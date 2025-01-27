@@ -1,99 +1,38 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { prismaClient } from "../../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../../test/helpers/graphql-helper";
-
-import { CandidacyStatusStep, OrganismTypology } from "@prisma/client";
+import {
+  CandidacyStatusStep,
+  OrganismTypology,
+  FormacodeType,
+} from "@prisma/client";
 import { TRAINING_INPUT } from "../../../../test/fixtures";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
 import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 import { createOrganismHelper } from "../../../../test/helpers/entities/create-organism-helper";
-import { FormacodeType } from ".prisma/client";
 
-const submitTraining = async ({
-  candidacy,
-  organism,
-}: {
-  candidacy: { id: string };
-  organism: { accounts: { keycloakId: string }[] };
-}) => {
-  const organismKeycloakId = organism?.accounts[0].keycloakId ?? "";
-  return await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: organismKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "training_submitTrainingForm",
-      arguments: {
-        candidacyId: candidacy.id,
-        training: TRAINING_INPUT,
-      },
-      returnFields: "{id,status}",
-    },
-  });
-};
+import { FastifyInstance } from "fastify";
+import { getFastifyInstance } from "../../../../test/jestFastifyInstance";
+import {
+  getGraphQLClient,
+  getGraphQLError,
+} from "../../../../test/jestGraphqlClient";
+import { graphql } from "../../../graphql/generated";
 
-const confirmTraining = async ({
-  candidacy,
-  organism,
-}: {
-  candidacy: { id: string };
-  organism: { accounts: { keycloakId: string }[] };
-}) => {
-  const organismKeycloakId = organism.accounts[0].keycloakId ?? "";
-  return await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "candidate",
-      keycloakId: organismKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "training_confirmTrainingForm",
-      arguments: {
-        candidacyId: candidacy?.id ?? "",
-      },
-      returnFields: "{id, status}",
-    },
-  });
-};
+let app: FastifyInstance;
 
-const updateCertificationWithinScope = async ({
-  certification,
-  candidacy,
-  organism,
-}: {
-  certification: { id: string };
-  candidacy: { id: string };
-  organism: { accounts: { keycloakId: string }[] };
-}) => {
-  const organismKeycloakId = organism.accounts[0].keycloakId ?? "";
+beforeAll(async () => {
+  app = await getFastifyInstance();
+});
 
-  return await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: organismKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint:
-        "candidacy_certification_updateCertificationWithinOrganismScope",
-      arguments: {
-        candidacyId: candidacy?.id,
-        certificationId: certification.id,
-      },
-      returnFields: "",
-    },
-  });
-};
+afterAll(async () => {
+  await app.close();
+});
+
+afterEach(async () => {
+  await clearDatabase();
+  jest.clearAllMocks();
+});
 
 const actionSocialeFormacode = {
   formacode: {
@@ -116,8 +55,117 @@ const degreeOne = {
   },
 };
 
+const submitTraining = async ({
+  candidacy,
+  organism,
+}: {
+  candidacy: { id: string };
+  organism: { accounts: { keycloakId: string }[] };
+}) => {
+  const organismKeycloakId = organism?.accounts[0].keycloakId ?? "";
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: organismKeycloakId,
+      }),
+    },
+  });
+
+  const training_submitTrainingForm = graphql(`
+    mutation training_submitTrainingForm(
+      $candidacyId: UUID!
+      $training: TrainingInput!
+    ) {
+      training_submitTrainingForm(
+        candidacyId: $candidacyId
+        training: $training
+      ) {
+        id
+        status
+      }
+    }
+  `);
+
+  return graphqlClient.request(training_submitTrainingForm, {
+    candidacyId: candidacy.id,
+    training: TRAINING_INPUT,
+  });
+};
+
+const confirmTraining = async ({
+  candidacy,
+}: {
+  candidacy: { id: string; candidate: { keycloakId: string } | null };
+}) => {
+  const candidateKeycloakId = candidacy?.candidate?.keycloakId ?? "";
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: candidateKeycloakId,
+      }),
+    },
+  });
+
+  const training_confirmTrainingForm = graphql(`
+    mutation training_confirmTrainingForm($candidacyId: UUID!) {
+      training_confirmTrainingForm(candidacyId: $candidacyId) {
+        id
+        status
+      }
+    }
+  `);
+
+  return graphqlClient.request(training_confirmTrainingForm, {
+    candidacyId: candidacy?.id ?? "",
+  });
+};
+
+const updateCertificationWithinScope = async ({
+  certification,
+  candidacy,
+  organism,
+}: {
+  certification: { id: string };
+  candidacy: { id: string };
+  organism: { accounts: { keycloakId: string }[] };
+}) => {
+  const organismKeycloakId = organism.accounts[0].keycloakId ?? "";
+
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: organismKeycloakId,
+      }),
+    },
+  });
+
+  const candidacy_certification_updateCertificationWithinOrganismScope =
+    graphql(`
+      mutation candidacy_certification_updateCertificationWithinOrganismScope(
+        $candidacyId: ID!
+        $certificationId: ID!
+      ) {
+        candidacy_certification_updateCertificationWithinOrganismScope(
+          candidacyId: $candidacyId
+          certificationId: $certificationId
+        )
+      }
+    `);
+
+  return graphqlClient.request(
+    candidacy_certification_updateCertificationWithinOrganismScope,
+    {
+      candidacyId: candidacy?.id,
+      certificationId: certification.id,
+    },
+  );
+};
+
 const createOrganismSocial = async () => {
-  return await createOrganismHelper({
+  return createOrganismHelper({
     typology: OrganismTypology.expertFiliere,
     organismOnFormacode: {
       create: actionSocialeFormacode,
@@ -129,7 +177,7 @@ const createOrganismSocial = async () => {
 };
 
 const createCertificationSocial = async () => {
-  return await createCertificationHelper({
+  return createCertificationHelper({
     certificationOnFormacode: {
       create: actionSocialeFormacode,
     },
@@ -152,10 +200,6 @@ const createCandidacyWithSocialCertificationAndOrganism = async ({
 
   return { candidacy, certification, organism };
 };
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 test("an organism should be able to update certification while a training is sent", async () => {
   const { candidacy, organism } =
@@ -188,7 +232,7 @@ test("should update certification after the training is confirmed", async () => 
   const newSocialCertification = await createCertificationSocial();
 
   await submitTraining({ candidacy, organism });
-  await confirmTraining({ candidacy, organism });
+  await confirmTraining({ candidacy });
   await updateCertificationWithinScope({
     certification: newSocialCertification,
     candidacy,
@@ -211,16 +255,19 @@ test("should not be able to update certification that is not in its scope", asyn
   const newRandomCertification = await createCertificationHelper();
 
   await submitTraining({ candidacy, organism });
-  const resp = await updateCertificationWithinScope({
-    certification: newRandomCertification,
-    candidacy,
-    organism,
-  });
-
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json().errors?.[0].message).toEqual(
-    "Cette certification n'est pas disponible pour cet organisme",
-  );
+  try {
+    await updateCertificationWithinScope({
+      certification: newRandomCertification,
+      candidacy,
+      organism,
+    });
+    fail("an error should be thrown");
+  } catch (error) {
+    const gqlError = getGraphQLError(error);
+    expect(gqlError).toEqual(
+      "Cette certification n'est pas disponible pour cet organisme",
+    );
+  }
 });
 
 test("should not be able to update certification after feasibility sent", async () => {
@@ -231,17 +278,19 @@ test("should not be able to update certification after feasibility sent", async 
 
   const newSocialCertification = await createCertificationSocial();
 
-  await submitTraining({ candidacy, organism });
-  const resp = await updateCertificationWithinScope({
-    certification: newSocialCertification,
-    candidacy,
-    organism,
-  });
-
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json().errors?.[0].message).toEqual(
-    "La certification ne peut être mise à jour qu'en début de candidature",
-  );
+  try {
+    await updateCertificationWithinScope({
+      certification: newSocialCertification,
+      candidacy,
+      organism,
+    });
+    fail("an error should be thrown");
+  } catch (error) {
+    const gqlError = getGraphQLError(error);
+    expect(gqlError).toEqual(
+      "La certification ne peut être mise à jour qu'en début de candidature",
+    );
+  }
 });
 
 test("should reset the status, keeping the training, after certification update", async () => {
