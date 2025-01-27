@@ -8,8 +8,8 @@ import { FastifyInstance } from "fastify";
 
 import { getFastifyInstance } from "../../test/jestFastifyInstance";
 import {
-  getGraphqlClient,
-  getQraphQLError,
+  getGraphQLClient,
+  getGraphQLError,
 } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
 
@@ -46,7 +46,7 @@ describe("candidate drop out decision", () => {
 
     const candidacyDropOut = await createCandidacyDropOutHelper();
 
-    const graphqlClient = getGraphqlClient({
+    const graphqlClient = getGraphQLClient({
       headers: {
         authorization: authorizationHeaderForUser({
           role: "candidate",
@@ -102,7 +102,7 @@ describe("candidate drop out decision", () => {
   test("should delete the candidacy drop out when  the candidate cancel the drop out", async () => {
     const candidacyDropOut = await createCandidacyDropOutHelper();
 
-    const graphqlClient = getGraphqlClient({
+    const graphqlClient = getGraphQLClient({
       headers: {
         authorization: authorizationHeaderForUser({
           role: "candidate",
@@ -153,7 +153,7 @@ describe("candidate drop out decision", () => {
       dropOutConfirmedByCandidate: true,
     });
 
-    const graphqlClient = getGraphqlClient({
+    const graphqlClient = getGraphQLClient({
       headers: {
         authorization: authorizationHeaderForUser({
           role: "candidate",
@@ -187,7 +187,7 @@ describe("candidate drop out decision", () => {
         },
       );
     } catch (error) {
-      const gqlError = getQraphQLError(error);
+      const gqlError = getGraphQLError(error);
       expect(gqlError).toEqual(
         "La décision d'abandon a déjà été confirmée par le candidat",
       );

@@ -1,11 +1,11 @@
 import { GraphQLClient } from "graphql-request";
 import { GraphQLClientRequestHeaders } from "graphql-request/build/esm/types";
 
-interface QraphQLClientParams {
+interface GraphQLClientParams {
   headers?: GraphQLClientRequestHeaders;
 }
 
-export const getGraphqlClient = (params: QraphQLClientParams) => {
+export const getGraphQLClient = (params: GraphQLClientParams) => {
   const { headers } = params;
 
   const url = `http://localhost:${process.env.PORT || 8081}/api/graphql`;
@@ -23,7 +23,7 @@ interface GraphQLError {
   message?: string;
 }
 
-export const getQraphQLError = (_error: unknown) => {
+export const getGraphQLError = (_error: unknown) => {
   const error = _error as GraphQLError;
   const message = error?.response?.errors
     ?.map((e: { message?: string }) => e?.message)

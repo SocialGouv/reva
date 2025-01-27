@@ -8,8 +8,8 @@ import { createCandidacyHelper } from "../../test/helpers/entities/create-candid
 import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 
 import {
-  getGraphqlClient,
-  getQraphQLError,
+  getGraphQLClient,
+  getGraphQLError,
 } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
 
@@ -31,7 +31,7 @@ test.each([
     });
     const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
-    const graphqlClient = getGraphqlClient({
+    const graphqlClient = getGraphQLClient({
       headers: {
         authorization: authorizationHeaderForUser({
           role: "candidate",
@@ -76,7 +76,7 @@ test("candidate should be able to change it's type_accompagnement to 'accompagne
   });
   const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "candidate",
@@ -117,7 +117,7 @@ test("candidate should NOT be able to change it's type_accompagnement to 'autono
   });
   const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "candidate",
@@ -147,7 +147,7 @@ test("candidate should NOT be able to change it's type_accompagnement to 'autono
       typeAccompagnement: "AUTONOME",
     });
   } catch (error) {
-    const gqlError = getQraphQLError(error);
+    const gqlError = getGraphQLError(error);
 
     expect(gqlError).toEqual(
       "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
@@ -162,7 +162,7 @@ test("candidate should NOT be able to change it's type_accompagnement to 'accomp
   });
   const candidateKeycloakId = candidacy.candidate?.keycloakId;
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "candidate",
@@ -192,7 +192,7 @@ test("candidate should NOT be able to change it's type_accompagnement to 'accomp
       typeAccompagnement: "ACCOMPAGNE",
     });
   } catch (error) {
-    const gqlError = getQraphQLError(error);
+    const gqlError = getGraphQLError(error);
 
     expect(gqlError).toEqual(
       "Impossible de modifier le type d'accompagnement une fois le dossier de faisabilité envoyé",

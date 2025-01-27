@@ -7,7 +7,7 @@ import { createCandidacyHelper } from "../../../test/helpers/entities/create-can
 import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import * as SendJuryResultCandidateEmailModule from "../emails/sendJuryResultCandidateEmail";
 import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
-import { getGraphqlClient } from "../../../test/jestGraphqlClient";
+import { getGraphQLClient } from "../../../test/jestGraphqlClient";
 import { graphql } from "../../graphql/generated";
 import { JuryResult } from "../../graphql/generated/graphql";
 import { FastifyInstance } from "fastify";
@@ -56,7 +56,7 @@ async function graphqlUpdateJuryResult({
   juryId: string;
   result: JuryResult;
 }) {
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "admin",

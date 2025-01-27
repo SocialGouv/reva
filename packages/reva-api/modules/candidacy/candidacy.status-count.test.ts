@@ -13,7 +13,7 @@ import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
 import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 
-import { getGraphqlClient } from "../../test/jestGraphqlClient";
+import { getGraphQLClient } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
 
 afterEach(async () => {
@@ -96,7 +96,7 @@ const executeQueryAndAssertResults = async ({
     ...defaultAssertionOverride,
   };
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role,

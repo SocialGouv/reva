@@ -9,15 +9,15 @@ import { createCandidacyHelper } from "../../test/helpers/entities/create-candid
 import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 
 import {
-  getGraphqlClient,
-  getQraphQLError,
+  getGraphQLClient,
+  getGraphQLError,
 } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
 
 test("get existing Candidacy with admin user", async () => {
   const candidacy = await createCandidacyHelper();
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "admin",
@@ -61,7 +61,7 @@ test("get existing Candidacy with admin user", async () => {
 });
 
 test("get non existing candidacy should yield errors", async () => {
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "admin",
@@ -91,7 +91,7 @@ test("a user can't modify the account information of another candidate", async (
   const candidate = await createCandidateHelper();
   const anotherCandidate = await createCandidateHelper();
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "candidate",
@@ -120,7 +120,7 @@ test("a user can't modify the account information of another candidate", async (
       candidateData: { phone: "0612345678" },
     });
   } catch (error) {
-    const gqlError = getQraphQLError(error);
+    const gqlError = getGraphQLError(error);
     expect(gqlError).toEqual(
       "Vous n'êtes pas autorisé à accéder à cette candidature",
     );
@@ -135,7 +135,7 @@ test("a candidate can modify his account information but not directly his email,
     phone: "0612345678",
   };
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "candidate",

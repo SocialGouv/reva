@@ -7,15 +7,15 @@ import { authorizationHeaderForUser } from "../../test/helpers/authorization-hel
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 
 import {
-  getGraphqlClient,
-  getQraphQLError,
+  getGraphQLClient,
+  getGraphQLError,
 } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
 
 test("candidacy_takeOver should fail when not authenticated", async function () {
   const candidacy = await createCandidacyHelper();
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "candidate",
@@ -37,7 +37,7 @@ test("candidacy_takeOver should fail when not authenticated", async function () 
       candidacyId: candidacy.id,
     });
   } catch (error) {
-    const gqlError = getQraphQLError(error);
+    const gqlError = getGraphQLError(error);
     expect(gqlError).toEqual("You are not authorized!");
   }
 });
@@ -45,7 +45,7 @@ test("candidacy_takeOver should fail when not authenticated", async function () 
 test("candidacy_takeOver should fail when user is admin", async function () {
   const candidacy = await createCandidacyHelper();
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "admin",
@@ -67,7 +67,7 @@ test("candidacy_takeOver should fail when user is admin", async function () {
       candidacyId: candidacy.id,
     });
   } catch (error) {
-    const gqlError = getQraphQLError(error);
+    const gqlError = getGraphQLError(error);
     expect(gqlError).toEqual("You are not authorized!");
   }
 });
@@ -75,7 +75,7 @@ test("candidacy_takeOver should fail when user is admin", async function () {
 test("candidacy_takeOver should fail when candidacy manager has wrong organism", async function () {
   const candidacy = await createCandidacyHelper();
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "manage_candidacy",
@@ -97,7 +97,7 @@ test("candidacy_takeOver should fail when candidacy manager has wrong organism",
       candidacyId: candidacy.id,
     });
   } catch (error) {
-    const gqlError = getQraphQLError(error);
+    const gqlError = getGraphQLError(error);
     expect(gqlError).toEqual("Votre compte utilisateur est introuvable.");
   }
 });
@@ -107,7 +107,7 @@ test("candidacy_takeOver should do nothing when candidacy status is not validati
     candidacyActiveStatus: CandidacyStatusStep.PROJET,
   });
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "manage_candidacy",
@@ -139,7 +139,7 @@ test("candidacy_takeOver should update candidacy statuses when active status is 
     candidacyActiveStatus: CandidacyStatusStep.VALIDATION,
   });
 
-  const graphqlClient = getGraphqlClient({
+  const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
         role: "manage_candidacy",
