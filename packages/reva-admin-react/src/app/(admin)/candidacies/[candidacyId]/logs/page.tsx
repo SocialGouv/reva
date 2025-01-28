@@ -77,15 +77,11 @@ const CandidacyLogsPage = () => {
         <p className="text-xl text-gray-700 font-bold mb-11">
           {candidacy.certification?.label}
         </p>
-        <ul className="list-none pl-0">
+        <div>
           {Object.keys(logsGroupedByDay).map((day) => {
-            return (
-              <li key={day}>
-                <DayLog day={day} logs={logsGroupedByDay[day]} />
-              </li>
-            );
+            return <DayLog key={day} day={day} logs={logsGroupedByDay[day]} />;
           })}
-        </ul>
+        </div>
       </div>
     )
   );
