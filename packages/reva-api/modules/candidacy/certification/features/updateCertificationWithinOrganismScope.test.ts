@@ -18,6 +18,7 @@ import {
   getGraphQLError,
 } from "../../../../test/jestGraphqlClient";
 import { graphql } from "../../../graphql/generated";
+import { shouldNotGoHere } from "../../../../test/jestHelpers";
 
 let app: FastifyInstance;
 
@@ -261,7 +262,7 @@ test("should not be able to update certification that is not in its scope", asyn
       candidacy,
       organism,
     });
-    fail("an error should be thrown");
+    shouldNotGoHere();
   } catch (error) {
     const gqlError = getGraphQLError(error);
     expect(gqlError).toEqual(
@@ -284,7 +285,7 @@ test("should not be able to update certification after feasibility sent", async 
       candidacy,
       organism,
     });
-    fail("an error should be thrown");
+    shouldNotGoHere();
   } catch (error) {
     const gqlError = getGraphQLError(error);
     expect(gqlError).toEqual(
