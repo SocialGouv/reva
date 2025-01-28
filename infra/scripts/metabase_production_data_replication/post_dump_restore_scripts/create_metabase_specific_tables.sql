@@ -5,7 +5,7 @@ CREATE TABLE dimensions_utiles AS -- table qui contient les dernieres infos de d
       candidacy.organism_id,
       candidacy.candidate_id,
       candidate.email,
-      candidacy.department_id,
+      candidate.department_id,
       candidacy.ccn_id,
       candidacy.certification_id,
       candidacy.typology,
@@ -3456,7 +3456,7 @@ CREATE TABLE candidatures_projet AS (
         candidate_id,
         ''::text AS email,
         organism_id, 
-        department_id, 
+        candidate.department_id, 
         ccn_id, 
         candidacy.certification_id AS certification_id, 
         certification_label, 
@@ -3474,6 +3474,8 @@ CREATE TABLE candidatures_projet AS (
     FROM projets
     LEFT JOIN candidacy 
         ON candidacy.id = projets.candidacy_id
+    LEFT JOIN candidate 
+        ON candidate.id = candidacy.candidate_id 
     LEFT JOIN certificateur_mapping
         ON certificateur_mapping.certification_id = candidacy.certification_id
 );
