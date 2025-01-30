@@ -70,6 +70,7 @@ const sectionsQuery = graphql(`
         vignette {
           url
           alternativeText
+          formats
         }
         description
       }

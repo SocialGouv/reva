@@ -63,7 +63,7 @@ const HelpSection = ({ articles }: { articles: ArticleDAide[] }) => {
                 ? textArticleToTruncate.forLongTitle
                 : textArticleToTruncate.forShortTitle,
             })}
-            thumbnailUrl={article?.vignette.url || ""}
+            thumbnailUrl={article?.vignette.formats.small.url || ""}
             thumbnailAlt={article?.vignette.alternativeText || ""}
             url={`/savoir-plus/articles/${article?.slug}`}
           />
