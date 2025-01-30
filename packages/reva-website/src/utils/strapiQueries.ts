@@ -59,10 +59,14 @@ const sectionsQuery = graphql(`
     sectionDAides(sort: "ordre", status: $publicationState) {
       documentId
       titre
-      article_d_aides(sort: "ordre") {
+      article_d_aides(
+        sort: "ordre"
+        filters: { publishedAt: { notNull: true } }
+      ) {
         documentId
         slug
         titre
+        publishedAt
         vignette {
           url
           alternativeText
@@ -109,7 +113,10 @@ const getRegionsBySlugQuery = graphql(`
       vignette {
         url
       }
-      article_regions(sort: "ordre") {
+      article_regions(
+        sort: "ordre"
+        filters: { publishedAt: { notNull: true } }
+      ) {
         titre
         slug
         resume
