@@ -182,7 +182,7 @@ const AdditionalInfoForm = ({
           ...register("certificationExpertContactDetails"),
         }}
       />
-      <h2>Informations facultatives</h2>
+      <h2>Informations complémentaires</h2>
       <Input
         label="Ressources pour aider au parcours VAE (optionnel) :"
         textArea
