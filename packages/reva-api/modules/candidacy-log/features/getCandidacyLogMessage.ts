@@ -46,7 +46,7 @@ export const getCandidacyLogMessage = ({
       return details
         ? log(
             "Certification choisie",
-            `Certification : ${details.certification.label} (${details.certification.codeRncp})`,
+            `${details.certification.label} (${details.certification.codeRncp})`,
           )
         : log("Certification choisie");
 
@@ -67,10 +67,7 @@ export const getCandidacyLogMessage = ({
 
     case "CANDIDACY_ARCHIVED":
       return details?.label
-        ? log(
-            "Candidature archivée",
-            `Informations complémentaires : ${details.label}`,
-          )
+        ? log("Candidature archivée", details.label)
         : log("Candidature archivée");
 
     case "CANDIDACY_UNARCHIVED":
@@ -79,7 +76,7 @@ export const getCandidacyLogMessage = ({
     case "APPOINTMENT_INFO_UPDATED":
       return log(
         "Date du premier rendez-vous pédagogique saisie",
-        `Date de rendez-vous : ${format(details.firstAppointmentOccuredAt, "dd/MM/yyyy")}`,
+        format(details.firstAppointmentOccuredAt, "dd/MM/yyyy"),
       );
 
     case "CANDIDACY_TAKEN_OVER":
@@ -87,16 +84,13 @@ export const getCandidacyLogMessage = ({
 
     case "ORGANISM_SELECTED":
       return details
-        ? log(
-            "Organisme d'accompagnement sélectionné",
-            `Organisme : ${details.organism.label}`,
-          )
+        ? log("Organisme d'accompagnement sélectionné", details.organism.label)
         : log("Organisme d'accompagnement sélectionné");
 
     case "TYPOLOGY_AND_CCN_INFO_UPDATED":
       return log(
         "Informations de typologie et de convention collective modifiées",
-        `Typologie : ${details.typology} ${
+        `${details.typology} ${
           details.ccn ? `— ${details.ccn.label} (${details.ccn.idcc}).` : ""
         }`.trim(),
       );
@@ -121,8 +115,8 @@ export const getCandidacyLogMessage = ({
 
     case "READY_FOR_JURY_ESTIMATED_DATE_UPDATED":
       return log(
-        "Date prévisionnelle de finalisation ou de dépôt du dossier de validation saisie",
-        `Date prévisionnelle : ${format(details.readyForJuryEstimatedAt, "dd/MM/yyyy")}`,
+        "Date prévisionnelle du dossier de validation saisie",
+        format(details.readyForJuryEstimatedAt, "dd/MM/yyyy"),
       );
 
     case "FEASIBILITY_SENT":
@@ -152,36 +146,31 @@ export const getCandidacyLogMessage = ({
     case "JURY_EXAM_INFO_UPDATED":
       return log(
         "Informations jury modifiées",
-        `Résultat : ${details.examResult}. ${
+        `${details.examResult}, ${
           details.estimatedExamDate
-            ? `Date d'examen prévue : ${format(details.estimatedExamDate, "dd/MM/yyyy")}.`
+            ? `estimée le ${format(details.estimatedExamDate, "dd/MM/yyyy")},`
             : ""
         } ${
           details.actualExamDate
-            ? `Date d'examen: ${format(details.actualExamDate, "dd/MM/yyyy")}.`
+            ? `prévue le ${format(details.actualExamDate, "dd/MM/yyyy")}`
             : ""
         }`.trim(),
       );
 
     case "JURY_RESULT_UPDATED":
-      return log("Résultat du jury saisi", `Résultat : ${details.result}.`);
+      return log("Résultat du jury saisi", details.result);
 
     case "JURY_SESSION_SCHEDULED":
       return log(
         "Date de passage en jury attribuée au candidat",
-        `Date de passage : ${format(details.dateOfSession, "dd/MM/yyyy")}. ${
-          details.timeOfSession
-            ? `Heure de passage : ${details.timeOfSession}.`
-            : ""
+        `le ${format(details.dateOfSession, "dd/MM/yyyy")} ${
+          details.timeOfSession ? `à ${details.timeOfSession}` : ""
         }`.trim(),
       );
 
     case "TYPE_ACCOMPAGNEMENT_UPDATED":
       return details?.typeAccompagnement
-        ? log(
-            "Type d'accompagnement modifié",
-            `Type d'accompagnement : ${details.typeAccompagnement}`,
-          )
+        ? log("Type d'accompagnement modifié", details.typeAccompagnement)
         : log("Type d'accompagnement modifié");
 
     case "CANDIDACY_ACTUALISATION":
