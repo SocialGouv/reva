@@ -189,6 +189,10 @@ test("should validate upload of dossier de validation", async () => {
   [
     "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
     "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+    "FAILURE",
+    "CANDIDATE_EXCUSED",
+    "CANDIDATE_ABSENT",
   ].forEach((result) =>
     test(`when status is ${candidacyActiveStatus} should allow sending again a DV when ${result} jury result`, async () => {
       const { certification, certificationAuthority } =

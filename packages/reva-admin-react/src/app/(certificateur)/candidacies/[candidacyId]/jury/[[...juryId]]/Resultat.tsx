@@ -17,6 +17,7 @@ import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomEr
 import { ResultatCard } from "./ResultatCard";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { HistoryResultatView } from "./HistoryResultatView";
+import { useAuth } from "@/components/auth/auth";
 
 const modal = createModal({
   id: "confirm-result",
@@ -32,6 +33,8 @@ const juryResultLabels: { [key in JuryResult]: string } = {
     "Réussite totale aux blocs de compétences visés",
   PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION:
     "Réussite partielle aux blocs de compétences visés",
+  PARTIAL_SUCCESS_PENDING_CONFIRMATION:
+    "Réussite partielle (sous reserve de confirmation par un certificateur)",
   FAILURE: "Non validation",
   CANDIDATE_EXCUSED: "Candidat excusé sur justificatif",
   CANDIDATE_ABSENT: "Candidat non présent",
@@ -44,6 +47,7 @@ const juryResultNotice: {
   PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "info",
   FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "success",
   PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "info",
+  PARTIAL_SUCCESS_PENDING_CONFIRMATION: "info",
   FAILURE: "error",
   CANDIDATE_EXCUSED: "new",
   CANDIDATE_ABSENT: "new",
@@ -55,6 +59,7 @@ const schema = z.object({
     "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
     "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
     "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
     "FAILURE",
     "CANDIDATE_EXCUSED",
     "CANDIDATE_ABSENT",
@@ -66,6 +71,18 @@ type ResultatFormData = z.infer<typeof schema>;
 
 export const Resultat = (): JSX.Element | null => {
   const { getCandidacy, updateJuryResult } = useJuryPageLogic();
+  const { isAdmin } = useAuth();
+  const availableResultOptions = isAdmin
+    ? ["PARTIAL_SUCCESS_PENDING_CONFIRMATION"]
+    : [
+        "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+        "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+        "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+        "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+        "FAILURE",
+        "CANDIDATE_EXCUSED",
+        "CANDIDATE_ABSENT",
+      ];
 
   const candidacy = getCandidacy.data?.getCandidacyById;
 
@@ -167,7 +184,7 @@ export const Resultat = (): JSX.Element | null => {
             <RadioButtons
               legend="Résultat"
               className="m-0 p-0 mb-12"
-              options={Object.keys(juryResultLabels).map((key) => {
+              options={availableResultOptions.map((key) => {
                 const label = juryResultLabels[key as JuryResult];
 
                 return {

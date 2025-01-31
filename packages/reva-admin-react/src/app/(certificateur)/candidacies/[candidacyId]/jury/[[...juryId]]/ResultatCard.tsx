@@ -11,6 +11,8 @@ const juryResultLabels: { [key in JuryResult]: string } = {
     "Réussite totale aux blocs de compétences visés",
   PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION:
     "Réussite partielle aux blocs de compétences visés",
+  PARTIAL_SUCCESS_PENDING_CONFIRMATION:
+    "Réussite partielle (sous reserve de confirmation par un certificateur)",
   FAILURE: "Non validation",
   CANDIDATE_EXCUSED: "Candidat excusé sur justificatif",
   CANDIDATE_ABSENT: "Candidat non présent",
@@ -23,6 +25,7 @@ const juryResultNotice: {
   PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "info",
   FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "success",
   PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "info",
+  PARTIAL_SUCCESS_PENDING_CONFIRMATION: "info",
   FAILURE: "error",
   CANDIDATE_EXCUSED: "new",
   CANDIDATE_ABSENT: "new",

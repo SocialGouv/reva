@@ -41,6 +41,7 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     roles,
     keycloakId,
   });
+
   if (!authorized) {
     throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
   }
@@ -77,6 +78,7 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
   const failedJuryResults = [
     "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
     "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
     "FAILURE",
     "CANDIDATE_EXCUSED",
     "CANDIDATE_ABSENT",
