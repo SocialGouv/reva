@@ -36,7 +36,10 @@ export const CandidacyBanner = () => {
   const lastActiveStatus = candidacy?.status;
   const isLastActiveStatusValidForActualisationBanner =
     lastActiveStatus === "DOSSIER_FAISABILITE_RECEVABLE" ||
-    lastActiveStatus === "DOSSIER_DE_VALIDATION_SIGNALE";
+    lastActiveStatus === "DOSSIER_DE_VALIDATION_SIGNALE" ||
+    lastActiveStatus === "DEMANDE_FINANCEMENT_ENVOYE" ||
+    (lastActiveStatus === "DEMANDE_PAIEMENT_ENVOYEE" &&
+      candidacy?.activeDossierDeValidation?.decision === "INCOMPLETE");
 
   const candidacyIsCaduque = !!candidacy?.isCaduque;
   const displayActualisationBanner = !!(
