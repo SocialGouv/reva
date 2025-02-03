@@ -12,6 +12,8 @@ import { graphql } from "../../graphql/generated";
 import { JuryResult } from "../../graphql/generated/graphql";
 import { FastifyInstance } from "fastify";
 import { getFastifyInstance } from "../../../test/jestFastifyInstance";
+import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
 
 const yesterday = startOfYesterday();
 
@@ -33,34 +35,74 @@ afterEach(async () => {
 const readyForJuryEstimatedAt = yesterday;
 
 async function createJuryAndDependenciesHelper() {
+  const certificationAuthorityLocalAccount =
+    await createCertificationAuthorityLocalAccountHelper();
+
+  const certification = await createCertificationHelper({
+    certificationAuthorityStructureId:
+      certificationAuthorityLocalAccount.certificationAuthority
+        .certificationAuthorityOnCertificationAuthorityStructure[0]
+        ?.certificationAuthorityStructureId,
+  });
+
   const candidacy = await createCandidacyHelper({
     candidacyActiveStatus: "DOSSIER_DE_VALIDATION_ENVOYE",
-    candidacyArgs: { readyForJuryEstimatedAt },
+    candidacyArgs: {
+      readyForJuryEstimatedAt,
+      certificationId: certification.id,
+    },
   });
 
   await createFeasibilityUploadedPdfHelper({
+    certificationAuthorityId:
+      certificationAuthorityLocalAccount.certificationAuthorityId,
     candidacyId: candidacy.id,
     decision: "ADMISSIBLE",
   });
 
-  return await createJuryHelper({
+  await prismaClient.certificationAuthorityLocalAccountOnCertification.create({
+    data: {
+      certificationAuthorityLocalAccountId:
+        certificationAuthorityLocalAccount.id,
+      certificationId: certification.id,
+    },
+  });
+
+  await prismaClient.certificationAuthorityLocalAccountOnDepartment.create({
+    data: {
+      certificationAuthorityLocalAccountId:
+        certificationAuthorityLocalAccount.id,
+      departmentId: candidacy.candidate?.departmentId || "",
+    },
+  });
+
+  const jury = await createJuryHelper({
     candidacyId: candidacy.id,
     dateOfSession: yesterday,
   });
+
+  return {
+    jury,
+    certificationAuthorityLocalAccount,
+  };
 }
 
 async function graphqlUpdateJuryResult({
+  role,
+  account,
   juryId,
   result,
 }: {
+  role: KeyCloakUserRole;
+  account: { keycloakId: string };
   juryId: string;
   result: JuryResult;
 }) {
   const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
-        role: "admin",
-        keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+        role,
+        keycloakId: account.keycloakId,
       }),
     },
   });
@@ -92,9 +134,12 @@ const failedJuryResults: JuryResult[] = [
 
 failedJuryResults.forEach((failedResult) => {
   test(`should reset ready jury estimated date when submitting failed jury result ${failedResult}`, async () => {
-    const jury = await createJuryAndDependenciesHelper();
+    const { jury, certificationAuthorityLocalAccount } =
+      await createJuryAndDependenciesHelper();
 
     await graphqlUpdateJuryResult({
+      role: "manage_feasibility",
+      account: certificationAuthorityLocalAccount.account,
       juryId: jury.id,
       result: failedResult,
     });
@@ -119,9 +164,12 @@ const successfulJuryResults: JuryResult[] = [
 
 successfulJuryResults.forEach((successfulResult) => {
   test(`should keep ready jury estimated date when submitting full jury result ${successfulResult}`, async () => {
-    const jury = await createJuryAndDependenciesHelper();
+    const { jury, certificationAuthorityLocalAccount } =
+      await createJuryAndDependenciesHelper();
 
     await graphqlUpdateJuryResult({
+      role: "manage_feasibility",
+      account: certificationAuthorityLocalAccount.account,
       juryId: jury.id,
       result: successfulResult,
     });
@@ -142,9 +190,12 @@ successfulJuryResults.forEach((successfulResult) => {
 });
 
 test("should save jury result without errors", async () => {
-  const jury = await createJuryAndDependenciesHelper();
+  const { jury, certificationAuthorityLocalAccount } =
+    await createJuryAndDependenciesHelper();
 
   const res = await graphqlUpdateJuryResult({
+    role: "manage_feasibility",
+    account: certificationAuthorityLocalAccount.account,
     juryId: jury.id,
     result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
   });
@@ -163,9 +214,12 @@ test("should send jury result to candidate", async () => {
     "sendJuryResultCandidateEmail",
   );
 
-  const jury = await createJuryAndDependenciesHelper();
+  const { jury, certificationAuthorityLocalAccount } =
+    await createJuryAndDependenciesHelper();
 
   await graphqlUpdateJuryResult({
+    role: "manage_feasibility",
+    account: certificationAuthorityLocalAccount.account,
     juryId: jury.id,
     result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
   });
@@ -184,7 +238,8 @@ test("should send jury result to organism", async () => {
     "sendJuryResultAAPEmail",
   );
 
-  const jury = await createJuryAndDependenciesHelper();
+  const { jury, certificationAuthorityLocalAccount } =
+    await createJuryAndDependenciesHelper();
 
   if (!jury.candidacy.organismId) {
     throw new Error("OrganismId is not defined");
@@ -199,6 +254,8 @@ test("should send jury result to organism", async () => {
   }
 
   await graphqlUpdateJuryResult({
+    role: "manage_feasibility",
+    account: certificationAuthorityLocalAccount.account,
     juryId: jury.id,
     result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
   });
