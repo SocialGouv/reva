@@ -18,7 +18,7 @@ const getUserProfileText = ({
       if (!user.firstname && !user.lastname) {
         return "Administrateur";
       }
-      return `un administrateur (${toUpper(
+      return `Administrateur (${toUpper(
         truncate(user.firstname, { length: 2, omission: "." }),
       )} ${capitalize(toLower(user.lastname))})`;
     case "AAP":
