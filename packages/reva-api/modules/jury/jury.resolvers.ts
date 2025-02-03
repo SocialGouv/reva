@@ -132,6 +132,7 @@ const unsafeResolvers = {
         juryId: params.juryId,
         juryInfo: params.input,
         roles: context.auth.userInfo.realm_access?.roles || [],
+        hasRole: context.auth.hasRole,
         keycloakId: context.auth.userInfo?.sub,
         userEmail: context.auth?.userInfo?.email,
       });

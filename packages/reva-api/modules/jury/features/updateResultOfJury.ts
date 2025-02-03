@@ -13,6 +13,7 @@ interface UpdateResultOfJury {
   juryId: string;
   juryInfo: JuryInfo;
   roles: KeyCloakUserRole[];
+  hasRole: (role: string) => boolean;
   keycloakId: string;
   userEmail: string;
 }
@@ -52,6 +53,15 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
 
   if (dateOfJuryHasNotPassed) {
     throw new Error("La date du jury n'est pas passée");
+  }
+
+  if (
+    params.hasRole("admin") &&
+    juryInfo.result !== "PARTIAL_SUCCESS_PENDING_CONFIRMATION"
+  ) {
+    throw new Error(
+      "Un administrateur ne peut soumettre qu'un résultat non-confirmé",
+    );
   }
 
   if (jury.result) {
