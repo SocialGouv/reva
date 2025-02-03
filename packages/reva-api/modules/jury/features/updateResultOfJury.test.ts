@@ -7,13 +7,17 @@ import { createCandidacyHelper } from "../../../test/helpers/entities/create-can
 import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import * as SendJuryResultCandidateEmailModule from "../emails/sendJuryResultCandidateEmail";
 import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
-import { getGraphQLClient } from "../../../test/jestGraphqlClient";
+import {
+  getGraphQLClient,
+  getGraphQLError,
+} from "../../../test/jestGraphqlClient";
 import { graphql } from "../../graphql/generated";
 import { JuryResult } from "../../graphql/generated/graphql";
 import { FastifyInstance } from "fastify";
 import { getFastifyInstance } from "../../../test/jestFastifyInstance";
 import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
+import { shouldNotGoHere } from "../../../test/jestHelpers";
 
 const yesterday = startOfYesterday();
 
@@ -33,6 +37,7 @@ afterEach(async () => {
 });
 
 const readyForJuryEstimatedAt = yesterday;
+const adminAccount = { keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf" };
 
 async function createJuryAndDependenciesHelper() {
   const certificationAuthorityLocalAccount =
@@ -268,4 +273,54 @@ test("should send jury result to organism", async () => {
   expect(await sendJuryResultAAPEmailSpy.mock.results[0].value).toBe(
     `email sent to ${organism.contactAdministrativeEmail}`,
   );
+});
+
+// Final result are all results except "PARTIAL_SUCCESS_PENDING_CONFIRMATION"
+const finalJuryResults: JuryResult[] = [
+  "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "FAILURE",
+  "CANDIDATE_EXCUSED",
+  "CANDIDATE_ABSENT",
+];
+
+finalJuryResults.forEach((result) => {
+  test(`should prevent an admin to save a ${result} final jury result`, async () => {
+    const { jury } = await createJuryAndDependenciesHelper();
+
+    try {
+      await graphqlUpdateJuryResult({
+        role: "admin",
+        account: adminAccount,
+        juryId: jury.id,
+        result,
+      });
+      shouldNotGoHere();
+    } catch (error) {
+      const gqlError = getGraphQLError(error);
+      expect(gqlError).toEqual(
+        "Un administrateur ne peut soumettre qu'un résultat non-confirmé",
+      );
+    }
+  });
+});
+
+test("should allow an admin to send a result with pending confirmation", async () => {
+  const { jury } = await createJuryAndDependenciesHelper();
+
+  const res = await graphqlUpdateJuryResult({
+    role: "admin",
+    account: adminAccount,
+    juryId: jury.id,
+    result: "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+  });
+
+  const juryUpdated = await prismaClient.jury.findUnique({
+    where: { id: jury.id },
+  });
+
+  expect(res).toMatchObject({ jury_updateResult: { id: jury.id } });
+  expect(juryUpdated?.result).toEqual("PARTIAL_SUCCESS_PENDING_CONFIRMATION");
 });
