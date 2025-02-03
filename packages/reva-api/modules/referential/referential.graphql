@@ -55,6 +55,7 @@ type Certification {
   juryFrequencyOther: String
   juryPlace: String
   additionalInfo: CertificationAdditionalInfo
+  isAapAvailable: Boolean!
 }
 
 type CertificationAdditionalInfo {
@@ -73,6 +74,7 @@ type CertificationPrerequisite {
   label: String!
   index: Int!
 }
+
 type Referential {
   goals: [Goal!]!
 }

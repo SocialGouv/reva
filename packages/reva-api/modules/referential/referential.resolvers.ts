@@ -58,6 +58,7 @@ import { validateCertification } from "./features/validateCertification";
 import { getAdditionalInfoByCertificationId } from "./features/getAdditionalInfoByCertificationId";
 import { updateCertificationAdditionalInfo } from "./features/updateCertificationAdditionalInfo";
 import { getFileNameAndUrl } from "./features/getDvTemplateNameAndUrl";
+import { isAapAvailableForCertificationId } from "./features/isAapAvailableForCertificationId";
 
 const unsafeReferentialResolvers = {
   Certification: {
@@ -83,6 +84,8 @@ const unsafeReferentialResolvers = {
       getCertificationPrerequisitesByCertificationId({ certificationId }),
     additionalInfo: ({ id: certificationId }: { id: string }) =>
       getAdditionalInfoByCertificationId({ certificationId }),
+    isAapAvailable: ({ id: certificationId }: { id: string }) =>
+      isAapAvailableForCertificationId({ certificationId }),
   },
   CertificationAdditionalInfo: {
     dossierDeValidationTemplate: ({
