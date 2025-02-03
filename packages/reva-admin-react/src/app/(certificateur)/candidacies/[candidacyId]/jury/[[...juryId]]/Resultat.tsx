@@ -127,8 +127,12 @@ export const Resultat = (): JSX.Element | null => {
 
   const result = jury?.result;
 
+  const hasFinalResult =
+    result && result !== "PARTIAL_SUCCESS_PENDING_CONFIRMATION";
+
   const editable = candidacy?.jury
-    ? isAfter(new Date(), startOfDay(candidacy?.jury.dateOfSession)) && !result
+    ? isAfter(new Date(), startOfDay(candidacy?.jury.dateOfSession)) &&
+      !hasFinalResult
     : false;
 
   return (
@@ -136,7 +140,7 @@ export const Resultat = (): JSX.Element | null => {
       <h3>Résultat suite au passage devant le jury</h3>
 
       <div className="flex flex-col gap-10">
-        {!result && (
+        {!hasFinalResult && (
           <p className="m-0 text-gray-600">
             Sélectionnez le résultat à communiquer par e-mail au candidat et à
             l’AAP. Vous devrez également envoyer un document officiel au
@@ -179,7 +183,7 @@ export const Resultat = (): JSX.Element | null => {
           </>
         )}
 
-        {!getCandidacy.isLoading && !result && (
+        {!getCandidacy.isLoading && !hasFinalResult && (
           <form onSubmit={handleFormSubmit}>
             <RadioButtons
               legend="Résultat"
