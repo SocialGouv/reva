@@ -91,7 +91,7 @@ export const getCandidacyLogMessage = ({
       return log(
         "Informations de typologie et de convention collective modifiées",
         `${details.typology} ${
-          details.ccn ? `— ${details.ccn.label} (${details.ccn.idcc}).` : ""
+          details.ccn ? `— ${details.ccn.label}, n°${details.ccn.idcc}` : ""
         }`.trim(),
       );
 
