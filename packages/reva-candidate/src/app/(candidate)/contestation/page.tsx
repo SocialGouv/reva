@@ -47,7 +47,7 @@ type ContestationForm = z.infer<typeof schema>;
 const HasContestedComponent = () => {
   return (
     <div
-      className="flex justify-between w-full"
+      className="flex justify-between w-full items-center"
       data-test="contestation-has-been-created"
     >
       <div className="flex flex-col justify-center">
@@ -69,7 +69,7 @@ const HasContestedComponent = () => {
         alt="Contestation réussie"
         width={282}
         height={319}
-        className="hidden md:block"
+        className="hidden md:block max-h-[319px]"
       />
     </div>
   );

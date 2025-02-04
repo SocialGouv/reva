@@ -57,7 +57,7 @@ const HasBeenUpdatedComponent = ({
 }) => {
   return (
     <div
-      className="flex justify-between w-full"
+      className="flex justify-between w-full items-center"
       data-test="actualisation-has-been-updated"
     >
       <div className="flex flex-col justify-center">
@@ -84,7 +84,7 @@ const HasBeenUpdatedComponent = ({
         alt="Actualisation réussie"
         width={282}
         height={319}
-        className="hidden md:block"
+        className="hidden md:block max-h-[319px]"
       />
     </div>
   );
