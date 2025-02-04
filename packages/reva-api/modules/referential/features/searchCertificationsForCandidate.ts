@@ -13,7 +13,6 @@ export const searchCertificationsForCandidate = async ({
 }: {
   offset?: number;
   limit?: number;
-  departmentId?: string;
   organismId?: string;
   searchText?: string;
 }): Promise<PaginatedListResult<Certification>> => {
