@@ -126,7 +126,7 @@ export const useAapDossierDeValidationPage = () => {
     if (!result.ok) {
       if (result.status === 413) {
         throw new Error(
-          "Le fichier que vous tentez d'envoyer est trop volumineux. Veuillez soumettre un fichier d'une taille inférieure à 10 Mo",
+          "Le fichier que vous tentez d'envoyer est trop volumineux. Veuillez soumettre un fichier d'une taille égale ou inférieure à 10 Mo",
         );
       }
       const errorMessage = await result.text();
