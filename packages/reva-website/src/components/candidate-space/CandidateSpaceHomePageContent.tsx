@@ -5,7 +5,7 @@ import FaitesValiderVosCompetencesParUnDiplome from "./FaitesValiderVosCompetenc
 import QuiPeutFaireUneVAE from "./QuiPeutFaireUneVAE";
 import VousAvezBesoinDePlusDaide from "./VousAvezBesoinDePlusDaide";
 
-export const CandidateHomePageContent = () => (
+export const CandidateSpaceHomePageContent = () => (
   <>
     <FaitesValiderVosCompetencesParUnDiplome />
     <QuiPeutFaireUneVAE />

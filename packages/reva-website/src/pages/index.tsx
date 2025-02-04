@@ -4,7 +4,7 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
 import { ReactNode } from "react";
 import BackGroundUnions from "@/components/home-page/BackGroundUnions";
-import { CandidateHomePageContent } from "@/components/candidate-space/CandidateHomePageContent";
+import { CandidateSpaceHomePageContent } from "@/components/candidate-space/CandidateSpaceHomePageContent";
 
 const HomeContainer = ({ children }: { children: ReactNode }) => (
   <div className="w-full mx-auto relative flex flex-col items-center lg:pb-32">
@@ -42,10 +42,16 @@ const HomePage = () => {
       />
 
       <HomeContainer>
-        <CandidateHomePageContent />
+        {isFeatureActive("HOMEPAGE_V2") ? (
+          <HomePageContent />
+        ) : (
+          <CandidateSpaceHomePageContent />
+        )}
       </HomeContainer>
     </MainLayout>
   );
 };
+
+const HomePageContent = () => <div>HomePage V2</div>;
 
 export default HomePage;
