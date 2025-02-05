@@ -35,7 +35,7 @@ export default function DossierDeValidationPag() {
       await updateReadyForJuryEstimatedAt.mutateAsync({
         readyForJuryEstimatedAt,
       });
-      successToast("Modifications enregistrées");
+      successToast("La date prévisionnelle a été enregistrée");
     } catch (error) {
       graphqlErrorToast(error);
     }
@@ -50,7 +50,7 @@ export default function DossierDeValidationPag() {
         dossierDeValidationFile,
         dossierDeValidationOtherFiles,
       });
-      successToast("Modifications enregistrées");
+      successToast("Votre dossier de validation a été envoyé");
       router.push("/");
     } catch (error) {
       graphqlErrorToast(error);
