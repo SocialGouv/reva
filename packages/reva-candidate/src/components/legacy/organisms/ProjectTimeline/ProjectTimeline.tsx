@@ -19,6 +19,7 @@ import { FeasibilityDematTimelineElement } from "./TimelineElements/accompagne/F
 import { FeasibilityFormat } from "@/graphql/generated/graphql";
 import { TypeAccompagnementTimelineElement } from "./TimelineElements/general/TypeAccompagnementTimelineElement/TypeAccompagnementTimelineElement";
 import { SelfServiceFeasibilityFileTimelineElement } from "./TimelineElements/autonome/SelfServiceFeasibilityFileTimelineElement/SelfServiceFeasibilityFileTimelineElement";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 interface TimelineProps {
   className?: string;
@@ -51,34 +52,40 @@ const AccompagneTimeline = ({
   feasibilityFormat: FeasibilityFormat;
   feasibilityRejected: boolean;
   gotJuryResult: boolean;
-}) => (
-  <Timeline className={className} data-test="accompagne-project-timeline">
-    <ContactTimelineElement />
-    <CertificationTimelineElement />
-    <TypeAccompagnementTimelineElement />
-    <GoalsTimelineElement />
-    <ExperiencesTimelineElement />
-    <OrganismTimelineElement />
-    <ProjectSubmissionTimelineElement />
-    <FeasibilityAppointmentTimelineElement />
-    <TrainingProgramTimelineElement />
+}) => {
+  const { isFeatureActive } = useFeatureFlipping();
+  return (
+    <Timeline className={className} data-test="accompagne-project-timeline">
+      <ContactTimelineElement />
+      <CertificationTimelineElement />
+      <TypeAccompagnementTimelineElement />
+      <GoalsTimelineElement />
+      <ExperiencesTimelineElement />
+      <OrganismTimelineElement />
+      <ProjectSubmissionTimelineElement />
+      <FeasibilityAppointmentTimelineElement />
+      <TrainingProgramTimelineElement />
 
-    {feasibilityFormat === "UPLOADED_PDF" ? (
-      <FeasibilityPdfTimelineElement />
-    ) : (
-      <FeasibilityDematTimelineElement />
-    )}
+      {feasibilityFormat === "UPLOADED_PDF" ? (
+        <FeasibilityPdfTimelineElement />
+      ) : (
+        <FeasibilityDematTimelineElement />
+      )}
+      {!feasibilityRejected && (
+        <>
+          {isFeatureActive("DOSSIER_VALIDATION_ACCOMPAGNE_V2") ? (
+            <DossierDeValidationTimelineElement />
+          ) : (
+            <DossierDeValidationAccompagneLegacyTimelineElement />
+          )}
+          <JuryTimelineElement />
+        </>
+      )}
 
-    {!feasibilityRejected && (
-      <>
-        <DossierDeValidationAccompagneLegacyTimelineElement />
-        <JuryTimelineElement />
-      </>
-    )}
-
-    {gotJuryResult && <ProjectEndedTimelineElement />}
-  </Timeline>
-);
+      {gotJuryResult && <ProjectEndedTimelineElement />}
+    </Timeline>
+  );
+};
 
 const AutonomeTimeline = ({
   className,
