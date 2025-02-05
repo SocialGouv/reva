@@ -23,6 +23,7 @@ import {
 } from "./paymentRequestUniFvaeInvoiceFormSchema";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { isAfter, sub } from "date-fns";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
 const PaymentRequestUniFvaeInvoicePage = () => {
   const { candidacyId } = useParams<{
@@ -303,7 +304,20 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   }
                 />
 
-                <fieldset className="mt-12">
+                <CallOut
+                  className="mt-6 mb-0"
+                  title="Envoyer sa facture avant l’entretien post-jury est possible"
+                >
+                  Vous pouvez envoyer votre facture avant l'entretien post-jury
+                  mais <strong>ne percevrez pas le forfait de 100€</strong>{" "}
+                  alloué à cet entretien. Si le candidat refuse de faire un
+                  entretien post-jury suite à votre proposition, vous pouvez
+                  envoyer la facture sans mention du post-jury. Vous n'avez{" "}
+                  <strong>rien à remplir sur la plateforme</strong>, il suffit
+                  d'adapter votre facture en fonction de votre choix.
+                </CallOut>
+
+                <fieldset className="mt-6">
                   <legend className="mb-6 font-medium">
                     Accompagnement (optionnel)
                   </legend>
