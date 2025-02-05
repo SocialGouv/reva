@@ -4,7 +4,7 @@ import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useGetDossierDeValidationAutonomeTimelineInfo } from "./useGetDossierDeValidationAutonomeTimeline";
+import { useGetDossierDeValidationTimelineInfo } from "./useGetDossierDeValidationTimeline";
 
 const getCandidateQuery = graphql(`
   query getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement {
@@ -20,14 +20,14 @@ const getCandidateQuery = graphql(`
   }
 `);
 
-export const DossierDeValidationAutonomeTimelineElement = () => {
+export const DossierDeValidationTimelineElement = () => {
   const router = useRouter();
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getCandidateResponse } = useQuery({
     queryKey: [
       "candidate",
-      "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+      "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
     ],
     queryFn: () => graphqlClient.request(getCandidateQuery),
   });
@@ -36,8 +36,7 @@ export const DossierDeValidationAutonomeTimelineElement = () => {
     getCandidateResponse?.candidate_getCandidateWithCandidacy?.candidacy;
   const isCaduque = candidacy?.isCaduque;
 
-  const { status, badge, notice } =
-    useGetDossierDeValidationAutonomeTimelineInfo();
+  const { status, badge, notice } = useGetDossierDeValidationTimelineInfo();
 
   if (!candidacy) {
     return null;

@@ -17,7 +17,7 @@ const DEFAULT_TEXT =
 const DV_HAS_BEEN_SENT_TEXT =
   "Votre dossier de validation a été transmis au certificateur.";
 
-export const useGetDossierDeValidationTimelineInfo =
+export const useGetDossierDeValidationAccompagneLegacyTimelineInfo =
   (): GetDossierDeValidationTimelineInfoResult => {
     const { candidacy } = useCandidacy();
     const { activeDossierDeValidation: dossierDeValidation, feasibility } =

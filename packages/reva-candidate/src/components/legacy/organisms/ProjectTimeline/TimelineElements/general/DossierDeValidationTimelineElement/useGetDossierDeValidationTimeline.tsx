@@ -26,7 +26,7 @@ const ToCompleteBadge = (
   </Badge>
 );
 
-export function useGetDossierDeValidationAutonomeTimelineInfo(): UseGetDossierDeValidationAutonomeTimelineInfo {
+export function useGetDossierDeValidationTimelineInfo(): UseGetDossierDeValidationAutonomeTimelineInfo {
   const { candidacy } = useCandidacy();
   const { isFeatureActive } = useFeatureFlipping();
   const candidacyActualisationFeatureIsActive = isFeatureActive(

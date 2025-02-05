@@ -1,13 +1,14 @@
 import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { useGetDossierDeValidationTimelineInfo } from "./useGetDossierDeValidationTimelineInfo";
+import { useGetDossierDeValidationAccompagneLegacyTimelineInfo } from "./useGetDossierDeValidationAccompagneLegacyTimelineInfo";
 
-export const DossierDeValidationTimelineElement = () => {
+export const DossierDeValidationAccompagneLegacyTimelineElement = () => {
   const { candidacy } = useCandidacy();
 
   const { feasibility } = candidacy;
-  const { status, icon, text } = useGetDossierDeValidationTimelineInfo();
+  const { status, icon, text } =
+    useGetDossierDeValidationAccompagneLegacyTimelineInfo();
 
   const FEASIBILITY_ADMISSIBLE = feasibility?.decision === "ADMISSIBLE";
 

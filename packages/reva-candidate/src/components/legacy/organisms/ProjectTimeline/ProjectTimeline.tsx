@@ -11,14 +11,14 @@ import { ProjectSubmissionTimelineElement } from "./TimelineElements/accompagne/
 import { FeasibilityAppointmentTimelineElement } from "./TimelineElements/accompagne/FeasibilityAppointmentTimelineElement/FeasibilityAppointmentTimelineElement";
 import { TrainingProgramTimelineElement } from "./TimelineElements/accompagne/TrainingProgramTimelineElement/TrainingProgramTimelineElement";
 import { FeasibilityPdfTimelineElement } from "./TimelineElements/accompagne/FeasibilityPdfTimelineElement/FeasibilityPdfTimelineElement";
-import { DossierDeValidationTimelineElement } from "./TimelineElements/accompagne/DossierDeValidationTimelineElement/DossierDeValidationTimelineElement";
+import { DossierDeValidationAccompagneLegacyTimelineElement } from "@/components/legacy/organisms/ProjectTimeline/TimelineElements/accompagne/DossierDeValidationAccompagneLegacyTimelineElement/DossierDeValidationAccompagneLegacyTimelineElement";
+import { DossierDeValidationTimelineElement } from "@/components/legacy/organisms/ProjectTimeline/TimelineElements/general/DossierDeValidationTimelineElement/DossierDeValidationTimelineElement";
 import { JuryTimelineElement } from "./TimelineElements/accompagne/JuryTimelineElement/JuryTimelineElement";
 import { ProjectEndedTimelineElement } from "./TimelineElements/general/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { FeasibilityDematTimelineElement } from "./TimelineElements/accompagne/FeasibilityDematTimelineElement/FeasibilityDematTimelineElement";
 import { FeasibilityFormat } from "@/graphql/generated/graphql";
 import { TypeAccompagnementTimelineElement } from "./TimelineElements/general/TypeAccompagnementTimelineElement/TypeAccompagnementTimelineElement";
 import { SelfServiceFeasibilityFileTimelineElement } from "./TimelineElements/autonome/SelfServiceFeasibilityFileTimelineElement/SelfServiceFeasibilityFileTimelineElement";
-import { DossierDeValidationAutonomeTimelineElement } from "./TimelineElements/autonome/DossierDeValidationAutonomeTimelineElement/DossierDeValidationAutonomeTimelineElement";
 
 interface TimelineProps {
   className?: string;
@@ -71,7 +71,7 @@ const AccompagneTimeline = ({
 
     {!feasibilityRejected && (
       <>
-        <DossierDeValidationTimelineElement />
+        <DossierDeValidationAccompagneLegacyTimelineElement />
         <JuryTimelineElement />
       </>
     )}
@@ -90,7 +90,7 @@ const AutonomeTimeline = ({
       <CertificationTimelineElement />
       <TypeAccompagnementTimelineElement />
       <SelfServiceFeasibilityFileTimelineElement />
-      <DossierDeValidationAutonomeTimelineElement />
+      <DossierDeValidationTimelineElement />
       <JuryTimelineElement />
       {gotJuryResult && <ProjectEndedTimelineElement />}
     </Timeline>
