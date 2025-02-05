@@ -16,6 +16,11 @@ function visitCaduciteContestation({
   feasibilityDecisionSentAt = DATE_NOW,
 } = {}) {
   cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(
+      req,
+      "activeFeaturesForConnectedUser",
+      "features/active-features.json",
+    );
     stubQuery(req, "getCandidacyCaduciteContestationQuery", {
       data: {
         getCandidacyById: {
@@ -35,7 +40,11 @@ function visitCaduciteContestation({
       },
     });
 
-    stubQuery(req, "getCandidacyWithCandidateInfoForLayout", {});
+    stubQuery(
+      req,
+      "getCandidacyWithCandidateInfoForLayout",
+      "candidacy/candidacy.json",
+    );
     stubQuery(req, "updateContestationCaduciteDecisionQuery", {
       data: {
         candidacy_contestation_caducite_update_certification_authority_contestation_decision:
@@ -48,7 +57,11 @@ function visitCaduciteContestation({
 
   cy.certificateur(URL_FEASIBILITY + "/caducite-contestation");
 
-  cy.wait("@getCandidacyCaduciteContestationQuery");
+  cy.wait([
+    "@activeFeaturesForConnectedUser",
+    "@getCandidacyCaduciteContestationQuery",
+    "@getCandidacyWithCandidateInfoForLayout",
+  ]);
 }
 
 describe("Caducite Contestation Page as Certificateur", () => {
