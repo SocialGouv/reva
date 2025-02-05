@@ -7,8 +7,8 @@ interface CandidacyContestation {
 }
 
 const DATE_NOW = Date.now();
-const URL_FEASIBILITY =
-  "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/feasibility";
+const CANDIDACY_ID = "46206f6b-0a59-4478-9338-45e3a8d968e4";
+const URL_FEASIBILITY = "/candidacies/" + CANDIDACY_ID + "/feasibility";
 
 function visitCaduciteContestation({
   candidacyContestationsCaducite = [] as CandidacyContestation[],
@@ -19,7 +19,7 @@ function visitCaduciteContestation({
     stubQuery(req, "getCandidacyCaduciteContestationQuery", {
       data: {
         getCandidacyById: {
-          id: "46206f6b-0a59-4478-9338-45e3a8d968e4",
+          id: CANDIDACY_ID,
           candidate: {
             firstname: "Alice",
             lastname: "Doe",
@@ -32,6 +32,16 @@ function visitCaduciteContestation({
           readyForJuryEstimatedAt: 1746230400000,
           candidacyContestationsCaducite,
         },
+      },
+    });
+
+    stubQuery(req, "getCandidacyWithCandidateInfoForLayout", {});
+    stubQuery(req, "updateContestationCaduciteDecisionQuery", {
+      data: {
+        candidacy_contestation_caducite_update_certification_authority_contestation_decision:
+          {
+            id: CANDIDACY_ID,
+          },
       },
     });
   });
