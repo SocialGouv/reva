@@ -48,7 +48,7 @@ export const DossierDeValidationTimelineElement = () => {
       status={status}
       badge={badge}
       data-test="dossier-de-validation-timeline-element"
-      description="Votre dossier de validation permettra au jury de prendre connaissances de vos activités et de votre parcours afin de prendre une première mesure de vos compétences acquises et de préparer votre entretien."
+      description="Ce dossier permet de justifier de vos expériences et compétences lors de votre passage devant le jury."
     >
       {notice}
       {!isCaduque && (
