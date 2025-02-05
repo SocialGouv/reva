@@ -332,7 +332,7 @@ function setupCandidacyState({ isCaduque, lastActivityDate, contestations }) {
       stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
       stubQuery(
         req,
-        "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+        "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
         candidate,
       );
     });
@@ -371,11 +371,9 @@ function verifyFeasibilityElement({ hasNonRecevableBadge, hasReviewButton }) {
 }
 
 function verifyDossierValidationElement({ hasUpdateButton }) {
-  cy.get(
-    '[data-test="dossier-de-validation-autonome-timeline-element"]',
-  ).within(() => {
+  cy.get('[data-test="dossier-de-validation-timeline-element"]').within(() => {
     cy.get(
-      '[data-test="dossier-de-validation-autonome-timeline-element-update-button"]',
+      '[data-test="dossier-de-validation-timeline-element-update-button"]',
     ).should(hasUpdateButton ? "exist" : "not.exist");
   });
 }

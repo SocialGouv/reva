@@ -1,7 +1,7 @@
 "use client";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { ReadyForJuryEstimatedDateTab } from "./_components/tabs/ready-for-jury-estimated-date-tab/ReadyForJuryEstimatedAtTab";
-import { useDossierDeValidationAutonomePage } from "./dossierDeValidationAutonome.hook";
+import { useDossierDeValidationPage } from "./dossierDeValidation.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -13,7 +13,7 @@ import { ReadOnlyReadyForJuryEstimatedDateTab } from "./_components/tabs/read-on
 import { ReadOnlyDossierDeValidationTab } from "./_components/tabs/read-only-dossier-de-validation-tab/ReadOnlyDossierDeValidationTab";
 import { useRouter } from "next/navigation";
 
-export default function DossierDeValidationAutonomePag() {
+export default function DossierDeValidationPag() {
   const {
     readyForJuryEstimatedAt,
     certificationAuthority,
@@ -22,7 +22,7 @@ export default function DossierDeValidationAutonomePag() {
     updateReadyForJuryEstimatedAt,
     sendDossierDeValidation,
     queryStatus,
-  } = useDossierDeValidationAutonomePage();
+  } = useDossierDeValidationPage();
 
   const router = useRouter();
 

@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 
 const getCandidateQuery = graphql(`
-  query getCandidateWithCandidacyForDossierDeValidationAutonomePage {
+  query getCandidateWithCandidacyForDossierDeValidationPage {
     candidate_getCandidateWithCandidacy {
       id
       candidacy {
@@ -45,7 +45,7 @@ const getCandidateQuery = graphql(`
 `);
 
 const updateReadyForJuryEstimatedAtMutation = graphql(`
-  mutation updateReadyForJuryEstimatedAtForDossierDeValidationAutonomePage(
+  mutation updateReadyForJuryEstimatedAtForDossierDeValidationPage(
     $candidacyId: UUID!
     $readyForJuryEstimatedAt: Timestamp!
   ) {
@@ -59,7 +59,7 @@ const updateReadyForJuryEstimatedAtMutation = graphql(`
   }
 `);
 
-export const useDossierDeValidationAutonomePage = () => {
+export const useDossierDeValidationPage = () => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
   const { accessToken } = useKeycloakContext();
@@ -67,7 +67,7 @@ export const useDossierDeValidationAutonomePage = () => {
   const { data: getCandidateResponse, status: queryStatus } = useQuery({
     queryKey: [
       "candidate",
-      "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+      "getCandidateWithCandidacyForDossierDeValidationPage",
     ],
     queryFn: () => graphqlClient.request(getCandidateQuery),
   });

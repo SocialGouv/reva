@@ -18,10 +18,7 @@ const EDITABLE_STATUSES = [
 ];
 
 const ToCompleteBadge = (
-  <Badge
-    severity="warning"
-    data-test="dossier-de-validation-autonome-to-complete-badge"
-  >
+  <Badge severity="warning" data-test="dossier-de-validation-to-complete-badge">
     À compléter
   </Badge>
 );
@@ -75,7 +72,7 @@ export function useGetDossierDeValidationTimelineInfo(): UseGetDossierDeValidati
         badge: (
           <Badge
             severity="success"
-            data-test="dossier-de-validation-autonome-sent-badge"
+            data-test="dossier-de-validation-sent-badge"
           >
             Envoyé
           </Badge>

@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-import { stubMutation, stubQuery } from "../../utils/graphql";
+import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Accompagnement autonome - Dossier de validation", () => {
   beforeEach(() => {
@@ -19,7 +19,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+              "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
               candidate,
             );
           });
@@ -32,14 +32,14 @@ context("Accompagnement autonome - Dossier de validation", () => {
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
 
+      cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
+        "exist",
+      );
       cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element"]',
-      ).should("exist");
-      cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element-update-button"]',
+        '[data-test="dossier-de-validation-timeline-element-update-button"]',
       ).should("be.disabled");
       cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element-update-button"]',
+        '[data-test="dossier-de-validation-timeline-element-update-button"]',
       ).should("contain.text", "Compléter");
     });
   });
@@ -59,7 +59,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+              "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
               candidate,
             );
           });
@@ -72,22 +72,22 @@ context("Accompagnement autonome - Dossier de validation", () => {
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
 
+      cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
+        "exist",
+      );
       cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element"]',
-      ).should("exist");
-      cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element-update-button"]',
+        '[data-test="dossier-de-validation-timeline-element-update-button"]',
       ).should("be.enabled");
       cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element-update-button"]',
+        '[data-test="dossier-de-validation-timeline-element-update-button"]',
       ).should("contain.text", "Compléter");
 
       cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element-update-button"]',
+        '[data-test="dossier-de-validation-timeline-element-update-button"]',
       ).click();
       cy.location("pathname").should(
         "equal",
-        "/candidat/dossier-de-validation-autonome/",
+        "/candidat/dossier-de-validation/",
       );
       cy.get("h1").should("contain.text", "Dossier de validation");
     });
@@ -106,7 +106,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
           cy.intercept("POST", "/api/graphql", (req) => {
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+              "getCandidateWithCandidacyForDossierDeValidationPage",
               candidate,
             );
           });
@@ -116,23 +116,21 @@ context("Accompagnement autonome - Dossier de validation", () => {
         stubMutation(req, "candidate_login", "candidate_login.json");
         stubMutation(
           req,
-          "updateReadyForJuryEstimatedAtForDossierDeValidationAutonomePage",
+          "updateReadyForJuryEstimatedAtForDossierDeValidationPage",
           "candidate1-certification-titre-2-selected.json",
         );
       });
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.visit("/dossier-de-validation-autonome/");
-      cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+      cy.visit("/dossier-de-validation/");
+      cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
 
       cy.get(".ready-for-jury-estimated-date-input").type("2035-12-31");
       cy.get(
         '[data-test="submit-ready-for-jury-estimated-date-form-button"]',
       ).click();
-      cy.wait(
-        "@updateReadyForJuryEstimatedAtForDossierDeValidationAutonomePage",
-      );
+      cy.wait("@updateReadyForJuryEstimatedAtForDossierDeValidationPage");
     });
 
     it("should show the ready for jury estimated date in the timeline when it's set", function () {
@@ -148,7 +146,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+              "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
               candidate,
             );
           });
@@ -160,9 +158,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element"]',
-      ).should(
+      cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
         "contain.text",
         "Vous avez renseigné une date de dépôt prévisionnelle, le 01/10/2024. Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.",
       );
@@ -180,7 +176,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+              "getCandidateWithCandidacyForDossierDeValidationPage",
               candidate,
             );
           });
@@ -199,8 +195,8 @@ context("Accompagnement autonome - Dossier de validation", () => {
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.visit("/dossier-de-validation-autonome/");
-      cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+      cy.visit("/dossier-de-validation/");
+      cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
 
       cy.get(".fr-tabs__tab").contains("du dossier").click();
 
@@ -239,7 +235,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+              "getCandidateWithCandidacyForDossierDeValidationPage",
               candidate,
             );
           });
@@ -253,8 +249,8 @@ context("Accompagnement autonome - Dossier de validation", () => {
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
 
-      cy.visit("/dossier-de-validation-autonome/");
-      cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+      cy.visit("/dossier-de-validation/");
+      cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
       cy.get(".fr-tabs__tab").contains("Date").click();
 
       cy.get(".ready-for-jury-estimated-date-text").should(
@@ -281,7 +277,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+              "getCandidateWithCandidacyForDossierDeValidationPage",
               candidate,
             );
           });
@@ -295,8 +291,8 @@ context("Accompagnement autonome - Dossier de validation", () => {
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
 
-      cy.visit("/dossier-de-validation-autonome/");
-      cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+      cy.visit("/dossier-de-validation/");
+      cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
 
       cy.get('[data-test="dossier-de-validation-sent-alert"]').should(
         "contain.text",
@@ -318,7 +314,7 @@ context("Accompagnement autonome - Dossier de validation", () => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+              "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
               candidate,
             );
           });
@@ -331,10 +327,10 @@ context("Accompagnement autonome - Dossier de validation", () => {
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element"] [data-test="timeline-element-badge"]',
+        '[data-test="dossier-de-validation-timeline-element"] [data-test="timeline-element-badge"]',
       ).should("contain.text", "À compléter");
       cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element"] [data-test="dossier-de-validation-signale-notice"]',
+        '[data-test="dossier-de-validation-timeline-element"] [data-test="dossier-de-validation-signale-notice"]',
       ).should("exist");
     });
 
@@ -355,12 +351,12 @@ context("Accompagnement autonome - Dossier de validation", () => {
             stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement",
+              "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
               candidate,
             );
             stubQuery(
               req,
-              "getCandidateWithCandidacyForDossierDeValidationAutonomePage",
+              "getCandidateWithCandidacyForDossierDeValidationPage",
               candidate,
             );
           });
@@ -373,9 +369,9 @@ context("Accompagnement autonome - Dossier de validation", () => {
       cy.wait("@candidate_login");
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.get(
-        '[data-test="dossier-de-validation-autonome-timeline-element-update-button"]',
+        '[data-test="dossier-de-validation-timeline-element-update-button"]',
       ).click();
-      cy.wait("@getCandidateWithCandidacyForDossierDeValidationAutonomePage");
+      cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
       cy.get(".fr-tabs__tab").contains("du dossier").click();
       cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
         "exist",

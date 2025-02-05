@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useGetDossierDeValidationTimelineInfo } from "./useGetDossierDeValidationTimeline";
 
 const getCandidateQuery = graphql(`
-  query getCandidateWithCandidacyForDossierDeValidationAutonomeTimelineElement {
+  query getCandidateWithCandidacyForDossierDeValidationTimelineElement {
     candidate_getCandidateWithCandidacy {
       id
       candidacy {
@@ -47,17 +47,17 @@ export const DossierDeValidationTimelineElement = () => {
       title="Dossier de validation"
       status={status}
       badge={badge}
-      data-test="dossier-de-validation-autonome-timeline-element"
+      data-test="dossier-de-validation-timeline-element"
       description="Votre dossier de validation permettra au jury de prendre connaissances de vos activités et de votre parcours afin de prendre une première mesure de vos compétences acquises et de préparer votre entretien."
     >
       {notice}
       {!isCaduque && (
         <Button
-          data-test="dossier-de-validation-autonome-timeline-element-update-button"
+          data-test="dossier-de-validation-timeline-element-update-button"
           priority={status === "active" ? "primary" : "secondary"}
           disabled={status === "disabled"}
           onClick={() => {
-            router.push("/dossier-de-validation-autonome");
+            router.push("/dossier-de-validation");
           }}
         >
           {status === "readonly" ? "Consulter" : "Compléter"}
