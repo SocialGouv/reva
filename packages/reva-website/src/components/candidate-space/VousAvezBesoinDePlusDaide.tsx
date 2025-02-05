@@ -26,7 +26,7 @@ const PolygonService = ({
     className="w-full"
   >
     <div className="flex flex-col items-center lg:flex-row ">
-      <div className="w-full h-[136px] lg:max-w-none lg:max-h-none flex lg:flex-col justify-center items-center lg:w-[240px] lg:h-[248px] bg-[url('/home-page/polygons-services/polygon-service-background.svg')] hover:bg-[url('/home-page/polygons-services/polygon-service-background-hover.svg')] bg-contain bg-no-repeat lg:bg-cover bg-center">
+      <div className="w-full h-[136px] lg:max-w-none lg:max-h-none flex lg:flex-col justify-center items-center lg:w-[240px] lg:h-[248px] bg-[url('/candidate-space/polygons-services/polygon-service-background.svg')] hover:bg-[url('/candidate-space/polygons-services/polygon-service-background-hover.svg')] bg-contain bg-no-repeat lg:bg-cover bg-center">
         <Image
           src={imageUrl}
           width={147}
@@ -60,13 +60,13 @@ const VousAvezBesoinDePlusDaide = () => (
       <div className="flex w-full lg:gap-6">
         <PolygonService
           imageAlt="Bâtiment public"
-          imageUrl="/home-page/polygons-services/polygon-service-point-relais-conseil.svg"
+          imageUrl="/candidate-space/polygons-services/polygon-service-point-relais-conseil.svg"
           label="Point-relais conseil"
           urlLink="https://vae.gouv.fr/savoir-plus/articles/liste-prc/"
         />
         <PolygonService
           imageAlt="Mon conseil en évolution professionnelle"
-          imageUrl="/home-page/polygons-services/polygon-service-conseil-evolution-professionnelle.svg"
+          imageUrl="/candidate-space/polygons-services/polygon-service-conseil-evolution-professionnelle.svg"
           label="Conseiller en évolution professionnelle"
           urlLink="https://mon-cep.org/"
         />
@@ -74,7 +74,7 @@ const VousAvezBesoinDePlusDaide = () => (
       <div className="w-1/2 lg:w-full self-center">
         <PolygonService
           imageAlt="Logo transition professionnelle"
-          imageUrl="/home-page/polygons-services/polygon-service-association-de-transition-professionnelle.svg"
+          imageUrl="/candidate-space/polygons-services/polygon-service-association-de-transition-professionnelle.svg"
           label="Association de transition professionnelle"
           urlLink="https://www.transitionspro.fr/"
         />

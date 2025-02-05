@@ -38,22 +38,22 @@ const QuiPeutFaireUneVAE = () => (
     <div className="py-12 flex flex-col sm:flex-row gap-4 lg:gap-[88px] w-full">
       <BlockCompetence
         label="Salariés du secteur privé"
-        imageUrl="/home-page/blocks-competences/image-block-competence-salaries-du-secteur-prive.svg"
+        imageUrl="/candidate-space/blocks-competences/image-block-competence-salaries-du-secteur-prive.svg"
         imageAlt="Document avec un stylo plume"
       />
       <BlockCompetence
         label="Demandeurs d'emploi"
-        imageUrl="/home-page/blocks-competences/image-block-competence-demandeurs-demplois.svg"
+        imageUrl="/candidate-space/blocks-competences/image-block-competence-demandeurs-demplois.svg"
         imageAlt="logiciel de recherche d'emploi avec une loupe"
       />
       <BlockCompetence
         label="Bénévoles"
-        imageUrl="/home-page/blocks-competences/image-block-competence-volontaires-et-benevoles.svg"
+        imageUrl="/candidate-space/blocks-competences/image-block-competence-volontaires-et-benevoles.svg"
         imageAlt="Mains réunies en signe de solidarité"
       />
       <BlockCompetence
         label="Proches aidants"
-        imageUrl="/home-page/blocks-competences/image-block-competence-proches-aidants.svg"
+        imageUrl="/candidate-space/blocks-competences/image-block-competence-proches-aidants.svg"
         imageAlt="Une main soutenant un coeur en signe de solidarité"
       />
     </div>

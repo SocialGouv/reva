@@ -39,17 +39,17 @@ const CommentFinancerVotreParcoursHorsPlateforme = () => (
       <div className="hidden lg:flex flex-col items-center relative">
         <div className="relative top-12">
           <PolygonFinancer
-            bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-orange.svg')]"
+            bgUrl="bg-[url('/candidate-space/polygon-financer/polygon-financer-orange.svg')]"
             label="Mon Compte Formation"
           />
         </div>
         <div className="flex gap-2">
           <PolygonFinancer
-            bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-blue.svg')]"
+            bgUrl="bg-[url('/candidate-space/polygon-financer/polygon-financer-blue.svg')]"
             label="Financement personnel"
           />
           <PolygonFinancer
-            bgUrl="bg-[url('/home-page/polygon-financer/polygon-financer-pink.svg')]"
+            bgUrl="bg-[url('/candidate-space/polygon-financer/polygon-financer-pink.svg')]"
             label="Financements complémentaires au CPF (employeurs, régions ou France Travail, autres)"
           />
         </div>
