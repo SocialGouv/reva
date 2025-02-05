@@ -108,7 +108,6 @@ export const AutocompleteDsfr = ({
       value: searchText,
     };
     if (selectedOption) {
-      console.log("option selected", selectedCertification);
       handleOptionSelection(selectedCertification);
       return;
     }
@@ -129,7 +128,6 @@ export const AutocompleteDsfr = ({
           allowEmptySearch
           className="w-full"
           onButtonClick={() => {
-            console.log("button click");
             handleSubmit(searchText);
           }}
           renderInput={({ className, id, type }) => {
