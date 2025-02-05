@@ -38,9 +38,6 @@ export const AutocompleteDsfr = ({
   const [displayOptions, setDisplayOptions] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [debouncedSearchText] = useDebounce(searchText, 500);
-  console.log("searchText", searchText);
-  console.log("defaultValue", defaultValue);
-  console.log("searchText || defaultValue", searchText || defaultValue);
 
   const updateSearchText = async (newSearchText: string) => {
     setSearchText(newSearchText);
@@ -96,7 +93,6 @@ export const AutocompleteDsfr = ({
       if (debouncedSearchText) {
         const newOptions = await searchFunction(debouncedSearchText);
         setOptions(newOptions);
-        // setSelectedOption(newOptions[0] || null);
         setStatus(newOptions.length ? "GOT_RESULTS" : "GOT_NO_RESULT");
       } else {
         setOptions([]);
