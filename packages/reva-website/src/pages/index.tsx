@@ -3,7 +3,6 @@ import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
 import { ReactNode } from "react";
-import BackGroundUnions from "@/components/home-page/BackGroundUnions";
 import { CandidateSpaceHomePageContent } from "@/components/candidate-space/CandidateSpaceHomePageContent";
 
 const HomeContainer = ({ children }: { children: ReactNode }) => (
@@ -32,7 +31,6 @@ const HomePage = () => {
           content="Découvrez la version beta du portail officiel du service public de la Validation des Acquis de L'Expérience."
         />
       </Head>
-      <BackGroundUnions />
       <Notice
         title={
           candidacyCreationDisabled
@@ -40,7 +38,6 @@ const HomePage = () => {
             : "Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement."
         }
       />
-
       <HomeContainer>
         {isFeatureActive("HOMEPAGE_V2") ? (
           <HomePageContent />

@@ -4,7 +4,7 @@ import Head from "next/head";
 
 const CandidateSpaceHomePage = () => {
   return (
-    <MainLayout className=" py-20  gap-32 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
+    <MainLayout className="w-full mx-auto relative flex flex-col items-center lg:pb-32">
       <Head>
         <title>
           France VAE | L’outil qui facilite le suivi des candidats à la VAE
