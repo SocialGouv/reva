@@ -1,5 +1,4 @@
 import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
-import { isUUID } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -29,20 +28,18 @@ const FaitesValiderVosCompetencesParUnDiplome = () => {
           Recherchez parmi les 24 diplômes disponibles sur France VAE
         </h2>
         <CertificateAutocompleteDsfr
-          onSubmit={({ label, value }) => {
-            const certificationId = isUUID(value) ? value : null;
+          big
+          onSubmit={({ label }) => {
             router.push({
-              pathname: "inscription-candidat",
+              pathname: "/espace-candidat/recherche",
               query: {
-                certificationId,
                 searchText: label,
               },
             });
           }}
           onOptionSelection={(o) =>
             router.push({
-              pathname: "inscription-candidat",
-              query: { certificationId: o.value },
+              pathname: `/certifications/${o.value}`,
             })
           }
         />

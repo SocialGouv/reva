@@ -1,4 +1,4 @@
-import Input from "@codegouvfr/react-dsfr/Input";
+import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
@@ -13,6 +13,8 @@ export const AutocompleteDsfr = ({
   onSubmit,
   defaultLabel,
   emptyLabel,
+  big = false,
+  defaultValue = "",
 }: {
   searchFunction: (searchText: string) => Promise<AutocompleteOption[]>;
   onOptionSelection: (selectedOption: AutocompleteOption) => void;
@@ -20,8 +22,12 @@ export const AutocompleteDsfr = ({
   onSubmit?: (selectedOption: AutocompleteOption) => void;
   defaultLabel?: string;
   emptyLabel?: string;
+  big?: boolean;
+  defaultValue?: string;
 }) => {
   const [options, setOptions] = useState<AutocompleteOption[]>([]);
+
+  const [, setInputElement] = useState<HTMLInputElement | null>(null);
 
   const [selectedOption, setSelectedOption] =
     useState<AutocompleteOption | null>(null);
@@ -32,6 +38,9 @@ export const AutocompleteDsfr = ({
   const [displayOptions, setDisplayOptions] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [debouncedSearchText] = useDebounce(searchText, 500);
+  console.log("searchText", searchText);
+  console.log("defaultValue", defaultValue);
+  console.log("searchText || defaultValue", searchText || defaultValue);
 
   const updateSearchText = async (newSearchText: string) => {
     setSearchText(newSearchText);
@@ -40,6 +49,7 @@ export const AutocompleteDsfr = ({
   const handleKeyDownOnOptions = (e: React.KeyboardEvent) => {
     switch (e.key) {
       case "Enter":
+        console.log("enter key down");
         if (!searchText) return;
         e.preventDefault();
         handleSubmit(searchText);
@@ -86,7 +96,7 @@ export const AutocompleteDsfr = ({
       if (debouncedSearchText) {
         const newOptions = await searchFunction(debouncedSearchText);
         setOptions(newOptions);
-        setSelectedOption(newOptions[0] || null);
+        // setSelectedOption(newOptions[0] || null);
         setStatus(newOptions.length ? "GOT_RESULTS" : "GOT_NO_RESULT");
       } else {
         setOptions([]);
@@ -101,6 +111,11 @@ export const AutocompleteDsfr = ({
       label: searchText,
       value: searchText,
     };
+    if (selectedOption) {
+      console.log("option selected", selectedCertification);
+      handleOptionSelection(selectedCertification);
+      return;
+    }
     setOptions([]);
     setSelectedOption(null);
     onSubmit?.(selectedCertification);
@@ -108,64 +123,79 @@ export const AutocompleteDsfr = ({
 
   return (
     <>
-      <span>
+      <p className="mb-2">
         {defaultLabel ??
           "Indiquez ci-dessous la certification ou le diplôme souhaité :"}
-      </span>
+      </p>
       <div data-testid="autocomplete" className="relative">
-        <Input
-          nativeInputProps={{
-            onKeyDown: handleKeyDownOnOptions,
-            onChange: (event) => updateSearchText(event.target.value),
-            placeholder,
-            value: searchText,
-            onBlur: () => {
-              setTimeout(() => setDisplayOptions(false), 200);
-            },
-            onFocus: () => setDisplayOptions(true),
-            onClick: () => setDisplayOptions(true),
+        <SearchBar
+          big={big}
+          allowEmptySearch
+          className="w-full"
+          onButtonClick={() => {
+            console.log("button click");
+            handleSubmit(searchText);
           }}
-          label=""
-          hideLabel
-          data-testid="autocomplete-input"
-          iconId="fr-icon-award-fill"
-        />
-        {status === "GOT_RESULTS" && displayOptions && (
-          <div
-            data-testid="autocomplete-options"
-            className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[42px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
-          >
-            {options.map((option) => {
-              const isSelected = selectedOption?.value === option.value;
-              return (
-                <div
-                  key={option.value}
-                  onClick={() => handleOptionSelection(option)}
-                  className={`whitespace-normal cursor-pointer select-none py-2 ${
-                    isSelected ? "bg-dsfrGray-contrast" : ""
-                  }`}
-                  onMouseOver={() => setSelectedOption(option)}
-                >
-                  {option.label}
-                </div>
-              );
-            })}
-          </div>
-        )}
+          renderInput={({ className, id, type }) => {
+            return (
+              <>
+                <input
+                  ref={setInputElement}
+                  onKeyDown={handleKeyDownOnOptions}
+                  onChange={(event) => updateSearchText(event.target.value)}
+                  placeholder={placeholder}
+                  value={searchText || defaultValue}
+                  onBlur={() => {
+                    setTimeout(() => setDisplayOptions(false), 200);
+                  }}
+                  onFocus={() => setDisplayOptions(true)}
+                  onClick={() => setDisplayOptions(true)}
+                  id={id}
+                  type={type}
+                  className={className}
+                  data-testid="autocomplete-input"
+                />
+                {status === "GOT_RESULTS" && displayOptions && (
+                  <div
+                    data-testid="autocomplete-options"
+                    onMouseOut={() => setSelectedOption(null)}
+                    className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[50px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
+                  >
+                    {options.map((option) => {
+                      const isSelected = selectedOption?.value === option.value;
+                      return (
+                        <div
+                          key={option.value}
+                          onClick={() => handleOptionSelection(option)}
+                          className={`whitespace-normal cursor-pointer select-none py-2 ${
+                            isSelected ? "bg-dsfrGray-contrast" : ""
+                          }`}
+                          onMouseOver={() => setSelectedOption(option)}
+                        >
+                          {option.label}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
 
-        {status === "GOT_NO_RESULT" && (
-          <div
-            data-testid="autocomplete-options"
-            className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[42px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
-          >
-            <div
-              key="empty-label"
-              className="whitespace-normal cursor-default select-none py"
-            >
-              {emptyLabel}
-            </div>
-          </div>
-        )}
+                {status === "GOT_NO_RESULT" && (
+                  <div
+                    data-testid="autocomplete-options"
+                    className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[50px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
+                  >
+                    <div
+                      key="empty-label"
+                      className="whitespace-normal cursor-default select-none py"
+                    >
+                      {emptyLabel}
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          }}
+        />
       </div>
     </>
   );
