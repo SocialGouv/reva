@@ -156,8 +156,10 @@ export default function CaduciteContestationPage() {
             e.preventDefault();
             handleReset();
           }}
+          data-test="caducite-contestation-form"
         >
           <RadioButtons
+            data-test="caducite-contestation-decision-radio-buttons"
             legend=""
             state={
               errors.certificationAuthorityContestationDecision
