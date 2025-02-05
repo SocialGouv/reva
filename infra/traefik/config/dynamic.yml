@@ -38,7 +38,7 @@ http:
         - redirect-reva-candidate
 
     app-candidate-staging:
-      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/candidat`)"
+      rule: "Host(`reva.incubateur.net`) && (Path(`/candidat`) || PathPrefix(`/candidat/`))"
       service: app-candidate-staging
       middlewares:
         - removeHeader
@@ -118,7 +118,7 @@ http:
         - redirect-reva-candidate
 
     app-candidate-production-vae-gouv-fr:
-      rule: "Host(`vae.gouv.fr`) && PathPrefix(`/candidat`)"
+      rule: "Host(`vae.gouv.fr`)  && (Path(`/candidat`) || PathPrefix(`/candidat/`))"
       service: app-candidate-production
       middlewares:
         - removeHeader
