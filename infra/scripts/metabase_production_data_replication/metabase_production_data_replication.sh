@@ -37,6 +37,19 @@ psql --dbname "${DATABASE_URL}" -c "DROP SCHEMA public CASCADE"
 echo "Creating public schema"
 psql --dbname "${DATABASE_URL}" -c "CREATE SCHEMA public"
 
+echo "Dropping data_level_2 schema"
+psql --dbname "${DATABASE_URL}" -c "DROP SCHEMA data_level_2 CASCADE"
+
+echo "Creating data_level_2 schema"
+psql --dbname "${DATABASE_URL}" -c "CREATE SCHEMA data_level_2"
+
+echo "Dropping data_level_3 schema"
+psql --dbname "${DATABASE_URL}" -c "DROP SCHEMA data_level_3 CASCADE"
+
+echo "Creating data_level_3 schema"
+psql --dbname "${DATABASE_URL}" -c "CREATE SCHEMA data_level_3"
+
+
 
 
 # Restore the data:
@@ -45,10 +58,19 @@ pg_restore --clean --if-exists --no-owner --no-privileges --no-comments \
 --dbname "${DATABASE_URL}" "/app/${backup_file_name}"
 
 echo "Running post import sql scripts"
-psql --dbname "${DATABASE_URL}" -a -f post_dump_restore_scripts/create_metabase_specific_tables.sql
+psql --dbname "${DATABASE_URL}" -a -f post_dump_restore_scripts/schema2_create_metabase_specific_tables.sql
+psql --dbname "${DATABASE_URL}" -a -f post_dump_restore_scripts/schema3_create_metabase_specific_tables.sql
+
 
 echo "Granting access rights to metabase user"
 psql --dbname "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA public TO ${METABASE_DB_USER}"
 psql --dbname "${DATABASE_URL}" -c "GRANT SELECT on ALL TABLES IN SCHEMA public TO ${METABASE_DB_USER}"
+
+psql --dbname "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA data_level_2 TO ${METABASE_DB_USER}"
+psql --dbname "${DATABASE_URL}" -c "GRANT SELECT on ALL TABLES IN SCHEMA data_level_2 TO ${METABASE_DB_USER}"
+
+psql --dbname "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA data_level_3 TO ${METABASE_DB_USER}"
+psql --dbname "${DATABASE_URL}" -c "GRANT SELECT on ALL TABLES IN SCHEMA data_level_3 TO ${METABASE_DB_USER}"
+
 
 echo 'Metabase production data replication script finished'
