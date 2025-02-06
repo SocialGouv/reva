@@ -19,7 +19,7 @@ interface UploadDossierDeValidationBody {
 type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
 
 export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
-  const maxUploadFileSizeInBytes = 15728640;
+  const maxUploadFileSizeInBytes = 10485760;
 
   server.register(fastifyMultipart, {
     attachFieldsToBody: true,
