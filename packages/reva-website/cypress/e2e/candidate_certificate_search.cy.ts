@@ -30,7 +30,7 @@ describe("candidate certificate search", () => {
     cy.get('[data-testid="autocomplete-options"]')
       .children("div")
       .eq(0)
-      .should("have.text", "BTS Chaudronnier");
+      .should("have.text", "BTS ChaudronnierRNCP 13125 VAE en autonomie");
   });
 
   it("should go to the next page when a certificate is found and clicked on", () => {
