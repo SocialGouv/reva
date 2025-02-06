@@ -59,13 +59,13 @@ export const submitCandidacy = async ({
     );
   }
   await sendNewCandidacyEmail({
-    email: organism.emailContact ?? organism.contactAdministrativeEmail,
+    email: organism.emailContact || organism.contactAdministrativeEmail,
     candidacyId: candidacy.id,
   });
   await sendConfirmationCandidacySubmissionEmail({
     email: candidate.email as string,
     organismName: organism.label,
-    organismEmail: organism.emailContact ?? organism.contactAdministrativeEmail,
+    organismEmail: organism.emailContact || organism.contactAdministrativeEmail,
     candidacyFundedByFranceVae: candidacy.financeModule !== "hors_plateforme",
   });
   return updatedCandidacy;

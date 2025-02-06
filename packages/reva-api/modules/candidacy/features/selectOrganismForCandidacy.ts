@@ -118,7 +118,8 @@ export const selectOrganismForCandidacy = async ({
       });
 
       await sendNewOrganismCandidateNewCandidacyEmail({
-        email: newOrganism.contactAdministrativeEmail,
+        email:
+          newOrganism.emailContact || newOrganism.contactAdministrativeEmail,
         candidacyId: candidacyId,
       });
     }
