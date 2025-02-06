@@ -270,7 +270,7 @@ const PageContent = ({
           status="TO_COMPLETE"
         >
           <div className="flex flex-col gap-4">
-            <h3 className="mb-0">
+            <h3 className="m-0">
               Descriptif de la certification dans France compétences
             </h3>
             <Info title="Intitulé">{certification.label}</Info>
@@ -289,7 +289,7 @@ const PageContent = ({
               </Info>
             </div>
 
-            <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
+            <h3 className="m-0">Domaines et sous-domaines du Formacode </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {certification.domains.length == 0 && (
@@ -327,9 +327,9 @@ const PageContent = ({
 
         <form id="CertificationDescriptionForm" onSubmit={handleFormSubmit}>
           <div className="flex flex-col gap-8">
-            <h2 className="mb-0">Informations complémentaires</h2>
+            <h2 className="m-0">Informations complémentaires</h2>
             <RadioButtons
-              className="mb-0"
+              className="m-0"
               legend="Nombre de langues vivantes :"
               orientation="horizontal"
               small
@@ -360,31 +360,31 @@ const PageContent = ({
               ]}
             />
 
-            <h2 className="mb-0">Jury</h2>
+            <div className="flex flex-col gap-6">
+              <h3 className="m-0">Jury</h3>
+              <div className="flex flex-col gap-4">
+                <h4 className="m-0">Types d’épreuves</h4>
+                <Checkbox
+                  className="m-0 [&_.fr-label]:p-2"
+                  small
+                  options={juryModalities.map((modality, index) => ({
+                    label: modality.label,
+                    nativeInputProps: {
+                      ...register(`juryModalities.${index}.checked`),
+                    },
+                  }))}
+                  state={errors.juryModalities ? "error" : "default"}
+                  stateRelatedMessage={
+                    errors.juryModalities
+                      ? "Veuillez séléctionner au moins une option"
+                      : undefined
+                  }
+                />
 
-            <div className="grid grid-cols-3">
-              <Checkbox
-                className="col-span-1 mb-0 [&_.fr-label]:p-2"
-                legend="Modalités d’évaluation :"
-                small
-                options={juryModalities.map((modality, index) => ({
-                  label: modality.label,
-                  nativeInputProps: {
-                    ...register(`juryModalities.${index}.checked`),
-                  },
-                }))}
-                state={errors.juryModalities ? "error" : "default"}
-                stateRelatedMessage={
-                  errors.juryModalities
-                    ? "Veuillez séléctionner au moins une option"
-                    : undefined
-                }
-              />
-
-              <div className="col-span-2 flex flex-col flex-1 justify-between">
+                <h4 className="m-0">Modalités de passage</h4>
                 <div className="flex flex-row gap-4">
                   <Select
-                    className="flex-1"
+                    className="m-0"
                     label="Fréquence des jurys :"
                     nativeSelectProps={{
                       defaultValue: "",
@@ -409,7 +409,7 @@ const PageContent = ({
                   </Select>
 
                   <Input
-                    className="flex-1"
+                    className="lg:min-w-96"
                     data-test="certification-description-jury_frequency_other-input"
                     label="Autre fréquence :"
                     disabled={juryFrequency != "Autre"}
@@ -432,41 +432,44 @@ const PageContent = ({
               </div>
             </div>
 
-            <h2 className="mb-0">
-              Visibilité de la certification sur la plateforme
-            </h2>
-            <p>
-              Si nous avons pu récupérer l’information, les champs ci-dessous
-              sont automatiquement remplis avec les dates de publication et
-              d’échéance fournies par France compétences. Si vous souhaitez
-              modifier ces dates et changer la visibilité de la certification
-              sur la plateforme, vous le pouvez.
-            </p>
+            <div className="flex flex-col gap-6">
+              <h3 className="m-0">
+                Visibilité de la certification sur la plateforme
+              </h3>
+              <p className="m-0">
+                Si nous avons pu récupérer l’information, les champs ci-dessous
+                sont automatiquement remplis avec les dates de publication et
+                d’échéance fournies par France compétences. Si vous souhaitez
+                modifier ces dates et changer la visibilité de la certification
+                sur la plateforme, vous le pouvez.
+              </p>
 
-            <div className="flex flex-row gap-6">
-              <Input
-                label="À partir de quand sera-t-elle visible ?"
-                hintText="Les candidats pourront la voir et la choisir."
-                nativeInputProps={{
-                  ...register("startOfVisibility"),
-                  type: "date",
-                }}
-                state={errors.startOfVisibility ? "error" : "default"}
-                stateRelatedMessage={errors.startOfVisibility?.message}
-              />
+              <div className="flex flex-row gap-6">
+                <Input
+                  label="À partir de quand sera-t-elle visible ?"
+                  hintText="Les candidats pourront la voir et la choisir."
+                  nativeInputProps={{
+                    ...register("startOfVisibility"),
+                    type: "date",
+                  }}
+                  state={errors.startOfVisibility ? "error" : "default"}
+                  stateRelatedMessage={errors.startOfVisibility?.message}
+                />
 
-              <Input
-                label="Jusqu'à quand sera-t-elle visible ?"
-                hintText="Max. 4 à 5 mois avant le dernier jury programmé. "
-                nativeInputProps={{
-                  ...register("endOfVisibility"),
-                  type: "date",
-                }}
-                state={errors.endOfVisibility ? "error" : "default"}
-                stateRelatedMessage={errors.endOfVisibility?.message}
-              />
+                <Input
+                  label="Jusqu'à quand sera-t-elle visible ?"
+                  hintText="Max. 4 à 5 mois avant le dernier jury programmé. "
+                  nativeInputProps={{
+                    ...register("endOfVisibility"),
+                    type: "date",
+                  }}
+                  state={errors.endOfVisibility ? "error" : "default"}
+                  stateRelatedMessage={errors.endOfVisibility?.message}
+                />
+              </div>
             </div>
           </div>
+
           <FormButtons
             backUrl={`/responsable-certifications/certifications/${certification.id}`}
             formState={{ isDirty, isSubmitting }}
