@@ -23,6 +23,7 @@ export const stubQuery = (
 ) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     fixture && req.reply({ statusCode, fixture });
   }
 };
@@ -36,6 +37,7 @@ export const stubMutation = (
 ) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     fixture && req.reply({ statusCode, fixture });
   }
 };
