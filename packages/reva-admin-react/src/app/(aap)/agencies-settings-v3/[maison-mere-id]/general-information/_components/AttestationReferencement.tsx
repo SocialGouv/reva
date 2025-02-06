@@ -1,5 +1,7 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { addMonths, format } from "date-fns";
+import { fr } from "date-fns/locale";
 import jsPDF from "jspdf";
 
 const generatePDF = async ({
@@ -117,19 +119,9 @@ const generatePDF = async ({
       });
     }
 
-    const currentDate = new Date().toLocaleDateString("fr-FR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
-    const futureDate = new Date(
-      new Date().setMonth(new Date().getMonth() + 3),
-    ).toLocaleDateString("fr-FR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    const now = new Date();
+    const currentDate = format(now, "d MMMM yyyy", { locale: fr });
+    const futureDate = format(addMonths(now, 3), "d MMMM yyyy", { locale: fr });
 
     pdf.setTextColor(0, 0, 0);
     pdf.setFont("arial", "normal");
