@@ -12,6 +12,8 @@ const searchCertificationsQuery = graphql(`
       rows {
         id
         label
+        isAapAvailable
+        codeRncp
       }
     }
   }
@@ -43,6 +45,8 @@ export const CertificateAutocompleteDsfr = ({
         ).searchCertificationsForCandidate.rows.map((r) => ({
           value: r.id,
           label: r.label,
+          codeRncp: r.codeRncp,
+          isAapAvailable: r.isAapAvailable,
         }))
       }
       emptyLabel="Aucune certification ou diplôme trouvés. Vérifiez l'orthographe et relancez votre recherche"

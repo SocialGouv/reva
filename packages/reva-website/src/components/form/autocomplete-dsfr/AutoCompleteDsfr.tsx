@@ -1,10 +1,14 @@
 import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
+import Tag from "@codegouvfr/react-dsfr/Tag";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 export interface AutocompleteOption {
   label: string;
   value: string;
+  codeRncp?: string;
+  isAapAvailable?: boolean;
 }
 export const AutocompleteDsfr = ({
   searchFunction,
@@ -157,19 +161,59 @@ export const AutocompleteDsfr = ({
                   >
                     {options.map((option) => {
                       const isSelected = selectedOption?.value === option.value;
+                      const optionsText = option.label.replace(
+                        new RegExp(searchText, "gi"),
+                        (match) => `<b>${match}</b>`,
+                      );
                       return (
                         <div
                           key={option.value}
                           onClick={() => handleOptionSelection(option)}
-                          className={`whitespace-normal cursor-pointer select-none py-2 ${
+                          className={`flex whitespace-normal cursor-pointer select-none py-2 ${
                             isSelected ? "bg-dsfrGray-contrast" : ""
                           }`}
                           onMouseOver={() => setSelectedOption(option)}
                         >
-                          {option.label}
+                          <span
+                            className=" fr-icon--sm fr-icon-file-text-line mr-3 px-1 bg-[#f6f6f6] self-center"
+                            aria-hidden="true"
+                          />
+                          <div>
+                            <span
+                              dangerouslySetInnerHTML={{ __html: optionsText }}
+                            />
+                            <br />
+                            <span className="text-dsfrGray-mentionGrey text-xs">
+                              RNCP {option.codeRncp}
+                            </span>
+                          </div>
+                          <div className="ml-auto">
+                            <Tag small>
+                              {option.isAapAvailable
+                                ? "VAE en autonomie ou accompagnée"
+                                : "VAE en autonomie"}
+                            </Tag>
+                          </div>
                         </div>
                       );
                     })}
+                    <div className="flex gap-3 border-t border-t-dsfrGray-contrast mt-1 pt-3 pb-2">
+                      <span
+                        className=" fr-icon--sm fr-icon-search-line px-1 bg-[#f6f6f6]"
+                        aria-hidden="true"
+                      />
+                      <b>{searchText}</b>{" "}
+                      <Link
+                        className="text-dsfrBlue-franceSun"
+                        href={{
+                          pathname: "/espace-candidat/recherche",
+                          query: { searchText },
+                        }}
+                      >
+                        Voir tous les résultats{" "}
+                        <span className="fr-icon--sm fr-icon-arrow-right-line" />
+                      </Link>
+                    </div>
                   </div>
                 )}
 
