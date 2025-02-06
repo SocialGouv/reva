@@ -19,6 +19,7 @@ import {
   CandidateTypology,
   CandidateTypologySelect,
 } from "../candidate-typology-select/CandidateTypologySelect";
+import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 const getDepartmentsQuery = graphql(`
   query getDepartments {
@@ -51,8 +52,10 @@ const zodSchema = z.object({
 export type CandidateRegistrationFormSchema = z.infer<typeof zodSchema>;
 
 export const CandidateRegistrationForm = ({
+  typeAccompagnement,
   onSubmit,
 }: {
+  typeAccompagnement?: TypeAccompagnement;
   onSubmit(form: CandidateRegistrationFormSchema): void;
 }) => {
   const { isFeatureActive } = useFeatureflipping();
@@ -84,6 +87,9 @@ export const CandidateRegistrationForm = ({
     setError,
   } = useForm<CandidateRegistrationFormSchema>({
     resolver: zodResolver(zodSchema),
+    defaultValues: {
+      typeAccompagnement,
+    },
   });
 
   const departmentIdController = useController({
@@ -124,6 +130,7 @@ export const CandidateRegistrationForm = ({
             data-testid="candidate-modalite-parcours-radio-buttons"
             className="!inline"
             legend="Que souhaitez-vous faire pour ce parcours ? "
+            disabled={!!typeAccompagnement}
             options={[
               {
                 label: "Je souhaite réaliser ma VAE avec un accompagnateur",

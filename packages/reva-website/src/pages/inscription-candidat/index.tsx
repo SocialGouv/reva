@@ -25,6 +25,7 @@ const getCertificationQuery = graphql(`
       label
       codeRncp
       typeDiplome
+      isAapAvailable
     }
   }
 `);
@@ -41,7 +42,7 @@ const OrientationCandidatPage = () => {
 
   const [certification, setCertification] = useState<Pick<
     Certification,
-    "id" | "label" | "codeRncp" | "typeDiplome"
+    "id" | "label" | "codeRncp" | "typeDiplome" | "isAapAvailable"
   > | null>(null);
 
   const defaultAutocompleteLabel = certification
@@ -151,7 +152,12 @@ const OrientationCandidatPage = () => {
                     }
                   />
                 </div>
-                <CandidateRegistrationForm onSubmit={handleFormSubmit} />
+                <CandidateRegistrationForm
+                  typeAccompagnement={
+                    !certification.isAapAvailable ? "AUTONOME" : undefined
+                  }
+                  onSubmit={handleFormSubmit}
+                />
               </div>
             )}
             {!certification && (
