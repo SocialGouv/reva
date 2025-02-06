@@ -191,8 +191,6 @@ model Candidacy {
   additionalHourCount                        Int?                                  @map("additional_hour_count")
   candidate                                  Candidate?                            @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   candidateId                                String?                               @map("candidate_id") @db.Uuid
-  department                                 Department?                           @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-  departmentId                               String?                               @map("department_id") @db.Uuid
   candidacyDropOut                           CandidacyDropOut?                     @relation()
   reorientationReason                        ReorientationReason?                  @relation(fields: [reorientationReasonId], references: [id], onDelete: Cascade)
   reorientationReasonId                      String?                               @map("reorientation_reason_id") @db.Uuid
@@ -226,7 +224,6 @@ model Candidacy {
 
   @@index([organismId])
   @@index([candidateId])
-  @@index([departmentId])
   @@index([certificationId])
   @@map("candidacy")
 }
@@ -398,7 +395,6 @@ model Department {
   code                                           String                                           @unique @db.VarChar(5)
   region                                         Region                                           @relation(fields: [regionId], references: [id])
   regionId                                       String                                           @map("region_id") @db.Uuid
-  candidacies                                    Candidacy[]
   createdAt                                      DateTime                                         @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                      DateTime?                                        @map("updated_at") @db.Timestamptz(6)
   Candidate                                      Candidate[]
