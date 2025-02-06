@@ -26,6 +26,7 @@ export const validateCertification = async ({
     certification.juryModalities.length > 0 &&
     ((certification.juryFrequency && certification.juryFrequency?.length > 0) ||
       certification.juryFrequencyOther) &&
+    typeof certification.juryEstimatedCost === "number" &&
     certification.availableAt &&
     certification.expiresAt;
 

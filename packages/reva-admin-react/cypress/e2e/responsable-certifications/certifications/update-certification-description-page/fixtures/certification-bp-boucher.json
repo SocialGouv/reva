@@ -16,6 +16,7 @@
       "juryFrequency": null,
       "juryFrequencyOther": null,
       "juryPlace": null,
+      "juryEstimatedCost": null,
       "degree": {
         "id": "0ee2104b-9bdc-4e44-b232-123cf2e3b9a1",
         "label": "Niveau 4 : Baccalauréat"

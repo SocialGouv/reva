@@ -53,6 +53,7 @@ function interceptCertification({
                     juryFrequency: "MONTHLY",
                     juryFrequencyOther: null,
                     juryPlace: null,
+                    juryEstimatedCost: 10.0,
                   }
                 : {})(),
             additionalInfo: withadditionalInfo

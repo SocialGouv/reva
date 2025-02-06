@@ -23,6 +23,7 @@ const getCertificationQuery = graphql(`
       juryFrequency
       juryFrequencyOther
       juryPlace
+      juryEstimatedCost
       additionalInfo {
         linkToReferential
         linkToCorrespondenceTable
