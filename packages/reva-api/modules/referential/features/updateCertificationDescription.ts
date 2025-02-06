@@ -5,7 +5,6 @@ import { prismaClient } from "../../../prisma/client";
 
 export const updateCertificationDescription = async ({
   certificationId,
-  languages,
   juryModalities,
   juryFrequency,
   juryFrequencyOther,
@@ -47,7 +46,6 @@ export const updateCertificationDescription = async ({
   return await prismaClient.certification.update({
     where: { id: certificationId },
     data: {
-      languages,
       juryModalities,
       juryFrequency,
       juryFrequencyOther,

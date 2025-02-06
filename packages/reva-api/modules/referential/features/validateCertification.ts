@@ -23,7 +23,6 @@ export const validateCertification = async ({
   }
 
   const isDescriptionComplete =
-    typeof certification.languages === "number" &&
     certification.juryModalities.length > 0 &&
     ((certification.juryFrequency && certification.juryFrequency?.length > 0) ||
       certification.juryFrequencyOther) &&

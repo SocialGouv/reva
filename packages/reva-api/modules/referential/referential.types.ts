@@ -111,7 +111,6 @@ export interface UpdateCertificationPrerequisitesInput {
 
 export interface UpdateCertificationDescriptionInput {
   certificationId: string;
-  languages: number;
   juryModalities: CertificationJuryModality[];
   juryFrequency?: CertificationJuryFrequency;
   juryFrequencyOther?: string;

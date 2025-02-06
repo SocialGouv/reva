@@ -15,7 +15,6 @@ import { useUpdateCertificationDescriptionPage } from "./updateCertificationDesc
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import Notice from "@codegouvfr/react-dsfr/Notice";
-import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -62,9 +61,6 @@ const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
 
 const zodSchema = z
   .object({
-    languages: z.enum(["Aucune", "1", "2"], {
-      invalid_type_error: "Veuillez séléctionner une option",
-    }),
     juryModalities: z
       .object({ id: z.string(), label: z.string(), checked: z.boolean() })
       .array(),
@@ -183,13 +179,6 @@ const PageContent = ({
   } = useForm<CompanySiretStepFormSchema>({
     resolver: zodResolver(zodSchema),
     defaultValues: {
-      languages:
-        typeof certification.languages === "number"
-          ? certification.languages > 0
-            ? (`${certification.languages}` as "1" | "2")
-            : "Aucune"
-          : undefined,
-
       juryModalities: EvaluationModalities.map((modality) => ({
         id: modality.id,
         label: modality.label,
@@ -231,8 +220,6 @@ const PageContent = ({
 
         await updateCertificationDescription.mutateAsync({
           certificationId: certification.id,
-          languages:
-            data.languages == "Aucune" ? 0 : parseInt(data.languages, 10),
           juryModalities: data.juryModalities
             .filter((modality) => modality.checked)
             .map((modality) => modality.id) as CertificationJuryModality[],
@@ -332,38 +319,6 @@ const PageContent = ({
         <form id="CertificationDescriptionForm" onSubmit={handleFormSubmit}>
           <div className="flex flex-col gap-8">
             <h2 className="m-0">Informations complémentaires</h2>
-            <RadioButtons
-              className="m-0"
-              legend="Nombre de langues vivantes :"
-              orientation="horizontal"
-              small
-              state={errors.languages ? "error" : "default"}
-              stateRelatedMessage={errors.languages?.message}
-              options={[
-                {
-                  label: "Aucune",
-                  nativeInputProps: {
-                    value: "Aucune",
-                    ...register("languages"),
-                  },
-                },
-                {
-                  label: "1",
-                  nativeInputProps: {
-                    value: "1",
-                    ...register("languages"),
-                  },
-                },
-                {
-                  label: "2",
-                  nativeInputProps: {
-                    value: "2",
-                    ...register("languages"),
-                  },
-                },
-              ]}
-            />
-
             <div className="flex flex-col gap-6">
               <h3 className="m-0">Jury</h3>
               <div className="flex flex-col gap-4">

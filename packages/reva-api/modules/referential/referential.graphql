@@ -49,7 +49,6 @@ type Certification {
   domains: [Domain!]!
   fcPrerequisites: String
   prerequisites: [CertificationPrerequisite!]!
-  languages: Int
   juryModalities: [CertificationJuryModality!]!
   juryFrequency: CertificationJuryFrequency
   juryFrequencyOther: String
@@ -395,7 +394,6 @@ input CertificationPrerequisiteInput {
 
 input UpdateCertificationDescriptionInput {
   certificationId: ID!
-  languages: Int!
   juryModalities: [CertificationJuryModality!]!
   juryFrequency: CertificationJuryFrequency
   juryFrequencyOther: String

@@ -16,7 +16,6 @@ const getCertificationQuery = graphql(`
       availableAt
       expiresAt
       typeDiplome
-      languages
       juryModalities
       juryFrequency
       juryFrequencyOther
