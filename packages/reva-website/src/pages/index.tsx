@@ -51,7 +51,12 @@ const HomePage = () => {
   );
 };
 
-const HomePageContent = () => <HeroSection />;
+const HomePageContent = () => (
+  <>
+    <HeroSection />
+    <QuiEtesVousSection />
+  </>
+);
 
 const HeroSection = () => (
   <section className="w-full relative md:py-16 md:pl-[120px] md:bg-[url('/home-page/homepage_hero.png')] bg-cover">
@@ -81,6 +86,118 @@ const HeroSection = () => (
       </Button>
     </div>
   </section>
+);
+
+const QuiEtesVousSection = () => (
+  <section className="w-full relative px-6 py-8 md:pt-12 md:pb-20 md:pl-[120px] bg-[#cedff4]">
+    <h2 className="text-[22px] md:text-[32px] text-center md:text-left mb-8">
+      Qui êtes-vous ?
+    </h2>
+    <div className="flex flex-col md:flex-row gap-8 ">
+      <QuiEtesVousCard
+        title="Candidat"
+        titleIcon={
+          <Image
+            src="/home-page/young_man_dc.png"
+            alt="visage jeune homme souriant"
+            width={40}
+            height={47}
+          />
+        }
+        subtitle="Transformez votre expérience professionnelle en diplôme reconnu !"
+        description="Construisez votre dossier pas à pas et bénéficiez d'un accompagnement pour valoriser vos compétences."
+      >
+        <Button
+          priority="secondary"
+          iconId="fr-icon-arrow-right-line"
+          iconPosition="right"
+          className="mt-auto"
+          linkProps={{
+            href: "https://vae.gouv.fr/espace-candidat/",
+            target: "_self",
+          }}
+        >
+          Faire un parcours VAE
+        </Button>
+      </QuiEtesVousCard>
+      <QuiEtesVousCard
+        title="Accompagnateurs"
+        titleIcon={
+          <Image
+            src="/home-page/young_woman_dc.png"
+            alt="visage jeune homme souriant"
+            width={40}
+            height={47}
+          />
+        }
+        subtitle="Guidez les candidats vers la réussite de leur VAE."
+        description="Accédez à tous les outils nécessaires pour suivre leurs parcours, de l’analyse du projet à la préparation du jury."
+      >
+        <Button
+          priority="secondary"
+          iconId="fr-icon-arrow-right-line"
+          iconPosition="right"
+          className="mt-auto"
+          linkProps={{
+            href: "https://vae.gouv.fr/espace-professionnel/",
+            target: "_self",
+          }}
+        >
+          Accompagner les candidats
+        </Button>
+      </QuiEtesVousCard>
+      <QuiEtesVousCard
+        title="Certificateur"
+        titleIcon={
+          <Image
+            src="/home-page/young_man_dc_2.png"
+            alt="visage jeune homme souriant"
+            width={40}
+            height={47}
+          />
+        }
+        subtitle="Simplifiez la gestion des certifications et des candidatures."
+        description="Pilotez votre activité de certificateur en toute autonomie et collaborez efficacement avec les accompagnateur."
+      >
+        <Button
+          priority="secondary"
+          iconId="fr-icon-arrow-right-line"
+          iconPosition="right"
+          className="mt-auto"
+          disabled
+        >
+          Créer mon espace certificateur
+        </Button>
+        <p className="text-xs text-gray-400 mt-1">
+          Fonctionnalité bientôt disponible.
+        </p>
+      </QuiEtesVousCard>
+    </div>
+  </section>
+);
+
+const QuiEtesVousCard = ({
+  title,
+  titleIcon,
+  subtitle,
+  description,
+  children,
+}: {
+  title: string;
+  titleIcon: ReactNode;
+  subtitle: string;
+  description: string;
+  children?: ReactNode;
+}) => (
+  <div className="w-[312pw] h-[367px] md:w-[379px] md:h-[351px] p-8 pb-10 bg-white flex flex-col">
+    <div className="flex items-center gap-3 mb-3">
+      {titleIcon}
+      <h3 className="mb-0 text-[20px] md:text-[22px]">{title}</h3>
+    </div>
+    <p className="font-bold">{subtitle}</p>
+    <p>{description}</p>
+    {children}
+  </div>
 );
 
 export default HomePage;
