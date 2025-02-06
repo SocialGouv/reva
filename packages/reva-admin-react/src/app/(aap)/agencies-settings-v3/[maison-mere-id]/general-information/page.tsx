@@ -1,6 +1,7 @@
 "use client";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { CompanyBadges } from "@/components/company-preview";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { LegalStatus, MaisonMereAap } from "@/graphql/generated/graphql";
@@ -10,11 +11,16 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { UseFormRegister } from "react-hook-form";
+import { AttestationReferencement } from "./_components/AttestationReferencement";
 import { LegalInformationUpdateBlock } from "./_components/legal-information-update-block/LegalInformationUpdateBlock";
 import { useGeneralInformationPage } from "./generalInformationPage.hook";
 
 const GeneralInformationPage = () => {
   const router = useRouter();
+  const { isFeatureActive } = useFeatureflipping();
+  const isAttestationReferencementActive = isFeatureActive(
+    "attestation_referencement",
+  );
   const {
     maisonMereAAP,
     maisonMereAAPId,
@@ -117,6 +123,12 @@ const GeneralInformationPage = () => {
         pouvez signaler un changement au support si ces informations ne sont
         plus à jour.
       </p>
+      {isAttestationReferencementActive && (
+        <AttestationReferencement
+          raisonSociale={maisonMereAAP.raisonSociale}
+          siret={maisonMereAAP.siret}
+        />
+      )}
       <form
         className="flex flex-col"
         onSubmit={handleFormSubmit}
