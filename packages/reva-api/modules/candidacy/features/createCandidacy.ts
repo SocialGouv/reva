@@ -6,17 +6,14 @@ import { prismaClient } from "../../../prisma/client";
 
 export const createCandidacy = async ({
   candidateId,
-  departmentId,
   typeAccompagnement,
 }: {
   candidateId: string;
-  departmentId: string;
   typeAccompagnement: CandidacyTypeAccompagnement;
 }) => {
   return prismaClient.candidacy.create({
     data: {
       typeAccompagnement,
-      departmentId,
       candidateId,
       admissibility: { create: {} },
       examInfo: { create: {} },
