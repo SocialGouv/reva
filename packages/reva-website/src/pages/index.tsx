@@ -93,7 +93,7 @@ const HeroSection = () => (
 const QuiEtesVousSection = () => (
   <section className="w-full px-6 py-8 md:pt-12 md:pb-20 bg-[#cedff4]">
     <div className="fr-container !p-0">
-      <h2 className="text-[22px] md:text-[32px] text-center md:text-left mb-8">
+      <h2 className="text-[22px] md:text-[32px] mb-8 text-dsfrBlue-franceSun md:text-black">
         Qui êtes-vous ?
       </h2>
       <div className="flex flex-col md:flex-row gap-8 ">
@@ -124,7 +124,7 @@ const QuiEtesVousSection = () => (
           </Button>
         </QuiEtesVousCard>
         <QuiEtesVousCard
-          title="Accompagnateurs"
+          title="Accompagnateur"
           titleIcon={
             <Image
               src="/home-page/young_woman_dc.png"
@@ -196,7 +196,9 @@ const QuiEtesVousCard = ({
   <div className="w-[312pw] h-[367px] md:w-[379px] md:h-[351px] p-8 pb-10 bg-white flex flex-col">
     <div className="flex items-center gap-3 mb-3">
       {titleIcon}
-      <h3 className="mb-0 text-[20px] md:text-[22px]">{title}</h3>
+      <h3 className="mb-0 text-[20px] md:text-[22px] text-dsfrBlue-franceSun md:text-black">
+        {title}
+      </h3>
     </div>
     <p className="font-bold">{subtitle}</p>
     <p>{description}</p>
