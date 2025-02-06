@@ -12,13 +12,14 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import request from "graphql-request";
 import { graphql } from "@/graphql/generated";
+import { GetCertificationForCertificationPageQuery } from "@/graphql/generated/graphql";
 
 import { GRAPHQL_API_URL } from "@/config/config";
 
 import { isUUID } from "@/utils";
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { GetCertificationForCertificationPageQuery } from "@/graphql/generated/graphql";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 
 export default function Page({
   certification,
@@ -63,8 +64,14 @@ export default function Page({
 
           <div className="flex flex-col gap-2">
             <h1 className="m-0">{certification?.label}</h1>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row items-center gap-4">
               <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
+
+              <Tag small>
+                {certification?.isAapAvailable
+                  ? "VAE en autonomie ou accompagnée"
+                  : "VAE en autonomie"}
+              </Tag>
             </div>
           </div>
 
@@ -101,16 +108,15 @@ export default function Page({
                   <ul className="text-lg">
                     <li>Constitution de votre dossier de faisabilité</li>
                     <li>Communication directe avec le certificateur</li>
+                    <li>Recherche de formations complémentaires si besoin</li>
                     <li>Élaboration de votre dossier de validation</li>
                     <li>Auto-préparation à l'entretien avec le jury</li>
-                    <li>Recherche de formations complémentaires si besoin</li>
                   </ul>
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <h3 className="m-0">Financement</h3>
                   <ul className="text-lg">
-                    <li>Financement possible par votre CPF</li>
                     <li>Frais de jury à prévoir</li>
                     <li>Coûts éventuels de formation complémentaire</li>
                   </ul>
@@ -134,59 +140,12 @@ export default function Page({
                       Tutoriel détaillé pour tout comprendre sur le parcours VAE
                       en autonomie
                     </Link>
-                  </div>
-                </div>
-              </div>
-            </Accordion>
-            <Accordion
-              className="[&_div]:pb-0"
-              label="En savoir plus sur le parcours de VAE à réaliser avec un accompagnateur"
-            >
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                  <h2 className="m-0">
-                    Un suivi personnalisé pour réussir votre VAE
-                  </h2>
-                  <ul className="text-lg">
-                    <li>
-                      Accompagnement expert à chaque étape clé du parcours
-                    </li>
-                    <li>Rythme adapté à vos disponibilités et besoins</li>
-                    <li>Optimisation de vos chances de réussite</li>
-                  </ul>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <h3 className="m-0">L’accompagnateur vous guide pour :</h3>
-                  <ul className="text-lg">
-                    <li>Rédiger et transmettre votre dossier de faisabilité</li>
-                    <li>Échanger efficacement avec le certificateur</li>
-                    <li>Construire un dossier de validation solide</li>
-                    <li>Préparer votre entretien avec le jury</li>
-                    <li>
-                      Identifier les formations complémentaires si nécessaire
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <h3 className="m-0">Financement</h3>
-                  <ul className="text-lg">
-                    <li>Financement possible par votre CPF</li>
-                    <li>Prise en charge partielle selon votre situation</li>
-                  </ul>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <h4 className="m-0">Ressources à votre disposition</h4>
-                  <div className="flex flex-col gap-2">
                     <Link
                       className="fr-link mr-auto"
                       target="_blank"
-                      href="https://scribehow.com/shared/Parcours_candidat__vp9k4YzATvmheao9kAoKjw"
+                      href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
                     >
-                      Tutoriel détaillé pour tout comprendre sur le parcours VAE
-                      accompagné
+                      Comment financer son accompagnement VAE ?
                     </Link>
                     <Link
                       className="fr-link mr-auto"
@@ -197,8 +156,80 @@ export default function Page({
                     </Link>
                   </div>
                 </div>
-              </div>{" "}
+              </div>
             </Accordion>
+            {certification?.isAapAvailable && (
+              <Accordion
+                className="[&_div]:pb-0"
+                label="En savoir plus sur le parcours de VAE à réaliser avec un accompagnateur"
+              >
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-2">
+                    <h2 className="m-0">
+                      Un suivi personnalisé pour réussir votre VAE
+                    </h2>
+                    <ul className="text-lg">
+                      <li>
+                        Accompagnement expert à chaque étape clé du parcours
+                      </li>
+                      <li>Rythme adapté à vos disponibilités et besoins</li>
+                      <li>Optimisation de vos chances de réussite</li>
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <h3 className="m-0">L’accompagnateur vous guide pour :</h3>
+                    <ul className="text-lg">
+                      <li>
+                        Rédiger et transmettre votre dossier de faisabilité
+                      </li>
+                      <li>Échanger efficacement avec le certificateur</li>
+                      <li>Construire un dossier de validation solide</li>
+                      <li>Préparer votre entretien avec le jury</li>
+                      <li>
+                        Identifier les formations complémentaires si nécessaire
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <h3 className="m-0">Financement</h3>
+                    <ul className="text-lg">
+                      <li>Financement possible par votre CPF</li>
+                      <li>Prise en charge partielle selon votre situation</li>
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <h4 className="m-0">Ressources à votre disposition</h4>
+                    <div className="flex flex-col gap-2">
+                      <Link
+                        className="fr-link mr-auto"
+                        target="_blank"
+                        href="https://scribehow.com/shared/Parcours_candidat__vp9k4YzATvmheao9kAoKjw"
+                      >
+                        Tutoriel détaillé pour tout comprendre sur le parcours
+                        VAE accompagné
+                      </Link>
+                      <Link
+                        className="fr-link mr-auto"
+                        target="_blank"
+                        href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
+                      >
+                        Comment financer son accompagnement VAE ?
+                      </Link>
+                      <Link
+                        className="fr-link mr-auto"
+                        target="_blank"
+                        href="https://vae.gouv.fr/savoir-plus/articles/comment-bien-choisir-son-diplome/"
+                      >
+                        Comment bien choisir son diplôme ?
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </Accordion>
+            )}
           </div>
 
           <Button
@@ -221,6 +252,7 @@ const getCertificationQuery = graphql(`
       id
       codeRncp
       label
+      isAapAvailable
     }
   }
 `);
