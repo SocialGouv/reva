@@ -68,6 +68,7 @@ model Certification {
   juryFrequency                                     CertificationJuryFrequency?                         @map("jury_frequency")
   juryFrequencyOther                                String?                                             @map("jury_frequency_other")
   juryPlace                                         String?                                             @map("jury_place")
+  juryEstimatedCost                                 Decimal?                                            @map("jury_estimated_cost") @db.Decimal(10, 2)
   previousVersionCertificationId                    String?                                             @unique @map("previous_version_certification_id") @db.Uuid
   previousVersion                                   Certification?                                      @relation("replacement", fields: [previousVersionCertificationId], references: [id])
   nextVersion                                       Certification?                                      @relation("replacement")

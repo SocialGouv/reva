@@ -10,6 +10,7 @@ export const updateCertificationDescription = async ({
   juryFrequency,
   juryFrequencyOther,
   juryPlace,
+  juryEstimatedCost,
   availableAt,
   expiresAt,
 }: UpdateCertificationDescriptionInput) => {
@@ -51,6 +52,7 @@ export const updateCertificationDescription = async ({
       juryFrequency,
       juryFrequencyOther,
       juryPlace,
+      juryEstimatedCost,
       availableAt,
       expiresAt,
     },

@@ -75,6 +75,7 @@ const zodSchema = z
     ]),
     juryFrequencyOther: z.string().optional(),
     juryPlace: z.string().optional(),
+    juryEstimatedCost: z.number(),
     startOfVisibility: z.string({
       invalid_type_error: "Champs requis",
     }),
@@ -202,6 +203,8 @@ const PageContent = ({
 
       juryPlace: certification.juryPlace || undefined,
 
+      juryEstimatedCost: certification.juryEstimatedCost || undefined,
+
       startOfVisibility: certification.availableAt
         ? format(certification.availableAt, "yyyy-MM-dd")
         : undefined,
@@ -236,6 +239,7 @@ const PageContent = ({
           juryFrequency: frequency,
           juryFrequencyOther: frequency ? null : data.juryFrequencyOther,
           juryPlace: data.juryPlace,
+          juryEstimatedCost: data.juryEstimatedCost,
           availableAt: new Date(data.startOfVisibility).getTime(),
           expiresAt: new Date(data.endOfVisibility).getTime(),
         });
@@ -420,14 +424,36 @@ const PageContent = ({
                     stateRelatedMessage={errors.juryFrequencyOther?.message}
                   />
                 </div>
-
                 <Input
+                  className="m-0"
                   data-test="certification-description-jury_place-input"
                   label="Lieu où se déroulera le passage (optionnel) :"
                   hintText="À renseigner s’il existe peu de lieux de passage pour cette certification."
                   nativeInputProps={{
                     ...register("juryPlace"),
                   }}
+                />
+
+                <h4 className="m-0">Coûts</h4>
+                <Input
+                  className="mr-auto"
+                  label="Estimation des frais de jury :"
+                  hintText="Veuillez saisir un nombre à 2 décimales."
+                  nativeInputProps={{
+                    type: "number",
+                    step: "0.01",
+                    min: 0,
+                    inputMode: "decimal",
+                    ...register("juryEstimatedCost", {
+                      valueAsNumber: true,
+                    }),
+                  }}
+                  state={errors.juryEstimatedCost ? "error" : "default"}
+                  stateRelatedMessage={
+                    errors.juryEstimatedCost
+                      ? "Veuillez renseigner une estimation"
+                      : undefined
+                  }
                 />
               </div>
             </div>

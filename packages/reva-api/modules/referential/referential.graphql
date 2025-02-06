@@ -56,6 +56,7 @@ type Certification {
   juryPlace: String
   additionalInfo: CertificationAdditionalInfo
   isAapAvailable: Boolean!
+  juryEstimatedCost: Decimal
 }
 
 type CertificationAdditionalInfo {
@@ -399,6 +400,7 @@ input UpdateCertificationDescriptionInput {
   juryFrequency: CertificationJuryFrequency
   juryFrequencyOther: String
   juryPlace: String
+  juryEstimatedCost: Decimal!
   availableAt: Timestamp
   expiresAt: Timestamp
 }

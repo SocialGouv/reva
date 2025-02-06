@@ -24,6 +24,7 @@ const getCertificationQuery = graphql(`
       juryFrequency
       juryFrequencyOther
       juryPlace
+      juryEstimatedCost
       degree {
         id
         label
