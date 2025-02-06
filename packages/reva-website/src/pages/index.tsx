@@ -59,119 +59,123 @@ const HomePageContent = () => (
 );
 
 const HeroSection = () => (
-  <section className="w-full relative md:py-16 md:pl-[120px] md:bg-[url('/home-page/homepage_hero.png')] bg-cover">
-    <div className="md:w-[575px] md:h-[512px] bg-[#FAF9FE] px-6 py-8 md:p-12 flex flex-col items-center md:items-start shadow-[0px_4px_12px_0px_rgba(0,0,18,0.32)]">
-      <h1 className="text-2xl md:text-[40px]">
-        Bienvenue sur le portail officiel de la VAE
-      </h1>
-      <p className="text-base md:text-xl">
-        La Validation des Acquis de l'Expérience (VAE) offre une 3ème voie
-        d'accès à la certification en France, équivalente à la formation
-        initiale, continue ou en alternance.
-      </p>
-      <p className="text-base md:text-xl">
-        En 2022, le Ministère du Travail a créé le Service public de la VAE,
-        accessible via cette plateforme.
-      </p>
-      <Button
-        iconId="fr-icon-arrow-right-line"
-        iconPosition="right"
-        className="mt-auto"
-        linkProps={{
-          href: "https://vae.gouv.fr/inscription-candidat/",
-          target: "_self",
-        }}
-      >
-        Commencez votre parcours VAE
-      </Button>
+  <section className="w-full  md:bg-[url('/home-page/homepage_hero.png')] bg-cover">
+    <div className="fr-container flex !p-0 md:!py-16">
+      <div className="md:w-[575px] md:h-[512px] bg-[#FAF9FE] px-6 py-8 md:p-12 flex flex-col items-center md:items-start shadow-[0px_4px_12px_0px_rgba(0,0,18,0.32)]">
+        <h1 className="text-2xl md:text-[40px]">
+          Bienvenue sur le portail officiel de la VAE
+        </h1>
+        <p className="text-base md:text-xl">
+          La Validation des Acquis de l'Expérience (VAE) offre une 3ème voie
+          d'accès à la certification en France, équivalente à la formation
+          initiale, continue ou en alternance.
+        </p>
+        <p className="text-base md:text-xl">
+          En 2022, le Ministère du Travail a créé le Service public de la VAE,
+          accessible via cette plateforme.
+        </p>
+        <Button
+          iconId="fr-icon-arrow-right-line"
+          iconPosition="right"
+          className="mt-auto"
+          linkProps={{
+            href: "https://vae.gouv.fr/inscription-candidat/",
+            target: "_self",
+          }}
+        >
+          Commencez votre parcours VAE
+        </Button>
+      </div>
     </div>
   </section>
 );
 
 const QuiEtesVousSection = () => (
-  <section className="w-full relative px-6 py-8 md:pt-12 md:pb-20 md:pl-[120px] bg-[#cedff4]">
-    <h2 className="text-[22px] md:text-[32px] text-center md:text-left mb-8">
-      Qui êtes-vous ?
-    </h2>
-    <div className="flex flex-col md:flex-row gap-8 ">
-      <QuiEtesVousCard
-        title="Candidat"
-        titleIcon={
-          <Image
-            src="/home-page/young_man_dc.png"
-            alt="visage jeune homme souriant"
-            width={40}
-            height={47}
-          />
-        }
-        subtitle="Transformez votre expérience professionnelle en diplôme reconnu !"
-        description="Construisez votre dossier pas à pas et bénéficiez d'un accompagnement pour valoriser vos compétences."
-      >
-        <Button
-          priority="secondary"
-          iconId="fr-icon-arrow-right-line"
-          iconPosition="right"
-          className="mt-auto"
-          linkProps={{
-            href: "https://vae.gouv.fr/espace-candidat/",
-            target: "_self",
-          }}
+  <section className="w-full px-6 py-8 md:pt-12 md:pb-20 bg-[#cedff4]">
+    <div className="fr-container !p-0">
+      <h2 className="text-[22px] md:text-[32px] text-center md:text-left mb-8">
+        Qui êtes-vous ?
+      </h2>
+      <div className="flex flex-col md:flex-row gap-8 ">
+        <QuiEtesVousCard
+          title="Candidat"
+          titleIcon={
+            <Image
+              src="/home-page/young_man_dc.png"
+              alt="visage jeune homme souriant"
+              width={40}
+              height={47}
+            />
+          }
+          subtitle="Transformez votre expérience professionnelle en diplôme reconnu !"
+          description="Construisez votre dossier pas à pas et bénéficiez d'un accompagnement pour valoriser vos compétences."
         >
-          Faire un parcours VAE
-        </Button>
-      </QuiEtesVousCard>
-      <QuiEtesVousCard
-        title="Accompagnateurs"
-        titleIcon={
-          <Image
-            src="/home-page/young_woman_dc.png"
-            alt="visage jeune homme souriant"
-            width={40}
-            height={47}
-          />
-        }
-        subtitle="Guidez les candidats vers la réussite de leur VAE."
-        description="Accédez à tous les outils nécessaires pour suivre leurs parcours, de l’analyse du projet à la préparation du jury."
-      >
-        <Button
-          priority="secondary"
-          iconId="fr-icon-arrow-right-line"
-          iconPosition="right"
-          className="mt-auto"
-          linkProps={{
-            href: "https://vae.gouv.fr/espace-professionnel/",
-            target: "_self",
-          }}
+          <Button
+            priority="secondary"
+            iconId="fr-icon-arrow-right-line"
+            iconPosition="right"
+            className="mt-auto"
+            linkProps={{
+              href: "https://vae.gouv.fr/espace-candidat/",
+              target: "_self",
+            }}
+          >
+            Faire un parcours VAE
+          </Button>
+        </QuiEtesVousCard>
+        <QuiEtesVousCard
+          title="Accompagnateurs"
+          titleIcon={
+            <Image
+              src="/home-page/young_woman_dc.png"
+              alt="visage jeune homme souriant"
+              width={40}
+              height={47}
+            />
+          }
+          subtitle="Guidez les candidats vers la réussite de leur VAE."
+          description="Accédez à tous les outils nécessaires pour suivre leurs parcours, de l’analyse du projet à la préparation du jury."
         >
-          Accompagner les candidats
-        </Button>
-      </QuiEtesVousCard>
-      <QuiEtesVousCard
-        title="Certificateur"
-        titleIcon={
-          <Image
-            src="/home-page/young_man_dc_2.png"
-            alt="visage jeune homme souriant"
-            width={40}
-            height={47}
-          />
-        }
-        subtitle="Simplifiez la gestion des certifications et des candidatures."
-        description="Pilotez votre activité de certificateur en toute autonomie et collaborez efficacement avec les accompagnateur."
-      >
-        <Button
-          priority="secondary"
-          iconId="fr-icon-arrow-right-line"
-          iconPosition="right"
-          className="mt-auto"
-          disabled
+          <Button
+            priority="secondary"
+            iconId="fr-icon-arrow-right-line"
+            iconPosition="right"
+            className="mt-auto"
+            linkProps={{
+              href: "https://vae.gouv.fr/espace-professionnel/",
+              target: "_self",
+            }}
+          >
+            Accompagner les candidats
+          </Button>
+        </QuiEtesVousCard>
+        <QuiEtesVousCard
+          title="Certificateur"
+          titleIcon={
+            <Image
+              src="/home-page/young_man_dc_2.png"
+              alt="visage jeune homme souriant"
+              width={40}
+              height={47}
+            />
+          }
+          subtitle="Simplifiez la gestion des certifications et des candidatures."
+          description="Pilotez votre activité de certificateur en toute autonomie et collaborez efficacement avec les accompagnateur."
         >
-          Créer mon espace certificateur
-        </Button>
-        <p className="text-xs text-gray-400 mt-1">
-          Fonctionnalité bientôt disponible.
-        </p>
-      </QuiEtesVousCard>
+          <Button
+            priority="secondary"
+            iconId="fr-icon-arrow-right-line"
+            iconPosition="right"
+            className="mt-auto"
+            disabled
+          >
+            Créer mon espace certificateur
+          </Button>
+          <p className="text-xs text-gray-400 mt-1">
+            Fonctionnalité bientôt disponible.
+          </p>
+        </QuiEtesVousCard>
+      </div>
     </div>
   </section>
 );
