@@ -70,10 +70,6 @@ const getCertificationQuery = graphql(`
         id
         label
       }
-
-      FCCertification {
-        ACTIVITES_VISEES
-      }
     }
   }
 `);

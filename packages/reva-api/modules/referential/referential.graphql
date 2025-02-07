@@ -56,7 +56,6 @@ type Certification {
   additionalInfo: CertificationAdditionalInfo
   isAapAvailable: Boolean!
   juryEstimatedCost: Decimal
-  FCCertification: FCCertification
 }
 
 type CertificationAdditionalInfo {
@@ -202,7 +201,6 @@ type FCCertification {
   BLOCS_COMPETENCES: [BlocCompetence!]!
   FORMACODES: [FCFormacode!]!
   DOMAINS: [Domain!]!
-  ACTIVITES_VISEES: [String!]
 }
 
 type Country {

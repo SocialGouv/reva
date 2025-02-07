@@ -38,7 +38,6 @@ export type RNCPCertification = {
     LIBELLE: string;
   }[];
   PREREQUIS: { LISTE_PREREQUIS: string; PARSED_PREREQUIS: string[] };
-  ACTIVITES_VISEES?: string[];
 };
 
 export class RNCPReferential {
@@ -279,9 +278,6 @@ function mapToRNCPCertification(data: any): RNCPCertification {
           (data.PREREQUIS_VALIDATION_CERTIFICATION as string) || "",
         ),
       },
-      ACTIVITES_VISEES: data.ACTIVITES_VISEES
-        ? splitString((data.ACTIVITES_VISEES as string) || "")
-        : undefined,
     };
 
     return certification;
