@@ -153,11 +153,13 @@ const generatePDF = async ({
 export const AttestationReferencement = ({
   raisonSociale,
   siret,
+  canDownloadAttestationReferencement,
 }: {
   raisonSociale: string;
   siret: string;
+  canDownloadAttestationReferencement: boolean;
 }) => (
-  <GrayCard className="mb-5">
+  <GrayCard className="mb-5 gap-4">
     <div className="flex items-center justify-between gap-2">
       <div className="flex items-center gap-2">
         <i className="ri-file-download-fill" aria-hidden="true"></i>
@@ -166,9 +168,16 @@ export const AttestationReferencement = ({
       <Button
         onClick={() => generatePDF({ raisonSociale, siret })}
         priority="secondary"
+        disabled={!canDownloadAttestationReferencement}
       >
         Générer le PDF
       </Button>
     </div>
+    {!canDownloadAttestationReferencement && (
+      <p className="pl-8 w-3/4 mb-0">
+        Vous ne pouvez pas générer d'attestation si votre compte n'est pas à
+        jour ou si votre établissement a fermé.
+      </p>
+    )}
   </GrayCard>
 );

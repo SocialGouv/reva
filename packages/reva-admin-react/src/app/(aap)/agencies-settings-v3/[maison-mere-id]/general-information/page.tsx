@@ -115,6 +115,12 @@ const GeneralInformationPage = () => {
     ? `/maison-mere-aap/${maisonMereAAP?.id}`
     : "/agencies-settings-v3";
 
+  const canDownloadAttestationReferencement =
+    maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ===
+      "A_JOUR" &&
+    !!etablissement &&
+    !etablissement.dateFermeture;
+
   return (
     <div className="flex flex-col w-full">
       <h1>Informations générales</h1>
@@ -123,10 +129,13 @@ const GeneralInformationPage = () => {
         pouvez signaler un changement au support si ces informations ne sont
         plus à jour.
       </p>
-      {isAttestationReferencementActive && (
+      {isAttestationReferencementActive && etablissement && (
         <AttestationReferencement
-          raisonSociale={maisonMereAAP.raisonSociale}
-          siret={maisonMereAAP.siret}
+          raisonSociale={etablissement.raisonSociale}
+          siret={etablissement.siret}
+          canDownloadAttestationReferencement={
+            canDownloadAttestationReferencement
+          }
         />
       )}
       <form

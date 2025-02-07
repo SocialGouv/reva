@@ -19,7 +19,6 @@ const generalInformationQueries = graphql(`
       maisonMereAAP {
         id
         siret
-        raisonSociale
         phone
         managerFirstname
         managerLastname
@@ -63,7 +62,6 @@ const getMaisonMereAAPGeneralInformationAdminQuery = graphql(`
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       id
       siret
-      raisonSociale
       phone
       managerFirstname
       managerLastname
