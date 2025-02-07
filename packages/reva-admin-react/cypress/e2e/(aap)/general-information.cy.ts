@@ -4,10 +4,14 @@ function visitGeneralInformation({
   statutValidation = "A_JOUR",
   dateFermeture = null,
   isAttestationReferencementActive = false,
+  qualiopiStatus = true,
+  siegeSocial = true,
 }: {
   statutValidation?: string;
   dateFermeture?: string | null;
   isAttestationReferencementActive?: boolean;
+  qualiopiStatus?: boolean;
+  siegeSocial?: boolean;
 }) {
   cy.fixture("features/active-features.json").then((activeFeatures) => {
     activeFeatures.data.activeFeaturesForConnectedUser =
@@ -65,8 +69,9 @@ function visitGeneralInformation({
               libelle: "Entrepreneur individuel",
               legalStatus: "EI",
             },
-            siegeSocial: true,
+            siegeSocial,
             dateFermeture,
+            qualiopiStatus,
           },
         },
       });
@@ -88,8 +93,48 @@ function visitGeneralInformation({
 }
 
 describe("General Information Page", () => {
+  context("Company Status Indicators and Badges", () => {
+    it("should display all active status badges for a fully compliant establishment", () => {
+      visitGeneralInformation({
+        siegeSocial: true,
+        dateFermeture: null,
+        qualiopiStatus: true,
+      });
+
+      cy.get('[data-test="siege-social-badge"]').should("exist");
+      cy.get('[data-test="en-activite-badge"]').should("exist");
+      cy.get('[data-test="qualiopi-actif-badge"]').should("exist");
+    });
+
+    it("should indicate secondary establishment status when not a headquarters", () => {
+      visitGeneralInformation({
+        siegeSocial: false,
+      });
+
+      cy.get('[data-test="etablissement-secondaire-badge"]').should("exist");
+    });
+
+    it("should show establishment closure status with specific closure date", () => {
+      visitGeneralInformation({
+        dateFermeture: "2023-12-31",
+      });
+
+      cy.get('[data-test="ferme-badge"]')
+        .should("exist")
+        .and("contain.text", "Fermé le 31/12/2023");
+    });
+
+    it("should indicate non-compliance when Qualiopi certification is missing", () => {
+      visitGeneralInformation({
+        qualiopiStatus: false,
+      });
+
+      cy.get('[data-test="qualiopi-inactif-badge"]').should("exist");
+    });
+  });
+
   context("Attestation de référencement", () => {
-    it("should display the attestation section when feature is active", () => {
+    it("should make attestation section visible when feature flag is enabled", () => {
       visitGeneralInformation({
         isAttestationReferencementActive: true,
       });
@@ -97,21 +142,22 @@ describe("General Information Page", () => {
         "exist",
       );
     });
+
     const attestationDownloadTestCases = [
       {
-        scenario: "active establishment with valid account status",
+        scenario: "establishment is active and account information is current",
         accountValidationStatus: "A_JOUR",
         establishmentClosingDate: null,
         isDownloadEnabled: true,
       },
       {
-        scenario: "outdated account information",
+        scenario: "account information requires update",
         accountValidationStatus: "A_METTRE_A_JOUR",
         establishmentClosingDate: null,
         isDownloadEnabled: false,
       },
       {
-        scenario: "closed establishment",
+        scenario: "establishment has ceased operations",
         accountValidationStatus: "A_JOUR",
         establishmentClosingDate: "2023-12-31",
         isDownloadEnabled: false,
@@ -125,7 +171,7 @@ describe("General Information Page", () => {
         establishmentClosingDate,
         isDownloadEnabled,
       }) => {
-        it(`should ${isDownloadEnabled ? "enable" : "disable"} attestation referencement download button and ${isDownloadEnabled ? "hide" : "display"} warning message when ${scenario}`, () => {
+        it(`should ${isDownloadEnabled ? "enable" : "disable"} attestation download and ${isDownloadEnabled ? "hide" : "display"} warning message when ${scenario}`, () => {
           visitGeneralInformation({
             statutValidation: accountValidationStatus,
             dateFermeture: establishmentClosingDate,
