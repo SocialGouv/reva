@@ -55,17 +55,17 @@ const HomePage = () => {
 
 const HomePageContent = () => (
   <>
-    <HeroSection />
+    <BienvenueSection />
     <QuiEtesVousSection />
     <LesAvantagesSection />
     <LaVAEUnDispositifAccessibleATousSection />
   </>
 );
 
-const HeroSection = () => (
-  <section className="w-full  md:bg-[url('/home-page/homepage_hero.png')] bg-cover">
-    <div className="fr-container flex !p-0 md:!py-16">
-      <div className="md:w-[575px] md:h-[512px] bg-[#FAF9FE] px-6 py-8 md:p-12 flex flex-col items-center md:items-start shadow-[0px_4px_12px_0px_rgba(0,0,18,0.32)]">
+const BienvenueSection = () => (
+  <section className="w-full  md:bg-[url('/home-page/homepage_hero.png')] bg-cover md:px-6 md:py-8 md:pt-12 md:pb-20">
+    <div className="fr-container flex !p-0">
+      <div className="md:w-[575px] md:h-[512px] bg-[#FAF9FE] px-6 py-8 md:p-12 flex flex-col items-start shadow-[0px_4px_12px_0px_rgba(0,0,18,0.32)]">
         <h1 className="text-2xl md:text-[40px]">
           Bienvenue sur le portail officiel de la VAE
         </h1>
@@ -211,12 +211,12 @@ const QuiEtesVousCard = ({
 );
 
 const LesAvantagesSection = () => (
-  <section className="w-full bg-neutral-100">
-    <div className="fr-container flex flex-col !p-8 md:!px-0 md:!py-16">
+  <section className="w-full bg-neutral-100 px-6 py-8 md:pt-12 md:pb-20">
+    <div className="fr-container flex flex-col !p-0">
       <h2 className="text-[22px] md:text-[32px] mb-8 ">
         Les avantages de la plateforme France VAE
       </h2>
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col items-center md:flex-row gap-6">
         <AvantageCard
           title="Démarche et gestion simplifiées"
           description="Un seul endroit pour faire votre parcours VAE, suivre les candidatures ou gérer les certifications."
@@ -264,8 +264,8 @@ const AvantageCard = ({
 );
 
 const LaVAEUnDispositifAccessibleATousSection = () => (
-  <section className="w-full bg-white">
-    <div className="fr-container flex flex-col items-center md:flex-row !p-8 md:!px-0 md:!py-16 gap-12 md:gap-20">
+  <section className="w-full bg-white px-6 py-8 md:pt-12 md:pb-20">
+    <div className="fr-container flex flex-col items-center md:flex-row !p-0 gap-12 md:gap-20">
       <Image
         src="/home-page/avatar_1_section_3.png"
         alt="3 visages souriants"
