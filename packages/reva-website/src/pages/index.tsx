@@ -59,6 +59,7 @@ const HomePageContent = () => (
     <QuiEtesVousSection />
     <LesAvantagesSection />
     <LaVAEUnDispositifAccessibleATousSection />
+    <LAVAEEnChiffresSection />
   </>
 );
 
@@ -299,4 +300,52 @@ const LaVAEUnDispositifAccessibleATousSection = () => (
   </section>
 );
 
+const LAVAEEnChiffresSection = () => (
+  <section className="w-full bg-white md:px-6 md:py-8 md:pt-12 md:pb-20">
+    <div className="fr-container flex flex-col md:flex-row mb-8 !p-6 md:!py-20 md:!px-16 bg-[#CAE0F6] border-2 border-[#9EC1E4]">
+      <div className="flex flex-col justify-center max-w-sm mr-6 mb-8 md:mb-0">
+        <h2 className="text-[22px] md:text-[32px]">La VAE... en chiffres</h2>
+        <p>
+          Découvrez les résultats concrets de la VAE : un taux de réussite
+          élevé, un parcours efficace et des candidats satisfaits.
+        </p>
+      </div>
+      <div className="overflow-x-auto">
+        <div className="flex min-w-[700px]">
+          <PolygonChiffre
+            title="+ de 87%"
+            subtitle="des candidats"
+            description="ont obtenu leur diplôme"
+          />
+          <PolygonChiffre
+            title="8 mois"
+            subtitle="en moyenne"
+            description="pour réaliser son parcours VAE"
+          />
+          <PolygonChiffre
+            title="94%"
+            subtitle="des candidats"
+            description="recommandent de faire un parcours VAE"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const PolygonChiffre = ({
+  title,
+  subtitle,
+  description,
+}: {
+  title: string;
+  subtitle: string;
+  description: string;
+}) => (
+  <div className="w-[240px] h-[268px] p-6 flex flex-col justify-start items-center gap-1.5 bg-[url('/home-page/white_polygon.svg')] bg-contain bg-no-repeat">
+    <span className="text-[#E1000F] text-[32px] font-bold mt-10">{title}</span>
+    <span className="font-bold">{subtitle}</span>
+    <span className="whitespace-break-spaces text-center">{description}</span>
+  </div>
+);
 export default HomePage;
