@@ -1,9 +1,9 @@
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import { useEtablissement } from "./CompanyPreview.hooks";
 import { format } from "date-fns";
 import { GrayCard } from "../card/gray-card/GrayCard";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { useEtablissement } from "./CompanyPreview.hooks";
 
 interface CompanyProps {
   companySiret: string;
@@ -195,18 +195,32 @@ export const CompanyBadges = ({
 }) => (
   <div className={`flex flex-col md:flex-row gap-2 ${className || ""}`}>
     {siegeSocial ? (
-      <Badge severity="success">Siège social</Badge>
+      <Badge severity="success" data-test="siege-social-badge">
+        Siège social
+      </Badge>
     ) : (
-      <Badge severity="error">Établissement secondaire</Badge>
+      <Badge severity="error" data-test="etablissement-secondaire-badge">
+        Établissement secondaire
+      </Badge>
     )}
     {!dateFermeture ? (
-      <Badge severity="success">En activité</Badge>
+      <Badge severity="success" data-test="en-activite-badge">
+        En activité
+      </Badge>
     ) : (
-      <Badge severity="error">
+      <Badge severity="error" data-test="ferme-badge">
         Fermé le {format(dateFermeture, "dd/MM/yyyy")}
       </Badge>
     )}
-    {qualiopiStatus && <Badge severity="success">Qualiopi VAE Actif</Badge>}
-    {!qualiopiStatus && <Badge severity="warning">Qualiopi VAE Inactif</Badge>}
+    {qualiopiStatus && (
+      <Badge severity="success" data-test="qualiopi-actif-badge">
+        Qualiopi VAE Actif
+      </Badge>
+    )}
+    {!qualiopiStatus && (
+      <Badge severity="warning" data-test="qualiopi-inactif-badge">
+        Qualiopi VAE Inactif
+      </Badge>
+    )}
   </div>
 );
