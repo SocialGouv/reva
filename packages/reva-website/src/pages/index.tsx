@@ -256,7 +256,7 @@ const AvantageCard = ({
   description: string;
   pictogram: ReactNode;
 }) => (
-  <div className="w-[312px] h-[320px] md:w-[384px] md:h-[296px] p-8 flex flex-col items-center text-center border border-[#929292] border-b-4 border-b-[#3A3A3A] bg-white">
+  <div className="md:h-[420px] lg:h-[320px] p-8 flex flex-col items-center text-center border border-[#929292] border-b-4 border-b-[#3A3A3A] bg-white">
     <div>{pictogram}</div>
     <h3 className="mt-4 mb-2 text-[20px] leading-snug">{title}</h3>
     <p className="mb-0">{description}</p>
