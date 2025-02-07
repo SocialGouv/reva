@@ -6,6 +6,8 @@ import { ReactNode } from "react";
 import { CandidateSpaceHomePageContent } from "@/components/candidate-space/CandidateSpaceHomePageContent";
 import Image from "next/image";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { PICTOGRAMS } from "@/components/pictograms";
+import Link from "next/link";
 
 const HomeContainer = ({ children }: { children: ReactNode }) => (
   <div className="w-full mx-auto relative flex flex-col items-center lg:pb-32">
@@ -55,6 +57,7 @@ const HomePageContent = () => (
   <>
     <HeroSection />
     <QuiEtesVousSection />
+    <LesAvantagesSection />
   </>
 );
 
@@ -203,6 +206,59 @@ const QuiEtesVousCard = ({
     <p className="font-bold">{subtitle}</p>
     <p>{description}</p>
     {children}
+  </div>
+);
+
+const LesAvantagesSection = () => (
+  <section className="w-full bg-neutral-100">
+    <div className="fr-container flex flex-col !p-8 md:!px-0 md:!py-16">
+      <h2 className="text-[22px] md:text-[32px] mb-8 ">
+        Les avantages de la plateforme France VAE
+      </h2>
+      <div className="flex flex-col md:flex-row gap-6">
+        <AvantageCard
+          title="Démarche et gestion simplifiées"
+          description="Un seul endroit pour faire votre parcours VAE, suivre les candidatures ou gérer les certifications."
+          pictogram={PICTOGRAMS.accessibility}
+        />
+        <AvantageCard
+          title="Accompagnement personnalisé"
+          description="Bénéficiez de l'expertise d'un accompagnateur pour réussir, au mieux, votre parcours VAE."
+          pictogram={PICTOGRAMS.community}
+        />
+        <AvantageCard
+          title="Ressources conçues par des experts de la VAE"
+          description="Accédez à des dizaines de contenus utiles, que vous soyez candidat, accompagnateur ou certificateur."
+          pictogram={PICTOGRAMS.binders}
+        />
+      </div>
+      <p className="mt-10 text-xl">
+        En savoir plus sur{" "}
+        <Link
+          href="https://vae.gouv.fr/cgu/"
+          target="_self"
+          className="fr-link !text-xl"
+        >
+          les conditions de réalisation d’un parcours de VAE
+        </Link>
+      </p>
+    </div>
+  </section>
+);
+
+const AvantageCard = ({
+  title,
+  description,
+  pictogram,
+}: {
+  title: string;
+  description: string;
+  pictogram: ReactNode;
+}) => (
+  <div className="w-[312px] h-[320px] md:w-[384px] md:h-[296px] p-8 flex flex-col items-center text-center border border-[#929292] border-b-4 border-b-[#3A3A3A] bg-white">
+    <div>{pictogram}</div>
+    <h3 className="mt-4 mb-2 text-[20px] leading-snug">{title}</h3>
+    <p className="mb-0">{description}</p>
   </div>
 );
 
