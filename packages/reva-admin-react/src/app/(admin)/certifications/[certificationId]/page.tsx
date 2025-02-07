@@ -15,6 +15,7 @@ import {
   CertificationJuryModality,
 } from "@/graphql/generated/graphql";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
+import { CertificationActivitiesSummaryCard } from "@/components/certifications/certification-activities-summary-card/CertificationActivitiesSummaryCard";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -232,6 +233,19 @@ const PageContent = ({
               `/certifications/${certification.id}/bloc-competence/${blocId}`,
             )
           }
+        />
+
+        <CertificationActivitiesSummaryCard
+          // isEditable={isEditable}
+          activities={
+            certification.FCCertification?.ACTIVITES_VISEES || undefined
+          }
+          // competenceBlocs={certification.competenceBlocs}
+          // onUpdateCompetenceBlocButtonClick={(blocId) =>
+          //   router.push(
+          //     `/responsable-certifications/certifications/${certification.id}/bloc-competence/${blocId}`,
+          //   )
+          // }
         />
 
         <EnhancedSectionCard

@@ -86,6 +86,13 @@ const unsafeReferentialResolvers = {
       getAdditionalInfoByCertificationId({ certificationId }),
     isAapAvailable: ({ id: certificationId }: { id: string }) =>
       isAapAvailableForCertificationId({ certificationId }),
+    FCCertification: ({
+      rncpId,
+      codeRncp,
+    }: {
+      rncpId: string;
+      codeRncp: string;
+    }) => RNCPReferential.getInstance().findOneByRncp(rncpId || codeRncp),
   },
   CertificationAdditionalInfo: {
     dossierDeValidationTemplate: ({

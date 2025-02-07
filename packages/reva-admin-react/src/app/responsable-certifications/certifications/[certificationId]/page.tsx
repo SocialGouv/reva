@@ -22,6 +22,7 @@ import {
 import { useAuth } from "@/components/auth/auth";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
 import { useUpdateCertificationPage } from "./updateCertification.hook";
+import { CertificationActivitiesSummaryCard } from "@/components/certifications/certification-activities-summary-card/CertificationActivitiesSummaryCard";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -232,6 +233,22 @@ const PageContent = ({
             )
           }
         />
+
+        {isAdmin && (
+          <CertificationActivitiesSummaryCard
+            // isEditable={isEditable}
+            activities={
+              certification.FCCertification?.ACTIVITES_VISEES || undefined
+            }
+            // competenceBlocs={certification.competenceBlocs}
+            // onUpdateCompetenceBlocButtonClick={(blocId) =>
+            //   router.push(
+            //     `/responsable-certifications/certifications/${certification.id}/bloc-competence/${blocId}`,
+            //   )
+            // }
+          />
+        )}
+
         <EnhancedSectionCard
           data-test="prerequisites-summary-card"
           isEditable={isEditable}
