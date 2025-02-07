@@ -83,7 +83,7 @@ const BienvenueSection = () => (
           iconPosition="right"
           className="mt-auto"
           linkProps={{
-            href: "https://vae.gouv.fr/inscription-candidat/",
+            href: "/inscription-candidat/",
             target: "_self",
           }}
         >
@@ -120,7 +120,7 @@ const QuiEtesVousSection = () => (
             iconPosition="right"
             className="mt-auto"
             linkProps={{
-              href: "https://vae.gouv.fr/espace-candidat/",
+              href: "/espace-candidat/",
               target: "_self",
             }}
           >
@@ -146,7 +146,7 @@ const QuiEtesVousSection = () => (
             iconPosition="right"
             className="mt-auto"
             linkProps={{
-              href: "https://vae.gouv.fr/espace-professionnel/",
+              href: "/espace-professionnel/",
               target: "_self",
             }}
           >
@@ -235,11 +235,7 @@ const LesAvantagesSection = () => (
       </div>
       <p className="mt-10 text-xl">
         En savoir plus sur{" "}
-        <Link
-          href="https://vae.gouv.fr/cgu/"
-          target="_self"
-          className="fr-link !text-xl"
-        >
+        <Link href="/cgu/" target="_self" className="fr-link !text-xl">
           les conditions de réalisation d’un parcours de VAE
         </Link>
       </p>
@@ -282,7 +278,7 @@ const LaVAEUnDispositifAccessibleATousSection = () => (
           VAE. La seule exception ? Si vous faites partie du secteur public, le
           parcours VAE ne s’effectue pas via notre plateforme. Contactez les{" "}
           <Link
-            href="https://vae.gouv.fr/savoir-plus/articles/vae-ou-se-renseigner/"
+            href="/savoir-plus/articles/vae-ou-se-renseigner/"
             target="_self"
             className="fr-link !text-xl"
           >
@@ -292,7 +288,7 @@ const LaVAEUnDispositifAccessibleATousSection = () => (
         </p>
         <Button
           linkProps={{
-            href: "https://vae.gouv.fr/inscription-candidat/",
+            href: "/inscription-candidat/",
             target: "_self",
           }}
         >
