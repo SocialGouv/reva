@@ -66,6 +66,8 @@ import success from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/succe
 import system from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/system.svg";
 import technicalError from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/technical-error.svg";
 import warning from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/warning.svg";
+import accessibility from "./assets/accessibility.svg";
+import binders from "./assets/binders.svg";
 
 const generateSvg = (
   svg: SVG,
@@ -160,4 +162,6 @@ export const PICTOGRAMS = {
   technicalErrorLG: generateSvg(technicalError, { width: 120, height: 120 }),
   warning: generateSvg(warning),
   warningLG: generateSvg(warning, { width: 120, height: 120 }),
+  accessibility: generateSvg(accessibility),
+  binders: generateSvg(binders),
 };
