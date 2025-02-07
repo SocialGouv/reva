@@ -58,6 +58,7 @@ const HomePageContent = () => (
     <HeroSection />
     <QuiEtesVousSection />
     <LesAvantagesSection />
+    <LaVAEUnDispositifAccessibleATousSection />
   </>
 );
 
@@ -260,6 +261,46 @@ const AvantageCard = ({
     <h3 className="mt-4 mb-2 text-[20px] leading-snug">{title}</h3>
     <p className="mb-0">{description}</p>
   </div>
+);
+
+const LaVAEUnDispositifAccessibleATousSection = () => (
+  <section className="w-full bg-white">
+    <div className="fr-container flex flex-col items-center md:flex-row !p-8 md:!px-0 md:!py-16 gap-12 md:gap-20">
+      <Image
+        src="/home-page/avatar_1_section_3.png"
+        alt="3 visages souriants"
+        width={312}
+        height={393}
+        className="basis-1/3"
+      />
+      <div className="flex flex-col basis-2/3">
+        <h2 className="text-[22px] md:text-[32px] mb-8">
+          La VAE, un dispositif accessible à tous !
+        </h2>
+        <p className="text-xl mb-8">
+          Vous pouvez dès maintenant vous inscrire pour commencer un parcours
+          VAE. La seule exception ? Si vous faites partie du secteur public, le
+          parcours VAE ne s’effectue pas via notre plateforme. Contactez les{" "}
+          <Link
+            href="https://vae.gouv.fr/savoir-plus/articles/vae-ou-se-renseigner/"
+            target="_self"
+            className="fr-link !text-xl"
+          >
+            organismes référents
+          </Link>{" "}
+          pour en savoir plus.
+        </p>
+        <Button
+          linkProps={{
+            href: "https://vae.gouv.fr/inscription-candidat/",
+            target: "_self",
+          }}
+        >
+          Commencez votre parcours VAE
+        </Button>
+      </div>
+    </div>
+  </section>
 );
 
 export default HomePage;
