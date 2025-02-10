@@ -21,6 +21,7 @@ import { isUUID } from "@/utils";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 export default function Page({
   certification,
@@ -52,21 +53,20 @@ export default function Page({
 
       <div className="flex-1 flex pb-8">
         <div className="flex-1 bg-white w-full mx-auto flex flex-col gap-8 fr-container p-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-          <div className="flex flex-row gap-1 text-xs">
-            <Link
-              className="text-dsfrGray-mentionGrey"
-              href={isFeatureActive("HOMEPAGE_V2") ? "/espace-candidat/" : "/"}
-            >
-              Candidats
-            </Link>
-
-            <span
-              className="fr-icon-arrow-right-s-line fr-icon--sm"
-              aria-hidden="true"
-            />
-
-            <span>{certification?.label}</span>
-          </div>
+          <Breadcrumb
+            className="!mt-0 !-mb-2"
+            currentPageLabel={certification?.label}
+            segments={[
+              {
+                label: "Candidats",
+                linkProps: {
+                  href: isFeatureActive("HOMEPAGE_V2")
+                    ? "/espace-candidat/"
+                    : "/",
+                },
+              },
+            ]}
+          />
 
           <div className="flex flex-col gap-2">
             <h1 className="m-0">{certification?.label}</h1>
