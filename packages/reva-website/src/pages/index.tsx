@@ -540,19 +540,23 @@ export const getArticlesDAideAndFAQ = async () => {
       "etapes-parcours-france-vae",
       "quest-ce-que-france-vae",
       "qui-accompagne-a-la-vae",
-    ].map((slug) =>
-      articlesDAideAndFAQResponse.articleDAides.find((a) => a?.slug === slug),
-    ),
+    ]
+      .map((slug) =>
+        articlesDAideAndFAQResponse.articleDAides.find((a) => a?.slug === slug),
+      )
+      .filter(Boolean),
     articlesFAQ: [
       "uk9035s38u122xg169nqrkhw",
       "rhrg04z5psnnl3ka3em4fo8p",
       "r890ckfm4o29lupb6w22d4he",
       "gbskuvsjqvgzvscvbr75n5vq",
-    ].map((documentId) =>
-      articlesDAideAndFAQResponse.articleFaqs.find(
-        (a) => a?.documentId === documentId,
-      ),
-    ),
+    ]
+      .map((documentId) =>
+        articlesDAideAndFAQResponse.articleFaqs.find(
+          (a) => a?.documentId === documentId,
+        ),
+      )
+      .filter(Boolean),
   };
 };
 
