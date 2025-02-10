@@ -431,7 +431,13 @@ const articlesQuery = graphql(`
 
 export const getArticlesDAide = async () => {
   const articles = await request(STRAPI_GRAPHQL_API_URL, articlesQuery);
-  return articles.articleDAides;
+  return [
+    articles.articleDAides.find(
+      (a) => a?.slug === "etapes-parcours-france-vae",
+    ),
+    articles.articleDAides.find((a) => a?.slug === "quest-ce-que-france-vae"),
+    articles.articleDAides.find((a) => a?.slug === "qui-accompagne-a-la-vae"),
+  ];
 };
 
 export default HomePage;
