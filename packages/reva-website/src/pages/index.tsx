@@ -212,7 +212,7 @@ const QuiEtesVousCard = ({
 );
 
 const LesAvantagesSection = () => (
-  <section className="w-full bg-neutral-100 px-6 py-8 md:pt-12 md:pb-20">
+  <section className="w-full bg-neutral-100 px-6 py-8 md:pt-20 md:pb-20">
     <div className="fr-container flex flex-col !p-0">
       <h2 className="text-[22px] md:text-[32px] mb-8 ">
         Les avantages de la plateforme France VAE
