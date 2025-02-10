@@ -20,10 +20,13 @@ import { isUUID } from "@/utils";
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Tag from "@codegouvfr/react-dsfr/Tag";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 export default function Page({
   certification,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { isFeatureActive } = useFeatureflipping();
+
   const content = certification
     ? `Code RNCP ${certification.codeRncp} - ${certification.label}`
     : "";
@@ -38,7 +41,7 @@ export default function Page({
       <div className="absolute -top-8 -z-10 w-full">
         <div className="hidden lg:block">
           <Image
-            src="/home-page/unions-background/union-background1.svg"
+            src="/candidate-space/unions-background/union-background1.svg"
             width={3000}
             height={1074}
             style={{ width: "100%" }}
@@ -50,7 +53,10 @@ export default function Page({
       <div className="flex-1 flex pb-8">
         <div className="flex-1 bg-white w-full mx-auto flex flex-col gap-8 fr-container p-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
           <div className="flex flex-row gap-1 text-xs">
-            <Link className="text-dsfrGray-mentionGrey" href="/">
+            <Link
+              className="text-dsfrGray-mentionGrey"
+              href={isFeatureActive("HOMEPAGE_V2") ? "/espace-candidat/" : "/"}
+            >
               Candidats
             </Link>
 

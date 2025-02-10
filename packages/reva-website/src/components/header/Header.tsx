@@ -23,7 +23,10 @@ export const Header = (props: { className?: string }) => {
             text: "Accueil",
           },
           {
-            isActive: !!asPath.match(/\/espace-candidat/)?.length,
+            isActive:
+              !!asPath.match(/\/espace-candidat/)?.length ||
+              !!asPath.match(/\/inscription-candidat/)?.length ||
+              !!asPath.match(/\/certifications/)?.length,
             linkProps: {
               href: "/espace-candidat",
             },
