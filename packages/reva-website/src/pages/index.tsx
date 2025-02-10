@@ -16,7 +16,7 @@ import { Card } from "@codegouvfr/react-dsfr/Card";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 const HomeContainer = ({ children }: { children: ReactNode }) => (
-  <div className="w-full mx-auto relative flex flex-col items-center lg:pb-32">
+  <div className="w-full mx-auto relative flex flex-col items-center">
     {children}
   </div>
 );
