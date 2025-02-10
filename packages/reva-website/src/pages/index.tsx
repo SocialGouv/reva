@@ -11,8 +11,9 @@ import Link from "next/link";
 import { graphql } from "@/graphql/generated";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import request from "graphql-request";
-import { ArticleDAide } from "@/graphql/generated/graphql";
+import { ArticleDAide, ArticleFaq } from "@/graphql/generated/graphql";
 import { Card } from "@codegouvfr/react-dsfr/Card";
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 const HomeContainer = ({ children }: { children: ReactNode }) => (
   <div className="w-full mx-auto relative flex flex-col items-center lg:pb-32">
@@ -20,7 +21,13 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
   </div>
 );
 
-const HomePage = ({ articlesDaide }: { articlesDaide: ArticleDAide[] }) => {
+const HomePage = ({
+  articlesDaide,
+  articlesFAQ,
+}: {
+  articlesDaide: ArticleDAide[];
+  articlesFAQ: ArticleFaq[];
+}) => {
   const { isFeatureActive, status: featureFlippingServiceStatus } =
     useFeatureflipping();
 
@@ -49,7 +56,10 @@ const HomePage = ({ articlesDaide }: { articlesDaide: ArticleDAide[] }) => {
       />
       <HomeContainer>
         {isFeatureActive("HOMEPAGE_V2") ? (
-          <HomePageContent articleDAides={articlesDaide} />
+          <HomePageContent
+            articleDAides={articlesDaide}
+            articlesFAQ={articlesFAQ}
+          />
         ) : (
           <CandidateSpaceHomePageContent />
         )}
@@ -60,8 +70,10 @@ const HomePage = ({ articlesDaide }: { articlesDaide: ArticleDAide[] }) => {
 
 const HomePageContent = ({
   articleDAides,
+  articlesFAQ,
 }: {
   articleDAides: ArticleDAide[];
+  articlesFAQ: ArticleFaq[];
 }) => (
   <>
     <BienvenueSection />
@@ -70,6 +82,7 @@ const HomePageContent = ({
     <LesAvantagesSection />
     <LaVAEUnDispositifAccessibleATousSection />
     <LAVAEEnChiffresSection />
+    <QuestionsFrequentesSection articlesFAQ={articlesFAQ} />
   </>
 );
 
@@ -399,13 +412,52 @@ const PolygonChiffre = ({
   </div>
 );
 
+const QuestionsFrequentesSection = ({
+  articlesFAQ,
+}: {
+  articlesFAQ: ArticleFaq[];
+}) => (
+  <section className="w-full bg-white px-6 pb-8 md:pt-0 md:pb-20">
+    <div className="fr-container flex flex-col !p-0">
+      <h2 className="text-[22px] md:text-[32px] mb-8">Questions fréquentes</h2>
+      <div className="flex flex-col mb-8">
+        {articlesFAQ.map((a) => (
+          <Accordion
+            key={a.documentId}
+            label={<p className="text-blue-900">{a?.question}</p>}
+            className="text-gray-700 font-normal"
+          >
+            <div
+              className="ck-content"
+              dangerouslySetInnerHTML={{
+                __html: a?.reponse?.replaceAll("<a", "<a target='_'") || "",
+              }}
+            />
+          </Accordion>
+        ))}
+      </div>
+      <p className="text-xl mb-8">
+        Accédez à toutes les{" "}
+        <Link href="/faq/" target="_self" className="fr-link !text-xl">
+          questions fréquentes
+        </Link>
+      </p>
+    </div>
+  </section>
+);
+
 export async function getServerSideProps() {
-  const articlesDaide = await getArticlesDAide();
-  return { props: { articlesDaide } };
+  const articlesDaideEtFAQ = await getArticlesDAideAndFAQ();
+  return {
+    props: {
+      articlesDaide: articlesDaideEtFAQ.articlesDAide,
+      articlesFAQ: articlesDaideEtFAQ.articlesFAQ,
+    },
+  };
 }
 
-const articlesQuery = graphql(`
-  query getArticleDAideForHomePage {
+const articlesDAideAndFAQQuery = graphql(`
+  query getArticleDAideAndFAQForHomePage {
     articleDAides(
       filters: {
         slug: {
@@ -426,18 +478,50 @@ const articlesQuery = graphql(`
       }
       description
     }
+    articleFaqs(
+      filters: {
+        documentId: {
+          in: [
+            "uk9035s38u122xg169nqrkhw"
+            "rhrg04z5psnnl3ka3em4fo8p"
+            "r890ckfm4o29lupb6w22d4he"
+            "gbskuvsjqvgzvscvbr75n5vq"
+          ]
+        }
+      }
+    ) {
+      documentId
+      question
+      reponse
+    }
   }
 `);
 
-export const getArticlesDAide = async () => {
-  const articles = await request(STRAPI_GRAPHQL_API_URL, articlesQuery);
-  return [
-    articles.articleDAides.find(
-      (a) => a?.slug === "etapes-parcours-france-vae",
+export const getArticlesDAideAndFAQ = async () => {
+  const articlesDAideAndFAQResponse = await request(
+    STRAPI_GRAPHQL_API_URL,
+    articlesDAideAndFAQQuery,
+  );
+
+  return {
+    articlesDAide: [
+      "etapes-parcours-france-vae",
+      "quest-ce-que-france-vae",
+      "qui-accompagne-a-la-vae",
+    ].map((slug) =>
+      articlesDAideAndFAQResponse.articleDAides.find((a) => a?.slug === slug),
     ),
-    articles.articleDAides.find((a) => a?.slug === "quest-ce-que-france-vae"),
-    articles.articleDAides.find((a) => a?.slug === "qui-accompagne-a-la-vae"),
-  ];
+    articlesFAQ: [
+      "uk9035s38u122xg169nqrkhw",
+      "rhrg04z5psnnl3ka3em4fo8p",
+      "r890ckfm4o29lupb6w22d4he",
+      "gbskuvsjqvgzvscvbr75n5vq",
+    ].map((documentId) =>
+      articlesDAideAndFAQResponse.articleFaqs.find(
+        (a) => a?.documentId === documentId,
+      ),
+    ),
+  };
 };
 
 export default HomePage;
