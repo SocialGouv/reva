@@ -359,6 +359,7 @@ CREATE TABLE "data_level_3"."candidatures_par_dates" AS -- table de recevabilite
             ON dimensions_utiles.candidacy_id = candidacy_validees.candidacy_id
         LEFT JOIN data_level_2.cohorte_3095_uniformation
             ON data_level_2.cohorte_3095_uniformation.candidacy_id = dimensions_utiles.candidacy_id
+        WHERE data_level_2.recevabilite.is_active = 'true'
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27
     ), candidatures_projet AS (
         SELECT 
@@ -619,6 +620,7 @@ CREATE TABLE "data_level_3"."candidatures_par_dates" AS -- table de recevabilite
         ON dimensions_utiles.candidacy_id = ranked.candidacy_id
     LEFT JOIN data_level_2.recevabilite 
         ON data_level_2.recevabilite.candidacy_id = ranked.candidacy_id
+    WHERE data_level_2.recevabilite.is_active = 'true'
     UNION 
         SELECT * FROM candidatures_projet
 ); 
