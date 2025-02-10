@@ -78,6 +78,7 @@ const HomePageContent = ({
   <>
     <BienvenueSection />
     <QuiEtesVousSection />
+    <LesActualitesFranceVAESection />
     <ToutSavoirSurLaVAESection articlesDaide={articleDAides} />
     <LesAvantagesSection />
     <LaVAEUnDispositifAccessibleATousSection />
@@ -232,6 +233,37 @@ const QuiEtesVousCard = ({
     <p>{description}</p>
     {children}
   </div>
+);
+
+const LesActualitesFranceVAESection = () => (
+  <section className="w-full bg-neutral-100 px-6 py-8 md:pt-20 md:pb-20">
+    <div className="fr-container flex flex-col !p-0">
+      <h2 className="text-[22px] md:text-[32px] mb-8">
+        Les actualités de France VAE
+      </h2>
+      <div className="w-[312px] h-[320px] md:w-[520px] md:h-[252px] p-8 pl-6 flex flex-col border border-neutral-400 bg-white">
+        <h3 className="text-dsfrBlue-franceSun text-lg md:text-[22px] mb-3">
+          Nouvelles fonctionnalités de la plateforme France VAE
+        </h3>
+        <p className="text-sm mb-4">
+          Dans le cadre de l’amélioration continue des services de la plateforme
+          France VAE, de nouvelles fonctionnalités sont régulièrement mises en
+          place pour simplifier vos démarches.
+        </p>
+        <Link
+          className="fr-link !pl-0 !text-sm mt-auto mr-auto"
+          href="https://fabnummas.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192"
+          target="_self"
+        >
+          Découvrir les nouvelles fonctionnalités{" "}
+          <span
+            className="fr-icon-arrow-right-line fr-icon--sm"
+            aria-hidden="true"
+          />
+        </Link>
+      </div>
+    </div>
+  </section>
 );
 
 const ToutSavoirSurLaVAESection = ({
