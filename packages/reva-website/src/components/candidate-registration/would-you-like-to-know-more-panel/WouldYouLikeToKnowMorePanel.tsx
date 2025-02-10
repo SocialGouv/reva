@@ -11,7 +11,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
       <p>
         Du fait de son déploiement progressif, tous les diplômes ne sont pas
         encore couverts par France VAE. De nouveaux diplômes seront ajoutés en
-        2024.
+        2025.
       </p>
       <br />
       <a
