@@ -11,8 +11,8 @@ const articlesQuery = graphql(`
       documentId
       titre
       vignette {
-        url
         alternativeText
+        formats
       }
       description
       slug

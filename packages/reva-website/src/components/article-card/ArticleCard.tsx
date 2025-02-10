@@ -12,7 +12,7 @@ export const ArticleCard = ({ article }: { article: ArticleDAide }) => {
         enlargeLink
         desc={description}
         imageAlt={vignette?.alternativeText as string}
-        imageUrl={vignette?.url as string}
+        imageUrl={vignette?.formats?.small?.url as string}
         linkProps={{
           href: `/savoir-plus/articles/${slug}`,
         }}
