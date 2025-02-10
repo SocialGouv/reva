@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 const trainingFormSchema = z.object({
   individualHourCount: z
@@ -355,7 +356,7 @@ export const TrainingForm = ({
         <>
           <h2 className="text-lg">Modalités de financement</h2>
           <Input
-            className="max-w-[282px]"
+            className="lg:max-w-xl"
             disabled={disabled}
             label="Montant du devis validé par le candidat :"
             nativeInputProps={{
@@ -368,6 +369,17 @@ export const TrainingForm = ({
             state={errors.estimatedCost ? "error" : "default"}
             stateRelatedMessage={errors.estimatedCost?.message}
           />
+
+          <SmallNotice className="mb-6 lg:max-w-xl">
+            <span>
+              Dans le cadre d’un financement via Mon Compte Formation, le devis
+              doit être validé avant l’étude de faisabilité pour qu’elle puisse
+              être prise en charge. Si le financement mobilisé par le candidat
+              doit être sollicité après la notification de recevabilité, vous
+              pouvez renseigner un montant prévisionnel.
+            </span>
+          </SmallNotice>
+
           <Checkbox
             disabled={disabled}
             legend="Plusieurs financements possibles :"
