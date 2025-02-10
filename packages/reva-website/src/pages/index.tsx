@@ -8,6 +8,11 @@ import Image from "next/image";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { PICTOGRAMS } from "@/components/pictograms";
 import Link from "next/link";
+import { graphql } from "@/graphql/generated";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import request from "graphql-request";
+import { ArticleDAide } from "@/graphql/generated/graphql";
+import { Card } from "@codegouvfr/react-dsfr/Card";
 
 const HomeContainer = ({ children }: { children: ReactNode }) => (
   <div className="w-full mx-auto relative flex flex-col items-center lg:pb-32">
@@ -15,7 +20,7 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
   </div>
 );
 
-const HomePage = () => {
+const HomePage = ({ articlesDaide }: { articlesDaide: ArticleDAide[] }) => {
   const { isFeatureActive, status: featureFlippingServiceStatus } =
     useFeatureflipping();
 
@@ -23,7 +28,7 @@ const HomePage = () => {
     "CANDIDACY_CREATION_DISABLED",
   );
 
-  if (featureFlippingServiceStatus === "LOADING") {
+  if (featureFlippingServiceStatus !== "INITIALIZED") {
     return null;
   }
   return (
@@ -44,7 +49,7 @@ const HomePage = () => {
       />
       <HomeContainer>
         {isFeatureActive("HOMEPAGE_V2") ? (
-          <HomePageContent />
+          <HomePageContent articleDAides={articlesDaide} />
         ) : (
           <CandidateSpaceHomePageContent />
         )}
@@ -53,10 +58,15 @@ const HomePage = () => {
   );
 };
 
-const HomePageContent = () => (
+const HomePageContent = ({
+  articleDAides,
+}: {
+  articleDAides: ArticleDAide[];
+}) => (
   <>
     <BienvenueSection />
     <QuiEtesVousSection />
+    <ToutSavoirSurLaVAESection articlesDaide={articleDAides} />
     <LesAvantagesSection />
     <LaVAEUnDispositifAccessibleATousSection />
     <LAVAEEnChiffresSection />
@@ -211,6 +221,46 @@ const QuiEtesVousCard = ({
   </div>
 );
 
+const ToutSavoirSurLaVAESection = ({
+  articlesDaide,
+}: {
+  articlesDaide: ArticleDAide[];
+}) => (
+  <section className="w-full bg-[#1B1B33] px-6 py-8 md:pt-20 md:pb-20">
+    <div className="fr-container flex flex-col !p-0">
+      <h2 className="text-[22px] md:text-[32px] mb-8 text-white ">
+        Tout savoir sur la Validation des Acquis de l’Expérience
+      </h2>
+      <div className="flex flex-col md:flex-row gap-6">
+        {articlesDaide.map((article) => (
+          <Card
+            key={article.documentId}
+            title={article.titre}
+            imageUrl={article.vignette.url}
+            imageAlt={article.vignette.alternativeText || ""}
+            desc={article.description}
+            className="md:h-[516px] md:w-[400px]"
+            linkProps={{
+              href: `/savoir-plus/articles/${article.slug}`,
+            }}
+            enlargeLink
+          />
+        ))}
+      </div>
+      <p className="mt-10 text-xl text-[#CECECE]">
+        Retrouvez tous nos articles sur{" "}
+        <Link
+          href="/savoir-plus/"
+          target="_self"
+          className="fr-link !text-xl !text-[#8585F6]"
+        >
+          l’espace d’informations
+        </Link>
+      </p>
+    </div>
+  </section>
+);
+
 const LesAvantagesSection = () => (
   <section className="w-full bg-neutral-100 px-6 py-8 md:pt-20 md:pb-20">
     <div className="fr-container flex flex-col !p-0">
@@ -348,4 +398,40 @@ const PolygonChiffre = ({
     <span className="whitespace-break-spaces text-center">{description}</span>
   </div>
 );
+
+export async function getServerSideProps() {
+  const articlesDaide = await getArticlesDAide();
+  return { props: { articlesDaide } };
+}
+
+const articlesQuery = graphql(`
+  query getArticleDAideForHomePage {
+    articleDAides(
+      filters: {
+        slug: {
+          in: [
+            "etapes-parcours-france-vae"
+            "quest-ce-que-france-vae"
+            "qui-accompagne-a-la-vae"
+          ]
+        }
+      }
+    ) {
+      documentId
+      titre
+      slug
+      vignette {
+        url
+        alternativeText
+      }
+      description
+    }
+  }
+`);
+
+export const getArticlesDAide = async () => {
+  const articles = await request(STRAPI_GRAPHQL_API_URL, articlesQuery);
+  return articles.articleDAides;
+};
+
 export default HomePage;
