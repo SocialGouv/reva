@@ -12,6 +12,7 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
 import Link from "next/link";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const searchCertificationsQuery = graphql(`
   query searchCertificationsQueryForResultPage(
@@ -49,6 +50,7 @@ const CertificationResultPage = ({
   pageInfo: SearchCertificationsQueryForResultPageQuery["searchCertificationsForCandidate"]["info"];
 }) => {
   const router = useRouter();
+  const { isFeatureActive } = useFeatureflipping();
   return (
     <MainLayout className="relative">
       <Head>
@@ -59,7 +61,7 @@ const CertificationResultPage = ({
         />
       </Head>
       <BackGroundUnions double={false} />
-      <div className="fr-container lg:shadow-lifted bg-white xl:my-8 xl:!px-6 py-6">
+      <div className="fr-container lg:shadow-lifted bg-white xl:mb-8 xl:!px-6 py-6">
         <Breadcrumb
           className="!mt-0 !mb-6"
           currentPageLabel={`Résultats de recherche pour "${searchText}"`}
@@ -67,7 +69,9 @@ const CertificationResultPage = ({
             {
               label: "Candidats",
               linkProps: {
-                href: "/",
+                href: isFeatureActive("HOMEPAGE_V2")
+                  ? "/espace-candidat/"
+                  : "/",
               },
             },
           ]}
@@ -89,7 +93,7 @@ const CertificationResultPage = ({
             })
           }
         />
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col min-h-[calc(100vh-310px)]">
           {(results?.length === 0 || searchText === "") && (
             <div className="bg-white border border-[#dddddd] p-8">
               <span className="fr-icon-search-line mr-2 " aria-hidden="true" />
@@ -158,7 +162,7 @@ const CertificationResultPage = ({
                   </div>
                 ))}
               </div>
-              <div className="flex justify-center mt-8">
+              <div className="flex justify-center mt-auto mb-0 pt-8">
                 <Pagination
                   defaultPage={pageInfo.currentPage}
                   count={pageInfo.totalPages}
