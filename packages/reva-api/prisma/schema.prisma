@@ -36,6 +36,12 @@ enum CertificationJuryModality {
   ORAL
 }
 
+enum CertificationJuryTypeOfModality {
+  PRESENTIEL
+  A_DISTANCE
+  LES_DEUX
+}
+
 enum CertificationJuryFrequency {
   MONTHLY
   TRIMESTERLY
@@ -64,6 +70,8 @@ model Certification {
   availableAt                                       DateTime                                            @map("available_at") @db.Timestamptz(6)
   expiresAt                                         DateTime                                            @map("expires_at") @db.Timestamptz(6)
   juryModalities                                    CertificationJuryModality[]                         @default([]) @map("jury_modalities")
+  juryTypeMiseEnSituationProfessionnelle            CertificationJuryTypeOfModality?                    @map("jury_type_mise_en_situation_professionnelle")
+  juryTypeSoutenanceOrale                           CertificationJuryTypeOfModality?                    @map("jury_type_soutenance_orale")
   juryFrequency                                     CertificationJuryFrequency?                         @map("jury_frequency")
   juryFrequencyOther                                String?                                             @map("jury_frequency_other")
   juryPlace                                         String?                                             @map("jury_place")

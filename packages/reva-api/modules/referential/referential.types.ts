@@ -1,6 +1,6 @@
 import {
   CertificationJuryFrequency,
-  CertificationJuryModality,
+  CertificationJuryTypeOfModality,
 } from "@prisma/client";
 
 export const CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID =
@@ -111,7 +111,8 @@ export interface UpdateCertificationPrerequisitesInput {
 
 export interface UpdateCertificationDescriptionInput {
   certificationId: string;
-  juryModalities: CertificationJuryModality[];
+  juryTypeMiseEnSituationProfessionnelle?: CertificationJuryTypeOfModality;
+  juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality;
   juryFrequency?: CertificationJuryFrequency;
   juryFrequencyOther?: string;
   juryPlace?: string;

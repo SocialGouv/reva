@@ -19,7 +19,8 @@ const getCertificationQuery = graphql(`
       availableAt
       expiresAt
       typeDiplome
-      juryModalities
+      juryTypeMiseEnSituationProfessionnelle
+      juryTypeSoutenanceOrale
       juryFrequency
       juryFrequencyOther
       juryPlace

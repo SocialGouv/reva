@@ -1,7 +1,7 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { format } from "date-fns";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
@@ -19,30 +19,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Select from "@codegouvfr/react-dsfr/Select";
 
-import {
-  CertificationJuryModality,
-  CertificationJuryFrequency,
-} from "@/graphql/generated/graphql";
-
-const EvaluationModalities: { id: CertificationJuryModality; label: string }[] =
-  [
-    {
-      id: "PRESENTIEL",
-      label: "Présentiel",
-    },
-    {
-      id: "A_DISTANCE",
-      label: "À distance",
-    },
-    {
-      id: "MISE_EN_SITUATION_PROFESSIONNELLE",
-      label: "Mise en situation professionnelle",
-    },
-    {
-      id: "ORAL",
-      label: "Oral",
-    },
-  ];
+import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
 
 const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   {
@@ -61,9 +38,16 @@ const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
 
 const zodSchema = z
   .object({
-    juryModalities: z
-      .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    juryTypeOfTest: z
+      .object({
+        id: z.string(),
+        label: z.string(),
+        checked: z.boolean(),
+        presentiel: z.boolean(),
+        distanciel: z.boolean(),
+      })
       .array(),
+
     juryFrequency: z.enum([
       "",
       ...JuryFrequencies.map(({ id }) => id),
@@ -82,7 +66,7 @@ const zodSchema = z
   .superRefine(
     (
       {
-        juryModalities,
+        juryTypeOfTest,
         juryFrequency,
         juryFrequencyOther,
         startOfVisibility,
@@ -90,10 +74,15 @@ const zodSchema = z
       },
       { addIssue },
     ) => {
-      if (juryModalities.findIndex((v) => v.checked) == -1) {
+      if (
+        juryTypeOfTest.findIndex(
+          (v) => v.checked && (v.presentiel || v.distanciel),
+        ) == -1
+      ) {
         addIssue({
-          path: ["juryModalities"],
-          message: "Veuillez séléctionner au moins une option",
+          path: ["juryTypeOfTest"],
+          message:
+            "Veuillez renseigner au moins un type d’épreuve pour le jury de cette certification",
           code: z.ZodIssueCode.custom,
         });
       }
@@ -170,24 +159,40 @@ const PageContent = ({
 }) => {
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { isSubmitting, isDirty, errors },
-    watch,
-  } = useForm<CompanySiretStepFormSchema>({
-    resolver: zodResolver(zodSchema),
-    defaultValues: {
-      juryModalities: EvaluationModalities.map((modality) => ({
-        id: modality.id,
-        label: modality.label,
-        checked: certification.juryModalities.includes(modality.id),
-      })),
+  const defaultValues = useMemo(
+    () => ({
+      juryTypeOfTest: [
+        {
+          id: "SOUTENANCE_ORALE",
+          label: "Soutenance orale du dossier de validation",
+          checked: !!certification.juryTypeSoutenanceOrale,
+          presentiel:
+            certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
+            certification.juryTypeSoutenanceOrale == "PRESENTIEL",
+          distanciel:
+            certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
+            certification.juryTypeSoutenanceOrale == "A_DISTANCE",
+        },
+        {
+          id: "MISE_EN_SITUATION_PROFESSIONNELLE",
+          label: "Mise en situation professionnelle",
+          checked: !!certification.juryTypeMiseEnSituationProfessionnelle,
+          presentiel:
+            certification.juryTypeMiseEnSituationProfessionnelle ==
+              "LES_DEUX" ||
+            certification.juryTypeMiseEnSituationProfessionnelle ==
+              "PRESENTIEL",
+          distanciel:
+            certification.juryTypeMiseEnSituationProfessionnelle ==
+              "LES_DEUX" ||
+            certification.juryTypeMiseEnSituationProfessionnelle ==
+              "A_DISTANCE",
+        },
+      ],
 
-      juryFrequency: certification.juryFrequencyOther
+      juryFrequency: (certification.juryFrequencyOther
         ? "Autre"
-        : certification.juryFrequency || "",
+        : certification.juryFrequency || "") as CertificationJuryFrequency,
       juryFrequencyOther: certification.juryFrequencyOther || undefined,
 
       juryPlace: certification.juryPlace || undefined,
@@ -202,14 +207,24 @@ const PageContent = ({
         : certification.rncpExpiresAt
           ? format(certification.rncpExpiresAt, "yyyy-MM-dd")
           : undefined,
-    },
+    }),
+    [certification],
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, isDirty, errors },
+    watch,
+    setValue,
+    reset,
+  } = useForm<CompanySiretStepFormSchema>({
+    resolver: zodResolver(zodSchema),
+    defaultValues,
   });
 
   const juryFrequency = watch("juryFrequency");
-  const { fields: juryModalities } = useFieldArray({
-    control,
-    name: "juryModalities",
-  });
+  const juryTypeOfTest = watch("juryTypeOfTest");
 
   const handleFormSubmit = handleSubmit(
     async (data) => {
@@ -218,11 +233,35 @@ const PageContent = ({
           JuryFrequencies.find(({ id }) => id == data.juryFrequency)?.id ||
           null;
 
+        const juryTypeMiseEnSituationProfessionnelle =
+          data.juryTypeOfTest.filter(
+            (modality) => modality.id == "MISE_EN_SITUATION_PROFESSIONNELLE",
+          )[0];
+
+        const juryTypeSoutenanceOrale = data.juryTypeOfTest.filter(
+          (modality) => modality.id == "SOUTENANCE_ORALE",
+        )[0];
+
         await updateCertificationDescription.mutateAsync({
           certificationId: certification.id,
-          juryModalities: data.juryModalities
-            .filter((modality) => modality.checked)
-            .map((modality) => modality.id) as CertificationJuryModality[],
+          juryTypeMiseEnSituationProfessionnelle:
+            juryTypeMiseEnSituationProfessionnelle.presentiel &&
+            juryTypeMiseEnSituationProfessionnelle.distanciel
+              ? "LES_DEUX"
+              : juryTypeMiseEnSituationProfessionnelle.presentiel
+                ? "PRESENTIEL"
+                : juryTypeMiseEnSituationProfessionnelle.distanciel
+                  ? "A_DISTANCE"
+                  : null,
+          juryTypeSoutenanceOrale:
+            juryTypeSoutenanceOrale.presentiel &&
+            juryTypeSoutenanceOrale.distanciel
+              ? "LES_DEUX"
+              : juryTypeSoutenanceOrale.presentiel
+                ? "PRESENTIEL"
+                : juryTypeSoutenanceOrale.distanciel
+                  ? "A_DISTANCE"
+                  : null,
           juryFrequency: frequency,
           juryFrequencyOther: frequency ? null : data.juryFrequencyOther,
           juryPlace: data.juryPlace,
@@ -316,29 +355,82 @@ const PageContent = ({
           </div>
         </EnhancedSectionCard>
 
-        <form id="CertificationDescriptionForm" onSubmit={handleFormSubmit}>
+        <form
+          id="CertificationDescriptionForm"
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            reset(defaultValues);
+          }}
+        >
           <div className="flex flex-col gap-8">
             <h2 className="m-0">Informations complémentaires</h2>
             <div className="flex flex-col gap-6">
               <h3 className="m-0">Jury</h3>
               <div className="flex flex-col gap-4">
-                <h4 className="m-0">Types d’épreuves</h4>
-                <Checkbox
-                  className="m-0 [&_.fr-label]:p-2"
-                  small
-                  options={juryModalities.map((modality, index) => ({
-                    label: modality.label,
-                    nativeInputProps: {
-                      ...register(`juryModalities.${index}.checked`),
-                    },
-                  }))}
-                  state={errors.juryModalities ? "error" : "default"}
-                  stateRelatedMessage={
-                    errors.juryModalities
-                      ? "Veuillez séléctionner au moins une option"
-                      : undefined
-                  }
-                />
+                <h4 className="mb-0">Types d’épreuves</h4>
+                <div className="max-w-[620px]">
+                  <Checkbox
+                    className="[&_.fr-label::before]:mt-2 [&_.fr-checkbox-group]:m-0 first:[&_.fr-checkbox-group]:border-t [&_.fr-checkbox-group]:border-b [&_.fr-messages-group>p]:pt-4 [&_.fr-messages-group]:pb-0 mb-0"
+                    small
+                    options={juryTypeOfTest.map((typeOfTest, index) => ({
+                      label: (
+                        <div className="flex-1 flex flex-row items-center gap-2">
+                          <div className="flex-1 py-1 cursor-pointer">
+                            {typeOfTest.label}
+                          </div>
+                          <div
+                            className="flex flex-row items-center gap-2"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                          >
+                            <Tag
+                              nativeButtonProps={{
+                                onClick: () => {
+                                  setValue(
+                                    `juryTypeOfTest.${index}.presentiel`,
+                                    !typeOfTest.presentiel,
+                                    { shouldDirty: true },
+                                  );
+                                },
+                                disabled: !typeOfTest.checked,
+                              }}
+                              pressed={typeOfTest.presentiel}
+                            >
+                              Présentiel
+                            </Tag>
+                            <Tag
+                              nativeButtonProps={{
+                                onClick: () => {
+                                  setValue(
+                                    `juryTypeOfTest.${index}.distanciel`,
+                                    !typeOfTest.distanciel,
+                                    { shouldDirty: true },
+                                  );
+                                },
+                                disabled: !typeOfTest.checked,
+                              }}
+                              pressed={typeOfTest.distanciel}
+                            >
+                              À distance
+                            </Tag>
+                          </div>
+                        </div>
+                      ),
+                      nativeInputProps: {
+                        ...register(`juryTypeOfTest.${index}.checked`),
+                      },
+                    }))}
+                    state={errors.juryTypeOfTest ? "error" : "default"}
+                    stateRelatedMessage={
+                      errors.juryTypeOfTest
+                        ? "Veuillez renseigner au moins un type d’épreuve pour le jury de cette certification"
+                        : undefined
+                    }
+                  />
+                </div>
 
                 <h4 className="m-0">Modalités de passage</h4>
                 <div className="flex flex-row gap-4">

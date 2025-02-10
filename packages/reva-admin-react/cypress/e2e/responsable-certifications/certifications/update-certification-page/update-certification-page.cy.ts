@@ -49,7 +49,8 @@ function interceptCertification({
                 ? {
                     availableAt: 1688162400000,
                     expiresAt: 1688162500000,
-                    juryModalities: ["ORAL"],
+                    juryTypeMiseEnSituationProfessionnelle: null,
+                    juryTypeSoutenanceOrale: "PRESENTIEL",
                     juryFrequency: "MONTHLY",
                     juryFrequencyOther: null,
                     juryPlace: null,

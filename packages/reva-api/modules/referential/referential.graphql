@@ -11,11 +11,10 @@ type Domain {
   children: [SubDomain!]!
 }
 
-enum CertificationJuryModality {
+enum CertificationJuryTypeOfModality {
   PRESENTIEL
   A_DISTANCE
-  MISE_EN_SITUATION_PROFESSIONNELLE
-  ORAL
+  LES_DEUX
 }
 
 enum CertificationJuryFrequency {
@@ -49,7 +48,8 @@ type Certification {
   domains: [Domain!]!
   fcPrerequisites: String
   prerequisites: [CertificationPrerequisite!]!
-  juryModalities: [CertificationJuryModality!]!
+  juryTypeMiseEnSituationProfessionnelle: CertificationJuryTypeOfModality
+  juryTypeSoutenanceOrale: CertificationJuryTypeOfModality
   juryFrequency: CertificationJuryFrequency
   juryFrequencyOther: String
   juryPlace: String
@@ -394,7 +394,8 @@ input CertificationPrerequisiteInput {
 
 input UpdateCertificationDescriptionInput {
   certificationId: ID!
-  juryModalities: [CertificationJuryModality!]!
+  juryTypeMiseEnSituationProfessionnelle: CertificationJuryTypeOfModality
+  juryTypeSoutenanceOrale: CertificationJuryTypeOfModality
   juryFrequency: CertificationJuryFrequency
   juryFrequencyOther: String
   juryPlace: String

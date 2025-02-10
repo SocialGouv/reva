@@ -5,7 +5,8 @@ import { prismaClient } from "../../../prisma/client";
 
 export const updateCertificationDescription = async ({
   certificationId,
-  juryModalities,
+  juryTypeMiseEnSituationProfessionnelle,
+  juryTypeSoutenanceOrale,
   juryFrequency,
   juryFrequencyOther,
   juryPlace,
@@ -31,7 +32,7 @@ export const updateCertificationDescription = async ({
     );
   }
 
-  if (juryModalities.length == 0) {
+  if (!juryTypeMiseEnSituationProfessionnelle && !juryTypeSoutenanceOrale) {
     throw new Error("Renseigner au moins une modalité de jury");
   }
 
@@ -46,7 +47,8 @@ export const updateCertificationDescription = async ({
   return await prismaClient.certification.update({
     where: { id: certificationId },
     data: {
-      juryModalities,
+      juryTypeMiseEnSituationProfessionnelle,
+      juryTypeSoutenanceOrale,
       juryFrequency,
       juryFrequencyOther,
       juryPlace,

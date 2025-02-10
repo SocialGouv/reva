@@ -14,10 +14,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
-import {
-  CertificationJuryFrequency,
-  CertificationJuryModality,
-} from "@/graphql/generated/graphql";
+import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
 
 import { useAuth } from "@/components/auth/auth";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
@@ -43,26 +40,6 @@ export default function UpdateCertificationForCertificationRegistryManagerPage()
     />
   ) : null;
 }
-
-const EvaluationModalities: { id: CertificationJuryModality; label: string }[] =
-  [
-    {
-      id: "PRESENTIEL",
-      label: "Présentiel",
-    },
-    {
-      id: "A_DISTANCE",
-      label: "À distance",
-    },
-    {
-      id: "MISE_EN_SITUATION_PROFESSIONNELLE",
-      label: "Mise en situation professionnelle",
-    },
-    {
-      id: "ORAL",
-      label: "Oral",
-    },
-  ];
 
 const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   {
@@ -103,7 +80,8 @@ const PageContent = ({
     : certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
 
   const isDescriptionComplete =
-    certification.juryModalities.length > 0 &&
+    (certification.juryTypeMiseEnSituationProfessionnelle ||
+      certification.juryTypeSoutenanceOrale) &&
     ((certification.juryFrequency && certification.juryFrequency?.length > 0) ||
       certification.juryFrequencyOther) &&
     typeof certification.juryEstimatedCost === "number" &&
@@ -164,22 +142,38 @@ const PageContent = ({
             </div>
 
             <h3 className="mb-0">Jury</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {certification.juryTypeSoutenanceOrale && (
+                <Info title="Soutenance orale du dossier de validation : ">
+                  {certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
+                    (certification.juryTypeSoutenanceOrale == "PRESENTIEL" && (
+                      <Tag>Présentiel</Tag>
+                    ))}
+                  {certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
+                    (certification.juryTypeSoutenanceOrale == "A_DISTANCE" && (
+                      <Tag>À distance</Tag>
+                    ))}
+                </Info>
+              )}
+              {certification.juryTypeMiseEnSituationProfessionnelle && (
+                <Info title="Soutenance orale du dossier de validation : ">
+                  {certification.juryTypeMiseEnSituationProfessionnelle ==
+                    "LES_DEUX" ||
+                    (certification.juryTypeMiseEnSituationProfessionnelle ==
+                      "PRESENTIEL" && <Tag>Présentiel</Tag>)}
+                  {certification.juryTypeMiseEnSituationProfessionnelle ==
+                    "LES_DEUX" ||
+                    (certification.juryTypeMiseEnSituationProfessionnelle ==
+                      "A_DISTANCE" && <Tag>À distance</Tag>)}
+                </Info>
+              )}
+
               <Info title="Fréquence des jurys">
                 {certification.juryFrequencyOther ||
                   JuryFrequencies.find(
                     ({ id }) => id == certification.juryFrequency,
                   )?.label ||
                   "À compléter"}
-              </Info>
-              <Info title="Modalités d'évaluation :">
-                {certification.juryModalities.length > 0
-                  ? certification.juryModalities.reduce(
-                      (acc, modality) =>
-                        `${acc}${acc && ","} ${EvaluationModalities.find(({ id }) => id == modality)?.label}`,
-                      "",
-                    )
-                  : "À compléter"}
               </Info>
               {certification.juryPlace && (
                 <Info title="Lieu où se déroulera le passage : ">
