@@ -93,7 +93,7 @@ const CertificationResultPage = ({
             })
           }
         />
-        <div className="mt-6 flex flex-col min-h-[calc(100vh-310px)]">
+        <div className="mt-6 flex flex-col min-h-[calc(100vh-180px)]">
           {(results?.length === 0 || searchText === "") && (
             <div className="bg-white border border-[#dddddd] p-8">
               <span className="fr-icon-search-line mr-2 " aria-hidden="true" />
