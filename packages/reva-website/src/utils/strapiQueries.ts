@@ -30,15 +30,19 @@ export const getArticleDAide = async (slug: string, preview = false) => {
 };
 
 const sectionFaqs = graphql(`
-  query getSectionFaqs($publicationState: PublicationStatus!) {
+  query getSectionFaqs(
+    $publicationState: PublicationStatus!
+    $itemFilter: ArticleFaqFiltersInput
+    $sectionFilter: SousSectionFaqFiltersInput
+  ) {
     sectionFaqs(sort: "ordre", status: $publicationState) {
       documentId
       titre
       pictogramme
-      sous_section_faqs(sort: "ordre") {
+      sous_section_faqs(sort: "ordre", filters: $sectionFilter) {
         documentId
         titre
-        article_faqs(sort: "ordre") {
+        article_faqs(sort: "ordre", filters: $itemFilter) {
           documentId
           question
           reponse
@@ -51,6 +55,8 @@ const sectionFaqs = graphql(`
 export const getSectionFaqs = async (preview = false) => {
   return request(STRAPI_GRAPHQL_API_URL, sectionFaqs, {
     publicationState: preview ? "DRAFT" : "PUBLISHED",
+    itemFilter: preview ? null : { publishedAt: { notNull: true } },
+    sectionFilter: preview ? null : { publishedAt: { notNull: true } },
   });
 };
 
