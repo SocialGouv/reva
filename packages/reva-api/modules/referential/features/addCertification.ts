@@ -79,6 +79,7 @@ export const addCertification = async (params: { codeRncp: string }) => {
           })),
         },
       },
+      certificationStatusHistory: { create: { status: "BROUILLON" } },
     },
   });
 

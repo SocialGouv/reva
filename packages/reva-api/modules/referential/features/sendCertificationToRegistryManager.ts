@@ -37,7 +37,12 @@ export const sendCertificationToRegistryManager = async ({
 
   const updatedCertification = await prismaClient.certification.update({
     where: { id: certification.id },
-    data: { status: "A_VALIDER_PAR_CERTIFICATEUR" },
+    data: {
+      status: "A_VALIDER_PAR_CERTIFICATEUR",
+      certificationStatusHistory: {
+        create: { status: "A_VALIDER_PAR_CERTIFICATEUR" },
+      },
+    },
   });
 
   const certificationRegistryManagerEmail =

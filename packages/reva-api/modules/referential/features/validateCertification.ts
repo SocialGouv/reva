@@ -44,6 +44,9 @@ export const validateCertification = async ({
     data: {
       status: "VALIDE_PAR_CERTIFICATEUR",
       visible,
+      certificationStatusHistory: {
+        create: { status: "VALIDE_PAR_CERTIFICATEUR" },
+      },
     },
   });
 };
