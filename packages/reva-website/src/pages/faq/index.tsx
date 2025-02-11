@@ -1,9 +1,11 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import { GetSectionFaqsQuery } from "@/graphql/generated/graphql";
-import { getSectionFaqs } from "@/utils/strapiQueries";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import request from "graphql-request";
 import Head from "next/head";
 
 const FaqPage = ({
@@ -98,8 +100,35 @@ const FaqPage = ({
   </>
 );
 
+const sectionFaqs = graphql(`
+  query getSectionFaqs(
+    $publicationState: PublicationStatus!
+    $itemFilter: ArticleFaqFiltersInput
+    $sectionFilter: SousSectionFaqFiltersInput
+  ) {
+    sectionFaqs(sort: "ordre", status: $publicationState) {
+      documentId
+      titre
+      pictogramme
+      sous_section_faqs(sort: "ordre", filters: $sectionFilter) {
+        documentId
+        titre
+        article_faqs(sort: "ordre", filters: $itemFilter) {
+          documentId
+          question
+          reponse
+        }
+      }
+    }
+  }
+`);
+
 export async function getServerSideProps({ preview = false }) {
-  const sections = await getSectionFaqs(preview);
+  const sections = await request(STRAPI_GRAPHQL_API_URL, sectionFaqs, {
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+    itemFilter: preview ? null : { publishedAt: { notNull: true } },
+    sectionFilter: preview ? null : { publishedAt: { notNull: true } },
+  });
   return { props: { sections, preview } };
 }
 
