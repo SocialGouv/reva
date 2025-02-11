@@ -51,7 +51,7 @@ export default function Page({
         </div>
       </div>
 
-      <div className="flex-1 flex pb-8">
+      <div className="flex-1 flex pb-8 min-h-screen">
         <div className="flex-1 bg-white w-full mx-auto flex flex-col gap-8 fr-container p-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
           <Breadcrumb
             className="!mt-0 !-mb-2"
