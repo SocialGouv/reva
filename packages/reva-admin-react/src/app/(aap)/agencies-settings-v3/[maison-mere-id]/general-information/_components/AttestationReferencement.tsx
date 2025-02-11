@@ -127,7 +127,7 @@ const generateAttestationPDF = async ({
       currentX += wordWidth + spaceWidth;
     });
 
-    currentY += lineHeight;
+    currentY += lineHeight * 2;
     pdf.setFont("arial", "normal");
     pdf.text(warningText, pageMargin, currentY);
 
