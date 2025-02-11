@@ -4,7 +4,7 @@ import { addMonths, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import jsPDF from "jspdf";
 
-const generatePDF = async ({
+const generateAttestationPDF = async ({
   raisonSociale,
   siret,
 }: {
@@ -19,130 +19,138 @@ const generatePDF = async ({
     });
 
     const pageWidth = pdf.internal.pageSize.getWidth();
-    const margin = 40;
-    const contentWidth = pageWidth - 2 * margin;
+    const pageMargin = 40;
+    const contentWidth = pageWidth - 2 * pageMargin;
+    const logoSize = 100;
+    const logoHeight = 60;
+    const francevaeLogoHeight = 40;
 
-    pdf.addImage("/admin2/logos/logo-gouv.png", "PNG", margin, 40, 100, 60);
+    pdf.addImage(
+      "/admin2/logos/logo-gouv.png",
+      "PNG",
+      pageMargin,
+      40,
+      logoSize,
+      logoHeight,
+    );
     pdf.addImage(
       "/admin2/logos/logo-france-vae.png",
       "PNG",
-      pageWidth - margin - 100,
+      pageWidth - pageMargin - logoSize,
       40,
-      100,
-      40,
+      logoSize,
+      francevaeLogoHeight,
     );
 
-    pdf.setFontSize(16);
+    const titleY = 140;
+    pdf.setFontSize(12);
     pdf.setFont("arial", "bold");
     pdf.text(
-      "Attestation de référencement sur France VAE",
+      "Attestation de référencement AAP sur France VAE",
       pageWidth / 2,
-      140,
+      titleY,
       { align: "center" },
     );
 
-    pdf.setFontSize(10);
+    const legalReferenceY = 170;
+    pdf.setFontSize(8);
     pdf.setFont("arial", "normal");
     pdf.setTextColor(0, 0, 255);
-    pdf.textWithLink("Article R6412-2 - Code du travail", pageWidth / 2, 170, {
-      align: "center",
-      url: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048700005",
-    });
+    pdf.textWithLink(
+      "Article R6412-2 - Code du travail",
+      pageWidth / 2,
+      legalReferenceY,
+      {
+        align: "center",
+        url: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048700005",
+      },
+    );
 
-    const createdByText = "créé par";
+    const decreeY = 185;
+    const decreePrefix = "créé par ";
     const decreeText = "Décret n°2023-1275 du 27 décembre 2023 - art. 2";
     const totalWidth =
-      pdf.getTextWidth(createdByText) + pdf.getTextWidth(decreeText);
-    const startX = (pageWidth - totalWidth) / 2;
+      pdf.getTextWidth(decreePrefix) + pdf.getTextWidth(decreeText);
+    const decreeStartX = (pageWidth - totalWidth) / 2;
 
-    pdf.setFontSize(9);
+    pdf.setFontSize(8);
     pdf.setTextColor(0, 0, 0);
-    pdf.text(createdByText, startX, 185);
+    pdf.text(decreePrefix, decreeStartX, decreeY);
 
-    pdf.setFontSize(10);
+    pdf.setFontSize(8);
     pdf.setTextColor(0, 0, 255);
     pdf.textWithLink(
       decreeText,
-      startX + pdf.getTextWidth(createdByText),
-      185,
+      decreeStartX + pdf.getTextWidth(decreePrefix),
+      decreeY,
       {
         align: "left",
         url: "https://www.legifrance.gouv.fr/loda/id/LEGIARTI000048687412/2023-12-29/",
       },
     );
 
-    pdf.setFontSize(11);
+    const mainContentY = 250;
+    const lineHeight = 14;
+    const mainText = {
+      prefix:
+        "La présente attestation certifie que l'Architecte Accompagnateur de Parcours (AAP) ",
+      entity: `${raisonSociale} - SIRET ${siret}`,
+      suffix:
+        " est référencé sur la plateforme France VAE  pour accompagner les personnes qui souhaitent s'engager dans un parcours de validation des acquis de l'expérience et bénéficier d'un accompagnement personnalisé, conformément aux dispositions réglementaires en vigueur, décrites dans les CGU de France VAE.",
+    };
+
+    const warningText =
+      "Ce référencement pourra être suspendu ou retiré en cas de manquement avéré aux engagements mentionnés en CGU.";
+
+    let currentY = mainContentY;
+    let currentX = pageMargin;
+    pdf.setFontSize(10);
     pdf.setTextColor(0, 0, 0);
 
-    const prefix = "La présente attestation certifie que ";
-    const boldText = `${raisonSociale} - SIRET ${siret} `;
-    const suffix =
-      " est référencé sur la plateforme France VAE selon les modalités définies réglementairement, pour accompagner les personnes qui souhaitent s'engager dans un parcours de validation des acquis de l'expérience et bénéficier d'un accompagnement personnalisé.";
+    const words = (mainText.prefix + mainText.entity + mainText.suffix).split(
+      " ",
+    );
 
-    const lineHeight = 14;
-    const startY = 250;
-    let currentY = startY;
+    words.forEach((word) => {
+      const spaceWidth = pdf.getTextWidth(" ");
+      const isEntityWord = mainText.entity.includes(word);
+      pdf.setFont("arial", isEntityWord ? "bold" : "normal");
 
-    pdf.setFont("arial", "normal");
-    const prefixWidth = pdf.getTextWidth(prefix);
-    pdf.text(prefix, margin, currentY);
+      const wordWidth = pdf.getTextWidth(word);
 
-    pdf.setFont("arial", "bold");
-    pdf.text(boldText, margin + prefixWidth, currentY);
-
-    const firstLineWidth = prefixWidth + pdf.getTextWidth(boldText);
-    const remainingWidth = contentWidth - firstLineWidth;
-
-    pdf.setFont("arial", "normal");
-    const firstWordSpace = pdf.getTextWidth(" ");
-
-    if (remainingWidth > firstWordSpace) {
-      const fittingText = pdf.splitTextToSize(suffix, remainingWidth)[0];
-      pdf.text(fittingText, margin + firstLineWidth, currentY);
-
-      const remainingSuffix = suffix.substring(fittingText.length);
-      if (remainingSuffix) {
-        const remainingLines = pdf.splitTextToSize(
-          remainingSuffix.trim(),
-          contentWidth,
-        );
-        remainingLines.forEach((line: string) => {
-          currentY += lineHeight;
-          pdf.text(line, margin, currentY);
-        });
-      }
-    } else {
-      const suffixLines = pdf.splitTextToSize(suffix.trim(), contentWidth);
-      suffixLines.forEach((line: string) => {
+      if (currentX + wordWidth > pageWidth - pageMargin) {
         currentY += lineHeight;
-        pdf.text(line, margin, currentY);
-      });
-    }
+        currentX = pageMargin;
+      }
+
+      pdf.text(word, currentX, currentY);
+      currentX += wordWidth + spaceWidth;
+    });
+
+    currentY += lineHeight;
+    pdf.setFont("arial", "normal");
+    pdf.text(warningText, pageMargin, currentY);
 
     const now = new Date();
     const currentDate = format(now, "d MMMM yyyy", { locale: fr });
-    const futureDate = format(addMonths(now, 3), "d MMMM yyyy", { locale: fr });
+    const expirationDate = format(addMonths(now, 3), "d MMMM yyyy", {
+      locale: fr,
+    });
 
-    pdf.setTextColor(0, 0, 0);
-    pdf.setFont("arial", "normal");
+    currentY += lineHeight * 3;
     const dateLabel = "Date de délivrance de l'attestation :";
     const dateLabelWidth = pdf.getTextWidth(dateLabel);
-    pdf.text(dateLabel, margin, 320);
+    pdf.text(dateLabel, pageMargin, currentY);
 
     pdf.setFont("arial", "bold");
-    pdf.text(currentDate, margin + dateLabelWidth + 4, 320);
+    pdf.text(currentDate, pageMargin + dateLabelWidth + 4, currentY);
 
+    currentY += lineHeight * 2;
     pdf.setFont("arial", "italic");
     pdf.setTextColor(128, 128, 128);
-    pdf.text(
-      `La présente attestation est valable du ${currentDate} au ${futureDate}`,
-      margin,
-      340,
-    );
-
-    pdf.setFont("arial", "normal");
-    pdf.setTextColor(0, 0, 0);
-    pdf.text("France VAE", margin, 380);
+    const validityText = `La présente attestation est valable du ${currentDate} au ${expirationDate}, sous réserve de tout changement pouvant affecter le référencement.`;
+    const validityLines = pdf.splitTextToSize(validityText, contentWidth);
+    pdf.text(validityLines, pageMargin, currentY);
 
     pdf.save("attestation_de_referencement_france_vae.pdf");
   } catch (error) {
@@ -166,7 +174,7 @@ export const AttestationReferencement = ({
         <h3 className="m-0">Attestation de référencement</h3>
       </div>
       <Button
-        onClick={() => generatePDF({ raisonSociale, siret })}
+        onClick={() => generateAttestationPDF({ raisonSociale, siret })}
         priority="secondary"
         disabled={!canDownloadAttestationReferencement}
         data-test="download-attestation-referencement"
