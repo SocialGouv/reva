@@ -212,8 +212,9 @@ export default function SetCertification() {
             >
               Compte Personnel de Formation
             </Link>
-            . À noter : si vous faites votre parcours en autonomie, il est
-            possible que des frais soient à votre charge (jury, formation…).
+            . Nous attirons votre attention sur le fait que les frais liés à
+            votre passage devant le jury et les actions de formations
+            complémentaires sont entièrement à votre charge.
           </CallOut>
 
           <div className="flex flex-col-reverse md:flex-row gap-4 justify-between mt-6">

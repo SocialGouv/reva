@@ -103,10 +103,11 @@ const Form = ({
               href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
               target="_blank"
             >
-              Mon Compte Formation.
-            </a>{" "}
-            À noter : si vous faites votre parcours en autonomie, il est
-            possible que des frais soient à votre charge (jury, formation…).
+              Mon Compte Formation
+            </a>
+            . Nous attirons votre attention sur le fait que les frais liés à
+            votre passage devant le jury et les actions de formations
+            complémentaires sont entièrement à votre charge.
           </p>
         </CallOut>
       </div>
