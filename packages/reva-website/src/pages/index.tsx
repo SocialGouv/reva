@@ -91,7 +91,7 @@ const BienvenueSection = () => (
   <section className="w-full  md:bg-[url('/home-page/homepage_hero.png')] bg-cover md:px-6 md:py-8 md:pt-12 md:pb-20">
     <div className="fr-container flex !p-0">
       <div className="md:w-[575px] md:h-[512px] bg-[#FAF9FE] px-6 py-8 md:p-12 flex flex-col items-start shadow-[0px_4px_12px_0px_rgba(0,0,18,0.32)]">
-        <h1 className="text-2xl md:text-[40px]">
+        <h1 className="text-2xl md:text-[40px] leading-tight">
           Bienvenue sur le portail officiel de la VAE
         </h1>
         <p className="text-base md:text-xl">
