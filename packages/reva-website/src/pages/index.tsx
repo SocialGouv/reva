@@ -281,10 +281,13 @@ const ToutSavoirSurLaVAESection = ({
           <Card
             key={article.documentId}
             title={article.titre}
-            imageUrl={article.vignette.url}
+            imageUrl={article.vignette.formats?.small?.url}
             imageAlt={article.vignette.alternativeText || ""}
             desc={article.description}
             className="md:h-[516px] md:w-[400px]"
+            nativeImgProps={{
+              loading: "lazy",
+            }}
             linkProps={{
               href: `/savoir-plus/articles/${article.slug}`,
             }}
@@ -505,8 +508,8 @@ const articlesDAideAndFAQQuery = graphql(`
       titre
       slug
       vignette {
-        url
         alternativeText
+        formats
       }
       description
     }

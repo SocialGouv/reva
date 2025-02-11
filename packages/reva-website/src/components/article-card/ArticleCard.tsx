@@ -13,6 +13,9 @@ export const ArticleCard = ({ article }: { article: ArticleDAide }) => {
         desc={description}
         imageAlt={vignette?.alternativeText as string}
         imageUrl={vignette?.formats?.small?.url as string}
+        nativeImgProps={{
+          loading: "lazy",
+        }}
         linkProps={{
           href: `/savoir-plus/articles/${slug}`,
         }}
