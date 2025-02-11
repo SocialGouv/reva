@@ -3,7 +3,6 @@ const nextConfig = {
   transpilePackages: ["@codegouvfr/react-dsfr"],
   reactStrictMode: true,
   swcMinify: true,
-  images: { unoptimized: true }, //needed for next export
   trailingSlash: true,
   async rewrites() {
     return [{ source: "/websiteapi/:path*", destination: "/api/:path*" }];

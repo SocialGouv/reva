@@ -7,7 +7,6 @@ const nextConfig = {
       : true,
   transpilePackages: ["@codegouvfr/react-dsfr"],
   swcMinify: true,
-  images: { unoptimized: true }, //needed for next export
   trailingSlash: true,
   webpack: (config) => {
     config.module.rules.push({
