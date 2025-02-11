@@ -32,7 +32,7 @@ export const validateCertification = async ({
     certification.expiresAt;
 
   if (!isDescriptionComplete) {
-    throw new Error("La description de la certifiction n'est pas complète");
+    throw new Error("La description de la certification n'est pas complète");
   }
 
   const visible =
