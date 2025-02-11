@@ -87,6 +87,13 @@ const IndexMentionsLegalesPage = () => {
             courriels pour demander la saisie d'informations personnelles.
           </SectionParagraph>
         </ContentSection>
+        <ContentSection id="credit" title="Crédits et droits des visuels">
+          <SectionParagraph>
+            Les visuels générés par intelligence artificielle sur ce site
+            proviennent de Visual Electric et sont utilisés conformément aux
+            conditions de leur licence commerciale.
+          </SectionParagraph>
+        </ContentSection>
       </div>
     </MainLayout>
   );
