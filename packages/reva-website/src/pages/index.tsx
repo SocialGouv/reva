@@ -189,7 +189,7 @@ const QuiEtesVousSection = () => (
             />
           }
           subtitle="Simplifiez la gestion des certifications et des candidatures."
-          description="Pilotez votre activité de certificateur en toute autonomie et collaborez efficacement avec les accompagnateur."
+          description="Pilotez votre activité de certificateur en toute autonomie et collaborez efficacement avec les accompagnateurs."
         >
           <Button
             priority="secondary"
