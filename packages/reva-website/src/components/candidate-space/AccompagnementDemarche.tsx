@@ -16,7 +16,7 @@ const AapStepBlock = ({
   <div className="flex flex-col w-[296px] lg:w-[384px] text-start">
     <Image src={imageUrl} alt={imageAlt} width={384} height={216} />
     <div className="p-6 flex flex-col gap-4">
-      <h6 className="text-lg lg:text-xl m-0">{title}</h6>
+      <h3 className="text-lg lg:text-xl m-0">{title}</h3>
       <p className="m-0">{description}</p>
     </div>
   </div>
@@ -66,7 +66,7 @@ const AccompagnementDemarche = () => {
           className="relative -top-28 lg:top-0 lg:-left-10"
         />
         <div className="flex flex-col justify-center pt-8 mt-[-120px] lg:mt-0 lg:p-0 text-justify">
-          <h6 className="mb-4 text-lg lg:text-xl">Un coup de pouce utile !</h6>
+          <h3 className="mb-4 text-lg lg:text-xl">Un coup de pouce utile !</h3>
           <p className="my-0">
             Votre accompagnateur vous aidera dans toutes les démarches de votre
             parcours, de la recherche de financement jusqu’au passage devant le

@@ -17,9 +17,9 @@ const BlockCompetence = ({
       alt={imageAlt}
       className="max-w-14 max-h-14 lg:max-w-none lg:max-h-none"
     />
-    <h5 className="text-xl text-[22px] leading-[28px] font-bold lg:w-2/3 mt-2 mb-0">
+    <h3 className="text-xl text-[22px] leading-[28px] font-bold lg:w-2/3 mt-2 mb-0">
       {label}
-    </h5>
+    </h3>
   </div>
 );
 
