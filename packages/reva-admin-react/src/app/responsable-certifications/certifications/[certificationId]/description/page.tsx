@@ -270,7 +270,7 @@ const PageContent = ({
           expiresAt: new Date(data.endOfVisibility).getTime(),
         });
 
-        successToast("La certification a bien été ajoutée");
+        successToast("La certification a bien été modifiée");
 
         router.push(
           `/responsable-certifications/certifications/${certification.id}`,
