@@ -100,8 +100,19 @@ model Certification {
   prerequisites                                          CertificationPrerequisite[]
   fcPrerequisites                                        String?                                                  @map("fc_prerequisites") @db.VarChar
   additionalInfo                                         CertificationAdditionalInfo?
+  certificationStatusHistory                             CertificationStatusHistory[]
 
   @@map("certification")
+}
+
+model CertificationStatusHistory {
+  id              String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationId String              @map("certification_id") @db.Uuid
+  certification   Certification       @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  status          CertificationStatus @map("status")
+  createdAt       DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("certification_status_history")
 }
 
 model CertificationCompetenceBloc {
