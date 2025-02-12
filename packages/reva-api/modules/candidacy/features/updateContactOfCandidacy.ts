@@ -48,6 +48,7 @@ export const updateContactOfCandidacy = async (params: {
       firstname: candidateData.firstname,
       lastname: candidateData.lastname,
       phone: candidateData.phone,
+      email: candidateData.email,
     },
   });
 };

@@ -127,12 +127,13 @@ test("a user can't modify the account information of another candidate", async (
   }
 });
 
-test("a candidate can modify his account information but not directly his email, it needs to be confirm via an email link", async () => {
+test("a candidate can modify all his account information", async () => {
   const candidate = await createCandidateHelper();
   const newCandidate = {
     firstname: "Updated Firstname",
     lastname: "Updated Lastname",
     phone: "0612345678",
+    email: faker.internet.email(),
   };
 
   const graphqlClient = getGraphQLClient({
@@ -164,21 +165,10 @@ test("a candidate can modify his account information but not directly his email,
 
   const res = await graphqlClient.request(candidacy_updateContact, {
     candidateId: candidate.id,
-    candidateData: {
-      firstname: newCandidate.firstname,
-      lastname: newCandidate.lastname,
-      phone: newCandidate.phone,
-      email: faker.internet.email(),
-    },
+    candidateData: newCandidate,
   });
 
-  expect(res).toMatchObject({
-    candidacy_updateContact: {
-      id: candidate.id,
-      email: candidate.email,
-      ...newCandidate,
-    },
-  });
+  expect(res.candidacy_updateContact).toMatchObject(newCandidate);
 
   const updatedCandidate = await prismaClient.candidate.findUnique({
     where: { id: candidate.id },

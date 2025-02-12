@@ -53,7 +53,7 @@ const getDefaultUpdatedCandidateFields = async () => {
 };
 
 describe("candidate information update", () => {
-  test("should update all fields of candidate information except the email", async () => {
+  test("should update all fields of candidate information", async () => {
     const candidacy = await createCandidacyHelper();
 
     if (!candidacy || !candidacy.candidate) {
@@ -66,7 +66,6 @@ describe("candidate information update", () => {
       ...updatedCandidateFields,
       birthDepartment: { id: updatedCandidateFields.birthDepartmentId },
       country: { id: updatedCandidateFields.countryId },
-      email: candidacy.candidate.email, // email should not be updated, a confirmation is send by email is send instead
     };
 
     const resp = await injectGraphql({
@@ -98,7 +97,7 @@ describe("candidate information update", () => {
     );
   });
 
-  test("should send a confirmation email when trying to update the candidate email", async () => {
+  test("should send notification emails when updating the candidate email", async () => {
     const sendNewEmailCandidateEmailSpy = jest
       .spyOn(SendNewEmailCandidateEmailModule, "sendNewEmailCandidateEmail")
       .mockImplementation(() => Promise.resolve(""));
@@ -141,13 +140,13 @@ describe("candidate information update", () => {
     expect(resp.json()).not.toHaveProperty("errors");
     const obj = resp.json();
     expect(obj.data.candidate_updateCandidateInformation).toMatchObject({
-      email: candidacy.candidate.email,
+      email: updatedCandidateFields.email,
     });
     expect(sendNewEmailCandidateEmailSpy).toHaveBeenCalled();
     expect(sendPreviousEmailCandidateEmailSpy).toHaveBeenCalled();
   });
 
-  test("should not send a confirmation email when the candidate email has not been changed", async () => {
+  test("should not send notification emails when the candidate email has not been changed", async () => {
     const sendNewEmailCandidateEmailSpy = jest
       .spyOn(SendNewEmailCandidateEmailModule, "sendNewEmailCandidateEmail")
       .mockImplementation(() => Promise.resolve(""));
