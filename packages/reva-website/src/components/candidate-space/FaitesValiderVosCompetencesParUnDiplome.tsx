@@ -24,7 +24,7 @@ const FaitesValiderVosCompetencesParUnDiplome = () => {
 
       <div className="bg-white z-10 px-6 lg:px-10 pt-8 lg:pt-10 pb-12 border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
         <h2 className="text-[28px] leading-9 lg:text-[32px] font-bold mb-6">
-          Recherchez parmi les 24 diplômes disponibles sur France VAE
+          Recherchez le diplôme qui vous correspond
         </h2>
         <CertificateAutocompleteDsfr
           big
