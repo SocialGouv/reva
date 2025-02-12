@@ -1,4 +1,3 @@
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
@@ -9,7 +8,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { PICTOGRAMS } from "@/components/pictograms";
 import Link from "next/link";
 import { graphql } from "@/graphql/generated";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { GRAPHQL_API_URL, STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import request from "graphql-request";
 import { ArticleDAide, ArticleFaq } from "@/graphql/generated/graphql";
 import { Card } from "@codegouvfr/react-dsfr/Card";
@@ -24,20 +23,16 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
 const HomePage = ({
   articlesDaide,
   articlesFAQ,
+  activeFeatures,
 }: {
   articlesDaide: ArticleDAide[];
   articlesFAQ: ArticleFaq[];
+  activeFeatures: string[];
 }) => {
-  const { isFeatureActive, status: featureFlippingServiceStatus } =
-    useFeatureflipping();
-
-  const candidacyCreationDisabled = isFeatureActive(
+  const candidacyCreationDisabled = activeFeatures.includes(
     "CANDIDACY_CREATION_DISABLED",
   );
 
-  if (featureFlippingServiceStatus !== "INITIALIZED") {
-    return null;
-  }
   return (
     <MainLayout className="relative">
       <Head>
@@ -55,7 +50,7 @@ const HomePage = ({
         }
       />
       <HomeContainer>
-        {isFeatureActive("HOMEPAGE_V2") ? (
+        {activeFeatures.includes("HOMEPAGE_V2") ? (
           <HomePageContent
             articleDAides={articlesDaide}
             articlesFAQ={articlesFAQ}
@@ -481,12 +476,22 @@ const QuestionsFrequentesSection = ({
   </section>
 );
 
+const activeFeaturesQuery = graphql(`
+  query activeFeaturesForConnectedUser {
+    activeFeaturesForConnectedUser
+  }
+`);
+
 export async function getServerSideProps() {
-  const articlesDaideEtFAQ = await getArticlesDAideAndFAQ();
+  const [activeFeatures, articlesDaideEtFAQ] = await Promise.all([
+    request(GRAPHQL_API_URL, activeFeaturesQuery),
+    getArticlesDAideAndFAQ(),
+  ]);
   return {
     props: {
       articlesDaide: articlesDaideEtFAQ.articlesDAide,
       articlesFAQ: articlesDaideEtFAQ.articlesFAQ,
+      activeFeatures: activeFeatures.activeFeaturesForConnectedUser,
     },
   };
 }
