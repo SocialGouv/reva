@@ -136,6 +136,7 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
 
       cy.get('[data-test="form-buttons"]')
         .find('button[type="submit"]')
+        .should("not.be.disabled")
         .click();
 
       cy.get('[data-test="prerequisite-input-0"]').within(() => {
