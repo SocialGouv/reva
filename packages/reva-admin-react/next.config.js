@@ -8,6 +8,15 @@ const nextConfig = {
   transpilePackages: ["@codegouvfr/react-dsfr"],
   swcMinify: true,
   trailingSlash: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "healing-nature-bb0384846f.media.strapiapp.com",
+        port: "",
+      },
+    ],
+  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.woff2$/,

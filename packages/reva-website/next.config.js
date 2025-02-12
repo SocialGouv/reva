@@ -4,6 +4,15 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   trailingSlash: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "healing-nature-bb0384846f.media.strapiapp.com",
+        port: "",
+      },
+    ],
+  },
   async rewrites() {
     return [{ source: "/websiteapi/:path*", destination: "/api/:path*" }];
   },
