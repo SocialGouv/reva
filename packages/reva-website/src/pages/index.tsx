@@ -24,15 +24,13 @@ const HomePage = ({
   articlesDaide,
   articlesFAQ,
   activeFeatures,
+  homePageNoticeText,
 }: {
   articlesDaide: ArticleDAide[];
   articlesFAQ: ArticleFaq[];
   activeFeatures: string[];
+  homePageNoticeText?: string;
 }) => {
-  const candidacyCreationDisabled = activeFeatures.includes(
-    "CANDIDACY_CREATION_DISABLED",
-  );
-
   return (
     <MainLayout className="relative">
       <Head>
@@ -42,13 +40,7 @@ const HomePage = ({
           content="Découvrez la version beta du portail officiel du service public de la Validation des Acquis de L'Expérience."
         />
       </Head>
-      <Notice
-        title={
-          candidacyCreationDisabled
-            ? "En raison d'une mise à jour technique, le service d'inscription sera indisponible jusqu'au lundi 28 octobre."
-            : "Vous êtes sur le portail officiel du service public de la VAE. Ce portail évolue régulièrement."
-        }
-      />
+      {homePageNoticeText && <Notice title={homePageNoticeText} />}
       <HomeContainer>
         {activeFeatures.includes("HOMEPAGE_V2") ? (
           <HomePageContent
@@ -510,21 +502,22 @@ const activeFeaturesQuery = graphql(`
 `);
 
 export async function getServerSideProps() {
-  const [activeFeatures, articlesDaideEtFAQ] = await Promise.all([
+  const [activeFeatures, homePageItems] = await Promise.all([
     request(GRAPHQL_API_URL, activeFeaturesQuery),
-    getArticlesDAideAndFAQ(),
+    getHomePageItemsFromStrapi(),
   ]);
   return {
     props: {
-      articlesDaide: articlesDaideEtFAQ.articlesDAide,
-      articlesFAQ: articlesDaideEtFAQ.articlesFAQ,
       activeFeatures: activeFeatures.activeFeaturesForConnectedUser,
+      articlesDaide: homePageItems.articlesDAide,
+      articlesFAQ: homePageItems.articlesFAQ,
+      homePageNoticeText: homePageItems.homePageNoticeText,
     },
   };
 }
 
-const articlesDAideAndFAQQuery = graphql(`
-  query getArticleDAideAndFAQForHomePage {
+const homePageItemsQuery = graphql(`
+  query getHomePageItems {
     articleDAides(
       filters: {
         slug: {
@@ -561,13 +554,16 @@ const articlesDAideAndFAQQuery = graphql(`
       question
       reponse
     }
+    homePage {
+      bandeau
+    }
   }
 `);
 
-export const getArticlesDAideAndFAQ = async () => {
-  const articlesDAideAndFAQResponse = await request(
+const getHomePageItemsFromStrapi = async () => {
+  const homePageItems = await request(
     STRAPI_GRAPHQL_API_URL,
-    articlesDAideAndFAQQuery,
+    homePageItemsQuery,
   );
 
   return {
@@ -576,9 +572,7 @@ export const getArticlesDAideAndFAQ = async () => {
       "quest-ce-que-france-vae",
       "qui-accompagne-a-la-vae",
     ]
-      .map((slug) =>
-        articlesDAideAndFAQResponse.articleDAides.find((a) => a?.slug === slug),
-      )
+      .map((slug) => homePageItems.articleDAides.find((a) => a?.slug === slug))
       .filter(Boolean),
     articlesFAQ: [
       "uk9035s38u122xg169nqrkhw",
@@ -587,11 +581,10 @@ export const getArticlesDAideAndFAQ = async () => {
       "gbskuvsjqvgzvscvbr75n5vq",
     ]
       .map((documentId) =>
-        articlesDAideAndFAQResponse.articleFaqs.find(
-          (a) => a?.documentId === documentId,
-        ),
+        homePageItems.articleFaqs.find((a) => a?.documentId === documentId),
       )
       .filter(Boolean),
+    homePageNoticeText: homePageItems.homePage?.bandeau,
   };
 };
 
