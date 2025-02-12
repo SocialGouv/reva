@@ -1,25 +1,18 @@
 "use client";
 
-import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
-import { Input } from "@codegouvfr/react-dsfr/Input";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 
 import { PageLayout } from "@/layouts/page.layout";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useUpdateContact } from "./update-contact.hooks";
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { graphqlErrorToast } from "@/components/toast/toast";
-
-const modalUpdateEmail = createModal({
-  id: "project-update-email",
-  isOpenedByDefault: false,
-});
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useUpdateContact } from "./update-contact.hooks";
 
 export default function UpdateContact() {
   const router = useRouter();
@@ -27,17 +20,6 @@ export default function UpdateContact() {
   const { candidate, refetch } = useCandidacy();
 
   const { updateContact } = useUpdateContact();
-
-  const isModalOpen = useIsModalOpen(modalUpdateEmail);
-  useIsModalOpen(modalUpdateEmail, {
-    onConceal: () => {
-      if (!isModalOpen) return;
-
-      setTimeout(() => {
-        router.push("/");
-      }, 300);
-    },
-  });
 
   const [firstname, setFirstname] = useState(candidate.firstname);
   const [lastname, setLastname] = useState(candidate.lastname);
@@ -60,12 +42,8 @@ export default function UpdateContact() {
       });
       if (response) {
         refetch();
-
-        if (candidate.email != email) {
-          modalUpdateEmail.open();
-        } else {
-          router.push("/");
-        }
+        successToast("Vos informations ont été mises à jour avec succès");
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
@@ -153,27 +131,6 @@ export default function UpdateContact() {
           Enregistrer
         </Button>
       </form>
-
-      <modalUpdateEmail.Component
-        title={
-          <div className="flex gap-2">
-            <span className="fr-icon-arrow-right-line fr-icon--lg"></span>
-            <span>
-              Votre demande de changement d&apos;e-mail de connexion a bien été
-              prise en compte
-            </span>
-          </div>
-        }
-        size="large"
-        concealingBackdrop={false}
-      >
-        <p className="my-4">
-          Afin de valider ce changement, un e-mail d&apos;activation a été
-          envoyé sur votre nouvelle adresse. Si vous ne trouvez pas notre
-          e-mail, pensez à vérifier votre dossier de courriers indésirables
-          (spams).
-        </p>
-      </modalUpdateEmail.Component>
     </PageLayout>
   );
 }
