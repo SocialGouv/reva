@@ -1,7 +1,9 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import { GetArticleDAideQuery } from "@/graphql/generated/graphql";
-import { getArticleDAide } from "@/utils/strapiQueries";
 import Button from "@codegouvfr/react-dsfr/Button";
+import request from "graphql-request";
 import Head from "next/head";
 
 const ArticleAidePage = ({
@@ -66,6 +68,33 @@ const ArticleAidePage = ({
       </MainLayout>
     </>
   );
+};
+
+const articleQuery = graphql(`
+  query getArticleDAide(
+    $filters: ArticleDAideFiltersInput!
+    $publicationState: PublicationStatus!
+  ) {
+    articleDAides(filters: $filters, status: $publicationState) {
+      documentId
+      titre
+      slug
+      vignette {
+        url
+        alternativeText
+      }
+      contenu
+      description
+    }
+  }
+`);
+
+const getArticleDAide = async (slug: string, preview = false) => {
+  const articles = await request(STRAPI_GRAPHQL_API_URL, articleQuery, {
+    filters: { slug: { eq: slug } },
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
+  return articles;
 };
 
 export async function getServerSideProps({

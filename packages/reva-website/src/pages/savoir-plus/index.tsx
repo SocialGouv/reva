@@ -1,13 +1,15 @@
 "use client";
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import {
   ArticleDAide,
   GetSectionDAidesQuery,
 } from "@/graphql/generated/graphql";
-import { getSectionDAides } from "@/utils/strapiQueries";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { request } from "graphql-request";
 import { truncate } from "lodash";
 import Head from "next/head";
 import Image from "next/image";
@@ -180,6 +182,36 @@ const SavoirPlusPage = ({
       </MainLayout>
     </>
   );
+};
+
+const sectionsQuery = graphql(`
+  query getSectionDAides($publicationState: PublicationStatus!) {
+    sectionDAides(sort: "ordre", status: $publicationState) {
+      documentId
+      titre
+      article_d_aides(
+        sort: "ordre"
+        filters: { publishedAt: { notNull: true } }
+      ) {
+        documentId
+        slug
+        titre
+        publishedAt
+        vignette {
+          url
+          alternativeText
+          formats
+        }
+        description
+      }
+    }
+  }
+`);
+
+const getSectionDAides = async (preview = false) => {
+  return request(STRAPI_GRAPHQL_API_URL, sectionsQuery, {
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
 };
 
 export async function getServerSideProps({ preview = false }) {

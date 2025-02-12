@@ -1,8 +1,10 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import { GetRegionsBySlugQueryForRegionHomePageQuery } from "@/graphql/generated/graphql";
-import { getRegionsBySlug } from "@/utils/strapiQueries";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
+import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -91,6 +93,40 @@ const RegionHomePage = ({
       )}
     </MainLayout>
   ) : null;
+};
+
+const getRegionsBySlugQuery = graphql(`
+  query getRegionsBySlugQueryForRegionHomePage(
+    $filters: RegionFiltersInput!
+    $publicationState: PublicationStatus!
+  ) {
+    regions(filters: $filters, status: $publicationState) {
+      nom
+      slug
+      urlExternePRCs
+      vignette {
+        url
+      }
+      article_regions(
+        sort: "ordre"
+        filters: { publishedAt: { notNull: true } }
+      ) {
+        titre
+        slug
+        resume
+        vignette {
+          url
+        }
+      }
+    }
+  }
+`);
+
+const getRegionsBySlug = async (regionSlug: string, preview = false) => {
+  return request(STRAPI_GRAPHQL_API_URL, getRegionsBySlugQuery, {
+    filters: { slug: { eq: regionSlug } },
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
 };
 
 export async function getServerSideProps({

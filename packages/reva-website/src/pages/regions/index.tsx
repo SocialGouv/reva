@@ -1,7 +1,9 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import { GetRegionsQuery } from "@/graphql/generated/graphql";
-import { getRegions } from "@/utils/strapiQueries";
 import { Card } from "@codegouvfr/react-dsfr/Card";
+import { request } from "graphql-request";
 import Head from "next/head";
 
 const RegionsPage = ({
@@ -77,6 +79,24 @@ const RegionCard = ({
     titleAs="h3"
   />
 );
+
+const getRegionsQuery = graphql(`
+  query getRegions($publicationState: PublicationStatus!) {
+    regions(sort: "ordre", status: $publicationState) {
+      nom
+      slug
+      vignette {
+        url
+      }
+    }
+  }
+`);
+
+const getRegions = async (preview = false) => {
+  return request(STRAPI_GRAPHQL_API_URL, getRegionsQuery, {
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
+};
 
 export async function getServerSideProps({ preview = false }) {
   const getRegionsResponse = await getRegions(preview);

@@ -3,8 +3,10 @@ import { HardCodedCgu } from "@/components/cgu/HardCodedCgu";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { NeutralBackground } from "@/components/layout/neutral-background/NeutralBackground";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import { GetCguQuery } from "@/graphql/generated/graphql";
-import { getCgu } from "@/utils/strapiQueries";
+import request from "graphql-request";
 import Head from "next/head";
 
 const CguProPage = ({ getCguResponse }: { getCguResponse: GetCguQuery }) => {
@@ -45,6 +47,22 @@ const CguProPage = ({ getCguResponse }: { getCguResponse: GetCguQuery }) => {
 };
 
 export default CguProPage;
+
+const getCguQuery = graphql(`
+  query getCgu {
+    legals(filters: { nom: { eq: "CGU" } }) {
+      documentId
+      titre
+      contenu
+      chapo
+      dateDeMiseAJour
+    }
+  }
+`);
+
+const getCgu = async () => {
+  return request(STRAPI_GRAPHQL_API_URL, getCguQuery);
+};
 
 export async function getServerSideProps() {
   const getCguResponse = await getCgu();

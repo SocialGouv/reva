@@ -1,5 +1,24 @@
-import { getArticleRegionById } from "@/utils/strapiQueries";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
+import request from "graphql-request";
 import { NextApiRequest, NextApiResponse } from "next";
+
+const getArticleRegionByIdQuery = graphql(`
+  query getArticleRegionsByIdForPreview($id: ID!) {
+    articleRegion(documentId: $id) {
+      titre
+      regions {
+        slug
+      }
+    }
+  }
+`);
+
+const getArticleRegionById = async (id: string) => {
+  return request(STRAPI_GRAPHQL_API_URL, getArticleRegionByIdQuery, {
+    id,
+  });
+};
 
 export default async function handler(
   req: NextApiRequest,

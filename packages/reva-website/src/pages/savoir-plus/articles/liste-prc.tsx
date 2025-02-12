@@ -1,10 +1,12 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import {
   GetArticleDAideQuery,
   GetPrCsQuery,
 } from "@/graphql/generated/graphql";
-import { getArticleDAide, getPRCs } from "@/utils/strapiQueries";
+import request from "graphql-request";
 import Head from "next/head";
 import { usePathname, useSearchParams } from "next/navigation";
 import router from "next/router";
@@ -141,6 +143,55 @@ const ListePrcPage = ({
       </MainLayout>
     </>
   );
+};
+
+const articleQuery = graphql(`
+  query getArticleDAide(
+    $filters: ArticleDAideFiltersInput!
+    $publicationState: PublicationStatus!
+  ) {
+    articleDAides(filters: $filters, status: $publicationState) {
+      documentId
+      titre
+      slug
+      vignette {
+        url
+        alternativeText
+      }
+      contenu
+      description
+    }
+  }
+`);
+
+const getArticleDAide = async (slug: string, preview = false) => {
+  const articles = await request(STRAPI_GRAPHQL_API_URL, articleQuery, {
+    filters: { slug: { eq: slug } },
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
+  return articles;
+};
+
+const getPrcsQuery = graphql(`
+  query getPRCs {
+    prcs(pagination: { page: 1, pageSize: 1000 }) {
+      documentId
+      nom
+      email
+      adresse
+      mandataire
+      region
+      telephone
+      departement {
+        nom
+        code
+      }
+    }
+  }
+`);
+
+const getPRCs = async () => {
+  return request(STRAPI_GRAPHQL_API_URL, getPrcsQuery);
 };
 
 export async function getServerSideProps() {

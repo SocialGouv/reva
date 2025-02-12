@@ -11,8 +11,10 @@ import { AccountInfoStepForm } from "@/components/professional-space/inscription
 import { CguStep } from "@/components/professional-space/inscription/form/CguStep";
 import { CompanyDocumentsStepForm } from "@/components/professional-space/inscription/form/CompanyDocumentsStepForm";
 import { CompanySiretStepForm } from "@/components/professional-space/inscription/form/CompanySiretStepForm";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import { GetCguQuery } from "@/graphql/generated/graphql";
-import { getCgu } from "@/utils/strapiQueries";
+import request from "graphql-request";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -71,6 +73,22 @@ const ProfessionalSpaceCreationPage = ({
       </OrganismBackground>
     </MainLayout>
   );
+};
+
+const getCguQuery = graphql(`
+  query getCgu {
+    legals(filters: { nom: { eq: "CGU" } }) {
+      documentId
+      titre
+      contenu
+      chapo
+      dateDeMiseAJour
+    }
+  }
+`);
+
+const getCgu = async () => {
+  return request(STRAPI_GRAPHQL_API_URL, getCguQuery);
 };
 
 export default ProfessionalSpaceCreationPage;
