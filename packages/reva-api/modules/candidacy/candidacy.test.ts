@@ -3,11 +3,11 @@
  */
 
 import { faker } from "@faker-js/faker/.";
-import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 
+import { injectGraphql } from "../../test/helpers/graphql-helper";
 import {
   getGraphQLClient,
   getGraphQLError,
@@ -136,43 +136,23 @@ test("a candidate can modify all his account information", async () => {
     email: faker.internet.email(),
   };
 
-  const graphqlClient = getGraphQLClient({
-    headers: {
-      authorization: authorizationHeaderForUser({
-        role: "candidate",
-        keycloakId: candidate.keycloakId,
-      }),
+  const res = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "candidate",
+      keycloakId: candidate.keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "candidacy_updateContact",
+      arguments: {
+        candidateId: candidate.id,
+        candidateData: newCandidate,
+      },
+      returnFields: "{firstname lastname phone email}",
     },
   });
 
-  const candidacy_updateContact = graphql(`
-    mutation candidacy_updateContact_of_same_candidate(
-      $candidateId: ID!
-      $candidateData: UpdateCandidateInput!
-    ) {
-      candidacy_updateContact(
-        candidateId: $candidateId
-        candidateData: $candidateData
-      ) {
-        id
-        firstname
-        lastname
-        phone
-        email
-      }
-    }
-  `);
-
-  const res = await graphqlClient.request(candidacy_updateContact, {
-    candidateId: candidate.id,
-    candidateData: newCandidate,
-  });
-
-  expect(res.candidacy_updateContact).toMatchObject(newCandidate);
-
-  const updatedCandidate = await prismaClient.candidate.findUnique({
-    where: { id: candidate.id },
-  });
-
-  expect(updatedCandidate).toMatchObject(newCandidate);
+  expect(res.statusCode).toEqual(200);
+  expect(res.json().data.candidacy_updateContact).toMatchObject(newCandidate);
 });

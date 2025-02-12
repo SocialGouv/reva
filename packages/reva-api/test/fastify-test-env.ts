@@ -1,13 +1,11 @@
 import NodeEnvironment from "jest-environment-node";
 
-import { PrismaClient } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 import { buildApp } from "../infra/server/app";
 import keycloakPluginMock from "./mocks/keycloak-plugin.mock";
 
 class FastifyEnvironment extends NodeEnvironment {
   server: FastifyInstance;
-  prismaClient: PrismaClient;
 
   async setup(): Promise<void> {
     await super.setup();
@@ -21,8 +19,6 @@ class FastifyEnvironment extends NodeEnvironment {
       });
 
       this.global.fastify = this.server;
-
-      this.prismaClient = new PrismaClient();
     } catch (err) {
       console.log(err);
       process.exit(1);
@@ -30,7 +26,6 @@ class FastifyEnvironment extends NodeEnvironment {
   }
 
   async teardown(): Promise<void> {
-    await this.prismaClient.$disconnect();
     await this.server.close();
     await super.teardown();
   }
