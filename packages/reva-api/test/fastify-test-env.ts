@@ -1,8 +1,8 @@
 import NodeEnvironment from "jest-environment-node";
 
+import { FastifyInstance } from "fastify";
 import { buildApp } from "../infra/server/app";
 import keycloakPluginMock from "./mocks/keycloak-plugin.mock";
-import { FastifyInstance } from "fastify";
 
 class FastifyEnvironment extends NodeEnvironment {
   server: FastifyInstance;
@@ -26,9 +26,15 @@ class FastifyEnvironment extends NodeEnvironment {
   }
 
   async teardown(): Promise<void> {
-    await super.teardown();
+    if (this.server) {
+      await new Promise((resolve) => {
+        this.server.close(() => {
+          resolve(true);
+        });
+      });
+    }
 
-    this.server.close();
+    await super.teardown();
   }
 }
 
