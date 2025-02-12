@@ -2,16 +2,27 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
+import { buildApp } from "../../infra/server/app";
 import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
-
+import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import {
   getGraphQLClient,
   getGraphQLError,
 } from "../../test/jestGraphqlClient";
+import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
 import { graphql } from "../graphql/generated";
+
+beforeAll(async () => {
+  const app = await buildApp({ keycloakPluginMock });
+  (global as any).fastify = app;
+});
+
+afterEach(async () => {
+  await clearDatabase();
+});
 
 test("get existing Candidacy with admin user", async () => {
   const candidacy = await createCandidacyHelper();
