@@ -59,16 +59,9 @@ export interface CandidateLoginInput {
   action: "login";
 }
 
-interface CandidateConfirmEmailInput {
-  previousEmail: string;
-  newEmail: string;
-  action: "confirmEmail";
-}
-
 export type CandidateAuthenticationInput =
   | CandidateRegistrationInput
-  | CandidateLoginInput
-  | CandidateConfirmEmailInput;
+  | CandidateLoginInput;
 
 export enum CandidateBusinessEvent {
   CREATED_CANDIDATE = "Created Candidate",

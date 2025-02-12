@@ -1,7 +1,6 @@
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCertification } from "../../candidacy/certification/features/updateCertification";
 import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
-import { updateEmailOfCandidacy } from "../../candidacy/features/updateEmailOfCandidacy";
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
 import {
@@ -44,13 +43,6 @@ export const candidateAuthentication = async ({ token }: { token: string }) => {
     return loginCandidate({
       email: candidateAuthenticationInput.email,
     });
-  } else if (candidateAuthenticationInput.action === "confirmEmail") {
-    const { previousEmail, newEmail } = candidateAuthenticationInput;
-    const candidateUpdated = await updateEmailOfCandidacy({
-      previousEmail,
-      newEmail,
-    });
-    return loginCandidate({ email: candidateUpdated.email });
   } else {
     throw new FunctionalError(
       FunctionalCodeError.TECHNICAL_ERROR,

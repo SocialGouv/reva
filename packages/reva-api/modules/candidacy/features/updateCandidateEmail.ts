@@ -1,7 +1,7 @@
-import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
 import { prismaClient } from "../../../prisma/client";
+import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
 
-export const updateEmailOfCandidacy = async ({
+export const updateCandidateEmail = async ({
   previousEmail,
   newEmail,
 }: {
@@ -36,8 +36,5 @@ export const updateEmailOfCandidacy = async ({
   return prismaClient.candidate.update({
     where: { email: previousEmail },
     data: { email: newEmail },
-    include: {
-      candidacies: true,
-    },
   });
 };

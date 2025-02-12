@@ -16,7 +16,6 @@ export const sendEmailWithLink = async ({
   action?:
     | "registration"
     | "login"
-    | "confirmEmail"
     | "admin"
     | "agencies-settings/legal-information"
     | "agencies-settings-v3"
@@ -36,8 +35,7 @@ export const sendEmailWithLink = async ({
       appPath = "admin2";
       break;
   }
-  const actionPath =
-    action == "registration" || action == "confirmEmail" ? "login" : action;
+  const actionPath = action == "registration" ? "login" : action;
 
   const baseUrl = `${process.env.BASE_URL}/${appPath}`;
   const url = customUrl

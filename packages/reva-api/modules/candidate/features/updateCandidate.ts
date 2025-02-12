@@ -7,7 +7,7 @@ import {
   sendNewEmailCandidateEmail,
   sendPreviousEmailCandidateEmail,
 } from "../../candidacy/emails";
-import { generateJwt } from "../../candidate/auth.helper";
+import { updateCandidateEmail } from "../../candidacy/features/updateCandidateEmail";
 import { CandidateUpdateInput } from "../../candidate/candidate.types";
 
 export const updateCandidate = async ({
@@ -89,17 +89,9 @@ export const updateCandidate = async ({
   const newEmail = email;
 
   if (newEmail && newEmail !== previousEmail) {
-    const token = generateJwt(
-      {
-        previousEmail,
-        newEmail,
-        action: "confirmEmail",
-      },
-      1 * 60 * 60 * 24 * 4,
-    );
-
+    await updateCandidateEmail({ previousEmail, newEmail });
     await sendPreviousEmailCandidateEmail({ email: previousEmail });
-    await sendNewEmailCandidateEmail({ email: newEmail, token });
+    await sendNewEmailCandidateEmail({ email: newEmail });
   }
 
   //We don't want to update the email in the database, it will be done after the email confirmation

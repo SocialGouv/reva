@@ -1,10 +1,10 @@
 import { prismaClient } from "../../../prisma/client";
-import { generateJwt } from "../../candidate/auth.helper";
 import { Candidate } from "../../candidate/candidate.types";
 import {
   sendNewEmailCandidateEmail,
   sendPreviousEmailCandidateEmail,
 } from "../emails";
+import { updateCandidateEmail } from "./updateCandidateEmail";
 export const updateContactOfCandidacy = async (params: {
   candidateId: string;
   candidateData: {
@@ -37,17 +37,9 @@ export const updateContactOfCandidacy = async (params: {
     const previousEmail = candidateToUpdate.email;
     const newEmail = candidateData.email;
 
-    const token = generateJwt(
-      {
-        previousEmail,
-        newEmail,
-        action: "confirmEmail",
-      },
-      1 * 60 * 60 * 24 * 4,
-    );
-
+    await updateCandidateEmail({ previousEmail, newEmail });
     await sendPreviousEmailCandidateEmail({ email: previousEmail });
-    await sendNewEmailCandidateEmail({ email: newEmail, token });
+    await sendNewEmailCandidateEmail({ email: newEmail });
   }
 
   return prismaClient.candidate.update({
