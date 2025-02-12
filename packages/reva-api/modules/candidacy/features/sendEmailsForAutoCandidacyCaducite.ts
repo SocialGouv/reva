@@ -1,12 +1,12 @@
 import { CandidacyEmailType } from "@prisma/client";
 import { addDays, format, subDays } from "date-fns";
-import { logger } from "modules/shared/logger";
 import { prismaClient } from "../../../prisma/client";
 import {
   ACTUALISATION_THRESHOLD_DAYS,
   CADUCITE_THRESHOLD_DAYS,
   WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
 } from "../../shared/candidacy/candidacyCaducite";
+import { logger } from "../../shared/logger";
 import { sendCandidacyCaduciteSoonWarningEmailToAap } from "../emails/sendCandidacyCaduciteSoonWarningEmailToAap";
 import { sendCandidacyCaduciteSoonWarningEmailToCandidate } from "../emails/sendCandidacyCaduciteSoonWarningEmailToCandidate";
 import { sendCandidacyIsCaduqueEmailToAap } from "../emails/sendCandidacyIsCaduqueEmailToAap";
