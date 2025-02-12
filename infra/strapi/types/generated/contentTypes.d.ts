@@ -536,6 +536,35 @@ export interface ApiDepartementDepartement extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
+  collectionName: 'home_pages';
+  info: {
+    description: '';
+    displayName: 'HomePage';
+    pluralName: 'home-pages';
+    singularName: 'home-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    bandeau: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::home-page.home-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLegalLegal extends Struct.CollectionTypeSchema {
   collectionName: 'legals';
   info: {
@@ -1335,6 +1364,7 @@ declare module '@strapi/strapi' {
       'api::article-faq.article-faq': ApiArticleFaqArticleFaq;
       'api::article-region.article-region': ApiArticleRegionArticleRegion;
       'api::departement.departement': ApiDepartementDepartement;
+      'api::home-page.home-page': ApiHomePageHomePage;
       'api::legal.legal': ApiLegalLegal;
       'api::prc.prc': ApiPrcPrc;
       'api::region.region': ApiRegionRegion;
