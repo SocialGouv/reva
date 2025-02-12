@@ -3,7 +3,7 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
 import { ReactNode } from "react";
 import { CandidateSpaceHomePageContent } from "@/components/candidate-space/CandidateSpaceHomePageContent";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { PICTOGRAMS } from "@/components/pictograms";
 import Link from "next/link";
@@ -82,37 +82,64 @@ const HomePageContent = ({
   </>
 );
 
-const BienvenueSection = () => (
-  <section className="w-full  md:bg-[url('/home-page/homepage_hero.png')] bg-cover md:px-6 md:py-8 md:pt-12 md:pb-20">
-    <div className="fr-container flex !p-0">
-      <div className="md:w-[575px] md:h-[512px] bg-[#FAF9FE] px-6 py-8 md:p-12 flex flex-col items-start shadow-[0px_4px_12px_0px_rgba(0,0,18,0.32)]">
-        <h1 className="text-2xl md:text-[40px] leading-tight">
-          Bienvenue sur le portail officiel de la VAE
-        </h1>
-        <p className="text-base md:text-xl">
-          La Validation des Acquis de l'Expérience (VAE) offre une 3ème voie
-          d'accès à la certification en France, équivalente à la formation
-          initiale, continue ou en alternance.
-        </p>
-        <p className="text-base md:text-xl">
-          En 2022, le Ministère du Travail a créé le Service public de la VAE,
-          accessible via cette plateforme.
-        </p>
-        <Button
-          iconId="fr-icon-arrow-right-line"
-          iconPosition="right"
-          className="mt-auto"
-          linkProps={{
-            href: "/inscription-candidat/",
-            target: "_self",
-          }}
-        >
-          Commencez votre parcours VAE
-        </Button>
+function getBackgroundImage(srcSet = "") {
+  const imageSet = srcSet
+    .split(", ")
+    .map((str) => {
+      const [url, dpi] = str.split(" ");
+      return `url("${url}") ${dpi}`;
+    })
+    .join(", ");
+  return `image-set(${imageSet})`;
+}
+
+const BienvenueSection = () => {
+  const {
+    props: { srcSet },
+  } = getImageProps({
+    alt: "Deux personnes souriant le regard tourné vers l'objectif",
+    width: 2880,
+    height: 1272,
+    src: "/home-page/homepage_hero.png",
+  });
+
+  const backgroundImage = getBackgroundImage(srcSet);
+  return (
+    <section className="w-full md:px-6 md:py-8 md:pt-12 md:pb-20 relative">
+      <div
+        className="absolute w-full h-full bg-cover inset-0 -z-10 hidden md:block"
+        style={{ backgroundImage }}
+      />
+      <div className="fr-container flex !p-0">
+        <div className="md:w-[575px] md:h-[512px] bg-[#FAF9FE] px-6 py-8 md:p-12 flex flex-col items-start shadow-[0px_4px_12px_0px_rgba(0,0,18,0.32)]">
+          <h1 className="text-2xl md:text-[40px] leading-tight">
+            Bienvenue sur le portail officiel de la VAE
+          </h1>
+          <p className="text-base md:text-xl">
+            La Validation des Acquis de l'Expérience (VAE) offre une 3ème voie
+            d'accès à la certification en France, équivalente à la formation
+            initiale, continue ou en alternance.
+          </p>
+          <p className="text-base md:text-xl">
+            En 2022, le Ministère du Travail a créé le Service public de la VAE,
+            accessible via cette plateforme.
+          </p>
+          <Button
+            iconId="fr-icon-arrow-right-line"
+            iconPosition="right"
+            className="mt-auto"
+            linkProps={{
+              href: "/inscription-candidat/",
+              target: "_self",
+            }}
+          >
+            Commencez votre parcours VAE
+          </Button>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const QuiEtesVousSection = () => (
   <section className="w-full px-6 py-8 md:pt-12 md:pb-20 bg-[#cedff4]">
