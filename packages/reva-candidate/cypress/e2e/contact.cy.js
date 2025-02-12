@@ -45,7 +45,6 @@ context("Candidate account", () => {
     });
 
     cy.get('[data-test="project-contact-save"]').click();
-    cy.get('[title="Fermer"][aria-controls="project-update-email"]').click();
     cy.wait("@update_contact");
     cy.wait("@candidate_getCandidateWithCandidacy");
 
