@@ -10,7 +10,11 @@ import Link from "next/link";
 import { graphql } from "@/graphql/generated";
 import { GRAPHQL_API_URL, STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import request from "graphql-request";
-import { ArticleDAide, ArticleFaq } from "@/graphql/generated/graphql";
+import {
+  ArticleActualite,
+  ArticleDAide,
+  ArticleFaq,
+} from "@/graphql/generated/graphql";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
@@ -23,12 +27,14 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
 const HomePage = ({
   articlesDaide,
   articlesFAQ,
-  activeFeatures,
+  articlesActualite,
   homePageNoticeText,
+  activeFeatures,
 }: {
   articlesDaide: ArticleDAide[];
   articlesFAQ: ArticleFaq[];
   activeFeatures: string[];
+  articlesActualite: ArticleActualite[];
   homePageNoticeText?: string;
 }) => {
   return (
@@ -46,6 +52,7 @@ const HomePage = ({
           <HomePageContent
             articleDAides={articlesDaide}
             articlesFAQ={articlesFAQ}
+            articlesActualite={articlesActualite}
           />
         ) : (
           <CandidateSpaceHomePageContent />
@@ -58,14 +65,16 @@ const HomePage = ({
 const HomePageContent = ({
   articleDAides,
   articlesFAQ,
+  articlesActualite,
 }: {
   articleDAides: ArticleDAide[];
   articlesFAQ: ArticleFaq[];
+  articlesActualite: ArticleActualite[];
 }) => (
   <>
     <BienvenueSection />
     <QuiEtesVousSection />
-    <LesActualitesFranceVAESection />
+    <LesActualitesFranceVAESection articlesActualite={articlesActualite} />
     <ToutSavoirSurLaVAESection articlesDaide={articleDAides} />
     <LesAvantagesSection />
     <LaVAEUnDispositifAccessibleATousSection />
@@ -250,32 +259,34 @@ const QuiEtesVousCard = ({
   </div>
 );
 
-const LesActualitesFranceVAESection = () => (
+const LesActualitesFranceVAESection = ({
+  articlesActualite,
+}: {
+  articlesActualite: ArticleActualite[];
+}) => (
   <section className="w-full bg-neutral-100 px-6 py-8 md:pt-20 md:pb-20">
     <div className="fr-container flex flex-col !p-0">
       <h2 className="text-[22px] md:text-[32px] mb-8">
         Les actualités de France VAE
       </h2>
-      <div className="w-[312px] h-[320px] md:w-[520px] md:h-[252px] p-8 pl-6 flex flex-col border border-neutral-400 bg-white">
-        <h3 className="text-dsfrBlue-franceSun text-lg md:text-[22px] mb-3">
-          Nouvelles fonctionnalités de la plateforme France VAE
-        </h3>
-        <p className="text-sm mb-4">
-          Dans le cadre de l’amélioration continue des services de la plateforme
-          France VAE, de nouvelles fonctionnalités sont régulièrement mises en
-          place pour simplifier vos démarches.
-        </p>
-        <Link
-          className="fr-link !pl-0 !text-sm mt-auto mr-auto"
-          href="https://fabnummas.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192"
-          target="_self"
-        >
-          Découvrez les nouvelles fonctionnalités{" "}
-          <span
-            className="fr-icon-arrow-right-line fr-icon--sm"
-            aria-hidden="true"
-          />
-        </Link>
+      <div className="flex flex-col md:flex-row md:flex-wrap gap-8">
+        {articlesActualite.map((article) => (
+          <div
+            key={article.documentId}
+            className="w-[312px] h-[320px] mx-auto md:mx-0 md:w-[520px] md:h-[252px] p-8 pl-6 flex flex-col border border-neutral-400 bg-white"
+          >
+            <h3 className="text-dsfrBlue-franceSun text-lg md:text-[22px] mb-3">
+              {article.titre}
+            </h3>
+            <div
+              className="ck-content"
+              dangerouslySetInnerHTML={{
+                __html:
+                  article?.contenu?.replaceAll("<a", "<a target='_'") || "",
+              }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -513,6 +524,7 @@ export async function getServerSideProps() {
       activeFeatures: activeFeatures.activeFeaturesForConnectedUser,
       articlesDaide: homePageItems.articlesDAide,
       articlesFAQ: homePageItems.articlesFAQ,
+      articlesActualite: homePageItems.articlesActualite,
       homePageNoticeText: homePageItems.homePageNoticeText,
     },
   };
@@ -556,6 +568,11 @@ const homePageItemsQuery = graphql(`
       question
       reponse
     }
+    articleActualites(sort: "ordre", pagination: { pageSize: 3 }) {
+      documentId
+      titre
+      contenu
+    }
     homePage {
       bandeau
     }
@@ -586,6 +603,7 @@ const getHomePageItemsFromStrapi = async () => {
         homePageItems.articleFaqs.find((a) => a?.documentId === documentId),
       )
       .filter(Boolean),
+    articlesActualite: homePageItems.articleActualites,
     homePageNoticeText: homePageItems.homePage?.bandeau,
   };
 };
