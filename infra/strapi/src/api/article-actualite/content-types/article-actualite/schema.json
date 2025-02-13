@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "article_actualites",
+  "info": {
+    "singularName": "article-actualite",
+    "pluralName": "article-actualites",
+    "displayName": "[ACTUALITE] - Article Actualité",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titre": {
+      "type": "string",
+      "required": true
+    },
+    "contenu": {
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "rich"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
+    },
+    "ordre": {
+      "type": "integer"
+    }
+  }
+}

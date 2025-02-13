@@ -369,6 +369,45 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiArticleActualiteArticleActualite
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'article_actualites';
+  info: {
+    description: '';
+    displayName: '[ACTUALITE] - Article Actualit\u00E9';
+    pluralName: 'article-actualites';
+    singularName: 'article-actualite';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    contenu: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor.CKEditor',
+        {
+          output: 'HTML';
+          preset: 'rich';
+        }
+      >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::article-actualite.article-actualite'
+    > &
+      Schema.Attribute.Private;
+    ordre: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiArticleDAideArticleDAide
   extends Struct.CollectionTypeSchema {
   collectionName: 'article_d_aides';
@@ -1360,6 +1399,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::article-actualite.article-actualite': ApiArticleActualiteArticleActualite;
       'api::article-d-aide.article-d-aide': ApiArticleDAideArticleDAide;
       'api::article-faq.article-faq': ApiArticleFaqArticleFaq;
       'api::article-region.article-region': ApiArticleRegionArticleRegion;
