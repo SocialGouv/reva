@@ -55,7 +55,7 @@ const zodSchema = z
     ]),
     juryFrequencyOther: z.string().optional(),
     juryPlace: z.string().optional(),
-    juryEstimatedCost: z.number(),
+    juryEstimatedCost: z.number().optional().nullable(),
     startOfVisibility: z.string({
       invalid_type_error: "Champs requis",
     }),
@@ -197,7 +197,7 @@ const PageContent = ({
 
       juryPlace: certification.juryPlace || undefined,
 
-      juryEstimatedCost: certification.juryEstimatedCost || undefined,
+      juryEstimatedCost: certification.juryEstimatedCost || null,
 
       startOfVisibility: certification.availableAt
         ? format(certification.availableAt, "yyyy-MM-dd")
@@ -484,7 +484,7 @@ const PageContent = ({
                 <h4 className="m-0">Coûts</h4>
                 <Input
                   className="mr-auto"
-                  label="Estimation des frais de jury :"
+                  label="Estimation des frais de jury (optionnel) :"
                   hintText="Veuillez saisir un nombre à 2 décimales."
                   nativeInputProps={{
                     type: "number",
@@ -492,13 +492,15 @@ const PageContent = ({
                     min: 0,
                     inputMode: "decimal",
                     ...register("juryEstimatedCost", {
-                      valueAsNumber: true,
+                      setValueAs: (v) => {
+                        return v === "" || v === null ? null : parseFloat(v);
+                      },
                     }),
                   }}
                   state={errors.juryEstimatedCost ? "error" : "default"}
                   stateRelatedMessage={
                     errors.juryEstimatedCost
-                      ? "Veuillez renseigner une estimation"
+                      ? "Veuillez renseigner une estimation valide"
                       : undefined
                   }
                 />
