@@ -399,7 +399,7 @@ input UpdateCertificationDescriptionInput {
   juryFrequency: CertificationJuryFrequency
   juryFrequencyOther: String
   juryPlace: String
-  juryEstimatedCost: Decimal!
+  juryEstimatedCost: Decimal
   availableAt: Timestamp
   expiresAt: Timestamp
 }
