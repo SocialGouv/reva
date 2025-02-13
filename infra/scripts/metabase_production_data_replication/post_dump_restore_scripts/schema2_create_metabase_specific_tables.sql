@@ -3182,4 +3182,5 @@ CREATE TABLE data_level_2."recevabilite" AS -- table de recevabilite
     LEFT JOIN certification_authority ON feasibility.certification_authority_id = certification_authority.id
     LEFT JOIN certification ON certification.id = candidacy.certification_id 
     LEFT JOIN organism ON candidacy.organism_id = organism.id
+    WHERE is_active = 'true'
 );
