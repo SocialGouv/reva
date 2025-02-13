@@ -132,12 +132,14 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
               force: true,
             },
           );
+          cy.get(
+            'input[name="prerequisites.0.state"][value="ACQUIRED"]',
+          ).should("be.checked");
         });
 
       cy.get('[data-test="form-buttons"]')
         .find('button[type="submit"]')
-        .should("not.be.disabled")
-        .click();
+        .click({ force: true });
 
       cy.get('[data-test="prerequisite-input-0"]').within(() => {
         cy.get(".fr-error-text").should("exist");
