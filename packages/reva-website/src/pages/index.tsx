@@ -113,15 +113,16 @@ const BienvenueSection = () => {
             initiale, continue ou en alternance.
           </p>
           <p className="text-base md:text-xl">
-            En 2022, le Ministère du Travail a créé le Service public de la VAE,
-            accessible via cette plateforme.
+            En 2022, une réforme de la VAE portée par le Ministère du Travail a
+            engagé la création du service public de la VAE et de cette
+            plateforme.
           </p>
           <Button
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
             className="mt-auto"
             linkProps={{
-              href: "/inscription-candidat/",
+              href: "/espace-candidat/",
               target: "_self",
             }}
           >
@@ -151,19 +152,19 @@ const QuiEtesVousSection = () => (
             />
           }
           subtitle="Transformez votre expérience professionnelle en diplôme reconnu !"
-          description="Construisez votre dossier pas à pas et bénéficiez d'un accompagnement pour valoriser vos compétences."
+          description="Constituez votre dossier VAE pas à pas avec un accompagnement pour vous aider à valoriser vos compétences et  obtenir votre diplôme."
         >
           <Button
             priority="secondary"
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
-            className="mt-auto"
+            className="mt-auto !py-8 md:!py-0"
             linkProps={{
               href: "/espace-candidat/",
               target: "_self",
             }}
           >
-            Faire un parcours VAE
+            Commencez votre parcours VAE
           </Button>
         </QuiEtesVousCard>
         <QuiEtesVousCard
@@ -177,7 +178,7 @@ const QuiEtesVousSection = () => (
             />
           }
           subtitle="Guidez les candidats vers la réussite de leur VAE."
-          description="Accédez à tous les outils nécessaires pour suivre leurs parcours, de l’analyse du projet à la préparation du jury."
+          description="Simplifiez l'accompagnement VAE avec un suivi des parcours, des échanges avec les certificateurs et une gestion complète de l’analyse du projet au jury."
         >
           <Button
             priority="secondary"
@@ -189,7 +190,7 @@ const QuiEtesVousSection = () => (
               target: "_self",
             }}
           >
-            Accompagner les candidats
+            Accompagnez les candidats
           </Button>
         </QuiEtesVousCard>
         <QuiEtesVousCard
@@ -203,16 +204,16 @@ const QuiEtesVousSection = () => (
             />
           }
           subtitle="Simplifiez la gestion des certifications et des candidatures."
-          description="Pilotez votre activité de certificateur en toute autonomie et collaborez efficacement avec les accompagnateurs."
+          description="Gérez vos certifications, collaborez avec les accompagnateurs et suivez les parcours VAE de la recevabilité au jury en toute autonomie."
         >
           <Button
             priority="secondary"
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
-            className="mt-auto"
+            className="mt-auto !py-8 md:!py-0"
             disabled
           >
-            Créer mon espace certificateur
+            Créez votre espace certificateur
           </Button>
           <p className="text-xs text-gray-400 mt-1">
             Fonctionnalité bientôt disponible.
@@ -269,7 +270,7 @@ const LesActualitesFranceVAESection = () => (
           href="https://fabnummas.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192"
           target="_self"
         >
-          Découvrir les nouvelles fonctionnalités{" "}
+          Découvrez les nouvelles fonctionnalités{" "}
           <span
             className="fr-icon-arrow-right-line fr-icon--sm"
             aria-hidden="true"
@@ -331,13 +332,13 @@ const LesAvantagesSection = () => (
       </h2>
       <div className="flex flex-col items-center md:flex-row gap-6">
         <AvantageCard
-          title="Démarche et gestion simplifiées"
-          description="Un seul endroit pour faire votre parcours VAE, suivre les candidatures ou gérer les certifications."
+          title="Démarches et gestion simplifiées"
+          description="Une plateforme unique adaptée à chaque acteur de la VAE pour candidater, accompagner les parcours  ou gérer les certifications."
           pictogram={PICTOGRAMS.accessibility}
         />
         <AvantageCard
           title="Accompagnement personnalisé"
-          description="Bénéficiez de l'expertise d'un accompagnateur pour réussir, au mieux, votre parcours VAE."
+          description="Profitez de l'expertise d'un accompagnateur pour sécuriser votre parcours VAE."
           pictogram={PICTOGRAMS.community}
         />
         <AvantageCard
@@ -416,10 +417,11 @@ const LAVAEEnChiffresSection = () => (
   <section className="w-full bg-white md:px-6 md:py-8 md:pt-12 md:pb-20">
     <div className="fr-container flex flex-col md:flex-row mb-8 !p-6 md:!py-20 md:!px-16 bg-[#CAE0F6] border-2 border-[#9EC1E4]">
       <div className="flex flex-col justify-center max-w-sm mr-6 mb-8 md:mb-0">
-        <h2 className="text-[22px] md:text-[32px]">La VAE... en chiffres</h2>
+        <h2 className="text-[22px] md:text-[32px]">La VAE en chiffres</h2>
         <p>
-          Découvrez les résultats concrets de la VAE : un taux de réussite
-          élevé, un parcours efficace et des candidats satisfaits.
+          Depuis 2002, plus de 400.000 diplômés ont validé leur parcours grâce à
+          la VAE. Avec un taux de réussite élevé, un processus efficace et des
+          candidats satisfaits, découvrez les chiffres clés :
         </p>
       </div>
       <div className="overflow-x-auto">
