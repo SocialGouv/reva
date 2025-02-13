@@ -1,24 +1,15 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { CandidacyStatusStep, Candidate, Certification } from "@prisma/client";
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
-import { CandidacyStatusFilter } from "./candidacy.types";
-import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
 import { prismaClient } from "../../prisma/client";
+import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
-import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
+import { CandidacyStatusFilter } from "./candidacy.types";
 
 import { getGraphQLClient } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 const createCandidacies = async ({
   status,

@@ -1,10 +1,7 @@
 import { Prisma } from "@prisma/client";
-import { buildApp } from "../../../infra/server/app";
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
-import keycloakPluginMock from "../../../test/mocks/keycloak-plugin.mock";
 import * as IAM from "../../account/features/keycloak";
 
 const subRequest = {
@@ -41,19 +38,6 @@ const cgu = {
   version: 1,
   createdAt: new Date(2021, 1, 1),
 } as Prisma.ProfessionalCguCreateInput;
-
-beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
-});
-
-beforeEach(async () => {
-  await clearDatabase();
-});
-
-afterEach(async () => {
-  await jest.clearAllMocks();
-});
 
 test("It should validate a correct subscription request", async () => {
   jest.spyOn(IAM, "getAccount").mockImplementation(() => Promise.resolve(null));

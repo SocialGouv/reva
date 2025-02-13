@@ -11,5 +11,5 @@ module.exports = {
     ],
   },
   globalSetup: "./test/jestGlobalSetup.ts",
-  setupFilesAfterEnv: ["./test/jestClearDatabaseBeforeEachTestFile.ts"],
+  setupFilesAfterEnv: ["./test/jestSetupFilesAfterEnv.ts"],
 };

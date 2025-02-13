@@ -1,23 +1,10 @@
 import { CertificationStatus } from "@prisma/client";
-import { buildApp } from "../../infra/server/app";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
 import { createFormaCodeHelper } from "../../test/helpers/entities/create-formacode-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
-import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
-import { RNCPReferential } from "./rncp/referential";
 import * as SendNewCertificationAvailableToCertificationRegistryManagerEmailModule from "./emails/sendNewCertificationAvailableToCertificationRegistryManagerEmail";
-
-beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
-});
-
-afterEach(async () => {
-  await clearDatabase();
-  await jest.clearAllMocks();
-});
+import { RNCPReferential } from "./rncp/referential";
 
 it("should create a new certification in the 'BROUILLON' status", async () => {
   const myFormaCode = await createFormaCodeHelper();

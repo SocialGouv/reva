@@ -1,29 +1,13 @@
-import { buildApp } from "../../../infra/server/app";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
-import keycloakPluginMock from "../../../test/mocks/keycloak-plugin.mock";
-import { FastifyInstance } from "fastify";
-import * as FILE from "../../shared/file/file.service";
-import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
-import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
-import * as SEND_NEW_DV_TO_CA_EMAIL from "../emails/sendNewDVToCertificationAuthoritiesEmail";
-import * as SEND_NEW_DV_TO_CANDIDATE_EMAIL from "../emails/sendDVSentToCandidateEmail";
-import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
 import { CandidacyStatusStep } from "@prisma/client";
-
-beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
-});
-
-beforeEach(async () => {
-  await clearDatabase();
-});
-
-afterEach(async () => {
-  await jest.clearAllMocks();
-});
+import { FastifyInstance } from "fastify";
+import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
+import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
+import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
+import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
+import * as FILE from "../../shared/file/file.service";
+import * as SEND_NEW_DV_TO_CANDIDATE_EMAIL from "../emails/sendDVSentToCandidateEmail";
+import * as SEND_NEW_DV_TO_CA_EMAIL from "../emails/sendNewDVToCertificationAuthoritiesEmail";
 
 const postDossierDeValidation = ({
   candidacyId,

@@ -1,40 +1,22 @@
-import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
+import { startOfYesterday } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
-import { startOfYesterday } from "date-fns";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import * as SendJuryResultCandidateEmailModule from "../emails/sendJuryResultCandidateEmail";
-import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
+import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
 import {
   getGraphQLClient,
   getGraphQLError,
 } from "../../../test/jestGraphqlClient";
+import { shouldNotGoHere } from "../../../test/jestHelpers";
 import { graphql } from "../../graphql/generated";
 import { JuryResult } from "../../graphql/generated/graphql";
-import { FastifyInstance } from "fastify";
-import { getFastifyInstance } from "../../../test/jestFastifyInstance";
-import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
-import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
-import { shouldNotGoHere } from "../../../test/jestHelpers";
+import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
+import * as SendJuryResultCandidateEmailModule from "../emails/sendJuryResultCandidateEmail";
 
 const yesterday = startOfYesterday();
-
-let app: FastifyInstance;
-
-beforeAll(async () => {
-  app = await getFastifyInstance();
-});
-
-afterAll(async () => {
-  app.close();
-});
-
-afterEach(async () => {
-  await clearDatabase();
-  jest.clearAllMocks();
-});
 
 const readyForJuryEstimatedAt = yesterday;
 const adminAccount = { keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf" };

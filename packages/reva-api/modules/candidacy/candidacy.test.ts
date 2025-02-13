@@ -1,7 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
@@ -10,6 +6,7 @@ import {
   getGraphQLClient,
   getGraphQLError,
 } from "../../test/jestGraphqlClient";
+import * as getKeycloakAdminModule from "../account/features/getKeycloakAdmin";
 import { graphql } from "../graphql/generated";
 
 test("get existing Candidacy with admin user", async () => {
@@ -125,7 +122,7 @@ test("a user can't modify the account information of another candidate", async (
   }
 });
 
-test.skip("a candidate can modify all his account information", async () => {
+test("a candidate can modify all his account information", async () => {
   const candidate = await createCandidateHelper();
   const newCandidate = {
     firstname: "Updated Firstname",
@@ -133,6 +130,16 @@ test.skip("a candidate can modify all his account information", async () => {
     phone: "0612345678",
     email: "updated@email.com",
   };
+
+  jest
+    .spyOn(getKeycloakAdminModule, "getKeycloakAdmin")
+    .mockImplementation(() =>
+      Promise.resolve({
+        users: {
+          update: jest.fn().mockResolvedValue({}),
+        },
+      } as any),
+    );
 
   const graphqlClient = getGraphQLClient({
     headers: {

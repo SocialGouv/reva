@@ -1,5 +1,3 @@
-import { buildApp } from "../../../infra/server/app";
-import keycloakPluginMock from "../../../test/mocks/keycloak-plugin.mock";
 import * as updateAccount from "../../account/features/updateAccount";
 
 import { prismaClient } from "../../../prisma/client";
@@ -38,15 +36,6 @@ const updateMaisonMereLegalInformationPayload: (
   },
   enumFields: ["statutJuridique"],
   returnFields: "",
-});
-
-beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
-});
-
-afterEach(async () => {
-  await jest.clearAllMocks();
 });
 
 test("should not allow a gestionnaire to update maison mere legal information", async () => {

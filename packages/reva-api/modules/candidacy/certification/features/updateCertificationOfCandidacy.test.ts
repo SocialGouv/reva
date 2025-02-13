@@ -1,7 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { prismaClient } from "../../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
@@ -11,7 +7,6 @@ import { randomUUID } from "crypto";
 import { TRAINING_INPUT } from "../../../../test/fixtures";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
-import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 
 const submitTraining = async ({
   keycloakId,
@@ -85,10 +80,6 @@ const updateCertification = async ({
       returnFields: "",
     },
   });
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 test("should be able to select a new certification while a training is sent", async () => {
   const candidacy = await createCandidacyHelper({

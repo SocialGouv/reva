@@ -1,7 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { faker } from "@faker-js/faker/.";
 import { prismaClient } from "../../../prisma/client";
 import { attachOrganismToAllConventionCollectiveHelper } from "../../../test/helpers/attach-organism-to-all-ccn-helper";
@@ -12,7 +8,6 @@ import { createCertificationHelper } from "../../../test/helpers/entities/create
 import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
 import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 
 const searchOrganisms = async ({
   keycloakId,
@@ -55,10 +50,6 @@ const searchOrganisms = async ({
 const ccnServicePersonne = {
   ccn: { connect: { code: "3127" } },
 };
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 describe("searchOrganismsForCandidacy", () => {
   describe("Basic search scenarios", () => {

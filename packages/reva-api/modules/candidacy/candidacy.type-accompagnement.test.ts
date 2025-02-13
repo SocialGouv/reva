@@ -1,21 +1,12 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { CandidacyStatusStep } from "@prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 
 import {
   getGraphQLClient,
   getGraphQLError,
 } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 test.each([
   "PROJET",

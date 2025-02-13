@@ -1,20 +1,9 @@
 import { Account } from "@prisma/client";
-import { buildApp } from "../../infra/server/app";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationAuthorityStructureHelper } from "../../test/helpers/entities/create-certification-authority-structure-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
 import * as createAccount from "../account/features/createAccount";
-
-beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
-});
-
-afterEach(async () => {
-  await jest.clearAllMocks();
-});
 
 test("should return an exisiting certification local account list of 1 item for the certification authority", async () => {
   const certificationAuthorityLocalAccount =

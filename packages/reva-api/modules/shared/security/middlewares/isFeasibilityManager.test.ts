@@ -1,15 +1,12 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
 import { faker } from "@faker-js/faker/.";
 import { prismaClient } from "../../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "../../../../test/helpers/entities/create-candidate-helper";
 import { createCertificationAuthorityHelper } from "../../../../test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
-import { createCandidateHelper } from "../../../../test/helpers/entities/create-candidate-helper";
 
 const getActiveFeasibilityByCandidacyId = async ({
   candidacyId,

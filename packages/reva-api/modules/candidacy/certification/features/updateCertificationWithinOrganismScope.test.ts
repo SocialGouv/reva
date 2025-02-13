@@ -1,39 +1,21 @@
-import { prismaClient } from "../../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import {
   CandidacyStatusStep,
-  OrganismTypology,
   FormacodeType,
+  OrganismTypology,
 } from "@prisma/client";
+import { prismaClient } from "../../../../prisma/client";
 import { TRAINING_INPUT } from "../../../../test/fixtures";
+import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
-import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 import { createOrganismHelper } from "../../../../test/helpers/entities/create-organism-helper";
 
-import { FastifyInstance } from "fastify";
-import { getFastifyInstance } from "../../../../test/jestFastifyInstance";
 import {
   getGraphQLClient,
   getGraphQLError,
 } from "../../../../test/jestGraphqlClient";
-import { graphql } from "../../../graphql/generated";
 import { shouldNotGoHere } from "../../../../test/jestHelpers";
-
-let app: FastifyInstance;
-
-beforeAll(async () => {
-  app = await getFastifyInstance();
-});
-
-afterAll(async () => {
-  await app.close();
-});
-
-afterEach(async () => {
-  await clearDatabase();
-  jest.clearAllMocks();
-});
+import { graphql } from "../../../graphql/generated";
 
 const actionSocialeFormacode = {
   formacode: {
