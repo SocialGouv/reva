@@ -160,12 +160,6 @@ const OrientationCandidatPage = () => {
                 />
               </div>
             )}
-            {!certification && (
-              <p className="text-lg font-bold !mb-0">
-                Le diplôme que vous recherchez n’est pas encore couvert par
-                France VAE.
-              </p>
-            )}
 
             {!certification && <WouldYouLikeToKnowMorePanel />}
           </div>
