@@ -2,9 +2,9 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
-import { OrganismDistanceFilter } from "./OrganismDistanceFilter";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { OrganismDistanceFilter } from "./OrganismDistanceFilter";
 
 const tagFilledStyle = (isSelected: boolean) =>
   isSelected
@@ -42,9 +42,6 @@ export const OrganismFilters = ({
   return (
     <div className="mt-8 lg:mt-0 w-full flex flex-col">
       <h2>Filtres :</h2>
-      {/* <div className="px-4 py-4 mb-6 font-medium text-[#000091] bg-[#E3E3FD]">
-        Modalités d’accompagnement
-      </div> */}
       <div className="mb-4">
         <Accordion
           label="Modalités d’accompagnement"
@@ -187,7 +184,6 @@ export const OrganismFilters = ({
         </Accordion>
       </div>
 
-      {/* <hr /> */}
       <div className="flex justify-center">
         <Button
           data-test="sidebar-button-reset-filters"

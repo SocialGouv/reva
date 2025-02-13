@@ -19,9 +19,6 @@ type ConformiteNormeAccessibilite =
   | "NON_CONFORME"
   | "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC";
 
-// type StatutValidationInformationsJuridiquesMaisonMereAAP =
-// "A_METTRE_A_JOUR" | "EN_ATTENTE_DE_VERIFICATION" | "A_JOUR"
-
 type LegalInformationValidationDecisionType = "VALIDE" | "DEMANDE_DE_PRECISION";
 
 export interface OrganismInformationsCommerciales {

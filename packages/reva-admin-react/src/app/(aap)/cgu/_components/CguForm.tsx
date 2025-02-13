@@ -52,7 +52,6 @@ export function CguForm() {
 
   return (
     <>
-      {/* <h1>Conditions générales d'utilisation</h1> */}
       <form onSubmit={handleSubmit(submitCgu)}>
         <fieldset>
           <hr className="mt-6 mb-8" />

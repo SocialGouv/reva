@@ -20,7 +20,6 @@ export async function insertDropOutReasonsIfNone(prisma: PrismaClient) {
         { label: "Avis architecte de parcours défavorable" },
         { label: "Report du projet à plus tard" },
         { label: "Non réponse du candidat après 3 relances" },
-        // { label: "Financement du jury" },
         { label: "Autre" },
       ],
     });

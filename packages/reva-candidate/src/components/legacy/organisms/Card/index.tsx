@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import Image from "next/image";
+import { ReactNode } from "react";
 
 import { onKeyboardValidation } from "@/utils/keyboardValidationHelper";
 
@@ -97,9 +97,6 @@ export const CardSkeleton = () => {
   return (
     <CardWrapper data-type="card-skeleton">
       <CardHeader>
-        {/* <div>CAPMR</div> */}
-        {/* <div>France Compétences</div> */}
-        {/* <div>17163</div> */}
         <div className="flex h-[12px]">{titleSkeleton(90)}</div>
       </CardHeader>
       <CardBody>
@@ -108,7 +105,7 @@ export const CardSkeleton = () => {
         <div className="flex text-white h-[20px]">{titleSkeleton(80)}</div>
       </CardBody>
 
-      <CardFooter>{/* <div>CNEAP / XELYA-BCCA</div> */}</CardFooter>
+      <CardFooter></CardFooter>
     </CardWrapper>
   );
 };
@@ -121,8 +118,6 @@ export const Card = (props: CardProps) => {
       onClick={props.onClick}
     >
       <CardHeader>
-        {/* <div>CAPMR</div> */}
-        {/* <div>France Compétences</div> */}
         <div>{props.codeRncp}</div>
       </CardHeader>
       <CardBody>
@@ -130,7 +125,7 @@ export const Card = (props: CardProps) => {
         <div className="text-white text-xl font-bold">{props.title}</div>
       </CardBody>
 
-      <CardFooter>{/* <div>CNEAP / XELYA-BCCA</div> */}</CardFooter>
+      <CardFooter></CardFooter>
     </CardWrapper>
   );
 };
