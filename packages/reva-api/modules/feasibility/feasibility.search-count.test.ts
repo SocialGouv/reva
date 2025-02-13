@@ -1,15 +1,11 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
+import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
+import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
 import { archiveCandidacy } from "../candidacy/features/archiveCandidacy";
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
-import { prismaClient } from "../../prisma/client";
-import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 
 let feasibilities: Awaited<
   ReturnType<typeof createFeasibilityUploadedPdfHelper>
@@ -59,10 +55,6 @@ beforeEach(async () => {
     candidacyId: candidacyToArchive.candidacy.id,
     reorientationReasonId: null,
   });
-});
-
-afterEach(async () => {
-  await clearDatabase();
 });
 
 test("should count 1 feasibility by email for admin user", async () => {

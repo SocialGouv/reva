@@ -1,7 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
@@ -12,7 +8,6 @@ import { createCertificationHelper } from "../../../test/helpers/entities/create
 import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 
 const getCandidacy = ({
   role,
@@ -36,10 +31,6 @@ const getCandidacy = ({
       returnFields: "{id}",
     },
   });
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 test("Admin should be able to access candidacy", async () => {
   const candidacy = await createCandidacyHelper();

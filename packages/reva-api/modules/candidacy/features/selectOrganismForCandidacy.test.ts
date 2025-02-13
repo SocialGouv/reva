@@ -1,7 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
@@ -10,7 +6,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { TRAINING_INPUT } from "../../../test/fixtures";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
-import { clearDatabase } from "../../../test/jestClearDatabaseBeforeEachTestFile";
 
 const selectNewOrganism = async ({
   keycloakId,
@@ -84,10 +79,6 @@ const confirmTraining = async ({
       returnFields: "{id, status}",
     },
   });
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 test("a candidate should be able to select a new organism while a training is sent", async () => {
   const candidacy = await createCandidacyHelper({

@@ -1,25 +1,12 @@
 import { Country, Department } from "@prisma/client";
-import { buildApp } from "../../infra/server/app";
 import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
-import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
 import * as SendNewEmailCandidateEmailModule from "../candidacy/emails/sendNewEmailCandidateEmail";
 import * as SendPreviousEmailCandidateEmailModule from "../candidacy/emails/sendPreviousEmailCandidateEmail";
 
 const mockAdminKeycloakUuid = "1b0e7046-ca61-4259-b716-785f36ab79b2";
-
-beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
-});
-
-afterEach(async () => {
-  await clearDatabase();
-  await jest.clearAllMocks();
-});
 
 const getDefaultUpdatedCandidateFields = async () => {
   const pasDeCalais = (await prismaClient.department.findUnique({

@@ -1,14 +1,10 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
+import { startOfTomorrow, startOfYesterday } from "date-fns";
 import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
-import { startOfTomorrow, startOfYesterday } from "date-fns";
 import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
+import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
+import { injectGraphql } from "../../test/helpers/graphql-helper";
 
 let juries: Awaited<ReturnType<typeof createJuryHelper>>[] = [];
 
@@ -44,16 +40,7 @@ beforeEach(async () => {
       dateOfResult: new Date(),
       dateOfSession: yesterday,
     }),
-    // createJuryHelper({
-    //   result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-    //   dateOfResult: new Date(),
-    //   isActive: false,
-    // }),
   ]);
-});
-
-afterEach(async () => {
-  await clearDatabase();
 });
 
 test("should count 1 jury by email for admin user", async () => {

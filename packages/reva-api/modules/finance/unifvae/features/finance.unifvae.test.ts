@@ -1,7 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
@@ -19,11 +15,6 @@ import { createCandidateHelper } from "../../../../test/helpers/entities/create-
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
-import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 const injectGraphqlPaymentRequestCreation = async ({
   keycloakId,

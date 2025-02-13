@@ -1,32 +1,14 @@
 import { startOfDay, startOfToday } from "date-fns";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./emails/sendCandidacyDropOutConfirmedEmailToAap";
 import * as SendCandidacyDropOutConfirmedEmailToCandidateModule from "./emails/sendCandidacyDropOutConfirmedEmailToCandidate";
-import { FastifyInstance } from "fastify";
 
-import { getFastifyInstance } from "../../test/jestFastifyInstance";
 import {
   getGraphQLClient,
   getGraphQLError,
 } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
-
-let app: FastifyInstance;
-
-beforeAll(async () => {
-  app = await getFastifyInstance();
-});
-
-afterAll(async () => {
-  app.close();
-});
-
-afterEach(async () => {
-  await clearDatabase();
-  jest.clearAllMocks();
-});
 
 describe("candidate drop out decision", () => {
   test("should mark the drop out as confirmed when the candidate confirms it and sent an email to the aap", async () => {

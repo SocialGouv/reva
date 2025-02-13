@@ -1,7 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";

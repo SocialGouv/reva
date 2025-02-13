@@ -1,6 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
 import { Organism } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
@@ -10,7 +7,6 @@ import { createCertificationHelper } from "../../test/helpers/entities/create-ce
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
 import { createOrganismOnConventionCollectiveHelper } from "../../test/helpers/entities/create-organism-on-convention-collective-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 
 const createCertifications = async () => {
   for (const cert of particulierEmployeurCertifications) {
@@ -52,10 +48,6 @@ const particulierEmployeurCertifications = [
   "Titre à finalité professionnelle Assistant maternel / garde d'enfants ",
   "Titre à finalité professionnelle Employé familial",
 ].map((label) => ({ label }));
-
-afterEach(async () => {
-  await clearDatabase();
-});
 
 /**
  * Test search certifications by a candidate

@@ -38,7 +38,3 @@ export const clearDatabase = async () => {
     console.log({ error });
   }
 };
-
-beforeAll(async () => {
-  await clearDatabase();
-});

@@ -1,7 +1,3 @@
-/**
- * @jest-environment ./test/fastify-test-env.ts
- */
-
 import { faker } from "@faker-js/faker/.";
 import { CertificationAuthorityContestationDecision } from "@prisma/client";
 import { randomUUID } from "crypto";
@@ -11,7 +7,6 @@ import { authorizationHeaderForUser } from "../../../../test/helpers/authorizati
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
 import { createFeasibilityDematerializedHelper } from "../../../../test/helpers/entities/create-feasibility-dematerialized-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
-import { clearDatabase } from "../../../../test/jestClearDatabaseBeforeEachTestFile";
 import { createCandidacyContestationCaducite } from "./createCandidacyContestationCaducite";
 
 const VALID_CONTESTATION_REASON = "Valid contestation reason";
@@ -65,10 +60,6 @@ const createContestationMutation = async ({
   });
 
 describe("createCandidacyContestationCaducite", () => {
-  beforeEach(async () => {
-    await clearDatabase();
-  });
-
   describe("Input validation", () => {
     test("should fail when contestationReason is empty", async () => {
       const candidacy = await createCandidacyHelper();

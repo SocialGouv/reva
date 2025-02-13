@@ -1,30 +1,13 @@
 import { FastifyInstance } from "fastify";
 
-import { buildApp } from "../../infra/server/app";
-import keycloakPluginMock from "../../test/mocks/keycloak-plugin.mock";
-
-import { clearDatabase } from "../../test/jestClearDatabaseBeforeEachTestFile";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import * as FILE from "../shared/file/file.service";
 import * as SEND_NEW_FEASIBILITY_EMAIL from "./emails/sendNewFeasibilitySubmittedEmail";
-import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
-
-beforeAll(async () => {
-  const app = await buildApp({ keycloakPluginMock });
-  (global as any).fastify = app;
-});
-
-beforeEach(async () => {
-  await clearDatabase();
-});
-
-afterEach(async () => {
-  await jest.clearAllMocks();
-});
 
 test("should count all (2) feasibilities for admin user", async () => {
   await createFeasibilityUploadedPdfHelper({
