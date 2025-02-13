@@ -15,7 +15,7 @@ export const askForLogin = async (email: string) => {
   ).length;
 
   if (doesUserExists) {
-    const token = generateJwt({ email, action: "login" }, 1 * 60 * 60);
+    const token = generateJwt({ email, action: "login" }, 4 * 60 * 60);
     return sendLoginEmail(email, token);
   } else {
     return sendUnknownUserEmail(email);
