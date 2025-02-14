@@ -1,1 +1,0 @@
-export { sendRejectionEmail } from "./rejection";

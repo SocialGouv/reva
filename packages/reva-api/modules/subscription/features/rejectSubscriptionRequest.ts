@@ -1,6 +1,6 @@
-import { deleteFile } from "../../shared/file";
 import { prismaClient } from "../../../prisma/client";
-import { sendRejectionEmail } from "../mail";
+import { deleteFile } from "../../shared/file";
+import { sendRejectionEmail } from "../emails/rejection";
 
 export const rejectSubscriptionRequest = async ({
   subscriptionRequestId,
