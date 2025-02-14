@@ -1,11 +1,12 @@
 import { v4 as uuidV4 } from "uuid";
+import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../../prisma/client";
 import {
   emptyUploadedFileStream,
   getUploadedFile,
   uploadFileToS3,
 } from "../../shared/file";
-import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
+import { sendSubscriptionRequestCreatedEmail } from "../emails/sendSubscriptionRequestCreatedEmail";
 
 export const createSubscriptionRequest = async ({
   params,
@@ -120,6 +121,10 @@ export const createSubscriptionRequest = async ({
             }
           : undefined,
       },
+    });
+
+    sendSubscriptionRequestCreatedEmail({
+      email: params.accountEmail,
     });
 
     return "Ok";
