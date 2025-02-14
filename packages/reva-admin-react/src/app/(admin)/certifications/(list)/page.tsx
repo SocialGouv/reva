@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import { useAuth } from "@/components/auth/auth";
 
 const getCertificationsQuery = graphql(`
   query getCertificationsV2ForListPage(
@@ -47,7 +48,7 @@ const getCertificationsQuery = graphql(`
 const RECORDS_PER_PAGE = 10;
 const CertificationListPage = () => {
   const { graphqlClient } = useGraphQlClient();
-
+  const { isAdmin } = useAuth();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
@@ -108,6 +109,17 @@ const CertificationListPage = () => {
                 >
                   Accéder à la certification
                 </Button>
+                {isAdmin && c.status === "A_VALIDER_PAR_CERTIFICATEUR" && (
+                  <Button
+                    priority="secondary"
+                    className="mt-2 ml-auto"
+                    linkProps={{
+                      href: `/responsable-certifications/certifications/${c.id}`,
+                    }}
+                  >
+                    Accès certificateur
+                  </Button>
+                )}
               </WhiteCard>
             )}
           </SearchList>
