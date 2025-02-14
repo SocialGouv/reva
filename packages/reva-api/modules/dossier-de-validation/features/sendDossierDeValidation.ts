@@ -1,6 +1,7 @@
 import { CandidacyStatusStep, FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
+import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../../prisma/client";
 import { getAccountById } from "../../account/features/getAccount";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
@@ -8,8 +9,8 @@ import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyS
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import { UploadedFile, uploadFileToS3 } from "../../shared/file";
 import { sendNewDVToCertificationAuthoritiesEmail } from "../emails";
+import { sendDVSentByCandidateToAapEmail } from "../emails/sendDVSentByCandidateToAapEmail";
 import { sendDVSentToCandidateEmail } from "../emails/sendDVSentToCandidateEmail";
-import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 
 export const sendDossierDeValidation = async ({
   candidacyId,
@@ -30,8 +31,22 @@ export const sendDossierDeValidation = async ({
     where: { id: candidacyId },
     include: {
       candidacyDropOut: true,
-      candidate: { select: { email: true, departmentId: true } },
+      candidate: {
+        select: {
+          email: true,
+          departmentId: true,
+          lastname: true,
+          firstname: true,
+        },
+      },
       Feasibility: { where: { isActive: true } },
+      organism: {
+        select: {
+          label: true,
+          emailContact: true,
+          contactAdministrativeEmail: true,
+        },
+      },
     },
   });
   if (!candidacy) {
@@ -213,8 +228,21 @@ export const sendDossierDeValidation = async ({
     }
   }
 
+  const isDVSentByCandidate = userRoles.includes("candidate");
+
   if (candidacy?.candidate?.email) {
     sendDVSentToCandidateEmail({ email: candidacy?.candidate?.email });
+    if (isDVSentByCandidate) {
+      sendDVSentByCandidateToAapEmail({
+        email:
+          candidacy?.organism?.emailContact ||
+          candidacy?.organism?.contactAdministrativeEmail ||
+          "",
+        candidacyId,
+        aapName: candidacy?.organism?.label || "",
+        candidateName: `${candidacy?.candidate?.firstname} ${candidacy?.candidate?.lastname}`,
+      });
+    }
   }
 
   await logCandidacyAuditEvent({
