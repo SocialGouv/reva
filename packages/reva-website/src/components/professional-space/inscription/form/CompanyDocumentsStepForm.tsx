@@ -111,9 +111,24 @@ export const CompanyDocumentsStepForm = () => {
         <CompanySummary currentStep={3} />
         <form className="flex flex-col gap-8" onSubmit={handleFormSubmit}>
           <FancyUpload
-            title="Attestation URSSAF"
-            description="L’attestation URSSAF doit afficher le code de sécurité -
-         Exemples : attestation de vigilance, attestation fiscale."
+            title="Attestation URSSAF ou attestation MSA"
+            description={
+              <>
+                Merci de fournir une attestion URSSAF ou MSA{" "}
+                <u>datée de moins de 3 mois</u> qui affiche les informations
+                suivantes :
+                <ul className="mt-4 leading-normal">
+                  <li>
+                    Le code de sécurité (visible sur l’attestation de vigilance,
+                    l’attestation fiscale ou l’attestation MSA) ;
+                  </li>
+                  <li>
+                    Le numéro de SIRET de la structure accompagnatrice (14
+                    chiffres)
+                  </li>
+                </ul>
+              </>
+            }
             hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
             nativeInputProps={{
               ...register("attestationURSSAF"),
@@ -126,17 +141,23 @@ export const CompanyDocumentsStepForm = () => {
             title="Copie du justificatif d'identité du dirigeant"
             description={
               <>
-                La pièce d’identité peut être une carte nationale d’identité en
-                cours de validité ou périmée de moins de 5 ans (recto/verso) ou
-                un passeport en cours de validité.
-                <br />
-                <span className="font-medium">
-                  Veillez à ce que la photocopie soit lisible, non tronquée,
-                  bien cadrée et qu’y soient apposés, par le dirigeant lui-même,
-                  la mention manuscrite “J’atteste que je suis à l’origine de la
-                  fourniture du présent justificatif d’identité”, ses nom et
-                  prénom(s), la date du jour ainsi qu’une signature.
-                </span>
+                Pour confirmer l’identité du dirigeant, merci de nous
+                transmettre l’un des justificatifs d’identité suivants :
+                <ul className="my-4 leading-normal">
+                  <li>
+                    Carte nationale d’identité recto/verso en cours de validité
+                    (ou dépassée depuis moins de 5 ans) ;
+                  </li>
+                  <li>Passeport en cours de validité ;</li>
+                </ul>
+                Sur le document, le dirigeant doit faire apparaître la{" "}
+                <b>mention manuscrite</b> suivante :{" "}
+                <b>
+                  «J’atteste être le représentant légal de la structure
+                  référencée et le propriétaire du justificatif d’identité
+                  fourni.»
+                </b>{" "}
+                Il devra également <b>dater et signer</b> le justificatif.
               </>
             }
             hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
@@ -151,7 +172,7 @@ export const CompanyDocumentsStepForm = () => {
             <>
               <FancyUpload
                 title="Lettre de délégation"
-                description="Il s'agit de la lettre de délégation de l'administration du compte France VAE signée et datée par le dirigeant et le délégataire"
+                description="Il s'agit de la lettre de délégation de l'administration du compte France VAE signée et datée par le dirigeant et le délégataire."
                 hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
                 nativeInputProps={{
                   ...register("lettreDeDelegation"),
@@ -165,14 +186,15 @@ export const CompanyDocumentsStepForm = () => {
                 title="Copie du justificatif d'identité du délégataire"
                 description={
                   <>
-                    Le justificatif d'identité peut être une carte nationale
-                    d’identité en cours de validité ou périmée de moins de 5 ans
-                    (recto/verso) ou un passeport en cours de validité.
-                    <br />
-                    <strong>
-                      Veillez à ce que votre photocopie soit lisible, non
-                      tronquée, bien cadrée.
-                    </strong>
+                    Pour confirmer l’identité du délégataire, merci de nous
+                    transmettre l’un des justificatifs d’identité suivants :
+                    <ul className="my-4 leading-normal">
+                      <li>
+                        Carte nationale d’identité recto/verso en cours de
+                        validité (ou dépassée depuis moins de 5 ans) ;
+                      </li>
+                      <li>Passeport en cours de validité ;</li>
+                    </ul>
                   </>
                 }
                 hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
