@@ -19,53 +19,68 @@ export const updateCertificationAdditionalInfo = async ({
       where: {
         certificationId,
       },
+      include: {
+        dossierDeValidationTemplate: true,
+      },
     });
 
-  const {
-    dossierDeValidationTemplate,
-    dossierDeValidationTemplateFileId,
-    ...otherInfo
-  } = additionalInfo;
+  const { dossierDeValidationTemplate, ...otherInfo } = additionalInfo;
 
-  const uploadedDossierDeValidationTemplate = await getUploadedFile(
-    dossierDeValidationTemplate,
-  );
-
-  if (uploadedDossierDeValidationTemplate._buf.length > MAX_UPLOAD_SIZE) {
+  if (
+    (!otherInfo.dossierDeValidationLink && !dossierDeValidationTemplate) ||
+    (otherInfo.dossierDeValidationLink && dossierDeValidationTemplate)
+  ) {
     throw new Error(
-      `Le fichier ${uploadedDossierDeValidationTemplate.filename} est trop volumineux (${(uploadedDossierDeValidationTemplate._buf.length / 1024 / 1024).toFixed(2)} Mo). La taille maximale autorisée est de ${MAX_UPLOAD_SIZE / 1024 / 1024} Mo.`,
+      "La trame du dossier de validation est requise et doit être transmise soit par PDF, soit sous forme de lien.",
     );
   }
 
-  const filePath = `certifications/${certificationId}/dv_templates/${uuidV4()}`;
+  let dossierDeValidationTemplateId: string | undefined;
+  if (dossierDeValidationTemplate) {
+    dossierDeValidationTemplateId = uuidV4();
 
-  await uploadFileToS3({
-    data: uploadedDossierDeValidationTemplate._buf,
-    filePath,
-    mimeType: uploadedDossierDeValidationTemplate.mimetype,
-    allowedFileTypes: allowFileTypeByDocumentType.dossierDeValidationTemplate,
-  });
+    const uploadedDossierDeValidationTemplate = await getUploadedFile(
+      dossierDeValidationTemplate,
+    );
 
-  const dossierDeValidationTemplateFile = await prismaClient.file.create({
-    data: {
-      path: filePath,
+    if (uploadedDossierDeValidationTemplate._buf.length > MAX_UPLOAD_SIZE) {
+      throw new Error(
+        `Le fichier ${uploadedDossierDeValidationTemplate.filename} est trop volumineux (${(uploadedDossierDeValidationTemplate._buf.length / 1024 / 1024).toFixed(2)} Mo). La taille maximale autorisée est de ${MAX_UPLOAD_SIZE / 1024 / 1024} Mo.`,
+      );
+    }
+
+    const filePath = `certifications/${certificationId}/dv_templates/${dossierDeValidationTemplateId}`;
+
+    await uploadFileToS3({
+      data: uploadedDossierDeValidationTemplate._buf,
+      filePath,
       mimeType: uploadedDossierDeValidationTemplate.mimetype,
-      name: uploadedDossierDeValidationTemplate.filename,
-    },
-  });
+      allowedFileTypes: allowFileTypeByDocumentType.dossierDeValidationTemplate,
+    });
 
-  if (existingInfo) {
-    await deleteFile(existingInfo.dossierDeValidationTemplateFileId);
-    await prismaClient.file.delete({
-      where: {
-        id: existingInfo.dossierDeValidationTemplateFileId,
+    await prismaClient.file.create({
+      data: {
+        id: dossierDeValidationTemplateId,
+        path: filePath,
+        mimeType: uploadedDossierDeValidationTemplate.mimetype,
+        name: uploadedDossierDeValidationTemplate.filename,
       },
     });
   }
+
+  if (existingInfo?.dossierDeValidationTemplate) {
+    await deleteFile(existingInfo.dossierDeValidationTemplate.path);
+    await prismaClient.file.delete({
+      where: {
+        id: existingInfo.dossierDeValidationTemplate.id,
+      },
+    });
+  }
+
   return prismaClient.certificationAdditionalInfo.create({
     data: {
       certificationId,
-      dossierDeValidationTemplateFileId: dossierDeValidationTemplateFile.id,
+      dossierDeValidationTemplateFileId: dossierDeValidationTemplateId,
       ...otherInfo,
     },
   });

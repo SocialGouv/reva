@@ -481,8 +481,9 @@ const PageContent = ({
                   className="m-0"
                   data-test="certification-description-jury_place-input"
                   label="Lieu où se déroulera le passage (optionnel) :"
-                  hintText="À renseigner s’il existe peu de lieux de passage pour cette certification."
+                  hintText="À renseigner s’il existe peu de lieux de passage pour cette certification. Exemple : nom d’une ville, code postal, nom du service en région..."
                   nativeInputProps={{
+                    placeholder: "ex : Angers, 49100, DDETS...",
                     ...register("juryPlace"),
                   }}
                 />

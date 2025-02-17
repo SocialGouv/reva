@@ -21,8 +21,11 @@ const getCertificationQuery = graphql(`
           previewUrl
           mimeType
         }
+        dossierDeValidationLink
         linkToJuryGuide
         certificationExpertContactDetails
+        certificationExpertContactPhone
+        certificationExpertContactEmail
         usefulResources
         commentsForAAP
       }

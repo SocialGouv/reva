@@ -17,12 +17,15 @@ export const CertificationAdditionalInfoSummaryCard = ({
     linkToCorrespondenceTable?: string | null;
     linkToJuryGuide?: string | null;
     certificationExpertContactDetails?: string | null;
+    certificationExpertContactPhone?: string | null;
+    certificationExpertContactEmail?: string | null;
     usefulResources?: string | null;
     commentsForAAP?: string | null;
-    dossierDeValidationTemplate: {
+    dossierDeValidationTemplate?: {
       name: string;
       previewUrl?: string | null;
-    };
+    } | null;
+    dossierDeValidationLink?: string | null;
   } | null;
 }) => (
   <EnhancedSectionCard
@@ -46,6 +49,15 @@ export const CertificationAdditionalInfoSummaryCard = ({
               Référentiels d’activités
             </Link>
           )}
+          {certificationAdditionalInfo.linkToJuryGuide && (
+            <Link
+              href={certificationAdditionalInfo.linkToJuryGuide}
+              className="fr-link mr-auto"
+              target="_blank"
+            >
+              Référentiel d’évaluation
+            </Link>
+          )}
           {certificationAdditionalInfo.linkToCorrespondenceTable && (
             <Link
               href={certificationAdditionalInfo.linkToCorrespondenceTable}
@@ -57,11 +69,9 @@ export const CertificationAdditionalInfoSummaryCard = ({
           )}
         </section>
         <section className="flex flex-col gap-4">
-          <h3 className="mb-0">
-            Documentation sur le dossier de validation et le jury :
-          </h3>
+          <h3 className="mb-0">Documentation sur le dossier de validation :</h3>
           {certificationAdditionalInfo.dossierDeValidationTemplate
-            .previewUrl && (
+            ?.previewUrl && (
             <FancyPreview
               src={
                 certificationAdditionalInfo.dossierDeValidationTemplate
@@ -74,23 +84,35 @@ export const CertificationAdditionalInfoSummaryCard = ({
               defaultDisplay={false}
             />
           )}
-          {certificationAdditionalInfo.linkToJuryGuide && (
+          {certificationAdditionalInfo.dossierDeValidationLink && (
             <Link
-              href={certificationAdditionalInfo.linkToJuryGuide}
+              href={certificationAdditionalInfo.dossierDeValidationLink}
               className="fr-link mr-auto"
               target="_blank"
             >
-              Guide du jury
+              Trame du dossier de validation
             </Link>
           )}
         </section>
         <section className="flex flex-col gap-4">
           <h3 className="mb-0">Contact d’un expert de la certification :</h3>
           {certificationAdditionalInfo.certificationExpertContactDetails && (
-            <p className="mb-0 font-medium">
+            <p className="mb-0 font-bold">
               {certificationAdditionalInfo.certificationExpertContactDetails}
             </p>
           )}
+          <div className="flex flex-row gap-4">
+            {certificationAdditionalInfo.certificationExpertContactPhone && (
+              <p className="mb-0">
+                {certificationAdditionalInfo.certificationExpertContactPhone}
+              </p>
+            )}
+            {certificationAdditionalInfo.certificationExpertContactEmail && (
+              <p className="mb-0">
+                {certificationAdditionalInfo.certificationExpertContactEmail}
+              </p>
+            )}
+          </div>
         </section>
         <section className="flex flex-col gap-4">
           <h3 className="mb-0">Informations complémentaires :</h3>

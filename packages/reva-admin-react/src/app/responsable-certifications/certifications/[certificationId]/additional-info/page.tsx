@@ -47,19 +47,43 @@ export default function CertificationAdditionalInfoPage() {
   );
 }
 
-const schema = z.object({
-  dossierDeValidationTemplate: z.object({
-    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
-  }),
-  linkToReferential: z.string({
-    required_error: "Merci de remplir ce champ",
-  }),
-  linkToCorrespondenceTable: z.string().optional(),
-  linkToJuryGuide: z.string().optional(),
-  certificationExpertContactDetails: z.string().optional(),
-  usefulResources: z.string().optional(),
-  commentsForAAP: z.string().optional(),
-});
+const schema = z
+  .object({
+    dossierDeValidationTemplate: z.object({
+      0: z
+        .instanceof(File, { message: "Merci de remplir ce champ" })
+        .optional(),
+    }),
+    dossierDeValidationLink: z.string().optional(),
+    linkToReferential: z.string().min(1, "Merci de remplir ce champ"),
+    linkToCorrespondenceTable: z.string().optional(),
+    linkToJuryGuide: z.string().optional(),
+    certificationExpertContactDetails: z.string().optional(),
+    certificationExpertContactPhone: z.string().optional(),
+    certificationExpertContactEmail: z.string().optional(),
+    usefulResources: z.string().optional(),
+    commentsForAAP: z.string().optional(),
+  })
+  .superRefine(
+    (
+      { dossierDeValidationTemplate, dossierDeValidationLink },
+      { addIssue },
+    ) => {
+      if (!dossierDeValidationTemplate?.[0] && !dossierDeValidationLink) {
+        addIssue({
+          path: ["dossierDeValidationTemplate[0]"],
+          message: "Vous devez renseigner au moins un de ces deux champs",
+          code: z.ZodIssueCode.custom,
+        });
+
+        addIssue({
+          path: ["dossierDeValidationLink"],
+          message: "Vous devez renseigner au moins un de ces deux champs",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+    },
+  );
 
 type FormData = z.infer<typeof schema>;
 
@@ -73,6 +97,8 @@ const AdditionalInfoForm = ({
       linkToCorrespondenceTable?: string | null;
       linkToJuryGuide?: string | null;
       certificationExpertContactDetails?: string | null;
+      certificationExpertContactPhone?: string | null;
+      certificationExpertContactEmail?: string | null;
       usefulResources?: string | null;
       commentsForAAP?: string | null;
       dossierDeValidationTemplate?: {
@@ -80,7 +106,8 @@ const AdditionalInfoForm = ({
         name: string;
         previewUrl?: string | null;
         mimeType: string;
-      };
+      } | null;
+      dossierDeValidationLink?: string | null;
     } | null;
   };
 }) => {
@@ -89,6 +116,7 @@ const AdditionalInfoForm = ({
     register,
     handleSubmit,
     formState: { errors, isDirty, isSubmitting },
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -98,9 +126,15 @@ const AdditionalInfoForm = ({
       linkToJuryGuide: certification.additionalInfo?.linkToJuryGuide || "",
       certificationExpertContactDetails:
         certification.additionalInfo?.certificationExpertContactDetails || "",
+      certificationExpertContactPhone:
+        certification.additionalInfo?.certificationExpertContactPhone || "",
+      certificationExpertContactEmail:
+        certification.additionalInfo?.certificationExpertContactEmail || "",
       usefulResources: certification.additionalInfo?.usefulResources || "",
       commentsForAAP: certification.additionalInfo?.commentsForAAP || "",
       dossierDeValidationTemplate: undefined,
+      dossierDeValidationLink:
+        certification.additionalInfo?.dossierDeValidationLink || "",
     },
   });
   const defaultDossierDeValidationTemplate = useMemo(
@@ -135,6 +169,9 @@ const AdditionalInfoForm = ({
     }
   };
 
+  const [watchedDossierDeValidationTemplate, watchedDossierDeValidationLink] =
+    watch(["dossierDeValidationTemplate", "dossierDeValidationLink"]);
+
   return (
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <h2>Documentation sur la certification</h2>
@@ -144,8 +181,15 @@ const AdditionalInfoForm = ({
         state={errors.linkToReferential ? "error" : "default"}
         stateRelatedMessage={errors.linkToReferential?.message}
         nativeInputProps={{
-          required: true,
+          placeholder: "https://",
           ...register("linkToReferential"),
+        }}
+      />
+      <Input
+        label="Lien vers le référentiel d'évaluation (optionnel) :"
+        nativeInputProps={{
+          placeholder: "https://",
+          ...register("linkToJuryGuide"),
         }}
       />
       <Input
@@ -153,35 +197,71 @@ const AdditionalInfoForm = ({
         state={errors.linkToCorrespondenceTable ? "error" : "default"}
         stateRelatedMessage={errors.linkToCorrespondenceTable?.message}
         nativeInputProps={{
+          placeholder: "https://",
           ...register("linkToCorrespondenceTable"),
         }}
       />
 
-      <h2>Documentation sur le dossier de validation et le jury</h2>
+      <h2>Documentation sur le dossier de validation</h2>
+      <p className="text-xl">
+        Veuillez importer un fichier ou renseigner un lien vers la trame du
+        dossier de validation.
+      </p>
       <FancyUpload
         dataTest="dossier-de-validation-template-upload"
-        title="Trame du dossier de validation"
+        title="Importer un fichier de trame de dossier"
         hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
         state={errors.dossierDeValidationTemplate?.[0] ? "error" : "default"}
         stateRelatedMessage={errors.dossierDeValidationTemplate?.[0]?.message}
         nativeInputProps={{
+          disabled: !!watchedDossierDeValidationLink,
           ...register("dossierDeValidationTemplate"),
         }}
         defaultFile={defaultDossierDeValidationTemplate}
         className="mb-4"
       />
-      <Input
-        label="Lien vers le guide du jury (optionnel) :"
-        nativeInputProps={{ ...register("linkToJuryGuide") }}
-      />
+      <div className="flex flex-col gap-4 px-8 mb-10">
+        <label className="font-bold text-lg">
+          Ou renseigner le lien vers la trame du dossier
+        </label>
+        <Input
+          data-test="dossier-de-validation-link"
+          label="Lien de la trame :"
+          className="flex-1"
+          disabled={!!watchedDossierDeValidationTemplate?.[0]}
+          state={errors.dossierDeValidationLink ? "error" : "default"}
+          stateRelatedMessage={errors.dossierDeValidationLink?.message}
+          nativeInputProps={{
+            placeholder: "https://",
+            ...register("dossierDeValidationLink"),
+          }}
+        />
+      </div>
+
       <h2>Contact d’un expert de la certification (le cas échéant)</h2>
       <Input
         label="Personne ou Service concerné (optionnel) :"
-        className="max-w-sm"
+        className="flex-1"
         nativeInputProps={{
           ...register("certificationExpertContactDetails"),
         }}
       />
+      <div className="flex flex-col gap-0 lg:flex-row lg:gap-6">
+        <Input
+          label="Téléphone (optionnel) :"
+          className="flex-1 lg:max-w-sm"
+          nativeInputProps={{
+            ...register("certificationExpertContactPhone"),
+          }}
+        />
+        <Input
+          label="E-mail (optionnel) :"
+          className="flex-1 mb-6"
+          nativeInputProps={{
+            ...register("certificationExpertContactEmail"),
+          }}
+        />
+      </div>
       <h2>Informations complémentaires</h2>
       <Input
         label="Ressources pour aider au parcours VAE (optionnel) :"
@@ -201,7 +281,7 @@ const AdditionalInfoForm = ({
   );
 };
 
-const getFancyDefaultFile = (file?: GQLFile) =>
+const getFancyDefaultFile = (file?: GQLFile | null) =>
   file?.previewUrl
     ? {
         name: file.name,

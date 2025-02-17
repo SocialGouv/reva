@@ -97,7 +97,11 @@ context("when i access the update certification info page ", () => {
       '[data-test="dossier-de-validation-template-upload"] p.fr-error-text',
     )
       .should("be.visible")
-      .and("have.text", "Merci de remplir ce champ");
+      .and("have.text", "Vous devez renseigner au moins un de ces deux champs");
+
+    cy.get('[data-test="dossier-de-validation-link"] p.fr-error-text')
+      .should("be.visible")
+      .and("have.text", "Vous devez renseigner au moins un de ces deux champs");
   });
 
   it("let me update additional info and submit the form", function () {

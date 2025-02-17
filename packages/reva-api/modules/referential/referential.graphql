@@ -62,9 +62,12 @@ type CertificationAdditionalInfo {
   id: ID!
   linkToReferential: String!
   linkToCorrespondenceTable: String
-  dossierDeValidationTemplate: File!
+  dossierDeValidationTemplate: File
+  dossierDeValidationLink: String
   linkToJuryGuide: String
   certificationExpertContactDetails: String
+  certificationExpertContactPhone: String
+  certificationExpertContactEmail: String
   usefulResources: String
   commentsForAAP: String
 }
@@ -412,8 +415,11 @@ input CertificationAdditionalInfoInput {
   linkToReferential: String!
   linkToCorrespondenceTable: String
   dossierDeValidationTemplate: Upload
+  dossierDeValidationLink: String
   linkToJuryGuide: String
   certificationExpertContactDetails: String
+  certificationExpertContactPhone: String
+  certificationExpertContactEmail: String
   usefulResources: String
   commentsForAAP: String
 }

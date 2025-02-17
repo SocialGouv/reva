@@ -148,10 +148,13 @@ model CertificationAdditionalInfo {
   createdAt                         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   linkToReferential                 String        @map("link_to_referential")
   linkToCorrespondenceTable         String?       @map("link_to_corresponence_table")
-  dossierDeValidationTemplateFileId String        @map("dossier_de_validation_file_id") @db.Uuid
-  dossierDeValidationTemplate       File          @relation(fields: [dossierDeValidationTemplateFileId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  dossierDeValidationTemplateFileId String?       @map("dossier_de_validation_file_id") @db.Uuid
+  dossierDeValidationTemplate       File?         @relation(fields: [dossierDeValidationTemplateFileId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  dossierDeValidationLink           String?       @map("dossier_de_validation_link")
   linkToJuryGuide                   String?       @map("link_to_jury_guide")
   certificationExpertContactDetails String?       @map("certification_expert_contact_details")
+  certificationExpertContactPhone   String?       @map("certification_expert_contact_phone") @db.VarChar(50)
+  certificationExpertContactEmail   String?       @map("certification_expert_contact_email") @db.VarChar(255)
   usefulResources                   String?       @map("useful_resources")
   commentsForAAP                    String?       @map("comments_for_aap")
   certificationId                   String        @unique @map("certification_id") @db.Uuid
