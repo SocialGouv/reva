@@ -245,21 +245,27 @@ const PageContent = ({
         await updateCertificationDescription.mutateAsync({
           certificationId: certification.id,
           juryTypeMiseEnSituationProfessionnelle:
+            juryTypeMiseEnSituationProfessionnelle.checked &&
             juryTypeMiseEnSituationProfessionnelle.presentiel &&
             juryTypeMiseEnSituationProfessionnelle.distanciel
               ? "LES_DEUX"
-              : juryTypeMiseEnSituationProfessionnelle.presentiel
+              : juryTypeMiseEnSituationProfessionnelle.checked &&
+                  juryTypeMiseEnSituationProfessionnelle.presentiel
                 ? "PRESENTIEL"
-                : juryTypeMiseEnSituationProfessionnelle.distanciel
+                : juryTypeMiseEnSituationProfessionnelle.checked &&
+                    juryTypeMiseEnSituationProfessionnelle.distanciel
                   ? "A_DISTANCE"
                   : null,
           juryTypeSoutenanceOrale:
+            juryTypeSoutenanceOrale.checked &&
             juryTypeSoutenanceOrale.presentiel &&
             juryTypeSoutenanceOrale.distanciel
               ? "LES_DEUX"
-              : juryTypeSoutenanceOrale.presentiel
+              : juryTypeSoutenanceOrale.checked &&
+                  juryTypeSoutenanceOrale.presentiel
                 ? "PRESENTIEL"
-                : juryTypeSoutenanceOrale.distanciel
+                : juryTypeSoutenanceOrale.checked &&
+                    juryTypeSoutenanceOrale.distanciel
                   ? "A_DISTANCE"
                   : null,
           juryFrequency: frequency,
