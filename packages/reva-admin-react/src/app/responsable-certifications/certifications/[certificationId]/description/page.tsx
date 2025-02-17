@@ -164,7 +164,7 @@ const PageContent = ({
       juryTypeOfTest: [
         {
           id: "SOUTENANCE_ORALE",
-          label: "Soutenance orale du dossier de validation",
+          label: "Entretien",
           checked: !!certification.juryTypeSoutenanceOrale,
           presentiel:
             certification.juryTypeSoutenanceOrale == "LES_DEUX" ||

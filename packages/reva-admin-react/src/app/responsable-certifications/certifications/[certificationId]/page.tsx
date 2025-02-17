@@ -143,27 +143,27 @@ const PageContent = ({
             <h3 className="mb-0">Jury</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {certification.juryTypeSoutenanceOrale && (
-                <Info title="Soutenance orale du dossier de validation : ">
-                  {certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
-                    (certification.juryTypeSoutenanceOrale == "PRESENTIEL" && (
-                      <Tag>Présentiel</Tag>
-                    ))}
-                  {certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
-                    (certification.juryTypeSoutenanceOrale == "A_DISTANCE" && (
-                      <Tag>À distance</Tag>
-                    ))}
+                <Info title="Entretien : ">
+                  {(certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
+                    certification.juryTypeSoutenanceOrale == "PRESENTIEL") && (
+                    <Tag>Présentiel</Tag>
+                  )}
+                  {(certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
+                    certification.juryTypeSoutenanceOrale == "A_DISTANCE") && (
+                    <Tag>À distance</Tag>
+                  )}
                 </Info>
               )}
               {certification.juryTypeMiseEnSituationProfessionnelle && (
-                <Info title="Soutenance orale du dossier de validation : ">
-                  {certification.juryTypeMiseEnSituationProfessionnelle ==
+                <Info title="Mise en situation professionnelle : ">
+                  {(certification.juryTypeMiseEnSituationProfessionnelle ==
                     "LES_DEUX" ||
-                    (certification.juryTypeMiseEnSituationProfessionnelle ==
-                      "PRESENTIEL" && <Tag>Présentiel</Tag>)}
-                  {certification.juryTypeMiseEnSituationProfessionnelle ==
+                    certification.juryTypeMiseEnSituationProfessionnelle ==
+                      "PRESENTIEL") && <Tag>Présentiel</Tag>}
+                  {(certification.juryTypeMiseEnSituationProfessionnelle ==
                     "LES_DEUX" ||
-                    (certification.juryTypeMiseEnSituationProfessionnelle ==
-                      "A_DISTANCE" && <Tag>À distance</Tag>)}
+                    certification.juryTypeMiseEnSituationProfessionnelle ==
+                      "A_DISTANCE") && <Tag>À distance</Tag>}
                 </Info>
               )}
 
