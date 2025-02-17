@@ -12,6 +12,7 @@ export const buildSubscriptionFilters = (searchFilter: string) => {
     containsFilter("accountFirstname"),
     containsFilter("accountEmail"),
     containsFilter("companyName"),
+    containsFilter("companySiret"),
   ];
 };
 
