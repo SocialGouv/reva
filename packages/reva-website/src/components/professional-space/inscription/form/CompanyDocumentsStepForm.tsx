@@ -1,12 +1,12 @@
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { CompanySummary } from "@/components/professional-space/inscription/component/CompanySummary";
+import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CompanySummary } from "../component/CompanySummary";
-import { useProfessionalSpaceSubscriptionContext } from "../context/ProfessionalSpaceSubscriptionContext";
 
 const schema = z.object({
   attestationURSSAF: z

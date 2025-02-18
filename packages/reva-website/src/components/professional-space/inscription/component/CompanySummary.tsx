@@ -1,6 +1,6 @@
+import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useProfessionalSpaceSubscriptionContext } from "../context/ProfessionalSpaceSubscriptionContext";
 
 const CompanySummaryItem = ({
   title,

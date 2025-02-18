@@ -1,4 +1,6 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { CompanySummary } from "@/components/professional-space/inscription/component/CompanySummary";
+import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -8,8 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
-import { CompanySummary } from "../component/CompanySummary";
-import { useProfessionalSpaceSubscriptionContext } from "../context/ProfessionalSpaceSubscriptionContext";
 
 export const AccountInfoStepForm = () => {
   const { professionalSpaceInfos, submitAccountInfoStep } =

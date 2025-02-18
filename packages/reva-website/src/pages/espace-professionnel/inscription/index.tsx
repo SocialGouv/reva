@@ -3,6 +3,14 @@
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import {
+  ProfessionalSpaceSubscriptionProvider,
+  useProfessionalSpaceSubscriptionContext,
+} from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
+import { AccountInfoStepForm } from "@/components/professional-space/inscription/form/AccountInfoStepForm";
+import { CguStep } from "@/components/professional-space/inscription/form/CguStep";
+import { CompanyDocumentsStepForm } from "@/components/professional-space/inscription/form/CompanyDocumentsStepForm";
+import { CompanySiretStepForm } from "@/components/professional-space/inscription/form/CompanySiretStepForm";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { GetCguQuery } from "@/graphql/generated/graphql";
@@ -10,14 +18,6 @@ import request from "graphql-request";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import {
-  ProfessionalSpaceSubscriptionProvider,
-  useProfessionalSpaceSubscriptionContext,
-} from "./_components/context/ProfessionalSpaceSubscriptionContext";
-import { AccountInfoStepForm } from "./_components/form/AccountInfoStepForm";
-import { CguStep } from "./_components/form/CguStep";
-import { CompanyDocumentsStepForm } from "./_components/form/CompanyDocumentsStepForm";
-import { CompanySiretStepForm } from "./_components/form/CompanySiretStepForm";
 
 const PageContent = ({ getCguResponse }: { getCguResponse: GetCguQuery }) => {
   const { currentStep } = useProfessionalSpaceSubscriptionContext();
