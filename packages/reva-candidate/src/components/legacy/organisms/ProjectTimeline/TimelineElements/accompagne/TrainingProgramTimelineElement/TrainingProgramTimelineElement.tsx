@@ -43,7 +43,7 @@ export const TrainingProgramTimelineElement = () => {
           ) : (
             <>
               Validez le nombre d’heures d’accompagnement et de formation défini
-              par votre référent
+              par votre accompagnateur
             </>
           )}
         </p>
