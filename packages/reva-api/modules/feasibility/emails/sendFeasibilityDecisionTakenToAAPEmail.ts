@@ -1,7 +1,5 @@
 import mjml2html from "mjml";
-
-import { sendGenericEmail, templateMail } from "../../shared/email";
-import { logger } from "../../shared/logger";
+import { sendEmailWithLink, templateMail } from "../../shared/email";
 
 export const sendFeasibilityDecisionTakenToAAPEmail = async ({
   email,
@@ -10,30 +8,28 @@ export const sendFeasibilityDecisionTakenToAAPEmail = async ({
   email: string;
   feasibilityUrl: string;
 }) => {
-  const htmlContent = mjml2html(
-    templateMail({
-      content: `
+  const htmlContent = (url: string) =>
+    mjml2html(
+      templateMail({
+        content: `
       <p>Bonjour,</p>
       <p>Un nouvel avis de recevabilité est disponible via le lien ci-dessous.</p>
       `,
-      labelCTA: "Accéder à la notification de recevabilité",
-      url: feasibilityUrl,
-      bottomLine:
-        "<p>En cas de dossier recevable, vous disposez d'un délai de deux mois pour renseigner <b>la date prévisionnelle</b> à laquelle le candidat sera potentiellement prêt pour son passage devant le jury.</p>",
-    }),
-  );
+        url,
+        labelCTA: "Accéder à la notification de recevabilité",
+        bottomLine: `
+      <p>En cas de dossier recevable, vous disposez d'un délai de deux mois pour renseigner <b>la date prévisionnelle</b> à laquelle le candidat sera potentiellement prêt pour son passage devant le jury.</p>
+      <p>Cordialement,</p>
+      <p>L'équipe France VAE</p>
+      `,
+      }),
+    );
 
-  if (htmlContent.errors.length > 0) {
-    const errorMessage = htmlContent.errors
-      .map((e) => e.formattedMessage)
-      .join("\n");
-    logger.error(errorMessage);
-    throw new Error(errorMessage);
-  }
-
-  return sendGenericEmail({
+  return sendEmailWithLink({
     to: { email },
-    htmlContent: htmlContent.html,
+    htmlContent,
     subject: "Un nouvel avis de recevabilité est disponible",
+    app: "admin",
+    customUrl: feasibilityUrl,
   });
 };

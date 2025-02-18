@@ -13,6 +13,7 @@ import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandi
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import { deleteFeasibilityIDFile } from "../../../feasibility/features/deleteFeasibilityIDFile";
 import {
+  sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
   sendFeasibilityIncompleteToCandidateAutonomeEmail,
   sendFeasibilityRejectedToCandidateAccompagneEmail,
@@ -115,6 +116,10 @@ const sendFeasibilityDecisionTakenEmail = async ({
         certificationAuthorityLabel,
         certificationName,
         infoFile: decisionUploadedFile,
+      });
+      sendFeasibilityDecisionTakenToAAPEmail({
+        email: aapEmail,
+        feasibilityUrl: `/candidacies/${candidacyId}/feasibility-aap`,
       });
     }
 

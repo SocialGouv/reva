@@ -13,8 +13,6 @@ import { deleteFeasibilityIDFile } from "../features/deleteFeasibilityIDFile";
 import { canManageFeasibility } from "./canManageFeasibility";
 import { updateCandidacyLastActivityDateToNow } from "./updateCandidacyLastActivityDateToNow";
 
-const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
-
 export const validateFeasibility = async ({
   feasibilityId,
   comment,
@@ -128,7 +126,7 @@ export const validateFeasibility = async ({
         sendFeasibilityDecisionTakenToAAPEmail({
           email:
             updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-          feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacyId}/feasibility-aap/pdf`,
+          feasibilityUrl: `/candidacies/${updatedFeasibility.candidacyId}/feasibility-aap/pdf`,
         });
       }
     }
