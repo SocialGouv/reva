@@ -65,8 +65,8 @@ const ReadyForJuryEstimatedDateTab = () => {
             description={
               <>
                 <p className="mt-4">
-                  Afin de faciliter la tenue du jury, l’AAP renseignera la date
-                  prévisionnelle qui correspond :
+                  Le candidat ou l’AAP (le cas échéant) renseignera
+                  prochainement la date prévisionnelle qui correspond :
                 </p>
                 <br />
                 <ul className="list-disc list-inside">
@@ -80,6 +80,10 @@ const ReadyForJuryEstimatedDateTab = () => {
                     certifications
                   </li>
                 </ul>
+                <p className="mt-4">
+                  Une fois cette date communiquée, vous pourrez facilement
+                  organiser le passage devant le jury.
+                </p>
               </>
             }
           />
