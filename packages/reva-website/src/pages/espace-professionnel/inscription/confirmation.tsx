@@ -1,9 +1,8 @@
 import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { PICTOGRAMS } from "@/components/pictograms";
-import { Hexagon } from "@/components/section-content/SectionContent";
 import Head from "next/head";
-import * as React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const ProfessionalSpaceInscriptionConfirmationPage = () => {
   return (
@@ -15,28 +14,38 @@ const ProfessionalSpaceInscriptionConfirmationPage = () => {
         </title>
       </Head>
       <OrganismBackground>
-        <div className="flex flex-col md:flex-row gap-10">
-          <div className="flex flex-col items-start">
-            <h1 className="max-w-2xl">
-              Votre demande d'inscription est enregistrée.
-            </h1>
-            <div role="status" className="flex flex-col">
-              <p className="text-xl">
-                Elle sera étudiée par un administrateur France VAE dans les plus
-                brefs délais.
-              </p>
-              <p className="text-sm">
-                Vous pourrez paramétrer votre compte après validation de votre
-                demande d’inscription.
-              </p>
+        <div
+          className="flex justify-between w-full items-center"
+          data-test="has-subscribed-successfully"
+        >
+          <div className="flex flex-col justify-center">
+            <h1>Votre demande d'inscription est enregistrée </h1>
+            <p className="text-xl">
+              Pour finaliser votre inscription sur la plateforme France VAE,
+              vous devez d'abord consulter et répondre à ce questionnaire de
+              présentation et d'explication du rôle de l'Architecte
+              Accompagnateur de Parcours.
+            </p>
+            <p className="text-xl">
+              Ce questionnaire vous sera également envoyé par email.
+            </p>
+            <p className="text-sm text-neutral-500">
+              Si votre dossier est valide et complet, vous recevrez un mail de
+              validation !
+            </p>
+            <div>
+              <Link href="https://tally.so/r/n0M4Ry" target="_blank">
+                Questionnaire de référencement
+              </Link>
             </div>
           </div>
-          <div className="m-auto flex items-center justify-center relative">
-            <Hexagon className="text-gray-100 w-[150px]" />
-            <div className="absolute mx-auto">
-              {PICTOGRAMS.technicalErrorLG}
-            </div>
-          </div>
+          <Image
+            src="/professional-space/submitted-successfully.png"
+            alt="Inscription réussie"
+            width={282}
+            height={319}
+            className="hidden md:block max-h-[319px]"
+          />
         </div>
       </OrganismBackground>
     </MainLayout>
