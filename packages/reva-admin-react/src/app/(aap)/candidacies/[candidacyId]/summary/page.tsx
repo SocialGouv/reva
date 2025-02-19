@@ -205,14 +205,25 @@ const CandidacySummaryPage = () => {
                   </span>
 
                   {candidacy.organism?.maisonMereAAP?.id && (
-                    <Button
-                      priority="secondary"
-                      linkProps={{
-                        href: `/maison-mere-aap/${candidacy.organism?.maisonMereAAP?.id}`,
-                      }}
-                    >
-                      Voir son profil
-                    </Button>
+                    <>
+                      <Button
+                        priority="secondary"
+                        linkProps={{
+                          href: `/candidacies/${candidacy.id}/changement-aap`,
+                        }}
+                      >
+                        Modifier
+                      </Button>
+
+                      <Button
+                        priority="secondary"
+                        linkProps={{
+                          href: `/maison-mere-aap/${candidacy.organism?.maisonMereAAP?.id}`,
+                        }}
+                      >
+                        Voir son profil
+                      </Button>
+                    </>
                   )}
                 </div>
                 {candidacy.organism ? (

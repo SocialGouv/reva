@@ -60,6 +60,8 @@ import { updateLastActivityDate } from "./features/updateLastActivityDate";
 import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import { resolversSecurityMap } from "./security/security";
+import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
+import { selectOrganismForCandidacyAsAdmin } from "./features/selectOrganismForCandidacyAsAdmin";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -140,6 +142,15 @@ const unsafeResolvers = {
         searchFilter,
         searchText,
       }),
+    candidacy_searchOrganismsForCandidacyAsAdmin: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+        offset?: number;
+        limit?: number;
+        searchText?: string;
+      },
+    ) => searchOrganismsForCandidacyAsAdmin(payload),
     candidacy_candidacyCountByStatus: async (
       _: unknown,
       _params: {
@@ -427,6 +438,24 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) => {
       const result = await selectOrganismForCandidacy({
+        candidacyId: payload.candidacyId,
+        organismId: payload.organismId,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+
+      return result;
+    },
+    candidacy_selectOrganismAsAdmin: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+        organismId: string;
+      },
+      context: GraphqlContext,
+    ) => {
+      const result = await selectOrganismForCandidacyAsAdmin({
         candidacyId: payload.candidacyId,
         organismId: payload.organismId,
         userKeycloakId: context.auth.userInfo?.sub,
