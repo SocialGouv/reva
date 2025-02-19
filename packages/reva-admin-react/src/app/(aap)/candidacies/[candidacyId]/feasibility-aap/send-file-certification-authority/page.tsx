@@ -96,6 +96,13 @@ export default function SendFileCertificationAuthorityPage() {
     setCertificationAuthoritySelectedId,
   ] = useState<string>("");
 
+  const [
+    certificationAuthoritySelectError,
+    setCertificationAuthoritySelectError,
+  ] = useState<boolean>(false);
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const decision = feasibility?.decision;
   const decisionSentAt = feasibility?.decisionSentAt;
   const decisionComment = feasibility?.decisionComment;
@@ -114,11 +121,17 @@ export default function SendFileCertificationAuthorityPage() {
     }
 
     if (!certificationAuthoritySelectedId) {
-      errorToast("Veuillez sélectionner un certificateur");
+      setCertificationAuthoritySelectError(true);
+      errorToast(
+        "Impossible d'envoyer le dossier. Merci de sélectionner un certificateur",
+      );
       return;
+    } else {
+      setCertificationAuthoritySelectError(false);
     }
 
     try {
+      setIsSubmitting(true);
       await sendToCertificationAuthorityMutation({
         dematerializedFeasibilityFileId: dematerializedFeasibilityFile.id,
         certificationAuthorityId: certificationAuthoritySelectedId,
@@ -127,6 +140,8 @@ export default function SendFileCertificationAuthorityPage() {
       router.push(feasibilitySummaryUrl);
     } catch (error) {
       graphqlErrorToast(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -163,6 +178,7 @@ export default function SendFileCertificationAuthorityPage() {
       <CertificationAuthoritySection
         certificationAuthorities={certificationAuthorities}
         certificationAuthoritySelectedId={certificationAuthoritySelectedId}
+        certificationAuthoritySelectError={certificationAuthoritySelectError}
         setCertificationAuthoritySelectedId={
           setCertificationAuthoritySelectedId
         }
@@ -180,7 +196,8 @@ export default function SendFileCertificationAuthorityPage() {
           onClick={handleSendFile}
           disabled={
             !feasibilityFileNeedsNewOrResendAction ||
-            !isReadyToBeSentToCertificationAuthority
+            !isReadyToBeSentToCertificationAuthority ||
+            isSubmitting
           }
         >
           Envoyer au certificateur

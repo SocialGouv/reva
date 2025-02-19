@@ -10,6 +10,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
+import { useState } from "react";
 
 const FeasibilityBanner = ({
   sentToCandidateAt,
@@ -47,15 +48,20 @@ export default function SendFileCandidatePage() {
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
 
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const handleSendFile = async () => {
     try {
       if (!dematerializedFeasibilityFileId) return;
+      setIsSubmitting(true);
 
       await sendToCandidateMutation(dematerializedFeasibilityFileId);
       successToast("Le dossier de faisabilité a été envoyé au candidat");
       router.push(feasibilitySummaryUrl);
     } catch (error) {
       graphqlErrorToast(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -84,7 +90,9 @@ export default function SendFileCandidatePage() {
         </Button>
         <Button
           onClick={handleSendFile}
-          disabled={!!dematerializedFeasibilityFile?.sentToCandidateAt}
+          disabled={
+            !!dematerializedFeasibilityFile?.sentToCandidateAt || isSubmitting
+          }
         >
           Envoyer au candidat
         </Button>

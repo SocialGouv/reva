@@ -8,6 +8,30 @@ interface GraphQLError {
   message?: string;
 }
 
+const genericToast = (props: {
+  title: string;
+  severity: "success" | "error" | "warning" | "info";
+  description?: string;
+  closable?: boolean;
+}) => {
+  const { title, severity, description = "", closable = false } = props;
+  return toast.custom(
+    () => (
+      <Alert
+        severity={severity}
+        title={title}
+        description={description}
+        className="bg-white"
+        closable={closable as true}
+        onClose={() => {
+          toast.dismiss();
+        }}
+      />
+    ),
+    { duration: closable ? 10000 : 3000 },
+  );
+};
+
 export const successToast = (
   props:
     | {
@@ -22,37 +46,17 @@ export const successToast = (
     description = "",
     closable = false,
   } = typeof props === "string" ? { title: props } : props;
-  return toast.custom(
-    () => (
-      <Alert
-        severity="success"
-        title={title}
-        description={description}
-        className="bg-white"
-        closable={closable as true}
-        onClose={() => {
-          toast.dismiss();
-        }}
-      />
-    ),
-    { duration: closable ? 10000 : 3000 },
-  );
+  return genericToast({ title, severity: "success", description, closable });
 };
 
 export const errorToast = (message: string) =>
-  toast.custom(() => (
-    <Alert severity="error" title={message} className="bg-white" />
-  ));
+  genericToast({ title: message, severity: "error" });
 
 export const infoToast = (message: string) =>
-  toast.custom(() => (
-    <Alert severity="info" title={message} className="bg-white" />
-  ));
+  genericToast({ title: message, severity: "info" });
 
 export const warningToast = (message: string) =>
-  toast.custom(() => (
-    <Alert severity="warning" title={message} className="bg-white" />
-  ));
+  genericToast({ title: message, severity: "warning" });
 
 export const graphqlErrorToast = (_error: unknown) => {
   const error = _error as GraphQLError;

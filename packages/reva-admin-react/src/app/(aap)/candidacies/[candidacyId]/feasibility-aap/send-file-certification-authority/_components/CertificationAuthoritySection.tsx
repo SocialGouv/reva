@@ -3,6 +3,7 @@ import Select from "@codegouvfr/react-dsfr/Select";
 type CertificationAuthorityProps = {
   certificationAuthorities: { label: string; id: string }[];
   certificationAuthoritySelectedId: string;
+  certificationAuthoritySelectError: boolean;
   setCertificationAuthoritySelectedId: (id: string) => void;
   feasibilityHasBeenSentToCertificationAuthority: boolean;
 };
@@ -10,6 +11,7 @@ type CertificationAuthorityProps = {
 const CertificateursSelect = ({
   certificationAuthorities,
   certificationAuthoritySelectedId,
+  certificationAuthoritySelectError,
   setCertificationAuthoritySelectedId,
 }: Omit<
   CertificationAuthorityProps,
@@ -21,6 +23,12 @@ const CertificateursSelect = ({
         <label className="block mt-[6px] mb-[10px] text-xs font-semibold">
           SÉLECTIONNEZ L'AUTORITÉ DE CERTIFICATION
         </label>
+      }
+      state={certificationAuthoritySelectError ? "error" : "default"}
+      stateRelatedMessage={
+        certificationAuthoritySelectError
+          ? "Veuillez choisir une autorité de certification"
+          : ""
       }
       nativeSelectProps={{
         onChange: (event) =>
@@ -46,6 +54,7 @@ const CertificateursSelect = ({
 export default function CertificationAuthoritySection({
   certificationAuthorities,
   certificationAuthoritySelectedId,
+  certificationAuthoritySelectError,
   setCertificationAuthoritySelectedId,
   feasibilityHasBeenSentToCertificationAuthority,
 }: CertificationAuthorityProps) {
@@ -68,6 +77,7 @@ export default function CertificationAuthoritySection({
         <CertificateursSelect
           certificationAuthorities={certificationAuthorities}
           certificationAuthoritySelectedId={certificationAuthoritySelectedId}
+          certificationAuthoritySelectError={certificationAuthoritySelectError}
           setCertificationAuthoritySelectedId={
             setCertificationAuthoritySelectedId
           }
