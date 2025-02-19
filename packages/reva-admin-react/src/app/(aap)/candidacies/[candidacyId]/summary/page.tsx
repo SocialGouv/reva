@@ -206,14 +206,16 @@ const CandidacySummaryPage = () => {
 
                   {candidacy.organism?.maisonMereAAP?.id && (
                     <>
-                      <Button
-                        priority="secondary"
-                        linkProps={{
-                          href: `/candidacies/${candidacy.id}/changement-aap`,
-                        }}
-                      >
-                        Modifier
-                      </Button>
+                      {candidacy.financeModule == "hors_plateforme" && (
+                        <Button
+                          priority="secondary"
+                          linkProps={{
+                            href: `/candidacies/${candidacy.id}/changement-aap`,
+                          }}
+                        >
+                          Modifier
+                        </Button>
+                      )}
 
                       <Button
                         priority="secondary"
