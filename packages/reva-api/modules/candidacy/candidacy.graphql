@@ -209,6 +209,11 @@ type RamdomOrganisms {
   totalRows: Int!
 }
 
+type OrganismPage {
+  rows: [Organism!]!
+  info: PaginationInfo!
+}
+
 type CandidacyCaducitePaginated {
   rows: [Candidacy!]!
   info: PaginationInfo!
@@ -228,6 +233,12 @@ type Query {
     searchText: String
     searchFilter: SearchOrganismFilter
   ): RamdomOrganisms!
+  candidacy_searchOrganismsForCandidacyAsAdmin(
+    candidacyId: UUID!
+    offset: Int
+    limit: Int
+    searchText: String
+  ): OrganismPage!
   candidacy_candidacyCountByStatus(
     searchFilter: String
     maisonMereAAPId: ID
@@ -301,6 +312,10 @@ type Mutation {
   ): Candidacy!
   candidacy_takeOver(candidacyId: ID!): Candidacy!
   candidacy_selectOrganism(candidacyId: UUID!, organismId: UUID!): Candidacy!
+  candidacy_selectOrganismAsAdmin(
+    candidacyId: UUID!
+    organismId: UUID!
+  ): Candidacy!
   candidacy_submitTypologyForm(
     candidacyId: ID!
     typology: CandidateTypology!

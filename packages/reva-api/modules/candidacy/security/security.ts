@@ -20,6 +20,8 @@ export const resolversSecurityMap = {
   "Query.getCandidacyById": [canAccessCandidacy],
   "Query.candidacy_getCandidacyCaducites": isAdminOrCertificationAuthority,
 
+  "Query.candidacy_searchOrganismsForCandidacyAsAdmin": isAdmin,
+
   "Mutation.*": defaultSecurity, // forbidden
 
   // Mutations candidat
@@ -29,6 +31,7 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateExperience": isOwnerOrCanManageCandidacy,
   "Mutation.candidacy_addExperience": isOwnerOrCanManageCandidacy,
   "Mutation.candidacy_selectOrganism": isOwnerOfCandidacy,
+  "Mutation.candidacy_selectOrganismAsAdmin": isAdmin,
   "Mutation.candidacy_submitCandidacy": isOwnerOfCandidacy,
   "Mutation.candidacy_updateTypeAccompagnement": isOwnerOfCandidacy,
 

@@ -65,6 +65,7 @@
 
   .modal-confirm-jury-result,
   .modal-confirm-reorientation,
+  .modal-confirm-changement-aap,
   .modal-validate-certification {
     .fr-modal__header {
       button {
