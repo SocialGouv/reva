@@ -22,7 +22,7 @@ dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
-const EVERY_DAY_AT_3_AM = "0 3 * * *";
+const EVERY_HOUR = "0 * * * *";
 
 const fundingRequestUnifvae = CronJob.from({
   cronTime: process.env.BATCH_FUNDING_REQUEST_UNIFVAE_CRONTIME || "*/5 * * * *",
@@ -176,7 +176,7 @@ CronJob.from({
 CronJob.from({
   cronTime:
     process.env.BATCH_SEND_EMAILS_FOR_AUTO_CANDIDACY_CADUCIE_CRONTIME ||
-    EVERY_DAY_AT_3_AM,
+    EVERY_HOUR,
   onTick: () =>
     runBatchIfActive({
       batchKey: "batch.send-emails-for-auto-candidacy-caducite",
