@@ -70,10 +70,16 @@ export const updateCertificationAdditionalInfo = async ({
 
   if (existingInfo?.dossierDeValidationTemplate) {
     await deleteFile(existingInfo.dossierDeValidationTemplate.path);
+
+    // at this point existingInfo will be cascade delete
     await prismaClient.file.delete({
       where: {
         id: existingInfo.dossierDeValidationTemplate.id,
       },
+    });
+  } else if (existingInfo) {
+    await prismaClient.certificationAdditionalInfo.delete({
+      where: { id: existingInfo.id },
     });
   }
 
