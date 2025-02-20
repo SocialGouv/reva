@@ -208,7 +208,7 @@ const CandidacySummaryPage = () => {
                     <>
                       {candidacy.financeModule == "hors_plateforme" && (
                         <Button
-                          priority="secondary"
+                          priority="tertiary no outline"
                           linkProps={{
                             href: `/candidacies/${candidacy.id}/changement-aap`,
                           }}
