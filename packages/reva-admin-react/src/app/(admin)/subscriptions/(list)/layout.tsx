@@ -115,7 +115,10 @@ const SubscriptionsLayout = ({ children }: { children: ReactNode }) => {
         fullHeight
         items={items}
       />
-      <div className="mt-3 w-full">{children}</div>
+      <div className="mt-3 w-full">
+        <h1>Vérifications</h1>
+        {children}
+      </div>
     </div>
   );
 };

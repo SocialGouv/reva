@@ -85,7 +85,8 @@ const CertificationListLayout = ({ children }: { children: ReactNode }) => {
           },
         ]}
       />
-      {children}
+
+      <div className="mt-3 w-full">{children}</div>
     </div>
   );
 };
