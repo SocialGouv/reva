@@ -49,11 +49,13 @@ export default function CertificationAdditionalInfoPage() {
 
 const schema = z
   .object({
-    dossierDeValidationTemplate: z.object({
-      0: z
-        .instanceof(File, { message: "Merci de remplir ce champ" })
-        .optional(),
-    }),
+    dossierDeValidationTemplate: z
+      .object({
+        0: z
+          .instanceof(File, { message: "Merci de remplir ce champ" })
+          .optional(),
+      })
+      .optional(),
     dossierDeValidationLink: z.string().optional(),
     linkToReferential: z.string().min(1, "Merci de remplir ce champ"),
     linkToCorrespondenceTable: z.string().optional(),
