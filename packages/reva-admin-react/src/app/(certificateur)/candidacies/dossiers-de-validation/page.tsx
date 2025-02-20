@@ -120,12 +120,14 @@ const DossiersDeValidationPage = () => {
 
   const categoryLabel = useMemo(() => {
     switch (category) {
+      case "ALL":
+        return "Tous les dossiers actifs";
       case "PENDING":
-        return "Dossiers de validation reçus / jurys à programmer";
+        return "Dossiers reçus / jurys à programmer";
       case "INCOMPLETE":
-        return "Dossiers de validation signalés";
+        return "Dossiers signalés";
       default:
-        return "Tous les dossiers de validation";
+        return category;
     }
   }, [category]);
 

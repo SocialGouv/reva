@@ -97,11 +97,11 @@ const CaducitesPage = () => {
   const statusLabel = useMemo(() => {
     switch (status) {
       case "CADUQUE":
-        return "Candidatures caduques";
+        return "Recevabilités caduques";
       case "CONTESTATION":
-        return "Candidatures en contestation";
+        return "Contestations caducité";
       default:
-        return "Toutes les candidatures";
+        return status;
     }
   }, [status]);
 

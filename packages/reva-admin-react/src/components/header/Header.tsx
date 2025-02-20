@@ -91,9 +91,13 @@ export const Header = () => {
                 // This isActive flag is set to true only for the AAP tab under candidacies,
                 // excluding specific subpaths like dossiers-de-validation, feasibilities, and juries
                 // which belong to the certification authorities' candidacies.
-                isActive: !!currentPathname.match(
-                  /\/candidacies\/(?!(dossiers-de-validation|feasibilities|juries)\/).*/,
-                ),
+                isActive:
+                  !!currentPathname.match(
+                    /\/candidacies\/(?!(dossiers-de-validation|feasibilities|juries|caducites)\/).*/,
+                  ) &&
+                  !currentPathname.match(
+                    /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)/,
+                  ),
               },
             ]
           : []),
@@ -121,7 +125,7 @@ export const Header = () => {
                 },
                 isActive: !!(
                   currentPathname.match(
-                    /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)/,
+                    /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)|(caducites)/,
                   ) ||
                   currentPathname.match(
                     /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)/,

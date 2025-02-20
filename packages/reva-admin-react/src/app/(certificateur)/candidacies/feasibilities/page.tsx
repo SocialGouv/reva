@@ -106,16 +106,24 @@ const FeasibilitiesPage = () => {
 
   const categoryLabel = useMemo(() => {
     switch (category) {
+      case "ALL":
+        return "Tous les dossiers actifs";
       case "PENDING":
-        return "Dossiers en attente de recevabilité";
-      case "ADMISSIBLE":
-        return "Dossiers recevables";
+        return "Nouveaux dossiers";
       case "REJECTED":
         return "Dossiers non recevables";
       case "INCOMPLETE":
         return "Dossiers incomplets";
+      case "COMPLETE":
+        return "Dossiers en attente de recevabilité";
+      case "ADMISSIBLE":
+        return "Dossiers recevables";
+      case "DROPPED_OUT":
+        return "Dossiers abandonnés";
+      case "ARCHIVED":
+        return "Dossiers supprimés";
       default:
-        return "Tous les dossiers de faisabilité";
+        return category;
     }
   }, [category]);
 

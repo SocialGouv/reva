@@ -106,12 +106,14 @@ const JuriesPage = () => {
 
   const categoryLabel = useMemo(() => {
     switch (category) {
-      case "SCHEDULED":
-        return "Programmés";
-      case "PASSED":
-        return "Passés";
-      default:
+      case "ALL":
         return "Tous les jurys";
+      case "SCHEDULED":
+        return "Jurys programmés";
+      case "PASSED":
+        return "Jurys passés";
+      default:
+        return category;
     }
   }, [category]);
 

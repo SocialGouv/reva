@@ -227,17 +227,18 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const juryItems = [
     menuItem({
-      text: `Tous (${juryCount})`,
+      text: `Tous les jurys (${juryCount})`,
       path: "/candidacies/juries",
       category: "ALL",
+      defaultMenuItem: true,
     }),
     menuItem({
-      text: `Programmés (${juryCountByCategory?.SCHEDULED || 0})`,
+      text: `Jurys programmés (${juryCountByCategory?.SCHEDULED || 0})`,
       path: "/candidacies/juries",
       category: "SCHEDULED",
     }),
     menuItem({
-      text: `Passés (${juryCountByCategory?.PASSED || 0})`,
+      text: `Jurys passés (${juryCountByCategory?.PASSED || 0})`,
       path: "/candidacies/juries",
       category: "PASSED",
     }),
@@ -247,9 +248,11 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     {
       items: feasibilityItems,
       text: `Dossiers de faisabilité (${feasibilityCountByCategory?.ALL || 0})`,
-      expandedByDefault: currentPathname.startsWith(
-        "/candidacies/feasibilities",
-      ),
+      expandedByDefault:
+        currentPathname.startsWith("/candidacies/feasibilities") &&
+        searchParams.get("CATEGORY") != "REJECTED" &&
+        searchParams.get("CATEGORY") != "DROPPED_OUT" &&
+        searchParams.get("CATEGORY") != "ARCHIVED",
     },
     {
       items: dossierDeValidationItems,
@@ -260,7 +263,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     },
     {
       items: juryItems,
-      text: `Jury (${juryCount})`,
+      text: `Jurys (${juryCount})`,
       expandedByDefault: currentPathname.startsWith("/candidacies/juries"),
     },
     menuItem({
