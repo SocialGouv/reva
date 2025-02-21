@@ -12,18 +12,13 @@ import { CcnSearchList } from "./_components/ccn-search-list/CcnSearchList";
 import { useEffect } from "react";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
+import {
+  AVAILABLE_CANDIDATE_TYPOLOGIES,
+  getTypologyLabel,
+} from "@/utils/candidateTypology.util";
 
 const typologyFormSchema = z.object({
-  typology: z.enum([
-    "NON_SPECIFIE",
-    "SALARIE_PRIVE",
-    "BENEVOLE",
-    "AIDANTS_FAMILIAUX",
-    "AIDANTS_FAMILIAUX_AGRICOLES",
-    "DEMANDEUR_EMPLOI",
-    "TRAVAILLEUR_NON_SALARIE",
-    "TITULAIRE_MANDAT_ELECTIF",
-  ]),
+  typology: z.enum(AVAILABLE_CANDIDATE_TYPOLOGIES),
   ccnId: z.string().optional(),
 });
 type TypologyFormData = z.infer<typeof typologyFormSchema>;
@@ -86,10 +81,11 @@ const TypologyPage = () => {
             Sélectionner
           </option>
 
-          <option value="SALARIE_PRIVE">Salarié du privé</option>
-          <option value="BENEVOLE">Bénévole</option>
-          <option value="AIDANTS_FAMILIAUX">Aidant familial</option>
-          <option value="DEMANDEUR_EMPLOI">Demandeur d'emploi</option>
+          {AVAILABLE_CANDIDATE_TYPOLOGIES.map((typology) => (
+            <option key={typology} value={typology}>
+              {getTypologyLabel(typology)}
+            </option>
+          ))}
         </Select>
         {(typology === "SALARIE_PRIVE" ||
           typology === "DEMANDEUR_EMPLOI" ||
@@ -145,9 +141,9 @@ const TypologyPage = () => {
 
         {(typology === "BENEVOLE" ||
           typology === "AIDANTS_FAMILIAUX" ||
-          typology === "AIDANTS_FAMILIAUX_AGRICOLES") && (
-          <Button className="ml-auto">Suivant</Button>
-        )}
+          typology === "AIDANTS_FAMILIAUX_AGRICOLES" ||
+          typology === "RETRAITE" ||
+          typology === "AUTRE") && <Button className="ml-auto">Suivant</Button>}
       </form>
     </>
   );

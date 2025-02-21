@@ -10,20 +10,8 @@ import {
   OTHER_FINANCING_METHOD_ID,
   useTrainingPage,
 } from "./trainingPage.hook";
+import { getTypologyLabel } from "@/utils/candidateTypology.util";
 
-const getTypologyLabel = (typology?: string) => {
-  switch (typology) {
-    case "SALARIE_PRIVE":
-      return "Salarié du privé";
-    case "DEMANDEUR_EMPLOI":
-      return "Demandeur d'emploi";
-    case "AIDANTS_FAMILIAUX":
-      return "Aidant familial";
-    case "BENEVOLE":
-      return "Bénévole";
-  }
-  return typology;
-};
 const TrainingPage = () => {
   const {
     getCandidacyByIdWithReferentialStatus,
