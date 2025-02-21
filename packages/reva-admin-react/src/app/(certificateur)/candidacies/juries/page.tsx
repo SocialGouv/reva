@@ -145,10 +145,10 @@ const JuriesPage = () => {
               </p>
             </div>
           ) : (
-            <h1>Espace pro administrateur</h1>
+            <h1>Jurys</h1>
           )
         ) : (
-          <h1>Espace certificateur</h1>
+          <h1>Jurys</h1>
         )}
 
         <CandidacySearchList

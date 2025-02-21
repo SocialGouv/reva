@@ -159,10 +159,10 @@ const DossiersDeValidationPage = () => {
               </p>
             </div>
           ) : (
-            <h1>Espace pro administrateur</h1>
+            <h1>Dossiers de validation</h1>
           )
         ) : (
-          <h1>Espace certificateur</h1>
+          <h1>Dossiers de validation</h1>
         )}
 
         <CandidacySearchList

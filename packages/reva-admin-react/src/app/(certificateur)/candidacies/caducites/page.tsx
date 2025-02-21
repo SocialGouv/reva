@@ -108,7 +108,7 @@ const CaducitesPage = () => {
   return (
     caducitesPage && (
       <div className="flex flex-col">
-        <h1>Espace certificateur</h1>
+        <h1>Candidatures</h1>
 
         <CandidacySearchList
           title={statusLabel}
