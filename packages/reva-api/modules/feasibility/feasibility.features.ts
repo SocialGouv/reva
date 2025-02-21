@@ -787,6 +787,7 @@ const rejectFeasibility = async ({
         email: updatedFeasibility.candidacy.candidate?.email as string,
         comment,
         certificationAuthorityLabel,
+        certificationName,
         infoFile,
       });
 

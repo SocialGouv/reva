@@ -98,6 +98,7 @@ const sendFeasibilityDecisionTakenEmail = async ({
         email: candidateEmail,
         comment: decisionComment,
         certificationAuthorityLabel,
+        certificationName,
       });
     }
   } else if (decision === "ADMISSIBLE") {
