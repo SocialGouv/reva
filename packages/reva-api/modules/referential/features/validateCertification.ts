@@ -1,5 +1,5 @@
 import { CertificationStatus } from "@prisma/client";
-import { startOfToday, isAfter, isBefore } from "date-fns";
+import { startOfToday, isAfter, isBefore, isEqual } from "date-fns";
 
 import { ValidateCertificationInput } from "../referential.types";
 import { prismaClient } from "../../../prisma/client";
@@ -34,9 +34,23 @@ export const validateCertification = async ({
     throw new Error("La description de la certification n'est pas complète");
   }
 
-  const visible =
+  const isTodayBetweenAvalaibleAtAndExpiresAt =
     isAfter(startOfToday(), certification.availableAt) &&
     isBefore(startOfToday(), certification.expiresAt);
+
+  const isTodayEqualsToAvailableAt = isEqual(
+    startOfToday(),
+    certification.availableAt,
+  );
+  const idTodayEqualsToExpiresAt = isEqual(
+    startOfToday(),
+    certification.expiresAt,
+  );
+
+  const visible =
+    isTodayEqualsToAvailableAt ||
+    isTodayBetweenAvalaibleAtAndExpiresAt ||
+    idTodayEqualsToExpiresAt;
 
   return await prismaClient.certification.update({
     where: { id: certificationId },
