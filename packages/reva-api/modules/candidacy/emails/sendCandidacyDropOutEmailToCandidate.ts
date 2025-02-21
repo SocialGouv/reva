@@ -7,22 +7,24 @@ import {
 } from "../../shared/email";
 import { generateJwt } from "../../candidate/auth.helper";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { getCandidateLoginUrl } from "../../candidate/features/getCandidateLoginUrl";
 
 export const sendCandidacyDropOutEmailToCandidate = async (email: string) => {
   const useBrevoTemplate = await isFeatureActiveForUser({
     feature: "USE_BREVO_EMAIL_TEMPLATES",
   });
-  const token = generateJwt({ email, action: "login" }, 1 * 60 * 60 * 24 * 4);
 
   if (useBrevoTemplate) {
     return sendEmailUsingTemplate({
       to: { email },
       templateId: 491,
       params: {
-        candidateLoginUrl: `${process.env.BASE_URL}/candidat/login?token=${token}`,
+        candidateLoginUrl: getCandidateLoginUrl({ candidateEmail: email }),
       },
     });
   } else {
+    const token = generateJwt({ email, action: "login" }, 1 * 60 * 60 * 24 * 4);
+
     const htmlContent = (url: string) =>
       mjml2html(
         templateMail({
