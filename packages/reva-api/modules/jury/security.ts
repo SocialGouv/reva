@@ -1,7 +1,6 @@
 import {
   defaultSecurity,
   isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
-  isAdminOrCandidacyCompanion,
   isAnyone,
 } from "../shared/security/presets";
 
@@ -10,12 +9,7 @@ export const resolversSecurityMap = {
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
 
   "Mutation.*": defaultSecurity, // forbidden
-
-  "Mutation.jury_updateExamInfo": isAdminOrCandidacyCompanion,
   "Mutation.jury_updateResult": isAnyone,
-
   "Candidacy.jury": isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
-  "Candidacy.examInfo":
-    isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   "Jury.candidacy": isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 };

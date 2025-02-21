@@ -9,20 +9,15 @@ import { getActiveJuries } from "./features/getActiveJuries";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCategory";
 import { getHistoryJuryByCandidacyId } from "./features/getHistoryJuryByCandidacyId";
-import { getExamInfo } from "./features/getExamInfo";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
-import { updateExamInfo } from "./features/updateExamInfo";
 import { updateResultOfJury } from "./features/updateResultOfJury";
-import { ExamInfo, JuryInfo } from "./jury.types";
+import { JuryInfo } from "./jury.types";
 import { resolversSecurityMap } from "./security";
 import { JuryStatusFilter } from "./types/juryStatusFilter.type";
 import { getCandidacy } from "../candidacy/features/getCandidacy";
 
 const unsafeResolvers = {
   Candidacy: {
-    examInfo: async (parent: Candidacy) => {
-      return getExamInfo({ candidacyId: parent.id });
-    },
     jury: async (parent: Candidacy) => {
       return getActivejuryByCandidacyId({ candidacyId: parent.id });
     },
@@ -98,21 +93,6 @@ const unsafeResolvers = {
     },
   },
   Mutation: {
-    jury_updateExamInfo: async (
-      _parent: unknown,
-      params: {
-        candidacyId: string;
-        examInfo: ExamInfo;
-      },
-      context: GraphqlContext,
-    ) => {
-      return updateExamInfo({
-        ...params,
-        userKeycloakId: context.auth.userInfo?.sub,
-        userEmail: context.auth?.userInfo?.email,
-        userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      });
-    },
     jury_updateResult: async (
       _parent: unknown,
       params: {
