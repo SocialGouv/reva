@@ -7,10 +7,12 @@ export const sendEmailUsingTemplate = async ({
   to,
   templateId,
   params,
+  attachment,
 }: {
   to: { email: string } | { email: string }[];
   templateId: number;
   params?: object;
+  attachment?: { name: string; content: string }[];
 }): Promise<void> => {
   const emailAddresses = Array.isArray(to)
     ? to.map((t) => t.email).join(", ")
@@ -33,6 +35,7 @@ export const sendEmailUsingTemplate = async ({
         templateId,
         to: Array.isArray(to) ? to : [to],
         params,
+        attachment,
       });
       logger.info(`email sent to ${emailAddresses}`);
     } catch (e: any) {
