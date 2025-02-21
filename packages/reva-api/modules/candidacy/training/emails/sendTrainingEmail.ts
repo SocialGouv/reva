@@ -1,12 +1,31 @@
 import mjml2html from "mjml";
 
-import { sendEmailWithLink, templateMail } from "../../../shared/email";
+import {
+  sendEmailUsingTemplate,
+  sendEmailWithLink,
+  templateMail,
+} from "../../../shared/email";
+import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
+import { getCandidateLoginUrl } from "../../../candidate/features/getCandidateLoginUrl";
 
 export const sendTrainingEmail = async (email: string, token: string) => {
-  const htmlContent = (url: string) =>
-    mjml2html(
-      templateMail({
-        content: `
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 495,
+      params: {
+        candidateLoginUrl: getCandidateLoginUrl({ candidateEmail: email }),
+      },
+    });
+  } else {
+    const htmlContent = (url: string) =>
+      mjml2html(
+        templateMail({
+          content: `
           Bonjour,
           <br />
           <br />
@@ -18,9 +37,9 @@ export const sendTrainingEmail = async (email: string, token: string) => {
           <br />
           Nous vous invitons à le valider rapidement en cliquant sur le bouton ci-dessous. Ce lien sera actif pendant 4 jours.
         `,
-        labelCTA: "Accéder à mon parcours pédagogique",
-        url,
-        bottomLine: `
+          labelCTA: "Accéder à mon parcours pédagogique",
+          url,
+          bottomLine: `
           Une fois validé, votre accompagnateur pourra transmettre votre dossier au certificateur afin d’étudier votre recevabilité. 
           <br />
           <br />
@@ -35,16 +54,17 @@ export const sendTrainingEmail = async (email: string, token: string) => {
           <br />
           L'équipe France VAE
         `,
-        disableThanks: true,
-      }),
-    );
+          disableThanks: true,
+        }),
+      );
 
-  return sendEmailWithLink({
-    to: { email },
-    token,
-    action: "login",
-    htmlContent,
-    subject: "Vous devez valider votre parcours pédagogique",
-    app: "candidate",
-  });
+    return sendEmailWithLink({
+      to: { email },
+      token,
+      action: "login",
+      htmlContent,
+      subject: "Vous devez valider votre parcours pédagogique",
+      app: "candidate",
+    });
+  }
 };
