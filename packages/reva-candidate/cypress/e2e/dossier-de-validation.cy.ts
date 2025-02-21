@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 
+import { JuryResult, TypeAccompagnement } from "@/graphql/generated/graphql";
 import { stubMutation, stubQuery } from "../utils/graphql";
-import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 const typesAccompagnement: TypeAccompagnement[] = ["AUTONOME", "ACCOMPAGNE"];
 
@@ -380,6 +380,61 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
           "exist",
         );
+      });
+    });
+
+    context("Failed jury result", () => {
+      const failedJuryResults: JuryResult[] = [
+        "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+        "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+        "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+        "FAILURE",
+        "CANDIDATE_EXCUSED",
+        "CANDIDATE_ABSENT",
+      ];
+
+      failedJuryResults.forEach((juryResult) => {
+        it(`should show active dossier de validation when jury result is ${juryResult}`, function () {
+          cy.fixture("candidate1-certification-titre-2-selected.json").then(
+            (candidate) => {
+              candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+                typeAccompagnement;
+              candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury =
+                {
+                  result: juryResult,
+                };
+
+              cy.intercept("POST", "/api/graphql", (req) => {
+                stubQuery(
+                  req,
+                  "candidate_getCandidateWithCandidacy",
+                  candidate,
+                );
+                stubQuery(
+                  req,
+                  "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
+                  candidate,
+                );
+              });
+            },
+          );
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubMutation(req, "candidate_login", "candidate_login.json");
+          });
+          cy.login();
+          cy.wait("@candidate_login");
+          cy.wait("@candidate_getCandidateWithCandidacy");
+
+          cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
+            "exist",
+          );
+          cy.get(
+            '[data-test="dossier-de-validation-timeline-element-update-button"]',
+          ).should("be.enabled");
+          cy.get(
+            '[data-test="dossier-de-validation-to-complete-badge"]',
+          ).should("exist");
+        });
       });
     });
   });
