@@ -271,10 +271,10 @@ export const getActiveCandidacyMenu = async ({
     };
   };
 
-  const getJuryMenuEntry = (): CandidacyMenuEntry => {
-    const showNewJuryMenu =
-      candidacy.financeModule == "unifvae" ||
-      candidacy.financeModule === "hors_plateforme";
+  const getJuryMenuEntry = (): CandidacyMenuEntry | undefined => {
+    if (candidacy.financeModule === "unireva") {
+      return undefined;
+    }
 
     const minumumStatusToShowJuryMenu =
       candidacy.financeModule === "hors_plateforme"
@@ -287,17 +287,11 @@ export const getActiveCandidacyMenu = async ({
       ? "ACTIVE_WITHOUT_HINT"
       : "INACTIVE";
 
-    return showNewJuryMenu
-      ? {
-          label: "Jury",
-          url: buildUrl({ suffix: "jury-aap" }),
-          status: menuEntryStatus,
-        }
-      : {
-          label: "Jury",
-          url: buildUrl({ suffix: "exam-info" }),
-          status: menuEntryStatus,
-        };
+    return {
+      label: "Jury",
+      url: buildUrl({ suffix: "jury-aap" }),
+      status: menuEntryStatus,
+    };
   };
 
   return [
