@@ -24,6 +24,7 @@ enum CandidateTypology {
   BENEVOLE
   STAGIAIRE
   TITULAIRE_MANDAT_ELECTIF
+  RETRAITE
   AUTRE
 }
 
