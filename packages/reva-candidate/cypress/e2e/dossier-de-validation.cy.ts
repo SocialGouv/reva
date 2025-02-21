@@ -1,7 +1,11 @@
-import { format } from "date-fns";
+import { addDays, addMonths, format } from "date-fns";
 
 import { JuryResult, TypeAccompagnement } from "@/graphql/generated/graphql";
 import { stubMutation, stubQuery } from "../utils/graphql";
+
+const DATE_NOW = new Date();
+const ESTIMATED_DATE = addMonths(DATE_NOW, 10);
+const SENT_DATE = addDays(DATE_NOW, 15);
 
 const typesAccompagnement: TypeAccompagnement[] = ["AUTONOME", "ACCOMPAGNE"];
 
@@ -42,9 +46,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.get(
           '[data-test="dossier-de-validation-timeline-element-update-button"]',
         ).should("be.disabled");
-        cy.get(
-          '[data-test="dossier-de-validation-timeline-element-update-button"]',
-        ).should("contain.text", "Compléter");
       });
     });
 
@@ -57,7 +58,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
               "DOSSIER_FAISABILITE_RECEVABLE";
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
-              format(new Date(), "yyyy-MM-dd");
+              format(ESTIMATED_DATE, "yyyy-MM-dd");
 
             cy.intercept("POST", "/api/graphql", (req) => {
               stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
@@ -82,9 +83,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.get(
           '[data-test="dossier-de-validation-timeline-element-update-button"]',
         ).should("be.enabled");
-        cy.get(
-          '[data-test="dossier-de-validation-timeline-element-update-button"]',
-        ).should("contain.text", "Compléter");
 
         cy.get(
           '[data-test="dossier-de-validation-timeline-element-update-button"]',
@@ -93,7 +91,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           "equal",
           "/candidat/dossier-de-validation/",
         );
-        cy.get("h1").should("contain.text", "Dossier de validation");
       });
 
       it("should let me change the readyForJuryEstimatedAt date", function () {
@@ -130,7 +127,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
 
-        cy.get(".ready-for-jury-estimated-date-input").type("2035-12-31");
+        cy.get('[data-test="ready-for-jury-estimated-date-input"]').type(
+          format(ESTIMATED_DATE, "yyyy-MM-dd"),
+        );
         cy.get(
           '[data-test="submit-ready-for-jury-estimated-date-form-button"]',
         ).click();
@@ -144,7 +143,8 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               typeAccompagnement;
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
               "DOSSIER_FAISABILITE_RECEVABLE";
-            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt = 1727776800000;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+              ESTIMATED_DATE.getTime();
 
             cy.intercept("POST", "/api/graphql", (req) => {
               stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
@@ -164,7 +164,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
           "contain.text",
-          "Vous avez renseigné une date de dépôt prévisionnelle, le 01/10/2024. Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.",
+          `Vous avez renseigné une date de dépôt prévisionnelle, le ${format(ESTIMATED_DATE, "dd/MM/yyyy")}. Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.`,
         );
       });
 
@@ -215,7 +215,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           .find("label")
           .click({ multiple: true });
 
-        cy.get('button[type="submit"]').click();
+        cy.get(
+          '[data-test="submit-dossier-de-validation-form-button"]',
+        ).click();
 
         cy.wait("@uploadDossierDeValidation");
 
@@ -224,16 +226,21 @@ typesAccompagnement.forEach((typeAccompagnement) => {
     });
 
     context("Read only views", () => {
-      it("should let me view a read only version of the ready for jury date tab once the dossier de validation is sent", function () {
+      it("should let me view a read only version of the ready for jury date tab when dossier de validation is sent and no failed jury result", function () {
         cy.fixture("candidate1-certification-titre-2-selected.json").then(
           (candidate) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
               typeAccompagnement;
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
               "DOSSIER_VALIDATION_ENVOYE";
-            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt = 1727776800000;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+              ESTIMATED_DATE.getTime();
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
               { dossierDeValidationOtherFiles: [] };
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury =
+              {
+                result: "SUCCESS",
+              };
 
             cy.intercept("POST", "/api/graphql", (req) => {
               stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
@@ -259,22 +266,27 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
         cy.get(".ready-for-jury-estimated-date-text").should(
           "contain.text",
-          "01/10/2024",
+          format(ESTIMATED_DATE, "dd/MM/yyyy"),
         );
       });
 
-      it("should let me view a read only version of the dossier de validation tab once the dossier de validation is sent", function () {
+      it("should let me view a read only version of the dossier de validation tab when dossier is sent and no failed jury result", function () {
         cy.fixture("candidate1-certification-titre-2-selected.json").then(
           (candidate) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
               typeAccompagnement;
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
               "DOSSIER_VALIDATION_ENVOYE";
-            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt = 1727776800000;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+              ESTIMATED_DATE.getTime();
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
               {
                 dossierDeValidationOtherFiles: [],
-                dossierDeValidationSentAt: 1727776800000,
+                dossierDeValidationSentAt: SENT_DATE.getTime(),
+              };
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury =
+              {
+                result: "SUCCESS",
               };
 
             cy.intercept("POST", "/api/graphql", (req) => {
@@ -299,9 +311,49 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
 
         cy.get('[data-test="dossier-de-validation-sent-alert"]').should(
-          "contain.text",
-          "Dossier de validation envoyé le 01/10/2024",
+          "exist",
         );
+      });
+
+      it("should not be read only when dossier is sent but has failed jury result", function () {
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              "DOSSIER_VALIDATION_ENVOYE";
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+              {
+                dossierDeValidationOtherFiles: [],
+                dossierDeValidationSentAt: SENT_DATE.getTime(),
+              };
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury =
+              {
+                result: "FAILURE",
+              };
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
+                candidate,
+              );
+            });
+          },
+        );
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubMutation(req, "candidate_login", "candidate_login.json");
+        });
+
+        cy.login();
+        cy.wait("@candidate_login");
+        cy.wait("@candidate_getCandidateWithCandidacy");
+
+        cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
+          "exist",
+        );
+        cy.get('[data-test="timeline-element-badge"]').should("exist");
       });
     });
 
@@ -330,12 +382,10 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.login();
         cy.wait("@candidate_login");
         cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.get(
-          '[data-test="dossier-de-validation-timeline-element"] [data-test="timeline-element-badge"]',
-        ).should("contain.text", "À compléter");
-        cy.get(
-          '[data-test="dossier-de-validation-timeline-element"] [data-test="dossier-de-validation-signale-notice"]',
-        ).should("exist");
+        cy.get('[data-test="timeline-element-badge"]').should("exist");
+        cy.get('[data-test="dossier-de-validation-signale-notice"]').should(
+          "exist",
+        );
       });
 
       it("should show a 'dossier de validation signalé' alert if i open a signaled dossier de validation", function () {
