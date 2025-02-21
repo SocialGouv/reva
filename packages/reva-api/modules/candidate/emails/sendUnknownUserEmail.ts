@@ -1,7 +1,18 @@
-import { sendGenericEmail } from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { sendEmailUsingTemplate, sendGenericEmail } from "../../shared/email";
 
 export const sendUnknownUserEmail = async (email: string) => {
-  const htmlContent = `Vous avez demandé à recevoir un lien pour vous connecter mais votre e-mail n’existe pas dans notre base.
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 494,
+    });
+  } else {
+    const htmlContent = `Vous avez demandé à recevoir un lien pour vous connecter mais votre e-mail n’existe pas dans notre base.
     <br>
     <ul>
       <li>Si vous avez une candidature en cours sur le site de l’Education Nationale (ex : DAVA), votre candidature est disponible sur le site dédié <a href="https://vae.education.gouv.fr/">https://vae.education.gouv.fr/</a>.</li>
@@ -11,10 +22,11 @@ export const sendUnknownUserEmail = async (email: string) => {
     <br>
     L’équipe France VAE`;
 
-  return sendGenericEmail({
-    htmlContent: htmlContent,
-    to: { email },
-    subject:
-      "Nous n’avons pas trouvé de compte France VAE correspondant à votre e-mail",
-  });
+    return sendGenericEmail({
+      htmlContent: htmlContent,
+      to: { email },
+      subject:
+        "Nous n’avons pas trouvé de compte France VAE correspondant à votre e-mail",
+    });
+  }
 };
