@@ -203,6 +203,7 @@ export const DossierDeValidationTab = ({
           type="submit"
           className="ml-auto"
           disabled={!isDirty || isSubmitting}
+          data-test="submit-dossier-de-validation-form-button"
         >
           Envoyer les documents
         </Button>
