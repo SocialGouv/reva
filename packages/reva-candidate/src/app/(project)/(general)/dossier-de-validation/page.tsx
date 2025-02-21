@@ -1,17 +1,27 @@
 "use client";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { ReadyForJuryEstimatedDateTab } from "./_components/tabs/ready-for-jury-estimated-date-tab/ReadyForJuryEstimatedAtTab";
 import { useDossierDeValidationPage } from "./dossierDeValidation.hook";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
+import { JuryResult } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useRouter } from "next/navigation";
 import {
   DossierDeValidationFormData,
   DossierDeValidationTab,
 } from "./_components/tabs/dossier-de-validation-tab/DossierDeValidationTab";
-import { ReadOnlyReadyForJuryEstimatedDateTab } from "./_components/tabs/read-only-ready-for-jury-estimated-date-tab/ReadOnlyReadyForJuryEstimatedDateTab";
 import { ReadOnlyDossierDeValidationTab } from "./_components/tabs/read-only-dossier-de-validation-tab/ReadOnlyDossierDeValidationTab";
-import { useRouter } from "next/navigation";
+import { ReadOnlyReadyForJuryEstimatedDateTab } from "./_components/tabs/read-only-ready-for-jury-estimated-date-tab/ReadOnlyReadyForJuryEstimatedDateTab";
+
+const failedJuryResults: JuryResult[] = [
+  "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+  "FAILURE",
+  "CANDIDATE_EXCUSED",
+  "CANDIDATE_ABSENT",
+];
 
 export default function DossierDeValidationPag() {
   const {
@@ -22,6 +32,7 @@ export default function DossierDeValidationPag() {
     updateReadyForJuryEstimatedAt,
     sendDossierDeValidation,
     queryStatus,
+    jury,
   } = useDossierDeValidationPage();
 
   const router = useRouter();
@@ -57,8 +68,13 @@ export default function DossierDeValidationPag() {
     }
   };
 
+  const hasFailedJuryResult =
+    jury?.result && failedJuryResults.includes(jury.result);
+
   const readOnlyView =
-    dossierDeValidation && dossierDeValidation.decision !== "INCOMPLETE";
+    dossierDeValidation &&
+    dossierDeValidation.decision !== "INCOMPLETE" &&
+    !hasFailedJuryResult;
 
   return (
     <div className="flex flex-col">

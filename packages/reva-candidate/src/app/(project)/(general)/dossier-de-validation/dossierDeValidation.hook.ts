@@ -1,9 +1,9 @@
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { REST_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { REST_API_URL } from "@/config/config";
 import { useCallback } from "react";
-import { useKeycloakContext } from "@/components/auth/keycloak.context";
 
 const getCandidateQuery = graphql(`
   query getCandidateWithCandidacyForDossierDeValidationPage {
@@ -38,6 +38,9 @@ const getCandidateQuery = graphql(`
             decisionSentAt
             decisionComment
           }
+        }
+        jury {
+          result
         }
       }
     }
@@ -102,6 +105,8 @@ export const useDossierDeValidationPage = () => {
     });
   }
 
+  const jury = candidacy?.jury;
+
   const sendDossierDeValidation = useCallback(
     async (data: {
       dossierDeValidationFile: {
@@ -159,5 +164,6 @@ export const useDossierDeValidationPage = () => {
     queryStatus,
     updateReadyForJuryEstimatedAt,
     sendDossierDeValidation,
+    jury,
   };
 };
