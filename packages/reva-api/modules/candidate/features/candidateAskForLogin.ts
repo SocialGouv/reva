@@ -1,5 +1,4 @@
 import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
-import { generateJwt } from "../auth.helper";
 import { sendLoginEmail, sendUnknownUserEmail } from "../emails";
 
 export const askForLogin = async (email: string) => {
@@ -15,9 +14,9 @@ export const askForLogin = async (email: string) => {
   ).length;
 
   if (doesUserExists) {
-    const token = generateJwt({ email, action: "login" }, 4 * 60 * 60);
-    return sendLoginEmail(email, token);
+    await sendLoginEmail(email);
   } else {
-    return sendUnknownUserEmail(email);
+    await sendUnknownUserEmail(email);
   }
+  return "OK";
 };
