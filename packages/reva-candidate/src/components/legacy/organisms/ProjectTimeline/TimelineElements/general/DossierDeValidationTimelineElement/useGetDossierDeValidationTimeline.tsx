@@ -64,6 +64,7 @@ export function useGetDossierDeValidationTimelineInfo(): UseGetDossierDeValidati
         badge: ToCompleteBadge,
         notice: (
           <TimelineNotice
+            data-test="dossier-de-validation-estimated-date-notice"
             icon="fr-icon-info-fill"
             text={`Vous avez renseigné une date de dépôt prévisionnelle, le ${format(candidacy.readyForJuryEstimatedAt, "dd/MM/yyyy")}. Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.`}
           />
@@ -94,6 +95,7 @@ export function useGetDossierDeValidationTimelineInfo(): UseGetDossierDeValidati
         ),
         notice: (
           <TimelineNotice
+            data-test="dossier-de-validation-studying-notice"
             icon="fr-icon-info-fill"
             text="Votre certificateur est en train d'étudier votre dossier. En cas d'erreur ou d'oubli, contactez-le pour pouvoir le modifier dans les plus brefs délais."
           />
