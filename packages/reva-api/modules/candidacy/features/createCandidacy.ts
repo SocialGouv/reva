@@ -18,8 +18,6 @@ export const createCandidacy = async ({
       typeAccompagnement,
       departmentId,
       candidateId,
-      admissibility: { create: {} },
-      examInfo: { create: {} },
       status: "PROJET",
       financeModule: "hors_plateforme",
       candidacyStatuses: {
