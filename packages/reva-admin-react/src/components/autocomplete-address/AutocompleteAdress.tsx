@@ -1,5 +1,5 @@
 import Input from "@codegouvfr/react-dsfr/Input";
-import { useState } from "react";
+import { DetailedHTMLProps, InputHTMLAttributes, useState } from "react";
 import {
   AddressOption,
   useAutocompleteAddress,
@@ -8,9 +8,17 @@ import {
 export const AutocompleteAddress = ({
   onOptionSelection,
   className,
+  nativeInputProps,
+  state,
+  stateRelatedMessage,
 }: {
   onOptionSelection: (selectedOption: AddressOption) => void;
   className?: string;
+  nativeInputProps?:
+    | DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+    | undefined;
+  state?: "error" | "success" | "info" | "default";
+  stateRelatedMessage?: string;
 }) => {
   const [searchText, setSearchText] = useState("");
   const { data: options = [], status } = useAutocompleteAddress({
@@ -81,6 +89,7 @@ export const AutocompleteAddress = ({
     <div data-testid="autocomplete" className={`relative ${className}`}>
       <Input
         nativeInputProps={{
+          ...nativeInputProps,
           onKeyDown: handleKeyDownOnOptions,
           onChange: (event) => {
             updateSearchText(event.target.value);
@@ -94,6 +103,8 @@ export const AutocompleteAddress = ({
           onFocus: () => setDisplayOptions(true),
           onClick: () => setDisplayOptions(true),
         }}
+        state={state}
+        stateRelatedMessage={stateRelatedMessage}
         label="Adresse complète"
         data-testid="autocomplete-input"
         iconId="fr-icon-map-pin-2-fill"

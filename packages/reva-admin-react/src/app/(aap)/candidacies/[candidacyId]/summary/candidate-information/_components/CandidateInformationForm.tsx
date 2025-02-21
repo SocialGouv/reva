@@ -340,6 +340,9 @@ const CandidateInformationForm = ({
             <AutocompleteAddress
               onOptionSelection={handleOnAddressSelection}
               className="w-full flex-1"
+              nativeInputProps={register("street")}
+              state={errors.street ? "error" : "default"}
+              stateRelatedMessage={errors.street?.message}
             />
           )}
           <Input
