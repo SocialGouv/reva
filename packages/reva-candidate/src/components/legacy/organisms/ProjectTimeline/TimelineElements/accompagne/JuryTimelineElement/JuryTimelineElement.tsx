@@ -1,12 +1,52 @@
-import { format, isBefore } from "date-fns";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
+import { format, isBefore } from "date-fns";
 
-import { JuryResult } from "@/graphql/generated/graphql";
+import {
+  DossierDeValidation,
+  Jury,
+  JuryResult,
+} from "@/graphql/generated/graphql";
 
 import { AuthenticatedLink } from "@/components/legacy/atoms/AuthenticatedLink/AuthenticatedLink";
-import { TimelineElement } from "@/components/legacy/molecules/Timeline/Timeline";
+import {
+  TimelineElement,
+  TimeLineElementStatus,
+} from "@/components/legacy/molecules/Timeline/Timeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+
+const failedJuryResults: JuryResult[] = [
+  "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+  "FAILURE",
+  "CANDIDATE_EXCUSED",
+  "CANDIDATE_ABSENT",
+];
+
+const timelineStatus = ({
+  hasFailedJuryResult,
+  jury,
+  dossierDeValidation,
+}: {
+  hasFailedJuryResult: boolean;
+  jury?: Jury | null;
+  dossierDeValidation?: DossierDeValidation | null;
+}) => {
+  if (hasFailedJuryResult) {
+    return "active";
+  }
+
+  if (jury?.result) {
+    return "readonly";
+  }
+
+  if (dossierDeValidation) {
+    return "active";
+  }
+
+  return "disabled";
+};
 
 export const JuryTimelineElement = () => {
   const { candidacy } = useCandidacy();
@@ -16,6 +56,10 @@ export const JuryTimelineElement = () => {
     activeDossierDeValidation: dossierDeValidation,
     typeAccompagnement,
   } = candidacy;
+
+  const hasFailedJuryResult = !!(
+    jury?.result && failedJuryResults.includes(jury.result)
+  );
 
   let text = `Votre jury sera programmé prochainement. Vous recevrez une convocation officielle du certificateur par courrier ou par e-mail.`;
 
@@ -45,14 +89,18 @@ export const JuryTimelineElement = () => {
       ? "text-dsfrBlue-400"
       : "text-dsfrGray-500";
 
+  const timeLineStatus: TimeLineElementStatus = timelineStatus({
+    hasFailedJuryResult,
+    jury: jury as Jury | null,
+    dossierDeValidation: dossierDeValidation as DossierDeValidation | null,
+  });
+
   return (
     <TimelineElement
       title="Jury"
       description="Date, lieu de passage... Les informations essentielles à votre passage devant le jury sont ici."
       classNameChildren="pb-0"
-      status={
-        jury?.result ? "readonly" : dossierDeValidation ? "active" : "disabled"
-      }
+      status={timeLineStatus}
     >
       {dossierDeValidation && (
         <>
@@ -99,7 +147,7 @@ const juryResultLabels: { [key in JuryResult]: string } = {
   PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION:
     "Réussite partielle aux blocs de compétences visés",
   PARTIAL_SUCCESS_PENDING_CONFIRMATION:
-    "Réussite partielle (sous reserve de confirmation par un certificateur))",
+    "Réussite partielle (sous reserve de confirmation par un certificateur)",
   FAILURE: "Non validation",
   CANDIDATE_EXCUSED: "Candidat excusé sur justificatif",
   CANDIDATE_ABSENT: "Candidat non présent",
