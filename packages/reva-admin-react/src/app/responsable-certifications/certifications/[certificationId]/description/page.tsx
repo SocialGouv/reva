@@ -1,5 +1,6 @@
 "use client";
 import { ReactNode, useMemo } from "react";
+import { TZDate } from "@date-fns/tz";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -242,6 +243,22 @@ const PageContent = ({
           (modality) => modality.id == "SOUTENANCE_ORALE",
         )[0];
 
+        const startOfVisibility = new Date(data.startOfVisibility);
+        const tzStartOfVisibility = new TZDate(
+          startOfVisibility.getFullYear(),
+          startOfVisibility.getMonth(),
+          startOfVisibility.getDate(),
+          "Europe/Paris",
+        );
+
+        const endOfVisibility = new Date(data.endOfVisibility);
+        const tzEndOfVisibility = new TZDate(
+          endOfVisibility.getFullYear(),
+          endOfVisibility.getMonth(),
+          endOfVisibility.getDate(),
+          "Europe/Paris",
+        );
+
         await updateCertificationDescription.mutateAsync({
           certificationId: certification.id,
           juryTypeMiseEnSituationProfessionnelle:
@@ -272,8 +289,8 @@ const PageContent = ({
           juryFrequencyOther: frequency ? null : data.juryFrequencyOther,
           juryPlace: data.juryPlace,
           juryEstimatedCost: data.juryEstimatedCost,
-          availableAt: new Date(data.startOfVisibility).getTime(),
-          expiresAt: new Date(data.endOfVisibility).getTime(),
+          availableAt: tzStartOfVisibility.getTime(),
+          expiresAt: tzEndOfVisibility.getTime(),
         });
 
         successToast("La certification a bien été modifiée");
