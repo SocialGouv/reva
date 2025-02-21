@@ -2,6 +2,7 @@ import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { TimeLineElementStatus } from "@/components/legacy/molecules/Timeline/Timeline";
 import { TimelineNotice } from "@/components/timeline-notice/TimelineNotice";
+import { JuryResult } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
 
@@ -15,6 +16,15 @@ const EDITABLE_STATUSES = [
   "DOSSIER_FAISABILITE_RECEVABLE",
   "DOSSIER_DE_VALIDATION_SIGNALE",
   "DEMANDE_FINANCEMENT_ENVOYE",
+];
+
+const failedJuryResults: JuryResult[] = [
+  "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+  "FAILURE",
+  "CANDIDATE_EXCUSED",
+  "CANDIDATE_ABSENT",
 ];
 
 const ToCompleteBadge = (
@@ -31,8 +41,13 @@ export function useGetDossierDeValidationTimelineInfo(): UseGetDossierDeValidati
   );
 
   const dossierSignale = candidacy.status === "DOSSIER_DE_VALIDATION_SIGNALE";
-  const isEditable = EDITABLE_STATUSES.includes(candidacy.status);
-  const isReadOnly = candidacy.status === "DOSSIER_DE_VALIDATION_ENVOYE";
+  const hasDossierDeValidationSent = !!candidacy?.activeDossierDeValidation;
+  const hasFailedJuryResult =
+    candidacy?.jury?.result &&
+    failedJuryResults.includes(candidacy.jury.result);
+  const isEditable =
+    EDITABLE_STATUSES.includes(candidacy.status) || hasFailedJuryResult;
+  const isReadOnly = hasDossierDeValidationSent && !hasFailedJuryResult;
   const isCaduque = candidacy.isCaduque;
 
   switch (true) {
