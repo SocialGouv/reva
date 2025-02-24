@@ -107,7 +107,7 @@ const getSearchTitle = (status: string, visible?: boolean) => {
 
 const getSearchHint = (status: string, visible?: boolean) => {
   if (status === "A_VALIDER_PAR_CERTIFICATEUR") {
-    return "Vous trouverez ici toutes les certifications pré-remplies par les administrateurs France VAE. Vous devez les relire, les compléter et/ou les modifier avant de les valider.";
+    return "Suite à votre demande d'intégration, vous trouverez ici toutes les certifications pré-remplies par les administrateurs France VAE. Vous devez les relire, les compléter, les modifier avant de les valider.";
   }
   if (visible) {
     return "Vous trouverez ici toutes les certifications visibles sur la plateforme France VAE.";
