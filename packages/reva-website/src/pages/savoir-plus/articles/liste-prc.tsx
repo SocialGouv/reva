@@ -24,7 +24,7 @@ const ListePrcPage = ({
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const searchFilter = searchParams.get("search") || "";
+  const searchFilter = searchParams?.get("search") || "";
 
   const displayedPrcs = useMemo(() => {
     if (searchFilter) {
@@ -74,7 +74,7 @@ const ListePrcPage = ({
                   searchFilter={searchFilter}
                   resultCount={displayedPrcs.length}
                   onSearchFilterChange={(filter) => {
-                    const queryParams = new URLSearchParams(searchParams);
+                    const queryParams = new URLSearchParams(searchParams || "");
                     if (filter) {
                       queryParams.set("search", filter);
                     } else {
