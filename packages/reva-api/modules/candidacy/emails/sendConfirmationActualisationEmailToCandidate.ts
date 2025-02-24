@@ -1,5 +1,10 @@
 import mjml2html from "mjml";
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import {
+  sendEmailUsingTemplate,
+  sendGenericEmail,
+  templateMail,
+} from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const sendConfirmationActualisationEmailToCandidate = async ({
   candidateEmail,
@@ -8,9 +13,22 @@ export const sendConfirmationActualisationEmailToCandidate = async ({
   candidateEmail: string;
   candidateFullName: string;
 }) => {
-  const htmlContent = mjml2html(
-    templateMail({
-      content: `
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CANDIDATE_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email: candidateEmail },
+      templateId: 509,
+      params: {
+        candidateFullName,
+      },
+    });
+  } else {
+    const htmlContent = mjml2html(
+      templateMail({
+        content: `
       <p>Bonjour ${candidateFullName},</p>
       <p>Nous vous confirmons que votre actualisation a bien été enregistrée !</p>
       <p>Prochaine étape ? Travailler sur votre dossier de validation afin de prouver au jury que vous avez l'expérience et les connaissances nécessaires pour obtenir votre diplôme !</p>
@@ -20,12 +38,13 @@ export const sendConfirmationActualisationEmailToCandidate = async ({
       <br/>
       <p><em>Procédure d'actualisation conforme aux dispositions de <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048699561">l'article R. 6412-4 du Code du travail</a> modifié par <a href="https://www.legifrance.gouv.fr/jorf/article_jo/JORFARTI000048679311">l'article 2 du décret n° 2023-1275 du 27 décembre 2023 relatif à la validation des acquis de l'expérience</a></em></p>
       `,
-    }),
-  );
+      }),
+    );
 
-  return sendGenericEmail({
-    to: { email: candidateEmail },
-    htmlContent: htmlContent.html,
-    subject: "Actualisation confirmée !",
-  });
+    return sendGenericEmail({
+      to: { email: candidateEmail },
+      htmlContent: htmlContent.html,
+      subject: "Actualisation confirmée !",
+    });
+  }
 };
