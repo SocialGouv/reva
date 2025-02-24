@@ -181,7 +181,7 @@ export default function CaduciteContestationPage() {
                 ),
                 label: "La recevabilité reste caduque",
                 hintText:
-                  "Le candidat ne pourra pas poursuivre son parcours. Il aura toutefois encore la possibilité de contester cette décision.",
+                  "Le candidat perdra définitivement sa recevabilité. Il ne pourra pas poursuivre son parcours de VAE.",
                 nativeInputProps: {
                   ...register("certificationAuthorityContestationDecision"),
                   value: "CADUCITE_CONFIRMED",
