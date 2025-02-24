@@ -1,4 +1,5 @@
 import { generateJwt } from "../auth.helper";
+import { CANDIDATE_APP_URL } from "../utils/candidate.helpers";
 
 export const getCandidateLoginUrl = ({
   candidateEmail,
@@ -9,5 +10,5 @@ export const getCandidateLoginUrl = ({
     { email: candidateEmail, action: "login" },
     1 * 60 * 60 * 24 * 4,
   );
-  return `${process.env.BASE_URL}/candidat/login?token=${token}`;
+  return `${CANDIDATE_APP_URL}/login?token=${token}`;
 };

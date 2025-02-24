@@ -13,3 +13,5 @@ export const candidateSearchWord = (word: string) => {
     ],
   };
 };
+
+export const CANDIDATE_APP_URL = `${process.env.BASE_URL}/candidat`;
