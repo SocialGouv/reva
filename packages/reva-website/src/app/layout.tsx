@@ -10,7 +10,7 @@ import Link from "next/link";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import Script from "next/script";
 
-const defaultColorScheme = "system";
+const defaultColorScheme = "light";
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
   const matomoBaseUrl = process.env.NEXT_PUBLIC_MATOMO_URL;
