@@ -2,18 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1,
+  h2,
+  h3 {
+    @apply font-bold;
+    margin: var(--title-spacing);
+  }
+  h2 {
+    font-size: 1.75rem;
+    line-height: 2.25rem;
+  }
+  @media (min-width: 48em) {
+    h2 {
+      font-size: 2rem;
+      line-height: 2.5rem;
+    }
+  }
+}
+
 @layer components {
-    .bg-candidate, .bg-organism {
-        background-repeat: no-repeat;
-        background-position-x: center;
-        background-color: white
-    }
+  .bg-candidate,
+  .bg-organism {
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-color: white;
+  }
 
-    .bg-candidate {
-        background-image: url("../../public/candidate-space/bg-candidate.svg");
-    }
+  .bg-candidate {
+    background-image: url("../../public/candidate-space/bg-candidate.svg");
+  }
 
-    .bg-organism {
-        background-image: url("../../public/professional-space/bg-organism.svg");
-    }
+  .bg-organism {
+    background-image: url("../../public/professional-space/bg-organism.svg");
+  }
 }
