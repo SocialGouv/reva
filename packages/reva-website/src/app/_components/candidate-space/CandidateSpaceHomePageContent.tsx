@@ -1,5 +1,5 @@
 import AccompagnementDemarche from "@/components/candidate-space/AccompagnementDemarche";
-import Articles from "@/components/candidate-space/Articles";
+import Articles from "@/app/_components/candidate-space/Articles";
 import CommentFinancerVotreParcours from "@/components/candidate-space/CommentFinancerVotreParcours";
 import FaitesValiderVosCompetencesParUnDiplome from "@/app/_components/candidate-space/FaitesValiderVosCompetencesParUnDiplome";
 import QuiPeutFaireUneVAE from "@/components/candidate-space/QuiPeutFaireUneVAE";
