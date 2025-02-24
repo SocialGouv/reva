@@ -30,10 +30,14 @@ const FaitesValiderVosCompetencesParUnDiplome = () => {
         <CertificateAutocompleteDsfr
           big
           onSubmit={({ label }) => {
-            router.push(new URL(`/certifications?search=${label}`).toString());
+            router.push(
+              `/espace-candidat/recherche?searchText=${encodeURIComponent(label)}`,
+            );
           }}
           onOptionSelection={(o) =>
-            router.push(new URL(`/certifications?search=${o.value}`).toString())
+            router.push(
+              `/certifications/${o.value}?searchText=${encodeURIComponent(o.label)}`,
+            )
           }
         />
       </div>
