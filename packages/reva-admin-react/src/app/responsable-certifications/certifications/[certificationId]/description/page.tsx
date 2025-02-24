@@ -335,9 +335,9 @@ const PageContent = ({
                   ? format(certification.rncpPublishedAt, "dd/MM/yyyy")
                   : "Inconnue"}
               </Info>
-              <Info title="Date d'échéance">
-                {certification.rncpDeliveryDeadline
-                  ? format(certification.rncpDeliveryDeadline, "dd/MM/yyyy")
+              <Info title="Date d’échéance">
+                {certification.rncpExpiresAt
+                  ? format(certification.rncpExpiresAt, "dd/MM/yyyy")
                   : "Inconnue"}
               </Info>
             </div>
