@@ -536,11 +536,11 @@ const PageContent = ({
                 Visibilité de la certification sur la plateforme
               </h3>
               <p className="m-0">
-                Si nous avons pu récupérer l’information, les champs ci-dessous
-                sont automatiquement remplis avec les dates de publication et
-                d’échéance fournies par France compétences. Si vous souhaitez
-                modifier ces dates et changer la visibilité de la certification
-                sur la plateforme, vous le pouvez.
+                La certification sera visible par les candidats et les AAP,
+                permettant le dépôt de candidatures à partir des dates indiquées
+                ci-dessous. Ces dates sont préremplies avec celles de France
+                Compétences, mais vous pouvez les modifier pour ajuster la
+                visibilité sur la plateforme.
               </p>
 
               <div className="flex flex-row gap-6">
