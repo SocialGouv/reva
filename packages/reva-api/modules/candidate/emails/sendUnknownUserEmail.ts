@@ -3,7 +3,7 @@ import { sendEmailUsingTemplate, sendGenericEmail } from "../../shared/email";
 
 export const sendUnknownUserEmail = async (email: string) => {
   const useBrevoTemplate = await isFeatureActiveForUser({
-    feature: "USE_BREVO_EMAIL_TEMPLATES",
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CANDIDATE_EMAILS",
   });
 
   if (useBrevoTemplate) {

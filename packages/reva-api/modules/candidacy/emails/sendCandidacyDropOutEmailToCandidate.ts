@@ -11,7 +11,7 @@ import { getCandidateLoginUrl } from "../../candidate/features/getCandidateLogin
 
 export const sendCandidacyDropOutEmailToCandidate = async (email: string) => {
   const useBrevoTemplate = await isFeatureActiveForUser({
-    feature: "USE_BREVO_EMAIL_TEMPLATES",
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CANDIDATE_EMAILS",
   });
 
   if (useBrevoTemplate) {
