@@ -1,7 +1,9 @@
 import {
-  CandidateRegistrationForm,
+  CandidateRegistrationFormLegacy,
   CandidateRegistrationFormSchema,
-} from "@/components/candidate-registration/candidate-registration-form/CandidateRegistrationForm";
+} from "@/components/candidate-registration/candidate-registration-form-legacy/CandidateRegistrationFormLegacy";
+import { CandidateRegistrationForm } from "@/components/candidate-registration/candidate-registration-form/CandidateRegistrationForm";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import { CertificateCard } from "@/components/candidate-registration/certificate-card/CertificateCard";
 import { WouldYouLikeToKnowMorePanel } from "@/components/candidate-registration/would-you-like-to-know-more-panel/WouldYouLikeToKnowMorePanel";
@@ -39,6 +41,7 @@ const askForRegistrationMutation = graphql(`
 const OrientationCandidatPage = () => {
   const router = useRouter();
   const { certificationId, searchText } = router.query;
+  const { isFeatureActive } = useFeatureflipping();
 
   const [certification, setCertification] = useState<Pick<
     Certification,
@@ -152,12 +155,21 @@ const OrientationCandidatPage = () => {
                     }
                   />
                 </div>
-                <CandidateRegistrationForm
-                  typeAccompagnement={
-                    !certification.isAapAvailable ? "AUTONOME" : undefined
-                  }
-                  onSubmit={handleFormSubmit}
-                />
+                {isFeatureActive("CANDIDATE_REGISTRATION_V2") ? (
+                  <CandidateRegistrationForm
+                    typeAccompagnement={
+                      !certification.isAapAvailable ? "AUTONOME" : undefined
+                    }
+                    onSubmit={handleFormSubmit}
+                  />
+                ) : (
+                  <CandidateRegistrationFormLegacy
+                    typeAccompagnement={
+                      !certification.isAapAvailable ? "AUTONOME" : undefined
+                    }
+                    onSubmit={handleFormSubmit}
+                  />
+                )}
               </div>
             )}
 
