@@ -6,8 +6,8 @@ import {
   templateMail,
 } from "../../shared/email";
 import { generateJwt } from "../auth.helper";
-import { getCandidateLoginUrl } from "../features/getCandidateLoginUrl";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { getCandidateLoginUrl } from "../utils/candidate.url.helpers";
 
 export const sendLoginEmail = async (email: string) => {
   const useBrevoTemplate = await isFeatureActiveForUser({

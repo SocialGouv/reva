@@ -6,7 +6,7 @@ import {
   templateMail,
 } from "../../shared/email";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
-import { getCandidateAppUrl } from "../../candidate/utils/candidate.helpers";
+import { getCandidateAppUrl } from "../../candidate/utils/candidate.url.helpers";
 
 export const sendCandidacyCaduciteSoonWarningEmailToCandidate = async ({
   candidateEmail,

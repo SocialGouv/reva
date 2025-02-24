@@ -6,9 +6,9 @@ import {
   templateMail,
 } from "../../shared/email";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
-import { getCandidateRegistrationUrl } from "../features/getCandidateRegistrationUrl";
 import { generateJwt } from "../auth.helper";
 import { TypeAccompagnement } from "../candidate.types";
+import { getCandidateRegistrationUrl } from "../utils/candidate.url.helpers";
 
 export const sendRegistrationEmailToCandidateAccompagne = async (args: {
   email: string;

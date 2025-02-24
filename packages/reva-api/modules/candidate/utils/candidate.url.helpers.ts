@@ -1,6 +1,19 @@
 import { generateJwt } from "../auth.helper";
 import { TypeAccompagnement } from "../candidate.types";
-import { getCandidateAppUrl } from "../utils/candidate.helpers";
+
+export const getCandidateAppUrl = () => `${process.env.BASE_URL}/candidat`;
+
+export const getCandidateLoginUrl = ({
+  candidateEmail,
+}: {
+  candidateEmail: string;
+}) => {
+  const token = generateJwt(
+    { email: candidateEmail, action: "login" },
+    1 * 60 * 60 * 24 * 4,
+  );
+  return `${getCandidateAppUrl()}/login?token=${token}`;
+};
 
 export const getCandidateRegistrationUrl = (params: {
   email: string;

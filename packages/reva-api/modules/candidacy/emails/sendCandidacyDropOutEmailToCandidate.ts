@@ -7,7 +7,7 @@ import {
 } from "../../shared/email";
 import { generateJwt } from "../../candidate/auth.helper";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
-import { getCandidateLoginUrl } from "../../candidate/features/getCandidateLoginUrl";
+import { getCandidateLoginUrl } from "../../candidate/utils/candidate.url.helpers";
 
 export const sendCandidacyDropOutEmailToCandidate = async (email: string) => {
   const useBrevoTemplate = await isFeatureActiveForUser({
