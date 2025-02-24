@@ -1,4 +1,3 @@
-import { generateJwt } from "../auth.helper";
 import { TypeAccompagnement } from "../candidate.types";
 import {
   sendRegistrationEmailToCandidateAccompagne,
@@ -16,11 +15,10 @@ interface CandidateInput {
 }
 
 export const askForRegistration = async (params: CandidateInput) => {
-  const token = generateJwt({ ...params, action: "registration" }, 3 * 60 * 60);
   if (params.typeAccompagnement === "AUTONOME") {
-    return sendRegistrationEmailToCandidateAutonome(params.email, token);
+    await sendRegistrationEmailToCandidateAutonome(params);
   } else {
     await sendRegistrationEmailToCandidateAccompagne(params);
-    return "ok";
   }
+  return "ok";
 };
