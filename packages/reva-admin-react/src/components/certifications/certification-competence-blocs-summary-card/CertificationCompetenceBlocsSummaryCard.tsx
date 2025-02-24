@@ -49,7 +49,6 @@ export const CertificationCompetenceBlocsSummaryCard = ({
           <Accordion
             className="flex-1"
             label={bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label}
-            defaultExpanded
           >
             <ul data-test="competences-list">
               {bloc.competences.map((competence) => (
