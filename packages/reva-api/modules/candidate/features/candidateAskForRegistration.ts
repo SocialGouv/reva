@@ -19,6 +19,8 @@ export const askForRegistration = async (params: CandidateInput) => {
   const token = generateJwt({ ...params, action: "registration" }, 3 * 60 * 60);
   if (params.typeAccompagnement === "AUTONOME") {
     return sendRegistrationEmailToCandidateAutonome(params.email, token);
+  } else {
+    await sendRegistrationEmailToCandidateAccompagne(params);
+    return "ok";
   }
-  return sendRegistrationEmailToCandidateAccompagne(params.email, token);
 };
