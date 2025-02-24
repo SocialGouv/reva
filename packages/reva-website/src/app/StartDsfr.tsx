@@ -10,7 +10,7 @@ declare module "@codegouvfr/react-dsfr/next-appdir" {
   }
 }
 
-const defaultColorScheme = "system";
+const defaultColorScheme = "light";
 
 startReactDsfr({ defaultColorScheme, Link });
 

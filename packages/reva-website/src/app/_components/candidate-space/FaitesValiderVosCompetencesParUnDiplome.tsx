@@ -34,11 +34,7 @@ const FaitesValiderVosCompetencesParUnDiplome = () => {
               `/espace-candidat/recherche?searchText=${encodeURIComponent(label)}`,
             );
           }}
-          onOptionSelection={(o) =>
-            router.push(
-              `/certifications/${o.value}?searchText=${encodeURIComponent(o.label)}`,
-            )
-          }
+          onOptionSelection={(o) => router.push(`/certifications/${o.value}`)}
         />
       </div>
     </section>
