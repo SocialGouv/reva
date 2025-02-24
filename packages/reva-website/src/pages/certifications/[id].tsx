@@ -20,14 +20,12 @@ import { isUUID } from "@/utils";
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Tag from "@codegouvfr/react-dsfr/Tag";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 export default function Page({
   certification,
+  activeFeatures,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { isFeatureActive } = useFeatureflipping();
-
   const content = certification
     ? `Code RNCP ${certification.codeRncp} - ${certification.label}`
     : "";
@@ -60,7 +58,7 @@ export default function Page({
               {
                 label: "Candidats",
                 linkProps: {
-                  href: isFeatureActive("HOMEPAGE_V2")
+                  href: activeFeatures?.includes("HOMEPAGE_V2")
                     ? "/espace-candidat/"
                     : "/",
                 },
@@ -252,6 +250,12 @@ export default function Page({
   );
 }
 
+const activeFeaturesQuery = graphql(`
+  query activeFeaturesForConnectedUser {
+    activeFeaturesForConnectedUser
+  }
+`);
+
 const getCertificationQuery = graphql(`
   query getCertificationForCertificationPage($certificationId: ID!) {
     getCertification(certificationId: $certificationId) {
@@ -277,9 +281,17 @@ export const getServerSideProps = (async (
     return { props: { certification } };
   }
 
-  const res = await request(GRAPHQL_API_URL, getCertificationQuery, {
-    certificationId,
-  });
+  const [activeFeatures, certification] = await Promise.all([
+    request(GRAPHQL_API_URL, activeFeaturesQuery),
+    request(GRAPHQL_API_URL, getCertificationQuery, {
+      certificationId,
+    }),
+  ]);
 
-  return { props: { certification: res.getCertification } };
+  return {
+    props: {
+      certification: certification.getCertification,
+      activeFeatures: activeFeatures.activeFeaturesForConnectedUser,
+    },
+  };
 }) satisfies GetServerSideProps<{ certification?: CertificationType }>;
