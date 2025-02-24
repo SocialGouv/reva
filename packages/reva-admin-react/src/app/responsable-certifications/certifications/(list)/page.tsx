@@ -189,7 +189,9 @@ export default function RegistryManagerHomepage() {
           {(c) => (
             <WhiteCard key={c.id} className="gap-2">
               <div className="flex flex-row justify-between items-center">
-                <span className="text-gray-500 text-sm">{c.codeRncp}</span>
+                <span className="text-gray-500 text-sm">
+                  Code RNCP : {c.codeRncp}
+                </span>
                 <BadgeCertificationStatus
                   status={c.status}
                   visible={c.visible}
@@ -197,7 +199,7 @@ export default function RegistryManagerHomepage() {
               </div>
               <span className="text-lg font-bold">{c.label}</span>
               <span>{c.certificationAuthorityStructure?.label}</span>
-              <span>Expire le: {format(c.expiresAt, "dd/MM/yyyy")}</span>
+              <span>Date d'échéance : {format(c.expiresAt, "dd/MM/yyyy")}</span>
               <Button
                 data-test="access-certification-button"
                 className="mt-2 ml-auto"
