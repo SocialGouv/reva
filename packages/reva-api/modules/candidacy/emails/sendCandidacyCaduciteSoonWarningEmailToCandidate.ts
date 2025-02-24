@@ -6,7 +6,7 @@ import {
   templateMail,
 } from "../../shared/email";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
-import { CANDIDATE_APP_URL } from "../../candidate/utils/candidate.helpers";
+import { getCandidateAppUrl } from "../../candidate/utils/candidate.helpers";
 
 export const sendCandidacyCaduciteSoonWarningEmailToCandidate = async ({
   candidateEmail,
@@ -28,7 +28,7 @@ export const sendCandidacyCaduciteSoonWarningEmailToCandidate = async ({
       params: {
         candidateFullName,
         dateThresholdWillBeCaduque,
-        candidateAppUrl: CANDIDATE_APP_URL,
+        candidateAppUrl: getCandidateAppUrl(),
       },
     });
   } else {

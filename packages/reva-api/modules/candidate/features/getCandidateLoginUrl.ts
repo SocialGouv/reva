@@ -1,5 +1,5 @@
 import { generateJwt } from "../auth.helper";
-import { CANDIDATE_APP_URL } from "../utils/candidate.helpers";
+import { getCandidateAppUrl } from "../utils/candidate.helpers";
 
 export const getCandidateLoginUrl = ({
   candidateEmail,
@@ -10,5 +10,5 @@ export const getCandidateLoginUrl = ({
     { email: candidateEmail, action: "login" },
     1 * 60 * 60 * 24 * 4,
   );
-  return `${CANDIDATE_APP_URL}/login?token=${token}`;
+  return `${getCandidateAppUrl()}/login?token=${token}`;
 };

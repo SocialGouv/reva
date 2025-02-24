@@ -1,6 +1,6 @@
 import { generateJwt } from "../auth.helper";
 import { TypeAccompagnement } from "../candidate.types";
-import { CANDIDATE_APP_URL } from "../utils/candidate.helpers";
+import { getCandidateAppUrl } from "../utils/candidate.helpers";
 
 export const getCandidateRegistrationUrl = (params: {
   email: string;
@@ -12,5 +12,5 @@ export const getCandidateRegistrationUrl = (params: {
   typeAccompagnement: TypeAccompagnement;
 }) => {
   const token = generateJwt({ ...params, action: "registration" }, 3 * 60 * 60);
-  return `${CANDIDATE_APP_URL}/registration?token=${token}`;
+  return `${getCandidateAppUrl()}/registration?token=${token}`;
 };
