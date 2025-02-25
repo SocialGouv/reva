@@ -1,3 +1,4 @@
+import { logger } from "../../shared/logger";
 import { prismaClient } from "../../../prisma/client";
 import { RNCPCertification, RNCPReferential } from "../rncp";
 import { getFormacodes, Formacode } from "./getFormacodes";
@@ -59,9 +60,13 @@ export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
     const formacode = getFormacodeByCode(rncpFormacode.CODE, referential);
 
     if (!formacode) {
-      throw new Error(
+      const error = new Error(
         `Le formacode avec le code ${rncpFormacode.CODE} n'existe pas dans le référentiel RNCP`,
       );
+      logger.error(error);
+
+      // stop here and continue with the next iteration
+      continue;
     }
 
     const parents = getParents(formacode, referential);
