@@ -13,7 +13,7 @@ export const createMaisonMereAapHelper = async (
       isActive: true,
       statutValidationInformationsJuridiquesMaisonMereAAP: "A_JOUR",
       raisonSociale: faker.company.name(),
-      siret: faker.string.nanoid(14),
+      siret: faker.string.numeric({ length: 14 }),
       statutJuridique: LegalStatus.ASSOCIATION_LOI_1901,
       typologie: "expertFiliere",
       dateExpirationCertificationQualiopi: faker.date.future(),

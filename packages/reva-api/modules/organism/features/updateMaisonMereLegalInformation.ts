@@ -24,6 +24,10 @@ export const updateMaisonMereLegalInformation = async ({
     );
   }
 
+  if (!siret.match(/^\d{14}$/)) {
+    throw new Error("Le numéro de SIRET doit contenir 14 chiffres.");
+  }
+
   const updatedMaisonMere = await prismaClient.maisonMereAAP.update({
     where: { id: maisonMereAAPId },
     data: {
@@ -33,6 +37,16 @@ export const updateMaisonMereLegalInformation = async ({
       managerFirstname,
       managerLastname,
       phone,
+      organismes: {
+        updateMany: {
+          where: {
+            maisonMereAAPId,
+          },
+          data: {
+            siret,
+          },
+        },
+      },
     },
   });
 
