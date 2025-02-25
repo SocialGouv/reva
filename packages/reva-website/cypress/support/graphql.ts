@@ -18,13 +18,16 @@ export const hasOperationName = (
 export const stubQuery = (
   req: CyHttpMessages.IncomingHttpRequest,
   operationName: string,
-  fixture: string,
+  fixture: string | object,
   statusCode = 200,
 ) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    fixture && req.reply({ statusCode, fixture });
+    if (typeof fixture == "string" && fixture.endsWith(".json")) {
+      req.reply({ statusCode, fixture });
+    } else {
+      req.reply(statusCode, fixture);
+    }
   }
 };
 
@@ -32,12 +35,15 @@ export const stubQuery = (
 export const stubMutation = (
   req: CyHttpMessages.IncomingHttpRequest,
   operationName: string,
-  fixture: string,
+  fixture: string | object,
   statusCode = 200,
 ) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    fixture && req.reply({ statusCode, fixture });
+    if (typeof fixture == "string" && fixture.endsWith(".json")) {
+      req.reply({ statusCode, fixture });
+    } else {
+      req.reply(statusCode, fixture);
+    }
   }
 };
