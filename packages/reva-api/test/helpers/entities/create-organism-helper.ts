@@ -16,7 +16,7 @@ export const createOrganismHelper = async (
     data: {
       contactAdministrativeEmail: faker.internet.email(),
       label: faker.company.name(),
-      siret: faker.string.nanoid(14),
+      siret: faker.string.numeric({ length: 14 }),
       typology: OrganismTypology.expertBranche,
       modaliteAccompagnement: "A_DISTANCE",
       modaliteAccompagnementRenseigneeEtValide: true,
