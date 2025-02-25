@@ -103,6 +103,7 @@ const OrientationCandidatPage = () => {
               certification || {
                 id: "",
                 label: "",
+                codeRncp: "",
                 isAapAvailable: false,
               }
             }

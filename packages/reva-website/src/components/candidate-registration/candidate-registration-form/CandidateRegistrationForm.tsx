@@ -21,6 +21,7 @@ interface Props {
   certification: {
     id: string;
     label: string;
+    codeRncp: string;
     isAapAvailable: boolean;
   };
 
@@ -69,12 +70,10 @@ export const CandidateRegistrationForm = ({
       />
 
       <div className="flex gap-8 mt-8">
-        <div className="w-64">
-          <CandidateRegistrationSidebar
-            typeAccompagnement={typeAccompagnement}
-            certificationLabel={certification.label}
-          />
-        </div>
+        <CandidateRegistrationSidebar
+          typeAccompagnement={typeAccompagnement}
+          certification={certification}
+        />
         <div className="flex-1">
           {currentStep === 1 && (
             <CandidateRegistrationStep1 onSubmit={submitStep1} />
