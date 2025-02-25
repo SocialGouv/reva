@@ -6,7 +6,8 @@
       "IMPERSONATE",
       "AAP_CGU",
       "AAP_SETTINGS_V3",
-      "admin_dashboard_v2"
+      "admin_dashboard_v2",
+      "CANDIDATE_REGISTRATION_V2"
     ]
   }
 }

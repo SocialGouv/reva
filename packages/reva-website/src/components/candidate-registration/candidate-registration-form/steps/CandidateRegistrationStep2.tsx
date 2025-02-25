@@ -87,7 +87,7 @@ export const CandidateRegistrationStep2 = ({
     return (
       <Alert
         severity="warning"
-        data-testid="candidate-typology-error-panel"
+        data-testid="registration-disabled-error"
         className="basis-1/2"
         title={
           <p className="font-normal">

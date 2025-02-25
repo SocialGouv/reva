@@ -3,7 +3,7 @@
     "getCertification": {
       "id": "7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
       "label": "BTS Chaudronnier",
-      "codeRncp": "RNCP123",
+      "codeRncp": "12345",
       "typeDiplome": "Titre-BTS"
     }
   }
