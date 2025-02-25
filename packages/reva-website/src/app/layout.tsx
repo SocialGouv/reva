@@ -2,13 +2,12 @@ import "@/styles/globals.css";
 import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 import "@/styles/ckeditor5-content-styles.css";
-import { DsfrHead } from "@codegouvfr/react-dsfr/next-appdir/DsfrHead";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
 import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
 import { StartDsfr } from "./StartDsfr";
-import Link from "next/link";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import Script from "next/script";
+import { DsfrHead } from "./_components/dsfr/DsfrHead";
 
 const defaultColorScheme = "light";
 
@@ -20,7 +19,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
     <html {...getHtmlAttributes({ defaultColorScheme, lang })}>
       <head>
         <StartDsfr />
-        <DsfrHead Link={Link} />
+        <DsfrHead />
       </head>
       <body>
         <DsfrProvider lang={lang}>{children}</DsfrProvider>

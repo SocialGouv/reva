@@ -164,7 +164,7 @@ const QuiEtesVousSection = () => (
             priority="secondary"
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
-            className="mt-auto !py-8 md:!py-0"
+            className="mt-auto py-8 md:py-0"
             linkProps={{
               href: "/espace-candidat/",
               target: "_self",
@@ -190,7 +190,7 @@ const QuiEtesVousSection = () => (
             priority="secondary"
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
-            className="mt-auto"
+            className="mt-auto py-8 md:py-0"
             linkProps={{
               href: "/espace-professionnel/",
               target: "_self",
@@ -216,7 +216,7 @@ const QuiEtesVousSection = () => (
             priority="secondary"
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
-            className="mt-auto !py-8 md:!py-0"
+            className="mt-auto py-8 md:py-0"
             disabled
           >
             Créez votre espace certificateur

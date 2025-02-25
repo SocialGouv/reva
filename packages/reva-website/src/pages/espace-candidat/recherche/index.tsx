@@ -154,7 +154,7 @@ const CertificationResultPage = ({
                       </p>
                       <Link
                         href={`/certifications/${certification?.id}`}
-                        className="text-xl text-dsfrBlue-franceSun font-bold mt-0 mb-0 !bg-none hover:underline"
+                        className="fr-link !text-xl font-bold mt-0 mb-0 !bg-none hover:underline"
                       >
                         {certification?.label}
                       </Link>
