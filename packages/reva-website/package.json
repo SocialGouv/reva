@@ -21,12 +21,10 @@
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.20.0",
-    "@headlessui/react": "^2.2.0",
     "@hookform/resolvers": "^3.9.1",
     "@strapi/blocks-react-renderer": "^1.0.1",
     "@tanstack/react-query": "^5.59.16",
     "graphql-request": "^6.1.0",
-    "import": "^0.0.6",
     "lodash": "^4.17.21",
     "next": "^15.1.7",
     "react": "^19.0.0",
