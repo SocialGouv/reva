@@ -2,9 +2,11 @@ import mjml2html from "mjml";
 
 import {
   formatFreeText,
+  sendEmailUsingTemplate,
   sendGenericEmail,
   templateMail,
 } from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const sendDVReportedToCandidateAutonomeEmail = async ({
   email,
@@ -17,15 +19,30 @@ export const sendDVReportedToCandidateAutonomeEmail = async ({
   certificationName: string;
   certificationAuthorityLabel: string;
 }) => {
-  const commentInfo = decisionComment
-    ? `
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CANDIDATE_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 517,
+      params: {
+        certificationAuthorityLabel,
+        certificationName,
+        comment: decisionComment,
+      },
+    });
+  } else {
+    const commentInfo = decisionComment
+      ? `
         <p><strong>Voici les remarques faites par le certificateur :</strong></p>
         <p><em>${formatFreeText(decisionComment)}</em></p>
         `
-    : "";
-  const htmlContent = mjml2html(
-    templateMail({
-      content: `
+      : "";
+    const htmlContent = mjml2html(
+      templateMail({
+        content: `
       <p>Bonjour,</p>
       <p>Votre dossier de validation a été signalé par le certificateur ${certificationAuthorityLabel} concernant votre dossier de validation pour la certification <em>${certificationName}</em>.</p>
       ${commentInfo}
@@ -35,12 +52,13 @@ export const sendDVReportedToCandidateAutonomeEmail = async ({
       <p>Cordialement,</p>
       <p>L’équipe France VAE</p>
     `,
-    }),
-  );
+      }),
+    );
 
-  return sendGenericEmail({
-    to: { email },
-    htmlContent: htmlContent.html,
-    subject: "Votre dossier de validation a été signalé",
-  });
+    return sendGenericEmail({
+      to: { email },
+      htmlContent: htmlContent.html,
+      subject: "Votre dossier de validation a été signalé",
+    });
+  }
 };
