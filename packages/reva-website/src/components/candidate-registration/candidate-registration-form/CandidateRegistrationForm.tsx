@@ -69,7 +69,7 @@ export const CandidateRegistrationForm = ({
         nextTitle={currentStep === 1 ? "Je crée mon compte" : undefined}
       />
 
-      <div className="flex gap-8 mt-8">
+      <div className="flex gap-6 mt-8">
         <CandidateRegistrationSidebar
           typeAccompagnement={typeAccompagnement}
           certification={certification}

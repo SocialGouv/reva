@@ -20,21 +20,29 @@ export const CandidateRegistrationStep1 = ({
           data-testid="tile-accompagne"
           enlargeLinkOrButton
           title={"Avec un accompagnateur"}
+          desc="Vous serez accompagné par un expert de la VAE qui vous aidera à chaque grande étape de votre parcours VAE. Une présence de A à Z, utile pour réaliser sereinement votre parcours."
           buttonProps={{
             onClick: () => {
               onSubmit("ACCOMPAGNE");
             },
           }}
+          orientation="vertical"
+          imageUrl="/candidate-space/pictograms/human-cooperation.svg"
+          imageSvg
         />
         <Tile
           data-testid="tile-autonome"
           enlargeLinkOrButton
           title="En autonomie"
+          desc="Vous réaliserez toutes les démarches et grandes étapes d'un parcours VAE en toute autonomie. Pour vous aider, nos articles de blog, tutos et webinaires seront là."
           buttonProps={{
             onClick: () => {
               onSubmit("AUTONOME");
             },
           }}
+          orientation="vertical"
+          imageUrl="/candidate-space/pictograms/self-training.svg"
+          imageSvg
         />
       </div>
     </>
