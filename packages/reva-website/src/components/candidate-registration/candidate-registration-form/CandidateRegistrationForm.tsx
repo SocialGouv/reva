@@ -1,7 +1,7 @@
 import { useState } from "react";
-
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { CandidateRegistrationStep1 } from "./steps/CandidateRegistrationStep1";
 import { CandidateRegistrationStep2 } from "./steps/CandidateRegistrationStep2";
 import { CandidateRegistrationSidebar } from "./CandidateRegistrationSidebar";
@@ -82,6 +82,27 @@ export const CandidateRegistrationForm = ({
             <CandidateRegistrationStep2 onSubmit={submitStep2} />
           )}
         </div>
+      </div>
+
+      <div className="mt-12">
+        {currentStep === 1 && (
+          <Button
+            data-testid="change-certification-button"
+            priority="secondary"
+            linkProps={{ href: `/certifications/${certification.id}` }}
+          >
+            Changer de diplôme
+          </Button>
+        )}
+        {currentStep === 2 && (
+          <Button
+            data-testid="candidate-registration-back-button"
+            priority="secondary"
+            onClick={() => setCurrentStep(1)}
+          >
+            Retour à l'étape 1
+          </Button>
+        )}
       </div>
     </div>
   );

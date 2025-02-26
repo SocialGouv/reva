@@ -78,6 +78,47 @@ describe("candidate two-steps registration", () => {
       cy.get('[data-testid="tag-accompagne"]').should("not.exist");
     });
 
+    it("should go back to certification page when using the update certification button", () => {
+      cy.visit(
+        "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0/",
+      );
+
+      cy.wait("@getCertification");
+
+      cy.get('[data-testid="change-certification-button"]').should(
+        "be.visible",
+      );
+      cy.get('[data-testid="candidate-registration-back-button"]').should(
+        "not.exist",
+      );
+
+      cy.get('[data-testid="change-certification-button"]').click();
+      cy.url().should(
+        "eq",
+        "http://localhost:3002/certifications/7ad608c2-5a4b-40eb-8ef9-7a85421b40f0/",
+      );
+    });
+
+    it("should go back to step 1 when using the back button on step 2", () => {
+      cy.visit(
+        "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
+      );
+
+      cy.wait("@getCertification");
+
+      cy.get('[data-testid="tile-accompagne"]').click();
+
+      cy.get('[data-testid="change-certification-button"]').should("not.exist");
+      cy.get('[data-testid="candidate-registration-back-button"]').click();
+
+      cy.get('[data-testid="candidate-registration-initial-step"]').should(
+        "exist",
+      );
+      cy.get('[data-testid="candidate-registration-back-button"]').should(
+        "not.exist",
+      );
+    });
+
     it("should let navigation to the account registration form on step 2", () => {
       cy.visit(
         "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",

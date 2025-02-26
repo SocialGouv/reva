@@ -8,7 +8,10 @@ export const CandidateRegistrationStep1 = ({
 }) => {
   return (
     <>
-      <div className="fr-text--lead font-semibold text-gray-900">
+      <div
+        data-testid="candidate-registration-initial-step"
+        className="fr-text--lead font-semibold text-gray-900"
+      >
         Comment je souhaite réaliser ma VAE ?
       </div>
 
