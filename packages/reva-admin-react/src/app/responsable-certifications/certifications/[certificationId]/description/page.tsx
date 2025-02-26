@@ -21,6 +21,7 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Select from "@codegouvfr/react-dsfr/Select";
 
 import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
+import { FranceCompetencesLogo } from "@/components/logo/france-competences-logo/FranceCompetencesLogo";
 
 const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   {
@@ -364,17 +365,19 @@ const PageContent = ({
                 </div>
               ))}
             </div>
-
-            <Notice
-              className="bg-transparent -ml-6 text-xs p-0 mt-2"
-              title={
-                <span className="text-sm inline font-normal">
-                  Vous trouverez dans cette section des informations à compléter
-                  et d’autres non modifiables. En cas d’erreur, contactez
-                  directement France compétences.
-                </span>
-              }
-            />
+            <div className="flex content-between items-start mt-2">
+              <Notice
+                className="bg-transparent -ml-6 text-xs p-0"
+                title={
+                  <span className="text-sm inline font-normal">
+                    Vous trouverez dans cette section des informations à
+                    compléter et d’autres non modifiables. En cas d’erreur,
+                    contactez directement France compétences.
+                  </span>
+                }
+              />
+              <FranceCompetencesLogo />
+            </div>
           </div>
         </EnhancedSectionCard>
 
