@@ -102,6 +102,7 @@ export const AutocompleteAddress = ({
           },
           onFocus: () => setDisplayOptions(true),
           onClick: () => setDisplayOptions(true),
+          autoComplete: "new-password",
         }}
         state={state}
         stateRelatedMessage={stateRelatedMessage}
