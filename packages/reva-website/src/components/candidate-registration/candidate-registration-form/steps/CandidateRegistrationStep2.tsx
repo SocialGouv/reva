@@ -163,7 +163,7 @@ export const CandidateRegistrationStep2 = ({
           ))}
         </Select>
       </fieldset>
-      <div className="absolute bottom-10 right-0 flex self-end gap-4">
+      <div className="sm:absolute bottom-10 right-0 flex self-end gap-4">
         <Button priority="tertiary no outline" type="reset">
           Réinitialiser
         </Button>

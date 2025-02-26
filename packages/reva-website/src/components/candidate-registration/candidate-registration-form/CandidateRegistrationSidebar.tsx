@@ -15,14 +15,14 @@ export const CandidateRegistrationSidebar = ({
   certification,
 }: Props) => {
   return (
-    <div className="py-4 border-r px-4 w-[284px]">
+    <div className="mb-8 lg:mb-0 lg:py-4 lg:border-r lg:px-4 lg:w-[284px]">
       <h2 className="mb-3">Résumé</h2>
       <div className="border p-6 mb-4">
         {!typeAccompagnement && (
           <Tag
             data-testid="tag-modalite-inconnue"
             small
-            className="!w-full mb-3"
+            className="lg:!w-full mb-3"
           >
             <span className="truncate">VAE en autonomie ou accompagnée</span>
           </Tag>
