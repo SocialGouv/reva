@@ -28,6 +28,10 @@ interface TimelineProps {
 export const ProjectTimeline = ({ className }: TimelineProps) => {
   const { candidacy } = useCandidacy();
 
+  if (!candidacy) {
+    return null;
+  }
+
   const { feasibilityFormat, feasibility, jury } = candidacy;
   const feasibilityRejected = feasibility?.decision == "REJECTED";
 

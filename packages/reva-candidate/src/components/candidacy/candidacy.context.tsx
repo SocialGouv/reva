@@ -262,7 +262,7 @@ export const useCandidacy = () => {
 
   const candidacy = candidate.candidacy;
 
-  const candidacyStatus = candidacy.status;
+  const candidacyStatus = candidacy?.status;
 
   const isCurrentlySubmitted = candidacyStatus === "PARCOURS_ENVOYE";
 
