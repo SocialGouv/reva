@@ -13,13 +13,13 @@ import { CandidateUpdateInput } from "../../candidate/candidate.types";
 export const updateCandidate = async ({
   params: { candidate, userRoles, userKeycloakId, userEmail },
 }: {
-  params: { candidate: CandidateUpdateInput } & {
+  params: { candidate: Partial<CandidateUpdateInput> } & {
     userKeycloakId?: string;
     userEmail?: string;
     userRoles: KeyCloakUserRole[];
   };
 }): Promise<Candidate> => {
-  const candidateInput: Partial<CandidateUpdateInput> = { ...candidate };
+  const candidateInput = { ...candidate };
   const { id, email, birthDepartmentId, countryId } = candidateInput;
   const candidateToUpdate = await prismaClient.candidate.findUnique({
     where: { id },
@@ -75,14 +75,16 @@ export const updateCandidate = async ({
 
   const today = new Date();
 
-  const dateSelected = new Date(Number(candidate.birthdate));
-  const sixteenYearsAgo = sub(today, { years: 16 });
-  const candidateBirthdayIsOlderThan16YearsAgo = isBefore(
-    dateSelected,
-    sixteenYearsAgo,
-  );
-  if (!candidateBirthdayIsOlderThan16YearsAgo) {
-    throw new Error(`Le candidat doit avoir plus de 16 ans`);
+  if (candidateInput.birthdate) {
+    const dateSelected = new Date(Number(candidate.birthdate));
+    const sixteenYearsAgo = sub(today, { years: 16 });
+    const candidateBirthdayIsOlderThan16YearsAgo = isBefore(
+      dateSelected,
+      sixteenYearsAgo,
+    );
+    if (!candidateBirthdayIsOlderThan16YearsAgo) {
+      throw new Error(`Le candidat doit avoir plus de 16 ans`);
+    }
   }
 
   const previousEmail = candidateToUpdate.email;
@@ -93,9 +95,6 @@ export const updateCandidate = async ({
     await sendPreviousEmailCandidateEmail({ email: previousEmail });
     await sendNewEmailCandidateEmail({ email: newEmail });
   }
-
-  //We don't want to update the email in the database, it will be done after the email confirmation
-  delete candidateInput.email;
 
   const candidacies = await prismaClient.candidacy.findMany({
     where: { candidateId: id },
