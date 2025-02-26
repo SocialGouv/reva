@@ -27,7 +27,7 @@ describe("candidate two-steps registration", () => {
       });
     });
 
-    it("should show the certification selected on the sidebar", () => {
+    it("should show the certification selected on the sidebar and the modalite inconnu tag", () => {
       cy.visit(
         "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
       );
@@ -40,6 +40,42 @@ describe("candidate two-steps registration", () => {
         "have.text",
         "12345",
       );
+
+      cy.get('[data-testid="tag-modalite-inconnue"]').should("be.visible");
+      cy.get('[data-testid="tag-accompagne"]').should("not.exist");
+      cy.get('[data-testid="tag-autonome"]').should("not.exist");
+    });
+
+    it("should show the correct modalite tag after selecting 'accompagne'", () => {
+      cy.visit(
+        "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
+      );
+
+      cy.wait("@getCertification");
+
+      cy.get('[data-testid="tag-modalite-inconnue"]').should("be.visible");
+
+      cy.get('[data-testid="tile-accompagne"]').click();
+
+      cy.get('[data-testid="tag-modalite-inconnue"]').should("not.exist");
+      cy.get('[data-testid="tag-accompagne"]').should("be.visible");
+      cy.get('[data-testid="tag-autonome"]').should("not.exist");
+    });
+
+    it("should show the correct accompaniment tag after selecting 'autonome'", () => {
+      cy.visit(
+        "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
+      );
+
+      cy.wait("@getCertification");
+
+      cy.get('[data-testid="tag-modalite-inconnue"]').should("be.visible");
+
+      cy.get('[data-testid="tile-autonome"]').click();
+
+      cy.get('[data-testid="tag-modalite-inconnue"]').should("not.exist");
+      cy.get('[data-testid="tag-autonome"]').should("be.visible");
+      cy.get('[data-testid="tag-accompagne"]').should("not.exist");
     });
 
     it("should let navigation to the account registration form on step 2", () => {
@@ -49,16 +85,10 @@ describe("candidate two-steps registration", () => {
 
       cy.wait("@getCertification");
 
-      cy.get(
-        '[data-testid="candidate-registration-form-accompagne-tile"]',
-      ).should("be.visible");
-      cy.get(
-        '[data-testid="candidate-registration-form-autonome-tile"]',
-      ).should("be.visible");
+      cy.get('[data-testid="tile-accompagne"]').should("be.visible");
+      cy.get('[data-testid="tile-autonome"]').should("be.visible");
 
-      cy.get(
-        '[data-testid="candidate-registration-form-accompagne-tile"]',
-      ).click();
+      cy.get('[data-testid="tile-accompagne"]').click();
 
       cy.get('[data-testid="candidate-registration-form"]').should("exist");
     });
@@ -70,9 +100,7 @@ describe("candidate two-steps registration", () => {
 
       cy.wait("@getCertification");
 
-      cy.get(
-        '[data-testid="candidate-registration-form-autonome-tile"]',
-      ).click();
+      cy.get('[data-testid="tile-autonome"]').click();
 
       cy.wait("@getDepartments");
 
@@ -132,9 +160,7 @@ describe("candidate two-steps registration", () => {
 
     it("should show an error message on step 2", () => {
       cy.wait("@getCertification");
-      cy.get(
-        '[data-testid="candidate-registration-form-autonome-tile"]',
-      ).click();
+      cy.get('[data-testid="tile-autonome"]').click();
 
       cy.get('[data-testid="registration-disabled-error"]').should(
         "be.visible",

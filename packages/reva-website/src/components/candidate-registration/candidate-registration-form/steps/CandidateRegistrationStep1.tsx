@@ -14,7 +14,7 @@ export const CandidateRegistrationStep1 = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Tile
-          data-testid="candidate-registration-form-accompagne-tile"
+          data-testid="tile-accompagne"
           enlargeLinkOrButton
           title={"Avec un accompagnateur"}
           buttonProps={{
@@ -24,7 +24,7 @@ export const CandidateRegistrationStep1 = ({
           }}
         />
         <Tile
-          data-testid="candidate-registration-form-autonome-tile"
+          data-testid="tile-autonome"
           enlargeLinkOrButton
           title="En autonomie"
           buttonProps={{

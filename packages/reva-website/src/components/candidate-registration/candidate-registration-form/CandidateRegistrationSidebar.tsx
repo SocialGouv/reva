@@ -15,9 +15,18 @@ export const CandidateRegistrationSidebar = ({
   certification,
 }: Props) => {
   return (
-    <div className="py-4 border-r pr-4 w-[282px]">
+    <div className="py-4 border-r px-4 w-[284px]">
       <h2 className="mb-3">Résumé</h2>
       <div className="border p-6 mb-4">
+        {!typeAccompagnement && (
+          <Tag
+            data-testid="tag-modalite-inconnue"
+            small
+            className="!w-full mb-3"
+          >
+            <span className="truncate">VAE en autonomie ou accompagnée</span>
+          </Tag>
+        )}
         <div className="flex items-center text-xs text-gray-500 mb-4">
           <Image
             width={16}
@@ -38,11 +47,15 @@ export const CandidateRegistrationSidebar = ({
       </div>
       {typeAccompagnement && (
         <div>
-          <Tag small>
-            {typeAccompagnement === "ACCOMPAGNE"
-              ? "VAE accompagnée"
-              : "En autonomie"}
-          </Tag>
+          {typeAccompagnement === "ACCOMPAGNE" ? (
+            <Tag data-testid="tag-accompagne" small>
+              VAE accompagnée
+            </Tag>
+          ) : (
+            <Tag data-testid="tag-autonome" small>
+              En autonomie
+            </Tag>
+          )}
         </div>
       )}
     </div>
