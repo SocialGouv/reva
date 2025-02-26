@@ -28,7 +28,7 @@ const RegionsPage = ({
         <br />
         <h2>Sélectionnez votre région</h2>
 
-        <ul className="!list-none flex flex-col items-center md:flex-row flex-wrap gap-6 !pl-0">
+        <ul className="list-none flex flex-col items-center md:flex-row flex-wrap gap-6 pl-0">
           {regions.map((r) => (
             <li key={r?.slug}>
               <RegionCard

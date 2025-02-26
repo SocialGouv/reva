@@ -59,7 +59,7 @@ const FaqPage = ({
               className="font-bold text-3xl text-black mb-12"
             >
               {s?.titre}
-              <ul className="!list-none !p-0">
+              <ul className="list-none p-0">
                 {s?.sous_section_faqs?.map((ss) => (
                   <li className="text-2xl mt-4" key={ss?.documentId}>
                     {(s?.sous_section_faqs?.length || 0) > 1 && ss?.titre}

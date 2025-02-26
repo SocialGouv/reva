@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .bg-candidate,
+  .bg-organism {
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-color: white;
+  }
+
+  .bg-candidate {
+    background-image: url("../../public/candidate-space/bg-candidate.svg");
+  }
+
+  .bg-organism {
+    background-image: url("../../public/professional-space/bg-organism.svg");
+  }
+}

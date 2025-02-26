@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "@/styles/globals.legacy.css";
 import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 import "@/styles/ckeditor5-content-styles.css";

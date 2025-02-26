@@ -97,7 +97,7 @@ export default function Page({
             >
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                  <h2 className="!m-0">
+                  <h2 className="m-0">
                     Réalisez votre projet seul, à votre rythme
                   </h2>
                   <ul className="text-lg">
@@ -108,7 +108,7 @@ export default function Page({
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <h3 className="!m-0">Les étapes clés en autonomie</h3>
+                  <h3 className="m-0">Les étapes clés en autonomie</h3>
                   <ul className="text-lg">
                     <li>Constitution de votre dossier de faisabilité</li>
                     <li>Communication directe avec le certificateur</li>
@@ -119,7 +119,7 @@ export default function Page({
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <h3 className="!m-0">Financement</h3>
+                  <h3 className="m-0">Financement</h3>
                   <ul className="text-lg">
                     <li>Frais de jury à prévoir</li>
                     <li>Coûts éventuels de formation complémentaire</li>
@@ -127,7 +127,7 @@ export default function Page({
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <h4 className="!m-0">Ressources à votre disposition</h4>
+                  <h4 className="m-0">Ressources à votre disposition</h4>
                   <div className="flex flex-col gap-2">
                     <Link
                       className="fr-link mr-auto"
@@ -169,7 +169,7 @@ export default function Page({
               >
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
-                    <h2 className="!m-0">
+                    <h2 className="m-0">
                       Un suivi personnalisé pour réussir votre VAE
                     </h2>
                     <ul className="text-lg">
@@ -182,7 +182,7 @@ export default function Page({
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <h3 className="!m-0">L’accompagnateur vous guide pour :</h3>
+                    <h3 className="m-0">L’accompagnateur vous guide pour :</h3>
                     <ul className="text-lg">
                       <li>
                         Rédiger et transmettre votre dossier de faisabilité
@@ -197,7 +197,7 @@ export default function Page({
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <h3 className="!m-0">Financement</h3>
+                    <h3 className="m-0">Financement</h3>
                     <ul className="text-lg">
                       <li>Financement possible par votre CPF</li>
                       <li>Prise en charge partielle selon votre situation</li>
@@ -205,7 +205,7 @@ export default function Page({
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <h4 className="!m-0">Ressources à votre disposition</h4>
+                    <h4 className="m-0">Ressources à votre disposition</h4>
                     <div className="flex flex-col gap-2">
                       <Link
                         className="fr-link mr-auto"
