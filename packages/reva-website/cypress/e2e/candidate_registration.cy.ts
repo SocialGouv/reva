@@ -165,6 +165,12 @@ describe("candidate two-steps registration", () => {
         .children("select")
         .select("department1");
 
+      cy.get(
+        '[data-testid="candidate-registration-form-public-employee-checkbox-wrapper"] input',
+      ).check({
+        force: true,
+      });
+
       cy.get('[data-testid="candidate-registration-submit-button"]').click();
 
       cy.wait("@candidate_askForRegistration");
@@ -173,6 +179,44 @@ describe("candidate two-steps registration", () => {
         "eq",
         "http://localhost:3002/inscription-candidat/confirmation/",
       );
+    });
+
+    it("should show error when form is submitted without checking public employee checkbox", () => {
+      cy.visit(
+        "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0",
+      );
+
+      cy.wait("@getCertification");
+
+      cy.get('[data-testid="tile-autonome"]').click();
+
+      cy.wait("@getDepartments");
+
+      cy.get(
+        '[data-testid="candidate-registration-form-firstname-input"]',
+      ).type("Alice");
+      cy.get('[data-testid="candidate-registration-form-lastname-input"]').type(
+        "Doe",
+      );
+      cy.get('[data-testid="candidate-registration-form-phone-input"]').type(
+        "+33 1 01 01 01 01",
+      );
+      cy.get('[data-testid="candidate-registration-form-email-input"]')
+        .children("input")
+        .type("alice.doe@example.com");
+      cy.get('[data-testid="candidate-registration-form-department-select"]')
+        .children("select")
+        .select("department1");
+
+      cy.get(
+        '[data-testid="candidate-registration-form-public-employee-checkbox-wrapper"] fieldset',
+      ).should("not.have.class", "fr-fieldset--error");
+
+      cy.get('[data-testid="candidate-registration-submit-button"]').click();
+
+      cy.get(
+        '[data-testid="candidate-registration-form-public-employee-checkbox-wrapper"] fieldset',
+      ).should("have.class", "fr-fieldset--error");
     });
   });
 

@@ -2,6 +2,7 @@ import { graphql } from "@/graphql/generated";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import Button from "@codegouvfr/react-dsfr/Button";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import request from "graphql-request";
 import { useEffect, useState } from "react";
@@ -36,6 +37,10 @@ const zodSchema = z.object({
       required_error: "Merci de remplir ce champ",
     })
     .min(1, "Merci de remplir ce champ"),
+  notSecteurPublic: z.boolean().refine((val) => val, {
+    message:
+      "Vous ne pouvez pas accéder à une VAE via France VAE si vous dépendez du secteur public.",
+  }),
 });
 
 type Step2FormData = z.infer<typeof zodSchema>;
@@ -163,6 +168,25 @@ export const CandidateRegistrationStep2 = ({
           ))}
         </Select>
       </fieldset>
+      <div
+        className="w-full"
+        data-testid="candidate-registration-form-public-employee-checkbox-wrapper"
+      >
+        <Checkbox
+          options={[
+            {
+              label: "Je certifie ne pas être salarié du secteur public",
+              hintText:
+                "Pour les salariés du secteur public, vous pouvez retrouver des informations auprès des point relais conseil.",
+              nativeInputProps: {
+                ...register("notSecteurPublic"),
+              },
+            },
+          ]}
+          state={errors.notSecteurPublic ? "error" : "default"}
+          stateRelatedMessage={errors.notSecteurPublic?.message}
+        />
+      </div>
       <div className="sm:absolute bottom-10 right-0 flex self-end gap-4">
         <Button priority="tertiary no outline" type="reset">
           Réinitialiser

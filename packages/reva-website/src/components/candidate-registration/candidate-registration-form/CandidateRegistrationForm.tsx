@@ -46,7 +46,11 @@ export const CandidateRegistrationForm = ({
   ) => {
     if (!typeAccompagnement) return;
     onSubmit({
-      ...formData,
+      firstname: formData.firstname,
+      lastname: formData.lastname,
+      phone: formData.phone,
+      email: formData.email,
+      departmentId: formData.departmentId,
       typeAccompagnement,
       certificationId: certification.id,
     });
