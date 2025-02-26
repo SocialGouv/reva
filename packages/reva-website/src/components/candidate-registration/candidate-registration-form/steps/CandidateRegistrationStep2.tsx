@@ -27,8 +27,8 @@ interface DepartmentOption {
 }
 
 const zodSchema = z.object({
-  firstname: z.string().min(1, "Merci de remplir ce champ"),
   lastname: z.string().min(1, "Merci de remplir ce champ"),
+  firstname: z.string().min(1, "Merci de remplir ce champ"),
   phone: z.string().min(10, "Veuillez entrer un numéro de téléphone valide"),
   email: z.string().email("Format attendu : nom@domaine.fr"),
   departmentId: z
@@ -102,17 +102,10 @@ export const CandidateRegistrationStep2 = ({
   return (
     <form
       data-testid="candidate-registration-form"
-      className="flex flex-col gap-12"
+      className="flex flex-col gap-8"
       onSubmit={handleFormSubmit}
     >
       <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-        <Input
-          data-testid="candidate-registration-form-firstname-input"
-          label="Prénom"
-          state={errors.firstname ? "error" : "default"}
-          stateRelatedMessage={errors.firstname?.message}
-          nativeInputProps={{ ...register("firstname") }}
-        />
         <Input
           data-testid="candidate-registration-form-lastname-input"
           label="Nom"
@@ -121,7 +114,13 @@ export const CandidateRegistrationStep2 = ({
           nativeInputProps={{ ...register("lastname") }}
         />
         <Input
-          className="md:mt-6"
+          data-testid="candidate-registration-form-firstname-input"
+          label="Prénom"
+          state={errors.firstname ? "error" : "default"}
+          stateRelatedMessage={errors.firstname?.message}
+          nativeInputProps={{ ...register("firstname") }}
+        />
+        <Input
           data-testid="candidate-registration-form-phone-input"
           label="Téléphone"
           state={errors.phone ? "error" : "default"}
@@ -134,8 +133,7 @@ export const CandidateRegistrationStep2 = ({
         />
         <Input
           data-testid="candidate-registration-form-email-input"
-          label="Email"
-          hintText="Format attendu : nom@domaine.fr"
+          label="Email (utilisé pour la connexion)"
           state={errors.email ? "error" : "default"}
           stateRelatedMessage={errors.email?.message}
           nativeInputProps={{
@@ -148,7 +146,6 @@ export const CandidateRegistrationStep2 = ({
         <Select
           data-testid="candidate-registration-form-department-select"
           label="Département"
-          hint="Entrez votre département de résidence"
           state={errors.departmentId ? "error" : "default"}
           stateRelatedMessage={errors.departmentId?.message}
           nativeSelectProps={{
@@ -156,7 +153,9 @@ export const CandidateRegistrationStep2 = ({
             onChange: departmentIdController.field.onChange,
           }}
         >
-          {!departmentIdController.field.value && <option value={undefined} />}
+          {!departmentIdController.field.value && (
+            <option value="">Sélectionner votre département</option>
+          )}
           {availableDepartments.map((d) => (
             <option key={d.value} value={d.value}>
               {d.label}
@@ -164,7 +163,7 @@ export const CandidateRegistrationStep2 = ({
           ))}
         </Select>
       </fieldset>
-      <div className="flex self-end mt-8 gap-4">
+      <div className="flex self-end gap-4">
         <Button priority="tertiary no outline" type="reset">
           Réinitialiser
         </Button>
@@ -172,7 +171,7 @@ export const CandidateRegistrationStep2 = ({
           data-testid="candidate-registration-submit-button"
           type="submit"
         >
-          Enregistrer
+          Créer mon compte
         </Button>
       </div>
     </form>

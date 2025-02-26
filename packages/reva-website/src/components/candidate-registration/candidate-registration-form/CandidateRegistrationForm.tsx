@@ -98,7 +98,10 @@ export const CandidateRegistrationForm = ({
           <Button
             data-testid="candidate-registration-back-button"
             priority="secondary"
-            onClick={() => setCurrentStep(1)}
+            onClick={() => {
+              setTypeAccompagnement(undefined);
+              setCurrentStep(1);
+            }}
           >
             Retour à l'étape 1
           </Button>
