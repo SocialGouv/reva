@@ -2,6 +2,7 @@ import {
   defaultSecurity,
   isAdminOrCandidacyCompanion,
   isAnyone,
+  isOwnerOfCandidate,
 } from "../../shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -12,4 +13,5 @@ export const resolversSecurityMap = {
   "Mutation.candidate_askForLogin": isAnyone,
   "Mutation.candidate_updateCandidateInformation": isAdminOrCandidacyCompanion,
   "Mutation.candidate_updateCandidateProfile": isAdminOrCandidacyCompanion,
+  "Mutation.candidate_updateCandidateInformationBySelf": isOwnerOfCandidate,
 };

@@ -10,12 +10,12 @@ import {
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
+import { getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists } from "./features/getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists";
+import { getHighestDegreeById } from "./features/getHighestDegreeById";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import { resolversSecurityMap } from "./security/security";
-import { getHighestDegreeById } from "./features/getHighestDegreeById";
-import { getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists } from "./features/getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists";
 
 const unsafeResolvers = {
   Candidate: {
@@ -125,6 +125,21 @@ const unsafeResolvers = {
       updateCandidateProfile({
         params: {
           ...candidateProfile,
+          userKeycloakId: context.auth.userInfo?.sub,
+          userEmail: context.auth.userInfo?.email,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        },
+      }),
+    candidate_updateCandidateInformationBySelf: async (
+      _: unknown,
+      {
+        candidateInformation,
+      }: { candidateInformation: Partial<CandidateUpdateInput> },
+      context: GraphqlContext,
+    ) =>
+      updateCandidate({
+        params: {
+          candidate: candidateInformation,
           userKeycloakId: context.auth.userInfo?.sub,
           userEmail: context.auth.userInfo?.email,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],

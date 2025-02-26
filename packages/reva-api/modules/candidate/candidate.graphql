@@ -85,6 +85,27 @@ input CandidateUpdateInformationInput {
   addressComplement: String
 }
 
+input CandidateUpdateInformationBySelfInput {
+  id: UUID!
+  email: String!
+  lastname: String!
+  firstname: String!
+  phone: String!
+  gender: Gender
+  givenName: String
+  firstname2: String
+  firstname3: String
+  birthdate: Timestamp
+  birthCity: String
+  birthDepartmentId: String
+  countryId: UUID
+  nationality: String
+  street: String
+  zip: String
+  city: String
+  addressComplement: String
+}
+
 input CandidateProfileUpdateInput {
   candidateId: UUID!
   highestDegreeId: UUID!
@@ -103,5 +124,9 @@ type Mutation {
   candidate_updateCandidateProfile(
     candidacyId: String!
     candidateProfile: CandidateProfileUpdateInput!
+  ): Candidate
+  candidate_updateCandidateInformationBySelf(
+    candidateId: String!
+    candidateInformation: CandidateUpdateInformationBySelfInput!
   ): Candidate
 }
