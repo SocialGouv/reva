@@ -53,7 +53,7 @@ export const CandidateRegistrationForm = ({
   };
 
   return (
-    <div className="py-10">
+    <div className="py-10 relative">
       <h1 className="mb-12">
         Mon inscription en 2 étapes
         <FormOptionalFieldsDisclaimer />
