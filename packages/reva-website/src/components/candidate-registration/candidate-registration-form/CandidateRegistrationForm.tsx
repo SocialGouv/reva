@@ -69,6 +69,13 @@ export const CandidateRegistrationForm = ({
         nextTitle={currentStep === 1 ? "Je crée mon compte" : undefined}
       />
 
+      {currentStep === 2 && (
+        <div className="fr-text--lead py-4">
+          Ces informations nous permettront de pré-remplir votre profil. Vous
+          pourrez les modifier à tout moment depuis votre espace.
+        </div>
+      )}
+
       <div className="lg:flex gap-6 mt-8">
         <CandidateRegistrationSidebar
           typeAccompagnement={typeAccompagnement}
