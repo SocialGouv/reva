@@ -176,8 +176,16 @@ export const CandidateRegistrationStep2 = ({
           options={[
             {
               label: "Je certifie ne pas être salarié du secteur public",
-              hintText:
-                "Pour les salariés du secteur public, vous pouvez retrouver des informations auprès des point relais conseil.",
+              hintText: (
+                <span>
+                  Pour les salariés du secteur public, vous pouvez retrouver des
+                  informations auprès des{" "}
+                  <a href="https://vae.gouv.fr/savoir-plus/articles/liste-prc/">
+                    point relais conseil
+                  </a>
+                  .
+                </span>
+              ),
               nativeInputProps: {
                 ...register("notSecteurPublic"),
               },
