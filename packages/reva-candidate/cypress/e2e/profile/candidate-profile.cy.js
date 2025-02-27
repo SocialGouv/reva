@@ -40,6 +40,7 @@ context("Candidate Profile Page", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate_login.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "getCandidateForProfilePage", candidateData);
       stubQuery(req, "getCountries", countries);
@@ -47,7 +48,11 @@ context("Candidate Profile Page", () => {
     });
 
     cy.login();
-    cy.wait(["@candidate_login", "@candidate_getCandidateWithCandidacy"]);
+    cy.wait([
+      "@candidate_login",
+      "@activeFeaturesForConnectedUser",
+      "@candidate_getCandidateWithCandidacy",
+    ]);
     cy.visit("/profile");
     cy.wait([
       "@getDepartments",
