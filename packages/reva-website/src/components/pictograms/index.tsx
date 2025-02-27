@@ -114,6 +114,7 @@ export const PICTOGRAMS = {
   dataVisualization: generateSvg(dataVisualization),
   internet: generateSvg(internet),
   mailSend: generateSvg(mailSend),
+  mailSendLG: generateSvg(mailSend, { width: 142, height: 142 }),
   search: generateSvg(search),
   contract: generateSvg(contract),
   documentDownload: generateSvg(documentDownload),
