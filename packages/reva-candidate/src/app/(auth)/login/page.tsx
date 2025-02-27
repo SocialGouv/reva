@@ -65,7 +65,7 @@ export default function Login() {
       <div className="border-t border-gray-200 pt-6">
         <button
           onClick={() => {
-            window.location.href = "/inscription-candidat/";
+            window.location.href = "/espace-candidat/";
           }}
           className="text-gray-500 underline"
         >
