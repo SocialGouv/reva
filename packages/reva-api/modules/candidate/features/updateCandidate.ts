@@ -64,8 +64,8 @@ export const updateCandidate = async ({
     candidateToUpdate.zip === null ||
     candidateToUpdate.zip !== candidateInput.zip;
 
-  if (isNewZip && candidateInput.zip?.match(/^(\d{5}|)$/)) {
-    const department = await getDepartmentFromZipCode(candidateInput.zip || "");
+  if (isNewZip && candidateInput.zip?.match(/^\d{5}$/)) {
+    const department = await getDepartmentFromZipCode(candidateInput.zip);
     if (!department) {
       throw new Error(`Le département n'existe pas`);
     }
