@@ -63,10 +63,19 @@ export const CandidateRegistrationStep2 = ({
   const {
     register,
     handleSubmit,
+    reset,
     control,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<Step2FormData>({
     resolver: zodResolver(zodSchema),
+    defaultValues: {
+      lastname: "",
+      firstname: "",
+      phone: "",
+      email: "",
+      departmentId: "",
+      notSecteurPublic: false,
+    },
   });
 
   const departmentIdController = useController({
@@ -109,6 +118,10 @@ export const CandidateRegistrationStep2 = ({
       data-testid="candidate-registration-form"
       className="flex flex-col gap-8"
       onSubmit={handleFormSubmit}
+      onReset={(e) => {
+        e.preventDefault();
+        reset();
+      }}
     >
       <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
         <Input
@@ -196,12 +209,13 @@ export const CandidateRegistrationStep2 = ({
         />
       </div>
       <div className="sm:absolute bottom-10 right-0 flex self-end gap-4">
-        <Button priority="tertiary no outline" type="reset">
+        <Button type="reset" priority="tertiary no outline" disabled={!isDirty}>
           Réinitialiser
         </Button>
         <Button
           data-testid="candidate-registration-submit-button"
           type="submit"
+          disabled={isSubmitting || !isDirty}
         >
           Créer mon compte
         </Button>
