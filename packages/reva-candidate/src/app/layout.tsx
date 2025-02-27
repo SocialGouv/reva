@@ -24,6 +24,7 @@ import { CandidacyGuard } from "@/components/candidacy/candidacy.context";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import Script from "next/script";
 import { Toaster } from "react-hot-toast";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +86,9 @@ export default function RootLayout({
 }
 
 const LayoutContent = ({ children }: { children: React.ReactNode }) => {
+  const { isFeatureActive } = useFeatureFlipping();
+  const isCandidateDashboardActive = isFeatureActive("CANDIDATE_DASHBOARD");
+
   return (
     <div className="w-full min-h-screen flex flex-col">
       <SkipLinks
@@ -108,11 +112,19 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
         className="flex flex-col flex-1 lg:bg-candidate"
       >
         <div className="fr-container flex flex-col flex-1">
-          <div
-            className={`fr-container lg:shadow-lifted flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}
-          >
-            {children}
-          </div>
+          {isCandidateDashboardActive ? (
+            <div
+              className={`flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12`}
+            >
+              {children}
+            </div>
+          ) : (
+            <div
+              className={`fr-container lg:shadow-lifted flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}
+            >
+              {children}
+            </div>
+          )}
         </div>
       </main>
 
