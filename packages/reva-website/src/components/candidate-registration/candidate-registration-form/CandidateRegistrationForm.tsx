@@ -82,12 +82,16 @@ export const CandidateRegistrationForm = ({
 
       <div className="lg:flex gap-6 mt-8">
         <CandidateRegistrationSidebar
+          isAapAvailable={certification.isAapAvailable}
           typeAccompagnement={typeAccompagnement}
           certification={certification}
         />
         <div className="flex-1">
           {currentStep === 1 && (
-            <CandidateRegistrationStep1 onSubmit={submitStep1} />
+            <CandidateRegistrationStep1
+              isAapAvailable={certification.isAapAvailable}
+              onSubmit={submitStep1}
+            />
           )}
           {currentStep === 2 && (
             <CandidateRegistrationStep2 onSubmit={submitStep2} />

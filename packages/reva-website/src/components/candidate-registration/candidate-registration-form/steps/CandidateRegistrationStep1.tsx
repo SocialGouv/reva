@@ -2,9 +2,11 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 export const CandidateRegistrationStep1 = ({
+  isAapAvailable,
   onSubmit,
 }: {
   onSubmit: (type: TypeAccompagnement) => void;
+  isAapAvailable: boolean;
 }) => {
   return (
     <>
@@ -18,6 +20,7 @@ export const CandidateRegistrationStep1 = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Tile
           data-testid="tile-accompagne"
+          disabled={!isAapAvailable}
           enlargeLinkOrButton
           title={"Avec un accompagnateur"}
           desc="Vous serez accompagné par un expert de la VAE qui vous aidera à chaque grande étape de votre parcours VAE. Une présence de A à Z, utile pour réaliser sereinement votre parcours."
