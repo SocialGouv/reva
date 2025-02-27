@@ -33,6 +33,7 @@ export const successToast = (
         onClose={() => {
           toast.dismiss();
         }}
+        data-testid="toast-success"
       />
     ),
     { duration: closable ? 10000 : 3000 },
@@ -41,17 +42,32 @@ export const successToast = (
 
 export const errorToast = (message: string) =>
   toast.custom(() => (
-    <Alert severity="error" title={message} className="bg-white" />
+    <Alert
+      severity="error"
+      title={message}
+      className="bg-white"
+      data-testid="toast-error"
+    />
   ));
 
 export const infoToast = (message: string) =>
   toast.custom(() => (
-    <Alert severity="info" title={message} className="bg-white" />
+    <Alert
+      severity="info"
+      title={message}
+      className="bg-white"
+      data-testid="toast-info"
+    />
   ));
 
 export const warningToast = (message: string) =>
   toast.custom(() => (
-    <Alert severity="warning" title={message} className="bg-white" />
+    <Alert
+      severity="warning"
+      title={message}
+      className="bg-white"
+      data-testid="toast-warning"
+    />
   ));
 
 export const graphqlErrorToast = (_error: unknown) => {
