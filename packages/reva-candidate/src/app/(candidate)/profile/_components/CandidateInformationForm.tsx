@@ -206,6 +206,7 @@ const CandidateInformationForm = ({
           resetFormData(candidate as Candidate);
         }}
         className="flex flex-col gap-6"
+        data-testid="candidate-information-form"
       >
         <h6 className="mb-0 text-xl font-bold">Informations civiles</h6>
         <div className="flex gap-8">
@@ -215,10 +216,15 @@ const CandidateInformationForm = ({
             nativeSelectProps={register("gender")}
             state={errors.gender ? "error" : "default"}
             stateRelatedMessage={errors.gender?.message}
+            data-testid="gender-select"
           >
             {genders.map(
               ({ value, label }: { value: string; label: string }) => (
-                <option key={value} value={value}>
+                <option
+                  key={value}
+                  value={value}
+                  data-testid={`gender-option-${value}`}
+                >
                   {label}
                 </option>
               ),
@@ -230,11 +236,13 @@ const CandidateInformationForm = ({
             nativeInputProps={register("lastname")}
             state={errors.lastname ? "error" : "default"}
             stateRelatedMessage={errors.lastname?.message}
+            data-testid="lastname-input"
           />
           <Input
             label="Nom d'usage (optionnel)"
             className="w-full mb-0"
             nativeInputProps={register("givenName")}
+            data-testid="given-name-input"
           />
         </div>
         <div className="flex gap-8">
@@ -244,16 +252,19 @@ const CandidateInformationForm = ({
             nativeInputProps={register("firstname")}
             state={errors.firstname ? "error" : "default"}
             stateRelatedMessage={errors.firstname?.message}
+            data-testid="firstname-input"
           />
           <Input
             label="Prénom 2 (optionnel)"
             className="w-full mb-0"
             nativeInputProps={register("firstname2")}
+            data-testid="firstname2-input"
           />
           <Input
             label="Prénom 3 (optionnel)"
             className="w-full mb-0"
             nativeInputProps={register("firstname3")}
+            data-testid="firstname3-input"
           />
         </div>
         <div className="flex">
@@ -266,6 +277,7 @@ const CandidateInformationForm = ({
             }}
             state={errors.birthdate ? "error" : "default"}
             stateRelatedMessage={errors.birthdate?.message}
+            data-testid="birthdate-input"
           />
         </div>
         <div className="flex gap-8">
@@ -275,6 +287,7 @@ const CandidateInformationForm = ({
             nativeSelectProps={register("country")}
             state={errors.country ? "error" : "default"}
             stateRelatedMessage={errors.country?.message}
+            data-testid="country-select"
           >
             {countries?.map((c) => (
               <option key={c.id} value={c.id}>
@@ -289,6 +302,7 @@ const CandidateInformationForm = ({
             nativeSelectProps={register("birthDepartment")}
             state={errors.birthDepartment ? "error" : "default"}
             stateRelatedMessage={errors.birthDepartment?.message}
+            data-testid="birth-department-select"
           >
             <option value="" disabled hidden>
               Votre département
@@ -306,6 +320,7 @@ const CandidateInformationForm = ({
             nativeInputProps={register("birthCity")}
             state={errors.birthCity ? "error" : "default"}
             stateRelatedMessage={errors.birthCity?.message}
+            data-testid="birth-city-input"
           />
         </div>
         <div className="flex gap-8">
@@ -315,6 +330,7 @@ const CandidateInformationForm = ({
             nativeInputProps={register("nationality")}
             state={errors.nationality ? "error" : "default"}
             stateRelatedMessage={errors.nationality?.message}
+            data-testid="nationality-input"
           />
         </div>
         <h6 className="mb-0 md:mt-4 text-xl font-bold">
@@ -328,6 +344,7 @@ const CandidateInformationForm = ({
               nativeInputProps={register("street")}
               state={errors.street ? "error" : "default"}
               stateRelatedMessage={errors.street?.message}
+              data-testid="street-input"
             />
           ) : (
             <AutocompleteAddress
@@ -336,6 +353,7 @@ const CandidateInformationForm = ({
               nativeInputProps={register("street")}
               state={errors.street ? "error" : "default"}
               stateRelatedMessage={errors.street?.message}
+              data-testid="autocomplete-address-input"
             />
           )}
           <Input
@@ -344,6 +362,7 @@ const CandidateInformationForm = ({
             nativeInputProps={register("addressComplement")}
             state={errors.addressComplement ? "error" : "default"}
             stateRelatedMessage={errors.addressComplement?.message}
+            data-testid="address-complement-input"
           />
         </div>
 
@@ -358,6 +377,7 @@ const CandidateInformationForm = ({
             },
           ]}
           className="mb-0"
+          data-testid="manual-address-checkbox"
         />
 
         <div className="flex gap-8">
@@ -367,6 +387,7 @@ const CandidateInformationForm = ({
             nativeInputProps={register("zip")}
             state={errors.zip ? "error" : "default"}
             stateRelatedMessage={errors.zip?.message}
+            data-testid="zip-input"
           />
           <Input
             label="Ville"
@@ -374,6 +395,7 @@ const CandidateInformationForm = ({
             nativeInputProps={register("city")}
             state={errors.city ? "error" : "default"}
             stateRelatedMessage={errors.city?.message}
+            data-testid="city-input"
           />
         </div>
         <div className="flex gap-8">
@@ -383,6 +405,7 @@ const CandidateInformationForm = ({
             nativeInputProps={register("phone")}
             state={errors.phone ? "error" : "default"}
             stateRelatedMessage={errors.phone?.message}
+            data-testid="phone-input"
           />
           <Input
             label="Email"
@@ -390,9 +413,14 @@ const CandidateInformationForm = ({
             nativeInputProps={register("email")}
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message}
+            data-testid="email-input"
           />
         </div>
-        <FormButtons backUrl="/" formState={formState} />
+        <FormButtons
+          backUrl="/"
+          formState={formState}
+          data-testid="form-buttons"
+        />
       </form>
     </>
   );
