@@ -39,7 +39,7 @@ context("Experiences", () => {
       );
     });
 
-    cy.get('[data-test="project-experience-add"]').click();
+    cy.get('[data-test="form-buttons"] button[type="submit"]').click();
     cy.wait("@add_experience");
     cy.wait("@candidate_getCandidateWithCandidacy");
 
