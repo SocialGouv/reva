@@ -1,30 +1,48 @@
 "use client";
 
+import { format, parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
-
-import { Duration } from "@/graphql/generated/graphql";
 
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { ExperienceDuration } from "@/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { useAddExperience } from "./add-experience.hooks";
 
-const durationOptions: { label: string; value: Duration }[] = [
-  { label: "Moins d'un an", value: "lessThanOneYear" },
-  { label: "Entre 1 et 3 ans", value: "betweenOneAndThreeYears" },
-  { label: "Plus de 3 ans", value: "moreThanThreeYears" },
-  { label: "Plus de 5 ans", value: "moreThanFiveYears" },
-  { label: "Plus de 10 ans", value: "moreThanTenYears" },
+const durationOptions: { label: string; value: ExperienceDuration }[] = [
+  { label: "Moins d'un an", value: ExperienceDuration.lessThanOneYear },
+  {
+    label: "Entre 1 et 3 ans",
+    value: ExperienceDuration.betweenOneAndThreeYears,
+  },
+  { label: "Plus de 3 ans", value: ExperienceDuration.moreThanThreeYears },
+  { label: "Plus de 5 ans", value: ExperienceDuration.moreThanFiveYears },
+  { label: "Plus de 10 ans", value: ExperienceDuration.moreThanTenYears },
 ];
+
+const schema = z.object({
+  title: z.string().min(1, "Ce champ est requis"),
+  startedAt: z.string().min(1, "Ce champ est requis"),
+  duration: z.nativeEnum(ExperienceDuration, {
+    errorMap: () => ({ message: "Ce champ est requis" }),
+  }),
+  description: z.string().min(1, "Ce champ est requis"),
+});
+
+type ExperienceForm = z.infer<typeof schema>;
 
 export default function AddExperience() {
   const router = useRouter();
@@ -32,32 +50,51 @@ export default function AddExperience() {
   const { canEditCandidacy, candidacy, refetch } = useCandidacy();
 
   const { addExperience } = useAddExperience();
+  const { isFeatureActive } = useFeatureFlipping();
+  const isDashboardCandidateActive = isFeatureActive("CANDIDATE_DASHBOARD");
+  const backUrl = isDashboardCandidateActive ? "/experiences" : "/";
 
-  const [title, setTitle] = useState<string>("");
-  const [startedAt, setStartedAt] = useState<number>(
-    new Date("2020-01-31").getTime(),
+  const defaultValues = useMemo(
+    () => ({
+      title: "",
+      startedAt: format(new Date("2020-01-31"), "yyyy-MM-dd"),
+      duration: "" as ExperienceDuration,
+      description: "",
+    }),
+    [],
   );
 
-  const [duration, setDuration] = useState<Duration | undefined>();
-  const [description, setDescription] = useState<string>("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isDirty, isSubmitting, errors },
+  } = useForm<ExperienceForm>({
+    resolver: zodResolver(schema),
+    defaultValues,
+  });
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const resetForm = useCallback(
+    () => reset(defaultValues),
+    [reset, defaultValues],
+  );
 
+  useEffect(resetForm, [resetForm]);
+
+  const onSubmit = async (data: ExperienceForm) => {
     try {
       const response = await addExperience.mutateAsync({
         candidacyId: candidacy.id,
         experience: {
-          title,
-          startedAt,
-          duration: duration!,
-          description,
+          title: data.title,
+          startedAt: parseISO(data.startedAt).getTime(),
+          duration: data.duration,
+          description: data.description,
         },
       });
       if (response) {
         refetch();
-        router.push("/");
+        router.push(backUrl);
       }
     } catch (error) {
       graphqlErrorToast(error);
@@ -73,7 +110,14 @@ export default function AddExperience() {
         d'une activité extra-professionnelle."
       />
 
-      <form onSubmit={onSubmit} className="flex flex-col">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onReset={(e) => {
+          e.preventDefault();
+          resetForm();
+        }}
+        className="flex flex-col"
+      >
         <fieldset>
           <legend>
             <h2 className="mt-2 mb-4 text-lg">Nouvelle expérience</h2>
@@ -82,42 +126,26 @@ export default function AddExperience() {
           <Input
             label="Intitulé du poste ou de l'activité"
             hintText="Exemple : Agent d'entretien ; Service à domicile ; Commercial ; etc."
-            nativeInputProps={{
-              required: true,
-              name: "title",
-              value: title,
-              onChange: (e) => {
-                setTitle(e.target.value);
-              },
-            }}
+            nativeInputProps={register("title")}
+            state={errors.title ? "error" : "default"}
+            stateRelatedMessage={errors.title?.message}
           />
           <div className="flex gap-6">
             <Input
               label="Date de début"
               nativeInputProps={{
-                required: true,
-                name: "startedAt",
                 type: "date",
-                defaultValue: new Date(startedAt).toISOString().slice(0, -14),
-                onChange: (e) => {
-                  const date = new Date(e.target.value);
-                  if (date instanceof Date && !isNaN(date.getTime())) {
-                    setStartedAt(date.getTime());
-                  }
-                },
+                ...register("startedAt"),
               }}
+              state={errors.startedAt ? "error" : "default"}
+              stateRelatedMessage={errors.startedAt?.message}
             />
 
             <Select
               label="Durée"
-              nativeSelectProps={{
-                required: true,
-                name: "duration",
-                value: duration || "",
-                onChange: (e) => {
-                  setDuration(e.target.value as Duration);
-                },
-              }}
+              nativeSelectProps={register("duration")}
+              state={errors.duration ? "error" : "default"}
+              stateRelatedMessage={errors.duration?.message}
             >
               <option value="" disabled hidden>
                 Sélectionner une option
@@ -134,22 +162,22 @@ export default function AddExperience() {
             textArea
             label="Description du poste ou de l'activité extra-professionnelle"
             nativeTextAreaProps={{
-              name: "description",
-              value: description,
-              onChange: (e) => {
-                setDescription(e.target.value);
-              },
               rows: 5,
+              ...register("description"),
             }}
+            state={errors.description ? "error" : "default"}
+            stateRelatedMessage={errors.description?.message}
           />
         </fieldset>
-        <Button
-          className="mt-6 justify-center w-[100%] md:w-fit"
-          data-test={`project-experience-add`}
-          disabled={!canEditCandidacy}
-        >
-          Ajouter votre expérience
-        </Button>
+        <FormButtons
+          backUrl={backUrl}
+          formState={{
+            isDirty,
+            isSubmitting,
+            canSubmit: canEditCandidacy,
+          }}
+          submitButtonLabel="Ajouter votre expérience"
+        />
       </form>
     </PageLayout>
   );
