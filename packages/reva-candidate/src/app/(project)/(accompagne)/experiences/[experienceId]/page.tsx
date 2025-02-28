@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -15,8 +15,8 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
-import { useUpdateExperience } from "./update-experience.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { useUpdateExperience } from "./update-experience.hooks";
 
 const durationOptions: { label: string; value: Duration }[] = [
   { label: "Moins d'un an", value: "lessThanOneYear" },
@@ -76,16 +76,12 @@ export default function UpdateExperience() {
   };
 
   return (
-    <PageLayout
-      className="max-w-2xl"
-      title="Modifier une expérience"
-      displayBackToHome
-    >
+    <PageLayout title="Modifier une expérience" displayBackToHome>
       <h2 className="mt-6 mb-2">Modifier une expérience</h2>
       <FormOptionalFieldsDisclaimer
         className="mb-4"
-        label="Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage ou
-        d’une activité extra-professionnelle."
+        label="Il peut s'agir d'une expérience professionnelle, bénévole, d'un stage ou
+        d'une activité extra-professionnelle."
       />
 
       <form onSubmit={onSubmit} className="flex flex-col">
@@ -95,8 +91,8 @@ export default function UpdateExperience() {
           </legend>
 
           <Input
-            label="Intitulé de l'experience"
-            hintText="Exemples : Entretien de l'espace de vie ; respect des normes d'hygiène ; pilotage d'activité commerciale ; etc."
+            label="Intitulé du poste ou de l'activité"
+            hintText="Exemple : Agent d'entretien ; Service à domicile ; Commercial ; etc."
             nativeInputProps={{
               required: true,
               name: "title",
@@ -106,48 +102,48 @@ export default function UpdateExperience() {
               },
             }}
           />
-          <Input
-            label="Date de début"
-            nativeInputProps={{
-              required: true,
-              name: "startedAt",
-              type: "date",
-              defaultValue: new Date(startedAt).toISOString().slice(0, -14),
-              onChange: (e) => {
-                const date = new Date(e.target.value);
-                if (date instanceof Date && !isNaN(date.getTime())) {
-                  setStartedAt(date.getTime());
-                }
-              },
-            }}
-          />
-          <label htmlFor="duration" className="fr-label"></label>
+          <div className="flex gap-6">
+            <Input
+              label="Date de début"
+              nativeInputProps={{
+                required: true,
+                name: "startedAt",
+                type: "date",
+                defaultValue: new Date(startedAt).toISOString().slice(0, -14),
+                onChange: (e) => {
+                  const date = new Date(e.target.value);
+                  if (date instanceof Date && !isNaN(date.getTime())) {
+                    setStartedAt(date.getTime());
+                  }
+                },
+              }}
+            />
 
-          <Select
-            label="Durée (optionnel)"
-            hint="Pendant combien de temps avez-vous exercé ?"
-            nativeSelectProps={{
-              required: true,
-              name: "duration",
-              value: duration || "",
-              onChange: (e) => {
-                setDuration(e.target.value as Duration);
-              },
-            }}
-          >
-            <option value="" disabled hidden>
-              Sélectionner une option
-            </option>
-            {durationOptions.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
+            <Select
+              label="Durée"
+              nativeSelectProps={{
+                required: true,
+                name: "duration",
+                value: duration || "",
+                onChange: (e) => {
+                  setDuration(e.target.value as Duration);
+                },
+              }}
+            >
+              <option value="" disabled hidden>
+                Sélectionner une option
               </option>
-            ))}
-          </Select>
+              {durationOptions.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </Select>
+          </div>
 
           <Input
             textArea
-            label="Description du poste (optionnel)"
+            label="Description du poste ou de l'activité extra-professionnelle"
             nativeTextAreaProps={{
               name: "description",
               value: description,
