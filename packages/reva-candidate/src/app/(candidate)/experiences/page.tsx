@@ -51,7 +51,7 @@ export default function ExperiencesPage() {
       <hr />
       <div>
         <Link
-          href="/experiences/new"
+          href="/experiences/add"
           className="flex items-center gap-2 mb-6 fr-link w-fit bg-none"
         >
           <span className="fr-icon-add-line fr-icon--sm" />

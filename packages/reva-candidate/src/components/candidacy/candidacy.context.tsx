@@ -267,7 +267,7 @@ export const useCandidacy = () => {
   const isCurrentlySubmitted = candidacyStatus === "PARCOURS_ENVOYE";
 
   const isTrainingConfirmed =
-    candidacy?.candidacyStatuses.findIndex(
+    candidacy?.candidacyStatuses?.findIndex(
       (status) => status.status == "PARCOURS_CONFIRME",
     ) != -1 && !isCurrentlySubmitted;
 
