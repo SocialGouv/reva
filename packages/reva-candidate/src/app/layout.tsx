@@ -1,8 +1,8 @@
 "use client";
 
-import "@/styles/globals.css";
-import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
+import "@/styles/dsfr-theme-tac.min.css";
+import "@/styles/globals.css";
 
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
@@ -21,11 +21,12 @@ import { AuthGuard } from "@/components/auth/auth.guard";
 import { KeycloakProvider } from "@/components/auth/keycloak.context";
 import { CandidacyGuard } from "@/components/candidacy/candidacy.context";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
+import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { Toaster } from "react-hot-toast";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-
+import { WhiteBoxContainer } from "./_components/WhiteBoxContainer";
 const queryClient = new QueryClient();
 
 setDefaultOptions({ locale: fr });
@@ -88,7 +89,7 @@ export default function RootLayout({
 const LayoutContent = ({ children }: { children: React.ReactNode }) => {
   const { isFeatureActive } = useFeatureFlipping();
   const isCandidateDashboardActive = isFeatureActive("CANDIDATE_DASHBOARD");
-
+  const isRootPath = usePathname() === "/";
   return (
     <div className="w-full min-h-screen flex flex-col">
       <SkipLinks
@@ -112,18 +113,14 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
         className="flex flex-col flex-1 lg:bg-candidate"
       >
         <div className="fr-container flex flex-col flex-1">
-          {isCandidateDashboardActive ? (
+          {isCandidateDashboardActive && isRootPath ? (
             <div
               className={`flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12`}
             >
               {children}
             </div>
           ) : (
-            <div
-              className={`fr-container lg:shadow-lifted flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}
-            >
-              {children}
-            </div>
+            <WhiteBoxContainer>{children}</WhiteBoxContainer>
           )}
         </div>
       </main>
