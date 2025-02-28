@@ -1,9 +1,11 @@
 "use client";
 
+// CSS imports order is important for proper styling - DO NOT MODIFY THE ORDER
+// 1. Global styles must be loaded first as they provide base styling
 import "@/styles/globals.css";
-
+// 2. DSFR theme styles provide the core design system components
 import "@/styles/dsfr-theme-tac.min.css";
-
+// 3. Extra theme styles provide additional customizations on top of the core theme
 import "@/styles/dsfr-theme-tac-extra.css";
 
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
