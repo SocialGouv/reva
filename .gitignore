@@ -19,3 +19,4 @@ infra/ftps/data/*
 **/videos
 **/storybook-static
 **/generated
+.cursorignore
