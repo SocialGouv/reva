@@ -91,6 +91,16 @@ export const StructureForm = ({
     replaceCertificationAuthorities,
   ]);
 
+  const selectOrUnselectAllCertificationAuthorities = (selectAll: boolean) => {
+    const newCAs =
+      availableCertificationAuthorities?.map((aca) => ({
+        id: aca.id,
+        label: aca.label,
+        checked: selectAll,
+      })) || [];
+    replaceCertificationAuthorities(newCAs);
+  };
+
   useEffect(() => {
     refreshCertificationAuthoritiesList();
   }, [
@@ -159,13 +169,24 @@ export const StructureForm = ({
           (certificationAuthoritiesFields.length ? (
             <Checkbox
               legend="Gestionnaire(s) des candidatures"
-              options={certificationAuthoritiesFields.map((ca, caIndex) => ({
-                label: ca.label,
-                nativeInputProps: {
-                  key: ca.id,
-                  ...register(`certificationAuthorities.${caIndex}.checked`),
+              options={[
+                {
+                  label: "Tout cocher / décocher",
+                  nativeInputProps: {
+                    onClick: (e) =>
+                      selectOrUnselectAllCertificationAuthorities(
+                        e.currentTarget.checked,
+                      ),
+                  },
                 },
-              }))}
+                ...certificationAuthoritiesFields.map((ca, caIndex) => ({
+                  label: ca.label,
+                  nativeInputProps: {
+                    key: ca.id,
+                    ...register(`certificationAuthorities.${caIndex}.checked`),
+                  },
+                })),
+              ]}
             />
           ) : (
             <NoCertificationAuthorityAlert className="my-4" />
