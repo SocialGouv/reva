@@ -5,6 +5,7 @@ import {
   CandidacyStatusStep,
   FinanceModule,
 } from "@/graphql/generated/graphql";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 export type CandidacyForStatus = {
   id: string;
@@ -35,6 +36,7 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
   const isCandidacyArchived = candidacy.status === "ARCHIVE";
 
   const { isAdmin } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
 
   const candidacyCurrentActiveStatus = useMemo(() => {
     return candidacy.status;
@@ -66,7 +68,9 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     !!isAdmin;
 
   const canSwitchFinanceModuleToHorsPlateforme =
-    isAdmin && candidacy.financeModule === "unifvae";
+    isFeatureActive("ADMIN_FINANCE_AND_TYPE_ACCOMPAGNEMENT_UPDATE_BUTTONS") &&
+    isAdmin &&
+    candidacy.financeModule === "unifvae";
 
   return {
     candidacyCurrentActiveStatus,
