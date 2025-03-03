@@ -1,13 +1,49 @@
 import Image from "next/image";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+import { useCandidacyForDashboard } from "./dashboard.hooks";
+import Tag from "@codegouvfr/react-dsfr/Tag";
+import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
+  const router = useRouter();
+  const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
+
+  const hasSelectedCertification = useMemo(
+    () => candidacy?.certification?.id !== undefined,
+    [candidacy],
+  );
+
+  const hasCompletedGoals = useMemo(
+    () => candidacy?.goals?.length > 0,
+    [candidacy],
+  );
+
+  const hasSelectedOrganism = useMemo(
+    () => candidacy?.organism?.id !== undefined,
+    [candidacy],
+  );
+
+  const canSendCandidacy = useMemo(
+    () =>
+      hasSelectedCertification &&
+      hasCompletedGoals &&
+      hasSelectedOrganism &&
+      !candidacyAlreadySubmitted,
+    [
+      hasSelectedCertification,
+      hasCompletedGoals,
+      hasSelectedOrganism,
+      candidacyAlreadySubmitted,
+    ],
+  );
+
   return (
     <div>
       <p className="text-xl">
-        RNCP XXXXX : Titre ingénieur - Ingénieur diplômé du Conservatoire
-        national des arts et métiers, spécialité Informatique et cybersécurité
+        RNCP {candidacy.certification?.codeRncp} :{" "}
+        {candidacy.certification?.label}
       </p>
       <div className="flex flex-col bg-white lg:flex-row items-center relative text-start border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 pl-0 w-full mt-32 lg:mt-16 lg:h-[110px]">
         <Image
@@ -25,93 +61,187 @@ const Dashboard = () => {
           </p>
         </div>
       </div>
-      <div className="grid grid-flow-row lg:grid-flow-col grid-cols-1 lg:grid-cols-3 grid-rows-2 gap-x-6 gap-y-8 mx-auto mt-20 w-full">
-        <div className="col-span-1 lg:col-span-2 row-span-1 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-          <div className="bg-white p-4 pl-6">
+      <div className="grid grid-flow-row lg:grid-flow-col grid-cols-1 lg:grid-cols-3 grid-rows-2 gap-x-6 gap-y-8 mx-auto mt-20">
+        <div className="col-span-1 lg:col-span-2 row-span-1 h-fit shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
+          <div className="bg-white p-4 pl-6 border-b-2">
             <p className="text-xl font-bold my-0 leading-loose">
               <span className="fr-icon-ball-pen-line" /> Compléter ma
               candidature
             </p>
           </div>
-          <div className="grid grid-cols-3 grid-rows-2">
+          <div
+            className={`grid ${
+              candidacy.typeAccompagnement === "ACCOMPAGNE"
+                ? "md:grid-cols-3 grid-rows-2"
+                : "md:grid-cols-2 grid-rows-1"
+            }`}
+          >
             <Tile
-              start={<Badge severity="success">complété</Badge>}
+              start={
+                <CompleteIncompleteBadge
+                  isComplete={hasSelectedCertification}
+                />
+              }
               title="Diplôme visé"
               small
               linkProps={{
-                href: "#",
+                href: "/set-certification",
               }}
-              imageUrl="/candidat/images/pictograms/conclusion.svg"
+              imageUrl="/candidat/images/pictograms/search.svg"
             />
             <Tile
-              start={<Badge severity="success">complété</Badge>}
-              title="Diplôme visé"
+              start={
+                <Tag small>
+                  {candidacy.typeAccompagnement === "ACCOMPAGNE"
+                    ? "Accompagné"
+                    : "Autonome"}
+                </Tag>
+              }
+              title="Modalité de parcours"
               small
               linkProps={{
-                href: "#",
+                href: "/type-accompagnement",
               }}
-              imageUrl="/candidat/images/pictograms/conclusion.svg"
+              imageUrl="/candidat/images/pictograms/human-cooperation.svg"
             />
-            <Tile
-              start={<Badge severity="success">complété</Badge>}
-              title="Diplôme visé"
-              small
-              linkProps={{
-                href: "#",
-              }}
-              imageUrl="/candidat/images/pictograms/conclusion.svg"
-            />
-            <Tile
-              start={<Badge severity="success">complété</Badge>}
-              title="Diplôme visé"
-              small
-              linkProps={{
-                href: "#",
-              }}
-              imageUrl="/candidat/images/pictograms/conclusion.svg"
-            />
-            <Tile
-              start={<Badge severity="success">complété</Badge>}
-              title="Diplôme visé"
-              small
-              linkProps={{
-                href: "#",
-              }}
-              imageUrl="/candidat/images/pictograms/conclusion.svg"
-            />
-            <Tile
-              start={<Badge severity="success">complété</Badge>}
-              title="Diplôme visé"
-              small
-              linkProps={{
-                href: "#",
-              }}
-              imageUrl="/candidat/images/pictograms/conclusion.svg"
-            />
+            {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
+              <>
+                <Tile
+                  start={
+                    <CompleteIncompleteBadge isComplete={hasCompletedGoals} />
+                  }
+                  title="Objectifs"
+                  small
+                  linkProps={{
+                    href: "/set-goals",
+                  }}
+                  imageUrl="/candidat/images/pictograms/conclusion.svg"
+                />
+                <Tile
+                  start={
+                    <Badge className="bg-[#fee7fc] text-[#6e445a]">
+                      {candidacy.experiences.length} renseignées
+                    </Badge>
+                  }
+                  title="Expériences"
+                  small
+                  linkProps={{
+                    href: "/experiences",
+                  }}
+                  imageUrl="/candidat/images/pictograms/culture.svg"
+                />
+                <Tile
+                  start={
+                    <CompleteIncompleteBadge isComplete={hasSelectedOrganism} />
+                  }
+                  title="Accompagnateur"
+                  small
+                  linkProps={{
+                    href: "/set-organism",
+                  }}
+                  imageUrl="/candidat/images/pictograms/avatar.svg"
+                />
+                <Tile
+                  disabled={!canSendCandidacy}
+                  title="Envoi de la candidature"
+                  desc="Compléter toutes les sections"
+                  small
+                  buttonProps={{
+                    disabled: !canSendCandidacy,
+                    onClick: () => {
+                      router.push("/submit-candidacy");
+                    },
+                  }}
+                  imageUrl="/candidat/images/pictograms/mail-send.svg"
+                />
+              </>
+            )}
           </div>
         </div>
-        <div className="col-span-1 lg:col-span-2 row-span-1">
-          <div className="bg-white p-4 pl-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-            <p className="text-xl font-bold my-0 leading-loose">
-              <span className="fr-icon-ball-pen-line" /> Suivre mon parcours
+        <div className="col-span-1 lg:col-span-2 row-span-1 h-fit shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
+          <div className="bg-white p-4 pl-6 border-b-2">
+            <p className="text-xl font-bold my-0 leading-loose inline-block">
+              <span className="fr-icon-award-line" /> Suivre mon parcours
             </p>
+            <span className="align-middle inline-block ml-2">
+              {candidacyAlreadySubmitted ? (
+                <Badge severity="success">Candidature envoyée</Badge>
+              ) : (
+                <Badge severity="warning">Candidature non envoyée</Badge>
+              )}
+            </span>
+          </div>
+          <div className="grid grid-flow-row md:grid-flow-col grid-rows-1">
+            {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
+              <Tile
+                disabled={
+                  candidacy.status == "PROJET" ||
+                  candidacy.status == "VALIDATION" ||
+                  candidacy.status == "PRISE_EN_CHARGE"
+                }
+                title="Parcours et financement"
+                small
+                buttonProps={{
+                  onClick: () => {
+                    router.push("/validate-training");
+                  },
+                }}
+                imageUrl="/candidat/images/pictograms/in-progress.svg"
+              />
+            )}
+            <Tile
+              disabled={!candidacy.feasibility}
+              title="Dossier de faisabilité"
+              small
+              buttonProps={{
+                onClick: () => {
+                  router.push("/validate-feasibility");
+                },
+              }}
+              imageUrl="/candidat/images/pictograms/contract.svg"
+            />
+            <Tile
+              disabled
+              title="Dossier de validation"
+              small
+              buttonProps={{
+                onClick: () => {
+                  router.push("/dossier-de-validation");
+                },
+              }}
+              imageUrl="/candidat/images/pictograms/binders.svg"
+            />
           </div>
         </div>
-        <div className="col-span-1 row-span-2 row-start-1">
-          <div className="bg-white p-4 pl-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-            <p className="text-xl font-bold my-0 leading-loose">
-              <span className="fr-icon-ball-pen-line" /> Mes prochains
+        <div className="flex flex-col col-span-1 row-span-2 row-start-1 gap-y-8">
+          <div className="bg-white shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] border-b-2">
+            <p className="text-xl font-bold my-0 leading-loose p-4 pl-6 border-b-[3px]">
+              <span className="fr-icon-calendar-2-line" /> Mes prochains
               rendez-vous
             </p>
+            <div className="p-6 border-b-4 border-black mb-0">
+              <p className="mb-0 font-bold">Aucun rendez-vous pour le moment</p>
+            </div>
           </div>
-          <div className="bg-white p-4 pl-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-            <p className="text-xl font-bold my-0 leading-loose">
-              <span className="fr-icon-ball-pen-line" /> Mes contacts
+          <div className="bg-white shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] border-b-2">
+            <p className="text-xl font-bold my-0 leading-loose p-4 pl-6 border-b-[3px]">
+              <span className="fr-icon-team-line" /> Mes contacts
             </p>
+            <div className="p-6 border-b-4 border-black mb-0">
+              <p className="mb-0 font-bold">Aucun contact pour le moment</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  );
+};
+
+const CompleteIncompleteBadge = ({ isComplete }: { isComplete: boolean }) => {
+  return (
+    <Badge severity={isComplete ? "success" : "warning"}>
+      {isComplete ? "complété" : "à compléter"}
+    </Badge>
   );
 };
 
