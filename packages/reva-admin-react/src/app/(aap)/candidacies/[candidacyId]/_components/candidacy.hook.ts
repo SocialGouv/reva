@@ -1,7 +1,10 @@
 import { useAuth } from "@/components/auth/auth";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { useMemo } from "react";
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+import {
+  CandidacyStatusStep,
+  FinanceModule,
+} from "@/graphql/generated/graphql";
 
 export type CandidacyForStatus = {
   id: string;
@@ -24,6 +27,7 @@ export type CandidacyForStatus = {
       }
     | null
     | undefined;
+  financeModule?: FinanceModule;
 };
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
@@ -61,6 +65,9 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     !isCandidacyArchivedAndNotReoriented &&
     !!isAdmin;
 
+  const canSwitchFinanceModuleToHorsPlateforme =
+    isAdmin && candidacy.financeModule === "unifvae";
+
   return {
     candidacyCurrentActiveStatus,
     isCandidacyDroppedOut,
@@ -68,5 +75,6 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     canBeRestored,
     canDroput,
     canCancelDropout,
+    canSwitchFinanceModuleToHorsPlateforme,
   };
 };
