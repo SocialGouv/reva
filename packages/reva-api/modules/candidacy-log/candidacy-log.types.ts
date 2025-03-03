@@ -1,3 +1,5 @@
+import { FinanceModule } from "@prisma/client";
+
 export type CandidacyLogUserProfile =
   | "ADMIN"
   | "CANDIDAT"
@@ -113,6 +115,10 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "ADMIN_CUSTOM_ACTION";
       details: { message: string };
+    }
+  | {
+      eventType: "FINANCE_MODULE_UPDATED";
+      details: { financeModule: FinanceModule };
     };
 
 export type CandidacyLog = {

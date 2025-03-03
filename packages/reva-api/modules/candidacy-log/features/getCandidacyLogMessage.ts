@@ -212,6 +212,8 @@ export const getCandidacyLogMessage = ({
       return details?.message
         ? log("Action exceptionnelle effectuée", details.message)
         : log("Action exceptionnelle effectuée");
+    case "FINANCE_MODULE_UPDATED":
+      return log("Module de financement mis à jour.", details.financeModule);
 
     default:
       return log("Événement inconnu");

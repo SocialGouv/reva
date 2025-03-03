@@ -283,6 +283,11 @@ export const createFeasibility = async ({
     await updateCandidacyFinanceModule({
       candidacyId,
       financeModule: "hors_plateforme",
+      userInfo: {
+        userKeycloakId,
+        userEmail,
+        userRoles,
+      },
     });
   }
 
