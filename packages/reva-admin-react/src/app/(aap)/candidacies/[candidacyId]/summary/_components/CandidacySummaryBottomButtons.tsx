@@ -4,6 +4,21 @@ import {
   useCandidacyStatus,
 } from "../../_components/candidacy.hook";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { graphql } from "@/graphql/generated";
+import { graphqlErrorToast } from "@/components/toast/toast";
+
+const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`
+  mutation updateCandidacyFinanceModuleToHorsPlateforme($candidacyId: UUID!) {
+    candidacy_updateFinanceModule(
+      candidacyId: $candidacyId
+      financeModule: hors_plateforme
+    ) {
+      id
+    }
+  }
+`);
 
 export const CandidacySummaryBottomButtons = ({
   candidacyId,
@@ -19,6 +34,35 @@ export const CandidacySummaryBottomButtons = ({
     canCancelDropout,
     canSwitchFinanceModuleToHorsPlateforme,
   } = useCandidacyStatus(candidacy);
+
+  const { graphqlClient } = useGraphQlClient();
+
+  const queryClient = useQueryClient();
+
+  const updateCandidacyFinanceModuleToHorsPlateforme = useMutation({
+    mutationKey: [candidacyId],
+    mutationFn: ({ candidacyId }: { candidacyId: string }) =>
+      graphqlClient.request(
+        updateCandidacyFinanceModuleToHorsPlateformeMutation,
+        { candidacyId },
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [candidacyId],
+      });
+    },
+  });
+
+  const handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick =
+    async () => {
+      try {
+        await updateCandidacyFinanceModuleToHorsPlateforme.mutateAsync({
+          candidacyId,
+        });
+      } catch (e) {
+        graphqlErrorToast(e);
+      }
+    };
 
   const confirmFinanceModuleSwitchToHorsPlateformeModal = createModal({
     id: "confirm-finance-module-switch-to-hors-plateforme",
@@ -43,6 +87,8 @@ export const CandidacySummaryBottomButtons = ({
           {
             priority: "primary",
             children: "Confirmer",
+            onClick:
+              handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick,
           },
         ]}
       >
