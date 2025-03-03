@@ -342,4 +342,8 @@ type Mutation {
     candidacyId: UUID!
     dropOutConfirmed: Boolean!
   ): Candidacy!
+  candidacy_updateFinanceModule(
+    candidacyId: UUID!
+    financeModule: FinanceModule!
+  ): Candidacy!
 }

@@ -1,5 +1,9 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import { CandidacyTypeAccompagnement, CandidateTypology } from "@prisma/client";
+import {
+  CandidacyTypeAccompagnement,
+  CandidateTypology,
+  FinanceModule,
+} from "@prisma/client";
 import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
@@ -62,6 +66,7 @@ import { logCandidacyEvent } from "./logCandidacyEvent";
 import { resolversSecurityMap } from "./security/security";
 import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
 import { selectOrganismForCandidacyAsAdmin } from "./features/selectOrganismForCandidacyAsAdmin";
+import { updateCandidacyFinanceModule } from "./features/updateCandidacyFinanceModule";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -659,6 +664,22 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) =>
       updateCandidateCandidacyDropoutDecision({
+        ...input,
+        userInfo: {
+          userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+          userEmail: context.auth.userInfo?.email,
+        },
+      }),
+    candidacy_updateFinanceModule: async (
+      _parent: unknown,
+      input: {
+        candidacyId: string;
+        financeModule: FinanceModule;
+      },
+      context: GraphqlContext,
+    ) =>
+      updateCandidacyFinanceModule({
         ...input,
         userInfo: {
           userKeycloakId: context.auth.userInfo?.sub,
