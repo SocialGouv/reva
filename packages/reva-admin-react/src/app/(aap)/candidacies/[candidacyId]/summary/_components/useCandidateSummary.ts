@@ -7,6 +7,7 @@ const getCandidacyById = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       financeModule
+      typeAccompagnement
       candidacyDropOut {
         createdAt
         proofReceivedByAdmin

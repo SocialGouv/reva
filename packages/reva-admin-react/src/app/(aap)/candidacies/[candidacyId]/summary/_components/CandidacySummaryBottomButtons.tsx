@@ -20,6 +20,17 @@ const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`
   }
 `);
 
+const updateCandidacyTypeAccompagnementToAutonomeMutation = graphql(`
+  mutation updateCandidacyTypeAccompagnementToAutonome($candidacyId: UUID!) {
+    candidacy_updateTypeAccompagnement(
+      candidacyId: $candidacyId
+      typeAccompagnement: AUTONOME
+    ) {
+      id
+    }
+  }
+`);
+
 export const CandidacySummaryBottomButtons = ({
   candidacyId,
   candidacy,
@@ -33,6 +44,7 @@ export const CandidacySummaryBottomButtons = ({
     canDroput,
     canCancelDropout,
     canSwitchFinanceModuleToHorsPlateforme,
+    canSwitchTypeAccompagnementToAutonome,
   } = useCandidacyStatus(candidacy);
 
   const { graphqlClient } = useGraphQlClient();
@@ -53,10 +65,35 @@ export const CandidacySummaryBottomButtons = ({
     },
   });
 
+  const updateCandidacyTypeAccompagnementToAutonome = useMutation({
+    mutationKey: [candidacyId],
+    mutationFn: ({ candidacyId }: { candidacyId: string }) =>
+      graphqlClient.request(
+        updateCandidacyTypeAccompagnementToAutonomeMutation,
+        { candidacyId },
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [candidacyId],
+      });
+    },
+  });
+
   const handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick =
     async () => {
       try {
         await updateCandidacyFinanceModuleToHorsPlateforme.mutateAsync({
+          candidacyId,
+        });
+      } catch (e) {
+        graphqlErrorToast(e);
+      }
+    };
+
+  const handleUpdateCandidacyTypeAccompagnementToAutonomeButtonClick =
+    async () => {
+      try {
+        await updateCandidacyTypeAccompagnementToAutonome.mutateAsync({
           candidacyId,
         });
       } catch (e) {
@@ -69,6 +106,11 @@ export const CandidacySummaryBottomButtons = ({
     isOpenedByDefault: false,
   });
 
+  const confirmTypeAccompagnementSwitchToAutonomeModal = createModal({
+    id: "confirm-type-accompagnement-switch-to-autonome",
+    isOpenedByDefault: false,
+  });
+
   return (
     <div className="mt-6 flex flex-col md:flex-row gap-4">
       <confirmFinanceModuleSwitchToHorsPlateformeModal.Component
@@ -78,7 +120,7 @@ export const CandidacySummaryBottomButtons = ({
             Cette action est irréversible
           </div>
         }
-        className="[&_.fr-btn--close]:hidden"
+        size="large"
         buttons={[
           {
             priority: "secondary",
@@ -99,6 +141,42 @@ export const CandidacySummaryBottomButtons = ({
           </p>
         </div>
       </confirmFinanceModuleSwitchToHorsPlateformeModal.Component>
+
+      <confirmTypeAccompagnementSwitchToAutonomeModal.Component
+        title={
+          <div className="flex gap-2">
+            <span className="fr-icon-warning-fill" />
+            Cette action est irréversible
+          </div>
+        }
+        size="large"
+        buttons={[
+          {
+            priority: "secondary",
+            children: "Annuler",
+          },
+          {
+            priority: "primary",
+            children: "Confirmer",
+            onClick:
+              handleUpdateCandidacyTypeAccompagnementToAutonomeButtonClick,
+          },
+        ]}
+      >
+        <div className="flex flex-col">
+          <p>Le changement de modalité effacera les sections suivantes :</p>
+          <ul className="mt-0 mb-4">
+            <li>Objectifs</li>
+            <li>Expériences</li>
+            <li>Choix de l’accompagnateur</li>
+          </ul>
+          <p>
+            Si une décision a déjà été prise sur le dossier de faisabilité, elle
+            sera consultable dans la section concernée.
+          </p>
+          <p>Êtes vous sûr de vouloir continuer ?</p>
+        </div>
+      </confirmTypeAccompagnementSwitchToAutonomeModal.Component>
       {canBeArchived && (
         <Button
           priority="secondary"
@@ -149,6 +227,14 @@ export const CandidacySummaryBottomButtons = ({
           onClick={confirmFinanceModuleSwitchToHorsPlateformeModal.open}
         >
           Passage en hors financement
+        </Button>
+      )}
+      {canSwitchTypeAccompagnementToAutonome && (
+        <Button
+          priority="secondary"
+          onClick={confirmTypeAccompagnementSwitchToAutonomeModal.open}
+        >
+          Passage en autonome
         </Button>
       )}
     </div>

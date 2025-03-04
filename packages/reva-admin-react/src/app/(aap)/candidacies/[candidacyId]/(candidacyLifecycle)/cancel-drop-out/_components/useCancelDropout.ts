@@ -9,6 +9,8 @@ const getCandidacyById = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       status
+      financeModule
+      typeAccompagnement
       candidacyDropOut {
         dropOutReason {
           label

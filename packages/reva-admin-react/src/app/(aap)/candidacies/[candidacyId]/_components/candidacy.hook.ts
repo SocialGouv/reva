@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import {
   CandidacyStatusStep,
   FinanceModule,
+  TypeAccompagnement,
 } from "@/graphql/generated/graphql";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
@@ -28,7 +29,8 @@ export type CandidacyForStatus = {
       }
     | null
     | undefined;
-  financeModule?: FinanceModule;
+  financeModule: FinanceModule;
+  typeAccompagnement: TypeAccompagnement;
 };
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
@@ -72,6 +74,12 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     isAdmin &&
     candidacy.financeModule === "unifvae";
 
+  const canSwitchTypeAccompagnementToAutonome =
+    isFeatureActive("ADMIN_FINANCE_AND_TYPE_ACCOMPAGNEMENT_UPDATE_BUTTONS") &&
+    isAdmin &&
+    candidacy.financeModule === "hors_plateforme" &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE";
+
   return {
     candidacyCurrentActiveStatus,
     isCandidacyDroppedOut,
@@ -80,5 +88,6 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     canDroput,
     canCancelDropout,
     canSwitchFinanceModuleToHorsPlateforme,
+    canSwitchTypeAccompagnementToAutonome,
   };
 };
