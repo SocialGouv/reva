@@ -18,7 +18,7 @@ const durationToString: {
 };
 
 export default function ExperiencesPage() {
-  const { candidacy } = useExperiences();
+  const { candidacy, canEditCandidacy } = useExperiences();
 
   const experiences = candidacy?.experiences;
 
@@ -48,16 +48,20 @@ export default function ExperiencesPage() {
           />
         ))}
       </div>
-      <hr />
-      <div>
-        <Link
-          href="/experiences/add"
-          className="flex items-center gap-2 mb-6 fr-link w-fit bg-none"
-        >
-          <span className="fr-icon-add-line fr-icon--sm" />
-          <span className="text-sm">Ajouter une expérience</span>
-        </Link>
-      </div>
+      {canEditCandidacy && (
+        <>
+          <hr />
+          <div>
+            <Link
+              href="/experiences/add"
+              className="flex items-center gap-2 mb-6 fr-link w-fit bg-none"
+            >
+              <span className="fr-icon-add-line fr-icon--sm" />
+              <span className="text-sm">Ajouter une expérience</span>
+            </Link>
+          </div>
+        </>
+      )}
       <Button priority="secondary" linkProps={{ href: "/" }}>
         Retour
       </Button>
