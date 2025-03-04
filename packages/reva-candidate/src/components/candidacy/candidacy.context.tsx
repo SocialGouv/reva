@@ -6,6 +6,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 
 import { PageLayout } from "@/layouts/page.layout";
 
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
 import { Loader } from "../legacy/atoms/Icons";
 
 const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
@@ -271,14 +272,10 @@ export const useCandidacy = () => {
       (status) => status.status == "PARCOURS_CONFIRME",
     ) != -1 && !isCurrentlySubmitted;
 
-  // Un candidat peut éditer son dossier de candidature tant qu'il n'a pas confirmé son parcours
-  // et que la candidature n'est pas abandonnée
-  const canEditCandidacy =
-    (candidacyStatus === "PROJET" ||
-      candidacyStatus === "VALIDATION" ||
-      candidacyStatus === "PRISE_EN_CHARGE" ||
-      candidacyStatus === "PARCOURS_ENVOYE") &&
-    !candidacy.candidacyDropOut;
+  const canEditCandidacy = candidateCanEditCandidacy({
+    candidacyStatus,
+    candidacyDropOut: !!candidacy.candidacyDropOut,
+  });
 
   const candidacyAlreadySubmitted = candidacyStatus !== "PROJET";
 
