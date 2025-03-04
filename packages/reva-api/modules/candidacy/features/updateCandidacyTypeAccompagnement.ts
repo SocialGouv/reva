@@ -4,13 +4,16 @@ import { getCandidacyById } from "./getCandidacyById";
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "../../candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
+import { getActiveFeasibilityByCandidacyid } from "../../feasibility/feasibility.features";
 
 export const updateCandidacyTypeAccompagnement = async ({
   candidacyId,
   typeAccompagnement,
+  userIsAdmin,
 }: {
   candidacyId: string;
   typeAccompagnement: CandidacyTypeAccompagnement;
+  userIsAdmin: boolean;
 }): Promise<Candidacy> => {
   const candidacy = await getCandidacyById({ candidacyId });
 
@@ -18,15 +21,38 @@ export const updateCandidacyTypeAccompagnement = async ({
     throw new Error("Candidature non trouvée");
   }
 
-  if (
-    candidacy.typeAccompagnement === "ACCOMPAGNE" &&
-    isCandidacyStatusEqualOrAboveGivenStatus(candidacy.status)(
-      "PARCOURS_CONFIRME",
-    )
-  ) {
-    throw new Error(
-      "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
-    );
+  if (userIsAdmin) {
+    //admin can change the type of accompniement from ACCOMPAGNE to AUTONOME with more leaway than a candidate (and some additional restrictions too)
+    if (candidacy.typeAccompagnement === "ACCOMPAGNE") {
+      if (candidacy.financeModule !== "hors_plateforme") {
+        throw new Error(
+          "Impossible de modifier le type d'accompagnement si l'utilisateur n'est pas hors financement",
+        );
+      }
+      if (candidacy.feasibilityFormat === "DEMATERIALIZED") {
+        const activeFeasibility = await getActiveFeasibilityByCandidacyid({
+          candidacyId,
+        });
+
+        if (!activeFeasibility || activeFeasibility.decision !== "ADMISSIBLE") {
+          throw new Error(
+            "Impossible de modifier le type d'accompagnement d'un DF dématérialisé si la recevabilité n'est pas valide",
+          );
+        }
+      }
+    }
+  } else {
+    //user is a candidate and has more restrictions when changing the type of accompaniment
+    if (
+      candidacy.typeAccompagnement === "ACCOMPAGNE" &&
+      isCandidacyStatusEqualOrAboveGivenStatus(candidacy.status)(
+        "PARCOURS_CONFIRME",
+      )
+    ) {
+      throw new Error(
+        "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
+      );
+    }
   }
 
   if (

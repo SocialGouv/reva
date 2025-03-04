@@ -636,6 +636,7 @@ const unsafeResolvers = {
       const result = await updateCandidacyTypeAccompagnement({
         candidacyId,
         typeAccompagnement,
+        userIsAdmin: context.auth.hasRole("admin"),
       });
       await logCandidacyAuditEvent({
         candidacyId,

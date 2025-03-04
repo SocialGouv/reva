@@ -1,3 +1,6 @@
+import { hasRole } from "../../shared/security/middlewares/hasRole";
+import { isCandidateOwnerOfCandidacy } from "../../shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
+import { whenHasRole } from "../../shared/security/middlewares/whenHasRole";
 import {
   defaultSecurity,
   isAdmin,
@@ -10,6 +13,11 @@ import {
   isOwnerOrCanManageCandidacy,
 } from "../../shared/security/presets";
 import { canAccessCandidacy } from "./canAccessCandidacy.security";
+
+const isAdminOrOwnerOfCandidacy = [
+  hasRole(["admin", "candidate"]),
+  whenHasRole("candidate", isCandidateOwnerOfCandidacy),
+];
 
 export const resolversSecurityMap = {
   // Sécurité par défaut
@@ -33,7 +41,7 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_selectOrganism": isOwnerOfCandidacy,
   "Mutation.candidacy_selectOrganismAsAdmin": isAdmin,
   "Mutation.candidacy_submitCandidacy": isOwnerOfCandidacy,
-  "Mutation.candidacy_updateTypeAccompagnement": isOwnerOfCandidacy,
+  "Mutation.candidacy_updateTypeAccompagnement": isAdminOrOwnerOfCandidacy,
 
   // Mutation manager
   "Mutation.candidacy_takeOver": isCandidacyCompanion,
