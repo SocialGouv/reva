@@ -12,7 +12,6 @@ import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Certification } from "@/graphql/generated/graphql";
-import { isUUID } from "@/utils";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import request from "graphql-request";
 import Head from "next/head";
@@ -124,11 +123,10 @@ const OrientationCandidatPage = () => {
               <fieldset className="mb-4 max-w-lg">
                 <CertificateAutocompleteDsfr
                   defaultLabel={defaultAutocompleteLabel}
-                  onSubmit={({ label, value }) => {
-                    const certificationId = isUUID(value) ? value : null;
+                  onSubmit={({ label }) => {
                     router.push({
-                      pathname: "/inscription-candidat",
-                      query: { certificationId, searchText: label },
+                      pathname: "/espace-candidat/recherche",
+                      query: { searchText: label },
                     });
                   }}
                   onOptionSelection={(o) =>
@@ -151,8 +149,9 @@ const OrientationCandidatPage = () => {
                     <Notice
                       className="basis-1/2"
                       title={
-                        <span>
-                          <p className="mb-4">
+                        <>
+                          <br />
+                          <span>
                             Ce diplôme peut être financé par votre{" "}
                             <Link
                               href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/"
@@ -162,8 +161,10 @@ const OrientationCandidatPage = () => {
                             </Link>{" "}
                             (CPF). Vous pouvez dès à présent consulter vos
                             droits sur la plateforme Mon Compte Formation.
-                          </p>
-                          <p>
+                          </span>
+                          <br />
+                          <br />
+                          <span>
                             Article utile :{" "}
                             <Link
                               href="https://vae.gouv.fr/savoir-plus/articles/financer-son-accompagnement-vae/"
@@ -171,8 +172,8 @@ const OrientationCandidatPage = () => {
                             >
                               Comment financer un parcours VAE ?
                             </Link>
-                          </p>
-                        </span>
+                          </span>
+                        </>
                       }
                     />
                   </div>

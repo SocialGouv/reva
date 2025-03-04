@@ -31,8 +31,6 @@ export const AutocompleteDsfr = ({
 }) => {
   const [options, setOptions] = useState<AutocompleteOption[]>([]);
 
-  const [, setInputElement] = useState<HTMLInputElement | null>(null);
-
   const [selectedOption, setSelectedOption] =
     useState<AutocompleteOption | null>(null);
 
@@ -50,13 +48,9 @@ export const AutocompleteDsfr = ({
   const handleKeyDownOnOptions = (e: React.KeyboardEvent) => {
     switch (e.key) {
       case "Enter":
-        console.log("enter key down");
         if (!searchText) return;
         e.preventDefault();
         handleSubmit(searchText);
-        break;
-      case "Escape":
-        setDisplayOptions(false);
         break;
       case "ArrowDown":
         e.preventDefault();
@@ -78,14 +72,11 @@ export const AutocompleteDsfr = ({
           setSelectedOption(nextOption);
         }
         break;
-      case "Tab":
-        setDisplayOptions(false);
-        break;
     }
   };
 
   const handleOptionSelection = (newSelectedOption: AutocompleteOption) => {
-    setSelectedOption(newSelectedOption);
+    setSelectedOption(null);
     onOptionSelection?.(newSelectedOption);
     setSearchText("");
   };
@@ -94,6 +85,7 @@ export const AutocompleteDsfr = ({
   useEffect(() => {
     const updateOptions = async () => {
       setStatus("SEARCHING");
+      setSelectedOption(null);
       if (debouncedSearchText) {
         const newOptions = await searchFunction(debouncedSearchText);
         setOptions(newOptions);
@@ -111,12 +103,13 @@ export const AutocompleteDsfr = ({
       label: searchText,
       value: searchText,
     };
+
     if (selectedOption) {
       handleOptionSelection(selectedCertification);
       return;
     }
+
     setOptions([]);
-    setSelectedOption(null);
     onSubmit?.(selectedCertification);
   };
 
@@ -138,13 +131,13 @@ export const AutocompleteDsfr = ({
             return (
               <>
                 <input
-                  ref={setInputElement}
                   onKeyDown={handleKeyDownOnOptions}
                   onChange={(event) => updateSearchText(event.target.value)}
                   placeholder={placeholder}
                   value={searchText || defaultValue}
                   onBlur={() => {
-                    setTimeout(() => setDisplayOptions(false), 200);
+                    setDisplayOptions(false);
+                    setSelectedOption(null);
                   }}
                   onFocus={() => setDisplayOptions(true)}
                   onClick={() => setDisplayOptions(true)}
@@ -168,7 +161,9 @@ export const AutocompleteDsfr = ({
                       return (
                         <div
                           key={option.value}
-                          onClick={() => handleOptionSelection(option)}
+                          onMouseDown={() => {
+                            handleOptionSelection(option);
+                          }}
                           className={`flex whitespace-normal cursor-pointer select-none py-2 ${
                             isSelected ? "bg-dsfrGray-contrast" : ""
                           }`}
@@ -204,13 +199,17 @@ export const AutocompleteDsfr = ({
                       />
                       <b>{searchText}</b>{" "}
                       <Link
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
                         className="text-dsfrBlue-franceSun"
                         href={{
                           pathname: "/espace-candidat/recherche",
                           query: { searchText },
                         }}
                       >
-                        Voir tous les résultats{" "}
+                        Voir tous les résultats
                         <span className="fr-icon--sm fr-icon-arrow-right-line" />
                       </Link>
                     </div>
