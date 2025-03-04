@@ -48,6 +48,7 @@ export default function AddExperience() {
   const router = useRouter();
 
   const { canEditCandidacy, candidacy, refetch } = useCandidacy();
+  const inputShouldBeDisabled = !canEditCandidacy;
 
   const { addExperience } = useAddExperience();
   const { isFeatureActive } = useFeatureFlipping();
@@ -129,6 +130,7 @@ export default function AddExperience() {
             nativeInputProps={register("title")}
             state={errors.title ? "error" : "default"}
             stateRelatedMessage={errors.title?.message}
+            disabled={inputShouldBeDisabled}
           />
           <div className="flex gap-6">
             <Input
@@ -139,6 +141,7 @@ export default function AddExperience() {
               }}
               state={errors.startedAt ? "error" : "default"}
               stateRelatedMessage={errors.startedAt?.message}
+              disabled={inputShouldBeDisabled}
             />
 
             <Select
@@ -146,6 +149,7 @@ export default function AddExperience() {
               nativeSelectProps={register("duration")}
               state={errors.duration ? "error" : "default"}
               stateRelatedMessage={errors.duration?.message}
+              disabled={inputShouldBeDisabled}
             >
               <option value="" disabled hidden>
                 Sélectionner une option
@@ -167,6 +171,7 @@ export default function AddExperience() {
             }}
             state={errors.description ? "error" : "default"}
             stateRelatedMessage={errors.description?.message}
+            disabled={inputShouldBeDisabled}
           />
         </fieldset>
         <FormButtons
