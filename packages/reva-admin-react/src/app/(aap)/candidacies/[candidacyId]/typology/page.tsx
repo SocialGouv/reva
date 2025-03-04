@@ -90,7 +90,8 @@ const TypologyPage = () => {
         {(typology === "SALARIE_PRIVE" ||
           typology === "DEMANDEUR_EMPLOI" ||
           typology === "TRAVAILLEUR_NON_SALARIE" ||
-          typology === "TITULAIRE_MANDAT_ELECTIF") && (
+          typology === "TITULAIRE_MANDAT_ELECTIF" ||
+          typology === "AIDANTS_FAMILIAUX_AGRICOLES") && (
           <>
             <span className="font-bold">
               Convention collective sélectionnée
@@ -141,7 +142,6 @@ const TypologyPage = () => {
 
         {(typology === "BENEVOLE" ||
           typology === "AIDANTS_FAMILIAUX" ||
-          typology === "AIDANTS_FAMILIAUX_AGRICOLES" ||
           typology === "RETRAITE" ||
           typology === "AUTRE") && <Button className="ml-auto">Suivant</Button>}
       </form>
