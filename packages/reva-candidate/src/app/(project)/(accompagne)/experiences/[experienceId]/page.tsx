@@ -56,6 +56,7 @@ export default function UpdateExperience() {
   const { isFeatureActive } = useFeatureFlipping();
   const isDashboardCandidateActive = isFeatureActive("CANDIDATE_DASHBOARD");
   const backUrl = isDashboardCandidateActive ? "/experiences" : "/";
+  const inputShouldBeDisabled = !canEditCandidacy;
 
   const experience = candidacy.experiences.find(
     (experience) => experience.id == experienceId,
@@ -139,6 +140,7 @@ export default function UpdateExperience() {
             nativeInputProps={register("title")}
             state={errors.title ? "error" : "default"}
             stateRelatedMessage={errors.title?.message}
+            disabled={inputShouldBeDisabled}
           />
           <div className="flex gap-6">
             <Input
@@ -149,6 +151,7 @@ export default function UpdateExperience() {
               }}
               state={errors.startedAt ? "error" : "default"}
               stateRelatedMessage={errors.startedAt?.message}
+              disabled={inputShouldBeDisabled}
             />
 
             <Select
@@ -156,6 +159,7 @@ export default function UpdateExperience() {
               nativeSelectProps={register("duration")}
               state={errors.duration ? "error" : "default"}
               stateRelatedMessage={errors.duration?.message}
+              disabled={inputShouldBeDisabled}
             >
               <option value="" disabled hidden>
                 Sélectionner une option
@@ -177,6 +181,7 @@ export default function UpdateExperience() {
             }}
             state={errors.description ? "error" : "default"}
             stateRelatedMessage={errors.description?.message}
+            disabled={inputShouldBeDisabled}
           />
         </fieldset>
         <FormButtons
