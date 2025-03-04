@@ -23,6 +23,11 @@ const Dashboard = () => {
     [candidacy],
   );
 
+  const hasCompletedExperience = useMemo(
+    () => candidacy?.experiences?.length > 0,
+    [candidacy],
+  );
+
   const hasSelectedOrganism = useMemo(
     () => candidacy?.organism?.id !== undefined,
     [candidacy],
@@ -33,6 +38,7 @@ const Dashboard = () => {
       hasSelectedCertification &&
       hasCompletedGoals &&
       hasSelectedOrganism &&
+      hasCompletedExperience &&
       candidate.firstname &&
       candidate.lastname &&
       candidate.birthdate &&
@@ -46,6 +52,7 @@ const Dashboard = () => {
       hasSelectedCertification,
       hasCompletedGoals,
       hasSelectedOrganism,
+      hasCompletedExperience,
       candidacyAlreadySubmitted,
       candidate,
     ],
@@ -141,10 +148,16 @@ const Dashboard = () => {
                 <Tile
                   start={
                     <Badge className="bg-[#fee7fc] text-[#6e445a]">
-                      {candidacy.experiences.length}{" "}
-                      {candidacy.experiences.length === 1
-                        ? "renseignée"
-                        : "renseignées"}
+                      {candidacy.experiences.length === 0 ? (
+                        <Badge severity="warning">À compléter</Badge>
+                      ) : (
+                        <>
+                          {candidacy.experiences.length}{" "}
+                          {candidacy.experiences.length === 1
+                            ? "renseignée"
+                            : "renseignées"}
+                        </>
+                      )}
                     </Badge>
                   }
                   title="Expériences"
