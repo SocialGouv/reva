@@ -57,7 +57,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
             },
           },
         },
-        take: 25,
+        take: 100,
       });
     for (const candidacy of candidaciesToSendEmailIsCaduciteSoonWarningToCandidate) {
       await sendCandidacyCaduciteSoonWarningEmailToCandidate({
@@ -118,7 +118,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
             },
           },
         },
-        take: 25,
+        take: 100,
       });
     for (const candidacy of candidaciesToSendEmailIsCaduciteSoonWarningToAap) {
       const aapEmail =
@@ -183,7 +183,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
             },
           },
         },
-        take: 25,
+        take: 100,
       });
 
     for (const candidacy of candidaciesToSendEmailIsCaduqueToAap) {
