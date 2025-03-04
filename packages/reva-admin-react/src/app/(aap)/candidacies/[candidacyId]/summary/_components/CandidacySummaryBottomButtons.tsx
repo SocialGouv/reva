@@ -223,7 +223,7 @@ export const CandidacySummaryBottomButtons = ({
           priority="secondary"
           onClick={confirmFinanceModuleSwitchToHorsPlateformeModal.open}
         >
-          Passage en hors financement
+          Passer en hors financement
         </Button>
       )}
       {canSwitchTypeAccompagnementToAutonome && (
@@ -231,7 +231,7 @@ export const CandidacySummaryBottomButtons = ({
           priority="secondary"
           onClick={confirmTypeAccompagnementSwitchToAutonomeModal.open}
         >
-          Passage en autonome
+          Passer en autonome
         </Button>
       )}
     </div>
