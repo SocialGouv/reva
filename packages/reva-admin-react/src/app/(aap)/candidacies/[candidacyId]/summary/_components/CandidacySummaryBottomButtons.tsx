@@ -164,12 +164,9 @@ export const CandidacySummaryBottomButtons = ({
         ]}
       >
         <div className="flex flex-col">
-          <p>Le changement de modalité effacera les sections suivantes :</p>
-          <ul className="mt-0 mb-4">
-            <li>Objectifs</li>
-            <li>Expériences</li>
-            <li>Choix de l’accompagnateur</li>
-          </ul>
+          <p>
+            Le changement de modalité effacera le choix de l’accompagnateur.
+          </p>
           <p>
             Si une décision a déjà été prise sur le dossier de faisabilité, elle
             sera consultable dans la section concernée.

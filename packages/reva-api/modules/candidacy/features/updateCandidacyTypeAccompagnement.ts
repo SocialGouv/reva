@@ -22,25 +22,35 @@ export const updateCandidacyTypeAccompagnement = async ({
   }
 
   if (userIsAdmin) {
-    //admin can change the type of accompniement from ACCOMPAGNE to AUTONOME with more leaway than a candidate (and some additional restrictions too)
-    if (candidacy.typeAccompagnement === "ACCOMPAGNE") {
-      if (candidacy.financeModule !== "hors_plateforme") {
+    //admin can change the type of accompniement from ACCOMPAGNE to AUTONOME with more leaway than a candidate
+    if (typeAccompagnement !== "AUTONOME") {
+      throw new Error(
+        "Impossible de modifier le type d'accompagnement. Seul le passage de ACCOMPAGNE à AUTONOME est autorisé",
+      );
+    }
+    if (candidacy.financeModule !== "hors_plateforme") {
+      throw new Error(
+        "Impossible de modifier le type d'accompagnement si l'utilisateur n'est pas hors financement",
+      );
+    }
+    if (candidacy.feasibilityFormat === "DEMATERIALIZED") {
+      const activeFeasibility = await getActiveFeasibilityByCandidacyid({
+        candidacyId,
+      });
+
+      if (!activeFeasibility || activeFeasibility.decision !== "ADMISSIBLE") {
         throw new Error(
-          "Impossible de modifier le type d'accompagnement si l'utilisateur n'est pas hors financement",
+          "Impossible de modifier le type d'accompagnement d'un DF dématérialisé si la recevabilité n'est pas valide",
         );
       }
-      if (candidacy.feasibilityFormat === "DEMATERIALIZED") {
-        const activeFeasibility = await getActiveFeasibilityByCandidacyid({
-          candidacyId,
-        });
-
-        if (!activeFeasibility || activeFeasibility.decision !== "ADMISSIBLE") {
-          throw new Error(
-            "Impossible de modifier le type d'accompagnement d'un DF dématérialisé si la recevabilité n'est pas valide",
-          );
-        }
-      }
     }
+    return prismaClient.candidacy.update({
+      where: { id: candidacyId },
+      data: {
+        typeAccompagnement: "AUTONOME",
+        organism: { disconnect: true },
+      },
+    });
   } else {
     //user is a candidate and has more restrictions when changing the type of accompaniment
     if (
