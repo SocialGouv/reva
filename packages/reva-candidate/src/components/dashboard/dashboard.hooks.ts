@@ -5,6 +5,20 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   query candidate_getCandidateWithCandidacyForDashboard {
     candidate_getCandidateWithCandidacy {
+      phone
+      email
+      birthDepartment {
+        id
+      }
+      birthCity
+      city
+      zip
+      street
+      birthdate
+      firstname
+      givenName
+      gender
+      nationality
       candidacy {
         id
         typeAccompagnement
@@ -39,6 +53,10 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           nomPublic
           emailContact
           telephone
+          adresseNumeroEtNomDeRue
+          adresseInformationsComplementaires
+          adresseCodePostal
+          adresseVille
         }
         activeDossierDeValidation {
           id

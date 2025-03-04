@@ -5,10 +5,13 @@ import { useCandidacyForDashboard } from "./dashboard.hooks";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
+import IconTitleWidget from "./widgets/IconTitleWidget";
+import { format, isAfter } from "date-fns";
 
 const Dashboard = () => {
   const router = useRouter();
-  const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
+  const { candidate, candidacy, candidacyAlreadySubmitted } =
+    useCandidacyForDashboard();
 
   const hasSelectedCertification = useMemo(
     () => candidacy?.certification?.id !== undefined,
@@ -30,12 +33,21 @@ const Dashboard = () => {
       hasSelectedCertification &&
       hasCompletedGoals &&
       hasSelectedOrganism &&
+      candidate.firstname &&
+      candidate.givenName &&
+      candidate.birthdate &&
+      candidate.birthCity &&
+      candidate.birthDepartment &&
+      candidate.nationality &&
+      candidate.phone &&
+      candidate.email &&
       !candidacyAlreadySubmitted,
     [
       hasSelectedCertification,
       hasCompletedGoals,
       hasSelectedOrganism,
       candidacyAlreadySubmitted,
+      candidate,
     ],
   );
 
@@ -120,7 +132,10 @@ const Dashboard = () => {
                 <Tile
                   start={
                     <Badge className="bg-[#fee7fc] text-[#6e445a]">
-                      {candidacy.experiences.length} renseignées
+                      {candidacy.experiences.length}{" "}
+                      {candidacy.experiences.length === 1
+                        ? "renseignée"
+                        : "renseignées"}
                     </Badge>
                   }
                   title="Expériences"
@@ -214,23 +229,61 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex flex-col col-span-1 row-span-2 row-start-1 gap-y-8">
-          <div className="bg-white shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] border-b-2">
-            <p className="text-xl font-bold my-0 leading-loose p-4 pl-6 border-b-[3px]">
-              <span className="fr-icon-calendar-2-line" /> Mes prochains
-              rendez-vous
-            </p>
-            <div className="p-6 border-b-4 border-black mb-0">
-              <p className="mb-0 font-bold">Aucun rendez-vous pour le moment</p>
-            </div>
-          </div>
-          <div className="bg-white shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] border-b-2">
-            <p className="text-xl font-bold my-0 leading-loose p-4 pl-6 border-b-[3px]">
-              <span className="fr-icon-team-line" /> Mes contacts
-            </p>
-            <div className="p-6 border-b-4 border-black mb-0">
+          <IconTitleWidget
+            icon="fr-icon-calendar-2-line"
+            title="Mes prochains
+              rendez-vous"
+          >
+            {candidacy.firstAppointmentOccuredAt &&
+            isAfter(candidacy.firstAppointmentOccuredAt, new Date()) ? (
+              <>
+                <Badge severity="info" small>
+                  Rendez-vous pédagogique
+                </Badge>
+                <p className="mb-0 mt-2 font-bold">
+                  {format(
+                    candidacy.firstAppointmentOccuredAt,
+                    "dd/MM/yyyy - HH:mm",
+                  )}
+                </p>
+              </>
+            ) : (
+              <p className="mb-0 font-bold">
+                Pas de rendez-vous pour le moment
+              </p>
+            )}
+          </IconTitleWidget>
+          <IconTitleWidget icon="fr-icon-team-line" title="Mes contacts">
+            {candidacy.organism ? (
+              <div className="font-bold">
+                <p className="mb-1">
+                  {candidacy.organism.nomPublic || candidacy.organism.label}
+                </p>
+                {candidacy.organism.adresseVille && (
+                  <p className="mb-0 text-sm leading-normal text-dsfrGray-700">
+                    {candidacy.organism.adresseNumeroEtNomDeRue} <br />
+                    {candidacy.organism.adresseInformationsComplementaires && (
+                      <>
+                        {candidacy.organism.adresseInformationsComplementaires}
+                        <br />
+                      </>
+                    )}
+                    {candidacy.organism.adresseCodePostal}{" "}
+                    {candidacy.organism.adresseVille}
+                  </p>
+                )}
+                <p className="mb-0 text-sm leading-normal text-dsfrGray-700">
+                  {candidacy.organism.emailContact ||
+                    candidacy.organism.contactAdministrativeEmail}
+                  <br />
+                  {candidacy.organism.telephone ||
+                    candidacy.organism.contactAdministrativePhone}
+                </p>
+              </div>
+            ) : (
               <p className="mb-0 font-bold">Aucun contact pour le moment</p>
-            </div>
-          </div>
+            )}
+          </IconTitleWidget>
         </div>
       </div>
     </div>
