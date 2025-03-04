@@ -34,7 +34,7 @@ const Dashboard = () => {
       hasCompletedGoals &&
       hasSelectedOrganism &&
       candidate.firstname &&
-      candidate.givenName &&
+      candidate.lastname &&
       candidate.birthdate &&
       candidate.birthCity &&
       candidate.birthDepartment &&
@@ -67,9 +67,18 @@ const Dashboard = () => {
         />
         <div className="pt-8 mt-[-120px] lg:mt-0 lg:p-0 text-justify">
           <p className="my-0 pl-8">
-            Pour envoyer votre candidature, vous devez avoir complété, vos
-            informations dans <b>“Mon profil”</b> et toutes les catégories de la
-            section <b>“Compléter ma candidature”</b>.
+            {canSendCandidacy ? (
+              <>
+                Votre candidature est correctement complétée ? Vous pouvez
+                l’envoyer sans plus tarder !{" "}
+              </>
+            ) : (
+              <>
+                Pour envoyer votre candidature, vous devez avoir complété, vos
+                informations dans <b>“Mon profil”</b> et toutes les catégories
+                de la section <b>“Compléter ma candidature”</b>.
+              </>
+            )}
           </p>
         </div>
       </div>

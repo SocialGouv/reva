@@ -16,7 +16,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       street
       birthdate
       firstname
-      givenName
+      lastname
       gender
       nationality
       candidacy {
