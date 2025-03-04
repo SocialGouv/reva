@@ -274,7 +274,7 @@ export const useCandidacy = () => {
 
   const canEditCandidacy = candidateCanEditCandidacy({
     candidacyStatus,
-    candidacyDropOut: !!candidacy.candidacyDropOut,
+    candidacyDropOut: !!candidacy?.candidacyDropOut,
   });
 
   const candidacyAlreadySubmitted = candidacyStatus !== "PROJET";
