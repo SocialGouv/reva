@@ -1,4 +1,5 @@
 import Button from "@codegouvfr/react-dsfr/Button";
+import Tile from "@codegouvfr/react-dsfr/Tile";
 import {
   CandidacyForStatus,
   useCandidacyStatus,
@@ -8,6 +9,8 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { graphql } from "@/graphql/generated";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { useAuth } from "@/components/auth/auth";
+import { ComponentProps } from "react";
 
 const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`
   mutation updateCandidacyFinanceModuleToHorsPlateforme($candidacyId: UUID!) {
@@ -47,6 +50,58 @@ export const CandidacySummaryBottomButtons = ({
     canSwitchTypeAccompagnementToAutonome,
   } = useCandidacyStatus(candidacy);
 
+  const { isAdmin } = useAuth();
+
+  return (
+    <div className="mt-8 flex flex-col">
+      {canDroput && (
+        <Button
+          priority="secondary"
+          className="ml-auto"
+          linkProps={{
+            href: `/candidacies/${candidacyId}/drop-out`,
+            target: "_self",
+          }}
+        >
+          Déclarer l'abandon du candidat
+        </Button>
+      )}
+
+      {isAdmin && (
+        <AdminActionsZone
+          candidacyId={candidacyId}
+          canBeArchived={canBeArchived}
+          canBeRestored={canBeRestored}
+          canCancelDropout={canCancelDropout}
+          canSwitchFinanceModuleToHorsPlateforme={
+            canSwitchFinanceModuleToHorsPlateforme
+          }
+          canSwitchTypeAccompagnementToAutonome={
+            canSwitchTypeAccompagnementToAutonome
+          }
+        />
+      )}
+    </div>
+  );
+};
+
+const AdminActionsZone = ({
+  candidacyId,
+  canBeArchived,
+  canBeRestored,
+  canCancelDropout,
+  canSwitchFinanceModuleToHorsPlateforme,
+  canSwitchTypeAccompagnementToAutonome,
+  className,
+}: {
+  candidacyId: string;
+  canBeArchived: boolean;
+  canBeRestored: boolean;
+  canCancelDropout: boolean;
+  canSwitchFinanceModuleToHorsPlateforme: boolean;
+  canSwitchTypeAccompagnementToAutonome: boolean;
+  className?: string;
+}) => {
   const { graphqlClient } = useGraphQlClient();
 
   const queryClient = useQueryClient();
@@ -112,7 +167,7 @@ export const CandidacySummaryBottomButtons = ({
   });
 
   return (
-    <div className="mt-6 flex flex-col md:flex-row gap-4">
+    <div className={`flex flex-col ${className || ""}`}>
       <confirmFinanceModuleSwitchToHorsPlateformeModal.Component
         title={
           <div className="flex gap-2">
@@ -174,66 +229,83 @@ export const CandidacySummaryBottomButtons = ({
           <p>Êtes vous sûr de vouloir continuer ?</p>
         </div>
       </confirmTypeAccompagnementSwitchToAutonomeModal.Component>
-      {canBeArchived && (
-        <Button
-          priority="secondary"
-          linkProps={{
-            href: `/candidacies/${candidacyId}/archive`,
-            target: "_self",
-          }}
-        >
-          Supprimer la candidature
-        </Button>
-      )}
-      {canBeRestored && (
-        <Button
-          priority="secondary"
-          linkProps={{
-            href: `/candidacies/${candidacyId}/unarchive`,
-            target: "_self",
-          }}
-        >
-          Restaurer la candidature
-        </Button>
-      )}
-      {canDroput && (
-        <Button
-          priority="secondary"
-          linkProps={{
-            href: `/candidacies/${candidacyId}/drop-out`,
-            target: "_self",
-          }}
-        >
-          Déclarer l'abandon du candidat
-        </Button>
-      )}
+
+      <div className="bg-white border border-b-2 mt-8">
+        <p className="text-xl font-bold my-0 leading-loose p-4 pl-6">
+          <span className="fr-icon-user-star-line fr-icon--lg mr-2" />
+          Actions admin FVAE
+        </p>
+      </div>
+
       {canCancelDropout && (
-        <Button
-          priority="secondary"
+        <AdminAction
+          title="Annuler l'abandon du candidat"
           linkProps={{
             href: `/candidacies/${candidacyId}/cancel-drop-out`,
             target: "_self",
           }}
-        >
-          Annuler l'abandon du candidat
-        </Button>
+        />
       )}
-      {canSwitchFinanceModuleToHorsPlateforme && (
-        <Button
-          priority="secondary"
-          onClick={confirmFinanceModuleSwitchToHorsPlateformeModal.open}
-        >
-          Passer en hors financement
-        </Button>
+      <AdminAction
+        title="Passer en hors financement"
+        buttonProps={{
+          onClick: confirmFinanceModuleSwitchToHorsPlateformeModal.open,
+        }}
+        disabled={!canSwitchFinanceModuleToHorsPlateforme}
+      />
+      <AdminAction
+        title="Passer en autonomie"
+        buttonProps={{
+          onClick: confirmTypeAccompagnementSwitchToAutonomeModal.open,
+        }}
+        disabled={!canSwitchTypeAccompagnementToAutonome}
+        disabledDescription="Disponible pour les candidatures en hors financement"
+      />
+
+      {canBeArchived && (
+        <AdminAction
+          title="Archiver la candidature"
+          linkProps={{
+            href: `/candidacies/${candidacyId}/archive`,
+            target: "_self",
+          }}
+        />
       )}
-      {canSwitchTypeAccompagnementToAutonome && (
-        <Button
-          priority="secondary"
-          onClick={confirmTypeAccompagnementSwitchToAutonomeModal.open}
-        >
-          Passer en autonome
-        </Button>
+      {canBeRestored && (
+        <AdminAction
+          title="Restaurer la candidature"
+          linkProps={{
+            href: `/candidacies/${candidacyId}/unarchive`,
+            target: "_self",
+          }}
+        />
       )}
     </div>
   );
 };
+
+const AdminAction = ({
+  title,
+  linkProps,
+  buttonProps,
+  disabled,
+  disabledDescription,
+}: {
+  title: string;
+  linkProps?: ComponentProps<typeof Tile>["linkProps"];
+  buttonProps?: ComponentProps<typeof Tile>["buttonProps"];
+  disabled?: boolean;
+  disabledDescription?: string;
+}) => (
+  <Tile
+    title={title}
+    enlargeLinkOrButton
+    orientation="horizontal"
+    small
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- linkProps type is not correctly inferred
+    linkProps={disabled ? undefined : (linkProps as any)}
+    buttonProps={buttonProps || {}}
+    disabled={disabled}
+    desc={disabled ? disabledDescription : undefined}
+  />
+);
