@@ -49,6 +49,7 @@
             "contactEmail": "revatrash@gmail.com"
           }
         ],
+        "feasibilityFormat": "UPLOADED_PDF",
         "feasibility": {
           "feasibilityFileSentAt": 1728482555946,
           "decision": "PENDING",

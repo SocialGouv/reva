@@ -43,7 +43,11 @@ export const ProjectTimeline = ({ className }: TimelineProps) => {
       gotJuryResult={!!jury?.result}
     />
   ) : (
-    <AutonomeTimeline className={className} gotJuryResult={!!jury?.result} />
+    <AutonomeTimeline
+      className={className}
+      gotJuryResult={!!jury?.result}
+      feasibilityFormat={feasibilityFormat}
+    />
   );
 };
 
@@ -94,13 +98,23 @@ const AccompagneTimeline = ({
 const AutonomeTimeline = ({
   className,
   gotJuryResult,
-}: TimelineProps & { gotJuryResult: boolean }) => {
+  feasibilityFormat,
+}: TimelineProps & {
+  gotJuryResult: boolean;
+  feasibilityFormat: FeasibilityFormat;
+}) => {
   return (
     <Timeline className={className} data-test="autonome-project-timeline">
       <ContactTimelineElement />
       <CertificationTimelineElement />
       <TypeAccompagnementTimelineElement />
-      <SelfServiceFeasibilityFileTimelineElement />
+
+      {feasibilityFormat === "UPLOADED_PDF" ? (
+        <SelfServiceFeasibilityFileTimelineElement />
+      ) : (
+        <FeasibilityDematTimelineElement />
+      )}
+
       <DossierDeValidationTimelineElement />
       <JuryTimelineElement />
       {gotJuryResult && <ProjectEndedTimelineElement />}

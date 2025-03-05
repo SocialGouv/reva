@@ -35,6 +35,7 @@
         "additionalHourCount": null,
         "basicSkills": [],
         "mandatoryTrainings": [],
+        "feasibilityFormat": "UPLOADED_PDF",
         "certificationAuthorities": [
           {
             "id": "cert1",

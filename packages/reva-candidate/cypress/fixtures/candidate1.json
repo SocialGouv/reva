@@ -28,7 +28,8 @@
         "collectiveHourCount": null,
         "additionalHourCount": null,
         "basicSkills": [],
-        "mandatoryTrainings": []
+        "mandatoryTrainings": [],
+        "feasibilityFormat": "UPLOADED_PDF"
       }
     }
   }
