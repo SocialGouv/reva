@@ -11,6 +11,7 @@ import { graphql } from "@/graphql/generated";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { useAuth } from "@/components/auth/auth";
 import { ComponentProps } from "react";
+import { FinanceModule, TypeAccompagnement } from "@/graphql/generated/graphql";
 
 const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`
   mutation updateCandidacyFinanceModuleToHorsPlateforme($candidacyId: UUID!) {
@@ -39,7 +40,10 @@ export const CandidacySummaryBottomButtons = ({
   candidacy,
 }: {
   candidacyId: string;
-  candidacy: CandidacyForStatus;
+  candidacy: CandidacyForStatus & {
+    financeModule: FinanceModule;
+    typeAccompagnement: TypeAccompagnement;
+  };
 }) => {
   const {
     canBeArchived,
@@ -79,6 +83,8 @@ export const CandidacySummaryBottomButtons = ({
           canSwitchTypeAccompagnementToAutonome={
             canSwitchTypeAccompagnementToAutonome
           }
+          isAutonome={candidacy.typeAccompagnement === "AUTONOME"}
+          isHorsPlateforme={candidacy.financeModule === "hors_plateforme"}
         />
       )}
     </div>
@@ -92,6 +98,8 @@ const AdminActionsZone = ({
   canCancelDropout,
   canSwitchFinanceModuleToHorsPlateforme,
   canSwitchTypeAccompagnementToAutonome,
+  isAutonome,
+  isHorsPlateforme,
   className,
 }: {
   candidacyId: string;
@@ -100,6 +108,8 @@ const AdminActionsZone = ({
   canCancelDropout: boolean;
   canSwitchFinanceModuleToHorsPlateforme: boolean;
   canSwitchTypeAccompagnementToAutonome: boolean;
+  isAutonome: boolean;
+  isHorsPlateforme: boolean;
   className?: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
@@ -246,21 +256,31 @@ const AdminActionsZone = ({
           }}
         />
       )}
-      <AdminAction
-        title="Passer en hors financement"
-        buttonProps={{
-          onClick: confirmFinanceModuleSwitchToHorsPlateformeModal.open,
-        }}
-        disabled={!canSwitchFinanceModuleToHorsPlateforme}
-      />
-      <AdminAction
-        title="Passer en autonomie"
-        buttonProps={{
-          onClick: confirmTypeAccompagnementSwitchToAutonomeModal.open,
-        }}
-        disabled={!canSwitchTypeAccompagnementToAutonome}
-        disabledDescription="Disponible pour les candidatures en hors financement"
-      />
+
+      {isHorsPlateforme ? (
+        <AdminStaticTile title="Parcours hors financement" />
+      ) : (
+        <AdminAction
+          title="Passer en hors financement"
+          buttonProps={{
+            onClick: confirmFinanceModuleSwitchToHorsPlateformeModal.open,
+          }}
+          disabled={!canSwitchFinanceModuleToHorsPlateforme}
+        />
+      )}
+
+      {isAutonome ? (
+        <AdminStaticTile title="Parcours en autonomie" />
+      ) : (
+        <AdminAction
+          title="Passer en autonomie"
+          buttonProps={{
+            onClick: confirmTypeAccompagnementSwitchToAutonomeModal.open,
+          }}
+          disabled={!canSwitchTypeAccompagnementToAutonome}
+          disabledDescription="Disponible pour les candidatures en hors financement"
+        />
+      )}
 
       {canBeArchived && (
         <AdminAction
@@ -308,4 +328,8 @@ const AdminAction = ({
     disabled={disabled}
     desc={disabled ? disabledDescription : undefined}
   />
+);
+
+const AdminStaticTile = ({ title }: { title: string }) => (
+  <Tile title={title} orientation="horizontal" small disabled />
 );
