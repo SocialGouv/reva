@@ -235,7 +235,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
         "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
       );
     }
-    // If the candidate has dropped out for less than 6 months and no proof of dropout has been received by the france vae admin
+    // If the candidate has dropped out for less than 4 months and no proof of dropout has been received by the france vae admin
     // and the candidate has not confirmed his dropout, we prevent the payment request creation
     if (
       candidacy.candidacyDropOut &&
@@ -243,11 +243,11 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       !candidacy.candidacyDropOut.dropOutConfirmedByCandidate &&
       isAfter(
         candidacy.candidacyDropOut.createdAt,
-        sub(new Date(), { months: 6 }),
+        sub(new Date(), { months: 4 }),
       )
     ) {
       throw new Error(
-        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
+        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 4 mois après la mise en abandon du candidat.",
       );
     }
   }

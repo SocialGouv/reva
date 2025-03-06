@@ -52,22 +52,22 @@ function visitPayment({
   );
 }
 
-const sixMonthsAgo = sub(new Date(), { months: 6 });
-const sixMonthsAgoMinusOneMinute = sub(new Date(), { months: 6, minutes: -1 });
+const fourMonthsAgo = sub(new Date(), { months: 4 });
+const fourMonthsAgoMinusOneMinute = sub(new Date(), { months: 4, minutes: -1 });
 
 context("Payment form", () => {
-  it("display a 'not available' alert when dropped-out less than 6 month ago", function () {
+  it("display a 'not available' alert when dropped-out less than 4 month ago", function () {
     visitPayment({
-      dropOutCreationDate: sixMonthsAgoMinusOneMinute,
+      dropOutCreationDate: fourMonthsAgoMinusOneMinute,
       proofReceivedByAdmin: false,
     });
     cy.wait("@getCandidacyForPaymentRequestUnifvaeInvoicePage");
     cy.get('[data-test="payment-request-not-available"]').should("exist");
   });
 
-  it("do not display any alert when dropped-out 6 month ago", function () {
+  it("do not display any alert when dropped-out 4 month ago", function () {
     visitPayment({
-      dropOutCreationDate: sixMonthsAgo,
+      dropOutCreationDate: fourMonthsAgo,
       proofReceivedByAdmin: false,
     });
     cy.wait("@getCandidacyForPaymentRequestUnifvaeInvoicePage");
@@ -84,9 +84,9 @@ context("Payment form", () => {
     cy.get('[data-test="payment-request-not-available"]').should("not.exist");
   });
 
-  it("do not display any alert when dropped-out less than 6 month ago but with proof received by admin", function () {
+  it("do not display any alert when dropped-out less than 4 month ago but with proof received by admin", function () {
     visitPayment({
-      dropOutCreationDate: sixMonthsAgoMinusOneMinute,
+      dropOutCreationDate: fourMonthsAgoMinusOneMinute,
       proofReceivedByAdmin: true,
     });
     cy.wait("@getCandidacyForPaymentRequestUnifvaeInvoicePage");

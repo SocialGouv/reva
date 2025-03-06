@@ -190,14 +190,14 @@ const PaymentRequestUniFvaeInvoicePage = () => {
         !candidacy.candidacyDropOut.dropOutConfirmedByCandidate &&
         isAfter(
           candidacy?.candidacyDropOut?.createdAt,
-          sub(new Date(), { months: 6 }),
+          sub(new Date(), { months: 4 }),
         ) && (
           <Alert
             data-test="payment-request-not-available"
             className="my-4"
             severity="error"
             title="La demande de paiement n’est pas disponible"
-            description="Vous y aurez accès 6 mois après la mise en abandon du candidat ou si le candidat valide l'abandon depuis son espace."
+            description="Vous y aurez accès 4 mois après la mise en abandon du candidat ou si le candidat valide l'abandon depuis son espace."
           />
         )}
       <Alert

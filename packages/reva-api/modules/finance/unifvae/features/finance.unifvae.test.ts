@@ -3,8 +3,8 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../../prisma/client";
 
 import {
-  CANDIDACY_DROP_OUT_SIX_MONTHS_AGO,
-  CANDIDACY_DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
+  CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
+  CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_ONE_MINUTE,
   FUNDING_REQUEST_SAMPLE,
   FUNDING_REQUEST_SAMPLE_FORMATTED_OUTPUT,
   PAYMENT_REQUEST,
@@ -45,7 +45,7 @@ const injectGraphqlPaymentRequestCreation = async ({
     },
   });
 
-const dropOutCandidacySixMonthsAgoMinusOneMinute = async ({
+const dropOutCandidacyFourMonthsAgoMinusOneMinute = async ({
   proofReceivedByAdmin,
   dropOutConfirmedByCandidate,
   candidacyId,
@@ -59,7 +59,7 @@ const dropOutCandidacySixMonthsAgoMinusOneMinute = async ({
     data: {
       candidacyDropOut: {
         create: {
-          ...CANDIDACY_DROP_OUT_SIX_MONTHS_AGO_MINUS_ONE_MINUTE,
+          ...CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_ONE_MINUTE,
           dropOutReason: { connect: { label: "Autre" } },
           proofReceivedByAdmin,
           dropOutConfirmedByCandidate,
@@ -224,7 +224,7 @@ test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidac
   );
 });
 
-test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 6 months ago then succeed after 6 months", async () => {
+test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 4 months ago then succeed after 4 months", async () => {
   const candidacyInput = await createCandidacyHelper({
     candidacyArgs: {
       financeModule: "unifvae",
@@ -238,7 +238,7 @@ test("should fail to create paymentRequestUnifvae when candidacy was drop out le
   const candidacy = feasibility.candidacy;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
 
-  await dropOutCandidacySixMonthsAgoMinusOneMinute({
+  await dropOutCandidacyFourMonthsAgoMinusOneMinute({
     proofReceivedByAdmin: false,
     candidacyId: candidacy.id,
   });
@@ -252,14 +252,14 @@ test("should fail to create paymentRequestUnifvae when candidacy was drop out le
   const obj = resp.json();
   expect(obj).toHaveProperty("errors");
   expect(obj.errors[0].message).toBe(
-    "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
+    "La demande de paiement n’est pas encore disponible. Vous y aurez accès 4 mois après la mise en abandon du candidat.",
   );
 
   await prismaClient.candidacy.update({
     where: { id: candidacy.id },
     data: {
       candidacyDropOut: {
-        update: CANDIDACY_DROP_OUT_SIX_MONTHS_AGO,
+        update: CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
       },
     },
   });
@@ -287,7 +287,7 @@ test("should allow the creation of paymentRequestUnifvae when candidacy was drop
   const candidacy = feasibility.candidacy;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
 
-  await dropOutCandidacySixMonthsAgoMinusOneMinute({
+  await dropOutCandidacyFourMonthsAgoMinusOneMinute({
     proofReceivedByAdmin: true,
     candidacyId: candidacy.id,
   });
@@ -314,7 +314,7 @@ test("should allow the creation of paymentRequestUnifvae when candidacy was drop
   const candidacy = feasibility.candidacy;
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
 
-  await dropOutCandidacySixMonthsAgoMinusOneMinute({
+  await dropOutCandidacyFourMonthsAgoMinusOneMinute({
     dropOutConfirmedByCandidate: true,
     candidacyId: candidacy.id,
   });
