@@ -120,19 +120,19 @@ export const getCandidacyLogMessage = ({
       );
 
     case "FEASIBILITY_SENT":
-      return log("Dossier de faisabilité envoyé");
+      return log("Dossier de recevabilité envoyé");
 
     case "FEASIBILITY_MARKED_AS_COMPLETE":
-      return log("Dossier de faisabilité complet");
+      return log("Dossier de recevabilité complet");
 
     case "FEASIBILITY_MARKED_AS_INCOMPLETE":
-      return log("Dossier de faisabilité marqué incomplet");
+      return log("Dossier de recevabilité marqué incomplet");
 
     case "FEASIBILITY_REJECTED":
-      return log("Dossier de faisabilité rejeté");
+      return log("Dossier de recevabilité rejeté");
 
     case "FEASIBILITY_VALIDATED":
-      return log("Dossier de faisabilité validé");
+      return log("Dossier de recevabilité validé");
 
     case "FUNDING_REQUEST_CREATED":
       return log("Demande de financement envoyée");
@@ -187,14 +187,14 @@ export const getCandidacyLogMessage = ({
 
     case "DFF_SENT_TO_CANDIDATE":
       return log(
-        "Demande de validation du dossier de faisabilité envoyée au candidat",
+        "Demande de validation du dossier de recevabilité envoyée au candidat",
       );
 
     case "DFF_VALIDATED_BY_CANDIDATE":
-      return log("Dossier de faisabilité validé");
+      return log("Dossier de recevabilité validé");
 
     case "DFF_SENT_TO_CERTIFICATION_AUTHORITY":
-      return log("Dossier de faisabilité envoyé au certificateur");
+      return log("Dossier de recevabilité envoyé au certificateur");
 
     case "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE":
       return log("Abandon de la candidature confirmé");
