@@ -113,7 +113,7 @@ const Dashboard = () => {
               title="Diplôme visé"
               small
               linkProps={{
-                href: "/set-certification",
+                href: "/search-certification",
               }}
               imageUrl="/candidat/images/pictograms/search.svg"
             />
