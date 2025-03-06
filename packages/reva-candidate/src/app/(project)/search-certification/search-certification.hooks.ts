@@ -1,4 +1,8 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useSuspenseQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
 
@@ -45,6 +49,51 @@ const UPDATE_CERTIFICATION = graphql(`
   }
 `);
 
+const GET_CANDIDACY_CERTIFICATION = graphql(`
+  query candidate_getCertificationForSearchPage {
+    candidate_getCandidateWithCandidacy {
+      candidacy {
+        id
+        status
+        candidacyDropOut {
+          createdAt
+        }
+        certification {
+          id
+          label
+          codeRncp
+        }
+      }
+    }
+  }
+`);
+
+export const useCandidacyForCertificationSearch = () => {
+  const { graphqlClient } = useGraphQlClient();
+
+  const candidateWithCandidacy = useSuspenseQuery({
+    queryKey: ["dashboard"],
+    queryFn: () => graphqlClient.request(GET_CANDIDACY_CERTIFICATION),
+  });
+
+  const candidacy =
+    candidateWithCandidacy?.data?.candidate_getCandidateWithCandidacy
+      ?.candidacy;
+  const candidacyStatus = candidacy?.status;
+
+  const canEditCandidacy =
+    (candidacyStatus === "PROJET" ||
+      candidacyStatus === "VALIDATION" ||
+      candidacyStatus === "PRISE_EN_CHARGE" ||
+      candidacyStatus === "PARCOURS_ENVOYE") &&
+    !candidacy?.candidacyDropOut;
+
+  return {
+    candidacy,
+    canEditCandidacy,
+  };
+};
+
 export const useSetCertification = ({
   searchText,
   currentPage,
@@ -53,11 +102,12 @@ export const useSetCertification = ({
   currentPage: number;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const { invalidateQueries } = useQueryClient();
 
   const RECORDS_PER_PAGE = 10;
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
 
-  const searchCertificationsForCandidate = useQuery({
+  const searchCertificationsForCandidate = useSuspenseQuery({
     queryKey: ["searchCertificationsForCandidate", searchText, currentPage],
     queryFn: () =>
       graphqlClient.request(SEARCH_CERTIFICATIONS_FOR_CANDIDATE, {
@@ -70,6 +120,9 @@ export const useSetCertification = ({
 
   const updateCertification = useMutation({
     mutationKey: ["candidacy_certification_updateCertification"],
+    onSuccess: () => {
+      invalidateQueries({ queryKey: ["dashboard"] });
+    },
     mutationFn: ({
       candidacyId,
       certificationId,

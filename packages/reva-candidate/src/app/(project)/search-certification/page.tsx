@@ -12,12 +12,13 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 
-import { useSetCertification } from "./set-certification.hooks";
+import {
+  useCandidacyForCertificationSearch,
+  useSetCertification,
+} from "./search-certification.hooks";
 import Link from "next/link";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
@@ -33,7 +34,7 @@ export default function SetCertification() {
   const searchFilter = searchParams.get("search") || "";
   const currentPage = page ? Number.parseInt(page) : 1;
 
-  const { canEditCandidacy, candidate, refetch } = useCandidacy();
+  const { canEditCandidacy, candidacy } = useCandidacyForCertificationSearch();
 
   const { searchCertificationsForCandidate, updateCertification } =
     useSetCertification({
@@ -55,12 +56,10 @@ export default function SetCertification() {
 
     try {
       const response = await updateCertification.mutateAsync({
-        candidacyId: candidate.candidacy.id,
+        candidacyId: candidacy.id,
         certificationId: selectedCertificationId!,
       });
       if (response) {
-        refetch();
-
         router.push("/");
       }
     } catch (error) {
@@ -104,7 +103,6 @@ export default function SetCertification() {
             </h2>
             <SearchBar
               label="Rechercher"
-              // className="mb-8"
               searchFilter={searchFilter}
               onSearchFilterChange={(filter) => {
                 const queryParams = new URLSearchParams(searchParams);
