@@ -19,6 +19,7 @@ const BackConfirmationModal = ({ onConfirm }: { onConfirm(): void }) => {
             type: "button",
             "aria-label":
               "Rester sur la page et continuer à éditer le formulaire",
+            "data-test": "stay-on-page-button",
           },
         },
         {
@@ -28,6 +29,7 @@ const BackConfirmationModal = ({ onConfirm }: { onConfirm(): void }) => {
           nativeButtonProps: {
             type: "button",
             "aria-label": "Quitter la page sans enregistrer les modifications",
+            "data-test": "leave-page-button",
           },
         },
       ]}
@@ -84,6 +86,7 @@ export const FormButtons = ({
             onClick={navigateBack}
             type="button"
             aria-label="Retour à la page précédente"
+            data-test="back-button"
           >
             Retour
           </Button>
