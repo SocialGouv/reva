@@ -58,6 +58,7 @@ const unsafeResolvers = {
         category?: JuryStatusFilter;
         searchFilter?: string;
         certificationAuthorityId?: string;
+        certificationAuthorityLocalAccountId?: string;
       },
       context: GraphqlContext,
     ) => {
@@ -76,9 +77,10 @@ const unsafeResolvers = {
     },
     jury_juryCountByCategory: (
       _: unknown,
-      _params: {
+      args: {
         searchFilter?: string;
         certificationAuthorityId?: string;
+        certificationAuthorityLocalAccountId?: string;
       },
       context: GraphqlContext,
     ) => {
@@ -92,8 +94,7 @@ const unsafeResolvers = {
       return getActiveJuryCountByCategory({
         keycloakId: context.auth.userInfo.sub,
         hasRole: context.auth.hasRole,
-        searchFilter: _params.searchFilter,
-        certificationAuthorityId: _params.certificationAuthorityId,
+        ...args,
       });
     },
   },

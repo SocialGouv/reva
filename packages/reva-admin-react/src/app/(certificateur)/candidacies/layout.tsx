@@ -39,10 +39,12 @@ const getDossierDeValidationCountByCategoryQuery = graphql(`
   query getDossierDeValidationCountByCategory(
     $searchFilter: String
     $certificationAuthorityId: ID
+    $certificationAuthorityLocalAccountId: ID
   ) {
     dossierDeValidation_dossierDeValidationCountByCategory(
       searchFilter: $searchFilter
       certificationAuthorityId: $certificationAuthorityId
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
     ) {
       ALL
       PENDING
@@ -55,10 +57,12 @@ const getJuryCountByCategoryQuery = graphql(`
   query getJuryCountByCategory(
     $searchFilter: String
     $certificationAuthorityId: ID
+    $certificationAuthorityLocalAccountId: ID
   ) {
     jury_juryCountByCategory(
       searchFilter: $searchFilter
       certificationAuthorityId: $certificationAuthorityId
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
     ) {
       SCHEDULED
       PASSED
@@ -111,6 +115,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       graphqlClient.request(getDossierDeValidationCountByCategoryQuery, {
         searchFilter,
         certificationAuthorityId,
+        certificationAuthorityLocalAccountId,
       }),
   });
 
@@ -124,6 +129,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       graphqlClient.request(getJuryCountByCategoryQuery, {
         searchFilter,
         certificationAuthorityId,
+        certificationAuthorityLocalAccountId,
       }),
   });
 
@@ -137,6 +143,12 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     }
     if (certificationAuthorityId) {
       params.set("certificationAuthorityId", certificationAuthorityId);
+    }
+    if (certificationAuthorityLocalAccountId) {
+      params.set(
+        "certificationAuthorityLocalAccountId",
+        certificationAuthorityLocalAccountId,
+      );
     }
 
     return `${path}/?${params.toString()}`;

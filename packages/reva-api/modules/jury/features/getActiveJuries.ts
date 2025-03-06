@@ -17,6 +17,7 @@ export const getActiveJuries = async ({
   categoryFilter,
   searchFilter,
   certificationAuthorityId,
+  certificationAuthorityLocalAccountId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
@@ -25,6 +26,7 @@ export const getActiveJuries = async ({
   categoryFilter?: JuryStatusFilter;
   searchFilter?: string;
   certificationAuthorityId?: string;
+  certificationAuthorityLocalAccountId?: string;
 }): Promise<PaginatedListResult<Jury>> => {
   let queryWhereClause: Prisma.JuryWhereInput = {
     isActive: true,
@@ -66,27 +68,60 @@ export const getActiveJuries = async ({
       }),
       candidacy: candidacyWhereClause,
     };
-  } else if (hasRole("admin") && certificationAuthorityId) {
-    //admin has access to everything
-    const account = await prismaClient.account.findFirst({
-      where: { certificationAuthorityId },
-    });
-    if (account) {
+  } else if (
+    hasRole("admin") &&
+    (certificationAuthorityId || certificationAuthorityLocalAccountId)
+  ) {
+    if (certificationAuthorityId) {
+      const account = await prismaClient.account.findFirst({
+        where: { certificationAuthorityId },
+      });
+
+      if (account) {
+        const candidacyWhereClause = {
+          ...queryWhereClause?.candidacy,
+          ...getJuryListQueryWhereClauseForUserWithManageRole({
+            account,
+            isCertificationAuthorityLocalAccount: false,
+            certificationAuthorityLocalAccount: null,
+          }).candidacy,
+        };
+
+        queryWhereClause = {
+          ...queryWhereClause,
+          ...getJuryListQueryWhereClauseForUserWithManageRole({
+            account,
+            isCertificationAuthorityLocalAccount: false,
+            certificationAuthorityLocalAccount: null,
+          }),
+          candidacy: candidacyWhereClause,
+        };
+      }
+    } else if (certificationAuthorityLocalAccountId) {
+      const certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: { id: certificationAuthorityLocalAccountId },
+          include: {
+            certificationAuthorityLocalAccountOnDepartment: true,
+            certificationAuthorityLocalAccountOnCertification: true,
+          },
+        });
+
       const candidacyWhereClause = {
         ...queryWhereClause?.candidacy,
         ...getJuryListQueryWhereClauseForUserWithManageRole({
-          account,
-          isCertificationAuthorityLocalAccount: false,
-          certificationAuthorityLocalAccount: null,
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
         }).candidacy,
       };
 
       queryWhereClause = {
         ...queryWhereClause,
         ...getJuryListQueryWhereClauseForUserWithManageRole({
-          account,
-          isCertificationAuthorityLocalAccount: false,
-          certificationAuthorityLocalAccount: null,
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
         }),
         candidacy: candidacyWhereClause,
       };

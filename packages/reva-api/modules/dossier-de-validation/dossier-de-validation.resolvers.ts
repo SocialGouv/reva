@@ -69,6 +69,7 @@ const unsafeResolvers = {
         category?: DossierDeValidationStatusFilter;
         searchFilter?: string;
         certificationAuthorityId?: string;
+        certificationAuthorityLocalAccountId?: string;
       },
       context: GraphqlContext,
     ) =>
@@ -79,17 +80,17 @@ const unsafeResolvers = {
       }),
     dossierDeValidation_dossierDeValidationCountByCategory: (
       _: unknown,
-      _params: {
+      args: {
         searchFilter?: string;
         certificationAuthorityId?: string;
+        certificationAuthorityLocalAccountId?: string;
       },
       context: GraphqlContext,
     ) =>
       getActiveDossierDeValidationCountByCategory({
         keycloakId: context.auth.userInfo?.sub || "",
         hasRole: context.auth.hasRole,
-        searchFilter: _params.searchFilter,
-        certificationAuthorityId: _params.certificationAuthorityId,
+        ...args,
       }),
   },
   Mutation: {

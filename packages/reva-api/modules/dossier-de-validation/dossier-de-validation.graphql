@@ -50,10 +50,12 @@ type Query {
     categoryFilter: DossierDeValidationCategoryFilter
     searchFilter: String
     certificationAuthorityId: ID
+    certificationAuthorityLocalAccountId: ID
   ): DossierDeValidationPage!
   dossierDeValidation_dossierDeValidationCountByCategory(
     searchFilter: String
     certificationAuthorityId: ID
+    certificationAuthorityLocalAccountId: ID
   ): DossierDeValidationCountByCategory!
 }
 

@@ -19,6 +19,7 @@ const getJuriesQuery = graphql(`
     $searchFilter: String
     $categoryFilter: JuryCategoryFilter
     $certificationAuthorityId: ID
+    $certificationAuthorityLocalAccountId: ID
   ) {
     jury_getJuries(
       categoryFilter: $categoryFilter
@@ -26,6 +27,7 @@ const getJuriesQuery = graphql(`
       offset: $offset
       searchFilter: $searchFilter
       certificationAuthorityId: $certificationAuthorityId
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
     ) {
       rows {
         id
@@ -65,6 +67,9 @@ const JuriesPage = () => {
   const certificationAuthorityId = searchParams.get(
     "certificationAuthorityId",
   ) as string | undefined;
+  const certificationAuthorityLocalAccountId = searchParams.get(
+    "certificationAuthorityLocalAccountId",
+  ) as string | undefined;
 
   const category = searchParams.get("CATEGORY");
 
@@ -99,6 +104,7 @@ const JuriesPage = () => {
           ? undefined
           : category) as JuryCategoryFilter,
         certificationAuthorityId,
+        certificationAuthorityLocalAccountId,
       }),
   });
 
@@ -123,30 +129,60 @@ const JuriesPage = () => {
     return `${currentPathname}?${currentParams.toString()}`;
   };
 
+  const getPathnameWithoutCertificationAuthorityLocalAccountId = (): string => {
+    const currentParams = new URLSearchParams(searchParams);
+    currentParams.delete("certificationAuthorityLocalAccountId");
+    return `${currentPathname}?${currentParams.toString()}`;
+  };
+
   return (
     juryPage && (
       <div className="flex flex-col">
         {isAdmin ? (
-          certificationAuthorityId ? (
-            <div>
-              <h1>Candidatures de la structure</h1>
-              <Button
-                priority="secondary"
-                linkProps={{
-                  href: getPathnameWithoutCertificationAuthorityId(),
-                }}
-              >
-                Accéder à toutes les candidatures
-              </Button>
-              <p className="mt-6">
-                Ici, vous pouvez rechercher une ou plusieurs candidatures gérées
-                par cette structure. Pour retrouver toutes les candidatures de
-                la plateforme, cliquez sur “Accéder à toutes les candidatures”.
-              </p>
-            </div>
-          ) : (
-            <h1>Jurys</h1>
-          )
+          <>
+            {certificationAuthorityId && (
+              <div>
+                <h1>Candidatures de la structure</h1>
+                <Button
+                  priority="secondary"
+                  linkProps={{
+                    href: getPathnameWithoutCertificationAuthorityId(),
+                  }}
+                >
+                  Accéder à toutes les candidatures
+                </Button>
+                <p className="mt-6">
+                  Ici, vous pouvez rechercher une ou plusieurs candidatures
+                  gérées par cette structure. Pour retrouver toutes les
+                  candidatures de la plateforme, cliquez sur “Accéder à toutes
+                  les candidatures”.
+                </p>
+              </div>
+            )}
+
+            {certificationAuthorityLocalAccountId && (
+              <div>
+                <h1>Candidatures du compte collaborateur</h1>
+                <Button
+                  priority="secondary"
+                  linkProps={{
+                    href: getPathnameWithoutCertificationAuthorityLocalAccountId(),
+                  }}
+                >
+                  Accéder à toutes les candidatures
+                </Button>
+                <p className="mt-6">
+                  Ici, vous pouvez rechercher une ou plusieurs candidatures
+                  gérées par ce compte collaborateur. Pour retrouver toutes les
+                  candidatures de la plateforme, cliquez sur “Accéder à toutes
+                  les candidatures”.
+                </p>
+              </div>
+            )}
+
+            {!certificationAuthorityId &&
+              !certificationAuthorityLocalAccountId && <h1>Jurys</h1>}
+          </>
         ) : (
           <h1>Jurys</h1>
         )}

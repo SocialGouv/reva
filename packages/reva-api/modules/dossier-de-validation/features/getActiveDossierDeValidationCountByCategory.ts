@@ -14,11 +14,13 @@ export const getActiveDossierDeValidationCountByCategory = async ({
   hasRole,
   searchFilter,
   certificationAuthorityId,
+  certificationAuthorityLocalAccountId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   searchFilter?: string;
   certificationAuthorityId?: string;
+  certificationAuthorityLocalAccountId?: string;
 }) => {
   const DossierDeValidationCountByCategory: Record<
     DossierDeValidationStatusFilter,
@@ -34,7 +36,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
     !hasRole("admin") &&
     !hasRole("manage_certification_authority_local_account");
 
-  const certificationAuthorityLocalAccount =
+  let certificationAuthorityLocalAccount =
     isCertificationAuthorityLocalAccount && account
       ? await getCertificationAuthorityLocalAccountByAccountId({
           accountId: account.id,
@@ -43,10 +45,21 @@ export const getActiveDossierDeValidationCountByCategory = async ({
 
   let certificationAuthorityAccount: Account | null;
 
-  if (hasRole("admin") && certificationAuthorityId) {
-    certificationAuthorityAccount = await prismaClient.account.findFirst({
-      where: { certificationAuthorityId },
-    });
+  if (hasRole("admin")) {
+    if (certificationAuthorityId) {
+      certificationAuthorityAccount = await prismaClient.account.findFirst({
+        where: { certificationAuthorityId },
+      });
+    } else if (certificationAuthorityLocalAccountId) {
+      certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: { id: certificationAuthorityLocalAccountId },
+          include: {
+            certificationAuthorityLocalAccountOnDepartment: true,
+            certificationAuthorityLocalAccountOnCertification: true,
+          },
+        });
+    }
   }
 
   await Promise.all(
@@ -71,17 +84,34 @@ export const getActiveDossierDeValidationCountByCategory = async ({
                   },
                 ),
               };
-            } else if (hasRole("admin") && certificationAuthorityAccount) {
-              whereClause = {
-                ...whereClause,
-                ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
-                  {
-                    account: certificationAuthorityAccount,
-                    isCertificationAuthorityLocalAccount: false,
-                    certificationAuthorityLocalAccount: null,
-                  },
-                ),
-              };
+            } else if (
+              hasRole("admin") &&
+              (certificationAuthorityAccount ||
+                certificationAuthorityLocalAccount)
+            ) {
+              if (certificationAuthorityAccount) {
+                whereClause = {
+                  ...whereClause,
+                  ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
+                    {
+                      account: certificationAuthorityAccount,
+                      isCertificationAuthorityLocalAccount: false,
+                      certificationAuthorityLocalAccount: null,
+                    },
+                  ),
+                };
+              } else if (certificationAuthorityLocalAccount) {
+                whereClause = {
+                  ...whereClause,
+                  ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
+                    {
+                      account: certificationAuthorityAccount,
+                      isCertificationAuthorityLocalAccount: true,
+                      certificationAuthorityLocalAccount,
+                    },
+                  ),
+                };
+              }
             }
 
             let candidacyClause: Prisma.CandidacyWhereInput =

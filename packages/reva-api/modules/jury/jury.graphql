@@ -76,10 +76,12 @@ type Query {
     categoryFilter: JuryCategoryFilter
     searchFilter: String
     certificationAuthorityId: ID
+    certificationAuthorityLocalAccountId: ID
   ): JuryPage!
   jury_juryCountByCategory(
     searchFilter: String
     certificationAuthorityId: ID
+    certificationAuthorityLocalAccountId: ID
   ): JuryCountByCategory!
 }
 

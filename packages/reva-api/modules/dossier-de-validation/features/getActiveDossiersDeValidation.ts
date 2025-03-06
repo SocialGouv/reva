@@ -17,6 +17,7 @@ export const getActiveDossiersDeValidation = async ({
   categoryFilter,
   searchFilter,
   certificationAuthorityId,
+  certificationAuthorityLocalAccountId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
@@ -25,6 +26,7 @@ export const getActiveDossiersDeValidation = async ({
   categoryFilter?: DossierDeValidationStatusFilter;
   searchFilter?: string;
   certificationAuthorityId?: string;
+  certificationAuthorityLocalAccountId?: string;
 }): Promise<PaginatedListResult<DossierDeValidation>> => {
   let queryWhereClause: Prisma.DossierDeValidationWhereInput = {
     isActive: true,
@@ -66,27 +68,60 @@ export const getActiveDossiersDeValidation = async ({
       }),
       candidacy: candidacyWhereClause,
     };
-  } else if (hasRole("admin") && certificationAuthorityId) {
-    const account = await prismaClient.account.findFirst({
-      where: { certificationAuthorityId },
-    });
+  } else if (
+    hasRole("admin") &&
+    (certificationAuthorityId || certificationAuthorityLocalAccountId)
+  ) {
+    if (certificationAuthorityId) {
+      const account = await prismaClient.account.findFirst({
+        where: { certificationAuthorityId },
+      });
 
-    if (account) {
+      if (account) {
+        const candidacyWhereClause = {
+          ...queryWhereClause?.candidacy,
+          ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
+            account,
+            isCertificationAuthorityLocalAccount: false,
+            certificationAuthorityLocalAccount: null,
+          }).candidacy,
+        };
+
+        queryWhereClause = {
+          ...queryWhereClause,
+          ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
+            account,
+            isCertificationAuthorityLocalAccount: false,
+            certificationAuthorityLocalAccount: null,
+          }),
+          candidacy: candidacyWhereClause,
+        };
+      }
+    } else if (certificationAuthorityLocalAccountId) {
+      const certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: { id: certificationAuthorityLocalAccountId },
+          include: {
+            certificationAuthorityLocalAccountOnDepartment: true,
+            certificationAuthorityLocalAccountOnCertification: true,
+          },
+        });
+
       const candidacyWhereClause = {
         ...queryWhereClause?.candidacy,
         ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
-          account,
-          isCertificationAuthorityLocalAccount: false,
-          certificationAuthorityLocalAccount: null,
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
         }).candidacy,
       };
 
       queryWhereClause = {
         ...queryWhereClause,
         ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
-          account,
-          isCertificationAuthorityLocalAccount: false,
-          certificationAuthorityLocalAccount: null,
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
         }),
         candidacy: candidacyWhereClause,
       };
