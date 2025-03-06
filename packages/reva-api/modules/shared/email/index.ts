@@ -4,3 +4,4 @@ export * from "./sendGenericEmail";
 export * from "./sendEmailUsingTemplate";
 export * from "./templateMail";
 export * from "./utils";
+export * from "./backoffice.url.helpers";
