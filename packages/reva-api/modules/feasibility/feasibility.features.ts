@@ -392,11 +392,13 @@ export const getActiveFeasibilityCountByCategory = async ({
   hasRole,
   searchFilter,
   certificationAuthorityId,
+  certificationAuthorityLocalAccountId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   searchFilter?: string;
   certificationAuthorityId?: string;
+  certificationAuthorityLocalAccountId?: string;
 }) => {
   type FeasibilityCountByCategoryType = Record<FeasibilityStatusFilter, number>;
 
@@ -424,7 +426,7 @@ export const getActiveFeasibilityCountByCategory = async ({
     !hasRole("admin") &&
     !hasRole("manage_certification_authority_local_account");
 
-  const certificationAuthorityLocalAccount =
+  let certificationAuthorityLocalAccount =
     isCertificationAuthorityLocalAccount && account
       ? await getCertificationAuthorityLocalAccountByAccountId({
           accountId: account.id,
@@ -433,10 +435,21 @@ export const getActiveFeasibilityCountByCategory = async ({
 
   let certificationAuthorityAccount: Account | null;
 
-  if (hasRole("admin") && certificationAuthorityId) {
-    certificationAuthorityAccount = await prismaClient.account.findFirst({
-      where: { certificationAuthorityId },
-    });
+  if (hasRole("admin")) {
+    if (certificationAuthorityId) {
+      certificationAuthorityAccount = await prismaClient.account.findFirst({
+        where: { certificationAuthorityId },
+      });
+    } else if (certificationAuthorityLocalAccountId) {
+      certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: { id: certificationAuthorityLocalAccountId },
+          include: {
+            certificationAuthorityLocalAccountOnDepartment: true,
+            certificationAuthorityLocalAccountOnCertification: true,
+          },
+        });
+    }
   }
 
   const feasibilityCountByCategoryArray = await Promise.all(
@@ -455,17 +468,34 @@ export const getActiveFeasibilityCountByCategory = async ({
               },
             ),
           };
-        } else if (hasRole("admin") && certificationAuthorityAccount) {
-          whereClause = {
-            ...whereClause,
-            ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
-              {
-                account: certificationAuthorityAccount,
-                isCertificationAuthorityLocalAccount: false,
-                certificationAuthorityLocalAccount: null,
-              },
-            ),
-          };
+        } else if (
+          hasRole("admin") &&
+          (certificationAuthorityAccount ||
+            certificationAuthorityLocalAccountId)
+        ) {
+          if (certificationAuthorityAccount) {
+            whereClause = {
+              ...whereClause,
+              ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+                {
+                  account: certificationAuthorityAccount,
+                  isCertificationAuthorityLocalAccount: false,
+                  certificationAuthorityLocalAccount: null,
+                },
+              ),
+            };
+          } else if (certificationAuthorityLocalAccount) {
+            whereClause = {
+              ...whereClause,
+              ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+                {
+                  account: null,
+                  isCertificationAuthorityLocalAccount: true,
+                  certificationAuthorityLocalAccount,
+                },
+              ),
+            };
+          }
         }
 
         let candidacyClause: Prisma.CandidacyWhereInput =
@@ -516,6 +546,7 @@ export const getActiveFeasibilities = async ({
   categoryFilter,
   searchFilter,
   certificationAuthorityId,
+  certificationAuthorityLocalAccountId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
@@ -524,6 +555,7 @@ export const getActiveFeasibilities = async ({
   categoryFilter?: FeasibilityCategoryFilter;
   searchFilter?: string;
   certificationAuthorityId?: string;
+  certificationAuthorityLocalAccountId?: string;
 }): Promise<PaginatedListResult<Feasibility>> => {
   let queryWhereClause: Prisma.FeasibilityWhereInput = { isActive: true };
 
@@ -564,9 +596,9 @@ export const getActiveFeasibilities = async ({
       where: { keycloakId },
     });
 
-    const isCertificationAuthorityLocalAccount = !hasRole(
-      "manage_certification_authority_local_account",
-    );
+    const isCertificationAuthorityLocalAccount =
+      !hasRole("admin") &&
+      !hasRole("manage_certification_authority_local_account");
 
     const certificationAuthorityLocalAccount =
       isCertificationAuthorityLocalAccount
@@ -593,12 +625,15 @@ export const getActiveFeasibilities = async ({
       }),
       candidacy: candidacyWhereClause,
     };
-  } else if (hasRole("admin") && certificationAuthorityId) {
-    //admin has access to everything
-    const account = await prismaClient.account.findFirst({
-      where: { certificationAuthorityId },
-    });
-    if (account) {
+  } else if (
+    hasRole("admin") &&
+    (certificationAuthorityId || certificationAuthorityLocalAccountId)
+  ) {
+    if (certificationAuthorityId) {
+      const account = await prismaClient.account.findFirst({
+        where: { certificationAuthorityId },
+      });
+
       const candidacyWhereClause = {
         ...queryWhereClause?.candidacy,
         ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole({
@@ -614,6 +649,34 @@ export const getActiveFeasibilities = async ({
           account,
           isCertificationAuthorityLocalAccount: false,
           certificationAuthorityLocalAccount: null,
+        }),
+        candidacy: candidacyWhereClause,
+      };
+    } else if (certificationAuthorityLocalAccountId) {
+      const certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: { id: certificationAuthorityLocalAccountId },
+          include: {
+            certificationAuthorityLocalAccountOnDepartment: true,
+            certificationAuthorityLocalAccountOnCertification: true,
+          },
+        });
+
+      const candidacyWhereClause = {
+        ...queryWhereClause?.candidacy,
+        ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole({
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
+        }).candidacy,
+      };
+
+      queryWhereClause = {
+        ...queryWhereClause,
+        ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole({
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
         }),
         candidacy: candidacyWhereClause,
       };

@@ -2,8 +2,8 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 
-const getCertificationAuthorityRasionSocialeAdminQuery = graphql(`
-  query getCertificationAuthorityRasionSocialeAdminQuery(
+const getCertificationAuthorityRaisonSocialeAdminQuery = graphql(`
+  query getCertificationAuthorityRaisonSocialeAdminQuery(
     $certificationAuthorityId: ID!
   ) {
     certification_authority_getCertificationAuthority(
@@ -25,7 +25,7 @@ export const useCertificationAuthority = ({
   const { data: certificationAuthorityData } = useQuery({
     queryKey: [certificationAuthorityId, "certificationAuthority"],
     queryFn: () =>
-      graphqlClient.request(getCertificationAuthorityRasionSocialeAdminQuery, {
+      graphqlClient.request(getCertificationAuthorityRaisonSocialeAdminQuery, {
         certificationAuthorityId,
       }),
   });

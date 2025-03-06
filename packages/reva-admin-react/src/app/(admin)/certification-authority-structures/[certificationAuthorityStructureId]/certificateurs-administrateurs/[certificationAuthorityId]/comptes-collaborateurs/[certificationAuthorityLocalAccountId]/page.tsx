@@ -6,6 +6,8 @@ import { CertificationAuthorityStructureBreadcrumb } from "../../../../_componen
 import Input from "@codegouvfr/react-dsfr/Input";
 import { CertificationsSummaryCard } from "../../../../_components/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "../../../../_components/intervention-area-summary-card/InterventionAreaSummaryCard";
+import { Impersonate } from "@/components/impersonate";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   const {
@@ -66,10 +68,29 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
             }
             pageLabel={"Comptes collaborateurs"}
           />
-          <h1>
-            {certificationAuthorityLocalAccount.account.firstname}{" "}
-            {certificationAuthorityLocalAccount.account.lastname}
-          </h1>
+          <div className="flex justify-between gap-4 w-full">
+            <h1 className="flex-1">
+              {certificationAuthorityLocalAccount.account.firstname}{" "}
+              {certificationAuthorityLocalAccount.account.lastname}
+            </h1>
+
+            <Impersonate
+              accountId={certificationAuthorityLocalAccount?.account?.id}
+            />
+
+            <div>
+              <Button
+                priority="secondary"
+                linkProps={{
+                  href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccount.id}`,
+                  target: "_blank",
+                }}
+              >
+                Voir les candidatures
+              </Button>
+            </div>
+          </div>
+
           <p className="text-xl mb-12">
             Il s’occupe des candidatures (dossier de validation, jury...)
           </p>

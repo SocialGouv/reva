@@ -9,6 +9,7 @@ export const getKeycloakAdmin = async () => {
   const KeycloakAdminClient = (
     await dynamicImport("@keycloak/keycloak-admin-client")
   ).default as typeof KeycloakAdminClientClass;
+
   const kcAdminClient = new KeycloakAdminClient({
     baseUrl: process.env.KEYCLOAK_ADMIN_URL,
     realmName: process.env.KEYCLOAK_ADMIN_REALM,

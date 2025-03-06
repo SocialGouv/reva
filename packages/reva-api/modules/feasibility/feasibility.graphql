@@ -82,6 +82,7 @@ type Query {
   feasibilityCountByCategory(
     searchFilter: String
     certificationAuthorityId: ID
+    certificationAuthorityLocalAccountId: ID
   ): FeasibilityCountByCategory!
   feasibilities(
     offset: Int
@@ -89,6 +90,7 @@ type Query {
     categoryFilter: FeasibilityCategoryFilter
     searchFilter: String
     certificationAuthorityId: ID
+    certificationAuthorityLocalAccountId: ID
   ): FeasibilityPage!
   feasibility(feasibilityId: ID!): Feasibility
   feasibility_getActiveFeasibilityByCandidacyId(candidacyId: ID!): Feasibility

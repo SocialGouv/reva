@@ -40,17 +40,17 @@ const unsafeResolvers = {
   Query: {
     feasibilityCountByCategory: (
       _: unknown,
-      _params: {
+      args: {
         searchFilter?: string;
         certificationAuthorityId?: string;
+        certificationAuthorityLocalAccountId?: string;
       },
       context: any,
     ) =>
       getActiveFeasibilityCountByCategory({
         keycloakId: context.auth.userInfo?.sub,
         hasRole: context.auth.hasRole,
-        searchFilter: _params.searchFilter,
-        certificationAuthorityId: _params.certificationAuthorityId,
+        ...args,
       }),
     feasibilities: (
       _: unknown,
@@ -60,6 +60,7 @@ const unsafeResolvers = {
         category?: FeasibilityCategoryFilter;
         searchFilter?: string;
         certificationAuthorityId?: string;
+        certificationAuthorityLocalAccountId?: string;
       },
       context: any,
     ) =>

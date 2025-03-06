@@ -97,22 +97,21 @@ const CertificationAuthorityAdminComponent = ({
         }
         pageLabel={certificationAuthority.label}
       />
-      <div className="flex justify-between w-full">
-        <h1>{certificationAuthority.label}</h1>
+      <div className="flex justify-between gap-4 w-full">
+        <h1 className="flex-1">{certificationAuthority.label}</h1>
 
-        <div className="flex-1 flex w-full gap-4 justify-end">
-          <Impersonate accountId={certificationAuthority?.account?.id} />
-          <div>
-            <Button
-              priority="secondary"
-              linkProps={{
-                href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityId=${certificationAuthority.id}`,
-                target: "_blank",
-              }}
-            >
-              Voir les candidatures
-            </Button>
-          </div>
+        <Impersonate accountId={certificationAuthority?.account?.id} />
+
+        <div>
+          <Button
+            priority="secondary"
+            linkProps={{
+              href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityId=${certificationAuthority.id}`,
+              target: "_blank",
+            }}
+          >
+            Voir les candidatures
+          </Button>
         </div>
       </div>
 

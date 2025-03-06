@@ -8,15 +8,18 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 import { CertificationAuthority } from "./(components)/CertificationAuthority";
+import { CertificationAuthorityLocalAccount } from "./(components)/CertificationAuthorityLocalAccount";
 
 const getFeasibilityCountByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory(
     $searchFilter: String
     $certificationAuthorityId: ID
+    $certificationAuthorityLocalAccountId: ID
   ) {
     feasibilityCountByCategory(
       searchFilter: $searchFilter
       certificationAuthorityId: $certificationAuthorityId
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
     ) {
       ALL
       PENDING
@@ -71,6 +74,9 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const certificationAuthorityId = searchParams.get(
     "certificationAuthorityId",
   ) as string | undefined;
+  const certificationAuthorityLocalAccountId = searchParams.get(
+    "certificationAuthorityLocalAccountId",
+  ) as string | undefined;
 
   const { isAdmin } = useAuth();
 
@@ -91,6 +97,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       graphqlClient.request(getFeasibilityCountByCategoryQuery, {
         searchFilter,
         certificationAuthorityId,
+        certificationAuthorityLocalAccountId,
       }),
   });
 
@@ -304,12 +311,25 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
         aria-label="Menu latéral"
         className="flex flex-col gap-4 md:basis-[400px]"
       >
-        {isAdmin && certificationAuthorityId && (
-          <div className="mr-8">
-            <CertificationAuthority
-              certificationAuthorityId={certificationAuthorityId}
-            />
-          </div>
+        {isAdmin && (
+          <>
+            {certificationAuthorityId && (
+              <div className="mr-8">
+                <CertificationAuthority
+                  certificationAuthorityId={certificationAuthorityId}
+                />
+              </div>
+            )}
+            {certificationAuthorityLocalAccountId && (
+              <div className="mr-8">
+                <CertificationAuthorityLocalAccount
+                  certificationAuthorityLocalAccountId={
+                    certificationAuthorityLocalAccountId
+                  }
+                />
+              </div>
+            )}
+          </>
         )}
         <SideMenu
           className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
