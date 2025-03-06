@@ -61,8 +61,7 @@ export const UserAccountForm = ({
     reset,
     setValue,
     control,
-    formState,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting },
   } = methods;
 
   const handleFormSubmit = handleSubmit(onSubmit);
@@ -200,7 +199,7 @@ export const UserAccountForm = ({
           <div className="border-gray-200 border-t pt-8">{FooterComponent}</div>
         )}
 
-        <FormButtons formState={formState} backUrl={backUrl} />
+        <FormButtons formState={{ isDirty, isSubmitting }} backUrl={backUrl} />
       </form>
     </>
   );

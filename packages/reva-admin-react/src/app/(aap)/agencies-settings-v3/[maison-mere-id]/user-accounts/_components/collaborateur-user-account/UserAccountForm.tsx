@@ -47,8 +47,7 @@ export const UserAccountForm = ({
 
   const {
     register,
-    formState,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting },
   } = methods;
 
   return (
@@ -137,7 +136,10 @@ export const UserAccountForm = ({
             </option>
           </Select>
         </fieldset>
-        <FormButtons formState={formState} backUrl={"/agencies-settings-v3"} />
+        <FormButtons
+          formState={{ isDirty, isSubmitting }}
+          backUrl="/agencies-settings-v3"
+        />
       </form>
     </>
   );

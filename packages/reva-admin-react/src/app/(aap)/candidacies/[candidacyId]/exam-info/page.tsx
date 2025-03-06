@@ -3,17 +3,17 @@
 import { useParams } from "next/navigation";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { format, parse } from "date-fns";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useExamInfoPage } from "./examInfo";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { useCallback, useEffect, useMemo } from "react";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format, parse } from "date-fns";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useExamInfoPage } from "./examInfo";
 
 const examInfoSchema = z.object({
   estimatedExamDate: z.string(),
@@ -55,12 +55,16 @@ const ExamInfoPage = () => {
     [candidacy],
   );
 
-  const { register, reset, handleSubmit, formState } =
-    useForm<ExamInfoFormData>({
-      resolver: zodResolver(examInfoSchema),
-      shouldUnregister: true,
-      defaultValues,
-    });
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors, isDirty, isSubmitting },
+  } = useForm<ExamInfoFormData>({
+    resolver: zodResolver(examInfoSchema),
+    shouldUnregister: true,
+    defaultValues,
+  });
 
   const handleFormSubmit = handleSubmit(
     async ({
@@ -128,6 +132,8 @@ const ExamInfoPage = () => {
                   type: "date",
                   ...register("estimatedExamDate"),
                 }}
+                state={errors.estimatedExamDate ? "error" : "default"}
+                stateRelatedMessage={errors.estimatedExamDate?.message}
               />
               <Input
                 className="w-72"
@@ -137,6 +143,8 @@ const ExamInfoPage = () => {
                   type: "date",
                   ...register("actualExamDate"),
                 }}
+                state={errors.actualExamDate ? "error" : "default"}
+                stateRelatedMessage={errors.actualExamDate?.message}
               />
             </div>
           </fieldset>
@@ -159,7 +167,10 @@ const ExamInfoPage = () => {
               <option value="FAILURE">Échec</option>
             </Select>
           </fieldset>
-          <FormButtons className="mt-12" formState={formState} />
+          <FormButtons
+            className="mt-12"
+            formState={{ isDirty, isSubmitting }}
+          />
         </form>
       )}
     </div>

@@ -1,21 +1,20 @@
 "use client";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
-import { useCallback, useEffect } from "react";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { z } from "zod";
-import { usePaymentRequestUniRevaConfirmationPage } from "./paymentRequestUniRevaConfirmation.hook";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Info } from "../../_components/form/Info";
 import { costsAndHoursTotal } from "../paymentRequestUniRevaPaymentUtils";
-import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import { usePaymentRequestUniRevaConfirmationPage } from "./paymentRequestUniRevaConfirmation.hook";
 
 const paymentRequestUniRevaConfirmationSchema = z.object({
   payementRequestConfirmation: z.literal(true, {
@@ -41,10 +40,14 @@ const PaymentRequestUniRevaConfirmationPage = () => {
   const { candidacy, confirmPaymentRequestUniReva, getCandidacyStatus } =
     usePaymentRequestUniRevaConfirmationPage();
 
-  const { register, reset, formState, handleSubmit } =
-    useForm<PaymentRequestUniRevaConfirmationFormData>({
-      resolver: zodResolver(paymentRequestUniRevaConfirmationSchema),
-    });
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors, isDirty, isSubmitting },
+  } = useForm<PaymentRequestUniRevaConfirmationFormData>({
+    resolver: zodResolver(paymentRequestUniRevaConfirmationSchema),
+  });
 
   const handleFormSubmit = handleSubmit(
     async () => {
@@ -117,17 +120,11 @@ const PaymentRequestUniRevaConfirmationPage = () => {
                   },
                 },
               ]}
-              state={
-                formState.errors.payementRequestConfirmation
-                  ? "error"
-                  : "default"
-              }
-              stateRelatedMessage={
-                formState.errors.payementRequestConfirmation?.message
-              }
+              state={errors.payementRequestConfirmation ? "error" : "default"}
+              stateRelatedMessage={errors.payementRequestConfirmation?.message}
             />
             {!paymentRequestAlreadySent && (
-              <FormButtons formState={formState} />
+              <FormButtons formState={{ isDirty, isSubmitting }} />
             )}
           </form>
         </>

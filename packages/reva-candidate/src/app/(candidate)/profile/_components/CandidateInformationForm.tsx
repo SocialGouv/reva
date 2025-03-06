@@ -55,8 +55,7 @@ const CandidateInformationForm = ({
     watch,
     setValue,
     reset,
-    formState,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting },
     clearErrors,
     handleSubmit,
   } = useForm<FormCandidateInformationData>({
@@ -418,7 +417,7 @@ const CandidateInformationForm = ({
         </div>
         <FormButtons
           backUrl="/"
-          formState={formState}
+          formState={{ isDirty, isSubmitting }}
           data-testid="form-buttons"
         />
       </form>

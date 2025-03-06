@@ -70,8 +70,7 @@ export const CandidateExperienceForm = ({
 
   const {
     register,
-    formState,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
     handleSubmit,
     reset,
   } = methods;
@@ -157,7 +156,7 @@ export const CandidateExperienceForm = ({
         </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/summary`}
-          formState={formState}
+          formState={{ isDirty, isSubmitting }}
         />
       </form>
     </div>

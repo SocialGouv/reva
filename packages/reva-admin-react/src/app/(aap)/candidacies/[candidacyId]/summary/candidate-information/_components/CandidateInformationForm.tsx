@@ -62,8 +62,7 @@ const CandidateInformationForm = ({
     watch,
     setValue,
     reset,
-    formState,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting },
     clearErrors,
     handleSubmit,
   } = useForm<FormCandidateInformationData>({
@@ -399,7 +398,7 @@ const CandidateInformationForm = ({
             stateRelatedMessage={errors.email?.message}
           />
         </div>
-        <FormButtons backUrl={backUrl} formState={formState} />
+        <FormButtons backUrl={backUrl} formState={{ isDirty, isSubmitting }} />
       </form>
     </>
   );

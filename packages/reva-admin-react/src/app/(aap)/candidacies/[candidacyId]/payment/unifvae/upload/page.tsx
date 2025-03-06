@@ -1,20 +1,20 @@
 "use client";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
-import { useCallback, useEffect } from "react";
-import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useParams, useRouter } from "next/navigation";
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { z } from "zod";
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { Section } from "../../_components/form/Section";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { REST_API_URL } from "@/config/config";
-import { successToast, errorToast } from "@/components/toast/toast";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { errorToast, successToast } from "@/components/toast/toast";
+import { REST_API_URL } from "@/config/config";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
+import { Section } from "../../_components/form/Section";
 
 const paymentRequestUniFvaeUploadSchema = z.object({
   invoiceFile: z.object({
@@ -66,8 +66,7 @@ const PaymentRequestUniFvaeUploadPage = () => {
     register,
     reset,
     control,
-    formState,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting },
     handleSubmit,
   } = useForm<PaymentRequestUniFvaeUploadFormData>({
     resolver: zodResolver(paymentRequestUniFvaeUploadSchema),
@@ -240,7 +239,7 @@ const PaymentRequestUniFvaeUploadPage = () => {
           />
         </Section>
         <FormButtons
-          formState={formState}
+          formState={{ isDirty, isSubmitting }}
           backUrl={`/candidacies/${candidacyId}/payment/unifvae/invoice/`}
           submitButtonLabel="Envoyer la demande de paiement"
         />

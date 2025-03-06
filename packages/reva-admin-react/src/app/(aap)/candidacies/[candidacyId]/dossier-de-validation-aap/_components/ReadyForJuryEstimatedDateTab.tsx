@@ -25,7 +25,7 @@ export const ReadyForJuryEstimatedDateTab = ({
     register,
     reset,
     handleSubmit,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, errors },
   } = useForm<ReadyForJuryEstimatedAtSchemaFormData>({
     resolver: zodResolver(readyForJuryEstimatedAtSchema),
     defaultValues: {
@@ -72,6 +72,8 @@ export const ReadyForJuryEstimatedDateTab = ({
             type: "date",
             ...register("readyForJuryEstimatedAt"),
           }}
+          state={errors.readyForJuryEstimatedAt ? "error" : "default"}
+          stateRelatedMessage={errors.readyForJuryEstimatedAt?.message}
         />
       </div>
 

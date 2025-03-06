@@ -54,7 +54,7 @@ const OrganismInformationForm = ({
   });
 
   const { register, handleSubmit, reset, formState, setValue } = methods;
-  const { errors } = formState;
+  const { errors, isDirty, isSubmitting } = formState;
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
@@ -219,7 +219,10 @@ const OrganismInformationForm = ({
           </fieldset>
         </div>
 
-        <FormButtons formState={formState} backUrl={pathRedirection} />
+        <FormButtons
+          formState={{ isDirty, isSubmitting }}
+          backUrl={pathRedirection}
+        />
       </form>
     </div>
   );

@@ -1,9 +1,9 @@
 "use client";
 import { useCandidateProfilePageLogic } from "@/app/(aap)/candidacies/[candidacyId]/summary/candidate-profile/candidateProfilePageLogic";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const CandidateProfilePage = () => {
   const {
@@ -11,10 +11,9 @@ const CandidateProfilePage = () => {
     degrees,
     register,
     handleFormSubmit,
-    formState,
-    errors,
     resetForm,
     watch,
+    formState: { errors, isDirty, isSubmitting },
   } = useCandidateProfilePageLogic();
 
   const highestDegreeId = watch("highestDegreeId");
@@ -89,7 +88,7 @@ const CandidateProfilePage = () => {
         </fieldset>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/summary`}
-          formState={formState}
+          formState={{ isDirty, isSubmitting }}
         />
       </form>
     </div>
