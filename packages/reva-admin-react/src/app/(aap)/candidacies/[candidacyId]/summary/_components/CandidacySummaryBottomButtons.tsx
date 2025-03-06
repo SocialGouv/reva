@@ -201,9 +201,11 @@ const AdminActionsZone = ({
       >
         <div className="flex flex-col gap-4">
           <p>
-            Le passage en hors financement privera ce candidat de tout prise en
-            charge par France VAE. Êtes vous sûr de vouloir continuer ?
+            Vous êtes sur le point de passer ce candidat en parcours hors
+            financement. Cette action est définitive et ne pourra pas être
+            annulée.
           </p>
+          <p className="mb-0">Êtes vous sûr de vouloir continuer ?</p>
         </div>
       </confirmFinanceModuleSwitchToHorsPlateformeModal.Component>
 
@@ -230,13 +232,19 @@ const AdminActionsZone = ({
       >
         <div className="flex flex-col">
           <p>
-            Le changement de modalité effacera le choix de l’accompagnateur.
+            Passer ce candidat en parcours autonome est une action définitive.
+            Cela supprimera certains éléments de son espace personnel :
           </p>
+          <ul className="mb-6">
+            <li>Objectifs</li>
+            <li>Expériences</li>
+            <li>Choix de l’accompagnateur</li>
+          </ul>
           <p>
             Si une décision a déjà été prise sur le dossier de faisabilité, elle
-            sera consultable dans la section concernée.
+            restera accessible dans la section concernée, sous le même format.
           </p>
-          <p>Êtes vous sûr de vouloir continuer ?</p>
+          <p className="mb-0">Êtes vous sûr de vouloir continuer ?</p>
         </div>
       </confirmTypeAccompagnementSwitchToAutonomeModal.Component>
 
