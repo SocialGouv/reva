@@ -91,9 +91,9 @@ describe("Dematerialized Feasibility File - Competencies Block Page", () => {
     it("should provide a link back to the feasibility summary page", function () {
       visitFeasibilityCompetenciesBlock();
 
-      cy.get('[data-test="form-buttons"]')
-        .find('a[href*="/feasibility-aap"]')
-        .should("exist");
+      cy.get('[data-test="back-button"]').click();
+
+      cy.url().should("include", "/feasibility-aap");
     });
   });
 });

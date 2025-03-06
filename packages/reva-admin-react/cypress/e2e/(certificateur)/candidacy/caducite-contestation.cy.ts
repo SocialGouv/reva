@@ -151,9 +151,7 @@ describe("Caducite Contestation Page as Certificateur", () => {
         ],
       });
 
-      cy.get("a[href*='" + URL_FEASIBILITY + "']")
-        .first()
-        .click();
+      cy.get('[data-test="back-button"]').click();
       cy.url().should("include", URL_FEASIBILITY);
     });
   });

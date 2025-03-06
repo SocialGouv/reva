@@ -132,10 +132,9 @@ describe("Dematerialized Feasibility File - AAP Decision Page", () => {
   context("Navigation", () => {
     it("should provide a back link to the feasibility summary", () => {
       visitFeasibilityDecision();
+      cy.get('[data-test="back-button"]').click();
 
-      cy.get('[data-test="form-buttons"]')
-        .find('a[href*="/feasibility-aap"]')
-        .should("exist");
+      cy.url().should("include", "/feasibility-aap");
     });
   });
 });

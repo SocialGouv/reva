@@ -241,9 +241,9 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
     it("should provide navigation back to feasibility summary", () => {
       visitFeasibilityPrerequisites();
 
-      cy.get('[data-test="form-buttons"]')
-        .find('a[href*="/feasibility-aap"]')
-        .should("exist");
+      cy.get('[data-test="back-button"]').click();
+
+      cy.url().should("include", "/feasibility-aap");
     });
   });
 });

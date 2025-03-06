@@ -189,9 +189,9 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
     it("should provide navigation back to feasibility summary", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="form-buttons"]')
-        .find('a[href*="/feasibility-aap"]')
-        .should("exist");
+      cy.get('[data-test="back-button"]').click();
+
+      cy.url().should("include", "/feasibility-aap");
     });
   });
 });
