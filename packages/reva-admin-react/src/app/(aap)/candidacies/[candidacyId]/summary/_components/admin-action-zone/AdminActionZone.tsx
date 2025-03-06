@@ -1,32 +1,8 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphqlErrorToast } from "@/components/toast/toast";
-import { graphql } from "@/graphql/generated";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import Tile from "@codegouvfr/react-dsfr/Tile";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { ComponentProps } from "react";
-
-const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`
-  mutation updateCandidacyFinanceModuleToHorsPlateforme($candidacyId: UUID!) {
-    candidacy_updateFinanceModule(
-      candidacyId: $candidacyId
-      financeModule: hors_plateforme
-    ) {
-      id
-    }
-  }
-`);
-
-const updateCandidacyTypeAccompagnementToAutonomeMutation = graphql(`
-  mutation updateCandidacyTypeAccompagnementToAutonome($candidacyId: UUID!) {
-    candidacy_updateTypeAccompagnement(
-      candidacyId: $candidacyId
-      typeAccompagnement: AUTONOME
-    ) {
-      id
-    }
-  }
-`);
+import { useAdminActionZone } from "./adminActionZone.hooks";
+import { graphqlErrorToast } from "@/components/toast/toast";
 
 export const AdminActionZone = ({
   candidacyId,
@@ -49,36 +25,19 @@ export const AdminActionZone = ({
   isHorsPlateforme: boolean;
   className?: string;
 }) => {
-  const { graphqlClient } = useGraphQlClient();
+  const {
+    updateCandidacyFinanceModuleToHorsPlateforme,
+    updateCandidacyTypeAccompagnementToAutonome,
+  } = useAdminActionZone({ candidacyId });
 
-  const queryClient = useQueryClient();
-
-  const updateCandidacyFinanceModuleToHorsPlateforme = useMutation({
-    mutationKey: [candidacyId],
-    mutationFn: ({ candidacyId }: { candidacyId: string }) =>
-      graphqlClient.request(
-        updateCandidacyFinanceModuleToHorsPlateformeMutation,
-        { candidacyId },
-      ),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [candidacyId],
-      });
-    },
+  const confirmFinanceModuleSwitchToHorsPlateformeModal = createModal({
+    id: "confirm-finance-module-switch-to-hors-plateforme",
+    isOpenedByDefault: false,
   });
 
-  const updateCandidacyTypeAccompagnementToAutonome = useMutation({
-    mutationKey: [candidacyId],
-    mutationFn: ({ candidacyId }: { candidacyId: string }) =>
-      graphqlClient.request(
-        updateCandidacyTypeAccompagnementToAutonomeMutation,
-        { candidacyId },
-      ),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [candidacyId],
-      });
-    },
+  const confirmTypeAccompagnementSwitchToAutonomeModal = createModal({
+    id: "confirm-type-accompagnement-switch-to-autonome",
+    isOpenedByDefault: false,
   });
 
   const handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick =
@@ -102,16 +61,6 @@ export const AdminActionZone = ({
         graphqlErrorToast(e);
       }
     };
-
-  const confirmFinanceModuleSwitchToHorsPlateformeModal = createModal({
-    id: "confirm-finance-module-switch-to-hors-plateforme",
-    isOpenedByDefault: false,
-  });
-
-  const confirmTypeAccompagnementSwitchToAutonomeModal = createModal({
-    id: "confirm-type-accompagnement-switch-to-autonome",
-    isOpenedByDefault: false,
-  });
 
   return (
     <div className={`flex flex-col ${className || ""}`}>
