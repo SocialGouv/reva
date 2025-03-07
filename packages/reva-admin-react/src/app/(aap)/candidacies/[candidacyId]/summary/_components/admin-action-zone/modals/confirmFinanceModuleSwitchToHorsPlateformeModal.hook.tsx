@@ -1,4 +1,14 @@
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const schema = z.object({
+  reason: z.string().min(1, "Merci de remplir ce champ"),
+});
+
+type Form = z.infer<typeof schema>;
 
 export const useConfirmFinanceModuleSwitchToHorsPlateformeModal = () => {
   const confirmFinanceModuleSwitchToHorsPlateformeModal = createModal({
@@ -9,38 +19,72 @@ export const useConfirmFinanceModuleSwitchToHorsPlateformeModal = () => {
   const ConfirmFinanceModuleSwitchToHorsPlateformeModal = ({
     onConfirmButtonClick,
   }: {
-    onConfirmButtonClick: () => void;
-  }) => (
-    <confirmFinanceModuleSwitchToHorsPlateformeModal.Component
-      title={
-        <div className="flex gap-2">
-          <span className="fr-icon-warning-fill" />
-          Cette action est irréversible
-        </div>
-      }
-      size="large"
-      buttons={[
-        {
-          priority: "secondary",
-          children: "Annuler",
-        },
-        {
-          priority: "primary",
-          children: "Confirmer",
-          onClick: onConfirmButtonClick,
-        },
-      ]}
-    >
-      <div className="flex flex-col gap-4">
-        <p>
-          Vous êtes sur le point de passer ce candidat en parcours hors
-          financement. Cette action est définitive et ne pourra pas être
-          annulée.
-        </p>
-        <p className="mb-0">Êtes vous sûr de vouloir continuer ?</p>
-      </div>
-    </confirmFinanceModuleSwitchToHorsPlateformeModal.Component>
-  );
+    onConfirmButtonClick: (data: { reason: string }) => void;
+  }) => {
+    const {
+      register,
+      handleSubmit,
+      reset,
+      formState: { errors },
+    } = useForm<Form>({ resolver: zodResolver(schema) });
+
+    const handleConfirmButtonClick = handleSubmit((data) => {
+      onConfirmButtonClick(data);
+      confirmFinanceModuleSwitchToHorsPlateformeModal.close();
+    });
+
+    const handleCancelButtonClick = () => {
+      reset({ reason: "" });
+      confirmFinanceModuleSwitchToHorsPlateformeModal.close();
+    };
+
+    return (
+      <confirmFinanceModuleSwitchToHorsPlateformeModal.Component
+        title={
+          <div className="flex gap-2">
+            <span className="fr-icon-warning-fill" />
+            Cette action est irréversible
+          </div>
+        }
+        size="large"
+        buttons={[
+          {
+            priority: "secondary",
+            children: "Annuler",
+            doClosesModal: false,
+            onClick: handleCancelButtonClick,
+          },
+          {
+            priority: "primary",
+            children: "Confirmer",
+            doClosesModal: false,
+            onClick: handleConfirmButtonClick,
+            type: "submit",
+          },
+        ]}
+      >
+        <form>
+          <div className="flex flex-col gap-4">
+            <p>
+              Vous êtes sur le point de passer ce candidat en parcours hors
+              financement. Cette action est définitive et ne pourra pas être
+              annulée.
+            </p>
+            <Input
+              label="Précisez la raison de cette action :"
+              hintText="Seuls les administrateurs FVAE auront accès à cette information"
+              nativeInputProps={{
+                ...register("reason", { required: true }),
+              }}
+              state={errors.reason ? "error" : "default"}
+              stateRelatedMessage={errors.reason ? errors.reason?.message : ""}
+            />
+            <p className="mb-0">Êtes vous sûr de vouloir continuer ?</p>
+          </div>
+        </form>
+      </confirmFinanceModuleSwitchToHorsPlateformeModal.Component>
+    );
+  };
 
   return {
     Component: ConfirmFinanceModuleSwitchToHorsPlateformeModal,
