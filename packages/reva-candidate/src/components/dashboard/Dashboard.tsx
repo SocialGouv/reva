@@ -1,17 +1,17 @@
-import Image from "next/image";
-import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import { useCandidacyForDashboard } from "./dashboard.hooks";
 import Tag from "@codegouvfr/react-dsfr/Tag";
-import { useMemo } from "react";
-import { useRouter } from "next/navigation";
-import IconTitleWidget from "./widgets/IconTitleWidget";
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { format, isAfter } from "date-fns";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { useCandidacyForDashboard } from "./dashboard.hooks";
+import IconTitleWidget from "./widgets/IconTitleWidget";
 
 const Dashboard = () => {
   const router = useRouter();
-  const { candidate, candidacy, candidacyAlreadySubmitted } =
-    useCandidacyForDashboard();
+  const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
 
   const hasSelectedCertification = useMemo(
     () => candidacy?.certification?.id !== undefined,
@@ -33,31 +33,23 @@ const Dashboard = () => {
     [candidacy],
   );
 
-  const canSendCandidacy = useMemo(
+  const canSubmitCandidacy = useMemo(
     () =>
-      hasSelectedCertification &&
-      hasCompletedGoals &&
-      hasSelectedOrganism &&
-      hasCompletedExperience &&
-      candidate.firstname &&
-      candidate.lastname &&
-      candidate.birthdate &&
-      candidate.birthCity &&
-      candidate.birthDepartment &&
-      candidate.nationality &&
-      candidate.phone &&
-      candidate.email &&
-      !candidacyAlreadySubmitted,
+      candidateCanSubmitCandidacyToAap(
+        hasSelectedCertification,
+        hasCompletedGoals,
+        hasSelectedOrganism,
+        hasCompletedExperience,
+        candidacyAlreadySubmitted,
+      ),
     [
       hasSelectedCertification,
       hasCompletedGoals,
       hasSelectedOrganism,
       hasCompletedExperience,
       candidacyAlreadySubmitted,
-      candidate,
     ],
   );
-
   return (
     <div>
       <p className="text-xl">
@@ -74,7 +66,7 @@ const Dashboard = () => {
         />
         <div className="pt-8 mt-[-120px] lg:mt-0 lg:p-0 text-justify">
           <p className="my-0 pl-8">
-            {canSendCandidacy ? (
+            {canSubmitCandidacy ? (
               <>
                 Votre candidature est correctement complétée ? Vous pouvez
                 l’envoyer sans plus tarder !{" "}
@@ -180,11 +172,9 @@ const Dashboard = () => {
                 />
                 <Tile
                   start={
-                    <CompleteIncompleteBadge
-                      isComplete={candidacyAlreadySubmitted}
-                    />
+                    <SentToSendBadge isComplete={candidacyAlreadySubmitted} />
                   }
-                  disabled={!canSendCandidacy}
+                  disabled={!canSubmitCandidacy}
                   title="Envoi de la candidature"
                   small
                   buttonProps={{
@@ -315,12 +305,16 @@ const Dashboard = () => {
   );
 };
 
-const CompleteIncompleteBadge = ({ isComplete }: { isComplete: boolean }) => {
-  return (
-    <Badge severity={isComplete ? "success" : "warning"}>
-      {isComplete ? "complété" : "à compléter"}
-    </Badge>
-  );
-};
+const CompleteIncompleteBadge = ({ isComplete }: { isComplete: boolean }) => (
+  <Badge severity={isComplete ? "success" : "warning"}>
+    {isComplete ? "complété" : "à compléter"}
+  </Badge>
+);
+
+const SentToSendBadge = ({ isComplete }: { isComplete: boolean }) => (
+  <Badge severity={isComplete ? "success" : "warning"}>
+    {isComplete ? "Envoyée" : "à envoyer"}
+  </Badge>
+);
 
 export default Dashboard;
