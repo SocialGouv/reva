@@ -74,12 +74,13 @@ export const useConfirmTypeAccompagnementSwitchToAutonomeModal = () => {
               <li>Expériences</li>
               <li>Choix de l’accompagnateur</li>
             </ul>
-            <p>
+            <p className="mb-8">
               Si une décision a déjà été prise sur le dossier de faisabilité,
               elle restera accessible dans la section concernée, sous le même
               format.
             </p>
             <Input
+              className="mb-8"
               label="Précisez la raison de cette action :"
               hintText="Seuls les administrateurs FVAE auront accès à cette information"
               nativeInputProps={{
@@ -88,7 +89,7 @@ export const useConfirmTypeAccompagnementSwitchToAutonomeModal = () => {
               state={errors.reason ? "error" : "default"}
               stateRelatedMessage={errors.reason ? errors.reason?.message : ""}
             />
-            <p className="mb-0">Êtes vous sûr de vouloir continuer ?</p>
+            <p className="mb-2">Êtes vous sûr de vouloir continuer ?</p>
           </div>
         </form>
       </confirmTypeAccompagnementSwitchToAutonomeModal.Component>
