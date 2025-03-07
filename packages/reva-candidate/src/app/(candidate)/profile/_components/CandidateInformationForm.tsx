@@ -12,6 +12,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -35,6 +36,7 @@ const CandidateInformationForm = ({
   departments?: Departments;
 }) => {
   const { updateCandidateInformationMutate } = useUpdateCandidateInformation();
+  const router = useRouter();
 
   const isAddressAlreadyCompleted =
     !!candidate?.street && !!candidate?.zip && !!candidate?.city;
@@ -167,6 +169,7 @@ const CandidateInformationForm = ({
         candidateInformation,
       });
       successToast("Les informations ont bien été mises à jour");
+      router.push("/");
     } catch (e) {
       graphqlErrorToast(e);
     }
