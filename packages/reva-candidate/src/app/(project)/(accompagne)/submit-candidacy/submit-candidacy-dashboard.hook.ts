@@ -24,6 +24,11 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       city
       candidacy {
         id
+        certification {
+          label
+          codeRncp
+          isAapAvailable
+        }
       }
     }
   }
@@ -39,9 +44,11 @@ export const useSubmitCandidacyForDashboard = () => {
 
   const candidate = data?.candidate_getCandidateWithCandidacy;
   const candidacy = candidate?.candidacy;
+  const certification = candidate?.candidacy?.certification;
   return {
     candidate,
     candidacy,
+    certification,
   };
 };
 

@@ -7,6 +7,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { BackButton } from "@/components/back-button/BackButton";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import CandidateSectionSubmitCandidacy from "./CandidateSectionSubmitCandidacy";
+import CertificationSectionSubmitCandidacy from "./CertificationSectionSubmitCandidacy";
 import { useSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
 
@@ -14,7 +15,8 @@ export default function SubmitCandidacy() {
   const router = useRouter();
 
   const { submitCandidacy } = useSubmitCandidacy();
-  const { candidate, candidacy } = useSubmitCandidacyForDashboard();
+  const { candidate, candidacy, certification } =
+    useSubmitCandidacyForDashboard();
 
   const onSubmitCandidacy = async () => {
     try {
@@ -38,6 +40,11 @@ export default function SubmitCandidacy() {
         pour fixer le premier rendez-vous.
       </p>
       <CandidateSectionSubmitCandidacy candidate={candidate} />
+      <CertificationSectionSubmitCandidacy
+        isAapAvailable={!!certification?.isAapAvailable}
+        codeRncp={certification?.codeRncp}
+        label={certification?.label}
+      />
       <div className="flex justify-between mt-6">
         <BackButton navigateBack={() => router.push("/")} />
         <Button data-test="project-submit" onClick={onSubmitCandidacy}>
