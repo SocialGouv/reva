@@ -333,6 +333,7 @@ type Mutation {
   candidacy_updateTypeAccompagnement(
     candidacyId: UUID!
     typeAccompagnement: TypeAccompagnement!
+    reason: String
   ): Candidacy!
   candidacy_updateLastActivityDate(
     candidacyId: UUID!
@@ -345,5 +346,6 @@ type Mutation {
   candidacy_updateFinanceModule(
     candidacyId: UUID!
     financeModule: FinanceModule!
+    reason: String
   ): Candidacy!
 }

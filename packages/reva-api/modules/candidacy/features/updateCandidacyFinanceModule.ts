@@ -10,10 +10,12 @@ import { updateCandidacyStatus } from "./updateCandidacyStatus";
 export const updateCandidacyFinanceModule = async ({
   candidacyId,
   financeModule,
+  reason,
   userInfo,
 }: {
   candidacyId: string;
   financeModule: FinanceModule;
+  reason?: string;
   userInfo: CandidacyAuditLogUserInfo;
 }) => {
   //if we are updating the finance module to hors_plateforme and the current status is either DEMANDE_PAIEMENT_ENVOYEE or DEMANDE_FINANCEMENT_ENVOYE
@@ -39,7 +41,7 @@ export const updateCandidacyFinanceModule = async ({
   await logCandidacyAuditEvent({
     candidacyId,
     eventType: "FINANCE_MODULE_UPDATED",
-    details: { financeModule },
+    details: { financeModule, reason },
     ...userInfo,
   });
 

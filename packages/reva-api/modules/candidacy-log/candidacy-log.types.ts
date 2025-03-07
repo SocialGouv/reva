@@ -39,7 +39,6 @@ export type CandidacyLogEventTypeAndDetails =
         | "FUNDING_REQUEST_CREATED"
         | "PAYMENT_REQUEST_CREATED_OR_UPDATED"
         | "PAYMENT_REQUEST_CONFIRMED"
-        | "TYPE_ACCOMPAGNEMENT_UPDATED"
         | "CANDIDACY_ACTUALISATION"
         | "CADUCITE_CONTESTED"
         | "CADUCITE_INVALIDATED"
@@ -110,7 +109,7 @@ export type CandidacyLogEventTypeAndDetails =
     }
   | {
       eventType: "TYPE_ACCOMPAGNEMENT_UPDATED";
-      details: { typeAccompagnement: string };
+      details: { typeAccompagnement: string; reason?: string };
     }
   | {
       eventType: "ADMIN_CUSTOM_ACTION";
@@ -118,7 +117,7 @@ export type CandidacyLogEventTypeAndDetails =
     }
   | {
       eventType: "FINANCE_MODULE_UPDATED";
-      details: { financeModule: FinanceModule };
+      details: { financeModule: FinanceModule; reason?: string };
     };
 
 export type CandidacyLog = {

@@ -627,9 +627,11 @@ const unsafeResolvers = {
       {
         candidacyId,
         typeAccompagnement,
+        reason,
       }: {
         candidacyId: string;
         typeAccompagnement: CandidacyTypeAccompagnement;
+        reason?: string;
       },
       context: GraphqlContext,
     ) => {
@@ -644,7 +646,7 @@ const unsafeResolvers = {
         userKeycloakId: context.auth.userInfo?.sub,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
         userEmail: context.auth.userInfo?.email,
-        details: { typeAccompagnement },
+        details: { typeAccompagnement, reason },
       });
       return result;
     },
@@ -677,6 +679,7 @@ const unsafeResolvers = {
       input: {
         candidacyId: string;
         financeModule: FinanceModule;
+        reason?: string;
       },
       context: GraphqlContext,
     ) =>

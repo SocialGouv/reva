@@ -169,16 +169,15 @@ export const getCandidacyLogMessage = ({
       );
 
     case "TYPE_ACCOMPAGNEMENT_UPDATED":
-      return details?.typeAccompagnement
-        ? log("Type d'accompagnement modifié", details.typeAccompagnement)
-        : log("Type d'accompagnement modifié");
+      return log(
+        "Type d'accompagnement modifié",
+        `nouveau type d'accompagnement: ${details.typeAccompagnement}${details.reason ? `, raison: ${details.reason || ""}` : ""}`,
+      );
 
     case "CANDIDACY_ACTUALISATION":
       return log("Candidature actualisée");
 
     case "CADUCITE_CONTESTED":
-      return log("Caducité de la candidature contestée");
-
     case "CADUCITE_INVALIDATED":
       return log("Caducité de la candidature invalidée");
 
@@ -208,12 +207,16 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_INVALIDATED":
       return log("Caducité de la candidature invalidée");
 
+    case "FINANCE_MODULE_UPDATED":
+      return log(
+        "Module de financement mis à jour.",
+        `nouveau module:${details.financeModule}${details.reason ? `, raison: ${details.reason || ""}` : ""}`,
+      );
+
     case "ADMIN_CUSTOM_ACTION":
       return details?.message
         ? log("Action exceptionnelle effectuée", details.message)
         : log("Action exceptionnelle effectuée");
-    case "FINANCE_MODULE_UPDATED":
-      return log("Module de financement mis à jour.", details.financeModule);
 
     default:
       return log("Événement inconnu");
