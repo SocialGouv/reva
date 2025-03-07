@@ -4,7 +4,10 @@ export async function insertDropOutReasonsIfNone(prisma: PrismaClient) {
   const dropOutReasonCount = await prisma.dropOutReason.count();
 
   // Drop out reason with value 'Financement du jury' is added by a migration
-  if (dropOutReasonCount === 1) {
+  // Drop out reason with value 'Non recevabilité prononcée par le certificateur' is added by a migration
+  // Drop out reason with value 'Recevabilité caduque' is added by a migration
+  // This why condition checks if count == 3
+  if (dropOutReasonCount === 3) {
     await prisma.dropOutReason.createMany({
       data: [
         { label: "Reprise d’emploi" },
