@@ -1,29 +1,8 @@
 import { format } from "date-fns";
 
-import { GenderEnum } from "@/constants";
-import { Candidate, Gender } from "@/graphql/generated/graphql";
-
-function getGenderPrefix(gender: Gender) {
-  switch (gender) {
-    case GenderEnum.man:
-      return "M. ";
-    case GenderEnum.woman:
-      return "Mme ";
-    case GenderEnum.undisclosed:
-      return "";
-  }
-}
-
-function getGenderBornLabel(gender: Gender) {
-  switch (gender) {
-    case GenderEnum.man:
-      return "Né";
-    case GenderEnum.woman:
-      return "Née";
-    case GenderEnum.undisclosed:
-      return "Né";
-  }
-}
+import { Candidate } from "@/graphql/generated/graphql";
+import { getGenderBornLabel } from "@/utils/getGenderBornLabel.util";
+import { getGenderPrefix } from "@/utils/getGenderPrefix.util";
 
 export default function CandidateSection({
   candidate,
