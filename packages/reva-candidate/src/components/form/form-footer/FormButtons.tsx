@@ -1,3 +1,4 @@
+import { BackButton } from "@/components/back-button/BackButton";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useRouter } from "next/navigation";
@@ -80,17 +81,7 @@ export const FormButtons = ({
         role="group"
         aria-label="Actions du formulaire"
       >
-        {backUrl && (
-          <Button
-            priority="secondary"
-            onClick={navigateBack}
-            type="button"
-            aria-label="Retour à la page précédente"
-            data-test="back-button"
-          >
-            Retour
-          </Button>
-        )}
+        {backUrl && <BackButton navigateBack={navigateBack} />}
         <div className="flex gap-x-2 ml-auto">
           <Button
             type="reset"
