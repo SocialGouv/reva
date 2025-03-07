@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
 
@@ -14,6 +14,7 @@ const SUBMIT_CANDIDACY = graphql(`
 
 export const useSubmitCandidacy = () => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const submitCandidacy = useMutation({
     mutationKey: ["candidacy_submitCandidacy"],
@@ -21,6 +22,9 @@ export const useSubmitCandidacy = () => {
       graphqlClient.request(SUBMIT_CANDIDACY, {
         candidacyId,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["candidate"] });
+    },
   });
 
   return { submitCandidacy };

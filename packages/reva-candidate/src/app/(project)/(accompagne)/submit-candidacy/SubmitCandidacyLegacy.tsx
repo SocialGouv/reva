@@ -14,7 +14,7 @@ import { useSubmitCandidacy } from "./submit-candidacy.hooks";
 export default function SubmitCandidacy() {
   const router = useRouter();
 
-  const { canEditCandidacy, candidacy, refetch, candidacyAlreadySubmitted } =
+  const { canEditCandidacy, candidacy, candidacyAlreadySubmitted } =
     useCandidacy();
 
   const { submitCandidacy } = useSubmitCandidacy();
@@ -29,7 +29,6 @@ export default function SubmitCandidacy() {
         candidacyId: candidacy.id,
       });
       if (response) {
-        refetch();
         router.push("/");
       }
     } catch (error) {
