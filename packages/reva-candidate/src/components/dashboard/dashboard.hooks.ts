@@ -1,6 +1,7 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { graphql } from "@/graphql/generated";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   query candidate_getCandidateWithCandidacyForDashboard {
@@ -127,14 +128,10 @@ export const useCandidacyForDashboard = () => {
       (status) => status.status == "PARCOURS_CONFIRME",
     ) != -1 && !isCurrentlySubmitted;
 
-  // Un candidat peut éditer son dossier de candidature tant qu'il n'a pas confirmé son parcours
-  // et que la candidature n'est pas abandonnée
-  const canEditCandidacy =
-    (candidacyStatus === "PROJET" ||
-      candidacyStatus === "VALIDATION" ||
-      candidacyStatus === "PRISE_EN_CHARGE" ||
-      candidacyStatus === "PARCOURS_ENVOYE") &&
-    !candidacy?.candidacyDropOut;
+  const canEditCandidacy = candidateCanEditCandidacy({
+    candidacyStatus,
+    candidacyDropOut: !!candidacy?.candidacyDropOut,
+  });
 
   const candidacyAlreadySubmitted = candidacyStatus !== "PROJET";
 

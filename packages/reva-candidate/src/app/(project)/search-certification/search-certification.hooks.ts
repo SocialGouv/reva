@@ -1,12 +1,13 @@
 import {
   useMutation,
-  useSuspenseQuery,
   useQueryClient,
+  useSuspenseQuery,
 } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
 
 const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
   query searchCertificationsForCandidateDashboard(
@@ -81,12 +82,10 @@ export const useCandidacyForCertificationSearch = () => {
       ?.candidacy;
   const candidacyStatus = candidacy?.status;
 
-  const canEditCandidacy =
-    (candidacyStatus === "PROJET" ||
-      candidacyStatus === "VALIDATION" ||
-      candidacyStatus === "PRISE_EN_CHARGE" ||
-      candidacyStatus === "PARCOURS_ENVOYE") &&
-    !candidacy?.candidacyDropOut;
+  const canEditCandidacy = candidateCanEditCandidacy({
+    candidacyStatus,
+    candidacyDropOut: !!candidacy?.candidacyDropOut,
+  });
 
   return {
     candidacy,
