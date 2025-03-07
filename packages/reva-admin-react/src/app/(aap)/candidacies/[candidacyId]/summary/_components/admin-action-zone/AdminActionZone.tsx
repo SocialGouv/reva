@@ -1,8 +1,9 @@
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { ComponentProps } from "react";
 import { useAdminActionZone } from "./adminActionZone.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { useConfirmFinanceModuleSwitchToHorsPlateformeModal } from "./modals/confirmFinanceModuleSwitchToHorsPlateformeModal.hook";
+import { useConfirmTypeAccompagnementSwitchToAutonomeModal } from "./modals/confirmTypeAccompagnementSwitchToAutonomeModal.hook";
 
 export const AdminActionZone = ({
   candidacyId,
@@ -30,15 +31,11 @@ export const AdminActionZone = ({
     updateCandidacyTypeAccompagnementToAutonome,
   } = useAdminActionZone({ candidacyId });
 
-  const confirmFinanceModuleSwitchToHorsPlateformeModal = createModal({
-    id: "confirm-finance-module-switch-to-hors-plateforme",
-    isOpenedByDefault: false,
-  });
+  const confirmFinanceModuleSwitchToHorsPlateformeModal =
+    useConfirmFinanceModuleSwitchToHorsPlateformeModal();
 
-  const confirmTypeAccompagnementSwitchToAutonomeModal = createModal({
-    id: "confirm-type-accompagnement-switch-to-autonome",
-    isOpenedByDefault: false,
-  });
+  const confirmTypeAccompagnementSwitchToAutonomeModal =
+    useConfirmTypeAccompagnementSwitchToAutonomeModal();
 
   const handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick =
     async () => {
@@ -65,74 +62,16 @@ export const AdminActionZone = ({
   return (
     <div className={`flex flex-col ${className || ""}`}>
       <confirmFinanceModuleSwitchToHorsPlateformeModal.Component
-        title={
-          <div className="flex gap-2">
-            <span className="fr-icon-warning-fill" />
-            Cette action est irréversible
-          </div>
+        onConfirmButtonClick={
+          handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick
         }
-        size="large"
-        buttons={[
-          {
-            priority: "secondary",
-            children: "Annuler",
-          },
-          {
-            priority: "primary",
-            children: "Confirmer",
-            onClick:
-              handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick,
-          },
-        ]}
-      >
-        <div className="flex flex-col gap-4">
-          <p>
-            Vous êtes sur le point de passer ce candidat en parcours hors
-            financement. Cette action est définitive et ne pourra pas être
-            annulée.
-          </p>
-          <p className="mb-0">Êtes vous sûr de vouloir continuer ?</p>
-        </div>
-      </confirmFinanceModuleSwitchToHorsPlateformeModal.Component>
+      />
 
       <confirmTypeAccompagnementSwitchToAutonomeModal.Component
-        title={
-          <div className="flex gap-2">
-            <span className="fr-icon-warning-fill" />
-            Cette action est irréversible
-          </div>
+        onConfirmButtonClick={
+          handleUpdateCandidacyTypeAccompagnementToAutonomeButtonClick
         }
-        size="large"
-        buttons={[
-          {
-            priority: "secondary",
-            children: "Annuler",
-          },
-          {
-            priority: "primary",
-            children: "Confirmer",
-            onClick:
-              handleUpdateCandidacyTypeAccompagnementToAutonomeButtonClick,
-          },
-        ]}
-      >
-        <div className="flex flex-col">
-          <p>
-            Passer ce candidat en parcours autonome est une action définitive.
-            Cela supprimera certains éléments de son espace personnel :
-          </p>
-          <ul className="mb-6">
-            <li>Objectifs</li>
-            <li>Expériences</li>
-            <li>Choix de l’accompagnateur</li>
-          </ul>
-          <p>
-            Si une décision a déjà été prise sur le dossier de faisabilité, elle
-            restera accessible dans la section concernée, sous le même format.
-          </p>
-          <p className="mb-0">Êtes vous sûr de vouloir continuer ?</p>
-        </div>
-      </confirmTypeAccompagnementSwitchToAutonomeModal.Component>
+      />
 
       <div className="bg-white border border-b-2 mt-8">
         <p className="text-xl font-bold my-0 leading-loose p-4 pl-6">
