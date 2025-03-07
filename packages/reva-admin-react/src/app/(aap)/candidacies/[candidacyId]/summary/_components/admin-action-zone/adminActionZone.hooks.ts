@@ -3,10 +3,14 @@ import { graphql } from "@/graphql/generated";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`
-  mutation updateCandidacyFinanceModuleToHorsPlateforme($candidacyId: UUID!) {
+  mutation updateCandidacyFinanceModuleToHorsPlateforme(
+    $candidacyId: UUID!
+    $reason: String
+  ) {
     candidacy_updateFinanceModule(
       candidacyId: $candidacyId
       financeModule: hors_plateforme
+      reason: $reason
     ) {
       id
     }
@@ -14,10 +18,14 @@ const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`
 `);
 
 const updateCandidacyTypeAccompagnementToAutonomeMutation = graphql(`
-  mutation updateCandidacyTypeAccompagnementToAutonome($candidacyId: UUID!) {
+  mutation updateCandidacyTypeAccompagnementToAutonome(
+    $candidacyId: UUID!
+    $reason: String
+  ) {
     candidacy_updateTypeAccompagnement(
       candidacyId: $candidacyId
       typeAccompagnement: AUTONOME
+      reason: $reason
     ) {
       id
     }
@@ -35,10 +43,16 @@ export const useAdminActionZone = ({
 
   const updateCandidacyFinanceModuleToHorsPlateforme = useMutation({
     mutationKey: [candidacyId],
-    mutationFn: ({ candidacyId }: { candidacyId: string }) =>
+    mutationFn: ({
+      candidacyId,
+      reason,
+    }: {
+      candidacyId: string;
+      reason: string;
+    }) =>
       graphqlClient.request(
         updateCandidacyFinanceModuleToHorsPlateformeMutation,
-        { candidacyId },
+        { candidacyId, reason },
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -49,10 +63,16 @@ export const useAdminActionZone = ({
 
   const updateCandidacyTypeAccompagnementToAutonome = useMutation({
     mutationKey: [candidacyId],
-    mutationFn: ({ candidacyId }: { candidacyId: string }) =>
+    mutationFn: ({
+      candidacyId,
+      reason,
+    }: {
+      candidacyId: string;
+      reason: string;
+    }) =>
       graphqlClient.request(
         updateCandidacyTypeAccompagnementToAutonomeMutation,
-        { candidacyId },
+        { candidacyId, reason },
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({

@@ -37,27 +37,35 @@ export const AdminActionZone = ({
   const confirmTypeAccompagnementSwitchToAutonomeModal =
     useConfirmTypeAccompagnementSwitchToAutonomeModal();
 
-  const handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick =
-    async () => {
-      try {
-        await updateCandidacyFinanceModuleToHorsPlateforme.mutateAsync({
-          candidacyId,
-        });
-      } catch (e) {
-        graphqlErrorToast(e);
-      }
-    };
+  const handleUpdateCandidacyFinanceModuleToHorsPlateformeButtonClick = async ({
+    reason,
+  }: {
+    reason: string;
+  }) => {
+    try {
+      await updateCandidacyFinanceModuleToHorsPlateforme.mutateAsync({
+        candidacyId,
+        reason,
+      });
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
 
-  const handleUpdateCandidacyTypeAccompagnementToAutonomeButtonClick =
-    async () => {
-      try {
-        await updateCandidacyTypeAccompagnementToAutonome.mutateAsync({
-          candidacyId,
-        });
-      } catch (e) {
-        graphqlErrorToast(e);
-      }
-    };
+  const handleUpdateCandidacyTypeAccompagnementToAutonomeButtonClick = async ({
+    reason,
+  }: {
+    reason: string;
+  }) => {
+    try {
+      await updateCandidacyTypeAccompagnementToAutonome.mutateAsync({
+        candidacyId,
+        reason,
+      });
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
 
   return (
     <div className={`flex flex-col ${className || ""}`}>
