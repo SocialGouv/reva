@@ -363,7 +363,7 @@ const CandidateInformationForm = ({
               },
             },
           ]}
-          className="mb-0"
+          className="mb-0 w-fit"
         />
 
         <div className="flex gap-8">

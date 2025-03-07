@@ -375,7 +375,7 @@ const CandidateInformationForm = ({
               },
             },
           ]}
-          className="mb-0"
+          className="mb-0 w-fit"
           data-testid="manual-address-checkbox"
         />
 
