@@ -179,12 +179,15 @@ const Dashboard = () => {
                   imageUrl="/candidat/images/pictograms/avatar.svg"
                 />
                 <Tile
+                  start={
+                    <CompleteIncompleteBadge
+                      isComplete={candidacyAlreadySubmitted}
+                    />
+                  }
                   disabled={!canSendCandidacy}
                   title="Envoi de la candidature"
-                  desc="Compléter toutes les sections"
                   small
                   buttonProps={{
-                    disabled: !canSendCandidacy,
                     onClick: () => {
                       router.push("/submit-candidacy");
                     },
