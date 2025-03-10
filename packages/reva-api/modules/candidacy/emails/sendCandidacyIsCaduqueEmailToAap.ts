@@ -1,6 +1,11 @@
 import mjml2html from "mjml";
 
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import {
+  sendEmailUsingTemplate,
+  sendGenericEmail,
+  templateMail,
+} from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const sendCandidacyIsCaduqueEmailToAap = async ({
   aapEmail,
@@ -11,6 +16,21 @@ export const sendCandidacyIsCaduqueEmailToAap = async ({
   aapLabel: string;
   candidateFullName: string;
 }) => {
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_ORGANISM_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email: aapEmail },
+      templateId: 548,
+      params: {
+        aapLabel,
+        candidateFullName,
+      },
+    });
+  }
+
   const htmlContent = mjml2html(
     templateMail({
       content: `
