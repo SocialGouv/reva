@@ -105,7 +105,9 @@ const Dashboard = () => {
               title="Diplôme visé"
               small
               linkProps={{
-                href: "/search-certification",
+                href: hasSelectedCertification
+                  ? `/certification/${candidacy.certification?.id}`
+                  : "/search-certification",
               }}
               imageUrl="/candidat/images/pictograms/search.svg"
             />
@@ -139,18 +141,18 @@ const Dashboard = () => {
                 />
                 <Tile
                   start={
-                    <Badge className="bg-[#fee7fc] text-[#6e445a]">
+                    <>
                       {candidacy.experiences.length === 0 ? (
                         <Badge severity="warning">À compléter</Badge>
                       ) : (
-                        <>
+                        <Badge className="bg-[#fee7fc] text-[#6e445a]">
                           {candidacy.experiences.length}{" "}
                           {candidacy.experiences.length === 1
                             ? "renseignée"
                             : "renseignées"}
-                        </>
+                        </Badge>
                       )}
-                    </Badge>
+                    </>
                   }
                   title="Expériences"
                   small
