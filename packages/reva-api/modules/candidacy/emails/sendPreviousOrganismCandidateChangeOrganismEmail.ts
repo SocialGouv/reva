@@ -1,7 +1,12 @@
 import mjml2html from "mjml";
 
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import {
+  sendEmailUsingTemplate,
+  sendGenericEmail,
+  templateMail,
+} from "../../shared/email";
 import { logger } from "../../shared/logger";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const sendPreviousOrganismCandidateChangeOrganismEmail = async ({
   email,
@@ -14,6 +19,21 @@ export const sendPreviousOrganismCandidateChangeOrganismEmail = async ({
   certificationName: string;
   date: Date | null;
 }) => {
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_ORGANISM_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 534,
+      params: {
+        candidateFullName,
+        certificationName,
+      },
+    });
+  }
+
   const htmlContent = mjml2html(
     templateMail({
       content: `<p>Bonjour,</p><p>France VAE vous informe que <strong>${candidateFullName}</strong> a choisi un autre Architecte Accompagnateur de Parcours pour l’accompagner dans son projet de <i>"${certificationName}"</i>.</p>
