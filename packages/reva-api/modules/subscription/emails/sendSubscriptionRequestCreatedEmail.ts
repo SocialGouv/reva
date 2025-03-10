@@ -1,15 +1,30 @@
 import mjml2html from "mjml";
 
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import {
+  sendEmailUsingTemplate,
+  sendGenericEmail,
+  templateMail,
+} from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const sendSubscriptionRequestCreatedEmail = async ({
   email,
 }: {
   email: string;
 }) => {
-  const htmlContent = mjml2html(
-    templateMail({
-      content: `
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_ORGANISM_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 554,
+    });
+  } else {
+    const htmlContent = mjml2html(
+      templateMail({
+        content: `
       <p>Bonjour,</p>
       <p>Nous avons pris connaissance de votre demande de référencement comme Architecte Accompagnateur de Parcours ou AAP sur le nouveau portail de la VAE.</p>
       <p>Pour finaliser votre inscription sur la plateforme France VAE, vous devez d'abord consulter et répondre à ce questionnaire de présentation et d'explication du rôle de l'Architecte Accompagnateur de Parcours : <a href="https://tally.so/r/n0M4Ry">lien vers le questionnaire</a></p>
@@ -24,12 +39,13 @@ export const sendSubscriptionRequestCreatedEmail = async ({
       <p>Cordialement,</p>
       <p>L'équipe VAE</p>
       `,
-    }),
-  );
+      }),
+    );
 
-  return sendGenericEmail({
-    to: { email },
-    htmlContent: htmlContent.html,
-    subject: "Inscription prise en compte",
-  });
+    return sendGenericEmail({
+      to: { email },
+      htmlContent: htmlContent.html,
+      subject: "Inscription prise en compte",
+    });
+  }
 };
