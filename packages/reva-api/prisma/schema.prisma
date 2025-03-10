@@ -1381,6 +1381,7 @@ model MaisonMereAAP {
   maisonMereAAPLegalInformationDocuments              MaisonMereAAPLegalInformationDocuments?
   maisonMereAAPLegalInformationDocumentsDecision      MaisonMereAAPLegalInformationDocumentsDecision[]
   isMCFCompatible                                     Boolean?                                            @map("is_mcf_compatible")
+  AAPLog                                              AAPLog[]
 
   @@index([typologie])
   @@index([gestionnaireAccountId])
@@ -1440,6 +1441,27 @@ model CandidacyLog {
 
   @@index([candidacyId])
   @@map("candidacy_log")
+}
+
+enum AAPLogUserProfile {
+  ADMIN
+  AAP
+}
+
+model AAPLog {
+  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userKeycloakId  String            @map("user_keycloak_id") @db.Uuid
+  userEmail       String            @map("user_email") @db.VarChar(255)
+  userProfile     AAPLogUserProfile @map("user_profile")
+  maisonMereAAPId String            @map("maison_mere_aap_id") @db.Uuid
+  maisonMere      MaisonMereAAP     @relation(fields: [maisonMereAAPId], references: [id])
+  eventType       String            @map("event_type")
+  details         Json?
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?         @map("updated_at") @db.Timestamptz(6)
+
+  @@index([maisonMereAAPId])
+  @@map("aap_log")
 }
 
 enum CompetenceBlocsPartCompletionEnum {
