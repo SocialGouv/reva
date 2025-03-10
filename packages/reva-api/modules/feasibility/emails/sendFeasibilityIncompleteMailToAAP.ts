@@ -2,10 +2,12 @@ import mjml2html from "mjml";
 
 import {
   formatFreeText,
+  sendEmailUsingTemplate,
   sendGenericEmail,
   templateMail,
 } from "../../shared/email";
 import { logger } from "../../shared/logger";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const sendFeasibilityIncompleteMailToAAP = async ({
   email,
@@ -16,11 +18,26 @@ export const sendFeasibilityIncompleteMailToAAP = async ({
   feasibilityUrl: string;
   comment?: string;
 }) => {
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_ORGANISM_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 535,
+      params: {
+        feasibilityUrl,
+        comment: comment || "",
+      },
+    });
+  }
+
   const commentInfo = comment
     ? `
-      <p>Commentaire du certificateur :</p>
-      <p><em>${formatFreeText(comment || "")}</em></p>
-      `
+        <p>Commentaire du certificateur :</p>
+        <p><em>${formatFreeText(comment || "")}</em></p>
+        `
     : "";
 
   const htmlContent = mjml2html(
@@ -37,7 +54,7 @@ export const sendFeasibilityIncompleteMailToAAP = async ({
         <p>Pour toute aide ou question, écrivez-nous à <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a></p>
         <p>Cordialement,</p>
         <p>L’équipe France VAE</p>
-      `,
+        `,
     }),
   );
 
