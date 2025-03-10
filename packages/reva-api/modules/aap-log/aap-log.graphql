@@ -1,0 +1,22 @@
+enum AAPLogUserProfile {
+  ADMIN
+  AAP
+}
+
+type AAPLogUser {
+  firstname: String!
+  lastname: String!
+}
+
+type AAPLog {
+  id: ID!
+  message: String!
+  details: String
+  createdAt: Timestamp!
+  userProfile: AAPLogUserProfile!
+  user: AAPLogUser!
+}
+
+type MaisonMereAAP {
+  aapLogs: [AAPLog!]!
+}

@@ -41,6 +41,8 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
+import { aapLogResolvers } from "./aap-log/aap-log.resolvers";
+import { aapLogLoaders } from "./aap-log/aap-log.loaders";
 
 // Resolvers
 
@@ -63,6 +65,7 @@ const resolvers = mergeResolvers([
   dossierDeValidationResolvers,
   juryResolvers,
   candidacyLogResolvers,
+  aapLogResolvers,
   candidacyMenuResolvers,
   dematerializedFeasibilityFileResolvers,
   feasibilityUploadedPdfResolvers,
@@ -92,6 +95,7 @@ export const graphqlConfiguration: MercuriusOptions = {
     ...certificationAuthorityLoaders,
     ...referentialLoaders,
     ...candidacyLogLoaders,
+    ...aapLogLoaders,
   },
   validationRules:
     process.env.NODE_ENV === "production"
