@@ -88,7 +88,16 @@ const unsafeResolvers = {
       }: {
         subscriptionRequestId: string;
       },
-    ) => validateSubscriptionRequest({ subscriptionRequestId }),
+      context: GraphqlContext,
+    ) =>
+      validateSubscriptionRequest({
+        subscriptionRequestId,
+        userInfo: {
+          userEmail: context.auth.userInfo?.email,
+          userKeycloakId: context.auth.userInfo?.sub,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        },
+      }),
     subscription_rejectSubscriptionRequest: async (
       _: unknown,
       {

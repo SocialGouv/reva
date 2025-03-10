@@ -11,11 +11,17 @@ import { logger } from "../../shared/logger";
 import { getDegrees } from "../../referential/features/getDegrees";
 import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
 import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
+import {
+  AAPAuditLogUserInfo,
+  logAAPAuditEvent,
+} from "../../aap-log/features/logAAPAuditEvent";
 
 export const validateSubscriptionRequest = async ({
   subscriptionRequestId,
+  userInfo,
 }: {
   subscriptionRequestId: string;
+  userInfo: AAPAuditLogUserInfo;
 }) => {
   const subscriptionRequest = await prismaClient.subscriptionRequest.findUnique(
     {
@@ -152,6 +158,12 @@ export const validateSubscriptionRequest = async ({
       subscriptionRequest.lettreDeDelegationFile,
       subscriptionRequest.justificatifIdentiteDelegataireFile,
     ].filter((f) => !!f) as File[],
+  });
+
+  await logAAPAuditEvent({
+    maisonMereAAPId: newMaisonMereAAP.id,
+    eventType: "SUBCRIBTION_REQUEST_VALIDATED",
+    userInfo,
   });
 
   return "Ok";

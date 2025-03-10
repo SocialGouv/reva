@@ -57,7 +57,7 @@ test("It should validate a correct subscription request", async () => {
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "admin",
-      keycloakId: "uuid",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
     }),
     payload: {
       requestType: "mutation",
@@ -124,7 +124,7 @@ test("It should fail to validate the subscription request if a keycloak account 
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "admin",
-      keycloakId: "uuid",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
     }),
     payload: {
       requestType: "mutation",
