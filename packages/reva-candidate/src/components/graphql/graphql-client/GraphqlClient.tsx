@@ -16,3 +16,8 @@ export const useGraphQlClient = () => {
 
   return { graphqlClient };
 };
+
+export const getSsrGraphQlClient = () => {
+  const graphqlClient = new GraphQLClient(GRAPHQL_API_URL);
+  return { graphqlClient };
+};

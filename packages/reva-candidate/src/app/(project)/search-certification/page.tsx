@@ -90,7 +90,9 @@ export default function SetCertification() {
         segments={[
           {
             label: "Diplôme visé",
-            linkProps: { href: "/certification" },
+            linkProps: {
+              href: `/certification/${candidacy.certification?.id}`,
+            },
           },
         ]}
       />
