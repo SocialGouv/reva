@@ -5,7 +5,7 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
-import { CandidacyLog, DayLog } from "./DayLog";
+import { Log, DayLog } from "../../../../../components/logs/day-log/DayLog";
 import { fr } from "date-fns/locale";
 
 const getCandidacyLogsQuery = graphql(`
@@ -54,7 +54,7 @@ const CandidacyLogsPage = () => {
   const candidacyLogs = candidacy?.candidacyLogs || [];
 
   const logsGroupedByDay = candidacyLogs.reduce(
-    (acc: Record<string, CandidacyLog[]>, log) => {
+    (acc: Record<string, Log[]>, log) => {
       const dayKey = format(log.createdAt, "do MMMM yyyy", { locale: fr });
 
       if (!acc[dayKey]) {

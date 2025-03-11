@@ -1,17 +1,16 @@
 import { format } from "date-fns";
-import {
-  CandidacyLogUser,
-  CandidacyLogUserProfile,
-} from "@/graphql/generated/graphql";
 import { capitalize, toLower, toUpper, truncate } from "lodash";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+
+type LogUserProfile = "ADMIN" | "AAP" | "CERTIFICATEUR" | "CANDIDAT";
+type LogUser = { firstname: string; lastname: string };
 
 const getUserProfileText = ({
   userProfile,
   user,
 }: {
-  userProfile: CandidacyLogUserProfile;
-  user: CandidacyLogUser;
+  userProfile: LogUserProfile;
+  user: LogUser;
 }) => {
   switch (userProfile) {
     case "ADMIN":
@@ -30,22 +29,16 @@ const getUserProfileText = ({
   }
 };
 
-export type CandidacyLog = {
+export type Log = {
   id: string;
   createdAt: number;
-  userProfile: CandidacyLogUserProfile;
-  user: CandidacyLogUser;
+  userProfile: LogUserProfile;
+  user: LogUser;
   message: string;
   details?: string | null;
 };
 
-export const DayLog = ({
-  day,
-  logs,
-}: {
-  day: string;
-  logs: CandidacyLog[];
-}) => {
+export const DayLog = ({ day, logs }: { day: string; logs: Log[] }) => {
   return (
     <Accordion label={day} defaultExpanded>
       <ul className="list-none flex flex-col gap-y-4 my-0 p-0 pt-3">
