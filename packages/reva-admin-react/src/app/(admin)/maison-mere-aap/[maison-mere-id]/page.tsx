@@ -63,6 +63,18 @@ const MaisonMereAapPage = () => {
               Voir les candidatures
             </Button>
           </div>
+          {isAdmin && (
+            <div>
+              <Button
+                priority="secondary"
+                linkProps={{
+                  href: `/maison-mere-aap/${maisonMereAAPId}/logs`,
+                }}
+              >
+                Journal des actions
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex items-center justify-between flex-col w-full  py-2 my-4">
