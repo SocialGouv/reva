@@ -8,6 +8,7 @@ import { BackButton } from "@/components/back-button/BackButton";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import CandidateSectionSubmitCandidacy from "./CandidateSectionSubmitCandidacy";
 import CertificationSectionSubmitCandidacy from "./CertificationSectionSubmitCandidacy";
+import ExperiencesSectionSubmitCandidacy from "./ExperiencesSectionSubmitCandidacy";
 import { useSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
 
@@ -45,6 +46,7 @@ export default function SubmitCandidacy() {
         codeRncp={certification?.codeRncp}
         label={certification?.label}
       />
+      <ExperiencesSectionSubmitCandidacy experiences={candidacy?.experiences} />
       <div className="flex justify-between mt-6">
         <BackButton navigateBack={() => router.push("/")} />
         <Button data-test="project-submit" onClick={onSubmitCandidacy}>

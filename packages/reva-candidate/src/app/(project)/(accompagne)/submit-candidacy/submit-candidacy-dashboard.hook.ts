@@ -29,6 +29,13 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           codeRncp
           isAapAvailable
         }
+        experiences {
+          id
+          title
+          startedAt
+          description
+          duration
+        }
       }
     }
   }
@@ -57,3 +64,6 @@ type SubmitCandidacyForDashboardHookReturnType = ReturnType<
 >;
 export type CandidateUseSubmitCandidacyForDashboard =
   SubmitCandidacyForDashboardHookReturnType["candidate"];
+
+export type ExperiencesUseSubmitCandidacyForDashboard =
+  SubmitCandidacyForDashboardHookReturnType["candidacy"]["experiences"];
