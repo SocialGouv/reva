@@ -178,12 +178,14 @@ export default function SetCertification() {
           >
             {selectedCertification.label}
           </h2>
-          <p data-test="certification-code-rncp" className="text-xs mb-4">
+          <p data-test="certification-code-rncp" className="text-xs mb-0">
             Code RNCP: {selectedCertification.codeRncp}
           </p>
-          <div className="mb-12 h-5 px-1.5 bg-[#e8edff] rounded justify-center items-center leading-tight inline-flex text-[#0063cb] text-xs font-bold uppercase ">
-            VAE EN AUTONOMIE ou accompagnée
-          </div>
+          <Tag className="my-8">
+            {selectedCertification.isAapAvailable
+              ? "VAE en autonomie ou accompagnée"
+              : "VAE en autonomie"}
+          </Tag>
           <p>
             <a
               data-test="certification-more-info-link"
@@ -196,28 +198,41 @@ export default function SetCertification() {
             </a>
           </p>
 
-          <CallOut
-            title="À quoi sert un accompagnateur ?"
-            classes={{ title: "pb-2" }}
-            className="w-full md:w-3/5 mt-8 mb-12"
-          >
-            C’est un expert de la VAE qui vous aide à chaque grande étape de
-            votre parcours : rédaction du dossier de faisabilité, communication
-            avec le certificateur, préparation au passage devant le jury, etc.
-            <br />
-            <br />
-            <strong>Bon à savoir :</strong> ces accompagnements peuvent être en
-            partie financés par votre{" "}
-            <Link
-              href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
-              target="_blank"
+          {selectedCertification.isAapAvailable ? (
+            <CallOut
+              title="À quoi sert un accompagnateur ?"
+              classes={{ title: "pb-2" }}
+              className="w-full md:w-3/5 mt-8 mb-12"
             >
-              Compte Personnel de Formation
-            </Link>
-            . Nous attirons votre attention sur le fait que les frais liés à
-            votre passage devant le jury et les actions de formations
-            complémentaires sont entièrement à votre charge.
-          </CallOut>
+              C’est un expert de la VAE qui vous aide à chaque grande étape de
+              votre parcours : rédaction du dossier de faisabilité,
+              communication avec le certificateur, préparation au passage devant
+              le jury, etc.
+              <br />
+              <br />
+              <strong>Bon à savoir :</strong> ces accompagnements peuvent être
+              en partie financés par votre{" "}
+              <Link
+                href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
+                target="_blank"
+              >
+                Compte Personnel de Formation
+              </Link>
+              . Nous attirons votre attention sur le fait que les frais liés à
+              votre passage devant le jury et les actions de formations
+              complémentaires sont entièrement à votre charge.
+            </CallOut>
+          ) : (
+            <CallOut
+              title="Ce diplôme se réalise en autonomie"
+              classes={{ title: "pb-2" }}
+              className="w-full md:w-3/5 mt-8 mb-12"
+            >
+              Si vous préférez être accompagné, vous pouvez contacter le support
+              pour qu’un accompagnateur prenne en charge ce diplôme. Sinon, il
+              reste également la possibilité de choisir un autre diplôme !
+            </CallOut>
+          )}
 
           <div className="flex flex-col-reverse md:flex-row gap-4 justify-between mt-6">
             <Button
