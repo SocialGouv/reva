@@ -14,12 +14,8 @@ import { getCandidacy } from "../candidacy/features/getCandidacy";
 
 const unsafeResolvers = {
   Candidacy: {
-    certificationAuthorities: ({
-      id: candidacyId,
-    }: {
-      id: string;
-      departmentId: string;
-    }) => getCertificationAuthorities({ candidacyId }),
+    certificationAuthorities: ({ id: candidacyId }: { id: string }) =>
+      getCertificationAuthorities({ candidacyId }),
     feasibility: ({ id: candidacyId }: { id: string }) =>
       getActiveFeasibilityByCandidacyid({ candidacyId }),
   },
