@@ -64,7 +64,7 @@ test("should allow admin to update maison mere legal information", async () => {
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "admin",
-      keycloakId: "uuid",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
     }),
     payload: updateMaisonMereLegalInformationPayload(mmAap.siret, mmAap.id),
   });

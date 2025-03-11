@@ -3,6 +3,13 @@ import { Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { AAPLogEventTypeAndDetails, AAPLogUserProfile } from "../aap-log.types";
 
+export const buildAAPAuditLogUserInfoFromContext = (
+  context: GraphqlContext,
+) => ({
+  userKeycloakId: context.auth.userInfo?.sub,
+  userRoles: context.auth.userInfo?.realm_access?.roles || [],
+  userEmail: context.auth.userInfo?.email,
+});
 export interface AAPAuditLogUserInfo {
   userKeycloakId?: string;
   userEmail?: string;

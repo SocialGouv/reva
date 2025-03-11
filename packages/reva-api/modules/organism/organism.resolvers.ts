@@ -65,6 +65,7 @@ import {
 import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
 import { createOrUpdateOnSiteOrganismGeneralInformation } from "./features/createOrUpdateOnSiteOrganismGeneralInformation";
 import { createOrUpdateRemoteOrganismGeneralInformation } from "./features/createOrUpdateRemoteOrganismGeneralInformation";
+import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 
 const unsafeResolvers = {
   Account: {
@@ -466,7 +467,12 @@ const unsafeResolvers = {
       params: {
         data: UpdateMaisonMereLegalInformationInput;
       },
-    ) => updateMaisonMereLegalInformation(params.data),
+      context: GraphqlContext,
+    ) =>
+      updateMaisonMereLegalInformation({
+        ...params.data,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
     organism_updateMaisonMereAAPFinancingMethods: async (
       _parent: unknown,
       params: { maisonMereAAPId: string; isMCFCompatible: boolean },

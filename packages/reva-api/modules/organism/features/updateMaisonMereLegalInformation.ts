@@ -1,6 +1,10 @@
 import { updateAccountById } from "../../account/features/updateAccount";
 import { prismaClient } from "../../../prisma/client";
 import { UpdateMaisonMereLegalInformationInput } from "../organism.types";
+import {
+  AAPAuditLogUserInfo,
+  logAAPAuditEvent,
+} from "../../aap-log/features/logAAPAuditEvent";
 
 export const updateMaisonMereLegalInformation = async ({
   maisonMereAAPId,
@@ -13,7 +17,10 @@ export const updateMaisonMereLegalInformation = async ({
   gestionnaireLastname,
   gestionnaireEmail,
   phone,
-}: UpdateMaisonMereLegalInformationInput) => {
+  userInfo,
+}: UpdateMaisonMereLegalInformationInput & {
+  userInfo: AAPAuditLogUserInfo;
+}) => {
   const maisonMereAAPWithSiret = await prismaClient.maisonMereAAP.findFirst({
     where: { siret },
   });
@@ -60,6 +67,12 @@ export const updateMaisonMereLegalInformation = async ({
       },
     });
   }
+
+  await logAAPAuditEvent({
+    eventType: "MAISON_MERE_LEGAL_INFORMATION_UPDATED",
+    maisonMereAAPId,
+    userInfo,
+  });
 
   return updatedMaisonMere;
 };

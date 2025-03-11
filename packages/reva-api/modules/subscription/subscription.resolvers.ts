@@ -9,6 +9,7 @@ import { rejectSubscriptionRequest } from "./features/rejectSubscriptionRequest"
 import { validateSubscriptionRequest } from "./features/validateSubscriptionRequest";
 import { findEtablissement } from "../referential/features/entreprise";
 import { getSubscriptionCountByStatus } from "./features/getSubscriptionCountByStatus";
+import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -92,11 +93,7 @@ const unsafeResolvers = {
     ) =>
       validateSubscriptionRequest({
         subscriptionRequestId,
-        userInfo: {
-          userEmail: context.auth.userInfo?.email,
-          userKeycloakId: context.auth.userInfo?.sub,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-        },
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
       }),
     subscription_rejectSubscriptionRequest: async (
       _: unknown,
