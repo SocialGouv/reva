@@ -78,17 +78,17 @@ export default function CandidateSectionSubmitCandidacy({
           <div>
             <p className="mb-0">Adresse postale</p>
             <p className="font-medium mb-0">{street}</p>
-            <p className="font-medium">
+            <p className="font-medium mb-0">
               {zip} {city}
             </p>
           </div>
           <div>
             <p className="mb-0">E-mail</p>
-            <p className="font-medium">{email}</p>
+            <p className="font-medium mb-0">{email}</p>
           </div>
           <div>
             <p className="mb-0">Téléphone</p>
-            <p className="font-medium">{phone}</p>
+            <p className="font-medium mb-0">{phone}</p>
           </div>
         </div>
       </div>

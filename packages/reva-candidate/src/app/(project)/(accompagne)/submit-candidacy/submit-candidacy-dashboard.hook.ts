@@ -40,6 +40,19 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           id
           label
         }
+        organism {
+          id
+          label
+          contactAdministrativeEmail
+          contactAdministrativePhone
+          nomPublic
+          emailContact
+          telephone
+          adresseNumeroEtNomDeRue
+          adresseInformationsComplementaires
+          adresseCodePostal
+          adresseVille
+        }
       }
     }
   }
@@ -74,3 +87,6 @@ export type ExperiencesUseSubmitCandidacyForDashboard =
 
 export type GoalsUseSubmitCandidacyForDashboard =
   SubmitCandidacyForDashboardHookReturnType["candidacy"]["goals"];
+
+export type OrganismUseSubmitCandidacyForDashboard =
+  SubmitCandidacyForDashboardHookReturnType["candidacy"]["organism"];

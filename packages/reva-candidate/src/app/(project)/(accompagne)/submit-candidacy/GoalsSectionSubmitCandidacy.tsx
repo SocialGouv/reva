@@ -21,7 +21,7 @@ export default function GoalsSectionSubmitCandidacy({
         </svg>
         <h2>Mes objectifs</h2>
       </div>
-      <ul className="pl-10">
+      <ul className="pl-10 mb-0">
         {goals.map((goal) => (
           <li key={goal.id}>{goal.label}</li>
         ))}

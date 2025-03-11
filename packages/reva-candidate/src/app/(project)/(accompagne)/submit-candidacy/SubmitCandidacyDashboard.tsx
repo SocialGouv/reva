@@ -12,6 +12,7 @@ import ExperiencesSectionSubmitCandidacy from "./ExperiencesSectionSubmitCandida
 import GoalsSectionSubmitCandidacy from "./GoalsSectionSubmitCandidacy";
 import { useSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
+import ContactSectionSubmitCandidacy from "./ContactSectionSubmitCandidacy";
 
 export default function SubmitCandidacy() {
   const router = useRouter();
@@ -49,6 +50,7 @@ export default function SubmitCandidacy() {
       />
       <ExperiencesSectionSubmitCandidacy experiences={candidacy?.experiences} />
       <GoalsSectionSubmitCandidacy goals={candidacy?.goals} />
+      <ContactSectionSubmitCandidacy organism={candidacy?.organism} />
       <div className="flex justify-between mt-12">
         <BackButton navigateBack={() => router.push("/")} />
         <Button data-test="project-submit" onClick={onSubmitCandidacy}>

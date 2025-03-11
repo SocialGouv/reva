@@ -13,7 +13,7 @@ export default function CertificationSectionSubmitCandidacy({
   if (!codeRncp || !label) return null;
 
   return (
-    <div>
+    <div className="mt-10">
       <div className="flex">
         <span
           className="fr-icon-award-fill fr-icon--lg mr-2"
