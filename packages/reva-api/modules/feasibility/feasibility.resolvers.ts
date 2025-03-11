@@ -16,11 +16,10 @@ const unsafeResolvers = {
   Candidacy: {
     certificationAuthorities: ({
       id: candidacyId,
-      departmentId,
     }: {
       id: string;
       departmentId: string;
-    }) => getCertificationAuthorities({ candidacyId, departmentId }),
+    }) => getCertificationAuthorities({ candidacyId }),
     feasibility: ({ id: candidacyId }: { id: string }) =>
       getActiveFeasibilityByCandidacyid({ candidacyId }),
   },

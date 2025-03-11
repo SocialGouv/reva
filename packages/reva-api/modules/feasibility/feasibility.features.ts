@@ -55,12 +55,17 @@ const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
 export const getCertificationAuthorities = async ({
   candidacyId,
-  departmentId,
 }: {
   candidacyId: string;
-  departmentId: string;
 }) => {
   const certification = await getCertificationByCandidacyId({ candidacyId });
+
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+    include: { candidate: { select: { departmentId: true } } },
+  });
+
+  const departmentId = candidacy?.candidate?.departmentId;
 
   return certification && departmentId
     ? prismaClient.certificationAuthority.findMany({
