@@ -36,6 +36,10 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           description
           duration
         }
+        goals {
+          id
+          label
+        }
       }
     }
   }
@@ -67,3 +71,6 @@ export type CandidateUseSubmitCandidacyForDashboard =
 
 export type ExperiencesUseSubmitCandidacyForDashboard =
   SubmitCandidacyForDashboardHookReturnType["candidacy"]["experiences"];
+
+export type GoalsUseSubmitCandidacyForDashboard =
+  SubmitCandidacyForDashboardHookReturnType["candidacy"]["goals"];

@@ -9,6 +9,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import CandidateSectionSubmitCandidacy from "./CandidateSectionSubmitCandidacy";
 import CertificationSectionSubmitCandidacy from "./CertificationSectionSubmitCandidacy";
 import ExperiencesSectionSubmitCandidacy from "./ExperiencesSectionSubmitCandidacy";
+import GoalsSectionSubmitCandidacy from "./GoalsSectionSubmitCandidacy";
 import { useSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
 
@@ -47,7 +48,8 @@ export default function SubmitCandidacy() {
         label={certification?.label}
       />
       <ExperiencesSectionSubmitCandidacy experiences={candidacy?.experiences} />
-      <div className="flex justify-between mt-6">
+      <GoalsSectionSubmitCandidacy goals={candidacy?.goals} />
+      <div className="flex justify-between mt-12">
         <BackButton navigateBack={() => router.push("/")} />
         <Button data-test="project-submit" onClick={onSubmitCandidacy}>
           Envoyer
