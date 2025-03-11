@@ -452,7 +452,12 @@ const unsafeResolvers = {
           isActive: boolean;
         };
       },
-    ) => updateMaisonMereOrganismsIsActive(params.data),
+      context: GraphqlContext,
+    ) =>
+      updateMaisonMereOrganismsIsActive({
+        ...params.data,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
     organism_updateMaisonMereIsSignalized: async (
       _parent: unknown,
       params: {
