@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
-import IconTitleWidget from "./widgets/IconTitleWidget";
+import TileGroup from "./widgets/TileGroup";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -195,13 +195,15 @@ const Dashboard = () => {
             <p className="text-xl font-bold my-0 leading-loose inline-block">
               <span className="fr-icon-award-line" /> Suivre mon parcours
             </p>
-            <span className="align-middle inline-block ml-2">
-              {candidacyAlreadySubmitted ? (
-                <Badge severity="success">Candidature envoyée</Badge>
-              ) : (
-                <Badge severity="warning">Candidature non envoyée</Badge>
-              )}
-            </span>
+            {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
+              <span className="align-middle inline-block ml-2">
+                {candidacyAlreadySubmitted ? (
+                  <Badge severity="success">Candidature envoyée</Badge>
+                ) : (
+                  <Badge severity="warning">Candidature non envoyée</Badge>
+                )}
+              </span>
+            )}
           </div>
           <div className="grid grid-flow-row md:grid-flow-col grid-rows-1">
             {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
@@ -246,61 +248,106 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex flex-col col-span-1 row-span-2 row-start-1 gap-y-8">
-          <IconTitleWidget
+          <TileGroup
             icon="fr-icon-calendar-2-line"
-            title="Mes prochains
-              rendez-vous"
+            title="Mes prochains rendez-vous"
           >
             {candidacy.firstAppointmentOccuredAt &&
             isAfter(candidacy.firstAppointmentOccuredAt, new Date()) ? (
-              <>
-                <Badge severity="info" small>
-                  Rendez-vous pédagogique
-                </Badge>
-                <p className="mb-0 mt-2 font-bold">
-                  {format(
-                    candidacy.firstAppointmentOccuredAt,
-                    "dd/MM/yyyy - HH:mm",
-                  )}
-                </p>
-              </>
-            ) : (
-              <p className="mb-0 font-bold">
-                Pas de rendez-vous pour le moment
-              </p>
-            )}
-          </IconTitleWidget>
-          <IconTitleWidget icon="fr-icon-team-line" title="Mes contacts">
-            {candidacy.organism ? (
-              <div className="font-bold">
-                <p className="mb-1">
-                  {candidacy.organism.nomPublic || candidacy.organism.label}
-                </p>
-                {candidacy.organism.adresseVille && (
-                  <p className="mb-0 text-sm leading-normal text-dsfrGray-700">
-                    {candidacy.organism.adresseNumeroEtNomDeRue} <br />
-                    {candidacy.organism.adresseInformationsComplementaires && (
-                      <>
-                        {candidacy.organism.adresseInformationsComplementaires}
-                        <br />
-                      </>
-                    )}
-                    {candidacy.organism.adresseCodePostal}{" "}
-                    {candidacy.organism.adresseVille}
-                  </p>
+              <Tile
+                small
+                orientation="horizontal"
+                classes={{
+                  content: "pb-0",
+                }}
+                start={
+                  <Badge severity="info" small>
+                    Rendez-vous pédagogique
+                  </Badge>
+                }
+                title={format(
+                  candidacy.firstAppointmentOccuredAt,
+                  "dd/MM/yyyy - HH:mm",
                 )}
-                <p className="mb-0 text-sm leading-normal text-dsfrGray-700">
-                  {candidacy.organism.emailContact ||
-                    candidacy.organism.contactAdministrativeEmail}
-                  <br />
-                  {candidacy.organism.telephone ||
-                    candidacy.organism.contactAdministrativePhone}
-                </p>
-              </div>
+              />
             ) : (
-              <p className="mb-0 font-bold">Aucun contact pour le moment</p>
+              <Tile title="Aucun rendez-vous pour le moment" />
             )}
-          </IconTitleWidget>
+          </TileGroup>
+          <TileGroup icon="fr-icon-team-line" title="Mes contacts">
+            {!candidacy.organism &&
+              !candidacy.feasibility?.certificationAuthority && (
+                <p className="mb-0 font-bold">Aucun contact pour le moment</p>
+              )}
+            {candidacy.organism && (
+              <Tile
+                title="Mon accompagnateur"
+                small
+                orientation="horizontal"
+                classes={{
+                  content: "pb-0",
+                }}
+                desc={
+                  <>
+                    <p className="mb-1 text-sm">
+                      {candidacy.organism.nomPublic || candidacy.organism.label}
+                    </p>
+                    {candidacy.organism.adresseVille && (
+                      <p className="mb-0 leading-normal text-sm">
+                        {candidacy.organism.adresseNumeroEtNomDeRue} <br />
+                        {candidacy.organism
+                          .adresseInformationsComplementaires && (
+                          <>
+                            {
+                              candidacy.organism
+                                .adresseInformationsComplementaires
+                            }
+                            <br />
+                          </>
+                        )}
+                        {candidacy.organism.adresseCodePostal}{" "}
+                        {candidacy.organism.adresseVille}
+                      </p>
+                    )}
+                    <p className="mb-0 leading-normal text-sm">
+                      {candidacy.organism.emailContact ||
+                        candidacy.organism.contactAdministrativeEmail}
+                      <br />
+                      {candidacy.organism.telephone ||
+                        candidacy.organism.contactAdministrativePhone}
+                    </p>
+                  </>
+                }
+              />
+            )}
+            {candidacy.feasibility?.certificationAuthority && (
+              <Tile
+                title="Mon certificateur"
+                small
+                orientation="horizontal"
+                classes={{
+                  content: "pb-0",
+                }}
+                desc={
+                  <>
+                    <p className="mb-1 font-bold">Mon certificateur</p>
+                    {candidacy.feasibility?.certificationAuthority.label}
+                    <p className="mb-0 text-sm leading-normal">
+                      {
+                        candidacy.feasibility?.certificationAuthority
+                          .contactFullName
+                      }
+                      <br />
+                      {
+                        candidacy.feasibility?.certificationAuthority
+                          .contactEmail
+                      }
+                    </p>
+                  </>
+                }
+              />
+            )}
+          </TileGroup>
         </div>
       </div>
     </div>
