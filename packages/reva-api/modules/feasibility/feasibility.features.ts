@@ -12,7 +12,6 @@ import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
-import { getCertificationByCandidacyId } from "../candidacy/certification/features/getCertificationByCandidacyId";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandidacyFinanceModule";
 import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
@@ -58,21 +57,20 @@ export const getCertificationAuthorities = async ({
 }: {
   candidacyId: string;
 }) => {
-  const certification = await getCertificationByCandidacyId({ candidacyId });
-
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     include: { candidate: { select: { departmentId: true } } },
   });
 
+  const certificationId = candidacy?.certificationId;
   const departmentId = candidacy?.candidate?.departmentId;
 
-  return certification && departmentId
+  return certificationId && departmentId
     ? prismaClient.certificationAuthority.findMany({
         where: {
           certificationAuthorityOnDepartment: { some: { departmentId } },
           certificationAuthorityOnCertification: {
-            some: { certificationId: certification.id },
+            some: { certificationId },
           },
         },
       })
