@@ -33,6 +33,11 @@ export const getAAPLogMessage = ({
         "Signalisation de la maison mère mis à jour",
         `nouveau statut :  ${details.isSignalized ? "signalée" : "non signalée"}`,
       );
+    case "MAISON_MERE_FINANCING_METHODS_UPDATED":
+      return log(
+        "Modalités de financement de la maison mère mises à jour",
+        `${details.isMCFCompatible ? "référencée MCF" : "non référencée MCF"}`,
+      );
     default:
       return log("Événement inconnu");
   }

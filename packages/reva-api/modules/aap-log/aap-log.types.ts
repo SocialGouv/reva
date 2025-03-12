@@ -14,6 +14,10 @@ export type AAPLogEventTypeAndDetails =
   | {
       eventType: "MAISON_MERE_SIGNALIZED_STATUS_UPDATED";
       details: { isSignalized: boolean };
+    }
+  | {
+      eventType: "MAISON_MERE_FINANCING_METHODS_UPDATED";
+      details: { isMCFCompatible: boolean };
     };
 
 export type AAPLog = {

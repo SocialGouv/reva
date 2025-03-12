@@ -486,7 +486,12 @@ const unsafeResolvers = {
     organism_updateMaisonMereAAPFinancingMethods: async (
       _parent: unknown,
       params: { maisonMereAAPId: string; isMCFCompatible: boolean },
-    ) => updateMaisonMereAAPFinancingMethods(params),
+      context: GraphqlContext,
+    ) =>
+      updateMaisonMereAAPFinancingMethods({
+        ...params,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
   },
   Query: {
     organism_getOrganism: async (
