@@ -11,7 +11,7 @@ export const sendAutoCandidacyDropOutConfirmationEmails = async () => {
         dropOutConfirmedByCandidate: false,
         proofReceivedByAdmin: false,
         autoDropOutConfirmationEmailsSent: false,
-        createdAt: { lt: subMonths(new Date(), 6) },
+        createdAt: { lt: subMonths(new Date(), 4) },
       },
       include: {
         candidacy: {

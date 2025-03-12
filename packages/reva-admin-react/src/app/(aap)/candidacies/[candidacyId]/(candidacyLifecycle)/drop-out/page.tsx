@@ -112,7 +112,7 @@ const CandidacyDropoutComponent = ({
       <p className="m-0">
         Si vous déclarez l’abandon du candidat, il ne pourra plus déposer de
         dossier sur le même diplôme durant cette année civile. Le candidat devra
-        valider l’abandon depuis son espace ou, sans réponse sous 6 mois, il
+        valider l’abandon depuis son espace ou, sans réponse sous 4 mois, il
         sera automatiquement acté.
       </p>
       <DropoutForm activeDropoutReasons={activeDropoutReasons} />

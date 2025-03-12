@@ -153,7 +153,7 @@ CronJob.from({
   timeZone: "Europe/Paris",
 });
 
-// Send emails for candidacies drop out that are not confirmed and are more than 6 months old
+// Send emails for candidacies drop out that are not confirmed and are more than 4 months old
 CronJob.from({
   cronTime:
     process.env.BATCH_SEND_EMAILS_FOR_AUTO_CONFIRMED_CANDIDACY_DROP_OUTS ||
