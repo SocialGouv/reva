@@ -27,6 +27,7 @@ export type AAPLogEventTypeAndDetails =
   | {
       eventType: "ORGANISM_SEARCH_RESULTS_VISIBILITY_UPDATED";
       details: {
+        organismId: string;
         organismLabel: string;
         modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
         visibleInSearchResults: boolean;
@@ -35,6 +36,7 @@ export type AAPLogEventTypeAndDetails =
   | {
       eventType: "ORGANISM_DEGREES_AND_FORMACODES_UPDATED";
       details: {
+        organismId: string;
         organismLabel: string;
         modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
       };
@@ -42,12 +44,14 @@ export type AAPLogEventTypeAndDetails =
   | {
       eventType: "LIEU_ACCUEIL_CREATED";
       details: {
+        organismId: string;
         organismLabel: string;
       };
     }
   | {
       eventType: "ORGANISM_ONSITE_GENERAL_INFORMATION_UPDATED";
       details: {
+        organismId: string;
         organismLabel: string;
       };
     };

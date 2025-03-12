@@ -57,6 +57,7 @@ export const updateOrganismDegreesAndFormacodes = async ({
       maisonMereAAPId: organism.maisonMereAAPId,
       userInfo,
       details: {
+        organismId: organism.id,
         organismLabel: organism.label,
         modaliteAccompagnement: organism.modaliteAccompagnement,
       },

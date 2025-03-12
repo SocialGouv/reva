@@ -131,9 +131,7 @@ export const createLieuAccueilInfo = async ({
       eventType: "LIEU_ACCUEIL_CREATED",
       maisonMereAAPId: maisonMereAAP.id,
       userInfo,
-      details: {
-        organismLabel: raisonSociale,
-      },
+      details: { organismId: newOrganism.id, organismLabel: raisonSociale },
     });
 
     logger.info(

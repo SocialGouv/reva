@@ -31,6 +31,7 @@ export const updateFermePourAbsenceOuConges = async ({
       eventType: "ORGANISM_SEARCH_RESULTS_VISIBILITY_UPDATED",
       maisonMereAAPId: organism.maisonMereAAPId,
       details: {
+        organismId: organism.id,
         organismLabel: organism.label,
         modaliteAccompagnement: organism.modaliteAccompagnement,
         visibleInSearchResults: organism.fermePourAbsenceOuConges,

@@ -43,7 +43,7 @@ export const createOrUpdateOnSiteOrganismGeneralInformation = async ({
     await logAAPAuditEvent({
       eventType: "ORGANISM_ONSITE_GENERAL_INFORMATION_UPDATED",
       maisonMereAAPId: organismUpdated.maisonMereAAPId,
-      details: { organismLabel: organismUpdated.label },
+      details: { organismId: organismId, organismLabel: organismUpdated.label },
       userInfo,
     });
   }
