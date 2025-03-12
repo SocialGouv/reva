@@ -62,6 +62,14 @@ export type AAPLogEventTypeAndDetails =
         organismLabel: string;
         accountEmail: string;
       };
+    }
+  | {
+      eventType: "ORGANISM_ACCOUNT_UPDATED";
+      details: {
+        organismId: string;
+        organismLabel: string;
+        accountEmail: string;
+      };
     };
 
 export type AAPLog = {

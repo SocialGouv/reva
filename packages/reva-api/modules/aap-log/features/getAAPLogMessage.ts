@@ -61,12 +61,17 @@ export const getAAPLogMessage = ({
       );
     case "LIEU_ACCUEIL_CREATED":
       return log("Lieu d'accueil créé", `nom: ${details.organismLabel}`);
-
     case "ORGANISM_ACCOUNT_CREATED":
       return log(
         "Compte collaborateur créé",
         `email: ${details.accountEmail}, organisme: ${details.organismLabel}`,
       );
+    case "ORGANISM_ACCOUNT_UPDATED":
+      return log(
+        "Compte collaborateur mis à jour",
+        `email: ${details.accountEmail}, organisme: ${details.organismLabel}`,
+      );
+
     default:
       return log("Événement inconnu");
   }
