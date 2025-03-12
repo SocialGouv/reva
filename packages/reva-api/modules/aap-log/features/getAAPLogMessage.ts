@@ -38,6 +38,13 @@ export const getAAPLogMessage = ({
         "Modalités de financement de la maison mère mises à jour",
         `${details.isMCFCompatible ? "référencée MCF" : "non référencée MCF"}`,
       );
+    case "ORGANISM_SEARCH_RESULTS_VISIBILITY_UPDATED":
+      return log(
+        "Visibilité d'un organisme mise à jour",
+        `nom: ${details.organismLabel}, modalité d'accompagnement:${details.modaliteAccompagnement}, visibilité: ${
+          details.visibleInSearchResults ? "visible" : "invisible"
+        }`,
+      );
     default:
       return log("Événement inconnu");
   }

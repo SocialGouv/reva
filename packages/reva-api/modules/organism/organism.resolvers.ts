@@ -269,6 +269,7 @@ const unsafeResolvers = {
       return updateFermePourAbsenceOuConges({
         organismId,
         fermePourAbsenceOuConges,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
       });
     },
     organism_createLieuAccueilInfo: async (

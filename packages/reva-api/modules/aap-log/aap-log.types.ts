@@ -18,6 +18,18 @@ export type AAPLogEventTypeAndDetails =
   | {
       eventType: "MAISON_MERE_FINANCING_METHODS_UPDATED";
       details: { isMCFCompatible: boolean };
+    }
+  | {
+      eventType: "MAISON_MERE_FINANCING_METHODS_UPDATED";
+      details: { isMCFCompatible: boolean };
+    }
+  | {
+      eventType: "ORGANISM_SEARCH_RESULTS_VISIBILITY_UPDATED";
+      details: {
+        organismLabel: string;
+        modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
+        visibleInSearchResults: boolean;
+      };
     };
 
 export type AAPLog = {
