@@ -1,4 +1,8 @@
 import { prismaClient } from "../../../prisma/client";
+import {
+  AAPAuditLogUserInfo,
+  logAAPAuditEvent,
+} from "../../aap-log/features/logAAPAuditEvent";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
 import {
   FunctionalCodeError,
@@ -16,9 +20,11 @@ import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMe
 export const createLieuAccueilInfo = async ({
   keycloakId,
   params,
+  userInfo,
 }: {
   keycloakId: string;
   params: CreateLieuAccueilInfoInput;
+  userInfo: AAPAuditLogUserInfo;
 }) => {
   try {
     const account = await getAccountByKeycloakId({
@@ -120,6 +126,15 @@ export const createLieuAccueilInfo = async ({
         })),
       });
     }
+
+    await logAAPAuditEvent({
+      eventType: "LIEU_ACCUEIL_CREATED",
+      maisonMereAAPId: maisonMereAAP.id,
+      userInfo,
+      details: {
+        organismLabel: raisonSociale,
+      },
+    });
 
     logger.info(
       `[validateorganismData] Successfuly created AP with organismId ${newOrganism.id}`,

@@ -55,6 +55,8 @@ export const getAAPLogMessage = ({
         "Domaines, branches et niveaux de l'organisme mis à jour",
         `nom: ${details.organismLabel}, modalité d'accompagnement: ${details.modaliteAccompagnement}`,
       );
+    case "LIEU_ACCUEIL_CREATED":
+      return log("Lieu d'accueil créé", `nom: ${details.organismLabel}`);
     default:
       return log("Événement inconnu");
   }

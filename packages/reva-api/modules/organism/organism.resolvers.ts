@@ -293,11 +293,11 @@ const unsafeResolvers = {
         );
       }
 
-      const result = await createLieuAccueilInfo({
+      return createLieuAccueilInfo({
         params: data,
         keycloakId: context.auth.userInfo.sub,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
       });
-      return result;
     },
 
     organism_acceptCgu: async (

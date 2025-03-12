@@ -38,6 +38,12 @@ export type AAPLogEventTypeAndDetails =
         organismLabel: string;
         modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
       };
+    }
+  | {
+      eventType: "LIEU_ACCUEIL_CREATED";
+      details: {
+        organismLabel: string;
+      };
     };
 
 export type AAPLog = {
