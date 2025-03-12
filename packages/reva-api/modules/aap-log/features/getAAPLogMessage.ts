@@ -49,6 +49,12 @@ export const getAAPLogMessage = ({
       return log(
         "Informations générales de l'accompagnement à distance mises à jour",
       );
+
+    case "ORGANISM_DEGREES_AND_FORMACODES_UPDATED":
+      return log(
+        "Domaines, branches et niveaux de l'organisme mis à jour",
+        `nom: ${details.organismLabel}, modalité d'accompagnement: ${details.modaliteAccompagnement}`,
+      );
     default:
       return log("Événement inconnu");
   }

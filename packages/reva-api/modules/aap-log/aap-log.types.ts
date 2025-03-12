@@ -31,6 +31,13 @@ export type AAPLogEventTypeAndDetails =
         modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
         visibleInSearchResults: boolean;
       };
+    }
+  | {
+      eventType: "ORGANISM_DEGREES_AND_FORMACODES_UPDATED";
+      details: {
+        organismLabel: string;
+        modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
+      };
     };
 
 export type AAPLog = {

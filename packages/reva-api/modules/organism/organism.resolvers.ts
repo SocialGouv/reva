@@ -331,11 +331,13 @@ const unsafeResolvers = {
           formacodeIds: string[];
         };
       },
+      context: GraphqlContext,
     ) =>
       updateOrganismDegreesAndFormacodes({
         organismId: params.data.organismId,
         degreeIds: params.data.degreeIds,
         formacodeIds: params.data.formacodeIds,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
       }),
     organism_createAccount: async (
       _parent: unknown,

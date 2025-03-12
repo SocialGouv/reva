@@ -1,13 +1,19 @@
 import { prismaClient } from "../../../prisma/client";
+import {
+  AAPAuditLogUserInfo,
+  logAAPAuditEvent,
+} from "../../aap-log/features/logAAPAuditEvent";
 
 export const updateOrganismDegreesAndFormacodes = async ({
   organismId,
   degreeIds,
   formacodeIds,
+  userInfo,
 }: {
   organismId: string;
   degreeIds: string[];
   formacodeIds: string[];
+  userInfo: AAPAuditLogUserInfo;
 }) => {
   const formacodes = await prismaClient.formacode.findMany({
     where: {
@@ -44,5 +50,17 @@ export const updateOrganismDegreesAndFormacodes = async ({
       where: { id: organismId },
     }),
   ]);
+
+  if (organism?.maisonMereAAPId) {
+    await logAAPAuditEvent({
+      eventType: "ORGANISM_DEGREES_AND_FORMACODES_UPDATED",
+      maisonMereAAPId: organism.maisonMereAAPId,
+      userInfo,
+      details: {
+        organismLabel: organism.label,
+        modaliteAccompagnement: organism.modaliteAccompagnement,
+      },
+    });
+  }
   return organism;
 };
