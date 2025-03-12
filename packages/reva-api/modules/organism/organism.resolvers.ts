@@ -48,7 +48,6 @@ import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccount
 import { updateMaisonMereIsSignalized } from "./features/updateMaisonMereIsSignalized";
 import { updateMaisonMereLegalInformation } from "./features/updateMaisonMereLegalInformation";
 import { updateMaisonMereOrganismsIsActive } from "./features/updateMaisonMereOrganismsIsActive";
-import { updateOrganismAccount } from "./features/updateOrganismAccount";
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 import { resolversSecurityMap } from "./organism.security";
@@ -59,7 +58,6 @@ import {
   UpdateMaisonMereAAPLegalValidationInput,
   UpdateMaisonMereLegalInformationInput,
   UpdateOrganimsAccountAndOrganismInput,
-  UpdateOrganismAccountInput,
   OrganismInformationsCommerciales,
 } from "./organism.types";
 import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
@@ -365,34 +363,6 @@ const unsafeResolvers = {
         data: UpdateOrganimsAccountAndOrganismInput;
       },
     ) => updateOrganismAccountAndOrganism(data),
-    organism_updateOrganismAccount: async (
-      _parent: unknown,
-      params: {
-        data: UpdateOrganismAccountInput;
-      },
-      context: GraphqlContext,
-    ) => {
-      if (context.auth.userInfo?.sub == undefined) {
-        throw new Error("Utilisateur non autorisé");
-      }
-
-      const roles = context.auth.userInfo.realm_access?.roles || [];
-      const userKeycloakId = context.auth.userInfo.sub;
-
-      if (!roles.includes("admin")) {
-        //if user is a "gestionnaire maison mere aap" he can access all organisms/agencies linked to his "maison mere"
-        if (
-          !isUserGestionnaireMaisonMereAAPOfOrganism({
-            organismId: params.data.organismId,
-            userKeycloakId,
-            userRoles: roles,
-          })
-        ) {
-          throw new Error("Utilisateur non autorisé");
-        }
-      }
-      return updateOrganismAccount({ params: params.data });
-    },
     organism_updateLegalInformationValidationDecision: async (
       _parent: unknown,
       params: {

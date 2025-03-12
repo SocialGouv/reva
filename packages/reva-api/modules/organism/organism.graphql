@@ -277,7 +277,6 @@ type Mutation {
     data: UpdateOrganismDegreesAndFormacodesInput!
   ): Organism
 
-  organism_updateOrganismAccount(data: UpdateOrganismAccountInput): Organism!
   organism_updateLegalInformationValidationDecision(
     data: UpdateMaisonMereAAPLegalValidationDecisionInput
   ): MaisonMereAAP!
