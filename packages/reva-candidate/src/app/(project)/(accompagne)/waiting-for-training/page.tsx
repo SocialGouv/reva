@@ -35,7 +35,7 @@ export default function WaitingForTraining() {
         <div className="m-auto">
           <Image
             src="/candidat/images/work-in-progress.svg"
-            alt="AAP logo"
+            alt="Cônes de chantier"
             width={282}
             height={319}
           />
