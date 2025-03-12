@@ -1,9 +1,27 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
-import { ExperienceInput } from "@/graphql/generated/graphql";
+import {
+  CandidacyStatusStep,
+  ExperienceInput,
+} from "@/graphql/generated/graphql";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
+
+const getCandidateQuery = graphql(`
+  query getCandidateForAddExperience {
+    candidate_getCandidateWithCandidacy {
+      candidacy {
+        id
+        status
+        candidacyDropOut {
+          status
+        }
+      }
+    }
+  }
+`);
 
 const ADD_EXPERIENCE = graphql(`
   mutation add_experience($candidacyId: ID!, $experience: ExperienceInput) {
@@ -22,6 +40,12 @@ const ADD_EXPERIENCE = graphql(`
 
 export const useAddExperience = () => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
+
+  const { data: getCandidateData } = useQuery({
+    queryKey: ["candidate"],
+    queryFn: () => graphqlClient.request(getCandidateQuery),
+  });
 
   const addExperience = useMutation({
     mutationKey: ["candidacy_addExperience"],
@@ -36,7 +60,27 @@ export const useAddExperience = () => {
         candidacyId,
         experience,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["candidate"],
+      });
+    },
   });
 
-  return { addExperience };
+  const candidacy =
+    getCandidateData?.candidate_getCandidateWithCandidacy.candidacy;
+
+  const canEditCandidacy = candidateCanEditCandidacy({
+    candidacyStatus: candidacy?.status as CandidacyStatusStep,
+    candidacyDropOut: !!candidacy?.candidacyDropOut,
+  });
+
+  const candidacyAlreadySubmitted = candidacy?.status !== "PROJET";
+
+  return {
+    addExperience,
+    canEditCandidacy,
+    candidacy,
+    candidacyAlreadySubmitted,
+  };
 };

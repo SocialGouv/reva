@@ -9,8 +9,6 @@ import { Select } from "@codegouvfr/react-dsfr/Select";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
@@ -47,8 +45,9 @@ type ExperienceForm = z.infer<typeof schema>;
 export default function AddExperience() {
   const router = useRouter();
 
-  const { canEditCandidacy, candidacy, refetch } = useCandidacy();
-  const inputShouldBeDisabled = !canEditCandidacy;
+  const { canEditCandidacy, candidacy, candidacyAlreadySubmitted } =
+    useAddExperience();
+  const inputShouldBeDisabled = !canEditCandidacy || candidacyAlreadySubmitted;
 
   const { addExperience } = useAddExperience();
   const { isFeatureActive } = useFeatureFlipping();
@@ -83,8 +82,11 @@ export default function AddExperience() {
   useEffect(resetForm, [resetForm]);
 
   const onSubmit = async (data: ExperienceForm) => {
+    if (!candidacy?.id) {
+      return;
+    }
     try {
-      const response = await addExperience.mutateAsync({
+      await addExperience.mutateAsync({
         candidacyId: candidacy.id,
         experience: {
           title: data.title,
@@ -93,10 +95,7 @@ export default function AddExperience() {
           description: data.description,
         },
       });
-      if (response) {
-        refetch();
-        router.push(backUrl);
-      }
+      router.push(backUrl);
     } catch (error) {
       graphqlErrorToast(error);
     }
