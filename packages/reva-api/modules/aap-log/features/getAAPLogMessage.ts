@@ -49,7 +49,11 @@ export const getAAPLogMessage = ({
       return log(
         "Informations générales de l'accompagnement à distance mises à jour",
       );
-
+    case "ORGANISM_ONSITE_GENERAL_INFORMATION_UPDATED":
+      return log(
+        "Informations générales du lieu d'acceuil mises à jour",
+        `nom: ${details.organismLabel}`,
+      );
     case "ORGANISM_DEGREES_AND_FORMACODES_UPDATED":
       return log(
         "Domaines, branches et niveaux de l'organisme mis à jour",

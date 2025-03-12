@@ -44,6 +44,12 @@ export type AAPLogEventTypeAndDetails =
       details: {
         organismLabel: string;
       };
+    }
+  | {
+      eventType: "ORGANISM_ONSITE_GENERAL_INFORMATION_UPDATED";
+      details: {
+        organismLabel: string;
+      };
     };
 
 export type AAPLog = {

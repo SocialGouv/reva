@@ -238,7 +238,12 @@ const unsafeResolvers = {
         organismId: string;
         informationsCommerciales: OrganismInformationsCommerciales;
       },
-    ) => createOrUpdateOnSiteOrganismGeneralInformation(params),
+      context: GraphqlContext,
+    ) =>
+      createOrUpdateOnSiteOrganismGeneralInformation({
+        ...params,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
 
     organism_updateFermePourAbsenceOuConges: async (
       _parent: unknown,
