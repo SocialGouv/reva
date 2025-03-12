@@ -31,7 +31,7 @@ export const createOrganismAccount = async ({
   });
 
   if (organism.maisonMereAAPId) {
-    logAAPAuditEvent({
+    await logAAPAuditEvent({
       eventType: "ORGANISM_ACCOUNT_CREATED",
       maisonMereAAPId: organism.maisonMereAAPId,
       details: { organismId, organismLabel: organism?.label, accountEmail },
