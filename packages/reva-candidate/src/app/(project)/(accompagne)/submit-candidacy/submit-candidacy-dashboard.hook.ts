@@ -1,5 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
@@ -24,7 +25,9 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       city
       candidacy {
         id
+        status
         certification {
+          id
           label
           codeRncp
           isAapAvailable
@@ -69,10 +72,31 @@ export const useSubmitCandidacyForDashboard = () => {
   const candidate = data?.candidate_getCandidateWithCandidacy;
   const candidacy = candidate?.candidacy;
   const certification = candidate?.candidacy?.certification;
+
+  const hasSelectedCertification = !!candidacy?.certification?.id;
+
+  const hasCompletedGoals = !!candidacy?.goals?.length;
+
+  const hasCompletedExperience = candidacy?.experiences?.length > 0;
+
+  const hasSelectedOrganism = !!candidacy?.organism?.id;
+
+  const candidacyAlreadySubmitted = candidacy?.status !== "PROJET";
+
+  const canSubmitCandidacy = candidateCanSubmitCandidacyToAap(
+    hasSelectedCertification,
+    hasCompletedGoals,
+    hasSelectedOrganism,
+    hasCompletedExperience,
+    candidacyAlreadySubmitted,
+  );
+
   return {
     candidate,
     candidacy,
     certification,
+    canSubmitCandidacy,
+    candidacyAlreadySubmitted,
   };
 };
 

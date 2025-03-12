@@ -177,7 +177,7 @@ const Dashboard = () => {
                   start={
                     <SentToSendBadge isComplete={candidacyAlreadySubmitted} />
                   }
-                  disabled={!canSubmitCandidacy}
+                  disabled={!candidacyAlreadySubmitted && !canSubmitCandidacy}
                   title="Envoi de la candidature"
                   small
                   buttonProps={{

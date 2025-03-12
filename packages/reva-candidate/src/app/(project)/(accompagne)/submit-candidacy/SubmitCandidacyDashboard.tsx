@@ -8,18 +8,23 @@ import { BackButton } from "@/components/back-button/BackButton";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import CandidateSectionSubmitCandidacy from "./CandidateSectionSubmitCandidacy";
 import CertificationSectionSubmitCandidacy from "./CertificationSectionSubmitCandidacy";
+import ContactSectionSubmitCandidacy from "./ContactSectionSubmitCandidacy";
 import ExperiencesSectionSubmitCandidacy from "./ExperiencesSectionSubmitCandidacy";
 import GoalsSectionSubmitCandidacy from "./GoalsSectionSubmitCandidacy";
 import { useSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
-import ContactSectionSubmitCandidacy from "./ContactSectionSubmitCandidacy";
 
 export default function SubmitCandidacy() {
   const router = useRouter();
 
   const { submitCandidacy } = useSubmitCandidacy();
-  const { candidate, candidacy, certification } =
-    useSubmitCandidacyForDashboard();
+  const {
+    candidate,
+    candidacy,
+    certification,
+    canSubmitCandidacy,
+    candidacyAlreadySubmitted,
+  } = useSubmitCandidacyForDashboard();
 
   const onSubmitCandidacy = async () => {
     try {
@@ -53,7 +58,11 @@ export default function SubmitCandidacy() {
       <ContactSectionSubmitCandidacy organism={candidacy?.organism} />
       <div className="flex justify-between mt-12">
         <BackButton navigateBack={() => router.push("/")} />
-        <Button data-test="project-submit" onClick={onSubmitCandidacy}>
+        <Button
+          data-test="project-submit"
+          onClick={onSubmitCandidacy}
+          disabled={candidacyAlreadySubmitted || !canSubmitCandidacy}
+        >
           Envoyer
         </Button>
       </div>
