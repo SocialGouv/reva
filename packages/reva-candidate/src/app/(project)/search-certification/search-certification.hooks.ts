@@ -63,6 +63,7 @@ const GET_CANDIDACY_CERTIFICATION = graphql(`
           id
           label
           codeRncp
+          isAapAvailable
         }
       }
     }
@@ -73,7 +74,7 @@ export const useCandidacyForCertificationSearch = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const candidateWithCandidacy = useSuspenseQuery({
-    queryKey: ["dashboard"],
+    queryKey: ["candidacyForCertificationsPage"],
     queryFn: () => graphqlClient.request(GET_CANDIDACY_CERTIFICATION),
   });
 
@@ -120,7 +121,11 @@ export const useSetCertification = ({
   const updateCertification = useMutation({
     mutationKey: ["candidacy_certification_updateCertification"],
     onSuccess: () => {
-      invalidateQueries({ queryKey: ["dashboard"] });
+      try {
+        invalidateQueries({ queryKey: ["dashboard"] });
+      } catch (e) {
+        console.error(e);
+      }
     },
     mutationFn: ({
       candidacyId,

@@ -25,6 +25,12 @@ import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+
+const certificationWarningModal = createModal({
+  id: "certification-warning",
+  isOpenedByDefault: false,
+});
 
 export default function SetCertification() {
   const router = useRouter();
@@ -50,10 +56,19 @@ export default function SetCertification() {
     redirect("/");
   }
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const info =
+    searchCertificationsForCandidate.data?.searchCertificationsForCandidate
+      .info;
 
+  const rows =
+    searchCertificationsForCandidate.data?.searchCertificationsForCandidate
+      .rows;
+
+  const selectedCertification = rows?.find(
+    (certification) => certification.id == selectedCertificationId,
+  );
+
+  const doUpdateCertification = async () => {
     try {
       const response = await updateCertification.mutateAsync({
         candidacyId: candidacy.id,
@@ -67,17 +82,19 @@ export default function SetCertification() {
     }
   };
 
-  const info =
-    searchCertificationsForCandidate.data?.searchCertificationsForCandidate
-      .info;
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const rows =
-    searchCertificationsForCandidate.data?.searchCertificationsForCandidate
-      .rows;
-
-  const selectedCertification = rows?.find(
-    (certification) => certification.id == selectedCertificationId,
-  );
+    if (
+      candidacy.certification?.isAapAvailable &&
+      selectedCertification?.isAapAvailable === false
+    ) {
+      certificationWarningModal.open();
+    } else {
+      await doUpdateCertification();
+    }
+  };
 
   return (
     <PageLayout title="Choix du diplôme" data-test={`certificates`}>
@@ -245,12 +262,34 @@ export default function SetCertification() {
             <Button
               data-test="submit-certification-button"
               className="justify-center w-[100%]  md:w-fit"
+              disabled={updateCertification.isPending}
             >
               Choisir
             </Button>
           </div>
         </form>
       )}
+      <certificationWarningModal.Component
+        title="Vous vous apprêtez à changer de diplôme"
+        iconId="fr-icon-warning-fill"
+        buttons={[
+          {
+            doClosesModal: true,
+            children: "Annuler",
+          },
+          {
+            onClick: async () => {
+              await doUpdateCertification();
+            },
+            disabled: updateCertification.isPending,
+            children: "Confirmer",
+          },
+        ]}
+      >
+        Tout changement de diplôme impliquera une mise à jour de votre espace.
+        Vous devrez ajouter à nouveau les informations essentielles au démarrage
+        de votre parcours. Souhaitez-vous continuer ?
+      </certificationWarningModal.Component>
     </PageLayout>
   );
 }
