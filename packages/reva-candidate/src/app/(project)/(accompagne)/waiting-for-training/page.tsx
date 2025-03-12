@@ -5,8 +5,8 @@ import Image from "next/image";
 export default function WaitingForTraining() {
   return (
     <PageLayout title="Parcours et financement">
-      <div className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto mt-8">
-        <div className="col-span-2">
+      <div className="grid grid-cols-3 grid-rows-1 h-full w-11/12 mx-auto">
+        <div className="col-span-2 my-auto">
           <h1 className="">Parcours et financement</h1>
           <p className="text-lg">
             Votre accompagnateur est en train de construire votre parcours
