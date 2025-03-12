@@ -41,9 +41,12 @@ export const useExperiences = () => {
     candidacyDropOut: !!candidacy?.candidacyDropOut,
   });
 
+  const candidacyAlreadySubmitted = candidacy?.status !== "PROJET";
+
   return {
     candidacy,
     canEditCandidacy,
+    candidacyAlreadySubmitted,
   };
 };
 

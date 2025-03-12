@@ -4,7 +4,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Card from "@codegouvfr/react-dsfr/Card";
 import { format } from "date-fns";
 import Link from "next/link";
-import { useExperiences } from "./_components/experiences.hooks";
+import { useExperiences } from "./experiences.hooks";
 
 const durationToString: {
   [key in Duration]: string;
@@ -18,7 +18,8 @@ const durationToString: {
 };
 
 export default function ExperiencesPage() {
-  const { candidacy, canEditCandidacy } = useExperiences();
+  const { candidacy, canEditCandidacy, candidacyAlreadySubmitted } =
+    useExperiences();
 
   const experiences = candidacy?.experiences;
 
@@ -48,7 +49,7 @@ export default function ExperiencesPage() {
           />
         ))}
       </div>
-      {canEditCandidacy && (
+      {canEditCandidacy && !candidacyAlreadySubmitted && (
         <>
           <hr />
           <div>
