@@ -20,7 +20,7 @@ export default function ContactSectionSubmitCandidacy({
     contactAdministrativePhone,
   } = organism;
 
-  const adresse = `${adresseNumeroEtNomDeRue} ${adresseInformationsComplementaires} - ${adresseCodePostal} ${adresseVille}`;
+  const adresse = `${adresseNumeroEtNomDeRue ?? ""} ${adresseInformationsComplementaires ?? ""} - ${adresseCodePostal ?? ""} ${adresseVille ?? ""}`;
   const email = emailContact || contactAdministrativeEmail;
   const phone = telephone || contactAdministrativePhone;
   const name = nomPublic || label;
