@@ -50,31 +50,31 @@ const MaisonMereAapPage = () => {
     <>
       <div className="flex w-full">
         <h1>{maisonMereAAP.raisonSociale}</h1>
-        <div className="flex-1 flex w-full gap-4 justify-end">
-          <Impersonate accountId={gestionnaireAccountId} />
+      </div>
+      <div className="flex-1 flex flex-col md:flex-row w-full gap-4">
+        <Impersonate accountId={gestionnaireAccountId} />
+        {isAdmin && (
           <div>
             <Button
               priority="secondary"
               linkProps={{
-                href: `/candidacies/?status=ACTIVE_HORS_ABANDON&page=1&maisonMereAAPId=${maisonMereAAPId}`,
-                target: "_blank",
+                href: `/maison-mere-aap/${maisonMereAAPId}/logs`,
               }}
             >
-              Voir les candidatures
+              Journal des actions
             </Button>
           </div>
-          {isAdmin && (
-            <div>
-              <Button
-                priority="secondary"
-                linkProps={{
-                  href: `/maison-mere-aap/${maisonMereAAPId}/logs`,
-                }}
-              >
-                Journal des actions
-              </Button>
-            </div>
-          )}
+        )}
+        <div>
+          <Button
+            priority="secondary"
+            linkProps={{
+              href: `/candidacies/?status=ACTIVE_HORS_ABANDON&page=1&maisonMereAAPId=${maisonMereAAPId}`,
+              target: "_blank",
+            }}
+          >
+            Voir les candidatures
+          </Button>
         </div>
       </div>
       <div className="flex items-center justify-between flex-col w-full  py-2 my-4">
