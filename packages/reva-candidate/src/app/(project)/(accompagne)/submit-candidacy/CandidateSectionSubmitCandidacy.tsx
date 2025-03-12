@@ -29,6 +29,13 @@ export default function CandidateSectionSubmitCandidacy({
 
   const genderLabel = gender ? getGenderPrefix(gender) : "";
 
+  const birthCityLabel =
+    birthCity || birthDepartment?.code
+      ? `${birthCity} ${birthDepartment?.code ? `(${birthDepartment.code})` : ""}`
+      : "-";
+
+  const fullNameLabel = `${genderLabel} ${givenName ? givenName : lastname}${firstname ? `, ${firstname}` : ""}${firstname2 ? `, ${firstname2}` : ""}${firstname3 ? `, ${firstname3}` : ""}`;
+
   return (
     <div>
       <div className="flex">
@@ -40,13 +47,7 @@ export default function CandidateSectionSubmitCandidacy({
       </div>
       <div className="pl-10">
         <h3 className="mb-4">Civilité</h3>
-        <p className="font-medium text-lg mb-4">
-          {genderLabel}
-          {givenName ? givenName : lastname}
-          {firstname ? `, ${firstname}` : ""}
-          {firstname2 ? `, ${firstname2}` : ""}
-          {firstname3 ? `, ${firstname3}` : ""}
-        </p>
+        <p className="font-medium text-lg mb-4">{fullNameLabel}</p>
         <div className="flex gap-12">
           {!!givenName && (
             <div>
@@ -57,19 +58,16 @@ export default function CandidateSectionSubmitCandidacy({
           <div>
             <p className="mb-0">Date de naissance</p>
             <p className="font-medium">
-              {birthdate ? format(birthdate, "dd/MM/yyyy") : ""}
+              {birthdate ? format(birthdate, "dd/MM/yyyy") : "-"}
             </p>
           </div>
           <div>
             <p className="mb-0">Ville de naissance</p>
-            <p className="font-medium">
-              {birthCity}{" "}
-              {birthDepartment?.code ? `(${birthDepartment.code})` : ""}
-            </p>
+            <p className="font-medium">{birthCityLabel}</p>
           </div>
           <div>
             <p className="mb-0">Nationalité</p>
-            <p className="font-medium">{nationality}</p>
+            <p className="font-medium">{nationality || "-"}</p>
           </div>
         </div>
 
@@ -77,10 +75,12 @@ export default function CandidateSectionSubmitCandidacy({
         <div className="flex gap-12">
           <div>
             <p className="mb-0">Adresse postale</p>
-            <p className="font-medium mb-0">{street}</p>
-            <p className="font-medium mb-0">
-              {zip} {city}
-            </p>
+            <p className="font-medium mb-0">{street || "-"}</p>
+            {(zip || city) && (
+              <p className="font-medium mb-0">
+                {zip} {city}
+              </p>
+            )}
           </div>
           <div>
             <p className="mb-0">E-mail</p>
