@@ -2,12 +2,13 @@ import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCand
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import { format, isAfter } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
 import TileGroup from "./widgets/TileGroup";
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -214,6 +215,7 @@ const Dashboard = () => {
                   candidacy.status == "PRISE_EN_CHARGE"
                 }
                 title="Parcours et financement"
+                start={<TrainingStatusBadge candidacy={candidacy} />}
                 small
                 buttonProps={{
                   onClick: () => {
@@ -366,6 +368,28 @@ const Dashboard = () => {
       </div>
     </div>
   );
+};
+
+const TrainingStatusBadge = ({
+  candidacy,
+}: {
+  candidacy: {
+    status: CandidacyStatusStep;
+    firstAppointmentOccuredAt?: number | null;
+  };
+}) => {
+  if (
+    (candidacy.status == "VALIDATION" ||
+      candidacy.status == "PRISE_EN_CHARGE") &&
+    candidacy.firstAppointmentOccuredAt &&
+    isBefore(candidacy.firstAppointmentOccuredAt, new Date())
+  ) {
+    return <Badge severity="info">En cours</Badge>;
+  } else if (candidacy.status == "PARCOURS_ENVOYE") {
+    return <Badge severity="warning">À valider</Badge>;
+  } else if (candidacy.status == "PARCOURS_CONFIRME") {
+    return <Badge severity="success">Validé</Badge>;
+  }
 };
 
 const CompleteIncompleteBadge = ({ isComplete }: { isComplete: boolean }) => (
