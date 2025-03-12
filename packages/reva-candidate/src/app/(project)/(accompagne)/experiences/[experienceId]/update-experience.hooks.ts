@@ -1,9 +1,34 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
-import { ExperienceInput } from "@/graphql/generated/graphql";
+import {
+  CandidacyStatusStep,
+  ExperienceInput,
+} from "@/graphql/generated/graphql";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
+
+const getCandidateQuery = graphql(`
+  query getCandidateForUpdateExperience {
+    candidate_getCandidateWithCandidacy {
+      candidacy {
+        id
+        status
+        candidacyDropOut {
+          status
+        }
+        experiences {
+          id
+          title
+          startedAt
+          duration
+          description
+        }
+      }
+    }
+  }
+`);
 
 const UPDATE_EXPERIENCE = graphql(`
   mutation update_experience(
@@ -27,6 +52,12 @@ const UPDATE_EXPERIENCE = graphql(`
 
 export const useUpdateExperience = () => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
+
+  const { data: getCandidateData } = useQuery({
+    queryKey: ["candidate"],
+    queryFn: () => graphqlClient.request(getCandidateQuery),
+  });
 
   const updateExperience = useMutation({
     mutationKey: ["candidacy_updateExperience"],
@@ -44,7 +75,27 @@ export const useUpdateExperience = () => {
         experienceId,
         experience,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["candidate"],
+      });
+    },
   });
 
-  return { updateExperience };
+  const candidacy =
+    getCandidateData?.candidate_getCandidateWithCandidacy.candidacy;
+
+  const canEditCandidacy = candidateCanEditCandidacy({
+    candidacyStatus: candidacy?.status as CandidacyStatusStep,
+    candidacyDropOut: !!candidacy?.candidacyDropOut,
+  });
+
+  const candidacyAlreadySubmitted = candidacy?.status !== "PROJET";
+
+  return {
+    updateExperience,
+    canEditCandidacy,
+    candidacy,
+    candidacyAlreadySubmitted,
+  };
 };

@@ -11,8 +11,6 @@ import { ExperienceDuration } from "@/constants";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
@@ -50,15 +48,18 @@ export default function UpdateExperience() {
 
   const { experienceId } = params;
 
-  const { candidacy, refetch, canEditCandidacy } = useCandidacy();
-
-  const { updateExperience } = useUpdateExperience();
+  const {
+    updateExperience,
+    canEditCandidacy,
+    candidacy,
+    candidacyAlreadySubmitted,
+  } = useUpdateExperience();
   const { isFeatureActive } = useFeatureFlipping();
   const isDashboardCandidateActive = isFeatureActive("CANDIDATE_DASHBOARD");
   const backUrl = isDashboardCandidateActive ? "/experiences" : "/";
-  const inputShouldBeDisabled = !canEditCandidacy;
+  const inputShouldBeDisabled = !canEditCandidacy || candidacyAlreadySubmitted;
 
-  const experience = candidacy.experiences.find(
+  const experience = candidacy?.experiences.find(
     (experience) => experience.id == experienceId,
   );
 
@@ -92,8 +93,11 @@ export default function UpdateExperience() {
   useEffect(resetForm, [resetForm]);
 
   const onSubmit = async (data: ExperienceForm) => {
+    if (!candidacy?.id) {
+      return;
+    }
     try {
-      const response = await updateExperience.mutateAsync({
+      await updateExperience.mutateAsync({
         candidacyId: candidacy.id,
         experienceId,
         experience: {
@@ -103,10 +107,7 @@ export default function UpdateExperience() {
           description: data.description || "",
         },
       });
-      if (response) {
-        refetch();
-        router.push(backUrl);
-      }
+      router.push(backUrl);
     } catch (error) {
       graphqlErrorToast(error);
     }
