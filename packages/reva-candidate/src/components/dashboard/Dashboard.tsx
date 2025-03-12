@@ -271,13 +271,27 @@ const Dashboard = () => {
                 )}
               />
             ) : (
-              <Tile title="Aucun rendez-vous pour le moment" />
+              <Tile
+                title="Aucun rendez-vous pour le moment"
+                small
+                orientation="horizontal"
+                classes={{
+                  content: "pb-0",
+                }}
+              />
             )}
           </TileGroup>
           <TileGroup icon="fr-icon-team-line" title="Mes contacts">
             {!candidacy.organism &&
               !candidacy.feasibility?.certificationAuthority && (
-                <p className="mb-0 font-bold">Aucun contact pour le moment</p>
+                <Tile
+                  title="Aucun contact pour le moment"
+                  small
+                  orientation="horizontal"
+                  classes={{
+                    content: "pb-0",
+                  }}
+                />
               )}
             {candidacy.organism && (
               <Tile
