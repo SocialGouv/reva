@@ -1,6 +1,7 @@
 import Input from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -11,12 +12,33 @@ const schema = z.object({
 type Form = z.infer<typeof schema>;
 
 export const useConfirmTypeAccompagnementSwitchToAutonomeModal = () => {
-  const confirmTypeAccompagnementSwitchToAutonomeModal = createModal({
-    id: "confirm-type-accompagnement-switch-to-autonome",
-    isOpenedByDefault: false,
-  });
+  const confirmTypeAccompagnementSwitchToAutonomeModal = useMemo(
+    () =>
+      createModal({
+        id: "confirm-type-accompagnement-switch-to-autonome",
+        isOpenedByDefault: false,
+      }),
+    [],
+  );
 
-  const ConfirmTypeAccompagnementSwitchToAutonomeModal = ({
+  const ConfirmFinanceModuleSwitchToHorsPlateformeModal = useMemo(
+    () =>
+      createConfirmFinanceModuleSwitchToHorsPlateformeModal(
+        confirmTypeAccompagnementSwitchToAutonomeModal,
+      ),
+    [confirmTypeAccompagnementSwitchToAutonomeModal],
+  );
+
+  return {
+    Component: ConfirmFinanceModuleSwitchToHorsPlateformeModal,
+    open: confirmTypeAccompagnementSwitchToAutonomeModal.open,
+  };
+};
+
+const createConfirmFinanceModuleSwitchToHorsPlateformeModal = (
+  modal: ReturnType<typeof createModal>,
+) => {
+  const Component = ({
     onConfirmButtonClick,
   }: {
     onConfirmButtonClick: (data: { reason: string }) => void;
@@ -30,16 +52,16 @@ export const useConfirmTypeAccompagnementSwitchToAutonomeModal = () => {
 
     const handleConfirmButtonClick = handleSubmit((data) => {
       onConfirmButtonClick(data);
-      confirmTypeAccompagnementSwitchToAutonomeModal.close();
+      modal.close();
     });
 
     const handleCancelButtonClick = () => {
       reset({ reason: "" });
-      confirmTypeAccompagnementSwitchToAutonomeModal.close();
+      modal.close();
     };
 
     return (
-      <confirmTypeAccompagnementSwitchToAutonomeModal.Component
+      <modal.Component
         title={
           <div className="flex gap-2">
             <span className="fr-icon-warning-fill" />
@@ -92,11 +114,9 @@ export const useConfirmTypeAccompagnementSwitchToAutonomeModal = () => {
             <p className="mb-2">Êtes vous sûr de vouloir continuer ?</p>
           </div>
         </form>
-      </confirmTypeAccompagnementSwitchToAutonomeModal.Component>
+      </modal.Component>
     );
   };
-  return {
-    Component: ConfirmTypeAccompagnementSwitchToAutonomeModal,
-    open: confirmTypeAccompagnementSwitchToAutonomeModal.open,
-  };
+  Component.displayName = "ConfirmFinanceModuleSwitchToHorsPlateformeModal";
+  return Component;
 };

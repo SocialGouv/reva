@@ -1,6 +1,7 @@
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -11,12 +12,33 @@ const schema = z.object({
 type Form = z.infer<typeof schema>;
 
 export const useConfirmFinanceModuleSwitchToHorsPlateformeModal = () => {
-  const confirmFinanceModuleSwitchToHorsPlateformeModal = createModal({
-    id: "confirm-finance-module-switch-to-hors-plateforme",
-    isOpenedByDefault: false,
-  });
+  const confirmFinanceModuleSwitchToHorsPlateformeModal = useMemo(
+    () =>
+      createModal({
+        id: "confirm-finance-module-switch-to-hors-plateforme",
+        isOpenedByDefault: false,
+      }),
+    [],
+  );
 
-  const ConfirmFinanceModuleSwitchToHorsPlateformeModal = ({
+  const ConfirmFinanceModuleSwitchToHorsPlateformeModal = useMemo(
+    () =>
+      createConfirmFinanceModuleSwitchToHorsPlateformeModal(
+        confirmFinanceModuleSwitchToHorsPlateformeModal,
+      ),
+    [confirmFinanceModuleSwitchToHorsPlateformeModal],
+  );
+
+  return {
+    Component: ConfirmFinanceModuleSwitchToHorsPlateformeModal,
+    open: confirmFinanceModuleSwitchToHorsPlateformeModal.open,
+  };
+};
+
+const createConfirmFinanceModuleSwitchToHorsPlateformeModal = (
+  modal: ReturnType<typeof createModal>,
+) => {
+  const Component = ({
     onConfirmButtonClick,
   }: {
     onConfirmButtonClick: (data: { reason: string }) => void;
@@ -30,16 +52,16 @@ export const useConfirmFinanceModuleSwitchToHorsPlateformeModal = () => {
 
     const handleConfirmButtonClick = handleSubmit((data) => {
       onConfirmButtonClick(data);
-      confirmFinanceModuleSwitchToHorsPlateformeModal.close();
+      modal.close();
     });
 
     const handleCancelButtonClick = () => {
       reset({ reason: "" });
-      confirmFinanceModuleSwitchToHorsPlateformeModal.close();
+      modal.close();
     };
 
     return (
-      <confirmFinanceModuleSwitchToHorsPlateformeModal.Component
+      <modal.Component
         title={
           <div className="flex gap-2">
             <span className="fr-icon-warning-fill" />
@@ -82,12 +104,9 @@ export const useConfirmFinanceModuleSwitchToHorsPlateformeModal = () => {
             <p className="mb-0">Êtes vous sûr de vouloir continuer ?</p>
           </div>
         </form>
-      </confirmFinanceModuleSwitchToHorsPlateformeModal.Component>
+      </modal.Component>
     );
   };
-
-  return {
-    Component: ConfirmFinanceModuleSwitchToHorsPlateformeModal,
-    open: confirmFinanceModuleSwitchToHorsPlateformeModal.open,
-  };
+  Component.displayName = "ConfirmFinanceModuleSwitchToHorsPlateformeModal";
+  return Component;
 };
