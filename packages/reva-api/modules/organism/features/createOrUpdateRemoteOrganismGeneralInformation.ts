@@ -1,10 +1,15 @@
 import { RemoteZone } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
+import {
+  AAPAuditLogUserInfo,
+  logAAPAuditEvent,
+} from "../../aap-log/features/logAAPAuditEvent";
 
 export const createOrUpdateRemoteOrganismGeneralInformation = async ({
   organismId,
   informationsCommerciales,
   remoteZones,
+  userInfo,
 }: {
   organismId: string;
   informationsCommerciales: {
@@ -14,6 +19,7 @@ export const createOrUpdateRemoteOrganismGeneralInformation = async ({
     emailContact: string | null;
   };
   remoteZones: RemoteZone[];
+  userInfo: AAPAuditLogUserInfo;
 }) =>
   prismaClient.$transaction(async (tx) => {
     const organismUpdated = await tx.organism.update({
@@ -27,5 +33,14 @@ export const createOrUpdateRemoteOrganismGeneralInformation = async ({
     await tx.organismOnRemoteZone.createMany({
       data: remoteZones.map((r) => ({ organismId, remoteZone: r })),
     });
-    return organismUpdated;
+
+    if (organismUpdated.maisonMereAAPId) {
+      await logAAPAuditEvent({
+        eventType: "ORGANISM_REMOTE_GENERAL_INFORMATION_UPDATED",
+        maisonMereAAPId: organismUpdated.maisonMereAAPId,
+        userInfo,
+        tx,
+      });
+      return organismUpdated;
+    }
   });

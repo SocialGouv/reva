@@ -225,7 +225,12 @@ const unsafeResolvers = {
         };
         remoteZones: RemoteZone[];
       },
-    ) => createOrUpdateRemoteOrganismGeneralInformation(params),
+      context: GraphqlContext,
+    ) =>
+      createOrUpdateRemoteOrganismGeneralInformation({
+        ...params,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
 
     organism_createOrUpdateOnSiteOrganismGeneralInformation: async (
       _parent: unknown,

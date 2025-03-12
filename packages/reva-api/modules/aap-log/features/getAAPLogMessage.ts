@@ -41,9 +41,13 @@ export const getAAPLogMessage = ({
     case "ORGANISM_SEARCH_RESULTS_VISIBILITY_UPDATED":
       return log(
         "Visibilité d'un organisme mise à jour",
-        `nom: ${details.organismLabel}, modalité d'accompagnement:${details.modaliteAccompagnement}, visibilité: ${
+        `nom: ${details.organismLabel}, modalité d'accompagnement: ${details.modaliteAccompagnement}, visibilité: ${
           details.visibleInSearchResults ? "visible" : "invisible"
         }`,
+      );
+    case "ORGANISM_REMOTE_GENERAL_INFORMATION_UPDATED":
+      return log(
+        "Informations générales de l'accompagnement à distance mises à jour",
       );
     default:
       return log("Événement inconnu");

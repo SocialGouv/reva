@@ -4,7 +4,8 @@ export type AAPLogEventTypeAndDetails =
   | {
       eventType:
         | "SUBCRIBTION_REQUEST_VALIDATED"
-        | "MAISON_MERE_LEGAL_INFORMATION_UPDATED";
+        | "MAISON_MERE_LEGAL_INFORMATION_UPDATED"
+        | "ORGANISM_REMOTE_GENERAL_INFORMATION_UPDATED";
       details?: undefined;
     }
   | {
