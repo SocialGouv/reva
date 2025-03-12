@@ -54,6 +54,14 @@ export type AAPLogEventTypeAndDetails =
         organismId: string;
         organismLabel: string;
       };
+    }
+  | {
+      eventType: "ORGANISM_ACCOUNT_CREATED";
+      details: {
+        organismId: string;
+        organismLabel: string;
+        accountEmail: string;
+      };
     };
 
 export type AAPLog = {

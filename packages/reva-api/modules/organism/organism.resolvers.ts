@@ -351,7 +351,12 @@ const unsafeResolvers = {
       }: {
         data: CreateOrganismAccountInput;
       },
-    ) => createOrganismAccount(data),
+      context: GraphqlContext,
+    ) =>
+      createOrganismAccount({
+        ...data,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
     organism_updateAccountAndOrganism: async (
       _parent: unknown,
       {
