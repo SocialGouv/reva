@@ -1,9 +1,30 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { graphql } from "@/graphql/generated";
-import { CandidateGoalInput } from "@/graphql/generated/graphql";
+import {
+  CandidacyStatusStep,
+  CandidateGoalInput,
+} from "@/graphql/generated/graphql";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
+
+const getCandidateQuery = graphql(`
+  query getCandidateForSetGoals {
+    candidate_getCandidateWithCandidacy {
+      candidacy {
+        id
+        status
+        candidacyDropOut {
+          status
+        }
+        goals {
+          id
+        }
+      }
+    }
+  }
+`);
 
 const GET_GOALS = graphql(`
   query getGoals {
@@ -27,6 +48,12 @@ const UPDATE_GOALS = graphql(`
 
 export const useSetGoals = () => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
+
+  const { data: getCandidateData } = useQuery({
+    queryKey: ["candidate"],
+    queryFn: () => graphqlClient.request(getCandidateQuery),
+  });
 
   const getGoals = useQuery({
     queryKey: ["getGoals"],
@@ -46,7 +73,28 @@ export const useSetGoals = () => {
         candidacyId,
         goals,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["candidate"],
+      });
+    },
   });
 
-  return { getGoals, updateGoals };
+  const candidacy =
+    getCandidateData?.candidate_getCandidateWithCandidacy.candidacy;
+
+  const canEditCandidacy = candidateCanEditCandidacy({
+    candidacyStatus: candidacy?.status as CandidacyStatusStep,
+    candidacyDropOut: !!candidacy?.candidacyDropOut,
+  });
+
+  const candidacyAlreadySubmitted = candidacy?.status !== "PROJET";
+
+  return {
+    getGoals,
+    updateGoals,
+    canEditCandidacy,
+    candidacyAlreadySubmitted,
+    candidacy,
+  };
 };

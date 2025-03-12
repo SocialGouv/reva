@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
@@ -10,20 +10,25 @@ import { PageLayout } from "@/layouts/page.layout";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { useSetGoals } from "./set-goals.hooks";
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { useSetGoals } from "./set-goals.hooks";
 
 export default function SetGoals() {
   const router = useRouter();
 
-  const { canEditCandidacy, candidacy, refetch } = useCandidacy();
-  const { getGoals, updateGoals } = useSetGoals();
+  const {
+    getGoals,
+    updateGoals,
+    canEditCandidacy,
+    candidacyAlreadySubmitted,
+    candidacy,
+  } = useSetGoals();
 
+  const formShouldBeDisabled = !canEditCandidacy || candidacyAlreadySubmitted;
   const goals = getGoals.data?.getReferential.goals || [];
 
   const [selectedGoalIds, setSelectedGoalIds] = useState<string[]>(
-    candidacy.goals.map((goal) => goal.id),
+    candidacy?.goals.map((goal) => goal.id) || [],
   );
 
   if (!canEditCandidacy) {
@@ -44,15 +49,16 @@ export default function SetGoals() {
     e.preventDefault();
     e.stopPropagation();
 
+    if (!candidacy?.id) {
+      return;
+    }
+
     try {
-      const response = await updateGoals.mutateAsync({
+      await updateGoals.mutateAsync({
         candidacyId: candidacy.id,
         goals: selectedGoalIds.map((goalId) => ({ goalId })),
       });
-      if (response) {
-        refetch();
-        router.push("/");
-      }
+      router.push("/");
     } catch (error) {
       graphqlErrorToast(error);
     }
@@ -70,6 +76,7 @@ export default function SetGoals() {
         <Checkbox
           className="w-full"
           legend="Objectif"
+          disabled={formShouldBeDisabled}
           options={goals.map((goal) => ({
             label: goal.label,
             nativeInputProps: {
@@ -82,7 +89,7 @@ export default function SetGoals() {
         <Button
           className="mb-4 justify-center w-[100%]  md:w-fit"
           data-test="project-goals-submit-goals"
-          disabled={!canEditCandidacy}
+          disabled={formShouldBeDisabled}
         >
           Valider mes objectifs
         </Button>
