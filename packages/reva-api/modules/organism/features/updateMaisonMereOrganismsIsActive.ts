@@ -23,7 +23,7 @@ export const updateMaisonMereOrganismsIsActive = async ({
   });
 
   await logAAPAuditEvent({
-    eventType: "MAISON_MEREE_ORGANISMS_ISACTIVE_UPDATED",
+    eventType: "MAISON_MERE_ORGANISMS_ISACTIVE_UPDATED",
     maisonMereAAPId,
     userInfo,
     details: { isActive },

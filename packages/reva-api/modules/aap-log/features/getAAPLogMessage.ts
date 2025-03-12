@@ -23,7 +23,7 @@ export const getAAPLogMessage = ({
     case "MAISON_MERE_LEGAL_INFORMATION_UPDATED":
       return log("Informations générales de la maison mère mises à jour");
 
-    case "MAISON_MEREE_ORGANISMS_ISACTIVE_UPDATED":
+    case "MAISON_MERE_ORGANISMS_ISACTIVE_UPDATED":
       return log(
         "Statut de la maison mère mis à jour",
         `nouveau statut :  ${details.isActive ? "activé" : "désactivé"}`,

@@ -8,7 +8,7 @@ export type AAPLogEventTypeAndDetails =
       details?: undefined;
     }
   | {
-      eventType: "MAISON_MEREE_ORGANISMS_ISACTIVE_UPDATED";
+      eventType: "MAISON_MERE_ORGANISMS_ISACTIVE_UPDATED";
       details: { isActive: boolean };
     };
 
