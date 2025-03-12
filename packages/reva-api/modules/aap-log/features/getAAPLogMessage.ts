@@ -28,6 +28,11 @@ export const getAAPLogMessage = ({
         "Statut de la maison mère mis à jour",
         `nouveau statut :  ${details.isActive ? "activé" : "désactivé"}`,
       );
+    case "MAISON_MERE_SIGNALIZED_STATUS_UPDATED":
+      return log(
+        "Signalisation de la maison mère mis à jour",
+        `nouveau statut :  ${details.isSignalized ? "signalée" : "non signalée"}`,
+      );
     default:
       return log("Événement inconnu");
   }

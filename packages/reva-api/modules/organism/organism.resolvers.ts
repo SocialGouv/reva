@@ -466,7 +466,12 @@ const unsafeResolvers = {
           isSignalized: boolean;
         };
       },
-    ) => updateMaisonMereIsSignalized(params.data),
+      context: GraphqlContext,
+    ) =>
+      updateMaisonMereIsSignalized({
+        ...params.data,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
     organism_updateMaisonMereLegalInformation: async (
       _parent: unknown,
       params: {
