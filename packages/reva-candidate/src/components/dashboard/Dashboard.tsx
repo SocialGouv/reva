@@ -212,14 +212,25 @@ const Dashboard = () => {
                 disabled={
                   candidacy.status == "PROJET" ||
                   candidacy.status == "VALIDATION" ||
-                  candidacy.status == "PRISE_EN_CHARGE"
+                  (candidacy.status == "PRISE_EN_CHARGE" &&
+                    !!candidacy.firstAppointmentOccuredAt &&
+                    isAfter(candidacy.firstAppointmentOccuredAt, new Date()))
                 }
                 title="Parcours et financement"
                 start={<TrainingStatusBadge candidacy={candidacy} />}
                 small
                 buttonProps={{
                   onClick: () => {
-                    router.push("/validate-training");
+                    router.push(
+                      candidacy.status == "PRISE_EN_CHARGE" &&
+                        !!candidacy.firstAppointmentOccuredAt &&
+                        isBefore(
+                          candidacy.firstAppointmentOccuredAt,
+                          new Date(),
+                        )
+                        ? "/waiting-for-training"
+                        : "/validate-training",
+                    );
                   },
                 }}
                 imageUrl="/candidat/images/pictograms/in-progress.svg"
