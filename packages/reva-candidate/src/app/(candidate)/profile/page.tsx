@@ -4,7 +4,8 @@ import CandidateInformationForm from "./_components/CandidateInformationForm";
 import { useProfile } from "./_components/useProfile";
 
 export default function Profile() {
-  const { countries, departments, candidate } = useProfile();
+  const { countries, departments, candidate, candidacyAlreadySubmitted } =
+    useProfile();
 
   if (!candidate || !departments || !countries) {
     return null;
@@ -20,6 +21,7 @@ export default function Profile() {
         candidate={candidate}
         countries={countries}
         departments={departments}
+        candidacyAlreadySubmitted={candidacyAlreadySubmitted}
       />
     </div>
   );

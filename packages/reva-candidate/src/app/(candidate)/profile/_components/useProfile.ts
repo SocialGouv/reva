@@ -28,6 +28,9 @@ const getCandidateQuery = graphql(`
       phone
       email
       addressComplement
+      candidacy {
+        status
+      }
     }
   }
 `);
@@ -73,10 +76,13 @@ export const useProfile = () => {
   const countries = getCountriesData?.getCountries;
   const departments = getDepartmentsData?.getDepartments;
 
+  const candidacyAlreadySubmitted = candidate?.candidacy?.status !== "PROJET";
+
   return {
     candidate,
     countries,
     departments,
+    candidacyAlreadySubmitted,
   };
 };
 
