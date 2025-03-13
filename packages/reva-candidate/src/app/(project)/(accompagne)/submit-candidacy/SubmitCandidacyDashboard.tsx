@@ -6,6 +6,8 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { BackButton } from "@/components/back-button/BackButton";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { useState } from "react";
+import CandidacySubmissionSuccessNotice from "./CandidacySubmissionSuccessNotice";
 import CandidateSectionSubmitCandidacy from "./CandidateSectionSubmitCandidacy";
 import CertificationSectionSubmitCandidacy from "./CertificationSectionSubmitCandidacy";
 import ContactSectionSubmitCandidacy from "./ContactSectionSubmitCandidacy";
@@ -13,8 +15,6 @@ import ExperiencesSectionSubmitCandidacy from "./ExperiencesSectionSubmitCandida
 import GoalsSectionSubmitCandidacy from "./GoalsSectionSubmitCandidacy";
 import { useSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
-import { useState } from "react";
-import CandidacySubmissionSuccessNotice from "./CandidacySubmissionSuccessNotice";
 
 export default function SubmitCandidacy() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function SubmitCandidacy() {
     }
   };
 
-  if (candidacySubmissionSuccess || candidacyAlreadySubmitted) {
+  if (candidacySubmissionSuccess) {
     return <CandidacySubmissionSuccessNotice />;
   }
 
