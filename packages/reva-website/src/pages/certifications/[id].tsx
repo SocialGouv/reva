@@ -14,8 +14,8 @@ import { GRAPHQL_API_URL } from "@/config/config";
 import { isUUID } from "@/utils";
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { CertificationPageV1 } from "./(components)/certification-page-v1/CertificationPageV1";
-import { CertificationPageV2 } from "./(components)/certification-page-v1/CertificationPageV2";
+import { CertificationPageV1 } from "../../components/certification-page/CertificationPageV1";
+import { CertificationPageV2 } from "../../components/certification-page/CertificationPageV2";
 export default function Page({
   certification,
   activeFeatures,
