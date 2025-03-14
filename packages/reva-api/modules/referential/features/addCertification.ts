@@ -70,6 +70,9 @@ export const addCertification = async (params: { codeRncp: string }) => {
       rncpEffectiveAt: rncpCertification.DATE_EFFET
         ? new Date(rncpCertification.DATE_EFFET)
         : null,
+      rncpObjectifsContexte: rncpCertification.OBJECTIFS_CONTEXTE
+        ? rncpCertification.OBJECTIFS_CONTEXTE
+        : null,
       fcPrerequisites: rncpCertification.PREREQUIS.LISTE_PREREQUIS,
       prerequisites: {
         createMany: {
