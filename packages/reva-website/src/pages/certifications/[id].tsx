@@ -15,6 +15,7 @@ import { isUUID } from "@/utils";
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { CertificationPageV1 } from "./(components)/certification-page-v1/CertificationPageV1";
+import { CertificationPageV2 } from "./(components)/certification-page-v1/CertificationPageV2";
 export default function Page({
   certification,
   activeFeatures,
@@ -26,6 +27,11 @@ export default function Page({
   if (!certification) {
     return null;
   }
+
+  const isHomePageV2FeatureActive = !!activeFeatures?.includes("HOMEPAGE_V2");
+  const isCertificationV2PageFeatureActive = !!activeFeatures?.includes(
+    "WEBSITE_CERTIFICATION_PAGE_V2",
+  );
 
   return (
     <MainLayout className="relative">
@@ -45,10 +51,17 @@ export default function Page({
           />
         </div>
       </div>
-      <CertificationPageV1
-        isHomePageV2FeatureActive={!!activeFeatures?.includes("HOMEPAGE_V2")}
-        certification={certification}
-      />
+      {isCertificationV2PageFeatureActive ? (
+        <CertificationPageV2
+          isHomePageV2FeatureActive={isHomePageV2FeatureActive}
+          certification={certification}
+        />
+      ) : (
+        <CertificationPageV1
+          isHomePageV2FeatureActive={isHomePageV2FeatureActive}
+          certification={certification}
+        />
+      )}
     </MainLayout>
   );
 }
