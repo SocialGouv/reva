@@ -9,6 +9,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         status
         typeAccompagnement
         firstAppointmentOccuredAt
+        isCaduque
         candidacyStatuses {
           status
         }
@@ -40,6 +41,12 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           adresseVille
         }
         feasibility {
+          decision
+          feasibilityFormat
+          dematerializedFeasibilityFile {
+            candidateConfirmationAt
+            sentToCandidateAt
+          }
           certificationAuthority {
             contactEmail
             contactFullName
@@ -85,3 +92,11 @@ export const useCandidacyForDashboard = () => {
     feasibility,
   };
 };
+
+type CandidacyForDashboardHookReturnType = ReturnType<
+  typeof useCandidacyForDashboard
+>;
+export type CandidateUseCandidacyForDashboard =
+  CandidacyForDashboardHookReturnType["candidacy"];
+export type FeasibilityUseCandidacyForDashboard =
+  CandidacyForDashboardHookReturnType["feasibility"];

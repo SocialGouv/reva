@@ -1,3 +1,4 @@
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tag from "@codegouvfr/react-dsfr/Tag";
@@ -7,8 +8,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
-import TileGroup from "./widgets/TileGroup";
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+import { FeasibilityTile } from "./tiles/FeasibilityTile";
+import TileGroup from "./tiles/TileGroup";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -229,17 +230,7 @@ const Dashboard = () => {
                 imageUrl="/candidat/images/pictograms/in-progress.svg"
               />
             )}
-            <Tile
-              disabled={!candidacy.feasibility}
-              title="Dossier de faisabilité"
-              small
-              buttonProps={{
-                onClick: () => {
-                  router.push("/validate-feasibility");
-                },
-              }}
-              imageUrl="/candidat/images/pictograms/contract.svg"
-            />
+            <FeasibilityTile feasibility={candidacy.feasibility} />
             <Tile
               disabled
               title="Dossier de validation"

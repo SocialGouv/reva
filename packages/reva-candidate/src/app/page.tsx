@@ -6,9 +6,9 @@ import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
 import { ProjectTimeline } from "@/components/legacy/organisms/ProjectTimeline/ProjectTimeline";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { CandidacyBanner } from "./_components/CandidacyBanner";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import Dashboard from "@/components/dashboard/Dashboard";
+import { CandidacyBanner } from "./_components/CandidacyBanner";
+import Dashboard from "./_components/dashboard/Dashboard";
 
 export default function Home() {
   const { candidate } = useCandidacy();
