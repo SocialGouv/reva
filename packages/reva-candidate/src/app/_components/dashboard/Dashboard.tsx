@@ -192,9 +192,7 @@ const Dashboard = () => {
             </p>
             {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
               <span className="align-middle inline-block ml-2">
-                {candidacyAlreadySubmitted ? (
-                  <Badge severity="success">Candidature envoyée</Badge>
-                ) : (
+                {!candidacyAlreadySubmitted && (
                   <Badge severity="warning">Candidature non envoyée</Badge>
                 )}
               </span>
@@ -230,7 +228,10 @@ const Dashboard = () => {
                 imageUrl="/candidat/images/pictograms/in-progress.svg"
               />
             )}
-            <FeasibilityTile feasibility={candidacy.feasibility} />
+            <FeasibilityTile
+              feasibility={candidacy.feasibility}
+              isCaduque={candidacy.isCaduque}
+            />
             <Tile
               disabled
               title="Dossier de validation"
