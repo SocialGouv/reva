@@ -1,18 +1,27 @@
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import { format, isAfter, isBefore } from "date-fns";
+import { isAfter } from "date-fns";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
+import { DashboardBanner } from "./DashboardBanner";
+import { AapContactTile } from "./tiles/AapContactTile";
+import { CertificationAuthorityContactTile } from "./tiles/CertificationAuthorityContactTile";
+import { CertificationTile } from "./tiles/CertificationTile";
+import { DossierValidationTile } from "./tiles/DossierValidationTile";
+import { ExperiencesTile } from "./tiles/ExperiencesTile";
 import { FeasibilityTile } from "./tiles/FeasibilityTile";
+import { GoalsTile } from "./tiles/GoalsTile";
+import { NoContactTile } from "./tiles/NoContactTile";
+import { NoRendezVousTile } from "./tiles/NoRendezVousTile";
+import { OrganismTile } from "./tiles/OrganismTile";
+import { RendezVousPedagogiqueTile } from "./tiles/RendezVousPedagogiqueTile";
+import { SubmitCandidacyTile } from "./tiles/SubmitCandidacyTile";
 import TileGroup from "./tiles/TileGroup";
+import { TrainingTile } from "./tiles/TrainingTile";
+import { TypeAccompagnementTile } from "./tiles/TypeAccompagnementTile";
 
 const Dashboard = () => {
-  const router = useRouter();
   const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
 
   const hasSelectedCertification = useMemo(
@@ -68,7 +77,7 @@ const Dashboard = () => {
         />
         <div className="pt-8 mt-[-120px] lg:mt-0 lg:p-0 text-justify">
           <p className="my-0 pl-8">
-            <BannerContent
+            <DashboardBanner
               candidacy={candidacy}
               canSubmitCandidacy={canSubmitCandidacy}
               candidacyAlreadySubmitted={candidacyAlreadySubmitted}
@@ -91,95 +100,21 @@ const Dashboard = () => {
                 : "md:grid-cols-2 grid-rows-1"
             }`}
           >
-            <Tile
-              start={
-                <CompleteIncompleteBadge
-                  isComplete={hasSelectedCertification}
-                />
-              }
-              title="Diplôme visé"
-              small
-              linkProps={{
-                href: hasSelectedCertification
-                  ? `/certification/${candidacy.certification?.id}`
-                  : "/search-certification",
-              }}
-              imageUrl="/candidat/images/pictograms/search.svg"
+            <CertificationTile
+              hasSelectedCertification={hasSelectedCertification}
+              certificationId={candidacy.certification?.id}
             />
-            <Tile
-              start={
-                <Tag small>
-                  {candidacy.typeAccompagnement === "ACCOMPAGNE"
-                    ? "Accompagné"
-                    : "Autonome"}
-                </Tag>
-              }
-              title="Modalité de parcours"
-              small
-              linkProps={{
-                href: "/type-accompagnement",
-              }}
-              imageUrl="/candidat/images/pictograms/human-cooperation.svg"
+            <TypeAccompagnementTile
+              typeAccompagnement={candidacy.typeAccompagnement}
             />
             {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
               <>
-                <Tile
-                  start={
-                    <CompleteIncompleteBadge isComplete={hasCompletedGoals} />
-                  }
-                  title="Objectifs"
-                  small
-                  linkProps={{
-                    href: "/set-goals",
-                  }}
-                  imageUrl="/candidat/images/pictograms/conclusion.svg"
-                />
-                <Tile
-                  start={
-                    <>
-                      {candidacy.experiences.length === 0 ? (
-                        <Badge severity="warning">À compléter</Badge>
-                      ) : (
-                        <Badge className="bg-[#fee7fc] text-[#6e445a]">
-                          {candidacy.experiences.length}{" "}
-                          {candidacy.experiences.length === 1
-                            ? "renseignée"
-                            : "renseignées"}
-                        </Badge>
-                      )}
-                    </>
-                  }
-                  title="Expériences"
-                  small
-                  linkProps={{
-                    href: "/experiences",
-                  }}
-                  imageUrl="/candidat/images/pictograms/culture.svg"
-                />
-                <Tile
-                  start={
-                    <CompleteIncompleteBadge isComplete={hasSelectedOrganism} />
-                  }
-                  title="Accompagnateur"
-                  small
-                  linkProps={{
-                    href: "/set-organism",
-                  }}
-                  imageUrl="/candidat/images/pictograms/avatar.svg"
-                />
-                <Tile
-                  start={
-                    <SentToSendBadge isComplete={candidacyAlreadySubmitted} />
-                  }
-                  disabled={!candidacyAlreadySubmitted && !canSubmitCandidacy}
-                  title="Envoi de la candidature"
-                  small
-                  buttonProps={{
-                    onClick: () => {
-                      router.push("/submit-candidacy");
-                    },
-                  }}
-                  imageUrl="/candidat/images/pictograms/mail-send.svg"
+                <GoalsTile hasCompletedGoals={hasCompletedGoals} />
+                <ExperiencesTile experiences={candidacy.experiences} />
+                <OrganismTile hasSelectedOrganism={hasSelectedOrganism} />
+                <SubmitCandidacyTile
+                  candidacyAlreadySubmitted={candidacyAlreadySubmitted}
+                  canSubmitCandidacy={canSubmitCandidacy}
                 />
               </>
             )}
@@ -200,49 +135,16 @@ const Dashboard = () => {
           </div>
           <div className="grid grid-flow-row md:grid-flow-col grid-rows-1">
             {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
-              <Tile
-                disabled={
-                  candidacy.status == "PROJET" ||
-                  candidacy.status == "VALIDATION" ||
-                  (candidacy.status == "PRISE_EN_CHARGE" &&
-                    !!candidacy.firstAppointmentOccuredAt &&
-                    isAfter(candidacy.firstAppointmentOccuredAt, new Date()))
-                }
-                title="Parcours et financement"
-                start={<TrainingStatusBadge candidacy={candidacy} />}
-                small
-                buttonProps={{
-                  onClick: () => {
-                    router.push(
-                      candidacy.status == "PRISE_EN_CHARGE" &&
-                        !!candidacy.firstAppointmentOccuredAt &&
-                        isBefore(
-                          candidacy.firstAppointmentOccuredAt,
-                          new Date(),
-                        )
-                        ? "/waiting-for-training"
-                        : "/validate-training",
-                    );
-                  },
-                }}
-                imageUrl="/candidat/images/pictograms/in-progress.svg"
+              <TrainingTile
+                candidacyStatus={candidacy.status}
+                firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
               />
             )}
             <FeasibilityTile
               feasibility={candidacy.feasibility}
               isCaduque={candidacy.isCaduque}
             />
-            <Tile
-              disabled
-              title="Dossier de validation"
-              small
-              buttonProps={{
-                onClick: () => {
-                  router.push("/dossier-de-validation");
-                },
-              }}
-              imageUrl="/candidat/images/pictograms/binders.svg"
-            />
+            <DossierValidationTile />
           </div>
         </div>
         <div className="flex flex-col col-span-1 row-span-2 row-start-1 gap-y-8">
@@ -252,110 +154,33 @@ const Dashboard = () => {
           >
             {candidacy.firstAppointmentOccuredAt &&
             isAfter(candidacy.firstAppointmentOccuredAt, new Date()) ? (
-              <Tile
-                small
-                orientation="horizontal"
-                classes={{
-                  content: "pb-0",
-                }}
-                start={
-                  <Badge severity="info" small>
-                    Rendez-vous pédagogique
-                  </Badge>
-                }
-                title={format(
-                  candidacy.firstAppointmentOccuredAt,
-                  "dd/MM/yyyy - HH:mm",
-                )}
+              <RendezVousPedagogiqueTile
+                firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
               />
             ) : (
-              <Tile
-                title="Aucun rendez-vous pour le moment"
-                small
-                orientation="horizontal"
-                classes={{
-                  content: "pb-0",
-                }}
-              />
+              <NoRendezVousTile />
             )}
           </TileGroup>
           <TileGroup icon="fr-icon-team-line" title="Mes contacts">
             {!candidacy.organism &&
               !candidacy.feasibility?.certificationAuthority && (
-                <Tile
-                  title="Aucun contact pour le moment"
-                  small
-                  orientation="horizontal"
-                  classes={{
-                    content: "pb-0",
-                  }}
-                />
+                <NoContactTile />
               )}
             {candidacy.organism && (
-              <Tile
-                title="Mon accompagnateur"
-                small
-                orientation="horizontal"
-                classes={{
-                  content: "pb-0",
-                }}
-                desc={
-                  <>
-                    <p className="mb-1 text-sm">
-                      {candidacy.organism.nomPublic || candidacy.organism.label}
-                    </p>
-                    {candidacy.organism.adresseVille && (
-                      <p className="mb-0 leading-normal text-sm">
-                        {candidacy.organism.adresseNumeroEtNomDeRue} <br />
-                        {candidacy.organism
-                          .adresseInformationsComplementaires && (
-                          <>
-                            {
-                              candidacy.organism
-                                .adresseInformationsComplementaires
-                            }
-                            <br />
-                          </>
-                        )}
-                        {candidacy.organism.adresseCodePostal}{" "}
-                        {candidacy.organism.adresseVille}
-                      </p>
-                    )}
-                    <p className="mb-0 leading-normal text-sm">
-                      {candidacy.organism.emailContact ||
-                        candidacy.organism.contactAdministrativeEmail}
-                      <br />
-                      {candidacy.organism.telephone ||
-                        candidacy.organism.contactAdministrativePhone}
-                    </p>
-                  </>
-                }
-              />
+              <AapContactTile organism={candidacy.organism} />
             )}
             {candidacy.feasibility?.certificationAuthority && (
-              <Tile
-                title="Mon certificateur"
-                small
-                orientation="horizontal"
-                classes={{
-                  content: "pb-0",
-                }}
-                desc={
-                  <>
-                    <p className="mb-1 font-bold">Mon certificateur</p>
-                    {candidacy.feasibility?.certificationAuthority.label}
-                    <p className="mb-0 text-sm leading-normal">
-                      {
-                        candidacy.feasibility?.certificationAuthority
-                          .contactFullName
-                      }
-                      <br />
-                      {
-                        candidacy.feasibility?.certificationAuthority
-                          .contactEmail
-                      }
-                    </p>
-                  </>
+              <CertificationAuthorityContactTile
+                certificationAuthorityLabel={
+                  candidacy.feasibility?.certificationAuthority.label
+                }
+                certificationAuthorityContactFullName={
+                  candidacy.feasibility?.certificationAuthority
+                    .contactFullName ?? ""
+                }
+                certificationAuthorityContactEmail={
+                  candidacy.feasibility?.certificationAuthority.contactEmail ??
+                  ""
                 }
               />
             )}
@@ -364,110 +189,6 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
-
-const TrainingStatusBadge = ({
-  candidacy,
-}: {
-  candidacy: {
-    status: CandidacyStatusStep;
-    firstAppointmentOccuredAt?: number | null;
-  };
-}) => {
-  if (
-    (candidacy.status == "VALIDATION" ||
-      candidacy.status == "PRISE_EN_CHARGE") &&
-    candidacy.firstAppointmentOccuredAt &&
-    isBefore(candidacy.firstAppointmentOccuredAt, new Date())
-  ) {
-    return <Badge severity="info">En cours</Badge>;
-  } else if (candidacy.status == "PARCOURS_ENVOYE") {
-    return <Badge severity="warning">À valider</Badge>;
-  } else if (candidacy.status == "PARCOURS_CONFIRME") {
-    return <Badge severity="success">Validé</Badge>;
-  }
-};
-
-const CompleteIncompleteBadge = ({ isComplete }: { isComplete: boolean }) => (
-  <Badge severity={isComplete ? "success" : "warning"}>
-    {isComplete ? "complété" : "à compléter"}
-  </Badge>
-);
-
-const SentToSendBadge = ({ isComplete }: { isComplete: boolean }) => (
-  <Badge severity={isComplete ? "success" : "warning"}>
-    {isComplete ? "Envoyée" : "à envoyer"}
-  </Badge>
-);
-
-const BannerContent = ({
-  candidacy,
-  candidacyAlreadySubmitted,
-  canSubmitCandidacy,
-}: {
-  candidacy: {
-    status: CandidacyStatusStep;
-    firstAppointmentOccuredAt?: number | null;
-    organism?: {
-      label: string;
-      nomPublic?: string | null;
-    } | null;
-  };
-  candidacyAlreadySubmitted: boolean;
-  canSubmitCandidacy: boolean;
-}) => {
-  if (candidacyAlreadySubmitted && !candidacy.firstAppointmentOccuredAt) {
-    return (
-      <>
-        Votre accompagnateur vous enverra prochainement un date de rendez-vous
-        pour parler de votre projet. <br /> Si vous n’avez toujours pas eu de
-        retour 10 jours après l’envoi de votre candidatures, contactez-le
-        directement par mail.
-      </>
-    );
-  } else if (
-    candidacyAlreadySubmitted &&
-    !!candidacy.firstAppointmentOccuredAt &&
-    isAfter(candidacy.firstAppointmentOccuredAt, new Date())
-  ) {
-    return (
-      <>
-        <b>Information importante :</b> un rendez-vous est prévu le{" "}
-        {format(candidacy.firstAppointmentOccuredAt, "dd/MM/yyyy, à HH'h'mm")}{" "}
-        avec{" "}
-        <em>{candidacy.organism?.nomPublic || candidacy.organism?.label}</em>.
-        Consultez la section “Mes prochains rendez-vous” pour en savoir plus.{" "}
-      </>
-    );
-  } else if (
-    candidacyAlreadySubmitted &&
-    !!candidacy.firstAppointmentOccuredAt &&
-    isBefore(candidacy.firstAppointmentOccuredAt, new Date())
-  ) {
-    return (
-      <>
-        Votre accompagnateur est en train de construire votre parcours France
-        VAE (heures d'accompagnement, formations prévues...).
-        <br />
-        Vous le découvrirez très prochainement !
-      </>
-    );
-  } else if (canSubmitCandidacy) {
-    return (
-      <>
-        Votre candidature est correctement complétée ? Vous pouvez l’envoyer
-        sans plus tarder !
-      </>
-    );
-  } else {
-    return (
-      <>
-        Pour envoyer votre candidature, vous devez avoir complété, vos
-        informations dans <b>“Mon profil”</b> et toutes les catégories de la
-        section <b>“Compléter ma candidature”</b>.
-      </>
-    );
-  }
 };
 
 export default Dashboard;

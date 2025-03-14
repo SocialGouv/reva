@@ -93,10 +93,14 @@ export const useCandidacyForDashboard = () => {
   };
 };
 
-type CandidacyForDashboardHookReturnType = ReturnType<
+type CandidateForDashboardHookReturnType = ReturnType<
   typeof useCandidacyForDashboard
 >;
-export type CandidateUseCandidacyForDashboard =
-  CandidacyForDashboardHookReturnType["candidacy"];
-export type FeasibilityUseCandidacyForDashboard =
-  CandidacyForDashboardHookReturnType["feasibility"];
+export type CandidacyUseCandidateForDashboard =
+  CandidateForDashboardHookReturnType["candidacy"];
+export type FeasibilityUseCandidateForDashboard =
+  CandidateForDashboardHookReturnType["feasibility"];
+export type ExperiencesUseCandidateForDashboard =
+  CandidateForDashboardHookReturnType["candidacy"]["experiences"];
+export type OrganismUseCandidateForDashboard =
+  CandidateForDashboardHookReturnType["candidacy"]["organism"];

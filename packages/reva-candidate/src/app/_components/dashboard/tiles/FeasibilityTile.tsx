@@ -1,13 +1,12 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
-import { FeasibilityUseCandidacyForDashboard } from "../dashboard.hooks";
-
+import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 const FeasibilityBadge = ({
   feasibility,
   isCaduque,
 }: {
-  feasibility: FeasibilityUseCandidacyForDashboard;
+  feasibility: FeasibilityUseCandidateForDashboard;
   isCaduque: boolean;
 }) => {
   const decision = feasibility?.decision;
@@ -49,7 +48,7 @@ export const FeasibilityTile = ({
   feasibility,
   isCaduque,
 }: {
-  feasibility: FeasibilityUseCandidacyForDashboard;
+  feasibility: FeasibilityUseCandidateForDashboard;
   isCaduque: boolean;
 }) => {
   const router = useRouter();
