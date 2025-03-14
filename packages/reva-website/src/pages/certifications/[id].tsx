@@ -79,6 +79,8 @@ const getCertificationQuery = graphql(`
       codeRncp
       label
       isAapAvailable
+      level
+      typeDiplome
     }
   }
 `);
