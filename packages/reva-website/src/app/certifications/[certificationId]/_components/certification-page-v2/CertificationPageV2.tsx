@@ -54,7 +54,7 @@ export const CertificationPageV2 = ({
               : "VAE en autonomie"}
           </Tag>
         </div>
-        <div className="flex gap-6 mt-8">
+        <div className="flex flex-col md:flex-row gap-6 mt-8">
           <Tile
             title={certification.typeDiplome}
             className="w-[282px] h-[98px]"
