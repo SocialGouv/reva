@@ -4,6 +4,7 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { MetierTab } from "./tabs/MetierTab";
+import { UsefulResources } from "./useful-resources/UserfulResources";
 
 export const CertificationPageV2 = ({
   isHomePageV2FeatureActive,
@@ -86,6 +87,8 @@ export const CertificationPageV2 = ({
           },
         ]}
       />
+      <hr className="mt-12 mb-8 pb-1" />
+      <UsefulResources />
     </div>
   </div>
 );
