@@ -89,6 +89,15 @@ export const CertificationPageV2 = ({
       />
       <hr className="mt-12 mb-8 pb-1" />
       <UsefulResources />
+      <Button
+        className="mt-12"
+        priority="secondary"
+        linkProps={{
+          href: "/espace-candidat/",
+        }}
+      >
+        Retour
+      </Button>
     </div>
   </div>
 );
