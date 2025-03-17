@@ -6,6 +6,8 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { MetierTab } from "./tabs/MetierTab";
 import { UsefulResources } from "./useful-resources/UserfulResources";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
+import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
+import { JuryTab } from "./tabs/JuryTab";
 
 export const CertificationPageV2 = ({
   isHomePageV2FeatureActive,
@@ -21,6 +23,10 @@ export const CertificationPageV2 = ({
     level: number;
     rncpObjectifsContexte?: string | null;
     prerequisites: { id: string; label: string }[];
+    juryTypeMiseEnSituationProfessionnelle?: CertificationJuryTypeOfModality | null;
+    juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
+    juryEstimatedCost?: number | null;
+    juryPlace?: string | null;
   };
 }) => (
   <div className="flex-1 flex pb-8 min-h-screen">
@@ -97,6 +103,19 @@ export const CertificationPageV2 = ({
             label: "Prérequis",
             content: (
               <PreRequisitesTab prerequisites={certification.prerequisites} />
+            ),
+          },
+          {
+            label: "Jury",
+            content: (
+              <JuryTab
+                juryTypeMiseEnSituationProfessionnelle={
+                  certification.juryTypeMiseEnSituationProfessionnelle
+                }
+                juryTypeSoutenanceOrale={certification.juryTypeSoutenanceOrale}
+                juryEstimatedCost={certification.juryEstimatedCost}
+                juryPlace={certification.juryPlace}
+              />
             ),
           },
         ]}

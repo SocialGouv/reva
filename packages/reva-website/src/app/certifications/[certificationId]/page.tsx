@@ -89,6 +89,10 @@ const getCertificationQuery = graphql(`
         id
         label
       }
+      juryTypeMiseEnSituationProfessionnelle
+      juryTypeSoutenanceOrale
+      juryEstimatedCost
+      juryPlace
     }
   }
 `);
