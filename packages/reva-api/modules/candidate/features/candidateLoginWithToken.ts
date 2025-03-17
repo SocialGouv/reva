@@ -1,15 +1,11 @@
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCertification } from "../../candidacy/certification/features/updateCertification";
-import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
-import { getCertificationById } from "../../referential/features/getCertificationById";
-import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
+import { TokenService } from "../../account/utils/token.service";
+import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
 import {
   createCandidateAccountInIAM,
-  generateIAMToken,
   getCandidateAccountInIAM,
   getJWTContent,
 } from "../auth.helper";
@@ -17,10 +13,15 @@ import {
   CandidateAuthenticationInput,
   CandidateRegistrationInput,
 } from "../candidate.types";
-import { createCandidateWithCandidacy } from "./createCandidateWithCandidacy";
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
+import { createCandidateWithCandidacy } from "./createCandidateWithCandidacy";
+import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
+import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
+import { getCertificationById } from "../../referential/features/getCertificationById";
+import { updateCertification } from "../../candidacy/certification/features/updateCertification";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 
-export const candidateAuthentication = async ({ token }: { token: string }) => {
+export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(
     token,
   )) as CandidateAuthenticationInput;
@@ -99,11 +100,7 @@ const confirmRegistration = async ({
     });
   }
 
-  const tokens = await generateIAMToken(candidateKeycloakId);
-  const iamToken = {
-    tokens,
-    candidate,
-  };
+  const url = getImpersonateUrl(candidate.keycloakId);
 
   await logCandidacyAuditEvent({
     candidacyId: candidacy.id,
@@ -113,7 +110,7 @@ const confirmRegistration = async ({
     userEmail: candidateInput.email,
   });
 
-  return iamToken;
+  return url;
 };
 
 const loginCandidate = async ({ email }: { email: string }) => {
@@ -134,11 +131,40 @@ const loginCandidate = async ({ email }: { email: string }) => {
     throw new Error("Candidat non trouvé");
   }
 
-  const tokens = await generateIAMToken(candidate.keycloakId);
-  const iamToken = {
-    tokens,
-    candidate,
-  };
+  const url = getImpersonateUrl(candidate.keycloakId);
 
-  return iamToken;
+  return url;
+};
+
+const getImpersonateUrl = async (
+  keycloakId: string,
+): Promise<string | undefined> => {
+  const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+
+  const token = await getImpersonateTokenForCandidate(keycloakId);
+  return `${baseUrl}/api/account/impersonate?token=${token}`;
+};
+
+const getImpersonateTokenForCandidate = async (
+  keycloakId: string,
+): Promise<string> => {
+  const keycloakAdmin = await getKeycloakAdmin();
+
+  // Check if candidate with candidateToUpdate.keycloakId exsits
+  const keycloakAccount = await keycloakAdmin.users.findOne({
+    id: keycloakId,
+    realm: process.env.KEYCLOAK_APP_REALM,
+  });
+
+  if (!keycloakAccount) {
+    throw new Error(
+      `Compte utilisateur keycloak pour l'id ${keycloakId} non trouvé`,
+    );
+  }
+
+  const token = TokenService.getInstance().getToken({
+    candidateId: keycloakId,
+  });
+
+  return token;
 };

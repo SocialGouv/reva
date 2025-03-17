@@ -18,27 +18,22 @@ export const getImpersonateUrl = async (
 ): Promise<string | undefined> => {
   const { accountId, candidateId } = params;
 
-  console.log("process.env.KEYCLOAK_ADMIN_URL", process.env.KEYCLOAK_ADMIN_URL);
-  console.log(
-    "process.env.KEYCLOAK_ADMIN_REALM_REVA",
-    process.env.KEYCLOAK_ADMIN_REALM_REVA,
-  );
-  console.log("accountId", accountId);
-
   const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
   if (accountId) {
-    const token = await getImpersonateUrlForAccount(context, { accountId });
+    const token = await getImpersonateTokenForAccount(context, { accountId });
     return `${baseUrl}/api/account/impersonate?token=${token}`;
   } else if (candidateId) {
-    const token = await getImpersonateUrlForCandidate(context, { candidateId });
+    const token = await getImpersonateTokenForCandidate(context, {
+      candidateId,
+    });
     return `${baseUrl}/api/account/impersonate?token=${token}`;
   }
 
   return undefined;
 };
 
-const getImpersonateUrlForAccount = async (
+const getImpersonateTokenForAccount = async (
   context: {
     hasRole: (role: string) => boolean;
     keycloakId: string;
@@ -49,11 +44,6 @@ const getImpersonateUrlForAccount = async (
 ): Promise<string> => {
   const { hasRole } = context;
 
-  console.log("process.env.KEYCLOAK_ADMIN_URL", process.env.KEYCLOAK_ADMIN_URL);
-  console.log(
-    "process.env.KEYCLOAK_ADMIN_REALM_REVA",
-    process.env.KEYCLOAK_ADMIN_REALM_REVA,
-  );
   if (!hasRole("admin") && !hasRole("gestion_maison_mere_aap")) {
     throw new Error("Utilisateur non autorisé");
   }
@@ -107,7 +97,7 @@ const getImpersonateUrlForAccount = async (
   return token;
 };
 
-const getImpersonateUrlForCandidate = async (
+const getImpersonateTokenForCandidate = async (
   context: {
     hasRole: (role: string) => boolean;
     keycloakId: string;

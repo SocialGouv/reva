@@ -16,6 +16,10 @@ import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormation
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import { resolversSecurityMap } from "./security/security";
+import { candidateLoginWithToken } from "./features/candidateLoginWithToken";
+import { candidateLoginWithCredentials } from "./features/candidateLoginWithCredentials";
+import { candidateForgotPassword } from "./features/candidateForgotPassword";
+import { candidateResetPassword } from "./features/candidateResetPassword";
 
 const unsafeResolvers = {
   Candidate: {
@@ -84,6 +88,8 @@ const unsafeResolvers = {
         };
       },
     ) => askForRegistration(params.candidate),
+    candidate_askForLogin: async (_: unknown, params: { email: string }) =>
+      askForLogin(params.email),
     candidate_login: async (
       _: any,
       params: {
@@ -93,8 +99,48 @@ const unsafeResolvers = {
       candidateAuthentication({
         ...params,
       }),
-    candidate_askForLogin: async (_: unknown, params: { email: string }) =>
-      askForLogin(params.email),
+    candidate_loginWithToken: async (
+      _: any,
+      params: {
+        token: string;
+      },
+    ) =>
+      candidateLoginWithToken({
+        ...params,
+      }),
+    candidate_loginWithCredentials: async (
+      _: any,
+      params: {
+        email: string;
+        password: string;
+      },
+    ) =>
+      candidateLoginWithCredentials({
+        ...params,
+      }),
+    candidate_forgotPassword: async (
+      _: any,
+      params: {
+        email: string;
+      },
+    ) => {
+      await candidateForgotPassword(params.email);
+
+      return true;
+    },
+    candidate_resetPassword: async (
+      _: any,
+      params: {
+        token: string;
+        password: string;
+      },
+    ) => {
+      await candidateResetPassword({
+        ...params,
+      });
+
+      return true;
+    },
     candidate_updateCandidateInformation: (
       _: unknown,
       {

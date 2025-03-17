@@ -12,7 +12,10 @@ import { useKeycloakContext } from "./keycloak.context";
 const UNAUTHENTICATED_PATHS = [
   "/login-confirmation",
   "/login",
+  "/login-v2",
   "/logout-confirmation",
+  "/forgot-password",
+  "/reset-password",
 ];
 
 interface Props {
@@ -27,30 +30,30 @@ export const AuthGuard = (props: Props) => {
   const isAuthenticatedPath =
     UNAUTHENTICATED_PATHS.findIndex((path) => pathname.startsWith(path)) == -1;
 
-  const { authenticated, resetKeycloakInstance } = useKeycloakContext();
+  const { authenticated } = useKeycloakContext();
 
-  const { login } = useAuth();
+  const { loginWithToken } = useAuth();
 
   const token = params.get("token");
 
-  const loginWithToken = useCallback(
+  const login = useCallback(
     async (token: string) => {
       try {
-        const response = await login.mutateAsync({ token });
-        if (response) {
-          resetKeycloakInstance(response.candidate_login.tokens);
+        const response = await loginWithToken.mutateAsync({ token });
+        if (response.candidate_loginWithToken) {
+          router.replace(response.candidate_loginWithToken);
         }
       } catch (error) {
         console.error(error);
         router.push("/login");
       }
     },
-    [login, resetKeycloakInstance, router],
+    [loginWithToken, router],
   );
 
   useEffect(() => {
     if (token) {
-      loginWithToken(token);
+      login(token);
     }
 
     // This page is loaded from link with token value

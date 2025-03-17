@@ -132,6 +132,18 @@ export const generateIAMToken = async (userId: string) => {
       },
     });
 
+    try {
+      const data = await keycloakAdmin.users.findOne({
+        id: userId,
+        realm: process.env.KEYCLOAK_APP_REALM,
+        userProfileMetadata: true,
+      });
+
+      console.log("data", data);
+    } catch (error) {
+      console.log("error", error);
+    }
+
     //generate a token for the user
     const _keycloak = new Keycloak(
       {},
@@ -146,9 +158,90 @@ export const generateIAMToken = async (userId: string) => {
         },
       },
     );
+
     const grant = await _keycloak.grantManager.obtainDirectly(
       user.username as string,
       randomPassword,
+    );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const refreshToken = grant?.refresh_token?.token;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const accessToken = grant?.access_token?.token;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const idToken = grant?.id_token?.token;
+    return { accessToken, refreshToken, idToken };
+  } catch (e) {
+    logger.error(e);
+    throw new Error(`Erreur lors de la génération du token IAM`);
+  }
+};
+
+export const resetPassword = async (userId: string, password: string) => {
+  const keycloakAdmin = await getKeycloakAdmin();
+
+  const user = await keycloakAdmin.users.findOne({
+    id: userId,
+    realm: process.env.KEYCLOAK_APP_REALM as string,
+  });
+
+  if (!user) {
+    throw new Error(`userId ${userId} not found`);
+  }
+
+  try {
+    await keycloakAdmin.users.resetPassword({
+      realm: process.env.KEYCLOAK_APP_REALM,
+      id: userId,
+      credential: {
+        temporary: false,
+        type: "password",
+        value: password,
+      },
+    });
+  } catch (e) {
+    logger.error(e);
+
+    throw new Error(`Erreur lors de la mise à jour du mot de passe.`);
+  }
+};
+
+export const generateIAMTokenWithPassword = async (
+  userId: string,
+  password: string,
+) => {
+  const keycloakAdmin = await getKeycloakAdmin();
+
+  const user = await keycloakAdmin.users.findOne({
+    id: userId,
+    realm: process.env.KEYCLOAK_APP_REALM as string,
+  });
+
+  if (!user) {
+    throw new Error(`userId ${userId} not found`);
+  }
+
+  try {
+    //generate a token for the user
+    const _keycloak = new Keycloak(
+      {},
+      {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
+        serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
+        realm: process.env.KEYCLOAK_APP_REALM as string,
+        credentials: {
+          secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET,
+        },
+      },
+    );
+
+    const grant = await _keycloak.grantManager.obtainDirectly(
+      user.username as string,
+      password,
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

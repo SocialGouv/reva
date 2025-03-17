@@ -4,26 +4,20 @@ import { graphql } from "@/graphql/generated";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
-const CANDIDATE_LOGIN = graphql(`
-  mutation candidate_login($token: String!) {
-    candidate_login(token: $token) {
-      tokens {
-        accessToken
-        refreshToken
-        idToken
-      }
-    }
+const CANDIDATE_LOGIN_WITH_TOKEN = graphql(`
+  mutation candidate_loginWithToken($token: String!) {
+    candidate_loginWithToken(token: $token)
   }
 `);
 
 export const useAuth = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const login = useMutation({
-    mutationKey: ["candidate_login"],
+  const loginWithToken = useMutation({
+    mutationKey: ["candidate_loginWithToken"],
     mutationFn: ({ token }: { token: string }) =>
-      graphqlClient.request(CANDIDATE_LOGIN, { token }),
+      graphqlClient.request(CANDIDATE_LOGIN_WITH_TOKEN, { token }),
   });
 
-  return { login };
+  return { loginWithToken };
 };

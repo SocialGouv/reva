@@ -63,6 +63,11 @@ export type CandidateAuthenticationInput =
   | CandidateRegistrationInput
   | CandidateLoginInput;
 
+export type CandidateResetPasswordInput = {
+  email: string;
+  action: "reset-password";
+};
+
 export enum CandidateBusinessEvent {
   CREATED_CANDIDATE = "Created Candidate",
 }

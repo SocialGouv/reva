@@ -117,6 +117,13 @@ type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
+  candidate_loginWithToken(token: String!): String!
+  candidate_loginWithCredentials(
+    email: String!
+    password: String!
+  ): CandidateLogged!
+  candidate_forgotPassword(email: String!): Boolean!
+  candidate_resetPassword(token: String!, password: String!): Boolean!
   candidate_updateCandidateInformation(
     candidacyId: String!
     candidateInformation: CandidateUpdateInformationInput!

@@ -27,6 +27,7 @@ import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import { WhiteBoxContainer } from "./_components/WhiteBoxContainer";
+import { HTMLAttributes } from "react";
 const queryClient = new QueryClient();
 
 setDefaultOptions({ locale: fr });
@@ -86,10 +87,30 @@ export default function RootLayout({
   );
 }
 
+const UNAUTHENTICATED_PATHS = [
+  "/login-confirmation",
+  "/login-v2",
+  "/logout-confirmation",
+  "/forgot-password",
+  "/reset-password",
+];
+
 const LayoutContent = ({ children }: { children: React.ReactNode }) => {
   const { isFeatureActive } = useFeatureFlipping();
   const isCandidateDashboardActive = isFeatureActive("CANDIDATE_DASHBOARD");
-  const isRootPath = usePathname() === "/";
+
+  const pathname = usePathname();
+  const isRootPath = pathname === "/";
+  const isUnAuthenticatedPath =
+    UNAUTHENTICATED_PATHS.findIndex((path) => pathname.startsWith(path)) != -1;
+
+  let className: HTMLAttributes<HTMLDivElement>["className"] =
+    "fr-container flex flex-col flex-1";
+
+  if (isUnAuthenticatedPath) {
+    className = `${className} max-w-2xl`;
+  }
+
   return (
     <div className="w-full min-h-screen flex flex-col">
       <SkipLinks
@@ -112,7 +133,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
         id="content"
         className="flex flex-col flex-1 lg:bg-candidate"
       >
-        <div className="fr-container flex flex-col flex-1">
+        <div className={className}>
           {isCandidateDashboardActive && isRootPath ? (
             <div
               className={`flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12`}
