@@ -85,6 +85,10 @@ const getCertificationQuery = graphql(`
       level
       typeDiplome
       rncpObjectifsContexte
+      prerequisites {
+        id
+        label
+      }
     }
   }
 `);

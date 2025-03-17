@@ -5,6 +5,7 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { MetierTab } from "./tabs/MetierTab";
 import { UsefulResources } from "./useful-resources/UserfulResources";
+import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 
 export const CertificationPageV2 = ({
   isHomePageV2FeatureActive,
@@ -19,6 +20,7 @@ export const CertificationPageV2 = ({
     typeDiplome?: string | null;
     level: number;
     rncpObjectifsContexte?: string | null;
+    prerequisites: { id: string; label: string }[];
   };
 }) => (
   <div className="flex-1 flex pb-8 min-h-screen">
@@ -89,6 +91,12 @@ export const CertificationPageV2 = ({
                 codeRncp={certification.codeRncp}
                 rncpObjectifsContexte={certification.rncpObjectifsContexte}
               />
+            ),
+          },
+          {
+            label: "Prérequis",
+            content: (
+              <PreRequisitesTab prerequisites={certification.prerequisites} />
             ),
           },
         ]}
