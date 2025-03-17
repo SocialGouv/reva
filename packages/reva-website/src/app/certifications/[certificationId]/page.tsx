@@ -1,32 +1,35 @@
-import type {
-  InferGetServerSidePropsType,
-  GetServerSideProps,
-  GetServerSidePropsContext,
-} from "next";
 import Head from "next/head";
 import Image from "next/image";
 import request from "graphql-request";
 import { graphql } from "@/graphql/generated";
-import { GetCertificationForCertificationPageQuery } from "@/graphql/generated/graphql";
-
 import { GRAPHQL_API_URL } from "@/config/config";
+import { CertificationPageV1 } from "./_components/CertificationPageV1";
+import { CertificationPageV2 } from "./_components/CertificationPageV2";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 
-import { isUUID } from "@/utils";
+export default async function CertificationPage({
+  params,
+}: {
+  params: Promise<{
+    certificationId: string;
+  }>;
+}) {
+  const certificationId = (await params).certificationId;
+  if (!certificationId) {
+    return null;
+  }
 
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { CertificationPageV1 } from "../../components/certification-page/CertificationPageV1";
-import { CertificationPageV2 } from "../../components/certification-page/CertificationPageV2";
-export default function Page({
-  certification,
-  activeFeatures,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const content = certification
-    ? `Code RNCP ${certification.codeRncp} - ${certification.label}`
-    : "";
+  const certification = await getCertifications(certificationId);
 
   if (!certification) {
     return null;
   }
+
+  const activeFeatures = await getActiveFeatures();
+
+  const content = certification
+    ? `Code RNCP ${certification.codeRncp} - ${certification.label}`
+    : "";
 
   const isHomePageV2FeatureActive = !!activeFeatures?.includes("HOMEPAGE_V2");
   const isCertificationV2PageFeatureActive = !!activeFeatures?.includes(
@@ -85,31 +88,14 @@ const getCertificationQuery = graphql(`
   }
 `);
 
-type CertificationType =
-  GetCertificationForCertificationPageQuery["getCertification"];
-
-export const getServerSideProps = (async (
-  context: GetServerSidePropsContext,
-) => {
-  const id = context.params?.id as string | undefined;
-  const certificationId = isUUID(id || "") ? id : null;
-
-  if (!certificationId) {
-    const certification: CertificationType | undefined = undefined;
-    return { props: { certification } };
-  }
-
-  const [activeFeatures, certification] = await Promise.all([
-    request(GRAPHQL_API_URL, activeFeaturesQuery),
-    request(GRAPHQL_API_URL, getCertificationQuery, {
+const getCertifications = async (certificationId: string) => {
+  return (
+    await request(GRAPHQL_API_URL, getCertificationQuery, {
       certificationId,
-    }),
-  ]);
-
-  return {
-    props: {
-      certification: certification.getCertification,
-      activeFeatures: activeFeatures.activeFeaturesForConnectedUser,
-    },
-  };
-}) satisfies GetServerSideProps<{ certification?: CertificationType }>;
+    })
+  ).getCertification;
+};
+const getActiveFeatures = async () => {
+  return (await request(GRAPHQL_API_URL, activeFeaturesQuery))
+    .activeFeaturesForConnectedUser;
+};
