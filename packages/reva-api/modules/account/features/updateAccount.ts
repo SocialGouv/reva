@@ -95,7 +95,7 @@ export const updateAccountById = async (params: {
   );
 
   if (prevEmail != nextEmail) {
-    notifyPreviousEmailAddress({ email: prevEmail });
+    notifyPreviousEmailAddress({ email: prevEmail, newEmail: nextEmail });
     notifyNewEmailAddress({ email: nextEmail });
   }
 
