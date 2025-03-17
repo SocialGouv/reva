@@ -1,7 +1,9 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import Tile from "@codegouvfr/react-dsfr/Tile";
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
+import { MetierTab } from "./tabs/MetierTab";
 
 export const CertificationPageV2 = ({
   isHomePageV2FeatureActive,
@@ -20,7 +22,7 @@ export const CertificationPageV2 = ({
   <div className="flex-1 flex pb-8 min-h-screen">
     <div className="flex-1 bg-white w-full mx-auto flex flex-col fr-container p-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
       <Breadcrumb
-        className="!mt-0 !-mb-2"
+        className="!mt-0 !mb-3"
         currentPageLabel={certification?.label}
         segments={[
           {
@@ -31,7 +33,6 @@ export const CertificationPageV2 = ({
           },
         ]}
       />
-
       <div className="flex flex-col gap-4">
         <h1 className="m-0">{certification?.label}</h1>
         <div className="flex flex-row items-center gap-4">
@@ -75,6 +76,16 @@ export const CertificationPageV2 = ({
       >
         Choisir ce diplôme
       </Button>
+      <Tabs
+        className="mt-12"
+        tabs={[
+          {
+            label: "Métier",
+            isDefault: true,
+            content: <MetierTab codeRncp={certification.codeRncp} />,
+          },
+        ]}
+      />
     </div>
   </div>
 );

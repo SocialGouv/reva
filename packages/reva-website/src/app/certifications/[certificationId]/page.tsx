@@ -3,8 +3,8 @@ import Image from "next/image";
 import request from "graphql-request";
 import { graphql } from "@/graphql/generated";
 import { GRAPHQL_API_URL } from "@/config/config";
-import { CertificationPageV1 } from "./_components/CertificationPageV1";
-import { CertificationPageV2 } from "./_components/CertificationPageV2";
+import { CertificationPageV1 } from "./_components/certification-page-v1/CertificationPageV1";
+import { CertificationPageV2 } from "./_components/certification-page-v2/CertificationPageV2";
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 
 export default async function CertificationPage({
