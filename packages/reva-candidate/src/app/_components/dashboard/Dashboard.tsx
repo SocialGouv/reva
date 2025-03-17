@@ -1,7 +1,6 @@
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { isAfter } from "date-fns";
-import Image from "next/image";
 import { useMemo } from "react";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
 import { DashboardBanner } from "./DashboardBanner";
@@ -67,24 +66,11 @@ const Dashboard = () => {
         RNCP {candidacy.certification?.codeRncp} :{" "}
         {candidacy.certification?.label}
       </p>
-      <div className="flex flex-col bg-white lg:flex-row items-center relative text-start border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 pl-0 w-full mt-32 lg:mt-16 lg:h-[110px]">
-        <Image
-          src="/candidat/images/image-home-character-young-man-glasses.png"
-          width={167}
-          height={168}
-          alt="Homme portant des lunettes"
-          className="relative -top-28 lg:top-0 lg:-left-3"
-        />
-        <div className="pt-8 mt-[-120px] lg:mt-0 lg:p-0 text-justify">
-          <p className="my-0 pl-8">
-            <DashboardBanner
-              candidacy={candidacy}
-              canSubmitCandidacy={canSubmitCandidacy}
-              candidacyAlreadySubmitted={candidacyAlreadySubmitted}
-            />
-          </p>
-        </div>
-      </div>
+      <DashboardBanner
+        candidacy={candidacy}
+        canSubmitCandidacy={canSubmitCandidacy}
+        candidacyAlreadySubmitted={candidacyAlreadySubmitted}
+      />
       <div className="grid grid-flow-row lg:grid-flow-col grid-cols-1 lg:grid-cols-3 grid-rows-2 gap-x-6 gap-y-8 mx-auto mt-20">
         <div className="col-span-1 lg:col-span-2 row-span-1 h-fit shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
           <div className="bg-white p-4 pl-6 border-b-2">

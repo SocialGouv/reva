@@ -6,6 +6,14 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   query candidate_getCandidateWithCandidacyForDashboard {
     candidate_getCandidateWithCandidacy {
       candidacy {
+        activeDossierDeValidation {
+          decision
+        }
+        candidacyContestationsCaducite {
+          contestationSentAt
+          certificationAuthorityContestationDecision
+        }
+        lastActivityDate
         status
         typeAccompagnement
         firstAppointmentOccuredAt
@@ -14,6 +22,8 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           status
         }
         candidacyDropOut {
+          proofReceivedByAdmin
+          createdAt
           dropOutConfirmedByCandidate
         }
         certification {
