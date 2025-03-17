@@ -84,6 +84,7 @@ const getCertificationQuery = graphql(`
       isAapAvailable
       level
       typeDiplome
+      rncpObjectifsContexte
     }
   }
 `);
@@ -95,6 +96,7 @@ const getCertifications = async (certificationId: string) => {
     })
   ).getCertification;
 };
+
 const getActiveFeatures = async () => {
   return (await request(GRAPHQL_API_URL, activeFeaturesQuery))
     .activeFeaturesForConnectedUser;

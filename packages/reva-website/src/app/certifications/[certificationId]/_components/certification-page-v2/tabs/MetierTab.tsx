@@ -1,7 +1,19 @@
 import Link from "next/link";
 
-export const MetierTab = ({ codeRncp }: { codeRncp: string }) => (
+export const MetierTab = ({
+  codeRncp,
+  rncpObjectifsContexte,
+}: {
+  codeRncp: string;
+  rncpObjectifsContexte?: string | null;
+}) => (
   <div className="flex flex-col">
+    {rncpObjectifsContexte && (
+      <>
+        <h2 className="text-xl">Résumé du métier</h2>
+        <p>{rncpObjectifsContexte}</p>
+      </>
+    )}
     <h2 className="text-xl">Activités visées par le diplôme</h2>
     <p>
       Chaque diplôme correspond à un Référentiel d’Activités et de Compétences

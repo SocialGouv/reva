@@ -18,6 +18,7 @@ export const CertificationPageV2 = ({
     codeRncp: string;
     typeDiplome?: string | null;
     level: number;
+    rncpObjectifsContexte?: string | null;
   };
 }) => (
   <div className="flex-1 flex pb-8 min-h-screen">
@@ -83,7 +84,12 @@ export const CertificationPageV2 = ({
           {
             label: "Métier",
             isDefault: true,
-            content: <MetierTab codeRncp={certification.codeRncp} />,
+            content: (
+              <MetierTab
+                codeRncp={certification.codeRncp}
+                rncpObjectifsContexte={certification.rncpObjectifsContexte}
+              />
+            ),
           },
         ]}
       />
