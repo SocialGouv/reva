@@ -93,6 +93,9 @@ const getCertificationQuery = graphql(`
       juryTypeSoutenanceOrale
       juryEstimatedCost
       juryPlace
+      certificationAuthorityStructure {
+        label
+      }
     }
   }
 `);
