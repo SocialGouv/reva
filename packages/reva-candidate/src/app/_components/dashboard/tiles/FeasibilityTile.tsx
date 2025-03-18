@@ -1,6 +1,7 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 const FeasibilityBadge = ({
   feasibility,
@@ -47,13 +48,41 @@ const FeasibilityBadge = ({
 export const FeasibilityTile = ({
   feasibility,
   isCaduque,
-  feasibilityTileDisabled,
+  candidacyIsAutonome,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
   isCaduque: boolean;
-  feasibilityTileDisabled: boolean;
+  candidacyIsAutonome: boolean;
 }) => {
   const router = useRouter();
+  const isFeasibilityDemat =
+    feasibility?.feasibilityFormat === "DEMATERIALIZED";
+  const feasibilityIsPdf = feasibility?.feasibilityFormat === "UPLOADED_PDF";
+  const feasibilityHasBeenSentToCandidate =
+    !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;
+
+  const feasibilityTileDisabled = useMemo(() => {
+    switch (true) {
+      case candidacyIsAutonome:
+        return false;
+      case !feasibility:
+        return true;
+      case feasibilityHasBeenSentToCandidate || feasibilityIsPdf:
+        return false;
+      default:
+        return true;
+    }
+  }, [
+    feasibility,
+    feasibilityHasBeenSentToCandidate,
+    feasibilityIsPdf,
+    candidacyIsAutonome,
+  ]);
+
+  const feasibilityUrl = isFeasibilityDemat
+    ? "/validate-feasibility"
+    : "/feasibility";
+
   return (
     <Tile
       disabled={feasibilityTileDisabled}
@@ -64,7 +93,7 @@ export const FeasibilityTile = ({
       small
       buttonProps={{
         onClick: () => {
-          router.push("/validate-feasibility");
+          router.push(feasibilityUrl);
         },
       }}
       imageUrl="/candidat/images/pictograms/contract.svg"
