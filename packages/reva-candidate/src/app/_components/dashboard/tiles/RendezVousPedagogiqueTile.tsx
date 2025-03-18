@@ -18,6 +18,6 @@ export const RendezVousPedagogiqueTile = ({
         Rendez-vous pédagogique
       </Badge>
     }
-    title={format(firstAppointmentOccuredAt, "dd/MM/yyyy - HH:mm")}
+    title={format(firstAppointmentOccuredAt, "dd/MM/yyyy")}
   />
 );
