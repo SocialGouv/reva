@@ -1,4 +1,4 @@
-import { stubMutation, stubQuery } from "../../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 
 context("Accompagnement autonome - Dossier de faisabilité", () => {
   beforeEach(() => {
@@ -17,11 +17,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="feasibility-timeline-element"]').should("exist");
@@ -49,11 +47,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.visit("/feasibility/");
@@ -79,11 +75,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.visit("/feasibility/");
@@ -109,11 +103,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="feasibility-timeline-element"]').should("exist");
@@ -146,11 +138,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="feasibility-timeline-element"]').should("exist");
@@ -185,11 +175,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="feasibility-timeline-element"]').should("exist");
@@ -224,11 +212,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="feasibility-timeline-element"]').should("exist");
@@ -261,11 +247,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.visit("/feasibility/");
@@ -291,11 +275,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.visit("/feasibility/");
@@ -325,11 +307,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.visit("/feasibility/");
@@ -361,11 +341,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.visit("/feasibility/");
@@ -394,11 +372,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.visit("/feasibility/");

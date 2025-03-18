@@ -1,10 +1,9 @@
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubQuery } from "../utils/graphql";
 
 context("Funding Request Sent", () => {
   describe("Testing correct screen", () => {
     it("display all fields", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(
           req,
           "candidate_getCandidateWithCandidacy",
@@ -14,7 +13,7 @@ context("Funding Request Sent", () => {
       });
 
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
 

@@ -1,3 +1,5 @@
+import { stubMutation } from "../utils/graphql";
+
 Cypress.Commands.add("auth", () => {
   cy.intercept(
     "**/realms/reva-app/protocol/openid-connect/3p-cookies/step1.html",
@@ -21,6 +23,14 @@ Cypress.Commands.add("auth", () => {
     },
     statusCode: 302,
   });
+
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubMutation(
+      req,
+      "candidate_loginWithToken",
+      "candidate_loginWithToken.json",
+    );
+  });
 });
 
 Cypress.Commands.add("login", (config = { token: "abc" }, options) => {
@@ -32,6 +42,7 @@ Cypress.Commands.add("login", (config = { token: "abc" }, options) => {
   cy.auth();
   if (config.token) {
     cy.visit(`/login?token=${config.token}`, options);
+    cy.wait("@candidate_loginWithToken");
   } else {
     cy.visit(`/login`, options);
   }

@@ -1,5 +1,5 @@
 import { subDays } from "date-fns";
-import { stubMutation, stubQuery } from "../../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 
 const VALID_STATUSES = [
   "DOSSIER_FAISABILITE_RECEVABLE",
@@ -33,7 +33,6 @@ const ACTUALISATION_THRESHOLD_TIME_BEFORE = subDays(
 describe("Autonome Candidacy Timeline Tests", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
           activeFeaturesForConnectedUser: [ACTUALISATION_FEATURE],
@@ -42,7 +41,6 @@ describe("Autonome Candidacy Timeline Tests", () => {
     });
 
     cy.login();
-    cy.wait("@candidate_login");
   });
 
   describe("Feature Flipping", () => {

@@ -4,12 +4,11 @@ const experienceTitle2 = "Experience 2";
 const experienceDescription1 = "Description 1";
 const experienceDescription2 = "Description 2";
 
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubQuery } from "../utils/graphql";
 
 context("Experiences", () => {
   it("add and edit an experience", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacy",
@@ -21,7 +20,7 @@ context("Experiences", () => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 

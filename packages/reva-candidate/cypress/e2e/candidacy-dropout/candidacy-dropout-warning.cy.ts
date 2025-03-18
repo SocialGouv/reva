@@ -1,4 +1,4 @@
-import { stubMutation, stubQuery } from "../../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 import candidateDropOut from "./fixtures/candidate-dropped-out.json";
 import { subMonths } from "date-fns";
 
@@ -14,8 +14,6 @@ function interceptCandidacy({
   dropOutDate?: Date;
 }) {
   cy.intercept("POST", "/api/graphql", (req) => {
-    stubMutation(req, "candidate_login", "candidate_login.json");
-
     stubQuery(req, "candidate_getCandidateWithCandidacy", {
       data: {
         candidate_getCandidateWithCandidacy: {
@@ -50,7 +48,7 @@ context("Candidacy dropout warning", () => {
       it("should show the warning when the drop out has not been confirmed", function () {
         interceptCandidacy({ droppedOut: true });
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.wait("@activeFeaturesForConnectedUser");
 
@@ -60,7 +58,7 @@ context("Candidacy dropout warning", () => {
       it("should let me click the decision button and lead me to the decision page", function () {
         interceptCandidacy({ droppedOut: true });
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.wait("@activeFeaturesForConnectedUser");
 
@@ -78,7 +76,7 @@ context("Candidacy dropout warning", () => {
             proofReceivedByAdmin: true,
           });
           cy.login();
-          cy.wait("@candidate_login");
+
           cy.wait("@candidate_getCandidateWithCandidacy");
           cy.wait("@activeFeaturesForConnectedUser");
           cy.get('[data-test="drop-out-warning"]').should("exist");
@@ -94,7 +92,7 @@ context("Candidacy dropout warning", () => {
             dropOutConfirmedByCandidate: true,
           });
           cy.login();
-          cy.wait("@candidate_login");
+
           cy.wait("@candidate_getCandidateWithCandidacy");
           cy.wait("@activeFeaturesForConnectedUser");
           cy.get('[data-test="drop-out-warning"]').should("exist");
@@ -111,7 +109,7 @@ context("Candidacy dropout warning", () => {
           dropOutDate: subMonths(new Date(), 6),
         });
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.wait("@activeFeaturesForConnectedUser");
         cy.get('[data-test="drop-out-warning"]').should("exist");
@@ -125,7 +123,7 @@ context("Candidacy dropout warning", () => {
     it("should not show the warning", function () {
       interceptCandidacy({});
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="project-home-ready"]').should("exist");

@@ -3,7 +3,6 @@ import candidateDropOut from "./fixtures/candidate-dropped-out.json";
 
 function interceptCandidacy() {
   cy.intercept("POST", "/api/graphql", (req) => {
-    stubMutation(req, "candidate_login", "candidate_login.json");
     stubMutation(
       req,
       "updateCandidateCandidacyDropoutDecision",
@@ -41,7 +40,7 @@ context("Candidacy dropout decision page", () => {
   it("should let me access the page", function () {
     interceptCandidacy();
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.visit("/candidacy-dropout-decision/");
@@ -52,7 +51,7 @@ context("Candidacy dropout decision page", () => {
   it("should let me validate my drop out and lead me to the confirmation page", function () {
     interceptCandidacy();
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.visit("/candidacy-dropout-decision/");
@@ -69,7 +68,7 @@ context("Candidacy dropout decision page", () => {
   it("should let me cancel my drop out and redirect me to the homepage", function () {
     interceptCandidacy();
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
     cy.visit("/candidacy-dropout-decision/");

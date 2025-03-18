@@ -1,5 +1,5 @@
 import { subDays } from "date-fns";
-import { stubMutation, stubQuery } from "../../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 
 const CADUCITE_THRESHOLD_DAYS = 183;
 const ACTUALISATION_THRESHOLD_DAYS = 166;
@@ -222,7 +222,6 @@ function setupTest({
   isFeatureActive = true,
 }) {
   cy.intercept("POST", "/api/graphql", (req) => {
-    stubMutation(req, "candidate_login", "candidate_login.json");
     stubQuery(req, "activeFeaturesForConnectedUser", {
       data: {
         activeFeaturesForConnectedUser: isFeatureActive
@@ -233,7 +232,6 @@ function setupTest({
   });
 
   cy.login();
-  cy.wait("@candidate_login");
 
   cy.fixture("candidate1.json").then((candidate) => {
     const candidacy =

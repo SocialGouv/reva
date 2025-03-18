@@ -1,4 +1,4 @@
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubQuery } from "../utils/graphql";
 
 const firstname1 = "John";
 const firstname2 = "John 2";
@@ -15,13 +15,12 @@ const phone2 = "06 01 02 03 05";
 context("Candidate account", () => {
   it("update all account information", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "update_contact", "contact.json");
     });
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="project-home-update-contact"]').click();

@@ -1,5 +1,5 @@
 import { addDays, format, subDays } from "date-fns";
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubQuery } from "../utils/graphql";
 
 const ACTUALISATION_FEATURE = "candidacy_actualisation";
 const CONTESTATION_REASON_INPUT =
@@ -13,10 +13,6 @@ const HAS_BEEN_CREATED_COMPONENT =
 
 context("Contestation Page", () => {
   beforeEach(() => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
-
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
         null;
@@ -37,7 +33,7 @@ context("Contestation Page", () => {
     });
 
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 

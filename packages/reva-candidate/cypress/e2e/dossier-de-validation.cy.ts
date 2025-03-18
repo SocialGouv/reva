@@ -33,11 +33,8 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
 
         cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
@@ -70,11 +67,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
+
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
 
         cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
@@ -114,7 +109,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           },
         );
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
           stubMutation(
             req,
             "updateReadyForJuryEstimatedAtForDossierDeValidationPage",
@@ -122,7 +116,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           );
         });
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -156,11 +150,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
+
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
           "contain.text",
@@ -186,9 +178,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
 
         cy.intercept(
           "POST",
@@ -197,7 +186,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         ).as("uploadDossierDeValidation");
 
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -252,12 +241,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
 
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
 
         cy.visit("/dossier-de-validation/");
@@ -299,12 +285,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
 
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
 
         cy.visit("/dossier-de-validation/");
@@ -342,12 +325,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
 
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
 
         cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
@@ -376,11 +356,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
+
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.get('[data-test="timeline-element-badge"]').should("exist");
         cy.get('[data-test="dossier-de-validation-signale-notice"]').should(
@@ -416,11 +394,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             });
           },
         );
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubMutation(req, "candidate_login", "candidate_login.json");
-        });
+
         cy.login();
-        cy.wait("@candidate_login");
+
         cy.wait("@candidate_getCandidateWithCandidacy");
         cy.get(
           '[data-test="dossier-de-validation-timeline-element-update-button"]',
@@ -468,11 +444,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               });
             },
           );
-          cy.intercept("POST", "/api/graphql", (req) => {
-            stubMutation(req, "candidate_login", "candidate_login.json");
-          });
+
           cy.login();
-          cy.wait("@candidate_login");
+
           cy.wait("@candidate_getCandidateWithCandidacy");
 
           cy.get('[data-test="dossier-de-validation-timeline-element"]').should(

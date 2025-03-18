@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { stubMutation, stubQuery } from "../../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 import candidateData from "./fixtures/candidate.json";
 import countries from "./fixtures/countries.json";
 import departments from "./fixtures/departments.json";
@@ -39,7 +39,6 @@ context("Candidate Profile Page", () => {
 
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "getCandidateForProfilePage", candidateData);
@@ -49,7 +48,6 @@ context("Candidate Profile Page", () => {
 
     cy.login();
     cy.wait([
-      "@candidate_login",
       "@activeFeaturesForConnectedUser",
       "@candidate_getCandidateWithCandidacy",
     ]);
@@ -283,7 +281,6 @@ context("Candidate Profile Page", () => {
   describe("Form Field Disabling Based on Candidacy Status", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
         stubQuery(
           req,
@@ -305,7 +302,6 @@ context("Candidate Profile Page", () => {
 
       cy.login();
       cy.wait([
-        "@candidate_login",
         "@activeFeaturesForConnectedUser",
         "@candidate_getCandidateWithCandidacy",
       ]);

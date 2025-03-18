@@ -1,5 +1,5 @@
 import { addDays, addWeeks, format, subDays, subMonths } from "date-fns";
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubQuery } from "../utils/graphql";
 
 const ACTUALISATION_FEATURE = "candidacy_actualisation";
 const CANDIDATE_CONFIRMATION_CHECKBOX =
@@ -12,10 +12,6 @@ const HAS_BEEN_UPDATED_COMPONENT =
   '[data-test="actualisation-has-been-updated"]';
 context("Actualisation Page", () => {
   beforeEach(() => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
-
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
@@ -41,7 +37,7 @@ context("Actualisation Page", () => {
     });
 
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 

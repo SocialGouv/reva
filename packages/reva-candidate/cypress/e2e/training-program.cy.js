@@ -1,10 +1,9 @@
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubQuery } from "../utils/graphql";
 
 context("Training Program", () => {
   describe("Testing project modification before and after training confirmation", () => {
     it("should be able to update his certification, organism, goals and experience when training sent and not confirmed", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
         stubQuery(
           req,
@@ -13,7 +12,7 @@ context("Training Program", () => {
         );
       });
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="project-home-set-certification"]').should(
@@ -26,7 +25,6 @@ context("Training Program", () => {
 
     it("should not be able to update his certification, organism, goals and experience after training confirmation", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
         stubQuery(
           req,
@@ -35,7 +33,7 @@ context("Training Program", () => {
         );
       });
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="project-home-set-certification"]').should(
@@ -49,7 +47,6 @@ context("Training Program", () => {
 
     it("should be able to update his certification, organism, goals and experience after training is confirmed then sent again", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
         stubQuery(
           req,
@@ -58,7 +55,7 @@ context("Training Program", () => {
         );
       });
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="project-home-set-certification"]').should(
@@ -73,7 +70,6 @@ context("Training Program", () => {
   describe("Testing descriptions", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(
           req,
           "candidate_getCandidateWithCandidacy",
@@ -87,7 +83,7 @@ context("Training Program", () => {
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="view-training-program-button"]').click();
@@ -122,7 +118,6 @@ context("Training Program", () => {
   describe("Testing descriptions with missing fields", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(
           req,
           "candidate_getCandidateWithCandidacy",
@@ -136,7 +131,7 @@ context("Training Program", () => {
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="view-training-program-button"]').click();
@@ -165,7 +160,6 @@ context("Training Program", () => {
   describe("Testing Checkbox logic", () => {
     it("validates checked condition and its mechanics", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(
           req,
           "candidate_getCandidateWithCandidacy",
@@ -184,7 +178,7 @@ context("Training Program", () => {
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="validate-training-program-button"]').click();
@@ -213,7 +207,6 @@ context("Training Program", () => {
   describe("Testing training confirmed but sent again", () => {
     it("should be able to accept and submit the training again", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate_login.json");
         stubQuery(
           req,
           "candidate_getCandidateWithCandidacy",
@@ -232,7 +225,7 @@ context("Training Program", () => {
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
-      cy.wait("@candidate_login");
+
       cy.wait("@candidate_getCandidateWithCandidacy");
       cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="validate-training-program-button"]').click();

@@ -9,7 +9,6 @@ context("Type accompagnement", () => {
 
   it("should show the type accompagnement in the timeline when the type_accompagnement is accompagne and the feature is active", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(
         req,
@@ -18,7 +17,7 @@ context("Type accompagnement", () => {
       );
     });
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@activeFeaturesForConnectedUser");
 
@@ -39,11 +38,8 @@ context("Type accompagnement", () => {
         stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
       });
     });
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get('[data-test="type-accompagnement-timeline-element"]').should(
@@ -63,11 +59,9 @@ context("Type accompagnement", () => {
         stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
       });
     });
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get(
@@ -88,11 +82,9 @@ context("Type accompagnement", () => {
         stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
       });
     });
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get(
@@ -110,11 +102,9 @@ context("Type accompagnement", () => {
         });
       },
     );
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
-    });
+
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
 
     cy.get(
@@ -139,7 +129,6 @@ context("Type accompagnement", () => {
     );
 
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate_login.json");
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacy",
@@ -152,7 +141,7 @@ context("Type accompagnement", () => {
       );
     });
     cy.login();
-    cy.wait("@candidate_login");
+
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.visit("/type-accompagnement");
     cy.wait("@getCandidateWithCandidacyForTypeAccompagnementPage");
