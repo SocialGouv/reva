@@ -60,6 +60,15 @@ const Dashboard = () => {
       candidacyAlreadySubmitted,
     ],
   );
+
+  const feasibility = candidacy?.feasibility;
+  const feasibilityHasBeenSentToCandidate =
+    !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;
+  const candidacyIsAccompagne = candidacy?.typeAccompagnement === "ACCOMPAGNE";
+  const feasibilityTileDisabled =
+    !feasibility ||
+    (!feasibilityHasBeenSentToCandidate && candidacyIsAccompagne);
+
   return (
     <div>
       <p className="text-xl">
@@ -126,8 +135,9 @@ const Dashboard = () => {
               />
             )}
             <FeasibilityTile
-              feasibility={candidacy.feasibility}
+              feasibility={feasibility}
               isCaduque={candidacy.isCaduque}
+              feasibilityTileDisabled={feasibilityTileDisabled}
             />
             <DossierValidationTile />
           </div>

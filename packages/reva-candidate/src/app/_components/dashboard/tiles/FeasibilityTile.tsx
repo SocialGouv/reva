@@ -47,14 +47,16 @@ const FeasibilityBadge = ({
 export const FeasibilityTile = ({
   feasibility,
   isCaduque,
+  feasibilityTileDisabled,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
   isCaduque: boolean;
+  feasibilityTileDisabled: boolean;
 }) => {
   const router = useRouter();
   return (
     <Tile
-      disabled={!feasibility}
+      disabled={feasibilityTileDisabled}
       title="Dossier de faisabilité"
       start={
         <FeasibilityBadge feasibility={feasibility} isCaduque={isCaduque} />
