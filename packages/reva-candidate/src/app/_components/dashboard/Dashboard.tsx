@@ -88,7 +88,6 @@ const Dashboard = () => {
           >
             <CertificationTile
               hasSelectedCertification={hasSelectedCertification}
-              certificationId={candidacy.certification?.id}
             />
             <TypeAccompagnementTile
               typeAccompagnement={candidacy.typeAccompagnement}

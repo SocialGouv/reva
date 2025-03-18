@@ -1,42 +1,21 @@
+"use client";
 import { PageLayout } from "@/layouts/page.layout";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 import Link from "next/link";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import { getSsrGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 import Tag from "@codegouvfr/react-dsfr/Tag";
+import { useCandidacyForCertification } from "./certification.hooks";
+import { useRouter } from "next/navigation";
 
-const getCertificationQuery = graphql(`
-  query getCertificationForCertificationPage($certificationId: ID!) {
-    getCertification(certificationId: $certificationId) {
-      id
-      codeRncp
-      label
-      isAapAvailable
-    }
+export default function CertificationDetail() {
+  const { canEditCandidacy, certification } = useCandidacyForCertification();
+  const router = useRouter();
+  if (!certification) {
+    return router.push("/search-certification");
   }
-`);
 
-export default async function CertificationDetail({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const selectedCertificationId = params.id;
-  const { graphqlClient } = getSsrGraphQlClient();
-
-  const { getCertification } = await graphqlClient.request(
-    getCertificationQuery,
-    {
-      certificationId: selectedCertificationId,
-    },
-  );
-  const selectedCertification = getCertification;
-  if (!selectedCertification) {
-    return null;
-  }
   return (
     <PageLayout title="Choix du diplôme" data-test={`certificates`}>
       <Breadcrumb
@@ -51,13 +30,13 @@ export default async function CertificationDetail({
         data-test="certification-label"
         className="mt-6 mb-2 text-2xl font-bold text-black "
       >
-        {selectedCertification.label}
+        {certification.label}
       </h2>
       <p data-test="certification-code-rncp" className="text-xs mb-0">
-        Code RNCP: {selectedCertification.codeRncp}
+        Code RNCP: {certification.codeRncp}
       </p>
       <Tag className="my-8">
-        {selectedCertification.isAapAvailable
+        {certification.isAapAvailable
           ? "VAE en autonomie ou accompagnée"
           : "VAE en autonomie"}
       </Tag>
@@ -66,14 +45,14 @@ export default async function CertificationDetail({
           data-test="certification-more-info-link"
           target="_blank"
           rel="noreferrer"
-          href={`https://www.francecompetences.fr/recherche/rncp/${selectedCertification.codeRncp}/`}
+          href={`https://www.francecompetences.fr/recherche/rncp/${certification.codeRncp}/`}
           className="text-dsfrBlue-500"
         >
           Lire les détails de la fiche diplôme
         </a>
       </p>
 
-      {selectedCertification.isAapAvailable ? (
+      {certification.isAapAvailable ? (
         <CallOut
           title="À quoi sert un accompagnateur ?"
           classes={{ title: "pb-2" }}
@@ -108,23 +87,25 @@ export default async function CertificationDetail({
         </CallOut>
       )}
 
-      <div className="flex flex-col-reverse md:flex-row gap-4 justify-between mt-6">
-        <Button
-          priority="secondary"
-          className="justify-center w-[100%]  md:w-fit"
-          linkProps={{ href: "/candidat" }}
-        >
-          Retour
-        </Button>
-        <Button
-          data-test="change-certification-button"
-          priority="tertiary no outline"
-          className="justify-center w-[100%]  md:w-fit"
-          linkProps={{ href: "/candidat/search-certification" }}
-        >
-          Changer de diplôme
-        </Button>
-      </div>
+      {canEditCandidacy && (
+        <div className="flex flex-col-reverse md:flex-row gap-4 justify-between mt-6">
+          <Button
+            priority="secondary"
+            className="justify-center w-[100%]  md:w-fit"
+            linkProps={{ href: "/" }}
+          >
+            Retour
+          </Button>
+          <Button
+            data-test="change-certification-button"
+            priority="tertiary no outline"
+            className="justify-center w-[100%]  md:w-fit"
+            linkProps={{ href: "/search-certification" }}
+          >
+            Changer de diplôme
+          </Button>
+        </div>
+      )}
     </PageLayout>
   );
 }

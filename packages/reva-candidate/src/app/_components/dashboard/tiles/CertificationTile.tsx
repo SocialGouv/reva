@@ -3,10 +3,8 @@ import { CompleteIncompleteBadge } from "./CompleteIncompleteBadge";
 
 export const CertificationTile = ({
   hasSelectedCertification,
-  certificationId,
 }: {
   hasSelectedCertification: boolean;
-  certificationId?: string;
 }) => (
   <Tile
     start={<CompleteIncompleteBadge isComplete={hasSelectedCertification} />}
@@ -14,7 +12,7 @@ export const CertificationTile = ({
     small
     linkProps={{
       href: hasSelectedCertification
-        ? `/certification/${certificationId}`
+        ? "/certification/"
         : "/search-certification",
     }}
     imageUrl="/candidat/images/pictograms/search.svg"
