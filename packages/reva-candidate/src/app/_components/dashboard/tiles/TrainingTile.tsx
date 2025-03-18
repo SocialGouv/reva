@@ -19,7 +19,12 @@ const TrainingStatusBadge = ({
     return <Badge severity="info">En cours</Badge>;
   } else if (candidacyStatus == "PARCOURS_ENVOYE") {
     return <Badge severity="warning">À valider</Badge>;
-  } else if (candidacyStatus == "PARCOURS_CONFIRME") {
+  } else if (
+    candidacyStatus == "PARCOURS_CONFIRME" ||
+    (candidacyStatus !== "VALIDATION" &&
+      candidacyStatus !== "PRISE_EN_CHARGE" &&
+      candidacyStatus !== "PROJET")
+  ) {
     return <Badge severity="success">Validé</Badge>;
   }
 };

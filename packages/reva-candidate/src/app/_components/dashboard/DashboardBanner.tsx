@@ -230,6 +230,20 @@ export const DashboardBanner = ({
         S'actualiser
       </Button>
     );
+  } else if (candidacy.feasibility?.decision === "ADMISSIBLE") {
+    bannerContent = (
+      <>
+        Félicitations, vous êtes recevable ! Vous pouvez, débuter la rédaction
+        de votre dossier de validation.{" "}
+        {!candidacy.readyForJuryEstimatedAt && (
+          <>
+            Afin de simplifier l’organisation de votre jury, vous pouvez
+            renseigner une date prévisionnelle de dépôt dans la section “Dossier
+            de validation”.
+          </>
+        )}
+      </>
+    );
   } else if (
     candidacyAlreadySubmitted &&
     !candidacy.firstAppointmentOccuredAt

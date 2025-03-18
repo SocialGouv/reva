@@ -1,11 +1,53 @@
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
+import {
+  FeasibilityUseCandidateForDashboard,
+  DossierDeValidationUseCandidateForDashboard,
+} from "../dashboard.hooks";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 
-export const DossierValidationTile = () => {
+const DossierValidationBadge = ({
+  activeDossierDeValidation,
+  isCaduque,
+}: {
+  activeDossierDeValidation: DossierDeValidationUseCandidateForDashboard;
+  isCaduque: boolean;
+}) => {
+  const decision = activeDossierDeValidation?.decision;
+
+  switch (true) {
+    case isCaduque:
+      return <Badge severity="error">caduque</Badge>;
+    case !activeDossierDeValidation || decision === "INCOMPLETE":
+      return <Badge severity="warning">à transmettre</Badge>;
+    case decision === "PENDING":
+      return <Badge severity="success">envoyé au certificateur</Badge>;
+    case decision === "INCOMPLETE":
+      return <Badge severity="warning">incomplet</Badge>;
+    default:
+      return null;
+  }
+};
+
+export const DossierValidationTile = ({
+  feasibility,
+  activeDossierDeValidation,
+  isCaduque,
+}: {
+  feasibility: FeasibilityUseCandidateForDashboard;
+  activeDossierDeValidation: DossierDeValidationUseCandidateForDashboard;
+  isCaduque: boolean;
+}) => {
   const router = useRouter();
   return (
     <Tile
-      disabled
+      disabled={feasibility?.decision !== "ADMISSIBLE" || isCaduque}
+      start={
+        <DossierValidationBadge
+          activeDossierDeValidation={activeDossierDeValidation}
+          isCaduque={isCaduque}
+        />
+      }
       title="Dossier de validation"
       small
       buttonProps={{

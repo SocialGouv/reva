@@ -6,6 +6,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   query candidate_getCandidateWithCandidacyForDashboard {
     candidate_getCandidateWithCandidacy {
       candidacy {
+        readyForJuryEstimatedAt
         activeDossierDeValidation {
           decision
         }
@@ -114,3 +115,5 @@ export type ExperiencesUseCandidateForDashboard =
   CandidateForDashboardHookReturnType["candidacy"]["experiences"];
 export type OrganismUseCandidateForDashboard =
   CandidateForDashboardHookReturnType["candidacy"]["organism"];
+export type DossierDeValidationUseCandidateForDashboard =
+  CandidateForDashboardHookReturnType["candidacy"]["activeDossierDeValidation"];

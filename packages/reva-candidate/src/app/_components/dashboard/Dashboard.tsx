@@ -135,7 +135,11 @@ const Dashboard = () => {
               isCaduque={candidacyIsCaduque}
               candidacyIsAutonome={candidacyIsAutonome}
             />
-            <DossierValidationTile />
+            <DossierValidationTile
+              feasibility={candidacy.feasibility}
+              activeDossierDeValidation={candidacy.activeDossierDeValidation}
+              isCaduque={candidacy.isCaduque}
+            />
           </div>
         </div>
         <div className="flex flex-col col-span-1 row-span-2 row-start-1 gap-y-8">
