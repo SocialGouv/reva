@@ -27,7 +27,6 @@ export const CertificationPageV2 = ({
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
     juryEstimatedCost?: number | null;
     juryPlace?: string | null;
-    certificationAuthorityStructure?: { label: string } | null;
   };
 }) => (
   <div className="flex-1 flex pb-8 min-h-screen">
@@ -58,8 +57,7 @@ export const CertificationPageV2 = ({
         <div className="flex flex-col md:flex-row gap-6 mt-8">
           <Tile
             title={certification.typeDiplome}
-            desc={certification?.certificationAuthorityStructure?.label}
-            className="w-[282px] h-[110px]"
+            className="w-[282px] h-[98px]"
             small
             orientation="horizontal"
             imageSvg
@@ -69,7 +67,7 @@ export const CertificationPageV2 = ({
           <Tile
             title={`Niveau ${certification.level}`}
             desc={getLevelDesc(certification.level)}
-            className="w-[282px] h-[110px]"
+            className="w-[282px] h-[98px]"
             small
             orientation="horizontal"
             imageSvg
