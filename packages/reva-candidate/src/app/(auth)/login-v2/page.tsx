@@ -36,7 +36,9 @@ export default function Login() {
 
     if (emailForMagicLink.length > 0) {
       try {
-        const response = await askForLogin.mutateAsync({ email });
+        const response = await askForLogin.mutateAsync({
+          email: emailForMagicLink,
+        });
         if (response) {
           router.push("/login-confirmation");
         }

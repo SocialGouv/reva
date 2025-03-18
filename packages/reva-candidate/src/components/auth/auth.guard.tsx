@@ -41,7 +41,7 @@ export const AuthGuard = (props: Props) => {
       try {
         const response = await loginWithToken.mutateAsync({ token });
         if (response.candidate_loginWithToken) {
-          router.replace(response.candidate_loginWithToken);
+          window.location.replace(response.candidate_loginWithToken);
         }
       } catch (error) {
         console.error(error);
