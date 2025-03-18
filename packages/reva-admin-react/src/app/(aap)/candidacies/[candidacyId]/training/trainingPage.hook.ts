@@ -1,7 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { TrainingInput } from "@/graphql/generated/graphql";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 export const OTHER_FINANCING_METHOD_ID = "a0d5b35b-06bb-46dd-8cf5-fbba5b01c711";
@@ -75,6 +75,7 @@ export const useTrainingPage = () => {
   }>();
 
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const {
     data: getCandidacyByIdWithReferentiaData,
@@ -99,6 +100,11 @@ export const useTrainingPage = () => {
         candidacyId,
         training,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [candidacyId],
+      });
+    },
   });
 
   const basicSkillsFromReferential =
