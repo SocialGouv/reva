@@ -1,6 +1,6 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 const SentToSendBadge = ({ isComplete }: { isComplete: boolean }) => (
   <Badge severity={isComplete ? "success" : "warning"}>
@@ -14,17 +14,21 @@ export const SubmitCandidacyTile = ({
 }: {
   candidacyAlreadySubmitted: boolean;
   canSubmitCandidacy: boolean;
-}) => (
-  <Tile
-    start={<SentToSendBadge isComplete={candidacyAlreadySubmitted} />}
-    disabled={!candidacyAlreadySubmitted && !canSubmitCandidacy}
-    title="Envoi de la candidature"
-    small
-    buttonProps={{
-      onClick: () => {
-        router.push("/submit-candidacy");
-      },
-    }}
-    imageUrl="/candidat/images/pictograms/mail-send.svg"
-  />
-);
+}) => {
+  const router = useRouter();
+
+  return (
+    <Tile
+      start={<SentToSendBadge isComplete={candidacyAlreadySubmitted} />}
+      disabled={!candidacyAlreadySubmitted && !canSubmitCandidacy}
+      title="Envoi de la candidature"
+      small
+      buttonProps={{
+        onClick: () => {
+          router.push("/submit-candidacy");
+        },
+      }}
+      imageUrl="/candidat/images/pictograms/mail-send.svg"
+    />
+  );
+};

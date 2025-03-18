@@ -2,7 +2,7 @@ import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { isAfter, isBefore } from "date-fns";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 const TrainingStatusBadge = ({
   candidacyStatus,
@@ -30,34 +30,38 @@ export const TrainingTile = ({
 }: {
   candidacyStatus: CandidacyStatusStep;
   firstAppointmentOccuredAt?: number | null;
-}) => (
-  <Tile
-    disabled={
-      candidacyStatus == "PROJET" ||
-      candidacyStatus == "VALIDATION" ||
-      (candidacyStatus == "PRISE_EN_CHARGE" &&
-        !!firstAppointmentOccuredAt &&
-        isAfter(firstAppointmentOccuredAt, new Date()))
-    }
-    title="Parcours et financement"
-    start={
-      <TrainingStatusBadge
-        candidacyStatus={candidacyStatus}
-        firstAppointmentOccuredAt={firstAppointmentOccuredAt}
-      />
-    }
-    small
-    buttonProps={{
-      onClick: () => {
-        router.push(
-          candidacyStatus == "PRISE_EN_CHARGE" &&
-            !!firstAppointmentOccuredAt &&
-            isBefore(firstAppointmentOccuredAt, new Date())
-            ? "/waiting-for-training"
-            : "/validate-training",
-        );
-      },
-    }}
-    imageUrl="/candidat/images/pictograms/in-progress.svg"
-  />
-);
+}) => {
+  const router = useRouter();
+
+  return (
+    <Tile
+      disabled={
+        candidacyStatus == "PROJET" ||
+        candidacyStatus == "VALIDATION" ||
+        (candidacyStatus == "PRISE_EN_CHARGE" &&
+          !!firstAppointmentOccuredAt &&
+          isAfter(firstAppointmentOccuredAt, new Date()))
+      }
+      title="Parcours et financement"
+      start={
+        <TrainingStatusBadge
+          candidacyStatus={candidacyStatus}
+          firstAppointmentOccuredAt={firstAppointmentOccuredAt}
+        />
+      }
+      small
+      buttonProps={{
+        onClick: () => {
+          router.push(
+            candidacyStatus == "PRISE_EN_CHARGE" &&
+              !!firstAppointmentOccuredAt &&
+              isBefore(firstAppointmentOccuredAt, new Date())
+              ? "/waiting-for-training"
+              : "/validate-training",
+          );
+        },
+      }}
+      imageUrl="/candidat/images/pictograms/in-progress.svg"
+    />
+  );
+};
