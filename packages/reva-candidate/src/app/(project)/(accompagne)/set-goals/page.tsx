@@ -1,9 +1,8 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-import Button from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 
 import { PageLayout } from "@/layouts/page.layout";
@@ -12,6 +11,8 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { useSetGoals } from "./set-goals.hooks";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 export default function SetGoals() {
   const router = useRouter();
@@ -31,9 +32,8 @@ export default function SetGoals() {
     candidacy?.goals.map((goal) => goal.id) || [],
   );
 
-  if (!canEditCandidacy) {
-    redirect("/");
-  }
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
   const toggle = (goalId: string) => {
     const filteredGoals = selectedGoalIds.filter((id) => id != goalId);
@@ -54,6 +54,7 @@ export default function SetGoals() {
     }
 
     try {
+      setIsSubmitting(true);
       await updateGoals.mutateAsync({
         candidacyId: candidacy.id,
         goals: selectedGoalIds.map((goalId) => ({ goalId })),
@@ -61,38 +62,51 @@ export default function SetGoals() {
       router.push("/");
     } catch (error) {
       graphqlErrorToast(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <PageLayout title="Vos objectifs" displayBackToHome>
+    <PageLayout title="Vos objectifs">
+      <Breadcrumb
+        currentPageLabel="Mes objectifs"
+        className="mb-0"
+        homeLinkProps={{
+          href: "/",
+        }}
+        segments={[]}
+      />
       <h2 className="mt-6 mb-2">Mes objectifs</h2>
       <FormOptionalFieldsDisclaimer
         className="mb-4"
         label="Plusieurs choix possibles"
       />
-
       <form onSubmit={onSubmit} className="flex flex-col">
         <Checkbox
           className="w-full"
+          small
           legend="Objectif"
           disabled={formShouldBeDisabled}
           options={goals.map((goal) => ({
             label: goal.label,
             nativeInputProps: {
               checked: selectedGoalIds.indexOf(goal.id) != -1,
-              onChange: () => toggle(goal.id),
+              onChange: () => {
+                setIsDirty(true);
+                toggle(goal.id);
+              },
             },
           }))}
         />
-
-        <Button
-          className="mb-4 justify-center w-[100%]  md:w-fit"
-          data-test="project-goals-submit-goals"
-          disabled={formShouldBeDisabled}
-        >
-          Valider mes objectifs
-        </Button>
+        <FormButtons
+          formState={{
+            canSubmit: !formShouldBeDisabled,
+            isSubmitting,
+            isDirty,
+          }}
+          backUrl="/"
+        />
       </form>
     </PageLayout>
   );
