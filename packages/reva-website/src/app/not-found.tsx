@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Head from "next/head";
