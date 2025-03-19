@@ -15,6 +15,7 @@ import ExperiencesSectionSubmitCandidacy from "./ExperiencesSectionSubmitCandida
 import GoalsSectionSubmitCandidacy from "./GoalsSectionSubmitCandidacy";
 import { useSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 export default function SubmitCandidacy() {
   const router = useRouter();
@@ -48,6 +49,14 @@ export default function SubmitCandidacy() {
 
   return (
     <div>
+      <Breadcrumb
+        currentPageLabel="Envoi de la candidature"
+        className="mb-0"
+        homeLinkProps={{
+          href: "/",
+        }}
+        segments={[]}
+      />
       <h2 className="mt-6 mb-4">Envoi de votre candidature</h2>
       <p className="mb-12">
         Vérifiez les informations puis validez l'envoi de votre candidature à

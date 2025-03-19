@@ -10,6 +10,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useRouter } from "next/navigation";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 type TypeAccompagnement = "AUTONOME" | "ACCOMPAGNE";
 
@@ -32,6 +33,14 @@ export default function ChooseTypeAccompagnementPage() {
   };
   return (
     <PageLayout title="Modalités de parcours">
+      <Breadcrumb
+        currentPageLabel="Modalité de parcours"
+        className="mb-0"
+        homeLinkProps={{
+          href: "/",
+        }}
+        segments={[]}
+      />
       <h1 className="mt-8">Modalités de parcours</h1>
       <FormOptionalFieldsDisclaimer />
       <p>

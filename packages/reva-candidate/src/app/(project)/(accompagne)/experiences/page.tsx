@@ -5,6 +5,7 @@ import Card from "@codegouvfr/react-dsfr/Card";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useExperiences } from "./experiences.hooks";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 const durationToString: {
   [key in Duration]: string;
@@ -25,6 +26,14 @@ export default function ExperiencesPage() {
 
   return (
     <div className="flex flex-col w-full gap-6">
+      <Breadcrumb
+        currentPageLabel="Mes expériences"
+        className="mb-0"
+        homeLinkProps={{
+          href: "/",
+        }}
+        segments={[]}
+      />
       <h1>Mes expériences</h1>
       <p>
         Complétez cette section avec vos différentes expériences
