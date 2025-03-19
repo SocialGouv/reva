@@ -1,6 +1,5 @@
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import { isAfter } from "date-fns";
 import { useMemo } from "react";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
 import { DashboardBanner } from "./DashboardBanner";
@@ -12,13 +11,12 @@ import { ExperiencesTile } from "./tiles/ExperiencesTile";
 import { FeasibilityTile } from "./tiles/FeasibilityTile";
 import { GoalsTile } from "./tiles/GoalsTile";
 import { NoContactTile } from "./tiles/NoContactTile";
-import { NoRendezVousTile } from "./tiles/NoRendezVousTile";
 import { OrganismTile } from "./tiles/OrganismTile";
-import { RendezVousPedagogiqueTile } from "./tiles/RendezVousPedagogiqueTile";
 import { SubmitCandidacyTile } from "./tiles/SubmitCandidacyTile";
 import TileGroup from "./tiles/TileGroup";
 import { TrainingTile } from "./tiles/TrainingTile";
 import { TypeAccompagnementTile } from "./tiles/TypeAccompagnementTile";
+import { AppointmentTiles } from "./tiles/AppointmentTiles";
 
 const Dashboard = () => {
   const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
@@ -147,14 +145,15 @@ const Dashboard = () => {
             icon="fr-icon-calendar-2-line"
             title="Mes prochains rendez-vous"
           >
-            {candidacy.firstAppointmentOccuredAt &&
+            <AppointmentTiles candidacy={candidacy} />
+            {/* {candidacy.firstAppointmentOccuredAt &&
             isAfter(candidacy.firstAppointmentOccuredAt, new Date()) ? (
               <RendezVousPedagogiqueTile
                 firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
               />
             ) : (
               <NoRendezVousTile />
-            )}
+            )} */}
           </TileGroup>
           <TileGroup icon="fr-icon-team-line" title="Mes contacts">
             {!candidacy.organism &&

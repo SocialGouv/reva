@@ -23,10 +23,10 @@ export const ReadOnlyDossierDeValidationTab = ({
     <div className="flex flex-col">
       <Alert
         data-test="dossier-de-validation-sent-alert"
-        title={`Dossier de validation envoyé le ${dossierDeValidationSentAt ? format(dossierDeValidationSentAt, "dd/MM/yyyy") : ""}`}
-        severity="info"
+        title={`Dossier de validation envoyé au certificateur le ${dossierDeValidationSentAt ? format(dossierDeValidationSentAt, "dd/MM/yyyy") : ""}`}
+        severity="success"
         className="mt-8"
-        description="Votre dossier a bien été envoyé au certificateur. En attendant le retour de votre certificateur, le contenu du dossier reste consultable."
+        description="Le contenu du dossier reste accessible, si vous souhaitez le consulter."
       />
 
       <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />

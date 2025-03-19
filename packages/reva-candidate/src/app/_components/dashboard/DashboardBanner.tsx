@@ -230,6 +230,24 @@ export const DashboardBanner = ({
         S'actualiser
       </Button>
     );
+  } else if (candidacy.activeDossierDeValidation?.decision === "PENDING") {
+    bannerContent = (
+      <>
+        Votre dossier de validation a bien été envoyé au certificateur. Vous
+        recevrez prochainement une convocation pour votre passage devant le jury
+        par mail ou par courrier. En cas d’erreur ou d’oubli, contactez-le pour
+        pouvoir le modifier dans les plus brefs délais.
+      </>
+    );
+  } else if (candidacy.activeDossierDeValidation?.decision === "INCOMPLETE") {
+    bannerContent = (
+      <>
+        Le certificateur a signalé que votre dossier de validation comportait
+        des erreurs. Rendez vous dans votre section “Dossier de validation” pour
+        connaitre les raisons transmises par votre certificateur et transmettre
+        un nouveau dossier de validation.
+      </>
+    );
   } else if (candidacy.feasibility?.decision === "ADMISSIBLE") {
     bannerContent = (
       <>
