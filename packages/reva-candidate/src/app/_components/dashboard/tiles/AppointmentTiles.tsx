@@ -27,7 +27,10 @@ export const AppointmentTiles = ({
     );
   }
 
-  if (candidacy.readyForJuryEstimatedAt) {
+  if (
+    candidacy.readyForJuryEstimatedAt &&
+    candidacy.activeDossierDeValidation?.decision !== "PENDING"
+  ) {
     appointments.push(
       <ReadyForJuryTile
         readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt}
