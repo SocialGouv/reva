@@ -232,25 +232,28 @@ export const DashboardBanner = ({
     );
   } else if (candidacy.activeDossierDeValidation?.decision === "PENDING") {
     bannerContent = (
-      <>
+      <div data-test="pending-dv-banner">
         Votre dossier de validation a bien été envoyé au certificateur. Vous
         recevrez prochainement une convocation pour votre passage devant le jury
         par mail ou par courrier. En cas d’erreur ou d’oubli, contactez-le pour
         pouvoir le modifier dans les plus brefs délais.
-      </>
+      </div>
     );
   } else if (candidacy.activeDossierDeValidation?.decision === "INCOMPLETE") {
     bannerContent = (
-      <>
+      <div data-test="incomplete-dv-banner">
         Le certificateur a signalé que votre dossier de validation comportait
         des erreurs. Rendez vous dans votre section “Dossier de validation” pour
         connaitre les raisons transmises par votre certificateur et transmettre
         un nouveau dossier de validation.
-      </>
+      </div>
     );
-  } else if (candidacy.feasibility?.decision === "ADMISSIBLE") {
+  } else if (
+    candidacy.feasibility?.decision === "ADMISSIBLE" &&
+    candidacy.typeAccompagnement === "AUTONOME"
+  ) {
     bannerContent = (
-      <>
+      <div data-test="autonome-admissible-feasibility-banner">
         Félicitations, vous êtes recevable ! Vous pouvez, débuter la rédaction
         de votre dossier de validation.{" "}
         {!candidacy.readyForJuryEstimatedAt && (
@@ -260,11 +263,97 @@ export const DashboardBanner = ({
             de validation”.
           </>
         )}
-      </>
+      </div>
+    );
+  } else if (
+    candidacy.feasibility?.decision === "ADMISSIBLE" &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE"
+  ) {
+    bannerContent = (
+      <div data-test="accompagne-admissible-feasibility-banner">
+        Félicitations, votre dossier de faisabilité est recevable ! Votre
+        accompagnateur vous contactera prochainement pour démarrer votre
+        accompagnement. Vous pourrez, ensemble, débuter la rédaction de votre
+        dossier de validation.
+      </div>
+    );
+  } else if (
+    candidacy.feasibility?.decision === "DRAFT" &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE"
+  ) {
+    bannerContent = (
+      <div data-test="draft-feasibility-banner">
+        Votre dossier de faisabilité est désormais consultable ! Si le contenu
+        proposé vous convient, transmettez une attestation sur l’honneur signée
+        à votre accompagnateur pour valider le dossier de faisabilité.
+      </div>
+    );
+  } else if (
+    candidacy.feasibility?.decision === "PENDING" &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE"
+  ) {
+    bannerContent = (
+      <div data-test="pending-feasibility-banner">
+        Votre dossier a été envoyé au certificateur. Votre accompagnateur et
+        vous-même recevrez un e-mail et/ou un courrier dans un délai de 2 mois
+        maximum vous informant si vous êtes recevable pour commencer un parcours
+        VAE !
+      </div>
+    );
+  } else if (
+    candidacy.feasibility?.decision === "PENDING" &&
+    candidacy.typeAccompagnement === "AUTONOME"
+  ) {
+    bannerContent = (
+      <div data-test="autonome-pending-feasibility-banner">
+        Votre dossier a été envoyé au certificateur. Vous recevrez un e-mail
+        et/ou un courrier dans un délai de 2 mois maximum vous informant si vous
+        êtes recevable pour commencer un parcours VAE !
+      </div>
+    );
+  } else if (
+    candidacy.feasibility?.decision === "INCOMPLETE" &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE"
+  ) {
+    bannerContent = (
+      <div data-test="incomplete-feasibility-banner">
+        Votre dossier de faisabilité est incomplet. Cliquez sur “Dossier de
+        faisabilité” pour découvrir les éléments manquants puis contactez votre
+        accompagnateur afin qu’il mette votre dossier à jour.
+      </div>
+    );
+  } else if (
+    candidacy.feasibility?.decision === "INCOMPLETE" &&
+    candidacy.typeAccompagnement === "AUTONOME"
+  ) {
+    bannerContent = (
+      <div data-test="autonome-incomplete-feasibility-banner">
+        Votre dossier de faisabilité est incomplet. Cliquez sur “Dossier de
+        faisabilité” pour découvrir les éléments manquants puis soumettez un
+        dossier mis à jour.
+      </div>
+    );
+  } else if (candidacy.feasibility?.decision === "REJECTED") {
+    imageComponent = (
+      <Image
+        src="/candidat/images/image-warning-hand.png"
+        width={167}
+        height={168}
+        alt="Main levée en signe d'avertissement"
+        className="relative -top-28 lg:top-0 lg:-left-7"
+      />
+    );
+    bannerContent = (
+      <div data-test="rejected-feasibility-banner">
+        Malheureusement, votre dossier de faisabilité n’a pas été accepté par le
+        certificateur. Vous pouvez soit contester cette décision soit arrêter
+        votre parcours VAE ici.
+      </div>
     );
   } else if (
     candidacyAlreadySubmitted &&
-    !candidacy.firstAppointmentOccuredAt
+    !candidacy.firstAppointmentOccuredAt &&
+    candidacy.typeAccompagnement === "ACCOMPAGNE"
   ) {
     bannerContent = (
       <div data-test="waiting-for-appointment-banner">
@@ -286,6 +375,19 @@ export const DashboardBanner = ({
         avec{" "}
         <em>{candidacy.organism?.nomPublic || candidacy.organism?.label}</em>.
         Consultez la section “Mes prochains rendez-vous” pour en savoir plus.{" "}
+      </div>
+    );
+  } else if (
+    candidacyAlreadySubmitted &&
+    !!candidacy.firstAppointmentOccuredAt &&
+    isBefore(candidacy.firstAppointmentOccuredAt, new Date()) &&
+    candidacy.status === "PARCOURS_CONFIRME"
+  ) {
+    bannerContent = (
+      <div data-test="creating-feasibility-banner">
+        Votre accompagnateur est en train de remplir votre dossier de
+        faisabilité. Une fois terminé, il vous sera transmis. Vous devrez le
+        valider avant qu’il soit envoyé au certificateur pour étude.
       </div>
     );
   } else if (
