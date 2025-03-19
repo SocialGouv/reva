@@ -22,7 +22,7 @@ export default function CertificationDetail() {
         currentPageLabel="Diplôme visé"
         className="mb-0"
         homeLinkProps={{
-          href: "/candidat",
+          href: "/",
         }}
         segments={[]}
       />
@@ -87,25 +87,26 @@ export default function CertificationDetail() {
         </CallOut>
       )}
 
-      {canEditCandidacy && (
-        <div className="flex flex-col-reverse md:flex-row gap-4 justify-between mt-6">
-          <Button
-            priority="secondary"
-            className="justify-center w-[100%]  md:w-fit"
-            linkProps={{ href: "/" }}
-          >
-            Retour
-          </Button>
-          <Button
-            data-test="change-certification-button"
-            priority="tertiary no outline"
-            className="justify-center w-[100%]  md:w-fit"
-            linkProps={{ href: "/search-certification" }}
-          >
-            Changer de diplôme
-          </Button>
-        </div>
-      )}
+      <div className="flex flex-col-reverse md:flex-row gap-4 justify-between mt-6">
+        <Button
+          priority="secondary"
+          className="justify-center w-[100%] md:w-fit"
+          linkProps={{ href: "/" }}
+        >
+          Retour
+        </Button>
+        <Button
+          data-test="change-certification-button"
+          priority="tertiary no outline"
+          className="justify-center w-[100%] md:w-fit"
+          onClick={() => {
+            router.push("/search-certification");
+          }}
+          disabled={!canEditCandidacy}
+        >
+          Changer de diplôme
+        </Button>
+      </div>
     </PageLayout>
   );
 }
