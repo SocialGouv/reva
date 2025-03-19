@@ -512,22 +512,6 @@ const activeFeaturesQuery = graphql(`
   }
 `);
 
-// export async function getServerSideProps() {
-//   const [activeFeatures, homePageItems] = await Promise.all([
-//     request(GRAPHQL_API_URL, activeFeaturesQuery),
-//     getHomePageItemsFromStrapi(),
-//   ]);
-//   return {
-//     props: {
-//       activeFeatures: activeFeatures.activeFeaturesForConnectedUser,
-//       articlesDaide: homePageItems.articlesDAide,
-//       articlesFAQ: homePageItems.articlesFAQ,
-//       articlesActualite: homePageItems.articlesActualite,
-//       homePageNoticeText: homePageItems.homePageNoticeText,
-//     },
-//   };
-// }
-
 const homePageItemsQuery = graphql(`
   query getHomePageItems {
     articleDAides(
