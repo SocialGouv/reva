@@ -7,9 +7,11 @@ import {
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
 const DossierValidationBadge = ({
+  feasibility,
   activeDossierDeValidation,
   isCaduque,
 }: {
+  feasibility: FeasibilityUseCandidateForDashboard;
   activeDossierDeValidation: DossierDeValidationUseCandidateForDashboard;
   isCaduque: boolean;
 }) => {
@@ -18,7 +20,8 @@ const DossierValidationBadge = ({
   switch (true) {
     case isCaduque:
       return <Badge severity="error">caduque</Badge>;
-    case !activeDossierDeValidation || decision === "INCOMPLETE":
+    case (!activeDossierDeValidation || decision === "INCOMPLETE") &&
+      feasibility?.decision === "ADMISSIBLE":
       return <Badge severity="warning">à transmettre</Badge>;
     case decision === "PENDING":
       return <Badge severity="success">envoyé au certificateur</Badge>;
@@ -46,6 +49,7 @@ export const DossierValidationTile = ({
         <DossierValidationBadge
           activeDossierDeValidation={activeDossierDeValidation}
           isCaduque={isCaduque}
+          feasibility={feasibility}
         />
       }
       title="Dossier de validation"

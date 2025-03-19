@@ -108,7 +108,7 @@ export default function SetCertification() {
           {
             label: "Diplôme visé",
             linkProps: {
-              href: `/certification/${candidacy.certification?.id}`,
+              href: "/certification/",
             },
           },
         ]}

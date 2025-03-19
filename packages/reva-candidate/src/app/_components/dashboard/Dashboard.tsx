@@ -146,14 +146,6 @@ const Dashboard = () => {
             title="Mes prochains rendez-vous"
           >
             <AppointmentTiles candidacy={candidacy} />
-            {/* {candidacy.firstAppointmentOccuredAt &&
-            isAfter(candidacy.firstAppointmentOccuredAt, new Date()) ? (
-              <RendezVousPedagogiqueTile
-                firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
-              />
-            ) : (
-              <NoRendezVousTile />
-            )} */}
           </TileGroup>
           <TileGroup icon="fr-icon-team-line" title="Mes contacts">
             {!candidacy.organism &&

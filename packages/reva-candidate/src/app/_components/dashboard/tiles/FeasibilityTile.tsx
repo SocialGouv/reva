@@ -6,9 +6,11 @@ import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 const FeasibilityBadge = ({
   feasibility,
   isCaduque,
+  candidacyIsAutonome,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
   isCaduque: boolean;
+  candidacyIsAutonome: boolean;
 }) => {
   const decision = feasibility?.decision;
   const isDfDemat = feasibility?.feasibilityFormat === "DEMATERIALIZED";
@@ -28,7 +30,7 @@ const FeasibilityBadge = ({
       return <Badge severity="warning">à valider</Badge>;
     case decisionIsDraft && isDfDemat:
       return <Badge severity="info">en cours</Badge>;
-    case decisionIsDraft:
+    case decisionIsDraft || (candidacyIsAutonome && !decision):
       return <Badge severity="info">à envoyer au certificateur</Badge>;
     case decision === "ADMISSIBLE":
       return <Badge severity="success">recevable</Badge>;
@@ -88,7 +90,11 @@ export const FeasibilityTile = ({
       disabled={feasibilityTileDisabled}
       title="Dossier de faisabilité"
       start={
-        <FeasibilityBadge feasibility={feasibility} isCaduque={isCaduque} />
+        <FeasibilityBadge
+          feasibility={feasibility}
+          isCaduque={isCaduque}
+          candidacyIsAutonome={candidacyIsAutonome}
+        />
       }
       small
       buttonProps={{
