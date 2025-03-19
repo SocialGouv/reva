@@ -33,7 +33,9 @@ export const CandidateTypologySelect = ({
       Sélectionner
     </option>
     <option value="SALARIE_PRIVE">Je suis salarié du secteur privé</option>
-    <option value="SALARIE_PUBLIC">Je suis salarié du secteur public</option>
+    <option value="SALARIE_PUBLIC">
+      Je suis agent public ou contractuel de l’État
+    </option>
     <option value="BENEVOLE">Je suis bénévole</option>
     <option value="AIDANTS_FAMILIAUX">Je suis aidant familial</option>
     <option value="AIDANTS_FAMILIAUX_AGRICOLES">

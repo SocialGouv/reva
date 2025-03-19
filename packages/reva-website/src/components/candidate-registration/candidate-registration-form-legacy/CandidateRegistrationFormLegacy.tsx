@@ -195,19 +195,14 @@ export const CandidateRegistrationFormLegacy = ({
                   <a href="https://vae.gouv.fr/" target="_blank">
                     vae.gouv.fr
                   </a>
-                  . Pour savoir si d’autres options existent, vous pouvez
-                  contacter dès à présent un{" "}
+                  . Pour identifier les structures expertes en VAE, vous pouvez{" "}
                   <a
-                    href="https://vae.gouv.fr/savoir-plus/articles/liste-prc/"
+                    href="https://vae.gouv.fr/savoir-plus/articles/vae-ou-se-renseigner/"
                     target="_blank"
                   >
-                    point relais conseil
-                  </a>{" "}
-                  ou un{" "}
-                  <a href="https://mon-cep.org/#trouver" target="_blank">
-                    conseiller en évolution professionnelle
+                    consulter les structures d’information dédiées
                   </a>
-                  .
+                  , adaptées à votre situation.
                 </span>
               }
             />
