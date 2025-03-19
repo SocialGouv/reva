@@ -75,9 +75,27 @@ const PageContent = ({
   const { isAdmin } = useAuth();
   //Temporirarilry set isEditable to true to allow admins to update existing certifications
 
-  const isEditable = isAdmin
+  const isValidationButtonEnabled = isAdmin
     ? true
     : certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
+
+  const isDescriptionSectionEditable = isAdmin
+    ? true
+    : certification.status == "A_VALIDER_PAR_CERTIFICATEUR" ||
+      certification.status == "VALIDE_PAR_CERTIFICATEUR";
+
+  const isCompetenceBlocsSectionEditable = isAdmin
+    ? true
+    : certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
+
+  const isPreRequisitesSectionEditable = isAdmin
+    ? true
+    : certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
+
+  const isAdditionalInfoSectionEditable = isAdmin
+    ? true
+    : certification.status == "A_VALIDER_PAR_CERTIFICATEUR" ||
+      certification.status == "VALIDE_PAR_CERTIFICATEUR";
 
   const isDescriptionComplete =
     (certification.juryTypeMiseEnSituationProfessionnelle ||
@@ -106,7 +124,7 @@ const PageContent = ({
           data-test="certification-description-card"
           title="Descriptif de la certification"
           status={isDescriptionComplete ? "COMPLETED" : "TO_COMPLETE"}
-          isEditable={isEditable}
+          isEditable={isDescriptionSectionEditable}
           titleIconClass="fr-icon-award-fill"
           buttonOnClickHref={`/responsable-certifications/certifications/${certification.id}/description`}
         >
@@ -217,7 +235,7 @@ const PageContent = ({
         </EnhancedSectionCard>
 
         <CertificationCompetenceBlocsSummaryCard
-          isEditable={isEditable}
+          isEditable={isCompetenceBlocsSectionEditable}
           competenceBlocs={certification.competenceBlocs}
           onUpdateCompetenceBlocButtonClick={(blocId) =>
             router.push(
@@ -227,7 +245,7 @@ const PageContent = ({
         />
         <EnhancedSectionCard
           data-test="prerequisites-summary-card"
-          isEditable={isEditable}
+          isEditable={isPreRequisitesSectionEditable}
           title="Prérequis obligatoires"
           titleIconClass="fr-icon-success-fill"
           customButtonTitle="Modifier"
@@ -253,12 +271,12 @@ const PageContent = ({
         </EnhancedSectionCard>
 
         <CertificationAdditionalInfoSummaryCard
-          isEditable={isEditable}
+          isEditable={isAdditionalInfoSectionEditable}
           updateButtonHref={`/responsable-certifications/certifications/${certification.id}/additional-info`}
           certificationAdditionalInfo={certification.additionalInfo}
         />
 
-        {isEditable && (
+        {isValidationButtonEnabled && (
           <>
             <div className=" h-[1px] w-[100%] bg-dsfr-light-decisions-border-border-default-grey" />
 
@@ -277,7 +295,7 @@ const PageContent = ({
         )}
       </div>
 
-      {isEditable && (
+      {isValidationButtonEnabled && (
         <div
           className={`flex gap-4 items-center justify-between mt-10`}
           data-test="form-buttons"
