@@ -6,11 +6,7 @@ import { createCertificationAuthorityLocalAccountHelper } from "../../../test/he
 import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
-import {
-  getGraphQLClient,
-  getGraphQLError,
-} from "../../../test/jestGraphqlClient";
-import { shouldNotGoHere } from "../../../test/jestHelpers";
+import { getGraphQLClient } from "../../../test/jestGraphqlClient";
 import { graphql } from "../../graphql/generated";
 import { JuryResult } from "../../graphql/generated/graphql";
 import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
