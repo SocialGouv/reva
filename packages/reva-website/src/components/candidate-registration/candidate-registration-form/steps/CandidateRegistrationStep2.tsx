@@ -14,7 +14,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 
 const getDepartmentsQuery = graphql(`
   query getDepartments {
-    getDepartments {
+    getDepartments(elligibleVAE: true) {
       id
       code
       label

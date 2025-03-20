@@ -23,7 +23,7 @@ import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 const getDepartmentsQuery = graphql(`
   query getDepartments {
-    getDepartments {
+    getDepartments(elligibleVAE: true) {
       id
       code
       label
