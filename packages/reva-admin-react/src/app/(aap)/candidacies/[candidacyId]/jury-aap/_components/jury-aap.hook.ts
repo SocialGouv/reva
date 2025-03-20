@@ -16,6 +16,7 @@ const getCandidacyById = graphql(`
         result
         dateOfResult
         informationOfResult
+        isResultTemporary
       }
       historyJury {
         id

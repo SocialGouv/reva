@@ -69,6 +69,7 @@ export const ResultatTab = () => {
             dateOfSession: jury.dateOfSession,
             result: jury.result,
             informationOfResult: jury.informationOfResult,
+            isResultTemporary: jury.isResultTemporary,
           }}
         />
 

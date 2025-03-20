@@ -35,6 +35,7 @@ type JuryType = {
   id: string;
   dateOfSession: number;
   result: JuryResult;
+  isResultTemporary?: boolean | null;
   informationOfResult?: string | null;
 };
 
@@ -56,6 +57,14 @@ export const ResultatCard = (props: Props) => {
             {juryResultLabels[jury.result as JuryResult]}
           </Badge>
         </dd>
+        {jury.isResultTemporary && (
+          <dd className="text-xs text-dsfrGray-mentionGrey leading-tight lg:w-4/5">
+            <span className="fr-icon-warning-fill fr-icon--sm mr-1" />
+            Ce résultat a été renseigné par un administrateur France VAE. Le
+            résultat transmis par le certificateur par courrier officiel fait
+            foi.
+          </dd>
+        )}
       </div>
 
       <div>
