@@ -55,13 +55,10 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     throw new Error("La date du jury n'est pas passée");
   }
 
-  if (
-    params.hasRole("admin") &&
-    juryInfo.result !== "PARTIAL_SUCCESS_PENDING_CONFIRMATION"
-  ) {
-    throw new Error(
-      "Un administrateur ne peut soumettre qu'un résultat non-confirmé",
-    );
+  let isResultTemporary = false;
+
+  if (params.hasRole("admin")) {
+    isResultTemporary = true;
   }
 
   if (jury.result) {
@@ -74,6 +71,7 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
     },
     data: {
       result: juryInfo.result,
+      isResultTemporary,
       dateOfResult: new Date(),
       informationOfResult:
         juryInfo.informationOfResult == ""

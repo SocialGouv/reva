@@ -1220,6 +1220,7 @@ model Jury {
   result                                     String?                @map("result")
   dateOfResult                               DateTime?              @map("date_of_result") @db.Timestamptz(6)
   informationOfResult                        String?                @map("information_of_result")
+  isResultTemporary                          Boolean?               @map("is_result_temporary")
   isActive                                   Boolean                @default(true) @map("is_active")
   createdAt                                  DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                  DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
