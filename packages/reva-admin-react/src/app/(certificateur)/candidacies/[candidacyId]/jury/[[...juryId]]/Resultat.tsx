@@ -59,7 +59,6 @@ const schema = z.object({
     "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
     "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
     "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
     "FAILURE",
     "CANDIDATE_EXCUSED",
     "CANDIDATE_ABSENT",
@@ -72,17 +71,15 @@ type ResultatFormData = z.infer<typeof schema>;
 export const Resultat = (): JSX.Element | null => {
   const { getCandidacy, updateJuryResult } = useJuryPageLogic();
   const { isAdmin } = useAuth();
-  const availableResultOptions = isAdmin
-    ? ["PARTIAL_SUCCESS_PENDING_CONFIRMATION"]
-    : [
-        "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-        "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-        "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-        "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-        "FAILURE",
-        "CANDIDATE_EXCUSED",
-        "CANDIDATE_ABSENT",
-      ];
+  const availableResultOptions = [
+    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "FAILURE",
+    "CANDIDATE_EXCUSED",
+    "CANDIDATE_ABSENT",
+  ];
 
   const candidacy = getCandidacy.data?.getCandidacyById;
 
@@ -188,7 +185,7 @@ export const Resultat = (): JSX.Element | null => {
                 const label = juryResultLabels[key as JuryResult];
 
                 return {
-                  label: label,
+                  label: `${label}${isAdmin ? " (sous reserve de confirmation par un certificateur)" : ""}`,
                   nativeInputProps: {
                     value: key,
                     ...register("result"),
