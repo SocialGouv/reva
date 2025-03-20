@@ -108,7 +108,7 @@ export const JuryTimelineElement = () => {
             <span className={`fr-icon ${icon} mr-2 self-center`} />
             {text && <p className="text-sm italic mb-0">{text}</p>}
             {jury?.result && (
-              <>
+              <div>
                 {juryResultNotice[jury.result] === "error" ? (
                   <CustomErrorBadge label={juryResultLabels[jury.result]} />
                 ) : (
@@ -116,7 +116,15 @@ export const JuryTimelineElement = () => {
                     {juryResultLabels[jury.result]}
                   </Badge>
                 )}
-              </>
+                {jury.isResultTemporary && (
+                  <div className="text-xs text-dsfrGray-mentionGrey leading-tight lg:w-4/5 mt-2">
+                    <span className="fr-icon-warning-fill fr-icon--sm mr-1" />
+                    Ce résultat a été renseigné par un administrateur France
+                    VAE. Le résultat transmis par le certificateur par courrier
+                    officiel fait foi.
+                  </div>
+                )}
+              </div>
             )}
           </div>
           {!jury?.result && jury?.convocationFile && !juryOutOfDate && (

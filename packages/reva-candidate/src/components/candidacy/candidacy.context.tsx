@@ -134,6 +134,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           result
           dateOfResult
           informationOfResult
+          isResultTemporary
           convocationFile {
             name
             url
