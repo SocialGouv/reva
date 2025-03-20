@@ -88,6 +88,7 @@ export default function SetCertification() {
 
     if (
       candidacy.certification?.isAapAvailable &&
+      candidacy.typeAccompagnement === "ACCOMPAGNE" &&
       selectedCertification?.isAapAvailable === false
     ) {
       certificationWarningModal.open();

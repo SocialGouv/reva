@@ -56,6 +56,7 @@ const GET_CANDIDACY_CERTIFICATION = graphql(`
       candidacy {
         id
         status
+        typeAccompagnement
         candidacyDropOut {
           createdAt
         }
