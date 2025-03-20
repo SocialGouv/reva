@@ -120,6 +120,7 @@ export const upsertDepartments = async (prisma: PrismaClient) => {
             code: department.codeRegion,
           },
         },
+        elligibleVAE: true,
       },
     });
   }

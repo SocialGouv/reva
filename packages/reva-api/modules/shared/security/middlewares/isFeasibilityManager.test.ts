@@ -251,6 +251,7 @@ describe("isFeasibilityManager", () => {
         data: {
           code: faker.string.numeric(3),
           label: faker.lorem.sentence(),
+          elligibleVAE: true,
           region: {
             create: {
               code: faker.string.numeric(3),
@@ -313,6 +314,7 @@ describe("isFeasibilityManager", () => {
         data: {
           code: faker.string.numeric(3),
           label: faker.lorem.sentence(),
+          elligibleVAE: true,
           region: {
             create: {
               code: faker.string.numeric(3),

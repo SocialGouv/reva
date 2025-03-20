@@ -402,6 +402,7 @@ model Department {
   certificationAuthorityOnDepartment             CertificationAuthorityOnDepartment[]
   certificationAuthorityLocalAccountOnDepartment CertificationAuthorityLocalAccountOnDepartment[]
   CandidateBirthDerpartment                      Candidate[]                                      @relation("birthDepartmentCandidate")
+  elligibleVAE                                   Boolean                                          @map("elligible_vae")
 
   @@index([regionId])
   @@map("department")
