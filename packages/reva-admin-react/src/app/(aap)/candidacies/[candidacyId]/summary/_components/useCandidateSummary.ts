@@ -87,25 +87,6 @@ const getCandidacyById = graphql(`
   }
 `);
 
-const getCountries = graphql(`
-  query getCountries {
-    getCountries {
-      id
-      label
-    }
-  }
-`);
-
-const getDepartments = graphql(`
-  query getDepartments {
-    getDepartments {
-      id
-      label
-      code
-    }
-  }
-`);
-
 const useCandidateSummary = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -118,33 +99,14 @@ const useCandidateSummary = (candidacyId: string) => {
         }),
     });
 
-  const { data: getCountriesData, isLoading: getCountriesIsLoading } = useQuery(
-    {
-      queryKey: ["getCountries"],
-      queryFn: () => graphqlClient.request(getCountries),
-    },
-  );
-
-  const { data: getDepartmentsData } = useQuery({
-    queryKey: ["getDepartments"],
-    queryFn: () => graphqlClient.request(getDepartments),
-  });
-
   const candidacy = getCandidacyByIdData?.getCandidacyById;
-  const countries = getCountriesData?.getCountries;
-  const departments = getDepartmentsData?.getDepartments;
 
   return {
     candidacy,
     getCandidacyIsLoading,
-    countries,
-    getCountriesIsLoading,
-    departments,
   };
 };
 
 export type Candidacy = ReturnType<typeof useCandidateSummary>["candidacy"];
-export type Countries = ReturnType<typeof useCandidateSummary>["countries"];
-export type Departments = ReturnType<typeof useCandidateSummary>["departments"];
 
 export default useCandidateSummary;
