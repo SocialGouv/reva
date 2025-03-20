@@ -163,7 +163,10 @@ const unsafeReferentialResolvers = {
       { certificationId }: { certificationId: string },
     ) => getCertificationById({ certificationId }),
     getRegions,
-    getDepartments,
+    getDepartments: (
+      _: unknown,
+      { elligibleVAE }: { elligibleVAE?: boolean },
+    ) => getDepartments({ elligibleVAE }),
     getDegrees,
     getVulnerabilityIndicators,
     getDropOutReasons,
