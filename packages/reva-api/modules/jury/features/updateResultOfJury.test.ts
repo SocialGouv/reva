@@ -193,6 +193,7 @@ test("should save jury result without errors", async () => {
 
   expect(res).toMatchObject({ jury_updateResult: { id: jury.id } });
   expect(juryUpdated?.result).toEqual("FULL_SUCCESS_OF_FULL_CERTIFICATION");
+  expect(juryUpdated?.isResultTemporary).toEqual(false);
 });
 
 test("should send jury result to candidate", async () => {
@@ -269,40 +270,21 @@ const finalJuryResults: JuryResult[] = [
 ];
 
 finalJuryResults.forEach((result) => {
-  test(`should prevent an admin to save a ${result} final jury result`, async () => {
+  test(`should allow an admin to send a ${result} result with pending confirmation`, async () => {
     const { jury } = await createJuryAndDependenciesHelper();
 
-    try {
-      await graphqlUpdateJuryResult({
-        role: "admin",
-        account: adminAccount,
-        juryId: jury.id,
-        result,
-      });
-      shouldNotGoHere();
-    } catch (error) {
-      const gqlError = getGraphQLError(error);
-      expect(gqlError).toEqual(
-        "Un administrateur ne peut soumettre qu'un résultat non-confirmé",
-      );
-    }
+    const res = await graphqlUpdateJuryResult({
+      role: "admin",
+      account: adminAccount,
+      juryId: jury.id,
+      result: result,
+    });
+
+    const juryUpdated = await prismaClient.jury.findUnique({
+      where: { id: jury.id },
+    });
+
+    expect(res).toMatchObject({ jury_updateResult: { id: jury.id } });
+    expect(juryUpdated?.isResultTemporary).toEqual(true);
   });
-});
-
-test("should allow an admin to send a result with pending confirmation", async () => {
-  const { jury } = await createJuryAndDependenciesHelper();
-
-  const res = await graphqlUpdateJuryResult({
-    role: "admin",
-    account: adminAccount,
-    juryId: jury.id,
-    result: "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
-  });
-
-  const juryUpdated = await prismaClient.jury.findUnique({
-    where: { id: jury.id },
-  });
-
-  expect(res).toMatchObject({ jury_updateResult: { id: jury.id } });
-  expect(juryUpdated?.result).toEqual("PARTIAL_SUCCESS_PENDING_CONFIRMATION");
 });
