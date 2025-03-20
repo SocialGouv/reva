@@ -80,10 +80,13 @@ export const getCandidacyCaducites = async ({
           })
         : null;
 
+    // Cette whereClause va vérifier le certificationAuthorityId dans le df du candidat et si c'est un compte local,
+    // on viendra également vérifier que le département du candidat ainsi que sa certification soient dans le périmètre du compte local
+    // Il faut qu'au moins un de ses dossiers de faisabilité remplisse les conditions
     queryWhereClause = {
       ...queryWhereClause,
       Feasibility: {
-        every: {
+        some: {
           ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
             {
               account,
