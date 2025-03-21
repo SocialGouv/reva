@@ -7,6 +7,7 @@ import {
 } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
+import { updateCandidacyLastActivityIfNotAlreadyCaduque } from "./updateCandidacyLastActivityIfNotAlreadyCaduque";
 
 export const setReadyForJuryEstimatedAt = async ({
   candidacyId,
@@ -35,10 +36,14 @@ export const setReadyForJuryEstimatedAt = async ({
     throw new Error("Cette candidature n'existe pas");
   }
 
-  return prismaClient.candidacy.update({
+  const result = await prismaClient.candidacy.update({
     where: { id: candidacyId },
     data: {
       readyForJuryEstimatedAt,
     },
   });
+
+  await updateCandidacyLastActivityIfNotAlreadyCaduque({ candidacyId });
+
+  return result;
 };
