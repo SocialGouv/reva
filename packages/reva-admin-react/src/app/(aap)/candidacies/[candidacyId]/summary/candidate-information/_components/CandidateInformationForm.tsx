@@ -6,6 +6,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useAuth } from "@/components/auth/auth";
 import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -39,6 +40,8 @@ const CandidateInformationForm = ({
 }) => {
   const backUrl = `/candidacies/${candidacyId}/summary`;
   const router = useRouter();
+  const { isAdmin } = useAuth();
+
   const { updateCandidateInformationMutate } =
     useUpdateCandidateInformation(candidacyId);
 
@@ -396,6 +399,7 @@ const CandidateInformationForm = ({
             nativeInputProps={register("email")}
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message}
+            disabled={!isAdmin}
           />
         </div>
         <FormButtons backUrl={backUrl} formState={{ isDirty, isSubmitting }} />
