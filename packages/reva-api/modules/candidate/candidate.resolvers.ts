@@ -157,7 +157,6 @@ const unsafeResolvers = {
           userEmail: context.auth.userInfo?.email,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
         },
-        hasRole: context.auth.hasRole,
       }),
 
     candidate_updateCandidateProfile: (
@@ -191,7 +190,6 @@ const unsafeResolvers = {
           userEmail: context.auth.userInfo?.email,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
         },
-        hasRole: context.auth.hasRole,
       }),
   },
 };
