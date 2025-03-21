@@ -1,9 +1,9 @@
-import AccompagnementDemarche from "@/components/candidate-space/AccompagnementDemarche";
+import AccompagnementDemarche from "@/app/espace-candidat/_components/AccompagnementDemarche";
 import Articles from "@/app/espace-candidat/_components/Articles";
-import CommentFinancerVotreParcours from "@/components/candidate-space/CommentFinancerVotreParcours";
+import CommentFinancerVotreParcours from "@/app/espace-candidat/_components/CommentFinancerVotreParcours";
 import FaitesValiderVosCompetencesParUnDiplome from "@/app/espace-candidat/_components/FaitesValiderVosCompetencesParUnDiplome";
-import QuiPeutFaireUneVAE from "@/components/candidate-space/QuiPeutFaireUneVAE";
-import VousAvezBesoinDePlusDaide from "@/components/candidate-space/VousAvezBesoinDePlusDaide";
+import QuiPeutFaireUneVAE from "@/app/espace-candidat/_components/QuiPeutFaireUneVAE";
+import VousAvezBesoinDePlusDaide from "@/app/espace-candidat/_components/VousAvezBesoinDePlusDaide";
 import BackGroundUnions from "@/components/candidate-space/BackGroundUnions";
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { Metadata } from "next";
