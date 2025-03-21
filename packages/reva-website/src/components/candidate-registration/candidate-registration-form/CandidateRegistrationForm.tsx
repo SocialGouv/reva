@@ -18,12 +18,12 @@ export interface CandidateFormData {
 }
 
 interface Props {
-  certification: {
+  certification?: {
     id: string;
     label: string;
     codeRncp: string;
     isAapAvailable: boolean;
-  };
+  } | null;
 
   onSubmit(data: CandidateFormData): void;
 }
@@ -35,6 +35,21 @@ export const CandidateRegistrationForm = ({
   const [currentStep, setCurrentStep] = useState(1);
   const [typeAccompagnement, setTypeAccompagnement] =
     useState<TypeAccompagnement>();
+
+  // When the legacy version will be removed, we'll be able to remove the undefined check,
+  // remove undefined from the certification type, and set a proper loading screen at the parent level.
+  // For the moment, the legacy version need the undefined case to display the "no certification found" message,
+  // which won't be the case anymore with this new version
+  if (!certification) {
+    return (
+      <div className="py-10 relative">
+        <h1 className="mb-12">
+          Mon inscription en 2 étapes
+          <FormOptionalFieldsDisclaimer />
+        </h1>
+      </div>
+    );
+  }
 
   const submitStep1 = (type: TypeAccompagnement) => {
     setTypeAccompagnement(type);

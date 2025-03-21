@@ -3,7 +3,7 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
 
 interface Props {
-  isAapAvailable: boolean;
+  isAapAvailable?: boolean;
   typeAccompagnement?: TypeAccompagnement;
   certification: {
     label: string;

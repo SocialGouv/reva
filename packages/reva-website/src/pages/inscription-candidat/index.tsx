@@ -95,17 +95,7 @@ const OrientationCandidatPage = () => {
       <CandidateBackground>
         {isFeatureActive("CANDIDATE_REGISTRATION_V2") ? (
           <CandidateRegistrationForm
-            certification={
-              // When the legacy version will be removed, we'll be able to remove the undefined check and set a proper loading screen.
-              // For the moment, the legacy version need the undefined case to display the "no certification found" message,
-              // which won't be the case anymore with this new version
-              certification || {
-                id: "",
-                label: "",
-                codeRncp: "",
-                isAapAvailable: false,
-              }
-            }
+            certification={certification}
             onSubmit={handleFormSubmit}
           />
         ) : (
