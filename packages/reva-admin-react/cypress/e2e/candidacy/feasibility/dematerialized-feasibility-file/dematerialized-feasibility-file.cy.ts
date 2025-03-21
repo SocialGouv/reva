@@ -701,7 +701,7 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           cy.get("button").should("not.exist");
         });
         cy.get("[data-test='send-file-candidate-section']").within(() => {
-          cy.get("button").should("not.be.disabled");
+          cy.get("button").should("not.exist");
         });
         cy.get("[data-test='sworn-statement-section']").within(() => {
           cy.get("button").should("not.exist");
