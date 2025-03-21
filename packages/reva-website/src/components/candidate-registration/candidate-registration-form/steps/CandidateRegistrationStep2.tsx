@@ -186,18 +186,19 @@ export const CandidateRegistrationStep2 = ({
         data-testid="candidate-registration-form-public-employee-checkbox-wrapper"
       >
         <Checkbox
+          small
           options={[
             {
-              label: "Je certifie ne pas être salarié du secteur public",
+              label:
+                "Je certifie ne pas être un agent de la fonction publique.",
               hintText: (
-                <span>
-                  Pour les salariés du secteur public, vous pouvez retrouver des
-                  informations auprès des{" "}
-                  <a href="https://vae.gouv.fr/savoir-plus/articles/liste-prc/">
-                    point relais conseil
-                  </a>
-                  .
-                </span>
+                <>
+                  France VAE n'est pas encore disponible pour les fonctionnaires
+                  et agents contractuels (de droit public ou privé).
+                  <br />
+                  Vous pouvez retrouver des informations auprès de vos
+                  interlocuteurs RH habituels.
+                </>
               ),
               nativeInputProps: {
                 ...register("notSecteurPublic"),
