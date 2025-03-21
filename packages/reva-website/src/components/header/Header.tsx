@@ -1,47 +1,33 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const { isFeatureActive } = useFeatureflipping();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   const navigation = [
-    ...(isFeatureActive("HOMEPAGE_V2")
-      ? [
-          {
-            isActive: !!asPath.match(/^\/$/)?.length,
-            linkProps: {
-              href: "/",
-            },
-            text: "Accueil",
-          },
-          {
-            isActive:
-              !!asPath.match(/\/espace-candidat/)?.length ||
-              !!asPath.match(/\/inscription-candidat/)?.length ||
-              !!asPath.match(/\/certifications/)?.length,
-            linkProps: {
-              href: "/espace-candidat",
-            },
-            text: "Candidats",
-          },
-        ]
-      : [
-          {
-            isActive: !!asPath.match(/^\/$/)?.length,
-            linkProps: {
-              href: "/",
-            },
-            text: "Candidats",
-          },
-        ]),
+    {
+      isActive: !!asPath.match(/^\/$/)?.length,
+      linkProps: {
+        href: "/",
+      },
+      text: "Accueil",
+    },
+    {
+      isActive:
+        !!asPath.match(/\/espace-candidat/)?.length ||
+        !!asPath.match(/\/inscription-candidat/)?.length ||
+        !!asPath.match(/\/certifications/)?.length,
+      linkProps: {
+        href: "/espace-candidat",
+      },
+      text: "Candidats",
+    },
     {
       isActive: !!asPath.match(/\/espace-professionnel/)?.length,
       linkProps: {

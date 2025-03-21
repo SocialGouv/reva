@@ -12,7 +12,6 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
 import Link from "next/link";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const searchCertificationsQuery = graphql(`
   query searchCertificationsQueryForResultPage(
@@ -50,7 +49,6 @@ const CertificationResultPage = ({
   pageInfo: SearchCertificationsQueryForResultPageQuery["searchCertificationsForCandidate"]["info"];
 }) => {
   const router = useRouter();
-  const { isFeatureActive } = useFeatureflipping();
   return (
     <MainLayout className="relative">
       <Head>
@@ -69,9 +67,7 @@ const CertificationResultPage = ({
             {
               label: "Candidats",
               linkProps: {
-                href: isFeatureActive("HOMEPAGE_V2")
-                  ? "/espace-candidat/"
-                  : "/",
+                href: "/espace-candidat/",
               },
             },
           ]}

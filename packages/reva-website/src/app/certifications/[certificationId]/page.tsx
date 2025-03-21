@@ -31,7 +31,6 @@ export default async function CertificationPage({
     ? `Code RNCP ${certification.codeRncp} - ${certification.label}`
     : "";
 
-  const isHomePageV2FeatureActive = !!activeFeatures?.includes("HOMEPAGE_V2");
   const isCertificationV2PageFeatureActive = !!activeFeatures?.includes(
     "WEBSITE_CERTIFICATION_PAGE_V2",
   );
@@ -55,15 +54,9 @@ export default async function CertificationPage({
         </div>
       </div>
       {isCertificationV2PageFeatureActive ? (
-        <CertificationPageV2
-          isHomePageV2FeatureActive={isHomePageV2FeatureActive}
-          certification={certification}
-        />
+        <CertificationPageV2 certification={certification} />
       ) : (
-        <CertificationPageV1
-          isHomePageV2FeatureActive={isHomePageV2FeatureActive}
-          certification={certification}
-        />
+        <CertificationPageV1 certification={certification} />
       )}
     </MainLayout>
   );

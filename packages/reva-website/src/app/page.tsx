@@ -1,13 +1,12 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import { ReactNode } from "react";
-import { CandidateSpaceHomePageContent } from "@/app/_components/candidate-space/CandidateSpaceHomePageContent";
 import Image, { getImageProps } from "next/image";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { PICTOGRAMS } from "@/components/pictograms";
 import Link from "next/link";
 import { graphql } from "@/graphql/generated";
-import { GRAPHQL_API_URL, STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import request from "graphql-request";
 import {
   ArticleActualite,
@@ -31,11 +30,7 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
 );
 
 const HomePage = async () => {
-  const [activeFeaturesResult, homePageItemsResult] = await Promise.all([
-    request(GRAPHQL_API_URL, activeFeaturesQuery),
-    getHomePageItemsFromStrapi(),
-  ]);
-  const activeFeatures = activeFeaturesResult.activeFeaturesForConnectedUser;
+  const homePageItemsResult = await getHomePageItemsFromStrapi();
   const articlesDaide = homePageItemsResult.articlesDAide;
   const articlesFAQ = homePageItemsResult.articlesFAQ;
   const articlesActualite = homePageItemsResult.articlesActualite;
@@ -45,15 +40,11 @@ const HomePage = async () => {
     <MainLayout className="relative">
       {homePageNoticeText && <Notice title={homePageNoticeText} />}
       <HomeContainer>
-        {activeFeatures.includes("HOMEPAGE_V2") ? (
-          <HomePageContent
-            articleDAides={articlesDaide as ArticleDAide[]}
-            articlesFAQ={articlesFAQ as ArticleFaq[]}
-            articlesActualite={articlesActualite as ArticleActualite[]}
-          />
-        ) : (
-          <CandidateSpaceHomePageContent />
-        )}
+        <HomePageContent
+          articleDAides={articlesDaide as ArticleDAide[]}
+          articlesFAQ={articlesFAQ as ArticleFaq[]}
+          articlesActualite={articlesActualite as ArticleActualite[]}
+        />
       </HomeContainer>
     </MainLayout>
   );
@@ -505,12 +496,6 @@ const QuestionsFrequentesSection = ({
     </div>
   </section>
 );
-
-const activeFeaturesQuery = graphql(`
-  query activeFeaturesForConnectedUser {
-    activeFeaturesForConnectedUser
-  }
-`);
 
 const homePageItemsQuery = graphql(`
   query getHomePageItems {

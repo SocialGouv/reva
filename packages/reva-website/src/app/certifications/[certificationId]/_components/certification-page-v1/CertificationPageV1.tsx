@@ -5,10 +5,8 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import Link from "next/link";
 
 export const CertificationPageV1 = ({
-  isHomePageV2FeatureActive,
   certification,
 }: {
-  isHomePageV2FeatureActive: boolean;
   certification: {
     id: string;
     label: string;
@@ -25,7 +23,7 @@ export const CertificationPageV1 = ({
           {
             label: "Candidats",
             linkProps: {
-              href: isHomePageV2FeatureActive ? "/espace-candidat/" : "/",
+              href: "/espace-candidat/",
             },
           },
         ]}

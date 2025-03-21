@@ -10,10 +10,8 @@ import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 import { JuryTab } from "./tabs/JuryTab";
 
 export const CertificationPageV2 = ({
-  isHomePageV2FeatureActive,
   certification,
 }: {
-  isHomePageV2FeatureActive: boolean;
   certification: {
     id: string;
     label: string;
@@ -39,7 +37,7 @@ export const CertificationPageV2 = ({
           {
             label: "Candidats",
             linkProps: {
-              href: isHomePageV2FeatureActive ? "/espace-candidat/" : "/",
+              href: "/espace-candidat/",
             },
           },
         ]}
