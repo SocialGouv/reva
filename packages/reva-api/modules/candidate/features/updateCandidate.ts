@@ -12,12 +12,14 @@ import { CandidateUpdateInput } from "../../candidate/candidate.types";
 
 export const updateCandidate = async ({
   params: { candidate, userRoles, userKeycloakId, userEmail },
+  hasRole,
 }: {
   params: { candidate: Partial<CandidateUpdateInput> } & {
     userKeycloakId?: string;
     userEmail?: string;
     userRoles: KeyCloakUserRole[];
   };
+  hasRole: (roles: KeyCloakUserRole[]) => boolean;
 }): Promise<Candidate> => {
   const candidateInput = { ...candidate };
   const { id, email, birthDepartmentId, countryId } = candidateInput;
@@ -90,7 +92,11 @@ export const updateCandidate = async ({
   const previousEmail = candidateToUpdate.email;
   const newEmail = email;
 
-  if (newEmail && newEmail !== previousEmail) {
+  if (
+    newEmail &&
+    newEmail !== previousEmail &&
+    hasRole(["admin", "candidate"])
+  ) {
     await updateCandidateEmail({ previousEmail, newEmail });
     await sendPreviousEmailCandidateEmail({ email: previousEmail });
     await sendNewEmailCandidateEmail({ email: newEmail });
