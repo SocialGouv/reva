@@ -231,6 +231,7 @@ const AapFeasibilityPage = () => {
             isReadyToBeSentToCandidate={
               dematerializedFeasibilityFile?.isReadyToBeSentToCandidate
             }
+            hasBeenSentToCertificationAuthority={!!feasibilityFileSentAt}
           />
           {dematerializedFeasibilityFile?.candidateDecisionComment && (
             <CandidateDecisionCommentSection

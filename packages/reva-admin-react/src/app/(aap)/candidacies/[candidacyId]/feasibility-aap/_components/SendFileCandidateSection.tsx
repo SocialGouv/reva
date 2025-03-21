@@ -4,9 +4,11 @@ import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 
 export const SendFileCandidateSection = ({
+  hasBeenSentToCertificationAuthority,
   sentToCandidateAt,
   isReadyToBeSentToCandidate,
 }: {
+  hasBeenSentToCertificationAuthority: boolean;
   sentToCandidateAt?: Date | null;
   isReadyToBeSentToCandidate?: boolean;
 }) => {
@@ -27,19 +29,21 @@ export const SendFileCandidateSection = ({
           data-test="sent-file-alert"
         />
       )}
-      <div className="flex justify-end">
-        <Button
-          disabled={!isReadyToBeSentToCandidate}
-          priority={sentToCandidateAt ? "secondary" : "primary"}
-          onClick={() => {
-            router.push(
-              `/candidacies/${candidacyId}/feasibility-aap/send-file-candidate`,
-            );
-          }}
-        >
-          {sentToCandidateAt ? "Voir le dossier" : "Vérifier et envoyer"}
-        </Button>
-      </div>
+      {!hasBeenSentToCertificationAuthority && (
+        <div className="flex justify-end">
+          <Button
+            disabled={!isReadyToBeSentToCandidate}
+            priority={sentToCandidateAt ? "secondary" : "primary"}
+            onClick={() => {
+              router.push(
+                `/candidacies/${candidacyId}/feasibility-aap/send-file-candidate`,
+              );
+            }}
+          >
+            {sentToCandidateAt ? "Voir le dossier" : "Vérifier et envoyer"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
