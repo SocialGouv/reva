@@ -12,19 +12,18 @@ import { sendCandidacyCaduciteSoonWarningEmailToCandidate } from "../emails/send
 import { sendCandidacyIsCaduqueEmailToAap } from "../emails/sendCandidacyIsCaduqueEmailToAap";
 
 export const sendEmailsForAutoCandidacyCaducite = async () => {
+  const today = new Date();
+
+  // Date à partir de laquelle la candidature sera considérée comme caduque
   const dateThresholdCandidacyIsCaduque = subDays(
-    new Date(),
+    today,
     CADUCITE_THRESHOLD_DAYS,
   );
 
+  // Date à partir de laquelle le candidat devra actualiser sa candidature
   const dateThresholdActualisation = subDays(
-    new Date(),
+    today,
     ACTUALISATION_THRESHOLD_DAYS,
-  );
-
-  const dateThresholdWillBeCaduque = format(
-    addDays(new Date(), CADUCITE_THRESHOLD_DAYS - ACTUALISATION_THRESHOLD_DAYS),
-    "dd/MM/yyyy",
   );
 
   // Send warning emails to candidates whose candidacy will soon be caduque
@@ -49,6 +48,7 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
         },
         select: {
           id: true,
+          lastActivityDate: true,
           candidate: {
             select: {
               email: true,
@@ -60,6 +60,23 @@ export const sendEmailsForAutoCandidacyCaducite = async () => {
         take: 100,
       });
     for (const candidacy of candidaciesToSendEmailIsCaduciteSoonWarningToCandidate) {
+      if (!candidacy.lastActivityDate) {
+        logger.error(
+          `La candidature ${candidacy.id} n'a pas de date de dernière activité`,
+          candidacy,
+        );
+        continue;
+      }
+      // Calculer la date exacte à laquelle cette candidature deviendra caduque
+      const exactCaduciteDate = addDays(
+        candidacy.lastActivityDate,
+        CADUCITE_THRESHOLD_DAYS,
+      );
+      const dateThresholdWillBeCaduque = format(
+        exactCaduciteDate,
+        "dd/MM/yyyy",
+      );
+
       await sendCandidacyCaduciteSoonWarningEmailToCandidate({
         candidateEmail: candidacy.candidate?.email || "",
         candidateFullName: `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`,
