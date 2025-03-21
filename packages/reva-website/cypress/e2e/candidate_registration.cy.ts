@@ -119,9 +119,12 @@ describe("candidate two-steps registration", () => {
 
         cy.get('[data-testid="tile-accompagne"]').click();
 
+        cy.get('[data-testid="candidate-registration-form"]').should("exist");
+
         cy.get('[data-testid="change-certification-button"]').should(
           "not.exist",
         );
+
         cy.get('[data-testid="candidate-registration-back-button"]').click();
 
         cy.get('[data-testid="candidate-registration-initial-step"]').should(
