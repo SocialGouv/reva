@@ -103,10 +103,10 @@ describe("candidate two-steps registration", () => {
           "not.exist",
         );
 
-        cy.get('[data-testid="change-certification-button"]').click();
-        cy.url().should(
-          "eq",
-          "http://localhost:3002/certifications/7ad608c2-5a4b-40eb-8ef9-7a85421b40f0/",
+        cy.get('[data-testid="change-certification-button"]').should(
+          "have.attr",
+          "href",
+          "/certifications/7ad608c2-5a4b-40eb-8ef9-7a85421b40f0/",
         );
       });
 
