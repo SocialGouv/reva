@@ -281,35 +281,38 @@ function getDefaultItemsFromDepartments(
   departments: {
     id: string;
     label: string;
-    region: { id: string; label: string };
+    region?: { id: string; label: string } | null;
   }[],
 ): TreeSelectItem[] {
   const items: TreeSelectItem[] = departments.reduce((acc, department) => {
     const { region } = department;
+    if (region) {
+      const regionItemIndex = acc.findIndex((item) => item.id == region.id);
+      const regionItem: TreeSelectItem =
+        regionItemIndex != -1
+          ? acc[regionItemIndex]
+          : {
+              id: region.id,
+              label: region.label,
+              selected: false,
+              children: [],
+            };
 
-    const regionItemIndex = acc.findIndex((item) => item.id == region.id);
-    const regionItem: TreeSelectItem =
-      regionItemIndex != -1
-        ? acc[regionItemIndex]
-        : {
-            id: region.id,
-            label: region.label,
-            selected: false,
-            children: [],
-          };
+      regionItem.children?.push({
+        id: department.id,
+        label: department.label,
+        selected: false,
+      });
 
-    regionItem.children?.push({
-      id: department.id,
-      label: department.label,
-      selected: false,
-    });
+      if (regionItemIndex != -1) {
+        acc.splice(regionItemIndex, 1, regionItem);
+        return acc;
+      }
 
-    if (regionItemIndex != -1) {
-      acc.splice(regionItemIndex, 1, regionItem);
+      return [...acc, regionItem];
+    } else {
       return acc;
     }
-
-    return [...acc, regionItem];
   }, [] as TreeSelectItem[]);
 
   return items;

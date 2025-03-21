@@ -33,18 +33,20 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
     departments: { id: string; label: string; code: string }[];
   }[] = [];
   certificationAuthorityLocalAccount?.departments.forEach((department) => {
-    let region = regionsAndDepartments.find(
-      (r) => r.id === department.region.id,
-    );
-    if (!region) {
-      region = {
-        id: department.region.id,
-        label: department.region.label,
-        departments: [],
-      };
-      regionsAndDepartments.push(region);
+    if (department.region) {
+      let region = regionsAndDepartments.find(
+        (r) => r.id === department.region?.id,
+      );
+      if (!region) {
+        region = {
+          id: department.region.id,
+          label: department.region.label,
+          departments: [],
+        };
+        regionsAndDepartments.push(region);
+      }
+      region.departments.push(department);
     }
-    region.departments.push(department);
   });
 
   return (

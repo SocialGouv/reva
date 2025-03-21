@@ -102,7 +102,7 @@ type Department {
   id: ID!
   code: String!
   label: String!
-  region: Region!
+  region: Region
 }
 
 type Degree {
