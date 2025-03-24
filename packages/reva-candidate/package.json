@@ -27,7 +27,7 @@
     "graphql-request": "^6.1.0",
     "html2pdf.js": "^0.10.2",
     "keycloak-js": "^24.0.3",
-    "next": "14.2.21",
+    "next": "^14.2.25",
     "postcss-url": "^10.1.3",
     "react": "^18",
     "react-dom": "^18",
