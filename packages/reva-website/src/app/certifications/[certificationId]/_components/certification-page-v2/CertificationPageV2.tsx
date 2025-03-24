@@ -57,7 +57,8 @@ export const CertificationPageV2 = ({
           <Tile
             title={certification.typeDiplome}
             desc={certification?.certificationAuthorityStructure?.label}
-            className="w-[282px] h-[110px]"
+            classes={{ content: "p-0" }}
+            className="w-[282px]"
             small
             orientation="horizontal"
             imageSvg
@@ -67,7 +68,8 @@ export const CertificationPageV2 = ({
           <Tile
             title={`Niveau ${certification.level}`}
             desc={getLevelDesc(certification.level)}
-            className="w-[282px] h-[110px]"
+            classes={{ content: "p-0" }}
+            className="w-[282px]"
             small
             orientation="horizontal"
             imageSvg
