@@ -15,6 +15,7 @@ import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { NotAuthorized } from "../../../../../components/not-authorized";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -45,7 +46,9 @@ const CandidacySummaryPage = () => {
     }
   }, [candidacy, takeOverCandidacy]);
 
-  if (!candidacy) return null;
+  if (!candidacy) {
+    return null;
+  }
 
   const { candidate, goals } = candidacy;
 

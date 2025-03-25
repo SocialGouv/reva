@@ -155,6 +155,7 @@ export const PICTOGRAMS = {
   information: generateSvg(information),
   notification: generateSvg(notification),
   padlock: generateSvg(padlock),
+  padlockXL: generateSvg(padlock, { width: 142, height: 142 }),
   success: generateSvg(success),
   successLg: generateSvg(success, { width: 120, height: 120 }),
   system: generateSvg(system),
