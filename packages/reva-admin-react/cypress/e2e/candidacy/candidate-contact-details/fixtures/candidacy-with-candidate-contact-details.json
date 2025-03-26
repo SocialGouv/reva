@@ -1,0 +1,11 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "candidate": {
+        "id": "fb451fbc-3218-416d-9ac9-65b13432469f",
+        "phone": "0600000000",
+        "email": "jane.doe@example.com"
+      }
+    }
+  }
+}
