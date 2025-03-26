@@ -11,12 +11,14 @@ function visitSummary({
   modaliteAccompagnement,
   isCaduque = false,
   isCandidacyActualisationActive = false,
+  isUpdateCandidateContactDetailsFeatureActive = false,
 }: {
   feasibilityFormat: FeasibilityFormat;
   financeModule: FinanceModule;
   modaliteAccompagnement: OrganismModaliteAccompagnement;
   isCaduque?: boolean;
   isCandidacyActualisationActive?: boolean;
+  isUpdateCandidateContactDetailsFeatureActive?: boolean;
 }) {
   cy.fixture("candidacy/candidacy.json").then((candidacy) => {
     cy.fixture("candidacy/candidacy-menu.json").then((candidacyMenu) => {
@@ -30,9 +32,14 @@ function visitSummary({
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(req, "activeFeaturesForConnectedUser", {
           data: {
-            activeFeaturesForConnectedUser: isCandidacyActualisationActive
-              ? ["candidacy_actualisation"]
-              : [],
+            activeFeaturesForConnectedUser: [
+              ...(isCandidacyActualisationActive
+                ? ["candidacy_actualisation"]
+                : []),
+              ...(isUpdateCandidateContactDetailsFeatureActive
+                ? ["UPDATE_CANDIDATE_CONTACT_DETAILS"]
+                : []),
+            ],
           },
         });
         stubQuery(
@@ -141,6 +148,51 @@ context("Candidacy summary page", () => {
     cy.get(
       '[data-test="candidate-profile"] [data-test="to-complete-badge"]',
     ).should("exist");
+  });
+
+  it("does not display the candidate contact details when the feature is disabled", function () {
+    visitSummary({
+      feasibilityFormat: "DEMATERIALIZED",
+      financeModule: "unifvae",
+      modaliteAccompagnement: "A_DISTANCE",
+    });
+    cy.wait("@getCandidacySummaryById");
+    cy.get('[data-test="candidate-contact-details"]').should("not.exist");
+  });
+
+  it("display the candidate contact details", function () {
+    visitSummary({
+      feasibilityFormat: "DEMATERIALIZED",
+      financeModule: "unifvae",
+      modaliteAccompagnement: "A_DISTANCE",
+      isUpdateCandidateContactDetailsFeatureActive: true,
+    });
+    cy.wait("@getCandidacySummaryById");
+    cy.get('[data-test="candidate-contact-details"]').should("exist");
+    cy.get('[data-test="candidate-contact-details-phone"]').contains(
+      "06000000",
+    );
+    cy.get('[data-test="candidate-contact-details-email"]').contains(
+      "alice.doe@example.com",
+    );
+  });
+
+  it("leads to the update candidate contact details page when the candidate contact details card update button is clicked on", function () {
+    visitSummary({
+      feasibilityFormat: "DEMATERIALIZED",
+      financeModule: "unifvae",
+      modaliteAccompagnement: "A_DISTANCE",
+      isUpdateCandidateContactDetailsFeatureActive: true,
+    });
+    cy.wait("@getCandidacySummaryById");
+    cy.get(
+      '[data-test="candidate-contact-details"] [data-test="action-button"]',
+    ).click();
+    cy.url().should(
+      "eq",
+      Cypress.config().baseUrl +
+        "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/summary/candidate-contact-details/",
+    );
   });
 
   context("Badge candidacy is caduque", () => {

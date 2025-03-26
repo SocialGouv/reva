@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -25,6 +26,12 @@ const CandidacySummaryPage = () => {
   const { takeOverCandidacy } = useTakeOverCandidacy();
 
   const { isAdmin } = useAuth();
+
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isUpdateCandidateContactDetailsFeatureActive = isFeatureActive(
+    "UPDATE_CANDIDATE_CONTACT_DETAILS",
+  );
 
   //mark the candidacy as "taken over" when the AAP opens it
   useEffect(() => {
@@ -149,6 +156,28 @@ const CandidacySummaryPage = () => {
                 </dd>
               </dl>
             </EnhancedSectionCard>
+
+            {isUpdateCandidateContactDetailsFeatureActive && (
+              <EnhancedSectionCard
+                data-test="candidate-contact-details"
+                title="Les coordonnées du candidat"
+                buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-contact-details`}
+                isEditable
+              >
+                <p
+                  className="mb-0 font-medium"
+                  data-test="candidate-contact-details-phone"
+                >
+                  {candidate.phone}
+                </p>
+                <p
+                  className="mb-0 font-medium"
+                  data-test="candidate-contact-details-email"
+                >
+                  {candidate.email}
+                </p>
+              </EnhancedSectionCard>
+            )}
             {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
               <EnhancedSectionCard
                 data-test="candidate-profile"
