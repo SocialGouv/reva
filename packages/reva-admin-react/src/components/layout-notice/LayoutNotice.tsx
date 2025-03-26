@@ -25,7 +25,8 @@ export const LayoutNotice = () => {
     authenticated &&
     isGestionnaireMaisonMereAAP &&
     !isCguPathname &&
-    !maisonMereCgu?.isLatestVersion;
+    maisonMereCgu &&
+    !maisonMereCgu.isLatestVersion;
 
   const canSeeAAPNotVisibleInSearchResultNotice =
     authenticated &&
