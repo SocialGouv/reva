@@ -26,6 +26,7 @@ import {
   Departments,
   useUpdateCandidateInformation,
 } from "./useCandidateInformation";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const CandidateInformationForm = ({
   candidacyId,
@@ -41,9 +42,14 @@ const CandidateInformationForm = ({
   const backUrl = `/candidacies/${candidacyId}/summary`;
   const router = useRouter();
   const { isAdmin } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
 
   const { updateCandidateInformationMutate } =
     useUpdateCandidateInformation(candidacyId);
+
+  const isCandidateContactDetailsFeatureActive = isFeatureActive(
+    "UPDATE_CANDIDATE_CONTACT_DETAILS",
+  );
 
   const candidate = candidacy?.candidate;
   const isAddressAlreadyCompleted =
@@ -385,23 +391,25 @@ const CandidateInformationForm = ({
             stateRelatedMessage={errors.city?.message}
           />
         </div>
-        <div className="flex gap-8">
-          <Input
-            label="Numéro de téléphone"
-            className="w-full"
-            nativeInputProps={register("phone")}
-            state={errors.phone ? "error" : "default"}
-            stateRelatedMessage={errors.phone?.message}
-          />
-          <Input
-            label="Email"
-            className="w-full"
-            nativeInputProps={register("email")}
-            state={errors.email ? "error" : "default"}
-            stateRelatedMessage={errors.email?.message}
-            disabled={!isAdmin}
-          />
-        </div>
+        {!isCandidateContactDetailsFeatureActive && (
+          <div className="flex gap-8">
+            <Input
+              label="Numéro de téléphone"
+              className="w-full"
+              nativeInputProps={register("phone")}
+              state={errors.phone ? "error" : "default"}
+              stateRelatedMessage={errors.phone?.message}
+            />
+            <Input
+              label="Email"
+              className="w-full"
+              nativeInputProps={register("email")}
+              state={errors.email ? "error" : "default"}
+              stateRelatedMessage={errors.email?.message}
+              disabled={!isAdmin}
+            />
+          </div>
+        )}
         <FormButtons backUrl={backUrl} formState={{ isDirty, isSubmitting }} />
       </form>
     </>
