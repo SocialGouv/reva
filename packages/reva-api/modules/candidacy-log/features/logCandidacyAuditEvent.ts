@@ -9,6 +9,12 @@ export interface CandidacyAuditLogUserInfo {
   userRoles: KeyCloakUserRole[];
 }
 
+export const buildCandidacyAuditLogUserInfo = (context: GraphqlContext) => ({
+  userKeycloakId: context.auth.userInfo?.sub,
+  userRoles: context.auth.userInfo?.realm_access?.roles || [],
+  userEmail: context.auth.userInfo?.email,
+});
+
 type LogCandidacyAuditEventParams = {
   candidacyId: string;
   tx?: Prisma.TransactionClient; //optional transaction to use
