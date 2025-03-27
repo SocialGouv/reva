@@ -41,11 +41,13 @@ export const AuthGuard = (props: Props) => {
         const response = await loginWithToken.mutateAsync({ token });
         if (response.candidate_loginWithToken) {
           window.location.replace(response.candidate_loginWithToken);
+          return;
         }
       } catch (error) {
         console.error(error);
-        router.push("/login");
       }
+
+      router.push("/login");
     },
     [loginWithToken, router],
   );
@@ -62,12 +64,16 @@ export const AuthGuard = (props: Props) => {
   }, []);
 
   useEffect(() => {
+    if (token) {
+      return;
+    }
+
     if (authenticated && !isAuthenticatedPath) {
       router.push("/");
     } else if (!authenticated && isAuthenticatedPath) {
       router.push("/login");
     }
-  }, [authenticated, isAuthenticatedPath, router]);
+  }, [authenticated, isAuthenticatedPath, router, token]);
 
   if (
     token ||
