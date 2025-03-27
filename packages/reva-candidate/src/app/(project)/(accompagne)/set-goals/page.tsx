@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 
@@ -31,6 +31,10 @@ export default function SetGoals() {
   const [selectedGoalIds, setSelectedGoalIds] = useState<string[]>(
     candidacy?.goals.map((goal) => goal.id) || [],
   );
+
+  useEffect(() => {
+    setSelectedGoalIds(candidacy?.goals.map((goal) => goal.id) || []);
+  }, [candidacy?.goals]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
