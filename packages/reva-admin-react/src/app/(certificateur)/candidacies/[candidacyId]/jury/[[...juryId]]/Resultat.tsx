@@ -179,13 +179,19 @@ export const Resultat = (): JSX.Element | null => {
         {!getCandidacy.isLoading && !result && (
           <form onSubmit={handleFormSubmit}>
             <RadioButtons
-              legend="Résultat"
-              className="m-0 p-0 mb-12"
+              legend="Résultats possibles :"
+              small
+              hintText={
+                isAdmin
+                  ? "Sous réserve de contre remplissage par le certificateur."
+                  : ""
+              }
+              className="m-0 p-0 mb-4"
               options={availableResultOptions.map((key) => {
                 const label = juryResultLabels[key as JuryResult];
 
                 return {
-                  label: `${label}${isAdmin ? " (sous reserve de confirmation par un certificateur)" : ""}`,
+                  label,
                   nativeInputProps: {
                     value: key,
                     ...register("result"),
