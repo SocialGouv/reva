@@ -8,7 +8,7 @@
           "column": 3
         }
       ],
-      "path": ["candidate_login"],
+      "path": ["candidate_loginWithToken"],
       "extensions": {
         "code": "CANDIDATE_INVALID_TOKEN",
         "message": "error"

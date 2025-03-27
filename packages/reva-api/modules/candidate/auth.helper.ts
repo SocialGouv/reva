@@ -56,32 +56,6 @@ export const getCandidateAccountInIAM = async (email: string) => {
   }
 };
 
-const alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const integers = "0123456789";
-const exCharacters = "!@#$%^&*_-=+";
-const createPassword = (
-  length: number,
-  hasNumbers: boolean,
-  hasSymbols: boolean,
-) => {
-  let chars = alpha;
-  if (hasNumbers) {
-    chars += integers;
-  }
-  if (hasSymbols) {
-    chars += exCharacters;
-  }
-  return generatePassword(length, chars);
-};
-
-const generatePassword = (length: number, chars: string) => {
-  let password = "";
-  for (let i = 0; i < length; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return password;
-};
-
 export const createCandidateAccountInIAM = async (account: {
   email: string;
   firstname?: string;
@@ -105,77 +79,6 @@ export const createCandidateAccountInIAM = async (account: {
     throw new Error(
       `Erreur lors de la création du compte ${account.email} sur l' IAM`,
     );
-  }
-};
-
-export const generateIAMToken = async (userId: string) => {
-  const keycloakAdmin = await getKeycloakAdmin();
-  const randomPassword = createPassword(20, true, true);
-
-  const user = await keycloakAdmin.users.findOne({
-    id: userId,
-    realm: process.env.KEYCLOAK_APP_REALM as string,
-  });
-
-  if (!user) {
-    throw new Error(`userId ${userId} not found`);
-  }
-
-  try {
-    await keycloakAdmin.users.resetPassword({
-      realm: process.env.KEYCLOAK_APP_REALM,
-      id: userId,
-      credential: {
-        temporary: false,
-        type: "password",
-        value: randomPassword,
-      },
-    });
-
-    try {
-      const data = await keycloakAdmin.users.findOne({
-        id: userId,
-        realm: process.env.KEYCLOAK_APP_REALM,
-        userProfileMetadata: true,
-      });
-
-      console.log("data", data);
-    } catch (error) {
-      console.log("error", error);
-    }
-
-    //generate a token for the user
-    const _keycloak = new Keycloak(
-      {},
-      {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
-        serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
-        realm: process.env.KEYCLOAK_APP_REALM as string,
-        credentials: {
-          secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET,
-        },
-      },
-    );
-
-    const grant = await _keycloak.grantManager.obtainDirectly(
-      user.username as string,
-      randomPassword,
-    );
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const refreshToken = grant?.refresh_token?.token;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const accessToken = grant?.access_token?.token;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const idToken = grant?.id_token?.token;
-    return { accessToken, refreshToken, idToken };
-  } catch (e) {
-    logger.error(e);
-    throw new Error(`Erreur lors de la génération du token IAM`);
   }
 };
 

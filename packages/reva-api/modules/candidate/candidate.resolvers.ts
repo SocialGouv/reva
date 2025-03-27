@@ -9,7 +9,6 @@ import {
 } from "./candidate.types";
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
-import { candidateAuthentication } from "./features/candidateAuthentication";
 import { candidateForgotPassword } from "./features/candidateForgotPassword";
 import { candidateLoginWithCredentials } from "./features/candidateLoginWithCredentials";
 import { candidateLoginWithToken } from "./features/candidateLoginWithToken";
@@ -90,15 +89,6 @@ const unsafeResolvers = {
     ) => askForRegistration(params.candidate),
     candidate_askForLogin: async (_: unknown, params: { email: string }) =>
       askForLogin(params.email),
-    candidate_login: async (
-      _: any,
-      params: {
-        token: string;
-      },
-    ) =>
-      candidateAuthentication({
-        ...params,
-      }),
     candidate_loginWithToken: async (
       _: any,
       params: {
