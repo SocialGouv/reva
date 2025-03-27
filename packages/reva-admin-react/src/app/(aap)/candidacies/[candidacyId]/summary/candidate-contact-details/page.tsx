@@ -6,7 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useCandidateContactDetailsPageLogic } from "./candidateContactDetails.hook";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 const schema = z.object({
   phone: z.string().min(1, "Merci de remplir ce champ"),
@@ -20,12 +21,34 @@ const CandidateContactDetailsPage = () => {
     candidacyId: string;
   }>();
 
-  const { candidate } = useCandidateContactDetailsPageLogic({ candidacyId });
+  const router = useRouter();
+
+  const { candidate, updateCandidateContactDetails } =
+    useCandidateContactDetailsPageLogic({ candidacyId });
+
+  if (!candidate) {
+    return null;
+  }
+
+  const handleFormSubmit = async (data: FormData) => {
+    try {
+      await updateCandidateContactDetails.mutate({
+        candidacyId,
+        candidateId: candidate.id,
+        candidateContactDetails: data,
+      });
+      successToast("Modifications enregistrées");
+      router.push(`/candidacies/${candidacyId}/summary`);
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
 
   return candidate ? (
     <CandidateContactDetailsForm
       candidacyId={candidacyId}
       defaultValues={{ phone: candidate.phone, email: candidate.email }}
+      onSubmit={handleFormSubmit}
     />
   ) : null;
 };
@@ -33,20 +56,23 @@ const CandidateContactDetailsPage = () => {
 const CandidateContactDetailsForm = ({
   candidacyId,
   defaultValues,
+  onSubmit,
 }: {
   candidacyId: string;
   defaultValues: { phone: string; email: string };
+  onSubmit: (data: FormData) => void;
 }) => {
   const {
     register,
     reset,
     formState: { isDirty, isSubmitting, errors },
+    handleSubmit,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues,
   });
 
-  const handleFormSubmit = () => console.log("handleFormSubmit");
+  const handleFormSubmit = handleSubmit(onSubmit);
 
   return (
     <div className="flex flex-col">

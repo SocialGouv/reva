@@ -1,4 +1,4 @@
-import { stubQuery } from "../../../utils/graphql";
+import { stubMutation, stubQuery } from "../../../utils/graphql";
 import candidacyWithCandidateContactDetails from "./fixtures/candidacy-with-candidate-contact-details.json";
 
 function interceptQueries() {
@@ -24,6 +24,24 @@ function interceptQueries() {
       req,
       "getMaisonMereCGUQuery",
       "account/gestionnaire-cgu-accepted.json",
+    );
+  });
+}
+
+function interceptUpdateCandidateContactDetailsMutation() {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubMutation(
+      req,
+      "updateCandidateContactDetailsForCandidateContactDetailsPage",
+      {
+        data: {
+          candidate_updateCandidateContactDetails: {
+            id: "fb451fbc-3218-416d-9ac9-65b13432469f",
+            phone: "1111111111",
+            email: "mynewemail@example.com",
+          },
+        },
+      },
     );
   });
 }
@@ -68,6 +86,38 @@ context("Candidate contact details", () => {
     cy.wait("@getCandidateContactDetails");
 
     cy.get('[data-test="back-button"]').click();
+    cy.url().should(
+      "eq",
+      Cypress.config().baseUrl +
+        "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/summary/",
+    );
+  });
+
+  it("should let me update the form, submit it and rediredct me to the candidacy summary page", function () {
+    interceptQueries();
+    interceptUpdateCandidateContactDetailsMutation();
+
+    cy.admin(
+      Cypress.config().baseUrl +
+        "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/summary/candidate-contact-details/",
+    );
+
+    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+    cy.wait("@getAccountInfo");
+    cy.wait("@getCandidacyMenuAndCandidateInfos");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait("@getCandidateContactDetails");
+
+    cy.get('[data-test="phone-input"] input').clear().type("1111111111");
+    cy.get('[data-test="email-input"] input')
+      .clear()
+      .type("mynewemail@example.com");
+
+    cy.get('button[type="submit"]').click();
+
+    cy.wait("@updateCandidateContactDetailsForCandidateContactDetailsPage");
+
     cy.url().should(
       "eq",
       Cypress.config().baseUrl +
