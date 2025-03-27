@@ -76,7 +76,6 @@ export default function ForgotPassword() {
           <Input
             className="mb-0"
             disabled={resetPassword.isPending}
-            hintText="Format attendu : nom@domaine.fr"
             nativeInputProps={{
               id: "password",
               name: "password",

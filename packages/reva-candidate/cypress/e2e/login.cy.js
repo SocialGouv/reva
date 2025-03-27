@@ -9,7 +9,7 @@ context("Login", () => {
     });
 
     cy.visit("/");
-    cy.get('[data-test="login-home"] #email').type(email);
+    cy.get('[data-test="login-home"] #emailForMagicLink').type(email);
 
     cy.get('[data-test="login-home-submit"]').click();
     cy.wait("@candidate_askForLogin");

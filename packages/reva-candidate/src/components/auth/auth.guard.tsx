@@ -12,7 +12,6 @@ import { useKeycloakContext } from "./keycloak.context";
 const UNAUTHENTICATED_PATHS = [
   "/login-confirmation",
   "/login",
-  "/login-v2",
   "/logout-confirmation",
   "/forgot-password",
   "/reset-password",

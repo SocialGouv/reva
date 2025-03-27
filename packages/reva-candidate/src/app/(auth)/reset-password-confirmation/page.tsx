@@ -23,7 +23,7 @@ export default function ResetPasswordConfirmation() {
         data-test="logout-confirmation-back-to-home"
         className="mt-6"
         onClick={() => {
-          router.push("/login-v2");
+          router.push("/login");
         }}
       >
         Retournez à la page d’accueil
