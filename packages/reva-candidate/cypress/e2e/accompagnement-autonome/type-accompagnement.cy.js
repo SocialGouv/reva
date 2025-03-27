@@ -87,6 +87,8 @@ context("Type accompagnement", () => {
 
     cy.wait("@candidate_getCandidateWithCandidacy");
 
+    cy.wait(1000);
+
     cy.get(
       '[data-test="type-accompagnement-timeline-element-update-button"]',
     ).should("not.exist");

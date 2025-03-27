@@ -43,18 +43,22 @@ export const TypeAccompagnementTimelineElement = () => {
         {candidacy.typeAccompagnement === "ACCOMPAGNE" && "VAE accompagnée"}
         {candidacy.typeAccompagnement === "AUTONOME" && "VAE en autonomie"}
       </h4>
-      {status !== "readonly" && (
-        <Button
-          data-test="type-accompagnement-timeline-element-update-button"
-          priority="secondary"
-          onClick={() => {
-            router.push("/type-accompagnement");
-          }}
-          disabled={status === "disabled"}
-        >
-          Modifier
-        </Button>
-      )}
+      {status !== "readonly" &&
+        !(
+          candidacy.typeAccompagnement === "AUTONOME" &&
+          candidacy.status != "PROJET"
+        ) && (
+          <Button
+            data-test="type-accompagnement-timeline-element-update-button"
+            priority="secondary"
+            onClick={() => {
+              router.push("/type-accompagnement");
+            }}
+            disabled={status === "disabled"}
+          >
+            Modifier
+          </Button>
+        )}
     </TimelineElement>
   );
 };
