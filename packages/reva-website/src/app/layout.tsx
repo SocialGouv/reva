@@ -30,11 +30,6 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
             })}
           </Script>
         )}
-        <Script
-          strategy="afterInteractive"
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="IilegiI0JSnsGyYBNrL/cg"
-        />
       </body>
     </html>
   );
