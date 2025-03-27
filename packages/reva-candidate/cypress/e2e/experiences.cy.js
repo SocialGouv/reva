@@ -15,6 +15,18 @@ context("Experiences", () => {
         "candidate1-certification-and-goals-selected.json",
       );
 
+      stubQuery(
+        req,
+        "getCandidateForAddExperience",
+        "candidate1-certification-and-goals-selected.json",
+      );
+
+      stubQuery(
+        req,
+        "getCandidateForUpdateExperience",
+        "candidate1-certification-and-goals-selected-with-experiences-updated.json",
+      );
+
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
@@ -25,6 +37,8 @@ context("Experiences", () => {
     cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="timeline-add-experience"]').click();
+    cy.wait("@getCandidateForAddExperience");
+
     cy.get("[name='title']").type(experienceTitle1);
     cy.get("[name='startedAt']").type("2019-01-31");
     cy.get("[name='duration']").select("betweenOneAndThreeYears");
@@ -56,6 +70,8 @@ context("Experiences", () => {
       });
 
     cy.get('[data-test="timeline-experiences-list"] > li').eq(0).click();
+    cy.wait("@getCandidateForUpdateExperience");
+
     cy.get("[name='startedAt']").type("2017-03-31");
     cy.get("[name='title']").type(`{selectAll}${experienceTitle2}`);
     cy.get("[name='duration']").select("moreThanFiveYears");
