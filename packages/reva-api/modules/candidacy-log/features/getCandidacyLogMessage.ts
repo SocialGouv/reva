@@ -213,6 +213,12 @@ export const getCandidacyLogMessage = ({
         `nouveau module:${details.financeModule}${details.reason ? `, raison: ${details.reason || ""}` : ""}`,
       );
 
+    case "CANDIDATE_CONTACT_DETAILS_UPDATED":
+      return log(
+        "Coordonnées du candidat modifiées",
+        `téléphone: ${details.phone}, ${details.email ? `, email: ${details.email || ""}` : ""}`,
+      );
+
     case "ADMIN_CUSTOM_ACTION":
       return details?.message
         ? log("Action exceptionnelle effectuée", details.message)

@@ -118,6 +118,10 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "FINANCE_MODULE_UPDATED";
       details: { financeModule: FinanceModule; reason?: string };
+    }
+  | {
+      eventType: "CANDIDATE_CONTACT_DETAILS_UPDATED";
+      details: { phone: string; email?: string };
     };
 
 export type CandidacyLog = {
