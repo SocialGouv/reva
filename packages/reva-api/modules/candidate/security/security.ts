@@ -17,4 +17,6 @@ export const resolversSecurityMap = {
   "Mutation.candidate_updateCandidateInformation": isAdminOrCandidacyCompanion,
   "Mutation.candidate_updateCandidateProfile": isAdminOrCandidacyCompanion,
   "Mutation.candidate_updateCandidateInformationBySelf": isOwnerOfCandidate,
+  "Mutation.candidate_updateCandidateContactDetails":
+    isAdminOrCandidacyCompanion,
 };

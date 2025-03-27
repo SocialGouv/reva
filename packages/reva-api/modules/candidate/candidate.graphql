@@ -113,6 +113,11 @@ input CandidateProfileUpdateInput {
   niveauDeFormationLePlusEleveDegreeId: String
 }
 
+input CandidateUpdateContactDetailsInput {
+  phone: String!
+  email: String
+}
+
 type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
@@ -135,4 +140,9 @@ type Mutation {
     candidateId: String!
     candidateInformation: CandidateUpdateInformationBySelfInput!
   ): Candidate
+  candidate_updateCandidateContactDetails(
+    candidacyId: String!
+    candidateId: String!
+    candidateContactDetails: CandidateUpdateContactDetailsInput!
+  ): Candidate!
 }

@@ -19,6 +19,8 @@ import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormation
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import { resolversSecurityMap } from "./security/security";
+import { updateCandidateContactDetails } from "./features/updateCandidateContactDetails";
+import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 
 const unsafeResolvers = {
   Candidate: {
@@ -180,6 +182,28 @@ const unsafeResolvers = {
           userEmail: context.auth.userInfo?.email,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
         },
+      }),
+    candidate_updateCandidateContactDetails: async (
+      _: unknown,
+      {
+        candidacyId,
+        candidateId,
+        candidateContactDetails,
+      }: {
+        candidacyId: string;
+        candidateId: string;
+        candidateContactDetails: {
+          phone: string;
+          email: string;
+        };
+      },
+      context: GraphqlContext,
+    ) =>
+      updateCandidateContactDetails({
+        candidacyId,
+        candidateId,
+        ...candidateContactDetails,
+        userInfo: buildCandidacyAuditLogUserInfo(context),
       }),
   },
 };
