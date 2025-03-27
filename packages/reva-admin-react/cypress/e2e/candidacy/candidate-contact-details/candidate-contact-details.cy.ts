@@ -124,4 +124,23 @@ context("Candidate contact details", () => {
         "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/summary/",
     );
   });
+
+  it("should disable the email button if i'm not an admin", function () {
+    interceptQueries();
+    interceptUpdateCandidateContactDetailsMutation();
+
+    cy.collaborateur(
+      Cypress.config().baseUrl +
+        "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/summary/candidate-contact-details/",
+    );
+
+    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+    cy.wait("@getAccountInfo");
+    cy.wait("@getCandidacyMenuAndCandidateInfos");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait("@getCandidateContactDetails");
+
+    cy.get('[data-test="email-input"] input').should("be.disabled");
+  });
 });

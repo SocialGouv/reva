@@ -8,6 +8,7 @@ import { z } from "zod";
 import { useCandidateContactDetailsPageLogic } from "./candidateContactDetails.hook";
 import { useParams, useRouter } from "next/navigation";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useAuth } from "@/components/auth/auth";
 
 const schema = z.object({
   phone: z.string().min(1, "Merci de remplir ce champ"),
@@ -20,6 +21,8 @@ const CandidateContactDetailsPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+
+  const { isAdmin } = useAuth();
 
   const router = useRouter();
 
@@ -48,6 +51,7 @@ const CandidateContactDetailsPage = () => {
     <CandidateContactDetailsForm
       candidacyId={candidacyId}
       defaultValues={{ phone: candidate.phone, email: candidate.email }}
+      emailInputDisabled={!isAdmin}
       onSubmit={handleFormSubmit}
     />
   ) : null;
@@ -56,10 +60,12 @@ const CandidateContactDetailsPage = () => {
 const CandidateContactDetailsForm = ({
   candidacyId,
   defaultValues,
+  emailInputDisabled,
   onSubmit,
 }: {
   candidacyId: string;
   defaultValues: { phone: string; email: string };
+  emailInputDisabled?: boolean;
   onSubmit: (data: FormData) => void;
 }) => {
   const {
@@ -99,6 +105,7 @@ const CandidateContactDetailsForm = ({
           <Input
             className="flex-1"
             data-test="email-input"
+            disabled={!!emailInputDisabled}
             label="Email"
             nativeInputProps={{ ...register("email") }}
             state={errors.email ? "error" : "default"}
