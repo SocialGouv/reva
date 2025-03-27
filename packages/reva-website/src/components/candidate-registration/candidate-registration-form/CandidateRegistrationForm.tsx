@@ -121,7 +121,7 @@ export const CandidateRegistrationForm = ({
             priority="secondary"
             linkProps={{ href: `/certifications/${certification.id}` }}
           >
-            Changer de diplôme
+            Retour
           </Button>
         )}
         {currentStep === 2 && (
