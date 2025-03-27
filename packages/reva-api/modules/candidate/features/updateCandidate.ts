@@ -3,12 +3,8 @@ import { isBefore, sub } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import {
-  sendNewEmailCandidateEmail,
-  sendPreviousEmailCandidateEmail,
-} from "../../candidacy/emails";
-import { updateCandidateEmail } from "../../candidacy/features/updateCandidateEmail";
 import { CandidateUpdateInput } from "../../candidate/candidate.types";
+import { updateCandidateEmailAndSendNotifications } from "./updateCandidateEmailAndSendNotifications";
 
 export const updateCandidate = async ({
   params: { candidate, userRoles, userKeycloakId, userEmail },
@@ -95,9 +91,10 @@ export const updateCandidate = async ({
     newEmail !== previousEmail &&
     (userRoles.includes("admin") || userRoles.includes("candidate"))
   ) {
-    await updateCandidateEmail({ previousEmail, newEmail });
-    await sendPreviousEmailCandidateEmail({ email: previousEmail });
-    await sendNewEmailCandidateEmail({ email: newEmail });
+    await updateCandidateEmailAndSendNotifications({
+      previousEmail,
+      newEmail,
+    });
   }
 
   const candidacies = await prismaClient.candidacy.findMany({
