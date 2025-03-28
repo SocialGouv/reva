@@ -8,6 +8,7 @@ export const TypeAccompagnementTile = ({
   typeAccompagnement: TypeAccompagnement;
 }) => (
   <Tile
+    data-test="type-accompagnement-tile"
     start={
       <Tag small>
         {typeAccompagnement === "ACCOMPAGNE" ? "Accompagné" : "Autonome"}

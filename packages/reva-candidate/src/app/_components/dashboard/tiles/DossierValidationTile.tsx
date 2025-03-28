@@ -1,10 +1,10 @@
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 import {
-  FeasibilityUseCandidateForDashboard,
   DossierDeValidationUseCandidateForDashboard,
+  FeasibilityUseCandidateForDashboard,
 } from "../dashboard.hooks";
-import Badge from "@codegouvfr/react-dsfr/Badge";
 
 const DossierValidationBadge = ({
   feasibility,
@@ -19,14 +19,33 @@ const DossierValidationBadge = ({
 
   switch (true) {
     case isCaduque:
-      return <Badge severity="error">caduque</Badge>;
+      return (
+        <Badge severity="error" data-test="dossier-validation-badge-caduque">
+          caduque
+        </Badge>
+      );
     case (!activeDossierDeValidation || decision === "INCOMPLETE") &&
       feasibility?.decision === "ADMISSIBLE":
-      return <Badge severity="warning">à transmettre</Badge>;
+      return (
+        <Badge severity="warning" data-test="dossier-validation-badge-to-send">
+          à transmettre
+        </Badge>
+      );
     case decision === "PENDING":
-      return <Badge severity="success">envoyé au certificateur</Badge>;
+      return (
+        <Badge severity="success" data-test="dossier-validation-badge-pending">
+          envoyé au certificateur
+        </Badge>
+      );
     case decision === "INCOMPLETE":
-      return <Badge severity="warning">incomplet</Badge>;
+      return (
+        <Badge
+          severity="warning"
+          data-test="dossier-validation-badge-incomplete"
+        >
+          incomplet
+        </Badge>
+      );
     default:
       return null;
   }
@@ -44,6 +63,7 @@ export const DossierValidationTile = ({
   const router = useRouter();
   return (
     <Tile
+      data-test="dossier-validation-tile"
       disabled={feasibility?.decision !== "ADMISSIBLE" || isCaduque}
       start={
         <DossierValidationBadge

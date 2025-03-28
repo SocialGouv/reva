@@ -16,16 +16,28 @@ const TrainingStatusBadge = ({
     firstAppointmentOccuredAt &&
     isBefore(firstAppointmentOccuredAt, new Date())
   ) {
-    return <Badge severity="info">En cours</Badge>;
+    return (
+      <Badge severity="info" data-test="training-status-badge-in-progress">
+        En cours
+      </Badge>
+    );
   } else if (candidacyStatus == "PARCOURS_ENVOYE") {
-    return <Badge severity="warning">À valider</Badge>;
+    return (
+      <Badge severity="warning" data-test="training-status-badge-to-validate">
+        À valider
+      </Badge>
+    );
   } else if (
     candidacyStatus == "PARCOURS_CONFIRME" ||
     (candidacyStatus !== "VALIDATION" &&
       candidacyStatus !== "PRISE_EN_CHARGE" &&
       candidacyStatus !== "PROJET")
   ) {
-    return <Badge severity="success">Validé</Badge>;
+    return (
+      <Badge severity="success" data-test="training-status-badge-validated">
+        Validé
+      </Badge>
+    );
   }
 };
 
@@ -40,6 +52,7 @@ export const TrainingTile = ({
 
   return (
     <Tile
+      data-test="training-tile"
       disabled={
         candidacyStatus == "PROJET" ||
         candidacyStatus == "VALIDATION" ||

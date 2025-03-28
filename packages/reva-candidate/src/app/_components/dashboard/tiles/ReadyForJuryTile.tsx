@@ -8,6 +8,7 @@ export const ReadyForJuryTile = ({
   readyForJuryEstimatedAt: number;
 }) => (
   <Tile
+    data-test="ready-for-jury-tile"
     small
     orientation="horizontal"
     start={

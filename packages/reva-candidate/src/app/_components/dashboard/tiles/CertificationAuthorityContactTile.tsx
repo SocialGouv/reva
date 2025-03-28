@@ -10,6 +10,7 @@ export const CertificationAuthorityContactTile = ({
   certificationAuthorityContactEmail: string;
 }) => (
   <Tile
+    data-test="certification-authority-contact-tile"
     title="Mon certificateur"
     small
     orientation="horizontal"

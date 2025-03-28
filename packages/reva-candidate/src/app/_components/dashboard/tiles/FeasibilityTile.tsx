@@ -22,26 +22,62 @@ const FeasibilityBadge = ({
 
   switch (true) {
     case isCaduque:
-      return <Badge severity="error">caduque</Badge>;
+      return (
+        <Badge severity="error" data-test="feasibility-badge-caduque">
+          caduque
+        </Badge>
+      );
     case decisionIsDraft &&
       isDfDemat &&
       isSentToCandidate &&
       !isCandidateConfirmed:
-      return <Badge severity="warning">à valider</Badge>;
+      return (
+        <Badge severity="warning" data-test="feasibility-badge-to-validate">
+          à valider
+        </Badge>
+      );
     case decisionIsDraft && isDfDemat:
-      return <Badge severity="info">en cours</Badge>;
+      return (
+        <Badge severity="info" data-test="feasibility-badge-in-progress">
+          en cours
+        </Badge>
+      );
     case decisionIsDraft || (candidacyIsAutonome && !decision):
-      return <Badge severity="info">à envoyer au certificateur</Badge>;
+      return (
+        <Badge severity="info" data-test="feasibility-badge-to-send">
+          à envoyer au certificateur
+        </Badge>
+      );
     case decision === "ADMISSIBLE":
-      return <Badge severity="success">recevable</Badge>;
+      return (
+        <Badge severity="success" data-test="feasibility-badge-admissible">
+          recevable
+        </Badge>
+      );
     case decision === "INCOMPLETE":
-      return <Badge severity="warning">incomplet</Badge>;
+      return (
+        <Badge severity="warning" data-test="feasibility-badge-incomplete">
+          incomplet
+        </Badge>
+      );
     case decision === "COMPLETE":
-      return <Badge severity="info">complet</Badge>;
+      return (
+        <Badge severity="info" data-test="feasibility-badge-complete">
+          complet
+        </Badge>
+      );
     case decision === "PENDING":
-      return <Badge severity="info">envoyé au certificateur</Badge>;
+      return (
+        <Badge severity="info" data-test="feasibility-badge-pending">
+          envoyé au certificateur
+        </Badge>
+      );
     case decision === "REJECTED":
-      return <Badge severity="error">non recevable</Badge>;
+      return (
+        <Badge severity="error" data-test="feasibility-badge-rejected">
+          non recevable
+        </Badge>
+      );
     default:
       return null;
   }
@@ -87,6 +123,7 @@ export const FeasibilityTile = ({
 
   return (
     <Tile
+      data-test="feasibility-tile"
       disabled={feasibilityTileDisabled}
       title="Dossier de faisabilité"
       start={

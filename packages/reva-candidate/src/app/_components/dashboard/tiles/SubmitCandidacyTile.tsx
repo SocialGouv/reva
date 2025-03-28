@@ -2,9 +2,15 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 
-const SentToSendBadge = ({ isComplete }: { isComplete: boolean }) => (
-  <Badge severity={isComplete ? "success" : "warning"}>
-    {isComplete ? "Envoyée" : "à envoyer"}
+const SentBadge = () => (
+  <Badge severity="success" data-test="sent-badge">
+    Envoyée
+  </Badge>
+);
+
+const ToSendBadge = () => (
+  <Badge severity="warning" data-test="to-send-badge">
+    à envoyer
   </Badge>
 );
 
@@ -19,7 +25,8 @@ export const SubmitCandidacyTile = ({
 
   return (
     <Tile
-      start={<SentToSendBadge isComplete={candidacyAlreadySubmitted} />}
+      data-test="submit-candidacy-tile"
+      start={<>{candidacyAlreadySubmitted ? <SentBadge /> : <ToSendBadge />}</>}
       disabled={!candidacyAlreadySubmitted && !canSubmitCandidacy}
       title="Envoi de la candidature"
       small

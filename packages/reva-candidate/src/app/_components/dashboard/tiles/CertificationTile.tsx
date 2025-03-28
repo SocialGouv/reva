@@ -7,6 +7,7 @@ export const CertificationTile = ({
   hasSelectedCertification: boolean;
 }) => (
   <Tile
+    data-test="certification-tile"
     start={<CompleteIncompleteBadge isComplete={hasSelectedCertification} />}
     title="Diplôme visé"
     small

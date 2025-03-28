@@ -8,12 +8,18 @@ export const ExperiencesTile = ({
   experiences: ExperiencesUseCandidateForDashboard;
 }) => (
   <Tile
+    data-test="experiences-tile"
     start={
       <>
         {experiences.length === 0 ? (
-          <Badge severity="warning">À compléter</Badge>
+          <Badge severity="warning" data-test="experiences-badge-to-complete">
+            À compléter
+          </Badge>
         ) : (
-          <Badge className="bg-[#fee7fc] text-[#6e445a]">
+          <Badge
+            className="bg-[#fee7fc] text-[#6e445a]"
+            data-test="experiences-badge-completed"
+          >
             {experiences.length}{" "}
             {experiences.length === 1 ? "renseignée" : "renseignées"}
           </Badge>

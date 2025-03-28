@@ -8,6 +8,7 @@ export const RendezVousPedagogiqueTile = ({
   firstAppointmentOccuredAt: number;
 }) => (
   <Tile
+    data-test="rendez-vous-pedagogique-tile"
     small
     orientation="horizontal"
     classes={{

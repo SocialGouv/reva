@@ -7,6 +7,7 @@ export const OrganismTile = ({
   hasSelectedOrganism: boolean;
 }) => (
   <Tile
+    data-test="organism-tile"
     start={<CompleteIncompleteBadge isComplete={hasSelectedOrganism} />}
     title="Accompagnateur"
     small

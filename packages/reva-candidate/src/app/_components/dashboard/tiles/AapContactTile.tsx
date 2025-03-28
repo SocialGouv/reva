@@ -18,6 +18,7 @@ export const AapContactTile = ({
 
   return (
     <Tile
+      data-test="aap-contact-tile"
       title="Mon accompagnateur"
       small
       orientation="horizontal"
