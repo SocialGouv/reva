@@ -1,4 +1,4 @@
-import { stubQuery } from "../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 
 context("Candidate Dashboard", () => {
   beforeEach(() => {
