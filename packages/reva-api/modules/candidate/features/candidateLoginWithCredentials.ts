@@ -1,3 +1,4 @@
+import { prismaClient } from "../../../prisma/client";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -31,6 +32,12 @@ export const candidateLoginWithCredentials = async ({
   if (!candidate) {
     throw new Error("Candidat non trouvé");
   }
+
+  // Track last login via password
+  await prismaClient.candidate.update({
+    where: { id: candidate.id },
+    data: { lastLoginViaPasswordAt: new Date() },
+  });
 
   const tokens = generateIAMTokenWithPassword(candidate.keycloakId, password);
 

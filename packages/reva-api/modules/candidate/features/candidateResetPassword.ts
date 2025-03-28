@@ -44,6 +44,7 @@ export const candidateResetPassword = async ({
 
     await resetPassword(candidate.keycloakId, password);
 
+    // Track password update
     await prismaClient.candidate.update({
       where: { id: candidate.id },
       data: { passwordUpdatedAt: new Date() },

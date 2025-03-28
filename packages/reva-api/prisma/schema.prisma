@@ -313,6 +313,8 @@ model Candidate {
   createdAt                            DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                            DateTime?               @map("updated_at") @db.Timestamptz(6)
   passwordUpdatedAt                    DateTime?               @map("password_updated_at") @db.Timestamptz(6)
+  lastLoginViaPasswordAt               DateTime?               @map("last_login_via_password_at") @db.Timestamptz(6)
+  lastLoginViaMagicLinkAt              DateTime?               @map("last_login_via_magic_link_at") @db.Timestamptz(6)
 
   @@map("candidate")
 }

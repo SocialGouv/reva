@@ -1,3 +1,4 @@
+import { prismaClient } from "../../../prisma/client";
 import { TokenService } from "../../account/utils/token.service";
 import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
 import {
@@ -130,6 +131,12 @@ const loginCandidate = async ({ email }: { email: string }) => {
   if (!candidate) {
     throw new Error("Candidat non trouvé");
   }
+
+  // Track last login via magic link
+  await prismaClient.candidate.update({
+    where: { id: candidate.id },
+    data: { lastLoginViaMagicLinkAt: new Date() },
+  });
 
   const url = getImpersonateUrl(candidate.keycloakId);
 
