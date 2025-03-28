@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <>
       {isCandidateDashboardActive ? (
-        <PageLayout data-test={`project-home-ready`}>
+        <PageLayout data-test="candidate-dashboard">
           <NameBadge
             as="h2"
             data-test="project-home-fullname"
@@ -28,7 +28,7 @@ export default function Home() {
           <Dashboard />
         </PageLayout>
       ) : (
-        <PageLayout data-test={`project-home-ready`}>
+        <PageLayout data-test="project-home-ready">
           <NameBadge
             as="h2"
             className="mt-4"
