@@ -1,3 +1,4 @@
+import { prismaClient } from "../../../prisma/client";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -42,6 +43,11 @@ export const candidateResetPassword = async ({
     }
 
     await resetPassword(candidate.keycloakId, password);
+
+    await prismaClient.candidate.update({
+      where: { id: candidate.id },
+      data: { passwordUpdatedAt: new Date() },
+    });
   } else {
     throw new FunctionalError(
       FunctionalCodeError.TECHNICAL_ERROR,
