@@ -155,7 +155,7 @@ const QuiEtesVousSection = () => (
             priority="secondary"
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
-            className="mt-auto py-8 md:py-0"
+            className="mt-auto"
             linkProps={{
               href: "/espace-candidat/",
               target: "_self",
@@ -181,7 +181,7 @@ const QuiEtesVousSection = () => (
             priority="secondary"
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
-            className="mt-auto py-8 md:py-0"
+            className="mt-auto"
             linkProps={{
               href: "/espace-professionnel/",
               target: "_self",
@@ -207,12 +207,12 @@ const QuiEtesVousSection = () => (
             priority="secondary"
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
-            className="mt-auto py-8 md:py-0"
+            className="mt-auto"
             disabled
           >
             Créez votre espace certificateur
           </Button>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-gray-400 mt-1 mb-0">
             Fonctionnalité bientôt disponible.
           </p>
         </QuiEtesVousCard>
@@ -234,7 +234,7 @@ const QuiEtesVousCard = ({
   description: string;
   children?: ReactNode;
 }) => (
-  <div className="h-[367px] lg:w-[379px] lg:h-[390px] p-8 pb-10 bg-white flex flex-col">
+  <div className="min-h-[367px] h-fit lg:w-[379px] lg:h-[390px] p-8 pb-10 bg-white flex flex-col">
     <div className="flex items-center gap-3 mb-3">
       {titleIcon}
       <h3 className="mb-0 text-[20px] md:text-[22px] text-dsfrBlue-franceSun md:text-black">
