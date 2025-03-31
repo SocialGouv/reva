@@ -175,7 +175,7 @@ const QuiEtesVousSection = () => (
             />
           }
           subtitle="Guidez les candidats vers la réussite de leur VAE."
-          description="Simplifiez l'accompagnement VAE avec un suivi des parcours, des échanges avec les certificateurs et une gestion complète de l’analyse du projet au jury."
+          description="Assurez un suivi complet des parcours VAE : échangez avec les certificateurs et gérez chaque étape, du premier entretien jusqu'au jury sur une plateforme unique et centralisée."
         >
           <Button
             priority="secondary"
@@ -234,7 +234,7 @@ const QuiEtesVousCard = ({
   description: string;
   children?: ReactNode;
 }) => (
-  <div className="h-[367px] lg:w-[379px] lg:h-[351px] p-8 pb-10 bg-white flex flex-col">
+  <div className="h-[367px] lg:w-[379px] lg:h-[390px] p-8 pb-10 bg-white flex flex-col">
     <div className="flex items-center gap-3 mb-3">
       {titleIcon}
       <h3 className="mb-0 text-[20px] md:text-[22px] text-dsfrBlue-franceSun md:text-black">
@@ -419,7 +419,7 @@ const LAVAEEnChiffresSection = () => (
       <div className="flex flex-col justify-center max-w-sm mr-6 mb-8 md:mb-0">
         <h2 className="text-[22px] md:text-[32px]">La VAE en chiffres</h2>
         <p>
-          Depuis 2002, plus de 400.000 diplômés ont validé leur parcours grâce à
+          Depuis 2002, plus de 400 000 candidats ont obtenu leur diplôme grâce à
           la VAE. Avec un taux de réussite élevé, un processus efficace et des
           candidats satisfaits, découvrez les chiffres clés :
         </p>
