@@ -1,22 +1,62 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { GetRegionsBySlugQueryForRegionHomePageQuery } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import request from "graphql-request";
 import Head from "next/head";
+import { draftMode } from "next/headers";
 import Image from "next/image";
 
-const RegionHomePage = ({
-  getRegionsBySlugResponse,
-  preview,
+const getRegionsBySlugQuery = graphql(`
+  query getRegionsBySlugQueryForRegionHomePage(
+    $filters: RegionFiltersInput!
+    $publicationState: PublicationStatus!
+  ) {
+    regions(filters: $filters, status: $publicationState) {
+      nom
+      slug
+      urlExternePRCs
+      masquerPRCs
+      vignette {
+        url
+      }
+      article_regions(
+        sort: "ordre"
+        filters: { publishedAt: { notNull: true } }
+      ) {
+        titre
+        slug
+        resume
+        vignette {
+          url
+        }
+      }
+    }
+  }
+`);
+
+const getRegionsBySlug = async (regionSlug: string, preview = false) => {
+  return request(STRAPI_GRAPHQL_API_URL, getRegionsBySlugQuery, {
+    filters: { slug: { eq: regionSlug } },
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
+};
+
+const RegionHomePage = async ({
+  params,
 }: {
-  getRegionsBySlugResponse?: GetRegionsBySlugQueryForRegionHomePageQuery;
-  preview?: boolean;
+  params: Promise<{ regionSlug: string }>;
 }) => {
+  const { isEnabled: preview } = await draftMode();
+  const { regionSlug } = await params;
+  const getRegionsBySlugResponse = await getRegionsBySlug(
+    decodeURIComponent(regionSlug),
+    preview,
+  );
   const region = getRegionsBySlugResponse?.regions[0];
   const [firstArticle, ...otherArticles] = region?.article_regions || [];
+
   return region ? (
     <MainLayout className="fr-container pt-6 md:pt-16 pb-12" preview={preview}>
       <Head>
@@ -96,51 +136,5 @@ const RegionHomePage = ({
     </MainLayout>
   ) : null;
 };
-
-const getRegionsBySlugQuery = graphql(`
-  query getRegionsBySlugQueryForRegionHomePage(
-    $filters: RegionFiltersInput!
-    $publicationState: PublicationStatus!
-  ) {
-    regions(filters: $filters, status: $publicationState) {
-      nom
-      slug
-      urlExternePRCs
-      masquerPRCs
-      vignette {
-        url
-      }
-      article_regions(
-        sort: "ordre"
-        filters: { publishedAt: { notNull: true } }
-      ) {
-        titre
-        slug
-        resume
-        vignette {
-          url
-        }
-      }
-    }
-  }
-`);
-
-const getRegionsBySlug = async (regionSlug: string, preview = false) => {
-  return request(STRAPI_GRAPHQL_API_URL, getRegionsBySlugQuery, {
-    filters: { slug: { eq: regionSlug } },
-    publicationState: preview ? "DRAFT" : "PUBLISHED",
-  });
-};
-
-export async function getServerSideProps({
-  params: { regionSlug },
-  preview = false,
-}: {
-  params: { regionSlug: string; preview: boolean };
-  preview: boolean;
-}) {
-  const getRegionsBySlugResponse = await getRegionsBySlug(regionSlug, preview);
-  return { props: { getRegionsBySlugResponse, preview } };
-}
 
 export default RegionHomePage;

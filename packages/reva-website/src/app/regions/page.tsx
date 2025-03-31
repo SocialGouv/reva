@@ -1,19 +1,34 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { GetRegionsQuery } from "@/graphql/generated/graphql";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import { request } from "graphql-request";
 import Head from "next/head";
+import { draftMode } from "next/headers";
 
-const RegionsPage = ({
-  getRegionsResponse,
-  preview,
-}: {
-  getRegionsResponse: GetRegionsQuery;
-  preview: boolean;
-}) => {
+const getRegionsQuery = graphql(`
+  query getRegions($publicationState: PublicationStatus!) {
+    regions(sort: "ordre", status: $publicationState) {
+      nom
+      slug
+      vignette {
+        url
+      }
+    }
+  }
+`);
+
+const getRegions = async (preview = false) => {
+  return request(STRAPI_GRAPHQL_API_URL, getRegionsQuery, {
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
+};
+
+const RegionsPage = async () => {
+  const { isEnabled: preview } = await draftMode();
+  const getRegionsResponse = await getRegions(preview);
   const regions = getRegionsResponse.regions || [];
+
   return (
     <MainLayout preview={preview}>
       <Head>
@@ -79,29 +94,5 @@ const RegionCard = ({
     titleAs="h3"
   />
 );
-
-const getRegionsQuery = graphql(`
-  query getRegions($publicationState: PublicationStatus!) {
-    regions(sort: "ordre", status: $publicationState) {
-      nom
-      slug
-      vignette {
-        url
-      }
-    }
-  }
-`);
-
-const getRegions = async (preview = false) => {
-  return request(STRAPI_GRAPHQL_API_URL, getRegionsQuery, {
-    publicationState: preview ? "DRAFT" : "PUBLISHED",
-  });
-};
-
-export async function getServerSideProps({ preview = false }) {
-  const getRegionsResponse = await getRegions(preview);
-
-  return { props: { getRegionsResponse, preview } };
-}
 
 export default RegionsPage;
