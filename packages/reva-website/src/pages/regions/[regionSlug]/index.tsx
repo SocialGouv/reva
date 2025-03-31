@@ -50,25 +50,27 @@ const RegionHomePage = ({
           titleAs="h2"
         />
       )}
-      <div id="fr-callout-:r1h:" className="fr-callout">
-        <h3 className="fr-card__title">
-          Vous souhaitez être orienté avant de démarrer votre VAE ?
-        </h3>
-        <p className="fr-callout__text">
-          Si vous n’êtes pas sûr de votre projet, si vous hésitez entre
-          plusieurs diplômes, ou entre VAE et formation, contactez un de nos
-          conseillers.
-        </p>
-        <Button
-          linkProps={{
-            href: region.urlExternePRCs
-              ? region.urlExternePRCs
-              : `/regions/${region.slug}/conseillers`,
-          }}
-        >
-          Consultez la liste des conseillers
-        </Button>
-      </div>
+      {!region.masquerPRCs && (
+        <div id="fr-callout-:r1h:" className="fr-callout">
+          <h3 className="fr-card__title">
+            Vous souhaitez être orienté avant de démarrer votre VAE ?
+          </h3>
+          <p className="fr-callout__text">
+            Si vous n’êtes pas sûr de votre projet, si vous hésitez entre
+            plusieurs diplômes, ou entre VAE et formation, contactez un de nos
+            conseillers.
+          </p>
+          <Button
+            linkProps={{
+              href: region.urlExternePRCs
+                ? region.urlExternePRCs
+                : `/regions/${region.slug}/conseillers`,
+            }}
+          >
+            Consultez la liste des conseillers
+          </Button>
+        </div>
+      )}
       {!!otherArticles.length && (
         <>
           <h2 className="mt-32 mb-16">Les actions de la Région pour la VAE</h2>
@@ -104,6 +106,7 @@ const getRegionsBySlugQuery = graphql(`
       nom
       slug
       urlExternePRCs
+      masquerPRCs
       vignette {
         url
       }
