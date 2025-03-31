@@ -707,6 +707,7 @@ export interface ApiRegionRegion extends Struct.CollectionTypeSchema {
       'api::region.region'
     > &
       Schema.Attribute.Private;
+    masquerPRCs: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     nom: Schema.Attribute.String & Schema.Attribute.Required;
     ordre: Schema.Attribute.Integer;
     prcs: Schema.Attribute.JSON;

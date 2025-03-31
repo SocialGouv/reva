@@ -24,9 +24,7 @@
       "type": "media",
       "multiple": false,
       "required": true,
-      "allowedTypes": [
-        "images"
-      ]
+      "allowedTypes": ["images"]
     },
     "urlExternePRCs": {
       "type": "string"
@@ -48,6 +46,11 @@
       "relation": "oneToMany",
       "target": "api::departement.departement",
       "mappedBy": "region"
+    },
+    "masquerPRCs": {
+      "type": "boolean",
+      "default": false,
+      "required": false
     }
   }
 }
