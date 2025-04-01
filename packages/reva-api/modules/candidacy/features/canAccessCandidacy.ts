@@ -9,11 +9,6 @@ export const canAccessCandidacy = async ({
   keycloakId: string;
   roles: KeyCloakUserRole[];
 }) => {
-  //user is admin
-  if (roles.includes("admin")) {
-    return true;
-  }
-
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
     include: {
@@ -23,6 +18,10 @@ export const canAccessCandidacy = async ({
 
   if (!candidacy) {
     return false;
+  }
+
+  if (roles.includes("admin")) {
+    return true;
   }
 
   //user is candidate
