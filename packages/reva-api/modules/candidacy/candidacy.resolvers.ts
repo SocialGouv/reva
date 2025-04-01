@@ -31,6 +31,7 @@ import {
 import { cancelDropOutCandidacyEvent } from "./events";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
+import { canAccessCandidacy } from "./features/canAccessCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getCandidacies } from "./features/getCandicacies";
@@ -211,6 +212,16 @@ const unsafeResolvers = {
         ...params,
         hasRole: context.auth.hasRole,
         keycloakId: context.auth.userInfo?.sub || "",
+      }),
+    candidacy_canAccessCandidacy: async (
+      _: unknown,
+      { candidacyId }: { candidacyId: string },
+      context: GraphqlContext,
+    ) =>
+      canAccessCandidacy({
+        candidacyId,
+        keycloakId: context.auth.userInfo?.sub || "",
+        roles: context.auth.userInfo?.realm_access?.roles || [],
       }),
   },
   Mutation: {

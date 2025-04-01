@@ -255,6 +255,7 @@ type Query {
     searchFilter: String
     status: CandidacyCaduciteStatus!
   ): CandidacyCaducitePaginated!
+  candidacy_canAccessCandidacy(candidacyId: ID!): Boolean!
 }
 
 # MUTATIONS

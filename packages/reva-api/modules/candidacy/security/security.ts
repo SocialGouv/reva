@@ -7,6 +7,7 @@ import {
   isAdminOrCandidacyCompanion,
   isAdminOrCertificationAuthority,
   isAdminOrManager,
+  isAnyone,
   isCandidacyCompanion,
   isOwnerOfCandidacy,
   isOwnerOfCandidate,
@@ -26,6 +27,7 @@ export const resolversSecurityMap = {
   "Query.getCandidacies": isAdminOrManager,
 
   "Query.getCandidacyById": [canAccessCandidacy],
+  "Query.candidacy_canAccessCandidacy": isAnyone,
   "Query.candidacy_getCandidacyCaducites": isAdminOrCertificationAuthority,
 
   "Query.candidacy_searchOrganismsForCandidacyAsAdmin": isAdmin,
