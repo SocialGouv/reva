@@ -50,7 +50,8 @@ import {
 } from "./utils/feasibility.helper";
 import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "./features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
 
-const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+const adminBaseUrl =
+  process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
 export const getCertificationAuthorities = async ({
   candidacyId,
@@ -327,7 +328,7 @@ export const createFeasibility = async ({
     if (emails.length) {
       sendNewFeasibilitySubmittedEmail({
         emails,
-        feasibilityUrl: `${baseUrl}/admin2/candidacies/${candidacy.id}/feasibility`,
+        feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacy.id}/feasibility`,
       });
     }
   }
@@ -871,7 +872,7 @@ const rejectFeasibility = async ({
         sendFeasibilityDecisionTakenToAAPEmail({
           email:
             updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-          feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+          feasibilityUrl: `${adminBaseUrl}/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
         });
       }
     }
@@ -966,7 +967,7 @@ const markFeasibilityAsIncomplete = async ({
         sendFeasibilityIncompleteMailToAAP({
           email:
             updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-          feasibilityUrl: `${baseUrl}/admin2/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+          feasibilityUrl: `${adminBaseUrl}/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
           comment,
         });
       }

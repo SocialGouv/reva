@@ -120,7 +120,7 @@ const sendFeasibilityDecisionTakenEmail = async ({
       });
       sendFeasibilityDecisionTakenToAAPEmail({
         email: aapEmail,
-        feasibilityUrl: `/candidacies/${candidacyId}/feasibility-aap`,
+        feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacyId}/feasibility-aap`,
       });
     }
 
