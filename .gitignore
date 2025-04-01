@@ -20,3 +20,4 @@ infra/ftps/data/*
 **/storybook-static
 **/generated
 .cursorignore
+*.local*
