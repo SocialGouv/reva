@@ -64,6 +64,11 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             label
           }
         }
+        jury {
+          dateOfSession
+          timeOfSession
+          timeSpecified
+        }
       }
     }
   }
@@ -109,6 +114,8 @@ type CandidateForDashboardHookReturnType = ReturnType<
 >;
 export type CandidacyUseCandidateForDashboard =
   CandidateForDashboardHookReturnType["candidacy"];
+export type JuryUseCandidateForDashboard =
+  CandidateForDashboardHookReturnType["candidacy"]["jury"];
 export type FeasibilityUseCandidateForDashboard =
   CandidateForDashboardHookReturnType["feasibility"];
 export type ExperiencesUseCandidateForDashboard =
