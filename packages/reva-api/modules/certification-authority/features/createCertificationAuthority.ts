@@ -20,6 +20,15 @@ export const createCertificationAuthority = async ({
   certificationAuthorityStructureId: string;
   certificationIds: string[];
 }) => {
+  const existingAccount = await prismaClient.account.findUnique({
+    where: {
+      email: accountEmail,
+    },
+  });
+  if (existingAccount) {
+    throw new Error("Adresse email déjà utilisée pour un autre compte");
+  }
+
   const allDepartements = await prismaClient.department.findMany({
     select: { id: true },
   });
