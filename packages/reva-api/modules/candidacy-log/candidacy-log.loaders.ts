@@ -7,6 +7,7 @@ export const candidacyLogLoaders = {
     user: async (queries: { obj: CandidacyLog }[]) => {
       const userKeycloakIdAndProfiles = queries.map(({ obj }) => ({
         userProfile: obj.userProfile,
+        userEmail: obj.userEmail,
         userKeycloakId: obj.userKeycloakId,
       }));
 
