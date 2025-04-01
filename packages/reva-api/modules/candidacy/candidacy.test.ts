@@ -73,13 +73,16 @@ test("get non existing candidacy should yield errors", async () => {
     }
   `);
 
-  const res = await graphqlClient.request(getCandidacyById, {
-    id: "fb53327b-8ed9-4238-8e80-007fa1ddcfe6",
-  });
-
-  expect(res).toMatchObject({
-    getCandidacyById: null,
-  });
+  try {
+    await graphqlClient.request(getCandidacyById, {
+      id: "fb53327b-8ed9-4238-8e80-007fa1ddcfe6",
+    });
+  } catch (error) {
+    const gqlError = getGraphQLError(error);
+    expect(gqlError).toEqual(
+      "Vous n'êtes pas autorisé à accéder à cette candidature",
+    );
+  }
 });
 
 test("a user can't modify the account information of another candidate", async () => {
