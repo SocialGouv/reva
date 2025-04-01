@@ -3,20 +3,16 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useMemo } from "react";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
 import { DashboardBanner } from "./DashboardBanner";
-import { AapContactTile } from "./tiles/AapContactTile";
-import { CertificationAuthorityContactTile } from "./tiles/CertificationAuthorityContactTile";
+import { DashboardSidebar } from "./DashboardSidebar";
 import { CertificationTile } from "./tiles/CertificationTile";
 import { DossierValidationTile } from "./tiles/DossierValidationTile";
 import { ExperiencesTile } from "./tiles/ExperiencesTile";
 import { FeasibilityTile } from "./tiles/FeasibilityTile";
 import { GoalsTile } from "./tiles/GoalsTile";
-import { NoContactTile } from "./tiles/NoContactTile";
 import { OrganismTile } from "./tiles/OrganismTile";
 import { SubmitCandidacyTile } from "./tiles/SubmitCandidacyTile";
-import TileGroup from "./tiles/TileGroup";
 import { TrainingTile } from "./tiles/TrainingTile";
 import { TypeAccompagnementTile } from "./tiles/TypeAccompagnementTile";
-import { AppointmentTiles } from "./tiles/AppointmentTiles";
 
 const Dashboard = () => {
   const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
@@ -140,38 +136,7 @@ const Dashboard = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col col-span-1 row-span-2 row-start-1 gap-y-8">
-          <TileGroup
-            icon="fr-icon-calendar-2-line"
-            title="Mes prochains rendez-vous"
-          >
-            <AppointmentTiles candidacy={candidacy} />
-          </TileGroup>
-          <TileGroup icon="fr-icon-team-line" title="Mes contacts">
-            {!candidacy.organism &&
-              !candidacy.feasibility?.certificationAuthority && (
-                <NoContactTile />
-              )}
-            {candidacy.organism && (
-              <AapContactTile organism={candidacy.organism} />
-            )}
-            {candidacy.feasibility?.certificationAuthority && (
-              <CertificationAuthorityContactTile
-                certificationAuthorityLabel={
-                  candidacy.feasibility?.certificationAuthority.label
-                }
-                certificationAuthorityContactFullName={
-                  candidacy.feasibility?.certificationAuthority
-                    .contactFullName ?? ""
-                }
-                certificationAuthorityContactEmail={
-                  candidacy.feasibility?.certificationAuthority.contactEmail ??
-                  ""
-                }
-              />
-            )}
-          </TileGroup>
-        </div>
+        <DashboardSidebar candidacy={candidacy} />
       </div>
     </div>
   );
