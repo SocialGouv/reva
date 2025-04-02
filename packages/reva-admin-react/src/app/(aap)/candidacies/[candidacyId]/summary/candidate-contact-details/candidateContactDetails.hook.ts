@@ -41,7 +41,7 @@ export const useCandidateContactDetailsPageLogic = ({
   const queryClient = useQueryClient();
 
   const { data: getCandidateContactDetailsResponse } = useQuery({
-    queryKey: ["getCandidateContactDetails", candidacyId],
+    queryKey: [candidacyId, "getCandidateContactDetails"],
     queryFn: () =>
       graphqlClient.request(getCandidateContactDetailsQuery, {
         candidacyId,
@@ -50,8 +50,8 @@ export const useCandidateContactDetailsPageLogic = ({
 
   const updateCandidateContactDetails = useMutation({
     mutationKey: [
-      "updateCandidateContactDetailsForCandidateContactDetailsPage",
       candidacyId,
+      "updateCandidateContactDetailsForCandidateContactDetailsPage",
     ],
     mutationFn: ({
       candidacyId,
