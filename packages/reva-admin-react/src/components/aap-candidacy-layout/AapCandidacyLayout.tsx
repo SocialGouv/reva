@@ -53,13 +53,15 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
     "candidacy_actualisation",
   );
 
-  const { data: getCandidacyMenuResponse, isLoading } = useQuery({
-    queryKey: [candidacyId, "getCandidacyMenu"],
-    queryFn: () =>
-      graphqlClient.request(getCandidacyMenuQuery, {
-        candidacyId,
-      }),
-  });
+  const { data: getCandidacyMenuResponse, isLoading: isLoadingMenu } = useQuery(
+    {
+      queryKey: [candidacyId, "getCandidacyMenu"],
+      queryFn: () =>
+        graphqlClient.request(getCandidacyMenuQuery, {
+          candidacyId,
+        }),
+    },
+  );
 
   const menuHeaderEntries =
     getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.menuHeader;
@@ -76,13 +78,9 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
 
   const isCaduque = !!candidacy?.isCaduque;
 
-  if (isLoading) {
-    return <Skeleton />;
-  }
-
   return (
     <div className="flex flex-col md:flex-row w-full">
-      <CandidacyLayoutSideMenu>
+      <CandidacyLayoutSideMenu isLoading={isLoadingMenu}>
         <div className="flex text-xl font-bold mt-2 md:mt-0 mb-2">
           <span className="fr-icon--xl fr-icon-user-fill mr-2" />
           <span className="capitalize">
@@ -156,7 +154,13 @@ const MenuEntry = ({
   </li>
 );
 
-const CandidacyLayoutSideMenu = ({ children }: { children: ReactNode }) => (
+const CandidacyLayoutSideMenu = ({
+  isLoading,
+  children,
+}: {
+  isLoading: boolean;
+  children: ReactNode;
+}) => (
   <nav
     role="navigation"
     aria-label="Menu latéral"
@@ -177,7 +181,7 @@ const CandidacyLayoutSideMenu = ({ children }: { children: ReactNode }) => (
           id="fr-sidemenu-wrapper"
           data-fr-js-collapse="true"
         >
-          <div className="lg:ml-1">{children}</div>
+          <div className="lg:ml-1">{isLoading ? <Skeleton /> : children}</div>
         </div>
       </div>
     </div>
