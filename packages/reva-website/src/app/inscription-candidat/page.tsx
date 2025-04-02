@@ -1,3 +1,4 @@
+"use client";
 import {
   CandidateRegistrationFormLegacy,
   CandidateRegistrationFormSchema,
@@ -8,15 +9,14 @@ import { CertificateAutocompleteDsfr } from "@/components/candidate-registration
 import { CertificateCard } from "@/components/candidate-registration/certificate-card/CertificateCard";
 import { WouldYouLikeToKnowMorePanel } from "@/components/candidate-registration/would-you-like-to-know-more-panel/WouldYouLikeToKnowMorePanel";
 import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Certification } from "@/graphql/generated/graphql";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import request from "graphql-request";
-import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const getCertificationQuery = graphql(`
@@ -37,9 +37,11 @@ const askForRegistrationMutation = graphql(`
   }
 `);
 
-const OrientationCandidatPage = () => {
+export default function CandidateRegistrationPage() {
   const router = useRouter();
-  const { certificationId, searchText } = router.query;
+  const searchParams = useSearchParams();
+  const certificationId = searchParams?.get("certificationId");
+  const searchText = searchParams?.get("searchText");
   const { isFeatureActive, status: featureFlippingStatus } =
     useFeatureflipping();
 
@@ -89,9 +91,6 @@ const OrientationCandidatPage = () => {
 
   return (
     <MainLayout>
-      <Head>
-        <title>Orientation candidat - France VAE</title>
-      </Head>
       <CandidateBackground>
         {isFeatureActive("CANDIDATE_REGISTRATION_V2") ? (
           <CandidateRegistrationForm
@@ -114,16 +113,14 @@ const OrientationCandidatPage = () => {
                 <CertificateAutocompleteDsfr
                   defaultLabel={defaultAutocompleteLabel}
                   onSubmit={({ label }) => {
-                    router.push({
-                      pathname: "/espace-candidat/recherche",
-                      query: { searchText: label },
-                    });
+                    router.push(
+                      `/espace-candidat/recherche?searchText=${label}`,
+                    );
                   }}
                   onOptionSelection={(o) =>
-                    router.push({
-                      pathname: "/inscription-candidat",
-                      query: { certificationId: o.value },
-                    })
+                    router.push(
+                      `/inscription-candidat?certificationId=${o.value}`,
+                    )
                   }
                 />
               </fieldset>
@@ -183,6 +180,4 @@ const OrientationCandidatPage = () => {
       </CandidateBackground>
     </MainLayout>
   );
-};
-
-export default OrientationCandidatPage;
+}
