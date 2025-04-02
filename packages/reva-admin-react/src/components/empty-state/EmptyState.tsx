@@ -16,12 +16,12 @@ export const EmptyState = ({
 }) => {
   if (orientation === "horizontal") {
     return (
-      <div data-test={dataTest} className="flex pt-6 pb-4 px-16">
-        <div className="flex-1 py-6">
+      <div data-test={dataTest} className="lg:flex pt-20 pb-20 px-6 lg:px-16">
+        <div className="flex-1 py-10">
           <h1>{title}</h1>
-          <div className="mb-10">{children}</div>
+          <div>{children}</div>
         </div>
-        <div className="my-6 relative flex items-center justify-center w-[282px] h-[319px]">
+        <div className="relative flex items-center justify-center w-[282px] h-[319px]">
           <Image src={hexagonBackground} className="absolute inset-0" alt="" />
           <div className="z-10">{pictogram}</div>
         </div>

@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
 import { useFeatureflipping } from "../feature-flipping/featureFlipping";
+import { NotAuthorized } from "@/components/not-authorized";
 
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {
@@ -68,7 +69,7 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
   );
 
   if (isSuccessAccessCheck && canAccess === false) {
-    return "Vous n'avez pas accès à cette candidature";
+    return <NotAuthorized />;
   }
 
   const menuHeaderEntries =
