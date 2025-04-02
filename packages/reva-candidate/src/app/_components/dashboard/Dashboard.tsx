@@ -1,8 +1,8 @@
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useMemo } from "react";
+import { DashboardBanner } from "./banners/DashboardBanner";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
-import { DashboardBanner } from "./DashboardBanner";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { CertificationTile } from "./tiles/CertificationTile";
 import { DossierValidationTile } from "./tiles/DossierValidationTile";

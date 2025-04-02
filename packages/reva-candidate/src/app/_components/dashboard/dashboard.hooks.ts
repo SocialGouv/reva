@@ -124,3 +124,7 @@ export type OrganismUseCandidateForDashboard =
   CandidateForDashboardHookReturnType["candidacy"]["organism"];
 export type DossierDeValidationUseCandidateForDashboard =
   CandidateForDashboardHookReturnType["candidacy"]["activeDossierDeValidation"];
+export type CandidacyDropOutUseCandidateForDashboard =
+  CandidateForDashboardHookReturnType["candidacy"]["candidacyDropOut"];
+export type CandidacyContestationsCaduciteUseCandidateForDashboard =
+  CandidateForDashboardHookReturnType["candidacy"]["candidacyContestationsCaducite"];
