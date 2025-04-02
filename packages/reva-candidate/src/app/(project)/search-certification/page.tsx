@@ -105,14 +105,18 @@ export default function SetCertification() {
         homeLinkProps={{
           href: "/",
         }}
-        segments={[
-          {
-            label: "Diplôme visé",
-            linkProps: {
-              href: "/certification/",
-            },
-          },
-        ]}
+        segments={
+          candidacy.certification?.id
+            ? [
+                {
+                  label: "Diplôme visé",
+                  linkProps: {
+                    href: `/certification/${candidacy.certification?.id}`,
+                  },
+                },
+              ]
+            : []
+        }
       />
       {!selectedCertification && (
         <>
@@ -154,11 +158,7 @@ export default function SetCertification() {
                     detail={`RNCP ${certification.codeRncp}`}
                     key={certification.id}
                     linkProps={{
-                      href: `/`,
-                      onClick: (e) => {
-                        e.preventDefault();
-                        setSelectedCertificationId(certification.id);
-                      },
+                      href: `/certification/${certification.id}`,
                     }}
                     enlargeLink
                     start={
