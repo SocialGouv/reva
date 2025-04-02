@@ -1,6 +1,8 @@
 "use client";
-import { CandidateRegistrationFormSchema } from "@/components/candidate-registration/candidate-registration-form-legacy/CandidateRegistrationFormLegacy";
-import { CandidateRegistrationForm } from "./_components/CandidateRegistrationForm";
+import {
+  CandidateFormData,
+  CandidateRegistrationForm,
+} from "./_components/CandidateRegistrationForm";
 import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
@@ -51,11 +53,7 @@ function CandidateRegistrationPageContent() {
     "id" | "label" | "codeRncp" | "typeDiplome" | "isAapAvailable"
   > | null>(null);
 
-  const handleFormSubmit = async (
-    form: CandidateRegistrationFormSchema & {
-      typeAccompagnement: "AUTONOME" | "ACCOMPAGNE";
-    },
-  ) => {
+  const handleFormSubmit = async (form: CandidateFormData) => {
     await request(GRAPHQL_API_URL, askForRegistrationMutation, {
       candidate: {
         ...form,
