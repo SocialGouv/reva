@@ -120,7 +120,7 @@ export default function SetCertification() {
       />
       {!selectedCertification && (
         <>
-          <h1 className="mt-6 mb-8">Choisir un diplôme</h1>
+          <h1 className="mt-4 mb-8">Choisir un diplôme</h1>
           <div className="mb-8 border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 w-full">
             <h2 className="mb-6">
               Recherchez parmi les diplômes disponibles sur France VAE

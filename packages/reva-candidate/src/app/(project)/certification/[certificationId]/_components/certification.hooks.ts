@@ -18,6 +18,7 @@ const GET_CANDIDACY_WITH_CERTIFICATION = graphql(`
         }
         status
         certification {
+          label
           id
           isAapAvailable
         }
