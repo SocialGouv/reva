@@ -17,6 +17,7 @@ export interface BaseBannerProps {
   imageAlt?: string;
   actionButton?: BannerActionButton;
   testId?: string;
+  topBadge?: React.ReactNode;
 }
 
 const BannerImage = ({ src, alt }: { src: string; alt: string }) => (
@@ -42,20 +43,24 @@ export const BaseBanner = ({
   imageAlt = DEFAULT_BANNER_IMAGE_ALT,
   actionButton,
   testId,
+  topBadge,
 }: BaseBannerProps) => {
   return (
-    <div className="flex flex-col">
-      <div className="flex bg-white items-center border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 lg:ml-3 lg:pl-0 mt-32 lg:mt-16 lg:h-[110px]">
-        <BannerImage src={imageSrc} alt={imageAlt} />
-        <p className="my-0 lg:ml-4 text-justify" data-test={testId}>
-          {content}
-        </p>
-      </div>
-      {actionButton && (
-        <div className="self-end mt-2">
-          <ActionButton {...actionButton} />
+    <div>
+      {topBadge}
+      <div className="flex flex-col">
+        <div className="flex bg-white items-center border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 lg:ml-3 lg:pl-0 mt-32 lg:mt-16 lg:h-[110px]">
+          <BannerImage src={imageSrc} alt={imageAlt} />
+          <p className="my-0 lg:ml-4 text-justify" data-test={testId}>
+            {content}
+          </p>
         </div>
-      )}
+        {actionButton && (
+          <div className="self-end mt-2">
+            <ActionButton {...actionButton} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
