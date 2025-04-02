@@ -35,7 +35,7 @@ const CandidateContactDetailsPage = () => {
 
   const handleFormSubmit = async (data: FormData) => {
     try {
-      await updateCandidateContactDetails.mutate({
+      await updateCandidateContactDetails.mutateAsync({
         candidacyId,
         candidateId: candidate.id,
         candidateContactDetails: data,
