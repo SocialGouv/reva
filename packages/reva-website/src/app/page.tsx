@@ -261,7 +261,7 @@ const LesActualitesFranceVAESection = ({
         {articlesActualite.map((article) => (
           <div
             key={article.documentId}
-            className="w-[312px] h-[320px] mx-auto md:mx-0 md:w-[520px] md:h-[252px] p-8 pl-6 flex flex-col border border-neutral-400 bg-white"
+            className="w-[312px] h-fit mx-auto md:mx-0 md:w-[520px] md:h-[252px] p-8 pl-6 flex flex-col border border-neutral-400 bg-white"
           >
             <h3 className="text-dsfrBlue-franceSun text-lg md:text-[22px] mb-3">
               {article.titre}
