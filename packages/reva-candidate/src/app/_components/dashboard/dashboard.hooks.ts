@@ -68,29 +68,19 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           dateOfSession
           timeOfSession
           timeSpecified
+          result
         }
       }
     }
   }
 `);
 
-const useCandidateWithCandidacy = () => {
+export const useCandidacyForDashboard = () => {
   const { graphqlClient } = useGraphQlClient();
-
-  const candidateWithCandidacy = useSuspenseQuery({
-    queryKey: ["dashboard"],
+  const { data } = useSuspenseQuery({
+    queryKey: ["candidate", "dashboard"],
     queryFn: () => graphqlClient.request(GET_CANDIDATE_WITH_CANDIDACY),
   });
-
-  return {
-    candidateWithCandidacy,
-  };
-};
-
-export const useCandidacyForDashboard = () => {
-  const {
-    candidateWithCandidacy: { data },
-  } = useCandidateWithCandidacy();
 
   const candidate = data?.candidate_getCandidateWithCandidacy;
 
