@@ -3,7 +3,7 @@ import {
   CandidateRegistrationFormLegacy,
   CandidateRegistrationFormSchema,
 } from "@/components/candidate-registration/candidate-registration-form-legacy/CandidateRegistrationFormLegacy";
-import { CandidateRegistrationForm } from "@/components/candidate-registration/candidate-registration-form/CandidateRegistrationForm";
+import { CandidateRegistrationForm } from "./_components/CandidateRegistrationForm";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import { CertificateCard } from "@/components/candidate-registration/certificate-card/CertificateCard";
