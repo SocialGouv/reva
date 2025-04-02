@@ -24,6 +24,8 @@ export const AapContactTile = ({
       orientation="horizontal"
       classes={{
         content: "pb-0",
+        body: "w-full",
+        desc: "w-full text-wrap",
       }}
       desc={
         <>
@@ -40,7 +42,7 @@ export const AapContactTile = ({
               {organism.adresseCodePostal} {organism.adresseVille}
             </p>
           )}
-          <p className="mb-0 leading-normal text-sm">
+          <p className="mb-0 w-full leading-normal text-sm">
             {organismEmail}
             <br />
             {organismPhone}

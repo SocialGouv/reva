@@ -16,6 +16,8 @@ export const CertificationAuthorityContactTile = ({
     orientation="horizontal"
     classes={{
       content: "pb-0",
+      body: "w-full",
+      desc: "w-full text-wrap",
     }}
     desc={
       <>
