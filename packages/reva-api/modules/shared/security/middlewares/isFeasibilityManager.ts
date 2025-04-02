@@ -44,26 +44,7 @@ export const isFeasibilityManager =
       const candidacyFeasibility = (
         await prismaClient.candidacy
           .findUnique({ where: { id: candidacyId } })
-          .Feasibility({
-            where: { isActive: true },
-            select: {
-              certificationAuthorityId: true,
-              candidacy: {
-                select: {
-                  certification: {
-                    select: {
-                      id: true,
-                    },
-                  },
-                  candidate: {
-                    select: {
-                      departmentId: true,
-                    },
-                  },
-                },
-              },
-            },
-          })
+          .Feasibility({ where: { isActive: true } })
       )?.[0];
 
       if (!candidacyFeasibility) {
@@ -82,43 +63,26 @@ export const isFeasibilityManager =
       const certificationAuthorityLocalAccount =
         await prismaClient.certificationAuthorityLocalAccount.findUnique({
           where: { accountId: account.id },
-          include: {
-            certificationAuthorityLocalAccountOnCertification: true,
-            certificationAuthorityLocalAccountOnDepartment: true,
-          },
         });
 
       if (!certificationAuthorityLocalAccount) {
         throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
       }
 
-      const candidacyCertificationId =
-        candidacyFeasibility.candidacy.certification?.id;
-
-      const candidateDepartmentId =
-        candidacyFeasibility.candidacy.candidate?.departmentId;
-
-      const candidacyCertificationAuthorityId =
-        candidacyFeasibility.certificationAuthorityId;
-
-      const matchCertificationAuthority =
-        certificationAuthorityLocalAccount?.certificationAuthorityId ===
-        candidacyCertificationAuthorityId;
-
-      const matchCertification =
-        certificationAuthorityLocalAccount.certificationAuthorityLocalAccountOnCertification.some(
-          (c) => c.certificationId === candidacyCertificationId,
-        );
-      const matchDepartment =
-        certificationAuthorityLocalAccount.certificationAuthorityLocalAccountOnDepartment.some(
-          (d) => d.departmentId === candidateDepartmentId,
+      const hasCandidacy =
+        await prismaClient.certificationAuthorityLocalAccountOnCandidacy.findUnique(
+          {
+            where: {
+              certificationAuthorityLocalAccountId_candidacyId: {
+                candidacyId: candidacyId,
+                certificationAuthorityLocalAccountId:
+                  certificationAuthorityLocalAccount.id,
+              },
+            },
+          },
         );
 
-      if (
-        matchCertificationAuthority &&
-        matchCertification &&
-        matchDepartment
-      ) {
+      if (hasCandidacy) {
         log("authorized");
         return next(root, args, context, info);
       }

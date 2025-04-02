@@ -189,19 +189,12 @@ test("Certification local account of the feasibility file of the candidacy shoul
         .certificationAuthorityOnCertificationAuthorityStructure[0]
         ?.certificationAuthorityStructureId,
   });
+
   const candidacyInput = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
     },
   });
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    certificationAuthorityId:
-      certificationAuthorityLocalAccount.certificationAuthorityId,
-    candidacyId: candidacyInput.id,
-  });
-
-  const candidacy = feasibility.candidacy;
-  const departmentId = candidacy.candidate?.departmentId;
 
   await prismaClient.certificationAuthorityLocalAccountOnCertification.create({
     data: {
@@ -215,8 +208,14 @@ test("Certification local account of the feasibility file of the candidacy shoul
     data: {
       certificationAuthorityLocalAccountId:
         certificationAuthorityLocalAccount.id,
-      departmentId: departmentId || "",
+      departmentId: candidacyInput.candidate?.departmentId || "",
     },
+  });
+
+  const feasibility = await createFeasibilityUploadedPdfHelper({
+    certificationAuthorityId:
+      certificationAuthorityLocalAccount.certificationAuthorityId,
+    candidacyId: candidacyInput.id,
   });
 
   const resp = await getCandidacy({

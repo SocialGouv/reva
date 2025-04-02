@@ -1,9 +1,7 @@
 import {
+  Prisma,
   Account,
   CertificationAuthorityLocalAccount,
-  CertificationAuthorityLocalAccountOnCertification,
-  CertificationAuthorityLocalAccountOnDepartment,
-  Prisma,
 } from "@prisma/client";
 
 export const getJuryListQueryWhereClauseForUserWithManageRole = ({
@@ -13,14 +11,10 @@ export const getJuryListQueryWhereClauseForUserWithManageRole = ({
 }: {
   account: Account | null;
   isCertificationAuthorityLocalAccount: boolean;
-  certificationAuthorityLocalAccount:
-    | (CertificationAuthorityLocalAccount & {
-        certificationAuthorityLocalAccountOnDepartment: CertificationAuthorityLocalAccountOnDepartment[];
-        certificationAuthorityLocalAccountOnCertification: CertificationAuthorityLocalAccountOnCertification[];
-      })
-    | null;
+  certificationAuthorityLocalAccount: CertificationAuthorityLocalAccount | null;
 }): Prisma.JuryWhereInput => {
-  let queryWhereClause = {};
+  let queryWhereClause: Prisma.JuryWhereInput = {};
+
   // For certification authority local accounts we restric matches to the local account own departments and certifications
   if (isCertificationAuthorityLocalAccount) {
     if (!certificationAuthorityLocalAccount) {
@@ -29,24 +23,17 @@ export const getJuryListQueryWhereClauseForUserWithManageRole = ({
       );
     }
 
-    const departmentIds =
-      certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-        (calad) => calad.departmentId,
-      );
-    const certificationIds =
-      certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-        (calac) => calac.certificationId,
-      );
-
     queryWhereClause = {
       ...queryWhereClause,
       certificationAuthorityId:
         certificationAuthorityLocalAccount?.certificationAuthorityId,
       candidacy: {
-        candidate: {
-          departmentId: { in: departmentIds },
+        CertificationAuthorityLocalAccountOnCandidacy: {
+          some: {
+            certificationAuthorityLocalAccountId:
+              certificationAuthorityLocalAccount.id,
+          },
         },
-        certificationId: { in: certificationIds },
       },
     };
   } else {

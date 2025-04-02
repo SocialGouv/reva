@@ -1,10 +1,8 @@
 import {
-  CertificationAuthorityLocalAccount,
-  CertificationAuthorityLocalAccountOnCertification,
-  CertificationAuthorityLocalAccountOnDepartment,
   Prisma,
+  Account,
+  CertificationAuthorityLocalAccount,
 } from "@prisma/client";
-import { Account } from "../../account/account.types";
 
 export const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole =
   ({
@@ -14,14 +12,10 @@ export const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole 
   }: {
     account: Account | null;
     isCertificationAuthorityLocalAccount: boolean;
-    certificationAuthorityLocalAccount:
-      | (CertificationAuthorityLocalAccount & {
-          certificationAuthorityLocalAccountOnDepartment: CertificationAuthorityLocalAccountOnDepartment[];
-          certificationAuthorityLocalAccountOnCertification: CertificationAuthorityLocalAccountOnCertification[];
-        })
-      | null;
+    certificationAuthorityLocalAccount: CertificationAuthorityLocalAccount | null;
   }): Prisma.FeasibilityWhereInput => {
-    let queryWhereClause = {};
+    let queryWhereClause: Prisma.FeasibilityWhereInput = {};
+
     // For certification authority local accounts we restric matches to the local account own departments and certifications
     if (isCertificationAuthorityLocalAccount) {
       if (!certificationAuthorityLocalAccount) {
@@ -30,24 +24,17 @@ export const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole 
         );
       }
 
-      const departmentIds =
-        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-          (calad) => calad.departmentId,
-        );
-      const certificationIds =
-        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-          (calac) => calac.certificationId,
-        );
-
       queryWhereClause = {
         ...queryWhereClause,
         certificationAuthorityId:
           certificationAuthorityLocalAccount?.certificationAuthorityId,
         candidacy: {
-          candidate: {
-            departmentId: { in: departmentIds },
+          CertificationAuthorityLocalAccountOnCandidacy: {
+            some: {
+              certificationAuthorityLocalAccountId:
+                certificationAuthorityLocalAccount.id,
+            },
           },
-          certificationId: { in: certificationIds },
         },
       };
     } else {

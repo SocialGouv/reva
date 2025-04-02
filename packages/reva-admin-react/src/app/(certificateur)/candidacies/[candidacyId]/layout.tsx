@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const getCandidacyQuery = graphql(`
   query getCandidacyWithCandidateInfoForLayout($candidacyId: ID!) {
@@ -32,6 +33,11 @@ const getCandidacyQuery = graphql(`
 `);
 
 const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isTranferCandidacyToCertificationAuthorityLocalAccountActive =
+    isFeatureActive("CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT_ON_CANDIDACY");
+
   const currentPathname = usePathname();
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -83,14 +89,34 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   ];
 
   if (!juryDateOfSession) {
-    items.push(
-      menuItem(
-        <Button size="small" priority="secondary" className="m-auto my-3">
-          Transférer la candidature
-        </Button>,
-        `/candidacies/${candidacyId}/transfer?page=1`,
-      ),
-    );
+    if (isTranferCandidacyToCertificationAuthorityLocalAccountActive) {
+      items.push(
+        menuItem(
+          <Button size="small" priority="secondary" className="m-auto my-3">
+            Transférer la candidature vers un autre certificateur
+          </Button>,
+          `/candidacies/${candidacyId}/transfer-to-certification-authority?page=1`,
+        ),
+      );
+
+      items.push(
+        menuItem(
+          <Button size="small" priority="secondary" className="m-auto my-3">
+            Transférer la candidature vers un autre compte collaborateur
+          </Button>,
+          `/candidacies/${candidacyId}/transfer-to-certification-authority-local-account?page=1`,
+        ),
+      );
+    } else {
+      items.push(
+        menuItem(
+          <Button size="small" priority="secondary" className="m-auto my-3">
+            Transférer la candidature
+          </Button>,
+          `/candidacies/${candidacyId}/transfer-to-certification-authority?page=1`,
+        ),
+      );
+    }
   }
 
   return (

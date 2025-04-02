@@ -28,6 +28,7 @@ export const CertificationAuthoritySearchList = ({
       {(certificationAuthority) =>
         certificationAuthority ? (
           <CertificationAuthorityCard
+            key={certificationAuthority.id}
             certificationAuthority={
               certificationAuthority as CertificationAuthority
             }

@@ -22,6 +22,8 @@ export const resolversSecurityMap = {
     isAdmin,
   "Query.certification_authority_getCertificationAuthoritiesToTransferCandidacy":
     isAdminOrCertificationAuthority,
+  "Query.certification_authority_getCertificationAuthorityLocalAccountsToTransferCandidacy":
+    isAdminOrCertificationAuthority,
 
   "Mutation.certification_authority_updateCertificationAuthority": isAnyone, //security handled in resolver
   "Mutation.certification_authority_updateCertificationAuthorityDepartmentsAndCertifications":
@@ -33,6 +35,8 @@ export const resolversSecurityMap = {
   "Mutation.certification_authority_deleteCertificationAuthorityLocalAccount":
     isAnyone, //security handled in resolver
   "Mutation.certification_authority_transferCandidacyToAnotherCertificationAuthority":
+    isAdminOrCertificationAuthority,
+  "Mutation.certification_authority_transferCandidacyToCertificationAuthorityLocalAccount":
     isAdminOrCertificationAuthority,
   "Mutation.certification_authority_createCertificationRegistryManager":
     isAdmin,
@@ -54,6 +58,7 @@ export const resolversSecurityMap = {
     hasRole([
       "admin",
       "manage_candidacy",
+      "manage_feasibility",
       "manage_certification_authority_local_account",
     ]),
   ],

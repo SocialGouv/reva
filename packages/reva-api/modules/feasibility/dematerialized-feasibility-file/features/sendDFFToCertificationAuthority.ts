@@ -1,3 +1,4 @@
+import { assignCandidadyToCertificationAuthorityLocalAccounts } from "../../../certification-authority/features/assignCandidadyToCertificationAuthorityLocalAccounts";
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
@@ -41,6 +42,10 @@ export const sendDFFToCertificationAuthority = async ({
     throw error;
   }
 
+  await assignCandidadyToCertificationAuthorityLocalAccounts({
+    candidacyId,
+  });
+
   const dff = await prismaClient.dematerializedFeasibilityFile.findUnique({
     where: { id: dematerializedFeasibilityFileId },
     include: {
@@ -51,7 +56,7 @@ export const sendDFFToCertificationAuthority = async ({
   });
 
   if (!dff) {
-    throw new Error("Dossier de faisabilité non trouvé");
+    throw new Error("Dossier de faisabilité dématérialisé non trouvé");
   }
 
   if (dff?.feasibility?.certificationAuthority?.contactEmail) {

@@ -8,10 +8,7 @@ export const CertificationAuthorityCard = ({
   certificationAuthority: CertificationAuthority;
   buttonComponent?: ReactNode;
 }) => (
-  <div
-    key={certificationAuthority.id}
-    className="flex flex-col justify-between p-6 border-[1px] border-[#DDD]"
-  >
+  <div className="flex flex-col justify-between p-6 border-[1px] border-[#DDD]">
     <div>
       <h6>{certificationAuthority.label}</h6>
       <p>

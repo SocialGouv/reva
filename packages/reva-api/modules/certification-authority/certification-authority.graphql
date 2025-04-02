@@ -44,6 +44,11 @@ type CertificationAuthorityPaginated {
   info: PaginationInfo!
 }
 
+type CertificationAuthorityLocalAccountPaginated {
+  rows: [CertificationAuthorityLocalAccount!]!
+  info: PaginationInfo!
+}
+
 type Certification {
   certificationAuthorities: [CertificationAuthority!]!
   certificationAuthorityStructure: CertificationAuthorityStructure
@@ -137,6 +142,13 @@ type Query {
     candidacyId: String!
   ): CertificationAuthorityPaginated!
 
+  certification_authority_getCertificationAuthorityLocalAccountsToTransferCandidacy(
+    offset: Int
+    limit: Int
+    searchFilter: String
+    candidacyId: String!
+  ): CertificationAuthorityLocalAccountPaginated!
+
   certification_authority_getCertificationAuthorityStructures(
     offset: Int
     limit: Int
@@ -198,6 +210,11 @@ type Mutation {
     candidacyId: String!
     certificationAuthorityId: String!
     transferReason: String!
+  ): Boolean!
+
+  certification_authority_transferCandidacyToCertificationAuthorityLocalAccount(
+    candidacyId: String!
+    certificationAuthorityLocalAccountId: String!
   ): Boolean!
 
   certification_authority_createCertificationAuthority(

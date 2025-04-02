@@ -47,6 +47,7 @@ export const canManageDossierDeValidation = async ({
       if (!account) {
         throw new Error("Compte utilisateur non trouvé");
       }
+
       const certificationAuthorityLocalAccount =
         await getCertificationAuthorityLocalAccountByAccountId({
           accountId: account.id,
@@ -58,36 +59,20 @@ export const canManageDossierDeValidation = async ({
         );
       }
 
-      if (
-        certificationAuthorityLocalAccount.certificationAuthorityId !==
-        certificationAuthorityId
-      ) {
-        throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
-      }
-
-      const departmentIds =
-        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-          (calad) => calad.departmentId,
-        );
-
-      const certificationIds =
-        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
-          (calac) => calac.certificationId,
-        );
-
-      return !!(await prismaClient.dossierDeValidation.findFirst({
-        where: {
-          id: dossierDeValidationId,
-          certificationAuthorityId:
-            certificationAuthorityLocalAccount.certificationAuthorityId,
-          candidacy: {
-            candidate: {
-              departmentId: { in: departmentIds },
+      const hasCandidacy =
+        await prismaClient.certificationAuthorityLocalAccountOnCandidacy.findUnique(
+          {
+            where: {
+              certificationAuthorityLocalAccountId_candidacyId: {
+                candidacyId: dossierDeValidation.candidacyId,
+                certificationAuthorityLocalAccountId:
+                  certificationAuthorityLocalAccount.id,
+              },
             },
-            certificationId: { in: certificationIds },
           },
-        },
-      }));
+        );
+
+      return !!hasCandidacy;
     }
   }
 

@@ -17,7 +17,6 @@ import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandid
 import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
-import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import {
   FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
   OOS_DOMAIN,
@@ -49,6 +48,7 @@ import {
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
 import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "./features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
+import { assignCandidadyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidadyToCertificationAuthorityLocalAccounts";
 
 const adminBaseUrl =
   process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
@@ -276,6 +276,10 @@ export const createFeasibility = async ({
     });
   }
 
+  await assignCandidadyToCertificationAuthorityLocalAccounts({
+    candidacyId,
+  });
+
   await updateCandidacyStatus({
     candidacyId,
     status: "DOSSIER_FAISABILITE_ENVOYE",
@@ -310,13 +314,13 @@ export const createFeasibility = async ({
     //sending a mail notification to candidacy certification authority and related certification authority local accounts
 
     const certificationAuthorityLocalAccounts =
-      await getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment(
-        {
-          certificationAuthorityId,
-          certificationId: candidacyCertificationId,
-          departmentId: candidateDepartmentId,
+      await prismaClient.certificationAuthorityLocalAccount.findMany({
+        where: {
+          CertificationAuthorityLocalAccountOnCandidacy: {
+            some: { candidacyId },
+          },
         },
-      );
+      });
     const emails = [];
     if (certificationAuthority?.contactEmail) {
       emails.push(certificationAuthority?.contactEmail);

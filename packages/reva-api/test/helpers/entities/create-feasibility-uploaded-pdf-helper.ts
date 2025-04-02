@@ -2,6 +2,7 @@ import { CandidacyStatusStep, Feasibility } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacyHelper } from "./create-candidacy-helper";
 import { createFileHelper } from "./create-file-helper";
+import { assignCandidadyToCertificationAuthorityLocalAccounts } from "../../../modules/certification-authority/features/assignCandidadyToCertificationAuthorityLocalAccounts";
 
 export const createFeasibilityUploadedPdfHelper = async (
   feasibilityArgs?: Partial<Feasibility>,
@@ -13,7 +14,7 @@ export const createFeasibilityUploadedPdfHelper = async (
   });
   const file = await createFileHelper();
 
-  return prismaClient.feasibility.create({
+  const feasibility = await prismaClient.feasibility.create({
     data: {
       candidacyId: feasibilityArgs?.candidacyId ?? candidacy.id,
       feasibilityUploadedPdf: {
@@ -34,4 +35,12 @@ export const createFeasibilityUploadedPdfHelper = async (
       },
     },
   });
+
+  if (feasibility.isActive && feasibility.certificationAuthorityId) {
+    await assignCandidadyToCertificationAuthorityLocalAccounts({
+      candidacyId: feasibility.candidacyId,
+    });
+  }
+
+  return feasibility;
 };

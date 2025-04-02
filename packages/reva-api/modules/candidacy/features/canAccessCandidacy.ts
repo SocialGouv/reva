@@ -11,9 +11,6 @@ export const canAccessCandidacy = async ({
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
-    include: {
-      candidate: { select: { departmentId: true } },
-    },
   });
 
   if (!candidacy) {
@@ -110,37 +107,26 @@ export const canAccessCandidacy = async ({
     const certificationAuthorityLocalAccount =
       await prismaClient.certificationAuthorityLocalAccount.findFirst({
         where: { accountId: account.id },
-        include: {
-          certificationAuthorityLocalAccountOnCertification: true,
-          certificationAuthorityLocalAccountOnDepartment: true,
-        },
       });
 
     if (!certificationAuthorityLocalAccount) {
       return false;
     }
 
-    const candidacyCertificationId = candidacy.certificationId;
-
-    const candidateDepartmentId = candidacy.candidate?.departmentId;
-
-    const candidacyCertificationAuthorityId =
-      candidacyFeasibility.certificationAuthorityId;
-
-    const matchCertificationAuthority =
-      certificationAuthorityLocalAccount?.certificationAuthorityId ===
-      candidacyCertificationAuthorityId;
-
-    const matchCertification =
-      certificationAuthorityLocalAccount.certificationAuthorityLocalAccountOnCertification.some(
-        (c) => c.certificationId === candidacyCertificationId,
-      );
-    const matchDepartment =
-      certificationAuthorityLocalAccount.certificationAuthorityLocalAccountOnDepartment.some(
-        (d) => d.departmentId === candidateDepartmentId,
+    const hasCandidacy =
+      await prismaClient.certificationAuthorityLocalAccountOnCandidacy.findUnique(
+        {
+          where: {
+            certificationAuthorityLocalAccountId_candidacyId: {
+              candidacyId: candidacyId,
+              certificationAuthorityLocalAccountId:
+                certificationAuthorityLocalAccount.id,
+            },
+          },
+        },
       );
 
-    return matchCertificationAuthority && matchCertification && matchDepartment;
+    return !!hasCandidacy;
   }
 
   return false;

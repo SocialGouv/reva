@@ -8,4 +8,5 @@ export interface Account {
   lastname: string | null;
   organismId: string | null;
   certificationAuthorityId: string | null;
+  disabledAt: Date | null;
 }

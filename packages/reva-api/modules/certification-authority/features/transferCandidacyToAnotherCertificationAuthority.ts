@@ -4,6 +4,7 @@ import {
   sendCandidacyTransferToPreviousCertificationAuthorityEmail,
   sendCandidacyTransferedToOrganismEmail,
 } from "../emails";
+import { assignCandidadyToCertificationAuthorityLocalAccounts } from "./assignCandidadyToCertificationAuthorityLocalAccounts";
 
 export const transferCandidacyToAnotherCertificationAuthority = async ({
   candidacyId,
@@ -93,6 +94,10 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
         },
       },
     },
+  });
+
+  await assignCandidadyToCertificationAuthorityLocalAccounts({
+    candidacyId,
   });
 
   const previousCertificationAuthority =

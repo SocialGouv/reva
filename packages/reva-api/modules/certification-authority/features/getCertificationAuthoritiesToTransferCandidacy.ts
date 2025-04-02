@@ -1,5 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
+import { Prisma } from "@prisma/client";
 
 export const getCertificationAuthoritiesToTransferCandidacy = async ({
   candidacyId,
@@ -22,24 +23,36 @@ export const getCertificationAuthoritiesToTransferCandidacy = async ({
   });
 
   if (!candidacy) {
-    throw new Error("Candidacy not found");
+    throw new Error("Candidature non trouvée");
   }
 
   if (!candidacy.certificationId) {
-    throw new Error("Candidacy has no active certification");
+    throw new Error("La candidature n'est pas associée à une certification");
   }
 
   const candidacyActiveFeasibility = candidacy.Feasibility.find(
     (feasibility) => feasibility.isActive,
   );
 
-  const whereClause = {
+  if (!candidacyActiveFeasibility) {
+    throw new Error(
+      "La candidature n'a pas de dossier de faisabilité en cours",
+    );
+  }
+
+  if (!candidacyActiveFeasibility.certificationAuthorityId) {
+    throw new Error(
+      "Le dossier de faisabilité n'est pas relié à une autorité de certification",
+    );
+  }
+
+  const whereClause: Prisma.CertificationAuthorityWhereInput = {
     label: {
       contains: searchFilter,
-      mode: "insensitive" as any,
+      mode: "insensitive",
     },
     id: {
-      not: candidacyActiveFeasibility?.certificationAuthorityId || "",
+      not: candidacyActiveFeasibility.certificationAuthorityId,
     },
     certificationAuthorityOnCertification: {
       some: {

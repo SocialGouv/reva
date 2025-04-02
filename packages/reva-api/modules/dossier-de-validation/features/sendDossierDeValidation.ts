@@ -6,7 +6,6 @@ import { prismaClient } from "../../../prisma/client";
 import { getAccountById } from "../../account/features/getAccount";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment";
 import { UploadedFile, uploadFileToS3 } from "../../shared/file";
 import { sendNewDVToCertificationAuthoritiesEmail } from "../emails";
 import { sendDVSentByCandidateToAapEmail } from "../emails/sendDVSentByCandidateToAapEmail";
@@ -203,14 +202,13 @@ export const sendDossierDeValidation = async ({
 
   if (candidacyCertificationId && candidateDepartmentId) {
     const certificationAuthorityLocalAccounts =
-      await getCertificationAuthorityLocalAccountByCertificationAuthorityIdCertificationAndDepartment(
-        {
-          certificationAuthorityId:
-            dossierDeValidation.certificationAuthorityId,
-          certificationId: candidacyCertificationId,
-          departmentId: candidateDepartmentId,
+      await prismaClient.certificationAuthorityLocalAccount.findMany({
+        where: {
+          CertificationAuthorityLocalAccountOnCandidacy: {
+            some: { candidacyId },
+          },
         },
-      );
+      });
     const certificationAuthority = dossierDeValidation.certificationAuthority;
     const emails = [];
     if (certificationAuthority?.contactEmail) {

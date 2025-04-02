@@ -50,30 +50,20 @@ export const canManageFeasibility = async ({
         );
       }
 
-      if (
-        certificationAuthorityLocalAccount.certificationAuthorityId !==
-        feasibility.certificationAuthorityId
-      ) {
-        throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
-      }
-
-      const departmentIds =
-        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
-          (calad) => calad.departmentId,
-        );
-
-      return !!(await prismaClient.feasibility.findFirst({
-        where: {
-          id: feasibility.id,
-          certificationAuthorityId:
-            certificationAuthorityLocalAccount.certificationAuthorityId,
-          candidacy: {
-            candidate: {
-              departmentId: { in: departmentIds },
+      const hasCandidacy =
+        await prismaClient.certificationAuthorityLocalAccountOnCandidacy.findUnique(
+          {
+            where: {
+              certificationAuthorityLocalAccountId_candidacyId: {
+                candidacyId: feasibility.candidacyId,
+                certificationAuthorityLocalAccountId:
+                  certificationAuthorityLocalAccount.id,
+              },
             },
           },
-        },
-      }));
+        );
+
+      return !!hasCandidacy;
     }
   }
 
