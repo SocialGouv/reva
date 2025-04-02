@@ -7,7 +7,7 @@ describe("candidate two-steps registration", () => {
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(req, "activeFeaturesForConnectedUser", {
             data: {
-              activeFeaturesForConnectedUser: ["CANDIDATE_REGISTRATION_V2"],
+              activeFeaturesForConnectedUser: [],
             },
           });
           stubQuery(
@@ -246,10 +246,7 @@ describe("candidate two-steps registration", () => {
           );
           stubQuery(req, "activeFeaturesForConnectedUser", {
             data: {
-              activeFeaturesForConnectedUser: [
-                "CANDIDACY_CREATION_DISABLED",
-                "CANDIDATE_REGISTRATION_V2",
-              ],
+              activeFeaturesForConnectedUser: ["CANDIDACY_CREATION_DISABLED"],
             },
           });
         });
