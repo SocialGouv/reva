@@ -148,7 +148,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     },
   });
 
-  if (candidacy.candidate) {
+  if (isAfter(dateOfSession, today) && candidacy.candidate) {
     sendJuryScheduledCandidateEmail({
       email: candidacy.candidate.email,
       convocationFile,
