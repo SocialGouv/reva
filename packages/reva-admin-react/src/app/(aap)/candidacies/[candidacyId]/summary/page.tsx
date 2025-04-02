@@ -145,10 +145,14 @@ const CandidacySummaryPage = () => {
                     `${candidate.birthDepartment.label} (${candidate.birthDepartment.code}) `}
                   {candidate.nationality}
                 </dd>
-                <dt className="sr-only">Téléphone</dt>
-                <dd>{candidate.phone}</dd>
-                <dt className="sr-only">Adresse email</dt>
-                <dd>{candidate.email}</dd>
+                {!isUpdateCandidateContactDetailsFeatureActive && (
+                  <>
+                    <dt className="sr-only">Téléphone</dt>
+                    <dd>{candidate.phone}</dd>
+                    <dt className="sr-only">Adresse email</dt>
+                    <dd>{candidate.email}</dd>
+                  </>
+                )}
                 <dt className="sr-only">Adresse</dt>
                 <dd>
                   {candidateHasAddressCompleted &&
