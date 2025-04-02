@@ -2,6 +2,7 @@
 import { CandidacyModalities } from "@/components/aap-candidacy-layout/CandidacyModalities";
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
 import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
@@ -53,6 +54,9 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
     "candidacy_actualisation",
   );
 
+  const { canAccess, isSuccess: isSuccessAccessCheck } =
+    useCanAccessCandidacy(candidacyId);
+
   const { data: getCandidacyMenuResponse, isLoading: isLoadingMenu } = useQuery(
     {
       queryKey: [candidacyId, "getCandidacyMenu"],
@@ -62,6 +66,10 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
         }),
     },
   );
+
+  if (isSuccessAccessCheck && canAccess === false) {
+    return "Vous n'avez pas accès à cette candidature";
+  }
 
   const menuHeaderEntries =
     getCandidacyMenuResponse?.candidacyMenu_getCandidacyMenu?.menuHeader;
