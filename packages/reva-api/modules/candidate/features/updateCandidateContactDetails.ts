@@ -32,7 +32,7 @@ export const updateCandidateContactDetails = async ({
     });
   }
 
-  const result = prismaClient.candidate.update({
+  const result = await prismaClient.candidate.update({
     where: { id: candidateId },
     data: { phone },
   });
