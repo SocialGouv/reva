@@ -9,6 +9,7 @@ import { Certification } from "@/graphql/generated/graphql";
 import request from "graphql-request";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Suspense } from "react";
 
 const getCertificationQuery = graphql(`
   query getCertification($certificationId: ID!) {
@@ -29,6 +30,18 @@ const askForRegistrationMutation = graphql(`
 `);
 
 export default function CandidateRegistrationPage() {
+  return (
+    <MainLayout>
+      <CandidateBackground>
+        <Suspense>
+          <CandidateRegistrationPageContent />
+        </Suspense>
+      </CandidateBackground>
+    </MainLayout>
+  );
+}
+
+function CandidateRegistrationPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const certificationId = searchParams?.get("certificationId");
@@ -70,13 +83,9 @@ export default function CandidateRegistrationPage() {
   }, [certificationId]);
 
   return (
-    <MainLayout>
-      <CandidateBackground>
-        <CandidateRegistrationForm
-          certification={certification}
-          onSubmit={handleFormSubmit}
-        />
-      </CandidateBackground>
-    </MainLayout>
+    <CandidateRegistrationForm
+      certification={certification}
+      onSubmit={handleFormSubmit}
+    />
   );
 }
