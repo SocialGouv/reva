@@ -2,6 +2,7 @@ import { isBefore, startOfDay } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
 import {
   sendJuryResultAAPEmail,
   sendJuryResultCandidateEmail,
@@ -100,6 +101,10 @@ export const updateResultOfJury = async (params: UpdateResultOfJury) => {
       data: {
         readyForJuryEstimatedAt: null,
       },
+    });
+
+    await updateCandidacyLastActivityDateToNow({
+      candidacyId: jury.candidacyId,
     });
   }
 
