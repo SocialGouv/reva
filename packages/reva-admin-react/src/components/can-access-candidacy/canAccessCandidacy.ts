@@ -11,7 +11,7 @@ const canAccessCandidacyQuery = graphql(`
 export const useCanAccessCandidacy = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: canAccessCandidacyResponse, isSuccess } = useQuery({
+  const { data: canAccessCandidacyResponse } = useQuery({
     queryKey: [candidacyId, "canAccessCandidacy"],
     queryFn: () =>
       graphqlClient.request(canAccessCandidacyQuery, {
@@ -21,8 +21,5 @@ export const useCanAccessCandidacy = (candidacyId: string) => {
 
   const canAccess = canAccessCandidacyResponse?.candidacy_canAccessCandidacy;
 
-  return {
-    canAccess,
-    isSuccess,
-  };
+  return { canAccess };
 };

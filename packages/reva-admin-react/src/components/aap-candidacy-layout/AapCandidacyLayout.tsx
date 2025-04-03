@@ -55,9 +55,6 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
     "candidacy_actualisation",
   );
 
-  const { canAccess, isSuccess: isSuccessAccessCheck } =
-    useCanAccessCandidacy(candidacyId);
-
   const { data: getCandidacyMenuResponse, isLoading: isLoadingMenu } = useQuery(
     {
       queryKey: [candidacyId, "getCandidacyMenu"],
@@ -68,7 +65,9 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
     },
   );
 
-  if (isSuccessAccessCheck && canAccess === false) {
+  const { canAccess } = useCanAccessCandidacy(candidacyId);
+
+  if (canAccess === false) {
     return <NotAuthorized />;
   }
 
