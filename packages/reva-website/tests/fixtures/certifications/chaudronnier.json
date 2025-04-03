@@ -1,0 +1,22 @@
+{
+  "data": {
+    "getCertification": {
+      "id": "610b6e86-9435-4781-abda-4cad3a746f32",
+      "label": "BTS Chaudronnier",
+      "codeRncp": "12345",
+      "typeDiplome": "Titre-BTS",
+      "isAapAvailable": true,
+      "level": 1,
+      "typeDiplome": "BTS",
+      "rncpObjectifsContexte": null,
+      "prerequisites": [],
+      "juryTypeMiseEnSituationProfessionnelle": null,
+      "juryTypeSoutenanceOrale": null,
+      "juryEstimatedCost": null,
+      "juryPlace": null,
+      "certificationAuthorityStructure": {
+        "label": "Ministère de l'Éducation nationale, de la Jeunesse et des Sports"
+      }
+    }
+  }
+}
