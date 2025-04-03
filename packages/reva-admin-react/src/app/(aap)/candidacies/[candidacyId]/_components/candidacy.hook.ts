@@ -54,7 +54,7 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     !isCandidacyArchivedAndNotReoriented &&
     (!isCandidacyStatusEqualOrAbove(
       candidacyCurrentActiveStatus,
-      "PARCOURS_CONFIRME",
+      "DOSSIER_FAISABILITE_INCOMPLET",
     ) ||
       isAdmin);
 

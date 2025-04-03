@@ -1,11 +1,13 @@
-import Button from "@codegouvfr/react-dsfr/Button";
 import {
   CandidacyForStatus,
   useCandidacyStatus,
 } from "../../_components/candidacy.hook";
 import { useAuth } from "@/components/auth/auth";
 import { FinanceModule, TypeAccompagnement } from "@/graphql/generated/graphql";
-import { AdminActionZone } from "./admin-action-zone/AdminActionZone";
+import {
+  AdminAction,
+  AdminActionZone,
+} from "./admin-action-zone/AdminActionZone";
 
 export const CandidacySummaryBottomButtons = ({
   candidacyId,
@@ -30,17 +32,33 @@ export const CandidacySummaryBottomButtons = ({
 
   return (
     <div className="mt-8 flex flex-col">
+      <div className="bg-white border border-b-2 mt-8">
+        <p className="text-xl font-bold my-0 leading-loose p-4 pl-6">
+          <span className="fr-icon-user-star-line fr-icon--lg mr-2" />
+          Actions administratives
+        </p>
+      </div>
       {canDroput && (
-        <Button
-          priority="secondary"
-          className="ml-auto"
+        <AdminAction
+          title="Déclarer l'abandon du candidat"
+          description="Le candidat ne pourra plus déposer de dossier de faisabilité sur le même diplôme durant cette année civile."
+          detail="Accessible tout au long du parcours."
           linkProps={{
             href: `/candidacies/${candidacyId}/drop-out`,
             target: "_self",
           }}
-        >
-          Déclarer l'abandon du candidat
-        </Button>
+        />
+      )}
+      {canBeArchived && (
+        <AdminAction
+          title="Archiver la candidature"
+          description="Le candidat pourra refaire une candidature dans le cadre de France VAE (modification du diplôme, changement d’AAP, …)"
+          detail="Accessible jusqu’au dépôt du dossier de faisabilité."
+          linkProps={{
+            href: `/candidacies/${candidacyId}/archive`,
+            target: "_self",
+          }}
+        />
       )}
 
       {isAdmin && (

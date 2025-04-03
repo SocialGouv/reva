@@ -145,18 +145,22 @@ export const AdminActionZone = ({
   );
 };
 
-const AdminAction = ({
+export const AdminAction = ({
   title,
   linkProps,
   buttonProps,
   disabled,
   disabledDescription,
+  description,
+  detail,
 }: {
   title: string;
   linkProps?: ComponentProps<typeof Tile>["linkProps"];
   buttonProps?: ComponentProps<typeof Tile>["buttonProps"];
   disabled?: boolean;
   disabledDescription?: string;
+  description?: string;
+  detail?: string;
 }) => (
   <Tile
     title={title}
@@ -167,7 +171,8 @@ const AdminAction = ({
     linkProps={disabled ? undefined : (linkProps as any)}
     buttonProps={buttonProps || {}}
     disabled={disabled}
-    desc={disabled ? disabledDescription : undefined}
+    desc={disabled ? disabledDescription : description}
+    detail={detail}
   />
 );
 
