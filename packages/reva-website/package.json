@@ -17,7 +17,9 @@
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "cypress:open": "cypress open",
     "cypress:ci": "cypress run",
-    "test:ci": "start-server-and-test 'next start -p 3002' http://localhost:3002 cypress:ci"
+    "test:ci": "start-server-and-test 'next start -p 3002' http://localhost:3002 cypress:ci",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.22.1",
@@ -47,7 +49,7 @@
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/client-preset": "^4.5.0",
     "@parcel/watcher": "^2.5.0",
-    "@playwright/test": "^1.51.1",
+    "@playwright/test": "^1.50.1",
     "@types/lodash": "^4.17.13",
     "@types/node": "^22",
     "@types/react": "^18",
@@ -58,6 +60,7 @@
     "eslint-config-next": "^15.1.7",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "msw": "^2.7.3",
     "postcss": "^8",
     "postcss-import": "^16.1.0",
     "postcss-url": "^10.1.3",
