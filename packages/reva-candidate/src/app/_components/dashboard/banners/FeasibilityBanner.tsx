@@ -142,7 +142,7 @@ export const FeasibilityBanner = ({
 
   if (
     decision === "INCOMPLETE" &&
-    feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+    !feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
     typeAccompagnement === "ACCOMPAGNE"
   ) {
     return (

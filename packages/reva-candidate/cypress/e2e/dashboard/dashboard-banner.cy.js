@@ -448,9 +448,6 @@ context("Dashboard Banner", () => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
           {
             decision: "INCOMPLETE",
-            dematerializedFeasibilityFile: {
-              candidateConfirmationAt: Date.now(),
-            },
           };
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
           "ACCOMPAGNE";
