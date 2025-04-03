@@ -223,6 +223,8 @@ model Candidacy {
   lastActivityDate                              DateTime?                                       @map("last_activity_date") @db.Timestamptz(6)
   candidacyContestationCaducite                 CandidacyContestationCaducite[]
   CandidacyEmail                                CandidacyEmail[]
+  cohorteVaeCollectiveId                        String?                                         @map("cohorte_vae_collective_id") @db.Uuid
+  cohorteVaeCollective                          CohorteVaeCollective?                           @relation(fields: [cohorteVaeCollectiveId], references: [id], onDelete: NoAction)
   CertificationAuthorityLocalAccountOnCandidacy CertificationAuthorityLocalAccountOnCandidacy[]
 
   @@index([organismId])
@@ -1814,6 +1816,7 @@ model CohorteVaeCollective {
   updatedAt                          DateTime?                           @map("updated_at") @db.Timestamptz(6)
   certificationCohorteVaeCollectives CertificationCohorteVaeCollective[]
   codeInscription                    String                              @unique @map("code_inscription") @db.VarChar(15)
+  Candidacy                          Candidacy[]
 
   @@map("cohorte_vae_collective")
 }
