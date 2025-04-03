@@ -85,11 +85,11 @@ export default function SendFileCertificationAuthorityPage() {
   } = useSendFileCertificationAuthority();
 
   const certificationAuthorities = useMemo(() => {
-    if (!candidacy?.certification?.certificationAuthorities) {
+    if (!candidacy?.certificationAuthorities) {
       return [];
     }
-    return candidacy.certification.certificationAuthorities;
-  }, [candidacy?.certification?.certificationAuthorities]);
+    return candidacy.certificationAuthorities;
+  }, [candidacy?.certificationAuthorities]);
 
   const [
     certificationAuthoritySelectedId,

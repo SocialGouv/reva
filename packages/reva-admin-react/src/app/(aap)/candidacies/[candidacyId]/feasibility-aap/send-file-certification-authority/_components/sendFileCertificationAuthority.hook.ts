@@ -82,6 +82,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
         }
         candidacy {
           certificationAuthorities {
+            id
             label
           }
           individualHourCount
@@ -96,10 +97,6 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             id
           }
           certification {
-            certificationAuthorities {
-              id
-              label
-            }
             label
             codeRncp
             level
