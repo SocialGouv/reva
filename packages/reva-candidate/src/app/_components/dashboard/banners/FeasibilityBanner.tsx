@@ -4,7 +4,7 @@ import { BaseBanner } from "./BaseBanner";
 interface FeasibilityBannerProps {
   feasibility: NonNullable<FeasibilityUseCandidateForDashboard>;
   typeAccompagnement: string;
-  readyForJuryEstimatedAt?: number;
+  readyForJuryEstimatedAt?: number | null;
 }
 
 const WARNING_IMAGE = "/candidat/images/image-warning-hand.png";
@@ -17,18 +17,22 @@ export const FeasibilityBanner = ({
 }: FeasibilityBannerProps) => {
   const { decision } = feasibility;
 
-  if (decision === "ADMISSIBLE" && typeAccompagnement === "AUTONOME") {
+  if (decision === "ADMISSIBLE") {
     return (
       <BaseBanner
         content={
-          <div data-test="autonome-admissible-feasibility-banner">
-            Félicitations, vous êtes recevable ! Vous pouvez, débuter la
-            rédaction de votre dossier de validation.{" "}
-            {!readyForJuryEstimatedAt && (
+          <div data-test="admissible-feasibility-banner">
+            {!readyForJuryEstimatedAt ? (
               <>
-                Afin de simplifier l'organisation de votre jury, vous pouvez
-                renseigner une date prévisionnelle de dépôt dans la section
-                "Dossier de validation".
+                Vous êtes recevable ! Vous pouvez débuter la rédaction de votre
+                dossier de validation. Afin de simplifier l’organisation de
+                votre jury, renseignez la date à laquelle vous pensez avoir
+                terminé votre dossier dans la section “Dossier de validation”.
+              </>
+            ) : (
+              <>
+                Lorsque vous aurez terminé la rédaction de votre dossier de
+                validation, déposez-le dans la section “Dossier de validation”.
               </>
             )}
           </div>
@@ -37,30 +41,78 @@ export const FeasibilityBanner = ({
     );
   }
 
-  if (decision === "ADMISSIBLE" && typeAccompagnement === "ACCOMPAGNE") {
+  // Dossier pas encore envoyé au candidat
+  if (
+    decision === "DRAFT" &&
+    typeAccompagnement === "ACCOMPAGNE" &&
+    !feasibility.dematerializedFeasibilityFile?.sentToCandidateAt
+  ) {
     return (
       <BaseBanner
         content={
-          <div data-test="accompagne-admissible-feasibility-banner">
-            Félicitations, votre dossier de faisabilité est recevable ! Votre
-            accompagnateur vous contactera prochainement pour démarrer votre
-            accompagnement. Vous pourrez, ensemble, débuter la rédaction de
-            votre dossier de validation.
+          <div data-test="creating-feasibility-banner">
+            Votre accompagnateur est en train de remplir votre dossier de
+            faisabilité. Une fois terminé, il vous sera transmis. Vous devrez le
+            valider avant qu'il soit envoyé au certificateur.
           </div>
         }
       />
     );
   }
 
-  if (decision === "DRAFT" && typeAccompagnement === "ACCOMPAGNE") {
+  // Dossier envoyé au candidat, candidat n'ayant pas encore confirmé
+  if (
+    (decision === "DRAFT" || decision === "INCOMPLETE") &&
+    typeAccompagnement === "ACCOMPAGNE" &&
+    !feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+    feasibility.dematerializedFeasibilityFile?.sentToCandidateAt
+  ) {
     return (
       <BaseBanner
         content={
           <div data-test="draft-feasibility-banner">
-            Votre dossier de faisabilité est désormais consultable ! Si le
-            contenu proposé vous convient, transmettez une attestation sur
-            l'honneur signée à votre accompagnateur pour valider le dossier de
-            faisabilité.
+            Votre dossier de faisabilité est désormais consultable ! Vérifiez-le
+            puis transmettez une attestation sur l’honneur signée à votre
+            accompagnateur pour valider le dossier de faisabilité.
+          </div>
+        }
+      />
+    );
+  }
+
+  // Candidat ayant confirmé sans attestation
+  if (
+    (decision === "DRAFT" || decision === "INCOMPLETE") &&
+    typeAccompagnement === "ACCOMPAGNE" &&
+    feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+    !feasibility.dematerializedFeasibilityFile?.swornStatementFileId
+  ) {
+    return (
+      <BaseBanner
+        content={
+          <div data-test="draft-feasibility-no-sworn-statement-banner">
+            Vous avez validé votre dossier de faisabilité. Si vous n’avez
+            toujours pas transmis votre attestation sur l’honneur, n’oubliez pas
+            de l’envoyer à votre accompagnateur.
+          </div>
+        }
+      />
+    );
+  }
+
+  // Candidat ayant confirmé avec attestation
+  if (
+    (decision === "DRAFT" || decision === "INCOMPLETE") &&
+    typeAccompagnement === "ACCOMPAGNE" &&
+    feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+    feasibility.dematerializedFeasibilityFile?.swornStatementFileId
+  ) {
+    return (
+      <BaseBanner
+        content={
+          <div data-test="draft-feasibility-with-sworn-statement-banner">
+            Vous avez validé votre dossier de faisabilité. Votre accompagnateur
+            le transmettra à votre certificateur.
           </div>
         }
       />
@@ -81,16 +133,17 @@ export const FeasibilityBanner = ({
           >
             Votre dossier a été envoyé au certificateur.{" "}
             {isPendingAccompagne ? "Votre accompagnateur et vous-même" : "Vous"}{" "}
-            recevrez un e-mail et/ou un courrier dans un délai de 2 mois maximum
-            vous informant si vous êtes recevable pour commencer un parcours VAE
-            !
+            recevrez bientôt une décision sur votre recevabilité.
           </div>
         }
       />
     );
   }
 
-  if (decision === "INCOMPLETE") {
+  if (
+    decision === "INCOMPLETE" &&
+    feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt
+  ) {
     const isAccompagne = typeAccompagnement === "ACCOMPAGNE";
     return (
       <BaseBanner
@@ -102,13 +155,13 @@ export const FeasibilityBanner = ({
                 : "autonome-incomplete-feasibility-banner"
             }
           >
-            Votre dossier de faisabilité est incomplet. Cliquez sur "Dossier de
-            faisabilité" pour découvrir les éléments manquants puis
             {isAccompagne
-              ? " contactez votre accompagnateur afin qu'il mette votre dossier à jour."
-              : " soumettez un dossier mis à jour."}
+              ? "Votre dossier de faisabilité est incomplet. Votre accompagnateur est en train de le mettre à jour et vous le renverra bientôt pour validation."
+              : "Votre certificateur a notifié qu’il manquait des éléments à votre dossier de faisabilité. Rendez vous dans la section “Dossier de faisabilité” pour connaitre les raisons et transmettre un nouveau dossier."}
           </div>
         }
+        imageSrc={WARNING_IMAGE}
+        imageAlt={WARNING_IMAGE_ALT}
       />
     );
   }
@@ -118,9 +171,8 @@ export const FeasibilityBanner = ({
       <BaseBanner
         content={
           <div data-test="rejected-feasibility-banner">
-            Malheureusement, votre dossier de faisabilité n'a pas été accepté
-            par le certificateur. Vous pouvez soit contester cette décision soit
-            arrêter votre parcours VAE ici.
+            Votre dossier de faisabilité n’a pas été validé par le certificateur
+            : votre parcours VAE s’arrête ici.
           </div>
         }
         imageSrc={WARNING_IMAGE}

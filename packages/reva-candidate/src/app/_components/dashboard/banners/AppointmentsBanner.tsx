@@ -26,9 +26,9 @@ export const AppointmentsBanner = ({
         content={
           <div data-test="waiting-for-appointment-banner">
             Votre accompagnateur vous enverra prochainement un date de
-            rendez-vous pour parler de votre projet. <br /> Si vous n'avez
-            toujours pas eu de retour 10 jours après l'envoi de votre
-            candidatures, contactez-le directement par mail.
+            rendez-vous pour parler de votre projet. Si vous n’avez toujours pas
+            eu de retour 2 semaines après l’envoi de votre candidature,
+            contactez-le directement.
           </div>
         }
       />
@@ -43,26 +43,24 @@ export const AppointmentsBanner = ({
           <div data-test="first-appointment-scheduled-banner">
             <b>Information importante :</b> un rendez-vous est prévu le{" "}
             {format(firstAppointmentOccuredAt, "dd/MM/yyyy, à HH'h'mm")} avec{" "}
-            <em>{organism?.nomPublic || organism?.label}</em>. Consultez la
-            section "Mes prochains rendez-vous" pour en savoir plus.{" "}
+            <em>{organism?.nomPublic || organism?.label}</em>.
           </div>
         }
       />
     );
   }
 
-  // Past appointment with confirmed path
+  // Past appointment with training waiting for confirmation
   if (
     isBefore(firstAppointmentOccuredAt, new Date()) &&
-    status === "PARCOURS_CONFIRME"
+    status === "PARCOURS_ENVOYE"
   ) {
     return (
       <BaseBanner
         content={
-          <div data-test="creating-feasibility-banner">
-            Votre accompagnateur est en train de remplir votre dossier de
-            faisabilité. Une fois terminé, il vous sera transmis. Vous devrez le
-            valider avant qu'il soit envoyé au certificateur pour étude.
+          <div data-test="training-to-validate-banner">
+            Vous pouvez maintenant consulter, vérifier et valider votre parcours
+            et le financement prévu.
           </div>
         }
       />
@@ -75,10 +73,9 @@ export const AppointmentsBanner = ({
       <BaseBanner
         content={
           <div data-test="waiting-for-training-banner">
-            Votre accompagnateur est en train de construire votre parcours
-            France VAE (heures d'accompagnement, formations prévues...).
-            <br />
-            Vous le découvrirez très prochainement !
+            Votre accompagnateur est en train de compléter votre parcours
+            construit ensemble (heures d'accompagnement, formations, etc…). Vous
+            pourrez le consulter très prochainement !
           </div>
         }
       />

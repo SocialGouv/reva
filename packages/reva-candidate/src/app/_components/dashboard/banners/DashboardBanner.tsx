@@ -116,6 +116,7 @@ export const DashboardBanner = (props: BannerProps) => {
       <FeasibilityBanner
         feasibility={feasibility}
         typeAccompagnement={typeAccompagnement}
+        readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt}
       />
     );
   }
@@ -131,5 +132,10 @@ export const DashboardBanner = (props: BannerProps) => {
     );
   }
 
-  return <CandidacySubmissionBanner canSubmitCandidacy={canSubmitCandidacy} />;
+  return (
+    <CandidacySubmissionBanner
+      canSubmitCandidacy={canSubmitCandidacy}
+      isAutonome={candidacyIsAutonome}
+    />
+  );
 };
