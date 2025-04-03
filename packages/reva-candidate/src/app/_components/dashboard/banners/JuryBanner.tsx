@@ -40,15 +40,9 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
     return (
       <BaseBanner
         content={
-          <>
-            <p className="font-bold mb-0">
-              Félicitations, vous avez obtenu votre diplôme grâce au parcours
-              VAE !
-            </p>
-            <p className="mb-0">
-              Pour en savoir plus, contactez dès à présent votre accompagnateur.
-            </p>
-          </>
+          <p className="font-bold mb-0">
+            Félicitations, vous avez réussi votre parcours VAE !
+          </p>
         }
         imageSrc="/candidat/images/gold-cup.png"
         imageAlt="Une coupe en or"
@@ -69,13 +63,11 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
         content={
           <>
             <p className="font-bold mb-0">
-              Vous avez obtenu une partie de votre diplôme grâce au parcours VAE
-              !
+              Vous avez obtenu une partie de votre diplôme grâce à la VAE !
             </p>
             <p className="mb-0">
-              Suite à ce résultat, vous pouvez repasser devant le jury.
-              Retrouvez toutes les informations au niveau de votre dossier de
-              validation.
+              Pour obtenir les blocs manquants, retrouvez toutes les
+              informations dans la section “Dossier de validation”.
             </p>
           </>
         }
@@ -99,8 +91,8 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
               Vous n'avez pas pu être présent lors du passage devant le jury.
             </p>
             <p className="mb-0">
-              Vous pouvez repasser devant le jury. Retrouvez toutes les
-              informations au niveau de votre dossier de validation.
+              Retrouvez toutes les informations dans la section “Dossier de
+              validation”.
             </p>
           </>
         }
@@ -123,13 +115,11 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
         content={
           <>
             <p className="font-bold mb-0">
-              Malheureusement, vous n'avez pas obtenu votre diplôme via ce
-              parcours VAE.
+              Vous n’avez pas obtenu votre diplôme via ce parcours VAE
             </p>
             <p className="mb-0">
-              Suite à ce résultat, vous pouvez repasser devant le jury.
-              Retrouvez toutes les informations au niveau de votre dossier de
-              validation.
+              Pour comprendre cette décision, retrouvez toutes les informations
+              dans la section “Dossier de validation”.
             </p>
           </>
         }
@@ -152,10 +142,10 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
         content={
           <>
             Le jour-J est programmé ! Votre passage devant le jury aura lieu le{" "}
-            {format(dateOfSession, "dd/MM/yyyy")}. Vous trouverez la date,
-            l'heure et le lieu de passage sur votre convocation ou dans l'encart
-            "Mes prochains rendez-vous". Un empêchement ? Contactez votre
-            certificateur dès à présente.
+            {format(dateOfSession, "dd/MM/yyyy")}. Vous trouverez l’heure et le
+            lieu de passage sur votre convocation ou dans l’encart “Mes
+            prochains rendez-vous”. Un empêchement ? Contactez votre
+            certificateur dès à présent.
           </>
         }
         testId="jury-banner-upcoming"
@@ -166,11 +156,7 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
   return (
     <BaseBanner
       content={
-        <>
-          Après votre passage devant le jury, vous recevrez sa décision par
-          e-mail sous 15 jours environ. Votre accompagnateur sera lui aussi
-          informé de la décision du certificateur.
-        </>
+        <>Vous recevrez bientôt le résultat de votre passage devant le jury.</>
       }
       testId="jury-banner-no-result"
     />
