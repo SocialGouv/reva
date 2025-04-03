@@ -133,6 +133,7 @@ const Dashboard = () => {
               feasibility={candidacy.feasibility}
               activeDossierDeValidation={candidacy.activeDossierDeValidation}
               isCaduque={candidacy.isCaduque}
+              jury={candidacy.jury}
             />
           </div>
         </div>
