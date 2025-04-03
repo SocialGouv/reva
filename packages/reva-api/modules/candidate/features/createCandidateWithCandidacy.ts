@@ -9,6 +9,7 @@ interface CreateCandidateWithCandidacyInput {
   lastname: string;
   departmentId: string;
   typeAccompagnement: TypeAccompagnement;
+  cohorteVaeCollectiveId?: string;
   keycloakId: string;
 }
 
@@ -43,6 +44,7 @@ export const createCandidateWithCandidacy = async (
     await createCandidacy({
       candidateId: createdCandidate.id,
       typeAccompagnement: candidateInput.typeAccompagnement,
+      cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
     });
   }
 

@@ -23,6 +23,7 @@ export const getCandidateRegistrationUrl = (params: {
   departmentId: string;
   certificationId?: string;
   typeAccompagnement: TypeAccompagnement;
+  cohorteVaeCollectiveId?: string;
 }) => {
   const token = generateJwt({ ...params, action: "registration" }, 3 * 60 * 60);
   return `${getCandidateAppUrl()}/registration?token=${token}`;

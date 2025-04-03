@@ -50,6 +50,7 @@ export interface CandidateRegistrationInput {
   departmentId: string;
   certificationId?: string;
   typeAccompagnement: TypeAccompagnement;
+  cohorteVaeCollectiveId?: string;
   action: "registration";
 }
 

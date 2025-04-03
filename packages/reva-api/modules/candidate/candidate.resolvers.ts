@@ -86,6 +86,7 @@ const unsafeResolvers = {
           lastname: string;
           departmentId: string;
           typeAccompagnement: TypeAccompagnement;
+          cohorteVaeCollectiveId?: string;
         };
       },
     ) => askForRegistration(params.candidate),

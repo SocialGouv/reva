@@ -18,6 +18,7 @@ export const sendRegistrationEmailToCandidateAccompagne = async (args: {
   departmentId: string;
   certificationId?: string;
   typeAccompagnement: TypeAccompagnement;
+  cohorteVaeCollectiveId?: string;
 }) => {
   const { email } = args;
   const useBrevoTemplate = await isFeatureActiveForUser({

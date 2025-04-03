@@ -62,6 +62,7 @@ input CandidateInput {
   departmentId: String!
   certificationId: String
   typeAccompagnement: TypeAccompagnement!
+  cohorteVaeCollectiveId: String
 }
 
 input CandidateUpdateInformationInput {
