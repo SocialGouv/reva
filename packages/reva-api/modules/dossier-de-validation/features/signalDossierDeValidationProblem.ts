@@ -2,6 +2,7 @@ import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidacyActiveStatus } from "../../candidacy/features/getCandidacyActiveStatus";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
+import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
 import {
   sendDVReportedToCandidateAutonomeEmail,
   sendDVReportedToOrganismEmail,
@@ -83,6 +84,10 @@ export const signalDossierDeValidationProblem = async ({
   await prismaClient.candidacy.update({
     where: { id: dossierDeValidation.candidacyId },
     data: { lastActivityDate: new Date() },
+  });
+
+  await updateCandidacyLastActivityDateToNow({
+    candidacyId: dossierDeValidation.candidacyId,
   });
 
   const isAutonome = candidacy?.typeAccompagnement === "AUTONOME";
