@@ -2,6 +2,7 @@ import {
   CandidacyStatusStep,
   Feasibility,
   FeasibilityStatus,
+  CertificationAuthority,
   Prisma,
 } from "@prisma/client";
 
@@ -27,7 +28,6 @@ import {
   uploadFilesToS3,
 } from "../shared/file";
 import { processPaginationInfo } from "../shared/list/pagination";
-import { logger } from "../shared/logger";
 import { getWhereClauseFromSearchFilter } from "../shared/search/search";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
@@ -247,7 +247,9 @@ export const createFeasibility = async ({
     feasibilityFormat: "UPLOADED_PDF",
   } as Prisma.FeasibilityCreateInput;
 
-  let feasibility;
+  let feasibility: Feasibility & {
+    certificationAuthority: CertificationAuthority | null;
+  };
 
   await prismaClient.feasibility.updateMany({
     where: { candidacyId },
@@ -266,12 +268,18 @@ export const createFeasibility = async ({
           },
         },
       },
+      include: {
+        certificationAuthority: true,
+      },
     });
   } else {
     feasibility = await prismaClient.feasibility.create({
       data: {
         ...feasibilityData,
         feasibilityUploadedPdf: { create: feasibilityUploadedPdfData },
+      },
+      include: {
+        certificationAuthority: true,
       },
     });
   }
@@ -299,42 +307,33 @@ export const createFeasibility = async ({
     });
   }
 
-  const candidacyCertificationId = candidacy?.certificationId;
-  const candidateDepartmentId = candidacy?.candidate?.departmentId;
+  // sending a mail notification to candidacy certification authority and related certification authority local accounts
 
-  if (candidacyCertificationId && candidateDepartmentId) {
-    const certificationAuthority = await getCertificationAuthorityById(
-      certificationAuthorityId,
-    );
-    if (!certificationAuthority) {
-      logger.error(
-        `Aucun certificateur trouvé pour la certification ${candidacyCertificationId} et le département : ${candidateDepartmentId}`,
-      );
-    }
-    //sending a mail notification to candidacy certification authority and related certification authority local accounts
-
-    const certificationAuthorityLocalAccounts =
-      await prismaClient.certificationAuthorityLocalAccount.findMany({
-        where: {
-          CertificationAuthorityLocalAccountOnCandidacy: {
-            some: { candidacyId },
-          },
+  const certificationAuthority = feasibility.certificationAuthority;
+  const certificationAuthorityLocalAccounts =
+    await prismaClient.certificationAuthorityLocalAccount.findMany({
+      where: {
+        CertificationAuthorityLocalAccountOnCandidacy: {
+          some: { candidacyId },
         },
-      });
-    const emails = [];
-    if (certificationAuthority?.contactEmail) {
-      emails.push(certificationAuthority?.contactEmail);
-    }
-    for (const cala of certificationAuthorityLocalAccounts) {
-      const account = await getAccountById({ id: cala.accountId });
-      emails.push(account.email);
-    }
-    if (emails.length) {
-      sendNewFeasibilitySubmittedEmail({
-        emails,
-        feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacy.id}/feasibility`,
-      });
-    }
+      },
+    });
+
+  const emails = [];
+  if (certificationAuthority?.contactEmail) {
+    emails.push(certificationAuthority?.contactEmail);
+  }
+
+  for (const cala of certificationAuthorityLocalAccounts) {
+    const account = await getAccountById({ id: cala.accountId });
+    emails.push(account.email);
+  }
+
+  if (emails.length) {
+    sendNewFeasibilitySubmittedEmail({
+      emails,
+      feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacy.id}/feasibility`,
+    });
   }
 
   await logCandidacyAuditEvent({

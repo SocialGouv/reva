@@ -2,10 +2,10 @@ import mjml2html from "mjml";
 import { sendEmailWithLink, templateMail } from "../../../shared/email";
 
 export const sendDFFNotificationToCertificationAuthorityEmail = ({
-  email,
+  emails,
   candidacyId,
 }: {
-  email: string;
+  emails: string[];
   candidacyId: string;
 }) => {
   const htmlContent = (url: string) =>
@@ -28,7 +28,7 @@ export const sendDFFNotificationToCertificationAuthorityEmail = ({
     );
 
   return sendEmailWithLink({
-    to: { email },
+    to: emails.map((email) => ({ email })),
     htmlContent,
     subject: "Un nouveau dossier de faisabilité vous a été transmis",
     app: "admin",

@@ -197,48 +197,48 @@ export const sendDossierDeValidation = async ({
     });
   }
 
-  const candidacyCertificationId = candidacy?.certificationId;
-  const candidateDepartmentId = candidacy?.candidate?.departmentId;
+  // sending a mail notification to candidacy certification authority and related certification authority local accounts
 
-  if (candidacyCertificationId && candidateDepartmentId) {
-    const certificationAuthorityLocalAccounts =
-      await prismaClient.certificationAuthorityLocalAccount.findMany({
-        where: {
-          CertificationAuthorityLocalAccountOnCandidacy: {
-            some: { candidacyId },
-          },
+  const certificationAuthority = dossierDeValidation.certificationAuthority;
+  const certificationAuthorityLocalAccounts =
+    await prismaClient.certificationAuthorityLocalAccount.findMany({
+      where: {
+        CertificationAuthorityLocalAccountOnCandidacy: {
+          some: { candidacyId },
         },
-      });
-    const certificationAuthority = dossierDeValidation.certificationAuthority;
-    const emails = [];
-    if (certificationAuthority?.contactEmail) {
-      emails.push(certificationAuthority?.contactEmail);
-    }
-    for (const cala of certificationAuthorityLocalAccounts) {
-      const account = await getAccountById({ id: cala.accountId });
-      emails.push(account.email);
-    }
-    if (emails.length) {
-      sendNewDVToCertificationAuthoritiesEmail({
-        emails,
-        candidacyId,
-      });
-    }
+      },
+    });
+
+  const emails = [];
+  if (certificationAuthority?.contactEmail) {
+    emails.push(certificationAuthority?.contactEmail);
+  }
+
+  for (const cala of certificationAuthorityLocalAccounts) {
+    const account = await getAccountById({ id: cala.accountId });
+    emails.push(account.email);
+  }
+
+  if (emails.length) {
+    sendNewDVToCertificationAuthoritiesEmail({
+      emails,
+      candidacyId,
+    });
   }
 
   const isDVSentByCandidate = userRoles.includes("candidate");
 
-  if (candidacy?.candidate?.email) {
-    sendDVSentToCandidateEmail({ email: candidacy?.candidate?.email });
+  if (candidacy.candidate?.email) {
+    sendDVSentToCandidateEmail({ email: candidacy.candidate.email });
     if (isDVSentByCandidate) {
       sendDVSentByCandidateToAapEmail({
         email:
-          candidacy?.organism?.emailContact ||
-          candidacy?.organism?.contactAdministrativeEmail ||
+          candidacy.organism?.emailContact ||
+          candidacy.organism?.contactAdministrativeEmail ||
           "",
         candidacyId,
-        aapName: candidacy?.organism?.label || "",
-        candidateName: `${candidacy?.candidate?.firstname} ${candidacy?.candidate?.lastname}`,
+        aapName: candidacy.organism?.label || "",
+        candidateName: `${candidacy.candidate.firstname} ${candidacy.candidate.lastname}`,
       });
     }
   }

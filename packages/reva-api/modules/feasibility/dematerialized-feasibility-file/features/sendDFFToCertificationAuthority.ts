@@ -3,6 +3,7 @@ import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import { sendDFFNotificationToCertificationAuthorityEmail } from "../emails";
+import { getAccountById } from "../../../account/features/getAccount";
 
 export const sendDFFToCertificationAuthority = async ({
   dematerializedFeasibilityFileId,
@@ -59,9 +60,31 @@ export const sendDFFToCertificationAuthority = async ({
     throw new Error("Dossier de faisabilité dématérialisé non trouvé");
   }
 
-  if (dff?.feasibility?.certificationAuthority?.contactEmail) {
+  // sending a mail notification to candidacy certification authority and related certification authority local accounts
+
+  const certificationAuthority = dff?.feasibility?.certificationAuthority;
+  const certificationAuthorityLocalAccounts =
+    await prismaClient.certificationAuthorityLocalAccount.findMany({
+      where: {
+        CertificationAuthorityLocalAccountOnCandidacy: {
+          some: { candidacyId },
+        },
+      },
+    });
+
+  const emails = [];
+  if (certificationAuthority?.contactEmail) {
+    emails.push(certificationAuthority?.contactEmail);
+  }
+
+  for (const cala of certificationAuthorityLocalAccounts) {
+    const account = await getAccountById({ id: cala.accountId });
+    emails.push(account.email);
+  }
+
+  if (emails.length) {
     await sendDFFNotificationToCertificationAuthorityEmail({
-      email: dff.feasibility.certificationAuthority.contactEmail,
+      emails,
       candidacyId: dff.feasibility.candidacyId,
     });
   }
