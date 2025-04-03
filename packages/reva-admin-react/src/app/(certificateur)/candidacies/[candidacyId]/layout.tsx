@@ -7,6 +7,7 @@ import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 
 const getCandidacyQuery = graphql(`
   query getCandidacyWithCandidateInfoForLayout($candidacyId: ID!) {
@@ -35,7 +36,7 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   }>();
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getCandidacyResponse } = useQuery({
+  const { data: getCandidacyResponse, isLoading: isLoadingMenu } = useQuery({
     queryKey: [candidacyId, "getCandidacyQuery"],
     queryFn: () =>
       graphqlClient.request(getCandidacyQuery, {
@@ -86,49 +87,53 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="flex flex-col flex-1 w-full md:flex-row gap-10 md:gap-0 ">
-      <SideMenu
-        title={
-          <>
-            <div className="flex items-center pt-1.5 mb-4">
-              <span className="fr-icon-user-fill fr-icon mr-2" />
-              <p className="font-bold text-xl capitalize">
-                {`${candidate?.firstname || ""} ${
-                  candidate?.lastname || ""
-                }`.toLowerCase()}
-              </p>
-            </div>
-            {typeAccompagnement === "AUTONOME" && (
-              <Badge severity="new" className="mt-4">
-                Candidat en autonomie
-              </Badge>
-            )}
-            {isCaduque && !hasPendingCaduciteContestation && (
-              <Badge
-                severity="error"
-                className="mt-4"
-                data-test="caduque-badge"
-              >
-                Recevabilité caduque
-              </Badge>
-            )}
-            {hasPendingCaduciteContestation && (
-              <Badge
-                severity="warning"
-                className="mt-4"
-                data-test="contestation-badge"
-              >
-                Contestation caducité
-              </Badge>
-            )}
-          </>
-        }
-        className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
-        align="left"
-        burgerMenuButtonText="Candidatures"
-        sticky
-        fullHeight
-        items={items}
-      />
+      {isLoadingMenu ? (
+        <Skeleton />
+      ) : (
+        <SideMenu
+          title={
+            <>
+              <div className="flex items-center pt-1.5 mb-4">
+                <span className="fr-icon-user-fill fr-icon mr-2" />
+                <p className="font-bold text-xl capitalize">
+                  {`${candidate?.firstname || ""} ${
+                    candidate?.lastname || ""
+                  }`.toLowerCase()}
+                </p>
+              </div>
+              {typeAccompagnement === "AUTONOME" && (
+                <Badge severity="new" className="mt-4">
+                  Candidat en autonomie
+                </Badge>
+              )}
+              {isCaduque && !hasPendingCaduciteContestation && (
+                <Badge
+                  severity="error"
+                  className="mt-4"
+                  data-test="caduque-badge"
+                >
+                  Recevabilité caduque
+                </Badge>
+              )}
+              {hasPendingCaduciteContestation && (
+                <Badge
+                  severity="warning"
+                  className="mt-4"
+                  data-test="contestation-badge"
+                >
+                  Contestation caducité
+                </Badge>
+              )}
+            </>
+          }
+          className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
+          align="left"
+          burgerMenuButtonText="Candidatures"
+          sticky
+          fullHeight
+          items={items}
+        />
+      )}
       <div className="mt-3 flex-1">{children}</div>
     </div>
   );
