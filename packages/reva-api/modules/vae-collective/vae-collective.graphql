@@ -1,0 +1,9 @@
+type Query {
+  cohorteVaeCollective(codeInscription: String!): CohorteVaeCollective
+}
+
+type CohorteVaeCollective {
+  id: ID!
+  nom: String!
+  codeInscription: String!
+}

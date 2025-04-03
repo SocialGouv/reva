@@ -43,6 +43,7 @@ import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 import { aapLogResolvers } from "./aap-log/aap-log.resolvers";
 import { aapLogLoaders } from "./aap-log/aap-log.loaders";
+import { vaeCollectiveResolvers } from "./vae-collective/vae-collective.resolvers";
 
 // Resolvers
 
@@ -72,6 +73,7 @@ const resolvers = mergeResolvers([
   trainingResolvers,
   certificationResolvers,
   candidacyContestationCaduciteResolvers,
+  vaeCollectiveResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
