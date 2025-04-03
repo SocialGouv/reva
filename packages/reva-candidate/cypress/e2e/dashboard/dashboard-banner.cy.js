@@ -346,7 +346,7 @@ context("Dashboard Banner", () => {
           );
         });
 
-        cy.get('[data-test="autonome-admissible-feasibility-banner"]').should(
+        cy.get('[data-test="admissible-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -369,7 +369,7 @@ context("Dashboard Banner", () => {
           );
         });
 
-        cy.get('[data-test="accompagne-admissible-feasibility-banner"]').should(
+        cy.get('[data-test="admissible-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -380,6 +380,9 @@ context("Dashboard Banner", () => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
           {
             decision: "DRAFT",
+            dematerializedFeasibilityFile: {
+              sentToCandidateAt: Date.now(),
+            },
           };
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
           "ACCOMPAGNE";
@@ -445,6 +448,9 @@ context("Dashboard Banner", () => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
           {
             decision: "INCOMPLETE",
+            dematerializedFeasibilityFile: {
+              candidateConfirmationAt: Date.now(),
+            },
           };
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
           "ACCOMPAGNE";
@@ -567,6 +573,13 @@ context("Dashboard Banner", () => {
           "PARCOURS_CONFIRME";
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
           pastAppointment;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
+          {
+            decision: "DRAFT",
+            dematerializedFeasibilityFile: {
+              sentToCandidateAt: null,
+            },
+          };
 
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
