@@ -9,6 +9,7 @@ export const AdminActionZone = ({
   candidacyId,
   canBeArchived,
   canBeRestored,
+  canDroput,
   canCancelDropout,
   canSwitchFinanceModuleToHorsPlateforme,
   canSwitchTypeAccompagnementToAutonome,
@@ -19,6 +20,7 @@ export const AdminActionZone = ({
   candidacyId: string;
   canBeArchived: boolean;
   canBeRestored: boolean;
+  canDroput: boolean;
   canCancelDropout: boolean;
   canSwitchFinanceModuleToHorsPlateforme: boolean;
   canSwitchTypeAccompagnementToAutonome: boolean;
@@ -88,6 +90,18 @@ export const AdminActionZone = ({
         </p>
       </div>
 
+      {canDroput && (
+        <AdminAction
+          title="Déclarer l'abandon du candidat"
+          description="Le candidat ne pourra plus déposer de dossier de faisabilité sur le même diplôme durant cette année civile."
+          detail="Accessible tout au long du parcours."
+          linkProps={{
+            href: `/candidacies/${candidacyId}/drop-out`,
+            target: "_self",
+          }}
+        />
+      )}
+
       {canCancelDropout && (
         <AdminAction
           title="Annuler l'abandon du candidat"
@@ -126,6 +140,8 @@ export const AdminActionZone = ({
       {canBeArchived && (
         <AdminAction
           title="Archiver la candidature"
+          description="Le candidat pourra refaire une candidature dans le cadre de France VAE (modification du diplôme, changement d’AAP, …)"
+          detail="Accessible jusqu’au dépôt du dossier de faisabilité."
           linkProps={{
             href: `/candidacies/${candidacyId}/archive`,
             target: "_self",

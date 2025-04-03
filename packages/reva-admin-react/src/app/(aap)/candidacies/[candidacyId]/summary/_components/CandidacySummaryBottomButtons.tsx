@@ -32,33 +32,37 @@ export const CandidacySummaryBottomButtons = ({
 
   return (
     <div className="mt-8 flex flex-col">
-      <div className="bg-white border border-b-2 mt-8">
-        <p className="text-xl font-bold my-0 leading-loose p-4 pl-6">
-          <span className="fr-icon-user-star-line fr-icon--lg mr-2" />
-          Actions administratives
-        </p>
-      </div>
-      {canDroput && (
-        <AdminAction
-          title="Déclarer l'abandon du candidat"
-          description="Le candidat ne pourra plus déposer de dossier de faisabilité sur le même diplôme durant cette année civile."
-          detail="Accessible tout au long du parcours."
-          linkProps={{
-            href: `/candidacies/${candidacyId}/drop-out`,
-            target: "_self",
-          }}
-        />
-      )}
-      {canBeArchived && (
-        <AdminAction
-          title="Archiver la candidature"
-          description="Le candidat pourra refaire une candidature dans le cadre de France VAE (modification du diplôme, changement d’AAP, …)"
-          detail="Accessible jusqu’au dépôt du dossier de faisabilité."
-          linkProps={{
-            href: `/candidacies/${candidacyId}/archive`,
-            target: "_self",
-          }}
-        />
+      {!isAdmin && (
+        <>
+          <div className="bg-white border border-b-2 mt-8">
+            <p className="text-xl font-bold my-0 leading-loose p-4 pl-6">
+              <span className="fr-icon-user-star-line fr-icon--lg mr-2" />
+              Actions administratives
+            </p>
+          </div>
+          {canDroput && (
+            <AdminAction
+              title="Déclarer l'abandon du candidat"
+              description="Le candidat ne pourra plus déposer de dossier de faisabilité sur le même diplôme durant cette année civile."
+              detail="Accessible tout au long du parcours."
+              linkProps={{
+                href: `/candidacies/${candidacyId}/drop-out`,
+                target: "_self",
+              }}
+            />
+          )}
+          {canBeArchived && (
+            <AdminAction
+              title="Archiver la candidature"
+              description="Le candidat pourra refaire une candidature dans le cadre de France VAE (modification du diplôme, changement d’AAP, …)"
+              detail="Accessible jusqu’au dépôt du dossier de faisabilité."
+              linkProps={{
+                href: `/candidacies/${candidacyId}/archive`,
+                target: "_self",
+              }}
+            />
+          )}
+        </>
       )}
 
       {isAdmin && (
@@ -67,6 +71,7 @@ export const CandidacySummaryBottomButtons = ({
           canBeArchived={canBeArchived}
           canBeRestored={canBeRestored}
           canCancelDropout={canCancelDropout}
+          canDroput={canDroput}
           canSwitchFinanceModuleToHorsPlateforme={
             canSwitchFinanceModuleToHorsPlateforme
           }
