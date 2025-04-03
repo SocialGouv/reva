@@ -27,10 +27,11 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
 
   const resultIsSuccess =
     result === "FULL_SUCCESS_OF_FULL_CERTIFICATION" ||
-    result === "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION";
+    result === "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION";
   const resultIsPartialSuccess =
     result === "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION" ||
-    result === "PARTIAL_SUCCESS_PENDING_CONFIRMATION";
+    result === "PARTIAL_SUCCESS_PENDING_CONFIRMATION" ||
+    result === "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION";
   const resultIsNotPresent =
     result === "CANDIDATE_ABSENT" || result === "CANDIDATE_EXCUSED";
   const resultIsFailure = result === "FAILURE";
