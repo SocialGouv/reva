@@ -20,6 +20,7 @@ import {
   DossierDeValidationFormData,
   DossierDeValidationTab,
 } from "./_components/DossierDeValidationTab";
+import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 
 const AapDossierDeValidationPage = () => {
   const router = useRouter();
@@ -82,6 +83,11 @@ const AapDossierDeValidationPage = () => {
 
   const dossierDeValidationActiveAndNotIncomplete =
     dossierDeValidation?.decision !== "INCOMPLETE";
+
+  if (getCandidacyStatus === "pending") {
+    return <Skeleton />;
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <CandidacyBackButton candidacyId={candidacyId} />
