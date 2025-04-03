@@ -1,6 +1,8 @@
 "use client";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+import { NotAuthorized } from "@/components/not-authorized";
+import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
@@ -55,6 +57,12 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
         caducite?.certificationAuthorityContestationDecision ===
         "DECISION_PENDING",
     );
+
+  const { canAccess } = useCanAccessCandidacy(candidacyId);
+
+  if (canAccess === false) {
+    return <NotAuthorized />;
+  }
 
   const menuItem = (text: string | ReactNode, path: string) => ({
     isActive: currentPathname.startsWith(path),
