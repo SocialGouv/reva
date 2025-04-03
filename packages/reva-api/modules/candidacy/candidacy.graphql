@@ -253,6 +253,8 @@ type Query {
     offset: Int
     limit: Int
     searchFilter: String
+    certificationAuthorityId: ID
+    certificationAuthorityLocalAccountId: ID
     status: CandidacyCaduciteStatus!
   ): CandidacyCaducitePaginated!
   candidacy_canAccessCandidacy(candidacyId: ID!): Boolean!

@@ -204,6 +204,8 @@ const unsafeResolvers = {
         offset?: number;
         limit?: number;
         searchFilter?: string;
+        certificationAuthorityId?: string;
+        certificationAuthorityLocalAccountId?: string;
         status: CandidacyCaduciteStatus;
       },
       context: GraphqlContext,

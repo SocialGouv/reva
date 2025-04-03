@@ -16,6 +16,8 @@ export const getCandidacyCaducites = async ({
   offset = 0,
   limit = 10,
   searchFilter,
+  certificationAuthorityId,
+  certificationAuthorityLocalAccountId,
   status,
   hasRole,
   keycloakId,
@@ -23,6 +25,8 @@ export const getCandidacyCaducites = async ({
   offset?: number;
   limit?: number;
   searchFilter?: string;
+  certificationAuthorityId?: string;
+  certificationAuthorityLocalAccountId?: string;
   status: CandidacyCaduciteStatus;
   hasRole: (role: string) => boolean;
   keycloakId: string;
@@ -97,6 +101,51 @@ export const getCandidacyCaducites = async ({
         },
       },
     };
+  } else if (hasRole("admin")) {
+    if (certificationAuthorityId) {
+      const certificationAuthorityAccount =
+        await prismaClient.account.findFirst({
+          where: { certificationAuthorityId },
+        });
+      if (certificationAuthorityAccount) {
+        queryWhereClause = {
+          ...queryWhereClause,
+          Feasibility: {
+            some: {
+              ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+                {
+                  account: certificationAuthorityAccount,
+                  isCertificationAuthorityLocalAccount: false,
+                  certificationAuthorityLocalAccount: null,
+                },
+              ),
+            },
+          },
+        };
+      }
+    } else if (certificationAuthorityLocalAccountId) {
+      const certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: { id: certificationAuthorityLocalAccountId },
+        });
+
+      if (certificationAuthorityLocalAccount) {
+        queryWhereClause = {
+          ...queryWhereClause,
+          Feasibility: {
+            some: {
+              ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+                {
+                  account: null,
+                  isCertificationAuthorityLocalAccount: true,
+                  certificationAuthorityLocalAccount,
+                },
+              ),
+            },
+          },
+        };
+      }
+    }
   } else if (!hasRole("admin")) {
     throw new Error("Utilisateur non autorisé");
   }

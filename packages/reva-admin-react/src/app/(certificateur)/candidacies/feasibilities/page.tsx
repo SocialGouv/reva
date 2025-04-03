@@ -94,6 +94,7 @@ const FeasibilitiesPage = () => {
       currentPage,
       category,
       certificationAuthorityId,
+      certificationAuthorityLocalAccountId,
     ],
     queryFn: () =>
       graphqlClient.request(getFeasibilitiesQuery, {

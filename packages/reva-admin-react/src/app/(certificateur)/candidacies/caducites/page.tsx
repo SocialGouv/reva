@@ -7,6 +7,8 @@ import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
+import { useAuth } from "@/components/auth/auth";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -15,12 +17,16 @@ const getCandidacyCaducitesQuery = graphql(`
     $offset: Int
     $limit: Int
     $searchFilter: String
+    $certificationAuthorityId: ID
+    $certificationAuthorityLocalAccountId: ID
     $status: CandidacyCaduciteStatus!
   ) {
     candidacy_getCandidacyCaducites(
       limit: $limit
       offset: $offset
       searchFilter: $searchFilter
+      certificationAuthorityId: $certificationAuthorityId
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
       status: $status
     ) {
       rows {
@@ -58,6 +64,12 @@ const CaducitesPage = () => {
   const page = searchParams.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
   const searchFilter = searchParams.get("search") || "";
+  const certificationAuthorityId = searchParams.get(
+    "certificationAuthorityId",
+  ) as string | undefined;
+  const certificationAuthorityLocalAccountId = searchParams.get(
+    "certificationAuthorityLocalAccountId",
+  ) as string | undefined;
 
   const status = searchParams.get("CATEGORY");
 
@@ -79,13 +91,24 @@ const CaducitesPage = () => {
     }
   }, [replace, page, status, currentPathname]);
 
+  const { isAdmin } = useAuth();
+
   const { data: getCandidacyCaducitesResponse } = useQuery({
-    queryKey: ["getCandidacyCaducites", searchFilter, currentPage, status],
+    queryKey: [
+      "getCandidacyCaducites",
+      searchFilter,
+      certificationAuthorityId,
+      certificationAuthorityLocalAccountId,
+      currentPage,
+      status,
+    ],
     queryFn: () =>
       graphqlClient.request(getCandidacyCaducitesQuery, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
         limit: RECORDS_PER_PAGE,
         searchFilter,
+        certificationAuthorityId,
+        certificationAuthorityLocalAccountId,
         status: status as CandidacyCaduciteStatus,
       }),
     enabled: !!status,
@@ -105,10 +128,69 @@ const CaducitesPage = () => {
     }
   }, [status]);
 
+  const getPathnameWithoutCertificationAuthorityId = (): string => {
+    const currentParams = new URLSearchParams(searchParams);
+    currentParams.delete("certificationAuthorityId");
+    return `${currentPathname}?${currentParams.toString()}`;
+  };
+
+  const getPathnameWithoutCertificationAuthorityLocalAccountId = (): string => {
+    const currentParams = new URLSearchParams(searchParams);
+    currentParams.delete("certificationAuthorityLocalAccountId");
+    return `${currentPathname}?${currentParams.toString()}`;
+  };
+
   return (
     caducitesPage && (
       <div className="flex flex-col">
-        <h1>Candidatures</h1>
+        {isAdmin ? (
+          <>
+            {certificationAuthorityId && (
+              <div>
+                <h1>Candidatures de la structure</h1>
+                <Button
+                  priority="secondary"
+                  linkProps={{
+                    href: getPathnameWithoutCertificationAuthorityId(),
+                  }}
+                >
+                  Accéder à toutes les candidatures
+                </Button>
+                <p className="mt-6">
+                  Ici, vous pouvez rechercher une ou plusieurs candidatures
+                  gérées par cette structure. Pour retrouver toutes les
+                  candidatures de la plateforme, cliquez sur “Accéder à toutes
+                  les candidatures”.
+                </p>
+              </div>
+            )}
+
+            {certificationAuthorityLocalAccountId && (
+              <div>
+                <h1>Candidatures du compte collaborateur</h1>
+                <Button
+                  priority="secondary"
+                  linkProps={{
+                    href: getPathnameWithoutCertificationAuthorityLocalAccountId(),
+                  }}
+                >
+                  Accéder à toutes les candidatures
+                </Button>
+                <p className="mt-6">
+                  Ici, vous pouvez rechercher une ou plusieurs candidatures
+                  gérées par ce compte collaborateur. Pour retrouver toutes les
+                  candidatures de la plateforme, cliquez sur “Accéder à toutes
+                  les candidatures”.
+                </p>
+              </div>
+            )}
+
+            {!certificationAuthorityId &&
+              !certificationAuthorityLocalAccountId && <h1>Candidatures</h1>}
+          </>
+        ) : (
+          <h1>Candidatures</h1>
+        )}
 
         <CandidacySearchList
           title={statusLabel}

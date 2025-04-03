@@ -96,6 +96,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       "getFeasibilityCountByCategory",
       searchFilter,
       certificationAuthorityId,
+      certificationAuthorityLocalAccountId,
     ],
     queryFn: () =>
       graphqlClient.request(getFeasibilityCountByCategoryQuery, {
@@ -110,6 +111,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       "getDossierDeValidationCountByCategory",
       searchFilter,
       certificationAuthorityId,
+      certificationAuthorityLocalAccountId,
     ],
     queryFn: () =>
       graphqlClient.request(getDossierDeValidationCountByCategoryQuery, {
@@ -124,6 +126,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       "getJuryCountByCategory",
       searchFilter,
       certificationAuthorityId,
+      certificationAuthorityLocalAccountId,
     ],
     queryFn: () =>
       graphqlClient.request(getJuryCountByCategoryQuery, {
