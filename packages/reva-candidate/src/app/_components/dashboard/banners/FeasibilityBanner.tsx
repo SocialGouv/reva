@@ -142,22 +142,33 @@ export const FeasibilityBanner = ({
 
   if (
     decision === "INCOMPLETE" &&
-    feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt
+    feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+    typeAccompagnement === "ACCOMPAGNE"
   ) {
-    const isAccompagne = typeAccompagnement === "ACCOMPAGNE";
     return (
       <BaseBanner
         content={
-          <div
-            data-test={
-              isAccompagne
-                ? "incomplete-feasibility-banner"
-                : "autonome-incomplete-feasibility-banner"
-            }
-          >
-            {isAccompagne
-              ? "Votre dossier de faisabilité est incomplet. Votre accompagnateur est en train de le mettre à jour et vous le renverra bientôt pour validation."
-              : "Votre certificateur a notifié qu’il manquait des éléments à votre dossier de faisabilité. Rendez vous dans la section “Dossier de faisabilité” pour connaitre les raisons et transmettre un nouveau dossier."}
+          <div data-test="incomplete-feasibility-banner">
+            Votre dossier de faisabilité est incomplet. Votre accompagnateur est
+            en train de le mettre à jour et vous le renverra bientôt pour
+            validation.
+          </div>
+        }
+        imageSrc={WARNING_IMAGE}
+        imageAlt={WARNING_IMAGE_ALT}
+      />
+    );
+  }
+
+  if (decision === "INCOMPLETE" && typeAccompagnement === "AUTONOME") {
+    return (
+      <BaseBanner
+        content={
+          <div data-test="autonome-incomplete-feasibility-banner">
+            Votre certificateur a notifié qu’il manquait des éléments à votre
+            dossier de faisabilité. Rendez vous dans la section “Dossier de
+            faisabilité” pour connaitre les raisons et transmettre un nouveau
+            dossier.
           </div>
         }
         imageSrc={WARNING_IMAGE}
