@@ -1,18 +1,10 @@
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
-import Badge from "@codegouvfr/react-dsfr/Badge";
 import { useMemo } from "react";
 import { DashboardBanner } from "./banners/DashboardBanner";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
 import { DashboardSidebar } from "./DashboardSidebar";
-import { CertificationTile } from "./tiles/CertificationTile";
-import { DossierValidationTile } from "./tiles/DossierValidationTile";
-import { ExperiencesTile } from "./tiles/ExperiencesTile";
-import { FeasibilityTile } from "./tiles/FeasibilityTile";
-import { GoalsTile } from "./tiles/GoalsTile";
-import { OrganismTile } from "./tiles/OrganismTile";
-import { SubmitCandidacyTile } from "./tiles/SubmitCandidacyTile";
-import { TrainingTile } from "./tiles/TrainingTile";
-import { TypeAccompagnementTile } from "./tiles/TypeAccompagnementTile";
+import { DashboardAccompagneTilesGroup } from "./persona-tiles-group/DashboardAccompagneTilesGroup";
+import { DashboardAutonomeTilesGroup } from "./persona-tiles-group/DashboardAutonomeTilesGroup";
 
 const Dashboard = () => {
   const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
@@ -56,8 +48,7 @@ const Dashboard = () => {
   );
 
   const candidacyIsAutonome = candidacy?.typeAccompagnement === "AUTONOME";
-  const candidacyIsCaduque = candidacy?.isCaduque;
-  const feasibility = candidacy?.feasibility;
+  const candidacyIsAccompagne = candidacy?.typeAccompagnement === "ACCOMPAGNE";
 
   return (
     <div>
@@ -71,72 +62,18 @@ const Dashboard = () => {
         candidacyAlreadySubmitted={candidacyAlreadySubmitted}
       />
       <div className="grid grid-flow-row lg:grid-flow-col grid-cols-1 lg:grid-cols-3 grid-rows-2 gap-x-6 gap-y-8 mx-auto mt-20">
-        <div className="col-span-1 lg:col-span-2 row-span-1 h-fit shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-          <div className="bg-white p-4 pl-6 border-b-2">
-            <p className="text-xl font-bold my-0 leading-loose">
-              <span className="fr-icon-ball-pen-line" /> Compléter ma
-              candidature
-            </p>
-          </div>
-          <div
-            className={`grid ${
-              candidacy.typeAccompagnement === "ACCOMPAGNE"
-                ? "md:grid-cols-3 grid-rows-2"
-                : "md:grid-cols-2 grid-rows-1"
-            }`}
-          >
-            <CertificationTile
-              selectedCertificationId={candidacy?.certification?.id}
-            />
-            <TypeAccompagnementTile
-              typeAccompagnement={candidacy.typeAccompagnement}
-            />
-            {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
-              <>
-                <GoalsTile hasCompletedGoals={hasCompletedGoals} />
-                <ExperiencesTile experiences={candidacy.experiences} />
-                <OrganismTile hasSelectedOrganism={hasSelectedOrganism} />
-                <SubmitCandidacyTile
-                  candidacyAlreadySubmitted={candidacyAlreadySubmitted}
-                  canSubmitCandidacy={canSubmitCandidacy}
-                />
-              </>
-            )}
-          </div>
-        </div>
-        <div className="col-span-1 lg:col-span-2 row-span-1 h-fit shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-          <div className="bg-white p-4 pl-6 border-b-2">
-            <p className="text-xl font-bold my-0 leading-loose inline-block">
-              <span className="fr-icon-award-line" /> Suivre mon parcours
-            </p>
-            {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
-              <span className="align-middle inline-block ml-2">
-                {!candidacyAlreadySubmitted && (
-                  <Badge severity="warning">Candidature non envoyée</Badge>
-                )}
-              </span>
-            )}
-          </div>
-          <div className="grid grid-flow-row md:grid-flow-col grid-rows-1">
-            {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
-              <TrainingTile
-                candidacyStatus={candidacy.status}
-                firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
-              />
-            )}
-            <FeasibilityTile
-              feasibility={feasibility}
-              isCaduque={candidacyIsCaduque}
-              candidacyIsAutonome={candidacyIsAutonome}
-            />
-            <DossierValidationTile
-              feasibility={candidacy.feasibility}
-              activeDossierDeValidation={candidacy.activeDossierDeValidation}
-              isCaduque={candidacy.isCaduque}
-              jury={candidacy.jury}
-            />
-          </div>
-        </div>
+        {candidacyIsAutonome && (
+          <DashboardAutonomeTilesGroup candidacy={candidacy} />
+        )}
+        {candidacyIsAccompagne && (
+          <DashboardAccompagneTilesGroup
+            candidacy={candidacy}
+            candidacyAlreadySubmitted={candidacyAlreadySubmitted}
+            canSubmitCandidacy={canSubmitCandidacy}
+            hasSelectedOrganism={hasSelectedOrganism}
+            hasCompletedGoals={hasCompletedGoals}
+          />
+        )}
         <DashboardSidebar candidacy={candidacy} />
       </div>
     </div>
