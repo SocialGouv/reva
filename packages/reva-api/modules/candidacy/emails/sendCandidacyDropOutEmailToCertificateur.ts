@@ -1,7 +1,12 @@
 import mjml2html from "mjml";
 
 import { prismaClient } from "../../../prisma/client";
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import {
+  sendEmailUsingTemplate,
+  sendGenericEmail,
+  templateMail,
+} from "../../shared/email";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -38,21 +43,33 @@ export const sendCandidacyDropOutEmailToCertificateur = async (
 
   const feasibilityUrl = `${baseUrl}/admin2/candidacies/${candidacyId}/feasibility`;
 
-  const htmlContent = mjml2html(
-    templateMail({
-      content: `
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CERTIFICATEURS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email: contactEmail },
+      templateId: 566,
+      params: { candidateFullName, feasibilityUrl },
+    });
+  } else {
+    const htmlContent = mjml2html(
+      templateMail({
+        content: `
       <p>Bonjour,</p>
       <p>Nous vous informons que ${candidateFullName} a abandonné son parcours VAE. Pour retrouver la candidature en question, cliquez sur le lien ci-dessous.</p>
       <p>L'équipe France VAE.</p>
     `,
-      labelCTA: "Accéder à la candidature",
-      url: feasibilityUrl,
-    }),
-  );
+        labelCTA: "Accéder à la candidature",
+        url: feasibilityUrl,
+      }),
+    );
 
-  return sendGenericEmail({
-    to: { email: contactEmail },
-    htmlContent: htmlContent.html,
-    subject: "Une candidature a été abandonnée",
-  });
+    return sendGenericEmail({
+      to: { email: contactEmail },
+      htmlContent: htmlContent.html,
+      subject: "Une candidature a été abandonnée",
+    });
+  }
 };
