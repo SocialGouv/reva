@@ -47,6 +47,7 @@ export const searchOrganismsForCandidacy = async ({
     if (!candidacy.candidate?.departmentId) {
       throw new Error("Aucun département n'est associé");
     }
+
     const result = await getRandomActiveOrganismForCertification({
       certificationId: candidacy.certificationId || "",
       departmentId: candidacy.candidate?.departmentId,
@@ -86,6 +87,7 @@ const getRandomActiveOrganismForCertification = async ({
   let fromClause = Prisma.raw(`from organism o
     join ${organismView} ao on ao.organism_id = o.id
     join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id`);
+
   let whereClause = Prisma.sql`where ao.certification_id=uuid(${certificationId}) and (o.modalite_accompagnement_renseignee_et_valide)`;
 
   if (searchText) {
@@ -108,6 +110,7 @@ const getRandomActiveOrganismForCertification = async ({
       `${fromClause.sql} join organism_on_remote_zone as orz on (orz.organism_id = o.id and orz.remote_zone = '${candidacyDepartmentRemoteZone}')`,
     );
   }
+
   if (searchFilter.distanceStatus === "ONSITE") {
     whereClause = Prisma.sql`${whereClause} and o.modalite_accompagnement = 'LIEU_ACCUEIL'`;
   }
@@ -174,30 +177,16 @@ const getAAPsWithZipCode = async ({
   pmr?: boolean;
   searchText?: string;
 }): Promise<{ rows: Organism[]; totalRows: number }> => {
-  const query = `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1`;
-  const res = await fetch(query);
-  const {
-    features,
-  }: {
-    features: [
-      {
-        geometry: {
-          type: string;
-          coordinates: [number, number];
-        };
-      },
-    ];
-  } = await res.json();
-
-  if (!features?.length || !certificationId) {
+  if (!certificationId) {
     return { rows: [], totalRows: 0 };
   }
 
-  const [
-    {
-      geometry: { coordinates },
-    },
-  ] = features;
+  const coordinates = await getCoordinates(zip);
+
+  if (!coordinates) {
+    return { rows: [], totalRows: 0 };
+  }
+
   const [longitude, latitude] = coordinates as [number, number];
 
   /*
@@ -306,4 +295,74 @@ const getRemoteZoneFromDepartment = async ({
     default:
       return "FRANCE_METROPOLITAINE";
   }
+};
+
+// Used to cache coordinates based on zip.
+const coordinatesArray: { zip: string; coordinates: [number, number] }[] = [];
+
+const getCoordinates = async (
+  zip: string,
+): Promise<[number, number] | undefined> => {
+  const coordinates = coordinatesArray.find((c) => c.zip == zip)?.coordinates;
+  if (coordinates) {
+    return coordinates;
+  }
+
+  const fetchedCoordinates = await fetchCoordinatesWithRetry({ zip });
+  if (fetchedCoordinates) {
+    coordinatesArray.push({ zip, coordinates: fetchedCoordinates });
+  }
+
+  return fetchedCoordinates;
+};
+
+function wait(milliseconds: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
+const fetchCoordinatesWithRetry = async ({
+  zip,
+  retry = 0,
+}: {
+  zip: string;
+  retry?: number;
+}): Promise<[number, number] | undefined> => {
+  const query = `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1`;
+  const res = await fetch(query);
+
+  const {
+    features,
+  }: {
+    features: [
+      {
+        geometry: {
+          type: string;
+          coordinates: [number, number];
+        };
+      },
+    ];
+  } = await res.json();
+
+  if (!features.length) {
+    if (retry < 5) {
+      await wait(1000);
+
+      return fetchCoordinatesWithRetry({
+        zip,
+        retry: retry + 1,
+      });
+    } else {
+      return undefined;
+    }
+  }
+
+  const [
+    {
+      geometry: { coordinates },
+    },
+  ] = features;
+
+  return coordinates;
 };
