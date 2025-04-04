@@ -3,12 +3,11 @@ import mjml2html from "mjml";
 import { prismaClient } from "../../../prisma/client";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
+  getBackofficeUrl,
   sendEmailUsingTemplate,
   sendGenericEmail,
   templateMail,
 } from "../../shared/email";
-
-const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
 export const sendCandidacyDropOutEmailToCertificateur = async (
   candidacyId: string,
@@ -41,7 +40,9 @@ export const sendCandidacyDropOutEmailToCertificateur = async (
     return;
   }
 
-  const feasibilityUrl = `${baseUrl}/admin2/candidacies/${candidacyId}/feasibility`;
+  const feasibilityUrl = getBackofficeUrl({
+    path: `/candidacies/${candidacyId}/feasibility`,
+  });
 
   const useBrevoTemplate = await isFeatureActiveForUser({
     feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CERTIFICATEURS",
