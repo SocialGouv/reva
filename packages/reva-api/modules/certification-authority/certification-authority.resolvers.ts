@@ -384,7 +384,12 @@ const unsafeResolvers = {
           limit?: number;
           searchFilter?: string;
         },
-      ) => getCertificationAuthorityLocalAccountsToTransferCandidacy(params),
+        context: GraphqlContext,
+      ) =>
+        getCertificationAuthorityLocalAccountsToTransferCandidacy({
+          ...params,
+          keycloakId: context.auth.userInfo?.sub,
+        }),
 
     certification_authority_getCertificationAuthorityStructures: (
       _parent: unknown,

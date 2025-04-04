@@ -8,11 +8,13 @@ export const getCertificationAuthorityLocalAccountsToTransferCandidacy =
     offset = 0,
     limit = 10,
     searchFilter,
+    keycloakId,
   }: {
     candidacyId: string;
     offset?: number;
     limit?: number;
     searchFilter?: string;
+    keycloakId?: string;
   }) => {
     const candidacy = await prismaClient.candidacy.findUnique({
       where: {
@@ -55,7 +57,14 @@ export const getCertificationAuthorityLocalAccountsToTransferCandidacy =
     const whereClause: Prisma.CertificationAuthorityLocalAccountWhereInput = {
       certificationAuthorityId: feasibility.certificationAuthorityId,
       certificationAuthorityLocalAccountOnCertification: {
-        some: { certificationId: candidacy.certificationId },
+        some: {
+          certificationId: candidacy.certificationId,
+          certificationAuthorityLocalAccount: {
+            account: {
+              keycloakId: { not: keycloakId },
+            },
+          },
+        },
       },
       account: {
         OR: [

@@ -4,7 +4,6 @@ import { graphql } from "@/graphql/generated";
 import { NotAuthorized } from "@/components/not-authorized";
 import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
@@ -88,35 +87,20 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
     menuItem("Jury", `/candidacies/${candidacyId}/jury`),
   ];
 
-  if (!juryDateOfSession) {
-    if (isTranferCandidacyToCertificationAuthorityLocalAccountActive) {
-      items.push(
-        menuItem(
-          <Button size="small" priority="secondary" className="m-auto my-3">
-            Transférer la candidature vers un autre certificateur
-          </Button>,
-          `/candidacies/${candidacyId}/transfer-to-certification-authority?page=1`,
-        ),
-      );
+  const footerItems = [];
 
-      items.push(
-        menuItem(
-          <Button size="small" priority="secondary" className="m-auto my-3">
-            Transférer la candidature vers un autre compte collaborateur
-          </Button>,
-          `/candidacies/${candidacyId}/transfer-to-certification-authority-local-account?page=1`,
-        ),
-      );
-    } else {
-      items.push(
-        menuItem(
-          <Button size="small" priority="secondary" className="m-auto my-3">
-            Transférer la candidature
-          </Button>,
-          `/candidacies/${candidacyId}/transfer-to-certification-authority?page=1`,
-        ),
-      );
-    }
+  if (!juryDateOfSession) {
+    footerItems.push(
+      menuItem(
+        <>
+          <ul>Transférer la candidature</ul>
+        </>,
+
+        isTranferCandidacyToCertificationAuthorityLocalAccountActive
+          ? `/candidacies/${candidacyId}/transfer`
+          : `/candidacies/${candidacyId}/transfer-to-certification-authority?page=1`,
+      ),
+    );
   }
 
   return (
@@ -124,49 +108,62 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
       {isLoadingMenu ? (
         <Skeleton />
       ) : (
-        <SideMenu
-          title={
-            <>
-              <div className="flex items-center pt-1.5 mb-4">
-                <span className="fr-icon-user-fill fr-icon mr-2" />
-                <p className="font-bold text-xl capitalize">
-                  {`${candidate?.firstname || ""} ${
-                    candidate?.lastname || ""
-                  }`.toLowerCase()}
-                </p>
-              </div>
-              {typeAccompagnement === "AUTONOME" && (
-                <Badge severity="new" className="mt-4">
-                  Candidat en autonomie
-                </Badge>
-              )}
-              {isCaduque && !hasPendingCaduciteContestation && (
-                <Badge
-                  severity="error"
-                  className="mt-4"
-                  data-test="caduque-badge"
-                >
-                  Recevabilité caduque
-                </Badge>
-              )}
-              {hasPendingCaduciteContestation && (
-                <Badge
-                  severity="warning"
-                  className="mt-4"
-                  data-test="contestation-badge"
-                >
-                  Contestation caducité
-                </Badge>
-              )}
-            </>
-          }
-          className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
-          align="left"
-          burgerMenuButtonText="Candidatures"
-          sticky
-          fullHeight
-          items={items}
-        />
+        <div className="flex flex-col">
+          <SideMenu
+            title={
+              <>
+                <div className="flex items-center pt-1.5 mb-4">
+                  <span className="fr-icon-user-fill fr-icon mr-2" />
+                  <p className="font-bold text-xl capitalize">
+                    {`${candidate?.firstname || ""} ${
+                      candidate?.lastname || ""
+                    }`.toLowerCase()}
+                  </p>
+                </div>
+                {typeAccompagnement === "AUTONOME" && (
+                  <Badge severity="new" className="mt-4">
+                    Candidat en autonomie
+                  </Badge>
+                )}
+                {isCaduque && !hasPendingCaduciteContestation && (
+                  <Badge
+                    severity="error"
+                    className="mt-4"
+                    data-test="caduque-badge"
+                  >
+                    Recevabilité caduque
+                  </Badge>
+                )}
+                {hasPendingCaduciteContestation && (
+                  <Badge
+                    severity="warning"
+                    className="mt-4"
+                    data-test="contestation-badge"
+                  >
+                    Contestation caducité
+                  </Badge>
+                )}
+              </>
+            }
+            align="left"
+            burgerMenuButtonText="Candidatures"
+            sticky
+            items={items}
+            className="flex-shrink-0 flex-grow-0"
+          />
+
+          <div className="border-r-[1px] mr-8 my-6">
+            <div className="border-t-[1px]" />
+          </div>
+
+          <SideMenu
+            className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
+            align="left"
+            burgerMenuButtonText="Candidatures"
+            sticky
+            items={footerItems}
+          />
+        </div>
       )}
       <div className="mt-3 flex-1">{children}</div>
     </div>
