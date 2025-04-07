@@ -29,7 +29,7 @@ export default function CertificationChangeButtons({
   const params = useParams<{ certificationId: string }>();
   const selectedCertificationId = params.certificationId;
 
-  if (isRefetching || !certification) {
+  if (isRefetching) {
     return null;
   }
 
@@ -70,7 +70,7 @@ export default function CertificationChangeButtons({
       >
         Retour
       </Button>
-      {certification.id === selectedCertificationId ? (
+      {certification?.id === selectedCertificationId ? (
         <Button
           data-test="change-certification-button"
           priority="tertiary no outline"
