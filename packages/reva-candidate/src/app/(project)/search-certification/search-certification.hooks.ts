@@ -14,11 +14,13 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
     $offset: Int
     $limit: Int
     $searchText: String
+    $candidacyId: ID
   ) {
     searchCertificationsForCandidate(
       offset: $offset
       limit: $limit
       searchText: $searchText
+      candidacyId: $candidacyId
     ) {
       rows {
         id
@@ -98,9 +100,11 @@ export const useCandidacyForCertificationSearch = () => {
 export const useSetCertification = ({
   searchText,
   currentPage,
+  candidacyId,
 }: {
   searchText?: string;
   currentPage: number;
+  candidacyId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
   const { invalidateQueries } = useQueryClient();
@@ -115,6 +119,7 @@ export const useSetCertification = ({
         offset,
         limit: RECORDS_PER_PAGE,
         searchText,
+        candidacyId,
       }),
     gcTime: 0,
   });

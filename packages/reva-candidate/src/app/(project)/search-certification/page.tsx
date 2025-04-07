@@ -31,6 +31,7 @@ export default function SetCertification() {
   const { searchCertificationsForCandidate } = useSetCertification({
     searchText: searchFilter,
     currentPage,
+    candidacyId: candidacy.id,
   });
 
   if (!canEditCandidacy) {
