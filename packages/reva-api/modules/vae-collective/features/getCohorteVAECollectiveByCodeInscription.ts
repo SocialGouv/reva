@@ -1,12 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prismaClient } from "../../../prisma/client";
 
 export const getCohorteVAECollectiveByCodeInscription = async ({
   codeInscription,
 }: {
   codeInscription: string;
 }) =>
-  prisma.cohorteVaeCollective.findUnique({
+  prismaClient.cohorteVaeCollective.findUnique({
     where: { codeInscription },
   });
