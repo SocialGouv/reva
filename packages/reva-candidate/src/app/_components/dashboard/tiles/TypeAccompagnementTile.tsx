@@ -4,11 +4,14 @@ import Tile from "@codegouvfr/react-dsfr/Tile";
 
 export const TypeAccompagnementTile = ({
   typeAccompagnement,
+  disabled,
 }: {
   typeAccompagnement: TypeAccompagnement;
+  disabled?: boolean;
 }) => (
   <Tile
     data-test="type-accompagnement-tile"
+    disabled={disabled}
     start={
       <Tag small>
         {typeAccompagnement === "ACCOMPAGNE" ? "Accompagné" : "Autonome"}
@@ -16,9 +19,14 @@ export const TypeAccompagnementTile = ({
     }
     title="Modalité de parcours"
     small
-    linkProps={{
-      href: "/type-accompagnement",
-    }}
+    linkProps={
+      disabled
+        ? undefined
+        : ({
+            href: "/type-accompagnement",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any)
+    }
     imageUrl="/candidat/images/pictograms/human-cooperation.svg"
   />
 );
