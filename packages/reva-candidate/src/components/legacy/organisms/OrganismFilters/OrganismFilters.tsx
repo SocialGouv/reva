@@ -59,6 +59,7 @@ export const OrganismFilters = ({
                   ...filters,
                   organismSearchOnsite: !organismSearchOnsite,
                   organismSearchRemote: false,
+                  organismSearchZip: "",
                 });
               }}
               className="p-2"
@@ -80,6 +81,7 @@ export const OrganismFilters = ({
                   ...filters,
                   organismSearchOnsite: false,
                   organismSearchRemote: !organismSearchRemote,
+                  organismSearchZip: "",
                 });
               }}
               className="p-2"

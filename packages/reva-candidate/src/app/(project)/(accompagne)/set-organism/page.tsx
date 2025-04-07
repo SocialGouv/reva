@@ -69,6 +69,18 @@ export default function SetOrganism() {
 
   const organisms =
     getRandomOrganismsForCandidacy.data?.getRandomOrganismsForCandidacy;
+  const isLoading =
+    getRandomOrganismsForCandidacy.isFetching ||
+    getRandomOrganismsForCandidacy.isPending;
+
+  useEffect(() => {
+    if (getRandomOrganismsForCandidacy.isError) {
+      graphqlErrorToast(getRandomOrganismsForCandidacy.error);
+    }
+  }, [
+    getRandomOrganismsForCandidacy.error,
+    getRandomOrganismsForCandidacy.isError,
+  ]);
 
   const [state, setState] = useState<State>({
     rows: [],
@@ -169,9 +181,11 @@ export default function SetOrganism() {
           />
         </div>
         <div className="lg:w-2/3">
-          {organisms && (
+          {isLoading ? (
+            <Loader />
+          ) : (
             <>
-              {organisms.totalRows > 0 ? (
+              {organisms && organisms.totalRows > 0 ? (
                 <p className="mt-3 mb-4 text-gray-500">
                   {organisms.totalRows === 1
                     ? `Résultat filtré : ${organisms.totalRows} accompagnateur`
@@ -185,6 +199,7 @@ export default function SetOrganism() {
               )}
             </>
           )}
+
           <Organisms
             submitOrganism={({ organismId }) => {
               submitOrganism(organismId);
@@ -318,5 +333,28 @@ const NoOrganisms = ({
         Réinitialiser les filtres
       </Button>
     </EmptyState>
+  );
+};
+
+const Loader = () => {
+  const [count, setCount] = useState<number>(1);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCount(count == 3 ? 1 : count + 1);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [count]);
+
+  return (
+    <p className="mt-3 mb-4 text-gray-500">
+      Veuillez patienter. Recherche en cours
+      {Array(count)
+        .fill(".")
+        .map((v) => v)}
+    </p>
   );
 };

@@ -23,10 +23,8 @@ export const OrganismDistanceFilter = ({
   const [zip, setZip] = useState(filters.organismSearchZip);
 
   useEffect(() => {
-    if (disabled) {
-      setZip("");
-    }
-  }, [disabled]);
+    setZip(filters.organismSearchZip);
+  }, [filters.organismSearchZip]);
 
   const handleChangeZip = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newZip = e.target.value;

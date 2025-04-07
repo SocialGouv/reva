@@ -353,9 +353,11 @@ const fetchCoordinatesWithRetry = async ({
         zip,
         retry: retry + 1,
       });
-    } else {
-      return undefined;
     }
+
+    throw new Error(
+      "Le service semble être indisponible. Veuillez vérifier que le code postal renseigné est correct ou réessayez ultérieurement.",
+    );
   }
 
   const [
