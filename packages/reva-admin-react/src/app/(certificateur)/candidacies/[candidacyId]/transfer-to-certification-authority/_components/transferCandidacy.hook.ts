@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "next/navigation";
 
 const getCandidacyTransferCandidacy = graphql(`
@@ -65,6 +65,7 @@ export function useTransferCandidacy({
 }: {
   searchFilter: string;
 }) {
+  const queryClient = useQueryClient();
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -89,6 +90,17 @@ export function useTransferCandidacy({
         certificationAuthorityId,
         transferReason,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.findIndex(
+            (key) =>
+              key == "getFeasibilityCountByCategory" ||
+              key == "getDossierDeValidationCountByCategory" ||
+              key == "getJuryCountByCategory",
+          ) != -1,
+      });
+    },
   });
 
   const {
