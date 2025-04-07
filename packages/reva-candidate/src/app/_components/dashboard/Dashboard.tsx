@@ -5,6 +5,7 @@ import { useCandidacyForDashboard } from "./dashboard.hooks";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardAccompagneTilesGroup } from "./persona-tiles-group/DashboardAccompagneTilesGroup";
 import { DashboardAutonomeTilesGroup } from "./persona-tiles-group/DashboardAutonomeTilesGroup";
+import { DashboardVaeCollectiveTilesGroup } from "./persona-tiles-group/DashboardVaeCollectiveTilesGroup";
 
 const Dashboard = () => {
   const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
@@ -49,6 +50,34 @@ const Dashboard = () => {
 
   const candidacyIsAutonome = candidacy?.typeAccompagnement === "AUTONOME";
   const candidacyIsAccompagne = candidacy?.typeAccompagnement === "ACCOMPAGNE";
+  const candidacyIsVaeCollective = !!candidacy?.cohorteVaeCollective;
+
+  const NonVaeCollectiveDashboard = () => (
+    <>
+      {candidacyIsAutonome && (
+        <DashboardAutonomeTilesGroup candidacy={candidacy} />
+      )}
+      {candidacyIsAccompagne && (
+        <DashboardAccompagneTilesGroup
+          candidacy={candidacy}
+          candidacyAlreadySubmitted={candidacyAlreadySubmitted}
+          canSubmitCandidacy={canSubmitCandidacy}
+          hasSelectedOrganism={hasSelectedOrganism}
+          hasCompletedGoals={hasCompletedGoals}
+        />
+      )}
+    </>
+  );
+
+  const VaeCollectiveDashboard = () => (
+    <DashboardVaeCollectiveTilesGroup
+      candidacy={candidacy}
+      candidacyAlreadySubmitted={candidacyAlreadySubmitted}
+      canSubmitCandidacy={canSubmitCandidacy}
+      hasSelectedOrganism={hasSelectedOrganism}
+      hasCompletedGoals={hasCompletedGoals}
+    />
+  );
 
   return (
     <div>
@@ -62,17 +91,10 @@ const Dashboard = () => {
         candidacyAlreadySubmitted={candidacyAlreadySubmitted}
       />
       <div className="grid grid-flow-row lg:grid-flow-col grid-cols-1 lg:grid-cols-3 grid-rows-2 gap-x-6 gap-y-8 mx-auto mt-20">
-        {candidacyIsAutonome && (
-          <DashboardAutonomeTilesGroup candidacy={candidacy} />
-        )}
-        {candidacyIsAccompagne && (
-          <DashboardAccompagneTilesGroup
-            candidacy={candidacy}
-            candidacyAlreadySubmitted={candidacyAlreadySubmitted}
-            canSubmitCandidacy={canSubmitCandidacy}
-            hasSelectedOrganism={hasSelectedOrganism}
-            hasCompletedGoals={hasCompletedGoals}
-          />
+        {candidacyIsVaeCollective ? (
+          <VaeCollectiveDashboard />
+        ) : (
+          <NonVaeCollectiveDashboard />
         )}
         <DashboardSidebar candidacy={candidacy} />
       </div>
