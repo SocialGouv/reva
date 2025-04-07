@@ -52,10 +52,14 @@ export default function SubmitCandidacy() {
       <Breadcrumb
         currentPageLabel="Envoi de la candidature"
         className="mb-0"
-        homeLinkProps={{
-          href: "/",
-        }}
-        segments={[]}
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "/",
+            },
+          },
+        ]}
       />
       <h2 className="mt-6 mb-4">Envoi de votre candidature</h2>
       <p className="mb-12">

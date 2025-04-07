@@ -29,10 +29,14 @@ export default function ExperiencesPage() {
       <Breadcrumb
         currentPageLabel="Mes expériences"
         className="mb-0"
-        homeLinkProps={{
-          href: "/",
-        }}
-        segments={[]}
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "/",
+            },
+          },
+        ]}
       />
       <h1>Mes expériences</h1>
       <p>

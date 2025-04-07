@@ -36,10 +36,14 @@ export default function ChooseTypeAccompagnementPage() {
       <Breadcrumb
         currentPageLabel="Modalité de parcours"
         className="mb-0"
-        homeLinkProps={{
-          href: "/",
-        }}
-        segments={[]}
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "/",
+            },
+          },
+        ]}
       />
       <h1 className="mt-8">Modalités de parcours</h1>
       <FormOptionalFieldsDisclaimer />

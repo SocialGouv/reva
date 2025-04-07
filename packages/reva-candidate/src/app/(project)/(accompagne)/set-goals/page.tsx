@@ -76,10 +76,14 @@ export default function SetGoals() {
       <Breadcrumb
         currentPageLabel="Mes objectifs"
         className="mb-0"
-        homeLinkProps={{
-          href: "/",
-        }}
-        segments={[]}
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "/",
+            },
+          },
+        ]}
       />
       <h2 className="mt-6 mb-2">Mes objectifs</h2>
       <FormOptionalFieldsDisclaimer

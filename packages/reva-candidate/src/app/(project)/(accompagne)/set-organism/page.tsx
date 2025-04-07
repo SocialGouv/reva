@@ -19,6 +19,7 @@ import { useSetOrganism } from "./set-organism.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { EmptyState } from "@/components/empty-state/EmptyState";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 const RECORDS_PER_PAGE = 10;
 const MAX_RECORDS = 50;
@@ -114,12 +115,20 @@ export default function SetOrganism() {
   };
 
   return (
-    <PageLayout
-      title="Choix du diplôme"
-      data-test={`certificates`}
-      displayBackToHome
-    >
-      <h1 className="mt-6 mb-2" id="page-title">
+    <PageLayout title="Choix du diplôme" data-test={`certificates`}>
+      <Breadcrumb
+        currentPageLabel="Choix de l'accompagnateur"
+        className="mb-0"
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "/",
+            },
+          },
+        ]}
+      />
+      <h1 className="mt-4 mb-2" id="page-title">
         Choix de l'accompagnateur
       </h1>
       <p className="text-xl my-6">

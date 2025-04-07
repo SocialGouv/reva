@@ -50,12 +50,15 @@ export default function SetCertification() {
       <Breadcrumb
         currentPageLabel="Choisir un diplôme"
         className="mb-0"
-        homeLinkProps={{
-          href: "/",
-        }}
         segments={
           candidacy.certification?.id
             ? [
+                {
+                  label: "Ma candidature",
+                  linkProps: {
+                    href: "/",
+                  },
+                },
                 {
                   label: "Diplôme visé",
                   linkProps: {
@@ -63,7 +66,14 @@ export default function SetCertification() {
                   },
                 },
               ]
-            : []
+            : [
+                {
+                  label: "Ma candidature",
+                  linkProps: {
+                    href: "/",
+                  },
+                },
+              ]
         }
       />
       <>
