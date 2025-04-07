@@ -10,11 +10,13 @@ export const searchCertificationsForCandidate = async ({
   limit,
   organismId,
   searchText,
+  candidacyId,
 }: {
   offset?: number;
   limit?: number;
   organismId?: string;
   searchText?: string;
+  candidacyId?: string;
 }): Promise<PaginatedListResult<Certification>> => {
   const realLimit = limit || 10;
   const realOffset = offset || 0;
@@ -26,12 +28,36 @@ export const searchCertificationsForCandidate = async ({
     .map((t) => t + ":*")
     .join("&");
 
+  let certificationsFromCohorteVaeCollectiveIds: string[] = [];
+
+  // If the candidacy is part of a VAE collective cohort, the certifications available are restricted to those defined for that cohort
+  if (candidacyId) {
+    const certificationCohorteVaeCollective =
+      await prismaClient.certificationCohorteVaeCollective.findMany({
+        where: {
+          cohorteVaeCollective: { candidacy: { some: { id: candidacyId } } },
+        },
+      });
+    certificationsFromCohorteVaeCollectiveIds =
+      certificationCohorteVaeCollective.map(
+        (certificationCohorteVaeCollective) =>
+          certificationCohorteVaeCollective.certificationId,
+      );
+  }
+
   const organismQuery = Prisma.sql`${Prisma.raw(`from certification c, active_organism_by_available_certification_based_on_formacode available_certification
     where c.id=available_certification.certification_id`)} 
       ${Prisma.sql` and available_certification.organism_id=uuid(${organismId})`}
       ${
         searchTextInTsQueryFormat
           ? Prisma.sql` and certification_searchable_text@@to_tsquery('simple',unaccent(${searchTextInTsQueryFormat}))`
+          : Prisma.empty
+      }
+      ${
+        certificationsFromCohorteVaeCollectiveIds.length
+          ? Prisma.sql` and c.id::text in (${Prisma.join(
+              certificationsFromCohorteVaeCollectiveIds,
+            )})`
           : Prisma.empty
       }`;
 
@@ -41,6 +67,13 @@ export const searchCertificationsForCandidate = async ({
       ${
         searchTextInTsQueryFormat
           ? Prisma.sql` and searchable_text@@to_tsquery('simple',unaccent(${searchTextInTsQueryFormat}))`
+          : Prisma.empty
+      }
+      ${
+        certificationsFromCohorteVaeCollectiveIds.length
+          ? Prisma.sql` and c.id::text in (${Prisma.join(
+              certificationsFromCohorteVaeCollectiveIds,
+            )})`
           : Prisma.empty
       }`;
 

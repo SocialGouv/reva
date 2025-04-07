@@ -300,6 +300,7 @@ type Query {
     limit: Int
     organismId: UUID
     searchText: String
+    candidacyId: ID
   ): CertificationPage!
   searchCertificationsForAdmin(
     offset: Int

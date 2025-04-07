@@ -135,6 +135,7 @@ const unsafeReferentialResolvers = {
         limit?: number;
         organismId?: string;
         searchText?: string;
+        candidacyId?: string;
       },
     ) => searchCertificationsForCandidate(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>

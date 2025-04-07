@@ -1822,7 +1822,7 @@ model CohorteVaeCollective {
   updatedAt                          DateTime?                           @map("updated_at") @db.Timestamptz(6)
   certificationCohorteVaeCollectives CertificationCohorteVaeCollective[]
   codeInscription                    String                              @unique @map("code_inscription") @db.VarChar(15)
-  Candidacy                          Candidacy[]
+  candidacy                          Candidacy[]
 
   @@map("cohorte_vae_collective")
 }
