@@ -108,61 +108,59 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
       {isLoadingMenu ? (
         <Skeleton />
       ) : (
-        <div className="flex flex-col">
-          <SideMenu
-            title={
-              <>
-                <div className="flex items-center pt-1.5 mb-4">
-                  <span className="fr-icon-user-fill fr-icon mr-2" />
-                  <p className="font-bold text-xl capitalize">
-                    {`${candidate?.firstname || ""} ${
-                      candidate?.lastname || ""
-                    }`.toLowerCase()}
-                  </p>
-                </div>
-                {typeAccompagnement === "AUTONOME" && (
-                  <Badge severity="new" className="mt-4">
-                    Candidat en autonomie
-                  </Badge>
-                )}
-                {isCaduque && !hasPendingCaduciteContestation && (
-                  <Badge
-                    severity="error"
-                    className="mt-4"
-                    data-test="caduque-badge"
-                  >
-                    Recevabilité caduque
-                  </Badge>
-                )}
-                {hasPendingCaduciteContestation && (
-                  <Badge
-                    severity="warning"
-                    className="mt-4"
-                    data-test="contestation-badge"
-                  >
-                    Contestation caducité
-                  </Badge>
-                )}
-              </>
-            }
-            align="left"
-            burgerMenuButtonText="Candidatures"
-            sticky
-            items={items}
-            className="flex-shrink-0 flex-grow-0"
-          />
+        <div>
+          <div className="sticky left-0 top-6 flex flex-col">
+            <SideMenu
+              title={
+                <>
+                  <div className="flex items-center pt-1.5 mb-4">
+                    <span className="fr-icon-user-fill fr-icon mr-2" />
+                    <p className="font-bold text-xl capitalize">
+                      {`${candidate?.firstname || ""} ${
+                        candidate?.lastname || ""
+                      }`.toLowerCase()}
+                    </p>
+                  </div>
+                  {typeAccompagnement === "AUTONOME" && (
+                    <Badge severity="new" className="mt-4">
+                      Candidat en autonomie
+                    </Badge>
+                  )}
+                  {isCaduque && !hasPendingCaduciteContestation && (
+                    <Badge
+                      severity="error"
+                      className="mt-4"
+                      data-test="caduque-badge"
+                    >
+                      Recevabilité caduque
+                    </Badge>
+                  )}
+                  {hasPendingCaduciteContestation && (
+                    <Badge
+                      severity="warning"
+                      className="mt-4"
+                      data-test="contestation-badge"
+                    >
+                      Contestation caducité
+                    </Badge>
+                  )}
+                </>
+              }
+              burgerMenuButtonText="Candidatures"
+              items={items}
+              className="flex-shrink-0 flex-grow-0"
+            />
 
-          <div className="border-r-[1px] mr-8 my-6">
-            <div className="border-t-[1px]" />
+            <div className="border-r-[1px] mr-8 py-6 border-dsfr-light-decisions-border-border-default-grey">
+              <div className="border-t-[1px] border-dsfr-light-decisions-border-border-default-grey" />
+            </div>
+
+            <SideMenu
+              className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
+              burgerMenuButtonText="Candidatures"
+              items={footerItems}
+            />
           </div>
-
-          <SideMenu
-            className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
-            align="left"
-            burgerMenuButtonText="Candidatures"
-            sticky
-            items={footerItems}
-          />
         </div>
       )}
       <div className="mt-3 flex-1">{children}</div>

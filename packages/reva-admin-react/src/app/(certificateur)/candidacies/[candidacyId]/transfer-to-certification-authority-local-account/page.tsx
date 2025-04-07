@@ -68,7 +68,7 @@ export default function TransferCandidacyPage() {
 
   return (
     <div>
-      <h1>Transfert de la candidature vers un autre compte collaborateur</h1>
+      <h1>Transférer la candidature vers un autre compte collaborateur</h1>
       <p className="text-xl">
         {certificationAuthorityLocalAccountSelected
           ? `Vous vous apprêtez à transférer la candidature de ${candidacy?.candidate?.firstname} ${candidacy?.candidate?.lastname} visant la certification ${candidacy?.certification?.label} à un collaborateur.`

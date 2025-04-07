@@ -13,7 +13,7 @@ export default function TransferCandidacyPage() {
 
   return (
     <div>
-      <h1>Transfert de la candidature</h1>
+      <h1>Transférer la candidature</h1>
       <p className="text-xl">
         Choisissez le type de compte vers lequel vous souhaitez transférer la
         candidature.
@@ -23,13 +23,11 @@ export default function TransferCandidacyPage() {
         <Tile
           className="w-1/2 h-[344px]"
           title={
-            <div className="flex flex-col gap-3 px-8">
+            <div className="flex flex-col gap-6 px-8">
               <p className="text-xl">
-                Vers un autre gestionnaire de candidature
+                Vers un autre gestionnaire de candidature administrateur
               </p>
-              <p className="text-dsfrGray-labelGrey text-s font-normal">
-                Retrouvez tous les certificateurs hors de votre structure.
-              </p>
+
               <p className="text-dsfrGray-mentionGrey text-xs font-normal">
                 Tous les certificateurs proposés sont déjà en charge de la
                 certification sélectionnée.
@@ -57,11 +55,9 @@ export default function TransferCandidacyPage() {
         <Tile
           className="w-1/2 h-[344px]"
           title={
-            <div className="flex flex-col gap-3 px-8">
+            <div className="flex flex-col gap-6 px-8">
               <p className="text-xl">Vers un autre compte collaborateur</p>
-              <p className="text-dsfrGray-labelGrey text-s font-normal">
-                Retrouvez tous les comptes collaborateurs de votre structure.
-              </p>
+
               <p className="text-dsfrGray-mentionGrey text-xs font-normal">
                 Tous les collaborateurs proposés sont déjà en charge de la
                 certification sélectionnée.
