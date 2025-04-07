@@ -59,7 +59,7 @@ export const DashboardAccompagneTilesGroup = ({
           ) : undefined
         }
       >
-        <div className="grid grid-flow-row md:grid-flow-col grid-rows-1">
+        <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-3 grid-rows-1">
           <TrainingTile
             candidacyStatus={candidacy.status}
             firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
