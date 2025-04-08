@@ -11,6 +11,20 @@ export const AppointmentTiles = ({
   candidacy: CandidacyUseCandidateForDashboard;
 }) => {
   const appointments: JSX.Element[] = [];
+  // When the candidacy has a failed jury result,
+  // the user can submit another dossier de validation
+  const failedJuryResults = [
+    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+    "FAILURE",
+    "CANDIDATE_EXCUSED",
+    "CANDIDATE_ABSENT",
+  ];
+
+  const canSubmitAgainAfterJury = failedJuryResults.includes(
+    candidacy.jury?.result || "",
+  );
   if (
     candidacy.firstAppointmentOccuredAt &&
     isAfter(candidacy.firstAppointmentOccuredAt, new Date())
@@ -24,7 +38,8 @@ export const AppointmentTiles = ({
 
   if (
     candidacy.readyForJuryEstimatedAt &&
-    candidacy.activeDossierDeValidation?.decision !== "PENDING"
+    (candidacy.activeDossierDeValidation?.decision !== "PENDING" ||
+      canSubmitAgainAfterJury)
   ) {
     appointments.push(
       <ReadyForJuryTile
