@@ -9,6 +9,7 @@ import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create
 import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import { createCohorteVaeCollectiveHelper } from "../../../test/helpers/entities/create-vae-collective-helper";
+import * as searchOrganismsForCandidacyModule from "./searchOrganismsForCandidacy";
 
 const searchOrganisms = async ({
   keycloakId,
@@ -648,6 +649,137 @@ describe("searchOrganismsForCandidacy", () => {
         });
 
         expect(resp.statusCode).toEqual(200);
+        const results = resp.json().data.getRandomOrganismsForCandidacy;
+        expect(results.totalRows).toBe(1);
+      });
+    });
+
+    describe("zip code search", () => {
+      test("should search organisms and return all organisms when there is no VAE collective organism restriction", async () => {
+        const getCoordinatesMock = jest
+          .spyOn(searchOrganismsForCandidacyModule, "getCoordinates")
+          .mockImplementation(() => Promise.resolve([2.345578, 48.864]));
+
+        const certification = await createCertificationHelper({
+          certificationOnConventionCollective: {
+            create: ccnServicePersonne,
+          },
+        });
+
+        const organism1 = await createOrganismHelper({
+          adresseVille: "Paris",
+          adresseNumeroEtNomDeRue: "3 place d'italie",
+          adresseCodePostal: "75001",
+          modaliteAccompagnementRenseigneeEtValide: true,
+          modaliteAccompagnement: "LIEU_ACCUEIL",
+          llToEarth:
+            "(4192353.361065173, 171722.7512714141, 4803718.520988227)",
+        });
+
+        await attachOrganismToAllDegreesHelper(organism1);
+        await attachOrganismToAllConventionCollectiveHelper(organism1);
+
+        const organism2 = await createOrganismHelper({
+          adresseVille: "Paris",
+          adresseNumeroEtNomDeRue: "3 place d'italie",
+          adresseCodePostal: "75001",
+          modaliteAccompagnementRenseigneeEtValide: true,
+          modaliteAccompagnement: "LIEU_ACCUEIL",
+          llToEarth:
+            "(4192353.361065173, 171722.7512714141, 4803718.520988227)",
+        });
+
+        await attachOrganismToAllDegreesHelper(organism2);
+        await attachOrganismToAllConventionCollectiveHelper(organism2);
+
+        const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+          certificationCohorteVaeCollectives: {
+            create: { certificationId: certification.id },
+          },
+        });
+
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: {
+            certificationId: certification?.id,
+            cohorteVaeCollectiveId: cohorteVaeCollective.id,
+          },
+        });
+
+        const resp = await searchOrganisms({
+          keycloakId: candidacy.candidate?.keycloakId ?? "",
+          candidacyId: candidacy.id,
+          searchFilter: { zip: "75001", distanceStatus: "ONSITE" },
+        });
+
+        expect(resp.statusCode).toEqual(200);
+        expect(getCoordinatesMock).toHaveBeenCalledTimes(1);
+        const results = resp.json().data.getRandomOrganismsForCandidacy;
+        expect(results.totalRows).toBe(2);
+      });
+
+      test("should search organisms and only return the restricted organisms there is a VAE collective organism restriction", async () => {
+        const getCoordinatesMock = jest
+          .spyOn(searchOrganismsForCandidacyModule, "getCoordinates")
+          .mockImplementation(() => Promise.resolve([2.345578, 48.864]));
+
+        const certification = await createCertificationHelper({
+          certificationOnConventionCollective: {
+            create: ccnServicePersonne,
+          },
+        });
+
+        const organism1 = await createOrganismHelper({
+          adresseVille: "Paris",
+          adresseNumeroEtNomDeRue: "3 place d'italie",
+          adresseCodePostal: "75001",
+          modaliteAccompagnementRenseigneeEtValide: true,
+          modaliteAccompagnement: "LIEU_ACCUEIL",
+          llToEarth:
+            "(4192353.361065173, 171722.7512714141, 4803718.520988227)",
+        });
+
+        await attachOrganismToAllDegreesHelper(organism1);
+        await attachOrganismToAllConventionCollectiveHelper(organism1);
+
+        const organism2 = await createOrganismHelper({
+          adresseVille: "Paris",
+          adresseNumeroEtNomDeRue: "3 place d'italie",
+          adresseCodePostal: "75001",
+          modaliteAccompagnementRenseigneeEtValide: true,
+          modaliteAccompagnement: "LIEU_ACCUEIL",
+          llToEarth:
+            "(4192353.361065173, 171722.7512714141, 4803718.520988227)",
+        });
+
+        await attachOrganismToAllDegreesHelper(organism2);
+        await attachOrganismToAllConventionCollectiveHelper(organism2);
+
+        const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+          certificationCohorteVaeCollectives: {
+            create: {
+              certificationId: certification.id,
+              certificationCohorteVaeCollectiveOnOrganisms: {
+                create: { organismId: organism1.id },
+              },
+            },
+          },
+        });
+
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: {
+            certificationId: certification?.id,
+            cohorteVaeCollectiveId: cohorteVaeCollective.id,
+          },
+        });
+
+        const resp = await searchOrganisms({
+          keycloakId: candidacy.candidate?.keycloakId ?? "",
+          candidacyId: candidacy.id,
+          searchFilter: { zip: "75001", distanceStatus: "ONSITE" },
+        });
+
+        expect(resp.statusCode).toEqual(200);
+        expect(getCoordinatesMock).toHaveBeenCalledTimes(1);
         const results = resp.json().data.getRandomOrganismsForCandidacy;
         expect(results.totalRows).toBe(1);
       });

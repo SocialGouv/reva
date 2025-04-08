@@ -335,7 +335,8 @@ const getRemoteZoneFromDepartment = async ({
 // Used to cache coordinates based on zip.
 const coordinatesArray: { zip: string; coordinates: [number, number] }[] = [];
 
-const getCoordinates = async (
+//exported for testing purposes
+export const getCoordinates = async (
   zip: string,
 ): Promise<[number, number] | undefined> => {
   const coordinates = coordinatesArray.find((c) => c.zip == zip)?.coordinates;
