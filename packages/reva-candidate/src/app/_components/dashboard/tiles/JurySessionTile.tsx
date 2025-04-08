@@ -12,9 +12,9 @@ export const JurySessionTile = ({
     return null;
   }
 
-  const dateOfJurySession = `${format(jury.dateOfSession, "dd/MM/yyyy")} ${
-    jury.timeSpecified ? `- ${jury.timeOfSession}` : ""
-  }`;
+  const dateOfJurySession = jury.timeSpecified
+    ? format(jury.dateOfSession, "dd/MM/yyyy - HH:mm")
+    : format(jury.dateOfSession, "dd/MM/yyyy");
 
   return (
     <Tile
