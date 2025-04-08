@@ -18,6 +18,10 @@ export const sendDFFToCertificationAuthority = async ({
 }) => {
   const now = new Date().toISOString();
 
+  const existingFeasibility = await prismaClient.feasibility.findFirst({
+    where: { candidacyId, isActive: true },
+  });
+
   try {
     const candidacy = await prismaClient.$transaction(async (tx) => {
       await tx.feasibility.updateMany({
@@ -43,9 +47,29 @@ export const sendDFFToCertificationAuthority = async ({
     throw error;
   }
 
-  await assignCandidadyToCertificationAuthorityLocalAccounts({
-    candidacyId,
-  });
+  // Update certification authority local accounts only if certificationAuthorityId has been changed
+  if (
+    existingFeasibility?.certificationAuthorityId &&
+    existingFeasibility.certificationAuthorityId != certificationAuthorityId
+  ) {
+    // Remove candidacy from any certification authority local account
+    await prismaClient.certificationAuthorityLocalAccountOnCandidacy.deleteMany(
+      {
+        where: { candidacyId },
+      },
+    );
+
+    await assignCandidadyToCertificationAuthorityLocalAccounts({
+      candidacyId,
+    });
+  }
+
+  // Assign certification authority local accounts only on new feasibility or if !existingFeasibility.certificationAuthorityId
+  if (!existingFeasibility || !existingFeasibility.certificationAuthorityId) {
+    await assignCandidadyToCertificationAuthorityLocalAccounts({
+      candidacyId,
+    });
+  }
 
   const dff = await prismaClient.dematerializedFeasibilityFile.findUnique({
     where: { id: dematerializedFeasibilityFileId },

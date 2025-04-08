@@ -55,10 +55,6 @@ export const assignCandidadyToCertificationAuthorityLocalAccounts =
         },
       });
 
-    await prismaClient.certificationAuthorityLocalAccountOnCandidacy.deleteMany(
-      { where: { candidacyId } },
-    );
-
     await prismaClient.certificationAuthorityLocalAccountOnCandidacy.createMany(
       {
         data: certificationAuthorityLocalAccounts.map(({ id }) => ({

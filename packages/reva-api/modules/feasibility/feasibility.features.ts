@@ -284,9 +284,33 @@ export const createFeasibility = async ({
     });
   }
 
-  await assignCandidadyToCertificationAuthorityLocalAccounts({
-    candidacyId,
-  });
+  // Update certification authority local accounts only if certificationAuthorityId has been changed
+  if (
+    existingFeasibilityUploadedPdf?.certificationAuthorityId &&
+    existingFeasibilityUploadedPdf.certificationAuthorityId !=
+      certificationAuthorityId
+  ) {
+    // Remove candidacy from any certification authority local account
+    await prismaClient.certificationAuthorityLocalAccountOnCandidacy.deleteMany(
+      {
+        where: { candidacyId },
+      },
+    );
+
+    await assignCandidadyToCertificationAuthorityLocalAccounts({
+      candidacyId,
+    });
+  }
+
+  // Assign certification authority local accounts only on new feasibility or if !existingFeasibility.certificationAuthorityId
+  if (
+    !existingFeasibilityUploadedPdf ||
+    !existingFeasibilityUploadedPdf.certificationAuthorityId
+  ) {
+    await assignCandidadyToCertificationAuthorityLocalAccounts({
+      candidacyId,
+    });
+  }
 
   await updateCandidacyStatus({
     candidacyId,

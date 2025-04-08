@@ -96,6 +96,11 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     },
   });
 
+  // Remove candidacy from any certification authority local account
+  await prismaClient.certificationAuthorityLocalAccountOnCandidacy.deleteMany({
+    where: { candidacyId },
+  });
+
   await assignCandidadyToCertificationAuthorityLocalAccounts({
     candidacyId,
   });
