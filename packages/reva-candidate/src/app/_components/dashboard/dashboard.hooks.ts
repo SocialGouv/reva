@@ -52,6 +52,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           adresseVille
         }
         feasibility {
+          feasibilityFileSentAt
           decision
           feasibilityFormat
           dematerializedFeasibilityFile {

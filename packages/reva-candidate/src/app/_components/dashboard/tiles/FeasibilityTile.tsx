@@ -19,6 +19,12 @@ const FeasibilityBadge = ({
   const isCandidateConfirmed =
     !!feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt;
   const decisionIsDraft = decision === "DRAFT";
+  const decisionIsDraftOrIncomplete =
+    decision === "DRAFT" || decision === "INCOMPLETE";
+  const needsAttestation =
+    isDfDemat &&
+    !candidacyIsAutonome &&
+    !feasibility?.dematerializedFeasibilityFile?.swornStatementFileId;
 
   switch (true) {
     case isCaduque:
@@ -42,22 +48,28 @@ const FeasibilityBadge = ({
           en cours
         </Badge>
       );
-    case decisionIsDraft || (candidacyIsAutonome && !decision):
+    case (decisionIsDraftOrIncomplete && !needsAttestation) ||
+      (candidacyIsAutonome && (!decision || decision === "INCOMPLETE")):
       return (
         <Badge severity="info" data-test="feasibility-badge-to-send">
           à envoyer au certificateur
+        </Badge>
+      );
+    case decisionIsDraftOrIncomplete &&
+      needsAttestation &&
+      isDfDemat &&
+      !candidacyIsAutonome &&
+      feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+      !feasibility?.dematerializedFeasibilityFile?.swornStatementFileId:
+      return (
+        <Badge severity="info" data-test="feasibility-badge-to-send">
+          attente attestation
         </Badge>
       );
     case decision === "ADMISSIBLE":
       return (
         <Badge severity="success" data-test="feasibility-badge-admissible">
           recevable
-        </Badge>
-      );
-    case decision === "INCOMPLETE":
-      return (
-        <Badge severity="warning" data-test="feasibility-badge-incomplete">
-          incomplet
         </Badge>
       );
     case decision === "COMPLETE":
@@ -104,6 +116,16 @@ export const FeasibilityTile = ({
       case candidacyIsAutonome:
         return false;
       case !feasibility:
+        return true;
+      case feasibility?.decision === "INCOMPLETE" &&
+        feasibilityIsPdf &&
+        !feasibility.feasibilityFileSentAt &&
+        !candidacyIsAutonome:
+        return true;
+      case feasibility?.decision === "INCOMPLETE" &&
+        !feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+        !feasibilityHasBeenSentToCandidate &&
+        !candidacyIsAutonome:
         return true;
       case feasibilityHasBeenSentToCandidate || feasibilityIsPdf:
         return false;

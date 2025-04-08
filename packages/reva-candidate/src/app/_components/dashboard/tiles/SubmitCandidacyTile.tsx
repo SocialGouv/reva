@@ -36,6 +36,11 @@ export const SubmitCandidacyTile = ({
         },
       }}
       imageUrl="/candidat/images/pictograms/mail-send.svg"
+      desc={
+        candidacyAlreadySubmitted || canSubmitCandidacy
+          ? ""
+          : "Compléter toutes les sections"
+      }
     />
   );
 };
