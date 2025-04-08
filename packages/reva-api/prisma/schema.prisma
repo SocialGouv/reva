@@ -489,10 +489,10 @@ model Organism {
 
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
 
-  modaliteAccompagnement                      OrganismModaliteAccompagnement                @map("modalite_accompagnement")
-  modaliteAccompagnementRenseigneeEtValide    Boolean                                       @map("modalite_accompagnement_renseignee_et_valide")
-  OrganismInformationsCommerciales            OrganismInformationsCommerciales?
-  CertificationCohorteVaeCollectiveOnOrganism CertificationCohorteVaeCollectiveOnOrganism[]
+  modaliteAccompagnement                       OrganismModaliteAccompagnement                @map("modalite_accompagnement")
+  modaliteAccompagnementRenseigneeEtValide     Boolean                                       @map("modalite_accompagnement_renseignee_et_valide")
+  OrganismInformationsCommerciales             OrganismInformationsCommerciales?
+  certificationCohorteVaeCollectiveOnOrganisms CertificationCohorteVaeCollectiveOnOrganism[]
 
   @@index([maisonMereAAPId])
   @@map("organism")

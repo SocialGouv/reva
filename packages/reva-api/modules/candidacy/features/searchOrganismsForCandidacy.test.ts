@@ -8,6 +8,7 @@ import { createCertificationHelper } from "../../../test/helpers/entities/create
 import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
 import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
+import { createCohorteVaeCollectiveHelper } from "../../../test/helpers/entities/create-vae-collective-helper";
 
 const searchOrganisms = async ({
   keycloakId,
@@ -561,6 +562,95 @@ describe("searchOrganismsForCandidacy", () => {
       expect(resp.statusCode).toEqual(200);
       const results = resp.json().data.getRandomOrganismsForCandidacy;
       expect(results.totalRows).toBe(0);
+    });
+  });
+
+  describe("VAE collective", () => {
+    describe("non zip code search", () => {
+      test("should search organisms and return all organisms when there is no VAE collective organism restriction", async () => {
+        const certification = await createCertificationHelper({
+          certificationOnConventionCollective: {
+            create: ccnServicePersonne,
+          },
+        });
+        const organism1 = await createOrganismHelper();
+
+        await attachOrganismToAllDegreesHelper(organism1);
+        await attachOrganismToAllConventionCollectiveHelper(organism1);
+
+        const organism2 = await createOrganismHelper();
+
+        await attachOrganismToAllDegreesHelper(organism2);
+        await attachOrganismToAllConventionCollectiveHelper(organism2);
+
+        const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+          certificationCohorteVaeCollectives: {
+            create: { certificationId: certification.id },
+          },
+        });
+
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: {
+            certificationId: certification?.id,
+            cohorteVaeCollectiveId: cohorteVaeCollective.id,
+          },
+        });
+
+        const resp = await searchOrganisms({
+          keycloakId: candidacy.candidate?.keycloakId ?? "",
+          candidacyId: candidacy.id,
+          searchFilter: {},
+        });
+
+        expect(resp.statusCode).toEqual(200);
+        const results = resp.json().data.getRandomOrganismsForCandidacy;
+        expect(results.totalRows).toBe(2);
+      });
+
+      test("should search organisms and only return the restricted organisms there is a VAE collective organism restriction", async () => {
+        const certification = await createCertificationHelper({
+          certificationOnConventionCollective: {
+            create: ccnServicePersonne,
+          },
+        });
+        const organism1 = await createOrganismHelper();
+
+        await attachOrganismToAllDegreesHelper(organism1);
+        await attachOrganismToAllConventionCollectiveHelper(organism1);
+
+        const organism2 = await createOrganismHelper();
+
+        await attachOrganismToAllDegreesHelper(organism2);
+        await attachOrganismToAllConventionCollectiveHelper(organism2);
+
+        const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+          certificationCohorteVaeCollectives: {
+            create: {
+              certificationId: certification.id,
+              certificationCohorteVaeCollectiveOnOrganisms: {
+                create: { organismId: organism1.id },
+              },
+            },
+          },
+        });
+
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: {
+            certificationId: certification?.id,
+            cohorteVaeCollectiveId: cohorteVaeCollective.id,
+          },
+        });
+
+        const resp = await searchOrganisms({
+          keycloakId: candidacy.candidate?.keycloakId ?? "",
+          candidacyId: candidacy.id,
+          searchFilter: {},
+        });
+
+        expect(resp.statusCode).toEqual(200);
+        const results = resp.json().data.getRandomOrganismsForCandidacy;
+        expect(results.totalRows).toBe(1);
+      });
     });
   });
 });

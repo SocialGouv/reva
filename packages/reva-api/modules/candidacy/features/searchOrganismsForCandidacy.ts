@@ -26,6 +26,23 @@ export const searchOrganismsForCandidacy = async ({
     throw new Error("Candidature non trouvée");
   }
 
+  // In case of a "VAE collective", if the cohorteVaeCollective restricts the available organisms, user search results are restricted to the organisms in the cohorteVaeCollective
+  const organismsFromCohorteVaeCollectiveIds = (
+    await prismaClient.organism.findMany({
+      where: {
+        certificationCohorteVaeCollectiveOnOrganisms: {
+          some: {
+            certificationCohorteVaeCollective: {
+              cohorteVaeCollective: {
+                candidacy: { some: { id: candidacyId } },
+              },
+            },
+          },
+        },
+      },
+    })
+  ).map((o) => o.id);
+
   let organismsFound: Organism[];
   let totalOrganismCount: number;
 
@@ -40,6 +57,7 @@ export const searchOrganismsForCandidacy = async ({
       pmr: searchFilter.pmr,
       limit: 50,
       searchText,
+      restrictedToOrganismsIds: organismsFromCohorteVaeCollectiveIds,
     });
     organismsFound = result.rows;
     totalOrganismCount = result.totalRows;
@@ -54,6 +72,7 @@ export const searchOrganismsForCandidacy = async ({
       searchText,
       searchFilter,
       limit: 50,
+      restrictedToOrganismsIds: organismsFromCohorteVaeCollectiveIds,
     });
 
     organismsFound = result.rows
@@ -74,12 +93,14 @@ const getRandomActiveOrganismForCertification = async ({
   searchText,
   searchFilter,
   limit,
+  restrictedToOrganismsIds,
 }: {
   certificationId: string;
   departmentId: string;
   searchText?: string;
   searchFilter: SearchOrganismFilter;
   limit: number;
+  restrictedToOrganismsIds?: string[];
 }) => {
   const organismView =
     "active_organism_by_available_certification_based_on_formacode";
@@ -128,6 +149,12 @@ const getRandomActiveOrganismForCertification = async ({
     whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
   }
 
+  if (restrictedToOrganismsIds?.length) {
+    whereClause = Prisma.sql`${whereClause} and o.id::text in (${Prisma.join(
+      restrictedToOrganismsIds,
+    )})`;
+  }
+
   const results = await prismaClient.$queryRaw<Organism[]>`
           select o.id,
                  o.label,
@@ -170,12 +197,14 @@ const getAAPsWithZipCode = async ({
   limit,
   pmr,
   searchText,
+  restrictedToOrganismsIds,
 }: {
   zip: string;
   certificationId: string;
   limit: number;
   pmr?: boolean;
   searchText?: string;
+  restrictedToOrganismsIds?: string[];
 }): Promise<{ rows: Organism[]; totalRows: number }> => {
   if (!certificationId) {
     return { rows: [], totalRows: 0 };
@@ -220,6 +249,12 @@ const getAAPsWithZipCode = async ({
   const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
   if (CGU_AAP_VERSION != undefined) {
     whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;
+  }
+
+  if (restrictedToOrganismsIds?.length) {
+    whereClause = Prisma.sql`${whereClause} and o.id::text in (${Prisma.join(
+      restrictedToOrganismsIds,
+    )})`;
   }
 
   const organismView =
