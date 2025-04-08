@@ -43,7 +43,10 @@ export const DashboardVaeCollectiveTilesGroup = ({
           />
           <GoalsTile hasCompletedGoals={hasCompletedGoals} />
           <ExperiencesTile experiences={candidacy.experiences} />
-          <OrganismTile hasSelectedOrganism={hasSelectedOrganism} />
+          <OrganismTile
+            hasSelectedOrganism={hasSelectedOrganism}
+            candidacyStatus={candidacy.status}
+          />
           <SubmitCandidacyTile
             candidacyAlreadySubmitted={candidacyAlreadySubmitted}
             canSubmitCandidacy={canSubmitCandidacy}
