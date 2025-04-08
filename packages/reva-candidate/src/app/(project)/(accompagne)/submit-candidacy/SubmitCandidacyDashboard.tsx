@@ -6,6 +6,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { BackButton } from "@/components/back-button/BackButton";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useState } from "react";
 import CandidacySubmissionSuccessNotice from "./CandidacySubmissionSuccessNotice";
 import CandidateSectionSubmitCandidacy from "./CandidateSectionSubmitCandidacy";
@@ -15,7 +16,6 @@ import ExperiencesSectionSubmitCandidacy from "./ExperiencesSectionSubmitCandida
 import GoalsSectionSubmitCandidacy from "./GoalsSectionSubmitCandidacy";
 import { useSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 import { useSubmitCandidacy } from "./submit-candidacy.hooks";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 export default function SubmitCandidacy() {
   const router = useRouter();
@@ -64,8 +64,8 @@ export default function SubmitCandidacy() {
       <h2 className="mt-6 mb-4">Envoi de votre candidature</h2>
       <p className="mb-12">
         Vérifiez les informations puis validez l'envoi de votre candidature à
-        l'AAP que vous avez choisi. Il se chargera ensuite de vous contacter
-        pour fixer le premier rendez-vous.
+        l'accompagnateur que vous avez choisi. Il se chargera ensuite de vous
+        contacter pour fixer le premier rendez-vous.
       </p>
       <CandidateSectionSubmitCandidacy candidate={candidate} />
       <CertificationSectionSubmitCandidacy
