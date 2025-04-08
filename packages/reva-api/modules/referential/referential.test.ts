@@ -7,6 +7,8 @@ import { createCertificationHelper } from "../../test/helpers/entities/create-ce
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
 import { createOrganismOnConventionCollectiveHelper } from "../../test/helpers/entities/create-organism-on-convention-collective-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
+import { createCohorteVaeCollectiveHelper } from "../../test/helpers/entities/create-vae-collective-helper";
 
 const createCertifications = async () => {
   for (const cert of particulierEmployeurCertifications) {
@@ -19,9 +21,11 @@ const createCertifications = async () => {
 async function searchCertificationsForCandidate({
   searchText,
   organism,
+  candidacyId,
 }: {
   searchText?: string;
   organism?: Organism | null;
+  candidacyId?: string;
 }) {
   return await injectGraphql({
     fastify: (global as any).fastify,
@@ -37,6 +41,7 @@ async function searchCertificationsForCandidate({
         limit: 10,
         ...(searchText ? { searchText } : {}),
         ...(organism ? { organismId: organism?.id || "" } : {}),
+        ...(candidacyId ? { candidacyId } : {}),
       },
       returnFields: "{ rows { label }, info { totalRows } }",
     },
@@ -91,4 +96,45 @@ test("should have only certifications handle by expertBranche", async () => {
   expect(obj.data.searchCertificationsForCandidate.rows).toEqual(
     particulierEmployeurCertifications,
   );
+});
+
+describe("VAE collective", () => {
+  /**
+   * Test search certifications by a candidate restricted by a VAE collective cohort
+   */
+  test("should return all certifications when searching with a VAE collective cohort without any certification restriction", async () => {
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+    const candidacy = await createCandidacyHelper({
+      candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+    });
+    const resp = await searchCertificationsForCandidate({
+      candidacyId: candidacy.id,
+    });
+    const obj = resp.json();
+    expect(
+      obj.data.searchCertificationsForCandidate.info.totalRows,
+    ).toBeGreaterThanOrEqual(212);
+  });
+
+  /**
+   * Test search certifications by a candidate restricted by a VAE collective cohort
+   */
+  test("should only return the certification available for the VAE collective cohort", async () => {
+    const certificationVaeCollective = await createCertificationHelper();
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+      certificationCohorteVaeCollectives: {
+        create: { certificationId: certificationVaeCollective.id },
+      },
+    });
+
+    const candidacy = await createCandidacyHelper({
+      candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+    });
+    const resp = await searchCertificationsForCandidate({
+      candidacyId: candidacy.id,
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+  });
 });
