@@ -42,7 +42,7 @@ export const AppointmentsBanner = ({
         content={
           <div data-test="first-appointment-scheduled-banner">
             <b>Information importante :</b> un rendez-vous est prévu le{" "}
-            {format(firstAppointmentOccuredAt, "dd/MM/yyyy, à HH'h'mm")} avec{" "}
+            {format(firstAppointmentOccuredAt, "dd/MM/yyyy")} avec{" "}
             <em>{organism?.nomPublic || organism?.label}</em>.
           </div>
         }

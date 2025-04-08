@@ -22,7 +22,7 @@ const BadgeSubtitle = () => (
   </p>
 );
 export const JuryBanner = ({ jury }: JuryBannerProps) => {
-  const { dateOfSession, result } = jury;
+  const { dateOfSession, result, isResultTemporary } = jury;
   const isUpcoming = isAfter(dateOfSession, new Date());
 
   const resultIsSuccess =
@@ -49,7 +49,7 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
         topBadge={
           <>
             <Badge severity="success">Réussite totale</Badge>
-            <BadgeSubtitle />
+            {isResultTemporary && <BadgeSubtitle />}
           </>
         }
         testId="jury-banner-success"
@@ -74,7 +74,7 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
         topBadge={
           <>
             <Badge severity="info">Réussite partielle</Badge>
-            <BadgeSubtitle />
+            {isResultTemporary && <BadgeSubtitle />}
           </>
         }
         testId="jury-banner-partial-success"
@@ -91,8 +91,8 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
               Vous n'avez pas pu être présent lors du passage devant le jury.
             </p>
             <p className="mb-0">
-              Retrouvez toutes les informations dans la section “Dossier de
-              validation”.
+              Vous pouvez repasser devant le jury. Retrouvez toutes les
+              informations dans la section “Dossier de validation”.
             </p>
           </>
         }
@@ -101,7 +101,7 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
         topBadge={
           <>
             <Badge severity="new">Non présent le jour du jury</Badge>
-            <BadgeSubtitle />
+            {isResultTemporary && <BadgeSubtitle />}
           </>
         }
         testId="jury-banner-absent-or-excused"
@@ -128,7 +128,7 @@ export const JuryBanner = ({ jury }: JuryBannerProps) => {
         topBadge={
           <>
             <CustomErrorBadge label="Diplôme non obtenu" />
-            <BadgeSubtitle />
+            {isResultTemporary && <BadgeSubtitle />}
           </>
         }
         testId="jury-banner-failure"

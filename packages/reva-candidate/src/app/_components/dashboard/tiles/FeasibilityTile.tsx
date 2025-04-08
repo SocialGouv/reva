@@ -33,7 +33,7 @@ const FeasibilityBadge = ({
           caduque
         </Badge>
       );
-    case decisionIsDraft &&
+    case decisionIsDraftOrIncomplete &&
       isDfDemat &&
       isSentToCandidate &&
       !isCandidateConfirmed:
@@ -42,28 +42,36 @@ const FeasibilityBadge = ({
           à valider
         </Badge>
       );
-    case decisionIsDraft && isDfDemat:
+    case decisionIsDraft && isDfDemat && !!feasibility.feasibilityFileSentAt:
       return (
         <Badge severity="info" data-test="feasibility-badge-in-progress">
           en cours
         </Badge>
       );
-    case (decisionIsDraftOrIncomplete && !needsAttestation) ||
-      (candidacyIsAutonome && (!decision || decision === "INCOMPLETE")):
+
+    case decisionIsDraftOrIncomplete &&
+      needsAttestation &&
+      isDfDemat &&
+      !candidacyIsAutonome &&
+      feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt &&
+      !feasibility?.dematerializedFeasibilityFile?.swornStatementFileId:
+      return (
+        <Badge severity="info" data-test="feasibility-waiting-for-attestation">
+          attente attestation
+        </Badge>
+      );
+    case decisionIsDraftOrIncomplete &&
+      !needsAttestation &&
+      !candidacyIsAutonome:
       return (
         <Badge severity="info" data-test="feasibility-badge-to-send">
           à envoyer au certificateur
         </Badge>
       );
-    case decisionIsDraftOrIncomplete &&
-      needsAttestation &&
-      isDfDemat &&
-      !candidacyIsAutonome &&
-      feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt &&
-      !feasibility?.dematerializedFeasibilityFile?.swornStatementFileId:
+    case candidacyIsAutonome && (!decision || decision === "INCOMPLETE"):
       return (
-        <Badge severity="info" data-test="feasibility-badge-to-send">
-          attente attestation
+        <Badge severity="warning" data-test="feasibility-badge-to-send">
+          à envoyer
         </Badge>
       );
     case decision === "ADMISSIBLE":
@@ -72,13 +80,7 @@ const FeasibilityBadge = ({
           recevable
         </Badge>
       );
-    case decision === "COMPLETE":
-      return (
-        <Badge severity="info" data-test="feasibility-badge-complete">
-          complet
-        </Badge>
-      );
-    case decision === "PENDING":
+    case decision === "PENDING" || decision === "COMPLETE":
       return (
         <Badge severity="info" data-test="feasibility-badge-pending">
           envoyé au certificateur

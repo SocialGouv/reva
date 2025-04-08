@@ -33,7 +33,7 @@ export const DashboardAutonomeTilesGroup = ({
         title="Suivre mon parcours"
         icon="fr-icon-award-line"
       >
-        <div className="grid grid-flow-row md:grid-flow-col grid-rows-1">
+        <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-2 grid-rows-1">
           <FeasibilityTile
             feasibility={feasibility}
             isCaduque={candidacyIsCaduque}

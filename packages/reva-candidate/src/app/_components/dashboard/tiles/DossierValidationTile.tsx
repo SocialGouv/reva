@@ -30,7 +30,7 @@ const DossierValidationBadge = ({
 
     case canSubmitAgainAfterJury:
       return (
-        <Badge severity="error" data-test="dossier-validation-badge-to-send">
+        <Badge severity="warning" data-test="dossier-validation-badge-to-send">
           à transmettre
         </Badge>
       );

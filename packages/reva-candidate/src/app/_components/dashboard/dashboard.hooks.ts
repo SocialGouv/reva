@@ -67,6 +67,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           }
         }
         jury {
+          isResultTemporary
           dateOfSession
           timeOfSession
           timeSpecified
