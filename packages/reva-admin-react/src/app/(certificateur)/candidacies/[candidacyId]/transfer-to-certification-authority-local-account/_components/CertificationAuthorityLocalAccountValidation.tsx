@@ -1,7 +1,16 @@
 import { CertificationAuthorityLocalAccount } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { CertificationAuthorityLocalAccountCard } from "./CertificationAuthorityLocalAccountCard";
+
+const schema = z.object({
+  reason: z.string().trim().min(1, {
+    message: "Ce champ est requis",
+  }),
+});
 
 export const CertificationAuthorityLocalAccountValidation = ({
   certificationAuthorityLocalAccount,
@@ -15,9 +24,10 @@ export const CertificationAuthorityLocalAccountValidation = ({
   onTransferCandidacy(transferReason: string): void;
 }) => {
   const {
+    register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm();
+    formState: { errors, isSubmitting, isDirty },
+  } = useForm({ resolver: zodResolver(schema), defaultValues: { reason: "" } });
 
   return (
     <>
@@ -29,6 +39,18 @@ export const CertificationAuthorityLocalAccountValidation = ({
         />
       </div>
       <form onSubmit={handleSubmit((data) => onTransferCandidacy(data.reason))}>
+        <Input
+          label="Précisez les raisons de ce transfert :"
+          textArea
+          className="my-12"
+          nativeTextAreaProps={register("reason")}
+          state={errors.reason ? "error" : "default"}
+          stateRelatedMessage={errors.reason?.message}
+        />
+        <p>
+          L'accompagnateur en charge de la candidature sera notifié de ce
+          transfert vers un nouveau service.
+        </p>
         <div className="flex gap-2 justify-end">
           <Button
             priority="secondary"
@@ -36,7 +58,7 @@ export const CertificationAuthorityLocalAccountValidation = ({
           >
             Annuler
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || !isDirty}>
             Transférer
           </Button>
         </div>

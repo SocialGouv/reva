@@ -278,9 +278,14 @@ const unsafeResolvers = {
         params: {
           candidacyId: string;
           certificationAuthorityLocalAccountId: string;
+          transferReason: string;
         },
+        context: GraphqlContext,
       ) => {
-        await transferCandidacyToCertificationAuthorityLocalAccount(params);
+        await transferCandidacyToCertificationAuthorityLocalAccount({
+          ...params,
+          keycloakId: context.auth.userInfo?.sub,
+        });
 
         return true;
       },

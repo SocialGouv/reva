@@ -51,10 +51,12 @@ const transferCandidacyToCertificationAuthorityLocalAccount = graphql(`
   mutation transferCandidacyToCertificationAuthorityLocalAccount(
     $candidacyId: String!
     $certificationAuthorityLocalAccountId: String!
+    $transferReason: String!
   ) {
     certification_authority_transferCandidacyToCertificationAuthorityLocalAccount(
       candidacyId: $candidacyId
       certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
+      transferReason: $transferReason
     )
   }
 `);
