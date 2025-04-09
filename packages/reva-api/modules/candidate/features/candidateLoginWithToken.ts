@@ -21,6 +21,7 @@ import { isCertificationAvailable } from "../../referential/features/isCertifica
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import { updateCertification } from "../../candidacy/certification/features/updateCertification";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationCohorteVaeCollectiveByCohorteVAECollectiveId } from "../../vae-collective/features/getCertificationCohorteVaeCollectiveByCohorteVAECollectiveId";
 
 export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(
@@ -101,6 +102,23 @@ const confirmRegistration = async ({
     });
   }
 
+  // special case of registration for a vae collective
+  if (candidateInput.cohorteVaeCollectiveId) {
+    const certificationCohorteVaeCollective =
+      await getCertificationCohorteVaeCollectiveByCohorteVAECollectiveId({
+        cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
+      });
+
+    // if there is only one certification for the vae collective, we assign it
+    if (certificationCohorteVaeCollective?.length === 1) {
+      await updateCertification({
+        candidacyId: candidacy.id,
+        author: "candidate",
+        certificationId: certificationCohorteVaeCollective[0].certificationId,
+        feasibilityFormat: "DEMATERIALIZED",
+      });
+    }
+  }
   const url = getImpersonateUrl(candidate.keycloakId);
 
   await logCandidacyAuditEvent({
