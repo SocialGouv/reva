@@ -26,6 +26,9 @@ const getCandidacyWithDossierDeValidationQuery = graphql(`
           previewUrl
         }
       }
+      jury {
+        id
+      }
       historyDossierDeValidation {
         id
         decision
@@ -66,14 +69,13 @@ export const useDossierDeValidationPageLogic = () => {
 
   const candidacy = getDossierDeValidationResponse?.getCandidacyById;
   const dossierDeValidation = candidacy?.activeDossierDeValidation;
+  const jury = candidacy?.jury;
   const historyDossierDeValidation =
     candidacy?.historyDossierDeValidation || [];
 
   const readyForJuryEstimatedAt = candidacy?.readyForJuryEstimatedAt;
 
-  const canSignalProblem =
-    candidacy?.status === "DOSSIER_DE_VALIDATION_ENVOYE" &&
-    dossierDeValidation?.decision === "PENDING";
+  const canSignalProblem = dossierDeValidation?.decision === "PENDING" && !jury;
 
   return {
     getDossierDeValidationStatus,
