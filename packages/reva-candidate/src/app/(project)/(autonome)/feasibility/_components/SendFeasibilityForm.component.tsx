@@ -106,6 +106,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
       candidacy?.certificationAuthorities.find(
         (c) => c.id === certificationAuthorityId,
       );
+
     return (
       <CallOut
         title={
