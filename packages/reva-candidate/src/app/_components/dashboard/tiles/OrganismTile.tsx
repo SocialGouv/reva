@@ -13,7 +13,6 @@ export const OrganismTile = ({
   hasSelectedCertification: boolean; // in some cases (vae collective) the candidate can register without selecting a certification
 }) => {
   const router = useRouter();
-  console.log("candidacyStatus", candidacyStatus);
   return (
     <Tile
       data-test="organism-tile"
