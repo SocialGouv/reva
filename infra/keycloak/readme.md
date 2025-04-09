@@ -6,6 +6,8 @@ Les variables d'environnement doivent pointer sur le Keycloak local (port 8888) 
 
 Demander le fichier .env avec les variables d'env à utiliser.
 
+Si un autre keycloak était utilisé seule les urls changent (attention au protocole et au /auth en plus): https://mon-keycloak-reva.net/ -> http://localhost:8888/auth
+
 ### `.env` racine
 
 ```properties
@@ -49,120 +51,16 @@ $ cd infra/keycloak
 
 Dans le fichier `docker-compose.yml` commenter le service `keycloak`:
 
-```yaml
-version: "3"
-
-volumes:
-  postgres_data:
-    driver: local
-
-services:
-  postgres:
-    image: postgres:13.7
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-    ports:
-      - 5433:5432
-  # keycloak:
-  #   image: quay.io/keycloak/keycloak:24.0.2
-  #   volumes:
-  #     - ./themes/francevae:/opt/keycloak/themes/francevae
-  #   environment:
-  #     KC_HEALTH_ENABLED: true
-  #     KC_METRICS_ENABLED: true
-  #     KC_DB: postgres
-  #     KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
-  #     KC_DB_USERNAME: keycloak
-  #     KC_DB_PASSWORD: password
-  #     KC_HOSTNAME: localhost
-  #     KC_PROXY: edge
-  #     # KC_HOSTNAME_STRICT: false
-  #     # KC_HOSTNAME_STRICT_BACKCHANNEL: true
-  #     KEYCLOAK_ADMIN: admin
-  #     KEYCLOAK_ADMIN_PASSWORD: password
-  #     REVA_BASE_URL: http://localhost:3000
-  #     KC_HTTP_RELATIVE_PATH: auth
-  #     KC_HTTP_ENABLED: true
-  #     KC_HOSTNAME_STRICT_HTTPS: false
-  #     # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
-  #     # JDBC_PARAMS: "ssl=true"
-  #   command:
-  #     - start
-  #     # - --optimized
-  #     - --hostname-port=8888
-  #   ports:
-  #     - 8888:8080
-  #   depends_on:
-  #     - postgres
-```
-
 Puis lancer le service de la db:
 
 ```
 $ cd infra/keycloak
-$ docker-compose up -d
+$ docker-compose up -d postgres
 ```
 
 Une db postgres est désormais lancée. Il suffit de restaurer le dump fourni.
 
-Enfin démarrer la stack en retirant le service `keycloak` en commentaire:
-
-```yaml
-version: "3"
-
-volumes:
-  postgres_data:
-    driver: local
-
-services:
-  postgres:
-    image: postgres:13.7
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-    ports:
-      - 5433:5432
-  keycloak:
-    image: quay.io/keycloak/keycloak:24.0.2
-    volumes:
-      - ./themes/francevae:/opt/keycloak/themes/francevae
-    environment:
-      KC_HEALTH_ENABLED: true
-      KC_METRICS_ENABLED: true
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: password
-      KC_HOSTNAME: localhost
-      KC_PROXY: edge
-      # KC_HOSTNAME_STRICT: false
-      # KC_HOSTNAME_STRICT_BACKCHANNEL: true
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: password
-      REVA_BASE_URL: http://localhost:3000
-      KC_HTTP_RELATIVE_PATH: auth
-      KC_HTTP_ENABLED: true
-      KC_HOSTNAME_STRICT_HTTPS: false
-      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
-      # JDBC_PARAMS: "ssl=true"
-    command:
-      - start
-      # - --optimized
-      - --hostname-port=8888
-    ports:
-      - 8888:8080
-    depends_on:
-      - postgres
-```
-
-Puis lancer le service de la db:
+Enfin démarrer le reste de la stack
 
 ```
 $ cd infra/keycloak
@@ -184,3 +82,5 @@ d01bb1f74931   postgres:13.7                      "docker-entrypoint.s…"   50 
 ```
 
 Et voilà ! La stack est lancée.
+
+L'interface d'admin est accessible sur l'url suivante : http://localhost:8888/auth
