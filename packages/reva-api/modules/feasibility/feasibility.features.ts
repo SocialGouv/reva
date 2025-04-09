@@ -65,6 +65,38 @@ export const getCertificationAuthorities = async ({
 
   const certificationId = candidacy?.certificationId;
   const departmentId = candidacy?.candidate?.departmentId;
+  const cohorteVaeCollectiveId = candidacy?.cohorteVaeCollectiveId;
+
+  // If the candidacy is part of a VAE collective cohort, the certification authorities available are restricted to those defined for that cohort
+  if (cohorteVaeCollectiveId && certificationId) {
+    const certificationVaeCollective =
+      await prismaClient.certificationCohorteVaeCollective.findFirst({
+        where: { cohorteVaeCollectiveId, certificationId },
+      });
+
+    // It means certification is part of cohort
+    if (certificationVaeCollective) {
+      const certificationAuthorities =
+        await prismaClient.certificationCohorteVaeCollectiveOnCertificationAuthority.findMany(
+          {
+            where: {
+              certificationCohorteVaeCollectiveId:
+                certificationVaeCollective.id,
+            },
+            include: {
+              certificationAuthority: true,
+            },
+          },
+        );
+
+      // It means there are restrictions of certification authorities for certificationId
+      if (certificationAuthorities.length > 0) {
+        return certificationAuthorities.map(
+          ({ certificationAuthority }) => certificationAuthority,
+        );
+      }
+    }
+  }
 
   return certificationId && departmentId
     ? prismaClient.certificationAuthority.findMany({

@@ -1,13 +1,17 @@
 import { FastifyInstance } from "fastify";
 
+import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { createCohorteVaeCollectiveHelper } from "../../test/helpers/entities/create-vae-collective-helper";
 import * as FILE from "../shared/file/file.service";
 import * as SEND_NEW_FEASIBILITY_EMAIL from "./emails/sendNewFeasibilitySubmittedEmail";
+import { getGraphQLClient } from "../../test/jestGraphqlClient";
+import { graphql } from "../graphql/generated";
 
 test("should count all (2) feasibilities for admin user", async () => {
   await createFeasibilityUploadedPdfHelper({
@@ -466,4 +470,99 @@ test("should validate upload of feasibility file", async () => {
   ).toBe(`email sent to ${emails.map((email) => email).join(", ")}`);
 
   expect(resp.statusCode).toEqual(200);
+});
+
+describe("VAE collective", () => {
+  /**
+   * Test get certification authorities by a candidate restricted by a VAE collective cohort
+   */
+  test("should only return the certification authorities available for the VAE collective cohort", async () => {
+    const certificationVaeCollective = await createCertificationHelper();
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+      certificationCohorteVaeCollectives: {
+        create: { certificationId: certificationVaeCollective.id },
+      },
+    });
+
+    const candidacy = await createCandidacyHelper({
+      candidacyArgs: {
+        cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        certificationId: certificationVaeCollective.id,
+      },
+    });
+
+    // Create first certification authority
+    const certificationAuthority1 = await createCertificationAuthorityHelper();
+    await prismaClient.certificationAuthorityOnCertification.create({
+      data: {
+        certificationAuthorityId: certificationAuthority1.id,
+        certificationId: certificationVaeCollective.id,
+      },
+    });
+    await prismaClient.certificationAuthorityOnDepartment.create({
+      data: {
+        certificationAuthorityId: certificationAuthority1.id,
+        departmentId: candidacy.candidate?.departmentId || "75",
+      },
+    });
+
+    // Restrict certification to first certification authority
+    await prismaClient.certificationCohorteVaeCollectiveOnCertificationAuthority.create(
+      {
+        data: {
+          certificationAuthorityId: certificationAuthority1.id,
+          certificationCohorteVaeCollectiveId:
+            cohorteVaeCollective.certificationCohorteVaeCollectives[0].id,
+        },
+      },
+    );
+
+    // Create second certification authority
+    const certificationAuthority2 = await createCertificationAuthorityHelper();
+    await prismaClient.certificationAuthorityOnCertification.create({
+      data: {
+        certificationAuthorityId: certificationAuthority2.id,
+        certificationId: certificationVaeCollective.id,
+      },
+    });
+    await prismaClient.certificationAuthorityOnDepartment.create({
+      data: {
+        certificationAuthorityId: certificationAuthority2.id,
+        departmentId: candidacy.candidate?.departmentId || "75",
+      },
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "candidate",
+          keycloakId: candidacy?.candidate?.keycloakId,
+        }),
+      },
+    });
+
+    const getCandidacy = graphql(`
+      query candidate_getCandidateWithCandidacyAndCertificationAuthroites {
+        candidate_getCandidateWithCandidacy {
+          candidacy {
+            certificationId
+            certificationAuthorities {
+              id
+              label
+            }
+          }
+        }
+      }
+    `);
+
+    const res = await graphqlClient.request(getCandidacy);
+    expect(
+      res.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorities
+        .length,
+    ).toBe(1);
+    expect(
+      res.candidate_getCandidateWithCandidacy.candidacy
+        .certificationAuthorities[0].id,
+    ).toBe(certificationAuthority1.id);
+  });
 });
