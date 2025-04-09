@@ -18,7 +18,6 @@ const FeasibilityBadge = ({
     !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;
   const isCandidateConfirmed =
     !!feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt;
-  const decisionIsDraft = decision === "DRAFT";
   const decisionIsDraftOrIncomplete =
     decision === "DRAFT" || decision === "INCOMPLETE";
   const needsAttestation =
@@ -42,19 +41,12 @@ const FeasibilityBadge = ({
           à valider
         </Badge>
       );
-    case decisionIsDraft && isDfDemat && !!feasibility.feasibilityFileSentAt:
-      return (
-        <Badge severity="info" data-test="feasibility-badge-in-progress">
-          en cours
-        </Badge>
-      );
 
     case decisionIsDraftOrIncomplete &&
       needsAttestation &&
       isDfDemat &&
       !candidacyIsAutonome &&
-      feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt &&
-      !feasibility?.dematerializedFeasibilityFile?.swornStatementFileId:
+      !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt:
       return (
         <Badge severity="info" data-test="feasibility-waiting-for-attestation">
           attente attestation

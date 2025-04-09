@@ -12,13 +12,13 @@ export const ExperiencesTile = ({
     start={
       <>
         {experiences.length === 0 ? (
-          <Badge severity="warning" data-test="experiences-badge-to-complete">
+          <Badge severity="warning" data-test="incomplete-badge">
             À compléter
           </Badge>
         ) : (
           <Badge
             className="bg-[#fee7fc] text-[#6e445a]"
-            data-test="experiences-badge-completed"
+            data-test="complete-badge"
           >
             {experiences.length}{" "}
             {experiences.length === 1 ? "renseignée" : "renseignées"}
