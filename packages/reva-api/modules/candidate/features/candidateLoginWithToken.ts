@@ -22,6 +22,8 @@ import { getCertificationById } from "../../referential/features/getCertificatio
 import { updateCertification } from "../../candidacy/certification/features/updateCertification";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { getCertificationCohortesByCohorteId } from "../../vae-collective/features/getCertificationCohortesByCohorteId";
+import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "../../vae-collective/features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
+import { updateCandidacyOrganism } from "../../candidacy/features/updateCandidacyOrganism";
 
 export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(
@@ -111,12 +113,26 @@ const confirmRegistration = async ({
 
     // if there is only one certification for the vae collective, we assign it
     if (certificationCohorteVaeCollective?.length === 1) {
+      const certificationCohorte = certificationCohorteVaeCollective[0];
       await updateCertification({
         candidacyId: candidacy.id,
         author: "candidate",
-        certificationId: certificationCohorteVaeCollective[0].certificationId,
+        certificationId: certificationCohorte.certificationId,
         feasibilityFormat: "DEMATERIALIZED",
       });
+
+      const certificationCohorteOnOrganisms =
+        await getCertificationCohorteOnOrganismsByCertificationCohorteId({
+          certificationCohorteVaeCollectiveId: certificationCohorte.id,
+        });
+
+      // if there is only one organism for the vae collective certification, we assign it
+      if (certificationCohorteOnOrganisms?.length === 1) {
+        await updateCandidacyOrganism({
+          candidacyId: candidacy.id,
+          organismId: certificationCohorteOnOrganisms[0].organismId,
+        });
+      }
     }
   }
   const url = getImpersonateUrl(candidate.keycloakId);
