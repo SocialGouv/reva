@@ -40,29 +40,19 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
     include: {
+      dossierDeValidation: { where: { isActive: true } },
       Feasibility: { where: { isActive: true } },
       candidate: true,
       organism: true,
       Jury: { where: { isActive: true } },
-      candidacyStatuses: true,
     },
   });
   if (!candidacy) {
     throw new Error("La candidature n'a pas été trouvée");
   }
 
-  const isDossierDeValidationSent =
-    candidacy.candidacyStatuses?.findIndex(
-      ({ status }) => status == "DOSSIER_DE_VALIDATION_ENVOYE",
-    ) != -1;
-
-  const isDemandeDePaiementSent =
-    candidacy.candidacyStatuses?.findIndex(
-      ({ status }) => status == "DEMANDE_PAIEMENT_ENVOYEE",
-    ) != -1;
-
-  // Need to check if isDemandeDePaiementSent for historical candidacies
-  if (!isDossierDeValidationSent && !isDemandeDePaiementSent) {
+  const dossierDeValidation = candidacy.dossierDeValidation[0];
+  if (dossierDeValidation?.decision != "PENDING") {
     throw new Error("Le dossier de validation n'a pas été envoyé");
   }
 

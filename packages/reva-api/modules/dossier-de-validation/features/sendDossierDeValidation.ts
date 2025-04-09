@@ -48,15 +48,19 @@ export const sendDossierDeValidation = async ({
       },
     },
   });
+
   if (!candidacy) {
     throw new Error("La candidature n'a pas été trouvée");
   }
+
   if (candidacy.candidacyDropOut) {
     throw new Error("La candidature a été abandonnée");
   }
+
   if (candidacy.status === "ARCHIVE") {
     throw new Error("La candidature a été supprimée");
   }
+
   if (candidacy.Feasibility?.[0]?.decision !== FeasibilityStatus.ADMISSIBLE) {
     throw new Error("Le dossier de faisabilité n'est pas recevable");
   }
@@ -81,7 +85,12 @@ export const sendDossierDeValidation = async ({
     );
   }
 
-  const jury = await prismaClient.jury.findFirst({
+  const activeDossierDeValidation =
+    await prismaClient.dossierDeValidation.findFirst({
+      where: { candidacyId: candidacy.id, isActive: true },
+    });
+
+  const activeJury = await prismaClient.jury.findFirst({
     where: { candidacyId: candidacy.id, isActive: true },
   });
 
@@ -95,16 +104,21 @@ export const sendDossierDeValidation = async ({
   ];
 
   const hasFailedJuryResult =
-    jury?.result && failedJuryResults.includes(jury.result);
+    activeJury?.result && failedJuryResults.includes(activeJury.result);
 
-  const hasAlreadySentDossierValidation = [
-    "DOSSIER_DE_VALIDATION_ENVOYE",
-    "DEMANDE_PAIEMENT_ENVOYEE",
-  ].includes(candidacy.status);
-
-  if (hasAlreadySentDossierValidation && !hasFailedJuryResult) {
+  if (activeDossierDeValidation?.decision == "PENDING" && !activeJury) {
     throw new Error(
-      "Seul un candidat ayant échoué totalement ou partiellement au jury peut renvoyer un dossier de validation",
+      "Un dossier de validation est en cours de validation par le certificateur.",
+    );
+  }
+
+  if (
+    activeDossierDeValidation?.decision == "PENDING" &&
+    activeJury &&
+    !hasFailedJuryResult
+  ) {
+    throw new Error(
+      "Seul un candidat ayant échoué totalement ou partiellement au jury peut renvoyer un dossier de validation.",
     );
   }
 
@@ -182,7 +196,11 @@ export const sendDossierDeValidation = async ({
     },
   });
 
-  if (!hasAlreadySentDossierValidation) {
+  const isDemandeDePaiementSent =
+    candidacy.status == "DEMANDE_PAIEMENT_ENVOYEE";
+
+  // If demandeDePaiementSent we can't update current candidacy status. We need to remove "DEMANDE_PAIEMENT_ENVOYEE" from candidacy.status to remove this check
+  if (!isDemandeDePaiementSent) {
     await updateCandidacyStatus({
       candidacyId,
       status: "DOSSIER_DE_VALIDATION_ENVOYE",

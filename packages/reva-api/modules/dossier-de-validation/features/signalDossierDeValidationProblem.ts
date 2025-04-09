@@ -1,6 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCandidacyActiveStatus } from "../../candidacy/features/getCandidacyActiveStatus";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
 import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
 import {
@@ -42,13 +41,13 @@ export const signalDossierDeValidationProblem = async ({
     );
   }
 
-  const candidacyStatus = await getCandidacyActiveStatus({
-    candidacyId: dossierDeValidation.candidacyId,
+  const activeJury = await prismaClient.jury.findFirst({
+    where: { candidacyId: dossierDeValidation.candidacyId, isActive: true },
   });
 
-  if (candidacyStatus.status !== "DOSSIER_DE_VALIDATION_ENVOYE") {
+  if (activeJury) {
     throw new Error(
-      "Impossible de demander une correction sur ce dossier. Le statut de la candidature est invalide",
+      "Impossible de demander une correction sur ce dossier. Un jury a déjà été planifié.",
     );
   }
 
@@ -60,6 +59,10 @@ export const signalDossierDeValidationProblem = async ({
       certification: { select: { label: true } },
     },
   });
+  if (!candidacy) {
+    throw new Error("La candidature n'a pas été trouvée");
+  }
+
   const feasibility = await prismaClient.feasibility.findFirst({
     where: { candidacyId: dossierDeValidation.candidacyId, isActive: true },
     include: { certificationAuthority: { select: { label: true } } },
@@ -68,7 +71,7 @@ export const signalDossierDeValidationProblem = async ({
   const organism = candidacy?.organism;
   const updatedDossierDeValidation =
     await prismaClient.dossierDeValidation.update({
-      where: { id: dossierDeValidationId, isActive: true },
+      where: { id: dossierDeValidationId },
       data: {
         decisionComment,
         decision: "INCOMPLETE",
@@ -76,10 +79,16 @@ export const signalDossierDeValidationProblem = async ({
       },
     });
 
-  await updateCandidacyStatus({
-    candidacyId: dossierDeValidation.candidacyId,
-    status: "DOSSIER_DE_VALIDATION_SIGNALE",
-  });
+  const isDemandeDePaiementSent =
+    candidacy.status == "DEMANDE_PAIEMENT_ENVOYEE";
+
+  // If demandeDePaiementSent we can't update current candidacy status. We need to remove "DEMANDE_PAIEMENT_ENVOYEE" from candidacy.status to remove this check
+  if (!isDemandeDePaiementSent) {
+    await updateCandidacyStatus({
+      candidacyId: dossierDeValidation.candidacyId,
+      status: "DOSSIER_DE_VALIDATION_SIGNALE",
+    });
+  }
 
   await prismaClient.candidacy.update({
     where: { id: dossierDeValidation.candidacyId },

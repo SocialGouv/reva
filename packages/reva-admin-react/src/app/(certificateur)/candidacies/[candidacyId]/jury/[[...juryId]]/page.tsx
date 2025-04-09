@@ -18,19 +18,8 @@ interface Props {
 const JuryPage = (_props: Props) => {
   const { getCandidacy } = useJuryPageLogic();
 
-  const candidacyStatuses =
-    getCandidacy.data?.getCandidacyById?.candidacyStatuses;
-
-  const isDossierDeValidationSent =
-    candidacyStatuses?.findIndex(
-      ({ status }) => status == "DOSSIER_DE_VALIDATION_ENVOYE",
-    ) != -1;
-
-  // Need to check if isDemandeDePaiementSent for historical candidacies
-  const isDemandeDePaiementSent =
-    candidacyStatuses?.findIndex(
-      ({ status }) => status == "DEMANDE_PAIEMENT_ENVOYEE",
-    ) != -1;
+  const candidacy = getCandidacy.data?.getCandidacyById;
+  const dossierDeValidation = candidacy?.activeDossierDeValidation;
 
   return (
     <div className="flex flex-col w-full">
@@ -38,7 +27,7 @@ const JuryPage = (_props: Props) => {
       <h1>Jury</h1>
 
       {!getCandidacy.isLoading &&
-        (isDossierDeValidationSent || isDemandeDePaiementSent) && (
+        dossierDeValidation?.decision == "PENDING" && (
           <Tabs
             tabs={[
               {
@@ -55,8 +44,8 @@ const JuryPage = (_props: Props) => {
         )}
 
       {!getCandidacy.isLoading &&
-        !isDossierDeValidationSent &&
-        !isDemandeDePaiementSent && (
+        (!dossierDeValidation ||
+          dossierDeValidation.decision == "INCOMPLETE") && (
           <div className="flex flex-col">
             <p className="text-gray-600">
               Le dossier de validation est en cours de rédaction. Il vous sera
