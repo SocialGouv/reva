@@ -157,7 +157,7 @@ export default function ValidateFeasibility() {
             </div>
 
             <CallOut
-              className="min-h-[200px] flex justify-end flex-col-reverse gap-2 flex-[1]"
+              className="min-h-[200px] flex justify-end flex-col gap-2 flex-[1]"
               title="Comment contacter mon accompagnateur ?"
             >
               <>
