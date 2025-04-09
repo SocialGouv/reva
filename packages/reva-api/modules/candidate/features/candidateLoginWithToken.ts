@@ -21,7 +21,7 @@ import { isCertificationAvailable } from "../../referential/features/isCertifica
 import { getCertificationById } from "../../referential/features/getCertificationById";
 import { updateCertification } from "../../candidacy/certification/features/updateCertification";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCertificationCohorteVaeCollectiveByCohorteVAECollectiveId } from "../../vae-collective/features/getCertificationCohorteVaeCollectiveByCohorteVAECollectiveId";
+import { getCertificationCohortesByCohorteId } from "../../vae-collective/features/getCertificationCohortesByCohorteId";
 
 export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(
@@ -105,7 +105,7 @@ const confirmRegistration = async ({
   // special case of registration for a vae collective
   if (candidateInput.cohorteVaeCollectiveId) {
     const certificationCohorteVaeCollective =
-      await getCertificationCohorteVaeCollectiveByCohorteVAECollectiveId({
+      await getCertificationCohortesByCohorteId({
         cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
       });
 

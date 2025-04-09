@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const getCertificationCohorteVaeCollectiveByCohorteVAECollectiveId = ({
+export const getCertificationCohortesByCohorteId = ({
   cohorteVaeCollectiveId,
 }: {
   cohorteVaeCollectiveId?: string;
