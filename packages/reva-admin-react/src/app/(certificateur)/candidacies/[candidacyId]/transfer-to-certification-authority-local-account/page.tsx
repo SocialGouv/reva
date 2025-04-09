@@ -41,8 +41,6 @@ export default function TransferCandidacyPage() {
     transferReason: string;
   }) => {
     try {
-      console.log(certificationAuthorityLocalAccountId);
-
       await transferCandidacyToCertificationAuthorityLocalAccountMutation({
         certificationAuthorityLocalAccountId,
         transferReason,

@@ -215,6 +215,7 @@ type Mutation {
   certification_authority_transferCandidacyToCertificationAuthorityLocalAccount(
     candidacyId: String!
     certificationAuthorityLocalAccountId: String!
+    transferReason: String!
   ): Boolean!
 
   certification_authority_createCertificationAuthority(
