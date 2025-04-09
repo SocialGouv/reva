@@ -3,6 +3,7 @@ import {
   sendCandidacyTransferToNewCertificationAuthorityEmail,
   sendCandidacyTransferToPreviousCertificationAuthorityEmail,
   sendCandidacyTransferedToOrganismEmail,
+  sendCandidacyTransferToCandidate,
 } from "../emails";
 import { assignCandidadyToCertificationAuthorityLocalAccounts } from "./assignCandidadyToCertificationAuthorityLocalAccounts";
 
@@ -140,6 +141,13 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
       candidateName,
       transferReason,
       candidacyId,
+    });
+  }
+
+  if (candidacy.candidate?.email) {
+    sendCandidacyTransferToCandidate({
+      email: candidacy.candidate?.email,
+      newCertificationAuthorityName,
     });
   }
 
