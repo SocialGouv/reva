@@ -22,8 +22,8 @@ export const sendCandidacyTransferToNewCertificationAuthorityEmail = ({
       templateMail({
         content: `
           <p>Bonjour ${newCertificationAuthorityName},</p>
-          <p>Le certificateur ${previousCertificationAuthorityName} vous a transféré la candidature de ${candidateName} pour la raison suivante : ${transferReason}.</p>
-          <p>Vous êtes désormais le nouveau certificateur en charge de ce dossier.</p>
+          <p>Le service ${previousCertificationAuthorityName} vous a transféré la candidature de ${candidateName} pour la raison suivante : ${transferReason}.</p>
+          <p>Vous êtes désormais le nouveau certificateur en charge de ce dossier. Pour consulter la candidature, cliquez sur le bouton ci-dessous :</p>
          `,
         url,
         labelCTA: "Accéder à la candidature",
