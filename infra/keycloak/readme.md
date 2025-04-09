@@ -6,12 +6,17 @@ Les variables d'environnement doivent pointer sur le Keycloak local (port 8888) 
 
 Demander le fichier .env avec les variables d'env à utiliser.
 
-Si un autre keycloak était utilisé seule les urls changent (attention au protocole et au /auth en plus): https://mon-keycloak-reva.net/ -> http://localhost:8888/auth
+Si un autre keycloak était utilisé les changements sont:
+
+- les urls changent (attention au protocole et au /auth en plus): https://mon-keycloak-reva.net/ -> http://localhost:8888/auth
+- il faut ajouter la variable FRANCE_VAE_DOMAIN="localhost" dans le env racine ou api
 
 ### `.env` racine
 
 ```properties
 KEYCLOAK_ADMIN_URL=http://localhost:8888/auth
+
+FRANCE_VAE_DOMAIN="localhost"
 
 KEYCLOAK_ADMIN_CLIENT_SECRET=
 
