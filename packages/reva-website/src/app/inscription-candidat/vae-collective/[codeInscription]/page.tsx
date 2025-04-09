@@ -16,6 +16,12 @@ const getVaeCollectiveCohortForRegistrationPageQuery = graphql(`
       id
       codeInscription
       nom
+      projetVaeCollective {
+        nom
+        commanditaireVaeCollective {
+          raisonSociale
+        }
+      }
     }
   }
 `);
@@ -72,17 +78,36 @@ export default function CandidateVaeCollectiveRegistrationPage() {
     <MainLayout>
       <CandidateBackground>
         <div className="py-10 relative">
-          <h1 className="mb-12">
-            Mon inscription sur la cohorte {cohorteVaeCollective?.nom}
+          <h1>
+            Mon inscription
             <FormOptionalFieldsDisclaimer />
           </h1>
 
-          <div className="fr-text--lead py-4">
+          <div className="fr-text--lead pb-4">
             Ces informations nous permettront de pré-remplir votre profil. Vous
             pourrez les modifier à tout moment depuis votre espace.
           </div>
 
-          <CandidateRegistrationStep2 onSubmit={handleFormSubmit} />
+          <div className="flex flex-col lg:flex-row gap-6 ">
+            <div className=" w-[282px] flex-shrink-0 border p-8 mb-auto flex flex-col gap-3">
+              <div className="text-dsfrGray-mentionGrey text-xs">
+                <span className="fr-icon--sm fr-icon-building-fill mr-2" />
+                {
+                  cohorteVaeCollective?.projetVaeCollective
+                    ?.commanditaireVaeCollective?.raisonSociale
+                }
+              </div>
+              <div className="text-dsfrGray-titleGrey text-[22px] font-bold">
+                {cohorteVaeCollective?.projetVaeCollective?.nom}
+              </div>
+              <div className="text-dsfrGray-mentionGrey text-sm">
+                {cohorteVaeCollective?.nom}
+              </div>
+            </div>
+            <div className="min-h-[450px]">
+              <CandidateRegistrationStep2 onSubmit={handleFormSubmit} />
+            </div>
+          </div>
         </div>
       </CandidateBackground>
     </MainLayout>
