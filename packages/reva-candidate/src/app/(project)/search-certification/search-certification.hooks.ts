@@ -107,7 +107,7 @@ export const useSetCertification = ({
   candidacyId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
-  const { invalidateQueries } = useQueryClient();
+  const queryClient = useQueryClient();
 
   const RECORDS_PER_PAGE = 10;
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
@@ -127,11 +127,7 @@ export const useSetCertification = ({
   const updateCertification = useMutation({
     mutationKey: ["candidacy_certification_updateCertification"],
     onSuccess: () => {
-      try {
-        invalidateQueries({ queryKey: ["dashboard"] });
-      } catch (e) {
-        console.error(e);
-      }
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
     mutationFn: ({
       candidacyId,

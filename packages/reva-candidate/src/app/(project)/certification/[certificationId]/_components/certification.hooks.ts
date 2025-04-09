@@ -41,7 +41,7 @@ const UPDATE_CERTIFICATION = graphql(`
 
 export const useCandidacyForCertification = () => {
   const { graphqlClient } = useGraphQlClient();
-  const { invalidateQueries } = useQueryClient();
+  const queryClient = useQueryClient();
 
   const { data, isRefetching } = useSuspenseQuery({
     queryKey: ["getCandidacyWithCertification"],
@@ -58,12 +58,10 @@ export const useCandidacyForCertification = () => {
   const updateCertification = useMutation({
     mutationKey: ["candidacy_certification_updateCertification"],
     onSuccess: () => {
-      try {
-        invalidateQueries({ queryKey: ["dashboard"] });
-        invalidateQueries({ queryKey: ["getCandidacyWithCertification"] });
-      } catch (e) {
-        console.error(e);
-      }
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      queryClient.invalidateQueries({
+        queryKey: ["getCandidacyWithCertification"],
+      });
     },
     mutationFn: ({
       candidacyId,
