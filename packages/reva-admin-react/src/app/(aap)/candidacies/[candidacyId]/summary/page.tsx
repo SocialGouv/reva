@@ -133,7 +133,10 @@ const CandidacySummaryPage = () => {
               <dl>
                 <dt className="sr-only">Prénom et nom</dt>
                 <dd>
-                  {candidate.firstname} {candidate.lastname}
+                  {candidate.givenName
+                    ? `${candidate.givenName} (${candidate.lastname})`
+                    : candidate?.lastname}{" "}
+                  {candidate.firstname}
                 </dd>
                 <dt className="sr-only">
                   Date de naissance, département et nationalité

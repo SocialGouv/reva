@@ -93,11 +93,13 @@ export const getCandidacyCountByStatus = async ({
 
     //search on candidate
     fromClause = Prisma.sql`${fromClause} join candidate on candidacy.candidate_id = candidate.id`;
+
     searchClauses.push(
       getSearchFilterClause({
         table: "candidate",
         fields: [
           "lastname",
+          "given_name",
           "firstname",
           "firstname2",
           "firstname3",

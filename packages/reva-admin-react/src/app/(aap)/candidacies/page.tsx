@@ -98,6 +98,7 @@ export default function CandidaciesPage() {
               candidacyId={candidacy.id}
               candidateFirstname={candidacy.candidate?.firstname || ""}
               candidateLastname={candidacy.candidate?.lastname || ""}
+              candidateGivenName={candidacy.candidate?.givenName || undefined}
               certificationLabel={
                 candidacy.certification
                   ? `RNCP ${candidacy?.certification.codeRncp} : ${candidacy?.certification?.label}`

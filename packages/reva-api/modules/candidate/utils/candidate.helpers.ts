@@ -5,6 +5,7 @@ export const candidateSearchWord = (word: string) => {
   return {
     OR: [
       containsFilter("lastname"),
+      containsFilter("givenName"),
       containsFilter("firstname"),
       containsFilter("firstname2"),
       containsFilter("firstname3"),

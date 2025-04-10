@@ -40,6 +40,7 @@ const getCandidacyMenuQuery = graphql(`
       candidate {
         lastname
         firstname
+        givenName
       }
     }
   }
@@ -92,8 +93,10 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
         <div className="flex text-xl font-bold mt-2 md:mt-0 mb-2">
           <span className="fr-icon--xl fr-icon-user-fill mr-2" />
           <span className="capitalize">
-            {candidate?.firstname?.toLowerCase()}{" "}
-            {candidate?.lastname?.toLowerCase()}
+            {candidate?.givenName
+              ? `${candidate.givenName.toLowerCase()} (${candidate.lastname.toLowerCase()})`
+              : candidate?.lastname.toLowerCase()}{" "}
+            {candidate?.firstname.toLowerCase()}
           </span>
         </div>
         <CandidacyModalities

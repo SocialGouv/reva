@@ -10,6 +10,7 @@ export const CandidacyCard = ({
   candidacyId,
   candidateFirstname,
   candidateLastname,
+  candidateGivenName,
   certificationLabel,
   departmentLabel,
   departmentCode,
@@ -23,8 +24,9 @@ export const CandidacyCard = ({
   vaeCollectiveCohortLabel,
 }: {
   candidacyId: string;
-  candidateFirstname?: string;
-  candidateLastname?: string;
+  candidateFirstname: string;
+  candidateLastname: string;
+  candidateGivenName?: string;
   certificationLabel?: string;
   departmentLabel?: string;
   departmentCode?: string;
@@ -72,7 +74,10 @@ export const CandidacyCard = ({
 
       <div className="flex flex-col gap-2">
         <div className="font-bold text-xl text-dsfr-blue-france-sun-113">
-          {candidateFirstname} {candidateLastname}
+          {candidateGivenName
+            ? `${candidateGivenName} (${candidateLastname})`
+            : candidateLastname}{" "}
+          {candidateFirstname}
         </div>
 
         <p className="m-0 text-sm">
