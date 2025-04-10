@@ -18,6 +18,7 @@ export const DashboardAutonomeTilesGroup = ({
       <DashboardTilesSection
         title="Compléter ma candidature"
         icon="fr-icon-ball-pen-line"
+        className="col-span-1 lg:col-span-2 row-span-1 h-fit"
       >
         <div className="grid md:grid-cols-2 grid-rows-1">
           <CertificationTile
@@ -32,6 +33,7 @@ export const DashboardAutonomeTilesGroup = ({
       <DashboardTilesSection
         title="Suivre mon parcours"
         icon="fr-icon-award-line"
+        className="col-span-1 lg:col-span-2 row-span-1 h-fit"
       >
         <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-2 grid-rows-1">
           <FeasibilityTile

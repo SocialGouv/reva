@@ -32,6 +32,7 @@ export const DashboardVaeCollectiveTilesGroup = ({
       <DashboardTilesSection
         title="Compléter ma candidature de VAE Collective"
         icon="fr-icon-ball-pen-line"
+        className="col-span-1 lg:col-span-2 row-span-1 h-fit"
       >
         <div className="grid md:grid-cols-3 grid-rows-2">
           <CertificationTile
@@ -58,6 +59,7 @@ export const DashboardVaeCollectiveTilesGroup = ({
       <DashboardTilesSection
         title="Suivre mon parcours"
         icon="fr-icon-award-line"
+        className="col-span-1 lg:col-span-2 row-span-1 h-fit"
         badge={
           !candidacyAlreadySubmitted ? (
             <Badge severity="warning">Candidature non envoyée</Badge>
