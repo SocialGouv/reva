@@ -100,11 +100,11 @@ export default function JurySessionPage() {
           title="Convocation au passage devant le jury"
           titleAs="h3"
           detail="PDF"
-          className="!border-b-0 mb-12"
+          className="!border-b-0 mb-0"
         />
       )}
 
-      <BackButton navigateBack={router.back} />
+      <BackButton navigateBack={router.back} className="mb-12" />
     </div>
   );
 }
