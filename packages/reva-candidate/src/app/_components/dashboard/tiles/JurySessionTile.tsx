@@ -30,6 +30,10 @@ export const JurySessionTile = ({
         </Badge>
       }
       title={dateOfJurySession}
+      desc="Informations détaillées"
+      linkProps={{
+        href: "/jury-session",
+      }}
     />
   );
 };
