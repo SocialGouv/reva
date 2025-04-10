@@ -96,7 +96,10 @@ const Dashboard = () => {
         ) : (
           <NonVaeCollectiveDashboard />
         )}
-        <DashboardSidebar candidacy={candidacy} />
+        <DashboardSidebar
+          candidacy={candidacy}
+          className="col-span-1 row-span-2 row-start-1"
+        />
       </div>
     </div>
   );

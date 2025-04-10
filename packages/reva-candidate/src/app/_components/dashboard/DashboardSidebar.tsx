@@ -7,10 +7,12 @@ import TileGroup from "./tiles/TileGroup";
 
 export const DashboardSidebar = ({
   candidacy,
+  className,
 }: {
   candidacy: CandidacyUseCandidateForDashboard;
+  className?: string;
 }) => (
-  <div className="flex flex-col col-span-1 row-span-2 row-start-1 gap-y-8">
+  <div className={`flex flex-col gap-y-8 ${className || ""}`}>
     <TileGroup icon="fr-icon-calendar-2-line" title="Mes prochains rendez-vous">
       <AppointmentTiles candidacy={candidacy} />
     </TileGroup>
