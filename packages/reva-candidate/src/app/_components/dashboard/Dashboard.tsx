@@ -54,7 +54,7 @@ const Dashboard = () => {
   const candidacyIsVaeCollective = !!candidacy?.cohorteVaeCollective;
 
   const NonVaeCollectiveDashboard = () => (
-    <div className="flex flex-col lg:flex-row gap-8 mt-20">
+    <div className="flex flex-col-reverse lg:flex-row gap-8 mt-20">
       {candidacyIsAutonome && (
         <DashboardAutonomeTilesGroup
           className="basis-2/3"
@@ -96,7 +96,7 @@ const Dashboard = () => {
           </div>
         }
       />
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col-reverse lg:flex-row gap-8">
         <DashboardVaeCollectiveTilesGroup
           className="basis-2/3"
           candidacy={candidacy}
