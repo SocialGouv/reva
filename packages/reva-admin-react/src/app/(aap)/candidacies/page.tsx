@@ -98,11 +98,18 @@ export default function CandidaciesPage() {
               candidacyId={candidacy.id}
               candidateFirstname={candidacy.candidate?.firstname || ""}
               candidateLastname={candidacy.candidate?.lastname || ""}
-              certificationLabel={candidacy?.certification?.label}
+              certificationLabel={
+                candidacy.certification
+                  ? `RNCP ${candidacy?.certification.codeRncp} : ${candidacy?.certification?.label}`
+                  : undefined
+              }
               departmentCode={candidacy.candidate?.department?.code}
               departmentLabel={candidacy.candidate?.department?.label}
               organismLabel={
                 candidacy.organism?.nomPublic || candidacy.organism?.label
+              }
+              organismModalitateAccompagnement={
+                candidacy.organism?.modaliteAccompagnement
               }
               candidacySentAt={
                 candidacy.candidacyStatuses.some(
@@ -117,6 +124,14 @@ export default function CandidaciesPage() {
               }
               fundable={candidacy.financeModule !== "hors_plateforme"}
               vaeCollective={!!candidacy.cohorteVaeCollective}
+              vaeCollectiveCommanditaireLabel={
+                candidacy.cohorteVaeCollective?.projetVaeCollective
+                  .commanditaireVaeCollective.raisonSociale
+              }
+              vaeCollectiveProjetLabel={
+                candidacy.cohorteVaeCollective?.projetVaeCollective.nom
+              }
+              vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
             />
           )}
         </SearchList>

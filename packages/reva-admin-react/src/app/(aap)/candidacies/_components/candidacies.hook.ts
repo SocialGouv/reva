@@ -66,6 +66,7 @@ const getCandidaciesByStatus = graphql(`
         organism {
           label
           nomPublic
+          modaliteAccompagnement
         }
         financeModule
         candidacyStatuses {
