@@ -50,15 +50,19 @@ export const CandidacyCard = ({
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
           {organismModalitateAccompagnement == "A_DISTANCE" && (
-            <Tag iconId="fr-icon-headphone-fill">À distance</Tag>
+            <Tag small iconId="fr-icon-headphone-fill">
+              À distance
+            </Tag>
           )}
           {organismModalitateAccompagnement == "LIEU_ACCUEIL" && (
-            <Tag iconId="fr-icon-home-4-fill">Sur site</Tag>
+            <Tag small iconId="fr-icon-home-4-fill">
+              Sur site
+            </Tag>
           )}
-          <Tag>
+          <Tag small>
             {fundable ? "Finançable France VAE" : "Financement droit commun"}
           </Tag>
-          {vaeCollective && <Tag>VAE collective</Tag>}
+          {vaeCollective && <Tag small>VAE collective</Tag>}
         </div>
 
         {departmentLabel && departmentCode && (
