@@ -80,9 +80,7 @@ export default function SetCertification() {
       <>
         <h1 className="mt-4 mb-8">Choisir un diplôme</h1>
         <div className="mb-8 border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 w-full">
-          <h2 className="mb-6">
-            Recherchez parmi les diplômes disponibles sur France VAE
-          </h2>
+          <h2 className="mb-6">Recherchez parmi les diplômes disponibles</h2>
           <SearchBar
             label="Rechercher"
             searchFilter={searchFilter}
