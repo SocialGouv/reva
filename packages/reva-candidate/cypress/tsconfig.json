@@ -8,7 +8,6 @@
   "compilerOptions": {
     "types": [
       "cypress",
-      "@percy/cypress"
     ],
     "lib": [
       "es2015",
