@@ -460,4 +460,127 @@ context("Dashboard Tiles", () => {
       });
     });
   });
+
+  describe("Dossier de Validation Tiles", () => {
+    const failedJuryResults = [
+      "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+      "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+      "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+      "FAILURE",
+      "CANDIDATE_EXCUSED",
+      "CANDIDATE_ABSENT",
+    ];
+
+    it("should display pending dossier validation badge", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+          {
+            decision: "PENDING",
+          };
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="dossier-validation-badge-pending"]').should(
+          "be.visible",
+        );
+      });
+    });
+
+    it("should display incomplete dossier validation badge", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+          {
+            decision: "INCOMPLETE",
+          };
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="dossier-validation-badge-incomplete"]').should(
+          "be.visible",
+        );
+      });
+    });
+
+    it("should display 'to send' dossier validation badge when not sent yet and DF is admissible", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+          null;
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
+          {
+            decision: "ADMISSIBLE",
+          };
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="dossier-validation-badge-to-send"]').should(
+          "be.visible",
+        );
+      });
+    });
+
+    it("should display 'to send' dossier validation badge when decision is INCOMPLETE and DF is admissible", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+          {
+            decision: "INCOMPLETE",
+          };
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
+          {
+            decision: "ADMISSIBLE",
+          };
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="dossier-validation-badge-to-send"]').should(
+          "be.visible",
+        );
+      });
+    });
+
+    failedJuryResults.forEach((juryResult) => {
+      it(`should display 'to send' dossier validation badge when jury result is ${juryResult}`, () => {
+        cy.fixture("candidate1.json").then((candidate) => {
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury = {
+            result: juryResult,
+          };
+
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubQuery(
+              req,
+              "candidate_getCandidateWithCandidacyForDashboard",
+              candidate,
+            );
+          });
+
+          cy.get('[data-test="dossier-validation-badge-to-send"]').should(
+            "be.visible",
+          );
+        });
+      });
+    });
+  });
 });
