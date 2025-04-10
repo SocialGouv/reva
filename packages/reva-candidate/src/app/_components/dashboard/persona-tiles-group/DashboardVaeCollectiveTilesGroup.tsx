@@ -32,7 +32,7 @@ export const DashboardVaeCollectiveTilesGroup = ({
   return (
     <div className={`flex flex-col gap-y-8 ${className || ""}`}>
       <DashboardTilesSection
-        title="Compléter ma candidature de VAE Collective"
+        title="Compléter ma candidature"
         icon="fr-icon-ball-pen-line"
       >
         <div className="grid md:grid-cols-3 grid-rows-2">
