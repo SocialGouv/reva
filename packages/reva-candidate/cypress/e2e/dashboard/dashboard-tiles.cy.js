@@ -1,3 +1,5 @@
+import { addDays, subDays } from "date-fns";
+
 import { stubQuery } from "../../utils/graphql";
 
 context("Dashboard Tiles", () => {
@@ -167,7 +169,7 @@ context("Dashboard Tiles", () => {
     });
   });
 
-  describe("Feasibility Tiles", () => {
+  describe("Feasibility Tile", () => {
     it("should display feasibility-badge-admissible when feasibility is admisible", () => {
       cy.fixture("candidate1.json").then((candidate) => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
@@ -395,8 +397,6 @@ context("Dashboard Tiles", () => {
 
     it("should be disabled when there is no feasibility", () => {
       cy.fixture("candidate1.json").then((candidate) => {
-        // candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility = null;
-
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
             req,
@@ -461,7 +461,7 @@ context("Dashboard Tiles", () => {
     });
   });
 
-  describe("Dossier de Validation Tiles", () => {
+  describe("Dossier de Validation Tile", () => {
     const failedJuryResults = [
       "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
       "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
@@ -580,6 +580,143 @@ context("Dashboard Tiles", () => {
             "be.visible",
           );
         });
+      });
+    });
+  });
+
+  describe("Training Tile", () => {
+    it("should be disabled when candidacy status is PROJET", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "PROJET";
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="training-tile"] button').should("be.disabled");
+      });
+    });
+
+    it("should be disabled when candidacy status is VALIDATION", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "VALIDATION";
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="training-tile"] button').should("be.disabled");
+      });
+    });
+
+    it("should be disabled when candidacy status is PRISE_EN_CHARGE and first appointment is in the future", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "PRISE_EN_CHARGE";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
+          addDays(new Date(), 5).getTime();
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="training-tile"] button').should("be.disabled");
+      });
+    });
+
+    it("should show 'en cours' badge when candidacy status is PRISE_EN_CHARGE and first appointment is passed", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "PRISE_EN_CHARGE";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
+          subDays(new Date(), 5).getTime();
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="training-status-badge-in-progress"]').should(
+          "be.visible",
+        );
+      });
+    });
+
+    it("should show 'en cours' badge when candidacy status is VALIDATION and first appointment is passed", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "VALIDATION";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
+          subDays(new Date(), 5).getTime();
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="training-status-badge-in-progress"]').should(
+          "be.visible",
+        );
+      });
+    });
+
+    it("should show 'to validate' badge when status is PARCOURS_ENVOYE", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "PARCOURS_ENVOYE";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
+          subDays(new Date(), 5).getTime();
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="training-status-badge-to-validate"]').should(
+          "be.visible",
+        );
+      });
+    });
+
+    it("should show 'validated' badge when status is PARCOURS_CONFIRME", () => {
+      cy.fixture("candidate1.json").then((candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "PARCOURS_CONFIRME";
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+
+        cy.get('[data-test="training-status-badge-validated"]').should(
+          "be.visible",
+        );
       });
     });
   });
