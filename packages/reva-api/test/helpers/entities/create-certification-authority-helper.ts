@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { prismaClient } from "../../../prisma/client";
-import { CertificationAuthority } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { createCertificationAuthorityStructureHelper } from "./create-certification-authority-structure-helper";
 
 export const createCertificationAuthorityHelper = async (
-  certificationAuthorityArgs?: Partial<CertificationAuthority>,
+  args?: Partial<Prisma.CertificationAuthorityCreateInput>,
 ) => {
   const certificationAuthorityStructure =
     await createCertificationAuthorityStructureHelper();
@@ -19,7 +19,7 @@ export const createCertificationAuthorityHelper = async (
           certificationAuthorityStructureId: certificationAuthorityStructure.id,
         },
       },
-      ...certificationAuthorityArgs,
+      ...args,
       Account: {
         create: {
           email: faker.internet.email(),

@@ -29,7 +29,7 @@ export const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole 
         certificationAuthorityId:
           certificationAuthorityLocalAccount?.certificationAuthorityId,
         candidacy: {
-          CertificationAuthorityLocalAccountOnCandidacy: {
+          certificationAuthorityLocalAccountOnCandidacy: {
             some: {
               certificationAuthorityLocalAccountId:
                 certificationAuthorityLocalAccount.id,

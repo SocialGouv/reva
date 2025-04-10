@@ -29,7 +29,7 @@ export const getDossierDeValidationListQueryWhereClauseForUserWithManageRole =
         certificationAuthorityId:
           certificationAuthorityLocalAccount?.certificationAuthorityId,
         candidacy: {
-          CertificationAuthorityLocalAccountOnCandidacy: {
+          certificationAuthorityLocalAccountOnCandidacy: {
             some: {
               certificationAuthorityLocalAccountId:
                 certificationAuthorityLocalAccount.id,

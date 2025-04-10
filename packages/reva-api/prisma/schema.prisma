@@ -225,7 +225,7 @@ model Candidacy {
   CandidacyEmail                                CandidacyEmail[]
   cohorteVaeCollectiveId                        String?                                         @map("cohorte_vae_collective_id") @db.Uuid
   cohorteVaeCollective                          CohorteVaeCollective?                           @relation(fields: [cohorteVaeCollectiveId], references: [id], onDelete: NoAction)
-  CertificationAuthorityLocalAccountOnCandidacy CertificationAuthorityLocalAccountOnCandidacy[]
+  certificationAuthorityLocalAccountOnCandidacy CertificationAuthorityLocalAccountOnCandidacy[]
 
   @@index([organismId])
   @@index([candidateId])
@@ -1014,7 +1014,7 @@ model CertificationAuthority {
   Jury                                                      Jury[]
   showLocalAccountsContactInfo                              Boolean                                                     @default(true) @map("show_local_accounts_contact_info")
   certificationAuthorityOnCertificationAuthorityStructure   CertificationAuthorityOnCertificationAuthorityStructure[]
-  CertificationCohorteVaeCollectiveOnCertificationAuthority CertificationCohorteVaeCollectiveOnCertificationAuthority[]
+  certificationCohorteVaeCollectiveOnCertificationAuthority CertificationCohorteVaeCollectiveOnCertificationAuthority[]
 
   @@map("certification_authority")
 }
@@ -1082,7 +1082,7 @@ model CertificationAuthorityLocalAccount {
   certificationAuthorityLocalAccountOnDepartment    CertificationAuthorityLocalAccountOnDepartment[]
   certificationAuthority                            CertificationAuthority                              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId                          String                                              @map("certification_authority_id") @db.Uuid
-  CertificationAuthorityLocalAccountOnCandidacy     CertificationAuthorityLocalAccountOnCandidacy[]
+  certificationAuthorityLocalAccountOnCandidacy     CertificationAuthorityLocalAccountOnCandidacy[]
 
   @@index([accountId])
   @@index([certificationAuthorityId])
@@ -1836,7 +1836,7 @@ model CertificationCohorteVaeCollective {
   certificationId                                           String                                                      @map("certification_id") @db.Uuid
   certification                                             Certification                                               @relation(fields: [certificationId], references: [id], onDelete: Cascade)
   certificationCohorteVaeCollectiveOnOrganisms              CertificationCohorteVaeCollectiveOnOrganism[]
-  CertificationCohorteVaeCollectiveOnCertificationAuthority CertificationCohorteVaeCollectiveOnCertificationAuthority[]
+  certificationCohorteVaeCollectiveOnCertificationAuthority CertificationCohorteVaeCollectiveOnCertificationAuthority[]
 
   @@map("certification_vae_collective")
 }

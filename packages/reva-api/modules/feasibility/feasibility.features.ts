@@ -369,7 +369,7 @@ export const createFeasibility = async ({
   const certificationAuthorityLocalAccounts =
     await prismaClient.certificationAuthorityLocalAccount.findMany({
       where: {
-        CertificationAuthorityLocalAccountOnCandidacy: {
+        certificationAuthorityLocalAccountOnCandidacy: {
           some: { candidacyId },
         },
       },

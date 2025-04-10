@@ -472,6 +472,134 @@ test("should validate upload of feasibility file", async () => {
   expect(resp.statusCode).toEqual(200);
 });
 
+/**
+ * Test get certification authorities by a candidate restricted by a certification
+ */
+test("should only return the certification authorities available for the certification", async () => {
+  const certificationCollective = await createCertificationHelper();
+
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: {
+      certificationId: certificationCollective.id,
+    },
+  });
+
+  // Create certification authority with certification
+  const certificationAuthorityWithCertification =
+    await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: { certificationId: certificationCollective.id },
+      },
+      certificationAuthorityOnDepartment: {
+        create: { departmentId: candidacy.candidate!.departmentId },
+      },
+    });
+
+  // Create certification authority without certification
+  await createCertificationAuthorityHelper({
+    certificationAuthorityOnDepartment: {
+      create: { departmentId: candidacy.candidate!.departmentId },
+    },
+  });
+
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: candidacy?.candidate?.keycloakId,
+      }),
+    },
+  });
+
+  const getCandidacy = graphql(`
+    query candidate_getCandidateWithCandidacyAndCertificationAuthroites {
+      candidate_getCandidateWithCandidacy {
+        candidacy {
+          certificationId
+          certificationAuthorities {
+            id
+            label
+          }
+        }
+      }
+    }
+  `);
+
+  const res = await graphqlClient.request(getCandidacy);
+  expect(
+    res.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorities
+      .length,
+  ).toBe(1);
+  expect(
+    res.candidate_getCandidateWithCandidacy.candidacy
+      .certificationAuthorities[0].id,
+  ).toBe(certificationAuthorityWithCertification.id);
+});
+
+/**
+ * Test get certification authorities by a candidate restricted by a certification
+ */
+test("should only return the certification authorities available for the department", async () => {
+  const certificationCollective = await createCertificationHelper();
+
+  const candidacy = await createCandidacyHelper({
+    candidacyArgs: {
+      certificationId: certificationCollective.id,
+    },
+  });
+
+  // Create certification authority with department
+  const certificationAuthorityWithDepartment =
+    await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: { certificationId: certificationCollective.id },
+      },
+      certificationAuthorityOnDepartment: {
+        create: { departmentId: candidacy.candidate!.departmentId },
+      },
+    });
+
+  // Create certification authority without department
+  await createCertificationAuthorityHelper({
+    certificationAuthorityOnCertification: {
+      create: { certificationId: certificationCollective.id },
+    },
+  });
+
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "candidate",
+        keycloakId: candidacy?.candidate?.keycloakId,
+      }),
+    },
+  });
+
+  const getCandidacy = graphql(`
+    query candidate_getCandidateWithCandidacyAndCertificationAuthroites {
+      candidate_getCandidateWithCandidacy {
+        candidacy {
+          certificationId
+          certificationAuthorities {
+            id
+            label
+          }
+        }
+      }
+    }
+  `);
+
+  const res = await graphqlClient.request(getCandidacy);
+  expect(
+    res.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorities
+      .length,
+  ).toBe(1);
+  expect(
+    res.candidate_getCandidateWithCandidacy.candidacy
+      .certificationAuthorities[0].id,
+  ).toBe(certificationAuthorityWithDepartment.id);
+});
+
 describe("VAE collective", () => {
   /**
    * Test get certification authorities by a candidate restricted by a VAE collective cohort
@@ -492,43 +620,22 @@ describe("VAE collective", () => {
     });
 
     // Create first certification authority
-    const certificationAuthority1 = await createCertificationAuthorityHelper();
-    await prismaClient.certificationAuthorityOnCertification.create({
-      data: {
-        certificationAuthorityId: certificationAuthority1.id,
-        certificationId: certificationVaeCollective.id,
+    const certificationAuthority1 = await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: { certificationId: certificationVaeCollective.id },
+      },
+      certificationAuthorityOnDepartment: {
+        create: { departmentId: candidacy.candidate!.departmentId },
       },
     });
-    await prismaClient.certificationAuthorityOnDepartment.create({
-      data: {
-        certificationAuthorityId: certificationAuthority1.id,
-        departmentId: candidacy.candidate?.departmentId || "75",
-      },
-    });
-
-    // Restrict certification to first certification authority
-    await prismaClient.certificationCohorteVaeCollectiveOnCertificationAuthority.create(
-      {
-        data: {
-          certificationAuthorityId: certificationAuthority1.id,
-          certificationCohorteVaeCollectiveId:
-            cohorteVaeCollective.certificationCohorteVaeCollectives[0].id,
-        },
-      },
-    );
 
     // Create second certification authority
-    const certificationAuthority2 = await createCertificationAuthorityHelper();
-    await prismaClient.certificationAuthorityOnCertification.create({
-      data: {
-        certificationAuthorityId: certificationAuthority2.id,
-        certificationId: certificationVaeCollective.id,
+    await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: { certificationId: certificationVaeCollective.id },
       },
-    });
-    await prismaClient.certificationAuthorityOnDepartment.create({
-      data: {
-        certificationAuthorityId: certificationAuthority2.id,
-        departmentId: candidacy.candidate?.departmentId || "75",
+      certificationAuthorityOnDepartment: {
+        create: { departmentId: candidacy.candidate!.departmentId },
       },
     });
 
@@ -559,9 +666,26 @@ describe("VAE collective", () => {
     expect(
       res.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorities
         .length,
+    ).toBe(2);
+
+    // Restrict certification to first certification authority
+    await prismaClient.certificationCohorteVaeCollectiveOnCertificationAuthority.create(
+      {
+        data: {
+          certificationAuthorityId: certificationAuthority1.id,
+          certificationCohorteVaeCollectiveId:
+            cohorteVaeCollective.certificationCohorteVaeCollectives[0].id,
+        },
+      },
+    );
+
+    const resWithRestriction = await graphqlClient.request(getCandidacy);
+    expect(
+      resWithRestriction.candidate_getCandidateWithCandidacy.candidacy
+        .certificationAuthorities.length,
     ).toBe(1);
     expect(
-      res.candidate_getCandidateWithCandidacy.candidacy
+      resWithRestriction.candidate_getCandidateWithCandidacy.candidacy
         .certificationAuthorities[0].id,
     ).toBe(certificationAuthority1.id);
   });
