@@ -61,6 +61,7 @@ const getCandidaciesByStatus = graphql(`
         }
         certification {
           label
+          codeRncp
         }
         organism {
           label
@@ -70,6 +71,15 @@ const getCandidaciesByStatus = graphql(`
         candidacyStatuses {
           status
           createdAt
+        }
+        cohorteVaeCollective {
+          nom
+          projetVaeCollective {
+            nom
+            commanditaireVaeCollective {
+              raisonSociale
+            }
+          }
         }
       }
       info {

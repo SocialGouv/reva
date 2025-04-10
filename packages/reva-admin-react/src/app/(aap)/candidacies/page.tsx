@@ -116,6 +116,7 @@ export default function CandidaciesPage() {
                   : undefined
               }
               fundable={candidacy.financeModule !== "hors_plateforme"}
+              vaeCollective={!!candidacy.cohorteVaeCollective}
             />
           )}
         </SearchList>

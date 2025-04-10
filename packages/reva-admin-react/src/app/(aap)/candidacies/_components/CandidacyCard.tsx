@@ -14,6 +14,7 @@ export const CandidacyCard = ({
   departmentCode,
   organismLabel,
   fundable,
+  vaeCollective,
 }: {
   candidacyId: string;
   candidateFirstname?: string;
@@ -24,15 +25,23 @@ export const CandidacyCard = ({
   departmentCode?: string;
   organismLabel?: string;
   fundable: boolean;
+  vaeCollective?: boolean;
 }) => {
   return (
     <WhiteCard key={candidacyId}>
       <div className="flex flex-col gap-2">
-        <Badge
-          className={`ml-auto ${fundable ? "fr-badge--info" : "fr-badge--yellow-tournesol"}`}
-        >
-          {fundable ? "finançable france vae" : "financement droit commun"}
-        </Badge>
+        <div className="ml-auto flex flex-row gap-3">
+          {vaeCollective && (
+            <Badge className="ml-auto fr-badge--info">VAE Collective</Badge>
+          )}
+          <Badge
+            className={
+              fundable ? "fr-badge--info" : "fr-badge--yellow-tournesol"
+            }
+          >
+            {fundable ? "finançable france vae" : "financement droit commun"}
+          </Badge>
+        </div>
         <h3 className="mb-2 text-lg">{certificationLabel}</h3>
       </div>
       <div className="mb-2 flex gap-x-12 text-lg">
