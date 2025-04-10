@@ -55,10 +55,14 @@ const Dashboard = () => {
   const NonVaeCollectiveDashboard = () => (
     <>
       {candidacyIsAutonome && (
-        <DashboardAutonomeTilesGroup candidacy={candidacy} />
+        <DashboardAutonomeTilesGroup
+          className="basis-2/3"
+          candidacy={candidacy}
+        />
       )}
       {candidacyIsAccompagne && (
         <DashboardAccompagneTilesGroup
+          className="basis-2/3"
           candidacy={candidacy}
           candidacyAlreadySubmitted={candidacyAlreadySubmitted}
           canSubmitCandidacy={canSubmitCandidacy}
@@ -71,6 +75,7 @@ const Dashboard = () => {
 
   const VaeCollectiveDashboard = () => (
     <DashboardVaeCollectiveTilesGroup
+      className="basis-2/3"
       candidacy={candidacy}
       candidacyAlreadySubmitted={candidacyAlreadySubmitted}
       canSubmitCandidacy={canSubmitCandidacy}
@@ -90,16 +95,13 @@ const Dashboard = () => {
         canSubmitCandidacy={canSubmitCandidacy}
         candidacyAlreadySubmitted={candidacyAlreadySubmitted}
       />
-      <div className="grid grid-flow-row lg:grid-flow-col grid-cols-1 lg:grid-cols-3 grid-rows-2 gap-x-6 gap-y-8 mx-auto mt-20">
+      <div className="flex flex-col lg:flex-row gap-8 mt-20">
         {candidacyIsVaeCollective ? (
           <VaeCollectiveDashboard />
         ) : (
           <NonVaeCollectiveDashboard />
         )}
-        <DashboardSidebar
-          candidacy={candidacy}
-          className="col-span-1 row-span-2 row-start-1"
-        />
+        <DashboardSidebar candidacy={candidacy} className="basis-1/3" />
       </div>
     </div>
   );
