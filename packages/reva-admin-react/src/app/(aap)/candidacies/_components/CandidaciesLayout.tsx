@@ -201,6 +201,13 @@ const CandidacyLayoutSideMenu = ({
       },
       isActive: isActive("ARCHIVE_HORS_ABANDON_HORS_REORIENTATION"),
     },
+    {
+      text: `Toutes les candidatures en VAE Collective ${getCounterText("VAE_COLLECTIVE")}`,
+      linkProps: {
+        href: hrefSideMenu("VAE_COLLECTIVE"),
+      },
+      isActive: isActive("VAE_COLLECTIVE"),
+    },
   ];
 
   if (isAdmin) {

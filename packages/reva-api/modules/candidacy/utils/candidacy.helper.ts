@@ -162,6 +162,13 @@ export const getWhereClauseFromStatusFilter = (
         },
       };
       break;
+    case "VAE_COLLECTIVE":
+      whereClause = {
+        ...whereClause,
+        candidacyDropOut: null,
+        cohorteVaeCollectiveId: { not: null },
+      };
+      break;
     case "CADUQUE":
       whereClause = {
         ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,

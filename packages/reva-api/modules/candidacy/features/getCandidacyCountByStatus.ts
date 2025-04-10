@@ -183,21 +183,25 @@ const getSQLSelectSumClauseFromStatusFilter = (
 
     case "JURY_HORS_ABANDON":
       return getSumClause(
-        `candidacyDropOut.candidacy_id  is null and activeJury.id is not null`,
+        `candidacyDropOut.candidacy_id is null and activeJury.id is not null`,
       );
 
     case "JURY_PROGRAMME_HORS_ABANDON":
       return getSumClause(
-        `candidacyDropOut.candidacy_id  is null and activeJury.id is not null and activeJury.date_of_result is null`,
+        `candidacyDropOut.candidacy_id is null and activeJury.id is not null and activeJury.date_of_result is null`,
       );
 
     case "JURY_PASSE_HORS_ABANDON":
       return getSumClause(
-        `candidacyDropOut.candidacy_id  is null and activeJury.id is not null and activeJury.date_of_result is not null`,
+        `candidacyDropOut.candidacy_id is null and activeJury.id is not null and activeJury.date_of_result is not null`,
       );
     case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
       return getSumClause(
         `candidacy.status in ('DOSSIER_FAISABILITE_ENVOYE','DOSSIER_FAISABILITE_COMPLET') and candidacyDropOut.candidacy_id is null`,
+      );
+    case "VAE_COLLECTIVE":
+      return getSumClause(
+        `candidacy.cohorte_vae_collective_id is not null and candidacyDropOut.candidacy_id is null`,
       );
     case "CADUQUE":
       return getSumClause(WHERE_CLAUSE_RAW_CANDIDACY_CADUQUE_AND_ACTUALISATION);

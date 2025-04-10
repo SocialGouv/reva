@@ -157,6 +157,7 @@ type CandidacyCountByStatus {
   DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON: Int!
   VALIDATION_HORS_ABANDON: Int!
   PROJET_HORS_ABANDON: Int!
+  VAE_COLLECTIVE: Int!
 }
 
 type CandidacyPage {
@@ -186,6 +187,7 @@ enum CandidacyStatusFilter {
   DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON
   VALIDATION_HORS_ABANDON
   PROJET_HORS_ABANDON
+  VAE_COLLECTIVE
 }
 
 enum CandidacyCaduciteStatus {

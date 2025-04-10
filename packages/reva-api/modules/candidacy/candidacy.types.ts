@@ -73,6 +73,7 @@ export const candidacyStatusFilters = [
   "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON",
   "VALIDATION_HORS_ABANDON",
   "PROJET_HORS_ABANDON",
+  "VAE_COLLECTIVE",
   "CADUQUE",
 ] as const;
 
