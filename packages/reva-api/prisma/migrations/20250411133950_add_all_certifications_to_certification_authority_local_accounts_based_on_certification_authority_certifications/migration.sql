@@ -1,0 +1,8 @@
+/* Delete all data from certification_authority_local_account_on_certification table */
+TRUNCATE TABLE certification_authority_local_account_on_certification;
+
+/* Insert all data in certification_authority_local_account_on_certification table */
+INSERT INTO certification_authority_local_account_on_certification (certification_authority_local_account_id, certification_id)
+SELECT certification_authority_local_account.id, certification_authority_on_certification.certification_id
+FROM certification_authority_local_account
+JOIN certification_authority_on_certification ON certification_authority_local_account.certification_authority_id = certification_authority_on_certification.certification_authority_id;
