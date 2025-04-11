@@ -172,7 +172,6 @@ export const OrganismFilters = ({
                   nativeInputProps: {
                     checked: filters.organismSearchMcf,
                     onChange: (e) => {
-                      console.log("onChange", e.target.checked);
                       onSearch({
                         ...filters,
                         organismSearchMcf: e.target.checked,
