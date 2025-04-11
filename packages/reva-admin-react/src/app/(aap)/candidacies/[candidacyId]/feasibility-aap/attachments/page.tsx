@@ -139,7 +139,6 @@ export default function AttachmentsPage() {
   });
 
   const remoteFiles = useMemo(() => {
-    console.log("hello memo");
     return {
       idCard: attachments?.find((attachment) => attachment?.type === "ID_CARD")
         ?.file,
