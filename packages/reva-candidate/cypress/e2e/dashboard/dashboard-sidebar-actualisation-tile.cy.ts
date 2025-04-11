@@ -17,7 +17,7 @@ interface CandidateFixture {
   };
 }
 
-context("Dashboard Sidebar", () => {
+context("Dashboard Sidebar - Actualisation Tile", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
@@ -42,27 +42,27 @@ context("Dashboard Sidebar", () => {
     cy.visit("/");
   });
 
-  describe("Actualisation Tile", () => {
-    const DATE_170_DAYS_AGO = subDays(new Date(), 170).getTime();
+  const DATE_170_DAYS_AGO = subDays(new Date(), 170).getTime();
 
-    const initCandidateForActualisation = (candidate: CandidateFixture) => {
-      candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
-        DATE_170_DAYS_AGO;
-      candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque =
-        false;
-      return candidate;
-    };
+  const initCandidateForActualisation = (candidate: CandidateFixture) => {
+    candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
+      DATE_170_DAYS_AGO;
+    candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque =
+      false;
+    return candidate;
+  };
 
-    const interceptGraphQL = (candidate: CandidateFixture) => {
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidacyForDashboard",
-          candidate,
-        );
-      });
-    };
+  const interceptGraphQL = (candidate: CandidateFixture) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        candidate,
+      );
+    });
+  };
 
+  describe("should display actualisation tile", () => {
     const validStatuses = [
       "DOSSIER_FAISABILITE_RECEVABLE",
       "DOSSIER_DE_VALIDATION_SIGNALE",
@@ -70,7 +70,7 @@ context("Dashboard Sidebar", () => {
     ];
 
     validStatuses.forEach((status) => {
-      it(`should display actualisation tile when candidacy status is ${status} and not caduque`, () => {
+      it(`when candidacy status is ${status} and not caduque`, () => {
         cy.fixture("candidate1.json").then(
           (initialCandidate: CandidateFixture) => {
             const candidate = initCandidateForActualisation(initialCandidate);
@@ -84,7 +84,7 @@ context("Dashboard Sidebar", () => {
       });
     });
 
-    it("should display actualisation tile when candidacy status is DEMANDE_PAIEMENT_ENVOYEE with INCOMPLETE dossier and not caduque", () => {
+    it("when candidacy status is DEMANDE_PAIEMENT_ENVOYEE with INCOMPLETE dossier and not caduque", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
           const candidate = initCandidateForActualisation(initialCandidate);
@@ -100,7 +100,9 @@ context("Dashboard Sidebar", () => {
         },
       );
     });
+  });
 
+  describe("should not display actualisation tile", () => {
     const negativeTestCases = [
       {
         description: "candidacy is caduque",
@@ -136,7 +138,7 @@ context("Dashboard Sidebar", () => {
     ];
 
     negativeTestCases.forEach(({ description, testSetup }) => {
-      it(`should not display actualisation tile when ${description}`, () => {
+      it(`when ${description}`, () => {
         cy.fixture("candidate1.json").then(
           (initialCandidate: CandidateFixture) => {
             const candidateForActualisation =
