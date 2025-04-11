@@ -3,6 +3,7 @@ import { logCandidacyAuditEvent } from "../../../modules/candidacy-log/features/
 import { prismaClient } from "../../../prisma/client";
 import { sendConfirmationActualisationEmailToAap } from "../emails/sendConfirmationActualisationEmailToAap";
 import { sendConfirmationActualisationEmailToCandidate } from "../emails/sendConfirmationActualisationEmailToCandidate";
+import { getCandidacyIsCaduque } from "./getCandidacyIsCaduque";
 
 export const updateLastActivityDate = async ({
   input,
@@ -32,6 +33,14 @@ export const updateLastActivityDate = async ({
     throw new Error(
       "La date de préparation pour le jury ne peut être dans le passé",
     );
+  }
+
+  const isCandidacyCaduque = await getCandidacyIsCaduque({
+    candidacyId,
+  });
+
+  if (isCandidacyCaduque) {
+    throw new Error("La candidature est caduque");
   }
 
   await logCandidacyAuditEvent({
