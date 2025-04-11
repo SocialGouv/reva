@@ -104,7 +104,7 @@ export default function JurySessionPage() {
         />
       )}
 
-      <BackButton navigateBack={router.back} className="mb-12" />
+      <BackButton navigateBack={router.back} className="mt-12" />
     </div>
   );
 }
