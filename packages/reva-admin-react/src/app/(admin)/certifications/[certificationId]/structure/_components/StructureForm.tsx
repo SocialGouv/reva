@@ -49,6 +49,7 @@ export const StructureForm = ({
     handleSubmit,
     formState: { isDirty, isSubmitting },
     reset,
+    getValues,
   } = useForm<CertificationStructureFormData>({
     resolver: zodResolver(certificationStructureFormSchema),
     defaultValues: {
@@ -173,7 +174,11 @@ export const StructureForm = ({
                 {
                   label: "Tout cocher / décocher",
                   nativeInputProps: {
-                    onClick: (e) =>
+                    checked: getValues("certificationAuthorities").reduce(
+                      (checked, item) => (!item.checked ? false : checked),
+                      true,
+                    ),
+                    onChange: (e) =>
                       selectOrUnselectAllCertificationAuthorities(
                         e.currentTarget.checked,
                       ),

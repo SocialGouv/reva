@@ -9,27 +9,88 @@ export const updateCertificationAuthorityCertifications = async ({
   certificationAuthorityId: string;
   certificationIds: string[];
 }): Promise<CertificationAuthority> => {
-  const result = await prismaClient.$transaction([
-    //delete old certifications associations and create the new ones
-    prismaClient.certificationAuthorityOnCertification.deleteMany({
-      where: { certificationAuthorityId },
-    }),
-    prismaClient.certificationAuthorityOnCertification.createMany({
-      data: certificationIds.map((cid) => ({
-        certificationAuthorityId,
-        certificationId: cid,
-      })),
-    }),
-    //remove the local account certifications association for the certifications which are no longer associated with the certification authority
-    prismaClient.certificationAuthorityLocalAccountOnCertification.deleteMany({
-      where: {
-        certificationAuthorityLocalAccount: { certificationAuthorityId },
-        certificationId: { notIn: certificationIds },
-      },
-    }),
-    prismaClient.certificationAuthority.findFirst({
+  const certificationAuthority =
+    await prismaClient.certificationAuthority.findUnique({
       where: { id: certificationAuthorityId },
-    }),
-  ]);
-  return result[3] as CertificationAuthority;
+    });
+  if (!certificationAuthority) {
+    throw new Error("Authorité de certification non trouvée");
+  }
+
+  await prismaClient.$transaction(async (tx) => {
+    const currentCertifications =
+      await tx.certificationAuthorityOnCertification.findMany({
+        where: { certificationAuthorityId },
+      });
+
+    const currentCertificationIds = currentCertifications.map(
+      ({ certificationId }) => certificationId,
+    );
+
+    const deletedCertificationIds = currentCertificationIds.filter(
+      (id) => certificationIds.indexOf(id) == -1,
+    );
+
+    const addedCertificationIds = certificationIds.filter(
+      (id) => currentCertificationIds.indexOf(id) == -1,
+    );
+
+    // Delete certifications on certification authority
+    await tx.certificationAuthorityOnCertification.deleteMany({
+      where: {
+        certificationAuthorityId,
+        certificationId: { in: deletedCertificationIds },
+      },
+    });
+
+    // Delete certifications on certification authority local account based on certificationAuthorityId
+    await tx.certificationAuthorityLocalAccountOnCertification.deleteMany({
+      where: {
+        certificationAuthorityLocalAccount: {
+          certificationAuthorityId,
+        },
+        certificationId: { in: deletedCertificationIds },
+      },
+    });
+
+    // Add certifications on certification authority
+    await tx.certificationAuthorityOnCertification.createMany({
+      data: addedCertificationIds.map((id) => ({
+        certificationId: id,
+        certificationAuthorityId,
+      })),
+    });
+
+    // Find certification authority local accounts based on certification authority
+    const certificationAuthorityLocalAccounts =
+      await tx.certificationAuthorityLocalAccount.findMany({
+        where: {
+          certificationAuthorityId,
+        },
+      });
+
+    const certificationAuthorityLocalAccountOnCertifications =
+      addedCertificationIds.reduce(
+        (acc, certificationId) => [
+          ...acc,
+          ...certificationAuthorityLocalAccounts.map(
+            ({ id: certificationAuthorityLocalAccountId }) => ({
+              certificationAuthorityLocalAccountId,
+              certificationId,
+            }),
+          ),
+        ],
+        [] as {
+          certificationId: string;
+          certificationAuthorityLocalAccountId: string;
+        }[],
+      );
+
+    // Add certification authority local accounts on certification
+    await tx.certificationAuthorityLocalAccountOnCertification.createMany({
+      data: certificationAuthorityLocalAccountOnCertifications,
+    });
+  });
+
+  return certificationAuthority;
 };
