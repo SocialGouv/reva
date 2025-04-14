@@ -81,7 +81,9 @@ export default function DossierDeValidationPag() {
       <h1>Dossier de validation</h1>
       <p>
         Renseignez les informations liées à votre dossier de validation puis
-        déposez-le afin de la transmettre au certificateur.
+        déposez-le afin de le transmettre au certificateur. Si votre
+        certification n’est pas totalement validée, vous pourrez déposer un
+        second dossier une fois votre résultat communiqué.
       </p>
       {queryStatus === "success" && (
         <>

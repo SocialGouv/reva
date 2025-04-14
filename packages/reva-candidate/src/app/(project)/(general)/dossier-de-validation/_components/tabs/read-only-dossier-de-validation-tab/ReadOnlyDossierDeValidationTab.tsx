@@ -26,7 +26,7 @@ export const ReadOnlyDossierDeValidationTab = ({
         title={`Dossier de validation envoyé au certificateur le ${dossierDeValidationSentAt ? format(dossierDeValidationSentAt, "dd/MM/yyyy") : ""}`}
         severity="success"
         className="mt-8"
-        description="Le contenu du dossier reste accessible, si vous souhaitez le consulter."
+        description="Le contenu reste consultable. Si vous souhaitez le modifier, contactez votre certificateur : lui seul peut rouvrir l’envoi du dossier de validation avant le passage en jury"
       />
 
       <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />
