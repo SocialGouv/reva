@@ -27,6 +27,12 @@ type FundingRequestUnifvae {
   fundingContactEmail: String
   fundingContactPhone: String
   numAction: String!
+  typeForfaitJury: TypeForfaitJuryFundingRequestUnifvae!
+}
+
+enum TypeForfaitJuryFundingRequestUnifvae {
+  FORFAIT_UNIQUE
+  FORFAIT_SEPARE_FAISABILITE_ET_ENTRETIEN_POST_JURY
 }
 
 type PaymentRequestUnifvae {
