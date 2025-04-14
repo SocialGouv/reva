@@ -1317,8 +1317,14 @@ model FundingRequestUnifvae {
   fundingContactEmail         String?                              @map("funding_contact_email") @db.VarChar(200)
   fundingContactPhone         String?                              @map("funding_contact_phone") @db.VarChar(50)
   fundingRequestBatchUnifvae  FundingRequestBatchUnifvae?
+  typeForfaitJury             TypeForfaitJuryFundingRequestUnifvae @default(FORFAIT_SEPARE_FAISABILITE_ET_ENTRETIEN_POST_JURY) @map("type_forfait_jury")
 
   @@map("funding_request_unifvae")
+}
+
+enum TypeForfaitJuryFundingRequestUnifvae {
+  FORFAIT_UNIQUE
+  FORFAIT_SEPARE_FAISABILITE_ET_ENTRETIEN_POST_JURY
 }
 
 model BasicSkillOnFundingRequestsUnifvae {
