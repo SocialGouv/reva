@@ -26,7 +26,15 @@ export const SubmitCandidacyTile = ({
   return (
     <Tile
       data-test="submit-candidacy-tile"
-      start={<>{candidacyAlreadySubmitted ? <SentBadge /> : <ToSendBadge />}</>}
+      start={
+        <>
+          {candidacyAlreadySubmitted ? (
+            <SentBadge />
+          ) : (
+            canSubmitCandidacy && <ToSendBadge />
+          )}
+        </>
+      }
       disabled={!candidacyAlreadySubmitted && !canSubmitCandidacy}
       title="Envoi de la candidature"
       small
