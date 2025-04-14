@@ -23,6 +23,7 @@ const getCandidacyQuery = graphql(`
       }
       fundingRequestUnifvae {
         numAction
+        typeForfaitJury
       }
       mandatoryTrainings {
         id

@@ -179,6 +179,8 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     handleReset();
   }, [handleReset]);
 
+  const typeForfaitJury = candidacy?.fundingRequestUnifvae?.typeForfaitJury;
+
   return (
     <div className="flex flex-col w-full p-1 md:p-2">
       <CandidacyBackButton candidacyId={candidacyId} />
@@ -269,30 +271,16 @@ const PaymentRequestUniFvaeInvoicePage = () => {
           </Section>
           <hr />
           <Section title="5. Accompagnement">
-            <div className="grid grid-cols-[1fr_250px] gap-y-2">
-              <span />
-              <span>Forfait</span>
-              <span className="font-medium">
-                Forfait d’étude de faisabilité
-              </span>
-              <span className="font-medium">200€ net</span>
-              {candidacy.feasibility?.decision !== "REJECTED" && (
-                <>
-                  <span className="font-medium">
-                    Forfait entretien post-jury
-                  </span>
-                  <span className="font-medium">100€ net</span>
-                </>
-              )}
-              <p className="flex text-dsfr-orange-500 mt-4 col-span-2 text-sm">
-                <span
-                  className="fr-icon-warning-fill fr-icon--sm mr-1"
-                  aria-hidden
-                />
-                Le forfait de faisabilité ne pourra être demandé que si l’étude
-                a été réalisée dans sa totalité.
-              </p>
-            </div>
+            {typeForfaitJury ===
+              "FORFAIT_SEPARE_FAISABILITE_ET_ENTRETIEN_POST_JURY" && (
+              <ForfaitJurySepareFaisabiliteEtEntretienPostJury
+                feasibilityNotRejected={
+                  candidacy.feasibility?.decision !== "REJECTED"
+                }
+              />
+            )}
+            {typeForfaitJury === "FORFAIT_UNIQUE" && <ForfaitUnique />}
+
             {candidacy?.feasibility?.decision === "ADMISSIBLE" && (
               <>
                 <Alert
@@ -304,18 +292,22 @@ const PaymentRequestUniFvaeInvoicePage = () => {
                   }
                 />
 
-                <CallOut
-                  className="mt-6 mb-0"
-                  title="Envoyer sa facture avant l’entretien post-jury est possible"
-                >
-                  Vous pouvez envoyer votre facture avant l'entretien post-jury
-                  mais <strong>ne percevrez pas le forfait de 100€</strong>{" "}
-                  alloué à cet entretien. Si le candidat refuse de faire un
-                  entretien post-jury suite à votre proposition, vous pouvez
-                  envoyer la facture sans mention du post-jury. Vous n'avez{" "}
-                  <strong>rien à remplir sur la plateforme</strong>, il suffit
-                  d'adapter votre facture en fonction de votre choix.
-                </CallOut>
+                {typeForfaitJury ===
+                  "FORFAIT_SEPARE_FAISABILITE_ET_ENTRETIEN_POST_JURY" && (
+                  <CallOut
+                    className="mt-6 mb-0"
+                    title="Envoyer sa facture avant l’entretien post-jury est possible"
+                  >
+                    Vous pouvez envoyer votre facture avant l'entretien
+                    post-jury mais{" "}
+                    <strong>ne percevrez pas le forfait de 100€</strong> alloué
+                    à cet entretien. Si le candidat refuse de faire un entretien
+                    post-jury suite à votre proposition, vous pouvez envoyer la
+                    facture sans mention du post-jury. Vous n'avez{" "}
+                    <strong>rien à remplir sur la plateforme</strong>, il suffit
+                    d'adapter votre facture en fonction de votre choix.
+                  </CallOut>
+                )}
 
                 <fieldset className="mt-6">
                   <legend className="mb-6 font-medium">
@@ -493,3 +485,43 @@ const PaymentRequestUniFvaeInvoicePage = () => {
 };
 
 export default PaymentRequestUniFvaeInvoicePage;
+
+const ForfaitJurySepareFaisabiliteEtEntretienPostJury = ({
+  feasibilityNotRejected,
+}: {
+  feasibilityNotRejected?: boolean;
+}) => (
+  <div className="grid grid-cols-[1fr_250px] gap-y-2">
+    <span />
+    <span>Forfait</span>
+    <span className="font-medium">Forfait d’étude de faisabilité</span>
+    <span className="font-medium">200€ net</span>
+    {feasibilityNotRejected && (
+      <>
+        <span className="font-medium">Forfait entretien post-jury</span>
+        <span className="font-medium">100€ net</span>
+      </>
+    )}
+    <p className="flex text-dsfr-orange-500 mt-4 col-span-2 text-sm">
+      <span className="fr-icon-warning-fill fr-icon--sm mr-1" aria-hidden />
+      Le forfait de faisabilité ne pourra être demandé que si l’étude a été
+      réalisée dans sa totalité.
+    </p>
+  </div>
+);
+
+const ForfaitUnique = () => (
+  <div className="grid grid-cols-[1fr_250px] gap-y-2">
+    <span />
+    <span>Forfait</span>
+    <span className="font-medium">
+      Forfait d’étude de faisabilité et entretien post-jury
+    </span>
+    <span className="font-medium">300€ net</span>
+    <p className="flex text-dsfr-orange-500 mt-4 col-span-2 text-sm">
+      <span className="fr-icon-warning-fill fr-icon--sm mr-1" aria-hidden />
+      Le forfait de faisabilité ne pourra être demandé que si l’étude a été
+      réalisée dans sa totalité.
+    </p>
+  </div>
+);
