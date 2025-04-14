@@ -275,6 +275,7 @@ export const useCandidacy = () => {
 
   const canEditCandidacy = candidateCanEditCandidacy({
     candidacyStatus,
+    typeAccompagnement: candidacy?.typeAccompagnement,
     candidacyDropOut: !!candidacy?.candidacyDropOut,
   });
 

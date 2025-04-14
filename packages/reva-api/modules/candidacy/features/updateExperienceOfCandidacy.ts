@@ -22,6 +22,7 @@ export const updateExperienceOfCandidacy = async ({
     where: { id: candidacyId },
     select: {
       status: true,
+      typeAccompagnement: true,
     },
   });
 

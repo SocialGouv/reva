@@ -87,6 +87,7 @@ export const useUpdateExperience = () => {
 
   const canEditCandidacy = candidateCanEditCandidacy({
     candidacyStatus: candidacy?.status as CandidacyStatusStep,
+    typeAccompagnement: "ACCOMPAGNE",
     candidacyDropOut: !!candidacy?.candidacyDropOut,
   });
 

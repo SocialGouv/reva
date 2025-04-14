@@ -39,6 +39,7 @@ export const selectOrganismForCandidacy = async ({
       candidacyStatuses: true,
       certificationId: true,
       status: true,
+      typeAccompagnement: true,
     },
   });
 

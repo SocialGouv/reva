@@ -51,6 +51,8 @@ export const useCandidacyForCertification = () => {
   const canEditCandidacy = candidateCanEditCandidacy({
     candidacyStatus:
       data?.candidate_getCandidateWithCandidacy?.candidacy.status,
+    typeAccompagnement:
+      data?.candidate_getCandidateWithCandidacy?.candidacy.typeAccompagnement,
     candidacyDropOut:
       !!data?.candidate_getCandidateWithCandidacy?.candidacy?.candidacyDropOut,
   });
