@@ -70,7 +70,7 @@ context("Dashboard Tiles", () => {
 
         cy.get(
           '[data-test="submit-candidacy-tile"] [data-test="to-send-badge"]',
-        ).should("be.visible");
+        ).should("not.exist");
         cy.get('[data-test="submit-candidacy-tile"] button').should(
           "be.disabled",
         );
@@ -126,7 +126,7 @@ context("Dashboard Tiles", () => {
           ).should("be.visible");
           cy.get(
             '[data-test="submit-candidacy-tile"] [data-test="to-send-badge"]',
-          ).should("be.visible");
+          ).should("not.exist");
           cy.get('[data-test="submit-candidacy-tile"] button').should(
             "be.disabled",
           );
