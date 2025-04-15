@@ -49,6 +49,7 @@ const getCertificationsQuery = graphql(`
 const getCandidacyQuery = graphql(`
   query getCandidacyForReorientation($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      typeAccompagnement
       organismId
       certification {
         id
@@ -60,12 +61,21 @@ const getCandidacyQuery = graphql(`
   }
 `);
 
-const updateCertificationMutation = graphql(`
+const updateCertificationWithOrganismScopeMutation = graphql(`
   mutation updateCertificationWithinOrganismScope(
     $candidacyId: ID!
     $certificationId: ID!
   ) {
     candidacy_certification_updateCertificationWithinOrganismScope(
+      candidacyId: $candidacyId
+      certificationId: $certificationId
+    )
+  }
+`);
+
+const updateCertificationMutation = graphql(`
+  mutation updateCertification($candidacyId: ID!, $certificationId: ID!) {
+    candidacy_certification_updateCertification(
       candidacyId: $candidacyId
       certificationId: $certificationId
     )
@@ -110,7 +120,7 @@ const ReorientationPage = () => {
         searchFilter,
         organismId,
       }),
-    enabled: !!organismId,
+    enabled: !!organismId || candidacy?.typeAccompagnement === "AUTONOME",
   });
 
   const updateCertification = useMutation({
@@ -121,10 +131,15 @@ const ReorientationPage = () => {
       candidacyId: string;
       certificationId: string;
     }) =>
-      graphqlClient.request(updateCertificationMutation, {
-        candidacyId,
-        certificationId,
-      }),
+      graphqlClient.request(
+        candidacy?.typeAccompagnement === "AUTONOME"
+          ? updateCertificationMutation
+          : updateCertificationWithOrganismScopeMutation,
+        {
+          candidacyId,
+          certificationId,
+        },
+      ),
   });
 
   const handleSubmitCertification = async (certificationId: string) => {
