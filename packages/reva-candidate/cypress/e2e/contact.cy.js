@@ -16,13 +16,18 @@ context("Candidate account", () => {
   it("update all account information", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1.json",
+      );
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "update_contact", "contact.json");
     });
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-
+    cy.wait("@candidate_getCandidateWithCandidacyForHome");
     cy.get('[data-test="project-home-update-contact"]').click();
 
     cy.get("[name=firstname]").should("have.value", firstname1);
@@ -41,12 +46,17 @@ context("Candidate account", () => {
         "candidate_getCandidateWithCandidacy",
         "candidate1-updated-contact-info.json",
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1-updated-contact-info.json",
+      );
     });
 
     cy.get('[data-test="project-contact-save"]').click();
     cy.wait("@update_contact");
     cy.wait("@candidate_getCandidateWithCandidacy");
-
+    cy.wait("@candidate_getCandidateWithCandidacyForHome");
     cy.get('[data-test="project-home-fullname"]').contains(
       `${firstname2} ${lastname2}`,
     );
