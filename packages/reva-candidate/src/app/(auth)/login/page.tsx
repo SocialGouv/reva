@@ -109,7 +109,7 @@ export default function Login() {
               name: "email",
               required: true,
               type: "email",
-              autoComplete: "email",
+              autoComplete: "username",
               spellCheck: "false",
               onChange: (e) => setEmail(e.target.value),
             }}
@@ -168,7 +168,7 @@ export default function Login() {
 
         <div className="w-full bg-dsfrGray-200 h-[1px]" />
 
-        <h2 className="mb-0">Vous n’avez pas de compte ?</h2>
+        <h2 className="mb-0">Vous n'avez pas de compte ?</h2>
 
         <Button
           type="button"
