@@ -12,6 +12,11 @@ context("Type accompagnement", () => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(
         req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
         "activeFeaturesForConnectedUser",
         "accompagnement-autonome/features-type-accompagnement.json",
       );
@@ -19,6 +24,7 @@ context("Type accompagnement", () => {
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait("@candidate_getCandidateWithCandidacyForHome");
     cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="type-accompagnement-timeline-element"]').should(
@@ -36,11 +42,13 @@ context("Type accompagnement", () => {
         "AUTONOME";
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
       });
     });
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait("@candidate_getCandidateWithCandidacyForHome");
 
     cy.get('[data-test="type-accompagnement-timeline-element"]').should(
       "exist",
@@ -57,13 +65,14 @@ context("Type accompagnement", () => {
         "AUTONOME";
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
       });
     });
 
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-
+    cy.wait("@candidate_getCandidateWithCandidacyForHome");
     cy.get(
       '[data-test="type-accompagnement-timeline-element-update-button"]',
     ).should("exist");
@@ -80,13 +89,14 @@ context("Type accompagnement", () => {
         "VALIDATION";
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
       });
     });
 
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-
+    cy.wait("@candidate_getCandidateWithCandidacyForHome");
     cy.wait(1000);
 
     cy.get(
@@ -101,6 +111,11 @@ context("Type accompagnement", () => {
           "AUTONOME";
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
         });
       },
     );
@@ -108,7 +123,7 @@ context("Type accompagnement", () => {
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-
+    cy.wait("@candidate_getCandidateWithCandidacyForHome");
     cy.get(
       '[data-test="type-accompagnement-timeline-element-update-button"]',
     ).click();
@@ -136,6 +151,11 @@ context("Type accompagnement", () => {
         "candidate_getCandidateWithCandidacy",
         "candidate1-certification-titre-2-selected.json",
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1-certification-titre-2-selected.json",
+      );
       stubMutation(
         req,
         "updateTypeAccompagnementForTypeAccompagnementPage",
@@ -145,6 +165,7 @@ context("Type accompagnement", () => {
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait("@candidate_getCandidateWithCandidacyForHome");
     cy.visit("/type-accompagnement");
     cy.wait("@getCandidateWithCandidacyForTypeAccompagnementPage");
 
