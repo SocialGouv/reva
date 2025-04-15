@@ -28,8 +28,7 @@ import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import { WhiteBoxContainer } from "./_components/WhiteBoxContainer";
 import { HTMLAttributes } from "react";
-import { Notice } from "@codegouvfr/react-dsfr/Notice";
-import Link from "next/link";
+import { LayoutNotice } from "./_components/layout-notice/LayoutNotice";
 
 const queryClient = new QueryClient();
 
@@ -104,7 +103,6 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
 
   const pathname = usePathname();
   const isRootPath = pathname === "/";
-  const isLoginPath = pathname === "/login/";
   const isUnAuthenticatedPath =
     UNAUTHENTICATED_PATHS.findIndex((path) => pathname.startsWith(path)) != -1;
 
@@ -138,23 +136,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
         className="flex flex-col flex-1 lg:bg-candidate"
       >
         <div className={className}>
-          {isLoginPath && (
-            <Notice
-              className="absolute left-0 w-full"
-              title={
-                <>
-                  <strong>Important : </strong>
-                  <span className="font-normal">
-                    Si vous ne vous êtes pas connecté depuis le 30 mars 2025,
-                    nous vous invitons à{" "}
-                  </span>
-                  <Link className="font-normal" href={`/forgot-password`}>
-                    définir un mot de passe.
-                  </Link>
-                </>
-              }
-            />
-          )}
+          <LayoutNotice />
 
           {isCandidateDashboardActive && isRootPath ? (
             <div
