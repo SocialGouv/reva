@@ -6,7 +6,6 @@ enum AccountGroup {
 
 type Account {
   id: UUID!
-  keycloakId: String!
   email: String!
   firstname: String
   lastname: String
