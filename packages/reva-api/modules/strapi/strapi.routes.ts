@@ -1,21 +1,52 @@
 import { FastifyPluginAsync } from "fastify";
-import { prismaClient } from "../../prisma/client";
 import { isFeatureActiveForUser } from "../../modules/feature-flipping/feature-flipping.features";
+import { prismaClient } from "../../prisma/client";
 
-type StrapiWebhookRequestBody = {
+interface CguEntry {
+  nom: string;
+  nouvelleVersion: boolean;
+}
+
+interface StrapiWebhookRequestBody {
   event: string;
   model: string;
   uid: string;
-  entry: {
-    nom: string;
-    nouvelleVersion: boolean;
-  };
+  entry: CguEntry;
+}
+
+const CGU_TYPES = {
+  MAISON_MERE: "CGU",
+  CERTIFICATEUR: "CGU_CERTIFICATEUR",
+} as const;
+
+const validateApiKey = (authHeader: string): boolean => {
+  const [_, apiKey] = authHeader.split("ApiKey ");
+  return apiKey === process.env.STRAPI_WEBHOOK_KEY;
+};
+
+// Webhook Strapi pour la gestion des Conditions Générales d'Utilisation (CGU)
+// Traite les CGU pour les Maisons Mères AAP ("CGU") et les Certificateurs ("CGU_CERTIFICATEUR")
+// Lorsqu'une nouvelle version est publiée (nouvelleVersion = true), une entrée est créée dans la base de données
+// Cette entrée servira de référence pour vérifier si l'utilisateur a accepté la dernière version des CGU
+const handleCguUpdate = async (entry: CguEntry) => {
+  if (!entry.nouvelleVersion) {
+    console.log(
+      `No need to create ${entry.nom} DB entry because nouvelleVersion is false`,
+    );
+    return { status: 200 };
+  }
+
+  console.log(`Creating ${entry.nom} DB entry because nouvelleVersion is true`);
+  if (entry.nom === CGU_TYPES.MAISON_MERE) {
+    await prismaClient.professionalCgu.create({});
+  } else if (entry.nom === CGU_TYPES.CERTIFICATEUR) {
+    await prismaClient.professionalCguCertificateur.create({});
+  }
+  return { status: 201 };
 };
 
 export const strapiWebhookRoute: FastifyPluginAsync = async (server) => {
-  server.post<{
-    Body: StrapiWebhookRequestBody;
-  }>("/strapi/webhook", {
+  server.post<{ Body: StrapiWebhookRequestBody }>("/strapi/webhook", {
     schema: {
       headers: {
         type: "object",
@@ -36,48 +67,40 @@ export const strapiWebhookRoute: FastifyPluginAsync = async (server) => {
       },
     },
     handler: async (request, reply) => {
-      if (
-        !(await isFeatureActiveForUser({
-          feature: "CGU_STRAPI_WEBHOOK",
-        }))
-      ) {
+      // Check feature flag
+      const isFeatureActive = await isFeatureActiveForUser({
+        feature: "CGU_STRAPI_WEBHOOK",
+      });
+
+      if (!isFeatureActive) {
         console.log("Feature flag is disabled, ignoring webhook");
-        reply.status(204).send();
-        return;
+        return reply.status(204).send();
       }
 
-      const [_, apiKey] = (
-        request.headers["x-strapi-authorization"] as string
-      ).split("ApiKey ");
-
-      if (!apiKey || apiKey !== process.env.STRAPI_WEBHOOK_KEY) {
-        reply.status(401).send("Unauthorized");
-        return;
+      // Validate API key
+      const isApiKeyValid = validateApiKey(
+        request.headers["x-strapi-authorization"] as string,
+      );
+      if (!isApiKeyValid) {
+        return reply.status(401).send("Unauthorized");
       }
 
-      const { event, model, entry } = request.body;
-      if (
-        event !== "entry.update" ||
-        model !== "legal" ||
-        entry.nom !== "CGU"
-      ) {
-        console.log("Ignoring event", event, model);
-        reply.status(204).send();
-        return;
+      const { event, model, entry } = request.body as StrapiWebhookRequestBody;
+
+      const isCguUpdate =
+        event === "entry.update" &&
+        model === "legal" &&
+        (entry.nom === CGU_TYPES.MAISON_MERE ||
+          entry.nom === CGU_TYPES.CERTIFICATEUR);
+
+      // Handle CGU updates
+      if (isCguUpdate) {
+        const { status } = await handleCguUpdate(entry);
+        return reply.status(status).send();
       }
-      const isNewversion = entry.nouvelleVersion;
-      if (isNewversion) {
-        console.log(
-          "Creating CGU DB entry because nouvelleVersion is set to true",
-        );
-        await prismaClient.professionalCgu.create({});
-        reply.status(201).send();
-      } else {
-        console.log(
-          "No need to create CGU DB entry because nouvelleVersion is set to false",
-        );
-        reply.status(200).send();
-      }
+
+      console.log("Ignoring event", event, model);
+      return reply.status(204).send();
     },
   });
 };
