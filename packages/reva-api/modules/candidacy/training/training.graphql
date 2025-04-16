@@ -13,6 +13,7 @@ type Candidacy {
 type CandidacyOnCandidacyFinancingMethod {
   id: ID!
   candidacyFinancingMethod: CandidacyFinancingMethod!
+  amount: Float!
   additionalInformation: String
 }
 
