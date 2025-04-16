@@ -1755,6 +1755,7 @@ model CandidacyOnCandidacyFinancingMethod {
   candidacyFinancingMethodId String                   @map("candidacy_financing_method") @db.Uuid
   candidacyFinancingMethod   CandidacyFinancingMethod @relation(fields: [candidacyFinancingMethodId], references: [id], onDelete: Cascade)
   additionalInformation      String?                  @map("additional_information")
+  amount                     Decimal                  @default(0) @map("amount") @db.Decimal(10, 2)
   createdAt                  DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                  DateTime?                @map("updated_at") @db.Timestamptz(6)
 
