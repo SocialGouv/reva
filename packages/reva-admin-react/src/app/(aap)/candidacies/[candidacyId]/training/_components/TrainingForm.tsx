@@ -157,7 +157,10 @@ export const TrainingForm = ({
     name: "candidacyFinancingMethods",
   });
 
-  const { candidacyFinancingMethodOtherSourceChecked } = useWatch({ control });
+  const {
+    candidacyFinancingMethodOtherSourceChecked,
+    candidacyFinancingMethods,
+  } = useWatch({ control });
 
   const handleFormSubmit = handleSubmit(
     (data) => {
@@ -352,7 +355,7 @@ export const TrainingForm = ({
             Ces éléments sont demandés à titre indicatifs, en l'absence
             d'information un montant approximatif peut être renseigné.
           </p>
-          <div className="grid md:grid-cols-[1fr_180px] gap-x-20">
+          <div className="grid md:grid-cols-[1fr_180px] gap-x-20 mb-12">
             {candidacyFinancingMethodsFields
               .filter((fm) => fm.originalId !== OTHER_FINANCING_METHOD_ID)
               .map((fm, fmIndex) => (
@@ -381,9 +384,9 @@ export const TrainingForm = ({
                   />
                 </>
               ))}
-
             <Checkbox
               className="col-span-2"
+              small
               options={[
                 {
                   label: "Autre source de financement",
@@ -393,7 +396,6 @@ export const TrainingForm = ({
                 },
               ]}
             />
-
             {candidacyFinancingMethodOtherSourceChecked && (
               <>
                 <Input
@@ -432,6 +434,13 @@ export const TrainingForm = ({
                 />
               </>
             )}
+            <div>Total</div>
+            <div className="font-medium ml-auto">
+              {candidacyFinancingMethods
+                ?.reduce((acc, fm) => acc + (fm?.amount || 0), 0)
+                .toFixed(2)}{" "}
+              €
+            </div>
           </div>
         </>
       )}
