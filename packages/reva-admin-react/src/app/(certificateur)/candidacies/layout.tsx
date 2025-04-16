@@ -82,7 +82,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     "certificationAuthorityLocalAccountId",
   ) as string | undefined;
 
-  const { isAdmin } = useAuth();
+  const { isAdmin, isAdminCertificationAuthority } = useAuth();
 
   const { graphqlClient } = useGraphQlClient();
   const { isFeatureActive } = useFeatureflipping();
@@ -326,26 +326,23 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
         aria-label="Menu latéral"
         className="flex flex-col gap-4 md:basis-[400px]"
       >
-        {isAdmin && (
-          <>
-            {certificationAuthorityId && (
-              <div className="mr-8">
-                <CertificationAuthority
-                  certificationAuthorityId={certificationAuthorityId}
-                />
-              </div>
-            )}
-            {certificationAuthorityLocalAccountId && (
-              <div className="mr-8">
-                <CertificationAuthorityLocalAccount
-                  certificationAuthorityLocalAccountId={
-                    certificationAuthorityLocalAccountId
-                  }
-                />
-              </div>
-            )}
-          </>
+        {isAdmin && certificationAuthorityId && (
+          <div className="mr-8">
+            <CertificationAuthority
+              certificationAuthorityId={certificationAuthorityId}
+            />
+          </div>
         )}
+        {(isAdmin || isAdminCertificationAuthority) &&
+          certificationAuthorityLocalAccountId && (
+            <div className="mr-8">
+              <CertificationAuthorityLocalAccount
+                certificationAuthorityLocalAccountId={
+                  certificationAuthorityLocalAccountId
+                }
+              />
+            </div>
+          )}
         <SideMenu
           className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
           align="left"

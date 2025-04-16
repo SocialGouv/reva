@@ -60,6 +60,25 @@ export const getActiveDossierDeValidationCountByCategory = async ({
           },
         });
     }
+  } else if (
+    hasRole("manage_certification_authority_local_account") &&
+    certificationAuthorityLocalAccountId
+  ) {
+    if (!account?.certificationAuthorityId) {
+      throw new Error("Utilisateur non autorisé");
+    }
+
+    certificationAuthorityLocalAccount =
+      await prismaClient.certificationAuthorityLocalAccount.findUnique({
+        where: {
+          id: certificationAuthorityLocalAccountId,
+          certificationAuthorityId: account.certificationAuthorityId,
+        },
+        include: {
+          certificationAuthorityLocalAccountOnDepartment: true,
+          certificationAuthorityLocalAccountOnCertification: true,
+        },
+      });
   }
 
   await Promise.all(
@@ -74,16 +93,32 @@ export const getActiveDossierDeValidationCountByCategory = async ({
             let whereClause: Prisma.DossierDeValidationWhereInput = {};
 
             if (!hasRole("admin") && hasRole("manage_feasibility")) {
-              whereClause = {
-                ...whereClause,
-                ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
-                  {
-                    account,
-                    isCertificationAuthorityLocalAccount,
-                    certificationAuthorityLocalAccount,
-                  },
-                ),
-              };
+              if (
+                hasRole("manage_certification_authority_local_account") &&
+                certificationAuthorityLocalAccountId
+              ) {
+                whereClause = {
+                  ...whereClause,
+                  ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
+                    {
+                      account: certificationAuthorityAccount,
+                      isCertificationAuthorityLocalAccount: true,
+                      certificationAuthorityLocalAccount,
+                    },
+                  ),
+                };
+              } else {
+                whereClause = {
+                  ...whereClause,
+                  ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole(
+                    {
+                      account,
+                      isCertificationAuthorityLocalAccount,
+                      certificationAuthorityLocalAccount,
+                    },
+                  ),
+                };
+              }
             } else if (
               hasRole("admin") &&
               (certificationAuthorityAccount ||

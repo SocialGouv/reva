@@ -184,9 +184,23 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
           }}
         >
           <fieldset className="flex flex-col gap-4 w-full">
-            <legend className="text-2xl font-bold mb-4">
-              Gestion des comptes locaux
-            </legend>
+            <div className="flex flex-row justify-between">
+              <legend className="text-2xl font-bold mb-4">
+                Gestion des comptes locaux
+              </legend>
+
+              {localAccount?.id && (
+                <Button
+                  priority="secondary"
+                  linkProps={{
+                    href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityLocalAccountId=${localAccount.id}`,
+                    target: "_blank",
+                  }}
+                >
+                  Voir les candidatures
+                </Button>
+              )}
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
               <Input
                 label="Nom (de la personne ou du compte)"

@@ -10,6 +10,8 @@ import { isCandidateOwnerOfCandidacy } from "./middlewares/isCandidateOwnerOfCan
 import { isFeasibilityManager } from "./middlewares/isFeasibilityManager";
 import { isUserOwnerOfCandidate } from "./middlewares/isUserOwnerOfCandidate";
 import { isCertificationRegistryManagerOfCertification } from "./middlewares/isCertificationRegistryManagerOfCertification.security";
+import { isCertificationAuthorityLocalAccountOwner } from "./middlewares/isCertificationAuthorityLocalAccountOwner";
+import { isCertificationAuthorityOwner } from "./middlewares/isCertificationAuthorityOwner";
 
 export const isAdminOrManager = [hasRole(["admin", "manage_candidacy"])];
 
@@ -29,6 +31,21 @@ export const defaultSecurity = [forbidden];
 export const isAnyone = [allowed];
 
 export const isAdmin = [hasRole(["admin"])];
+export const isAdminOrCertificationAuthorityLocalAccountOwner = [
+  hasRole(["admin", "manage_certification_authority_local_account"]),
+  whenHasRole(
+    "manage_certification_authority_local_account",
+    isCertificationAuthorityLocalAccountOwner,
+  ),
+];
+
+export const isAdminOrCertificationAuthorityOwner = [
+  hasRole(["admin", "manage_certification_authority_local_account"]),
+  whenHasRole(
+    "manage_certification_authority_local_account",
+    isCertificationAuthorityOwner,
+  ),
+];
 
 export const isAdminOrCertificationAuthority = [
   hasRole(["admin", "manage_feasibility"]),

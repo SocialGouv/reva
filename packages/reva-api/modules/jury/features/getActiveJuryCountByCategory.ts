@@ -57,6 +57,25 @@ export const getActiveJuryCountByCategory = async ({
           },
         });
     }
+  } else if (
+    hasRole("manage_certification_authority_local_account") &&
+    certificationAuthorityLocalAccountId
+  ) {
+    if (!account?.certificationAuthorityId) {
+      throw new Error("Utilisateur non autorisé");
+    }
+
+    certificationAuthorityLocalAccount =
+      await prismaClient.certificationAuthorityLocalAccount.findUnique({
+        where: {
+          id: certificationAuthorityLocalAccountId,
+          certificationAuthorityId: account.certificationAuthorityId,
+        },
+        include: {
+          certificationAuthorityLocalAccountOnDepartment: true,
+          certificationAuthorityLocalAccountOnCertification: true,
+        },
+      });
   }
 
   await Promise.all(
@@ -68,14 +87,28 @@ export const getActiveJuryCountByCategory = async ({
               let whereClause: Prisma.JuryWhereInput = {};
 
               if (!hasRole("admin") && hasRole("manage_feasibility")) {
-                whereClause = {
-                  ...whereClause,
-                  ...getJuryListQueryWhereClauseForUserWithManageRole({
-                    account,
-                    isCertificationAuthorityLocalAccount,
-                    certificationAuthorityLocalAccount,
-                  }),
-                };
+                if (
+                  hasRole("manage_certification_authority_local_account") &&
+                  certificationAuthorityLocalAccountId
+                ) {
+                  whereClause = {
+                    ...whereClause,
+                    ...getJuryListQueryWhereClauseForUserWithManageRole({
+                      account: null,
+                      isCertificationAuthorityLocalAccount: true,
+                      certificationAuthorityLocalAccount,
+                    }),
+                  };
+                } else {
+                  whereClause = {
+                    ...whereClause,
+                    ...getJuryListQueryWhereClauseForUserWithManageRole({
+                      account,
+                      isCertificationAuthorityLocalAccount,
+                      certificationAuthorityLocalAccount,
+                    }),
+                  };
+                }
               } else if (
                 hasRole("admin") &&
                 (certificationAuthorityAccount ||

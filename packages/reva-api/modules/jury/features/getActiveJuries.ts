@@ -39,35 +39,70 @@ export const getActiveJuries = async ({
       where: { keycloakId },
     });
 
-    const isCertificationAuthorityLocalAccount = !hasRole(
-      "manage_certification_authority_local_account",
-    );
+    if (
+      hasRole("manage_certification_authority_local_account") &&
+      certificationAuthorityLocalAccountId
+    ) {
+      if (!account.certificationAuthorityId) {
+        throw new Error("Utilisateur non autorisé");
+      }
 
-    const certificationAuthorityLocalAccount =
-      isCertificationAuthorityLocalAccount
-        ? await getCertificationAuthorityLocalAccountByAccountId({
-            accountId: account.id,
-          })
-        : null;
+      const certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: {
+            id: certificationAuthorityLocalAccountId,
+            certificationAuthorityId: account.certificationAuthorityId,
+          },
+        });
+      const candidacyWhereClause = {
+        ...queryWhereClause?.candidacy,
+        ...getJuryListQueryWhereClauseForUserWithManageRole({
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
+        }).candidacy,
+      };
 
-    const candidacyWhereClause = {
-      ...queryWhereClause?.candidacy,
-      ...getJuryListQueryWhereClauseForUserWithManageRole({
-        account,
-        isCertificationAuthorityLocalAccount,
-        certificationAuthorityLocalAccount,
-      }).candidacy,
-    };
+      queryWhereClause = {
+        ...queryWhereClause,
+        ...getJuryListQueryWhereClauseForUserWithManageRole({
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
+        }),
+        candidacy: candidacyWhereClause,
+      };
+    } else {
+      const isCertificationAuthorityLocalAccount = !hasRole(
+        "manage_certification_authority_local_account",
+      );
 
-    queryWhereClause = {
-      ...queryWhereClause,
-      ...getJuryListQueryWhereClauseForUserWithManageRole({
-        account,
-        isCertificationAuthorityLocalAccount,
-        certificationAuthorityLocalAccount,
-      }),
-      candidacy: candidacyWhereClause,
-    };
+      const certificationAuthorityLocalAccount =
+        isCertificationAuthorityLocalAccount
+          ? await getCertificationAuthorityLocalAccountByAccountId({
+              accountId: account.id,
+            })
+          : null;
+
+      const candidacyWhereClause = {
+        ...queryWhereClause?.candidacy,
+        ...getJuryListQueryWhereClauseForUserWithManageRole({
+          account,
+          isCertificationAuthorityLocalAccount,
+          certificationAuthorityLocalAccount,
+        }).candidacy,
+      };
+
+      queryWhereClause = {
+        ...queryWhereClause,
+        ...getJuryListQueryWhereClauseForUserWithManageRole({
+          account,
+          isCertificationAuthorityLocalAccount,
+          certificationAuthorityLocalAccount,
+        }),
+        candidacy: candidacyWhereClause,
+      };
+    }
   } else if (
     hasRole("admin") &&
     (certificationAuthorityId || certificationAuthorityLocalAccountId)

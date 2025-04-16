@@ -3,6 +3,8 @@ import {
   defaultSecurity,
   isAdmin,
   isAdminOrCertificationAuthority,
+  isAdminOrCertificationAuthorityLocalAccountOwner,
+  isAdminOrCertificationAuthorityOwner,
   isAdminOrCertificationRegistryManagerOfCertification,
   isAdminOrManager,
   isAnyone,
@@ -19,7 +21,7 @@ export const resolversSecurityMap = {
   "Query.certification_authority_searchCertificationAuthoritiesAndLocalAccounts":
     isAdmin,
   "Query.certification_authority_getCertificationAuthorityLocalAccount":
-    isAdmin,
+    isAdminOrCertificationAuthorityLocalAccountOwner,
   "Query.certification_authority_getCertificationAuthoritiesToTransferCandidacy":
     isAdminOrCertificationAuthority,
   "Query.certification_authority_getCertificationAuthorityLocalAccountsToTransferCandidacy":
@@ -53,7 +55,8 @@ export const resolversSecurityMap = {
   "CertificationAuthority.certificationAuthorityStructures": isAdmin,
   "CertificationAuthority.account": isAdmin,
 
-  "CertificationAuthorityLocalAccount.certificationAuthority": isAdmin,
+  "CertificationAuthorityLocalAccount.certificationAuthority":
+    isAdminOrCertificationAuthorityOwner,
   "CertificationAuthorityLocalAccount.account": [
     hasRole([
       "admin",

@@ -73,34 +73,66 @@ export const getCandidacyCaducites = async ({
       where: { keycloakId },
     });
 
-    const isCertificationAuthorityLocalAccount = !hasRole(
-      "manage_certification_authority_local_account",
-    );
+    if (
+      hasRole("manage_certification_authority_local_account") &&
+      certificationAuthorityLocalAccountId
+    ) {
+      if (!account.certificationAuthorityId) {
+        throw new Error("Utilisateur non autorisé");
+      }
 
-    const certificationAuthorityLocalAccount =
-      isCertificationAuthorityLocalAccount
-        ? await getCertificationAuthorityLocalAccountByAccountId({
-            accountId: account.id,
-          })
-        : null;
+      const certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: {
+            id: certificationAuthorityLocalAccountId,
+            certificationAuthorityId: account.certificationAuthorityId,
+          },
+        });
 
-    // Cette whereClause va vérifier le certificationAuthorityId dans le df du candidat et si c'est un compte local,
-    // on viendra également vérifier que le département du candidat ainsi que sa certification soient dans le périmètre du compte local
-    // Il faut qu'au moins un de ses dossiers de faisabilité remplisse les conditions
-    queryWhereClause = {
-      ...queryWhereClause,
-      Feasibility: {
-        some: {
-          ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
-            {
-              account,
-              isCertificationAuthorityLocalAccount,
-              certificationAuthorityLocalAccount,
-            },
-          ),
+      queryWhereClause = {
+        ...queryWhereClause,
+        Feasibility: {
+          some: {
+            ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+              {
+                account: null,
+                isCertificationAuthorityLocalAccount: true,
+                certificationAuthorityLocalAccount,
+              },
+            ),
+          },
         },
-      },
-    };
+      };
+    } else {
+      const isCertificationAuthorityLocalAccount = !hasRole(
+        "manage_certification_authority_local_account",
+      );
+
+      const certificationAuthorityLocalAccount =
+        isCertificationAuthorityLocalAccount
+          ? await getCertificationAuthorityLocalAccountByAccountId({
+              accountId: account.id,
+            })
+          : null;
+
+      // Cette whereClause va vérifier le certificationAuthorityId dans le df du candidat et si c'est un compte local,
+      // on viendra également vérifier que le département du candidat ainsi que sa certification soient dans le périmètre du compte local
+      // Il faut qu'au moins un de ses dossiers de faisabilité remplisse les conditions
+      queryWhereClause = {
+        ...queryWhereClause,
+        Feasibility: {
+          some: {
+            ...getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole(
+              {
+                account,
+                isCertificationAuthorityLocalAccount,
+                certificationAuthorityLocalAccount,
+              },
+            ),
+          },
+        },
+      };
+    }
   } else if (hasRole("admin")) {
     if (certificationAuthorityId) {
       const certificationAuthorityAccount =

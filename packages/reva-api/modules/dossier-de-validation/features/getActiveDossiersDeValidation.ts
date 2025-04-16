@@ -38,36 +38,71 @@ export const getActiveDossiersDeValidation = async ({
     const account = await prismaClient.account.findFirstOrThrow({
       where: { keycloakId },
     });
+    if (
+      hasRole("manage_certification_authority_local_account") &&
+      certificationAuthorityLocalAccountId
+    ) {
+      if (!account.certificationAuthorityId) {
+        throw new Error("Utilisateur non autorisé");
+      }
 
-    const isCertificationAuthorityLocalAccount = !hasRole(
-      "manage_certification_authority_local_account",
-    );
+      const certificationAuthorityLocalAccount =
+        await prismaClient.certificationAuthorityLocalAccount.findUnique({
+          where: {
+            id: certificationAuthorityLocalAccountId,
+            certificationAuthorityId: account.certificationAuthorityId,
+          },
+        });
 
-    const certificationAuthorityLocalAccount =
-      isCertificationAuthorityLocalAccount
-        ? await getCertificationAuthorityLocalAccountByAccountId({
-            accountId: account.id,
-          })
-        : null;
+      const candidacyWhereClause = {
+        ...queryWhereClause?.candidacy,
+        ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
+        }).candidacy,
+      };
 
-    const candidacyWhereClause = {
-      ...queryWhereClause?.candidacy,
-      ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
-        account,
-        isCertificationAuthorityLocalAccount,
-        certificationAuthorityLocalAccount,
-      }).candidacy,
-    };
+      queryWhereClause = {
+        ...queryWhereClause,
+        ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
+          account: null,
+          isCertificationAuthorityLocalAccount: true,
+          certificationAuthorityLocalAccount,
+        }),
+        candidacy: candidacyWhereClause,
+      };
+    } else {
+      const isCertificationAuthorityLocalAccount = !hasRole(
+        "manage_certification_authority_local_account",
+      );
 
-    queryWhereClause = {
-      ...queryWhereClause,
-      ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
-        account,
-        isCertificationAuthorityLocalAccount,
-        certificationAuthorityLocalAccount,
-      }),
-      candidacy: candidacyWhereClause,
-    };
+      const certificationAuthorityLocalAccount =
+        isCertificationAuthorityLocalAccount
+          ? await getCertificationAuthorityLocalAccountByAccountId({
+              accountId: account.id,
+            })
+          : null;
+
+      const candidacyWhereClause = {
+        ...queryWhereClause?.candidacy,
+        ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
+          account,
+          isCertificationAuthorityLocalAccount,
+          certificationAuthorityLocalAccount,
+        }).candidacy,
+      };
+
+      queryWhereClause = {
+        ...queryWhereClause,
+        ...getDossierDeValidationListQueryWhereClauseForUserWithManageRole({
+          account,
+          isCertificationAuthorityLocalAccount,
+          certificationAuthorityLocalAccount,
+        }),
+        candidacy: candidacyWhereClause,
+      };
+    }
   } else if (
     hasRole("admin") &&
     (certificationAuthorityId || certificationAuthorityLocalAccountId)
