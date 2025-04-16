@@ -28,6 +28,7 @@ const GET_CANDIDATE_WITH_CANDIDACY_QUERY = graphql(`
         otherTraining
         candidacyOnCandidacyFinancingMethods {
           id
+          amount
           additionalInformation
           candidacyFinancingMethod {
             id

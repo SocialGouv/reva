@@ -11,8 +11,7 @@ import { PageLayout } from "@/layouts/page.layout";
 import { useValidateTraining } from "./validate-training.hooks";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 
 type Condition =
   | "conditionOne"
@@ -299,19 +298,28 @@ export default function ValidateTraining() {
       {candidacy.financeModule === "hors_plateforme" && (
         <TrainingSection
           title="Modalités de financement"
-          className="flex flex-col gap-4 mb-8"
+          className="flex flex-col gap-4 mb-12"
         >
-          <div className="flex flex-wrap gap-2">
+          <p>
+            Ces éléments sont renseignés à titre indicatifs, en l'absence
+            d'information un montant approximatif a été renseigné.
+          </p>
+          <div className="grid grid-cols-[1fr_100px] gap-2">
             {candidacy.candidacyOnCandidacyFinancingMethods.map((fm) => (
-              <Tag key={fm.id}>
-                {fm.additionalInformation || fm.candidacyFinancingMethod.label}
-              </Tag>
+              <>
+                <div>{fm.candidacyFinancingMethod.label}</div>
+                <div className="font-medium ml-auto">{fm.amount} €</div>
+                <hr className="col-span-full mt-2 pb-2" />
+              </>
             ))}
+            <div>Montant total du devis que vous avez validé :</div>
+            <div className="font-medium ml-auto">
+              {candidacy.candidacyOnCandidacyFinancingMethods
+                .reduce((acc, fm) => acc + fm.amount, 0)
+                .toFixed(2)}{" "}
+              €
+            </div>
           </div>
-          <span>
-            Montant du devis que vous avez validé :{" "}
-            <strong>{candidacy.estimatedCost}€</strong>
-          </span>
         </TrainingSection>
       )}
       {!isTrainingConfirmed && !isCandidacyDropOut && (
