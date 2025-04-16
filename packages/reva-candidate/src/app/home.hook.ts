@@ -11,9 +11,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       candidacy {
         lastActivityDate
         typeAccompagnement
-        cohorteVaeCollective {
-          id
-        }
       }
     }
   }

@@ -15,7 +15,6 @@ export const LayoutNotice = () => {
   const { candidacy, isCandidateDashboardActive } = useHome();
 
   const candidacyIsAutonome = candidacy?.typeAccompagnement === "AUTONOME";
-  const candidacyIsVaeCollective = !!candidacy?.cohorteVaeCollective;
 
   if (isLoginPath) {
     return (
@@ -37,7 +36,7 @@ export const LayoutNotice = () => {
     );
   }
 
-  if (isCandidateDashboardActive && !candidacyIsVaeCollective) {
+  if (isCandidateDashboardActive) {
     const tutorialUrl = candidacyIsAutonome
       ? TUTORIAL_URL_DASHBOARD_AUTONOME
       : TUTORIAL_URL_DASHBOARD_ACCOMPAGNE;
