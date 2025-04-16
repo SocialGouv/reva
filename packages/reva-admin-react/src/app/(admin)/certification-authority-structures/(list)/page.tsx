@@ -1,11 +1,10 @@
 "use client";
-import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { Pagination } from "@/components/pagination/Pagination";
 import { graphql } from "@/graphql/generated";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import { Card } from "@codegouvfr/react-dsfr/Card";
 
 const getCertificationAuthorityStructures = graphql(`
   query getCertificationAuthorityStructures($offset: Int) {
@@ -59,17 +58,14 @@ const CertificationAuthorityStructuresListPage = () => {
             </span>
             <ul className="flex flex-col gap-2 pl-0">
               {certificationAuthorityStructuresPage.rows.map((c) => (
-                <WhiteCard key={c.id}>
-                  <span className="font-bold">{c.label}</span>
-                  <Button
-                    className="ml-auto"
-                    linkProps={{
-                      href: `/certification-authority-structures/${c.id}`,
-                    }}
-                  >
-                    Voir plus
-                  </Button>
-                </WhiteCard>
+                <Card
+                  key={c.id}
+                  enlargeLink
+                  title={c.label}
+                  linkProps={{
+                    href: `/certification-authority-structures/${c.id}`,
+                  }}
+                />
               ))}
             </ul>
             <br />
