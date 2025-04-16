@@ -61,37 +61,6 @@ test("AAP should be able to submit a basic training form when candidacy status i
   });
 });
 
-test("AAP should not be able to submit a basic training form without an estimated costwhen candidacy financeModule is 'hors_plateforme'", async () => {
-  const candidacy = await createCandidacyHelper({
-    candidacyArgs: {
-      financeModule: "hors_plateforme",
-    },
-    candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
-  });
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
-
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: organismKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "training_submitTrainingForm",
-      arguments: {
-        candidacyId: candidacy.id,
-        training: TRAINING_INPUT,
-      },
-      returnFields: "{id,status}",
-    },
-  });
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json().errors?.[0].message).toEqual(
-    "Un montant de devis doit être renseigné",
-  );
-});
-
 test("AAP should not be able to submit a basic training form without at least one financing method  when candidacy financeModule is 'hors_plateforme'", async () => {
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
@@ -112,7 +81,7 @@ test("AAP should not be able to submit a basic training form without at least on
       endpoint: "training_submitTrainingForm",
       arguments: {
         candidacyId: candidacy.id,
-        training: { ...TRAINING_INPUT, estimatedCost: 1000 },
+        training: { ...TRAINING_INPUT },
       },
       returnFields: "{id,status}",
     },
@@ -123,7 +92,7 @@ test("AAP should not be able to submit a basic training form without at least on
   );
 });
 
-test("AAP should not be able to submit a basic training form without a text when the 'other source' financing method has been checked", async () => {
+test("AAP should not be able to submit a basic training form  with an 'other source' financing method without an additional information text", async () => {
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       financeModule: "hors_plateforme",
@@ -145,9 +114,12 @@ test("AAP should not be able to submit a basic training form without a text when
         candidacyId: candidacy.id,
         training: {
           ...TRAINING_INPUT,
-          estimatedCost: 1000,
-          candidacyFinancingMethodIds: [
-            CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+          candidacyFinancingMethodInfos: [
+            {
+              candidacyFinancingMethodId:
+                CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+              amount: 4,
+            },
           ],
         },
       },
@@ -160,7 +132,7 @@ test("AAP should not be able to submit a basic training form without a text when
   );
 });
 
-test("AAP should be able to submit a basic training form when candidacy status is 'PRISE_EN_CHARGE' and its finance module is 'hors_plateforme'", async () => {
+test("AAP should be able to submit a basic training form  with an 'other source' financing method with an additional information text", async () => {
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       financeModule: "hors_plateforme",
@@ -182,11 +154,14 @@ test("AAP should be able to submit a basic training form when candidacy status i
         candidacyId: candidacy.id,
         training: {
           ...TRAINING_INPUT,
-          estimatedCost: 1000,
-          candidacyFinancingMethodIds: [
-            CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+          candidacyFinancingMethodInfos: [
+            {
+              candidacyFinancingMethodId:
+                CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+              amount: 4,
+              additionalInformation: "Autre source",
+            },
           ],
-          candidacyFinancingMethodOtherSourceText: "My other source text",
         },
       },
       returnFields: "{id,status}",

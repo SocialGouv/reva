@@ -33,9 +33,11 @@ export const submitTraining = async ({
     collectiveHourCount: number;
     additionalHourCount: number;
     isCertificationPartial: boolean;
-    candidacyFinancingMethodIds: string[];
-    candidacyFinancingMethodOtherSourceText?: string;
-    estimatedCost?: number;
+    candidacyFinancingMethodInfos: {
+      candidacyFinancingMethodId: string;
+      amount: number;
+      additionalInformation: string;
+    }[];
   };
 } & CandidacyAuditLogUserInfo) => {
   if (
@@ -67,21 +69,22 @@ export const submitTraining = async ({
   }
 
   if (candidacy.financeModule === "hors_plateforme") {
-    if (!training.estimatedCost) {
-      throw new Error("Un montant de devis doit être renseigné");
-    }
-
-    if (!training.candidacyFinancingMethodIds.length) {
+    if (!training.candidacyFinancingMethodInfos.length) {
       throw new Error(
         "Au moins une modalité de financement doit être renseignée",
       );
     }
 
+    const otherFinancingMethodInfo =
+      training.candidacyFinancingMethodInfos.find(
+        (cfm) =>
+          cfm.candidacyFinancingMethodId ===
+          CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
+      );
+
     if (
-      training.candidacyFinancingMethodIds.includes(
-        CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
-      ) &&
-      !training.candidacyFinancingMethodOtherSourceText
+      otherFinancingMethodInfo &&
+      !otherFinancingMethodInfo?.additionalInformation
     ) {
       throw new Error(
         "Un motif doit être renseigné quand la modalité de financement 'Autre source de financement' est cochée",
@@ -134,9 +137,11 @@ const updateTrainingInformations = async (params: {
     collectiveHourCount: number;
     additionalHourCount: number;
     isCertificationPartial: boolean;
-    candidacyFinancingMethodIds: string[];
-    candidacyFinancingMethodOtherSourceText?: string;
-    estimatedCost?: number;
+    candidacyFinancingMethodInfos: {
+      candidacyFinancingMethodId: string;
+      amount: number;
+      additionalInformation: string;
+    }[];
   };
 }) =>
   prismaClient.$transaction(async (tx) => {
@@ -169,31 +174,13 @@ const updateTrainingInformations = async (params: {
       },
     });
     await tx.candidacyOnCandidacyFinancingMethod.createMany({
-      data: params.training.candidacyFinancingMethodIds.map((id) => ({
+      data: params.training.candidacyFinancingMethodInfos.map((cfm) => ({
         candidacyId: params.candidacyId,
-        candidacyFinancingMethodId: id,
+        candidacyFinancingMethodId: cfm.candidacyFinancingMethodId,
+        amount: cfm.amount,
+        additionalInformation: cfm.additionalInformation,
       })),
     });
-
-    if (
-      params.training.candidacyFinancingMethodIds.find(
-        (id) => id === CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
-      )
-    ) {
-      await tx.candidacyOnCandidacyFinancingMethod.update({
-        where: {
-          candidacyId_candidacyFinancingMethodId: {
-            candidacyId: params.candidacyId,
-            candidacyFinancingMethodId:
-              CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID,
-          },
-        },
-        data: {
-          additionalInformation:
-            params.training.candidacyFinancingMethodOtherSourceText,
-        },
-      });
-    }
 
     await tx.candidacy.update({
       where: {
@@ -206,7 +193,6 @@ const updateTrainingInformations = async (params: {
         collectiveHourCount: params.training.collectiveHourCount,
         additionalHourCount: params.training.additionalHourCount,
         isCertificationPartial: params.training.isCertificationPartial,
-        estimatedCost: params.training.estimatedCost,
       },
     });
   });

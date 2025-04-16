@@ -46,9 +46,13 @@ input TrainingInput {
   basicSkillIds: [UUID!]!
   mandatoryTrainingIds: [UUID!]!
   isCertificationPartial: Boolean!
-  candidacyFinancingMethodIds: [UUID]!
-  candidacyFinancingMethodOtherSourceText: String
-  estimatedCost: Float
+  candidacyFinancingMethodInfos: [CandidacyFinancingMethodInput!]!
+}
+
+input CandidacyFinancingMethodInput {
+  candidacyFinancingMethodId: UUID!
+  amount: Float!
+  additionalInformation: String
 }
 
 type Mutation {

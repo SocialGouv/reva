@@ -7,5 +7,5 @@ export const TRAINING_INPUT = {
   basicSkillIds: [],
   mandatoryTrainingIds: [],
   isCertificationPartial: false,
-  candidacyFinancingMethodIds: [],
+  candidacyFinancingMethodInfos: [],
 };
