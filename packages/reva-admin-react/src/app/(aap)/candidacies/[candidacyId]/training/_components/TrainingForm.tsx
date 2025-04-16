@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
+import { Fragment } from "react";
 
 const trainingFormSchema = z.object({
   individualHourCount: z
@@ -359,7 +360,7 @@ export const TrainingForm = ({
             {candidacyFinancingMethodsFields
               .filter((fm) => fm.originalId !== OTHER_FINANCING_METHOD_ID)
               .map((fm, fmIndex) => (
-                <>
+                <Fragment key={fm.id}>
                   <span className="text-dsfrGray-labelGrey">{fm.label}</span>
                   <Input
                     label=""
@@ -382,7 +383,7 @@ export const TrainingForm = ({
                       errors.candidacyFinancingMethods?.message
                     }
                   />
-                </>
+                </Fragment>
               ))}
             <Checkbox
               className="col-span-2"
