@@ -401,6 +401,7 @@ const unsafeResolvers = {
       params: {
         limit?: number;
         offset?: number;
+        searchFilter?: string;
       },
     ) => getCertificationAuthorityStructures(params),
 

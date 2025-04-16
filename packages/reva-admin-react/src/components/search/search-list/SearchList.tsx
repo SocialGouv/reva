@@ -15,6 +15,7 @@ export interface SearchListProps<T> {
   searchBarProps?: {
     lifted?: boolean;
     title?: string;
+    placeholder?: string;
   };
   searchFilter: string;
   searchResultsPage: SearchResultsPage<T>;

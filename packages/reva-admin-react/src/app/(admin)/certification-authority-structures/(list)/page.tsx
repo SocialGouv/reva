@@ -1,16 +1,20 @@
 "use client";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { Pagination } from "@/components/pagination/Pagination";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { Card } from "@codegouvfr/react-dsfr/Card";
+import { SearchList } from "@/components/search/search-list/SearchList";
 
 const getCertificationAuthorityStructures = graphql(`
-  query getCertificationAuthorityStructures($offset: Int) {
+  query getCertificationAuthorityStructures(
+    $offset: Int
+    $searchFilter: String
+  ) {
     certification_authority_getCertificationAuthorityStructures(
       limit: 10
       offset: $offset
+      searchFilter: $searchFilter
     ) {
       rows {
         id
@@ -33,17 +37,32 @@ const CertificationAuthorityStructuresListPage = () => {
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
+  const searchFilter = searchParams.get("search") || "";
 
   const {
     data: getCertificationAuthorityStructuresResponse,
     status: getCertificationAuthorityStructuresStatus,
   } = useQuery({
-    queryKey: ["getCertificationAuthorityStructures", currentPage],
+    queryKey: [
+      "getCertificationAuthorityStructures",
+      searchFilter,
+      currentPage,
+    ],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityStructures, {
         offset: (currentPage - 1) * RECORDS_PER_PAGE,
+        searchFilter,
       }),
   });
+
+  if (getCertificationAuthorityStructuresStatus === "pending") {
+    return (
+      <div className="flex flex-col flex-1">
+        <h1>Structures certificatrices</h1>
+        <p>Chargement des structures certificatrices...</p>
+      </div>
+    );
+  }
 
   const certificationAuthorityStructuresPage =
     getCertificationAuthorityStructuresResponse?.certification_authority_getCertificationAuthorityStructures;
@@ -52,32 +71,25 @@ const CertificationAuthorityStructuresListPage = () => {
       <div className="flex flex-col flex-1">
         <h1>Structures certificatrices</h1>
         {getCertificationAuthorityStructuresStatus === "success" && (
-          <>
-            <span className="text-xs mb-1">
-              {certificationAuthorityStructuresPage.info.totalRows} résultats
-            </span>
-            <ul className="flex flex-col gap-2 pl-0">
-              {certificationAuthorityStructuresPage.rows.map((c) => (
-                <Card
-                  key={c.id}
-                  enlargeLink
-                  title={c.label}
-                  linkProps={{
-                    href: `/certification-authority-structures/${c.id}`,
-                  }}
-                />
-              ))}
-            </ul>
-            <br />
-            <Pagination
-              totalPages={certificationAuthorityStructuresPage.info.totalPages}
-              currentPage={
-                certificationAuthorityStructuresPage.info.currentPage
-              }
-              baseHref="/certification-authority-structures"
-              className="mx-auto"
-            />
-          </>
+          <SearchList
+            searchResultsPage={certificationAuthorityStructuresPage}
+            searchFilter={searchFilter}
+            searchBarProps={{
+              placeholder:
+                "Rechercher par nom de certificateur, nom ou email de collaborateur, région, département...",
+            }}
+          >
+            {(c) => (
+              <Card
+                key={c.id}
+                enlargeLink
+                title={c.label}
+                linkProps={{
+                  href: `/certification-authority-structures/${c.id}`,
+                }}
+              />
+            )}
+          </SearchList>
         )}
       </div>
     )

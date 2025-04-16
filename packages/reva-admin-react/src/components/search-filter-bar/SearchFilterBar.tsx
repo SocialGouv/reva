@@ -9,6 +9,7 @@ export const SearchFilterBar = ({
   searchFilter: defaultSearchFilter,
   onSearchFilterChange,
   resultCount,
+  placeholder = "Rechercher",
 }: {
   className: string;
   lifted?: boolean;
@@ -16,6 +17,7 @@ export const SearchFilterBar = ({
   searchFilter: string;
   onSearchFilterChange: (filter: string) => void;
   resultCount: number;
+  placeholder?: string;
 }) => {
   const resultCountLabel = `${resultCount} résultat${
     resultCount > 1 ? "s" : ""
@@ -36,6 +38,7 @@ export const SearchFilterBar = ({
           big={lifted}
           onButtonClick={onSearchFilterChange}
           allowEmptySearch
+          label={placeholder}
           renderInput={({ className, id, placeholder, type }) => (
             <input
               id={id}
