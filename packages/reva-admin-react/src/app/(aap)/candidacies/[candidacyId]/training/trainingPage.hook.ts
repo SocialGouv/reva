@@ -1,7 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { TrainingInput } from "@/graphql/generated/graphql";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 export const OTHER_FINANCING_METHOD_ID = "a0d5b35b-06bb-46dd-8cf5-fbba5b01c711";
@@ -34,6 +33,7 @@ const getCandidacyByIdWithReferential = graphql(`
       estimatedCost
       candidacyOnCandidacyFinancingMethods {
         additionalInformation
+        amount
         candidacyFinancingMethod {
           id
           label
@@ -55,27 +55,12 @@ const getCandidacyByIdWithReferential = graphql(`
   }
 `);
 
-const submitTrainingMutation = graphql(`
-  mutation submitTrainingForCandidacyTrainingPage(
-    $candidacyId: UUID!
-    $training: TrainingInput!
-  ) {
-    training_submitTrainingForm(
-      candidacyId: $candidacyId
-      training: $training
-    ) {
-      id
-    }
-  }
-`);
-
 export const useTrainingPage = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
 
   const { graphqlClient } = useGraphQlClient();
-  const queryClient = useQueryClient();
 
   const {
     data: getCandidacyByIdWithReferentiaData,
@@ -86,25 +71,6 @@ export const useTrainingPage = () => {
       graphqlClient.request(getCandidacyByIdWithReferential, {
         candidacyId,
       }),
-  });
-
-  const submitTraining = useMutation({
-    mutationFn: ({
-      candidacyId,
-      training,
-    }: {
-      candidacyId?: string;
-      training: TrainingInput;
-    }) =>
-      graphqlClient.request(submitTrainingMutation, {
-        candidacyId,
-        training,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [candidacyId],
-      });
-    },
   });
 
   const basicSkillsFromReferential =
@@ -125,6 +91,5 @@ export const useTrainingPage = () => {
     getCandidacyByIdWithReferentialStatus,
     candidacy,
     referential,
-    submitTraining,
   };
 };

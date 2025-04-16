@@ -13,17 +13,14 @@ import {
 import { getTypologyLabel } from "@/utils/candidateTypology.util";
 
 const TrainingPage = () => {
-  const {
-    getCandidacyByIdWithReferentialStatus,
-    candidacy,
-    referential,
-    submitTraining,
-  } = useTrainingPage();
+  const { getCandidacyByIdWithReferentialStatus, candidacy, referential } =
+    useTrainingPage();
 
-  const candidacyFinancingMethodIds =
-    candidacy?.candidacyOnCandidacyFinancingMethods?.map(
-      (c) => c.candidacyFinancingMethod.id,
-    ) || [];
+  const candidacyFinancingMethods =
+    candidacy?.candidacyOnCandidacyFinancingMethods?.map((c) => ({
+      id: c.candidacyFinancingMethod.id,
+      amount: c.amount,
+    })) || [];
 
   const candidacyFinancingMethodOtherSourceText =
     candidacy?.candidacyOnCandidacyFinancingMethods?.find(
@@ -34,14 +31,7 @@ const TrainingPage = () => {
 
   const handleFormSubmit = async (values: TrainingFormValues) => {
     try {
-      const { certificationScope, ...rest } = values;
-      await submitTraining.mutateAsync({
-        candidacyId: candidacy?.id,
-        training: {
-          ...rest,
-          isCertificationPartial: certificationScope === "PARTIAL",
-        },
-      });
+      console.log(values);
       successToast("Le parcours personnalisé a bien été envoyé.");
       router.push(`/candidacies/${candidacy?.id}/summary`);
     } catch (e) {
@@ -107,9 +97,8 @@ const TrainingPage = () => {
                       ? "PARTIAL"
                       : "COMPLETE"
                     : null,
-                candidacyFinancingMethodIds,
+                candidacyFinancingMethods,
                 candidacyFinancingMethodOtherSourceText,
-                estimatedCost: candidacy.estimatedCost,
               }}
               onSubmit={handleFormSubmit}
               disabled={isCandidacyStatusEqualOrAbove(

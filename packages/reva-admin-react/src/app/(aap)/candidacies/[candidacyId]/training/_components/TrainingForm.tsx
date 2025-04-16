@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 const trainingFormSchema = z.object({
   individualHourCount: z
@@ -48,14 +47,16 @@ const trainingFormSchema = z.object({
       message: "Merci de remplir ce champ",
     }),
   }),
-  estimatedCost: z
-    .number({ errorMap: () => ({ message: "Merci de remplir ce champ" }) })
-    .max(1000000, "La valeur de ce champ est trop élevée")
-    .optional(),
   candidacyFinancingMethods: z
-    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .object({
+      id: z.string(),
+      originalId: z.string(),
+      label: z.string(),
+      amount: z.number(),
+    })
     .array(),
 
+  candidacyFinancingMethodOtherSourceChecked: z.boolean(),
   candidacyFinancingMethodOtherSourceText: z.string().optional(),
 });
 
@@ -71,9 +72,8 @@ export interface TrainingFormValues {
   certificateSkills: string;
   otherTraining: string;
   certificationScope: "PARTIAL" | "COMPLETE";
-  candidacyFinancingMethodIds: string[];
+  candidacyFinancingMethods: { id: string; amount: number }[];
   candidacyFinancingMethodOtherSourceText?: string;
-  estimatedCost?: number;
 }
 export interface TrainingFormProps {
   defaultValues: NullablePartial<TrainingFormValues>;
@@ -124,13 +124,20 @@ export const TrainingForm = ({
       candidacyFinancingMethods: candidacyFinancingMethodsFromReferential?.map(
         (fm) => ({
           id: fm.id,
+          originalId: fm.id,
           label: fm.label,
-          checked: defaultValues?.candidacyFinancingMethodIds?.includes(fm.id),
+          amount:
+            defaultValues?.candidacyFinancingMethods?.find(
+              (cfm) => cfm.id === fm.id,
+            )?.amount || 0,
         }),
       ),
+      candidacyFinancingMethodOtherSourceChecked:
+        !!defaultValues?.candidacyFinancingMethods?.find(
+          (fm) => fm.id === OTHER_FINANCING_METHOD_ID,
+        )?.amount || false,
       candidacyFinancingMethodOtherSourceText:
         defaultValues?.candidacyFinancingMethodOtherSourceText || "",
-      estimatedCost: defaultValues?.estimatedCost || undefined,
     },
   });
 
@@ -149,7 +156,7 @@ export const TrainingForm = ({
     name: "candidacyFinancingMethods",
   });
 
-  const { candidacyFinancingMethods } = useWatch({ control });
+  const { candidacyFinancingMethodOtherSourceChecked } = useWatch({ control });
 
   const handleFormSubmit = handleSubmit(
     (data) => {
@@ -158,20 +165,11 @@ export const TrainingForm = ({
         mandatoryTrainings,
         candidacyFinancingMethods,
         candidacyFinancingMethodOtherSourceText,
-        estimatedCost,
         ...rest
       } = data;
 
       if (showCandidacyFinancingMethodFields) {
-        if (!estimatedCost) {
-          setError("estimatedCost", {
-            type: "required",
-            message: "Merci de remplir ce champ",
-          });
-          return;
-        }
-
-        if (!candidacyFinancingMethods.some((fm) => fm.checked)) {
+        if (!candidacyFinancingMethods.some((fm) => fm.amount)) {
           setError("candidacyFinancingMethods", {
             type: "required",
             message: "Merci de remplir ce champ",
@@ -181,7 +179,7 @@ export const TrainingForm = ({
 
         if (
           candidacyFinancingMethods
-            .filter((fm) => fm.checked)
+            .filter((fm) => fm.amount)
             .some((fm) => fm.id === OTHER_FINANCING_METHOD_ID) &&
           !candidacyFinancingMethodOtherSourceText
         ) {
@@ -195,24 +193,18 @@ export const TrainingForm = ({
 
       onSubmit?.({
         ...rest,
-        estimatedCost,
         candidacyFinancingMethodOtherSourceText,
         mandatoryTrainingIds: mandatoryTrainings
           .filter((t) => t.checked)
           .map((t) => t.id),
         basicSkillIds: basicSkills.filter((s) => s.checked).map((s) => s.id),
-        candidacyFinancingMethodIds: candidacyFinancingMethods
-          .filter((fm) => fm.checked)
-          .map((fm) => fm.id),
+        candidacyFinancingMethods: candidacyFinancingMethods
+          .filter((fm) => fm.amount)
+          .map((fm) => ({ id: fm.id, amount: fm.amount })),
       });
     },
     (e) => console.log({ error: e }),
   );
-
-  const candidacyFinancingMethodOtherSourceTextInputDisabled =
-    !candidacyFinancingMethods?.find(
-      (fm) => fm.id === OTHER_FINANCING_METHOD_ID,
-    )?.checked;
 
   return (
     <form className="flex flex-col" onSubmit={handleFormSubmit}>
@@ -355,60 +347,91 @@ export const TrainingForm = ({
       {showCandidacyFinancingMethodFields && (
         <>
           <h2 className="text-lg">Modalités de financement</h2>
-          <Input
-            className="lg:max-w-xl"
-            disabled={disabled}
-            label="Montant du devis validé par le candidat :"
-            nativeInputProps={{
-              ...register("estimatedCost", { valueAsNumber: true }),
-              type: "number",
-              step: "0.01",
-              min: 0,
-              inputMode: "decimal",
-            }}
-            state={errors.estimatedCost ? "error" : "default"}
-            stateRelatedMessage={errors.estimatedCost?.message}
-          />
+          <p>
+            Ces éléments sont demandés à titre indicatifs, en l'absence
+            d'information un montant approximatif peut être renseigné.
+          </p>
+          <div className="grid md:grid-cols-[1fr_180px] gap-x-20">
+            {candidacyFinancingMethodsFields
+              .filter((fm) => fm.originalId !== OTHER_FINANCING_METHOD_ID)
+              .map((fm, fmIndex) => (
+                <>
+                  <span className="text-dsfrGray-labelGrey">{fm.label}</span>
+                  <Input
+                    label=""
+                    iconId="fr-icon-money-euro-circle-line"
+                    key={fm.id}
+                    nativeInputProps={{
+                      type: "number",
+                      step: "0.01",
+                      min: 0,
+                      inputMode: "decimal",
+                      ...register(
+                        `candidacyFinancingMethods.${fmIndex}.amount`,
+                        { valueAsNumber: true },
+                      ),
+                    }}
+                    state={
+                      errors.candidacyFinancingMethods ? "error" : "default"
+                    }
+                    stateRelatedMessage={
+                      errors.candidacyFinancingMethods?.message
+                    }
+                  />
+                </>
+              ))}
 
-          <SmallNotice className="mb-6 lg:max-w-xl">
-            <span>
-              Dans le cadre d’un financement via Mon Compte Formation, le devis
-              doit être validé avant l’étude de faisabilité pour qu’elle puisse
-              être prise en charge. Si le financement mobilisé par le candidat
-              doit être sollicité après la notification de recevabilité, vous
-              pouvez renseigner un montant prévisionnel.
-            </span>
-          </SmallNotice>
+            <Checkbox
+              className="col-span-2"
+              options={[
+                {
+                  label: "Autre source de financement",
+                  nativeInputProps: {
+                    ...register("candidacyFinancingMethodOtherSourceChecked"),
+                  },
+                },
+              ]}
+            />
 
-          <Checkbox
-            disabled={disabled}
-            legend="Plusieurs financements possibles :"
-            options={candidacyFinancingMethodsFields.map((fm, fmIndex) => ({
-              label: fm.label,
-              nativeInputProps: {
-                ...register(`candidacyFinancingMethods.${fmIndex}.checked`),
-              },
-            }))}
-            state={errors.candidacyFinancingMethods ? "error" : "default"}
-            stateRelatedMessage={errors.candidacyFinancingMethods?.message}
-          />
-          <Input
-            disabled={
-              disabled || candidacyFinancingMethodOtherSourceTextInputDisabled
-            }
-            label="S’il s’agit d’une autre source de financement, merci de l’indiquer ici :"
-            nativeInputProps={{
-              ...register("candidacyFinancingMethodOtherSourceText"),
-            }}
-            state={
-              errors.candidacyFinancingMethodOtherSourceText
-                ? "error"
-                : "default"
-            }
-            stateRelatedMessage={
-              errors.candidacyFinancingMethodOtherSourceText?.message
-            }
-          />
+            {candidacyFinancingMethodOtherSourceChecked && (
+              <>
+                <Input
+                  disabled={disabled}
+                  label="S’il s’agit d’une autre source de financement, merci de l’indiquer ici :"
+                  nativeInputProps={{
+                    ...register("candidacyFinancingMethodOtherSourceText"),
+                  }}
+                  state={
+                    errors.candidacyFinancingMethodOtherSourceText
+                      ? "error"
+                      : "default"
+                  }
+                  stateRelatedMessage={
+                    errors.candidacyFinancingMethodOtherSourceText?.message
+                  }
+                />
+                <Input
+                  label=""
+                  className="mt-8"
+                  iconId="fr-icon-money-euro-circle-line"
+                  nativeInputProps={{
+                    type: "number",
+                    step: "0.01",
+                    min: 0,
+                    inputMode: "decimal",
+                    ...register(
+                      `candidacyFinancingMethods.${candidacyFinancingMethodsFields.findIndex((fm) => fm.originalId === OTHER_FINANCING_METHOD_ID)}.amount`,
+                      { valueAsNumber: true },
+                    ),
+                  }}
+                  state={errors.candidacyFinancingMethods ? "error" : "default"}
+                  stateRelatedMessage={
+                    errors.candidacyFinancingMethods?.message
+                  }
+                />
+              </>
+            )}
+          </div>
         </>
       )}
       <Button className="ml-auto" disabled={isSubmitting || disabled}>
