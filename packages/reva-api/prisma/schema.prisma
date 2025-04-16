@@ -1387,6 +1387,14 @@ model ProfessionalCgu {
   @@map("professional_cgu")
 }
 
+model ProfessionalCguCertificateur {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  version   Int      @default(autoincrement()) @map("version")
+
+  @@map("professional_cgu_certificateur")
+}
+
 model MaisonMereAAP {
   id                                  String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   raisonSociale                       String                                @map("raison_sociale") @db.VarChar(255)
