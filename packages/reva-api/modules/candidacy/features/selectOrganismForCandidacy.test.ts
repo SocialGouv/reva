@@ -197,7 +197,6 @@ test("should reset the training and update the status when selecting a new organ
     collectiveHourCount: null,
     additionalHourCount: null,
     isCertificationPartial: null,
-    estimatedCost: null,
   });
 
   expect(basicSkillsCount).toEqual(0);

@@ -166,7 +166,6 @@ test("should reset the training and status when selecting a new certification", 
     collectiveHourCount: null,
     additionalHourCount: null,
     isCertificationPartial: null,
-    estimatedCost: null,
   });
 
   expect(basicSkillsCount).toEqual(0);

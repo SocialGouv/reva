@@ -35,7 +35,6 @@ const GET_CANDIDATE_WITH_CANDIDACY_QUERY = graphql(`
             label
           }
         }
-        estimatedCost
         candidacyStatuses {
           id
           status

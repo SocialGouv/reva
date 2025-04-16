@@ -7,7 +7,6 @@ type Candidacy {
   basicSkills: [BasicSkill!]!
   mandatoryTrainings: [Training!]!
   candidacyOnCandidacyFinancingMethods: [CandidacyOnCandidacyFinancingMethod!]!
-  estimatedCost: Float
 }
 
 type CandidacyOnCandidacyFinancingMethod {

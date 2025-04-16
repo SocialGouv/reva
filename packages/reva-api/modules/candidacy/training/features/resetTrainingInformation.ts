@@ -62,7 +62,6 @@ export const resetTrainingInformation = async ({
         collectiveHourCount: null,
         additionalHourCount: null,
         isCertificationPartial: null,
-        estimatedCost: null,
       },
     });
 

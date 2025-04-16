@@ -96,7 +96,6 @@ export const updateCandidacyTypeAccompagnement = async ({
         collectiveHourCount: null,
         additionalHourCount: null,
         isCertificationPartial: null,
-        estimatedCost: null,
         firstAppointmentOccuredAt: null,
         typology: "NON_SPECIFIE",
         typologyAdditional: null,

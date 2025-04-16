@@ -31,7 +31,6 @@ const getCandidacyByIdWithReferential = graphql(`
       status
       feasibilityFormat
       financeModule
-      estimatedCost
       candidacyOnCandidacyFinancingMethods {
         additionalInformation
         amount
