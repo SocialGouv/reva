@@ -74,6 +74,7 @@ export interface TrainingFormValues {
   certificationScope: "PARTIAL" | "COMPLETE";
   candidacyFinancingMethods: { id: string; amount: number }[];
   candidacyFinancingMethodOtherSourceText?: string;
+  candidacyFinancingMethodOtherSourceChecked?: boolean;
 }
 export interface TrainingFormProps {
   defaultValues: NullablePartial<TrainingFormValues>;

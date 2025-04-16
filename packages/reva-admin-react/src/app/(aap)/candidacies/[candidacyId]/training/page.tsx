@@ -13,8 +13,12 @@ import {
 import { getTypologyLabel } from "@/utils/candidateTypology.util";
 
 const TrainingPage = () => {
-  const { getCandidacyByIdWithReferentialStatus, candidacy, referential } =
-    useTrainingPage();
+  const {
+    getCandidacyByIdWithReferentialStatus,
+    candidacy,
+    referential,
+    submitTraining,
+  } = useTrainingPage();
 
   const candidacyFinancingMethods =
     candidacy?.candidacyOnCandidacyFinancingMethods?.map((c) => ({
@@ -31,7 +35,35 @@ const TrainingPage = () => {
 
   const handleFormSubmit = async (values: TrainingFormValues) => {
     try {
-      console.log(values);
+      const {
+        certificationScope,
+        candidacyFinancingMethods,
+        candidacyFinancingMethodOtherSourceText,
+        candidacyFinancingMethodOtherSourceChecked,
+        ...rest
+      } = values;
+
+      const candidacyFinancingMethodsWithAdditionalData: {
+        candidacyFinancingMethodId: string;
+        amount: number;
+        additionalInformation?: string;
+      }[] = candidacyFinancingMethods.map((c) => ({
+        candidacyFinancingMethodId: c.id,
+        amount: c.amount,
+        additionalInformation:
+          c.id === OTHER_FINANCING_METHOD_ID
+            ? candidacyFinancingMethodOtherSourceText
+            : undefined,
+      }));
+      await submitTraining.mutateAsync({
+        candidacyId: candidacy?.id,
+        training: {
+          ...rest,
+          isCertificationPartial: certificationScope === "PARTIAL",
+          candidacyFinancingMethodInfos:
+            candidacyFinancingMethodsWithAdditionalData,
+        },
+      });
       successToast("Le parcours personnalisé a bien été envoyé.");
       router.push(`/candidacies/${candidacy?.id}/summary`);
     } catch (e) {
