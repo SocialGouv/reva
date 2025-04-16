@@ -12,6 +12,7 @@ const getCertificationAuthorityStructureWithRegistryManagerQuery = graphql(`
       certificationRegistryManager {
         id
         account {
+          id
           firstname
           lastname
           email

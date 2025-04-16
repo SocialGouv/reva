@@ -10,6 +10,7 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CertificationAuthorityStructureBreadcrumb } from "../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
+import { Impersonate } from "@/components/impersonate";
 
 const schema = z.object({
   accountFirstname: z.string().optional().default(""),
@@ -102,7 +103,16 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
         }
         pageLabel="Responsable de certifications"
       />
-      <h1>Responsable de certifications</h1>
+      <div className="flex flex-row justify-between">
+        <h1>Responsable de certifications</h1>
+
+        {certificationRegistryManager?.account.id && (
+          <Impersonate
+            accountId={certificationRegistryManager?.account.id}
+            size="small"
+          />
+        )}
+      </div>
       <p className="text-xl">
         Le responsable de certifications bénéficie d'un espace personnel sur la
         plateforme. Renseignez ses informations de connexion pour qu’il puisse
