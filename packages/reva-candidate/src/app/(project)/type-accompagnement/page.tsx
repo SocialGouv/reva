@@ -110,17 +110,17 @@ const Form = ({
             avec le certificateur, préparation au passage devant le jury, etc.
           </p>
           <p className="mt-4">
-            Ces acompagnements peuvent être financés par des dispositifs tels
-            que{" "}
+            <b>Bon à savoir : </b>Ces acompagnements peuvent être financés par
+            votre{" "}
             <a
               href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
               target="_blank"
             >
-              Mon Compte Formation
+              Compte Personnel de Formation
             </a>
-            . Nous attirons votre attention sur le fait que les frais liés à
-            votre passage devant le jury et les actions de formations
-            complémentaires sont entièrement à votre charge.
+            . À noter : si vous faites votre parcours en autonomie, les frais de
+            passage devant le jury et les formations complémentaires seront
+            entièrement à votre charge.
           </p>
         </CallOut>
       </div>
