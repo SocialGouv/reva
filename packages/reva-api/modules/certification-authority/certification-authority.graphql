@@ -20,9 +20,16 @@ type CertificationAuthorityLocalAccount {
   certificationAuthority: CertificationAuthority!
 }
 
+type CertificationAuthorityCGU {
+  version: Int
+  acceptedAt: Timestamp
+  isLatestVersion: Boolean!
+}
+
 type CertificationAuthorityStructure {
   id: ID!
   label: String!
+  cgu: CertificationAuthorityCGU!
   certifications: [Certification!]!
   certificationAuthorities: [CertificationAuthority!]!
   certificationRegistryManager: CertificationRegistryManager

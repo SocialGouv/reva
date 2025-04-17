@@ -2,6 +2,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { CertificationAuthorityLocalAccount } from "@prisma/client";
 import mercurius from "mercurius";
 
+import { getAccountById } from "../account/features/getAccount";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -20,10 +21,13 @@ import { getCertificationAuthoritiesByCertificationId } from "./features/getCert
 import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
 import { getCertificationAuthoritiesToTransferCandidacy } from "./features/getCertificationAuthoritiesToTransferCandidacy";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
+import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
 import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
+import { getCertificationAuthorityLocalAccountsToTransferCandidacy } from "./features/getCertificationAuthorityLocalAccountsToTransferCandidacy";
 import { getCertificationAuthorityRegions } from "./features/getCertificationAuthorityRegions";
 import { getCertificationAuthorityStructureById } from "./features/getCertificationAuthorityStructureById";
 import { getCertificationAuthorityStructures } from "./features/getCertificationAuthorityStructures";
+import { getCertificationAuthorityStructuresByCertificationAuthorityId } from "./features/getCertificationAuthorityStructuresByCertificationAuthorityId";
 import { getCertificationRegistryManagerByStructureId } from "./features/getCertificationRegistryManagerByStructureId";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
@@ -38,10 +42,7 @@ import { updateCertificationAuthorityDepartmentsAndCertifications } from "./feat
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
-import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
-import { getAccountById } from "../account/features/getAccount";
-import { getCertificationAuthorityStructuresByCertificationAuthorityId } from "./features/getCertificationAuthorityStructuresByCertificationAuthorityId";
-import { getCertificationAuthorityLocalAccountsToTransferCandidacy } from "./features/getCertificationAuthorityLocalAccountsToTransferCandidacy";
+import { getLastProfessionalCguCertificateur } from "./features/getLastProfessionalCguCertificateur";
 
 const unsafeResolvers = {
   CertificationAuthority: {
@@ -114,6 +115,18 @@ const unsafeResolvers = {
       id: string;
     }) =>
       getCertificationRegistryManagerByStructureId(certificationStructureId),
+    cgu: async ({
+      cguVersion,
+      cguAcceptedAt,
+    }: {
+      cguVersion: number;
+      cguAcceptedAt?: Date;
+    }) => ({
+      version: cguVersion,
+      acceptedAt: cguAcceptedAt,
+      isLatestVersion:
+        (await getLastProfessionalCguCertificateur())?.version == cguVersion,
+    }),
   },
   Mutation: {
     certification_authority_updateCertificationAuthority: async (
