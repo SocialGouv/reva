@@ -286,6 +286,7 @@ type Formacode {
 type CandidacyFinancingMethod {
   id: ID!
   label: String!
+  aapDescription: String
 }
 input ActiveCertificationsFiltersInput {
   domaines: [String!]

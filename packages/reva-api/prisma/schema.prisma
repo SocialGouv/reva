@@ -1748,6 +1748,7 @@ model OrganismOnFormacode {
 model CandidacyFinancingMethod {
   id                                  String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                               String                                @unique @db.VarChar(255)
+  aapDescription                      String?                               @map("aap_description") @db.VarChar(255) // Additional description for AAP in the admin app
   order                               Int
   createdAt                           DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                           DateTime?                             @map("updated_at") @db.Timestamptz(6)
