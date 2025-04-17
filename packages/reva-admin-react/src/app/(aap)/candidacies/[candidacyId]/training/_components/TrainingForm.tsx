@@ -52,6 +52,7 @@ const trainingFormSchema = z.object({
     .object({
       id: z.string(),
       label: z.string(),
+      aapDescription: z.string().optional().nullable(),
       amount: z.number(),
     })
     .array(),
@@ -80,7 +81,11 @@ export interface TrainingFormProps {
   defaultValues: NullablePartial<TrainingFormValues>;
   basicSkillsFromReferential: { id: string; label: string }[];
   trainingsFromReferential: { id: string; label: string }[];
-  candidacyFinancingMethodsFromReferential: { id: string; label: string }[];
+  candidacyFinancingMethodsFromReferential: {
+    id: string;
+    label: string;
+    aapDescription?: string | null;
+  }[];
   onSubmit?(values: TrainingFormValues): void;
   disabled?: boolean;
   showCertificationCompletionFields?: boolean;
@@ -127,6 +132,7 @@ export const TrainingForm = ({
         (fm) => ({
           id: fm.id,
           label: fm.label,
+          aapDescription: fm.aapDescription,
           amount:
             defaultValues?.candidacyFinancingMethods?.find(
               (cfm) => cfm.id === fm.id,
@@ -384,16 +390,26 @@ export const TrainingForm = ({
             Ces éléments sont demandés à titre indicatifs, en l'absence
             d'information un montant approximatif peut être renseigné.
           </p>
-          <div className="grid md:grid-cols-[1fr_180px] gap-x-20 mb-12">
+          <div className="grid md:grid-cols-[1fr_180px] gap-x-20 gap-y-6 mb-12">
             {candidacyFinancingMethodsFields
               .filter((fm) => fm.id !== OTHER_FINANCING_METHOD_ID)
               .map((fm, fmIndex) => (
                 <Fragment key={fm.id}>
-                  <span className="text-dsfrGray-labelGrey">{fm.label}</span>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-dsfrGray-labelGrey leading-6">
+                      {fm.label}
+                    </span>
+                    {fm.aapDescription && (
+                      <span className="text-dsfrGray-mentionGrey text-xs leading-5">
+                        {fm.aapDescription}
+                      </span>
+                    )}
+                  </div>
                   <Input
                     label=""
                     iconId="fr-icon-money-euro-circle-line"
                     key={fm.id}
+                    className="mb-0"
                     nativeInputProps={{
                       type: "number",
                       step: "0.01",

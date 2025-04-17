@@ -36,7 +36,6 @@ const getCandidacyByIdWithReferential = graphql(`
         amount
         candidacyFinancingMethod {
           id
-          label
         }
       }
     }
@@ -51,6 +50,7 @@ const getCandidacyByIdWithReferential = graphql(`
     getCandidacyFinancingMethods {
       id
       label
+      aapDescription
     }
   }
 `);
