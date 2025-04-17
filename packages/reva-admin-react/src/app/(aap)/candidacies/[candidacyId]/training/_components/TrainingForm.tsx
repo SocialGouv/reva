@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
-import { Fragment } from "react";
+import { Fragment, useCallback } from "react";
 
 const trainingFormSchema = z.object({
   individualHourCount: z
@@ -51,7 +51,6 @@ const trainingFormSchema = z.object({
   candidacyFinancingMethods: z
     .object({
       id: z.string(),
-      originalId: z.string(),
       label: z.string(),
       amount: z.number(),
     })
@@ -100,6 +99,7 @@ export const TrainingForm = ({
 }: TrainingFormProps) => {
   const {
     register,
+    setValue,
     handleSubmit,
     control,
     setError,
@@ -126,7 +126,6 @@ export const TrainingForm = ({
       candidacyFinancingMethods: candidacyFinancingMethodsFromReferential?.map(
         (fm) => ({
           id: fm.id,
-          originalId: fm.id,
           label: fm.label,
           amount:
             defaultValues?.candidacyFinancingMethods?.find(
@@ -146,16 +145,22 @@ export const TrainingForm = ({
   const { fields: basicSkillsFields } = useFieldArray({
     control,
     name: "basicSkills",
+    keyName: "_id",
   });
 
   const { fields: mandatoryTrainingsFields } = useFieldArray({
     control,
     name: "mandatoryTrainings",
+    keyName: "_id",
   });
 
-  const { fields: candidacyFinancingMethodsFields } = useFieldArray({
+  const {
+    fields: candidacyFinancingMethodsFields,
+    update: updateCandidacyFinancingMethods,
+  } = useFieldArray({
     control,
     name: "candidacyFinancingMethods",
+    keyName: "_id",
   });
 
   const {
@@ -209,6 +214,29 @@ export const TrainingForm = ({
       });
     },
     (e) => console.log({ error: e }),
+  );
+
+  const handleOtherSourceFinancingMethodChange = useCallback(
+    (checked: boolean) => {
+      if (!checked) {
+        const otherSourceFinancingMethodIndex =
+          candidacyFinancingMethodsFields.findIndex(
+            (fm) => fm.id === OTHER_FINANCING_METHOD_ID,
+          );
+
+        updateCandidacyFinancingMethods(otherSourceFinancingMethodIndex, {
+          ...candidacyFinancingMethodsFields[otherSourceFinancingMethodIndex],
+          amount: 0,
+        });
+
+        setValue("candidacyFinancingMethodOtherSourceText", "");
+      }
+    },
+    [
+      candidacyFinancingMethodsFields,
+      setValue,
+      updateCandidacyFinancingMethods,
+    ],
   );
 
   return (
@@ -358,7 +386,7 @@ export const TrainingForm = ({
           </p>
           <div className="grid md:grid-cols-[1fr_180px] gap-x-20 mb-12">
             {candidacyFinancingMethodsFields
-              .filter((fm) => fm.originalId !== OTHER_FINANCING_METHOD_ID)
+              .filter((fm) => fm.id !== OTHER_FINANCING_METHOD_ID)
               .map((fm, fmIndex) => (
                 <Fragment key={fm.id}>
                   <span className="text-dsfrGray-labelGrey">{fm.label}</span>
@@ -392,7 +420,12 @@ export const TrainingForm = ({
                 {
                   label: "Autre source de financement",
                   nativeInputProps: {
-                    ...register("candidacyFinancingMethodOtherSourceChecked"),
+                    ...register("candidacyFinancingMethodOtherSourceChecked", {
+                      onChange: (e) =>
+                        handleOtherSourceFinancingMethodChange(
+                          e.target.checked,
+                        ),
+                    }),
                   },
                 },
               ]}
@@ -424,7 +457,7 @@ export const TrainingForm = ({
                     min: 0,
                     inputMode: "decimal",
                     ...register(
-                      `candidacyFinancingMethods.${candidacyFinancingMethodsFields.findIndex((fm) => fm.originalId === OTHER_FINANCING_METHOD_ID)}.amount`,
+                      `candidacyFinancingMethods.${candidacyFinancingMethodsFields.findIndex((fm) => fm.id === OTHER_FINANCING_METHOD_ID)}.amount`,
                       { valueAsNumber: true },
                     ),
                   }}
