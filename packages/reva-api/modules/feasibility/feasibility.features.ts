@@ -76,7 +76,7 @@ export const getCertificationAuthorities = async ({
 
     // It means certification is part of cohort
     if (certificationVaeCollective) {
-      const certificationAuthorities =
+      const certificationCohorteVaeCollectiveOnCertificationAuthorities =
         await prismaClient.certificationCohorteVaeCollectiveOnCertificationAuthority.findMany(
           {
             where: {
@@ -90,8 +90,10 @@ export const getCertificationAuthorities = async ({
         );
 
       // It means there are restrictions of certification authorities for certificationId
-      if (certificationAuthorities.length > 0) {
-        return certificationAuthorities.map(
+      if (
+        certificationCohorteVaeCollectiveOnCertificationAuthorities.length > 0
+      ) {
+        return certificationCohorteVaeCollectiveOnCertificationAuthorities.map(
           ({ certificationAuthority }) => certificationAuthority,
         );
       }

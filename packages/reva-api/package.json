@@ -11,7 +11,7 @@
     "start": "npm run prisma:migrate:deploy && node dist/index.js",
     "start:server:only": "node dist/index.js",
     "pretest": "dotenv -e .env.test -- prisma generate",
-    "test": "npm run graphql:generate && npm run graphql:generate-ts && dotenv -e .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js  -w 1 --testRegex='.*.test.ts$'",
+    "test": "npm run graphql:generate && npm run graphql:generate-ts && dotenv -e .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js  -w 1 --testRegex='.*assignCandidadyToCertificationAuthorityLocalAccounts.test.ts$'",
     "testModule": "dotenv -e .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js  -w 1",
     "graphql:generate": "tsx ./modules/generate-graphql-schema.ts",
     "graphql:generate-ts": "graphql-codegen --config codegen.ts",

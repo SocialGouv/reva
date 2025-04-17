@@ -1072,16 +1072,17 @@ model CertificationAuthorityOnCertification {
 }
 
 model CertificationAuthorityLocalAccount {
-  id                                                String                                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
-  accountId                                         String                                              @unique @map("account_id") @db.Uuid
-  account                                           Account                                             @relation(fields: [accountId], references: [id])
-  certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
-  certificationAuthorityLocalAccountOnDepartment    CertificationAuthorityLocalAccountOnDepartment[]
-  certificationAuthority                            CertificationAuthority                              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId                          String                                              @map("certification_authority_id") @db.Uuid
-  certificationAuthorityLocalAccountOnCandidacy     CertificationAuthorityLocalAccountOnCandidacy[]
+  id                                                                                            String                                                                                          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt                                                                                     DateTime                                                                                        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                                                                     DateTime?                                                                                       @map("updated_at") @db.Timestamptz(6)
+  accountId                                                                                     String                                                                                          @unique @map("account_id") @db.Uuid
+  account                                                                                       Account                                                                                         @relation(fields: [accountId], references: [id])
+  certificationAuthorityLocalAccountOnCertification                                             CertificationAuthorityLocalAccountOnCertification[]
+  certificationAuthorityLocalAccountOnDepartment                                                CertificationAuthorityLocalAccountOnDepartment[]
+  certificationAuthority                                                                        CertificationAuthority                                                                          @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId                                                                      String                                                                                          @map("certification_authority_id") @db.Uuid
+  certificationAuthorityLocalAccountOnCandidacy                                                 CertificationAuthorityLocalAccountOnCandidacy[]
+  CertificationCohorteVaeCollectiveOnCertificationAuthorityOnCertificationAuthorityLocalAccount CertificationCohorteVaeCollectiveOnCertificationAuthorityOnCertificationAuthorityLocalAccount[]
 
   @@index([accountId])
   @@index([certificationAuthorityId])
@@ -1866,11 +1867,22 @@ model CertificationCohorteVaeCollectiveOnOrganism {
 }
 
 model CertificationCohorteVaeCollectiveOnCertificationAuthority {
-  id                                  String                            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  certificationCohorteVaeCollectiveId String                            @map("certification_cohorte_vae_collective_id") @db.Uuid
-  certificationCohorteVaeCollective   CertificationCohorteVaeCollective @relation(fields: [certificationCohorteVaeCollectiveId], references: [id], map: "ccvco_certification_cohorte")
-  certificationAuthorityId            String                            @map("certification_authority_id") @db.Uuid
-  certificationAuthority              CertificationAuthority            @relation(fields: [certificationAuthorityId], references: [id], map: "ccvco_certification_authority")
+  id                                                                                            String                                                                                          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationCohorteVaeCollectiveId                                                           String                                                                                          @map("certification_cohorte_vae_collective_id") @db.Uuid
+  certificationCohorteVaeCollective                                                             CertificationCohorteVaeCollective                                                               @relation(fields: [certificationCohorteVaeCollectiveId], references: [id], map: "ccvco_certification_cohorte")
+  certificationAuthorityId                                                                      String                                                                                          @map("certification_authority_id") @db.Uuid
+  certificationAuthority                                                                        CertificationAuthority                                                                          @relation(fields: [certificationAuthorityId], references: [id], map: "ccvco_certification_authority")
+  certificationCohorteVaeCollectiveOnCertificationAuthorityOnCertificationAuthorityLocalAccount CertificationCohorteVaeCollectiveOnCertificationAuthorityOnCertificationAuthorityLocalAccount[]
 
   @@map("certification_vae_collective_on_certification_authority")
+}
+
+model CertificationCohorteVaeCollectiveOnCertificationAuthorityOnCertificationAuthorityLocalAccount {
+  id                                                          String                                                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationCohorteVaeCollectiveOnCertificationAuthorityId String                                                    @map("certification_cohorte_vae_collective_certification_authority_id") @db.Uuid
+  certificationCohorteVaeCollectiveOnCertificationAuthority   CertificationCohorteVaeCollectiveOnCertificationAuthority @relation(fields: [certificationCohorteVaeCollectiveOnCertificationAuthorityId], references: [id], map: "ccvco_certification_authority")
+  certificationAuthorityLocalAccountId                        String                                                    @map("certification_authority_local_account_id") @db.Uuid
+  certificationAuthorityLocalAccount                          CertificationAuthorityLocalAccount                        @relation(fields: [certificationAuthorityLocalAccountId], references: [id], map: "ccvco_certification_authority_local_account")
+
+  @@map("certification_vae_collective_on_certification_authority_on_certification_authority_local_account")
 }
