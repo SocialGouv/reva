@@ -410,6 +410,9 @@ export const TrainingForm = ({
                     iconId="fr-icon-money-euro-circle-line"
                     key={fm.id}
                     className="mb-0"
+                    classes={{
+                      nativeInputOrTextArea: "text-right pr-8",
+                    }}
                     nativeInputProps={{
                       type: "number",
                       step: "0.01",
@@ -467,6 +470,9 @@ export const TrainingForm = ({
                   label=""
                   className="mt-8"
                   iconId="fr-icon-money-euro-circle-line"
+                  classes={{
+                    nativeInputOrTextArea: "text-right pr-8",
+                  }}
                   nativeInputProps={{
                     type: "number",
                     step: "0.01",
