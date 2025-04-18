@@ -4,7 +4,7 @@ import { prismaClient } from "../../../../prisma/client";
 const UNAUTHORIZED_ACCESS_ERROR =
   "Vous n'êtes pas autorisé à accéder à cette structure";
 
-export const isCertificationAuthorityStructureRegistryMember =
+export const getIsCertificationAuthorityStructureMember =
   (next: IFieldResolver<unknown>) =>
   async (
     root: any,
@@ -14,53 +14,52 @@ export const isCertificationAuthorityStructureRegistryMember =
   ) => {
     const userKeycloakId = context.auth?.userInfo?.sub;
 
-    const targetRegistryManagerId =
-      args.certificationRegistryManagerId ||
-      args.data?.certificationRegistryManagerId ||
-      root?.certificationRegistryManagerId ||
-      root?.id;
+    const targetCertificationAuthorityId =
+      args.certificationAuthorityId ||
+      args.data?.certificationAuthorityId ||
+      root.certificationAuthorityId ||
+      root.id;
 
     const userAccount = await prismaClient.account.findUnique({
       where: {
         keycloakId: userKeycloakId,
       },
-    });
-
-    const userRegistryManager =
-      await prismaClient.certificationRegistryManager.findFirst({
-        where: {
-          accountId: userAccount?.id,
-        },
-        select: {
-          certificationAuthorityStructure: {
-            select: { id: true },
+      select: {
+        certificationAuthority: {
+          select: {
+            certificationAuthorityOnCertificationAuthorityStructure: {
+              select: { id: true },
+            },
           },
         },
-      });
+      },
+    });
 
-    if (!userRegistryManager) {
+    if (!userAccount) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
     }
 
-    const targetRegistryManager =
-      await prismaClient.certificationRegistryManager.findUnique({
+    const targetCertificationAuthority =
+      await prismaClient.certificationAuthority.findUnique({
         where: {
-          id: targetRegistryManagerId,
+          id: targetCertificationAuthorityId,
         },
         select: {
-          certificationAuthorityStructure: {
+          certificationAuthorityOnCertificationAuthorityStructure: {
             select: { id: true },
           },
         },
       });
 
-    if (!targetRegistryManager) {
+    if (!targetCertificationAuthority) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
     }
 
     const hasMatchingAuthorityStructure =
-      userRegistryManager.certificationAuthorityStructure?.id ===
-      targetRegistryManager.certificationAuthorityStructure?.id;
+      userAccount?.certificationAuthority
+        ?.certificationAuthorityOnCertificationAuthorityStructure[0]?.id ===
+      targetCertificationAuthority
+        ?.certificationAuthorityOnCertificationAuthorityStructure[0]?.id;
 
     if (!hasMatchingAuthorityStructure) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);

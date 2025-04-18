@@ -6,11 +6,11 @@ import {
   isCandidacyOwner,
   whenHasRole,
 } from "./middlewares";
+import { getIsCertificationAuthorityStructureMember } from "./middlewares/getIsCertificationAuthorityStructureMember.security";
+import { getIsCertificationAuthorityStructureRegistryManagerMember } from "./middlewares/getIsCertificationAuthorityStructureRegistryManagerMember.security";
 import { isCandidateOwnerOfCandidacy } from "./middlewares/isCandidateOwnerOfCandidacy.security";
 import { isCertificationAuthorityLocalAccountOwner } from "./middlewares/isCertificationAuthorityLocalAccountOwner";
 import { isCertificationAuthorityOwner } from "./middlewares/isCertificationAuthorityOwner";
-import { isCertificationAuthorityStructureMember } from "./middlewares/isCertificationAuthorityStructureMember.security";
-import { isCertificationAuthorityStructureRegistryMember } from "./middlewares/isCertificationAuthorityStructureRegistryMember.security";
 import { isCertificationRegistryManagerOfCertification } from "./middlewares/isCertificationRegistryManagerOfCertification.security";
 import { isFeasibilityManager } from "./middlewares/isFeasibilityManager";
 import { isUserOwnerOfCandidate } from "./middlewares/isUserOwnerOfCandidate";
@@ -90,10 +90,22 @@ export const isAdminOrCertificationRegistryManagerOfCertification = [
 ];
 
 export const isAdminOrIsCertificationAuthorityStructureMember = [
-  hasRole(["admin", "manage_feasibility", "manage_certification_registry"]),
-  whenHasRole("manage_feasibility", isCertificationAuthorityStructureMember),
+  hasRole(["admin", "manage_feasibility"]),
+  whenHasRole("manage_feasibility", getIsCertificationAuthorityStructureMember),
+];
+
+export const isAdminOrIsCertificationAuthorityStructureRegistryManagerMember = [
+  hasRole(["admin", "manage_certification_registry"]),
   whenHasRole(
     "manage_certification_registry",
-    isCertificationAuthorityStructureRegistryMember,
+    getIsCertificationAuthorityStructureRegistryManagerMember,
+  ),
+];
+
+export const isCertificationAuthorityStructureRegistryManagerMember = [
+  hasRole(["manage_certification_registry"]),
+  whenHasRole(
+    "manage_certification_registry",
+    getIsCertificationAuthorityStructureRegistryManagerMember,
   ),
 ];

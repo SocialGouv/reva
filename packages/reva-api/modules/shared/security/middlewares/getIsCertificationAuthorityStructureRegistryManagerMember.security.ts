@@ -4,7 +4,7 @@ import { prismaClient } from "../../../../prisma/client";
 const UNAUTHORIZED_ACCESS_ERROR =
   "Vous n'êtes pas autorisé à accéder à cette structure";
 
-export const isCertificationAuthorityStructureMember =
+export const getIsCertificationAuthorityStructureRegistryManagerMember =
   (next: IFieldResolver<unknown>) =>
   async (
     root: any,
@@ -14,52 +14,53 @@ export const isCertificationAuthorityStructureMember =
   ) => {
     const userKeycloakId = context.auth?.userInfo?.sub;
 
-    const targetCertificationAuthorityId =
-      args.certificationAuthorityId ||
-      args.data?.certificationAuthorityId ||
-      root.certificationAuthorityId ||
-      root.id;
+    const targetRegistryManagerId =
+      args.certificationRegistryManagerId ||
+      args.data?.certificationRegistryManagerId ||
+      root?.certificationRegistryManagerId ||
+      root?.id;
 
     const userAccount = await prismaClient.account.findUnique({
       where: {
         keycloakId: userKeycloakId,
       },
-      select: {
-        certificationAuthority: {
-          select: {
-            certificationAuthorityOnCertificationAuthorityStructure: {
-              select: { id: true },
-            },
-          },
-        },
-      },
     });
 
-    if (!userAccount) {
-      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
-    }
-
-    const targetCertificationAuthority =
-      await prismaClient.certificationAuthority.findUnique({
+    const userRegistryManager =
+      await prismaClient.certificationRegistryManager.findFirst({
         where: {
-          id: targetCertificationAuthorityId,
+          accountId: userAccount?.id,
         },
         select: {
-          certificationAuthorityOnCertificationAuthorityStructure: {
+          certificationAuthorityStructure: {
             select: { id: true },
           },
         },
       });
 
-    if (!targetCertificationAuthority) {
+    if (!userRegistryManager) {
+      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+    }
+
+    const targetRegistryManager =
+      await prismaClient.certificationRegistryManager.findUnique({
+        where: {
+          id: targetRegistryManagerId,
+        },
+        select: {
+          certificationAuthorityStructure: {
+            select: { id: true },
+          },
+        },
+      });
+
+    if (!targetRegistryManager) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
     }
 
     const hasMatchingAuthorityStructure =
-      userAccount?.certificationAuthority
-        ?.certificationAuthorityOnCertificationAuthorityStructure[0]?.id ===
-      targetCertificationAuthority
-        ?.certificationAuthorityOnCertificationAuthorityStructure[0]?.id;
+      userRegistryManager.certificationAuthorityStructure?.id ===
+      targetRegistryManager.certificationAuthorityStructure?.id;
 
     if (!hasMatchingAuthorityStructure) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
