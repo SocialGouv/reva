@@ -6,7 +6,7 @@ import { useUpdatePrerequisitesPage } from "./updatePrerequisites.hook";
 import {
   PrerequisitesForm,
   PrerequisitesFormData,
-} from "./(components)/prerequisites-form/PrerequisitesForm";
+} from "../../../../../../components/certifications/prerequisites-form/PrerequisitesForm";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
