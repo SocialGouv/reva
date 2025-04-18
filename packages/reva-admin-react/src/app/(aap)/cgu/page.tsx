@@ -1,9 +1,9 @@
 "use client";
-import { Cgu } from "@/app/(aap)/cgu/_components/Cgu";
-import { CguForm } from "./_components/CguForm";
-import { useAppCgu } from "./page.hooks";
+import { Cgu } from "@/components/cgu/Cgu";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { CguForm } from "./_components/CguForm";
 import { HardCodedCgu } from "./_components/HardCodedCGU";
+import { useAppCgu } from "./page.hooks";
 
 export default function CguPage() {
   const { cguResponse } = useAppCgu();
