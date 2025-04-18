@@ -10,7 +10,6 @@ import {
   isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
   isAdminOrManager,
   isAnyone,
-  isCertificationAuthorityStructureRegistryManagerMember,
 } from "../shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -55,7 +54,7 @@ export const resolversSecurityMap = {
   "Mutation.certification_authority_updateCertificationAuthorityDepartments":
     isAdmin,
   "Mutation.certification_authority_acceptCgu":
-    isCertificationAuthorityStructureRegistryManagerMember,
+    isAdminOrCertificationRegistryManagerOfCertification,
 
   "CertificationAuthority.certificationAuthorityStructures":
     isAdminOrIsCertificationAuthorityStructureMember,

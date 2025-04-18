@@ -101,11 +101,3 @@ export const isAdminOrIsCertificationAuthorityStructureRegistryManagerMember = [
     getIsCertificationAuthorityStructureRegistryManagerMember,
   ),
 ];
-
-export const isCertificationAuthorityStructureRegistryManagerMember = [
-  hasRole(["manage_certification_registry"]),
-  whenHasRole(
-    "manage_certification_registry",
-    getIsCertificationAuthorityStructureRegistryManagerMember,
-  ),
-];

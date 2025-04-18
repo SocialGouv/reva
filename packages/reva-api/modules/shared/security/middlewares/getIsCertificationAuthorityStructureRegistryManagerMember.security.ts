@@ -20,6 +20,10 @@ export const getIsCertificationAuthorityStructureRegistryManagerMember =
       root?.certificationRegistryManagerId ||
       root?.id;
 
+    if (!targetRegistryManagerId) {
+      throw new Error(UNAUTHORIZED_ACCESS_ERROR);
+    }
+
     const userAccount = await prismaClient.account.findUnique({
       where: {
         keycloakId: userKeycloakId,
