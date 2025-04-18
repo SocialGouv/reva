@@ -1,16 +1,16 @@
 "use client";
 
-import { useAppCgu } from "@/app/(aap)/cgu/page.hooks";
-import { graphqlErrorToast } from "@/components/toast/toast";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { IgnoreCguModalContent } from "./IgnoreCguModalContent";
+import { useCguCertificateur } from "../cgu-certificateur.hook";
+import { IgnoreCguCertificateurModalContent } from "./IgnoreCguCertificateurModalContent";
 
 const zodSchema = z.object({
   cguAcceptance: z.literal<boolean>(true),
@@ -19,7 +19,7 @@ const zodSchema = z.object({
 type CguCertificateurFormSchema = z.infer<typeof zodSchema>;
 
 const modalIgnoreCgu = createModal({
-  id: "modal-ignore-cgu",
+  id: "modal-ignore-cgu-certificateur",
   isOpenedByDefault: true,
 });
 
@@ -32,19 +32,13 @@ export function CguCertificateurForm() {
     resolver: zodResolver(zodSchema),
   });
 
-  const router = useRouter();
-
-  const { acceptMaisonMereCgu } = useAppCgu();
-
-  const queryClient = useQueryClient();
+  const { acceptCertificateurCgu } = useCguCertificateur();
+  const { logout } = useKeycloakContext();
 
   const submitCgu = async () => {
     try {
-      await acceptMaisonMereCgu.mutateAsync();
-      queryClient.invalidateQueries({
-        queryKey: ["getMaisonMereCGUQuery"],
-      });
-      router.push("/candidacies");
+      await acceptCertificateurCgu();
+      successToast("CGU acceptées avec succès");
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -55,10 +49,7 @@ export function CguCertificateurForm() {
       <form onSubmit={handleSubmit(submitCgu)}>
         <fieldset>
           <hr className="mt-6 mb-8" />
-          <p className="text-light-text-mention-grey text-xs leading-5 -mt-6">
-            Sauf mention contraire “(optionnel)” dans le label, tous les champs
-            sont obligatoires.
-          </p>
+          <FormOptionalFieldsDisclaimer />
           <Checkbox
             options={[
               {
@@ -90,8 +81,10 @@ export function CguCertificateurForm() {
         title=" Que se passe-t-il si vous ignorez les nouvelles CGU ?"
         buttons={[
           {
-            linkProps: { href: "/candidacies" },
             children: "Ignorer les CGU",
+            nativeButtonProps: {
+              onClick: logout,
+            },
           },
 
           {
@@ -99,7 +92,7 @@ export function CguCertificateurForm() {
           },
         ]}
       >
-        <IgnoreCguModalContent />
+        <IgnoreCguCertificateurModalContent />
       </modalIgnoreCgu.Component>
     </>
   );

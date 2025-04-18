@@ -4,7 +4,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import request from "graphql-request";
+import { usePathname } from "next/navigation";
 
 const getCertificationAuthorityStructureCGUQuery = graphql(`
   query getCertificationAuthorityStructureCGUQuery {
@@ -19,24 +19,10 @@ const getCertificationAuthorityStructureCGUQuery = graphql(`
       certificationAuthority {
         certificationAuthorityStructures {
           cgu {
-            version
-            acceptedAt
             isLatestVersion
           }
         }
       }
-    }
-  }
-`);
-
-const getCguCertificateurQuery = graphql(`
-  query getCguCertificateur {
-    legals(filters: { nom: { eq: "CGU_CERTIFICATEUR" } }) {
-      documentId
-      titre
-      contenu
-      chapo
-      dateDeMiseAJour
     }
   }
 `);
@@ -53,18 +39,6 @@ export const useCertificateurLayout = () => {
 
   const { graphqlClient } = useGraphQlClient();
 
-  const { data: getCguCertificateurResponse } = useQuery({
-    queryKey: ["strapi", "getCguCertificateur"],
-    queryFn: () =>
-      request(
-        (process.env.NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL ?? "") + "/graphql",
-        getCguCertificateurQuery,
-      ),
-    enabled: isCguCertificateurActive,
-  });
-
-  const cguCertificateur = getCguCertificateurResponse?.legals?.[0];
-
   const { data: getCertificationAuthorityStructureCGU } = useQuery({
     queryKey: ["certificateur", "getCertificationAuthorityStructureCGU"],
     queryFn: () =>
@@ -78,22 +52,22 @@ export const useCertificateurLayout = () => {
     getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
       ?.certificationRegistryManager?.certificationAuthorityStructure?.cgu;
 
+  const currentPathName = usePathname();
+
+  const isOnCguPage =
+    currentPathName === "/certificateur-cgu/" ||
+    currentPathName === "/certificateur-cgu";
+
   const displayCguCertificateur =
     isCguCertificateurActive &&
     !isAdmin &&
     !certificationAuthorityStructureCGU?.isLatestVersion &&
+    !isOnCguPage &&
     (isAdminCertificationAuthority ||
       isCertificationAuthority ||
       isCertificationRegistryManager);
 
   return {
     displayCguCertificateur,
-    cguCertificateur,
   };
 };
-
-type CertificateurLayoutHookReturnType = ReturnType<
-  typeof useCertificateurLayout
->;
-export type CertificateurLayoutUseCguCertificateur =
-  CertificateurLayoutHookReturnType["cguCertificateur"];
