@@ -1,3 +1,7 @@
+type Account {
+  certificationRegistryManager: CertificationRegistryManager
+}
+
 type CertificationAuthority {
   id: ID!
   account: Account

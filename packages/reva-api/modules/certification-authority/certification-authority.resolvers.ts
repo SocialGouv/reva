@@ -1,5 +1,9 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import { CertificationAuthorityLocalAccount } from "@prisma/client";
+import {
+  Account,
+  CertificationAuthorityLocalAccount,
+  CertificationRegistryManager,
+} from "@prisma/client";
 import mercurius from "mercurius";
 
 import { getAccountById } from "../account/features/getAccount";
@@ -28,10 +32,12 @@ import { getCertificationAuthorityRegions } from "./features/getCertificationAut
 import { getCertificationAuthorityStructureById } from "./features/getCertificationAuthorityStructureById";
 import { getCertificationAuthorityStructures } from "./features/getCertificationAuthorityStructures";
 import { getCertificationAuthorityStructuresByCertificationAuthorityId } from "./features/getCertificationAuthorityStructuresByCertificationAuthorityId";
+import { getCertificationRegistryManagerByAccountId } from "./features/getCertificationRegistryManagerByAccountId";
 import { getCertificationRegistryManagerByStructureId } from "./features/getCertificationRegistryManagerByStructureId";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
+import { getLastProfessionalCguCertificateur } from "./features/getLastProfessionalCguCertificateur";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { transferCandidacyToCertificationAuthorityLocalAccount } from "./features/transferCandidacyToCertificationAuthorityLocalAccount";
@@ -42,9 +48,14 @@ import { updateCertificationAuthorityDepartmentsAndCertifications } from "./feat
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
-import { getLastProfessionalCguCertificateur } from "./features/getLastProfessionalCguCertificateur";
 
 const unsafeResolvers = {
+  Account: {
+    certificationRegistryManager: (parent: Account) =>
+      getCertificationRegistryManagerByAccountId({
+        accountId: parent.id,
+      }),
+  },
   CertificationAuthority: {
     departments: (parent: CertificationAuthority) =>
       getDepartmentsByCertificationAuthorityId({
@@ -128,6 +139,14 @@ const unsafeResolvers = {
         (await getLastProfessionalCguCertificateur())?.version == cguVersion,
     }),
   },
+  CertificationRegistryManager: {
+    certificationAuthorityStructure: (parent: CertificationRegistryManager) =>
+      getCertificationAuthorityStructureById({
+        certificationAuthorityStructureId:
+          parent.certificationAuthorityStructureId,
+      }),
+  },
+
   Mutation: {
     certification_authority_updateCertificationAuthority: async (
       _parent: unknown,

@@ -6,6 +6,7 @@ import {
   isAdminOrCertificationAuthorityLocalAccountOwner,
   isAdminOrCertificationAuthorityOwner,
   isAdminOrCertificationRegistryManagerOfCertification,
+  isAdminOrIsCertificationAuthorityStructureMember,
   isAdminOrManager,
   isAnyone,
 } from "../shared/security/presets";
@@ -52,7 +53,8 @@ export const resolversSecurityMap = {
   "Mutation.certification_authority_updateCertificationAuthorityDepartments":
     isAdmin,
 
-  "CertificationAuthority.certificationAuthorityStructures": isAdmin,
+  "CertificationAuthority.certificationAuthorityStructures":
+    isAdminOrIsCertificationAuthorityStructureMember,
   "CertificationAuthority.account": isAdmin,
 
   "CertificationAuthorityLocalAccount.certificationAuthority":
@@ -73,5 +75,6 @@ export const resolversSecurityMap = {
   "CertificationAuthorityStructure.certifications":
     isAdminOrCertificationRegistryManagerOfCertification,
 
-  "CertificationRegistryManager.certificationAuthorityStructure": isAdmin,
+  "CertificationRegistryManager.certificationAuthorityStructure":
+    isAdminOrIsCertificationAuthorityStructureMember,
 };
