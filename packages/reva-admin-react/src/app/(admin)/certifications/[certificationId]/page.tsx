@@ -229,8 +229,11 @@ const PageContent = ({
 
         <EnhancedSectionCard
           data-test="prerequisites-summary-card"
+          isEditable={isEditable}
           title="Prérequis obligatoires"
           titleIconClass="fr-icon-success-fill"
+          customButtonTitle="Modifier"
+          buttonOnClickHref={`/certifications/${certification.id}/prerequisites`}
         >
           {certification.prerequisites.length ? (
             <ul className="ml-10" data-test="prerequisite-list">
