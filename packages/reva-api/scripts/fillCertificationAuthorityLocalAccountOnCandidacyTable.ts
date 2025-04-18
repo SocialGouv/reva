@@ -33,20 +33,19 @@ const fillCertificationAuthorityLocalAccountOnCandidacyTable = async () => {
       },
     });
 
-    for (const feasibility of feasibilities) {
-      try {
-        await prismaClient.certificationAuthorityLocalAccountOnCandidacy.create(
-          {
-            data: {
-              certificationAuthorityLocalAccountId:
-                certificationAuthorityLocalAccount.id,
-              candidacyId: feasibility.candidacyId,
-            },
-          },
-        );
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      await prismaClient.certificationAuthorityLocalAccountOnCandidacy.createMany(
+        {
+          data: feasibilities.map((feasibility) => ({
+            certificationAuthorityLocalAccountId:
+              certificationAuthorityLocalAccount.id,
+            candidacyId: feasibility.candidacyId,
+          })),
+          skipDuplicates: true,
+        },
+      );
+    } catch (error) {
+      console.log(error);
     }
   }
 };
