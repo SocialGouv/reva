@@ -352,6 +352,14 @@ const unsafeResolvers = {
     ) => {
       return createCertificationRegistryManager(params.input);
     },
+    certification_authority_acceptCgu: async (
+      _parent: unknown,
+      _params: unknown,
+      context: GraphqlContext,
+    ) =>
+      certificationAuthorityAcceptCgu({
+        keycloakId: context.auth.userInfo?.sub || "",
+      }),
   },
   Query: {
     certification_authority_getCertificationAuthority: async (
@@ -448,14 +456,6 @@ const unsafeResolvers = {
     ) =>
       getCertificationAuthorityStructureById({
         certificationAuthorityStructureId: id,
-      }),
-    certification_authority_acceptCgu: async (
-      _parent: unknown,
-      _params: unknown,
-      context: GraphqlContext,
-    ) =>
-      certificationAuthorityAcceptCgu({
-        keycloakId: context.auth.userInfo?.sub || "",
       }),
   },
 };
