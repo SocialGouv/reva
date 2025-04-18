@@ -79,6 +79,12 @@ function visitFeasibility({
           "getCandidacyMenuAndCandidateInfos",
           "candidacy/candidacy-menu-dff.json",
         );
+
+        stubQuery(
+          req,
+          "candidacy_canAccessCandidacy",
+          "security/can-access-candidacy.json",
+        );
       });
     });
   });
@@ -94,6 +100,7 @@ function visitFeasibility({
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@getCandidacyByIdForAAPFeasibilityPage",
+    "@candidacy_canAccessCandidacy",
   ]);
 }
 

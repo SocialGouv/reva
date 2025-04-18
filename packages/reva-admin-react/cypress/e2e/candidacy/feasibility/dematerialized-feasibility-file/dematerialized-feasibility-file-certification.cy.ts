@@ -33,6 +33,12 @@ function visitFeasibilityCertification() {
         "getCandidacyMenuAndCandidateInfos",
         "candidacy/candidacy-menu-dff.json",
       );
+
+      stubQuery(
+        req,
+        "candidacy_canAccessCandidacy",
+        "security/can-access-candidacy.json",
+      );
     });
   });
 
@@ -47,6 +53,7 @@ function visitFeasibilityCertification() {
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@getCandidacyByIdForAapFeasibilityCertificationPage",
+    "@candidacy_canAccessCandidacy",
   ]);
 }
 

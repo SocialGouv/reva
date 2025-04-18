@@ -34,6 +34,12 @@ function visitFeasibilityEligibility() {
         "getCandidacyMenuAndCandidateInfos",
         "candidacy/candidacy-menu-dff.json",
       );
+
+      stubQuery(
+        req,
+        "candidacy_canAccessCandidacy",
+        "security/can-access-candidacy.json",
+      );
     });
   });
 
@@ -48,6 +54,7 @@ function visitFeasibilityEligibility() {
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@getCandidacyByIdForAapFeasibilityEligibilityPage",
+    "@candidacy_canAccessCandidacy",
   ]);
 }
 

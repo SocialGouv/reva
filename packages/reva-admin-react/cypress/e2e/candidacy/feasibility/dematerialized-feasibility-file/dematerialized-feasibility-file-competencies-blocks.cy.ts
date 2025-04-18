@@ -30,6 +30,12 @@ function visitFeasibilityCompetenciesBlock() {
       "getCandidacyMenuAndCandidateInfos",
       "candidacy/candidacy-menu-dff.json",
     );
+
+    stubQuery(
+      req,
+      "candidacy_canAccessCandidacy",
+      "security/can-access-candidacy.json",
+    );
   });
 
   cy.collaborateur(
@@ -43,6 +49,7 @@ function visitFeasibilityCompetenciesBlock() {
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@getBlocDeCompetencesForCompetenciesBlockPage",
+    "@candidacy_canAccessCandidacy",
   ]);
 }
 

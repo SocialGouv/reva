@@ -30,6 +30,12 @@ function visitFeasibilityPrerequisites() {
       "feasibilityWithDematerializedFeasibilityFileByCandidacyId",
       "feasibility/dematerialized-feasibility-file-prerequisites.json",
     );
+
+    stubQuery(
+      req,
+      "candidacy_canAccessCandidacy",
+      "security/can-access-candidacy.json",
+    );
   });
 
   cy.collaborateur(
@@ -43,6 +49,7 @@ function visitFeasibilityPrerequisites() {
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@feasibilityWithDematerializedFeasibilityFileByCandidacyId",
+    "@candidacy_canAccessCandidacy",
   ]);
 }
 
