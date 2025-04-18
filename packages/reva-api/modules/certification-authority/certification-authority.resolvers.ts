@@ -15,6 +15,7 @@ import { logger } from "../shared/logger";
 import { resolversSecurityMap } from "./certification-authority.security";
 import { CertificationAuthority } from "./certification-authority.types";
 import { canUserManageCertificationAuthorityLocalAccount } from "./features/canUserManageCertifiationAuthorityLocalAccount";
+import { certificationAuthorityAcceptCgu } from "./features/certificationAuthorityAcceptCgu";
 import { createCertificationAuthority } from "./features/createCertificationAuthority";
 import { createCertificationAuthorityLocalAccount } from "./features/createCertificationAuthorityLocalAccount";
 import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
@@ -447,6 +448,14 @@ const unsafeResolvers = {
     ) =>
       getCertificationAuthorityStructureById({
         certificationAuthorityStructureId: id,
+      }),
+    certification_authority_acceptCgu: async (
+      _parent: unknown,
+      _params: unknown,
+      context: GraphqlContext,
+    ) =>
+      certificationAuthorityAcceptCgu({
+        keycloakId: context.auth.userInfo?.sub || "",
       }),
   },
 };

@@ -232,4 +232,6 @@ type Mutation {
   certification_authority_createCertificationAuthority(
     input: CreateCertificationAuthorityInput!
   ): CertificationAuthority!
+
+  certification_authority_acceptCgu: Boolean!
 }
