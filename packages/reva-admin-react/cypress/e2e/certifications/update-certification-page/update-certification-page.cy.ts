@@ -303,4 +303,39 @@ context("when i access the update certification page ", () => {
       cy.get('[data-test="button-reset"]').should("not.exist");
     });
   });
+
+  context("Prerequisites summary card", () => {
+    it("display the correct number of prerequisites", function () {
+      interceptCertification();
+
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getCertificationForUpdateCertificationPage");
+
+      cy.get(
+        '[data-test="update-certification-page"] [data-test="prerequisites-summary-card"] [data-test="prerequisite-list"] [data-test="prerequisite"]',
+      ).should("have.length", 2);
+    });
+
+    it("let me click on the 'update prerequisites' button and leads me to the prerequisites update page", function () {
+      interceptCertification();
+
+      cy.admin("/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait("@getCertificationForUpdateCertificationPage");
+
+      cy.get(
+        '[data-test="update-certification-page"] [data-test="prerequisites-summary-card"]  [data-test="action-button"]',
+      ).click();
+
+      cy.url().should(
+        "eq",
+        "http://localhost:3003/admin2/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/prerequisites/",
+      );
+    });
+  });
 });

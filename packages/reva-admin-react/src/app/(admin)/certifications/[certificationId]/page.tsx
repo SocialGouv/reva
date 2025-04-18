@@ -238,7 +238,9 @@ const PageContent = ({
           {certification.prerequisites.length ? (
             <ul className="ml-10" data-test="prerequisite-list">
               {certification.prerequisites.map((p) => (
-                <li key={p.id}>{p.label}</li>
+                <li key={p.id} data-test="prerequisite">
+                  {p.label}
+                </li>
               ))}
             </ul>
           ) : (
