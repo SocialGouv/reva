@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "1.0.2",
-    "@strapi/plugin-graphql": "5.7.0",
-    "@strapi/plugin-users-permissions": "5.7.0",
-    "@strapi/strapi": "5.12.1",
+    "@strapi/plugin-graphql": "5.12.5",
+    "@strapi/plugin-users-permissions": "5.12.5",
+    "@strapi/strapi": "5.12.5",
     "better-sqlite3": "11.3.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
