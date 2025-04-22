@@ -20,7 +20,7 @@ type CguCertificateurFormSchema = z.infer<typeof zodSchema>;
 
 const modalIgnoreCgu = createModal({
   id: "modal-ignore-cgu-certificateur",
-  isOpenedByDefault: true,
+  isOpenedByDefault: false,
 });
 
 export function CguCertificateurForm() {
@@ -46,11 +46,15 @@ export function CguCertificateurForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(submitCgu)}>
+      <form
+        onSubmit={handleSubmit(submitCgu)}
+        data-test="cgu-certificateur-form"
+      >
         <fieldset>
           <hr className="mt-6 mb-8" />
           <FormOptionalFieldsDisclaimer />
           <Checkbox
+            data-test="cgu-certificateur-acceptance"
             options={[
               {
                 label:
@@ -67,10 +71,15 @@ export function CguCertificateurForm() {
             type="button"
             priority="tertiary no outline"
             onClick={modalIgnoreCgu.open}
+            data-test="cgu-certificateur-ignore"
           >
             Ignorer les CGU
           </Button>
-          <Button type="submit" disabled={!isValid}>
+          <Button
+            type="submit"
+            disabled={!isValid}
+            data-test="cgu-certificateur-submit"
+          >
             Valider les CGU
           </Button>
         </div>
@@ -84,11 +93,15 @@ export function CguCertificateurForm() {
             children: "Ignorer les CGU",
             nativeButtonProps: {
               onClick: logout,
+              "data-test": "cgu-certificateur-ignore-modal",
             },
           },
 
           {
             children: "Relire les CGU",
+            nativeButtonProps: {
+              "data-test": "cgu-certificateur-ignore-modal-relire",
+            },
           },
         ]}
       >
