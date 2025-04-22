@@ -30,16 +30,11 @@ export const getCandidacyCcns = async (
     orderBy: [{ idcc: "asc" }],
     take: limit,
     skip: offset,
+    where: { disabledAt: null },
   };
 
-  const queryCount: Prisma.CandidacyConventionCollectiveCountArgs = {};
-
-  query.where = {
-    ...query.where,
-  };
-
-  queryCount.where = {
-    ...queryCount.where,
+  const queryCount: Prisma.CandidacyConventionCollectiveCountArgs = {
+    where: { disabledAt: null },
   };
 
   if (searchFilter && searchFilter.length > 0) {

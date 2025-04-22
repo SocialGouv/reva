@@ -1444,9 +1444,13 @@ model MaisonMereAAPOnConventionCollective {
 }
 
 model CandidacyConventionCollective {
-  id        String      @id @db.Uuid
-  idcc      String      @unique @map("idcc") @db.VarChar(10)
-  label     String      @db.Text
+  id         String    @id @db.Uuid
+  idcc       String    @unique @map("idcc") @db.VarChar(10)
+  label      String    @db.Text
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime? @map("updated_at") @db.Timestamptz(6)
+  disabledAt DateTime? @map("disabled_at") @db.Timestamptz(6)
+
   Candidacy Candidacy[]
 
   @@map("candidacy_convention_collective")
