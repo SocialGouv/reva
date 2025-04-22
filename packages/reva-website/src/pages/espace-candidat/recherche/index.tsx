@@ -11,7 +11,7 @@ import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
-import Link from "next/link";
+import Card from "@codegouvfr/react-dsfr/Card";
 
 const searchCertificationsQuery = graphql(`
   query searchCertificationsQueryForResultPage(
@@ -127,17 +127,11 @@ const CertificationResultPage = ({
               </p>
               <div className="flex flex-col gap-2.5">
                 {results.map((certification) => (
-                  <div
-                    className=" bg-white border border-[#dddddd] flex-col justify-start items-start gap-2.5 inline-flex"
+                  <Card
                     key={certification.id}
-                  >
-                    <div className="flex-col gap-2.5 flex p-6">
-                      <Tag small>
-                        {certification?.isAapAvailable
-                          ? "VAE en autonomie ou accompagnée"
-                          : "VAE en autonomie"}
-                      </Tag>
-                      <p className="text-xs text-dsfrGray-mentionGrey mb-3">
+                    title={certification.label}
+                    detail={
+                      <span>
                         <Image
                           width={16}
                           height={16}
@@ -146,16 +140,24 @@ const CertificationResultPage = ({
                           aria-hidden="true"
                           className="mr-2 inline-block"
                         />
-                        RNCP {certification?.codeRncp}
-                      </p>
-                      <Link
-                        href={`/certifications/${certification?.id}`}
-                        className="text-dsfrBlue-franceSun text-xl font-bold mt-0 mb-0 !bg-none hover:underline"
-                      >
-                        {certification?.label}
-                      </Link>
-                    </div>
-                  </div>
+                        RNCP {certification.codeRncp}
+                      </span>
+                    }
+                    linkProps={{
+                      href: `/certifications/${certification?.id}`,
+                    }}
+                    enlargeLink
+                    start={
+                      <Tag small>
+                        {certification?.isAapAvailable
+                          ? "VAE en autonomie ou accompagnée"
+                          : "VAE en autonomie"}
+                      </Tag>
+                    }
+                    classes={{
+                      detail: "mt-2",
+                    }}
+                  />
                 ))}
               </div>
               <div className="flex justify-center mt-auto mb-0 pt-8">
