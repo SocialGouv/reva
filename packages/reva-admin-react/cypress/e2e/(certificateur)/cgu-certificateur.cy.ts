@@ -199,8 +199,11 @@ describe("CGU Certificateur Page", () => {
     });
 
     it("should close the modal when relire button is clicked", () => {
+      cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible");
       cy.get(SELECTORS.CGU_IGNORE_BUTTON).click();
+      cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("not.be.visible");
       cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).click();
+      cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible");
       cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).should("not.be.visible");
     });
 
