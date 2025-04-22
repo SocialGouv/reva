@@ -128,9 +128,25 @@ context("Dashboard Sidebar - Actualisation Tile", () => {
         testSetup: (candidate: CandidateFixture) => {
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
             "DEMANDE_PAIEMENT_ENVOYEE";
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque =
+            false;
+
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
             {
               decision: "PENDING",
+            };
+          return candidate;
+        },
+      },
+      {
+        description: "candidacy is dropped out",
+        testSetup: (candidate: CandidateFixture) => {
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+            "DOSSIER_FAISABILITE_RECEVABLE";
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyDropOut =
+            {
+              id: "f9ed6b93-1684-4498-8c31-091c0da24e53",
+              createdAt: new Date(),
             };
           return candidate;
         },
@@ -149,6 +165,7 @@ context("Dashboard Sidebar - Actualisation Tile", () => {
             );
 
             interceptGraphQL(candidateUpdatedForTest);
+            cy.get('[data-test="dashboard-sidebar"]').should("exist");
             cy.get('[data-test="actualisation-tile"]').should("not.exist");
           },
         );

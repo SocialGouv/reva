@@ -23,10 +23,15 @@ export const DashboardSidebar = ({
       candidacy?.activeDossierDeValidation?.decision === "INCOMPLETE");
 
   const displayActualisationTile =
-    isLastActiveStatusValidForActualisationBanner && !candidacy.isCaduque;
+    isLastActiveStatusValidForActualisationBanner &&
+    !candidacy.isCaduque &&
+    !candidacy.candidacyDropOut;
 
   return (
-    <div className={`flex flex-col gap-y-8 ${className || ""}`}>
+    <div
+      className={`flex flex-col gap-y-8 ${className || ""}`}
+      data-test="dashboard-sidebar"
+    >
       <TileGroup
         icon="fr-icon-calendar-2-line"
         title="Mes prochains rendez-vous"
