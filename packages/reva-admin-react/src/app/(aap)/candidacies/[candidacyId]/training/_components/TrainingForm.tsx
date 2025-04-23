@@ -195,7 +195,7 @@ export const TrainingForm = ({
         if (!candidacyFinancingMethods.some((fm) => fm.amount)) {
           setError("candidacyFinancingMethods", {
             type: "required",
-            message: "Merci de remplir ce champ",
+            message: "Merci de remplir au moins une source de financement",
           });
           return;
         }
@@ -512,11 +512,18 @@ export const TrainingForm = ({
               </>
             )}
             <div>Total</div>
-            <div className="font-medium ml-auto">
-              {candidacyFinancingMethods
-                ?.reduce((acc, fm) => acc + (fm?.amount || 0), 0)
-                .toFixed(2)}{" "}
-              €
+            <div className="flex flex-col">
+              <span className="font-medium ml-auto">
+                {candidacyFinancingMethods
+                  ?.reduce((acc, fm) => acc + (fm?.amount || 0), 0)
+                  .toFixed(2)}{" "}
+                €
+              </span>
+              {errors.candidacyFinancingMethods && (
+                <span className="fr-error-text col-start-2">
+                  {errors.candidacyFinancingMethods?.message}
+                </span>
+              )}
             </div>
           </div>
         </>
