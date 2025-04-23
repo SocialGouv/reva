@@ -519,7 +519,7 @@ export const TrainingForm = ({
                   .toFixed(2)}{" "}
                 €
               </span>
-              {errors.candidacyFinancingMethods && (
+              {errors.candidacyFinancingMethods?.message && (
                 <span className="fr-error-text col-start-2">
                   {errors.candidacyFinancingMethods?.message}
                 </span>
