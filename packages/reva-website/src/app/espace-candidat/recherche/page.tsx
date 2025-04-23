@@ -1,17 +1,15 @@
-import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import BackGroundUnions from "@/components/candidate-space/BackGroundUnions";
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import request from "graphql-request";
 import { graphql } from "@/graphql/generated";
 import { GRAPHQL_API_URL } from "@/config/config";
-import { SearchCertificationsQueryForResultPageQuery } from "@/graphql/generated/graphql";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
 import Card from "@codegouvfr/react-dsfr/Card";
+import { ClientSearchbar } from "./_components/ClientSearchbar";
 
 const searchCertificationsQuery = graphql(`
   query searchCertificationsQueryForResultPage(
@@ -39,16 +37,25 @@ const searchCertificationsQuery = graphql(`
   }
 `);
 
-const CertificationResultPage = ({
-  searchText,
-  results,
-  pageInfo,
+const CertificationResultPage = async ({
+  searchParams,
 }: {
-  searchText: string;
-  results: SearchCertificationsQueryForResultPageQuery["searchCertificationsForCandidate"]["rows"];
-  pageInfo: SearchCertificationsQueryForResultPageQuery["searchCertificationsForCandidate"]["info"];
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
-  const router = useRouter();
+  const searchText = (await searchParams).searchText ?? "";
+  const page = (await searchParams).page ?? "1";
+  const offset = page ? (parseInt(page) - 1) * 50 : 0;
+  const resultsResponse = await request(
+    GRAPHQL_API_URL,
+    searchCertificationsQuery,
+    {
+      searchText,
+      offset,
+    },
+  );
+  const results = resultsResponse.searchCertificationsForCandidate.rows;
+  const pageInfo = resultsResponse.searchCertificationsForCandidate.info;
+
   return (
     <MainLayout className="relative">
       <Head>
@@ -72,23 +79,7 @@ const CertificationResultPage = ({
             },
           ]}
         />
-        <CertificateAutocompleteDsfr
-          defaultLabel=""
-          defaultValue={searchText}
-          onSubmit={({ label }) => {
-            router.push({
-              pathname: "/espace-candidat/recherche",
-              query: {
-                searchText: label,
-              },
-            });
-          }}
-          onOptionSelection={(o) =>
-            router.push({
-              pathname: `/certifications/${o.value}`,
-            })
-          }
-        />
+        <ClientSearchbar searchText={searchText} />
         <div className="mt-6 flex flex-col min-h-[calc(100vh-180px)]">
           {(results?.length === 0 || searchText === "") && (
             <div className="bg-white border border-[#dddddd] p-8">
@@ -178,22 +169,3 @@ const CertificationResultPage = ({
 };
 
 export default CertificationResultPage;
-
-export async function getServerSideProps({
-  query: { searchText, page },
-}: {
-  query: { searchText: string; page: string };
-}) {
-  const offset = page ? (parseInt(page) - 1) * 50 : 0;
-  const resultsResponse = await request(
-    GRAPHQL_API_URL,
-    searchCertificationsQuery,
-    {
-      searchText,
-      offset,
-    },
-  );
-  const results = resultsResponse.searchCertificationsForCandidate.rows;
-  const pageInfo = resultsResponse.searchCertificationsForCandidate.info;
-  return { props: { searchText: searchText ?? "", results, pageInfo } };
-}
