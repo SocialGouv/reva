@@ -1891,5 +1891,5 @@ model CertificationCohorteVaeCollectiveOnCertificationAuthorityOnCertificationAu
   certificationAuthorityLocalAccountId                        String                                                    @map("certification_authority_local_account_id") @db.Uuid
   certificationAuthorityLocalAccount                          CertificationAuthorityLocalAccount                        @relation(fields: [certificationAuthorityLocalAccountId], references: [id], map: "ccvco_certification_authority_local_account")
 
-  @@map("certification_vae_collective_on_certification_authority_on_certification_authority_local_account")
+  @@map("certification_vae_collective_on_certification_authority_la")
 }
