@@ -53,7 +53,14 @@ const trainingFormSchema = z.object({
       id: z.string(),
       label: z.string(),
       aapDescription: z.string().optional().nullable(),
-      amount: z.number(),
+      amount: z
+        .number({
+          errorMap: () => ({
+            message: "Ce champ doit être un entier supérieur ou égal à zéro",
+          }),
+        })
+        .min(0)
+        .max(10000, "La valeur de ce champ est trop élevée"),
     })
     .array(),
 
@@ -245,6 +252,11 @@ export const TrainingForm = ({
     ],
   );
 
+  const otherCandidacyFinancingMethodIndex =
+    candidacyFinancingMethodsFields.findIndex(
+      (fm) => fm.id === OTHER_FINANCING_METHOD_ID,
+    );
+
   return (
     <form className="flex flex-col" onSubmit={handleFormSubmit}>
       <h2 className="text-lg">Nombre d'heures</h2>
@@ -416,7 +428,6 @@ export const TrainingForm = ({
                     nativeInputProps={{
                       type: "number",
                       step: "0.01",
-                      min: 0,
                       inputMode: "decimal",
                       ...register(
                         `candidacyFinancingMethods.${fmIndex}.amount`,
@@ -424,10 +435,13 @@ export const TrainingForm = ({
                       ),
                     }}
                     state={
-                      errors.candidacyFinancingMethods ? "error" : "default"
+                      errors.candidacyFinancingMethods?.[fmIndex]?.amount
+                        ? "error"
+                        : "default"
                     }
                     stateRelatedMessage={
-                      errors.candidacyFinancingMethods?.message
+                      errors.candidacyFinancingMethods?.[fmIndex]?.amount
+                        ?.message
                     }
                   />
                 </Fragment>
@@ -476,16 +490,23 @@ export const TrainingForm = ({
                   nativeInputProps={{
                     type: "number",
                     step: "0.01",
-                    min: 0,
                     inputMode: "decimal",
                     ...register(
-                      `candidacyFinancingMethods.${candidacyFinancingMethodsFields.findIndex((fm) => fm.id === OTHER_FINANCING_METHOD_ID)}.amount`,
+                      `candidacyFinancingMethods.${otherCandidacyFinancingMethodIndex}.amount`,
                       { valueAsNumber: true },
                     ),
                   }}
-                  state={errors.candidacyFinancingMethods ? "error" : "default"}
+                  state={
+                    errors.candidacyFinancingMethods?.[
+                      otherCandidacyFinancingMethodIndex
+                    ]?.amount
+                      ? "error"
+                      : "default"
+                  }
                   stateRelatedMessage={
-                    errors.candidacyFinancingMethods?.message
+                    errors.candidacyFinancingMethods?.[
+                      otherCandidacyFinancingMethodIndex
+                    ]?.amount?.message
                   }
                 />
               </>
