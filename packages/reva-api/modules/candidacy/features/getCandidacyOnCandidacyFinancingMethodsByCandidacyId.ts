@@ -7,4 +7,8 @@ export const getCandidacyOnCandidacyFinancingMethodsByCandidacyId = ({
 }) =>
   prismaClient.candidacy
     .findUnique({ where: { id: candidacyId } })
-    .candidacyOnCandidacyFinancingMethod();
+    .candidacyOnCandidacyFinancingMethod({
+      orderBy: {
+        candidacyFinancingMethod: { order: "asc" },
+      },
+    });
