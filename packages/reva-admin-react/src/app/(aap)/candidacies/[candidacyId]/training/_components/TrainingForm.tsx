@@ -418,6 +418,7 @@ export const TrainingForm = ({
                     )}
                   </div>
                   <Input
+                    disabled={disabled}
                     label=""
                     iconId="fr-icon-money-euro-circle-line"
                     key={fm.id}
@@ -448,6 +449,7 @@ export const TrainingForm = ({
               ))}
             <Checkbox
               className="col-span-2"
+              disabled={disabled}
               small
               options={[
                 {
@@ -481,6 +483,7 @@ export const TrainingForm = ({
                   }
                 />
                 <Input
+                  disabled={disabled}
                   label=""
                   className="mt-8"
                   iconId="fr-icon-money-euro-circle-line"
