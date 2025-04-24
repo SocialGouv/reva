@@ -307,7 +307,12 @@ export default function ValidateTraining() {
           <div className="grid grid-cols-[1fr_100px] gap-2">
             {candidacy.candidacyOnCandidacyFinancingMethods.map((fm) => (
               <>
-                <div>{fm.candidacyFinancingMethod.label}</div>
+                <div>
+                  {fm.candidacyFinancingMethod.label}{" "}
+                  {fm.additionalInformation
+                    ? ` (${fm.additionalInformation})`
+                    : ""}
+                </div>
                 <div className="font-medium ml-auto">{fm.amount} €</div>
                 <hr className="col-span-full mt-2 pb-2" />
               </>
