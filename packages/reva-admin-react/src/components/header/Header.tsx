@@ -79,6 +79,32 @@ export const Header = () => {
     },
   ];
 
+  const adminCertificationAuthorityTabs = [
+    {
+      text: candidaciesLabel,
+      linkProps: {
+        href: "/candidacies/feasibilities",
+        target: "_self",
+      },
+      isActive: !!(
+        currentPathname.match(
+          /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)|(caducites)/,
+        ) ||
+        currentPathname.match(
+          /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/,
+        )
+      ),
+    },
+    {
+      text: "Gestion des comptes locaux",
+      linkProps: {
+        href: "/certification-authorities/local-accounts/",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith("/certification-authorities"),
+    },
+  ];
+
   const navigation = authenticated
     ? [
         ...(isAdmin || isOrganism || isGestionnaireMaisonMereAAP
@@ -115,7 +141,7 @@ export const Header = () => {
             ]
           : []),
         ...(isAdmin ? adminTabs : []),
-        ...(isAdmin || isAdminCertificationAuthority || isCertificationAuthority
+        ...(isAdmin || isCertificationAuthority
           ? [
               {
                 text: candidaciesLabel,
@@ -134,21 +160,10 @@ export const Header = () => {
               },
             ]
           : []),
-        ...(isAdminCertificationAuthority
-          ? [
-              {
-                text: "Gestion des comptes locaux",
-                linkProps: {
-                  href: "/certification-authorities/local-accounts/",
-                  target: "_self",
-                },
-                isActive: currentPathname.startsWith(
-                  "/certification-authorities",
-                ),
-              },
-            ]
-          : []),
         ...(isCertificationRegistryManager ? registryManagerTabs : []),
+        ...(isAdminCertificationAuthority
+          ? adminCertificationAuthorityTabs
+          : []),
       ]
     : [
         {
