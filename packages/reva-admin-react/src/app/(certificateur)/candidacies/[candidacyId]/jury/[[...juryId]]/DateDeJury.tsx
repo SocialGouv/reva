@@ -1,6 +1,14 @@
 "use client";
+import {
+  add,
+  endOfDay,
+  format,
+  isAfter,
+  isBefore,
+  startOfDay,
+  toDate,
+} from "date-fns";
 import { useEffect, useState } from "react";
-import { add, endOfDay, format, isAfter, isBefore, startOfDay } from "date-fns";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -12,9 +20,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useJuryPageLogic } from "./juryPageLogic";
 import { DateDeJuryCard } from "./DateDeJuryCard";
 import { HistoryDateDeJuryView } from "./HistoryDateDeJuryView";
+import { useJuryPageLogic } from "./juryPageLogic";
 
 const schema = z
   .object({
@@ -34,7 +42,7 @@ const schema = z
         code: z.ZodIssueCode.custom,
       });
     }
-    if (isAfter(new Date(date), endOfDay(add(new Date(), { years: 2 })))) {
+    if (isAfter(toDate(date), endOfDay(add(new Date(), { years: 2 })))) {
       ctx.addIssue({
         path: ["date"],
         message: "La date doit être inférieure à 2 ans",
@@ -63,9 +71,9 @@ export const DateDeJury = (): JSX.Element => {
     if (candidacy?.jury?.dateOfSession) {
       setValue(
         "date",
-        format(new Date(candidacy.jury.dateOfSession), "yyyy-MM-dd"),
+        format(toDate(candidacy.jury.dateOfSession), "yyyy-MM-dd"),
       );
-      setValue("time", format(new Date(candidacy.jury.dateOfSession), "HH:mm"));
+      setValue("time", format(toDate(candidacy.jury.dateOfSession), "HH:mm"));
     }
   }, [candidacy?.jury?.dateOfSession, setValue]);
 
@@ -74,7 +82,7 @@ export const DateDeJury = (): JSX.Element => {
       setValue(
         "dossierValidationUpdatedAt",
         format(
-          new Date(candidacy.activeDossierDeValidation.updatedAt),
+          toDate(candidacy.activeDossierDeValidation.updatedAt),
           "yyyy-MM-dd",
         ),
       );
@@ -84,19 +92,17 @@ export const DateDeJury = (): JSX.Element => {
   const handleFormSubmit = handleSubmit(async (data) => {
     if (candidacy?.id) {
       try {
-        let date = new Date(`${data.date}T00:00:00`).valueOf().toString();
+        let date = toDate(`${data.date}T00:00:00`).valueOf().toString();
         let time;
         if (data.time) {
-          date = new Date(data.date)
+          date = toDate(data.date)
             .setHours(
               Number(data.time.split(":")[0]),
               Number(data.time.split(":")[1]),
             )
             .valueOf()
             .toString();
-          time = new Date(
-            format(`${data.date}T${data.time}`, "yyyy-MM-dd HH:mm"),
-          )
+          time = toDate(format(`${data.date}T${data.time}`, "yyyy-MM-dd HH:mm"))
             .valueOf()
             .toString();
         }

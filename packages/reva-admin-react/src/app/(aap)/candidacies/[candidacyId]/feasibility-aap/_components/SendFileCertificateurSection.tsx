@@ -5,7 +5,7 @@ import {
 } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 
 const AlertDffState = ({
@@ -81,7 +81,7 @@ export const SendFileCertificationAuthoritySection = ({
       <AlertDffState
         sentToCertificationAuthorityAt={
           sentToCertificationAuthorityAt
-            ? new Date(sentToCertificationAuthorityAt)
+            ? toDate(sentToCertificationAuthorityAt)
             : null
         }
         decisionSentAt={decisionSentAt}

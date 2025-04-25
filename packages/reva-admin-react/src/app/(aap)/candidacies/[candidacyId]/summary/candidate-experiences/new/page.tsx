@@ -8,7 +8,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { ExperienceInput } from "@/graphql/generated/graphql";
 import { useMutation } from "@tanstack/react-query";
-import { parse } from "date-fns";
+import { parseISO } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 
 const addCandidacyExperienceMutation = graphql(`
@@ -46,11 +46,7 @@ const NewCandidateExperiencePage = () => {
         title: formData.title,
         description: formData.description,
         duration: formData.duration,
-        startedAt: parse(
-          formData.startedAt,
-          "yyyy-MM-dd",
-          new Date(),
-        ).getTime(),
+        startedAt: parseISO(formData.startedAt).getTime(),
       });
       successToast("Expérience ajoutée");
       router.push(`/candidacies/${candidacyId}/summary`);

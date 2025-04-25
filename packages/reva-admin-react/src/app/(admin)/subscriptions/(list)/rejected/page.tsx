@@ -4,6 +4,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
+import { toDate } from "date-fns";
 import { useSearchParams } from "next/navigation";
 
 const getRejectedSubscriptionRequests = graphql(`
@@ -65,7 +66,7 @@ const RejectedSubscriptionRequestsPage = () => {
             key={r.id}
             companyName={r.companyName}
             createdAtLabel="Date d'envoi de l'inscription"
-            createdAt={new Date(r.createdAt)}
+            createdAt={toDate(r.createdAt)}
             href={`/subscriptions/${r.id}`}
           />
         )}

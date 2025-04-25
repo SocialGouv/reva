@@ -9,7 +9,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, parse } from "date-fns";
+import { format, parse, toDate } from "date-fns";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -40,15 +40,12 @@ const ExamInfoPage = () => {
     () => ({
       estimatedExamDate: candidacy?.examInfo?.estimatedExamDate
         ? format(
-            new Date(candidacy?.examInfo?.estimatedExamDate || 0),
+            toDate(candidacy?.examInfo?.estimatedExamDate || 0),
             "yyyy-MM-dd",
           )
         : undefined,
       actualExamDate: candidacy?.examInfo?.actualExamDate
-        ? format(
-            new Date(candidacy?.examInfo?.actualExamDate || 0),
-            "yyyy-MM-dd",
-          )
+        ? format(toDate(candidacy?.examInfo?.actualExamDate || 0), "yyyy-MM-dd")
         : undefined,
       examResult: candidacy?.examInfo?.examResult || undefined,
     }),

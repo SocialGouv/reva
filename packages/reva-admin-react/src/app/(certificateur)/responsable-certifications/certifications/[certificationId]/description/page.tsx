@@ -1,27 +1,26 @@
 "use client";
-import { ReactNode, useMemo } from "react";
 import { TZDate } from "@date-fns/tz";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
+import { useParams, useRouter } from "next/navigation";
+import { ReactNode, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Input from "@codegouvfr/react-dsfr/Input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useUpdateCertificationDescriptionPage } from "./updateCertificationDescription.hook";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import Notice from "@codegouvfr/react-dsfr/Notice";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import Notice from "@codegouvfr/react-dsfr/Notice";
 import Select from "@codegouvfr/react-dsfr/Select";
+import Tag from "@codegouvfr/react-dsfr/Tag";
+import { useUpdateCertificationDescriptionPage } from "./updateCertificationDescription.hook";
 
-import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
 import { FranceCompetencesLogo } from "@/components/logo/france-competences-logo/FranceCompetencesLogo";
+import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
 
 const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   {
@@ -244,7 +243,7 @@ const PageContent = ({
           (modality) => modality.id == "SOUTENANCE_ORALE",
         )[0];
 
-        const startOfVisibility = new Date(data.startOfVisibility);
+        const startOfVisibility = toDate(data.startOfVisibility);
         const tzStartOfVisibility = new TZDate(
           startOfVisibility.getFullYear(),
           startOfVisibility.getMonth(),
@@ -252,7 +251,7 @@ const PageContent = ({
           "Europe/Paris",
         );
 
-        const endOfVisibility = new Date(data.endOfVisibility);
+        const endOfVisibility = toDate(data.endOfVisibility);
         const tzEndOfVisibility = new TZDate(
           endOfVisibility.getFullYear(),
           endOfVisibility.getMonth(),

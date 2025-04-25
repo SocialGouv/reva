@@ -7,7 +7,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isBefore } from "date-fns";
+import { isBefore, parseISO, toDate } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -41,7 +41,7 @@ const schema = z
           message: "Veuillez sélectionner une date de fin de validité",
           path: ["eligibilityValidUntil"],
         });
-      } else if (isBefore(new Date(eligibilityValidUntil), new Date())) {
+      } else if (isBefore(toDate(eligibilityValidUntil), new Date())) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Merci d'indiquer une date postérieure à la date du jour",
@@ -118,7 +118,7 @@ export default function EligibilityPage() {
     const eligibilityValidUntilDate =
       eligibilityValidUntil &&
       eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT"
-        ? new Date(eligibilityValidUntil).getTime()
+        ? parseISO(eligibilityValidUntil).getTime()
         : undefined;
 
     const input = {

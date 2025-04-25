@@ -6,7 +6,7 @@ import {
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import Link from "next/link";
 
 interface Props {
@@ -97,7 +97,7 @@ export function FeasibilityBanner({
             className="mb-12"
             severity="error"
             data-test="feasibility-decision-rejected"
-            title={`Dossier déclaré comme "non recevable" le ${new Date(decisionSentAt!).toLocaleDateString("fr-FR")}`}
+            title={`Dossier déclaré comme "non recevable" le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <p>
                 Si vous avez précisé les motifs de cette décision, ils seront
@@ -121,7 +121,7 @@ export function FeasibilityBanner({
             className="mb-12"
             severity="warning"
             data-test="feasibility-decision-incomplete"
-            title={`Dossier renvoyé car "incomplet" le ${new Date(decisionSentAt!).toLocaleDateString("fr-FR")}`}
+            title={`Dossier renvoyé car "incomplet" le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <p>
                 Le dossier a été renvoyé au candidat car "incomplet". Si vous
@@ -151,7 +151,7 @@ export function FeasibilityBanner({
             severity="success"
             data-test="feasibility-decision-admissible"
             small
-            description={`Recevabilité acceptée le  ${new Date(decisionSentAt!).toLocaleDateString("fr-FR")}`}
+            description={`Recevabilité acceptée le  ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
           />
           {feasibilityHistory.length > 0 && (
             <FeasibilityDecisionHistory history={feasibilityHistory} />

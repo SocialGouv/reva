@@ -1,14 +1,17 @@
 "use client";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { Typology } from "@/components/organism-summary/OrganismSummary";
-import { OrganismSummary } from "@/components/organism-summary/OrganismSummary";
+import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
+import { Info } from "@/components/organism-summary/Info";
+import {
+  OrganismSummary,
+  Typology,
+} from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
+import { toDate } from "date-fns";
 import { useParams } from "next/navigation";
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
-import { Info } from "@/components/organism-summary/Info";
-import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {
@@ -108,9 +111,9 @@ const MaisonMereAAPPage = () => {
           accountLastname={maisonMereAAP.gestionnaire.lastname || ""}
           accountEmail={maisonMereAAP.gestionnaire.email}
           accountPhoneNumber={maisonMereAAP.phone || ""}
-          companyQualiopiCertificateExpiresAt={
-            new Date(maisonMereAAP.dateExpirationCertificationQualiopi || "")
-          }
+          companyQualiopiCertificateExpiresAt={toDate(
+            maisonMereAAP.dateExpirationCertificationQualiopi || "",
+          )}
           companySiret={maisonMereAAP.siret}
           companyLegalStatus={maisonMereAAP.statutJuridique}
           companyWebsite={maisonMereAAP.siteWeb}
@@ -118,7 +121,7 @@ const MaisonMereAAPPage = () => {
           ccns={maisonMereAAP.maisonMereAAPOnConventionCollectives.map(
             (c) => c.ccn.label,
           )}
-          createdAt={new Date(maisonMereAAP.createdAt)}
+          createdAt={toDate(maisonMereAAP.createdAt)}
           companyManagerFirstname={
             maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP ==
             "A_JOUR"
@@ -134,8 +137,8 @@ const MaisonMereAAPPage = () => {
           legalInformationDocumentsDecisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
             (d) => ({
               ...d,
-              aapUpdatedDocumentsAt: new Date(d.aapUpdatedDocumentsAt),
-              decisionTakenAt: new Date(d.decisionTakenAt),
+              aapUpdatedDocumentsAt: toDate(d.aapUpdatedDocumentsAt),
+              decisionTakenAt: toDate(d.decisionTakenAt),
             }),
           )}
           statutValidationInformationsJuridiquesMaisonMereAAP={

@@ -4,6 +4,7 @@ import {
   CandidacyCountByStatus,
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import {
@@ -11,7 +12,7 @@ import {
   CandidacyCard,
   useCandidacies,
 } from "./_components";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { toDate } from "date-fns";
 
 export default function CandidaciesPage() {
   const pathname = usePathname();
@@ -116,7 +117,7 @@ export default function CandidaciesPage() {
                 candidacy.candidacyStatuses.some(
                   (s) => s.status === "VALIDATION",
                 )
-                  ? new Date(
+                  ? toDate(
                       candidacy.candidacyStatuses.find(
                         (s) => s.status === "VALIDATION",
                       )?.createdAt || 0,

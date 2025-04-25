@@ -9,12 +9,12 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  addMonths,
   format,
-  parse,
   isAfter,
   isBefore,
+  parseISO,
   startOfToday,
-  addMonths,
 } from "date-fns";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
@@ -32,12 +32,7 @@ const schema = z
   .superRefine(({ firstAppointmentOccuredAt, candidacyCreatedAt }, ctx) => {
     const today = startOfToday();
 
-    if (
-      isAfter(
-        parse(firstAppointmentOccuredAt, "yyyy-MM-dd", new Date()),
-        addMonths(today, 3),
-      )
-    ) {
+    if (isAfter(parseISO(firstAppointmentOccuredAt), addMonths(today, 3))) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["firstAppointmentOccuredAt"],
@@ -47,8 +42,8 @@ const schema = z
 
     if (
       isBefore(
-        parse(firstAppointmentOccuredAt, "yyyy-MM-dd", new Date()),
-        parse(candidacyCreatedAt, "yyyy-MM-dd", new Date()),
+        parseISO(firstAppointmentOccuredAt),
+        parseISO(candidacyCreatedAt),
       )
     ) {
       ctx.addIssue({
@@ -143,11 +138,7 @@ const MeetingsPage = () => {
     try {
       await updateCandidacyFirstAppointmentInformations.mutateAsync({
         candidacyId,
-        firstAppointmentOccuredAt: parse(
-          data.firstAppointmentOccuredAt,
-          "yyyy-MM-dd",
-          new Date(),
-        ),
+        firstAppointmentOccuredAt: parseISO(data.firstAppointmentOccuredAt),
       });
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
       successToast("Les modifications ont bien été enregistrées");

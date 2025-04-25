@@ -4,6 +4,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
+import { toDate } from "date-fns";
 import { useSearchParams } from "next/navigation";
 
 const getLegalVerificationPendingSubscriptionRequests = graphql(`
@@ -72,7 +73,7 @@ const ValidatedSubscriptionRequestsPage = () => {
             key={r.id}
             companyName={r.raisonSociale}
             createdAtLabel="Date d'envoi de l'inscription"
-            createdAt={new Date(r.createdAt)}
+            createdAt={toDate(r.createdAt)}
             href={`/maisonMereAAPs/${r.id}`}
           />
         )}

@@ -1,7 +1,7 @@
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import { GrayCard } from "../card/gray-card/GrayCard";
 import { useEtablissement } from "./CompanyPreview.hooks";
 
@@ -76,7 +76,7 @@ export const CompanyPreview = (props: Props) => {
             siegeSocial={etablissement.siegeSocial}
             dateFermeture={
               etablissement.dateFermeture
-                ? new Date(etablissement.dateFermeture)
+                ? toDate(etablissement.dateFermeture)
                 : null
             }
             qualiopiStatus={!!etablissement.qualiopiStatus}

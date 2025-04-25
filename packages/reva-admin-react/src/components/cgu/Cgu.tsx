@@ -1,5 +1,6 @@
 "use client";
 import { BlocksContent, BlocksRenderer } from "@strapi/blocks-react-renderer";
+import { toDate } from "date-fns";
 
 export const Cgu = ({
   cguHtml,
@@ -23,8 +24,7 @@ export const Cgu = ({
     <div dangerouslySetInnerHTML={{ __html: cguHtml }} />
     <br />
     <p>
-      Dernière version des CGU :{" "}
-      {new Date(updatedAt).toLocaleDateString("fr-FR")}
+      Dernière version des CGU : {toDate(updatedAt).toLocaleDateString("fr-FR")}
     </p>
   </>
 );

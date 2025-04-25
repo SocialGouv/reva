@@ -2,25 +2,25 @@
 
 import { useParams, useRouter } from "next/navigation";
 
+import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useAapDossierDeValidationPage } from "./aapDossierDeValidation.hooks";
-import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { parse } from "date-fns";
 import {
-  successToast,
-  graphqlErrorToast,
   errorToast,
+  graphqlErrorToast,
+  successToast,
 } from "@/components/toast/toast";
-import {
-  ReadyForJuryEstimatedAtSchemaFormData,
-  ReadyForJuryEstimatedDateTab,
-} from "./_components/ReadyForJuryEstimatedDateTab";
-import { ReadOnlyDossierDeValidationView } from "./_components/ReadOnlyDossierDeValidationView";
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import {
   DossierDeValidationFormData,
   DossierDeValidationTab,
 } from "./_components/DossierDeValidationTab";
-import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
+import { ReadOnlyDossierDeValidationView } from "./_components/ReadOnlyDossierDeValidationView";
+import {
+  ReadyForJuryEstimatedAtSchemaFormData,
+  ReadyForJuryEstimatedDateTab,
+} from "./_components/ReadyForJuryEstimatedDateTab";
+import { useAapDossierDeValidationPage } from "./aapDossierDeValidation.hooks";
+import { parseISO } from "date-fns";
 
 const AapDossierDeValidationPage = () => {
   const router = useRouter();
@@ -43,11 +43,7 @@ const AapDossierDeValidationPage = () => {
   }: ReadyForJuryEstimatedAtSchemaFormData) => {
     try {
       await setReadyForJuryEstimatedAt.mutateAsync({
-        readyForJuryEstimatedAt: parse(
-          readyForJuryEstimatedAt,
-          "yyyy-MM-dd",
-          new Date(),
-        ).getTime(),
+        readyForJuryEstimatedAt: parseISO(readyForJuryEstimatedAt).getTime(),
       });
       successToast("modifications enregistrées");
     } catch (e) {

@@ -8,6 +8,7 @@ import { LegalStatus, MaisonMereAap } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
+import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { UseFormRegister } from "react-hook-form";
@@ -187,7 +188,7 @@ const GeneralInformationPage = () => {
                     siegeSocial={etablissement.siegeSocial}
                     dateFermeture={
                       etablissement.dateFermeture
-                        ? new Date(etablissement.dateFermeture)
+                        ? toDate(etablissement.dateFermeture)
                         : null
                     }
                     qualiopiStatus={!!etablissement.qualiopiStatus}
@@ -225,7 +226,7 @@ const GeneralInformationPage = () => {
                   decisions={maisonMereAAP.legalInformationDocumentsDecisions.map(
                     (d) => ({
                       ...d,
-                      decisionTakenAt: new Date(d.decisionTakenAt),
+                      decisionTakenAt: toDate(d.decisionTakenAt),
                     }),
                   )}
                 />

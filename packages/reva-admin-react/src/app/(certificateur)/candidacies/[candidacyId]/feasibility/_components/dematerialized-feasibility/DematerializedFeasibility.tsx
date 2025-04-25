@@ -16,7 +16,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -211,7 +211,7 @@ export const DematerializedFeasibility = () => {
   const organism = candidacy.organism;
 
   const feasibilityDecisionSentAt = feasibility?.decisionSentAt
-    ? new Date(feasibility.decisionSentAt)
+    ? toDate(feasibility.decisionSentAt)
     : null;
 
   const dateSinceCandidacyIsCaduque = candidacy.isCaduque

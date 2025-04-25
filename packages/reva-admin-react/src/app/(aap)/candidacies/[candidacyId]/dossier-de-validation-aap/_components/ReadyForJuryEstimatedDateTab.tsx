@@ -1,7 +1,7 @@
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -30,7 +30,7 @@ export const ReadyForJuryEstimatedDateTab = ({
     resolver: zodResolver(readyForJuryEstimatedAtSchema),
     defaultValues: {
       readyForJuryEstimatedAt: readyForJuryEstimatedAt
-        ? format(new Date(readyForJuryEstimatedAt || 0), "yyyy-MM-dd")
+        ? format(toDate(readyForJuryEstimatedAt || 0), "yyyy-MM-dd")
         : undefined,
     },
   });
@@ -38,7 +38,7 @@ export const ReadyForJuryEstimatedDateTab = ({
   const handleReset = useCallback(() => {
     reset({
       readyForJuryEstimatedAt: readyForJuryEstimatedAt
-        ? format(new Date(readyForJuryEstimatedAt || 0), "yyyy-MM-dd")
+        ? format(toDate(readyForJuryEstimatedAt || 0), "yyyy-MM-dd")
         : undefined,
     });
   }, [readyForJuryEstimatedAt, reset]);

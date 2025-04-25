@@ -5,16 +5,16 @@ import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summ
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { CertificationCard } from "./_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{
@@ -283,7 +283,7 @@ const CandidacySummaryPage = () => {
                 id: e.id,
                 title: e.title,
                 description: e.description,
-                startedAt: new Date(e.startedAt),
+                startedAt: toDate(e.startedAt),
                 duration: e.duration,
               }))}
             />

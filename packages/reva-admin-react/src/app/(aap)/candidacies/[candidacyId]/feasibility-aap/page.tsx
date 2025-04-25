@@ -18,6 +18,7 @@ import {
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+import { toDate } from "date-fns";
 import { AttachmentsSection } from "./_components/AttachmentsSection";
 import { CandidateDecisionCommentSection } from "./_components/CandidateDecisionCommentSection";
 import { CertificationSection } from "./_components/CertificationSection";
@@ -68,7 +69,7 @@ const FeasibilityBanner = ({
 
   return (
     <DecisionSentComponent
-      decisionSentAt={decisionSentAt ? new Date(decisionSentAt) : null}
+      decisionSentAt={decisionSentAt ? toDate(decisionSentAt) : null}
       decision={decision}
       decisionComment={decisionComment}
       history={history}
@@ -156,7 +157,7 @@ const AapFeasibilityPage = () => {
             }
             eligibilityValidUntil={
               dematerializedFeasibilityFile?.eligibilityValidUntil
-                ? new Date(dematerializedFeasibilityFile?.eligibilityValidUntil)
+                ? toDate(dematerializedFeasibilityFile?.eligibilityValidUntil)
                 : null
             }
             isFeasibilityEditable={isFeasibilityEditable}
@@ -252,14 +253,14 @@ const AapFeasibilityPage = () => {
 
           <SendFileCertificationAuthoritySection
             sentToCertificationAuthorityAt={
-              feasibilityFileSentAt ? new Date(feasibilityFileSentAt) : null
+              feasibilityFileSentAt ? toDate(feasibilityFileSentAt) : null
             }
             isReadyToBeSentToCertificationAuthority={
               dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
             }
             decisionSentAt={
               feasibility.decisionSentAt
-                ? new Date(feasibility.decisionSentAt)
+                ? toDate(feasibility.decisionSentAt)
                 : null
             }
             decision={feasibility.decision}

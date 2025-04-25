@@ -7,10 +7,10 @@ import {
 } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
-import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
 import { useState } from "react";
+import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
 
 const FeasibilityBanner = ({
   sentToCandidateAt,
@@ -66,7 +66,7 @@ export default function SendFileCandidatePage() {
   };
 
   const sentToCandidateAt = dematerializedFeasibilityFile?.sentToCandidateAt
-    ? new Date(dematerializedFeasibilityFile?.sentToCandidateAt)
+    ? toDate(dematerializedFeasibilityFile?.sentToCandidateAt)
     : null;
 
   return (
