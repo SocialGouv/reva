@@ -3,6 +3,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { REST_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toDate } from "date-fns";
 import { useCallback } from "react";
 
 const getCandidateQuery = graphql(`
@@ -94,13 +95,13 @@ export const useDossierDeValidationPage = () => {
 
   const dossierDeValidationProblems =
     dossierDeValidation?.history?.map((h) => ({
-      decisionSentAt: new Date(h.decisionSentAt || 0),
+      decisionSentAt: toDate(h.decisionSentAt || 0),
       decisionComment: h.decisionComment || "",
     })) || [];
 
   if (dossierDeValidation?.decision === "INCOMPLETE") {
     dossierDeValidationProblems.unshift({
-      decisionSentAt: new Date(dossierDeValidation.decisionSentAt || 0),
+      decisionSentAt: toDate(dossierDeValidation.decisionSentAt || 0),
       decisionComment: dossierDeValidation.decisionComment || "",
     });
   }

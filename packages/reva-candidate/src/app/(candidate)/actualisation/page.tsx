@@ -9,7 +9,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, isBefore } from "date-fns";
+import { format, isBefore, parseISO, toDate } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -39,7 +39,7 @@ const schema = z
           "Veuillez sélectionner une date prévisionnelle de dépôt du dossier de validation",
         path: ["readyForJuryEstimatedAt"],
       });
-    } else if (isBefore(new Date(readyForJuryEstimatedAt), new Date())) {
+    } else if (isBefore(toDate(readyForJuryEstimatedAt), new Date())) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Merci d'indiquer une date postérieure à la date du jour",
@@ -69,7 +69,7 @@ const HasBeenUpdatedComponent = ({
         <p className="text-xl">
           Pour information, votre date prévisionnelle de dépot du dossier de
           validation est le{" "}
-          {format(new Date(readyForJuryEstimatedAt), "dd/MM/yyyy")}.
+          {format(toDate(readyForJuryEstimatedAt), "dd/MM/yyyy")}.
         </p>
         <div>
           <Link href="/">
@@ -105,7 +105,7 @@ export default function ActualisationPage() {
     () => ({
       candidateConfirmation: false,
       readyForJuryEstimatedAt: candidacy?.readyForJuryEstimatedAt
-        ? format(new Date(candidacy.readyForJuryEstimatedAt), "yyyy-MM-dd")
+        ? format(toDate(candidacy.readyForJuryEstimatedAt), "yyyy-MM-dd")
         : null,
     }),
     [candidacy?.readyForJuryEstimatedAt],
@@ -131,7 +131,7 @@ export default function ActualisationPage() {
     try {
       await updateLastActivityDate({
         candidacyId: candidacy?.id,
-        readyForJuryEstimatedAt: new Date(readyForJuryEstimatedAt).getTime(),
+        readyForJuryEstimatedAt: parseISO(readyForJuryEstimatedAt).getTime(),
       });
       successToast("Votre actualisation est enregistrée");
       setHasBeenUpdated(true);

@@ -2,7 +2,7 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { isValid } from "date-fns";
+import { isValid, toDate } from "date-fns";
 import { useState } from "react";
 import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
 
@@ -49,7 +49,7 @@ export const ReadyForJuryEstimatedDateTab = ({
               ?.toISOString()
               .split("T")[0],
             onChange: (e) => {
-              setReadyForJuryEstimatedAt(new Date(e.target.value));
+              setReadyForJuryEstimatedAt(toDate(e.target.value));
             },
           }}
         />

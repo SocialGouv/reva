@@ -1,7 +1,7 @@
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { isDropOutConfirmed } from "@/utils/dropOutHelper";
-import { addDays, isAfter } from "date-fns";
+import { addDays, isAfter, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { ActualisationBanner } from "./ActualisationBanner";
 import { CaduqueBanner } from "./CaduqueBanner";
@@ -80,12 +80,12 @@ export const CandidacyBanner = () => {
     return (
       <DropOutWarning
         className="mb-16"
-        dropOutDate={new Date(candidacy.candidacyDropOut.createdAt)}
+        dropOutDate={toDate(candidacy.candidacyDropOut.createdAt)}
         dropOutConfirmed={isDropOutConfirmed({
           dropOutConfirmedByCandidate:
             candidacy.candidacyDropOut.dropOutConfirmedByCandidate,
           proofReceivedByAdmin: candidacy.candidacyDropOut.proofReceivedByAdmin,
-          dropOutDate: new Date(candidacy.candidacyDropOut.createdAt),
+          dropOutDate: toDate(candidacy.candidacyDropOut.createdAt),
         })}
         onDecisionButtonClick={() => router.push("/candidacy-dropout-decision")}
       />

@@ -1,6 +1,6 @@
 import { GenderEnum } from "@/constants";
 import { deserializeStringToPhoneNumberStructure } from "@/utils/deserializeStringToPhoneNumberStructure.util";
-import { isBefore, sub } from "date-fns";
+import { isBefore, sub, toDate } from "date-fns";
 import { z } from "zod";
 
 const defaultErrorMessage = "Merci de remplir ce champ";
@@ -31,7 +31,7 @@ export const candidateInformationSchema = z
   })
   .superRefine((data, ctx) => {
     if (data.birthdate) {
-      const date = new Date(data.birthdate);
+      const date = toDate(data.birthdate);
       if (date.toString() === "Invalid Date") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

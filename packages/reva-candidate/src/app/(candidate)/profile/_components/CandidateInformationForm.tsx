@@ -11,7 +11,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { format } from "date-fns";
+import { format, parseISO, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -73,7 +73,7 @@ const CandidateInformationForm = ({
       gender: (candidate?.gender as GenderEnum) ?? GenderEnum.undisclosed,
       birthCity: candidate?.birthCity ?? "",
       birthdate: candidate?.birthdate
-        ? format(new Date(candidate?.birthdate), "yyyy-MM-dd")
+        ? format(toDate(candidate?.birthdate), "yyyy-MM-dd")
         : undefined,
       birthDepartment: candidate?.birthDepartment?.id ?? "",
       country: candidate?.country?.id ?? franceId,
@@ -104,7 +104,7 @@ const CandidateInformationForm = ({
         firstname3: candidate.firstname3 ?? "",
         birthCity: candidate.birthCity ?? "",
         birthdate: candidate.birthdate
-          ? format(new Date(candidate?.birthdate), "yyyy-MM-dd")
+          ? format(toDate(candidate?.birthdate), "yyyy-MM-dd")
           : undefined,
         birthDepartment: candidate.birthDepartment?.id,
         country: candidate.country?.id ?? franceId,
@@ -155,7 +155,7 @@ const CandidateInformationForm = ({
       gender: data.gender as GenderEnum,
       countryId: data.country,
       birthdate: data.birthdate
-        ? new Date(data.birthdate).getTime()
+        ? parseISO(data.birthdate).getTime()
         : undefined,
       birthDepartmentId: data.birthDepartment,
       street: data.street,

@@ -6,6 +6,7 @@ import {
 } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Notice from "@codegouvfr/react-dsfr/Notice";
+import { toDate } from "date-fns";
 
 interface Props {
   decision: FeasibilityDecision;
@@ -37,7 +38,7 @@ export default function FeasibilityDecisionDisplay({
             className="mb-8"
             severity="error"
             data-test="feasibility-decision-rejected"
-            title={`Dossier déclaré non recevable le ${new Date(decisionSentAt!).toLocaleDateString("fr-FR")}`}
+            title={`Dossier déclaré non recevable le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <>
                 <p>
@@ -64,7 +65,7 @@ export default function FeasibilityDecisionDisplay({
             className="mb-8"
             severity="warning"
             data-test="feasibility-decision-incomplete"
-            title={`Dossier déclaré incomplet le ${new Date(decisionSentAt!).toLocaleDateString("fr-FR")}`}
+            title={`Dossier déclaré incomplet le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <>
                 <p>
@@ -89,7 +90,7 @@ export default function FeasibilityDecisionDisplay({
           className="mb-8"
           severity="info"
           data-test="feasibility-decision-pending"
-          title={`Dossier envoyé le ${new Date(feasibilityFileSentAt!).toLocaleDateString("fr-FR")}`}
+          title={`Dossier envoyé le ${toDate(feasibilityFileSentAt!).toLocaleDateString("fr-FR")}`}
           description={
             <>
               <p>
@@ -108,7 +109,7 @@ export default function FeasibilityDecisionDisplay({
             className="mb-8"
             severity="success"
             data-test="feasibility-decision-admissible"
-            title={`Dossier déclaré recevable le ${new Date(decisionSentAt!).toLocaleDateString("fr-FR")}`}
+            title={`Dossier déclaré recevable le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <>
                 <p>

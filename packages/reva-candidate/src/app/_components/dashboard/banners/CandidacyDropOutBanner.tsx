@@ -1,5 +1,5 @@
 import { isDropOutConfirmed } from "@/utils/dropOutHelper";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import { CandidacyDropOutUseCandidateForDashboard } from "../dashboard.hooks";
 import { BaseBanner } from "./BaseBanner";
 
@@ -15,13 +15,13 @@ export const CandidacyDropOutBanner = ({
   const dropOutConfirmed = isDropOutConfirmed({
     dropOutConfirmedByCandidate: candidacyDropOut.dropOutConfirmedByCandidate,
     proofReceivedByAdmin: candidacyDropOut.proofReceivedByAdmin,
-    dropOutDate: new Date(candidacyDropOut.createdAt),
+    dropOutDate: toDate(candidacyDropOut.createdAt),
   });
 
   const content = (
     <div data-test="drop-out-warning">
       Votre parcours est en abandon depuis le{" "}
-      {format(new Date(candidacyDropOut.createdAt), "dd/MM/yyyy")}.{" "}
+      {format(toDate(candidacyDropOut.createdAt), "dd/MM/yyyy")}.{" "}
       {dropOutConfirmed
         ? "Cela fait suite soit à la décision de votre accompagnateur (que vous avez confirmée) soit à un délai d'inactivité de plus de 6 mois."
         : "Vous avez 6 mois pour enregistrer votre décision : accepter l'abandon ou continuer votre parcours."}

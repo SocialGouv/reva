@@ -6,6 +6,7 @@ import { useDossierDeValidationPage } from "./dossierDeValidation.hook";
 
 import { JuryResult } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import {
   DossierDeValidationFormData,
@@ -82,7 +83,7 @@ export default function DossierDeValidationPag() {
       <p>
         Renseignez les informations liées à votre dossier de validation puis
         déposez-le afin de le transmettre au certificateur. Si votre
-        certification n’est pas totalement validée, vous pourrez déposer un
+        certification n'est pas totalement validée, vous pourrez déposer un
         second dossier une fois votre résultat communiqué.
       </p>
       {queryStatus === "success" && (
@@ -97,7 +98,7 @@ export default function DossierDeValidationPag() {
                     <ReadOnlyReadyForJuryEstimatedDateTab
                       readyForJuryEstimatedAt={
                         readyForJuryEstimatedAt
-                          ? new Date(readyForJuryEstimatedAt)
+                          ? toDate(readyForJuryEstimatedAt)
                           : undefined
                       }
                       certificationAuthorityInfo={{
@@ -115,8 +116,8 @@ export default function DossierDeValidationPag() {
                     <ReadOnlyDossierDeValidationTab
                       dossierDeValidationSentAt={
                         dossierDeValidation.dossierDeValidationSentAt
-                          ? new Date(
-                              dossierDeValidation?.dossierDeValidationSentAt,
+                          ? toDate(
+                              dossierDeValidation.dossierDeValidationSentAt,
                             )
                           : undefined
                       }
@@ -146,7 +147,7 @@ export default function DossierDeValidationPag() {
                     <ReadyForJuryEstimatedDateTab
                       defaultValues={{
                         readyForJuryEstimatedAt: readyForJuryEstimatedAt
-                          ? new Date(readyForJuryEstimatedAt)
+                          ? toDate(readyForJuryEstimatedAt)
                           : undefined,
                       }}
                       certificationAuthorityInfo={{

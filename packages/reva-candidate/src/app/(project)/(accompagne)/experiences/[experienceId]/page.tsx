@@ -1,6 +1,6 @@
 "use client";
 
-import { format, parseISO } from "date-fns";
+import { format, parseISO, toDate } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 
@@ -67,8 +67,8 @@ export default function UpdateExperience() {
     () => ({
       title: experience?.title || "",
       startedAt: experience?.startedAt
-        ? format(new Date(experience.startedAt), "yyyy-MM-dd")
-        : format(new Date("2020-01-31"), "yyyy-MM-dd"),
+        ? format(toDate(experience.startedAt), "yyyy-MM-dd")
+        : format(toDate("2020-01-31"), "yyyy-MM-dd"),
       duration: experience?.duration as ExperienceDuration,
       description: experience?.description || "",
     }),

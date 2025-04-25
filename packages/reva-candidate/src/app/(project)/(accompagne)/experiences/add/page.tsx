@@ -1,6 +1,6 @@
 "use client";
 
-import { format, parseISO } from "date-fns";
+import { format, parseISO, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 
@@ -57,7 +57,7 @@ export default function AddExperience() {
   const defaultValues = useMemo(
     () => ({
       title: "",
-      startedAt: format(new Date("2020-01-31"), "yyyy-MM-dd"),
+      startedAt: format(toDate("2020-01-31"), "yyyy-MM-dd"),
       duration: "" as ExperienceDuration,
       description: "",
     }),

@@ -1,4 +1,4 @@
-import { isAfter, addMonths } from "date-fns";
+import { addMonths, isAfter } from "date-fns";
 
 const isDropOutGracePeriodOver = ({ dropOutDate }: { dropOutDate: Date }) =>
   isAfter(new Date(), addMonths(dropOutDate, 6));
