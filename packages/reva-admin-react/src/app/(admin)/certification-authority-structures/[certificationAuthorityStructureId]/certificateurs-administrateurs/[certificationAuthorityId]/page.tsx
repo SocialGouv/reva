@@ -15,6 +15,8 @@ import {
   useCertificationAuthorityForm,
 } from "./certificationAuthority.hooks";
 import { useParams } from "next/navigation";
+import GeneralInformationCard from "./_components/general-information-card/GeneralInformationCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 type FormData = z.infer<typeof schema>;
 
@@ -38,6 +40,7 @@ const CertificationAuthorityAdminComponent = ({
   certificationAuthorityStructureId: string;
 }) => {
   const { updateCertificationAuthority } = useCertificationAuthorityForm();
+  const { isFeatureActive } = useFeatureflipping();
 
   const {
     register,
@@ -123,31 +126,38 @@ const CertificationAuthorityAdminComponent = ({
         administrateur est obligatoire pour la gestion des candidatures.
       </p>
       <div className="flex flex-col gap-y-6">
-        <form onSubmit={handleFormSubmit} id="certificationAuthorityForm">
-          <div className="grid grid-cols-2 w-full gap-x-4">
-            <Input
-              label="Gestionnaire des candidatures"
-              className="col-span-2"
-              nativeInputProps={{
-                ...register("label"),
-              }}
-            />
-            <Input
-              label="Nom et prénom ou Service"
-              nativeInputProps={{
-                ...register("contactFullName"),
-              }}
-            />
-            <Input
-              label="Email de connexion"
-              state={errors.contactEmail ? "error" : "default"}
-              stateRelatedMessage={errors.contactEmail?.message}
-              nativeInputProps={{
-                ...register("contactEmail"),
-              }}
-            />
-          </div>
-        </form>
+        {isFeatureActive("PARAMETRES_CERTIFICATEUR") ? (
+          <GeneralInformationCard
+            certificationAuthority={certificationAuthority}
+          />
+        ) : (
+          <form onSubmit={handleFormSubmit} id="certificationAuthorityForm">
+            <div className="grid grid-cols-2 w-full gap-x-4">
+              <Input
+                label="Gestionnaire des candidatures"
+                className="col-span-2"
+                nativeInputProps={{
+                  ...register("label"),
+                }}
+              />
+              <Input
+                label="Nom et prénom ou Service"
+                nativeInputProps={{
+                  ...register("contactFullName"),
+                }}
+              />
+              <Input
+                label="Email de connexion"
+                state={errors.contactEmail ? "error" : "default"}
+                stateRelatedMessage={errors.contactEmail?.message}
+                nativeInputProps={{
+                  ...register("contactEmail"),
+                }}
+              />
+            </div>
+          </form>
+        )}
+
         <InterventionAreaSummaryCard
           regions={regionsAndDepartments}
           updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/zone-intervention`}

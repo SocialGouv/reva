@@ -21,8 +21,6 @@ const createCertificationAuthorityMutation = graphql(`
   mutation createCertificationAuthority(
     $label: String!
     $certificationAuthorityStructureId: ID!
-    $contactEmail: String!
-    $contactFullName: String!
     $accountEmail: String!
     $accountFirstname: String!
     $accountLastname: String!
@@ -32,8 +30,6 @@ const createCertificationAuthorityMutation = graphql(`
       input: {
         label: $label
         certificationAuthorityStructureId: $certificationAuthorityStructureId
-        contactEmail: $contactEmail
-        contactFullName: $contactFullName
         accountEmail: $accountEmail
         accountFirstname: $accountFirstname
         accountLastname: $accountLastname
@@ -78,8 +74,6 @@ export const useCreateCertificationAuthorityPage = () => {
         accountFirstname: params.firstname,
         accountLastname: params.lastname,
         certificationAuthorityStructureId: certificationAuthorityStructureId,
-        contactEmail: params.email,
-        contactFullName: `${params.firstname} ${params.lastname}`,
         certificationIds:
           certificationAuthorityStructure?.certifications?.map((c) => c.id) ||
           [],
