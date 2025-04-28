@@ -33,6 +33,7 @@ export const searchOrganismsForCandidacy = async ({
         certificationCohorteVaeCollectiveOnOrganisms: {
           some: {
             certificationCohorteVaeCollective: {
+              certificationId: candidacy.certificationId || "",
               cohorteVaeCollective: {
                 candidacy: { some: { id: candidacyId } },
               },
