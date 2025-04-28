@@ -3,8 +3,6 @@ import { prismaClient } from "../../../prisma/client";
 
 export const createCertificationAuthority = async ({
   label,
-  contactEmail,
-  contactFullName,
   accountFirstname,
   accountLastname,
   accountEmail,
@@ -12,8 +10,6 @@ export const createCertificationAuthority = async ({
   certificationIds,
 }: {
   label: string;
-  contactEmail: string;
-  contactFullName: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
@@ -57,8 +53,6 @@ export const createCertificationAuthority = async ({
           },
         },
         label,
-        contactEmail,
-        contactFullName,
       },
     });
 
