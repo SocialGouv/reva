@@ -53,8 +53,6 @@ test("should create a certification authority", async () => {
         input: {
           label: "Mon autorite de certification",
           certificationAuthorityStructureId: certificationAuthorityStructure.id,
-          contactEmail: "testcontact.test@gmail.com",
-          contactFullName: "Monieur test test",
           accountEmail: "testaccount.test@gmail.com",
           accountFirstname: "testFirstname",
           accountLastname: "testLastname",
