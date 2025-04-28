@@ -49,6 +49,7 @@ import { updateCertificationAuthorityDepartmentsAndCertifications } from "./feat
 import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
+import { updateCertificationAuthorityV2ById } from "./features/updateCertificationAuthorityV2";
 
 const unsafeResolvers = {
   Account: {
@@ -181,6 +182,34 @@ const unsafeResolvers = {
       }
     },
 
+    certification_authority_updateCertificationAuthorityV2: async (
+      _parent: unknown,
+      params: {
+        certificationAuthorityId: string;
+        certificationAuthorityData: {
+          label: string;
+          contactFullName: string | null;
+          contactEmail: string | null;
+          contactPhone: string | null;
+        };
+      },
+      context: GraphqlContext,
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized",
+          );
+        }
+
+        return updateCertificationAuthorityV2ById(params);
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
+
     certification_authority_createCertificationAuthorityLocalAccount: async (
       _parent: unknown,
       params: {
@@ -207,8 +236,6 @@ const unsafeResolvers = {
           accountLastname: string;
           accountEmail: string;
           label: string;
-          contactEmail: string;
-          contactFullName: string;
           certificationAuthorityStructureId: string;
           certificationIds: string[];
         };

@@ -8,6 +8,7 @@ type CertificationAuthority {
   label: String!
   contactFullName: String
   contactEmail: String
+  contactPhone: String
   departments: [Department!]!
   regions: [Region!]!
   certifications: [Certification!]!
@@ -84,15 +85,14 @@ type CertificationAuhtorityOrLocalAccountPaginated {
 }
 
 input UpdateCertificationAuthorityInput {
-  label: String!
+  label: String
   contactFullName: String
   contactEmail: String
+  contactPhone: String
 }
 
 input CreateCertificationAuthorityInput {
   label: String!
-  contactEmail: String!
-  contactFullName: String!
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!
@@ -173,6 +173,11 @@ type Query {
 
 type Mutation {
   certification_authority_updateCertificationAuthority(
+    certificationAuthorityId: ID!
+    certificationAuthorityData: UpdateCertificationAuthorityInput!
+  ): CertificationAuthority!
+
+  certification_authority_updateCertificationAuthorityV2(
     certificationAuthorityId: ID!
     certificationAuthorityData: UpdateCertificationAuthorityInput!
   ): CertificationAuthority!
