@@ -1004,6 +1004,7 @@ model CertificationAuthority {
   label                                                     String                                                      @db.VarChar(200)
   contactFullName                                           String?                                                     @map("contact_full_name") @db.VarChar(200)
   contactEmail                                              String?                                                     @map("contact_email") @db.VarChar(200)
+  contactPhone                                              String?                                                     @map("contact_phone") @db.VarChar(25)
   createdAt                                                 DateTime                                                    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                                 DateTime?                                                   @map("updated_at") @db.Timestamptz(6)
   certificationAuthorityOnDepartment                        CertificationAuthorityOnDepartment[]
