@@ -35,6 +35,12 @@ const getCertificationAuthorityStructureCGUInCguPageQuery = graphql(`
       }
       certificationAuthority {
         certificationAuthorityStructures {
+          certificationRegistryManager {
+            account {
+              firstname
+              lastname
+            }
+          }
           cgu {
             isLatestVersion
           }
@@ -69,16 +75,36 @@ export const useCguCertificateur = () => {
     isCertificationAuthority ||
     isCertificationRegistryManager;
 
-  const cguStructure =
+  const certificationAuthorityStructure =
     getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
-      ?.certificationRegistryManager?.certificationAuthorityStructure?.cgu ||
+      ?.certificationRegistryManager?.certificationAuthorityStructure ||
     getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
-      ?.certificationAuthority?.certificationAuthorityStructures?.[0]?.cgu;
+      ?.certificationAuthority?.certificationAuthorityStructures?.[0];
+
+  const cguStructure = certificationAuthorityStructure?.cgu;
 
   const canAccessCguCertificateur =
     isCertificateur &&
     isCguCertificateurActive &&
     !cguStructure?.isLatestVersion;
+
+  const certificationAuthorityManagerFirstname =
+    (
+      certificationAuthorityStructure as unknown as {
+        certificationRegistryManager: {
+          account: { firstname: string };
+        };
+      }
+    )?.certificationRegistryManager?.account?.firstname ?? "";
+
+  const certificationAuthorityManagerLastname =
+    (
+      certificationAuthorityStructure as unknown as {
+        certificationRegistryManager: {
+          account: { lastname: string };
+        };
+      }
+    )?.certificationRegistryManager?.account?.lastname ?? "";
 
   const { mutateAsync: acceptCertificateurCgu } = useMutation({
     mutationFn: () => graphqlClient.request(acceptCertificateurCGUMutation),
@@ -106,5 +132,7 @@ export const useCguCertificateur = () => {
     isCertificationRegistryManager,
     cguCertificateur,
     canAccessCguCertificateur,
+    certificationAuthorityManagerFirstname,
+    certificationAuthorityManagerLastname,
   };
 };
