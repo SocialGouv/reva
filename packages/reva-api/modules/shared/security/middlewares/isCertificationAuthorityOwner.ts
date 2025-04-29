@@ -14,7 +14,12 @@ export const isCertificationAuthorityOwner =
   ) => {
     log("isCertificationAuthorityOwner");
 
-    const certificationAuthorityId = root.certificationAuthorityId;
+    const certificationAuthorityId =
+      root.certificationAuthorityId ||
+      root.id ||
+      args.id ||
+      args.certificationAuthorityId ||
+      args.certificationAuthority?.id;
 
     if (!certificationAuthorityId) {
       throw new Error('args "certificationAuthorityId" is missing');
