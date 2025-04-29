@@ -18,5 +18,5 @@ export default function CertificateurLayout({
     redirect("/certificateur-cgu");
   }
 
-  return <div>{children}</div>;
+  return <div className="w-full">{children}</div>;
 }
