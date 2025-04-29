@@ -1,16 +1,10 @@
 "use client";
-import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import { useCertificationAuthority } from "./certificationAuthorityGeneralInfo.hooks";
-import { useParams } from "next/navigation";
 import { CertificationAuthorityGeneralInfoForm } from "@/components/certification-authority/forms/certification-authority-general-info/CertificationAuthorityGeneralInfoForm";
 
 const CertificationAuthorityGeneralInfoAdminPage = () => {
   const { certificationAuthority, getCertificationAuthorityStatus } =
     useCertificationAuthority();
-
-  const { certificationAuthorityStructureId } = useParams<{
-    certificationAuthorityStructureId: string;
-  }>();
 
   if (
     !certificationAuthority ||
@@ -21,17 +15,6 @@ const CertificationAuthorityGeneralInfoAdminPage = () => {
 
   return (
     <div className="flex flex-col flex-1">
-      <CertificationAuthorityStructureBreadcrumb
-        certificationAuthorityStructureId={certificationAuthorityStructureId}
-        certificationAuthorityStructureLabel={
-          certificationAuthority.certificationAuthorityStructures.find(
-            (s) => s.id === certificationAuthorityStructureId,
-          )?.label || "inconnu"
-        }
-        certificationAuthoritylabel={certificationAuthority.label}
-        certificationAuthorityId={certificationAuthority.id}
-        pageLabel="Informations générales"
-      />
       <h1 className="flex-1">Informations générales</h1>
 
       <p className="text-xl">
@@ -40,7 +23,7 @@ const CertificationAuthorityGeneralInfoAdminPage = () => {
       </p>
       <CertificationAuthorityGeneralInfoForm
         certificationAuthority={certificationAuthority}
-        backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/`}
+        backUrl="/certification-authorities/settings"
       />
     </div>
   );

@@ -2,17 +2,16 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
 export default function GeneralInformationCard({
+  hrefPrefix,
   certificationAuthority,
 }: {
+  hrefPrefix: string;
   certificationAuthority: {
     id: string;
     label: string;
     contactFullName?: string | null;
     contactEmail?: string | null;
     contactPhone?: string | null;
-    certificationAuthorityStructures: {
-      id: string;
-    }[];
   };
 }) {
   const isComplete =
@@ -24,7 +23,8 @@ export default function GeneralInformationCard({
       titleIconClass="fr-icon-information-fill"
       isEditable
       status={isComplete ? "COMPLETED" : "TO_COMPLETE"}
-      buttonOnClickHref={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructures[0].id}/certificateurs-administrateurs/${certificationAuthority.id}/informations-generales`}
+      buttonOnClickHref={`${hrefPrefix}/informations-generales`}
+      // buttonOnClickHref={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructures[0].id}/certificateurs-administrateurs/${certificationAuthority.id}/informations-generales`}
     >
       <div className="pl-10">
         <p className="text-xl font-bold mb-2">{certificationAuthority.label}</p>

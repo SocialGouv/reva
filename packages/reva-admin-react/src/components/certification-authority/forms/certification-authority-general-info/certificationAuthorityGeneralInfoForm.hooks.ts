@@ -40,6 +40,9 @@ export const useCertificationAuthorityForm = () => {
           "getCertificationAuthorityGeneralInfo",
         ],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["getCertificationAuthorityGeneralInfoForCertificator"],
+      });
     },
   });
 

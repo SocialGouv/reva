@@ -15,7 +15,7 @@ import {
   useCertificationAuthorityForm,
 } from "./certificationAuthority.hooks";
 import { useParams } from "next/navigation";
-import GeneralInformationCard from "./_components/general-information-card/GeneralInformationCard";
+import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 type FormData = z.infer<typeof schema>;
@@ -128,6 +128,7 @@ const CertificationAuthorityAdminComponent = ({
       <div className="flex flex-col gap-y-6">
         {isFeatureActive("PARAMETRES_CERTIFICATEUR") ? (
           <GeneralInformationCard
+            hrefPrefix={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructures[0].id}/certificateurs-administrateurs/${certificationAuthority.id}`}
             certificationAuthority={certificationAuthority}
           />
         ) : (

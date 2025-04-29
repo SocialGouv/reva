@@ -3,7 +3,7 @@ import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 
 const getCertificationAuthority = graphql(`
-  query getCertificationAuthorityForCertificationAuthoritySettingsPage {
+  query getCertificationAuthorityGeneralInfoForEditPage {
     account_getAccountForConnectedUser {
       certificationAuthority {
         id
@@ -11,33 +11,29 @@ const getCertificationAuthority = graphql(`
         contactFullName
         contactEmail
         contactPhone
+        account {
+          id
+          email
+          firstname
+          lastname
+        }
         certificationAuthorityStructures {
           id
-        }
-        certificationAuthorityLocalAccounts {
-          id
-          account {
-            id
-            firstname
-            lastname
-            email
-          }
+          label
         }
       }
     }
   }
 `);
 
-export const useCertificationAuthoritySettings = () => {
+export const useCertificationAuthority = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const {
     data: getCertificationAuthorityResponse,
     status: getCertificationAuthorityStatus,
   } = useQuery({
-    queryKey: [
-      "getCertificationAuthorityForCertificationAuthoritySettingsPage",
-    ],
+    queryKey: ["getCertificationAuthorityGeneralInfoForCertificator"],
     queryFn: () => graphqlClient.request(getCertificationAuthority),
   });
 

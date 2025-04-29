@@ -18,7 +18,7 @@ const schema = z.object({
 
 export const CertificationAuthorityGeneralInfoForm = ({
   certificationAuthority,
-  certificationAuthorityStructureId,
+  backUrl,
 }: {
   certificationAuthority: {
     id: string;
@@ -33,7 +33,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
       email: string;
     } | null;
   };
-  certificationAuthorityStructureId: string;
+  backUrl: string;
 }) => {
   const { updateCertificationAuthority } = useCertificationAuthorityForm();
 
@@ -50,11 +50,6 @@ export const CertificationAuthorityGeneralInfoForm = ({
       contactPhone: certificationAuthority.contactPhone || undefined,
     },
   });
-
-  console.log(
-    "certificationAuthority.contactFullName",
-    certificationAuthority.contactFullName,
-  );
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
@@ -159,7 +154,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
             className="mr-auto"
             priority="secondary"
             linkProps={{
-              href: `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/`,
+              href: backUrl,
             }}
           >
             Retour

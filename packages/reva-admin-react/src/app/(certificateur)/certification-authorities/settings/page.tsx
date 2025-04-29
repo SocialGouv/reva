@@ -1,12 +1,16 @@
 "use client";
 import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
 import { useCertificationAuthoritySettings } from "./certificationAuthoritySettingsPage.hook";
+import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
 
 export default function CertificationAuthoritySettingsPage() {
   const { certificationAuthority, getCertificationAuthorityStatus } =
     useCertificationAuthoritySettings();
 
-  if (getCertificationAuthorityStatus !== "success") {
+  if (
+    getCertificationAuthorityStatus !== "success" ||
+    !certificationAuthority
+  ) {
     return null;
   }
 
@@ -19,6 +23,10 @@ export default function CertificationAuthoritySettingsPage() {
         optimale et simplifiée de vos candidatures.
       </p>
       <div className="flex flex-col gap-y-6">
+        <GeneralInformationCard
+          hrefPrefix={"/certification-authorities/settings"}
+          certificationAuthority={certificationAuthority}
+        />
         <CertificationAuthorityLocalAccountsSummaryCard
           accounts={
             certificationAuthority?.certificationAuthorityLocalAccounts || []
