@@ -1,4 +1,5 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
 export default function GeneralInformationCard({
@@ -29,19 +30,25 @@ export default function GeneralInformationCard({
       <div className="pl-10">
         <p className="text-xl font-bold mb-2">{certificationAuthority.label}</p>
         {isComplete ? (
-          <div className="flex gap-x-2">
-            <p>Contact référent :</p>
-            <div>
-              <p className="my-0">{certificationAuthority.contactFullName}</p>
-              <p className="my-0">{certificationAuthority.contactEmail}</p>
-              <p className="my-0">{certificationAuthority.contactPhone}</p>
+          <>
+            <div className="flex gap-x-2">
+              <p>Contact référent :</p>
+              <div>
+                <p className="my-0">{certificationAuthority.contactFullName}</p>
+                <p className="my-0">{certificationAuthority.contactEmail}</p>
+                <p className="my-0">{certificationAuthority.contactPhone}</p>
+              </div>
             </div>
-          </div>
+          </>
         ) : (
-          <div>
+          <div className="flex flex-col gap-y-6">
             <Badge severity="new" small>
               Aucun contact référent
             </Badge>
+            <SmallNotice className="-ml-10">
+              Ajoutez un contact référent pour améliorer le suivi et la
+              communication avec les AAP et les candidats
+            </SmallNotice>
           </div>
         )}
       </div>
