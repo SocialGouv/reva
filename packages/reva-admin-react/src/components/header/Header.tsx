@@ -27,6 +27,9 @@ export const Header = () => {
     ? "Certificateurs/Candidatures"
     : "Candidatures";
 
+  const isCertificationAuthorityLocalAccount =
+    isCertificationAuthority && !isAdminCertificationAuthority;
+
   const adminTabs = [
     {
       text: "Certifications",
@@ -162,7 +165,7 @@ export const Header = () => {
             ]
           : []),
         ...(isAdmin ? adminTabs : []),
-        ...(isAdmin || isCertificationAuthority
+        ...(isAdmin || isCertificationAuthorityLocalAccount
           ? [
               {
                 text: candidaciesLabel,
