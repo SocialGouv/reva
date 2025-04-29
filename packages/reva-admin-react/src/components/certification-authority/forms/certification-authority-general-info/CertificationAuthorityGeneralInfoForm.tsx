@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
 import { z } from "zod";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 
 type FormData = z.infer<typeof schema>;
 
@@ -14,6 +15,7 @@ const schema = z.object({
     .string()
     .email("Le champ doit contenir une adresse email valide"),
   contactPhone: z.string().optional(),
+  isGlobalContact: z.boolean(),
 });
 
 export const CertificationAuthorityGeneralInfoForm = ({
@@ -48,6 +50,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
       contactFullName: certificationAuthority.contactFullName || undefined,
       contactEmail: certificationAuthority.contactEmail || undefined,
       contactPhone: certificationAuthority.contactPhone || undefined,
+      isGlobalContact: false,
     },
   });
 
@@ -118,16 +121,17 @@ export const CertificationAuthorityGeneralInfoForm = ({
             pour faciliter les échanges.
           </p>
           <form onSubmit={handleFormSubmit} id="certificationAuthorityForm">
-            <div className="w-full gap-x-4">
+            <div className="w-full flex flex-col gap-y-4">
               <Input
                 label="Service associé"
+                className="mb-0"
                 state={errors.contactFullName ? "error" : "default"}
                 stateRelatedMessage={errors.contactFullName?.message}
                 nativeInputProps={{
                   ...register("contactFullName"),
                 }}
               />
-              <div className="flex flex-row gap-x-4 grow items-end">
+              <div className="flex flex-col md:flex-row gap-4 grow items-end">
                 <Input
                   className="mb-0 w-full"
                   label="Email"
@@ -146,6 +150,18 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   }}
                 />
               </div>
+              <Checkbox
+                small
+                options={[
+                  {
+                    label:
+                      "J’attribue ce contact référent à tous les comptes locaux de ce gestionnaire de candidatures",
+                    hintText:
+                      "Ce contact référent sera le seul affiché aux AAP et aux candidats sur votre zone d’intervention et les certifications gérées",
+                    nativeInputProps: { ...register("isGlobalContact") },
+                  },
+                ]}
+              />
             </div>
           </form>
         </div>

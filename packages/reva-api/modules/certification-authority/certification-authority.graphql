@@ -89,6 +89,7 @@ input UpdateCertificationAuthorityInput {
   contactFullName: String
   contactEmail: String
   contactPhone: String
+  isGlobalContact: Boolean
 }
 
 input CreateCertificationAuthorityInput {

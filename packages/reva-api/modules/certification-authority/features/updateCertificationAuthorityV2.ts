@@ -8,6 +8,7 @@ export const updateCertificationAuthorityV2ById = async (params: {
     contactFullName: string | null;
     contactEmail: string | null;
     contactPhone: string | null;
+    isGlobalContact: boolean;
   };
 }): Promise<CertificationAuthority> => {
   const { certificationAuthorityId, certificationAuthorityData } = params;
@@ -34,6 +35,12 @@ export const updateCertificationAuthorityV2ById = async (params: {
         contactPhone: certificationAuthorityData.contactPhone,
       },
     });
+
+  if (certificationAuthorityData.isGlobalContact) {
+    console.log(
+      "Would assign contact to all local accounts of the certification authority",
+    );
+  }
 
   return updatedCertificationAuthority;
 };

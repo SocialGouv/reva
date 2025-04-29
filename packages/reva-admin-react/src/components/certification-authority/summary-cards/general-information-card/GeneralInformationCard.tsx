@@ -25,7 +25,6 @@ export default function GeneralInformationCard({
       isEditable
       status={isComplete ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={`${hrefPrefix}/informations-generales`}
-      // buttonOnClickHref={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructures[0].id}/certificateurs-administrateurs/${certificationAuthority.id}/informations-generales`}
     >
       <div className="pl-10">
         <p className="text-xl font-bold mb-2">{certificationAuthority.label}</p>

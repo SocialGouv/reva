@@ -27,10 +27,10 @@ export const useCertificationAuthorityForm = () => {
     mutationFn: (params: {
       certificationAuthorityId: string;
       certificationAuthorityData: {
-        label?: string;
-        contactFullName?: string;
-        contactEmail?: string;
+        contactFullName: string;
+        contactEmail: string;
         contactPhone?: string;
+        isGlobalContact: boolean;
       };
     }) => graphqlClient.request(updateCertificationAuthorityMutation, params),
     onSuccess: ({ certification_authority_updateCertificationAuthorityV2 }) => {
