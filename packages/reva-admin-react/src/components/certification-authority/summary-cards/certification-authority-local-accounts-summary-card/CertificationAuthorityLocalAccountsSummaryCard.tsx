@@ -1,9 +1,11 @@
 import { SectionCard } from "@/components/card/section-card/SectionCard";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useRouter } from "next/navigation";
 
 export const CertificationAuthorityLocalAccountsSummaryCard = ({
   accounts,
-  hrefPrefix,
+  updateLocalAccountPageUrl,
+  addLocalAccountPageUrl,
 }: {
   accounts: {
     id: string;
@@ -14,12 +16,18 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
       email: string;
     };
   }[];
-  hrefPrefix: string;
+  addLocalAccountPageUrl: string;
+  updateLocalAccountPageUrl: string;
 }) => {
+  const router = useRouter();
   return (
     <SectionCard
-      title="Comptes collaborateurs"
+      title="Comptes locaux"
       titleIconClass="fr-icon-team-fill"
+      hasButton={true}
+      buttonTitle="Ajouter un compte"
+      buttonOnClick={() => router.push(addLocalAccountPageUrl)}
+      buttonPriority="secondary"
     >
       <ul className="list-none font-bold">
         {accounts.map(({ account, id }) => (
@@ -38,10 +46,10 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
                 priority="tertiary no outline"
                 size="small"
                 linkProps={{
-                  href: `${hrefPrefix}/${id}`,
+                  href: `${updateLocalAccountPageUrl}/${id}`,
                 }}
               >
-                Visualiser
+                Modifier
               </Button>
             </span>
           </li>

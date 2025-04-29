@@ -23,7 +23,10 @@ export default function CertificationAuthoritySettingsPage() {
           accounts={
             certificationAuthority?.certificationAuthorityLocalAccounts || []
           }
-          hrefPrefix={"/settings/local-accounts"}
+          updateLocalAccountPageUrl={"/certification-authorities/settings/"}
+          addLocalAccountPageUrl={
+            "/certification-authorities/settings/local-accounts/add-local-account"
+          }
         />
       </div>
     </div>
