@@ -6,6 +6,7 @@ import {
   isCandidacyOwner,
   whenHasRole,
 } from "./middlewares";
+import { getIsCertificationAuthorityAccountOrLocalAccountStructureMember } from "./middlewares/getIsCertificationAuthorityAccountOrLocalAccountStructureMember.security";
 import { getIsCertificationAuthorityStructureMember } from "./middlewares/getIsCertificationAuthorityStructureMember.security";
 import { getIsCertificationAuthorityStructureRegistryManagerMember } from "./middlewares/getIsCertificationAuthorityStructureRegistryManagerMember.security";
 import { isCandidateOwnerOfCandidacy } from "./middlewares/isCandidateOwnerOfCandidacy.security";
@@ -89,15 +90,28 @@ export const isAdminOrCertificationRegistryManagerOfCertification = [
   ),
 ];
 
-export const isAdminOrIsCertificationAuthorityStructureMember = [
-  hasRole(["admin", "manage_feasibility"]),
-  whenHasRole("manage_feasibility", getIsCertificationAuthorityStructureMember),
-];
+export const isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember =
+  [
+    hasRole(["admin", "manage_feasibility"]),
+    whenHasRole(
+      "manage_feasibility",
+      getIsCertificationAuthorityAccountOrLocalAccountStructureMember,
+    ),
+  ];
 
 export const isAdminOrIsCertificationAuthorityStructureRegistryManagerMember = [
   hasRole(["admin", "manage_certification_registry"]),
   whenHasRole(
     "manage_certification_registry",
     getIsCertificationAuthorityStructureRegistryManagerMember,
+  ),
+];
+
+export const isAdminOrIsCertificationAuthorityStructureMember = [
+  hasRole(["admin", "manage_feasibility", "manage_certification_registry"]),
+  whenHasRole("manage_feasibility", getIsCertificationAuthorityStructureMember),
+  whenHasRole(
+    "manage_certification_registry",
+    getIsCertificationAuthorityStructureMember,
   ),
 ];

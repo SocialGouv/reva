@@ -4,7 +4,7 @@ import { prismaClient } from "../../../../prisma/client";
 const UNAUTHORIZED_ACCESS_ERROR =
   "Vous n'êtes pas autorisé à accéder à cette structure";
 
-export const getIsCertificationAuthorityStructureMember =
+export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
   (next: IFieldResolver<unknown>) =>
   async (
     root: any,
@@ -14,10 +14,10 @@ export const getIsCertificationAuthorityStructureMember =
   ) => {
     const userKeycloakId = context.auth?.userInfo?.sub;
 
-    const targetCertificationAuthorityStructureId =
-      args.certificationAuthorityStructureId ||
-      args.data?.certificationAuthorityStructureId ||
-      root.certificationAuthorityStructureId ||
+    const targetCertificationAuthorityId =
+      args.certificationAuthorityId ||
+      args.data?.certificationAuthorityId ||
+      root.certificationAuthorityId ||
       root.id;
 
     const userAccount = await prismaClient.account.findUnique({
@@ -28,9 +28,7 @@ export const getIsCertificationAuthorityStructureMember =
         certificationAuthority: {
           select: {
             certificationAuthorityOnCertificationAuthorityStructure: {
-              select: {
-                certificationAuthorityStructureId: true,
-              },
+              select: { id: true },
             },
           },
         },
@@ -42,19 +40,26 @@ export const getIsCertificationAuthorityStructureMember =
     }
 
     const targetCertificationAuthority =
-      await prismaClient.certificationAuthorityStructure.findUnique({
+      await prismaClient.certificationAuthority.findUnique({
         where: {
-          id: targetCertificationAuthorityStructureId,
+          id: targetCertificationAuthorityId,
+        },
+        select: {
+          certificationAuthorityOnCertificationAuthorityStructure: {
+            select: { id: true },
+          },
         },
       });
 
     if (!targetCertificationAuthority) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
     }
+
     const hasMatchingAuthorityStructure =
       userAccount?.certificationAuthority
-        ?.certificationAuthorityOnCertificationAuthorityStructure[0]
-        ?.certificationAuthorityStructureId === targetCertificationAuthority.id;
+        ?.certificationAuthorityOnCertificationAuthorityStructure[0]?.id ===
+      targetCertificationAuthority
+        ?.certificationAuthorityOnCertificationAuthorityStructure[0]?.id;
 
     if (!hasMatchingAuthorityStructure) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
