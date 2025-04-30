@@ -7,12 +7,12 @@ import { z } from "zod";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 
 const schema = z.object({
-  firstname: z.string().optional().default(""),
-  lastname: z
+  accountFirstname: z.string().optional().default(""),
+  accountLastname: z
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")
     .default(""),
-  email: z
+  accountEmail: z
     .string()
     .email("Le champ doit contenir une adresse email")
     .default(""),
@@ -56,21 +56,24 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
         <Input
           label="Nom de la personne ou du compte"
-          nativeInputProps={{ ...register("lastname") }}
-          state={errors.lastname ? "error" : "default"}
-          stateRelatedMessage={errors.lastname?.message}
+          nativeInputProps={{ ...register("accountLastname") }}
+          state={errors.accountLastname ? "error" : "default"}
+          stateRelatedMessage={errors.accountLastname?.message}
         />
         <Input
           label="Prénom (optionnel)"
-          nativeInputProps={{ ...register("firstname") }}
-          state={errors.firstname ? "error" : "default"}
-          stateRelatedMessage={errors.firstname?.message}
+          nativeInputProps={{ ...register("accountFirstname") }}
+          state={errors.accountFirstname ? "error" : "default"}
+          stateRelatedMessage={errors.accountFirstname?.message}
         />
         <Input
           label="Email de connexion"
-          nativeInputProps={{ autoComplete: "email", ...register("email") }}
-          state={errors.email ? "error" : "default"}
-          stateRelatedMessage={errors.email?.message}
+          nativeInputProps={{
+            autoComplete: "email",
+            ...register("accountEmail"),
+          }}
+          state={errors.accountEmail ? "error" : "default"}
+          stateRelatedMessage={errors.accountEmail?.message}
         />
       </div>
       <h2 className="mt-8">Contact référent </h2>

@@ -9,15 +9,26 @@ import { graphqlErrorToast } from "@/components/toast/toast";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useAddLocalAccountGeneralInformationPage } from "./addLocalAccountGeneralInformationPage.hook";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-
+import { useRouter } from "next/navigation";
 export default function AddLocalAccountPage() {
-  const { certificationAuthority } = useAddLocalAccountGeneralInformationPage();
+  const { certificationAuthority, addCertificationAuthorityLocalAccount } =
+    useAddLocalAccountGeneralInformationPage();
+
+  const router = useRouter();
 
   const handleFormSubmit = async (data: LocalAccountFormData) => {
     try {
-      console.log({ data });
+      const result = await addCertificationAuthorityLocalAccount.mutateAsync({
+        ...data,
+        certificationIds: [],
+        departmentIds: [],
+      });
 
       successToast("Le compte local a bien été créé");
+
+      router.push(
+        `/certification-authorities/settings/local-accounts/${result.certification_authority_createCertificationAuthorityLocalAccount?.id}`,
+      );
     } catch (error) {
       graphqlErrorToast(error);
     }

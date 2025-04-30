@@ -1,6 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { CreateCertificationAuthorityLocalAccountInput } from "@/graphql/generated/graphql";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getCertificationAuthorityQuery = graphql(`
   query getCertificationAuthorityForAddCertificationAuthorityLocalAccountPage {
@@ -13,6 +14,18 @@ const getCertificationAuthorityQuery = graphql(`
   }
 `);
 
+const addCertificationAuthorityLocalAccountMutation = graphql(`
+  mutation addCertificationAuthorityLocalAccount(
+    $input: CreateCertificationAuthorityLocalAccountInput!
+  ) {
+    certification_authority_createCertificationAuthorityLocalAccount(
+      input: $input
+    ) {
+      id
+    }
+  }
+`);
+
 export const useAddLocalAccountGeneralInformationPage = () => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -21,8 +34,18 @@ export const useAddLocalAccountGeneralInformationPage = () => {
     queryFn: () => graphqlClient.request(getCertificationAuthorityQuery),
   });
 
+  const addCertificationAuthorityLocalAccount = useMutation({
+    mutationFn: (input: CreateCertificationAuthorityLocalAccountInput) =>
+      graphqlClient.request(addCertificationAuthorityLocalAccountMutation, {
+        input,
+      }),
+  });
+
   const certificationAuthority =
     data?.account_getAccountForConnectedUser?.certificationAuthority;
 
-  return { certificationAuthority };
+  return {
+    certificationAuthority,
+    addCertificationAuthorityLocalAccount,
+  };
 };
