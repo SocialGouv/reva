@@ -215,7 +215,7 @@ const CandidateInformationForm = ({
   return (
     <>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, (e) => console.log(e))}
         onReset={(e) => {
           e.preventDefault();
           resetFormData(candidate as Candidate);
