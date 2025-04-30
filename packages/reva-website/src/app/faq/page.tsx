@@ -1,32 +1,34 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { GetSectionFaqsQuery } from "@/graphql/generated/graphql";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import request from "graphql-request";
-import Head from "next/head";
+import { Metadata } from "next";
+import { draftMode } from "next/headers";
 
-const FaqPage = ({
-  sections,
-  preview,
-}: {
-  sections: GetSectionFaqsQuery;
-  preview: boolean;
-}) => (
-  <>
-    <Head>
-      <title>France VAE | FAQ </title>
-      <meta charSet="UTF-8" />
-      <meta
-        name="description"
-        content="Retrouvez les questions les plus fréquentes sur la VAE en France. Trouvez des réponses à vos questions sur la Validation des Acquis de l'Expérience"
-      />
-      <meta name="keywords" content="Gouvernement, France, VAE, France VAE" />
-      <meta name="author" content="France VAE" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    </Head>
+export const metadata: Metadata = {
+  title: "France VAE | FAQ",
+  description:
+    "Retrouvez les questions les plus fréquentes sur la VAE en France. Trouvez des réponses à vos questions sur la Validation des Acquis de l'Expérience",
+  openGraph: {
+    title: "France VAE | FAQ",
+    description:
+      "Retrouvez les questions les plus fréquentes sur la VAE en France. Trouvez des réponses à vos questions sur la Validation des Acquis de l'Expérience",
+  },
+  keywords: ["Gouvernement", "France", "VAE", "France VAE"],
+  viewport: "width=device-width, initial-scale=1.0",
+};
+
+const FaqPage = async () => {
+  const { isEnabled: preview } = await draftMode();
+  const sections = await request(STRAPI_GRAPHQL_API_URL, sectionFaqs, {
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+    itemFilter: preview ? null : { publishedAt: { notNull: true } },
+    sectionFilter: preview ? null : { publishedAt: { notNull: true } },
+  });
+  return (
     <MainLayout preview={preview}>
       <div className="flex flex-col w-full gap-8 fr-container p-32 pt-0 md:pt-16">
         <h1 className="text-4xl font-bold  bg-white mt-12 mb-0 md:mb-6 self-center">
@@ -97,8 +99,8 @@ const FaqPage = ({
         </div>
       </div>
     </MainLayout>
-  </>
-);
+  );
+};
 
 const sectionFaqs = graphql(`
   query getSectionFaqs(
@@ -122,14 +124,5 @@ const sectionFaqs = graphql(`
     }
   }
 `);
-
-export async function getServerSideProps({ preview = false }) {
-  const sections = await request(STRAPI_GRAPHQL_API_URL, sectionFaqs, {
-    publicationState: preview ? "DRAFT" : "PUBLISHED",
-    itemFilter: preview ? null : { publishedAt: { notNull: true } },
-    sectionFilter: preview ? null : { publishedAt: { notNull: true } },
-  });
-  return { props: { sections, preview } };
-}
 
 export default FaqPage;
