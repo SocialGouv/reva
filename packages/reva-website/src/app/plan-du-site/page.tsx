@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import Head from "next/head";
 import Link from "next/link";
 
