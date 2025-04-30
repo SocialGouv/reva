@@ -13,7 +13,10 @@ import {
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
 import { resolversSecurityMap } from "./certification-authority.security";
-import { CertificationAuthority } from "./certification-authority.types";
+import {
+  CertificationAuthority,
+  CreateCertificationAuthorityLocalAccountInput,
+} from "./certification-authority.types";
 import { canUserManageCertificationAuthorityLocalAccount } from "./features/canUserManageCertifiationAuthorityLocalAccount";
 import { certificationAuthorityAcceptCgu } from "./features/certificationAuthorityAcceptCgu";
 import { createCertificationAuthority } from "./features/createCertificationAuthority";
@@ -214,13 +217,7 @@ const unsafeResolvers = {
     certification_authority_createCertificationAuthorityLocalAccount: async (
       _parent: unknown,
       params: {
-        input: {
-          accountFirstname: string;
-          accountLastname: string;
-          accountEmail: string;
-          departmentIds: string[];
-          certificationIds: string[];
-        };
+        input: CreateCertificationAuthorityLocalAccountInput;
       },
       context: GraphqlContext,
     ) =>

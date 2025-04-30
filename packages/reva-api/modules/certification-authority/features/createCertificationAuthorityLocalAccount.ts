@@ -4,6 +4,7 @@ import { prismaClient } from "../../../prisma/client";
 import { createAccount } from "../../account/features/createAccount";
 import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
 import { FunctionalError } from "../../shared/error/functionalError";
+import { CreateCertificationAuthorityLocalAccountInput } from "../certification-authority.types";
 
 export const createCertificationAuthorityLocalAccount = async ({
   accountFirstname,
@@ -12,14 +13,10 @@ export const createCertificationAuthorityLocalAccount = async ({
   departmentIds,
   certificationIds,
   certificationAuthorityKeycloakId,
-}: {
-  accountFirstname: string;
-  accountLastname: string;
-  accountEmail: string;
-  departmentIds: string[];
-  certificationIds: string[];
-  certificationAuthorityKeycloakId: string;
-}) => {
+  contactFullName,
+  contactEmail,
+  contactPhone,
+}: CreateCertificationAuthorityLocalAccountInput) => {
   const certificationAuthorityAccount = await getAccountByKeycloakId({
     keycloakId: certificationAuthorityKeycloakId,
   });
@@ -68,6 +65,9 @@ export const createCertificationAuthorityLocalAccount = async ({
     data: {
       accountId: account.id,
       certificationAuthorityId: certificationAuthority?.id,
+      contactFullName,
+      contactEmail,
+      contactPhone,
       certificationAuthorityLocalAccountOnCertification: {
         createMany: {
           data: certificationIds.map((certificationId) => ({

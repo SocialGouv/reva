@@ -105,6 +105,9 @@ input CreateCertificationAuthorityLocalAccountInput {
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!
+  contactFullName: String
+  contactEmail: String
+  contactPhone: String
   departmentIds: [String!]!
   certificationIds: [String!]!
 }
