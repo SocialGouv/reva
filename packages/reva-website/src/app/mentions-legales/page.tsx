@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import {
   ContentSection,
   MainTitle,
