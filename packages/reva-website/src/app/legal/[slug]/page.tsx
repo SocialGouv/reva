@@ -1,11 +1,11 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { NeutralBackground } from "@/components/layout/neutral-background/NeutralBackground";
 import { graphql } from "@/graphql/generated";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import Head from "next/head";
 import request from "graphql-request";
-import { Legal } from "@/graphql/generated/graphql";
-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
+import { draftMode } from "next/headers";
+import { StrapiBlocksRenderer } from "@/app/_components/blocks-renderer/StrapiBlocksRenderer";
 
 const getLegalArticle = graphql(`
   query getLegalArticle($nom: String!, $publicationState: PublicationStatus!) {
@@ -19,10 +19,27 @@ const getLegalArticle = graphql(`
   }
 `);
 
-const LegalDocumentationPage = ({ legalArticle }: { legalArticle: Legal }) => {
+const LegalDocumentationPage = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const { isEnabled: preview } = await draftMode();
+  const { slug } = await params;
+  const getLegalArticleResponse = await request(
+    STRAPI_GRAPHQL_API_URL,
+    getLegalArticle,
+    {
+      nom: slug,
+      publicationState: preview ? "DRAFT" : "PUBLISHED",
+    },
+  );
+  const legalArticle = getLegalArticleResponse?.legals[0] ?? null;
+
   if (!legalArticle) {
     return null;
   }
+
   return (
     <MainLayout>
       <Head>
@@ -39,14 +56,7 @@ const LegalDocumentationPage = ({ legalArticle }: { legalArticle: Legal }) => {
             legalArticle.chapo[0].children[0].text === ""
           ) && (
             <>
-              <BlocksRenderer
-                content={legalArticle.chapo}
-                blocks={{
-                  paragraph: ({ children }) => (
-                    <p className="text-xl leading-relaxed mb-0">{children}</p>
-                  ),
-                }}
-              />
+              <StrapiBlocksRenderer content={legalArticle.chapo} />
               <hr className="mt-12 mb-6" />
             </>
           )}
@@ -60,22 +70,3 @@ const LegalDocumentationPage = ({ legalArticle }: { legalArticle: Legal }) => {
   );
 };
 export default LegalDocumentationPage;
-
-export async function getServerSideProps({
-  params: { slug },
-  preview = false,
-}: {
-  params: { slug: string };
-  preview: boolean;
-}) {
-  const getLegalArticleResponse = await request(
-    STRAPI_GRAPHQL_API_URL,
-    getLegalArticle,
-    {
-      nom: slug,
-      publicationState: preview ? "DRAFT" : "PUBLISHED",
-    },
-  );
-  const legalArticle = getLegalArticleResponse?.legals[0] ?? null;
-  return { props: { legalArticle } };
-}
