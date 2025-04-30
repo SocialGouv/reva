@@ -1,13 +1,12 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import Head from "next/head";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+
+export const metadata = {
+  title: "Nous contacter - France VAE",
+};
 
 const IndexNousContacterPage = () => {
   return (
     <MainLayout>
-      <Head>
-        <title>Nous contacter - France VAE</title>
-      </Head>
-
       <div className="fr-container text-center pt-20">
         <h1>Nous contacter</h1>
         <iframe
