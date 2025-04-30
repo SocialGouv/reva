@@ -1,8 +1,7 @@
 import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ReactNode, useMemo } from "react";
-import { useRouter } from "next/navigation";
 
 type SearchResultsPage<T> = {
   info: { totalRows: number; totalPages: number; currentPage: number };
@@ -21,6 +20,7 @@ export interface SearchListProps<T> {
   searchResultsPage: SearchResultsPage<T>;
   children?: (searchResult: T) => ReactNode;
   childrenContainerClassName?: string;
+  addButton?: ReactNode;
 }
 
 export const SearchList = <T,>({
@@ -31,6 +31,7 @@ export const SearchList = <T,>({
   children,
   searchResultsPage,
   childrenContainerClassName,
+  addButton,
 }: SearchListProps<T>) => {
   const pathname = usePathname();
 
@@ -77,6 +78,7 @@ export const SearchList = <T,>({
           const path = `${pathname}?${queryParams.toString()}`;
           router.push(path);
         }}
+        addButton={addButton}
       />
       <ul
         data-test="results"

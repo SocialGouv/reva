@@ -1,6 +1,43 @@
-import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useEffect, useState } from "react";
+import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
+import { ReactNode, useEffect, useState } from "react";
+
+const SearchResultsHeader = ({
+  defaultSearchFilter,
+  onSearchFilterChange,
+  resultCount,
+  addButton,
+}: {
+  defaultSearchFilter: string;
+  onSearchFilterChange: (filter: string) => void;
+  resultCount: number;
+  addButton: ReactNode;
+}) => {
+  const resultCountLabel = `${resultCount} résultat${
+    resultCount > 1 ? "s" : ""
+  }`;
+  return (
+    <div className="flex justify-between">
+      {defaultSearchFilter ? (
+        <div>
+          <div className="text-xs text-neutral-500">
+            {resultCountLabel} pour « {defaultSearchFilter} »
+          </div>
+          <Button
+            className="mt-2"
+            priority="secondary"
+            onClick={() => onSearchFilterChange("")}
+          >
+            Réinitialiser le filtre
+          </Button>
+        </div>
+      ) : (
+        <div className="text-xs text-neutral-500">{resultCountLabel}</div>
+      )}
+      {addButton && addButton}
+    </div>
+  );
+};
 
 export const SearchFilterBar = ({
   className,
@@ -10,6 +47,7 @@ export const SearchFilterBar = ({
   onSearchFilterChange,
   resultCount,
   placeholder = "Rechercher",
+  addButton,
 }: {
   className: string;
   lifted?: boolean;
@@ -18,11 +56,8 @@ export const SearchFilterBar = ({
   onSearchFilterChange: (filter: string) => void;
   resultCount: number;
   placeholder?: string;
+  addButton?: ReactNode;
 }) => {
-  const resultCountLabel = `${resultCount} résultat${
-    resultCount > 1 ? "s" : ""
-  }`;
-
   const [searchFilter, setSearchFilter] = useState(defaultSearchFilter);
   useEffect(() => {
     setSearchFilter(defaultSearchFilter);
@@ -65,22 +100,12 @@ export const SearchFilterBar = ({
           )}
         />
       </div>
-      {defaultSearchFilter ? (
-        <>
-          <div className="text-xs text-neutral-500">
-            {resultCountLabel} pour « {defaultSearchFilter} »
-          </div>
-          <Button
-            className="mt-2"
-            priority="secondary"
-            onClick={() => onSearchFilterChange("")}
-          >
-            Réinitialiser le filtre
-          </Button>
-        </>
-      ) : (
-        <div className="text-xs text-neutral-500">{resultCountLabel}</div>
-      )}
+      <SearchResultsHeader
+        defaultSearchFilter={defaultSearchFilter}
+        onSearchFilterChange={onSearchFilterChange}
+        resultCount={resultCount}
+        addButton={addButton}
+      />
     </div>
   );
 };
