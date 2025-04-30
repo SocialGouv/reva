@@ -37,9 +37,16 @@ export const updateCertificationAuthorityV2ById = async (params: {
     });
 
   if (certificationAuthorityData.isGlobalContact) {
-    console.log(
-      "Would assign contact to all local accounts of the certification authority",
-    );
+    await prismaClient.certificationAuthorityLocalAccount.updateMany({
+      where: {
+        certificationAuthorityId: certificationAuthority.id,
+      },
+      data: {
+        contactFullName: certificationAuthorityData.contactFullName,
+        contactEmail: certificationAuthorityData.contactEmail,
+        contactPhone: certificationAuthorityData.contactPhone,
+      },
+    });
   }
 
   return updatedCertificationAuthority;
