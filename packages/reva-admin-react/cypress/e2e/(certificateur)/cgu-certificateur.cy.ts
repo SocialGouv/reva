@@ -3,7 +3,10 @@ import cguCertificateurFixture from "./fixtures/cgu-certificateur.json";
 
 const SELECTORS = {
   CGU_FORM: '[data-test="cgu-certificateur-form"]',
-  CGU_ACCEPTANCE_CHECKBOX: '[data-test="cgu-certificateur-acceptance"] input',
+  CGU_ACCEPTANCE_CHECKBOX:
+    '[data-test="cgu-certificateur-cgu-acceptance"] input',
+  CHARTER_ACCEPTANCE_CHECKBOX:
+    '[data-test="cgu-certificateur-charter-acceptance"] input',
   CGU_SUBMIT_BUTTON: '[data-test="cgu-certificateur-submit"]',
   CGU_IGNORE_BUTTON: '[data-test="cgu-certificateur-ignore"]',
   IGNORE_MODAL_IGNORE_BUTTON:
@@ -152,17 +155,21 @@ describe("CGU Certificateur Page", () => {
 
     it("should have disabled submit button when checkbox is unchecked", () => {
       cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).should("exist");
+      cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).should("exist");
       cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("be.disabled");
     });
 
-    it("should enable submit button only when acceptance checkbox is checked", () => {
-      cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({
-        force: true,
-      });
+    it("should enable submit button only when both acceptance checkboxes are checked", () => {
+      cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({ force: true });
+      cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("be.disabled");
+      cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({ force: true });
       cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("not.be.disabled");
     });
 
     it("should show success toast notification when CGU are successfully accepted", () => {
+      cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({
+        force: true,
+      });
       cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({
         force: true,
       });
@@ -177,6 +184,9 @@ describe("CGU Certificateur Page", () => {
       });
       cy.get(SELECTORS.CGU_FORM).should("exist");
 
+      cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({
+        force: true,
+      });
       cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({
         force: true,
       });
