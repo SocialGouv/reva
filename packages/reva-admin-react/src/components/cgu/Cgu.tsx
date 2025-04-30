@@ -11,7 +11,7 @@ export const Cgu = ({
   chapo: BlocksContent;
   updatedAt: string;
 }) => (
-  <>
+  <div data-test="cgu">
     <BlocksRenderer
       content={chapo}
       blocks={{
@@ -26,5 +26,5 @@ export const Cgu = ({
     <p>
       Dernière version des CGU : {toDate(updatedAt).toLocaleDateString("fr-FR")}
     </p>
-  </>
+  </div>
 );

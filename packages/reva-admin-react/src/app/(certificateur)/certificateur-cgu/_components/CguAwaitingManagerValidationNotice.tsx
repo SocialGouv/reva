@@ -11,7 +11,10 @@ export const CguAwaitingManagerValidationNotice = ({
   setShowCgu: (showCgu: boolean) => void;
 }) => {
   return (
-    <div className="flex items-center justify-center gap-28">
+    <div
+      className="flex items-center justify-center gap-28"
+      data-test="cgu-awaiting-manager-validation"
+    >
       <div>
         <h1>Mise à jour des conditions générales d'utilisation</h1>
         <p>
@@ -29,7 +32,11 @@ export const CguAwaitingManagerValidationNotice = ({
           Une fois les CGU acceptées par votre responsable de certification,
           veuillez vous reconnecter afin d'accéder à votre espace.
         </p>
-        <Button onClick={() => setShowCgu(true)} priority="secondary">
+        <Button
+          onClick={() => setShowCgu(true)}
+          priority="secondary"
+          data-test="cgu-show-button"
+        >
           <span>Voir les conditions générales d'utilisation</span>
         </Button>
       </div>
