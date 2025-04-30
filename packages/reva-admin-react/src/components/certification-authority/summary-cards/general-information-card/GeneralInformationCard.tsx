@@ -33,9 +33,15 @@ export default function GeneralInformationCard({
             <div className="flex gap-x-2">
               <p>Contact référent :</p>
               <div>
-                <p className="my-0">{certificationAuthority.contactFullName}</p>
-                <p className="my-0">{certificationAuthority.contactEmail}</p>
-                <p className="my-0">{certificationAuthority.contactPhone}</p>
+                <p className="my-0 font-medium">
+                  {certificationAuthority.contactFullName}
+                </p>
+                <p className="my-0 font-medium">
+                  {certificationAuthority.contactEmail}
+                </p>
+                <p className="my-0 font-medium">
+                  {certificationAuthority.contactPhone}
+                </p>
               </div>
             </div>
           </>
