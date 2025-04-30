@@ -1,4 +1,5 @@
 import { SectionCard } from "@/components/card/section-card/SectionCard";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
 
@@ -9,6 +10,7 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
 }: {
   accounts: {
     id: string;
+    contactEmail?: string | null;
     account: {
       id: string;
       firstname?: string | null;
@@ -29,17 +31,25 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
       buttonOnClick={() => router.push(addLocalAccountPageUrl)}
       buttonPriority="secondary"
     >
-      <ul className="list-none font-bold">
-        {accounts.map(({ account, id }) => (
+      <ul className="list-none">
+        {accounts.map(({ account, id, contactEmail }) => (
           <li
             key={account.id}
             className="flex items-center justify-between pt-4 pb-3 border-neutral-300 border-t last:border-b"
           >
-            <div className="flex flex-col">
-              <span>
+            <div className="flex flex-col gap-y-2">
+              <span className="font-bold">
                 {account.firstname} {account.lastname}
               </span>
-              <span className="font-normal">{account.email}</span>
+              {contactEmail ? (
+                <span>
+                  Contact référent : <strong>{contactEmail}</strong>
+                </span>
+              ) : (
+                <Badge severity="new" small>
+                  Aucun contact référent
+                </Badge>
+              )}
             </div>
             <span>
               <Button
