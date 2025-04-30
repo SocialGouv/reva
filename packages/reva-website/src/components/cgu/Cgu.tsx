@@ -1,3 +1,4 @@
+"use client";
 import { BlocksContent, BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 export const Cgu = ({
