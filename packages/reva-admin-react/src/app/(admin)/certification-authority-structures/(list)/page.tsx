@@ -1,10 +1,11 @@
 "use client";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import { Card } from "@codegouvfr/react-dsfr/Card";
 import { SearchList } from "@/components/search/search-list/SearchList";
+import { graphql } from "@/graphql/generated";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { Card } from "@codegouvfr/react-dsfr/Card";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const getCertificationAuthorityStructures = graphql(`
   query getCertificationAuthorityStructures(
@@ -33,7 +34,7 @@ const RECORDS_PER_PAGE = 10;
 
 const CertificationAuthorityStructuresListPage = () => {
   const { graphqlClient } = useGraphQlClient();
-
+  const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const currentPage = page ? Number.parseInt(page) : 1;
@@ -78,6 +79,18 @@ const CertificationAuthorityStructuresListPage = () => {
               placeholder:
                 "Rechercher par nom de certificateur, nom ou email de collaborateur, région, département...",
             }}
+            addButton={
+              <Button
+                onClick={() => {
+                  router.push("/certification-authority-structures/add");
+                }}
+                priority="tertiary no outline"
+                size="small"
+              >
+                <span className="fr-icon-add-line fr-icon--sm" /> Ajouter une
+                structure
+              </Button>
+            }
           >
             {(c) => (
               <Card
