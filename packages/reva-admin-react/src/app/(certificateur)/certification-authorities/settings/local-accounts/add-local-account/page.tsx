@@ -26,7 +26,7 @@ export default function AddLocalAccountPage() {
           titleIconClass="fr-icon-information-fill"
           status="TO_COMPLETE"
           isEditable
-          buttonOnClickHref="/certification-authorities/settings/local-accounts/add-local-account/informations-generales"
+          buttonOnClickHref="/certification-authorities/settings/local-accounts/add-local-account/general-information"
         >
           <SmallNotice>
             Commencez par remplir les informations générales liées au compte.
