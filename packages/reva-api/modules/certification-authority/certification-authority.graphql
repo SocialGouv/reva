@@ -243,4 +243,8 @@ type Mutation {
   ): CertificationAuthority!
 
   certification_authority_acceptCgu: Boolean!
+
+  certification_authority_createCertificationAuthorityStructure(
+    label: String!
+  ): CertificationAuthorityStructure!
 }

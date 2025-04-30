@@ -21,6 +21,7 @@ import { canUserManageCertificationAuthorityLocalAccount } from "./features/canU
 import { certificationAuthorityAcceptCgu } from "./features/certificationAuthorityAcceptCgu";
 import { createCertificationAuthority } from "./features/createCertificationAuthority";
 import { createCertificationAuthorityLocalAccount } from "./features/createCertificationAuthorityLocalAccount";
+import { createCertificationAuthorityStructure } from "./features/createCertificationAuthorityStructure";
 import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
 import { deleteCertificationAuthorityLocalAccount } from "./features/deleteCertificationAuthorityLocalAccount";
 import { getAccountByCertificationAuthorityId } from "./features/getAccountByCertificationAuthorityId";
@@ -385,6 +386,12 @@ const unsafeResolvers = {
       certificationAuthorityAcceptCgu({
         keycloakId: context.auth.userInfo?.sub || "",
       }),
+    certification_authority_createCertificationAuthorityStructure: async (
+      _parent: unknown,
+      params: {
+        label: string;
+      },
+    ) => createCertificationAuthorityStructure(params.label),
   },
   Query: {
     certification_authority_getCertificationAuthority: async (

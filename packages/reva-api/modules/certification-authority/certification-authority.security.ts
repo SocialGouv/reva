@@ -59,6 +59,8 @@ export const resolversSecurityMap = {
   "Mutation.certification_authority_acceptCgu": hasRole([
     "manage_certification_registry",
   ]),
+  "Mutation.certification_authority_createCertificationAuthorityStructure":
+    isAdmin,
 
   "CertificationAuthority.certificationAuthorityStructures":
     isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
