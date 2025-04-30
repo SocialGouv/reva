@@ -20,6 +20,9 @@ type CertificationAuthority {
 type CertificationAuthorityLocalAccount {
   id: ID!
   account: Account!
+  contactFullName: String
+  contactEmail: String
+  contactPhone: String
   departments: [Department!]!
   certifications: [Certification!]!
   certificationAuthority: CertificationAuthority!
