@@ -17,6 +17,8 @@ import { Card } from "@codegouvfr/react-dsfr/Card";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import type { Metadata } from "next";
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "France VAE | Bienvenue sur le portail de la VAE",
   description:
