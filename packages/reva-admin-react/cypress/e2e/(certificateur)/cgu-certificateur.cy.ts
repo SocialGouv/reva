@@ -15,6 +15,9 @@ const SELECTORS = {
     '[data-test="cgu-certificateur-ignore-modal-relire-button"]',
   TOAST_SUCCESS: '[data-test="toast-success"]',
   TOAST_ERROR: '[data-test="toast-error"]',
+  AWAITING_MANAGER_VALIDATION: '[data-test="cgu-awaiting-manager-validation"]',
+  SHOW_CGU_BUTTON: '[data-test="cgu-show-button"]',
+  CGU: '[data-test="cgu"]',
 };
 
 interface VisitCguCertificateurParams {
@@ -101,7 +104,6 @@ describe("CGU Certificateur Page", () => {
       }
       return true;
     });
-    // intercept the graphql call to strapi to return the cguCertificateurFixture
     cy.intercept("POST", "/graphql", (req) => {
       if (req.body.operationName === "getCguCertificateur") {
         req.alias = "getCguCertificateur";
@@ -135,94 +137,116 @@ describe("CGU Certificateur Page", () => {
     });
   });
 
-  context("Page Content and Form Display", () => {
-    it("should NOT display CGU acceptance form for standard Certificateur users", () => {
+  describe("Certification Authority Registry Manager", () => {
+    beforeEach(() => {
+      visitCguCertificateur();
+    });
+
+    it("should display CGU acceptance form", () => {
+      cy.get(SELECTORS.CGU_FORM).should("exist");
+    });
+
+    it("should not display awaiting manager validation notice", () => {
+      cy.get(SELECTORS.AWAITING_MANAGER_VALIDATION).should("not.exist");
+    });
+
+    context("CGU Acceptance Form", () => {
+      beforeEach(() => {
+        cy.get(SELECTORS.CGU_FORM).should("exist");
+      });
+
+      it("should have disabled submit button when checkbox is unchecked", () => {
+        cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).should("exist");
+        cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).should("exist");
+        cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("be.disabled");
+      });
+
+      it("should enable submit button only when both acceptance checkboxes are checked", () => {
+        cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({ force: true });
+        cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("be.disabled");
+        cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({ force: true });
+        cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("not.be.disabled");
+      });
+
+      it("should show success toast notification when CGU are successfully accepted", () => {
+        cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({
+          force: true,
+        });
+        cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({
+          force: true,
+        });
+        cy.get(SELECTORS.CGU_SUBMIT_BUTTON).click();
+        cy.wait("@acceptCertificateurCGUMutation");
+        cy.get(SELECTORS.TOAST_SUCCESS).should("exist");
+      });
+
+      it("should show error toast notification when CGU acceptance API call fails", () => {
+        visitCguCertificateur({
+          acceptCguError: true,
+        });
+        cy.get(SELECTORS.CGU_FORM).should("exist");
+
+        cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({
+          force: true,
+        });
+        cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({
+          force: true,
+        });
+        cy.get(SELECTORS.CGU_SUBMIT_BUTTON).click();
+        cy.wait("@acceptCertificateurCGUMutation");
+        cy.get(SELECTORS.TOAST_ERROR).should("exist");
+      });
+    });
+
+    context("Ignore CGU Modal", () => {
+      beforeEach(() => {
+        cy.get(SELECTORS.CGU_FORM).should("exist");
+      });
+
+      it("should display both ignore and relire buttons when ignore modal is opened", () => {
+        cy.get(SELECTORS.CGU_IGNORE_BUTTON).click();
+        cy.get(SELECTORS.IGNORE_MODAL_IGNORE_BUTTON).should("exist");
+        cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).should("exist");
+      });
+
+      it("should close the modal when relire button is clicked", () => {
+        cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible");
+        cy.get(SELECTORS.CGU_IGNORE_BUTTON).click();
+        cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("not.be.visible");
+        cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).click();
+        cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible");
+        cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).should("not.be.visible");
+      });
+
+      it("should trigger appropriate action when modal ignore button is clicked", () => {
+        cy.get(SELECTORS.CGU_FORM).should("be.visible");
+        cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible").click();
+        cy.get(SELECTORS.CGU_FORM).should("not.be.visible");
+        cy.get(SELECTORS.IGNORE_MODAL_IGNORE_BUTTON)
+          .should("be.visible")
+          .click();
+        cy.get(SELECTORS.CGU_FORM).should("be.visible");
+      });
+    });
+  });
+
+  describe("Certification Authority and Local Account", () => {
+    beforeEach(() => {
       visitCguCertificateur({ isRegistryManager: false });
+    });
+
+    it("should NOT display CGU acceptance form", () => {
       cy.get(SELECTORS.CGU_FORM).should("not.exist");
     });
 
-    it("should display CGU acceptance form for Registry Manager users", () => {
-      visitCguCertificateur();
-      cy.get(SELECTORS.CGU_FORM).should("exist");
-    });
-  });
-
-  context("CGU Acceptance Form (Registry Manager)", () => {
-    beforeEach(() => {
-      visitCguCertificateur();
-      cy.get(SELECTORS.CGU_FORM).should("exist");
+    it("should display the awaiting manager validation notice", () => {
+      cy.get(SELECTORS.AWAITING_MANAGER_VALIDATION).should("exist");
     });
 
-    it("should have disabled submit button when checkbox is unchecked", () => {
-      cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).should("exist");
-      cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).should("exist");
-      cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("be.disabled");
-    });
-
-    it("should enable submit button only when both acceptance checkboxes are checked", () => {
-      cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({ force: true });
-      cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("be.disabled");
-      cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({ force: true });
-      cy.get(SELECTORS.CGU_SUBMIT_BUTTON).should("not.be.disabled");
-    });
-
-    it("should show success toast notification when CGU are successfully accepted", () => {
-      cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({
-        force: true,
-      });
-      cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({
-        force: true,
-      });
-      cy.get(SELECTORS.CGU_SUBMIT_BUTTON).click();
-      cy.wait("@acceptCertificateurCGUMutation");
-      cy.get(SELECTORS.TOAST_SUCCESS).should("exist");
-    });
-
-    it("should show error toast notification when CGU acceptance API call fails", () => {
-      visitCguCertificateur({
-        acceptCguError: true,
-      });
-      cy.get(SELECTORS.CGU_FORM).should("exist");
-
-      cy.get(SELECTORS.CHARTER_ACCEPTANCE_CHECKBOX).click({
-        force: true,
-      });
-      cy.get(SELECTORS.CGU_ACCEPTANCE_CHECKBOX).click({
-        force: true,
-      });
-      cy.get(SELECTORS.CGU_SUBMIT_BUTTON).click();
-      cy.wait("@acceptCertificateurCGUMutation");
-      cy.get(SELECTORS.TOAST_ERROR).should("exist");
-    });
-  });
-
-  context("Ignore CGU Modal (Registry Manager)", () => {
-    beforeEach(() => {
-      visitCguCertificateur();
-      cy.get(SELECTORS.CGU_FORM).should("exist");
-    });
-
-    it("should display both ignore and relire buttons when ignore modal is opened", () => {
-      cy.get(SELECTORS.CGU_IGNORE_BUTTON).click();
-      cy.get(SELECTORS.IGNORE_MODAL_IGNORE_BUTTON).should("exist");
-      cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).should("exist");
-    });
-
-    it("should close the modal when relire button is clicked", () => {
-      cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible");
-      cy.get(SELECTORS.CGU_IGNORE_BUTTON).click();
-      cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("not.be.visible");
-      cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).click();
-      cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible");
-      cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).should("not.be.visible");
-    });
-
-    it("should trigger appropriate action when modal ignore button is clicked", () => {
-      cy.get(SELECTORS.CGU_FORM).should("be.visible");
-      cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible").click();
-      cy.get(SELECTORS.CGU_FORM).should("not.be.visible");
-      cy.get(SELECTORS.IGNORE_MODAL_IGNORE_BUTTON).should("be.visible").click();
-      cy.get(SELECTORS.CGU_FORM).should("be.visible");
+    it("should have a functional button to show CGU content", () => {
+      cy.get(SELECTORS.SHOW_CGU_BUTTON).should("exist");
+      cy.get(SELECTORS.SHOW_CGU_BUTTON).click();
+      cy.get(SELECTORS.CGU).should("be.visible");
     });
   });
 });
