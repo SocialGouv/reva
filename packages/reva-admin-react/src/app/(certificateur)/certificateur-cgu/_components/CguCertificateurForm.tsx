@@ -1,7 +1,6 @@
 "use client";
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
@@ -13,6 +12,7 @@ import { useCguCertificateur } from "../cgu-certificateur.hook";
 import { IgnoreCguCertificateurModalContent } from "./IgnoreCguCertificateurModalContent";
 
 const zodSchema = z.object({
+  charterAcceptance: z.literal<boolean>(true),
   cguAcceptance: z.literal<boolean>(true),
 });
 
@@ -52,16 +52,23 @@ export function CguCertificateurForm() {
       >
         <fieldset>
           <hr className="mt-6 mb-8" />
-          <FormOptionalFieldsDisclaimer />
           <Checkbox
-            data-test="cgu-certificateur-acceptance"
+            data-test="cgu-certificateur-charter-acceptance"
             options={[
               {
                 label:
-                  "J’accepte les nouvelles conditions générales d’utilisation.",
-                nativeInputProps: {
-                  ...register("cguAcceptance"),
-                },
+                  "Je reconnais avoir lu et pris connaissance de la charte certificateur.",
+                nativeInputProps: register("charterAcceptance"),
+              },
+            ]}
+          />
+          <Checkbox
+            data-test="cgu-certificateur-cgu-acceptance"
+            options={[
+              {
+                label:
+                  "J'accepte les nouvelles conditions générales d'utilisation.",
+                nativeInputProps: register("cguAcceptance"),
               },
             ]}
           />
