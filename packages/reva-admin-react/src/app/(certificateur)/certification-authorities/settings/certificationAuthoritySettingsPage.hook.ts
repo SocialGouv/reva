@@ -11,9 +11,6 @@ const getCertificationAuthority = graphql(`
         contactFullName
         contactEmail
         contactPhone
-        certificationAuthorityStructures {
-          id
-        }
         certificationAuthorityLocalAccounts {
           id
           contactEmail
