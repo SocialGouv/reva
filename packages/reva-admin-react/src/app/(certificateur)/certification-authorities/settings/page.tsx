@@ -31,7 +31,9 @@ export default function CertificationAuthoritySettingsPage() {
           accounts={
             certificationAuthority?.certificationAuthorityLocalAccounts || []
           }
-          updateLocalAccountPageUrl={"/certification-authorities/settings/"}
+          updateLocalAccountPageUrl={
+            "/certification-authorities/settings/local-accounts"
+          }
           addLocalAccountPageUrl={
             "/certification-authorities/settings/local-accounts/add-local-account"
           }
