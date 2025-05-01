@@ -48,7 +48,7 @@ export default function UpdateLocalAccountPage() {
           href: "/certification-authorities/settings/",
         }}
       >
-        Annuler
+        Retour
       </Button>
     </div>
   );
