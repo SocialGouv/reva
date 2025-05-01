@@ -24,6 +24,7 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
   const router = useRouter();
   return (
     <SectionCard
+      data-test="certification-authority-local-accounts-summary-card"
       title="Comptes locaux"
       titleIconClass="fr-icon-team-fill"
       hasButton={true}
@@ -31,7 +32,10 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
       buttonOnClick={() => router.push(addLocalAccountPageUrl)}
       buttonPriority="secondary"
     >
-      <ul className="list-none">
+      <ul
+        className="list-none"
+        data-test="certification-authority-local-accounts-summary-card-list"
+      >
         {accounts.map(({ account, id, contactEmail }) => (
           <li
             key={account.id}
@@ -46,13 +50,18 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
                   Contact référent : <strong>{contactEmail}</strong>
                 </span>
               ) : (
-                <Badge severity="new" small>
+                <Badge
+                  severity="new"
+                  small
+                  data-test="no-contact-referent-badge"
+                >
                   Aucun contact référent
                 </Badge>
               )}
             </div>
             <span>
               <Button
+                data-test="edit-local-account-button"
                 priority="tertiary no outline"
                 size="small"
                 linkProps={{
