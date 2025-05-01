@@ -70,7 +70,7 @@ export default function AddLocalAccountPage() {
         />
       </div>
       <CertificationAuthorityLocalAccountGeneralInformationForm
-        backUrl="/certification-authorities/settings/local-accounts/add-local-account"
+        backUrl={`/certification-authorities/settings/local-accounts/${certificationLocalAccountId}`}
         onSubmit={handleFormSubmit}
         defaultValues={{
           accountFirstname:
