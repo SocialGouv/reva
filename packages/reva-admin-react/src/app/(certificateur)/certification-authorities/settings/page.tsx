@@ -15,7 +15,10 @@ export default function CertificationAuthoritySettingsPage() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div
+      className="flex flex-col"
+      data-test="certification-authority-settings-page"
+    >
       <h1>Paramètres</h1>
       <p className="mb-12">
         Accédez à toutes les informations liées au suivi de vos candidatures et
