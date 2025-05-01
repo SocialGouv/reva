@@ -3,6 +3,8 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
 import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
+import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
+
 export default function UpdateLocalAccountPage() {
   const { certificationLocalAccountId } = useParams<{
     certificationLocalAccountId: string;
@@ -32,7 +34,13 @@ export default function UpdateLocalAccountPage() {
       <p className="mb-12">
         Retrouvez l’ensemble des informations liées à ce compte local.
       </p>
-      <div className="w-full flex flex-col gap-8"></div>
+      <div className="w-full flex flex-col gap-8">
+        <LocalAccountGeneralInformationSummaryCard
+          contactFullName={localAccountLabel}
+          contactEmail={certificationAuthorityLocalAccount?.account.email}
+          updateGeneralInformationPageUrl={`/certification-authorities/settings/local-accounts/${certificationLocalAccountId}/general-information`}
+        />
+      </div>
       <Button
         className="mt-12"
         priority="secondary"
