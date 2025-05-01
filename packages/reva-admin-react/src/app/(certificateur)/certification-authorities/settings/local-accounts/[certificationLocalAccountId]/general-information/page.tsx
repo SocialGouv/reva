@@ -4,24 +4,44 @@ import {
   LocalAccountFormData,
 } from "@/components/certification-authority/local-account/general-information-form/CertificationAuthorityLocalAccountGeneralInformationForm";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { graphqlErrorToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useUpdateLocalAccountGeneralInformationPage } from "./updateLocalAccountGeneralInformationPage.hook";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function AddLocalAccountPage() {
+  const router = useRouter();
+
   const { certificationLocalAccountId } = useParams<{
     certificationLocalAccountId: string;
   }>();
-  const { certificationAuthorityLocalAccount } =
-    useUpdateLocalAccountGeneralInformationPage({
-      certificationLocalAccountId,
-    });
+  const {
+    certificationAuthorityLocalAccount,
+    updateCertificationAuthorityLocalAccount,
+  } = useUpdateLocalAccountGeneralInformationPage({
+    certificationLocalAccountId,
+  });
 
   const handleFormSubmit = async (data: LocalAccountFormData) => {
     try {
-      console.log(data);
+      await updateCertificationAuthorityLocalAccount.mutateAsync({
+        contactFullName: data.contactFullName,
+        contactEmail: data.contactEmail,
+        contactPhone: data.contactPhone,
+        departmentIds:
+          certificationAuthorityLocalAccount?.departments.map((d) => d.id) ||
+          [],
+        certificationIds:
+          certificationAuthorityLocalAccount?.certifications.map((c) => c.id) ||
+          [],
+      });
+
+      successToast("modifications enregistrées");
+
+      router.push(
+        `/certification-authorities/settings/local-accounts/${certificationLocalAccountId}`,
+      );
     } catch (error) {
       graphqlErrorToast(error);
     }

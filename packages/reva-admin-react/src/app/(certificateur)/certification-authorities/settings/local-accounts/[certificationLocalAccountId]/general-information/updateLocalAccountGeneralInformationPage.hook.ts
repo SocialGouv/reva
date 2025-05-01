@@ -1,6 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { UpdateCertificationAuthorityLocalAccountInput } from "@/graphql/generated/graphql";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const getCertificationAuthorityLocalAccountQuery = graphql(`
   query getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountGeneralInformationPage(
@@ -21,9 +22,28 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
       certificationAuthority {
         label
       }
+      departments {
+        id
+      }
+      certifications {
+        id
+      }
     }
   }
 `);
+
+const updateCertificationAuthorityLocalAccountGeneralInformationMutation =
+  graphql(`
+    mutation certification_authority_updateCertificationAuthorityLocalAccount(
+      $input: UpdateCertificationAuthorityLocalAccountInput!
+    ) {
+      certification_authority_updateCertificationAuthorityLocalAccount(
+        input: $input
+      ) {
+        id
+      }
+    }
+  `);
 
 export const useUpdateLocalAccountGeneralInformationPage = ({
   certificationLocalAccountId,
@@ -31,13 +51,40 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
   certificationLocalAccountId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data } = useQuery({
-    queryKey: ["certification_authority_getCertificationAuthorityLocalAccount"],
+    queryKey: [
+      certificationLocalAccountId,
+      "certification_authority_getCertificationAuthorityLocalAccount",
+    ],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityLocalAccountQuery, {
         certificationLocalAccountId,
       }),
+  });
+
+  const updateCertificationAuthorityLocalAccount = useMutation({
+    mutationFn: (
+      input: Omit<
+        UpdateCertificationAuthorityLocalAccountInput,
+        "certificationAuthorityLocalAccountId"
+      >,
+    ) =>
+      graphqlClient.request(
+        updateCertificationAuthorityLocalAccountGeneralInformationMutation,
+        {
+          input: {
+            ...input,
+            certificationAuthorityLocalAccountId: certificationLocalAccountId,
+          },
+        },
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [certificationLocalAccountId],
+      });
+    },
   });
 
   const certificationAuthorityLocalAccount =
@@ -45,5 +92,6 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
 
   return {
     certificationAuthorityLocalAccount,
+    updateCertificationAuthorityLocalAccount,
   };
 };
