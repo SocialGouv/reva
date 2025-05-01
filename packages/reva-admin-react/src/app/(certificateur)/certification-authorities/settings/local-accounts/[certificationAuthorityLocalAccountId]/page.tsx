@@ -6,12 +6,12 @@ import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
 import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 
 export default function UpdateLocalAccountPage() {
-  const { certificationLocalAccountId } = useParams<{
-    certificationLocalAccountId: string;
+  const { certificationAuthorityLocalAccountId } = useParams<{
+    certificationAuthorityLocalAccountId: string;
   }>();
 
   const { certificationAuthorityLocalAccount } = useUpdateLocalAccountPage({
-    certificationAuthorityLocalAccountId: certificationLocalAccountId,
+    certificationAuthorityLocalAccountId: certificationAuthorityLocalAccountId,
   });
 
   const localAccountLabel = `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`;
@@ -38,7 +38,7 @@ export default function UpdateLocalAccountPage() {
         <LocalAccountGeneralInformationSummaryCard
           contactFullName={certificationAuthorityLocalAccount?.contactFullName}
           contactEmail={certificationAuthorityLocalAccount?.contactEmail}
-          updateGeneralInformationPageUrl={`/certification-authorities/settings/local-accounts/${certificationLocalAccountId}/general-information`}
+          updateGeneralInformationPageUrl={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/general-information`}
         />
       </div>
       <Button

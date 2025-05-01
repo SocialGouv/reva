@@ -13,14 +13,14 @@ import { useParams, useRouter } from "next/navigation";
 export default function AddLocalAccountPage() {
   const router = useRouter();
 
-  const { certificationLocalAccountId } = useParams<{
-    certificationLocalAccountId: string;
+  const { certificationAuthorityLocalAccountId } = useParams<{
+    certificationAuthorityLocalAccountId: string;
   }>();
   const {
     certificationAuthorityLocalAccount,
     updateCertificationAuthorityLocalAccount,
   } = useUpdateLocalAccountGeneralInformationPage({
-    certificationLocalAccountId,
+    certificationAuthorityLocalAccountId,
   });
 
   const handleFormSubmit = async (data: LocalAccountFormData) => {
@@ -40,7 +40,7 @@ export default function AddLocalAccountPage() {
       successToast("modifications enregistrées");
 
       router.push(
-        `/certification-authorities/settings/local-accounts/${certificationLocalAccountId}`,
+        `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
       );
     } catch (error) {
       graphqlErrorToast(error);
@@ -65,7 +65,7 @@ export default function AddLocalAccountPage() {
           {
             label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
             linkProps: {
-              href: `/certification-authorities/settings/local-accounts/${certificationLocalAccountId}`,
+              href: `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
             },
           },
         ]}
@@ -90,7 +90,7 @@ export default function AddLocalAccountPage() {
         />
       </div>
       <CertificationAuthorityLocalAccountGeneralInformationForm
-        backUrl={`/certification-authorities/settings/local-accounts/${certificationLocalAccountId}`}
+        backUrl={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`}
         onSubmit={handleFormSubmit}
         defaultValues={{
           accountFirstname:
