@@ -1,4 +1,4 @@
-import { stubQuery } from "../../utils/graphql";
+import { stubQuery } from "../../../utils/graphql";
 import cguCertificateurFixture from "./fixtures/cgu-certificateur.json";
 
 const SELECTORS = {
