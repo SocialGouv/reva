@@ -1,5 +1,6 @@
-import { stubQuery } from "../../../../utils/graphql";
+import { stubMutation, stubQuery } from "../../../../utils/graphql";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
+import updateCertificationAuthorityLocalAccountMutationFixture from "./fixtures/update-certification-authority-local-account-mutation-response.json";
 
 function interceptUpdateLocalAccountGeneralInformation() {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -18,6 +19,12 @@ function interceptUpdateLocalAccountGeneralInformation() {
       req,
       "getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountGeneralInformationPage",
       certificationAuthorityLocalAccountFixture,
+    );
+
+    stubMutation(
+      req,
+      "updateCertificationAuthorityLocalAccountGeneralInformationForUpdateLocalAccountGeneralInformationPage",
+      updateCertificationAuthorityLocalAccountMutationFixture,
     );
   });
 }
@@ -104,6 +111,52 @@ context("main page", () => {
         cy.get(
           '[data-test="update-certification-authority-local-account-general-information-page"] button[type="submit"]',
         ).should("be.disabled");
+      });
+
+      it("let me change the contact fields and submit the form", () => {
+        interceptUpdateLocalAccountGeneralInformation();
+
+        cy.certificateur(
+          "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/general-information",
+        );
+        cy.wait("@activeFeaturesForConnectedUser");
+        cy.wait("@getOrganismForAAPVisibilityCheck");
+        cy.wait("@getMaisonMereCGUQuery");
+        cy.wait(
+          "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountGeneralInformationPage",
+        );
+
+        cy.get(
+          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-full-name-input"] input',
+        )
+          .clear()
+          .type("new contact full name");
+
+        cy.get(
+          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-email-input"] input',
+        )
+          .clear()
+          .type("newcontact.email@example.com");
+
+        cy.get(
+          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-phone-input"] input',
+        )
+          .clear()
+          .type("9999999999");
+
+        cy.get(
+          '[data-test="update-certification-authority-local-account-general-information-page"] button[type="submit"]',
+        ).click();
+
+        cy.wait(
+          "@updateCertificationAuthorityLocalAccountGeneralInformationForUpdateLocalAccountGeneralInformationPage",
+        );
+
+        cy.url().should(
+          "be.equal",
+          Cypress.config("baseUrl") +
+            "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/",
+        );
       });
     },
   );

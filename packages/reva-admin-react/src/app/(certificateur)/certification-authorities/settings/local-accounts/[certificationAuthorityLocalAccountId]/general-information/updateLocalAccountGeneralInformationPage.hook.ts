@@ -34,7 +34,7 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
 
 const updateCertificationAuthorityLocalAccountGeneralInformationMutation =
   graphql(`
-    mutation certification_authority_updateCertificationAuthorityLocalAccount(
+    mutation updateCertificationAuthorityLocalAccountGeneralInformationForUpdateLocalAccountGeneralInformationPage(
       $input: UpdateCertificationAuthorityLocalAccountInput!
     ) {
       certification_authority_updateCertificationAuthorityLocalAccount(

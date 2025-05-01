@@ -7,14 +7,12 @@
         "lastname": "doe",
         "email": "monemail@example.com"
       },
-      "contactFullName": "contact full name",
-      "contactEmail": "contact@example.com",
-      "contactPhone": "0123456789",
+      "contactFullName": "new contact full name",
+      "contactEmail": "newcontact.email@example.com",
+      "contactPhone": "9999999999",
       "certificationAuthority": {
         "label": "Certification Authority"
-      },
-      "departments": [],
-      "certifications": []
+      }
     }
   }
 }
