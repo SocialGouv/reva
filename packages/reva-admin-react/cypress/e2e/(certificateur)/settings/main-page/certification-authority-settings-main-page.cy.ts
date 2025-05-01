@@ -138,8 +138,8 @@ context("local accounts summary card", () => {
     });
   });
 
-  context("when i click on the edit button", () => {
-    it("redirect to the edit local account page", function () {
+  context("when i click on the update button", () => {
+    it("redirect to the update local account page", function () {
       interceptSettings();
 
       cy.certificateur("/certification-authorities/settings");
@@ -155,7 +155,7 @@ context("local accounts summary card", () => {
       )
         .children("li")
         .first()
-        .find('[data-test="edit-local-account-button"]')
+        .find('[data-test="update-local-account-button"]')
         .click();
 
       cy.url().should(

@@ -61,7 +61,7 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
             </div>
             <span>
               <Button
-                data-test="edit-local-account-button"
+                data-test="update-local-account-button"
                 priority="tertiary no outline"
                 size="small"
                 linkProps={{
