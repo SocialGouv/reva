@@ -30,10 +30,14 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
   className,
   backUrl,
   onSubmit,
+  defaultValues,
+  disableAccountFields,
 }: {
   className?: string;
   backUrl: string;
   onSubmit: (data: LocalAccountFormData) => void;
+  defaultValues?: LocalAccountFormData;
+  disableAccountFields?: boolean;
 }) => {
   const {
     register,
@@ -42,6 +46,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
     formState: { errors },
   } = useForm<LocalAccountFormData>({
     resolver: zodResolver(schema),
+    defaultValues,
   });
 
   const handleFormSubmit = handleSubmit(onSubmit, (e) => console.log(e));
@@ -55,23 +60,29 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
         <Input
+          data-test="account-lastname-input"
           label="Nom de la personne ou du compte"
           nativeInputProps={{ ...register("accountLastname") }}
+          disabled={disableAccountFields}
           state={errors.accountLastname ? "error" : "default"}
           stateRelatedMessage={errors.accountLastname?.message}
         />
         <Input
+          data-test="account-firstname-input"
           label="Prénom (optionnel)"
           nativeInputProps={{ ...register("accountFirstname") }}
+          disabled={disableAccountFields}
           state={errors.accountFirstname ? "error" : "default"}
           stateRelatedMessage={errors.accountFirstname?.message}
         />
         <Input
+          data-test="account-email-input"
           label="Email de connexion"
           nativeInputProps={{
             autoComplete: "email",
             ...register("accountEmail"),
           }}
+          disabled={disableAccountFields}
           state={errors.accountEmail ? "error" : "default"}
           stateRelatedMessage={errors.accountEmail?.message}
         />
@@ -85,6 +96,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
         <Input
+          data-test="contact-full-name-input"
           className="col-span-full"
           label="Service associé "
           nativeInputProps={{ ...register("contactFullName") }}
@@ -92,6 +104,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
           stateRelatedMessage={errors.contactFullName?.message}
         />
         <Input
+          data-test="contact-email-input"
           label="Email"
           nativeInputProps={{
             autoComplete: "email",
@@ -102,6 +115,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
           stateRelatedMessage={errors.contactEmail?.message}
         />
         <Input
+          data-test="contact-phone-input"
           className="md:max-w-[280px] md:mt-6"
           label="Téléphone (optionnel)"
           nativeInputProps={{

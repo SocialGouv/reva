@@ -24,7 +24,7 @@ function interceptUpdateLocalAccount() {
 
 context("main page", () => {
   context("when i access the update local account page ", () => {
-    it("display the page with a correct title", function () {
+    it("display the page with a correct title", () => {
       interceptUpdateLocalAccount();
 
       cy.certificateur(
@@ -46,7 +46,7 @@ context("main page", () => {
 
 context("general information summary card", () => {
   context("when i access the update local account page ", () => {
-    it("display the general information summary card with the correct information", function () {
+    it("display the general information summary card with the correct information", () => {
       interceptUpdateLocalAccount();
 
       cy.certificateur(
@@ -77,7 +77,7 @@ context("general information summary card", () => {
     });
   });
   context("when i click on the update button ", () => {
-    it("redirect to the update general information page", function () {
+    it("redirect to the update general information page", () => {
       interceptUpdateLocalAccount();
 
       cy.certificateur(
