@@ -15,7 +15,10 @@ export default function UpdateLocalAccountPage() {
   const localAccountLabel = `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`;
 
   return (
-    <div className="flex flex-col">
+    <div
+      className="flex flex-col"
+      data-test="update-certification-authority-local-account-page"
+    >
       <Breadcrumb
         segments={[
           {

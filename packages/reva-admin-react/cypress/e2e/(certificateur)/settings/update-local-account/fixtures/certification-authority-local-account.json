@@ -1,0 +1,15 @@
+{
+  "data": {
+    "certification_authority_getCertificationAuthorityLocalAccount": {
+      "id": "ca2905e6-7888-4fb8-b4cc-85a8b855d1fb",
+      "account": {
+        "firstname": "jane",
+        "lastname": "doe",
+        "email": "monemail@example.com"
+      },
+      "contactFullName": null,
+      "contactEmail": null,
+      "contactPhone": null
+    }
+  }
+}
