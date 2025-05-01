@@ -69,11 +69,11 @@ context("general information summary card", () => {
 
       cy.get(
         '[data-test="local-account-general-information-summary-card"] [data-test="contact-full-name"]',
-      ).should("have.text", "jane doe");
+      ).should("have.text", "contact full name");
 
       cy.get(
         '[data-test="local-account-general-information-summary-card"] [data-test="contact-email"]',
-      ).should("have.text", "monemail@example.com");
+      ).should("have.text", "contact.email@example.com");
     });
   });
   context("when i click on the update button ", () => {

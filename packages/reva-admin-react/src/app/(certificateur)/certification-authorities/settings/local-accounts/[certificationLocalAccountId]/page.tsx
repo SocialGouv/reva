@@ -36,8 +36,8 @@ export default function UpdateLocalAccountPage() {
       </p>
       <div className="w-full flex flex-col gap-8">
         <LocalAccountGeneralInformationSummaryCard
-          contactFullName={localAccountLabel}
-          contactEmail={certificationAuthorityLocalAccount?.account.email}
+          contactFullName={certificationAuthorityLocalAccount?.contactFullName}
+          contactEmail={certificationAuthorityLocalAccount?.contactEmail}
           updateGeneralInformationPageUrl={`/certification-authorities/settings/local-accounts/${certificationLocalAccountId}/general-information`}
         />
       </div>

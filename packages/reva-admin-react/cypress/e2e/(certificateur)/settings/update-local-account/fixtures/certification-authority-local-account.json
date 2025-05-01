@@ -7,9 +7,9 @@
         "lastname": "doe",
         "email": "monemail@example.com"
       },
-      "contactFullName": null,
-      "contactEmail": null,
-      "contactPhone": null
+      "contactFullName": "contact full name",
+      "contactEmail": "contact.email@example.com",
+      "contactPhone": "0123456789"
     }
   }
 }
