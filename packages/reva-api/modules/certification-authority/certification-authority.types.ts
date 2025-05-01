@@ -24,3 +24,12 @@ export interface CreateCertificationAuthorityLocalAccountInput {
   contactEmail?: string | null;
   contactPhone?: string | null;
 }
+
+export interface UpdateCertificationAuthorityLocalAccountInput {
+  certificationAuthorityLocalAccountId: string;
+  contactFullName?: string | null;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
+  departmentIds: string[];
+  certificationIds: string[];
+}

@@ -16,6 +16,7 @@ import { resolversSecurityMap } from "./certification-authority.security";
 import {
   CertificationAuthority,
   CreateCertificationAuthorityLocalAccountInput,
+  UpdateCertificationAuthorityLocalAccountInput,
 } from "./certification-authority.types";
 import { canUserManageCertificationAuthorityLocalAccount } from "./features/canUserManageCertifiationAuthorityLocalAccount";
 import { certificationAuthorityAcceptCgu } from "./features/certificationAuthorityAcceptCgu";
@@ -247,11 +248,7 @@ const unsafeResolvers = {
     certification_authority_updateCertificationAuthorityLocalAccount: async (
       _parent: unknown,
       params: {
-        input: {
-          certificationAuthorityLocalAccountId: string;
-          departmentIds: string[];
-          certificationIds: string[];
-        };
+        input: UpdateCertificationAuthorityLocalAccountInput;
       },
       context: GraphqlContext,
     ) => {

@@ -1,14 +1,14 @@
 import { prismaClient } from "../../../prisma/client";
+import { UpdateCertificationAuthorityLocalAccountInput } from "../certification-authority.types";
 
 export const updateCertificationAuthorityLocalAccount = async ({
   certificationAuthorityLocalAccountId,
   departmentIds,
   certificationIds,
-}: {
-  certificationAuthorityLocalAccountId: string;
-  departmentIds: string[];
-  certificationIds: string[];
-}) => {
+  contactFullName,
+  contactEmail,
+  contactPhone,
+}: UpdateCertificationAuthorityLocalAccountInput) => {
   const result = await prismaClient.$transaction([
     prismaClient.certificationAuthorityLocalAccountOnCertification.deleteMany({
       where: { certificationAuthorityLocalAccountId },
@@ -28,9 +28,14 @@ export const updateCertificationAuthorityLocalAccount = async ({
         departmentId: did,
       })),
     }),
-    prismaClient.certificationAuthorityLocalAccount.findFirst({
+    prismaClient.certificationAuthorityLocalAccount.update({
       where: {
         id: certificationAuthorityLocalAccountId,
+      },
+      data: {
+        contactFullName,
+        contactEmail,
+        contactPhone,
       },
     }),
   ]);
