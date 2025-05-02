@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import { CertificationsSummaryCard } from "../../_components/certifications-summary-card/CertificationsSummaryCard";
-import InterventionAreaSummaryCard from "../../_components/intervention-area-summary-card/InterventionAreaSummaryCard";
+import InterventionAreaSummaryCard from "../../../../../../components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 import AccountsSummaryCard from "./_components/accounts-summary-card/AccountsSummaryCard";
 import {
   useCertificationAuthority,

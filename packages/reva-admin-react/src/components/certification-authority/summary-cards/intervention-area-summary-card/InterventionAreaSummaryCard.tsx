@@ -20,6 +20,7 @@ export default function InterventionAreaSummaryCard({
   const isInterventionAreaComplete = regions.length > 0;
   return (
     <EnhancedSectionCard
+      data-test="intervention-area-summary-card"
       title="Zone d'intervention"
       titleIconClass="fr-icon-road-map-fill"
       isEditable={!!updateButtonHref}

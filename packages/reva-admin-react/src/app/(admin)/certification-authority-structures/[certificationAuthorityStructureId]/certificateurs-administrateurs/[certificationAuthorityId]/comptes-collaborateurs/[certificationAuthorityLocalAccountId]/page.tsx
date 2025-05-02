@@ -5,7 +5,7 @@ import { useComptesCollaborateursPage } from "./comptesCollaborateurs.hooks";
 import { CertificationAuthorityStructureBreadcrumb } from "../../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { CertificationsSummaryCard } from "../../../../_components/certifications-summary-card/CertificationsSummaryCard";
-import InterventionAreaSummaryCard from "../../../../_components/intervention-area-summary-card/InterventionAreaSummaryCard";
+import InterventionAreaSummaryCard from "../../../../../../../../components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 import { Impersonate } from "@/components/impersonate";
 import Button from "@codegouvfr/react-dsfr/Button";
 
