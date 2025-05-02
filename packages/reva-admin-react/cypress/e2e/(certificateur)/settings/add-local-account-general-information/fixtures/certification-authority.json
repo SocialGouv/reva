@@ -1,0 +1,10 @@
+{
+  "data": {
+    "account_getAccountForConnectedUser": {
+      "certificationAuthority": {
+        "id": "c7399291-e79b-4e0f-b798-d3c97661e47f",
+        "label": "certification authority label"
+      }
+    }
+  }
+}

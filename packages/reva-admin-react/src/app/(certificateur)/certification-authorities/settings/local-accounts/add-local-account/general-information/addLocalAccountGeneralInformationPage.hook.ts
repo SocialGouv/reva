@@ -4,7 +4,7 @@ import { CreateCertificationAuthorityLocalAccountInput } from "@/graphql/generat
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getCertificationAuthorityQuery = graphql(`
-  query getCertificationAuthorityForAddCertificationAuthorityLocalAccountPage {
+  query getCertificationAuthorityForAddLocalAccountGeneralInformationPage {
     account_getAccountForConnectedUser {
       certificationAuthority {
         id
@@ -15,7 +15,7 @@ const getCertificationAuthorityQuery = graphql(`
 `);
 
 const addCertificationAuthorityLocalAccountMutation = graphql(`
-  mutation addCertificationAuthorityLocalAccount(
+  mutation addCertificationAuthorityLocalAccountGeneralInformationForAddLocalAccountGeneralInformationPage(
     $input: CreateCertificationAuthorityLocalAccountInput!
   ) {
     certification_authority_createCertificationAuthorityLocalAccount(
