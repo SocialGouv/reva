@@ -11,7 +11,7 @@ http:
         - removeHeader
 
     dashboard-staging:
-      rule: 'Host(`metabase.reva.incubateur.net`) && PathPrefix(`/dashboard`))'
+      rule: 'Host(`metabase.reva.incubateur.net`) && PathPrefix(`/dashboard`)'
       service: api@internal
       middlewares:
         - forward-auth
@@ -202,6 +202,9 @@ http:
       forwardAuth:
         address: "https://auth.reva.incubateur.net/realms/reva/protocol/openid-connect/auth"
         trustForwardHeader: true
+        authResponseHeaders:
+          - "Authorization"
+          - "X-Forwarded-User"
   services:
     # --- BEGIN STAGING ---
 
