@@ -6,7 +6,10 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export default function AddLocalAccountPage() {
   return (
-    <div className="flex flex-col">
+    <div
+      className="flex flex-col"
+      data-test="add-certification-authority-local-account-page"
+    >
       <Breadcrumb
         segments={[
           {
@@ -22,6 +25,7 @@ export default function AddLocalAccountPage() {
       </p>
       <div className="w-full flex flex-col gap-8">
         <EnhancedSectionCard
+          data-test="local-account-general-information-summary-card"
           title="Informations générales"
           titleIconClass="fr-icon-information-fill"
           status="TO_COMPLETE"
