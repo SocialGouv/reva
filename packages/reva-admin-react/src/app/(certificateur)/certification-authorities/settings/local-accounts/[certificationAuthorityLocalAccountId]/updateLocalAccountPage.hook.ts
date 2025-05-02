@@ -18,6 +18,15 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
       contactFullName
       contactEmail
       contactPhone
+      departments {
+        id
+        label
+        code
+        region {
+          id
+          label
+        }
+      }
     }
   }
 `);

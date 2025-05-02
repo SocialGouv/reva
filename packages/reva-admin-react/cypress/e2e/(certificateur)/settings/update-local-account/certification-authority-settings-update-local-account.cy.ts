@@ -101,3 +101,55 @@ context("general information summary card", () => {
     });
   });
 });
+
+context("intervention area summary card", () => {
+  context("when i access the update local account page ", () => {
+    it("display the intervention area summary card with the correct information", () => {
+      interceptUpdateLocalAccount();
+
+      cy.certificateur(
+        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+      );
+
+      cy.get('[data-test="intervention-area-summary-card"]').should("exist");
+
+      cy.get('[data-test="intervention-area-summary-card"] h2').should(
+        "have.text",
+        "Zone d'intervention",
+      );
+
+      cy.get('[data-test="department-tag-01"]').should("exist");
+      cy.get('[data-test="department-tag-63"]').should("exist");
+    });
+  });
+  context("when i click on the update button ", () => {
+    it("redirect to the update intervention area page", () => {
+      interceptUpdateLocalAccount();
+
+      cy.certificateur(
+        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+      );
+
+      cy.get(
+        '[data-test="intervention-area-summary-card"] [data-test="action-button"]',
+      ).click();
+
+      cy.url().should(
+        "include",
+        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/intervention-area/",
+      );
+    });
+  });
+});

@@ -4,6 +4,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
 import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
 import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
+import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 
 export default function UpdateLocalAccountPage() {
   const { certificationAuthorityLocalAccountId } = useParams<{
@@ -15,6 +16,28 @@ export default function UpdateLocalAccountPage() {
   });
 
   const localAccountLabel = `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`;
+
+  const regionsAndDepartments: {
+    id: string;
+    label: string;
+    departments: { id: string; label: string; code: string }[];
+  }[] = [];
+  certificationAuthorityLocalAccount?.departments.forEach((department) => {
+    if (department.region) {
+      let region = regionsAndDepartments.find(
+        (r) => r.id === department.region?.id,
+      );
+      if (!region) {
+        region = {
+          id: department.region.id,
+          label: department.region.label,
+          departments: [],
+        };
+        regionsAndDepartments.push(region);
+      }
+      region.departments.push(department);
+    }
+  });
 
   return (
     <div
@@ -39,6 +62,10 @@ export default function UpdateLocalAccountPage() {
           contactFullName={certificationAuthorityLocalAccount?.contactFullName}
           contactEmail={certificationAuthorityLocalAccount?.contactEmail}
           updateGeneralInformationPageUrl={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/general-information`}
+        />
+        <InterventionAreaSummaryCard
+          regions={regionsAndDepartments}
+          updateButtonHref={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/intervention-area`}
         />
       </div>
       <Button

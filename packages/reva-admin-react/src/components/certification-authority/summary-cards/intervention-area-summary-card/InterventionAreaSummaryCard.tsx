@@ -31,7 +31,7 @@ export default function InterventionAreaSummaryCard({
         <Accordion label={r.label} key={r.id}>
           <div className="flex flex-wrap gap-2">
             {r.departments.map((d) => (
-              <Tag key={d.id}>
+              <Tag key={d.id} data-test={`department-tag-${d.code}`}>
                 {d.label} ({d.code})
               </Tag>
             ))}

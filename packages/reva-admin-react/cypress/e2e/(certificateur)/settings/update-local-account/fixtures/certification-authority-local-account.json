@@ -9,7 +9,27 @@
       },
       "contactFullName": "contact full name",
       "contactEmail": "contact.email@example.com",
-      "contactPhone": "0123456789"
+      "contactPhone": "0123456789",
+      "departments": [
+        {
+          "id": "0fd699b6-40c2-4ded-a29c-3417cded8b58",
+          "label": "Ain",
+          "code": "01",
+          "region": {
+            "id": "2946d835-f0fa-4c37-9a50-0735112395bd",
+            "label": "Auvergne-Rhône-Alpes"
+          }
+        },
+        {
+          "id": "201a8192-50d9-42c0-9250-d98d80090c31",
+          "label": "Puy-de-Dôme",
+          "code": "63",
+          "region": {
+            "id": "2946d835-f0fa-4c37-9a50-0735112395bd",
+            "label": "Auvergne-Rhône-Alpes"
+          }
+        }
+      ]
     }
   }
 }
