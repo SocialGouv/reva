@@ -8,6 +8,7 @@ export default function LocalAccountGeneralInformationSummaryCard({
   contactFullName?: string | null;
   contactEmail?: string | null;
   updateGeneralInformationPageUrl: string;
+  status?: "TO_COMPLETE" | "COMPLETED";
 }) {
   return (
     <EnhancedSectionCard
@@ -15,7 +16,7 @@ export default function LocalAccountGeneralInformationSummaryCard({
       title="Informations générales"
       titleIconClass="fr-icon-information-fill"
       isEditable
-      status={"COMPLETED"}
+      status={contactEmail ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={updateGeneralInformationPageUrl}
     >
       <div className="pl-10">
