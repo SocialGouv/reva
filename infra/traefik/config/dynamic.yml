@@ -12,9 +12,11 @@ http:
 
     dashboard-staging:
       rule: 'Host(`metabase.reva.incubateur.net`) && PathPrefix(`/dashboard`)'
-      service: api@internal
+      service: metabase-reva-incubateur-net
       middlewares:
         - forward-auth
+        - removeHeader
+        - add-anti-clickjacking-headers
 
     metabase-reva-incubateur-net:
       rule: "Host(`metabase.reva.incubateur.net`)"
@@ -140,7 +142,7 @@ http:
 
     # Enable dashboard on /dashboard with basic auth
     dashboard:
-      rule: 'Host(`vae.gouv.fr`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
+      rule: '(Host(`vae.gouv.fr`) && (PathPrefix(`/api`)) || (Host(`metabase.vae.gouv.fr`) && PathPrefix(`/dashboard`))'
       service: api@internal
       middlewares:
         - auth
