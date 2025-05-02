@@ -70,7 +70,7 @@ export default defineConfig({
     // },
   ],
   webServer: {
-    command: "NODE_ENV=test npm run dev",
+    command: "cross-env NODE_ENV=test npm run dev",
     url: "http://localhost:3002",
     reuseExistingServer: !process.env.CI,
     env: {
