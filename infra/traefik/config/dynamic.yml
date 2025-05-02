@@ -64,7 +64,11 @@ http:
       service: site-web-staging
       middlewares:
         - removeHeader
-
+    dashboard-staging:
+      rule: 'Host(`reva.incubateur.net`) && PathPrefix(`/dashboard`))'
+      service: api@internal
+      middlewares:
+        - forward-auth
     # --- END STAGING ---
     # --- BEGIN PRODUCTION REVA.BETA.GOUV.FR---
 
@@ -134,7 +138,7 @@ http:
 
     # Enable dashboard on /dashboard with basic auth
     dashboard:
-      rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
+      rule: 'Host(`vae.gouv.fr`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
       service: api@internal
       middlewares:
         - auth
@@ -191,6 +195,11 @@ http:
       basicAuth:
         users:
           - '{{ env "BASIC_AUTH_USER_PASSWORD" }}' # htpasswd format  BASIC_AUTH_USER_PASSWORD="test:TODEFINED"
+
+    forward-auth:
+      forwardAuth:
+        address: "https://auth.reva.incubateur.net/realms/reva/protocol/openid-connect/auth"
+        trustForwardHeader: true
   services:
     # --- BEGIN STAGING ---
 
