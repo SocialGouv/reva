@@ -202,7 +202,7 @@ http:
 
     forward-auth:
       forwardAuth:
-        address: "https://auth.reva.incubateur.net/realms/reva/protocol/openid-connect/auth"
+        address: "https://auth.reva.incubateur.net/realms/reva/protocol/openid-connect/auth?client_id=metabase-dashboard&response_type=code&scope=openid&redirect_uri=https://metabase.reva.incubateur.net/dashboard"
         trustForwardHeader: true
         authResponseHeaders:
           - "Authorization"
