@@ -14,7 +14,7 @@ http:
       rule: 'Host(`metabase.reva.incubateur.net`) && PathPrefix(`/dashboard`)'
       service: metabase-reva-incubateur-net
       middlewares:
-        - forward-auth
+        - auth
         - removeHeader
         - add-anti-clickjacking-headers
 
