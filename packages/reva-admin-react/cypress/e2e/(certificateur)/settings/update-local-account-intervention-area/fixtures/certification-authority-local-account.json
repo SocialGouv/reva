@@ -1,0 +1,67 @@
+{
+  "data": {
+    "certification_authority_getCertificationAuthorityLocalAccount": {
+      "id": "ca2905e6-7888-4fb8-b4cc-85a8b855d1fb",
+      "account": {
+        "firstname": "jane",
+        "lastname": "doe",
+        "email": "monemail@example.com"
+      },
+      "contactFullName": "contact full name",
+      "contactEmail": "contact@example.com",
+      "contactPhone": "0123456789",
+      "certificationAuthority": {
+        "label": "Certification Authority"
+      },
+      "departments": [
+        {
+          "id": "ec234db7-2a3b-46f4-9514-fedee4f4f1ca",
+          "label": "Rhône"
+        },
+        {
+          "id": "0fd699b6-40c2-4ded-a29c-3417cded8b58",
+          "label": "Ain"
+        }
+      ],
+      "certifications": []
+    },
+    "getRegions": [
+      {
+        "id": "2946d835-f0fa-4c37-9a50-0735112395bd",
+        "label": "Auvergne-Rhône-Alpes",
+        "departments": [
+          {
+            "id": "0fd699b6-40c2-4ded-a29c-3417cded8b58",
+            "label": "Ain"
+          },
+          {
+            "id": "296bce2a-9bc3-4915-ad61-e666868c4d82",
+            "label": "Drôme"
+          },
+          {
+            "id": "ec234db7-2a3b-46f4-9514-fedee4f4f1ca",
+            "label": "Rhône"
+          },
+          {
+            "id": "9d89aab8-c0d3-4965-ac32-3e035ba7370b",
+            "label": "Savoie"
+          }
+        ]
+      },
+      {
+        "id": "466c5805-c297-4c6a-9ba7-62a0889a6b71",
+        "label": "Pays de la Loire",
+        "departments": [
+          {
+            "id": "ceb64010-79ff-44c1-b45f-277ef726314c",
+            "label": "Loire-Atlantique"
+          },
+          {
+            "id": "01bae087-8ca0-4fab-9ffe-fd8aec53129f",
+            "label": "Vendée"
+          }
+        ]
+      }
+    ]
+  }
+}

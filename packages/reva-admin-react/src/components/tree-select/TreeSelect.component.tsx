@@ -53,6 +53,7 @@ export const TreeSelect = (props: Props): JSX.Element => {
           return (
             <div
               key={item.id}
+              data-test={`tree-select-item-${item.label}`}
               className={
                 availableChildren ? "relative fix-accordion" : "fix-accordion"
               }
