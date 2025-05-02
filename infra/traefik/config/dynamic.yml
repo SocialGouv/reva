@@ -10,6 +10,12 @@ http:
       middlewares:
         - removeHeader
 
+    dashboard-staging:
+      rule: 'Host(`metabase.reva.incubateur.net`) && PathPrefix(`/dashboard`))'
+      service: api@internal
+      middlewares:
+        - forward-auth
+
     metabase-reva-incubateur-net:
       rule: "Host(`metabase.reva.incubateur.net`)"
       service: metabase-reva-incubateur-net
@@ -64,11 +70,7 @@ http:
       service: site-web-staging
       middlewares:
         - removeHeader
-    dashboard-staging:
-      rule: 'Host(`reva.incubateur.net`) && PathPrefix(`/dashboard`))'
-      service: api@internal
-      middlewares:
-        - forward-auth
+
     # --- END STAGING ---
     # --- BEGIN PRODUCTION REVA.BETA.GOUV.FR---
 
