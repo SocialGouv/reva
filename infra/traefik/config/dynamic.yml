@@ -206,7 +206,9 @@ http:
         trustForwardHeader: true
         authResponseHeaders:
           - "Authorization"
-          - "X-Forwarded-User"
+        authRequestHeaders:
+          - "Cookie"
+          - "Authorization"
   services:
     # --- BEGIN STAGING ---
 
