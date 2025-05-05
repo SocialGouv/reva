@@ -15,13 +15,6 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
       account {
         firstname
         lastname
-        email
-      }
-      contactFullName
-      contactEmail
-      contactPhone
-      certificationAuthority {
-        label
       }
       departments {
         id
