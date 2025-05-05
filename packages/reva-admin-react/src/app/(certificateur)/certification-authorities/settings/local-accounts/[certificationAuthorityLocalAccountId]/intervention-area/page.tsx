@@ -4,20 +4,41 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalInterventionAreaPage.hook";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 export default function InterventionAreaPage() {
+  const router = useRouter();
+
   const { certificationAuthorityLocalAccountId } = useParams<{
     certificationAuthorityLocalAccountId: string;
   }>();
-
-  const { certificationAuthorityLocalAccount, regions, isLoading } =
-    useUpdateLocalAccountInterventionAreaPage({
-      certificationAuthorityLocalAccountId,
-    });
+  const {
+    certificationAuthorityLocalAccount,
+    regions,
+    isLoading,
+    updateCertificationAuthorityLocalAccountDepartments,
+  } = useUpdateLocalAccountInterventionAreaPage({
+    certificationAuthorityLocalAccountId,
+  });
 
   const handleFormSubmit = async (data: InterventionAreaFormData) => {
-    console.log(data);
+    try {
+      await updateCertificationAuthorityLocalAccountDepartments.mutateAsync(
+        data.regions
+          .flatMap((r) => r.children)
+          .filter((d) => d.selected)
+          .map((d) => d.id),
+      );
+
+      successToast("modification enregistrées");
+      router.push(
+        `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+      );
+    } catch (error) {
+      console.log(error);
+      graphqlErrorToast(error);
+    }
   };
 
   if (isLoading) {

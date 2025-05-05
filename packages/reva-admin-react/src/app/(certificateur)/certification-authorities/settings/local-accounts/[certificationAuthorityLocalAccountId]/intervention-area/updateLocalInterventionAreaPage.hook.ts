@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { sortBy } from "lodash";
 import { useMemo } from "react";
 
@@ -42,12 +42,31 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
   }
 `);
 
+const updateCertificationAuthorityLocalAccountDepartmentsMutation = graphql(`
+  mutation updateCertificationAuthorityLocalAccountDepartmentsForUpdateLocalAccountInterventionAreaPage(
+    $certificationAuthorityLocalAccountId: ID!
+    $departmentIds: [String!]!
+  ) {
+    certification_authority_updateCertificationAuthorityLocalAccountDepartments(
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
+      departmentIds: $departmentIds
+    ) {
+      id
+      departments {
+        id
+        label
+      }
+    }
+  }
+`);
+
 export const useUpdateLocalAccountInterventionAreaPage = ({
   certificationAuthorityLocalAccountId,
 }: {
   certificationAuthorityLocalAccountId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: [
@@ -58,6 +77,25 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
       graphqlClient.request(getCertificationAuthorityLocalAccountQuery, {
         certificationAuthorityLocalAccountId,
       }),
+  });
+
+  const updateCertificationAuthorityLocalAccountDepartments = useMutation({
+    mutationFn: (departmentIds: string[]) =>
+      graphqlClient.request(
+        updateCertificationAuthorityLocalAccountDepartmentsMutation,
+        {
+          certificationAuthorityLocalAccountId,
+          departmentIds,
+        },
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          certificationAuthorityLocalAccountId,
+          "getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
+        ],
+      });
+    },
   });
 
   const certificationAuthorityLocalAccount =
@@ -72,5 +110,6 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
     certificationAuthorityLocalAccount,
     regions,
     isLoading,
+    updateCertificationAuthorityLocalAccountDepartments,
   };
 };
