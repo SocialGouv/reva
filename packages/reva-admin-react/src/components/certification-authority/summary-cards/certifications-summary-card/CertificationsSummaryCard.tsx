@@ -28,6 +28,7 @@ export const CertificationsSummaryCard = ({
 
   return (
     <EnhancedSectionCard
+      data-test="certifications-summary-card"
       title="Certifications gérées"
       titleIconClass="fr-icon-award-fill"
       isEditable={!!updateButtonHref}
@@ -36,7 +37,10 @@ export const CertificationsSummaryCard = ({
     >
       {certificationCount ? (
         <div className="flex flex-col gap-6">
-          <Badge className="bg-[#FEE7FC] text-[#6E445A]">
+          <Badge
+            className="bg-[#FEE7FC] text-[#6E445A]"
+            data-test="certifications-count-badge"
+          >
             {certificationCount} certifications gérées
           </Badge>
         </div>

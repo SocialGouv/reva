@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
 import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
+import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 
 export default function UpdateLocalAccountPage() {
   const { certificationAuthorityLocalAccountId } = useParams<{
@@ -66,6 +67,12 @@ export default function UpdateLocalAccountPage() {
         <InterventionAreaSummaryCard
           regions={regionsAndDepartments}
           updateButtonHref={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/intervention-area`}
+        />
+        <CertificationsSummaryCard
+          certifications={
+            certificationAuthorityLocalAccount?.certifications || []
+          }
+          updateButtonHref={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/certifications`}
         />
       </div>
       <Button

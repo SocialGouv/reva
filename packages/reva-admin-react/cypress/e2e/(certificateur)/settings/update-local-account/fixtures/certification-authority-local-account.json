@@ -29,6 +29,23 @@
             "label": "Auvergne-Rhône-Alpes"
           }
         }
+      ],
+      "certifications": [
+        {
+          "id": "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
+          "label": "CQP Animateur d'équipe autonome de production industrielle",
+          "conventionsCollectives": [
+            {
+              "id": "3af3e807-9848-4e27-b71a-1fb210aac1ef",
+              "label": "Métallurgie"
+            }
+          ]
+        },
+        {
+          "id": "0236bf82-e85d-4e88-927a-c93bb6c44efb",
+          "label": "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
+          "conventionsCollectives": []
+        }
       ]
     }
   }

@@ -27,6 +27,14 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
           label
         }
       }
+      certifications {
+        id
+        label
+        conventionsCollectives {
+          id
+          label
+        }
+      }
     }
   }
 `);

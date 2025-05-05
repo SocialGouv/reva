@@ -153,3 +153,56 @@ context("intervention area summary card", () => {
     });
   });
 });
+
+context("certifications summary card", () => {
+  context("when i access the update local account page ", () => {
+    it("display the certifications summary card with the correct information", () => {
+      interceptUpdateLocalAccount();
+
+      cy.certificateur(
+        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+      );
+
+      cy.get('[data-test="certifications-summary-card"]').should("exist");
+
+      cy.get('[data-test="certifications-summary-card"] h2').should(
+        "have.text",
+        "Certifications gérées",
+      );
+
+      cy.get(
+        '[data-test="certifications-summary-card"] [data-test="certifications-count-badge"]',
+      ).should("have.text", "2 certifications gérées");
+    });
+  });
+  context("when i click on the update button ", () => {
+    it("redirect to the update certifications page", () => {
+      interceptUpdateLocalAccount();
+
+      cy.certificateur(
+        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+      );
+
+      cy.get(
+        '[data-test="certifications-summary-card"] [data-test="action-button"]',
+      ).click();
+
+      cy.url().should(
+        "include",
+        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications/",
+      );
+    });
+  });
+});
