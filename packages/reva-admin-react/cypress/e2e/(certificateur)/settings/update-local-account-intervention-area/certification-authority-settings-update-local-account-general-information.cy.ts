@@ -1,5 +1,6 @@
 import { stubQuery } from "../../../../utils/graphql";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
+import updateCertificationAuthorityLocalAccountDepartmentsFixture from "./fixtures/update-certification-authority-local-account-departments-mutation-response.json";
 
 function interceptUpdateLocalAccountInterventionArea() {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -18,6 +19,11 @@ function interceptUpdateLocalAccountInterventionArea() {
       req,
       "getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
       certificationAuthorityLocalAccountFixture,
+    );
+    stubQuery(
+      req,
+      "updateCertificationAuthorityLocalAccountDepartmentsForUpdateLocalAccountInterventionAreaPage",
+      updateCertificationAuthorityLocalAccountDepartmentsFixture,
     );
   });
 }
@@ -88,6 +94,42 @@ context("main page", () => {
         cy.get(
           '[data-test="update-certification-authority-local-account-intervention-area-page"] button[type="submit"]',
         ).should("be.disabled");
+      });
+
+      it("let me update the departments and submit the form", () => {
+        interceptUpdateLocalAccountInterventionArea();
+
+        cy.certificateur(
+          "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/intervention-area",
+        );
+        cy.wait("@activeFeaturesForConnectedUser");
+        cy.wait("@getOrganismForAAPVisibilityCheck");
+        cy.wait("@getMaisonMereCGUQuery");
+        cy.wait(
+          "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
+        );
+
+        cy.get(
+          '[data-test="tree-select-item-Pays de la Loire"] .fr-accordion__btn',
+        ).click({ force: true });
+
+        cy.get('[data-test="tree-select-item-Loire-Atlantique"] input').check({
+          force: true,
+        });
+
+        cy.get(
+          '[data-test="update-certification-authority-local-account-intervention-area-page"] button[type="submit"]',
+        ).click();
+
+        cy.wait(
+          "@updateCertificationAuthorityLocalAccountDepartmentsForUpdateLocalAccountInterventionAreaPage",
+        );
+
+        cy.url().should(
+          "be.equal",
+          Cypress.config("baseUrl") +
+            "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/intervention-area/",
+        );
       });
     },
   );
