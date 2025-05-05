@@ -1,28 +1,32 @@
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { SectionParagraph } from "@/components/section-content/SectionContent";
+import { GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
+import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
-const SuspendedCreationPage = () => {
-  const { isFeatureActive, status } = useFeatureflipping();
+const activeFeaturesQuery = graphql(`
+  query activeFeaturesForConnectedUser {
+    activeFeaturesForConnectedUser
+  }
+`);
 
-  const isAAPSubscriptionSuspended = isFeatureActive(
+const getActiveFeatures = async () => {
+  return (await request(GRAPHQL_API_URL, activeFeaturesQuery))
+    .activeFeaturesForConnectedUser;
+};
+
+const SuspendedCreationPage = async () => {
+  const activeFeatures = await getActiveFeatures();
+
+  const isAAPSubscriptionSuspended = activeFeatures.includes(
     "AAP_SUBSCRIPTION_SUSPENDED",
   );
 
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status == "INITIALIZED" && !isAAPSubscriptionSuspended) {
-      router.push("/espace-professionnel/inscription/");
-    }
-  }, [router, status, isAAPSubscriptionSuspended]);
-
-  if (status !== "INITIALIZED" || !isAAPSubscriptionSuspended) {
-    return null;
+  if (!isAAPSubscriptionSuspended) {
+    redirect("/espace-professionnel/inscription/");
   }
 
   return (
