@@ -9,7 +9,7 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import { CertificationsSummaryCard } from "./_components/certifications-summary-card/CertificationsSummaryCard";
+import { CertificationsSummaryCard } from "../../../../components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 
 const getCertificationAuthorityStructure = graphql(`
   query getCertificationAuthorityStructureForAdminPage($id: ID!) {
