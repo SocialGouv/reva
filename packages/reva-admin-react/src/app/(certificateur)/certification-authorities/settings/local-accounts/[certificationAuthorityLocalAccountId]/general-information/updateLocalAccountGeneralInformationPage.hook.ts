@@ -56,7 +56,7 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
   const { data } = useQuery({
     queryKey: [
       certificationAuthorityLocalAccountId,
-      "certification_authority_getCertificationAuthorityLocalAccount",
+      "certification_authority_getCertificationAuthorityLocalAccountGeneralInformationPage",
     ],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityLocalAccountQuery, {
