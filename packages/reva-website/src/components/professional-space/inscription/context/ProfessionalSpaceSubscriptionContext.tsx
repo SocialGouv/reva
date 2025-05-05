@@ -1,8 +1,9 @@
+"use client";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { CreateSubscriptionRequestInput } from "@/graphql/generated/graphql";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import {
   ReactNode,
   createContext,

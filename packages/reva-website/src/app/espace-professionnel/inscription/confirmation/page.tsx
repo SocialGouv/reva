@@ -1,5 +1,5 @@
 import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
