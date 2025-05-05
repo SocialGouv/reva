@@ -3,7 +3,7 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalInterventionAreaPage.hook";
+import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
 import { useParams, useRouter } from "next/navigation";
 import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
