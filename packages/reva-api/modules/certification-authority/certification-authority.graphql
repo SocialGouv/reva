@@ -228,6 +228,11 @@ type Mutation {
     input: UpdateCertificationAuthorityLocalAccountInput!
   ): CertificationAuthorityLocalAccount!
 
+  certification_authority_updateCertificationAuthorityLocalAccountDepartments(
+    certificationAuthorityLocalAccountId: ID!
+    departmentIds: [String!]
+  ): CertificationAuthorityLocalAccount!
+
   certification_authority_deleteCertificationAuthorityLocalAccount(
     certificationAuthorityLocalAccountId: ID!
   ): CertificationAuthorityLocalAccount!

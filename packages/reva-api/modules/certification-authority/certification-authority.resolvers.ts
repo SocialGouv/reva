@@ -55,6 +55,7 @@ import { updateCertificationAuthorityLocalAccount } from "./features/updateCerti
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 import { updateCertificationAuthorityV2ById } from "./features/updateCertificationAuthorityV2";
+import { updateCertificationAuthorityLocalAccountDepartments } from "./features/updateCertificationAuthorityLocalAccountDepartments";
 
 const unsafeResolvers = {
   Account: {
@@ -318,6 +319,30 @@ const unsafeResolvers = {
       });
     },
 
+    certification_authority_updateCertificationAuthorityLocalAccountDepartments:
+      async (
+        _parent: unknown,
+        params: {
+          certificationAuthorityLocalAccountId: string;
+          departmentIds: string[];
+        },
+        context: GraphqlContext,
+      ) => {
+        const canManage = await canUserManageCertificationAuthorityLocalAccount(
+          {
+            certificationAuthorityLocalAccountId:
+              params.certificationAuthorityLocalAccountId,
+            userKeycloakId: context.auth.userInfo?.sub || "",
+            userRoles: context.auth.userInfo?.realm_access?.roles || [],
+          },
+        );
+        if (!canManage) {
+          throw new Error(
+            "L'utilisateur n'est pas autorisé à modifier ce compte local d'autorité de certification",
+          );
+        }
+        return updateCertificationAuthorityLocalAccountDepartments(params);
+      },
     certification_authority_transferCandidacyToAnotherCertificationAuthority:
       async (
         _parent: unknown,

@@ -39,6 +39,8 @@ export const resolversSecurityMap = {
     isAnyone, //security handled in resolver
   "Mutation.certification_authority_updateCertificationAuthorityLocalAccount":
     isAnyone, //security handled in resolver
+  "Mutation.certification_authority_updateCertificationAuthorityLocalAccountDepartments":
+    isAnyone, //security handled in resolver
   "Mutation.certification_authority_deleteCertificationAuthorityLocalAccount":
     isAnyone, //security handled in resolver
   "Mutation.certification_authority_transferCandidacyToAnotherCertificationAuthority":
