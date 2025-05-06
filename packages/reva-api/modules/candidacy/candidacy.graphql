@@ -72,6 +72,7 @@ type Candidacy {
   typeAccompagnement: TypeAccompagnement!
   lastActivityDate: Timestamp
   isCaduque: Boolean!
+  hasMoreThanOneCertificationAvailable: Boolean!
 }
 enum TypeAccompagnement {
   ACCOMPAGNE

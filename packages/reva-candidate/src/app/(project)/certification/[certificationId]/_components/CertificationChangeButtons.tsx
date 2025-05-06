@@ -18,6 +18,10 @@ export default function CertificationChangeButtons({
     isAapAvailable: boolean;
   };
 }) {
+  const router = useRouter();
+  const params = useParams<{ certificationId: string }>();
+  const selectedCertificationId = params.certificationId;
+
   const {
     canEditCandidacy,
     updateCertification,
@@ -25,9 +29,6 @@ export default function CertificationChangeButtons({
     candidacy,
     isRefetching,
   } = useCandidacyForCertification();
-  const router = useRouter();
-  const params = useParams<{ certificationId: string }>();
-  const selectedCertificationId = params.certificationId;
 
   if (isRefetching) {
     return null;
@@ -70,19 +71,22 @@ export default function CertificationChangeButtons({
       >
         Retour
       </Button>
-      {certification?.id === selectedCertificationId ? (
-        <Button
-          data-test="change-certification-button"
-          priority="tertiary no outline"
-          className="justify-center w-[100%] md:w-fit"
-          onClick={() => {
-            router.push("/search-certification");
-          }}
-          disabled={!canEditCandidacy}
-        >
-          Changer de diplôme
-        </Button>
-      ) : (
+      {certification?.id === selectedCertificationId &&
+        candidacy.hasMoreThanOneCertificationAvailable && (
+          <Button
+            data-test="change-certification-button"
+            priority="tertiary no outline"
+            className="justify-center w-[100%] md:w-fit"
+            onClick={() => {
+              router.push("/search-certification");
+            }}
+            disabled={!canEditCandidacy}
+          >
+            Changer de diplôme
+          </Button>
+        )}
+
+      {certification?.id !== selectedCertificationId && (
         <Button
           data-test="submit-certification-button"
           className="justify-center w-[100%]  md:w-fit"

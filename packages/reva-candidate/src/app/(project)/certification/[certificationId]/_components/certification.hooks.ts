@@ -22,6 +22,7 @@ const GET_CANDIDACY_WITH_CERTIFICATION = graphql(`
           id
           isAapAvailable
         }
+        hasMoreThanOneCertificationAvailable
       }
     }
   }

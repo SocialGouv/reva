@@ -61,6 +61,22 @@ import { getFileNameAndUrl } from "./features/getDvTemplateNameAndUrl";
 import { isAapAvailableForCertificationId } from "./features/isAapAvailableForCertificationId";
 
 const unsafeReferentialResolvers = {
+  Candidacy: {
+    hasMoreThanOneCertificationAvailable: async ({
+      id: candidacyId,
+    }: {
+      id: string;
+    }) => {
+      try {
+        const { info } = await searchCertificationsForCandidate({
+          candidacyId,
+        });
+        return info.totalRows > 1;
+      } catch (_) {}
+
+      return false;
+    },
+  },
   Certification: {
     codeRncp: ({ rncpId, codeRncp }: { rncpId: string; codeRncp: string }) =>
       codeRncp || rncpId,
