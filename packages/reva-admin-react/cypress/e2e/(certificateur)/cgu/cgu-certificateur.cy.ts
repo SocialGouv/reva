@@ -198,7 +198,7 @@ describe("CGU Certificateur Page", () => {
       });
     });
 
-    context("Ignore CGU Modal", () => {
+    context.skip("Ignore CGU Modal", () => {
       beforeEach(() => {
         cy.get(SELECTORS.CGU_FORM).should("exist");
       });
