@@ -25,21 +25,27 @@ export default function GeneralInformationCard({
       isEditable
       status={isComplete ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={`${hrefPrefix}/informations-generales`}
+      data-test="certification-authority-general-information-card"
     >
       <div className="pl-10">
-        <p className="text-xl font-bold mb-2">{certificationAuthority.label}</p>
+        <p
+          className="text-xl font-bold mb-2"
+          data-test="certification-authority-label"
+        >
+          {certificationAuthority.label}
+        </p>
         {isComplete ? (
           <>
             <div className="flex gap-x-2">
               <p>Contact référent :</p>
               <div>
-                <p className="my-0 font-medium">
+                <p className="my-0 font-medium" data-test="contact-full-name">
                   {certificationAuthority.contactFullName}
                 </p>
-                <p className="my-0 font-medium">
+                <p className="my-0 font-medium" data-test="contact-email">
                   {certificationAuthority.contactEmail}
                 </p>
-                <p className="my-0 font-medium">
+                <p className="my-0 font-medium" data-test="contact-phone">
                   {certificationAuthority.contactPhone}
                 </p>
               </div>
@@ -47,10 +53,10 @@ export default function GeneralInformationCard({
           </>
         ) : (
           <div className="flex flex-col gap-y-6">
-            <Badge severity="new" small>
+            <Badge severity="new" small data-test="no-contact-badge">
               Aucun contact référent
             </Badge>
-            <SmallNotice className="-ml-10">
+            <SmallNotice className="-ml-10" data-test="no-contact-notice">
               Ajoutez un contact référent pour améliorer le suivi et la
               communication avec les AAP et les candidats
             </SmallNotice>

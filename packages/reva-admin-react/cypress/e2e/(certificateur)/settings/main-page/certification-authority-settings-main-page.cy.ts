@@ -1,8 +1,10 @@
 import { stubQuery } from "../../../../utils/graphql";
 import certificationAuthoritySettingsFixture from "./fixtures/certification-authority-settings.json";
+import certificationAuthoritySettingsNoContactInfoFixture from "./fixtures/certification-authority-settings-no-contact-info.json";
+
 import activeFeaturesFixture from "./fixtures/active-features.json";
 
-function interceptSettings() {
+function interceptSettings(hasContactInfo = true) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(req, "activeFeaturesForConnectedUser", activeFeaturesFixture);
     stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
@@ -14,7 +16,9 @@ function interceptSettings() {
     stubQuery(
       req,
       "getCertificationAuthorityForCertificationAuthoritySettingsPage",
-      certificationAuthoritySettingsFixture,
+      hasContactInfo
+        ? certificationAuthoritySettingsFixture
+        : certificationAuthoritySettingsNoContactInfoFixture,
     );
   });
 }
@@ -35,6 +39,125 @@ context("main page", () => {
       cy.get('[data-test="certification-authority-settings-page"]')
         .children("h1")
         .should("have.text", "Paramètres");
+    });
+  });
+});
+
+context("general information summary card", () => {
+  context("when i access the settings page ", () => {
+    it("display the general information summary card with the correct information", () => {
+      interceptSettings();
+
+      cy.certificateur("/certification-authorities/settings");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
+      );
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"]',
+      ).should("exist");
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] h2',
+      ).should("have.text", "Informations générales");
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="certification-authority-label"]',
+      ).should("have.text", "certification authority label");
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="contact-full-name"]',
+      ).should("have.text", "jane doe");
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="contact-email"]',
+      ).should("have.text", "monemail@example.com");
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="contact-phone"]',
+      ).should("have.text", "0101010101");
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="completed-badge"]',
+      ).should("exist");
+    });
+
+    it("shows a button to update the general information", () => {
+      interceptSettings();
+
+      cy.certificateur("/certification-authorities/settings");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
+      );
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="action-button"]',
+      ).should("have.text", "Modifier");
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="action-button"]',
+      ).should("be.enabled");
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="action-button"]',
+      ).click();
+
+      cy.url().should(
+        "include",
+        "/certification-authorities/settings/informations-generales",
+      );
+    });
+
+    it("should show a to complete badge when general information is missing", () => {
+      interceptSettings(false);
+
+      cy.certificateur("/certification-authorities/settings");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
+      );
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="to-complete-badge"]',
+      ).should("exist");
+    });
+
+    it("should show a no-contact-info badge when contact info is missing", () => {
+      interceptSettings(false);
+
+      cy.certificateur("/certification-authorities/settings");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
+      );
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="no-contact-badge"]',
+      ).should("exist");
+    });
+
+    it("should show a no contact notice when contact info is missing", () => {
+      interceptSettings(false);
+
+      cy.certificateur("/certification-authorities/settings");
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
+      );
+
+      cy.get(
+        '[data-test="certification-authority-general-information-card"] [data-test="no-contact-notice"]',
+      ).should("exist");
     });
   });
 });
