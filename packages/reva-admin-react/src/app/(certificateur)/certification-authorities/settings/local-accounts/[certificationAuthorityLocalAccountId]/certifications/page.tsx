@@ -7,7 +7,10 @@ import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import { CertificationsForm } from "@/components/certifications-form/CertificationsForm";
 import { CertificationsFormData } from "@/components/certifications-form/CertificationsForm.hook";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useRouter } from "next/navigation";
 export default function InterventionAreaPage() {
+  const router = useRouter();
   const { certificationAuthorityLocalAccountId } = useParams<{
     certificationAuthorityLocalAccountId: string;
   }>();
@@ -16,6 +19,7 @@ export default function InterventionAreaPage() {
     isLoading,
     certificationsFromCertificationAuthority,
     certificationsFromLocalAccount,
+    updateCertificationAuthorityLocalAccountCertifications,
   } = useUpdateLocalAccountCertificationsPage({
     certificationAuthorityLocalAccountId,
   });
@@ -36,7 +40,18 @@ export default function InterventionAreaPage() {
   }
 
   const handleFormSubmit = async (data: CertificationsFormData) => {
-    console.log(data);
+    try {
+      await updateCertificationAuthorityLocalAccountCertifications.mutateAsync(
+        data.certifications.filter((c) => c.selected).map((c) => c.id),
+      );
+      successToast("modification enregistrées");
+      router.push(
+        `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+      );
+    } catch (error) {
+      console.log(error);
+      graphqlErrorToast(error);
+    }
   };
 
   return (

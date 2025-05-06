@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 const getCertificationAuthorityLocalAccountQuery = graphql(`
   query getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage(
     $certificationAuthorityLocalAccountId: ID!
@@ -26,12 +26,31 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
   }
 `);
 
+const updateCertificationAuthorityLocalAccountCertificationsMutation = graphql(`
+  mutation updateCertificationAuthorityLocalAccountCertificationsForUpdateLocalAccountCertificationsPage(
+    $certificationAuthorityLocalAccountId: ID!
+    $certificationIds: [String!]!
+  ) {
+    certification_authority_updateCertificationAuthorityLocalAccountCertifications(
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
+      certificationIds: $certificationIds
+    ) {
+      id
+      certifications {
+        id
+        label
+      }
+    }
+  }
+`);
+
 export const useUpdateLocalAccountCertificationsPage = ({
   certificationAuthorityLocalAccountId,
 }: {
   certificationAuthorityLocalAccountId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: [
@@ -42,6 +61,25 @@ export const useUpdateLocalAccountCertificationsPage = ({
       graphqlClient.request(getCertificationAuthorityLocalAccountQuery, {
         certificationAuthorityLocalAccountId,
       }),
+  });
+
+  const updateCertificationAuthorityLocalAccountCertifications = useMutation({
+    mutationFn: (certificationIds: string[]) =>
+      graphqlClient.request(
+        updateCertificationAuthorityLocalAccountCertificationsMutation,
+        {
+          certificationAuthorityLocalAccountId,
+          certificationIds,
+        },
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          certificationAuthorityLocalAccountId,
+          "getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage",
+        ],
+      });
+    },
   });
 
   const certificationAuthorityLocalAccount =
@@ -60,5 +98,6 @@ export const useUpdateLocalAccountCertificationsPage = ({
     certificationsFromCertificationAuthority,
     certificationsFromLocalAccount,
     isLoading,
+    updateCertificationAuthorityLocalAccountCertifications,
   };
 };

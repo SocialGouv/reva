@@ -1,5 +1,6 @@
-import { stubQuery } from "../../../../utils/graphql";
+import { stubMutation, stubQuery } from "../../../../utils/graphql";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
+import updateCertificationAuthorityLocalAccountCertificationsFixture from "./fixtures/update-certification-authority-local-account-certifications-mutation-response.json";
 
 function interceptUpdateLocalAccountCertifications() {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -18,6 +19,11 @@ function interceptUpdateLocalAccountCertifications() {
       req,
       "getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage",
       certificationAuthorityLocalAccountFixture,
+    );
+    stubMutation(
+      req,
+      "updateCertificationAuthorityLocalAccountCertificationsForUpdateLocalAccountCertificationsPage",
+      updateCertificationAuthorityLocalAccountCertificationsFixture,
     );
   });
 }
@@ -86,6 +92,40 @@ context("main page", () => {
       cy.get(
         '[data-test="update-certification-authority-local-account-certifications-page"] button[type="submit"]',
       ).should("be.disabled");
+    });
+
+    it("let me update the certifications and submit the form", () => {
+      interceptUpdateLocalAccountCertifications();
+
+      cy.certificateur(
+        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage",
+      );
+
+      cy.get(
+        '[data-test="tree-select-item-CQP Animateur d\'équipe autonome de production industrielle"] input',
+      ).check({
+        force: true,
+      });
+
+      cy.get(
+        '[data-test="update-certification-authority-local-account-certifications-page"] button[type="submit"]',
+      ).click();
+
+      cy.wait(
+        "@updateCertificationAuthorityLocalAccountCertificationsForUpdateLocalAccountCertificationsPage",
+      );
+
+      cy.url().should(
+        "be.equal",
+        Cypress.config("baseUrl") +
+          "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/",
+      );
     });
   });
 });
