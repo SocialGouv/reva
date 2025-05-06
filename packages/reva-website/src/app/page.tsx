@@ -1,21 +1,21 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import Notice from "@codegouvfr/react-dsfr/Notice";
-import { ReactNode } from "react";
-import Image, { getImageProps } from "next/image";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { PICTOGRAMS } from "@/components/pictograms";
-import Link from "next/link";
-import { graphql } from "@/graphql/generated";
 import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
-import request from "graphql-request";
+import { graphql } from "@/graphql/generated";
 import {
   ArticleActualite,
   ArticleDAide,
   ArticleFaq,
 } from "@/graphql/generated/graphql";
-import { Card } from "@codegouvfr/react-dsfr/Card";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Card } from "@codegouvfr/react-dsfr/Card";
+import Notice from "@codegouvfr/react-dsfr/Notice";
+import request from "graphql-request";
 import type { Metadata } from "next";
+import Image, { getImageProps } from "next/image";
+import Link from "next/link";
+import { ReactNode } from "react";
 
 export const revalidate = 600;
 
@@ -210,13 +210,13 @@ const QuiEtesVousSection = () => (
             iconId="fr-icon-arrow-right-line"
             iconPosition="right"
             className="mt-auto"
-            disabled
+            linkProps={{
+              href: "/savoir-plus/articles/espace-certificateurs/",
+              target: "_self",
+            }}
           >
             Créez votre espace certificateur
           </Button>
-          <p className="text-xs text-gray-400 mt-1 mb-0">
-            Fonctionnalité bientôt disponible.
-          </p>
         </QuiEtesVousCard>
       </div>
     </div>
