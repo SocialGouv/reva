@@ -18,6 +18,7 @@ const SELECTORS = {
   AWAITING_MANAGER_VALIDATION: '[data-test="cgu-awaiting-manager-validation"]',
   SHOW_CGU_BUTTON: '[data-test="cgu-show-button"]',
   CGU: '[data-test="cgu"]',
+  MODAL_CONTAINER_SELECTOR: '[id="modal-ignore-cgu-certificateur"]',
 };
 
 interface VisitCguCertificateurParams {
@@ -198,7 +199,7 @@ describe("CGU Certificateur Page", () => {
       });
     });
 
-    context.skip("Ignore CGU Modal", () => {
+    context("Ignore CGU Modal", () => {
       beforeEach(() => {
         cy.get(SELECTORS.CGU_FORM).should("exist");
       });
@@ -215,7 +216,7 @@ describe("CGU Certificateur Page", () => {
         cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("not.be.visible");
         cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).click();
         cy.get(SELECTORS.CGU_IGNORE_BUTTON).should("be.visible");
-        cy.get(SELECTORS.IGNORE_MODAL_RELIRE_BUTTON).should("not.be.visible");
+        cy.get(SELECTORS.MODAL_CONTAINER_SELECTOR).should("not.be.visible");
       });
 
       it("should trigger appropriate action when modal ignore button is clicked", () => {
