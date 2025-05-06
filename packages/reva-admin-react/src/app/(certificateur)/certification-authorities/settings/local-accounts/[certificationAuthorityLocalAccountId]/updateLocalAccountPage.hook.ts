@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCertificationAuthorityLocalAccountQuery = graphql(`
   query getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage(
@@ -39,12 +39,25 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
   }
 `);
 
+const deleteCertificationAuthorityLocalAccountMutation = graphql(`
+  mutation deleteCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage(
+    $certificationAuthorityLocalAccountId: ID!
+  ) {
+    certification_authority_deleteCertificationAuthorityLocalAccount(
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
+    ) {
+      id
+    }
+  }
+`);
+
 export const useUpdateLocalAccountPage = ({
   certificationAuthorityLocalAccountId,
 }: {
   certificationAuthorityLocalAccountId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data } = useQuery({
     queryKey: [
@@ -57,9 +70,21 @@ export const useUpdateLocalAccountPage = ({
       }),
   });
 
+  const deleteCertificationAuthorityLocalAccount = useMutation({
+    mutationFn: (certificationAuthorityLocalAccountId: string) =>
+      graphqlClient.request(deleteCertificationAuthorityLocalAccountMutation, {
+        certificationAuthorityLocalAccountId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [certificationAuthorityLocalAccountId],
+      });
+    },
+  });
   const certificationAuthorityLocalAccount =
     data?.certification_authority_getCertificationAuthorityLocalAccount;
   return {
     certificationAuthorityLocalAccount,
+    deleteCertificationAuthorityLocalAccount,
   };
 };

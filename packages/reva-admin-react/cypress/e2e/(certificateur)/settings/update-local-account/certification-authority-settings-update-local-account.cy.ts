@@ -1,5 +1,6 @@
-import { stubQuery } from "../../../../utils/graphql";
+import { stubQuery, stubMutation } from "../../../../utils/graphql";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
+import deleteCertificationAuthorityLocalAccountFixture from "./fixtures/delete-certification-authority-local-account-mutation-response.json";
 
 function interceptUpdateLocalAccount() {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -18,6 +19,11 @@ function interceptUpdateLocalAccount() {
       req,
       "getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
       certificationAuthorityLocalAccountFixture,
+    );
+    stubMutation(
+      req,
+      "deleteCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+      deleteCertificationAuthorityLocalAccountFixture,
     );
   });
 }
@@ -205,4 +211,59 @@ context("certifications summary card", () => {
       );
     });
   });
+});
+
+context("delete button", () => {
+  context("when i access the update local account page ", () => {
+    it("display the delete button", () => {
+      interceptUpdateLocalAccount();
+
+      cy.certificateur(
+        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+      );
+
+      cy.get(
+        '[data-test="delete-certification-authority-local-account-button"]',
+      ).should("exist");
+    });
+  });
+  context(
+    "when i click the delete local account button and confirm the deletion",
+    () => {
+      it("delete the local account and redirect to the settings page", () => {
+        interceptUpdateLocalAccount();
+
+        cy.certificateur(
+          "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
+        );
+        cy.wait("@activeFeaturesForConnectedUser");
+        cy.wait("@getOrganismForAAPVisibilityCheck");
+        cy.wait(
+          "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+        );
+
+        cy.get(
+          '[data-test="delete-certification-authority-local-account-button"]',
+        ).click();
+
+        cy.get(
+          '[data-test="delete-certification-authority-local-account-confirm-button"]',
+        ).click();
+
+        cy.wait(
+          "@deleteCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+        );
+
+        cy.url().should(
+          "be.equal",
+          Cypress.config("baseUrl") + "/certification-authorities/settings/",
+        );
+      });
+    },
+  );
 });

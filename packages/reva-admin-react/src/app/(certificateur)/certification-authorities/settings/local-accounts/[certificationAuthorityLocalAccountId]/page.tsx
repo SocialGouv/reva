@@ -6,14 +6,28 @@ import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
 import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import { createModal } from "@codegouvfr/react-dsfr/Modal/Modal";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useRouter } from "next/navigation";
 
 export default function UpdateLocalAccountPage() {
+  const router = useRouter();
+
   const { certificationAuthorityLocalAccountId } = useParams<{
     certificationAuthorityLocalAccountId: string;
   }>();
 
-  const { certificationAuthorityLocalAccount } = useUpdateLocalAccountPage({
+  const {
+    certificationAuthorityLocalAccount,
+    deleteCertificationAuthorityLocalAccount,
+  } = useUpdateLocalAccountPage({
     certificationAuthorityLocalAccountId: certificationAuthorityLocalAccountId,
+  });
+
+  const deleteConfirmationModal = createModal({
+    id: "delete-confirmation-modal",
+    isOpenedByDefault: false,
   });
 
   const localAccountLabel = `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`;
@@ -40,11 +54,42 @@ export default function UpdateLocalAccountPage() {
     }
   });
 
+  const handleDeleteCertificationAuthorityLocalAccount = async () => {
+    try {
+      await deleteCertificationAuthorityLocalAccount.mutateAsync(
+        certificationAuthorityLocalAccountId,
+      );
+      successToast("Compte local supprimé");
+      router.push("/certification-authorities/settings/");
+    } catch (error) {
+      console.error(error);
+      graphqlErrorToast(error);
+    }
+  };
+
   return (
     <div
       className="flex flex-col"
       data-test="update-certification-authority-local-account-page"
     >
+      <deleteConfirmationModal.Component
+        title="Vous allez supprimer ce compte."
+        buttons={[
+          {
+            children: "Annuler",
+          },
+          {
+            onClick: handleDeleteCertificationAuthorityLocalAccount,
+            children: "Continuer",
+            nativeButtonProps: {
+              "data-test":
+                "delete-certification-authority-local-account-confirm-button",
+            },
+          },
+        ]}
+      >
+        <p>Cette action est irréversible.</p>
+      </deleteConfirmationModal.Component>
       <Breadcrumb
         segments={[
           {
@@ -73,6 +118,26 @@ export default function UpdateLocalAccountPage() {
             certificationAuthorityLocalAccount?.certifications || []
           }
           updateButtonHref={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/certifications`}
+        />
+        <Tile
+          data-test="delete-certification-authority-local-account-button"
+          title={
+            <span>
+              <span className="fr-icon-delete-fill fr-icon--sm mr-2" />
+              Supprimer ce compte local
+            </span>
+          }
+          detail={
+            <span>
+              <span className="fr-icon-warning-fill fr-icon--sm mr-2" />
+              La suppression d’un compte local est irréversible.
+            </span>
+          }
+          small
+          orientation="horizontal"
+          buttonProps={{
+            onClick: deleteConfirmationModal.open,
+          }}
         />
       </div>
       <Button
