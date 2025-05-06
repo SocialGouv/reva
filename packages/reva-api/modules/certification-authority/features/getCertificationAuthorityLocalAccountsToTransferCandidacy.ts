@@ -58,7 +58,6 @@ export const getCertificationAuthorityLocalAccountsToTransferCandidacy =
       certificationAuthorityId: feasibility.certificationAuthorityId,
       certificationAuthorityLocalAccountOnCertification: {
         some: {
-          certificationId: candidacy.certificationId,
           certificationAuthorityLocalAccount: {
             account: {
               keycloakId: { not: keycloakId },
