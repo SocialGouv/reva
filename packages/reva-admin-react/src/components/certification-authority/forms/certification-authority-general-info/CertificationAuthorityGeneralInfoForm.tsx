@@ -43,7 +43,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
     register,
     reset,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -183,7 +183,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
               type: "submit",
               form: "certificationAuthorityForm",
             }}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !isDirty}
           >
             Enregistrer
           </Button>
