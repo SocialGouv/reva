@@ -190,6 +190,13 @@ enum CandidacyStatusFilter {
   VAE_COLLECTIVE
 }
 
+enum CandidacySortByFilter {
+  DATE_CREATION_ASC
+  DATE_CREATION_DESC
+  DATE_ENVOI_ASC
+  DATE_ENVOI_DESC
+}
+
 enum CandidacyCaduciteStatus {
   CADUQUE
   CONTESTATION
@@ -229,6 +236,7 @@ type Query {
     limit: Int
     statusFilter: CandidacyStatusFilter
     searchFilter: String
+    sortByFilter: CandidacySortByFilter
     maisonMereAAPId: ID
   ): CandidacyPage!
   getRandomOrganismsForCandidacy(

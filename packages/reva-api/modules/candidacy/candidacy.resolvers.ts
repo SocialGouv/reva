@@ -20,6 +20,7 @@ import {
   Candidacy,
   CandidacyBusinessEvent,
   CandidacyCaduciteStatus,
+  CandidacySortByFilter,
   CandidacyStatusFilter,
   SearchOrganismFilter,
 } from "./candidacy.types";
@@ -116,6 +117,7 @@ const unsafeResolvers = {
         offset?: number;
         statusFilter?: CandidacyStatusFilter;
         searchFilter?: string;
+        sortByFilter?: CandidacySortByFilter;
         maisonMereAAPId?: string;
       },
       context: GraphqlContext,

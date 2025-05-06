@@ -17,6 +17,7 @@ const CandidacyLayoutSideMenu = ({
   const searchParams = useSearchParams();
   const candidacyStatus = searchParams.get("status");
   const searchFilter = searchParams.get("search") || "";
+  const sortByFilter = searchParams.get("sortBy");
   const maisonMereAAPId = searchParams.get("maisonMereAAPId") as
     | string
     | undefined;
@@ -34,6 +35,9 @@ const CandidacyLayoutSideMenu = ({
 
     if (searchFilter) {
       params.set("search", searchFilter);
+    }
+    if (sortByFilter) {
+      params.set("sortBy", sortByFilter);
     }
     if (maisonMereAAPId) {
       params.set("maisonMereAAPId", maisonMereAAPId);

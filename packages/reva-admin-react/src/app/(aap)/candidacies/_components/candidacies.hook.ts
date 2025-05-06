@@ -1,7 +1,10 @@
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { CandidacyStatusFilter } from "@/graphql/generated/graphql";
+import {
+  CandidacySortByFilter,
+  CandidacyStatusFilter,
+} from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 
 const getCandidacyByStatusCount = graphql(`
@@ -40,12 +43,14 @@ const getCandidaciesByStatus = graphql(`
   query getCandidaciesByStatus(
     $searchFilter: String
     $statusFilter: CandidacyStatusFilter
+    $sortByFilter: CandidacySortByFilter
     $offset: Int
     $maisonMereAAPId: ID
   ) {
     getCandidacies(
       searchFilter: $searchFilter
       statusFilter: $statusFilter
+      sortByFilter: $sortByFilter
       limit: 10
       offset: $offset
       maisonMereAAPId: $maisonMereAAPId
@@ -97,11 +102,13 @@ const getCandidaciesByStatus = graphql(`
 export const useCandidacies = ({
   searchFilter,
   statusFilter,
+  sortByFilter,
   currentPage,
   maisonMereAAPId,
 }: {
   searchFilter: string;
   statusFilter: CandidacyStatusFilter;
+  sortByFilter: CandidacySortByFilter;
   currentPage: number;
   maisonMereAAPId?: string;
 }) => {
@@ -124,6 +131,7 @@ export const useCandidacies = ({
       "getCandidaciesByStatus",
       searchFilter,
       statusFilter,
+      sortByFilter,
       currentPage,
       maisonMereAAPId,
     ],
@@ -131,6 +139,7 @@ export const useCandidacies = ({
       graphqlClient.request(getCandidaciesByStatus, {
         searchFilter,
         statusFilter,
+        sortByFilter,
         offset,
         maisonMereAAPId,
       }),

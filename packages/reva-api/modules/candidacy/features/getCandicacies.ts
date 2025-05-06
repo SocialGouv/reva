@@ -3,7 +3,10 @@ import { Candidacy, Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
-import { CandidacyStatusFilter } from "../candidacy.types";
+import {
+  CandidacySortByFilter,
+  CandidacyStatusFilter,
+} from "../candidacy.types";
 import {
   candidacySearchWord,
   getWhereClauseFromStatusFilter,
@@ -16,6 +19,7 @@ export const getCandidacies = async ({
   offset,
   statusFilter,
   searchFilter,
+  sortByFilter,
   maisonMereAAPId,
 }: {
   hasRole(role: string): boolean;
@@ -24,6 +28,7 @@ export const getCandidacies = async ({
   offset?: number;
   statusFilter?: CandidacyStatusFilter;
   searchFilter?: string;
+  sortByFilter?: CandidacySortByFilter;
   maisonMereAAPId?: string;
 }) => {
   const realOffset = offset || 0;
@@ -61,6 +66,7 @@ export const getCandidacies = async ({
       limit: realLimit,
       statusFilter,
       searchFilter,
+      sortByFilter,
     });
   } else if (hasRole("manage_candidacy")) {
     candidaciesAndTotal = await getCandidaciesFromDb({
@@ -69,6 +75,7 @@ export const getCandidacies = async ({
       limit: realLimit,
       statusFilter,
       searchFilter,
+      sortByFilter,
     });
   }
 
@@ -88,15 +95,18 @@ const getCandidaciesFromDb = async ({
   organismAccountKeycloakId,
   statusFilter,
   searchFilter,
+  sortByFilter,
 }: {
   limit: number;
   offset: number;
   organismAccountKeycloakId?: string;
   statusFilter?: CandidacyStatusFilter;
   searchFilter?: string;
+  sortByFilter?: CandidacySortByFilter;
 }) => {
   let whereClause: Prisma.CandidacyWhereInput = organismAccountKeycloakId
     ? {
+        candidateId: { not: null },
         organism: {
           OR: [
             {
@@ -116,7 +126,7 @@ const getCandidaciesFromDb = async ({
           ],
         },
       }
-    : {};
+    : { candidateId: { not: null } };
 
   whereClause = {
     ...whereClause,
@@ -124,12 +134,18 @@ const getCandidaciesFromDb = async ({
     ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
   };
 
+  if (sortByFilter) {
+    whereClause = {
+      ...whereClause,
+    };
+  }
+
   const candidaciesCount = await prismaClient.candidacy.count({
     where: whereClause,
   });
 
   const candidacies = await prismaClient.candidacy.findMany({
-    orderBy: [{ createdAt: "desc" }],
+    orderBy: getOrderByClauseFromSortByFilter(sortByFilter),
     where: whereClause,
     skip: offset,
     take: limit,
@@ -139,4 +155,23 @@ const getCandidaciesFromDb = async ({
     total: candidaciesCount,
     candidacies,
   };
+};
+
+const getOrderByClauseFromSortByFilter = (
+  sortByFilter: CandidacySortByFilter = "DATE_CREATION_DESC",
+):
+  | Prisma.CandidacyOrderByWithRelationInput
+  | Prisma.CandidacyOrderByWithRelationInput[]
+  | undefined => {
+  if (sortByFilter == "DATE_CREATION_DESC") {
+    return [{ createdAt: "desc" }];
+  } else if (sortByFilter == "DATE_CREATION_ASC") {
+    return [{ createdAt: "asc" }];
+  } else if (sortByFilter == "DATE_ENVOI_DESC") {
+    return [{ sentAt: "desc" }];
+  } else if (sortByFilter == "DATE_ENVOI_ASC") {
+    return [{ sentAt: "asc" }];
+  }
+
+  return undefined;
 };

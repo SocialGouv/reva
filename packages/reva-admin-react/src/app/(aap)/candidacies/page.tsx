@@ -2,6 +2,7 @@
 import { SearchList } from "@/components/search/search-list/SearchList";
 import {
   CandidacyCountByStatus,
+  CandidacySortByFilter,
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -13,6 +14,7 @@ import {
   useCandidacies,
 } from "./_components";
 import { toDate } from "date-fns";
+import { FilterBar } from "./_components/FilterBar";
 
 export default function CandidaciesPage() {
   const pathname = usePathname();
@@ -23,6 +25,7 @@ export default function CandidaciesPage() {
   const currentPage = page ? Number.parseInt(page) : 1;
   const searchFilter = searchParams.get("search") || "";
   const status = searchParams.get("status");
+  const sortByFilter = searchParams.get("sortBy");
   const maisonMereAAPId = searchParams.get("maisonMereAAPId") as
     | string
     | undefined;
@@ -35,6 +38,8 @@ export default function CandidaciesPage() {
   const { candidaciesByStatusCount, candidaciesByStatus } = useCandidacies({
     searchFilter,
     statusFilter: (status as CandidacyStatusFilter) ?? "ACTIVE_HORS_ABANDON",
+    sortByFilter:
+      (sortByFilter as CandidacySortByFilter) ?? "DATE_CREATION_DESC",
     currentPage,
     maisonMereAAPId,
   });
@@ -43,12 +48,15 @@ export default function CandidaciesPage() {
     if (!status) {
       params.set("status", "ACTIVE_HORS_ABANDON");
     }
+    if (!sortByFilter) {
+      params.set("sortBy", "DATE_CREATION_DESC");
+    }
     if (!page) {
       params.set("page", "1");
     }
 
     replace(`${pathname}?${params.toString()}`);
-  }, [status, params, pathname, replace, page]);
+  }, [status, params, pathname, replace, page, sortByFilter]);
 
   const getPathnameWithoutMaisonMereAAPId = (): string => {
     const currentParams = new URLSearchParams(searchParams);
@@ -88,10 +96,12 @@ export default function CandidaciesPage() {
           </p>
         </div>
       )}
+
       {candidaciesByStatus && (
         <SearchList
           searchFilter={searchFilter}
           searchResultsPage={candidaciesByStatus}
+          FilterBar={<FilterBar />}
         >
           {(candidacy) => (
             <CandidacyCard

@@ -198,6 +198,7 @@ model Candidacy {
   reorientationReasonId                         String?                                         @map("reorientation_reason_id") @db.Uuid
   createdAt                                     DateTime                                        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                     DateTime?                                       @map("updated_at") @db.Timestamptz(6)
+  sentAt                                        DateTime?                                       @map("sent_at") @db.Timestamptz(6)
   financeModule                                 FinanceModule                                   @default(hors_plateforme) @map("finance_module")
   FundingRequest                                FundingRequest[]
   paymentRequest                                PaymentRequest?

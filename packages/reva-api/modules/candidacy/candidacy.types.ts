@@ -79,6 +79,16 @@ export const candidacyStatusFilters = [
 
 export type CandidacyStatusFilter = (typeof candidacyStatusFilters)[number];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const candidacySortByFilters = [
+  "DATE_CREATION_ASC",
+  "DATE_CREATION_DESC",
+  "DATE_ENVOI_ASC",
+  "DATE_ENVOI_DESC",
+] as const;
+
+export type CandidacySortByFilter = (typeof candidacySortByFilters)[number];
+
 export interface SearchOrganismFilter {
   distanceStatus?: string;
   pmr?: boolean;

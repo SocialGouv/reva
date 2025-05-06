@@ -25,6 +25,7 @@ export const updateCandidacyStatus = async ({
         id: candidacyId,
       },
       data: {
+        ...(() => (status == "VALIDATION" ? { sentAt: new Date() } : {}))(),
         status,
         candidacyStatuses: {
           create: {

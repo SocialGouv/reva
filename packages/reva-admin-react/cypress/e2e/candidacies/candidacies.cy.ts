@@ -34,7 +34,9 @@ context("Candidacy", () => {
     cy.wait("@getCandidaciesByStatus");
     cy.location().should((loc) => {
       expect(loc.pathname).to.eq("/admin2/candidacies/");
-      expect(loc.search).to.eq("?status=ACTIVE_HORS_ABANDON&page=1");
+      expect(loc.search).to.eq(
+        "?status=ACTIVE_HORS_ABANDON&sortBy=DATE_CREATION_DESC&page=1",
+      );
     });
 
     cy.get('a[href*="ARCHIVE_HORS_ABANDON_HORS_REORIENTATION"]').click();
@@ -42,7 +44,7 @@ context("Candidacy", () => {
     cy.location().should((loc) => {
       expect(loc.pathname).to.eq("/admin2/candidacies/");
       expect(loc.search).to.eq(
-        "?page=1&status=ARCHIVE_HORS_ABANDON_HORS_REORIENTATION",
+        "?page=1&status=ARCHIVE_HORS_ABANDON_HORS_REORIENTATION&sortBy=DATE_CREATION_DESC",
       );
     });
 
@@ -51,7 +53,7 @@ context("Candidacy", () => {
     cy.location().should((loc) => {
       expect(loc.pathname).to.eq("/admin2/candidacies/");
       expect(loc.search).to.eq(
-        "?status=ARCHIVE_HORS_ABANDON_HORS_REORIENTATION&page=2",
+        "?status=ARCHIVE_HORS_ABANDON_HORS_REORIENTATION&sortBy=DATE_CREATION_DESC&page=2",
       );
     });
   });

@@ -35,6 +35,9 @@ export const getCandidacyCountByStatus = async ({
   let whereClause = Prisma.sql`where 1=1`;
   let fromClause = Prisma.sql`from candidacy`;
 
+  //candidacy canidateId is not null
+  whereClause = Prisma.sql`${whereClause} and candidacy.candidate_id IS NOT NULL`;
+
   //candidacy organism as candidacyOrganism
   fromClause = Prisma.sql`${fromClause} left join organism candidacyOrganism on candidacy.organism_id = candidacyOrganism.id`;
 
