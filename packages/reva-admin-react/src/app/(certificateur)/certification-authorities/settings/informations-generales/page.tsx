@@ -15,7 +15,12 @@ const CertificationAuthorityGeneralInfoAdminPage = () => {
 
   return (
     <div className="flex flex-col flex-1">
-      <h1 className="flex-1">Informations générales</h1>
+      <h1
+        className="flex-1"
+        data-test="certification-authority-general-info-page-title"
+      >
+        Informations générales
+      </h1>
 
       <p className="text-xl">
         Consultez les identifiants de connexion de votre compte et complétez les

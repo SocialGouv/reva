@@ -83,6 +83,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
               label="Nom de la structure"
               nativeInputProps={{ value: certificationAuthority.label }}
               disabled
+              data-test="certification-authority-label"
             />
             <div className="flex gap-4">
               <Input
@@ -92,6 +93,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   value: certificationAuthority.account?.lastname || "",
                 }}
                 disabled
+                data-test="certification-authority-account-lastname"
               />
               <Input
                 className="w-full"
@@ -100,6 +102,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   value: certificationAuthority.account?.firstname || "",
                 }}
                 disabled
+                data-test="certification-authority-account-firstname"
               />
             </div>
             <Input
@@ -109,6 +112,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
               }}
               disabled
               className="w-[calc(50%-0.5rem)]"
+              data-test="certification-authority-account-email"
             />
           </div>
         </div>
@@ -130,6 +134,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                 nativeInputProps={{
                   ...register("contactFullName"),
                 }}
+                data-test="certification-authority-contact-full-name"
               />
               <div className="flex flex-col md:flex-row gap-4 grow items-end">
                 <Input
@@ -141,6 +146,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   nativeInputProps={{
                     ...register("contactEmail"),
                   }}
+                  data-test="certification-authority-contact-email"
                 />
                 <Input
                   className="w-full"
@@ -148,6 +154,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   nativeInputProps={{
                     ...register("contactPhone"),
                   }}
+                  data-test="certification-authority-contact-phone"
                 />
               </div>
               <Checkbox
@@ -184,6 +191,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
               form: "certificationAuthorityForm",
             }}
             disabled={isSubmitting || !isDirty}
+            data-test="certification-authority-submit-button"
           >
             Enregistrer
           </Button>
