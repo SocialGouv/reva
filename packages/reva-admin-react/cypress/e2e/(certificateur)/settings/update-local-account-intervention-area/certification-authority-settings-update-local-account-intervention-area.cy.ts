@@ -128,7 +128,7 @@ context("main page", () => {
         cy.url().should(
           "be.equal",
           Cypress.config("baseUrl") +
-            "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/intervention-area/",
+            "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/",
         );
       });
     },
