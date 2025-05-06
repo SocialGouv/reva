@@ -112,15 +112,10 @@ export const FormLocalAccount = (props: Props): JSX.Element => {
 
     setDepartmentItems(selectedDerpartmentItems);
 
-    let selectedCertificationItems = getDefaultItemsCertifications(
+    const selectedCertificationItems = getDefaultItemsCertifications(
       certifictionAuthority?.certifications || [],
+      localAccount?.certificationIds || [],
     );
-    for (const id of localAccount?.certificationIds || []) {
-      selectedCertificationItems = updateSelectedValueForAllItemsBasedOnItem(
-        selectedCertificationItems,
-        { id, label: "", selected: true },
-      );
-    }
 
     setCertificationItems(selectedCertificationItems);
 
@@ -339,17 +334,21 @@ function getDefaultItemsCertifications(
     status: CertificationStatus;
     codeRncp: string;
   }[],
+  selectedCertificationIds: string[],
 ): TreeSelectItem[] {
   const items: TreeSelectItem[] = certifications
     .filter(
-      (c) => c.status === "VALIDE_PAR_CERTIFICATEUR" || c.status === "INACTIVE",
+      (c) =>
+        selectedCertificationIds.includes(c.id) ||
+        c.status === "VALIDE_PAR_CERTIFICATEUR" ||
+        c.status === "INACTIVE",
     )
     .map((certification) => ({
       id: certification.id,
       label: `${certification.codeRncp} - ${certification.label}${
         certification.status === "INACTIVE" ? " (ancienne version)" : ""
       }`,
-      selected: false,
+      selected: selectedCertificationIds.includes(certification.id),
     }));
 
   return items;
