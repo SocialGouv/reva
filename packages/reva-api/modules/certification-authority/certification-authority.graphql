@@ -233,6 +233,11 @@ type Mutation {
     departmentIds: [String!]
   ): CertificationAuthorityLocalAccount!
 
+  certification_authority_updateCertificationAuthorityLocalAccountCertifications(
+    certificationAuthorityLocalAccountId: ID!
+    certificationIds: [String!]
+  ): CertificationAuthorityLocalAccount!
+
   certification_authority_deleteCertificationAuthorityLocalAccount(
     certificationAuthorityLocalAccountId: ID!
   ): CertificationAuthorityLocalAccount!
