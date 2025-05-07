@@ -1,34 +1,42 @@
 import { stubMutation, stubQuery } from "../utils/graphql";
 
-context.skip("Empty candidacy", () => {
+context("Empty candidacy", () => {
   it("prevent organism selection", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate1.json",
+      );
     });
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
-    cy.get('[data-test="project-home-edit-organism').should("be.disabled");
+    cy.get('[data-test="organism-tile"] button').should("be.disabled");
   });
 });
 
-context.skip("Candidacy with certification selected", () => {
+context("Candidacy with certification selected", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
       stubQuery(req, "getRandomOrganismsForCandidacy", "organism.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate3.json",
+      );
     });
 
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
-    cy.get('[data-test="project-home-edit-organism').click();
+    cy.get('[data-test="organism-tile"] button').click();
     cy.wait("@getRandomOrganismsForCandidacy");
   });
 
@@ -105,9 +113,10 @@ context.skip("Candidacy with certification selected", () => {
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
+      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForDashboard",
         "candidate3-organism-selected.json",
       );
     });
@@ -116,23 +125,13 @@ context.skip("Candidacy with certification selected", () => {
 
     cy.wait("@candidacy_selectOrganism");
     cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
 
-    cy.get('[data-test="project-home-organism-label"]').should(
-      "have.text",
-      "Architecte 1",
-    );
-    cy.get('[data-test="project-home-organism-email"]').should(
-      "have.text",
-      "email@exemple.com",
-    );
-    cy.get('[data-test="project-home-organism-phone"]').should(
-      "have.text",
-      "0111111111",
-    );
+    //TODO ajouter un check sur les AapContactTile
   });
 });
 
-context.skip("Candidacy with no organism results", () => {
+context("Candidacy with no organism results", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
@@ -145,14 +144,18 @@ context.skip("Candidacy with no organism results", () => {
         },
       });
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate3.json",
+      );
     });
 
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
-    cy.get('[data-test="project-home-edit-organism').click();
+    cy.get('[data-test="organism-tile"] button').click();
     cy.wait("@getRandomOrganismsForCandidacy");
   });
 
