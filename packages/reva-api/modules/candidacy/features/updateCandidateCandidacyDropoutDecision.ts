@@ -38,6 +38,12 @@ export const updateCandidateCandidacyDropoutDecision = async ({
     );
   }
 
+  if (dropOut.autoDropOutConfirmationEmailsSent) {
+    throw new Error(
+      "La décision d'abandon a déjà été confirmée automatiquement",
+    );
+  }
+
   if (dropOutConfirmed) {
     const candidacy = await prismaClient.candidacy.update({
       where: { id: candidacyId },
