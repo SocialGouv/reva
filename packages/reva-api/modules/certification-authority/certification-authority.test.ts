@@ -4,6 +4,187 @@ import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpe
 import { createCertificationAuthorityStructureHelper } from "../../test/helpers/entities/create-certification-authority-structure-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import * as createAccount from "../account/features/createAccount";
+import {
+  getGraphQLClient,
+  getGraphQLError,
+} from "../../test/jestGraphqlClient";
+import { UpdateCertificationAuthorityInput } from "../../modules/graphql/generated/graphql";
+import { graphql } from "../../modules/graphql/generated";
+import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
+import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
+
+async function graphqlUpdateCertificationAuthority({
+  role,
+  account,
+  certificationAuthorityId,
+  data,
+}: {
+  role: KeyCloakUserRole;
+  account: { keycloakId: string };
+  certificationAuthorityId: string;
+  data: UpdateCertificationAuthorityInput;
+}) {
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role,
+        keycloakId: account.keycloakId,
+      }),
+    },
+  });
+
+  const updateCertificationAuthorityV2ById = graphql(`
+    mutation updateCertificationAuthorityV2(
+      $certificationAuthorityId: ID!
+      $certificationAuthorityData: UpdateCertificationAuthorityInput!
+    ) {
+      certification_authority_updateCertificationAuthorityV2(
+        certificationAuthorityId: $certificationAuthorityId
+        certificationAuthorityData: $certificationAuthorityData
+      ) {
+        id
+        label
+        contactFullName
+        contactEmail
+      }
+    }
+  `);
+
+  return graphqlClient.request(updateCertificationAuthorityV2ById, {
+    certificationAuthorityId,
+    certificationAuthorityData: data,
+  });
+}
+
+test("should update a certification authority's contact info as a certificaton authority manager", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
+  const resp = await graphqlUpdateCertificationAuthority({
+    role: "manage_certification_authority_local_account",
+    account: certificationAuthority.Account[0],
+    certificationAuthorityId: certificationAuthority.id,
+    data: {
+      contactFullName: "new name",
+      contactEmail: "new email",
+    },
+  });
+
+  expect(resp.certification_authority_updateCertificationAuthorityV2).toEqual({
+    id: certificationAuthority.id,
+    label: certificationAuthority.label,
+    contactFullName: "new name",
+    contactEmail: "new email",
+  });
+});
+
+test("should update a certification authority's contact info as an admin", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
+  const resp = await graphqlUpdateCertificationAuthority({
+    role: "admin",
+    account: {
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    },
+    certificationAuthorityId: certificationAuthority.id,
+    data: {
+      contactFullName: "new name",
+      contactEmail: "new email",
+    },
+  });
+
+  expect(resp.certification_authority_updateCertificationAuthorityV2).toEqual({
+    id: certificationAuthority.id,
+    label: certificationAuthority.label,
+    contactFullName: "new name",
+    contactEmail: "new email",
+  });
+});
+
+test("should refuse to to update a certification authority's contact info as a candidacy manager", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
+  try {
+    await graphqlUpdateCertificationAuthority({
+      role: "manage_candidacy",
+      account: {
+        keycloakId: "64ae851c-9519-4efb-a483-db4b71918e2d",
+      },
+      certificationAuthorityId: certificationAuthority.id,
+      data: {
+        contactFullName: "new name",
+        contactEmail: "new email",
+      },
+    });
+  } catch (error) {
+    const gqlError = getGraphQLError(error);
+    expect(gqlError).toEqual("You are not authorized!");
+  }
+});
+
+test("should refuse to to update a certification authority's contact info as a candidate", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
+  try {
+    await graphqlUpdateCertificationAuthority({
+      role: "candidate",
+      account: {
+        keycloakId: "64ae851c-9519-4efb-a483-db4b71918e2d",
+      },
+      certificationAuthorityId: certificationAuthority.id,
+      data: {
+        contactFullName: "new name",
+        contactEmail: "new email",
+      },
+    });
+  } catch (error) {
+    const gqlError = getGraphQLError(error);
+    expect(gqlError).toEqual("You are not authorized!");
+  }
+});
+
+test("should update all of a certification authority's local accounts contact info when isGlobalContact is true", async () => {
+  const certificationAuthority = await createCertificationAuthorityHelper();
+
+  await createCertificationAuthorityLocalAccountHelper({
+    certificationAuthorityId: certificationAuthority.id,
+  });
+
+  await createCertificationAuthorityLocalAccountHelper({
+    certificationAuthorityId: certificationAuthority.id,
+  });
+
+  const resp = await graphqlUpdateCertificationAuthority({
+    role: "admin",
+    account: {
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    },
+    certificationAuthorityId: certificationAuthority.id,
+    data: {
+      contactFullName: "new name",
+      contactEmail: "new email",
+      isGlobalContact: true,
+    },
+  });
+
+  expect(resp.certification_authority_updateCertificationAuthorityV2).toEqual({
+    id: certificationAuthority.id,
+    label: certificationAuthority.label,
+    contactFullName: "new name",
+    contactEmail: "new email",
+  });
+
+  const localAccounts =
+    await getCertificationAuthorityLocalAccountByCertificationAuthorityId({
+      certificationAuthorityId: certificationAuthority.id,
+    });
+
+  expect(localAccounts?.length).toEqual(2);
+
+  for (const localAccount of localAccounts!) {
+    expect(localAccount.contactFullName).toEqual("new name");
+    expect(localAccount.contactEmail).toEqual("new email");
+  }
+});
 
 test("should return an exisiting certification local account list of 1 item for the certification authority", async () => {
   const certificationAuthorityLocalAccount =
