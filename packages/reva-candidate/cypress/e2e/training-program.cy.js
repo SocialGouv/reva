@@ -1,72 +1,6 @@
 import { stubQuery } from "../utils/graphql";
 
-context.skip("Training Program", () => {
-  describe("Testing project modification before and after training confirmation", () => {
-    it("should be able to update his certification, organism, goals and experience when training sent and not confirmed", () => {
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidacy",
-          "candidate2-training-sent.json",
-        );
-      });
-      cy.login();
-
-      cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.get('[data-test="project-home-set-certification"]').should(
-        "be.enabled",
-      );
-      cy.get('[data-test="project-home-edit-organism"]').should("be.enabled");
-      cy.get('[data-test="project-home-edit-goals"]').should("be.enabled");
-      cy.get('[data-test="timeline-add-experience"]').should("be.enabled");
-    });
-
-    it("should not be able to update his certification, organism, goals and experience after training confirmation", () => {
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidacy",
-          "candidate2-training-confirmed.json",
-        );
-      });
-      cy.login();
-
-      cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.get('[data-test="project-home-set-certification"]').should(
-        "not.exist",
-      );
-      cy.get('[data-test="project-home-edit-organism"]').should("not.exist");
-      cy.get('[data-test="project-home-edit-goals"]').should("not.exist");
-      cy.get('[data-test="timeline-add-experience"]').should("not.exist");
-      cy.get('[data-test="view-training-program-button"]').should("exist");
-    });
-
-    it("should be able to update his certification, organism, goals and experience after training is confirmed then sent again", () => {
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidacy",
-          "candidate2-training-confirmed-sent-again.json",
-        );
-      });
-      cy.login();
-
-      cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.get('[data-test="project-home-set-certification"]').should(
-        "be.enabled",
-      );
-      cy.get('[data-test="project-home-edit-organism"]').should("be.enabled");
-      cy.get('[data-test="project-home-edit-goals"]').should("be.enabled");
-      cy.get('[data-test="timeline-add-experience"]').should("be.enabled");
-    });
-  });
-
+context("Training Program", () => {
   describe("Testing descriptions", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
@@ -80,13 +14,19 @@ context.skip("Training Program", () => {
           "getCandidateWithCandidacyForTrainingValidation",
           "candidate2-training-confirmed.json",
         );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForDashboard",
+          "candidate2-training-confirmed.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
 
       cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.get('[data-test="view-training-program-button"]').click();
+      cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+
+      cy.get('[data-test="training-tile"] button').click();
       cy.wait("@getCandidateWithCandidacyForTrainingValidation");
     });
 
@@ -128,13 +68,19 @@ context.skip("Training Program", () => {
           "getCandidateWithCandidacyForTrainingValidation",
           "candidate2-missing-training-fields.json",
         );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForDashboard",
+          "candidate2-missing-training-fields.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
 
       cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.get('[data-test="view-training-program-button"]').click();
+      cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+
+      cy.get('[data-test="training-tile"] button').click();
       cy.wait("@getCandidateWithCandidacyForTrainingValidation");
     });
 
@@ -175,13 +121,18 @@ context.skip("Training Program", () => {
           "training_confirmTrainingForm",
           "confirm-training-form.json",
         );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForDashboard",
+          "candidate2-training-sent.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
 
       cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.get('[data-test="validate-training-program-button"]').click();
+      cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+      cy.get('[data-test="training-tile"] button').click();
       cy.wait("@getCandidateWithCandidacyForTrainingValidation");
 
       cy.get('[data-test="accept-conditions-checkbox-group"]')
@@ -197,7 +148,7 @@ context.skip("Training Program", () => {
         .click({ multiple: true });
 
       cy.get('[data-test="submit-training-program-button"]')
-        .should("be.enabled")
+        .should("not.be.disabled")
         .click();
 
       cy.wait("@training_confirmTrainingForm");
@@ -222,13 +173,19 @@ context.skip("Training Program", () => {
           "training_confirmTrainingForm",
           "confirm-training-form.json",
         );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForDashboard",
+          "candidate2-training-confirmed-sent-again.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
 
       cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.get('[data-test="validate-training-program-button"]').click();
+      cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+
+      cy.get('[data-test="training-tile"] button').click();
       cy.wait("@getCandidateWithCandidacyForTrainingValidation");
 
       cy.get('[data-test="accept-conditions-checkbox-group"]')
@@ -243,7 +200,7 @@ context.skip("Training Program", () => {
         .click({ multiple: true });
 
       cy.get('[data-test="submit-training-program-button"]')
-        .should("be.enabled")
+        .should("not.be.disabled")
         .click();
       cy.wait("@training_confirmTrainingForm");
     });
