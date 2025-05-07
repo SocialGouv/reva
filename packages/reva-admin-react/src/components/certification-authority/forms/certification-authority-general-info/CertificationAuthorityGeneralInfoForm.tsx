@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
 import { z } from "zod";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useRouter } from "next/navigation";
 
 type FormData = z.infer<typeof schema>;
 
@@ -16,6 +18,11 @@ const schema = z.object({
     .email("Le champ doit contenir une adresse email valide"),
   contactPhone: z.string().optional(),
   isGlobalContact: z.boolean(),
+});
+
+const globalContactConfirmationModal = createModal({
+  id: "global-contact-confirmation-modal",
+  isOpenedByDefault: false,
 });
 
 export const CertificationAuthorityGeneralInfoForm = ({
@@ -38,12 +45,14 @@ export const CertificationAuthorityGeneralInfoForm = ({
   backUrl: string;
 }) => {
   const { updateCertificationAuthority } = useCertificationAuthorityForm();
+  const router = useRouter();
 
   const {
     register,
     reset,
     handleSubmit,
     formState: { errors, isSubmitting, isDirty },
+    getValues,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -62,10 +71,21 @@ export const CertificationAuthorityGeneralInfoForm = ({
       });
 
       successToast("L'autorité de certification a bien été mise à jour");
+      router.push(backUrl);
     } catch (error) {
       graphqlErrorToast(error);
     }
   });
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { isGlobalContact } = getValues();
+    if (isGlobalContact) {
+      return globalContactConfirmationModal.open();
+    } else {
+      await handleFormSubmit(e);
+    }
+  };
 
   return (
     <>
@@ -124,7 +144,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
             à des étapes clés du parcours VAE (faisabilité, validation, jury)
             pour faciliter les échanges.
           </p>
-          <form onSubmit={handleFormSubmit} id="certificationAuthorityForm">
+          <form onSubmit={onSubmit} id="certificationAuthorityForm">
             <div className="w-full flex flex-col gap-y-4">
               <Input
                 label="Service associé"
@@ -197,6 +217,29 @@ export const CertificationAuthorityGeneralInfoForm = ({
           </Button>
         </div>
       </div>
+      <globalContactConfirmationModal.Component
+        title="Attribuer le contact référent"
+        buttons={[
+          {
+            children: "Annuler",
+          },
+          {
+            onClick: handleFormSubmit,
+            children: "Confirmer l'attribution",
+          },
+        ]}
+      >
+        <p>
+          Vous êtes sur le point d’attribuer le contact référent de votre
+          gestionnaire de candidatures à tous les comptes locaux rattachés. Ce
+          contact sera visible par les AAP et les candidats tout au long de leur
+          parcours de VAE.
+        </p>
+        <p>
+          Voulez-vous confirmer l’attribution de ce contact référent à tous les
+          comptes ?
+        </p>
+      </globalContactConfirmationModal.Component>
     </>
   );
 };
