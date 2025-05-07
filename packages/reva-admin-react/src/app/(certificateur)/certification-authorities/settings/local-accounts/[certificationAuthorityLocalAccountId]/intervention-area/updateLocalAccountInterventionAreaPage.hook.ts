@@ -20,16 +20,15 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
         id
         label
       }
-      certifications {
-        id
-      }
-    }
-    getRegions {
-      id
-      label
-      departments {
-        id
-        label
+      certificationAuthority {
+        departments {
+          id
+          label
+          region {
+            id
+            label
+          }
+        }
       }
     }
   }
@@ -94,8 +93,34 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
   const certificationAuthorityLocalAccount =
     data?.certification_authority_getCertificationAuthorityLocalAccount;
 
+  type Region = {
+    id: string;
+    label: string;
+    departments: { id: string; label: string }[];
+  };
+
   const regions = useMemo(
-    () => sortBy(data?.getRegions, (r) => r.label),
+    () =>
+      sortBy(
+        data?.certification_authority_getCertificationAuthorityLocalAccount?.certificationAuthority?.departments.reduce(
+          (acc, department) => {
+            if (department.region) {
+              let region = acc.find((r) => r.id === department.region?.id);
+              if (!region) {
+                region = { ...department.region, departments: [] };
+                acc.push(region);
+              }
+              region.departments.push({
+                id: department.id,
+                label: department.label,
+              });
+            }
+            return acc;
+          },
+          [] as Region[],
+        ),
+        (r) => r.label,
+      ),
     [data],
   );
 
