@@ -50,6 +50,3 @@ export const useExperiences = () => {
     candidacyAlreadySubmitted,
   };
 };
-
-type ExperiencesHookReturnType = ReturnType<typeof useExperiences>;
-export type CandidacyUseExperiences = ExperiencesHookReturnType["candidacy"];

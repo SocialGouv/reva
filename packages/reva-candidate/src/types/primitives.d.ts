@@ -1,3 +1,4 @@
+/* eslint-disable */
 declare module "@codegouvfr/react-dsfr/*.svg" {
   export interface SVG {
     height: number;

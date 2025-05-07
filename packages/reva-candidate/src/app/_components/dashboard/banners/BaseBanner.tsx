@@ -1,17 +1,17 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
-export const DEFAULT_BANNER_IMAGE =
+const DEFAULT_BANNER_IMAGE =
   "/candidat/images/image-home-character-young-man-glasses.png";
-export const DEFAULT_BANNER_IMAGE_ALT = "Homme portant des lunettes";
+const DEFAULT_BANNER_IMAGE_ALT = "Homme portant des lunettes";
 
-export interface BannerActionButton {
+interface BannerActionButton {
   href: string;
   label: string;
   testId?: string;
 }
 
-export interface BaseBannerProps {
+interface BaseBannerProps {
   content: React.ReactNode;
   imageSrc?: string;
   imageAlt?: string;

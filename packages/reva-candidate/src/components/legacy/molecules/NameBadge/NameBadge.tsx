@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export const BasicNameBadge = ({
+const BasicNameBadge = ({
   className,
   "data-test": dataTest,
   children,

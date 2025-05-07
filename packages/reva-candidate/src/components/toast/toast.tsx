@@ -50,7 +50,7 @@ export const errorToast = (message: string) =>
     />
   ));
 
-export const infoToast = (message: string) =>
+const _infoToast = (message: string) =>
   toast.custom(() => (
     <Alert
       severity="info"
@@ -60,7 +60,7 @@ export const infoToast = (message: string) =>
     />
   ));
 
-export const warningToast = (message: string) =>
+const _warningToast = (message: string) =>
   toast.custom(() => (
     <Alert
       severity="warning"

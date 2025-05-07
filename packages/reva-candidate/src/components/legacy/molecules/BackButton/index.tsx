@@ -11,7 +11,7 @@ export interface BasicBackButtonProps {
   label?: string;
 }
 
-export const BasicBackButton = ({
+const BasicBackButton = ({
   className = "",
   color = "dark",
   onClick,

@@ -12,7 +12,7 @@ export const KEYCLOAK_REALM =
   process.env.NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_REALM;
 export const KEYCLOAK_URL = process.env.NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_URL;
 
-export const STRAPI_BASE_URL =
+const STRAPI_BASE_URL =
   process.env.NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL || "http://localhost:1337";
 
 export const STRAPI_GRAPHQL_API_URL = STRAPI_BASE_URL + "/graphql";

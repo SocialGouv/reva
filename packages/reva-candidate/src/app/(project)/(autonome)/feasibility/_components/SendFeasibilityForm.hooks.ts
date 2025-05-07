@@ -2,7 +2,7 @@ import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { REST_API_URL } from "@/config/config";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export type FeasibilityInputType = {
+type FeasibilityInputType = {
   candidacyId: string;
   certificationAuthorityId: string;
   feasibilityFile: File;
