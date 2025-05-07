@@ -69,6 +69,9 @@ const Form = ({
   const [typeAccompagnement, setTypeAccompagnement] = useState(
     defaultValues.typeAccompagnement,
   );
+
+  const disabled = typeAccompagnement == defaultValues.typeAccompagnement;
+
   return (
     <form
       className="mt-12"
@@ -87,7 +90,7 @@ const Form = ({
                 nativeInputProps: {
                   value: "ACCOMPAGNE",
                   className: "type-accompagnement-accompagne-radio-button",
-                  defaultChecked: typeAccompagnement === "ACCOMPAGNE",
+                  checked: typeAccompagnement === "ACCOMPAGNE",
                   onChange: () => setTypeAccompagnement("ACCOMPAGNE"),
                 },
               },
@@ -96,7 +99,7 @@ const Form = ({
                 nativeInputProps: {
                   value: "AUTONOME",
                   className: "type-accompagnement-autonome-radio-button",
-                  defaultChecked: typeAccompagnement === "AUTONOME",
+                  checked: typeAccompagnement === "AUTONOME",
                   onChange: () => setTypeAccompagnement("AUTONOME"),
                 },
               },
@@ -128,14 +131,12 @@ const Form = ({
         <Button priority="tertiary" linkProps={{ href: "/" }}>
           Retour
         </Button>
+
         <Button
-          type="reset"
-          priority="tertiary no outline"
           className="md:ml-auto"
+          data-test="submit-type-accompagnement-form-button"
+          disabled={disabled}
         >
-          Réinitialiser
-        </Button>
-        <Button data-test="submit-type-accompagnement-form-button">
           Enregistrer
         </Button>
       </div>
