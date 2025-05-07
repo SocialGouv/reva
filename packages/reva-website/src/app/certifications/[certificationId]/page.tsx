@@ -3,8 +3,7 @@ import Image from "next/image";
 import request from "graphql-request";
 import { graphql } from "@/graphql/generated";
 import { GRAPHQL_API_URL } from "@/config/config";
-import { CertificationPageV1 } from "./_components/certification-page-v1/CertificationPageV1";
-import { CertificationPageV2 } from "./_components/certification-page-v2/CertificationPageV2";
+import { CertificationPageContent } from "./_components/certification-page-content/CertificationPageContent";
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 
 export default async function CertificationPage({
@@ -25,15 +24,9 @@ export default async function CertificationPage({
     return null;
   }
 
-  const activeFeatures = await getActiveFeatures();
-
   const content = certification
     ? `Code RNCP ${certification.codeRncp} - ${certification.label}`
     : "";
-
-  const isCertificationV2PageFeatureActive = !!activeFeatures?.includes(
-    "WEBSITE_CERTIFICATION_PAGE_V2",
-  );
 
   return (
     <MainLayout className="relative">
@@ -53,20 +46,10 @@ export default async function CertificationPage({
           />
         </div>
       </div>
-      {isCertificationV2PageFeatureActive ? (
-        <CertificationPageV2 certification={certification} />
-      ) : (
-        <CertificationPageV1 certification={certification} />
-      )}
+      <CertificationPageContent certification={certification} />
     </MainLayout>
   );
 }
-
-const activeFeaturesQuery = graphql(`
-  query activeFeaturesForConnectedUser {
-    activeFeaturesForConnectedUser
-  }
-`);
 
 const getCertificationQuery = graphql(`
   query getCertificationForCertificationPage($certificationId: ID!) {
@@ -99,9 +82,4 @@ const getCertifications = async (certificationId: string) => {
       certificationId,
     })
   ).getCertification;
-};
-
-const getActiveFeatures = async () => {
-  return (await request(GRAPHQL_API_URL, activeFeaturesQuery))
-    .activeFeaturesForConnectedUser;
 };

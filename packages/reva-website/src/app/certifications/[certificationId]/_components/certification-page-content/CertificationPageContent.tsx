@@ -9,7 +9,7 @@ import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 import { JuryTab } from "./tabs/JuryTab";
 
-export const CertificationPageV2 = ({
+export const CertificationPageContent = ({
   certification,
 }: {
   certification: {
