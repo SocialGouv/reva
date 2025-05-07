@@ -1,0 +1,2 @@
+-- Remove CANDIDATE_DASHBOARD feature flag
+DELETE FROM "features" WHERE "key" = 'CANDIDATE_DASHBOARD';
