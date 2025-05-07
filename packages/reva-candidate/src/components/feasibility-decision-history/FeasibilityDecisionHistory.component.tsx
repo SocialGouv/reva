@@ -1,6 +1,6 @@
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 interface Props {
   history: FeasibilityDecision[];
@@ -39,9 +39,7 @@ interface FeasibilityDecision {
   decisionComment?: string | null | undefined;
 }
 
-export const FeasibilityDecisionInfo = (
-  feasibilityDecision: FeasibilityDecision,
-) => {
+const FeasibilityDecisionInfo = (feasibilityDecision: FeasibilityDecision) => {
   const { decision, decisionSentAt, decisionComment } = feasibilityDecision;
 
   const decisionDateLabel = useMemo(() => {
