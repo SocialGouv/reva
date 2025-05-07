@@ -10,7 +10,7 @@ const RESET_BUTTON = '[data-test="form-buttons"] button[type="reset"]';
 const CONTINUE_BUTTON = '[data-test="actualisation-continue-button"]';
 const HAS_BEEN_UPDATED_COMPONENT =
   '[data-test="actualisation-has-been-updated"]';
-context.skip("Actualisation Page", () => {
+context("Actualisation Page", () => {
   beforeEach(() => {
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
@@ -25,6 +25,11 @@ context.skip("Actualisation Page", () => {
 
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForDashboard",
+          "candidate1.json",
+        );
       });
     });
 
@@ -39,7 +44,6 @@ context.skip("Actualisation Page", () => {
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.visit("/actualisation");
   });
