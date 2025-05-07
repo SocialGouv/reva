@@ -10,10 +10,15 @@ const SENT_DATE = addDays(DATE_NOW, 15);
 const typesAccompagnement: TypeAccompagnement[] = ["AUTONOME", "ACCOMPAGNE"];
 
 typesAccompagnement.forEach((typeAccompagnement) => {
-  context.skip(`${typeAccompagnement} - Dossier de validation`, () => {
+  context(`${typeAccompagnement} - Dossier de validation`, () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForDashboard",
+          "candidate1.json",
+        );
       });
     });
 
@@ -30,19 +35,21 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
             });
           },
         );
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
-
-        cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
-          "exist",
-        );
-        cy.get(
-          '[data-test="dossier-de-validation-timeline-element-update-button"]',
-        ).should("be.disabled");
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.get('[data-test="dossier-validation-tile"] button')
+          .should("exist")
+          .should("be.disabled");
       });
     });
 
@@ -56,12 +63,19 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               "DOSSIER_FAISABILITE_RECEVABLE";
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
               format(ESTIMATED_DATE, "yyyy-MM-dd");
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility.decision =
+              "ADMISSIBLE";
 
             cy.intercept("POST", "/api/graphql", (req) => {
               stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
             });
@@ -71,17 +85,13 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
 
-        cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
-          "exist",
+        cy.get('[data-test="dossier-validation-tile"] button').should(
+          "not.be.disabled",
         );
-        cy.get(
-          '[data-test="dossier-de-validation-timeline-element-update-button"]',
-        ).should("be.enabled");
 
-        cy.get(
-          '[data-test="dossier-de-validation-timeline-element-update-button"]',
-        ).click();
+        cy.get('[data-test="dossier-validation-tile"] button').click();
         cy.location("pathname").should(
           "equal",
           "/candidat/dossier-de-validation/",
@@ -98,8 +108,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
             cy.intercept("POST", "/api/graphql", (req) => {
               stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-            });
-            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationPage",
@@ -118,6 +131,8 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
 
@@ -128,36 +143,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           '[data-test="submit-ready-for-jury-estimated-date-form-button"]',
         ).click();
         cy.wait("@updateReadyForJuryEstimatedAtForDossierDeValidationPage");
-      });
-
-      it("should show the ready for jury estimated date in the timeline when it's set", function () {
-        cy.fixture("candidate1-certification-titre-2-selected.json").then(
-          (candidate) => {
-            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-              typeAccompagnement;
-            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-              "DOSSIER_FAISABILITE_RECEVABLE";
-            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
-              ESTIMATED_DATE.getTime();
-
-            cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-              stubQuery(
-                req,
-                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
-                candidate,
-              );
-            });
-          },
-        );
-
-        cy.login();
-
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
-          "contain.text",
-          `Vous avez renseigné une date de dépôt prévisionnelle, le ${format(ESTIMATED_DATE, "dd/MM/yyyy")}. Assurez-vous de bien transmettre votre dossier de validation à votre certificateur.`,
-        );
       });
 
       it("should let me send a dossier de validation", function () {
@@ -175,6 +160,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "getCandidateWithCandidacyForDossierDeValidationPage",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
             });
           },
         );
@@ -188,6 +178,8 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
 
@@ -238,6 +230,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "getCandidateWithCandidacyForDossierDeValidationPage",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
             });
           },
         );
@@ -245,6 +242,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
 
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -282,6 +280,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "getCandidateWithCandidacyForDossierDeValidationPage",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
             });
           },
         );
@@ -289,6 +292,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
 
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -322,35 +326,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
                 candidate,
               );
-            });
-          },
-        );
-
-        cy.login();
-
-        cy.wait("@candidate_getCandidateWithCandidacy");
-
-        cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
-          "exist",
-        );
-        cy.get('[data-test="timeline-element-badge"]').should("exist");
-      });
-    });
-
-    context("Incomplete dossier de validation", () => {
-      it("should show a 'to complete' badge and a warning in the timeline", function () {
-        cy.fixture("candidate1-certification-titre-2-selected.json").then(
-          (candidate) => {
-            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-              typeAccompagnement;
-            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-              "DOSSIER_DE_VALIDATION_SIGNALE";
-
-            cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
               stubQuery(
                 req,
-                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
+                "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
             });
@@ -360,13 +338,16 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.get('[data-test="timeline-element-badge"]').should("exist");
-        cy.get('[data-test="dossier-de-validation-signale-notice"]').should(
-          "exist",
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+
+        cy.get('[data-test="dossier-validation-tile"] button').should(
+          "not.be.disabled",
         );
       });
+    });
 
-      it("should show a 'dossier de validation signalé' alert if i open a signaled dossier de validation", function () {
+    context("Incomplete dossier de validation", () => {
+      it("should show a 'to complete' badge and a warning in the timeline", function () {
         cy.fixture("candidate1-certification-titre-2-selected.json").then(
           (candidate) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
@@ -388,7 +369,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               );
               stubQuery(
                 req,
-                "getCandidateWithCandidacyForDossierDeValidationPage",
+                "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
             });
@@ -398,9 +379,55 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.get(
-          '[data-test="dossier-de-validation-timeline-element-update-button"]',
-        ).click();
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+
+        cy.get('[data-test="dossier-validation-tile"] button').should("exist");
+        cy.get('[data-test="incomplete-dv-banner"]').should("exist");
+      });
+
+      it("should show a 'dossier de validation signalé' alert if i open a signaled dossier de validation", function () {
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              "DOSSIER_DE_VALIDATION_SIGNALE";
+
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility.decision =
+              "ADMISSIBLE";
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+              {
+                dossierDeValidationOtherFiles: [],
+                decision: "INCOMPLETE",
+              };
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
+            });
+          },
+        );
+
+        cy.login();
+
+        cy.wait("@candidate_getCandidateWithCandidacy");
+        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+
+        cy.get('[data-test="dossier-validation-tile"] button').click();
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
         cy.get(".fr-tabs__tab").contains("du dossier").click();
         cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
@@ -441,6 +468,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                   "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
                   candidate,
                 );
+                stubQuery(
+                  req,
+                  "candidate_getCandidateWithCandidacyForDashboard",
+                  candidate,
+                );
               });
             },
           );
@@ -448,16 +480,14 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           cy.login();
 
           cy.wait("@candidate_getCandidateWithCandidacy");
+          cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
 
-          cy.get('[data-test="dossier-de-validation-timeline-element"]').should(
+          cy.get('[data-test="dossier-validation-tile"] button').should(
+            "not.be.disabled",
+          );
+          cy.get('[data-test="dossier-validation-badge-to-send"]').should(
             "exist",
           );
-          cy.get(
-            '[data-test="dossier-de-validation-timeline-element-update-button"]',
-          ).should("be.enabled");
-          cy.get(
-            '[data-test="dossier-de-validation-to-complete-badge"]',
-          ).should("exist");
         });
       });
     });
