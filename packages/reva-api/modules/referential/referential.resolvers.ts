@@ -67,14 +67,10 @@ const unsafeReferentialResolvers = {
     }: {
       id: string;
     }) => {
-      try {
-        const { info } = await searchCertificationsForCandidate({
-          candidacyId,
-        });
-        return info.totalRows > 1;
-      } catch (_) {}
-
-      return false;
+      const { info } = await searchCertificationsForCandidate({
+        candidacyId,
+      });
+      return info.totalRows > 1;
     },
   },
   Certification: {
