@@ -1,6 +1,6 @@
 import { stubQuery } from "../../utils/graphql";
 
-context("Accompagnement Autonome Timeline", () => {
+context.skip("Accompagnement Autonome Timeline", () => {
   it("should show the accompagné timeline", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");

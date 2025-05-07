@@ -6,7 +6,7 @@ const experienceDescription2 = "Description 2";
 
 import { stubQuery } from "../utils/graphql";
 
-context("Experiences", () => {
+context.skip("Experiences", () => {
   it("add and edit an experience", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(

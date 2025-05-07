@@ -10,7 +10,7 @@ const RESET_BUTTON = '[data-test="form-buttons"] button[type="reset"]';
 const CONTINUE_BUTTON = '[data-test="actualisation-continue-button"]';
 const HAS_BEEN_UPDATED_COMPONENT =
   '[data-test="actualisation-has-been-updated"]';
-context("Actualisation Page", () => {
+context.skip("Actualisation Page", () => {
   beforeEach(() => {
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;

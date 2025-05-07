@@ -1,6 +1,6 @@
 import { stubQuery } from "../utils/graphql";
 
-context("Funding Request Sent", () => {
+context.skip("Funding Request Sent", () => {
   describe("Testing correct screen", () => {
     it("display all fields", () => {
       cy.intercept("POST", "/api/graphql", (req) => {

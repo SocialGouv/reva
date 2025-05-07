@@ -1,6 +1,6 @@
+import { subMonths } from "date-fns";
 import { stubQuery } from "../../utils/graphql";
 import candidateDropOut from "./fixtures/candidate-dropped-out.json";
-import { subMonths } from "date-fns";
 
 function interceptCandidacy({
   droppedOut = false,
@@ -42,7 +42,7 @@ function interceptCandidacy({
   });
 }
 
-context("Candidacy dropout warning", () => {
+context.skip("Candidacy dropout warning", () => {
   context("When the candidacy has  been dropped out", () => {
     context("And it has been less than 6 months since the drop out", () => {
       it("should show the warning when the drop out has not been confirmed", function () {

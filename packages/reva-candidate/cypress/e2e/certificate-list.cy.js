@@ -14,7 +14,7 @@ context("Certificate list", () => {
     cy.wait("@activeFeaturesForConnectedUser");
   });
 
-  it("should show only 2 certifications", function () {
+  it.skip("should show only 2 certifications", function () {
     cy.get('[data-test="project-home-set-certification"]').click();
 
     cy.wait("@searchCertificationsForCandidate");

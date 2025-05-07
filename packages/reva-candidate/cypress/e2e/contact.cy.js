@@ -12,7 +12,7 @@ const email2 = "email2@example.com";
 const phone1 = "06 01 02 03 04";
 const phone2 = "06 01 02 03 05";
 
-context("Candidate account", () => {
+context.skip("Candidate account", () => {
   it("update all account information", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");

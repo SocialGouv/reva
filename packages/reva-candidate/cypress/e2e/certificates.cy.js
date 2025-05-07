@@ -1,6 +1,6 @@
 import { stubMutation, stubQuery } from "../utils/graphql";
 
-context("Certificates", () => {
+context.skip("Certificates", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");

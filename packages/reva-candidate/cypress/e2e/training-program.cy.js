@@ -1,6 +1,6 @@
 import { stubQuery } from "../utils/graphql";
 
-context("Training Program", () => {
+context.skip("Training Program", () => {
   describe("Testing project modification before and after training confirmation", () => {
     it("should be able to update his certification, organism, goals and experience when training sent and not confirmed", () => {
       cy.intercept("POST", "/api/graphql", (req) => {

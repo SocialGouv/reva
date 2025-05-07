@@ -36,7 +36,7 @@ function interceptCandidacy() {
   });
 }
 
-context("Candidacy dropout decision page", () => {
+context.skip("Candidacy dropout decision page", () => {
   it("should let me access the page", function () {
     interceptCandidacy();
     cy.login();

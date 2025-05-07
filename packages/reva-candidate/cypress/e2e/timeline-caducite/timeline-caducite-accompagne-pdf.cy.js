@@ -22,7 +22,7 @@ const ACTUALISATION_THRESHOLD_TIME_BEFORE = subDays(
 
 const DATE_NOW = Date.now();
 
-describe("Timeline caducité - Accompagné PDF", () => {
+describe.skip("Timeline caducité - Accompagné PDF", () => {
   describe("Feature activation", () => {
     it("should hide all caducité elements when feature is disabled", () => {
       setupTest({

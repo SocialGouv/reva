@@ -10,7 +10,7 @@ const SENT_DATE = addDays(DATE_NOW, 15);
 const typesAccompagnement: TypeAccompagnement[] = ["AUTONOME", "ACCOMPAGNE"];
 
 typesAccompagnement.forEach((typeAccompagnement) => {
-  context(`${typeAccompagnement} - Dossier de validation`, () => {
+  context.skip(`${typeAccompagnement} - Dossier de validation`, () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");

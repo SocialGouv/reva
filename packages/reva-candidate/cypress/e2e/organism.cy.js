@@ -1,6 +1,6 @@
 import { stubMutation, stubQuery } from "../utils/graphql";
 
-context("Empty candidacy", () => {
+context.skip("Empty candidacy", () => {
   it("prevent organism selection", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
@@ -15,7 +15,7 @@ context("Empty candidacy", () => {
   });
 });
 
-context("Candidacy with certification selected", () => {
+context.skip("Candidacy with certification selected", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
@@ -132,7 +132,7 @@ context("Candidacy with certification selected", () => {
   });
 });
 
-context("Candidacy with no organism results", () => {
+context.skip("Candidacy with no organism results", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");

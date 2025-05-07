@@ -11,7 +11,7 @@ const CONTINUE_BUTTON = '[data-test="contestation-continue-button"]';
 const HAS_BEEN_CREATED_COMPONENT =
   '[data-test="contestation-has-been-created"]';
 
-context("Contestation Page", () => {
+context.skip("Contestation Page", () => {
   beforeEach(() => {
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =

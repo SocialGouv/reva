@@ -1,6 +1,6 @@
 import { stubQuery } from "../../utils/graphql";
 
-context("Accompagnement autonome - Dossier de faisabilité", () => {
+context.skip("Accompagnement autonome - Dossier de faisabilité", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");

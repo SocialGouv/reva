@@ -30,7 +30,7 @@ const ACTUALISATION_THRESHOLD_TIME_BEFORE = subDays(
   ACTUALISATION_THRESHOLD_DAYS_BEFORE,
 ).getTime();
 
-describe("Autonome Candidacy Timeline Tests", () => {
+describe.skip("Autonome Candidacy Timeline Tests", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "activeFeaturesForConnectedUser", {

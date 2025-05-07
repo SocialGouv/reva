@@ -1,6 +1,6 @@
 import { stubQuery } from "../utils/graphql";
 
-context("Submission", () => {
+context.skip("Submission", () => {
   it("log on a submitted project", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(

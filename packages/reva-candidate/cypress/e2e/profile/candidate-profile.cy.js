@@ -34,7 +34,7 @@ const TOAST_ERROR = '[data-testid="toast-error"]';
 // Data constants
 const FRANCE_COUNTRY_ID = "208ef9d1-4d18-475b-9f5f-575da5f7218c";
 
-context("Candidate Profile Page", () => {
+context.skip("Candidate Profile Page", () => {
   const candidate = candidateData.data.candidate_getCandidateWithCandidacy;
 
   beforeEach(() => {

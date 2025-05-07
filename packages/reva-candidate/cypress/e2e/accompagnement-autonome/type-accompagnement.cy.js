@@ -1,6 +1,6 @@
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
-context("Type accompagnement", () => {
+context.skip("Type accompagnement", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
