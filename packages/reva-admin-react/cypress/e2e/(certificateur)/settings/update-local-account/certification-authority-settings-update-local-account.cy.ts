@@ -235,7 +235,7 @@ context("delete button", () => {
   context(
     "when i click the delete local account button and confirm the deletion",
     () => {
-      it.skip("delete the local account and redirect to the settings page", () => {
+      it("delete the local account and redirect to the settings page", () => {
         interceptUpdateLocalAccount();
 
         cy.certificateur(
