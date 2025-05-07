@@ -25,9 +25,11 @@ const getMandatoryInfo = (organism: Organism) => {
 export const OrganismCard = ({
   organism,
   onClick,
+  isSelected,
 }: {
   organism: Organism;
   onClick: () => void;
+  isSelected?: boolean;
 }) => {
   const mandatoryInfo = getMandatoryInfo(organism);
 
@@ -56,13 +58,16 @@ export const OrganismCard = ({
         <div>
           <OrganismCardDistance distanceKm={organism.distanceKm} />
         </div>
+
         <Button
           data-test={`project-organisms-submit-organism-${organism.id}`}
           priority="secondary"
           size="small"
           nativeButtonProps={{ onClick }}
+          disabled={isSelected}
+          className={isSelected ? "shadow-none" : ""}
         >
-          Choisir
+          {isSelected ? "Sélectionné actuellement" : "Choisir"}
         </Button>
       </div>
     </div>

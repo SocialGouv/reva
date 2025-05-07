@@ -201,6 +201,7 @@ export default function SetOrganism() {
           )}
 
           <Organisms
+            selectedOrganismId={candidacy.organism?.id}
             submitOrganism={({ organismId }) => {
               submitOrganism(organismId);
             }}
@@ -250,11 +251,13 @@ export default function SetOrganism() {
 interface PropsOrganisms {
   submitOrganism: ({ organismId }: { organismId: string }) => void;
   availableOrganisms?: { rows: Organism[]; totalRows: number };
+  selectedOrganismId?: string;
 }
 
 const Organisms: React.FC<PropsOrganisms> = ({
   submitOrganism,
   availableOrganisms = { rows: [], totalRows: 0 },
+  selectedOrganismId,
 }) => {
   const OrganismGroup = ({
     indexPredicate,
@@ -269,6 +272,7 @@ const Organisms: React.FC<PropsOrganisms> = ({
             return (
               <OrganismCard
                 key={organism.id}
+                isSelected={selectedOrganismId == organism.id}
                 organism={organism}
                 onClick={() => submitOrganism({ organismId: organism.id })}
               />

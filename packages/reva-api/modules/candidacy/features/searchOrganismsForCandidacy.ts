@@ -76,9 +76,7 @@ export const searchOrganismsForCandidacy = async ({
       restrictedToOrganismsIds: organismsFromCohorteVaeCollectiveIds,
     });
 
-    organismsFound = result.rows
-      .filter((r) => r.id !== candidacy?.organism?.id)
-      .slice(0, 50);
+    organismsFound = result.rows.slice(0, 50);
     totalOrganismCount = result.totalRows;
   }
 
