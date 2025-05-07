@@ -13,8 +13,7 @@
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "cypress:open": "cypress open",
     "cypress:ci": "cypress run",
-    "test:ci": "start-server-and-test 'next start -p 3004' http://localhost:3004/candidat/ cypress:ci",
-    "find-deadcode": "npx ts-prune -s .test.ts? -s cypress/ -s .generated.ts -s .graphql.ts"
+    "test:ci": "start-server-and-test 'next start -p 3004' http://localhost:3004/candidat/ cypress:ci"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.14.1",

@@ -17,6 +17,13 @@
         "varsIgnorePattern": "^_",
         "ignoreRestSiblings": true
       }
+    ],
+    "import/no-unused-modules": [
+      2,
+      {
+        "unusedExports": true,
+        "ignoreExports": ["**/page.tsx", "**/layout.tsx"]
+      }
     ]
   }
 }
