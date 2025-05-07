@@ -21,13 +21,12 @@ import { AuthGuard } from "@/components/auth/auth.guard";
 import { KeycloakProvider } from "@/components/auth/keycloak.context";
 import { CandidacyGuard } from "@/components/candidacy/candidacy.context";
 
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
+import { HTMLAttributes } from "react";
 import { Toaster } from "react-hot-toast";
 import { WhiteBoxContainer } from "./_components/WhiteBoxContainer";
-import { HTMLAttributes } from "react";
 import { LayoutNotice } from "./_components/layout-notice/LayoutNotice";
 
 const queryClient = new QueryClient();
@@ -98,9 +97,6 @@ const UNAUTHENTICATED_PATHS = [
 ];
 
 const LayoutContent = ({ children }: { children: React.ReactNode }) => {
-  const { isFeatureActive } = useFeatureFlipping();
-  const isCandidateDashboardActive = isFeatureActive("CANDIDATE_DASHBOARD");
-
   const pathname = usePathname();
   const isRootPath = pathname === "/";
   const isUnAuthenticatedPath =
@@ -138,7 +134,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
         <div className={className}>
           <LayoutNotice />
 
-          {isCandidateDashboardActive && isRootPath ? (
+          {isRootPath ? (
             <div
               className={`flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12`}
             >

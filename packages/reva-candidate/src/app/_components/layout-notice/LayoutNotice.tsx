@@ -12,7 +12,7 @@ export const LayoutNotice = () => {
   const pathname = usePathname();
   const isLoginPath = pathname === "/login/";
 
-  const { candidacy, isCandidateDashboardActive } = useHome();
+  const { candidacy } = useHome();
 
   const candidacyIsAutonome = candidacy?.typeAccompagnement === "AUTONOME";
 
@@ -36,28 +36,24 @@ export const LayoutNotice = () => {
     );
   }
 
-  if (isCandidateDashboardActive) {
-    const tutorialUrl = candidacyIsAutonome
-      ? TUTORIAL_URL_DASHBOARD_AUTONOME
-      : TUTORIAL_URL_DASHBOARD_ACCOMPAGNE;
+  const tutorialUrl = candidacyIsAutonome
+    ? TUTORIAL_URL_DASHBOARD_AUTONOME
+    : TUTORIAL_URL_DASHBOARD_ACCOMPAGNE;
 
-    return (
-      <Notice
-        title={
-          <>
-            <span>
-              Votre espace évolue. Si vous avez besoin d'aide, vous pouvez{" "}
-            </span>
-            <Link href={tutorialUrl} target="_blank">
-              consulter le tutoriel
-            </Link>
-          </>
-        }
-        isClosable
-        className="absolute w-full left-0"
-      />
-    );
-  }
-
-  return null;
+  return (
+    <Notice
+      title={
+        <>
+          <span>
+            Votre espace évolue. Si vous avez besoin d'aide, vous pouvez{" "}
+          </span>
+          <Link href={tutorialUrl} target="_blank">
+            consulter le tutoriel
+          </Link>
+        </>
+      }
+      isClosable
+      className="absolute w-full left-0"
+    />
+  );
 };

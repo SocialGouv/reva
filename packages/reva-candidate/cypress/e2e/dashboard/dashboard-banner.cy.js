@@ -10,18 +10,12 @@ context("Dashboard Banner", () => {
         "candidate_getCandidateWithCandidacyForDashboard",
         "candidate1.json",
       );
-      stubQuery(req, "activeFeaturesForConnectedUser", {
-        data: {
-          activeFeaturesForConnectedUser: ["CANDIDATE_DASHBOARD"],
-        },
-      });
     });
 
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.visit("/");
   });

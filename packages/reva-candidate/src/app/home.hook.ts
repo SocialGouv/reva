@@ -1,4 +1,3 @@
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
@@ -9,15 +8,12 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
       firstname
       lastname
       candidacy {
-        lastActivityDate
         typeAccompagnement
       }
     }
   }
 `);
 export const useHome = () => {
-  const { isFeatureActive } = useFeatureFlipping();
-  const isCandidateDashboardActive = isFeatureActive("CANDIDATE_DASHBOARD");
   const { graphqlClient } = useGraphQlClient();
 
   const { data: candidateWithCandidacy } = useQuery({
@@ -29,7 +25,6 @@ export const useHome = () => {
   const candidacy = candidate?.candidacy;
 
   return {
-    isCandidateDashboardActive,
     candidate,
     candidacy,
   };

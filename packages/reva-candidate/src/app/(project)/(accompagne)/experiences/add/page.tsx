@@ -9,7 +9,6 @@ import { Select } from "@codegouvfr/react-dsfr/Select";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
@@ -50,9 +49,7 @@ export default function AddExperience() {
   const inputShouldBeDisabled = !canEditCandidacy || candidacyAlreadySubmitted;
 
   const { addExperience } = useAddExperience();
-  const { isFeatureActive } = useFeatureFlipping();
-  const isDashboardCandidateActive = isFeatureActive("CANDIDATE_DASHBOARD");
-  const backUrl = isDashboardCandidateActive ? "/experiences" : "/";
+  const backUrl = "/experiences";
 
   const defaultValues = useMemo(
     () => ({

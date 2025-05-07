@@ -11,7 +11,6 @@ import { ExperienceDuration } from "@/constants";
 
 import { PageLayout } from "@/layouts/page.layout";
 
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
@@ -54,9 +53,7 @@ export default function UpdateExperience() {
     candidacy,
     candidacyAlreadySubmitted,
   } = useUpdateExperience();
-  const { isFeatureActive } = useFeatureFlipping();
-  const isDashboardCandidateActive = isFeatureActive("CANDIDATE_DASHBOARD");
-  const backUrl = isDashboardCandidateActive ? "/experiences" : "/";
+  const backUrl = "/experiences";
   const inputShouldBeDisabled = !canEditCandidacy || candidacyAlreadySubmitted;
 
   const experience = candidacy?.experiences.find(

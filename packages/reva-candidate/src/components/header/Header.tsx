@@ -4,18 +4,15 @@ import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { usePathname } from "next/navigation";
-import { useFeatureFlipping } from "../feature-flipping/featureFlipping";
 
 const getNavigation = ({
   authenticated,
-  isCandidateDashboardActive,
   currentPathname,
 }: {
   authenticated: boolean;
-  isCandidateDashboardActive: boolean;
   currentPathname: string;
 }) => {
-  if (!authenticated || !isCandidateDashboardActive) return [];
+  if (!authenticated) return [];
 
   return [
     {
@@ -38,13 +35,10 @@ const getNavigation = ({
 };
 export const Header = () => {
   const { authenticated, logout } = useKeycloakContext();
-  const { isFeatureActive } = useFeatureFlipping();
-  const isCandidateDashboardActive = isFeatureActive("CANDIDATE_DASHBOARD");
   const currentPathname = usePathname();
 
   const navigation = getNavigation({
     authenticated,
-    isCandidateDashboardActive,
     currentPathname,
   });
 
