@@ -29,8 +29,8 @@ export default function TransferCandidacyPage() {
               </p>
 
               <p className="text-dsfrGray-mentionGrey text-xs font-normal">
-                Tous les certificateurs proposés sont déjà en charge de la
-                certification sélectionnée.
+                Tous les certificateurs proposés en charge de la certification
+                sélectionnée.
               </p>
             </div>
           }
@@ -59,8 +59,8 @@ export default function TransferCandidacyPage() {
               <p className="text-xl">Vers un autre compte collaborateur</p>
 
               <p className="text-dsfrGray-mentionGrey text-xs font-normal">
-                Tous les collaborateurs proposés sont déjà en charge de la
-                certification sélectionnée.
+                Tous les collaborateurs proposés par votre gestionnaire de
+                candidatures, sans restriction de certifications.
               </p>
             </div>
           }
