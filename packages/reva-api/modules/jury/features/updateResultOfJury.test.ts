@@ -211,9 +211,7 @@ test("should send jury result to candidate", async () => {
   expect(sendJuryResultCandidateEmailSpy).toHaveBeenCalledWith({
     email: jury.candidacy.candidate?.email,
   });
-  expect(await sendJuryResultCandidateEmailSpy.mock.results[0].value).toBe(
-    `email sent to ${jury.candidacy.candidate?.email}`,
-  );
+  expect(sendJuryResultCandidateEmailSpy).toHaveBeenCalledTimes(1);
 });
 
 test("should send jury result to organism", async () => {

@@ -3,7 +3,6 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { generateJwt } from "../../../candidate/auth.helper";
 import { sendTrainingEmail } from "../emails";
 import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
@@ -108,11 +107,7 @@ export const submitTraining = async ({
   });
 
   if (candidate?.email) {
-    const token = generateJwt(
-      { email: candidate?.email, action: "login" },
-      1 * 60 * 60 * 24 * 4,
-    );
-    sendTrainingEmail(candidate.email, token);
+    sendTrainingEmail(candidate.email);
   }
 
   await logCandidacyAuditEvent({

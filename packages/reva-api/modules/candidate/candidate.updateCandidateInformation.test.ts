@@ -87,14 +87,14 @@ describe("candidate information update", () => {
   test("should send notification emails when updating the candidate email", async () => {
     const sendNewEmailCandidateEmailSpy = jest
       .spyOn(SendNewEmailCandidateEmailModule, "sendNewEmailCandidateEmail")
-      .mockImplementation(() => Promise.resolve(""));
+      .mockImplementation(() => Promise.resolve());
 
     const sendPreviousEmailCandidateEmailSpy = jest
       .spyOn(
         SendPreviousEmailCandidateEmailModule,
         "sendPreviousEmailCandidateEmail",
       )
-      .mockImplementation(() => Promise.resolve(""));
+      .mockImplementation(() => Promise.resolve());
 
     const candidacy = await createCandidacyHelper();
 
@@ -136,14 +136,14 @@ describe("candidate information update", () => {
   test("should not send notification emails when the candidate email has not been changed", async () => {
     const sendNewEmailCandidateEmailSpy = jest
       .spyOn(SendNewEmailCandidateEmailModule, "sendNewEmailCandidateEmail")
-      .mockImplementation(() => Promise.resolve(""));
+      .mockImplementation(() => Promise.resolve());
 
     const sendPreviousEmailCandidateEmailSpy = jest
       .spyOn(
         SendPreviousEmailCandidateEmailModule,
         "sendPreviousEmailCandidateEmail",
       )
-      .mockImplementation(() => Promise.resolve(""));
+      .mockImplementation(() => Promise.resolve());
 
     const candidacy = await createCandidacyHelper();
 

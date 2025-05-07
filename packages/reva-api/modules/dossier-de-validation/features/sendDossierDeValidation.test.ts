@@ -92,9 +92,7 @@ test("should validate upload of dossier de validation", async () => {
     await sendNewDVToCertificationAuthoritiesEmailMock.mock.results[0].value,
   ).toBe(`email sent to ${emails.map((email) => email).join(", ")}`);
 
-  expect(await sendDVSentToCandidateEmailMock.mock.results[0].value).toBe(
-    `email sent to ${candidacy?.candidate?.email}`,
-  );
+  expect(sendDVSentToCandidateEmailMock).toHaveBeenCalledTimes(1);
 
   expect(resp.statusCode).toEqual(200);
 });

@@ -24,7 +24,7 @@ describe("candidate drop out decision", () => {
         SendCandidacyDropOutConfirmedEmailToCandidateModule,
         "sendCandidacyDropOutConfirmedEmailToCandidate",
       )
-      .mockImplementation(() => Promise.resolve(""));
+      .mockImplementation(() => Promise.resolve());
 
     const candidacyDropOut = await createCandidacyDropOutHelper();
 
