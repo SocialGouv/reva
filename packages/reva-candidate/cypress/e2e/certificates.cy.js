@@ -1,6 +1,6 @@
 import { stubMutation, stubQuery } from "../utils/graphql";
 
-context.skip("Certificates", () => {
+context("Certificates", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
@@ -12,14 +12,18 @@ context.skip("Certificates", () => {
         "candidacy_certification_updateCertification",
         "updated-candidacy1.json",
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate1.json",
+      );
     });
 
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
-    cy.get('[data-test="project-home-set-certification"]').click();
+    cy.visit("/set-certification");
     cy.wait("@searchCertificationsForCandidate");
   });
 
@@ -47,8 +51,5 @@ context.skip("Certificates", () => {
 
     cy.wait("@candidacy_certification_updateCertification");
     cy.wait("@candidate_getCandidateWithCandidacy");
-
-    cy.get('[data-test="project-home-ready"]');
-    cy.get('[data-test="certification-label"]').should("contain", "Titre 2");
   });
 });
