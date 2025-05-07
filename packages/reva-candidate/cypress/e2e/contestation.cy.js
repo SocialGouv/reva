@@ -11,7 +11,7 @@ const CONTINUE_BUTTON = '[data-test="contestation-continue-button"]';
 const HAS_BEEN_CREATED_COMPONENT =
   '[data-test="contestation-has-been-created"]';
 
-context.skip("Contestation Page", () => {
+context("Contestation Page", () => {
   beforeEach(() => {
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
@@ -30,12 +30,16 @@ context.skip("Contestation Page", () => {
           activeFeaturesForConnectedUser: [ACTUALISATION_FEATURE],
         },
       });
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate1.json",
+      );
     });
 
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.visit("/contestation");
   });
