@@ -34,23 +34,40 @@ function interceptCandidacy({
         },
       },
     });
-    stubQuery(req, "activeFeaturesForConnectedUser", {
+
+    stubQuery(req, "candidate_getCandidateWithCandidacyForDashboard", {
       data: {
-        activeFeaturesForConnectedUser: [],
+        candidate_getCandidateWithCandidacy: {
+          ...candidateDropOut.data.candidate_getCandidateWithCandidacy,
+          candidacy: {
+            ...candidateDropOut.data.candidate_getCandidateWithCandidacy
+              .candidacy,
+            candidacyDropOut: droppedOut
+              ? {
+                  createdAt: dropOutDate
+                    ? dropOutDate.toJSON()
+                    : new Date().toJSON(),
+                  proofReceivedByAdmin,
+                  dropOutConfirmedByCandidate,
+                }
+              : null,
+          },
+        },
       },
     });
+    stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
   });
+  cy.login();
+
+  cy.wait("@candidate_getCandidateWithCandidacy");
+  cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
 }
 
-context.skip("Candidacy dropout warning", () => {
+context("Candidacy dropout warning", () => {
   context("When the candidacy has  been dropped out", () => {
     context("And it has been less than 6 months since the drop out", () => {
       it("should show the warning when the drop out has not been confirmed", function () {
         interceptCandidacy({ droppedOut: true });
-        cy.login();
-
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@activeFeaturesForConnectedUser");
 
         cy.get('[data-test="drop-out-warning"]').should("exist");
       });
@@ -60,7 +77,6 @@ context.skip("Candidacy dropout warning", () => {
         cy.login();
 
         cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@activeFeaturesForConnectedUser");
 
         cy.get('[data-test="drop-out-warning-decision-button"]').click();
         cy.url().should(
@@ -75,10 +91,7 @@ context.skip("Candidacy dropout warning", () => {
             droppedOut: true,
             proofReceivedByAdmin: true,
           });
-          cy.login();
 
-          cy.wait("@candidate_getCandidateWithCandidacy");
-          cy.wait("@activeFeaturesForConnectedUser");
           cy.get('[data-test="drop-out-warning"]').should("exist");
           cy.get('[data-test="drop-out-warning-decision-button"]').should(
             "not.exist",
@@ -91,10 +104,7 @@ context.skip("Candidacy dropout warning", () => {
             droppedOut: true,
             dropOutConfirmedByCandidate: true,
           });
-          cy.login();
 
-          cy.wait("@candidate_getCandidateWithCandidacy");
-          cy.wait("@activeFeaturesForConnectedUser");
           cy.get('[data-test="drop-out-warning"]').should("exist");
           cy.get('[data-test="drop-out-warning-decision-button"]').should(
             "not.exist",
@@ -108,10 +118,7 @@ context.skip("Candidacy dropout warning", () => {
           droppedOut: true,
           dropOutDate: subMonths(new Date(), 6),
         });
-        cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@activeFeaturesForConnectedUser");
         cy.get('[data-test="drop-out-warning"]').should("exist");
         cy.get('[data-test="drop-out-warning-decision-button"]').should(
           "not.exist",
@@ -119,14 +126,10 @@ context.skip("Candidacy dropout warning", () => {
       });
     });
   });
-  context("When the candidacy has  not been dropped out", () => {
+  context("When the candidacy has not been dropped out", () => {
     it("should not show the warning", function () {
       interceptCandidacy({});
-      cy.login();
 
-      cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.get('[data-test="project-home-ready"]').should("exist");
       cy.get('[data-test="drop-out-warning"]').should("not.exist");
     });
   });
