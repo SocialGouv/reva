@@ -86,6 +86,7 @@ export type UpdateMaisonMereLegalInformationInput = {
   gestionnaireLastname: string;
   gestionnaireEmail: string;
   phone: string;
+  gestionBranch: boolean;
 };
 
 export type RemoteZone =

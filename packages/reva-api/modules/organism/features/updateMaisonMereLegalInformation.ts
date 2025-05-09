@@ -1,10 +1,11 @@
-import { updateAccountById } from "../../account/features/updateAccount";
 import { prismaClient } from "../../../prisma/client";
-import { UpdateMaisonMereLegalInformationInput } from "../organism.types";
 import {
   AAPAuditLogUserInfo,
   logAAPAuditEvent,
 } from "../../aap-log/features/logAAPAuditEvent";
+import { updateAccountById } from "../../account/features/updateAccount";
+import { UpdateMaisonMereLegalInformationInput } from "../organism.types";
+import { updateMaisonMereAndAapGestionBranch } from "./updateMaisonMereAndAapGestionBranch";
 
 export const updateMaisonMereLegalInformation = async ({
   maisonMereAAPId,
@@ -17,6 +18,7 @@ export const updateMaisonMereLegalInformation = async ({
   gestionnaireLastname,
   gestionnaireEmail,
   phone,
+  gestionBranch,
   userInfo,
 }: UpdateMaisonMereLegalInformationInput & {
   userInfo: AAPAuditLogUserInfo;
@@ -57,6 +59,20 @@ export const updateMaisonMereLegalInformation = async ({
     },
   });
 
+  const mmTypologie = updatedMaisonMere.typologie;
+  const manageBranch =
+    mmTypologie === "expertBrancheEtFiliere" || mmTypologie === "expertBranche";
+
+  const gestionBranchToUpdate =
+    (mmTypologie === "expertFiliere" && gestionBranch) ||
+    (manageBranch && !gestionBranch);
+
+  if (gestionBranchToUpdate) {
+    await updateMaisonMereAndAapGestionBranch({
+      maisonMereAAPId,
+      gestionBranch,
+    });
+  }
   if (updatedMaisonMere.gestionnaireAccountId) {
     await updateAccountById({
       accountId: updatedMaisonMere.gestionnaireAccountId,
