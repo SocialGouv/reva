@@ -20,6 +20,7 @@ const newMaisonMereAAP1Data = (siret: string) => ({
   gestionnaireLastname: "Smith",
   gestionnaireEmail: "jane.smith@example.com",
   phone: "0123456789",
+  gestionBranch: true,
 });
 
 const updateMaisonMereLegalInformationPayload: (
