@@ -16,7 +16,10 @@ export const DashboardAutonomeTilesGroup = ({
   const feasibility = candidacy?.feasibility;
 
   return (
-    <div className={`flex flex-col gap-y-8 ${className || ""}`}>
+    <div
+      className={`flex flex-col gap-y-8 ${className || ""}`}
+      data-test="dashboard-autonome"
+    >
       <DashboardTilesSection
         title="Compléter ma candidature"
         icon="fr-icon-ball-pen-line"
