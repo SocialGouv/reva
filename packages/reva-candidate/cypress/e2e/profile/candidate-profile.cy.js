@@ -34,13 +34,18 @@ const TOAST_ERROR = '[data-testid="toast-error"]';
 // Data constants
 const FRANCE_COUNTRY_ID = "208ef9d1-4d18-475b-9f5f-575da5f7218c";
 
-context.skip("Candidate Profile Page", () => {
+context("Candidate Profile Page", () => {
   const candidate = candidateData.data.candidate_getCandidateWithCandidacy;
 
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate1.json",
+      );
       stubQuery(req, "getCandidateForProfilePage", candidateData);
       stubQuery(req, "getCountries", countries);
       stubQuery(req, "getDepartments", departments);
@@ -48,8 +53,8 @@ context.skip("Candidate Profile Page", () => {
 
     cy.login();
     cy.wait([
-      "@activeFeaturesForConnectedUser",
       "@candidate_getCandidateWithCandidacy",
+      "@candidate_getCandidateWithCandidacyForDashboard",
     ]);
     cy.visit("/profile");
     cy.wait([
@@ -301,10 +306,7 @@ context.skip("Candidate Profile Page", () => {
       });
 
       cy.login();
-      cy.wait([
-        "@activeFeaturesForConnectedUser",
-        "@candidate_getCandidateWithCandidacy",
-      ]);
+      cy.wait(["@candidate_getCandidateWithCandidacy"]);
       cy.visit("/profile");
       cy.wait([
         "@getCandidateForProfilePage",
