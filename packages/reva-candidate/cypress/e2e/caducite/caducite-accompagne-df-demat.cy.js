@@ -22,46 +22,47 @@ const ACTUALISATION_THRESHOLD_TIME_BEFORE = subDays(
 
 const DATE_NOW = Date.now();
 
-describe.skip("Timeline caducité - Accompagné DF Demat", () => {
-  describe("Feature activation", () => {
-    it("should hide all caducité elements when feature is disabled", () => {
-      setupTest({
-        isCaduque: true,
-        lastActivityDate: CADUCITE_THRESHOLD_TIME,
-        isFeatureActive: false,
-      });
+function setupTest({ isCaduque, lastActivityDate, contestations = [] }) {
+  cy.login();
 
-      verifyBannerState({
-        caduqueBanner: false,
-        pendingContestationBanner: false,
-        confirmedContestationBanner: false,
-        actualisationBanner: false,
-      });
+  cy.fixture("candidate1.json").then((candidate) => {
+    const candidacy =
+      candidate.data.candidate_getCandidateWithCandidacy.candidacy;
 
-      verifyFeasibilityElement({
-        hasNonRecevableBadge: false,
-      });
-    });
+    candidacy.id = "1";
+    candidacy.isCaduque = isCaduque;
+    candidacy.feasibilityFormat = "DEMATERIALIZED";
+    candidacy.lastActivityDate = new Date(lastActivityDate).toISOString();
+    candidacy.status = "DOSSIER_FAISABILITE_RECEVABLE";
+    candidacy.feasibility = {
+      decision: "ADMISSIBLE",
+      decisionSentAt: DATE_NOW,
+      feasibilityFormat: "DEMATERIALIZED",
+      dematerializedFeasibilityFile: {
+        sentToCandidateAt: DATE_NOW,
+        candidateConfirmationAt: DATE_NOW,
+        swornStatementFile: null,
+      },
+    };
+    candidacy.typeAccompagnement = "ACCOMPAGNE";
+    candidacy.candidacyContestationsCaducite = contestations;
 
-    it("should show caducité elements when feature is enabled", () => {
-      setupTest({
-        isCaduque: true,
-        lastActivityDate: CADUCITE_THRESHOLD_TIME,
-      });
-
-      verifyBannerState({
-        caduqueBanner: true,
-        pendingContestationBanner: false,
-        confirmedContestationBanner: false,
-        actualisationBanner: false,
-      });
-
-      verifyFeasibilityElement({
-        hasNonRecevableBadge: true,
-      });
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        candidate,
+      );
     });
   });
+  cy.wait([
+    "@candidate_getCandidateWithCandidacy",
+    "@candidate_getCandidateWithCandidacyForDashboard",
+  ]);
+}
 
+describe("Caducité - Accompagné DF Demat", () => {
   describe("Active candidacy state", () => {
     beforeEach(() => {
       setupTest({
@@ -215,53 +216,6 @@ describe.skip("Timeline caducité - Accompagné DF Demat", () => {
   });
 });
 
-function setupTest({
-  isCaduque,
-  lastActivityDate,
-  contestations = [],
-  isFeatureActive = true,
-}) {
-  cy.intercept("POST", "/api/graphql", (req) => {
-    stubQuery(req, "activeFeaturesForConnectedUser", {
-      data: {
-        activeFeaturesForConnectedUser: isFeatureActive
-          ? ["candidacy_actualisation"]
-          : [],
-      },
-    });
-  });
-
-  cy.login();
-
-  cy.fixture("candidate1.json").then((candidate) => {
-    const candidacy =
-      candidate.data.candidate_getCandidateWithCandidacy.candidacy;
-
-    candidacy.id = "1";
-    candidacy.isCaduque = isCaduque;
-    candidacy.feasibilityFormat = "DEMATERIALIZED";
-    candidacy.lastActivityDate = new Date(lastActivityDate).toISOString();
-    candidacy.status = "DOSSIER_FAISABILITE_RECEVABLE";
-    candidacy.feasibility = {
-      decision: "ADMISSIBLE",
-      decisionSentAt: DATE_NOW,
-      feasibilityFormat: "DEMATERIALIZED",
-      dematerializedFeasibilityFile: {
-        sentToCandidateAt: DATE_NOW,
-        candidateConfirmationAt: DATE_NOW,
-        swornStatementFile: null,
-      },
-    };
-    candidacy.typeAccompagnement = "ACCOMPAGNE";
-    candidacy.candidacyContestationsCaducite = contestations;
-
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-    });
-  });
-  cy.wait("@candidate_getCandidateWithCandidacy");
-}
-
 function verifyBannerState({
   caduqueBanner,
   pendingContestationBanner,
@@ -283,9 +237,9 @@ function verifyBannerState({
 }
 
 function verifyFeasibilityElement({ hasNonRecevableBadge }) {
-  cy.get('[data-test="feasibility-timeline-element"]').within(() => {
-    cy.get(
-      '[data-test="feasibility-timeline-element-non-valable-badge"]',
-    ).should(hasNonRecevableBadge ? "exist" : "not.exist");
+  cy.get('[data-test="feasibility-tile"]').within(() => {
+    cy.get('[data-test="feasibility-badge-caduque"]').should(
+      hasNonRecevableBadge ? "exist" : "not.exist",
+    );
   });
 }
