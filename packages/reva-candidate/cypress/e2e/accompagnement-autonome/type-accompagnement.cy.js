@@ -43,7 +43,7 @@ const interceptCandidacy = (candidate) => {
 };
 
 context("Type accompagnement", () => {
-  it("should show the type accompagnement in the timeline when the type_accompagnement is autonome", function () {
+  it("should show the type accompagnement in the dashboard when the type_accompagnement is autonome", function () {
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
         "AUTONOME";
