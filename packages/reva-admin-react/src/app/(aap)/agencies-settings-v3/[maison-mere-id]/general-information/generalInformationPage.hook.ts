@@ -23,6 +23,7 @@ const generalInformationQueries = graphql(`
         managerFirstname
         managerLastname
         statutValidationInformationsJuridiquesMaisonMereAAP
+        typologie
         legalInformationDocumentsDecisions(
           input: { decision: DEMANDE_DE_PRECISION }
         ) {
@@ -66,6 +67,7 @@ const getMaisonMereAAPGeneralInformationAdminQuery = graphql(`
       managerFirstname
       managerLastname
       statutValidationInformationsJuridiquesMaisonMereAAP
+      typologie
       legalInformationDocumentsDecisions(
         input: { decision: DEMANDE_DE_PRECISION }
       ) {
@@ -107,6 +109,7 @@ const schema = z.object({
   gestionnaireLastname: z.string(),
   gestionnaireEmail: z.string().email(),
   phone: z.string(),
+  gestionBranch: z.boolean(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -172,6 +175,9 @@ export const useGeneralInformationPage = () => {
       gestionnaireLastname: maisonMereAAP?.gestionnaire?.lastname ?? "",
       gestionnaireEmail: maisonMereAAP?.gestionnaire?.email ?? "",
       phone: maisonMereAAP?.phone ?? "",
+      gestionBranch:
+        maisonMereAAP?.typologie === "expertBrancheEtFiliere" ||
+        maisonMereAAP?.typologie === "expertBranche",
     }),
     [maisonMereAAP],
   );

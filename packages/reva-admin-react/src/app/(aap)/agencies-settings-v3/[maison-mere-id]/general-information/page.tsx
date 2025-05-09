@@ -8,13 +8,20 @@ import { LegalStatus, MaisonMereAap } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { UseFormRegister } from "react-hook-form";
+import { AdminToggleGestionBranch } from "./_components/AdminToggleGestionBranch";
 import { AttestationReferencement } from "./_components/AttestationReferencement";
 import { LegalInformationUpdateBlock } from "./_components/legal-information-update-block/LegalInformationUpdateBlock";
 import { useGeneralInformationPage } from "./generalInformationPage.hook";
+
+const confirmGestionBranchChangeModal = createModal({
+  id: "confirm-gestion-branch-change",
+  isOpenedByDefault: false,
+});
 
 const GeneralInformationPage = () => {
   const router = useRouter();
@@ -37,11 +44,19 @@ const GeneralInformationPage = () => {
   } = useGeneralInformationPage();
 
   const {
-    formState: { isSubmitting, isDirty, errors },
+    formState: { isSubmitting, isDirty, errors, defaultValues },
     register,
     handleSubmit,
     setError,
+    setValue,
+    watch,
   } = formHook;
+
+  const gestionBranchIsChecked = watch("gestionBranch");
+  const gestionBranchIsDirty =
+    defaultValues?.gestionBranch !== gestionBranchIsChecked;
+  const setGestionBranch = (value: boolean) =>
+    setValue("gestionBranch", value, { shouldDirty: true });
 
   const handleFormSubmit = handleSubmit(async (data) => {
     if (!etablissement) {
@@ -63,6 +78,7 @@ const GeneralInformationPage = () => {
       gestionnaireLastname,
       gestionnaireEmail,
       phone,
+      gestionBranch,
     } = data;
     const { formeJuridique, raisonSociale, qualiopiStatus, dateFermeture } =
       etablissement;
@@ -99,6 +115,7 @@ const GeneralInformationPage = () => {
         gestionnaireLastname,
         gestionnaireEmail,
         phone,
+        gestionBranch,
       });
 
       successToast("Les informations ont été modifiées");
@@ -123,97 +140,101 @@ const GeneralInformationPage = () => {
     !etablissement.dateFermeture;
 
   return (
-    <div className="flex flex-col w-full">
-      <h1>Informations générales</h1>
-      <p>
-        Retrouvez ici les informations renseignées lors de l'inscription. Vous
-        pouvez signaler un changement au support si ces informations ne sont
-        plus à jour.
-      </p>
-      {isAttestationReferencementActive && etablissement && (
-        <AttestationReferencement
-          raisonSociale={etablissement.raisonSociale}
-          siret={etablissement.siret}
-          canDownloadAttestationReferencement={
-            canDownloadAttestationReferencement
-          }
-        />
-      )}
-      <form
-        className="flex flex-col"
-        onSubmit={handleFormSubmit}
-        onReset={(e) => {
-          e.preventDefault();
-          handleReset();
-        }}
-      >
-        {isAdmin && (
-          <div className="my-3 flex gap-8">
-            <Input
-              label="Numéro de Siret"
-              hintText="Cette modification sera effective sur le compte de l'AAP"
-              nativeInputProps={{
-                ...register("siret"),
-                value: siret,
-              }}
-              className="md:w-1/4 mb-0"
-            />
-            {errors.siret ? (
-              <Alert
-                className="hidden md:block w-full "
-                title="Impossible de modifier le numéro de SIRET"
-                severity="error"
-                description={errors.siret?.message}
-              />
-            ) : (
-              <div className="hidden md:block w-full" />
-            )}
-          </div>
-        )}
-        {maisonMereAAPError && (
-          <Alert
-            className="mb-6"
-            severity="error"
-            title="Une erreur est survenue pendant la récupération des informations générales."
+    <>
+      <div className="flex flex-col w-full">
+        <h1>Informations générales</h1>
+        <p>
+          Retrouvez ici les informations renseignées lors de l'inscription. Vous
+          pouvez signaler un changement au support si ces informations ne sont
+          plus à jour.
+        </p>
+        {isAttestationReferencementActive && etablissement && (
+          <AttestationReferencement
+            raisonSociale={etablissement.raisonSociale}
+            siret={etablissement.siret}
+            canDownloadAttestationReferencement={
+              canDownloadAttestationReferencement
+            }
           />
         )}
-        {maisonMereAAPSuccess && maisonMereAAP && (
-          <ul className="list-none flex flex-col gap-6 pl-0">
-            <GrayCard className="min-h-[220px]">
-              <h2>Informations liées au SIRET - {siret}</h2>
-              {etablissement && (
-                <>
-                  <CompanyBadges
-                    className="col-span-3 mb-4"
-                    siegeSocial={etablissement.siegeSocial}
-                    dateFermeture={
-                      etablissement.dateFermeture
-                        ? toDate(etablissement.dateFermeture)
-                        : null
-                    }
-                    qualiopiStatus={!!etablissement.qualiopiStatus}
-                  />
-                  <div className="grid grid-cols-1 md:grid-cols-2">
-                    <Info title="Raison sociale">
-                      {etablissement.raisonSociale}
-                    </Info>
-                    <Info title="Forme juridique">
-                      {etablissement.formeJuridique.libelle}
-                    </Info>
-                  </div>
-                </>
-              )}
-            </GrayCard>
-            <GrayCard>
-              <h2>Dirigeant et administrateur du compte</h2>
-              {isAdmin ? (
-                <AccountInfoForm register={register} />
+        <form
+          className="flex flex-col"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (gestionBranchIsDirty) {
+              confirmGestionBranchChangeModal.open();
+            } else {
+              handleFormSubmit();
+            }
+          }}
+          onReset={(e) => {
+            e.preventDefault();
+            handleReset();
+          }}
+        >
+          {isAdmin && (
+            <div className="my-3 flex gap-8">
+              <Input
+                label="Numéro de Siret"
+                hintText="Cette modification sera effective sur le compte de l'AAP"
+                nativeInputProps={register("siret")}
+                className="md:w-1/4 mb-0"
+              />
+              {errors.siret ? (
+                <Alert
+                  className="hidden md:block w-full "
+                  title="Impossible de modifier le numéro de SIRET"
+                  severity="error"
+                  description={errors.siret?.message}
+                />
               ) : (
-                <AccountInfo maisonMereAAP={maisonMereAAP} />
+                <div className="hidden md:block w-full" />
               )}
-            </GrayCard>
-            {(isGestionnaireMaisonMereAAP || isAdmin) && (
-              <li>
+            </div>
+          )}
+          {maisonMereAAPError && (
+            <Alert
+              className="mb-6"
+              severity="error"
+              title="Une erreur est survenue pendant la récupération des informations générales."
+            />
+          )}
+          {maisonMereAAPSuccess && maisonMereAAP && (
+            <div className="list-none flex flex-col gap-6 pl-0 my-1">
+              <GrayCard className="min-h-[220px]">
+                <h2>Informations liées au SIRET - {siret}</h2>
+                {etablissement && (
+                  <>
+                    <CompanyBadges
+                      className="col-span-3 mb-4"
+                      siegeSocial={etablissement.siegeSocial}
+                      dateFermeture={
+                        etablissement.dateFermeture
+                          ? toDate(etablissement.dateFermeture)
+                          : null
+                      }
+                      qualiopiStatus={!!etablissement.qualiopiStatus}
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                      <Info title="Raison sociale">
+                        {etablissement.raisonSociale}
+                      </Info>
+                      <Info title="Forme juridique">
+                        {etablissement.formeJuridique.libelle}
+                      </Info>
+                    </div>
+                  </>
+                )}
+              </GrayCard>
+              <GrayCard>
+                <h2>Dirigeant et administrateur du compte</h2>
+                {isAdmin ? (
+                  <AccountInfoForm register={register} />
+                ) : (
+                  <AccountInfo maisonMereAAP={maisonMereAAP} />
+                )}
+              </GrayCard>
+              {(isGestionnaireMaisonMereAAP || isAdmin) && (
                 <LegalInformationUpdateBlock
                   onUpdateButtonClick={() =>
                     router.push(
@@ -230,29 +251,60 @@ const GeneralInformationPage = () => {
                     }),
                   )}
                 />
-              </li>
-            )}
-          </ul>
-        )}
-        {isAdmin ? (
-          <FormButtons
-            className="col-span-2"
-            formState={{ isSubmitting, isDirty }}
-            backUrl={backUrl}
-          />
-        ) : (
+              )}
+              {isAdmin && (
+                <AdminToggleGestionBranch
+                  gestionBranchIsChecked={gestionBranchIsChecked}
+                  setGestionBranch={setGestionBranch}
+                />
+              )}
+            </div>
+          )}
+          {isAdmin ? (
+            <FormButtons
+              className="col-span-2"
+              formState={{ isSubmitting, isDirty }}
+              backUrl={backUrl}
+            />
+          ) : (
+            <Button
+              className="mt-12"
+              priority="tertiary"
+              linkProps={{
+                href: backUrl,
+              }}
+            >
+              Retour
+            </Button>
+          )}
+        </form>
+      </div>
+      <confirmGestionBranchChangeModal.Component
+        title="Confirmation de changement de gestion des branches"
+        size="large"
+      >
+        <p>
+          Vous êtes sur le point de modifier la gestion des branches pour l'AAP.
+          Cette action est irréversible.
+        </p>
+        <div className="flex flex-row justify-end gap-4 mt-12">
           <Button
-            className="mt-12"
             priority="tertiary"
-            linkProps={{
-              href: backUrl,
+            onClick={() => confirmGestionBranchChangeModal.close()}
+          >
+            Annuler
+          </Button>
+          <Button
+            onClick={() => {
+              handleFormSubmit();
+              confirmGestionBranchChangeModal.close();
             }}
           >
-            Retour
+            Enregistrer
           </Button>
-        )}
-      </form>
-    </div>
+        </div>
+      </confirmGestionBranchChangeModal.Component>
+    </>
   );
 };
 
@@ -298,6 +350,7 @@ const AccountInfoForm = ({
     gestionnaireEmail: string;
     siret: string;
     phone: string;
+    gestionBranch: boolean;
   }>;
 }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,7 +1,7 @@
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
+import Badge from "@codegouvfr/react-dsfr/Badge";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 
 interface Decision {
@@ -20,7 +20,7 @@ export const LegalInformationUpdateBlock = ({
   onUpdateButtonClick(): void;
 }) => {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 my-4">
       <div className="flex flex-col border p-6">
         <h2>Mise à jour du compte</h2>
         {statutValidationInformationsJuridiquesMaisonMereAAP === "A_JOUR" && (
