@@ -9,8 +9,6 @@ const VALID_STATUSES = [
 const ADMISSIBLE_DECISION = "ADMISSIBLE";
 const AUTONOME_TYPE = "AUTONOME";
 
-const ACTUALISATION_FEATURE = "candidacy_actualisation";
-
 const CADUCITE_THRESHOLD_DAYS = 183;
 const ACTUALISATION_THRESHOLD_DAYS = 166;
 const ACTUALISATION_THRESHOLD_DAYS_BEFORE = 165;
@@ -30,42 +28,11 @@ const ACTUALISATION_THRESHOLD_TIME_BEFORE = subDays(
   ACTUALISATION_THRESHOLD_DAYS_BEFORE,
 ).getTime();
 
-describe.skip("Autonome Candidacy Timeline Tests", () => {
+const DATE_NOW = Date.now();
+
+describe("Caducité - Autonome PDF", () => {
   beforeEach(() => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "activeFeaturesForConnectedUser", {
-        data: {
-          activeFeaturesForConnectedUser: [ACTUALISATION_FEATURE],
-        },
-      });
-    });
-
     cy.login();
-  });
-
-  describe("Feature Flipping", () => {
-    it("should not display any caducité related elements when feature is disabled", () => {
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "activeFeaturesForConnectedUser", {
-          data: {
-            activeFeaturesForConnectedUser: [],
-          },
-        });
-      });
-
-      setupCandidacyState({
-        isCaduque: true,
-        lastActivityDate: CADUCITE_THRESHOLD_TIME,
-        contestations: [],
-      });
-
-      verifyBannerState({
-        caduqueBanner: false,
-        pendingContestationBanner: false,
-        confirmedContestationBanner: false,
-        actualisationBanner: false,
-      });
-    });
   });
 
   describe("Candidacy Banner States", () => {
@@ -92,7 +59,7 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
           contestations: [
             {
               certificationAuthorityContestationDecision: "DECISION_PENDING",
-              contestationSentAt: new Date().getTime(),
+              contestationSentAt: DATE_NOW,
             },
           ],
         });
@@ -112,7 +79,7 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
           contestations: [
             {
               certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
-              contestationSentAt: new Date().getTime(),
+              contestationSentAt: DATE_NOW,
             },
           ],
         });
@@ -128,12 +95,12 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
       it("should not display any caducité banners when contestation is invalidated", () => {
         setupCandidacyState({
           isCaduque: false,
-          lastActivityDate: new Date().getTime(),
+          lastActivityDate: DATE_NOW,
           contestations: [
             {
               certificationAuthorityContestationDecision:
                 "CADUCITE_INVALIDATED",
-              contestationSentAt: new Date().getTime(),
+              contestationSentAt: DATE_NOW,
             },
           ],
         });
@@ -154,11 +121,11 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
             {
               certificationAuthorityContestationDecision:
                 "CADUCITE_INVALIDATED",
-              contestationSentAt: new Date().getTime(),
+              contestationSentAt: DATE_NOW,
             },
             {
               certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
-              contestationSentAt: new Date().getTime(),
+              contestationSentAt: DATE_NOW,
             },
           ],
         });
@@ -179,11 +146,11 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
             {
               certificationAuthorityContestationDecision:
                 "CADUCITE_INVALIDATED",
-              contestationSentAt: new Date().getTime(),
+              contestationSentAt: DATE_NOW,
             },
             {
               certificationAuthorityContestationDecision: "DECISION_PENDING",
-              contestationSentAt: new Date().getTime(),
+              contestationSentAt: DATE_NOW,
             },
           ],
         });
@@ -227,35 +194,12 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
           actualisationBanner: false,
         });
       });
-
-      it("should not display actualisation banner when feature is disabled", () => {
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "activeFeaturesForConnectedUser", {
-            data: {
-              activeFeaturesForConnectedUser: [],
-            },
-          });
-        });
-
-        setupCandidacyState({
-          isCaduque: false,
-          lastActivityDate: ACTUALISATION_THRESHOLD_TIME,
-          contestations: [],
-        });
-
-        verifyBannerState({
-          caduqueBanner: false,
-          pendingContestationBanner: false,
-          confirmedContestationBanner: false,
-          actualisationBanner: false,
-        });
-      });
     });
   });
 
-  describe("Timeline Elements States", () => {
-    describe("Feasibility Timeline Element", () => {
-      it("should show non-recevable badge and review button when candidacy is caduque", () => {
+  describe("Dashboard Elements States", () => {
+    describe("Feasibility Tile Element", () => {
+      it("should show non-recevable badge when candidacy is caduque", () => {
         setupCandidacyState({
           isCaduque: true,
           lastActivityDate: CADUCITE_THRESHOLD_TIME,
@@ -264,11 +208,10 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
 
         verifyFeasibilityElement({
           hasNonRecevableBadge: true,
-          hasReviewButton: true,
         });
       });
 
-      it("should only show review button when candidacy is not caduque", () => {
+      it("should not show non-recevable badge when candidacy is not caduque", () => {
         setupCandidacyState({
           isCaduque: false,
           lastActivityDate: ACTUALISATION_THRESHOLD_TIME_BEFORE,
@@ -277,13 +220,12 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
 
         verifyFeasibilityElement({
           hasNonRecevableBadge: false,
-          hasReviewButton: true,
         });
       });
     });
 
-    describe("Dossier de Validation Timeline Element", () => {
-      it("should not show update button when candidacy is caduque", () => {
+    describe("Dossier de Validation Tile Element", () => {
+      it("should show caduque badge when candidacy is caduque", () => {
         setupCandidacyState({
           isCaduque: true,
           lastActivityDate: CADUCITE_THRESHOLD_TIME,
@@ -291,11 +233,11 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
         });
 
         verifyDossierValidationElement({
-          hasUpdateButton: false,
+          hasCaduqueBadge: true,
         });
       });
 
-      it("should show update button when candidacy is not caduque", () => {
+      it("should not show caduque badge when candidacy is not caduque", () => {
         setupCandidacyState({
           isCaduque: false,
           lastActivityDate: ACTUALISATION_THRESHOLD_TIME_BEFORE,
@@ -303,7 +245,7 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
         });
 
         verifyDossierValidationElement({
-          hasUpdateButton: true,
+          hasCaduqueBadge: false,
         });
       });
     });
@@ -312,28 +254,33 @@ describe.skip("Autonome Candidacy Timeline Tests", () => {
 
 function setupCandidacyState({ isCaduque, lastActivityDate, contestations }) {
   cy.fixture("candidate1.json").then((candidate) => {
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque =
-      isCaduque;
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
-      lastActivityDate;
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-      VALID_STATUSES[0];
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility = {
+    const candidacy =
+      candidate.data.candidate_getCandidateWithCandidacy.candidacy;
+
+    candidacy.id = "1";
+    candidacy.isCaduque = isCaduque;
+    candidacy.lastActivityDate = new Date(lastActivityDate).toISOString();
+    candidacy.status = VALID_STATUSES[0];
+    candidacy.feasibility = {
       decision: ADMISSIBLE_DECISION,
+      decisionSentAt: DATE_NOW,
     };
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-      AUTONOME_TYPE;
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
-      contestations;
+    candidacy.typeAccompagnement = AUTONOME_TYPE;
+    candidacy.candidacyContestationsCaducite = contestations;
 
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
       stubQuery(
         req,
-        "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
+        "candidate_getCandidateWithCandidacyForDashboard",
         candidate,
       );
     });
+
+    cy.wait([
+      "@candidate_getCandidateWithCandidacy",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
   });
 }
 
@@ -357,21 +304,18 @@ function verifyBannerState({
   );
 }
 
-function verifyFeasibilityElement({ hasNonRecevableBadge, hasReviewButton }) {
-  cy.get('[data-test="feasibility-timeline-element"]').within(() => {
-    cy.get(
-      '[data-test="feasibility-timeline-element-non-valable-badge"]',
-    ).should(hasNonRecevableBadge ? "exist" : "not.exist");
-    cy.get('[data-test="feasibility-timeline-element-review-button"]').should(
-      hasReviewButton ? "exist" : "not.exist",
+function verifyFeasibilityElement({ hasNonRecevableBadge }) {
+  cy.get('[data-test="feasibility-tile"]').within(() => {
+    cy.get('[data-test="feasibility-badge-caduque"]').should(
+      hasNonRecevableBadge ? "exist" : "not.exist",
     );
   });
 }
 
-function verifyDossierValidationElement({ hasUpdateButton }) {
-  cy.get('[data-test="dossier-de-validation-timeline-element"]').within(() => {
-    cy.get(
-      '[data-test="dossier-de-validation-timeline-element-update-button"]',
-    ).should(hasUpdateButton ? "exist" : "not.exist");
+function verifyDossierValidationElement({ hasCaduqueBadge }) {
+  cy.get('[data-test="dossier-validation-tile"]').within(() => {
+    cy.get('[data-test="dossier-validation-badge-caduque"]').should(
+      hasCaduqueBadge ? "exist" : "not.exist",
+    );
   });
 }
