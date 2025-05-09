@@ -33,7 +33,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
   });
 
-  it("should show an active and editable feasibility element in the timeline when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
+  it("should show an active and editable feasibility element in the dashboard when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
     cy.get(FEASIBILITY_TILE).should("exist");
     cy.get(FEASIBILITY_TILE_BUTTON).should("be.enabled");
   });
