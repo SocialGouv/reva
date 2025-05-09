@@ -23,7 +23,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
     });
 
     context("Inactive dossier de validation", () => {
-      it("should show an inactive dossier de validation element in the timeline when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
+      it("should show an inactive dossier de validation element in the dashboard when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
         cy.fixture("candidate1-certification-titre-2-selected.json").then(
           (candidate) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
@@ -54,7 +54,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
     });
 
     context("Update views", () => {
-      it("should show an active dossier de validation element in the timeline when the type_accompagnement is autonome and the candidacy status is 'DOSSIER_FAISABILITE_RECEVABLE' and route to the dossier de validation autonome page when clicked on", function () {
+      it("should show an active dossier de validation element in the dashboard when the type_accompagnement is autonome and the candidacy status is 'DOSSIER_FAISABILITE_RECEVABLE' and route to the dossier de validation autonome page when clicked on", function () {
         cy.fixture("candidate1-certification-titre-2-selected.json").then(
           (candidate) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
@@ -347,7 +347,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
     });
 
     context("Incomplete dossier de validation", () => {
-      it("should show a 'to complete' badge and a warning in the timeline", function () {
+      it("should show a 'to complete' badge and a warning in the dashboard", function () {
         cy.fixture("candidate1-certification-titre-2-selected.json").then(
           (candidate) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
