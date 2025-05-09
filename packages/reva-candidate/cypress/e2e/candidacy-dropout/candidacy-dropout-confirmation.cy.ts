@@ -4,16 +4,21 @@ function interceptCandidacy() {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(req, "candidate_getCandidateWithCandidacy", candidateDropOut);
     stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    stubQuery(
+      req,
+      "candidate_getCandidateWithCandidacyForDashboard",
+      candidateDropOut,
+    );
   });
 }
 
-context.skip("Candidacy dropout confirmation page", () => {
+context("Candidacy dropout confirmation page", () => {
   it("should let me access the page", function () {
     interceptCandidacy();
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
     cy.visit("/candidacy-dropout-decision/dropout-confirmation");
     cy.get('[data-test="candidacy-dropout-confirmation-page"]').should("exist");
     cy.get("h1").should("contain.text", "Votre parcours VAE est abandonné");
@@ -24,7 +29,7 @@ context.skip("Candidacy dropout confirmation page", () => {
     cy.login();
 
     cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
     cy.visit("/candidacy-dropout-decision/dropout-confirmation");
     cy.get('[data-test="candidacy-dropout-confirmation-back-button"]').click();
     cy.url().should("eq", Cypress.config().baseUrl);
