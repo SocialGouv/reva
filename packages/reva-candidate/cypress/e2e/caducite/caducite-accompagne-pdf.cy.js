@@ -22,52 +22,43 @@ const ACTUALISATION_THRESHOLD_TIME_BEFORE = subDays(
 
 const DATE_NOW = Date.now();
 
-describe.skip("Timeline caducité - Accompagné PDF", () => {
-  describe("Feature activation", () => {
-    it("should hide all caducité elements when feature is disabled", () => {
-      setupTest({
-        isCaduque: true,
-        lastActivityDate: CADUCITE_THRESHOLD_TIME,
-        isFeatureActive: false,
-      });
+function setupTest({ isCaduque, lastActivityDate, contestations = [] }) {
+  cy.login();
 
-      verifyBannerState({
-        caduqueBanner: false,
-        pendingContestationBanner: false,
-        confirmedContestationBanner: false,
-        actualisationBanner: false,
-      });
+  cy.fixture("candidate1.json").then((candidate) => {
+    const candidacy =
+      candidate.data.candidate_getCandidateWithCandidacy.candidacy;
 
-      verifyFeasibilityElement({
-        hasNonRecevableBadge: false,
-        hasReviewButton: false,
-      });
+    candidacy.id = "1";
+    candidacy.isCaduque = isCaduque;
+    candidacy.feasibilityFormat = "UPLOADED_PDF";
+    candidacy.lastActivityDate = new Date(lastActivityDate).toISOString();
+    candidacy.status = "DOSSIER_FAISABILITE_RECEVABLE";
+    candidacy.feasibility = {
+      decision: "ADMISSIBLE",
+      decisionSentAt: DATE_NOW,
+      feasibilityFormat: "UPLOADED_PDF",
+    };
+    candidacy.typeAccompagnement = "ACCOMPAGNE";
+    candidacy.candidacyContestationsCaducite = contestations;
 
-      verifyDossierValidationElement();
-    });
-
-    it("should show caducité elements when feature is enabled", () => {
-      setupTest({
-        isCaduque: true,
-        lastActivityDate: CADUCITE_THRESHOLD_TIME,
-      });
-
-      verifyBannerState({
-        caduqueBanner: true,
-        pendingContestationBanner: false,
-        confirmedContestationBanner: false,
-        actualisationBanner: false,
-      });
-
-      verifyFeasibilityElement({
-        hasNonRecevableBadge: true,
-        hasReviewButton: false,
-      });
-
-      verifyDossierValidationElement();
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        candidate,
+      );
     });
   });
 
+  cy.wait([
+    "@candidate_getCandidateWithCandidacy",
+    "@candidate_getCandidateWithCandidacyForDashboard",
+  ]);
+}
+
+describe("Caducité - Accompagné PDF", () => {
   describe("Active candidacy state", () => {
     beforeEach(() => {
       setupTest({
@@ -88,10 +79,9 @@ describe.skip("Timeline caducité - Accompagné PDF", () => {
     it("should display feasibility element without warning", () => {
       verifyFeasibilityElement({
         hasNonRecevableBadge: false,
-        hasReviewButton: false,
       });
 
-      verifyDossierValidationElement();
+      verifyDossierValidationElement({ hasCaduqueBadge: false });
     });
   });
 
@@ -112,7 +102,7 @@ describe.skip("Timeline caducité - Accompagné PDF", () => {
           actualisationBanner: false,
         });
 
-        verifyDossierValidationElement();
+        verifyDossierValidationElement({ hasCaduqueBadge: false });
       });
     });
 
@@ -132,7 +122,7 @@ describe.skip("Timeline caducité - Accompagné PDF", () => {
           actualisationBanner: true,
         });
 
-        verifyDossierValidationElement();
+        verifyDossierValidationElement({ hasCaduqueBadge: false });
       });
     });
   });
@@ -153,15 +143,16 @@ describe.skip("Timeline caducité - Accompagné PDF", () => {
           confirmedContestationBanner: false,
           actualisationBanner: false,
         });
+
+        verifyDossierValidationElement({ hasCaduqueBadge: true });
       });
 
       it("should show non-recevable warning on feasibility", () => {
         verifyFeasibilityElement({
           hasNonRecevableBadge: true,
-          hasReviewButton: false,
         });
 
-        verifyDossierValidationElement();
+        verifyDossierValidationElement({ hasCaduqueBadge: true });
       });
     });
 
@@ -188,15 +179,14 @@ describe.skip("Timeline caducité - Accompagné PDF", () => {
           confirmedContestationBanner: false,
           actualisationBanner: false,
         });
+        verifyDossierValidationElement({ hasCaduqueBadge: true });
       });
 
       it("should maintain non-recevable warning", () => {
         verifyFeasibilityElement({
           hasNonRecevableBadge: true,
-          hasReviewButton: false,
         });
-
-        verifyDossierValidationElement();
+        verifyDossierValidationElement({ hasCaduqueBadge: true });
       });
     });
 
@@ -223,62 +213,19 @@ describe.skip("Timeline caducité - Accompagné PDF", () => {
           confirmedContestationBanner: true,
           actualisationBanner: false,
         });
+        verifyDossierValidationElement({ hasCaduqueBadge: true });
       });
 
       it("should maintain non-recevable warning", () => {
         verifyFeasibilityElement({
           hasNonRecevableBadge: true,
-          hasReviewButton: false,
         });
 
-        verifyDossierValidationElement();
+        verifyDossierValidationElement({ hasCaduqueBadge: true });
       });
     });
   });
 });
-
-function setupTest({
-  isCaduque,
-  lastActivityDate,
-  contestations = [],
-  isFeatureActive = true,
-}) {
-  cy.intercept("POST", "/api/graphql", (req) => {
-    stubQuery(req, "activeFeaturesForConnectedUser", {
-      data: {
-        activeFeaturesForConnectedUser: isFeatureActive
-          ? ["candidacy_actualisation"]
-          : [],
-      },
-    });
-  });
-
-  cy.login();
-
-  cy.fixture("candidate1.json").then((candidate) => {
-    const candidacy =
-      candidate.data.candidate_getCandidateWithCandidacy.candidacy;
-
-    candidacy.id = "1";
-    candidacy.isCaduque = isCaduque;
-    candidacy.feasibilityFormat = "UPLOADED_PDF";
-    candidacy.lastActivityDate = new Date(lastActivityDate).toISOString();
-    candidacy.status = "DOSSIER_FAISABILITE_RECEVABLE";
-    candidacy.feasibility = {
-      decision: "ADMISSIBLE",
-      decisionSentAt: DATE_NOW,
-      feasibilityFormat: "UPLOADED_PDF",
-    };
-    candidacy.typeAccompagnement = "ACCOMPAGNE";
-    candidacy.candidacyContestationsCaducite = contestations;
-
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-    });
-  });
-
-  cy.wait("@candidate_getCandidateWithCandidacy");
-}
 
 function verifyBannerState({
   caduqueBanner,
@@ -300,23 +247,18 @@ function verifyBannerState({
   );
 }
 
-function verifyFeasibilityElement({ hasNonRecevableBadge, hasReviewButton }) {
-  cy.get('[data-test="feasibility-timeline-element"]').within(() => {
-    cy.get(
-      '[data-test="feasibility-timeline-element-non-valable-badge"]',
-    ).should(hasNonRecevableBadge ? "exist" : "not.exist");
-    cy.get('[data-test="feasibility-timeline-element-review-button"]').should(
-      hasReviewButton ? "exist" : "not.exist",
+function verifyFeasibilityElement({ hasNonRecevableBadge }) {
+  cy.get('[data-test="feasibility-tile"]').within(() => {
+    cy.get('[data-test="feasibility-badge-caduque"]').should(
+      hasNonRecevableBadge ? "exist" : "not.exist",
     );
   });
 }
 
-function verifyDossierValidationElement() {
-  cy.get(
-    '[data-test="dossier-de-validation-accompagne-timeline-element"]',
-  ).within(() => {
-    cy.get(
-      '[data-test="dossier-de-validation-accompagne-timeline-element-update-button"]',
-    ).should("not.exist");
+function verifyDossierValidationElement({ hasCaduqueBadge }) {
+  cy.get('[data-test="dossier-validation-tile"]').within(() => {
+    cy.get('[data-test="dossier-validation-badge-caduque"]').should(
+      hasCaduqueBadge ? "exist" : "not.exist",
+    );
   });
 }
