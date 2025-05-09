@@ -1,107 +1,69 @@
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
-context.skip("Type accompagnement", () => {
-  beforeEach(() => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-    });
-  });
+const DASHBOARD_AUTONOME = '[data-test="dashboard-autonome"]';
+const DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE =
+  '[data-test="type-accompagnement-tile"]';
 
-  it("should show the type accompagnement in the timeline when the type_accompagnement is accompagne and the feature is active", function () {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate1.json",
-      );
-      stubQuery(
-        req,
-        "activeFeaturesForConnectedUser",
-        "accompagnement-autonome/features-type-accompagnement.json",
-      );
-    });
-    cy.login();
-
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForHome");
-    cy.wait("@activeFeaturesForConnectedUser");
-
-    cy.get('[data-test="type-accompagnement-timeline-element"]').should(
-      "exist",
+const interceptCandidacy = (candidate) => {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    stubQuery(
+      req,
+      "candidate_getCandidateWithCandidacyForHome",
+      candidate || "candidate1.json",
     );
-    cy.get('[data-test="type-accompagnement-timeline-element-label"]').should(
-      "contain.text",
-      "VAE accompagnée",
+    stubQuery(
+      req,
+      "candidate_getCandidateWithCandidacy",
+      candidate || "candidate1.json",
+    );
+
+    stubQuery(
+      req,
+      "candidate_getCandidateWithCandidacyForDashboard",
+      candidate || "candidate1.json",
+    );
+    stubQuery(
+      req,
+      "getCandidateWithCandidacyForTypeAccompagnementPage",
+      candidate || "candidate1.json",
+    );
+    stubMutation(
+      req,
+      "updateTypeAccompagnementForTypeAccompagnementPage",
+      candidate || "candidate1-certification-titre-2-selected.json",
     );
   });
+  cy.login();
 
+  cy.wait("@candidate_getCandidateWithCandidacy");
+  cy.wait("@candidate_getCandidateWithCandidacyForHome");
+  cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+};
+
+context("Type accompagnement", () => {
   it("should show the type accompagnement in the timeline when the type_accompagnement is autonome", function () {
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
         "AUTONOME";
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-        stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
-      });
+      interceptCandidacy(candidate);
     });
-    cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForHome");
-
-    cy.get('[data-test="type-accompagnement-timeline-element"]').should(
-      "exist",
-    );
-    cy.get('[data-test="type-accompagnement-timeline-element-label"]').should(
-      "contain.text",
-      "VAE en autonomie",
-    );
+    cy.get(DASHBOARD_AUTONOME).should("exist");
   });
 
-  it("should disable the type_accompagnement update button when no certification is selected", function () {
+  it("should show the type_accompagnement update button when no certification is selected", function () {
     cy.fixture("candidate1.json").then((candidate) => {
       candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
         "AUTONOME";
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-        stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
-      });
+      candidate.data.candidate_getCandidateWithCandidacy.candidacy.certification =
+        null;
+      interceptCandidacy(candidate);
     });
 
-    cy.login();
-
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForHome");
-    cy.get(
-      '[data-test="type-accompagnement-timeline-element-update-button"]',
-    ).should("exist");
-    cy.get(
-      '[data-test="type-accompagnement-timeline-element-update-button"]',
-    ).should("be.disabled");
-  });
-
-  it("should hide the type_accompagnement update button when the candidacy status is not 'PROJET'", function () {
-    cy.fixture("candidate1.json").then((candidate) => {
-      candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-        "AUTONOME";
-      candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-        "VALIDATION";
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-        stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
-      });
-    });
-
-    cy.login();
-
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForHome");
-    cy.wait(1000);
-
-    cy.get(
-      '[data-test="type-accompagnement-timeline-element-update-button"]',
-    ).should("not.exist");
+    cy.get(DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE).should("exist");
+    cy.get(DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE).should("not.be.disabled");
   });
 
   it("should open the type_accompagnement choice page when i click on the update button", function () {
@@ -109,24 +71,11 @@ context.skip("Type accompagnement", () => {
       (candidate) => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
           "AUTONOME";
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-        });
+        interceptCandidacy(candidate);
       },
     );
 
-    cy.login();
-
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForHome");
-    cy.get(
-      '[data-test="type-accompagnement-timeline-element-update-button"]',
-    ).click();
+    cy.get(DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE).click();
     cy.location("pathname").should("equal", "/candidat/type-accompagnement/");
   });
 
@@ -135,37 +84,10 @@ context.skip("Type accompagnement", () => {
       (candidate) => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
           "AUTONOME";
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "getCandidateWithCandidacyForTypeAccompagnementPage",
-            candidate,
-          );
-        });
+        interceptCandidacy(candidate);
       },
     );
 
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacy",
-        "candidate1-certification-titre-2-selected.json",
-      );
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate1-certification-titre-2-selected.json",
-      );
-      stubMutation(
-        req,
-        "updateTypeAccompagnementForTypeAccompagnementPage",
-        "candidate1-certification-titre-2-selected.json",
-      );
-    });
-    cy.login();
-
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForHome");
     cy.visit("/type-accompagnement");
     cy.wait("@getCandidateWithCandidacyForTypeAccompagnementPage");
 
