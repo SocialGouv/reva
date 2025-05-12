@@ -195,18 +195,22 @@ const CertificationAuthorityAdminComponent = ({
         >
           Retour
         </Button>
-        <Button priority="tertiary no outline" onClick={() => reset()}>
-          Réinitialiser
-        </Button>
-        <Button
-          nativeButtonProps={{
-            type: "submit",
-            form: "certificationAuthorityForm",
-          }}
-          disabled={isSubmitting}
-        >
-          Enregistrer
-        </Button>
+        {!isFeatureActive("PARAMETRES_CERTIFICATEUR") && (
+          <>
+            <Button priority="tertiary no outline" onClick={() => reset()}>
+              Réinitialiser
+            </Button>
+            <Button
+              nativeButtonProps={{
+                type: "submit",
+                form: "certificationAuthorityForm",
+              }}
+              disabled={isSubmitting}
+            >
+              Enregistrer
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
