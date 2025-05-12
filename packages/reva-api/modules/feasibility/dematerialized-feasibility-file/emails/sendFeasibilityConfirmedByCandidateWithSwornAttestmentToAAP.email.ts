@@ -1,6 +1,11 @@
 import mjml2html from "mjml";
-
-import { sendEmailWithLink, templateMail } from "../../../shared/email";
+import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
+import {
+  getBackofficeUrl,
+  sendEmailUsingTemplate,
+  sendEmailWithLink,
+  templateMail,
+} from "../../../shared/email";
 
 export const sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP =
   async ({
@@ -12,6 +17,22 @@ export const sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP =
     aapName: string;
     candidateName: string;
   }) => {
+    const useBrevoTemplate = await isFeatureActiveForUser({
+      feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CERTIFICATEURS",
+    });
+
+    if (useBrevoTemplate) {
+      return sendEmailUsingTemplate({
+        to: [{ email: aapEmail }],
+        templateId: 594,
+        params: {
+          aapName,
+          candidateName,
+          backofficeUrl: getBackofficeUrl({ path: "/" }),
+        },
+      });
+    }
+
     const htmlContent = (url: string) =>
       mjml2html(
         templateMail({
