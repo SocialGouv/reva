@@ -1,6 +1,10 @@
 import mjml2html from "mjml";
-
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import {
+  sendGenericEmail,
+  templateMail,
+  sendEmailUsingTemplate,
+} from "../../shared/email";
 
 export const sendCandidacyTransferToCandidate = async ({
   email,
@@ -9,19 +13,33 @@ export const sendCandidacyTransferToCandidate = async ({
   email: string;
   newCertificationAuthorityName: string;
 }) => {
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CANDIDATE_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 666,
+      params: {
+        newCertificationAuthorityName,
+      },
+    });
+  }
+
   const htmlContent = mjml2html(
     templateMail({
       content: `
       <p>Bonjour,</p>
       <p>Nous vous informons que votre candidature a été transférée au gestionnaire de candidatures ${newCertificationAuthorityName}, à l'initiative du certificateur.</p>
       <p>Il sera ainsi le destinataire des différents documents liés à votre parcours (dossier de faisabilité, dossier de validation) et vous communiquera, via la plateforme, les informations liées à votre passage devant le jury.</p>
-      
+
       <p>Nous vous souhaitons une bonne poursuite de parcours. </p>
-      
+
       <p>Besoin d’aide ? Vous pouvez nous contacter à l’adresse support@vae.gouv.fr.</p>
 
       <p>Cordialement,</p>
-      
+
       <p>L’équipe France VAE</p>
         `,
     }),
