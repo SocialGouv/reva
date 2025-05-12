@@ -1,10 +1,29 @@
 import mjml2html from "mjml";
-
-import { sendEmailWithLink, templateMail } from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import {
+  sendEmailWithLink,
+  templateMail,
+  sendEmailUsingTemplate,
+} from "../../shared/email";
 import { generateJwt } from "../auth.helper";
 
 export const sendForgotPasswordEmail = async (email: string) => {
   const token = generateJwt({ email, action: "reset-password" }, 4 * 60 * 60);
+  const url = `/reset-password?resetPasswordToken=${token}`;
+
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CANDIDATE_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 666,
+      params: {
+        resetPasswordUrl: url,
+      },
+    });
+  }
 
   const htmlContent = (url: string) =>
     mjml2html(
@@ -18,8 +37,6 @@ export const sendForgotPasswordEmail = async (email: string) => {
         disableThanks: true,
       }),
     );
-
-  const url = `/reset-password?resetPasswordToken=${token}`;
 
   return sendEmailWithLink({
     to: { email },
