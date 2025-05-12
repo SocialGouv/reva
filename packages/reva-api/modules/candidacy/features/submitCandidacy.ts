@@ -66,7 +66,6 @@ export const submitCandidacy = async ({
     email: candidate.email as string,
     organismName: organism.label,
     organismEmail: organism.emailContact || organism.contactAdministrativeEmail,
-    candidacyFundedByFranceVae: candidacy.financeModule !== "hors_plateforme",
   });
   return updatedCandidacy;
 };
