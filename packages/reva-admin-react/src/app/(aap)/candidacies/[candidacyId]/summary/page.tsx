@@ -220,6 +220,38 @@ const CandidacySummaryPage = () => {
               </EnhancedSectionCard>
             )}
             <CertificationCard candidacy={candidacy} />
+            <EnhancedSectionCard title="Certificateur">
+              <div className="ml-10 mr-6">
+                <p className="text-xl font-bold mb-0 leading-loose">
+                  {candidacy.certificationAuthorities[0]?.label}
+                </p>
+                <div>
+                  {candidacy.certificationAuthorityLocalAccounts &&
+                  candidacy.certificationAuthorityLocalAccounts.length > 0 ? (
+                    candidacy.certificationAuthorityLocalAccounts.map(
+                      (account) => (
+                        <p
+                          key={account?.contactEmail}
+                          className="mb-4 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-4"
+                        >
+                          {account?.contactFullName} <br />
+                          {account?.contactEmail} <br />
+                          {account?.contactPhone}
+                        </p>
+                      ),
+                    )
+                  ) : (
+                    <p>
+                      {candidacy.certificationAuthorities[0].contactFullName}
+                      <br />
+                      {candidacy.certificationAuthorities[0].contactEmail}
+                      <br />
+                      {candidacy.certificationAuthorities[0].contactPhone}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </EnhancedSectionCard>
 
             <GrayCard>
               <span className="text-2xl font-bold mb-5">Ses objectifs</span>

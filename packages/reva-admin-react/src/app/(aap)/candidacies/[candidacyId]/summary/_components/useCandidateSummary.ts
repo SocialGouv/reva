@@ -8,6 +8,17 @@ const getCandidacyById = graphql(`
       id
       financeModule
       typeAccompagnement
+      certificationAuthorities {
+        label
+        contactFullName
+        contactEmail
+        contactPhone
+      }
+      certificationAuthorityLocalAccounts {
+        contactFullName
+        contactEmail
+        contactPhone
+      }
       candidacyDropOut {
         createdAt
         proofReceivedByAdmin
