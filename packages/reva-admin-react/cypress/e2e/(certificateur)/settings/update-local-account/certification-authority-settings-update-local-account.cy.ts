@@ -2,7 +2,7 @@ import { stubQuery, stubMutation } from "../../../../utils/graphql";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
 import deleteCertificationAuthorityLocalAccountFixture from "./fixtures/delete-certification-authority-local-account-mutation-response.json";
 
-function interceptUpdateLocalAccount() {
+function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
       req,
@@ -18,7 +18,12 @@ function interceptUpdateLocalAccount() {
     stubQuery(
       req,
       "getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
-      certificationAuthorityLocalAccountFixture,
+      {
+        ...certificationAuthorityLocalAccountFixture,
+        ...(params?.noContactDetails
+          ? { contactFullname: null, contactEmail: null, contactPhone: null }
+          : {}),
+      },
     );
     stubMutation(
       req,
@@ -82,29 +87,53 @@ context("general information summary card", () => {
       ).should("have.text", "contact.email@example.com");
     });
   });
-  context("when i click on the update button ", () => {
-    it("redirect to the update general information page", () => {
-      interceptUpdateLocalAccount();
 
-      cy.certificateur(
-        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
-      );
-      cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
-      cy.wait("@getMaisonMereCGUQuery");
-      cy.wait(
-        "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
-      );
+  context(
+    "when i access the update local account page with no contact details",
+    () => {
+      it("display the general information summary card with the correct information", () => {
+        interceptUpdateLocalAccount({ noContactDetails: true });
 
-      cy.get(
-        '[data-test="local-account-general-information-summary-card"] [data-test="action-button"]',
-      ).click();
+        cy.certificateur(
+          "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
+        );
 
-      cy.url().should(
-        "include",
-        "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/general-information",
-      );
-    });
+        cy.wait("@activeFeaturesForConnectedUser");
+        cy.wait("@getOrganismForAAPVisibilityCheck");
+        cy.wait("@getMaisonMereCGUQuery");
+        cy.wait(
+          "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+        );
+
+        cy.get(
+          '[data-test="local-account-general-information-summary-card"] [data-test="no-contact-details-badge"]',
+        ).should("exist");
+      });
+    },
+  );
+});
+context("when i click on the update button ", () => {
+  it("redirect to the update general information page", () => {
+    interceptUpdateLocalAccount();
+
+    cy.certificateur(
+      "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
+    );
+    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait(
+      "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
+    );
+
+    cy.get(
+      '[data-test="local-account-general-information-summary-card"] [data-test="action-button"]',
+    ).click();
+
+    cy.url().should(
+      "include",
+      "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/general-information",
+    );
   });
 });
 

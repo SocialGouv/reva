@@ -1,4 +1,5 @@
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 
 export default function LocalAccountGeneralInformationSummaryCard({
   contactFullName,
@@ -20,7 +21,7 @@ export default function LocalAccountGeneralInformationSummaryCard({
       buttonOnClickHref={updateGeneralInformationPageUrl}
     >
       <div className="pl-10">
-        {contactFullName && (
+        {contactFullName ? (
           <div className="flex gap-x-2">
             <p>Contact référent :</p>
             <div>
@@ -32,6 +33,10 @@ export default function LocalAccountGeneralInformationSummaryCard({
               </p>
             </div>
           </div>
+        ) : (
+          <Badge severity="new" small data-test="no-contact-details-badge">
+            Aucun contact référent
+          </Badge>
         )}
       </div>
     </EnhancedSectionCard>
