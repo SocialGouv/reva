@@ -17,6 +17,7 @@ import {
 import { useParams } from "next/navigation";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
 
 type FormData = z.infer<typeof schema>;
 
@@ -167,10 +168,22 @@ const CertificationAuthorityAdminComponent = ({
           certifications={certificationAuthority.certifications}
           updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/certifications`}
         />
-        <AccountsSummaryCard
-          accounts={certificationAuthority.certificationAuthorityLocalAccounts}
-          hrefPrefix={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/comptes-collaborateurs`}
-        />
+        {isFeatureActive("PARAMETRES_CERTIFICATEUR") ? (
+          <CertificationAuthorityLocalAccountsSummaryCard
+            accounts={
+              certificationAuthority.certificationAuthorityLocalAccounts
+            }
+            addLocalAccountPageUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/comptes-collaborateurs/ajouter`}
+            updateLocalAccountPageUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/comptes-collaborateurs/`}
+          />
+        ) : (
+          <AccountsSummaryCard
+            accounts={
+              certificationAuthority.certificationAuthorityLocalAccounts
+            }
+            hrefPrefix={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/comptes-collaborateurs`}
+          />
+        )}
       </div>
       <div className="flex flex-row justify-end mt-4 gap-x-4">
         <Button
