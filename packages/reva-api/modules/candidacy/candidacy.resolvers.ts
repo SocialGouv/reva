@@ -69,6 +69,7 @@ import { resolversSecurityMap } from "./security/security";
 import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
 import { selectOrganismForCandidacyAsAdmin } from "./features/selectOrganismForCandidacyAsAdmin";
 import { updateCandidacyFinanceModule } from "./features/updateCandidacyFinanceModule";
+import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -95,6 +96,8 @@ const unsafeResolvers = {
       getCandidacyOnCandidacyFinancingMethodsByCandidacyId({ candidacyId }),
     isCaduque: ({ id: candidacyId }: Candidacy) =>
       getCandidacyIsCaduque({ candidacyId }),
+    certificationAuthorityLocalAccounts: ({ id: candidacyId }: Candidacy) =>
+      getCandidacyCertificationAuthorityLocalAccounts({ candidacyId }),
   },
   CandidacyOnCandidacyFinancingMethod: {
     candidacyFinancingMethod: ({

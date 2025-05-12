@@ -46,6 +46,12 @@ enum CandidacyStatusStep {
   DEMANDE_PAIEMENT_ENVOYEE
 }
 
+type CandidacyCertificationAuthorityLocalAccount {
+  contactFullName: String!
+  contactEmail: String!
+  contactPhone: String
+}
+
 # QUERY
 
 type Candidacy {
@@ -73,6 +79,7 @@ type Candidacy {
   lastActivityDate: Timestamp
   isCaduque: Boolean!
   hasMoreThanOneCertificationAvailable: Boolean!
+  certificationAuthorityLocalAccounts: [CandidacyCertificationAuthorityLocalAccount]
 }
 enum TypeAccompagnement {
   ACCOMPAGNE
