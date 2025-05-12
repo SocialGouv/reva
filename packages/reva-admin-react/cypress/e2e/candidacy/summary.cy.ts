@@ -195,6 +195,40 @@ context("Candidacy summary page", () => {
     );
   });
 
+  it("displays certification authority's contact information", function () {
+    visitSummary({
+      feasibilityFormat: "DEMATERIALIZED",
+      financeModule: "unifvae",
+      modaliteAccompagnement: "A_DISTANCE",
+      isUpdateCandidateContactDetailsFeatureActive: true,
+    });
+    cy.wait("@getCandidacySummaryById");
+    cy.get('[data-test="certification-authority-local-account-0"]').should(
+      "exist",
+    );
+    cy.get('[data-test="certification-authority-local-account-1"]').should(
+      "exist",
+    );
+    cy.get('[data-test="certification-authority-local-account-0"]').contains(
+      "Jane Doe public contact",
+    );
+    cy.get('[data-test="certification-authority-local-account-0"]').contains(
+      "janedoepublic@uncertificateur.fr",
+    );
+    cy.get('[data-test="certification-authority-local-account-0"]').contains(
+      "0123456789",
+    );
+    cy.get('[data-test="certification-authority-local-account-1"]').contains(
+      "John Doe public contact",
+    );
+    cy.get('[data-test="certification-authority-local-account-1"]').contains(
+      "johndoepublic@uncertificateur.fr",
+    );
+    cy.get('[data-test="certification-authority-local-account-1"]').contains(
+      "023456789",
+    );
+  });
+
   context("Badge candidacy is caduque", () => {
     [
       {

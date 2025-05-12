@@ -229,10 +229,11 @@ const CandidacySummaryPage = () => {
                   {candidacy.certificationAuthorityLocalAccounts &&
                   candidacy.certificationAuthorityLocalAccounts.length > 0 ? (
                     candidacy.certificationAuthorityLocalAccounts.map(
-                      (account) => (
+                      (account, i) => (
                         <p
-                          key={account?.contactEmail}
+                          key={i}
                           className="mb-4 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-4"
+                          data-test={`certification-authority-local-account-${i}`}
                         >
                           {account?.contactFullName} <br />
                           {account?.contactEmail} <br />
