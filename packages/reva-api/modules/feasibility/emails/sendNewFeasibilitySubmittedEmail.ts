@@ -1,6 +1,10 @@
 import mjml2html from "mjml";
-
-import { sendGenericEmail, templateMail } from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import {
+  sendGenericEmail,
+  templateMail,
+  sendEmailUsingTemplate,
+} from "../../shared/email";
 import { logger } from "../../shared/logger";
 
 export const sendNewFeasibilitySubmittedEmail = async ({
@@ -10,6 +14,18 @@ export const sendNewFeasibilitySubmittedEmail = async ({
   emails: string[];
   feasibilityUrl: string;
 }) => {
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CERTIFICATEURS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: emails.map((email) => ({ email })),
+      templateId: 568,
+      params: { feasibilityUrl },
+    });
+  }
+
   const htmlContent = mjml2html(
     templateMail({
       content: `
