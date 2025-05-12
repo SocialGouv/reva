@@ -223,8 +223,7 @@ const CandidacySummaryPage = () => {
             <EnhancedSectionCard title="Certificateur">
               <div className="ml-10 mr-6">
                 <p className="text-xl font-bold mb-0 leading-loose">
-                  {candidacy.certificationAuthorities &&
-                    candidacy.certificationAuthorities[0]?.label}
+                  {candidacy.certificationAuthorities[0]?.label}
                 </p>
                 <div>
                   {candidacy.certificationAuthorityLocalAccounts &&
@@ -242,20 +241,13 @@ const CandidacySummaryPage = () => {
                       ),
                     )
                   ) : (
-                    <>
-                      {candidacy.certificationAuthorities && (
-                        <p>
-                          {
-                            candidacy.certificationAuthorities[0]
-                              ?.contactFullName
-                          }
-                          <br />
-                          {candidacy.certificationAuthorities[0]?.contactEmail}
-                          <br />
-                          {candidacy.certificationAuthorities[0]?.contactPhone}
-                        </p>
-                      )}
-                    </>
+                    <p>
+                      {candidacy.certificationAuthorities[0]?.contactFullName}
+                      <br />
+                      {candidacy.certificationAuthorities[0]?.contactEmail}
+                      <br />
+                      {candidacy.certificationAuthorities[0]?.contactPhone}
+                    </p>
                   )}
                 </div>
               </div>
