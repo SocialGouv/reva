@@ -29,6 +29,8 @@ const getCandidacyById = graphql(`
       organism {
         label
         contactAdministrativeEmail
+        emailContact
+        nomPublic
         maisonMereAAP {
           id
         }

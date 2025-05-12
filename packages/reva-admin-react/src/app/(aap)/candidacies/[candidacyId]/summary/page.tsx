@@ -299,9 +299,12 @@ const CandidacySummaryPage = () => {
                 </div>
                 {candidacy.organism ? (
                   <>
-                    <p className="mb-0">{candidacy.organism.label}</p>
                     <p className="mb-0">
-                      {candidacy.organism.contactAdministrativeEmail}
+                      {candidacy.organism.nomPublic || candidacy.organism.label}
+                    </p>
+                    <p className="mb-0">
+                      {candidacy.organism.emailContact ||
+                        candidacy.organism.contactAdministrativeEmail}
                     </p>
                   </>
                 ) : (
