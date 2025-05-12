@@ -1,6 +1,10 @@
 import mjml2html from "mjml";
-
-import { sendEmailWithLink, templateMail } from "../../shared/email";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import {
+  sendEmailWithLink,
+  templateMail,
+  sendEmailUsingTemplate,
+} from "../../shared/email";
 
 export const sendConfirmationCandidacySubmissionEmail = async ({
   email,
@@ -28,6 +32,22 @@ export const sendConfirmationCandidacySubmissionEmail = async ({
         <li>Afin d’optimiser votre premier rendez-vous avec votre accompagnateur, nous vous invitons à créer votre compte <a href="https://www.moncompteformation.gouv.fr/espace-prive/html/#/">CPF</a> si ce n’est pas déjà fait, à vous munir de vos codes d’accès à votre compte CPF et consulter le solde de votre droit CPF.</li>
       </ul>`;
 
+  const useBrevoTemplate = await isFeatureActiveForUser({
+    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CANDIDATE_EMAILS",
+  });
+
+  if (useBrevoTemplate) {
+    return sendEmailUsingTemplate({
+      to: { email },
+      templateId: 666,
+      params: {
+        organismName,
+        organismEmail,
+        candidacyFundedByFranceVae,
+      },
+    });
+  }
+
   const htmlContent = (url: string) =>
     mjml2html(
       templateMail({
@@ -36,7 +56,7 @@ export const sendConfirmationCandidacySubmissionEmail = async ({
       <p>Bonjour,</p>
       <p>Votre candidature sur le site France VAE a bien été enregistrée !</p>
       <p>Vous avez choisi :</p>
-     
+
       <p>${organismName} pour vous accompagner tout au long de votre parcours.</p>
       <p>Un <b>accompagnateur de cet organisme</b> prendra contact avec vous dans les prochains jours pour vous proposer un premier entretien afin de bien comprendre votre souhait de parcours et de vous guider au mieux dans sa réalisation.</p>
       <p><b>En cas de questions ou remarques</b>, vous pouvez contacter votre accompagnateur par e-mail à l'adresse suivante : ${organismEmail}</p>
