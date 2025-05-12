@@ -1,6 +1,5 @@
 "use client";
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { AddCertificationAuthorityLocalAccountPageContent } from "@/components/certification-authority/local-account/add-local-account-page-content/AddCertificationAuthorityLocalAccountPageContent";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
@@ -23,36 +22,7 @@ export default function AddLocalAccountPage() {
       <p className="mb-12">
         Retrouvez l’ensemble des informations liées à ce compte local.
       </p>
-      <div className="w-full flex flex-col gap-8">
-        <EnhancedSectionCard
-          data-test="local-account-general-information-summary-card"
-          title="Informations générales"
-          titleIconClass="fr-icon-information-fill"
-          status="TO_COMPLETE"
-          isEditable
-          buttonOnClickHref="/certification-authorities/settings/local-accounts/add-local-account/general-information"
-        >
-          <SmallNotice>
-            Commencez par remplir les informations générales liées au compte.
-          </SmallNotice>
-        </EnhancedSectionCard>
-        <EnhancedSectionCard
-          title="Zone d’intervention"
-          titleIconClass="fr-icon-road-map-fill"
-          status="TO_COMPLETE"
-          isEditable
-          buttonOnClickHref="#"
-          disabled
-        />
-        <EnhancedSectionCard
-          title="Certifications gérées"
-          titleIconClass="fr-icon-award-fill"
-          status="TO_COMPLETE"
-          isEditable
-          buttonOnClickHref="#"
-          disabled
-        />
-      </div>
+      <AddCertificationAuthorityLocalAccountPageContent generalInformationPageUrl="/certification-authorities/settings/local-accounts/add-local-account/general-information" />
       <Button
         className="mt-12"
         priority="secondary"
