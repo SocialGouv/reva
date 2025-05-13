@@ -38,8 +38,8 @@ export const FilterBar = () => {
           Date de création décroissante
         </option>
         <option value="DATE_CREATION_ASC">Date de création croissante</option>
-        <option value="DATE_ENVOI_DESC">Date d'envoie décroissante</option>
-        <option value="DATE_ENVOI_ASC">Date d'envoie croissante</option>
+        <option value="DATE_ENVOI_DESC">Date d'envoi décroissante</option>
+        <option value="DATE_ENVOI_ASC">Date d'envoi croissante</option>
       </Select>
     </div>
   );
