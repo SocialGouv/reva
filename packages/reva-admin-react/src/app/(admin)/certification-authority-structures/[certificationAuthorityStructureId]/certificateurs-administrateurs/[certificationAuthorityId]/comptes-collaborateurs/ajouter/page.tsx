@@ -90,7 +90,7 @@ export default function AddLocalAccountPage() {
         Retrouvez l’ensemble des informations liées à ce compte local.
       </p>
       <AddCertificationAuthorityLocalAccountPageContent
-        generalInformationPageUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/ajouter/general-information`}
+        generalInformationPageUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/ajouter/informations-generales`}
       />
       <Button
         className="mt-12"
