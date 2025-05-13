@@ -210,6 +210,7 @@ input UpdateOrganismDegreesAndFormacodesInput {
   organismId: ID!
   degreeIds: [ID!]!
   formacodeIds: [ID!]!
+  conventionCollectiveIds: [ID!]!
 }
 
 type MaisonMereAAPsPaginated {

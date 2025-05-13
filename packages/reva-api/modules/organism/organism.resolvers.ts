@@ -6,6 +6,7 @@ import {
 import mercurius from "mercurius";
 
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
@@ -24,6 +25,8 @@ import { adminCreateMaisonMereAAPLegalInformationValidationDecision } from "./fe
 import { adminUpdateLegalInformationValidationStatus } from "./features/adminUpdateMaisonMereAAP";
 import { createLieuAccueilInfo } from "./features/createLieuAccueilInfo";
 import { createOrganismAccount } from "./features/createOrganismAccount";
+import { createOrUpdateOnSiteOrganismGeneralInformation } from "./features/createOrUpdateOnSiteOrganismGeneralInformation";
+import { createOrUpdateRemoteOrganismGeneralInformation } from "./features/createOrUpdateRemoteOrganismGeneralInformation";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
@@ -44,6 +47,7 @@ import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganism
 import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
 import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
+import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
 import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
 import { updateMaisonMereIsSignalized } from "./features/updateMaisonMereIsSignalized";
 import { updateMaisonMereLegalInformation } from "./features/updateMaisonMereLegalInformation";
@@ -54,16 +58,12 @@ import { resolversSecurityMap } from "./organism.security";
 import {
   CreateLieuAccueilInfoInput,
   CreateOrganismAccountInput,
+  OrganismInformationsCommerciales,
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
   UpdateMaisonMereLegalInformationInput,
   UpdateOrganimsAccountAndOrganismInput,
-  OrganismInformationsCommerciales,
 } from "./organism.types";
-import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
-import { createOrUpdateOnSiteOrganismGeneralInformation } from "./features/createOrUpdateOnSiteOrganismGeneralInformation";
-import { createOrUpdateRemoteOrganismGeneralInformation } from "./features/createOrUpdateRemoteOrganismGeneralInformation";
-import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 
 const unsafeResolvers = {
   Account: {
@@ -332,6 +332,7 @@ const unsafeResolvers = {
           organismId: string;
           degreeIds: string[];
           formacodeIds: string[];
+          conventionCollectiveIds: string[];
         };
       },
       context: GraphqlContext,
@@ -340,6 +341,7 @@ const unsafeResolvers = {
         organismId: params.data.organismId,
         degreeIds: params.data.degreeIds,
         formacodeIds: params.data.formacodeIds,
+        conventionCollectiveIds: params.data.conventionCollectiveIds,
         userInfo: buildAAPAuditLogUserInfoFromContext(context),
       }),
     organism_createAccount: async (

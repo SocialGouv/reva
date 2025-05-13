@@ -8,11 +8,13 @@ export const updateOrganismDegreesAndFormacodes = async ({
   organismId,
   degreeIds,
   formacodeIds,
+  conventionCollectiveIds,
   userInfo,
 }: {
   organismId: string;
   degreeIds: string[];
   formacodeIds: string[];
+  conventionCollectiveIds: string[];
   userInfo: AAPAuditLogUserInfo;
 }) => {
   const formacodes = await prismaClient.formacode.findMany({
@@ -48,6 +50,15 @@ export const updateOrganismDegreesAndFormacodes = async ({
 
     prismaClient.organism.findUnique({
       where: { id: organismId },
+    }),
+    prismaClient.organismOnConventionCollective.deleteMany({
+      where: { organismId },
+    }),
+    prismaClient.organismOnConventionCollective.createMany({
+      data: conventionCollectiveIds.map((ccnId) => ({
+        organismId,
+        ccnId,
+      })),
     }),
   ]);
 
