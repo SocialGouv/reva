@@ -9,6 +9,8 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
   ) {
     certification_authority_getCertificationAuthorityLocalAccount(id: $id) {
       id
+      contactFullName
+      contactEmail
       certifications {
         id
         codeRncp
