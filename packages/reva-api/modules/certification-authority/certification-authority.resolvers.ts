@@ -223,11 +223,9 @@ const unsafeResolvers = {
       params: {
         input: CreateCertificationAuthorityLocalAccountInput;
       },
-      context: GraphqlContext,
     ) =>
       createCertificationAuthorityLocalAccount({
         ...params.input,
-        certificationAuthorityKeycloakId: context.auth.userInfo?.sub || "",
       }),
 
     certification_authority_createCertificationAuthority: async (

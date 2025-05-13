@@ -2,35 +2,24 @@ import { Account } from "@prisma/client";
 
 import { prismaClient } from "../../../prisma/client";
 import { createAccount } from "../../account/features/createAccount";
-import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
 import { FunctionalError } from "../../shared/error/functionalError";
 import { CreateCertificationAuthorityLocalAccountInput } from "../certification-authority.types";
 
 export const createCertificationAuthorityLocalAccount = async ({
+  certificationAuthorityId,
   accountFirstname,
   accountLastname,
   accountEmail,
   departmentIds,
   certificationIds,
-  certificationAuthorityKeycloakId,
   contactFullName,
   contactEmail,
   contactPhone,
 }: CreateCertificationAuthorityLocalAccountInput) => {
-  const certificationAuthorityAccount = await getAccountByKeycloakId({
-    keycloakId: certificationAuthorityKeycloakId,
-  });
-
-  if (!certificationAuthorityAccount) {
-    throw new Error(
-      "Erreur pendant la récupération du compte de l'utiliseur de l'autorité de certification",
-    );
-  }
-
   const certificationAuthority =
-    await prismaClient.certificationAuthority.findFirst({
+    await prismaClient.certificationAuthority.findUnique({
       where: {
-        id: certificationAuthorityAccount?.certificationAuthorityId || "",
+        id: certificationAuthorityId,
       },
     });
 

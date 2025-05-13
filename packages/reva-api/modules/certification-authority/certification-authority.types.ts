@@ -19,7 +19,7 @@ export interface CreateCertificationAuthorityLocalAccountInput {
   accountEmail: string;
   departmentIds: string[];
   certificationIds: string[];
-  certificationAuthorityKeycloakId: string;
+  certificationAuthorityId: string;
   contactFullName?: string | null;
   contactEmail?: string | null;
   contactPhone?: string | null;

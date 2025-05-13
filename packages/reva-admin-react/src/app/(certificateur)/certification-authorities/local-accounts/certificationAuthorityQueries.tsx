@@ -107,9 +107,17 @@ export const useCertificationAuthorityQueries = () => {
       ?.certificationAuthority;
 
   const useCreateCertificationAuthorityMutation = useMutation({
-    mutationFn: (data: CreateCertificationAuthorityLocalAccountInput) =>
+    mutationFn: (
+      data: Omit<
+        CreateCertificationAuthorityLocalAccountInput,
+        "certificationAuthorityId"
+      >,
+    ) =>
       graphqlClient.request(createCertificationAuthorityMutation, {
-        data,
+        data: {
+          ...data,
+          certificationAuthorityId: certifictionAuthority?.id || "",
+        },
       }),
   });
 

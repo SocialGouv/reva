@@ -34,15 +34,23 @@ export const useAddLocalAccountGeneralInformationPage = () => {
     queryFn: () => graphqlClient.request(getCertificationAuthorityQuery),
   });
 
-  const addCertificationAuthorityLocalAccount = useMutation({
-    mutationFn: (input: CreateCertificationAuthorityLocalAccountInput) =>
-      graphqlClient.request(addCertificationAuthorityLocalAccountMutation, {
-        input,
-      }),
-  });
-
   const certificationAuthority =
     data?.account_getAccountForConnectedUser?.certificationAuthority;
+
+  const addCertificationAuthorityLocalAccount = useMutation({
+    mutationFn: (
+      input: Omit<
+        CreateCertificationAuthorityLocalAccountInput,
+        "certificationAuthorityId"
+      >,
+    ) =>
+      graphqlClient.request(addCertificationAuthorityLocalAccountMutation, {
+        input: {
+          ...input,
+          certificationAuthorityId: certificationAuthority?.id || "",
+        },
+      }),
+  });
 
   return {
     certificationAuthority,
