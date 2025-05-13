@@ -1,8 +1,12 @@
 "use client";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -10,10 +14,6 @@ import {
   useActiveCertifications,
   useFormacodesCcnsDegreesForm,
 } from "./formacodesCcnsDegreesForm.hook";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { useQueryClient } from "@tanstack/react-query";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 const schema = z.object({
   organismDegrees: z
@@ -56,6 +56,7 @@ const FormacodesCcnsDegreesForm = ({
     organismTypology,
     organismAndReferentialStatus,
     updateOrganismDegreesAndFormacodes,
+    isAdmin,
   } = useFormacodesCcnsDegreesForm({ organismId });
 
   const queryClient = useQueryClient();
@@ -147,6 +148,9 @@ const FormacodesCcnsDegreesForm = ({
           .map((key) => data.organismFormacodes[key])
           .filter((od) => od.checked)
           .map((od) => od.code),
+        conventionCollectiveIds: data.organismConventionCollectives
+          .filter((oc) => oc.checked)
+          .map((oc) => oc.id),
       });
       queryClient.invalidateQueries({
         queryKey: [organismId],
@@ -166,6 +170,14 @@ const FormacodesCcnsDegreesForm = ({
     .map((degree) => degree.level);
 
   const selectedBranches = organismConventionCollectives.map((ccn) => ccn.id);
+
+  const canManageDomaines =
+    organismTypology === "expertFiliere" ||
+    organismTypology === "expertBrancheEtFiliere";
+
+  const canManageBranches =
+    organismTypology === "expertBranche" ||
+    organismTypology === "expertBrancheEtFiliere";
 
   const { certifications } = useActiveCertifications({
     domaines: selectedFormacodes,
@@ -200,18 +212,12 @@ const FormacodesCcnsDegreesForm = ({
             resetForm();
           }}
         >
-          <fieldset className="flex flex-col gap-4">
-            <legend className="text-3xl font-bold mb-4">
-              {organismTypology === "expertFiliere" && "Domaines"}
-              {organismTypology === "expertBranche" && "Branches"}
-              {organismTypology === "expertBrancheEtFiliere" &&
-                "Domaines et branches"}
-            </legend>
+          {canManageDomaines && (
+            <fieldset className="flex flex-col gap-4">
+              <legend className="text-3xl font-bold mb-4">Domaines</legend>
 
-            <div className="flex flex-col">
-              {(organismTypology === "expertFiliere" ||
-                organismTypology === "expertBrancheEtFiliere") &&
-                domains.map((domain) => (
+              <div className="flex flex-col">
+                {domains.map((domain) => (
                   <Accordion
                     className="[&_div]:pb-0"
                     key={domain.code}
@@ -233,55 +239,62 @@ const FormacodesCcnsDegreesForm = ({
                     />
                   </Accordion>
                 ))}
-            </div>
-
-            {(organismTypology === "expertBranche" ||
-              organismTypology === "expertBrancheEtFiliere") && (
-              <div className="flex flex-col">
-                <Checkbox
-                  legend={
-                    <p className="text-sm">
-                      Quelles sont les branches que vous couvrez ?
-                    </p>
-                  }
-                  disabled
-                  options={organismConventionCollectivesFields.map(
-                    (oc, ocIndex) => ({
-                      label: oc.label,
-                      nativeInputProps: {
-                        ...register(
-                          `organismConventionCollectives.${ocIndex}.checked`,
-                        ),
-                      },
-                    }),
-                  )}
-                />
-                <SmallNotice>
-                  Vous souhaitez modifier vos branches ? <br />
-                  Adressez-vous directement au support à support@vae.gouv.fr.
-                </SmallNotice>
               </div>
-            )}
-          </fieldset>
+            </fieldset>
+          )}
 
-          <fieldset className="flex flex-col gap-4">
-            <legend className="text-3xl font-bold mb-4">
-              Niveaux de certification
-            </legend>
-            <Checkbox
-              legend={
-                <p className="text-sm">
-                  Quels sont les niveaux de certification que vous couvrez ?
-                </p>
-              }
-              options={organismDegreesFields.map((od, odIndex) => ({
-                label: od.label,
-                nativeInputProps: {
-                  ...register(`organismDegrees.${odIndex}.checked`),
-                },
-              }))}
-            />
-          </fieldset>
+          <div
+            className={`flex flex-col gap-8 ${canManageDomaines ? "" : "md:grid md:grid-cols-2 md:col-span-2"}`}
+          >
+            <fieldset className="flex flex-col gap-4">
+              <legend className="text-3xl font-bold mb-4">
+                Niveaux de certification
+              </legend>
+              <Checkbox
+                legend={
+                  <p className="text-sm">
+                    Quels sont les niveaux de certification que vous couvrez ?
+                  </p>
+                }
+                options={organismDegreesFields.map((od, odIndex) => ({
+                  label: od.label,
+                  nativeInputProps: {
+                    ...register(`organismDegrees.${odIndex}.checked`),
+                  },
+                }))}
+              />
+            </fieldset>
+
+            {canManageBranches && (
+              <fieldset className="flex flex-col gap-4">
+                <legend className="text-3xl font-bold mb-4">Branches</legend>
+                <div className="flex flex-col">
+                  <Checkbox
+                    legend={
+                      <p className="text-sm">
+                        Quelles sont les branches que vous couvrez ?
+                      </p>
+                    }
+                    disabled={!isAdmin}
+                    options={organismConventionCollectivesFields.map(
+                      (oc, ocIndex) => ({
+                        label: oc.label,
+                        nativeInputProps: {
+                          ...register(
+                            `organismConventionCollectives.${ocIndex}.checked`,
+                          ),
+                        },
+                      }),
+                    )}
+                  />
+                  <SmallNotice>
+                    Vous souhaitez modifier vos branches ? <br />
+                    Adressez-vous directement au support à support@vae.gouv.fr.
+                  </SmallNotice>
+                </div>
+              </fieldset>
+            )}
+          </div>
 
           {certifications.length > 0 && (
             <fieldset className="col-span-2 flex flex-col bg-neutral-100 p-6">

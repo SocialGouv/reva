@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { ActiveCertificationsFiltersInput } from "@/graphql/generated/graphql";
@@ -59,6 +60,7 @@ export const useFormacodesCcnsDegreesForm = ({
   organismId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const { isAdmin } = useAuth();
 
   const {
     data: organismAndReferentialResponse,
@@ -90,16 +92,19 @@ export const useFormacodesCcnsDegreesForm = ({
       organismId,
       degreeIds,
       formacodeIds,
+      conventionCollectiveIds,
     }: {
       organismId: string;
       degreeIds: string[];
       formacodeIds: string[];
+      conventionCollectiveIds: string[];
     }) =>
       graphqlClient.request(updateOrganismDegreesAndFormacodesMutation, {
         data: {
           organismId,
           degreeIds,
           formacodeIds,
+          conventionCollectiveIds,
         },
       }),
   });
@@ -114,6 +119,7 @@ export const useFormacodesCcnsDegreesForm = ({
     organismTypology,
     organismAndReferentialStatus,
     updateOrganismDegreesAndFormacodes,
+    isAdmin,
   };
 };
 
