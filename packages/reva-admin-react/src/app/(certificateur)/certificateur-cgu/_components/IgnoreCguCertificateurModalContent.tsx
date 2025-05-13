@@ -5,8 +5,7 @@ export const IgnoreCguCertificateurModalContent = () => (
     </p>
     <ul className="mb-4 [&_li]:my-2">
       <li>
-        Vos certifications seront retirées de la liste des certifications
-        proposées aux candidats ;
+        Vos certifications seront inaccessibles pour les nouveaux candidats ;
       </li>
       <li>
         Votre accès à la plateforme sera bloqué jusqu'à l'acceptation de
