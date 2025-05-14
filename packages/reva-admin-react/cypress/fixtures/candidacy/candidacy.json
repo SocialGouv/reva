@@ -10,11 +10,13 @@
         "contactAdministrativeEmail": "organism@example.com"
       },
       "status": "PARCOURS_CONFIRME",
-      "certificationAuthorities": {
-        "label": "Un certificateur",
-        "contactFullName": "Jane Doe",
-        "contactEmail": "janedoe@uncertificateur.fr",
-        "contactPhone": "0323456789"
+      "feasibility": {
+        "certificationAuthority": {
+          "label": "Un certificateur",
+          "contactFullName": "Jane Doe",
+          "contactEmail": "janedoe@uncertificateur.fr",
+          "contactPhone": "0323456789"
+        }
       },
       "certificationAuthorityLocalAccounts": [
         {
