@@ -57,7 +57,7 @@ export default function InterventionAreaPage() {
 
   return (
     <div
-      className="flex flex-col h-full"
+      className="flex flex-col w-full h-full"
       data-test="update-certification-authority-local-account-intervention-area-page"
     >
       <AdminCertificationAuthorityLocalAccountBreadcrumb
