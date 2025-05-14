@@ -1,4 +1,4 @@
-import { stubQuery } from "../../../../../utils/graphql";
+import { stubQuery } from "../../../../utils/graphql";
 import certificationAuthorityFixture from "./fixtures/certification-authority.json";
 import activeFeaturesFixture from "./fixtures/active-features.json";
 
