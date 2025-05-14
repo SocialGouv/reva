@@ -25,9 +25,11 @@ export default function AddLocalAccountPage() {
 
   const {
     certificationAuthorityLocalAccount,
+    certificationAuthorityStructure,
     updateCertificationAuthorityLocalAccount,
   } = useUpdateLocalAccountGeneralInformationPage({
     certificationAuthorityLocalAccountId,
+    certificationAuthorityStructureId,
   });
 
   const handleFormSubmit = async (data: LocalAccountFormData) => {
@@ -65,9 +67,14 @@ export default function AddLocalAccountPage() {
     >
       <AdminCertificationAuthorityLocalAccountBreadcrumb
         certificationAuthorityStructureId={certificationAuthorityStructureId}
-        certificationAuthorityStructureLabel={certificationAuthorityStructureId}
+        certificationAuthorityStructureLabel={
+          certificationAuthorityStructure?.label || ""
+        }
         certificationAuthorityId={certificationAuthorityId}
-        certificationAuthoritylabel={certificationAuthorityId}
+        certificationAuthoritylabel={
+          certificationAuthorityLocalAccount?.certificationAuthority?.label ||
+          ""
+        }
         certificationAuthorityLocalAccountId={
           certificationAuthorityLocalAccountId
         }

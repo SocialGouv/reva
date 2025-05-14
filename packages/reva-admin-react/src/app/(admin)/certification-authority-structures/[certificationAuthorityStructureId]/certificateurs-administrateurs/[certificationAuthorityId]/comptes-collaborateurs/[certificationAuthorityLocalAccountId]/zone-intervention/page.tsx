@@ -23,11 +23,13 @@ export default function InterventionAreaPage() {
 
   const {
     certificationAuthorityLocalAccount,
+    certificationAuthorityStructure,
     regions,
     isLoading,
     updateCertificationAuthorityLocalAccountDepartments,
   } = useUpdateLocalAccountInterventionAreaPage({
     certificationAuthorityLocalAccountId,
+    certificationAuthorityStructureId,
   });
 
   const handleFormSubmit = async (data: InterventionAreaFormData) => {
@@ -60,9 +62,14 @@ export default function InterventionAreaPage() {
     >
       <AdminCertificationAuthorityLocalAccountBreadcrumb
         certificationAuthorityStructureId={certificationAuthorityStructureId}
-        certificationAuthorityStructureLabel={certificationAuthorityStructureId}
+        certificationAuthorityStructureLabel={
+          certificationAuthorityStructure?.label || ""
+        }
         certificationAuthorityId={certificationAuthorityId}
-        certificationAuthoritylabel={certificationAuthorityId}
+        certificationAuthoritylabel={
+          certificationAuthorityLocalAccount?.certificationAuthority?.label ||
+          ""
+        }
         certificationAuthorityLocalAccountId={
           certificationAuthorityLocalAccountId
         }

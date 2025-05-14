@@ -5,8 +5,9 @@ import { sortBy } from "lodash";
 import { useMemo } from "react";
 
 const getCertificationAuthorityLocalAccountQuery = graphql(`
-  query getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage(
+  query getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountInterventionAreaPage(
     $certificationAuthorityLocalAccountId: ID!
+    $certificationAuthorityStructureId: ID!
   ) {
     certification_authority_getCertificationAuthorityLocalAccount(
       id: $certificationAuthorityLocalAccountId
@@ -21,6 +22,7 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
         label
       }
       certificationAuthority {
+        label
         departments {
           id
           label
@@ -31,11 +33,17 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
         }
       }
     }
+    certification_authority_getCertificationAuthorityStructure(
+      id: $certificationAuthorityStructureId
+    ) {
+      id
+      label
+    }
   }
 `);
 
 const updateCertificationAuthorityLocalAccountDepartmentsMutation = graphql(`
-  mutation updateCertificationAuthorityLocalAccountDepartmentsForUpdateLocalAccountInterventionAreaPage(
+  mutation updateCertificationAuthorityLocalAccountDepartmentsForAdminUpdateLocalAccountInterventionAreaPage(
     $certificationAuthorityLocalAccountId: ID!
     $departmentIds: [String!]!
   ) {
@@ -54,8 +62,10 @@ const updateCertificationAuthorityLocalAccountDepartmentsMutation = graphql(`
 
 export const useUpdateLocalAccountInterventionAreaPage = ({
   certificationAuthorityLocalAccountId,
+  certificationAuthorityStructureId,
 }: {
   certificationAuthorityLocalAccountId: string;
+  certificationAuthorityStructureId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
@@ -63,11 +73,12 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
   const { data, isLoading } = useQuery({
     queryKey: [
       certificationAuthorityLocalAccountId,
-      "getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
+      "getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
     ],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityLocalAccountQuery, {
         certificationAuthorityLocalAccountId,
+        certificationAuthorityStructureId,
       }),
   });
 
@@ -84,7 +95,7 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
       queryClient.invalidateQueries({
         queryKey: [
           certificationAuthorityLocalAccountId,
-          "getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
+          "getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
         ],
       });
     },
@@ -92,6 +103,9 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
 
   const certificationAuthorityLocalAccount =
     data?.certification_authority_getCertificationAuthorityLocalAccount;
+
+  const certificationAuthorityStructure =
+    data?.certification_authority_getCertificationAuthorityStructure;
 
   type Region = {
     id: string;
@@ -126,6 +140,7 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
 
   return {
     certificationAuthorityLocalAccount,
+    certificationAuthorityStructure,
     regions,
     isLoading,
     updateCertificationAuthorityLocalAccountDepartments,

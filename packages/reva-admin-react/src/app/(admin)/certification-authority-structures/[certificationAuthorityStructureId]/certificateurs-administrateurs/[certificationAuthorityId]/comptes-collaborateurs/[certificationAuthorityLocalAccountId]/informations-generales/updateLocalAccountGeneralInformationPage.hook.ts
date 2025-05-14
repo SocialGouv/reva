@@ -4,8 +4,9 @@ import { UpdateCertificationAuthorityLocalAccountInput } from "@/graphql/generat
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const getCertificationAuthorityLocalAccountQuery = graphql(`
-  query getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountGeneralInformationPage(
+  query getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountGeneralInformationPage(
     $certificationAuthorityLocalAccountId: ID!
+    $certificationAuthorityStructureId: ID!
   ) {
     certification_authority_getCertificationAuthorityLocalAccount(
       id: $certificationAuthorityLocalAccountId
@@ -29,6 +30,12 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
         id
       }
     }
+    certification_authority_getCertificationAuthorityStructure(
+      id: $certificationAuthorityStructureId
+    ) {
+      id
+      label
+    }
   }
 `);
 
@@ -47,8 +54,10 @@ const updateCertificationAuthorityLocalAccountGeneralInformationMutation =
 
 export const useUpdateLocalAccountGeneralInformationPage = ({
   certificationAuthorityLocalAccountId,
+  certificationAuthorityStructureId,
 }: {
   certificationAuthorityLocalAccountId: string;
+  certificationAuthorityStructureId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
@@ -56,11 +65,12 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
   const { data } = useQuery({
     queryKey: [
       certificationAuthorityLocalAccountId,
-      "certification_authority_getCertificationAuthorityLocalAccountGeneralInformationPage",
+      "getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountGeneralInformationPage",
     ],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityLocalAccountQuery, {
         certificationAuthorityLocalAccountId,
+        certificationAuthorityStructureId,
       }),
   });
 
@@ -90,8 +100,12 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
   const certificationAuthorityLocalAccount =
     data?.certification_authority_getCertificationAuthorityLocalAccount;
 
+  const certificationAuthorityStructure =
+    data?.certification_authority_getCertificationAuthorityStructure;
+
   return {
     certificationAuthorityLocalAccount,
+    certificationAuthorityStructure,
     updateCertificationAuthorityLocalAccount,
   };
 };
