@@ -137,7 +137,9 @@ const AapFeasibilityPage = () => {
             hasConfirmedCaduciteContestation={hasConfirmedCaduciteContestation}
           />
         }
-        certificationAuthorityLabel={feasibility?.certificationAuthority?.label}
+        certificationAuthorityLabel={
+          candidacy?.feasibility?.certificationAuthority?.label
+        }
       />
     );
   }

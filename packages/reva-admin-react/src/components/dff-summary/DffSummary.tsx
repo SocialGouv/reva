@@ -11,7 +11,7 @@ import dynamic from "next/dynamic";
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
 import CandidateSection from "./_components/CandidateSection";
-import { CertificationAuthoritySection } from "./_components/CertificationAuthoritySection";
+import { ContactInfosSection } from "../../app/contact-infos-section/ContactInfosSection";
 import CertificationSection from "./_components/CertificationSection";
 import DecisionSection from "./_components/DecisionSection";
 import EligibilitySection from "./_components/EligibilitySection";
@@ -33,7 +33,6 @@ export function DffSummary({
   dematerializedFeasibilityFile,
   candidacy,
   FeasibilityBanner,
-  certificationAuthorityLabel,
   displayGiveYourDecisionSubtitle = false,
 }: {
   dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
@@ -133,9 +132,17 @@ export function DffSummary({
           attachments={attachments as DffAttachment[]}
           swornStatementFile={swornStatementFile}
         />
-        <CertificationAuthoritySection
-          certificationAuthorityLabel={certificationAuthorityLabel}
-        />
+        {candidacy?.feasibility?.certificationAuthority && (
+          <ContactInfosSection
+            certificationAuthority={
+              candidacy.feasibility?.certificationAuthority
+            }
+            certificationAuthorityLocalAccounts={
+              candidacy.certificationAuthorityLocalAccounts
+            }
+            organism={candidacy.organism}
+          />
+        )}
       </div>
     </div>
   );

@@ -10,6 +10,29 @@ const getCandidacyById = graphql(`
       collectiveHourCount
       additionalHourCount
       isCertificationPartial
+      organism {
+        contactAdministrativePhone
+        contactAdministrativeEmail
+        adresseVille
+        adresseCodePostal
+        adresseInformationsComplementaires
+        adresseNumeroEtNomDeRue
+        emailContact
+        telephone
+        nomPublic
+        label
+      }
+      certificationAuthorities {
+        contactFullName
+        contactEmail
+        contactPhone
+        label
+      }
+      certificationAuthorityLocalAccounts {
+        contactFullName
+        contactEmail
+        contactPhone
+      }
       experiences {
         id
         title
@@ -40,6 +63,9 @@ const getCandidacyById = graphql(`
         feasibilityFileSentAt
         certificationAuthority {
           label
+          contactFullName
+          contactEmail
+          contactPhone
         }
         history {
           id
