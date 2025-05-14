@@ -47,15 +47,11 @@ export const DashboardSidebar = ({
         {candidacy.organism && <AapContactTile organism={candidacy.organism} />}
         {candidacy.feasibility?.certificationAuthority && (
           <CertificationAuthorityContactTile
-            certificationAuthorityLabel={
-              candidacy.feasibility?.certificationAuthority.label
+            certificationAuthority={
+              candidacy.feasibility.certificationAuthority
             }
-            certificationAuthorityContactFullName={
-              candidacy.feasibility?.certificationAuthority.contactFullName ??
-              ""
-            }
-            certificationAuthorityContactEmail={
-              candidacy.feasibility?.certificationAuthority.contactEmail ?? ""
+            certificationAuthorityLocalAccounts={
+              candidacy.certificationAuthorityLocalAccounts
             }
           />
         )}

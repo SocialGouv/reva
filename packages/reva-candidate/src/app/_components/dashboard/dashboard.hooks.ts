@@ -10,6 +10,11 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         activeDossierDeValidation {
           decision
         }
+        certificationAuthorityLocalAccounts {
+          contactFullName
+          contactEmail
+          contactPhone
+        }
         candidacyContestationsCaducite {
           contestationSentAt
           certificationAuthorityContestationDecision
@@ -63,6 +68,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           certificationAuthority {
             contactEmail
             contactFullName
+            contactPhone
             label
           }
         }
