@@ -8,12 +8,6 @@ const getCandidacyById = graphql(`
       id
       financeModule
       typeAccompagnement
-      certificationAuthorities {
-        label
-        contactFullName
-        contactEmail
-        contactPhone
-      }
       certificationAuthorityLocalAccounts {
         contactFullName
         contactEmail
@@ -93,6 +87,12 @@ const getCandidacyById = graphql(`
       }
       feasibilityFormat
       feasibility {
+        certificationAuthority {
+          label
+          contactFullName
+          contactEmail
+          contactPhone
+        }
         feasibilityFileSentAt
         decision
       }
