@@ -8,7 +8,7 @@ import {
 
 import { useHooks } from "./FeasibiltyStatus.hooks";
 
-import { CertificationAuthorityLocalAccounts } from "../CertificationAuthorityLocalAccounts";
+import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 
 interface Props {
   candidacyId: string;
@@ -21,6 +21,9 @@ export const FeasibiltyStatus = (props: Props): JSX.Element => {
 
   const feasibility = candidacy.data?.getCandidacyById?.feasibility;
   const certificationAuthority = feasibility?.certificationAuthority;
+  const organism = candidacy.data?.getCandidacyById?.organism;
+  const certificationAuthorityLocalAccounts =
+    candidacy.data?.getCandidacyById?.certificationAuthorityLocalAccounts;
 
   const uploadedPdf = feasibility?.feasibilityUploadedPdf;
   const feasibilityFile = uploadedPdf?.feasibilityFile;
@@ -83,17 +86,13 @@ export const FeasibiltyStatus = (props: Props): JSX.Element => {
       )}
 
       {certificationAuthority && (
-        <>
-          <CertificationAuthorityLocalAccounts
-            certificationAuthorityId={certificationAuthority.id}
-            certificationId={
-              candidacy.data?.getCandidacyById?.certification?.id
-            }
-            departmentId={
-              candidacy.data?.getCandidacyById?.candidate?.department?.id
-            }
-          />
-        </>
+        <ContactInfosSection
+          certificationAuthority={certificationAuthority}
+          certificationAuthorityLocalAccounts={
+            certificationAuthorityLocalAccounts
+          }
+          organism={organism}
+        />
       )}
 
       {feasibility?.history && feasibility.history.length > 0 && (

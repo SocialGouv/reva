@@ -14,6 +14,23 @@ const getCandidacyQuery = graphql(`
           id
         }
       }
+      organism {
+        contactAdministrativePhone
+        contactAdministrativeEmail
+        adresseVille
+        adresseCodePostal
+        adresseInformationsComplementaires
+        adresseNumeroEtNomDeRue
+        emailContact
+        telephone
+        nomPublic
+        label
+      }
+      certificationAuthorityLocalAccounts {
+        contactFullName
+        contactEmail
+        contactPhone
+      }
       certification {
         id
         label
@@ -36,6 +53,7 @@ const getCandidacyQuery = graphql(`
           label
           contactFullName
           contactEmail
+          contactPhone
         }
         feasibilityUploadedPdf {
           feasibilityFile {

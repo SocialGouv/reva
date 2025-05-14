@@ -59,7 +59,7 @@ export const ContactInfosSection = ({
           />
         )}
         <Tile
-          className="basis-1/2 h-auto"
+          className="basis-1/2 grow h-auto"
           title="Certificateur"
           small
           orientation="horizontal"
