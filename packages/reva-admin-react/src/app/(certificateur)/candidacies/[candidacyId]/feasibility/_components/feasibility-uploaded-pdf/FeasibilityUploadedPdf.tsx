@@ -1,5 +1,4 @@
 import { BackButton } from "@/components/back-button/BackButton";
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { errorToast } from "@/components/toast/toast";
@@ -16,6 +15,7 @@ import {
   FeasibilityValidationFormData,
 } from "../FeasibilityValidationForm";
 import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
+import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 
 export const FeasibilityUploadedPdf = () => {
   const { candidacy, feasibility, submitFeasibilityDecision } =
@@ -171,18 +171,14 @@ export const FeasibilityUploadedPdf = () => {
             />
           </div>
 
-          {candidacy.typeAccompagnement === "ACCOMPAGNE" && (
-            <GrayCard>
-              <h5 className="text-2xl font-bold mb-4">
-                Architecte Accompagnateur de Parcours
-              </h5>
-              <h6 className="text-xl font-bold mb-4">
-                {candidacy.organism?.label}
-              </h6>
-              <p className="text-lg mb-0">
-                {candidacy.organism?.contactAdministrativeEmail}
-              </p>
-            </GrayCard>
+          {feasibility?.certificationAuthority && (
+            <ContactInfosSection
+              certificationAuthority={feasibility?.certificationAuthority}
+              certificationAuthorityLocalAccounts={
+                candidacy.certificationAuthorityLocalAccounts
+              }
+              organism={candidacy?.organism}
+            />
           )}
 
           {candidacy.typeAccompagnement === "AUTONOME" && (

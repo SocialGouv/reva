@@ -14,7 +14,6 @@ import {
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, toDate } from "date-fns";
 import Link from "next/link";
@@ -31,6 +30,7 @@ import {
   createOrUpdateCertificationAuthorityDecision,
   useDematerializedFeasibility,
 } from "./dematerializedFeasibility.hook";
+import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 
 const FeasibilityBanner = ({
   isWaitingForDecision,
@@ -264,17 +264,14 @@ export const DematerializedFeasibility = () => {
         displayGiveYourDecisionSubtitle
       />
 
-      {organism && (
-        <CallOut title="Architecte Accompagnateur de Parcours en charge du dossier :">
-          <div className="my-4 flex flex-col">
-            <span>{organism.label}</span>
-            <span>
-              {organism.adresseCodePostal} {organism.adresseVille}
-            </span>
-            <span>{organism.telephone}</span>
-            <span>{organism.emailContact}</span>
-          </div>
-        </CallOut>
+      {feasibility?.certificationAuthority && (
+        <ContactInfosSection
+          certificationAuthority={feasibility?.certificationAuthority}
+          certificationAuthorityLocalAccounts={
+            candidacy.certificationAuthorityLocalAccounts
+          }
+          organism={organism}
+        />
       )}
 
       {waitingForDecision && (

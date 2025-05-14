@@ -19,8 +19,21 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
         email
       }
       organism {
-        label
+        contactAdministrativePhone
         contactAdministrativeEmail
+        adresseVille
+        adresseCodePostal
+        adresseInformationsComplementaires
+        adresseNumeroEtNomDeRue
+        emailContact
+        telephone
+        nomPublic
+        label
+      }
+      certificationAuthorityLocalAccounts {
+        contactFullName
+        contactEmail
+        contactPhone
       }
       candidacyDropOut {
         status
@@ -32,6 +45,13 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
         decision
         decisionComment
         decisionSentAt
+        certificationAuthority {
+          id
+          label
+          contactFullName
+          contactEmail
+          contactPhone
+        }
         history {
           id
           decision

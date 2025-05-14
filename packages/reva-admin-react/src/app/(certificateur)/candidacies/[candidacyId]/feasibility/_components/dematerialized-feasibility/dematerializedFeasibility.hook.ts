@@ -9,6 +9,13 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
       decision
       decisionComment
       decisionSentAt
+      certificationAuthority {
+        id
+        label
+        contactFullName
+        contactEmail
+        contactPhone
+      }
       history {
         id
         decision
@@ -68,14 +75,21 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         id
         status
         organism {
-          label
-          telephone
-          emailContact
-          adresseCodePostal
+          contactAdministrativePhone
+          contactAdministrativeEmail
           adresseVille
-        }
-        certificationAuthorities {
+          adresseCodePostal
+          adresseInformationsComplementaires
+          adresseNumeroEtNomDeRue
+          emailContact
+          telephone
+          nomPublic
           label
+        }
+        certificationAuthorityLocalAccounts {
+          contactFullName
+          contactEmail
+          contactPhone
         }
         individualHourCount
         collectiveHourCount
