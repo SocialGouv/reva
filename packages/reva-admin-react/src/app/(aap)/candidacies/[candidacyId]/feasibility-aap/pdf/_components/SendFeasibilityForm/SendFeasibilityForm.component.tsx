@@ -16,8 +16,8 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
 
-import { CertificationAuthorityLocalAccounts } from "../CertificationAuthorityLocalAccounts";
 import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
+import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 
 const schema = z.object({
   feasibilityFile: z.object({
@@ -45,6 +45,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
   const { candidacy, sendFeasibility } = useSendFeasibilityForm(candidacyId);
 
   const feasibility = candidacy.data?.getCandidacyById?.feasibility;
+  const organism = candidacy.data?.getCandidacyById?.organism;
 
   const certificationAuthorities = useMemo(
     () => candidacy.data?.getCandidacyById?.certificationAuthorities || [],
@@ -64,6 +65,9 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
       setCertificationAuthorityId(certificationAuthorities[0].id);
     }
   }, [certificationAuthorities]);
+
+  const certificationAuthorityLocalAccounts =
+    certificationAuthority?.certificationAuthorityLocalAccounts;
 
   const {
     register,
@@ -245,14 +249,12 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
         )}
 
         {certificationAuthority && (
-          <CertificationAuthorityLocalAccounts
-            certificationAuthorityId={certificationAuthority.id}
-            certificationId={
-              candidacy.data?.getCandidacyById?.certification?.id
+          <ContactInfosSection
+            certificationAuthority={certificationAuthority}
+            certificationAuthorityLocalAccounts={
+              certificationAuthorityLocalAccounts
             }
-            departmentId={
-              candidacy.data?.getCandidacyById?.candidate?.department.id
-            }
+            organism={organism}
           />
         )}
 

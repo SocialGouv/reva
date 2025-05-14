@@ -9,8 +9,8 @@ type ContactInfosSectionProps = {
     contactPhone?: string | null;
   };
   certificationAuthorityLocalAccounts?: Array<{
-    contactFullName: string;
-    contactEmail: string;
+    contactFullName?: string | null;
+    contactEmail?: string | null;
     contactPhone?: string | null;
   } | null> | null;
   organism?: {
@@ -32,6 +32,10 @@ export const ContactInfosSection = ({
   organism,
   certificationAuthorityLocalAccounts,
 }: ContactInfosSectionProps) => {
+  const filteredAccounts = certificationAuthorityLocalAccounts?.filter(
+    (account) =>
+      account?.contactEmail !== null && account?.contactFullName !== null,
+  );
   return (
     <TileGroup icon="fr-icon-team-line" title="Contacts">
       <div className="flex flex-row" data-test="contact-infos-section">
@@ -66,9 +70,8 @@ export const ContactInfosSection = ({
           desc={
             <div data-test="certification-authority-contact-info-tile">
               {certificationAuthority?.label}
-              {certificationAuthorityLocalAccounts &&
-              certificationAuthorityLocalAccounts.length > 0 ? (
-                certificationAuthorityLocalAccounts.map((account, i) => (
+              {filteredAccounts && filteredAccounts.length > 0 ? (
+                filteredAccounts.map((account, i) => (
                   <div
                     key={i}
                     className="[&:not(:last-child)]:border-b-2 [&:not(:last-child)]:mb-4 [&:not(:last-child)]:pb-4"

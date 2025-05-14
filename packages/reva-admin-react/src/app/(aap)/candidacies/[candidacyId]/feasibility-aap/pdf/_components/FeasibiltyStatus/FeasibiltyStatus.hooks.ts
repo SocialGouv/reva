@@ -37,12 +37,6 @@ const getCandidacyQuery = graphql(`
         codeRncp
         typeDiplome
       }
-      certificationAuthorities {
-        id
-        label
-        contactFullName
-        contactEmail
-      }
       feasibility {
         id
         decision

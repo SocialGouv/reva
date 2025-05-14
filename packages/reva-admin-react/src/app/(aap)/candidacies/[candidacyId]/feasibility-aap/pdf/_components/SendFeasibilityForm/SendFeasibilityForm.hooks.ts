@@ -17,6 +17,18 @@ const getCandidacyQuery = graphql(`
           label
         }
       }
+      organism {
+        contactAdministrativePhone
+        contactAdministrativeEmail
+        adresseVille
+        adresseCodePostal
+        adresseInformationsComplementaires
+        adresseNumeroEtNomDeRue
+        emailContact
+        telephone
+        nomPublic
+        label
+      }
       certification {
         id
         label
@@ -24,6 +36,11 @@ const getCandidacyQuery = graphql(`
         typeDiplome
       }
       certificationAuthorities {
+        certificationAuthorityLocalAccounts {
+          contactFullName
+          contactEmail
+          contactPhone
+        }
         id
         label
         contactFullName
