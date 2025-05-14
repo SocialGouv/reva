@@ -48,10 +48,11 @@ context("main page", () => {
       cy.wait(
         "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
       );
-
       cy.get(
-        '[data-test="update-certification-authority-local-account-page"] h1',
-      ).should("have.text", "jane doe");
+        '[data-test="update-certification-authority-local-account-page"]  h1',
+      )
+        .first()
+        .should("have.text", "jane doe");
     });
   });
 });

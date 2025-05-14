@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useComptesCollaborateursPage } from "./comptesCollaborateurs.hooks";
 import { CertificationAuthorityStructureBreadcrumb } from "../../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -10,8 +10,14 @@ import { Impersonate } from "@/components/impersonate";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import LocalAccountGeneraInformationCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { successToast } from "@/components/toast/toast";
+import { graphqlErrorToast } from "@/components/toast/toast";
 const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   const { isFeatureActive } = useFeatureflipping();
+
+  const router = useRouter();
 
   const parametresCertificateurFeatureActive = isFeatureActive(
     "PARAMETRES_CERTIFICATEUR",
@@ -28,6 +34,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
 
   const {
     certificationAuthorityLocalAccount,
+    deleteCertificationAuthorityLocalAccount,
     getCertificationAuthorityLocalAccountStatus,
   } = useComptesCollaborateursPage({ certificationAuthorityLocalAccountId });
 
@@ -56,6 +63,26 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
       region.departments.push(department);
     }
   });
+
+  const deleteConfirmationModal = createModal({
+    id: "delete-confirmation-modal",
+    isOpenedByDefault: false,
+  });
+
+  const handleDeleteCertificationAuthorityLocalAccount = async () => {
+    try {
+      await deleteCertificationAuthorityLocalAccount.mutateAsync(
+        certificationAuthorityLocalAccountId,
+      );
+      successToast("Compte local supprimé");
+      router.push(
+        `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`,
+      );
+    } catch (error) {
+      console.error(error);
+      graphqlErrorToast(error);
+    }
+  };
 
   return (
     <div
@@ -113,6 +140,24 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
           </p>
           {parametresCertificateurFeatureActive ? (
             <div className="flex flex-col gap-12">
+              <deleteConfirmationModal.Component
+                title="Vous allez supprimer ce compte."
+                buttons={[
+                  {
+                    children: "Annuler",
+                  },
+                  {
+                    onClick: handleDeleteCertificationAuthorityLocalAccount,
+                    children: "Continuer",
+                    nativeButtonProps: {
+                      "data-test":
+                        "delete-certification-authority-local-account-confirm-button",
+                    },
+                  },
+                ]}
+              >
+                <p>Cette action est irréversible.</p>
+              </deleteConfirmationModal.Component>
               <LocalAccountGeneraInformationCard
                 data-test="local-account-general-information-summary-card"
                 updateGeneralInformationPageUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/${certificationAuthorityLocalAccountId}/informations-generales`}
@@ -139,6 +184,34 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
                   certificationAuthorityLocalAccount.certifications
                 }
               />
+              <Tile
+                data-test="delete-certification-authority-local-account-button"
+                title={
+                  <span>
+                    <span className="fr-icon-delete-fill fr-icon--sm mr-2" />
+                    Supprimer ce compte local
+                  </span>
+                }
+                detail={
+                  <span>
+                    <span className="fr-icon-warning-fill fr-icon--sm mr-2" />
+                    La suppression d’un compte local est irréversible.
+                  </span>
+                }
+                small
+                orientation="horizontal"
+                buttonProps={{
+                  onClick: deleteConfirmationModal.open,
+                }}
+              />
+              <Button
+                priority="secondary"
+                linkProps={{
+                  href: "/certification-authorities/settings/",
+                }}
+              >
+                Retour
+              </Button>
             </div>
           ) : (
             <div className="flex flex-col gap-12">
