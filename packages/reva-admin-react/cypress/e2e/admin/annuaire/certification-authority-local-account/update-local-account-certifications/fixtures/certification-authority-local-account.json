@@ -1,0 +1,34 @@
+{
+  "data": {
+    "certification_authority_getCertificationAuthorityLocalAccount": {
+      "id": "ca2905e6-7888-4fb8-b4cc-85a8b855d1fb",
+      "account": {
+        "firstname": "jane",
+        "lastname": "doe",
+        "email": "monemail@example.com"
+      },
+      "certificationAuthority": {
+        "label": "Certification Authority",
+        "certifications": [
+          {
+            "id": "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
+            "label": "CQP Animateur d'équipe autonome de production industrielle"
+          },
+          {
+            "id": "0236bf82-e85d-4e88-927a-c93bb6c44efb",
+            "label": "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF"
+          },
+          {
+            "id": "032036b5-528e-4d06-bbe0-a7d180602bc1",
+            "label": "Titre professionnel Cariste d'entrepôt - CE "
+          }
+        ]
+      },
+      "certifications": [
+        {
+          "id": "0236bf82-e85d-4e88-927a-c93bb6c44efb"
+        }
+      ]
+    }
+  }
+}
