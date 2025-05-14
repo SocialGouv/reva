@@ -58,7 +58,10 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   });
 
   return (
-    <div className="flex flex-col flex-1">
+    <div
+      className="flex flex-col flex-1"
+      data-test="update-certification-authority-local-account-page"
+    >
       {certificationAuthorityLocalAccount && (
         <div className="flex flex-col">
           <CertificationAuthorityStructureBreadcrumb
@@ -111,6 +114,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
           {parametresCertificateurFeatureActive ? (
             <div className="flex flex-col gap-12">
               <LocalAccountGeneraInformationCard
+                data-test="local-account-general-information-summary-card"
                 updateGeneralInformationPageUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/${certificationAuthorityLocalAccountId}/informations-generales`}
                 contactFullName={
                   certificationAuthorityLocalAccount.contactFullName
@@ -123,11 +127,13 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
                 }
               />
               <InterventionAreaSummaryCard
+                data-test="intervention-area-summary-card"
                 updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/${certificationAuthorityLocalAccountId}/zone-intervention`}
                 regions={regionsAndDepartments}
               />
 
               <CertificationsSummaryCard
+                data-test="certifications-summary-card"
                 updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/${certificationAuthorityLocalAccountId}/certifications`}
                 certifications={
                   certificationAuthorityLocalAccount.certifications

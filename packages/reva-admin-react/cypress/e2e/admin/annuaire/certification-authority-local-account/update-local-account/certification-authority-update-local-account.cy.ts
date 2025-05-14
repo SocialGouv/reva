@@ -1,0 +1,244 @@
+import { stubQuery } from "../../../../../utils/graphql";
+import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
+import activeFeaturesFixture from "./fixtures/active-features.json";
+
+function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(req, "activeFeaturesForConnectedUser", activeFeaturesFixture);
+    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
+    stubQuery(
+      req,
+      "getMaisonMereCGUQuery",
+      "account/gestionnaire-cgu-accepted.json",
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const localAccountFixture: any = {
+      ...certificationAuthorityLocalAccountFixture,
+    };
+
+    if (params?.noContactDetails) {
+      localAccountFixture.data.certification_authority_getCertificationAuthorityLocalAccount.contactFullName =
+        null;
+      localAccountFixture.data.certification_authority_getCertificationAuthorityLocalAccount.contactEmail =
+        null;
+      localAccountFixture.data.certification_authority_getCertificationAuthorityLocalAccount.contactPhone =
+        null;
+    }
+
+    stubQuery(
+      req,
+      "getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+      localAccountFixture,
+    );
+  });
+}
+
+context("main page", () => {
+  context("when i access the update local account page ", () => {
+    it("display the page with a correct title", () => {
+      interceptUpdateLocalAccount();
+
+      cy.admin(
+        "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+      );
+
+      cy.get(
+        '[data-test="update-certification-authority-local-account-page"] h1',
+      ).should("have.text", "jane doe");
+    });
+  });
+});
+
+context("general information summary card", () => {
+  context("when i access the update local account page ", () => {
+    it("display the general information summary card with the correct information", () => {
+      interceptUpdateLocalAccount();
+
+      cy.admin(
+        "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+      );
+
+      cy.get(
+        '[data-test="local-account-general-information-summary-card"]',
+      ).should("exist");
+
+      cy.get(
+        '[data-test="local-account-general-information-summary-card"] h2',
+      ).should("have.text", "Informations générales");
+
+      cy.get(
+        '[data-test="local-account-general-information-summary-card"] [data-test="contact-full-name"]',
+      ).should("have.text", "contact full name");
+
+      cy.get(
+        '[data-test="local-account-general-information-summary-card"] [data-test="contact-email"]',
+      ).should("have.text", "contact.email@example.com");
+    });
+  });
+
+  context(
+    "when i access the update local account page with no contact details",
+    () => {
+      it("display the general information summary card with the correct information", () => {
+        interceptUpdateLocalAccount({ noContactDetails: true });
+
+        cy.admin(
+          "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869",
+        );
+
+        cy.wait("@activeFeaturesForConnectedUser");
+        cy.wait("@getOrganismForAAPVisibilityCheck");
+        cy.wait("@getMaisonMereCGUQuery");
+        cy.wait(
+          "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+        );
+
+        cy.get(
+          '[data-test="local-account-general-information-summary-card"] [data-test="no-contact-details-badge"]',
+        ).should("exist");
+      });
+    },
+  );
+});
+context("when i click on the update button ", () => {
+  it("redirect to the update general information page", () => {
+    interceptUpdateLocalAccount();
+
+    cy.admin(
+      "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869",
+    );
+    cy.wait("@activeFeaturesForConnectedUser");
+    cy.wait("@getOrganismForAAPVisibilityCheck");
+    cy.wait("@getMaisonMereCGUQuery");
+    cy.wait(
+      "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+    );
+
+    cy.get(
+      '[data-test="local-account-general-information-summary-card"] [data-test="action-button"]',
+    ).click();
+
+    cy.url().should(
+      "include",
+      "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869/informations-generales",
+    );
+  });
+});
+
+context("intervention area summary card", () => {
+  context("when i access the update local account page ", () => {
+    it("display the intervention area summary card with the correct information", () => {
+      interceptUpdateLocalAccount();
+
+      cy.admin(
+        "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+      );
+
+      cy.get('[data-test="intervention-area-summary-card"]').should("exist");
+
+      cy.get('[data-test="intervention-area-summary-card"] h2').should(
+        "have.text",
+        "Zone d'intervention",
+      );
+
+      cy.get('[data-test="department-tag-01"]').should("exist");
+      cy.get('[data-test="department-tag-63"]').should("exist");
+    });
+  });
+  context("when i click on the update button ", () => {
+    it("redirect to the update intervention area page", () => {
+      interceptUpdateLocalAccount();
+
+      cy.admin(
+        "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+      );
+
+      cy.get(
+        '[data-test="intervention-area-summary-card"] [data-test="action-button"]',
+      ).click();
+
+      cy.url().should(
+        "include",
+        "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869/zone-intervention/",
+      );
+    });
+  });
+});
+
+context("certifications summary card", () => {
+  context("when i access the update local account page ", () => {
+    it("display the certifications summary card with the correct information", () => {
+      interceptUpdateLocalAccount();
+
+      cy.admin(
+        "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+      );
+
+      cy.get('[data-test="certifications-summary-card"]').should("exist");
+
+      cy.get('[data-test="certifications-summary-card"] h2').should(
+        "have.text",
+        "Certifications gérées",
+      );
+
+      cy.get(
+        '[data-test="certifications-summary-card"] [data-test="certifications-count-badge"]',
+      ).should("have.text", "2 certifications gérées");
+    });
+  });
+  context("when i click on the update button ", () => {
+    it("redirect to the update certifications page", () => {
+      interceptUpdateLocalAccount();
+
+      cy.admin(
+        "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
+      );
+
+      cy.get(
+        '[data-test="certifications-summary-card"] [data-test="action-button"]',
+      ).click();
+
+      cy.url().should(
+        "include",
+        "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications/",
+      );
+    });
+  });
+});
