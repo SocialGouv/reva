@@ -733,6 +733,28 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='dff-summary']").should("exist");
     });
 
+    it("should display the contact info section with the correct information", () => {
+      visitFeasibility({
+        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
+      });
+      cy.get("[data-test='contact-infos-section']").within(() => {
+        cy.get("[data-test='organism-contact-info-tile']").should("exist");
+        cy.get("[data-test='organism-contact-info-tile']").contains(
+          "Organisme Lorem Ipsum nom public",
+        );
+      });
+
+      cy.get("[data-test='certification-authority-contact-info-tile']").should(
+        "exist",
+      );
+      cy.get("[data-test='certification-authority-local-account-0']").should(
+        "exist",
+      );
+      cy.get("[data-test='certification-authority-local-account-0']").contains(
+        "Jane Doe public contact",
+      );
+    });
+
     it("should display the feasibility summary when the decision is REJECTED", () => {
       const feasibilityRejectedDecision = {
         ...DEFAULT_FEASIBILITY_FILE,

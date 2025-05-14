@@ -34,7 +34,7 @@ export const ContactInfosSection = ({
 }: ContactInfosSectionProps) => {
   return (
     <TileGroup icon="fr-icon-team-line" title="Contacts">
-      <div className="flex flex-row">
+      <div className="flex flex-row" data-test="contact-infos-section">
         {organism && (
           <Tile
             className="basis-1/2 h-auto"
@@ -45,7 +45,7 @@ export const ContactInfosSection = ({
             title="Architecte accompagnateur de parcours"
             small
             desc={
-              <>
+              <div data-test="organism-contact-info-tile">
                 <div>{organism?.nomPublic || organism?.label}</div>
                 <div>{organism?.adresseNumeroEtNomDeRue}</div>
                 <div>{organism?.adresseInformationsComplementaires}</div>
@@ -54,7 +54,7 @@ export const ContactInfosSection = ({
                 </div>
                 <div>{organism?.telephone}</div>
                 <div>{organism?.emailContact}</div>
-              </>
+              </div>
             }
           />
         )}
@@ -64,7 +64,7 @@ export const ContactInfosSection = ({
           small
           orientation="horizontal"
           desc={
-            <div>
+            <div data-test="certification-authority-contact-info-tile">
               {certificationAuthority?.label}
               {certificationAuthorityLocalAccounts &&
               certificationAuthorityLocalAccounts.length > 0 ? (
@@ -80,11 +80,11 @@ export const ContactInfosSection = ({
                   </div>
                 ))
               ) : (
-                <>
+                <div data-test="certification-authority-contact-info-tile">
                   <div>{certificationAuthority?.contactFullName}</div>
                   <div>{certificationAuthority?.contactEmail}</div>
                   <div>{certificationAuthority?.contactPhone}</div>
-                </>
+                </div>
               )}
             </div>
           }

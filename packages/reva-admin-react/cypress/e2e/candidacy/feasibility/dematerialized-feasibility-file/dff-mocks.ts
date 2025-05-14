@@ -92,6 +92,12 @@ export const DEFAULT_FEASIBILITY_FILE = {
   feasibilityFileSentAt: null as null | number,
   history: [],
   dematerializedFeasibilityFile: DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+  certificationAuthority: {
+    label: "Un certificateur",
+    contactFullName: "Jane Doe",
+    contactEmail: "janedoe@uncertificateur.fr",
+    contactPhone: "0323456789",
+  },
 };
 
 export const DF_FORMATED_DATE_6_MONTHS_FROM_NOW = format(

@@ -4,6 +4,10 @@
       "id": "57bf364b-8c8b-4ff4-889b-66917e26d7d0",
       "isCertificationPartial": false,
       "isCaduque": false,
+      "organism": {
+        "label": "Organisme Lorem Ipsum",
+        "nomPublic": "Organisme Lorem Ipsum nom public"
+      },
       "experiences": [
         {
           "id": "b2927373-1073-44d7-b494-ea78c7c56b74",
@@ -35,12 +39,30 @@
         "label": "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
         "codeRncp": "37780"
       },
+      "certificationAuthorityLocalAccounts": [
+        {
+          "contactFullName": "Jane Doe public contact",
+          "contactEmail": "janedoepublic@uncertificateur.fr",
+          "contactPhone": "0123456789"
+        },
+        {
+          "contactFullName": "John Doe public contact",
+          "contactEmail": "johndoepublic@uncertificateur.fr",
+          "contactPhone": "023456789"
+        }
+      ],
       "feasibility": {
         "decision": "DRAFT",
         "decisionSentAt": null,
         "decisionComment": null,
         "feasibilityFileSentAt": null,
         "history": [],
+        "certificationAuthority": {
+          "label": "Un certificateur",
+          "contactFullName": "Jane Doe",
+          "contactEmail": "janedoe@uncertificateur.fr",
+          "contactPhone": "0323456789"
+        },
         "dematerializedFeasibilityFile": {
           "swornStatementFileId": null,
           "isReadyToBeSentToCandidate": false,

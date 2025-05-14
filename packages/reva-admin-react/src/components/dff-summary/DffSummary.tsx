@@ -132,7 +132,7 @@ export function DffSummary({
           attachments={attachments as DffAttachment[]}
           swornStatementFile={swornStatementFile}
         />
-        {candidacy?.feasibility?.certificationAuthority && (
+        {candidacy.feasibility?.certificationAuthority && (
           <ContactInfosSection
             certificationAuthority={
               candidacy.feasibility?.certificationAuthority
