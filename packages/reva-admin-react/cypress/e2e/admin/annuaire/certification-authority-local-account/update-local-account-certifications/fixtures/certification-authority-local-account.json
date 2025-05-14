@@ -29,6 +29,10 @@
           "id": "0236bf82-e85d-4e88-927a-c93bb6c44efb"
         }
       ]
+    },
+    "certification_authority_getCertificationAuthorityStructure": {
+      "id": "e8f214f1-3243-4dc6-8fe0-205d4cafd9d1",
+      "label": "myStructure"
     }
   }
 }
