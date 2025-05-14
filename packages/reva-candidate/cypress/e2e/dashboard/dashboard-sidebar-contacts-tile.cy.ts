@@ -240,6 +240,49 @@ context("Dashboard Sidebar - Contact Tiles", () => {
       );
     });
 
+    it("should display local accounts contact information when available", () => {
+      cy.fixture("candidate1.json").then(
+        (initialCandidate: CandidateFixture) => {
+          const candidate = resetContactData(initialCandidate);
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
+            {
+              certificationAuthority: {
+                label: "Test Certification Authority",
+                contactFullName: "John Doe",
+                contactEmail: "john.doe@authority.test",
+              },
+            };
+          (candidate.data.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorityLocalAccounts =
+            [
+              {
+                contactFullName: "Jane Doe public contact",
+                contactEmail: "janedoepublic@uncertificateur.fr",
+                contactPhone: "0123456789",
+              },
+              {
+                contactFullName: "John Doe public contact",
+                contactEmail: "johndoepublic@uncertificateur.fr",
+                contactPhone: "023456789",
+              },
+            ]),
+            interceptGraphQL(candidate);
+
+          cy.get('[data-test="certification-authority-contact-tile"]')
+            .contains("Test Certification Authority")
+            .should("be.visible");
+          cy.get('[data-test="certification-authority-contact-tile"]')
+            .contains("Jane Doe public contact")
+            .should("be.visible");
+          cy.get('[data-test="certification-authority-contact-tile"]')
+            .contains("janedoepublic@uncertificateur.fr")
+            .should("be.visible");
+          cy.get('[data-test="certification-authority-contact-tile"]')
+            .contains("0123456789")
+            .should("be.visible");
+        },
+      );
+    });
+
     it("should handle missing contact information", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
