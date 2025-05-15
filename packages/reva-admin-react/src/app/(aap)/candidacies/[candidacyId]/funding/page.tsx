@@ -2,13 +2,12 @@
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
 import { Candidacy } from "@/graphql/generated/graphql";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ChoixCandidatBlock } from "./_components/ChoixCandidatBlock";
 import { InformationCandidatBlock } from "./_components/InformationCandidatBlock";
@@ -16,7 +15,6 @@ import { ParcoursPersonnaliseBlock } from "./_components/ParcoursPersonnaliseBlo
 import { ResponsableFinancementBlock } from "./_components/ResponsableFinancementBlock";
 import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { z } from "zod";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 
@@ -78,15 +76,11 @@ const FundingPage = () => {
     candidacyId: string;
   }>();
   const router = useRouter();
-  const { isFeatureActive } = useFeatureflipping();
 
   const candidacySummaryUrl = `/candidacies/${candidacyId}/summary`;
 
-  const fundingRequestDisabled = isFeatureActive("FUNDING_REQUEST_DISABLED");
-
   const {
     candidacy,
-    createFundingRequestUnifvaeMutate,
     candidacyHasAlreadyFundingRequest,
     candidacyIsXpReva,
     candidacyIsLoading,
@@ -144,49 +138,9 @@ const FundingPage = () => {
   });
 
   const {
-    reset,
-    handleSubmit,
-    setError,
-    setFocus,
     register,
-    formState: { isDirty, isSubmitting, errors },
+    formState: { isSubmitting, errors },
   } = methods;
-
-  const onSubmit = async (data: CandidacyFundingFormData) => {
-    const dataToSend = JSON.parse(JSON.stringify(data));
-    delete dataToSend.confirmation;
-    try {
-      await createFundingRequestUnifvaeMutate(dataToSend);
-      successToast("La demande de financement a bien été enregistrée.");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      if (e.response?.errors) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return e.response.errors.forEach((error: any) => {
-          const isInputError = error.message.startsWith("input.");
-          if (isInputError) {
-            const errorField = error.message.split(".")[1].split(":")[0];
-            const errorMessage = error.message.split(":")[1].trim();
-            if (errorField && errorMessage) {
-              setError(errorField as keyof CandidacyFundingFormData, {
-                message: errorMessage,
-              });
-              setFocus(errorField as keyof CandidacyFundingFormData);
-              return;
-            }
-          }
-          graphqlErrorToast(e);
-        });
-      }
-      graphqlErrorToast(e);
-    }
-  };
-
-  useEffect(() => {
-    if (candidacy) {
-      reset(candidacyFormData);
-    }
-  }, [candidacy, reset, candidacyFormData]);
 
   if (candidacyIsLoading) {
     return null;
@@ -196,7 +150,7 @@ const FundingPage = () => {
     router.push(candidacySummaryUrl);
   }
 
-  return !isReadOnly && fundingRequestDisabled ? (
+  return !isReadOnly ? (
     <div className="flex flex-col w-full p-1 md:p-2">
       <h1>Demande de prise en charge</h1>
       <Alert
@@ -227,29 +181,21 @@ const FundingPage = () => {
         )}
       </div>
       <FormProvider {...methods}>
-        <form
-          data-test="funding-form"
-          className="flex flex-col"
-          onSubmit={handleSubmit(onSubmit)}
-          onReset={(e) => {
-            e.preventDefault();
-            reset(candidacyFormData);
-          }}
-        >
+        <form data-test="funding-form" className="flex flex-col">
           <InformationCandidatBlock
             candidacy={candidacy as Candidacy}
-            isReadOnly={isReadOnly}
+            isReadOnly
           />
           <CustomSeparator />
           <ChoixCandidatBlock candidacy={candidacy as Candidacy} />
           <CustomSeparator />
           <ParcoursPersonnaliseBlock
             candidacy={candidacy as Candidacy}
-            isReadOnly={isReadOnly}
+            isReadOnly
             isForfaitOnly={isForfaitOnly}
           />
           <CustomSeparator />
-          <ResponsableFinancementBlock isReadOnly={isReadOnly} />
+          <ResponsableFinancementBlock isReadOnly />
           <GrayCard className="mt-4 md:mt-0">
             <h2 className="text-lg md:text-xl">
               Avant de finaliser votre envoi :
@@ -262,7 +208,7 @@ const FundingPage = () => {
                     "Je confirme le montant de la prise en charge. Je ne pourrai pas modifier cette demande après son envoi.",
                   nativeInputProps: {
                     ...register("confirmation"),
-                    disabled: isReadOnly,
+                    disabled: true,
                   },
                 },
               ]}
@@ -278,7 +224,7 @@ const FundingPage = () => {
           <FormButtons
             backUrl={candidacySummaryUrl}
             formState={{
-              isDirty: isDirty && !isReadOnly,
+              isDirty: false,
               isSubmitting,
             }}
           />

@@ -1,10 +1,7 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import {
-  CandidacyStatusStep,
-  FundingRequestUnifvaeInput,
-} from "@/graphql/generated/graphql";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+import { useQuery } from "@tanstack/react-query";
 
 const getCandidateFundingRequestReva = graphql(`
   query getCandidateFundingRequestReva($candidacyId: UUID!) {
@@ -107,42 +104,14 @@ const getCandidacyByIdFunding = graphql(`
   }
 `);
 
-const createFundingRequestUnifvae = graphql(`
-  mutation createFundingRequestUnifvae(
-    $candidacyId: UUID!
-    $fundingRequest: FundingRequestUnifvaeInput!
-  ) {
-    candidacy_createFundingRequestUnifvae(
-      candidacyId: $candidacyId
-      fundingRequest: $fundingRequest
-    ) {
-      id
-    }
-  }
-`);
-
 export const useCandidacyFunding = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
-  const queryClient = useQueryClient();
   const { data: candidacyData, isLoading: candidacyIsLoading } = useQuery({
     queryKey: [candidacyId, "getCandidacyByIdFunding"],
     queryFn: () =>
       graphqlClient.request(getCandidacyByIdFunding, { candidacyId }),
   });
 
-  const {
-    mutateAsync: createFundingRequestUnifvaeMutate,
-    isPending: createFundingRequestUnifvaeIsPending,
-  } = useMutation({
-    mutationFn: (fundingRequest: FundingRequestUnifvaeInput) =>
-      graphqlClient.request(createFundingRequestUnifvae, {
-        fundingRequest,
-        candidacyId,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [candidacyId] });
-    },
-  });
   const candidacy = candidacyData?.getCandidacyById;
   const candidacyIsXpReva = candidacy?.financeModule === "unireva";
   const candidacyHasAlreadyFundingRequest = !!candidacy?.fundingRequestUnifvae;
@@ -186,8 +155,6 @@ export const useCandidacyFunding = (candidacyId: string) => {
   return {
     candidacy,
     candidacyIsLoading,
-    createFundingRequestUnifvaeMutate,
-    createFundingRequestUnifvaeIsPending,
     candidacyFundingRequest,
     candidacyIsXpReva,
     candidacyHasAlreadyFundingRequest,
