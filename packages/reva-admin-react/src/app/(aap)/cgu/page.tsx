@@ -10,7 +10,7 @@ export default function CguPage() {
   }
   return (
     <div>
-      <h1>Conditions générales d'utilisation</h1>
+      <h1>{cguResponse.titre}</h1>
       <Cgu
         cguHtml={cguResponse?.contenu ?? ""}
         chapo={cguResponse?.chapo ?? ""}

@@ -48,7 +48,7 @@ export default function CertificateurCguPage() {
 
   return (
     <div>
-      <h1>Conditions générales d'utilisation</h1>
+      <h1>{cguCertificateur.titre}</h1>
       <FormOptionalFieldsDisclaimer />
       <Cgu
         cguHtml={cguCertificateur.contenu ?? ""}
