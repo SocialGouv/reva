@@ -1,6 +1,4 @@
 import { Cgu } from "@/components/cgu/Cgu";
-import { HardCodedCgu } from "@/components/cgu/HardCodedCgu";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GetCguQuery } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
@@ -35,12 +33,6 @@ export const CguStep = ({
       ...professionalSpaceInfos,
     },
   });
-
-  const { isFeatureActive, status } = useFeatureflipping();
-  const showFromStrapi = isFeatureActive("CGU_FROM_STRAPI");
-  if (status !== "INITIALIZED") {
-    return null;
-  }
 
   const alertDescription = (
     <>
@@ -100,15 +92,11 @@ export const CguStep = ({
               générales d'utilisation
             </h2>
           </legend>
-          {showFromStrapi ? (
-            <Cgu
-              cguHtml={getCguResponse?.legals[0]?.contenu ?? ""}
-              chapo={getCguResponse?.legals[0]?.chapo ?? ""}
-              updatedAt={getCguResponse?.legals[0]?.dateDeMiseAJour}
-            />
-          ) : (
-            <HardCodedCgu />
-          )}
+          <Cgu
+            cguHtml={getCguResponse?.legals[0]?.contenu ?? ""}
+            chapo={getCguResponse?.legals[0]?.chapo ?? ""}
+            updatedAt={getCguResponse?.legals[0]?.dateDeMiseAJour}
+          />
           <Checkbox
             className="!mt-2"
             options={[
