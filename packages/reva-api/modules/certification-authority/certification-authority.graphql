@@ -1,5 +1,6 @@
 type Account {
   certificationRegistryManager: CertificationRegistryManager
+  certificationAuthorityLocalAccount: CertificationAuthorityLocalAccount
 }
 
 type CertificationAuthority {
