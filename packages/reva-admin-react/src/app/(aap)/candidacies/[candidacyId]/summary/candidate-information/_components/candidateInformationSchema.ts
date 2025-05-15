@@ -1,5 +1,4 @@
 import { GenderEnum } from "@/constants";
-import { deserializeStringToPhoneNumberStructure } from "@/utils";
 import { isBefore, sub, toDate } from "date-fns";
 import { z } from "zod";
 
@@ -25,8 +24,6 @@ export const candidateInformationSchema = z
       .string()
       .min(5, "Le code postal doit contenir au moins 5 chiffres")
       .regex(/^\d{5}$/, "Le code postal est invalide"),
-    phone: z.string(),
-    email: z.string().email(defaultErrorMessage),
     addressComplement: z.string().optional(),
   })
   .superRefine((data, ctx) => {
@@ -60,23 +57,6 @@ export const candidateInformationSchema = z
         code: z.ZodIssueCode.custom,
         message: "Merci de remplir ce champ",
         path: ["birthdate"],
-      });
-    }
-
-    const phoneNumberFormatted = deserializeStringToPhoneNumberStructure(
-      data.phone,
-    );
-
-    if (
-      phoneNumberFormatted.length >= 10 &&
-      phoneNumberFormatted.length <= 14
-    ) {
-      data.phone = phoneNumberFormatted;
-    } else {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Le numéro de téléphone est invalide",
-        path: ["phone"],
       });
     }
 

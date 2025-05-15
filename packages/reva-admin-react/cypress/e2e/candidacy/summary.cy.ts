@@ -11,14 +11,12 @@ function visitSummary({
   modaliteAccompagnement,
   isCaduque = false,
   isCandidacyActualisationActive = false,
-  isUpdateCandidateContactDetailsFeatureActive = false,
 }: {
   feasibilityFormat: FeasibilityFormat;
   financeModule: FinanceModule;
   modaliteAccompagnement: OrganismModaliteAccompagnement;
   isCaduque?: boolean;
   isCandidacyActualisationActive?: boolean;
-  isUpdateCandidateContactDetailsFeatureActive?: boolean;
 }) {
   cy.fixture("candidacy/candidacy.json").then((candidacy) => {
     cy.fixture("candidacy/candidacy-menu.json").then((candidacyMenu) => {
@@ -35,9 +33,6 @@ function visitSummary({
             activeFeaturesForConnectedUser: [
               ...(isCandidacyActualisationActive
                 ? ["candidacy_actualisation"]
-                : []),
-              ...(isUpdateCandidateContactDetailsFeatureActive
-                ? ["UPDATE_CANDIDATE_CONTACT_DETAILS"]
                 : []),
             ],
           },
@@ -165,7 +160,6 @@ context("Candidacy summary page", () => {
       feasibilityFormat: "DEMATERIALIZED",
       financeModule: "unifvae",
       modaliteAccompagnement: "A_DISTANCE",
-      isUpdateCandidateContactDetailsFeatureActive: true,
     });
     cy.wait("@getCandidacySummaryById");
     cy.get('[data-test="candidate-contact-details"]').should("exist");
@@ -182,7 +176,6 @@ context("Candidacy summary page", () => {
       feasibilityFormat: "DEMATERIALIZED",
       financeModule: "unifvae",
       modaliteAccompagnement: "A_DISTANCE",
-      isUpdateCandidateContactDetailsFeatureActive: true,
     });
     cy.wait("@getCandidacySummaryById");
     cy.get(
@@ -200,7 +193,6 @@ context("Candidacy summary page", () => {
       feasibilityFormat: "DEMATERIALIZED",
       financeModule: "unifvae",
       modaliteAccompagnement: "A_DISTANCE",
-      isUpdateCandidateContactDetailsFeatureActive: true,
     });
     cy.wait("@getCandidacySummaryById");
     cy.get('[data-test="certification-authority-local-account-0"]').should(

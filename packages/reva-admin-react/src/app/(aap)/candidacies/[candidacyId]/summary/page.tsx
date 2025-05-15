@@ -5,10 +5,9 @@ import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summ
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format, toDate } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -26,12 +25,6 @@ const CandidacySummaryPage = () => {
   const { takeOverCandidacy } = useTakeOverCandidacy();
 
   const { isAdmin } = useAuth();
-
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isUpdateCandidateContactDetailsFeatureActive = isFeatureActive(
-    "UPDATE_CANDIDATE_CONTACT_DETAILS",
-  );
 
   //mark the candidacy as "taken over" when the AAP opens it
   useEffect(() => {
@@ -148,14 +141,6 @@ const CandidacySummaryPage = () => {
                     `${candidate.birthDepartment.label} (${candidate.birthDepartment.code}) `}
                   {candidate.nationality}
                 </dd>
-                {!isUpdateCandidateContactDetailsFeatureActive && (
-                  <>
-                    <dt className="sr-only">Téléphone</dt>
-                    <dd>{candidate.phone}</dd>
-                    <dt className="sr-only">Adresse email</dt>
-                    <dd>{candidate.email}</dd>
-                  </>
-                )}
                 <dt className="sr-only">Adresse</dt>
                 <dd>
                   {candidateHasAddressCompleted &&
@@ -164,27 +149,25 @@ const CandidacySummaryPage = () => {
               </dl>
             </EnhancedSectionCard>
 
-            {isUpdateCandidateContactDetailsFeatureActive && (
-              <EnhancedSectionCard
-                data-test="candidate-contact-details"
-                title="Les coordonnées du candidat"
-                buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-contact-details`}
-                isEditable
+            <EnhancedSectionCard
+              data-test="candidate-contact-details"
+              title="Les coordonnées du candidat"
+              buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-contact-details`}
+              isEditable
+            >
+              <p
+                className="mb-0 font-medium"
+                data-test="candidate-contact-details-phone"
               >
-                <p
-                  className="mb-0 font-medium"
-                  data-test="candidate-contact-details-phone"
-                >
-                  {candidate.phone}
-                </p>
-                <p
-                  className="mb-0 font-medium"
-                  data-test="candidate-contact-details-email"
-                >
-                  {candidate.email}
-                </p>
-              </EnhancedSectionCard>
-            )}
+                {candidate.phone}
+              </p>
+              <p
+                className="mb-0 font-medium"
+                data-test="candidate-contact-details-email"
+              >
+                {candidate.email}
+              </p>
+            </EnhancedSectionCard>
             {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
               <EnhancedSectionCard
                 data-test="candidate-profile"

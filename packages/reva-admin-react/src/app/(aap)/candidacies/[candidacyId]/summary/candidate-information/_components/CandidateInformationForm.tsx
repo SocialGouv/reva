@@ -2,17 +2,15 @@ import {
   Candidate,
   CandidateUpdateInformationInput,
 } from "@/graphql/generated/graphql";
-import Input from "@codegouvfr/react-dsfr/Input";
-import Select from "@codegouvfr/react-dsfr/Select";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useAuth } from "@/components/auth/auth";
 import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { format, parseISO, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -41,15 +39,9 @@ const CandidateInformationForm = ({
 }) => {
   const backUrl = `/candidacies/${candidacyId}/summary`;
   const router = useRouter();
-  const { isAdmin } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
 
   const { updateCandidateInformationMutate } =
     useUpdateCandidateInformation(candidacyId);
-
-  const isCandidateContactDetailsFeatureActive = isFeatureActive(
-    "UPDATE_CANDIDATE_CONTACT_DETAILS",
-  );
 
   const candidate = candidacy?.candidate;
   const isAddressAlreadyCompleted =
@@ -94,8 +86,6 @@ const CandidateInformationForm = ({
       street: candidate?.street ?? "",
       city: candidate?.city ?? "",
       zip: candidate?.zip ?? "",
-      phone: candidate?.phone ?? "",
-      email: candidate?.email ?? "",
       addressComplement: candidate?.addressComplement ?? "",
     },
   });
@@ -126,8 +116,6 @@ const CandidateInformationForm = ({
         street: candidate.street ?? "",
         city: candidate.city ?? "",
         zip: candidate.zip ?? "",
-        phone: candidate.phone ?? "",
-        email: candidate.email ?? "",
         addressComplement: candidate.addressComplement ?? "",
       });
     },
@@ -171,9 +159,10 @@ const CandidateInformationForm = ({
       street: data.street,
       zip: data.zip,
       city: data.city,
-      phone: data.phone,
-      email: data.email,
       addressComplement: data.addressComplement,
+      //form does not update phone and email anymore, so we keep the old values
+      phone: candidate?.phone ?? "",
+      email: candidate?.email ?? "",
     };
 
     try {
@@ -391,25 +380,6 @@ const CandidateInformationForm = ({
             stateRelatedMessage={errors.city?.message}
           />
         </div>
-        {!isCandidateContactDetailsFeatureActive && (
-          <div className="flex gap-8">
-            <Input
-              label="Numéro de téléphone"
-              className="w-full"
-              nativeInputProps={register("phone")}
-              state={errors.phone ? "error" : "default"}
-              stateRelatedMessage={errors.phone?.message}
-            />
-            <Input
-              label="Email"
-              className="w-full"
-              nativeInputProps={register("email")}
-              state={errors.email ? "error" : "default"}
-              stateRelatedMessage={errors.email?.message}
-              disabled={!isAdmin}
-            />
-          </div>
-        )}
         <FormButtons backUrl={backUrl} formState={{ isDirty, isSubmitting }} />
       </form>
     </>
