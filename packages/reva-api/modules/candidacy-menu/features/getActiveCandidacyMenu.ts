@@ -2,7 +2,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { getCandidacyHasConfirmedCaducite } from "../../candidacy/features/getCandidacyHasConfirmedCaducite";
 import { getCandidacyIsCaduque } from "../../candidacy/features/getCandidacyIsCaduque";
-import { getCertificationById } from "../../referential/features/getCertificationById";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
@@ -10,7 +9,6 @@ import {
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
-import { isFundingRequestEnabledForCertification } from "./isFundingRequestEnabledForCertification";
 import { prismaClient } from "../../../prisma/client";
 
 export const getActiveCandidacyMenu = async ({
@@ -144,22 +142,12 @@ export const getActiveCandidacyMenu = async ({
       return;
     }
 
-    const certification = await getCertificationById({
-      certificationId: candidacy.certificationId,
-    });
-
     const fundingRequest = await prismaClient.fundingRequest.findUnique({
       where: { candidacyId: candidacy.id },
       select: { id: true },
     });
 
-    if (
-      !certification ||
-      (!isFundingRequestEnabledForCertification({
-        certificationRncpId: certification.rncpId,
-      }) &&
-        !fundingRequest)
-    ) {
+    if (!fundingRequest) {
       return;
     }
 

@@ -8,7 +8,6 @@ import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
 import { getCertificationById } from "../../referential/features/getCertificationById";
-import { isFundingRequestEnabledForCertification } from "./isFundingRequestEnabledForCertification";
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
@@ -42,12 +41,7 @@ export const getDroppedOutCandidacyMenu = async ({
       certificationId: candidacy.certificationId,
     });
 
-    if (
-      !certification ||
-      !isFundingRequestEnabledForCertification({
-        certificationRncpId: certification.rncpId,
-      })
-    ) {
+    if (!certification) {
       return;
     }
 

@@ -1,130 +1,11 @@
-import { Candidate } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
-import { format, isAfter, isBefore, sub } from "date-fns";
+import { isAfter, isBefore, sub } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { isFundingRequestEnabledForCertification } from "../../../candidacy-menu/features/isFundingRequestEnabledForCertification";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
-import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 import { UploadedFile } from "../../../shared/file";
 import { applyBusinessValidationRules } from "../validation";
-import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
-
-export const createFundingRequestUnifvae = async ({
-  candidacyId,
-  isCertificationPartial,
-  fundingRequest,
-  userKeycloakId,
-  userEmail,
-  userRoles,
-}: FundingRequestUnifvaeInputCompleted & {
-  userKeycloakId?: string;
-  userEmail?: string;
-  userRoles: KeyCloakUserRole[];
-}) => {
-  const fundingRequestDisabled = await isFeatureActiveForUser({
-    feature: "FUNDING_REQUEST_DISABLED",
-  });
-  if (fundingRequestDisabled) {
-    throw new Error("La demande de prise en charge est désactivée");
-  }
-
-  const candidacy = await prismaClient.candidacy.findUnique({
-    where: { id: candidacyId },
-    select: {
-      financeModule: true,
-      basicSkills: true,
-      trainings: true,
-      otherTraining: true,
-      certificateSkills: true,
-      candidate: true,
-      certification: true,
-    },
-  });
-  if (candidacy === null) {
-    throw new Error(`Candidacy ${candidacyId} not found`);
-  }
-  const fundreq = await prismaClient.fundingRequestUnifvae.create({
-    data: {
-      candidacyId,
-      numAction: await getNextNumAction(),
-      otherTraining: candidacy.otherTraining ?? "",
-      certificateSkills: candidacy.certificateSkills ?? "",
-      ...fundingRequest,
-      isPartialCertification: isCertificationPartial,
-      candidateFirstname: candidacy.candidate?.firstname,
-      candidateLastname: candidacy.candidate?.lastname,
-    },
-  });
-
-  if (
-    !candidacy.certification ||
-    !isFundingRequestEnabledForCertification({
-      certificationRncpId: candidacy.certification.rncpId,
-    })
-  ) {
-    throw new Error(
-      "La demande de financement n'est pas autorisée pour cette certification",
-    );
-  }
-
-  await prismaClient.$transaction([
-    prismaClient.basicSkillOnFundingRequestsUnifvae.createMany({
-      data: candidacy.basicSkills.map(({ basicSkillId }) => ({
-        basicSkillId,
-        fundingRequestUnifvaeId: fundreq.id,
-      })),
-    }),
-    prismaClient.trainingOnFundingRequestsUnifvae.createMany({
-      data: candidacy.trainings.map(({ trainingId }) => ({
-        trainingId,
-        fundingRequestUnifvaeId: fundreq.id,
-      })),
-    }),
-    prismaClient.candidate.update({
-      where: { id: (candidacy.candidate as Candidate).id },
-      data: {
-        gender: fundingRequest.candidateGender,
-        firstname2: fundingRequest.candidateSecondname,
-        firstname3: fundingRequest.candidateThirdname,
-      },
-    }),
-  ]);
-  await updateCandidacyStatus({
-    candidacyId,
-    status: "DEMANDE_FINANCEMENT_ENVOYE",
-  });
-
-  await createBatchFromFundingRequestUnifvae(fundreq.id);
-
-  const result = await prismaClient.fundingRequestUnifvae.findUnique({
-    where: {
-      id: fundreq.id,
-    },
-    include: {
-      basicSkills: {
-        select: {
-          basicSkill: true,
-        },
-      },
-      mandatoryTrainings: {
-        select: {
-          training: true,
-        },
-      },
-    },
-  });
-
-  await logCandidacyAuditEvent({
-    candidacyId,
-    userKeycloakId,
-    userEmail,
-    userRoles,
-    eventType: "FUNDING_REQUEST_CREATED",
-  });
-  return result;
-};
 
 export const getFundingRequestUnifvaeFromCandidacyId = async (
   candidacyId: string,
@@ -136,16 +17,6 @@ export const getFundingRequestUnifvaeFromCandidacyId = async (
       mandatoryTrainings: { include: { training: true } },
     },
   });
-
-async function getNextNumAction() {
-  const nextValQueryResult =
-    (await prismaClient.$queryRaw`Select nextval('funding_request_unifvae_num_action_sequence')`) as {
-      nextval: number;
-    }[];
-  return `reva_${format(new Date(), "yyyyMMdd")}_${nextValQueryResult[0].nextval
-    .toString()
-    .padStart(5, "0")}`;
-}
 
 export const getPaymentRequestUnifvaeFromCandidacyId = (candidacyId: string) =>
   prismaClient.paymentRequestUnifvae.findFirst({

@@ -5,13 +5,10 @@ import { prismaClient } from "../../../../prisma/client";
 import {
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_ONE_MINUTE,
-  FUNDING_REQUEST_SAMPLE,
-  FUNDING_REQUEST_SAMPLE_FORMATTED_OUTPUT,
   PAYMENT_REQUEST,
 } from "../../../../test/fixtures";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
-import { createCandidateHelper } from "../../../../test/helpers/entities/create-candidate-helper";
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
@@ -70,159 +67,6 @@ const dropOutCandidacyFourMonthsAgoMinusOneMinute = async ({
       candidacyDropOut: true,
     },
   });
-
-test("should create fundingRequestUnifvae with matching batch", async () => {
-  const candidate = await createCandidateHelper({
-    firstname: FUNDING_REQUEST_SAMPLE.fundingContactFirstname,
-    firstname2: FUNDING_REQUEST_SAMPLE.candidateSecondname,
-    firstname3: FUNDING_REQUEST_SAMPLE.candidateThirdname,
-    lastname: FUNDING_REQUEST_SAMPLE.fundingContactLastname,
-    email: FUNDING_REQUEST_SAMPLE.fundingContactEmail,
-    phone: FUNDING_REQUEST_SAMPLE.fundingContactPhone,
-    gender: FUNDING_REQUEST_SAMPLE.candidateGender,
-  });
-  const candidacyInput = await createCandidacyHelper({
-    candidacyArgs: {
-      candidateId: candidate.id,
-    },
-  });
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityFileSentAt: new Date(),
-    candidacyId: candidacyInput.id,
-  });
-  const candidacy = feasibility.candidacy;
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
-
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: organismKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_createFundingRequestUnifvae",
-      returnFields:
-        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount, fundingContactFirstname, fundingContactLastname, fundingContactEmail, fundingContactPhone }",
-      arguments: {
-        candidacyId: candidacy.id,
-        fundingRequest: FUNDING_REQUEST_SAMPLE,
-      },
-      enumFields: ["candidateGender"],
-    },
-  });
-  expect(resp.statusCode).toBe(200);
-  const obj = resp.json();
-  expect(obj).not.toHaveProperty("errors");
-  // Check resulting object
-  expect(obj).toMatchObject({
-    data: {
-      candidacy_createFundingRequestUnifvae: FUNDING_REQUEST_SAMPLE,
-    },
-  });
-
-  // Check candidacy status
-  const status = await prismaClient.candidaciesStatus.findFirst({
-    where: { candidacyId: candidacy.id, isActive: true },
-  });
-  expect(status?.status).toBe(CandidacyStatusStep.DEMANDE_FINANCEMENT_ENVOYE);
-
-  // Check batch
-  const myFundReqBatch =
-    await prismaClient.fundingRequestBatchUnifvae.findFirst({
-      where: { fundingRequestId: obj.data.id },
-    });
-
-  expect(myFundReqBatch).toMatchObject({
-    sent: false,
-    content: {
-      ...FUNDING_REQUEST_SAMPLE_FORMATTED_OUTPUT,
-      NumAction: expect.any(String),
-      SiretAP: candidacy.organism?.siret,
-    },
-  });
-});
-
-test("Should fail to create fundingRequestUnifvae when candidacy is not bound to Unifvae finance module", async () => {
-  const candidacyInput = await createCandidacyHelper({
-    candidacyArgs: {
-      financeModule: "unireva",
-    },
-  });
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    feasibilityFileSentAt: new Date(),
-    candidacyId: candidacyInput.id,
-  });
-  const candidacy = feasibility.candidacy;
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
-
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: organismKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_createFundingRequestUnifvae",
-      returnFields:
-        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
-      arguments: {
-        candidacyId: candidacy.id,
-        fundingRequest: FUNDING_REQUEST_SAMPLE,
-      },
-      enumFields: ["candidateGender"],
-    },
-  });
-  expect(resp.statusCode).toBe(200);
-  const obj = resp.json();
-  expect(obj).toHaveProperty("errors");
-  expect(obj.errors[0].message).toBe(
-    'Cannot create FundingRequestUnifvae: candidacy.financeModule is "unireva"',
-  );
-});
-
-test("should fail to create a fundingRequestUnifvae whith a 'hors care' candidacy certification", async () => {
-  const certification = await createCertificationHelper({ rncpId: "000000" });
-  const candidacyInput = await createCandidacyHelper({
-    candidacyArgs: {
-      certificationId: certification.id,
-    },
-  });
-  const feasibility = await createFeasibilityUploadedPdfHelper({
-    candidacyId: candidacyInput.id,
-    feasibilityFileSentAt: new Date(),
-  });
-  const candidacy = feasibility.candidacy;
-
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: organismKeycloakId,
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_createFundingRequestUnifvae",
-      returnFields:
-        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount, fundingContactFirstname, fundingContactLastname, fundingContactEmail, fundingContactPhone }",
-      arguments: {
-        candidacyId: candidacy.id,
-        fundingRequest: {
-          ...FUNDING_REQUEST_SAMPLE,
-        },
-      },
-      enumFields: ["candidateGender"],
-    },
-  });
-  expect(resp.statusCode).toBe(200);
-  const obj = resp.json();
-  expect(obj).toHaveProperty("errors");
-  expect(obj.errors[0].message).toBe(
-    "La demande de financement n'est pas autorisée pour cette certification",
-  );
-});
 
 test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 4 months ago then succeed after 4 months", async () => {
   const candidacyInput = await createCandidacyHelper({
