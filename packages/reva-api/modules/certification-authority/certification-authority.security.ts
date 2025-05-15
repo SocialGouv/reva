@@ -71,7 +71,7 @@ export const resolversSecurityMap = {
   "CertificationAuthority.account": isAdminOrCertificationAuthorityOwner,
 
   "CertificationAuthorityLocalAccount.certificationAuthority":
-    isAdminOrCertificationAuthorityOwner,
+    isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
   "CertificationAuthorityLocalAccount.account": [
     hasRole([
       "admin",
@@ -86,7 +86,7 @@ export const resolversSecurityMap = {
   "CertificationAuthorityStructure.certificationAuthorities":
     isAdminOrIsCertificationAuthorityStructureMember,
   "CertificationAuthorityStructure.certificationRegistryManager":
-    isAdminOrIsCertificationAuthorityStructureMember,
+    isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
   "CertificationAuthorityStructure.certifications":
     isAdminOrCertificationRegistryManagerOfCertification,
 
