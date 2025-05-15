@@ -9,7 +9,6 @@ import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteEx
 import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
 import { sendEmailsForAutoCandidacyCaducite } from "../modules/candidacy/features/sendEmailsForAutoCandidacyCaducite";
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
-import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
 import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
 import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
@@ -23,17 +22,6 @@ dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
 const EVERY_HOUR = "0 * * * *";
-
-const fundingRequestUnifvae = CronJob.from({
-  cronTime: process.env.BATCH_FUNDING_REQUEST_UNIFVAE_CRONTIME || "*/5 * * * *",
-  onTick: () =>
-    runBatchIfActive({
-      batchKey: "batch.demande-financement-unifvae",
-      batchCallback: batchFundingRequestUnifvae,
-    }),
-  start: true,
-  timeZone: "Europe/Paris",
-});
 
 const paymentRequestProofUpload = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_PROOF_CRONTIME || "*/2 * * * *",
