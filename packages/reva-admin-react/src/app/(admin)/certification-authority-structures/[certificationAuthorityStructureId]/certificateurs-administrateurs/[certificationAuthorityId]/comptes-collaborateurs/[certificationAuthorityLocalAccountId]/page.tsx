@@ -207,7 +207,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
               <Button
                 priority="secondary"
                 linkProps={{
-                  href: "/certification-authorities/settings/",
+                  href: `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`,
                 }}
               >
                 Retour
