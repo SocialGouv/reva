@@ -1,5 +1,4 @@
 import { FastifyPluginAsync } from "fastify";
-import { isFeatureActiveForUser } from "../../modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "../../prisma/client";
 
 interface CguEntry {
@@ -67,16 +66,6 @@ export const strapiWebhookRoute: FastifyPluginAsync = async (server) => {
       },
     },
     handler: async (request, reply) => {
-      // Check feature flag
-      const isFeatureActive = await isFeatureActiveForUser({
-        feature: "CGU_STRAPI_WEBHOOK",
-      });
-
-      if (!isFeatureActive) {
-        console.log("Feature flag is disabled, ignoring webhook");
-        return reply.status(204).send();
-      }
-
       // Validate API key
       const isApiKeyValid = validateApiKey(
         request.headers["x-strapi-authorization"] as string,
