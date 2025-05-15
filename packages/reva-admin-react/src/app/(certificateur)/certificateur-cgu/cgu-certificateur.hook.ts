@@ -46,6 +46,21 @@ const getCertificationAuthorityStructureCGUInCguPageQuery = graphql(`
           }
         }
       }
+      certificationAuthorityLocalAccount {
+        certificationAuthority {
+          certificationAuthorityStructures {
+            certificationRegistryManager {
+              account {
+                firstname
+                lastname
+              }
+            }
+            cgu {
+              isLatestVersion
+            }
+          }
+        }
+      }
     }
   }
 `);
@@ -57,11 +72,15 @@ export const useCguCertificateur = () => {
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
     isCertificationAuthority,
+    isCertificationLocalAccount,
   } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
   const isCguCertificateurActive = isFeatureActive("CGU_CERTIFICATEUR");
 
-  const { data: getCertificationAuthorityStructureCGU } = useQuery({
+  const {
+    data: getCertificationAuthorityStructureCGU,
+    isLoading: isLoadingGetCertificationAuthorityStructureCGU,
+  } = useQuery({
     queryKey: ["certificateur", "getCertificationAuthorityStructureCGU"],
     queryFn: () =>
       graphqlClient.request(
@@ -73,13 +92,17 @@ export const useCguCertificateur = () => {
   const isCertificateur =
     isAdminCertificationAuthority ||
     isCertificationAuthority ||
-    isCertificationRegistryManager;
+    isCertificationRegistryManager ||
+    isCertificationLocalAccount;
 
   const certificationAuthorityStructure =
     getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
       ?.certificationRegistryManager?.certificationAuthorityStructure ||
     getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
-      ?.certificationAuthority?.certificationAuthorityStructures?.[0];
+      ?.certificationAuthority?.certificationAuthorityStructures?.[0] ||
+    getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
+      ?.certificationAuthorityLocalAccount?.certificationAuthority
+      ?.certificationAuthorityStructures?.[0];
 
   const cguStructure = certificationAuthorityStructure?.cgu;
 
@@ -134,5 +157,6 @@ export const useCguCertificateur = () => {
     canAccessCguCertificateur,
     certificationAuthorityManagerFirstname,
     certificationAuthorityManagerLastname,
+    isLoadingGetCertificationAuthorityStructureCGU,
   };
 };

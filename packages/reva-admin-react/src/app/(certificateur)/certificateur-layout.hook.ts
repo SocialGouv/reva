@@ -23,6 +23,21 @@ const getCertificationAuthorityStructureCGUQuery = graphql(`
           }
         }
       }
+      certificationAuthorityLocalAccount {
+        certificationAuthority {
+          certificationAuthorityStructures {
+            certificationRegistryManager {
+              account {
+                firstname
+                lastname
+              }
+            }
+            cgu {
+              isLatestVersion
+            }
+          }
+        }
+      }
     }
   }
 `);
@@ -33,6 +48,7 @@ export const useCertificateurLayout = () => {
     isAdminCertificationAuthority,
     isCertificationAuthority,
     isCertificationRegistryManager,
+    isCertificationLocalAccount,
   } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
   const isCguCertificateurActive = isFeatureActive("CGU_CERTIFICATEUR");
@@ -50,7 +66,10 @@ export const useCertificateurLayout = () => {
     getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
       ?.certificationAuthority?.certificationAuthorityStructures[0]?.cgu ||
     getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
-      ?.certificationRegistryManager?.certificationAuthorityStructure?.cgu;
+      ?.certificationRegistryManager?.certificationAuthorityStructure?.cgu ||
+    getCertificationAuthorityStructureCGU?.account_getAccountForConnectedUser
+      ?.certificationAuthorityLocalAccount?.certificationAuthority
+      ?.certificationAuthorityStructures[0]?.cgu;
 
   const currentPathName = usePathname();
 
@@ -65,7 +84,8 @@ export const useCertificateurLayout = () => {
     !isOnCguPage &&
     (isAdminCertificationAuthority ||
       isCertificationAuthority ||
-      isCertificationRegistryManager);
+      isCertificationRegistryManager ||
+      isCertificationLocalAccount);
 
   return {
     displayCguCertificateur,
