@@ -8,7 +8,7 @@ import {
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
 import {
-  sendNewOrganismCandidateNewCandidacyEmail,
+  sendNewCandidacyEmail,
   sendPreviousOrganismCandidateChangeOrganismEmail,
 } from "../emails";
 import { resetTrainingInformation } from "../training/features/resetTrainingInformation";
@@ -118,7 +118,7 @@ export const selectOrganismForCandidacy = async ({
         date: firstAppointmentOccuredAt,
       });
 
-      await sendNewOrganismCandidateNewCandidacyEmail({
+      await sendNewCandidacyEmail({
         email:
           newOrganism.emailContact || newOrganism.contactAdministrativeEmail,
         candidacyId: candidacyId,
