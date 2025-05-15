@@ -12,7 +12,8 @@ export const useAuth = () => {
     isOrganism: boolean = false,
     isGestionnaireMaisonMereAAP: boolean = false,
     isCertificationRegistryManager: boolean = false,
-    isAdminCertificationAuthority: boolean = false;
+    isAdminCertificationAuthority: boolean = false,
+    isCertificationLocalAccount: boolean = false;
 
   let roles: UserRole[] = [];
 
@@ -32,6 +33,9 @@ export const useAuth = () => {
     isAdminCertificationAuthority = roles.includes(
       "manage_certification_authority_local_account",
     );
+    isCertificationLocalAccount =
+      roles.includes("manage_feasibility") &&
+      !roles.includes("manage_certification_authority_local_account");
   }
   return {
     roles,
@@ -41,5 +45,6 @@ export const useAuth = () => {
     isGestionnaireMaisonMereAAP,
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
+    isCertificationLocalAccount,
   };
 };
