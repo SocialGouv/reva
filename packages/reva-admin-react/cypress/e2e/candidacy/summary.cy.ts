@@ -145,16 +145,6 @@ context("Candidacy summary page", () => {
     ).should("exist");
   });
 
-  it("does not display the candidate contact details when the feature is disabled", function () {
-    visitSummary({
-      feasibilityFormat: "DEMATERIALIZED",
-      financeModule: "unifvae",
-      modaliteAccompagnement: "A_DISTANCE",
-    });
-    cy.wait("@getCandidacySummaryById");
-    cy.get('[data-test="candidate-contact-details"]').should("not.exist");
-  });
-
   it("display the candidate contact details", function () {
     visitSummary({
       feasibilityFormat: "DEMATERIALIZED",
