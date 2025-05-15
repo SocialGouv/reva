@@ -252,7 +252,7 @@ context("Dashboard Sidebar - Contact Tiles", () => {
                 contactEmail: "john.doe@authority.test",
               },
             };
-          (candidate.data.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorityLocalAccounts =
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorityLocalAccounts =
             [
               {
                 contactFullName: "Jane Doe public contact",
@@ -264,8 +264,8 @@ context("Dashboard Sidebar - Contact Tiles", () => {
                 contactEmail: "johndoepublic@uncertificateur.fr",
                 contactPhone: "023456789",
               },
-            ]),
-            interceptGraphQL(candidate);
+            ];
+          interceptGraphQL(candidate);
 
           cy.get('[data-test="certification-authority-contact-tile"]')
             .contains("Test Certification Authority")
