@@ -27,9 +27,6 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
         decision
         decisionSentAt
         decisionComment
-        certificationAuthority {
-          label
-        }
         dematerializedFeasibilityFile {
           id
           swornStatementFile {
@@ -84,6 +81,20 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
           certificationAuthorities {
             id
             label
+          }
+          feasibility {
+            certificationAuthority {
+              id
+              label
+              contactFullName
+              contactEmail
+              contactPhone
+            }
+          }
+          certificationAuthorityLocalAccounts {
+            contactFullName
+            contactEmail
+            contactPhone
           }
           individualHourCount
           collectiveHourCount

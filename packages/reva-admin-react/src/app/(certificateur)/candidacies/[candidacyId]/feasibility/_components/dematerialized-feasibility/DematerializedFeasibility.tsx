@@ -264,7 +264,7 @@ export const DematerializedFeasibility = () => {
         displayGiveYourDecisionSubtitle
       />
 
-      {feasibility?.certificationAuthority && (
+      {(feasibility?.certificationAuthority || organism) && (
         <ContactInfosSection
           certificationAuthority={feasibility?.certificationAuthority}
           certificationAuthorityLocalAccounts={

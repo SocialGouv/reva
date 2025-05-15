@@ -133,15 +133,17 @@ export function DffSummary({
           swornStatementFile={swornStatementFile}
         />
         {candidacy.feasibility?.certificationAuthority && (
-          <ContactInfosSection
-            certificationAuthority={
-              candidacy.feasibility?.certificationAuthority
-            }
-            certificationAuthorityLocalAccounts={
-              candidacy.certificationAuthorityLocalAccounts
-            }
-            organism={candidacy.organism}
-          />
+          <div className="mb-4">
+            <ContactInfosSection
+              certificationAuthority={
+                candidacy.feasibility?.certificationAuthority
+              }
+              certificationAuthorityLocalAccounts={
+                candidacy.certificationAuthorityLocalAccounts
+              }
+              organism={candidacy.organism}
+            />
+          </div>
         )}
       </div>
     </div>

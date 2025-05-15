@@ -173,7 +173,9 @@ export default function SendFileCertificationAuthorityPage() {
             }
           />
         }
-        certificationAuthorityLabel={feasibility?.certificationAuthority?.label}
+        certificationAuthorityLabel={
+          candidacy?.feasibility?.certificationAuthority?.label
+        }
       />
       <CertificationAuthoritySection
         certificationAuthorities={certificationAuthorities}
