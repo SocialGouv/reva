@@ -2,8 +2,9 @@ import { assignCandidadyToCertificationAuthorityLocalAccounts } from "../../../c
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
-import { sendDFFNotificationToCertificationAuthorityEmail } from "../emails";
 import { getAccountById } from "../../../account/features/getAccount";
+import { getBackofficeUrl } from "../../../shared/email";
+import { sendNewFeasibilitySubmittedEmail } from "../../emails";
 
 export const sendDFFToCertificationAuthority = async ({
   dematerializedFeasibilityFileId,
@@ -106,10 +107,14 @@ export const sendDFFToCertificationAuthority = async ({
     emails.push(account.email);
   }
 
+  const feasibilityUrl = getBackofficeUrl({
+    path: `/candidacies/${dff.feasibility.candidacyId}/feasibility`,
+  });
+
   if (emails.length) {
-    await sendDFFNotificationToCertificationAuthorityEmail({
+    await sendNewFeasibilitySubmittedEmail({
       emails,
-      candidacyId: dff.feasibility.candidacyId,
+      feasibilityUrl,
     });
   }
 
