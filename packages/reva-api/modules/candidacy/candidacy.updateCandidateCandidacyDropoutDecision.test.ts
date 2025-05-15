@@ -17,7 +17,7 @@ describe("candidate drop out decision", () => {
         SendCandidacyDropOutConfirmedEmailToAapModule,
         "sendCandidacyDropOutConfirmedEmailToAap",
       )
-      .mockImplementation(() => Promise.resolve(""));
+      .mockImplementation(() => Promise.resolve());
 
     const sendCandidacyDropOutConfirmedEmailToCandidateSpy = jest
       .spyOn(
