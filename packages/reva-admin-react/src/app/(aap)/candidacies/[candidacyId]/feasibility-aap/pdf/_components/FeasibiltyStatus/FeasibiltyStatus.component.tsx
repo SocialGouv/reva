@@ -14,7 +14,7 @@ interface Props {
   candidacyId: string;
 }
 
-export const FeasibiltyStatus = (props: Props): JSX.Element => {
+export const FeasibiltyStatus = (props: Props) => {
   const { candidacyId } = props;
 
   const { candidacy } = useHooks(candidacyId);

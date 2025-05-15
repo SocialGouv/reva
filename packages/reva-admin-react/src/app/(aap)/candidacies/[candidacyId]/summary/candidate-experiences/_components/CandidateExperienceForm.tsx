@@ -30,7 +30,7 @@ const durationToString: {
   moreThanTenYears: "Plus de 10 ans",
 };
 
-export const schema = z
+const schema = z
   .object({
     title: z.string().min(1, "Merci de remplir ce champ"),
     description: z.string(),

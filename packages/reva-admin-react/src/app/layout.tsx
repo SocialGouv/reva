@@ -5,13 +5,12 @@ import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 
 import { DsfrHead } from "@/components/dsfr/DsfrHead";
-import { StartDsfr } from "@/components/dsfr/StartDsfr";
-import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
+import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
+// import { getHtmlAttributes } from "@/components/dsfr/server-only-index";
+
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
-import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
-import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Keycloak from "keycloak-js";
 import { Toaster } from "react-hot-toast";
@@ -54,17 +53,27 @@ const queryClient = new QueryClient();
 
 setDefaultOptions({ locale: fr });
 
-export default function RootLayout({ children }: { children: JSX.Element }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const lang = "fr";
+
   return (
-    <html {...getHtmlAttributes({ defaultColorScheme })} lang="fr">
+    <html
+      //should use  <html {...getHtmlAttributes({ lang })} ... but calling getHtmlAttributes clashes with tailwind css overrides for unknown reasons
+      // {...getHtmlAttributes({ lang })}
+      lang={lang}
+    >
       <head>
-        <StartDsfr />
+        <StartDsfrOnHydration />
         <DsfrHead />
         {PRODUKTLY_CLIENT_TOKEN && <Produktly />}
         <title>France VAE</title>
       </head>
       <body>
-        <DsfrProvider>
+        <DsfrProvider lang={lang}>
           <KeycloakProvider keycloakInstance={keycloakInstance}>
             <QueryClientProvider client={queryClient}>
               <Toaster position="top-right" />
@@ -95,7 +104,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
   );
 }
 
-const LayoutContent = ({ children }: { children: JSX.Element }) => {
+const LayoutContent = ({ children }: { children: React.ReactNode }) => {
   const { authenticated, keycloakUser } = useKeycloakContext();
   const { status: featureFlippingHookStatus, isFeatureActive } =
     useFeatureflipping();

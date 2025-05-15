@@ -53,7 +53,7 @@ const schema = z
 
 type DateDeJuryFormData = z.infer<typeof schema>;
 
-export const DateDeJury = (): JSX.Element => {
+export const DateDeJury = () => {
   const { getCandidacy, scheduleJury } = useJuryPageLogic();
 
   const candidacy = getCandidacy.data?.getCandidacyById;

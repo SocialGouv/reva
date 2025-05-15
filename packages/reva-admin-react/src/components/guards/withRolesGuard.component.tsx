@@ -9,7 +9,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const RolesGuard = (props: Props): JSX.Element => {
+const RolesGuard = (props: Props) => {
   const { children, roles } = props;
 
   const { hasRoles } = useHasRoles();

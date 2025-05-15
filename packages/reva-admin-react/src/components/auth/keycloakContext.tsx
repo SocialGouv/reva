@@ -15,17 +15,8 @@ const KeycloakContext = React.createContext<{
 
 interface KeycloakProviderProps {
   keycloakInstance?: _Keycloak;
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
 }
-
-export const Keycloak = (config: {
-  clientId: string;
-  realm: string;
-  url: string;
-}) => {
-  const keycloak = new _Keycloak(config);
-  return keycloak;
-};
 
 const ACCESS_TOKEN_EXPIRATION_IN_SECONDS = 60;
 

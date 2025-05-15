@@ -13,7 +13,7 @@ interface Props {
   size?: "small" | "medium" | "large";
 }
 
-export const Impersonate = (props: Props): JSX.Element | null => {
+export const Impersonate = (props: Props) => {
   const { candidateId, accountId, size } = props;
 
   const { isFeatureActive } = useFeatureflipping();

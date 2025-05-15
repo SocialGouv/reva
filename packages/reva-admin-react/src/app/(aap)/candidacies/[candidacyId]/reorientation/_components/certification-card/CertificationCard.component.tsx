@@ -4,7 +4,7 @@ interface Props {
   typeDiplome?: string | null;
 }
 
-export const CertificationCard = (props: Props): JSX.Element => {
+export const CertificationCard = (props: Props) => {
   const { label, codeRncp, typeDiplome } = props;
 
   return (

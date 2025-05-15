@@ -120,6 +120,4 @@ const useCandidateSummary = (candidacyId: string) => {
   };
 };
 
-export type Candidacy = ReturnType<typeof useCandidateSummary>["candidacy"];
-
 export default useCandidateSummary;

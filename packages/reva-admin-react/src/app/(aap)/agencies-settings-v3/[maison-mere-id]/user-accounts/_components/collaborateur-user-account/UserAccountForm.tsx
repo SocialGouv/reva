@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 
 import { z } from "zod";
 
-export const userAccountFormSchema = z.object({
+const userAccountFormSchema = z.object({
   firstname: z
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")
@@ -27,7 +27,7 @@ export const userAccountFormSchema = z.object({
   organismId: z.string(),
 });
 
-export type UserAccountFormData = z.infer<typeof userAccountFormSchema>;
+type UserAccountFormData = z.infer<typeof userAccountFormSchema>;
 
 export const UserAccountForm = ({
   defaultValues,

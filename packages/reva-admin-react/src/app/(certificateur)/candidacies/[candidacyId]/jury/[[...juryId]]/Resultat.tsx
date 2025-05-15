@@ -68,7 +68,7 @@ const schema = z.object({
 
 type ResultatFormData = z.infer<typeof schema>;
 
-export const Resultat = (): JSX.Element | null => {
+export const Resultat = () => {
   const { getCandidacy, updateJuryResult } = useJuryPageLogic();
   const { isAdmin } = useAuth();
   const availableResultOptions = [

@@ -4,9 +4,9 @@ import cguCertificateurFixture from "./fixtures/cgu-certificateur.json";
 const SELECTORS = {
   CGU_FORM: '[data-test="cgu-certificateur-form"]',
   CGU_ACCEPTANCE_CHECKBOX:
-    '[data-test="cgu-certificateur-cgu-acceptance"] input',
+    '[data-test="cgu-certificateur-cgu-acceptance-input"]',
   CHARTER_ACCEPTANCE_CHECKBOX:
-    '[data-test="cgu-certificateur-charter-acceptance"] input',
+    '[data-test="cgu-certificateur-charter-acceptance-input"]',
   CGU_SUBMIT_BUTTON: '[data-test="cgu-certificateur-submit"]',
   CGU_IGNORE_BUTTON: '[data-test="cgu-certificateur-ignore"]',
   IGNORE_MODAL_IGNORE_BUTTON:

@@ -6,7 +6,6 @@ const nextConfig = {
       ? JSON.parse(process.env.NEXT_PUBLIC_REACT_STRICT_MODE)
       : true,
   transpilePackages: ["@codegouvfr/react-dsfr"],
-  swcMinify: true,
   trailingSlash: true,
   images: {
     remotePatterns: [

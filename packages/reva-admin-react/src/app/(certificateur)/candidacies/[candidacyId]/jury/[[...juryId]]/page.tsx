@@ -8,14 +8,7 @@ import { DateDeJury } from "./DateDeJury";
 import { Resultat } from "./Resultat";
 import { BackButton } from "@/components/back-button/BackButton";
 
-interface Props {
-  params: {
-    candidacyId: string;
-    juryId?: string[];
-  };
-}
-
-const JuryPage = (_props: Props) => {
+const JuryPage = () => {
   const { getCandidacy } = useJuryPageLogic();
 
   const candidacy = getCandidacy.data?.getCandidacyById;
