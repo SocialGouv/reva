@@ -14,7 +14,12 @@ import {
 import { RNCPReferential } from "../rncp/referential";
 import { prismaClient } from "../../../prisma/client";
 import { graphql } from "../../graphql/generated";
-import { CertificationStatus } from "@prisma/client";
+import {
+  CertificationJuryFrequency,
+  CertificationJuryModality,
+  CertificationJuryTypeOfModality,
+  CertificationStatus,
+} from "@prisma/client";
 
 const replaceCertificationMutation = graphql(`
   mutation ReplaceCertification($input: ReplaceCertificationInput!) {
@@ -198,7 +203,24 @@ it("should add a new certification linked to the previous one", async () => {
 it("should copy all relationships and data from the previous certification", async () => {
   await createFormaCodeAndMockReferential();
 
+  const linkToReferential = "Test linkToReferential";
+  const certificationExpertContactDetails = "Test contact";
+  const usefulResources = "Test usefulResources";
+
   const conventionCollective = await createCCNHelper();
+
+  const juryInfo = {
+    juryModalities: [
+      CertificationJuryModality.PRESENTIEL,
+      CertificationJuryModality.A_DISTANCE,
+    ],
+    juryTypeMiseEnSituationProfessionnelle:
+      CertificationJuryTypeOfModality.PRESENTIEL,
+    juryTypeSoutenanceOrale: CertificationJuryTypeOfModality.A_DISTANCE,
+    juryFrequency: CertificationJuryFrequency.TRIMESTERLY,
+    juryFrequencyOther: "Toutes les heures",
+    juryEstimatedCost: 200,
+  };
 
   const existingCertification = await createCertificationHelper({
     status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
@@ -208,6 +230,14 @@ it("should copy all relationships and data from the previous certification", asy
         ccnId: conventionCollective.id,
       },
     },
+    additionalInfo: {
+      create: {
+        linkToReferential,
+        usefulResources,
+        certificationExpertContactDetails,
+      },
+    },
+    ...juryInfo,
   });
 
   const { certificationRegistryManager } =
@@ -246,6 +276,9 @@ it("should copy all relationships and data from the previous certification", asy
   const newCertificationWithRelations =
     await prismaClient.certification.findUnique({
       where: { id: newCertification.id },
+      include: {
+        additionalInfo: true,
+      },
     });
 
   const newCertificationAuthorities =
@@ -277,10 +310,20 @@ it("should copy all relationships and data from the previous certification", asy
     ccnId: conventionCollective.id,
   });
 
-  expect(newCertificationWithRelations).toMatchObject({
+  expect({
+    ...newCertificationWithRelations,
+    juryEstimatedCost:
+      newCertificationWithRelations?.juryEstimatedCost?.toNumber(),
+  }).toMatchObject({
     feasibilityFormat: existingCertification.feasibilityFormat,
     certificationAuthorityStructureId:
       certificationRegistryManager?.certificationAuthorityStructureId,
+    additionalInfo: {
+      linkToReferential,
+      usefulResources,
+      certificationExpertContactDetails,
+    },
+    ...juryInfo,
   });
 });
 

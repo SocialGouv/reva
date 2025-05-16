@@ -117,6 +117,14 @@ export const replaceCertification = async (params: {
       previousVersionCertificationId: certificationId,
       certificationAuthorityStructureId:
         existingCertification.certificationAuthorityStructureId,
+      juryModalities: existingCertification.juryModalities,
+      juryTypeMiseEnSituationProfessionnelle:
+        existingCertification.juryTypeMiseEnSituationProfessionnelle,
+      juryTypeSoutenanceOrale: existingCertification.juryTypeSoutenanceOrale,
+      juryFrequency: existingCertification.juryFrequency,
+      juryFrequencyOther: existingCertification.juryFrequencyOther,
+      juryPlace: existingCertification.juryPlace,
+      juryEstimatedCost: existingCertification.juryEstimatedCost,
     },
   });
 
@@ -190,6 +198,28 @@ export const replaceCertification = async (params: {
         certificationId: newCertification.id,
         ccnId: cc.ccnId,
       })),
+    });
+  }
+
+  // 4. Copy additional information if available
+  const additionalInfo =
+    await prismaClient.certificationAdditionalInfo.findUnique({
+      where: { certificationId },
+    });
+
+  if (additionalInfo) {
+    const {
+      id,
+      certificationId: oldCertId,
+      createdAt,
+      ...additionalInfoData
+    } = additionalInfo;
+
+    await prismaClient.certificationAdditionalInfo.create({
+      data: {
+        ...additionalInfoData,
+        certificationId: newCertification.id,
+      },
     });
   }
 
