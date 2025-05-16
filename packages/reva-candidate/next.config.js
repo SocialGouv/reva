@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   basePath: "/candidat",
   reactStrictMode:
     process.env.NEXT_PUBLIC_REACT_STRICT_MODE != undefined
