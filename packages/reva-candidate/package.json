@@ -2,6 +2,10 @@
   "name": "reva-candidate",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "npm": "10",
+    "node": "22"
+  },
   "scripts": {
     "predev": "react-dsfr update-icons && graphql-codegen --config codegen.ts",
     "dev": "next dev -p 3004",

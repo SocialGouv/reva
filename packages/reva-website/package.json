@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "npm": "10",
-    "node": "20"
+    "node": "22"
   },
   "scripts": {
     "predev": "react-dsfr update-icons && graphql-codegen --config codegen.ts",
