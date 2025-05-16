@@ -251,7 +251,7 @@ const confirmPaymentRequestUnifvae = async ({
   userEmail: string;
   userRoles: KeyCloakUserRole[];
 }) => {
-  const candidacy = await prismaClient.candidacy.findFirst({
+  const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     include: {
       fundingRequestUnifvae: true,
@@ -335,6 +335,11 @@ const confirmPaymentRequestUnifvae = async ({
           formationComplementaireCoutHoraireMoyen.toFixed(2, Decimal.ROUND_UP),
       },
     },
+  });
+
+  await prismaClient.paymentRequestUnifvae.update({
+    where: { id: paymentRequest.id },
+    data: { confirmedAt: new Date() },
   });
 
   await updateCandidacyStatus({

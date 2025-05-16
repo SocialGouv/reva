@@ -6,6 +6,7 @@ import { getFundingRequestByCandidacyId } from "./getFundingRequestByCandidacyId
 import { getPaymentRequestByCandidacyId } from "./getPaymentRequestByCandidacyId";
 import { getOrganismById } from "../../../organism/features/getOrganism";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+import { prismaClient } from "../../../../prisma/client";
 
 export const confirmPaymentRequest = async ({
   candidacyId,
@@ -51,6 +52,11 @@ export const confirmPaymentRequest = async ({
       fundingRequest,
       paymentRequest,
     }),
+  });
+
+  await prismaClient.paymentRequest.update({
+    where: { id: paymentRequest.id },
+    data: { confirmedAt: new Date() },
   });
 
   await updateCandidacyStatus({
