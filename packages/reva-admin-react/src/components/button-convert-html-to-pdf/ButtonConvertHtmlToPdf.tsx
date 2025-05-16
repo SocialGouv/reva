@@ -29,7 +29,7 @@ export const ButtonConvertHtmlToPdf = ({
           mode: "avoid-all",
         },
         html2canvas: {
-          scale: 3,
+          scale: 2,
           logging: false,
         },
         jsPDF: {
