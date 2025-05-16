@@ -1,0 +1,15 @@
+{
+  "data": {
+    "getCertification": {
+      "id": "123",
+      "label": "RNCP18978 - Bac professionnel accompagnement soins et services à la personne - à domicile",
+      "codeRncp": "18978",
+      "status": "PUBLIE",
+      "typeDiplome": "Bac professionnel",
+      "degree": {
+        "id": "4",
+        "label": "Bac professionnel (Niveau 4)"
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "data": {
+    "getFCCertification": {
+      "ID_FICHE": "RNCP38902",
+      "NUMERO_FICHE": "RNCP38902",
+      "INTITULE": "CAP Accompagnant éducatif petite enfance",
+      "ABREGE": {
+        "CODE": "CAP",
+        "LIBELLE": "Certificat d'aptitude professionnelle"
+      },
+      "NOMENCLATURE_EUROPE": {
+        "NIVEAU": "3",
+        "INTITULE": "Niveau 3 (CAP, BEP)"
+      },
+      "DATE_FIN_ENREGISTREMENT": "2026-08-31T00:00:00.000Z",
+      "DATE_LIMITE_DELIVRANCE": "2027-08-31T00:00:00.000Z",
+      "FORMACODES": [
+        {
+          "CODE": "44041",
+          "LIBELLE": "Petite enfance"
+        }
+      ],
+      "DOMAINS": [
+        {
+          "id": "K",
+          "code": "K",
+          "label": "SERVICES AUX PERSONNES",
+          "children": [
+            {
+              "id": "K13",
+              "code": "44041",
+              "label": "Petite enfance"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
