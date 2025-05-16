@@ -1,10 +1,10 @@
-import { CertificationAuthorityLocalAccount } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createAccountHelper } from "./create-account-helper";
 import { createCertificationAuthorityHelper } from "./create-certification-authority-helper";
 
 export const createCertificationAuthorityLocalAccountHelper = async (
-  args?: Partial<CertificationAuthorityLocalAccount>,
+  args?: Partial<Prisma.CertificationAuthorityLocalAccountUncheckedCreateInput>,
 ) => {
   const certificationAuthority = await createCertificationAuthorityHelper();
   const account = await createAccountHelper();

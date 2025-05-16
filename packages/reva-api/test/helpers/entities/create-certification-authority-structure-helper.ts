@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker/.";
-import { CertificationAuthorityStructure } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createAccountHelper } from "./create-account-helper";
 
 export const createCertificationAuthorityStructureHelper = async (
-  args?: Partial<CertificationAuthorityStructure>,
+  args?: Partial<Prisma.CertificationAuthorityStructureCreateInput>,
 ) => {
   const registryManagerAccount = await createAccountHelper();
 
