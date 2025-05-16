@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   transpilePackages: ["@codegouvfr/react-dsfr"],
   reactStrictMode: true,
   trailingSlash: true,
