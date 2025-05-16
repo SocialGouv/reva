@@ -1,5 +1,6 @@
 import { stubQuery, stubMutation } from "../../../../utils/graphql";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
+import certificationAuthorityLocalAccountNoContactDetailsFixture from "./fixtures/certification-authority-local-account-no-contact-details.json";
 import deleteCertificationAuthorityLocalAccountFixture from "./fixtures/delete-certification-authority-local-account-mutation-response.json";
 
 function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {
@@ -18,12 +19,9 @@ function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {
     stubQuery(
       req,
       "getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
-      {
-        ...certificationAuthorityLocalAccountFixture,
-        ...(params?.noContactDetails
-          ? { contactFullname: null, contactEmail: null, contactPhone: null }
-          : {}),
-      },
+      params?.noContactDetails
+        ? certificationAuthorityLocalAccountNoContactDetailsFixture
+        : certificationAuthorityLocalAccountFixture,
     );
     stubMutation(
       req,

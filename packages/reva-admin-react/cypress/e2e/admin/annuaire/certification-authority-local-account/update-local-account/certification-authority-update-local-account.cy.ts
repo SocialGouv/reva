@@ -1,5 +1,7 @@
 import { stubQuery } from "../../../../../utils/graphql";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
+import certificationAuthorityLocalAccountNoContactDetailsFixture from "./fixtures/certification-authority-local-account-no-contact-details.json";
+
 import activeFeaturesFixture from "./fixtures/active-features.json";
 
 function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {
@@ -12,24 +14,12 @@ function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {
       "account/gestionnaire-cgu-accepted.json",
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const localAccountFixture: any = {
-      ...certificationAuthorityLocalAccountFixture,
-    };
-
-    if (params?.noContactDetails) {
-      localAccountFixture.data.certification_authority_getCertificationAuthorityLocalAccount.contactFullName =
-        null;
-      localAccountFixture.data.certification_authority_getCertificationAuthorityLocalAccount.contactEmail =
-        null;
-      localAccountFixture.data.certification_authority_getCertificationAuthorityLocalAccount.contactPhone =
-        null;
-    }
-
     stubQuery(
       req,
       "getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
-      localAccountFixture,
+      params?.noContactDetails
+        ? certificationAuthorityLocalAccountNoContactDetailsFixture
+        : certificationAuthorityLocalAccountFixture,
     );
   });
 }
