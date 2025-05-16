@@ -21,19 +21,27 @@ export const deleteExpiredCandidacies = async () => {
   for (const candidacyId of candidacyIds) {
     try {
       await prismaClient.admissibility.delete({ where: { candidacyId } });
-    } catch (_error) {}
+    } catch (error) {
+      logger.error(error);
+    }
 
     try {
       await prismaClient.examInfo.delete({ where: { candidacyId } });
-    } catch (_error) {}
+    } catch (error) {
+      logger.error(error);
+    }
 
     try {
       await prismaClient.candidacyDropOut.delete({ where: { candidacyId } });
-    } catch (_error) {}
+    } catch (error) {
+      logger.error(error);
+    }
 
     try {
       await prismaClient.candidacyLog.deleteMany({ where: { candidacyId } });
-    } catch (_error) {}
+    } catch (error) {
+      logger.error(error);
+    }
 
     try {
       await prismaClient.candidacy.delete({ where: { id: candidacyId } });
