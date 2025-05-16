@@ -27,6 +27,7 @@ import {
   UpdateCertificationDescriptionInput,
   ValidateCertificationInput,
   UpdateCertificationAdditionalInfoInput,
+  ReplaceCertificationInput,
 } from "./referential.types";
 import { RNCPCertification, RNCPReferential } from "./rncp";
 import {
@@ -42,6 +43,7 @@ import { getCandidacyFinancingMethods } from "./features/getCandidacyFinancingMe
 import { getCertificationCompetenceBlocById } from "./features/getCertificationCompetenceBlocById";
 import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
 import { addCertification } from "./features/addCertification";
+import { replaceCertification } from "./features/replaceCertification";
 import { deleteCertificationCompetenceBloc } from "./features/deleteCertificationCompetenceBloc";
 import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
 import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
@@ -247,6 +249,10 @@ const unsafeReferentialResolvers = {
       _parent: unknown,
       { input }: { input: { codeRncp: string } },
     ) => addCertification(input),
+    referential_replaceCertification: (
+      _parent: unknown,
+      { input }: { input: ReplaceCertificationInput },
+    ) => replaceCertification(input),
     referential_updateCertificationStructureAndCertificationAuthorities: (
       _parent: unknown,
       {

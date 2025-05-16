@@ -343,6 +343,11 @@ input AddCertificationInput {
   codeRncp: String!
 }
 
+input ReplaceCertificationInput {
+  codeRncp: String!
+  certificationId: ID!
+}
+
 input CompetenceInput {
   id: ID
   index: Int!
@@ -448,6 +453,7 @@ type Mutation {
     certificationCompetenceBlocId: ID!
   ): CertificationCompetenceBloc!
   referential_addCertification(input: AddCertificationInput!): Certification!
+  referential_replaceCertification(input: ReplaceCertificationInput!): Certification!
   referential_updateCertificationStructureAndCertificationAuthorities(
     input: UpdateCertificationStructureAndCertificationAuthoritiesInput
   ): Certification!
