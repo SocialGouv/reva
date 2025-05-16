@@ -807,6 +807,7 @@ model PaymentRequest {
   invoiceNumber                        String               @map("invoice_number")
   PaymentRequestBatch                  PaymentRequestBatch?
   createdAt                            DateTime?            @default(now()) @map("created_at") @db.Timestamptz(6)
+  confirmedAt                          DateTime?            @map("confirmed_at") @db.Timestamptz(6)
 
   @@map("payment_request")
 }
@@ -851,6 +852,7 @@ model PaymentRequestUnifvae {
   invoiceNumber                        String                      @map("invoice_number")
   PaymentRequestBatchUnifvae           PaymentRequestBatchUnifvae?
   createdAt                            DateTime?                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  confirmedAt                          DateTime?                   @map("confirmed_at") @db.Timestamptz(6)
 
   @@map("payment_request_unifvae")
 }
