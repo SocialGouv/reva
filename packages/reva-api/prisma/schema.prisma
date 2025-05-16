@@ -683,6 +683,7 @@ model FundingRequest {
   examCost                    Decimal                       @map("exam_cost") @db.Decimal(10, 2)
   fundingRequestBatch         FundingRequestBatch?
   numAction                   String                        @default("TO_MIGRATE") @map("num_action")
+  createdAt                   DateTime?                     @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("funding_request")
 }
@@ -805,6 +806,7 @@ model PaymentRequest {
   otherTrainingEffectiveCost           Decimal              @default(0) @map("other_training_effective_cost") @db.Decimal(10, 2)
   invoiceNumber                        String               @map("invoice_number")
   PaymentRequestBatch                  PaymentRequestBatch?
+  createdAt                            DateTime?            @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("payment_request")
 }
@@ -848,6 +850,7 @@ model PaymentRequestUnifvae {
   otherTrainingEffectiveCost           Decimal                     @default(0) @map("other_training_effective_cost") @db.Decimal(10, 2)
   invoiceNumber                        String                      @map("invoice_number")
   PaymentRequestBatchUnifvae           PaymentRequestBatchUnifvae?
+  createdAt                            DateTime?                   @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("payment_request_unifvae")
 }
@@ -1305,6 +1308,7 @@ model FundingRequestUnifvae {
   fundingContactPhone         String?                              @map("funding_contact_phone") @db.VarChar(50)
   fundingRequestBatchUnifvae  FundingRequestBatchUnifvae?
   typeForfaitJury             TypeForfaitJuryFundingRequestUnifvae @default(FORFAIT_SEPARE_FAISABILITE_ET_ENTRETIEN_POST_JURY) @map("type_forfait_jury")
+  createdAt                   DateTime?                            @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("funding_request_unifvae")
 }
