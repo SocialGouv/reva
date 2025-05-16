@@ -83,19 +83,8 @@ export const getWhereClauseFromStatusFilter = (
       whereClause = {
         ...whereClause,
         candidacyDropOut: null,
-        candidacyStatuses: {
-          some: {
-            AND: {
-              isActive: true,
-              status: {
-                notIn: [
-                  "ARCHIVE",
-                  "PROJET",
-                  "DOSSIER_FAISABILITE_NON_RECEVABLE",
-                ],
-              },
-            },
-          },
+        status: {
+          notIn: ["ARCHIVE", "PROJET", "DOSSIER_FAISABILITE_NON_RECEVABLE"],
         },
       };
       break;

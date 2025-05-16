@@ -12,14 +12,6 @@ export const updateCandidacyStatus = async ({
   tx?: Prisma.TransactionClient; //optional transaction to use
 }): Promise<Candidacy> => {
   const withTransaction = async (t: Prisma.TransactionClient) => {
-    await t.candidaciesStatus.updateMany({
-      where: {
-        candidacyId,
-      },
-      data: {
-        isActive: false,
-      },
-    });
     return t.candidacy.update({
       where: {
         id: candidacyId,
@@ -30,7 +22,6 @@ export const updateCandidacyStatus = async ({
         candidacyStatuses: {
           create: {
             status,
-            isActive: true,
           },
         },
       },

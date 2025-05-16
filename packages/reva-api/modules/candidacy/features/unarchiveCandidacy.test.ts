@@ -2,7 +2,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { createReorientationReasonHelper } from "../../../test/helpers/entities/create-reorientation-reason-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
-import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
 import { unarchiveCandidacy } from "./unarchiveCandidacy";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
@@ -40,9 +39,7 @@ describe("unarchive candidacy", () => {
 
   test("should return an unarchived candidacy", async () => {
     const candidacy = await createCandidacyHelper();
-    const activeStatusBeforeArchive = candidacy.candidacyStatuses?.find(
-      (s) => s.isActive,
-    );
+    const activeStatusBeforeArchive = candidacy.status;
     await updateCandidacyStatus({
       candidacyId: candidacy.id,
       status: "ARCHIVE",
@@ -50,11 +47,9 @@ describe("unarchive candidacy", () => {
     await unarchiveCandidacy({
       candidacyId: candidacy.id,
     });
-    const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
-      candidacyId: candidacy.id,
-    });
-    const activeStatus = candidacyStatuses?.find((status) => status.isActive);
+
+    const activeStatus = candidacy.status;
     expect(activeStatus).not.toBeNull();
-    expect(activeStatus?.status).toEqual(activeStatusBeforeArchive?.status);
+    expect(activeStatus).toEqual(activeStatusBeforeArchive);
   });
 });

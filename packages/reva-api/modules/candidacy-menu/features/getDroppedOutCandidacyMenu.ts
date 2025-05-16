@@ -14,9 +14,7 @@ export const getDroppedOutCandidacyMenu = async ({
 }: {
   candidacy: CandidacyForMenu;
 }): Promise<CandidacyMenuEntry[]> => {
-  const activeCandidacyStatus = candidacy.candidacyStatuses.find(
-    ({ isActive }) => isActive,
-  )?.status;
+  const activeCandidacyStatus = candidacy.status;
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
     activeCandidacyStatus as CandidacyStatusStep,

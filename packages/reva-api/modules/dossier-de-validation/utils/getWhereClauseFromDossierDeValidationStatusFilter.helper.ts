@@ -9,7 +9,7 @@ export const getWhereClauseFromDossierDeValidationStatusFilter = (
   const excludeArchivedAndDroppedOutCandidacyAndActiveJury: Prisma.DossierDeValidationWhereInput =
     {
       candidacy: {
-        candidacyStatuses: { none: { isActive: true, status: "ARCHIVE" } },
+        status: { not: "ARCHIVE" },
         candidacyDropOut: { is: null },
         Jury: { none: { isActive: true } },
       },

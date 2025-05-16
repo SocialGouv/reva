@@ -90,13 +90,11 @@ export const selectOrganismForCandidacy = async ({
       where: { id: certificationId || "" },
     });
 
-    const currentCandidacyStatus = candidacy.candidacyStatuses.find(
-      (status) => status.isActive == true,
-    );
+    const currentCandidacyStatus = candidacy.status;
     const isValidStatus =
       currentCandidacyStatus &&
-      (currentCandidacyStatus?.status == "PRISE_EN_CHARGE" ||
-        currentCandidacyStatus?.status == "VALIDATION");
+      (currentCandidacyStatus == "PRISE_EN_CHARGE" ||
+        currentCandidacyStatus == "VALIDATION");
 
     const newOrganism = await getOrganismById({ organismId });
 

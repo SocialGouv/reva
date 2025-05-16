@@ -669,9 +669,7 @@ export const getActiveFeasibilities = async ({
     case "ARCHIVED":
       queryWhereClause = {
         ...queryWhereClause,
-        candidacy: {
-          candidacyStatuses: { some: { isActive: true, status: "ARCHIVE" } },
-        },
+        candidacy: { status: "ARCHIVE" },
       };
       break;
     case "DROPPED_OUT":

@@ -25,7 +25,6 @@ export const createCandidacy = async ({
       candidacyStatuses: {
         create: {
           status: CandidacyStatusStep.PROJET,
-          isActive: true,
         },
       },
     },

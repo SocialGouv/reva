@@ -11,9 +11,13 @@ export const getDeletedCandidacyMenu = async ({
 }): Promise<CandidacyMenuEntry[]> => {
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
-  const deletedAt = candidacy.candidacyStatuses.find(
-    (s) => s.status === "ARCHIVE" && s.isActive,
-  )?.createdAt;
+  let deletedAt: Date | undefined;
+
+  if (candidacy.status === "ARCHIVE") {
+    deletedAt = candidacy.candidacyStatuses.find(
+      (s) => s.status === "ARCHIVE",
+    )?.createdAt;
+  }
 
   const getDeletedCandidacyMenuEntry = (): CandidacyMenuEntry => ({
     label: deletedAt

@@ -3,7 +3,6 @@ import { prismaClient } from "../../../prisma/client";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { archiveCandidacy } from "./archiveCandidacy";
-import { getCandidacyStatusesByCandidacyId } from "./getCandidacyStatusesByCandidacyId";
 
 describe("archive candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
@@ -51,15 +50,11 @@ describe("archive candidacy", () => {
       reorientationReasonId: reorientationReason.id,
     });
 
-    const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
-      candidacyId: candidacy.id,
-    });
     expect(archivedCandidacy.reorientationReasonId).not.toBeNull();
     expect(archivedCandidacy.reorientationReasonId).toEqual(
       reorientationReason.id,
     );
-    const activeStatus = candidacyStatuses?.find((s) => s.isActive);
-    expect(activeStatus?.status).toBe("ARCHIVE");
+    expect(archivedCandidacy.status).toBe("ARCHIVE");
   });
 
   test("should return an archived candidacy without reorientation reason", async () => {
@@ -69,11 +64,7 @@ describe("archive candidacy", () => {
       reorientationReasonId: null,
     });
 
-    const candidacyStatuses = await getCandidacyStatusesByCandidacyId({
-      candidacyId: candidacy.id,
-    });
     expect(archivedCandidacy.reorientationReasonId).toBeNull();
-    const activeStatus = candidacyStatuses?.find((s) => s.isActive);
-    expect(activeStatus?.status).toBe("ARCHIVE");
+    expect(archivedCandidacy.status).toBe("ARCHIVE");
   });
 });

@@ -6,6 +6,7 @@ import {
 } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidacy } from "./getCandidacy";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
+import { findLastIndex } from "lodash";
 
 export const updateCandidacyFinanceModule = async ({
   candidacyId,
@@ -63,10 +64,11 @@ const rollbackToPreviousStatus = async ({
   }
 
   const currentStatus = candidacyWithSortedStatus.status;
-  const currentStatusIndex =
-    candidacyWithSortedStatus.candidacyStatuses.findIndex(
-      (status) => status.status === currentStatus && status.isActive,
-    );
+
+  const currentStatusIndex = findLastIndex(
+    candidacyWithSortedStatus.candidacyStatuses,
+    (s) => s.status === currentStatus,
+  );
 
   if (currentStatusIndex < 1) {
     throw new Error(

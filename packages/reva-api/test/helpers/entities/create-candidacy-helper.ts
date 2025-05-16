@@ -66,7 +66,6 @@ export const createCandidacyHelper = async (args?: {
         create: {
           status:
             candidacyActiveStatus ?? CandidacyStatusStep.PARCOURS_CONFIRME,
-          isActive: true,
         },
       },
       ...candidacyArgs,

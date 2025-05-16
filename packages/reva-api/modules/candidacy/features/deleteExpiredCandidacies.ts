@@ -7,16 +7,18 @@ export const deleteExpiredCandidacies = async () => {
   const today = startOfDay(new Date());
   const prev2MonthesDate = add(today, { months: -2 });
 
-  const candidacyStatuses = await prismaClient.candidaciesStatus.findMany({
+  const candidacies = await prismaClient.candidacy.findMany({
     where: {
-      isActive: true,
+      typeAccompagnement: "ACCOMPAGNE",
       status: "PROJET",
       createdAt: { lt: prev2MonthesDate },
-      candidacy: { typeAccompagnement: "ACCOMPAGNE" },
+    },
+    select: {
+      id: true,
     },
   });
 
-  const candidacyIds = candidacyStatuses.map(({ candidacyId }) => candidacyId);
+  const candidacyIds = candidacies.map(({ id }) => id);
 
   for (const candidacyId of candidacyIds) {
     try {

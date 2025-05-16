@@ -65,9 +65,8 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     );
   }
 
-  const activeCandidacyStatus = candidacy.candidacyStatuses?.filter(
-    (s) => s.isActive,
-  )?.[0].status;
+  const activeCandidacyStatus = candidacy.status;
+
   const isCandidacyDroppedOut = !!candidacy.candidacyDropOut;
   const hasConfirmedCandidacyCaducite =
     !!candidacy.candidacyContestationCaducite?.find(

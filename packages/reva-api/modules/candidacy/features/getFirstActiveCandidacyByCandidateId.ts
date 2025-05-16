@@ -8,10 +8,6 @@ export const getFirstActiveCandidacyByCandidateId = ({
   prismaClient.candidacy.findFirst({
     where: {
       candidateId,
-      candidacyStatuses: {
-        none: {
-          OR: [{ status: "ARCHIVE", isActive: true }],
-        },
-      },
+      status: { not: "ARCHIVE" },
     },
   });

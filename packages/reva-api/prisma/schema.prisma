@@ -244,15 +244,12 @@ model CandidaciesStatus {
   candidacy   Candidacy           @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId String              @map("candidacy_id") @db.Uuid
   status      CandidacyStatusStep @default(PROJET)
-  isActive    Boolean             @default(false) @map("is_active")
   createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?           @map("updated_at") @db.Timestamptz(6)
 
-  @@index([candidacyId, isActive])
-  @@index([candidacyId, status, isActive])
-  @@index([candidacyId, status])
-  @@index([status, isActive])
   @@index([candidacyId])
+  @@index([status])
+  @@index([candidacyId, status])
   @@map("candidacy_candidacy_status")
 }
 

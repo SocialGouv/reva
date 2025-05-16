@@ -18,9 +18,7 @@ export const getActiveCandidacyMenu = async ({
   candidacy: CandidacyForMenu;
   isCandidateSummaryComplete: boolean;
 }) => {
-  const activeCandidacyStatus = candidacy.candidacyStatuses.find(
-    (status) => status.isActive,
-  )?.status as CandidacyStatusStep;
+  const activeCandidacyStatus = candidacy.status;
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
     activeCandidacyStatus,

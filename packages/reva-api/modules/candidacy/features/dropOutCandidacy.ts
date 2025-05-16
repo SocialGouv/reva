@@ -17,11 +17,6 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
       candidacyId: params.candidacyId,
       includes: {
         candidate: true,
-        candidacyStatuses: {
-          where: {
-            isActive: true,
-          },
-        },
         experiences: true,
         goals: true,
         candidacyDropOut: {
@@ -43,7 +38,7 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
     );
   }
 
-  const candidacyStatus = candidacy.candidacyStatuses[0].status;
+  const candidacyStatus = candidacy.status;
 
   const hasDropOut = Boolean(candidacy.candidacyDropOut);
 

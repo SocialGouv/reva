@@ -32,11 +32,7 @@ export const createCandidateWithCandidacy = async (
   const candidacy = await prismaClient.candidacy.findFirst({
     where: {
       candidateId: createdCandidate.id,
-      candidacyStatuses: {
-        none: {
-          OR: [{ status: "ARCHIVE", isActive: true }],
-        },
-      },
+      status: { not: "ARCHIVE" },
     },
   });
 

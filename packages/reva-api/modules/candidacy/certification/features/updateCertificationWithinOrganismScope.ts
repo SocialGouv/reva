@@ -30,6 +30,7 @@ export const updateCertificationWithinOrganismScope = async ({
     where: { id: candidacyId },
     select: {
       id: true,
+      status: true,
       candidate: { select: { departmentId: true } },
       organismId: true,
       candidacyDropOut: { select: { candidacyId: true } },
@@ -87,22 +88,7 @@ export const updateCertificationWithinOrganismScope = async ({
     "DOSSIER_FAISABILITE_INCOMPLET",
   ];
 
-  const lastStatusWithDetails = await prismaClient.candidaciesStatus.findFirst({
-    where: {
-      candidacyId: candidacyId,
-      isActive: true,
-    },
-    select: {
-      status: true,
-    },
-    orderBy: [{ createdAt: "desc" }],
-  });
-
-  if (!lastStatusWithDetails) {
-    throw new Error("La certification n'a aucun statut actif");
-  }
-
-  const lastStatus = lastStatusWithDetails.status;
+  const lastStatus = candidacy.status;
 
   if (!allowedStatues.includes(lastStatus)) {
     throw new Error(

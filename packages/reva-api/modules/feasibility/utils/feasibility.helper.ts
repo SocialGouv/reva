@@ -79,7 +79,7 @@ export const getWhereClauseFromStatusFilter = (
       whereClause = {
         ...whereClause,
         candidacy: {
-          candidacyStatuses: { some: { isActive: true, status: "ARCHIVE" } },
+          status: "ARCHIVE",
         },
       };
       break;
