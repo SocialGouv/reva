@@ -142,3 +142,8 @@ export interface UpdateCertificationAdditionalInfoInput {
   certificationId: string;
   additionalInfo: CertificationAdditionalInfo;
 }
+
+export interface ReplaceCertificationInput {
+  codeRncp: string;
+  certificationId: string;
+}
