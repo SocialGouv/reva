@@ -107,9 +107,7 @@ context("general information summary card", () => {
           "@getCertificationAuthorityLocalAccountForComptesCollaborateursPage",
         );
 
-        cy.get(
-          '[data-test="local-account-general-information-summary-card"] [data-test="no-contact-details-badge"]',
-        ).should("exist");
+        cy.get('[data-test="no-contact-details-badge"]').should("exist");
       });
     },
   );
