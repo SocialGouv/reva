@@ -58,7 +58,6 @@ export const replaceCertification = async (params: {
   }
   const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
 
-  // Rather than updating the existing certification, create a new one and link them
   const newCertification = await prismaClient.certification.create({
     data: {
       status: "A_VALIDER_PAR_CERTIFICATEUR",
