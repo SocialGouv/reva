@@ -23,8 +23,7 @@
         "status": "PARCOURS_CONFIRME",
         "candidacyStatuses": [
           {
-            "status": "PARCOURS_CONFIRME",
-            "isActive": true
+            "status": "PARCOURS_CONFIRME"
           }
         ],
         "appointmentCount": 0,

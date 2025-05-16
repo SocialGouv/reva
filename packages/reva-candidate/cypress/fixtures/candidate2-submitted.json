@@ -42,12 +42,10 @@
         "status": "VALIDATION",
         "candidacyStatuses": [
           {
-            "status": "PROJET",
-            "isActive": false
+            "status": "PROJET"
           },
           {
-            "status": "VALIDATION",
-            "isActive": true
+            "status": "VALIDATION"
           }
         ],
         "appointmentCount": 0,

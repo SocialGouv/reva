@@ -124,7 +124,6 @@ type CandidacyFilterInfo {
 type CandidacyStatus {
   id: ID!
   status: CandidacyStatusStep!
-  isActive: Boolean!
   createdAt: Timestamp!
 }
 

@@ -68,7 +68,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           id
           createdAt
           status
-          isActive
         }
         certification {
           id

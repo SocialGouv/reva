@@ -27,8 +27,7 @@
         "status": "PROJET",
         "candidacyStatuses": [
           {
-            "status": "PROJET",
-            "isActive": true
+            "status": "PROJET"
           }
         ],
         "appointmentCount": 0,

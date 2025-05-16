@@ -32,7 +32,6 @@ test("get existing Candidacy with admin user", async () => {
         }
         candidacyStatuses {
           createdAt
-          isActive
           status
         }
       }

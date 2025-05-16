@@ -43,16 +43,13 @@
         "status": "PARCOURS_ENVOYE",
         "candidacyStatuses": [
           {
-            "status": "PROJET",
-            "isActive": false
+            "status": "PROJET"
           },
           {
-            "status": "PRISE_EN_CHARGE",
-            "isActive": false
+            "status": "PRISE_EN_CHARGE"
           },
           {
-            "status": "PARCOURS_ENVOYE",
-            "isActive": true
+            "status": "PARCOURS_ENVOYE"
           }
         ],
         "appointmentCount": 0,

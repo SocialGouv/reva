@@ -38,7 +38,6 @@ const GET_CANDIDATE_WITH_CANDIDACY_QUERY = graphql(`
         candidacyStatuses {
           id
           status
-          isActive
         }
         candidacyDropOut {
           createdAt

@@ -42,16 +42,13 @@
         "status": "PRISE_EN_CHARGE",
         "candidacyStatuses": [
           {
-            "status": "PROJET",
-            "isActive": false
+            "status": "PROJET"
           },
           {
-            "status": "VALIDATION",
-            "isActive": false
+            "status": "VALIDATION"
           },
           {
-            "status": "PRISE_EN_CHARGE",
-            "isActive": true
+            "status": "PRISE_EN_CHARGE"
           }
         ],
         "appointmentCount": 0,

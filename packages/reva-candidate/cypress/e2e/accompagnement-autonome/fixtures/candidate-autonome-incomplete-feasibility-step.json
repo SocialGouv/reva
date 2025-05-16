@@ -23,8 +23,7 @@
         "status": "DOSSIER_FAISABILITE_INCOMPLET",
         "candidacyStatuses": [
           {
-            "status": "DOSSIER_FAISABILITE_INCOMPLET",
-            "isActive": true
+            "status": "DOSSIER_FAISABILITE_INCOMPLET"
           }
         ],
         "appointmentCount": 0,

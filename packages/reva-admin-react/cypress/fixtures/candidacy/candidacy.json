@@ -32,24 +32,19 @@
       ],
       "candidacyStatuses": [
         {
-          "status": "PROJET",
-          "isActive": false
+          "status": "PROJET"
         },
         {
-          "status": "VALIDATION",
-          "isActive": false
+          "status": "VALIDATION"
         },
         {
-          "status": "PRISE_EN_CHARGE",
-          "isActive": false
+          "status": "PRISE_EN_CHARGE"
         },
         {
-          "status": "PARCOURS_ENVOYE",
-          "isActive": false
+          "status": "PARCOURS_ENVOYE"
         },
         {
-          "status": "PARCOURS_CONFIRME",
-          "isActive": true
+          "status": "PARCOURS_CONFIRME"
         }
       ],
       "certification": {

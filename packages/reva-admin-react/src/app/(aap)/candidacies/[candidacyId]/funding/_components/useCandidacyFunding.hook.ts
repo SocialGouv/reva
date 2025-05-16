@@ -44,7 +44,6 @@ const getCandidacyByIdFunding = graphql(`
       financeModule
       candidacyStatuses {
         status
-        isActive
       }
       feasibility {
         decision

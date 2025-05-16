@@ -23,8 +23,7 @@
         "status": "DOSSIER_FAISABILITE_NON_RECEVABLE",
         "candidacyStatuses": [
           {
-            "status": "DOSSIER_FAISABILITE_NON_RECEVABLE",
-            "isActive": true
+            "status": "DOSSIER_FAISABILITE_NON_RECEVABLE"
           }
         ],
         "appointmentCount": 0,

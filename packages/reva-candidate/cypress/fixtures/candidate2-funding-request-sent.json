@@ -42,24 +42,19 @@
         "status": "DEMANDE_FINANCEMENT_ENVOYE",
         "candidacyStatuses": [
           {
-            "status": "PROJET",
-            "isActive": false
+            "status": "PROJET"
           },
           {
-            "status": "PRISE_EN_CHARGE",
-            "isActive": false
+            "status": "PRISE_EN_CHARGE"
           },
           {
-            "status": "PARCOURS_ENVOYE",
-            "isActive": false
+            "status": "PARCOURS_ENVOYE"
           },
           {
-            "status": "PARCOURS_CONFIRME",
-            "isActive": false
+            "status": "PARCOURS_CONFIRME"
           },
           {
-            "status": "DEMANDE_FINANCEMENT_ENVOYE",
-            "isActive": true
+            "status": "DEMANDE_FINANCEMENT_ENVOYE"
           }
         ],
         "appointmentCount": 0,
