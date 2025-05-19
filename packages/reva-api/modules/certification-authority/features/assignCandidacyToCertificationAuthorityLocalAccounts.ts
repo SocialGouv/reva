@@ -1,6 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
 
-export const assignCandidadyToCertificationAuthorityLocalAccounts =
+export const assignCandidacyToCertificationAuthorityLocalAccounts =
   async (params: { candidacyId: string }) => {
     const { candidacyId } = params;
 

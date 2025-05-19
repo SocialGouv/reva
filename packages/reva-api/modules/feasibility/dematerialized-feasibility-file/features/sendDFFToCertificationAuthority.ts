@@ -1,4 +1,4 @@
-import { assignCandidadyToCertificationAuthorityLocalAccounts } from "../../../certification-authority/features/assignCandidadyToCertificationAuthorityLocalAccounts";
+import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../../../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
@@ -60,14 +60,14 @@ export const sendDFFToCertificationAuthority = async ({
       },
     );
 
-    await assignCandidadyToCertificationAuthorityLocalAccounts({
+    await assignCandidacyToCertificationAuthorityLocalAccounts({
       candidacyId,
     });
   }
 
   // Assign certification authority local accounts only on new feasibility or if !existingFeasibility.certificationAuthorityId
   if (!existingFeasibility || !existingFeasibility.certificationAuthorityId) {
-    await assignCandidadyToCertificationAuthorityLocalAccounts({
+    await assignCandidacyToCertificationAuthorityLocalAccounts({
       candidacyId,
     });
   }

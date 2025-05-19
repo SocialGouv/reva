@@ -7,7 +7,7 @@ import { createCertificationAuthorityLocalAccountHelper } from "../../../test/he
 import { createFeasibilityDematerializedHelper } from "../../../test/helpers/entities/create-feasibility-dematerialized-helper";
 
 /**
- * Test assignCandidadyToCertificationAuthorityLocalAccounts
+ * Test assignCandidacyToCertificationAuthorityLocalAccounts
  */
 test("should only return the certification authority local accounts based on same certification and department", async () => {
   const certification = await createCertificationHelper();
@@ -66,7 +66,7 @@ test("should only return the certification authority local accounts based on sam
 
 describe("VAE collective", () => {
   /**
-   * Test assignCandidadyToCertificationAuthorityLocalAccounts restricted by a VAE collective cohort
+   * Test assignCandidacyToCertificationAuthorityLocalAccounts restricted by a VAE collective cohort
    */
   test("should only return the certification authority local accounts available for the VAE collective cohort", async () => {
     const certificationVaeCollective = await createCertificationHelper();

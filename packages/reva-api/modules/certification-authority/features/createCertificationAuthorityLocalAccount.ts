@@ -4,6 +4,7 @@ import { prismaClient } from "../../../prisma/client";
 import { createAccount } from "../../account/features/createAccount";
 import { FunctionalError } from "../../shared/error/functionalError";
 import { CreateCertificationAuthorityLocalAccountInput } from "../certification-authority.types";
+import { assignCandidaciesToCertificationAuthorityLocalAccount } from "./assignCandidaciesToCertificationAuthorityLocalAccount";
 
 export const createCertificationAuthorityLocalAccount = async ({
   certificationAuthorityId,
@@ -50,25 +51,34 @@ export const createCertificationAuthorityLocalAccount = async ({
     throw new Error("Erreur pendant la création du compte certificateur local");
   }
 
-  return prismaClient.certificationAuthorityLocalAccount.create({
-    data: {
-      accountId: account.id,
-      certificationAuthorityId: certificationAuthority?.id,
-      contactFullName,
-      contactEmail,
-      contactPhone,
-      certificationAuthorityLocalAccountOnCertification: {
-        createMany: {
-          data: certificationIds.map((certificationId) => ({
-            certificationId,
-          })),
+  const createdCertificationAuthorityLocalAccount =
+    await prismaClient.certificationAuthorityLocalAccount.create({
+      data: {
+        accountId: account.id,
+        certificationAuthorityId: certificationAuthority?.id,
+        contactFullName,
+        contactEmail,
+        contactPhone,
+        certificationAuthorityLocalAccountOnCertification: {
+          createMany: {
+            data: certificationIds.map((certificationId) => ({
+              certificationId,
+            })),
+          },
+        },
+        certificationAuthorityLocalAccountOnDepartment: {
+          createMany: {
+            data: departmentIds.map((departmentId) => ({ departmentId })),
+          },
         },
       },
-      certificationAuthorityLocalAccountOnDepartment: {
-        createMany: {
-          data: departmentIds.map((departmentId) => ({ departmentId })),
-        },
-      },
-    },
+    });
+
+  // assign candidacies to created certification authority local account
+  await assignCandidaciesToCertificationAuthorityLocalAccount({
+    certificationAuthorityLocalAccountId:
+      createdCertificationAuthorityLocalAccount.id,
   });
+
+  return createdCertificationAuthorityLocalAccount;
 };

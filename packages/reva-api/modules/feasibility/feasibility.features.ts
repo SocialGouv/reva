@@ -48,7 +48,7 @@ import {
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
 import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "./features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
-import { assignCandidadyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidadyToCertificationAuthorityLocalAccounts";
+import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 
 const adminBaseUrl =
   process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
@@ -331,7 +331,7 @@ export const createFeasibility = async ({
       },
     );
 
-    await assignCandidadyToCertificationAuthorityLocalAccounts({
+    await assignCandidacyToCertificationAuthorityLocalAccounts({
       candidacyId,
     });
   }
@@ -341,7 +341,7 @@ export const createFeasibility = async ({
     !existingFeasibilityUploadedPdf ||
     !existingFeasibilityUploadedPdf.certificationAuthorityId
   ) {
-    await assignCandidadyToCertificationAuthorityLocalAccounts({
+    await assignCandidacyToCertificationAuthorityLocalAccounts({
       candidacyId,
     });
   }
