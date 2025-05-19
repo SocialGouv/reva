@@ -35,6 +35,8 @@ const getCandidacyByStatusCount = graphql(`
       DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON
       VAE_COLLECTIVE
       CADUQUE
+      DEMANDE_FINANCEMENT_ENVOYEE
+      DEMANDE_PAIEMENT_ENVOYEE
     }
   }
 `);

@@ -28,6 +28,11 @@ const CandidacyLayoutSideMenu = ({
     "candidacy_actualisation",
   );
 
+  const isFundingAndPaymentRequestsFromCandidacyStatusesRemoved =
+    isFeatureActive(
+      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    );
+
   const hrefSideMenu = (status: CandidacyStatusFilter) => {
     const params = new URLSearchParams();
     params.set("page", "1");
@@ -112,13 +117,17 @@ const CandidacyLayoutSideMenu = ({
           text: `Dossiers de faisabilité recevables ${getCounterText("DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON")}`,
           isActive: isActive("DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON"),
         },
-        {
-          linkProps: {
-            href: hrefSideMenu("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"),
-          },
-          text: `Demandes de prise en charge envoyées ${getCounterText("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON")}`,
-          isActive: isActive("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"),
-        },
+        ...(isFundingAndPaymentRequestsFromCandidacyStatusesRemoved
+          ? []
+          : [
+              {
+                linkProps: {
+                  href: hrefSideMenu("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"),
+                },
+                text: `Demandes de prise en charge envoyées ${getCounterText("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON")}`,
+                isActive: isActive("DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"),
+              },
+            ]),
         {
           linkProps: {
             href: hrefSideMenu("DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON"),
@@ -133,13 +142,17 @@ const CandidacyLayoutSideMenu = ({
           text: `Dossiers de validation signalés ${getCounterText("DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON")}`,
           isActive: isActive("DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON"),
         },
-        {
-          linkProps: {
-            href: hrefSideMenu("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON"),
-          },
-          text: `Demandes de paiement envoyées ${getCounterText("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON")}`,
-          isActive: isActive("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON"),
-        },
+        ...(isFundingAndPaymentRequestsFromCandidacyStatusesRemoved
+          ? []
+          : [
+              {
+                linkProps: {
+                  href: hrefSideMenu("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON"),
+                },
+                text: `Demandes de paiement envoyées ${getCounterText("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON")}`,
+                isActive: isActive("DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON"),
+              },
+            ]),
       ],
     },
     {
@@ -205,6 +218,24 @@ const CandidacyLayoutSideMenu = ({
       },
       isActive: isActive("ARCHIVE_HORS_ABANDON_HORS_REORIENTATION"),
     },
+    ...(isFundingAndPaymentRequestsFromCandidacyStatusesRemoved
+      ? [
+          {
+            text: `Demandes de financement envoyée ${getCounterText("DEMANDE_FINANCEMENT_ENVOYEE")}`,
+            linkProps: {
+              href: hrefSideMenu("DEMANDE_FINANCEMENT_ENVOYEE"),
+            },
+            isActive: isActive("DEMANDE_FINANCEMENT_ENVOYEE"),
+          },
+          {
+            text: `Demandes de paiement envoyée ${getCounterText("DEMANDE_PAIEMENT_ENVOYEE")}`,
+            linkProps: {
+              href: hrefSideMenu("DEMANDE_PAIEMENT_ENVOYEE"),
+            },
+            isActive: isActive("DEMANDE_PAIEMENT_ENVOYEE"),
+          },
+        ]
+      : []),
   ];
 
   if (isAdmin) {
