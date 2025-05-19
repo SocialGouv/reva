@@ -47,6 +47,18 @@ export const getCandidacyCountByStatus = async ({
   //left join on active jury as activeJury
   fromClause = Prisma.sql`${fromClause} left join jury activeJury on candidacy.id = activeJury.candidacy_id and activeJury.is_active = true`;
 
+  //left join on funding request as fundingRequest
+  fromClause = Prisma.sql`${fromClause} left join funding_request fundingRequest on candidacy.id = fundingRequest.candidacy_id`;
+
+  //left join on funding request as fundingRequestUnifvae
+  fromClause = Prisma.sql`${fromClause} left join funding_request_unifvae fundingRequestUnifvae on candidacy.id = fundingRequestUnifvae.candidacy_id`;
+
+  //left join on payment request as paymentRequest
+  fromClause = Prisma.sql`${fromClause} left join payment_request paymentRequest on candidacy.id = paymentRequest.candidacy_id`;
+
+  //left join on payment request as paymentRequestUnifvae
+  fromClause = Prisma.sql`${fromClause} left join payment_request_unifvae paymentRequestUnifvae on candidacy.id = paymentRequestUnifvae.candidacy_id`;
+
   //access rights
   if (!hasRole("admin")) {
     //gestionnaire maison mère
@@ -210,6 +222,15 @@ const getSQLSelectSumClauseFromStatusFilter = (
       );
     case "CADUQUE":
       return getSumClause(WHERE_CLAUSE_RAW_CANDIDACY_CADUQUE_AND_ACTUALISATION);
+
+    case "DEMANDE_FINANCEMENT_ENVOYEE":
+      return getSumClause(
+        `fundingRequest.id is not null or fundingRequestUnifvae.id is not null`,
+      );
+    case "DEMANDE_PAIEMENT_ENVOYEE":
+      return getSumClause(
+        `paymentRequest.confirmed_at is not null or paymentRequestUnifvae.confirmed_at is not null`,
+      );
   }
 };
 

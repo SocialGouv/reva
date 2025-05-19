@@ -75,6 +75,8 @@ export const candidacyStatusFilters = [
   "PROJET_HORS_ABANDON",
   "VAE_COLLECTIVE",
   "CADUQUE",
+  "DEMANDE_FINANCEMENT_ENVOYEE",
+  "DEMANDE_PAIEMENT_ENVOYEE",
 ] as const;
 
 export type CandidacyStatusFilter = (typeof candidacyStatusFilters)[number];
