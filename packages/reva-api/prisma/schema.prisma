@@ -682,6 +682,7 @@ model FundingRequest {
   numAction                   String                        @default("TO_MIGRATE") @map("num_action")
   createdAt                   DateTime?                     @default(now()) @map("created_at") @db.Timestamptz(6)
 
+  @@index([candidacyId])
   @@map("funding_request")
 }
 
@@ -806,6 +807,8 @@ model PaymentRequest {
   createdAt                            DateTime?            @default(now()) @map("created_at") @db.Timestamptz(6)
   confirmedAt                          DateTime?            @map("confirmed_at") @db.Timestamptz(6)
 
+  @@index([candidacyId])
+  @@index([candidacyId, confirmedAt])
   @@map("payment_request")
 }
 
@@ -851,6 +854,8 @@ model PaymentRequestUnifvae {
   createdAt                            DateTime?                   @default(now()) @map("created_at") @db.Timestamptz(6)
   confirmedAt                          DateTime?                   @map("confirmed_at") @db.Timestamptz(6)
 
+  @@index([candidacyId])
+  @@index([candidacyId, confirmedAt])
   @@map("payment_request_unifvae")
 }
 
@@ -1309,6 +1314,7 @@ model FundingRequestUnifvae {
   typeForfaitJury             TypeForfaitJuryFundingRequestUnifvae @default(FORFAIT_SEPARE_FAISABILITE_ET_ENTRETIEN_POST_JURY) @map("type_forfait_jury")
   createdAt                   DateTime?                            @default(now()) @map("created_at") @db.Timestamptz(6)
 
+  @@index([candidacyId])
   @@map("funding_request_unifvae")
 }
 
