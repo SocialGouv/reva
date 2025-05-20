@@ -10,14 +10,14 @@
     "predev": "react-dsfr update-icons && graphql-codegen --config codegen.ts",
     "dev": "next dev -p 3003",
     "prebuild": "react-dsfr update-icons && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
-    "build": "next build && node copy-assets.js",
-    "start": "node .next/standalone/server.js",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "cypress:open": "cypress open",
     "cypress:ci": "cypress run",
-    "test:ci": "start-server-and-test 'PORT=3003 node .next/standalone/server.js' http://localhost:3003/admin2/ cypress:ci"
+    "test:ci": "start-server-and-test 'next start -p 3003 .next/standalone/server.js' http://localhost:3003/admin2/ cypress:ci"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.23.4",
