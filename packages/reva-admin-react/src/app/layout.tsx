@@ -40,6 +40,8 @@ import { useCrisp } from "@/components/crisp/useCrisp";
 import { useEffect } from "react";
 import { HelpBubble } from "@/components/help-bubble/HelpBubble";
 
+export const dynamic = "force-dynamic";
+
 const keycloakInstance =
   typeof window !== "undefined"
     ? new Keycloak({
