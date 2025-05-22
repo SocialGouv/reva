@@ -265,7 +265,7 @@ const confirmPaymentRequestUnifvae = async ({
     );
   }
 
-  const fundingRequest = candidacy?.fundingRequestUnifvae[0];
+  const fundingRequest = candidacy?.fundingRequestUnifvae;
 
   if (!fundingRequest) {
     throw new Error(
