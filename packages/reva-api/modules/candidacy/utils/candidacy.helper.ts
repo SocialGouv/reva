@@ -167,6 +167,40 @@ export const getWhereClauseFromStatusFilter = (
         },
       };
       break;
+    case "DEMANDE_FINANCEMENT_ENVOYEE":
+      whereClause = {
+        ...whereClause,
+        OR: [
+          {
+            financeModule: "unireva",
+            FundingRequest: { isNot: null },
+          },
+          {
+            financeModule: "unifvae",
+            fundingRequestUnifvae: { isNot: null },
+          },
+        ],
+      };
+      break;
+    case "DEMANDE_PAIEMENT_ENVOYEE":
+      whereClause = {
+        ...whereClause,
+        OR: [
+          {
+            financeModule: "unireva",
+            paymentRequest: {
+              confirmedAt: { not: null },
+            },
+          },
+          {
+            financeModule: "unifvae",
+            paymentRequestUnifvae: {
+              confirmedAt: { not: null },
+            },
+          },
+        ],
+      };
+      break;
   }
   return whereClause;
 };
