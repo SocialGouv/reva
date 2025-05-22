@@ -54,6 +54,8 @@ const CandidateInformationForm = ({
     { label: "Ne se prononce pas", value: "undisclosed" },
   ];
 
+  const inputShouldBeDisabled = candidacyAlreadySubmitted;
+
   const {
     register,
     watch,
@@ -63,7 +65,7 @@ const CandidateInformationForm = ({
     clearErrors,
     handleSubmit,
   } = useForm<FormCandidateInformationData>({
-    resolver: zodResolver(candidateInformationSchema),
+    resolver: zodResolver(candidateInformationSchema(inputShouldBeDisabled)),
     defaultValues: {
       firstname: candidate?.firstname,
       lastname: candidate?.lastname,
@@ -200,8 +202,6 @@ const CandidateInformationForm = ({
     setValue("zip", "");
     setValue("city", "");
   };
-
-  const inputShouldBeDisabled = candidacyAlreadySubmitted;
 
   return (
     <>
