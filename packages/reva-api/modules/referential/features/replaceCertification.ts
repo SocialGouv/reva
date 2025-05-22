@@ -56,6 +56,18 @@ export const replaceCertification = async (params: {
       `La certification avec le code RNCP ${codeRncp} n'a pas de date de fin d'enregistrement`,
     );
   }
+
+  const existingCertificationWithSamePreviousVersion =
+    await prismaClient.certification.findFirst({
+      where: { previousVersionCertificationId: certificationId },
+    });
+
+  if (existingCertificationWithSamePreviousVersion) {
+    throw new Error(
+      `Une version plus récente de cette certification existe déjà`,
+    );
+  }
+
   const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
 
   const newCertification = await prismaClient.certification.create({
