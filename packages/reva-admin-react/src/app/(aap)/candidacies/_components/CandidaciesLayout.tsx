@@ -33,6 +33,8 @@ const CandidacyLayoutSideMenu = ({
       "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
     );
 
+  const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
+
   const hrefSideMenu = (status: CandidacyStatusFilter) => {
     const params = new URLSearchParams();
     params.set("page", "1");
@@ -240,18 +242,20 @@ const CandidacyLayoutSideMenu = ({
 
   if (isAdmin) {
     sideMenuItems.push({
-      text: `Toutes les candidatures en VAE Collective ${getCounterText("VAE_COLLECTIVE")}`,
-      linkProps: {
-        href: hrefSideMenu("VAE_COLLECTIVE"),
-      },
-      isActive: isActive("VAE_COLLECTIVE"),
-    });
-    sideMenuItems.push({
       text: `Tous les projets en cours d'édition ${getCounterText("PROJET_HORS_ABANDON")}`,
       linkProps: {
         href: hrefSideMenu("PROJET_HORS_ABANDON"),
       },
       isActive: isActive("PROJET_HORS_ABANDON"),
+    });
+  }
+  if (isVaeCollectiveFeatureActive) {
+    sideMenuItems.push({
+      text: `VAE Collective ${getCounterText("VAE_COLLECTIVE")}`,
+      linkProps: {
+        href: hrefSideMenu("VAE_COLLECTIVE"),
+      },
+      isActive: isActive("VAE_COLLECTIVE"),
     });
   }
 
