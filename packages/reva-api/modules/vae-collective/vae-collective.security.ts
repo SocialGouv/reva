@@ -5,4 +5,5 @@ export const vaeCollectiveResolversSecurityMap = {
 
   // Define specific resolver security rules
   "Query.getCohorteVAECollectiveByCodeInscription": isAnyone,
+  "Query.cohortesVaeCollectivesForConnectedAap": isAnyone, // La sécurité est gérée dans la feature (filtre par rapport au rôle de l'utilisateur)
 };

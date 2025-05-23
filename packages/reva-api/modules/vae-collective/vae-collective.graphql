@@ -1,5 +1,6 @@
 type Query {
   cohorteVaeCollective(codeInscription: String!): CohorteVaeCollective
+  cohortesVaeCollectivesForConnectedAap: [CohorteVaeCollective!]!
 }
 
 type CohorteVaeCollective {

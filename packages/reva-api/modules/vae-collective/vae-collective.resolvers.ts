@@ -4,6 +4,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { getCohorteVAECollectiveById } from "./features/getCohorteVAECollectiveById";
 import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
 import { getProjetVaeCollectiveById } from "./features/getProjetVaeCollectiveById";
+import { getCohortesVaeCollectivesForConnectedAap } from "./features/getCohortesVaeCollectivesForConnectedAap";
 
 const unsafeResolvers = {
   CohorteVaeCollective: {
@@ -34,6 +35,15 @@ const unsafeResolvers = {
     ) =>
       getCohorteVAECollectiveByCodeInscription({
         codeInscription,
+      }),
+    cohortesVaeCollectivesForConnectedAap: async (
+      _parent: unknown,
+      _args: unknown,
+      context: GraphqlContext,
+    ) =>
+      getCohortesVaeCollectivesForConnectedAap({
+        userKeycloakId: context.auth.userInfo?.sub || "",
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
   },
 };
