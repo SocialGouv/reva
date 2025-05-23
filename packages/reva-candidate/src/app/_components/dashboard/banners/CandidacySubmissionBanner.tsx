@@ -41,7 +41,9 @@ export const CandidacySubmissionBanner = ({
       content={
         <div data-test="need-to-complete-info-banner">
           Pour envoyer votre candidature à votre accompagnateur, complétez
-          toutes les catégories de la section “Compléter ma candidature”.
+          toutes les catégories de la section “Compléter ma candidature”. Tant
+          que votre candidature n'est pas envoyée, votre accompagnateur n'y aura
+          pas accès.
         </div>
       }
     />
