@@ -3,10 +3,10 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Fragment, useCallback } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
-import { Fragment, useCallback } from "react";
 
 const trainingFormSchema = z.object({
   individualHourCount: z
@@ -450,7 +450,6 @@ export const TrainingForm = ({
               ))}
             <Checkbox
               className="col-span-2"
-              disabled={disabled}
               small
               options={[
                 {
@@ -461,6 +460,7 @@ export const TrainingForm = ({
                         handleOtherSourceFinancingMethodChange(
                           e.target.checked,
                         ),
+                      disabled,
                     }),
                   },
                 },
