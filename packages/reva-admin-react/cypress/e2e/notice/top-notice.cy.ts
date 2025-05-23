@@ -21,8 +21,8 @@ function interceptCandidacies({
       stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
       stubQuery(
         req,
-        "getCandidacyByStatusCount",
-        "candidacy/candidacy-count-by-status.json",
+        "getCandidacyByStatusCountAndCohortesVaeCollectives",
+        "candidacy/candidacy-count-by-status-and-cohortes-vae-collectives.json",
       );
       stubQuery(req, "getCandidaciesByStatus", "candidacies/candidacies.json");
 

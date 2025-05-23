@@ -7,8 +7,11 @@ import {
 } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 
-const getCandidacyByStatusCount = graphql(`
-  query getCandidacyByStatusCount($searchFilter: String, $maisonMereAAPId: ID) {
+const getCandidacyByStatusCountAndCohortesVaeCollectives = graphql(`
+  query getCandidacyByStatusCountAndCohortesVaeCollectives(
+    $searchFilter: String
+    $maisonMereAAPId: ID
+  ) {
     candidacy_candidacyCountByStatus(
       searchFilter: $searchFilter
       maisonMereAAPId: $maisonMereAAPId
@@ -37,6 +40,10 @@ const getCandidacyByStatusCount = graphql(`
       CADUQUE
       DEMANDE_FINANCEMENT_ENVOYEE
       DEMANDE_PAIEMENT_ENVOYEE
+    }
+    cohortesVaeCollectivesForConnectedAap {
+      id
+      nom
     }
   }
 `);
@@ -118,15 +125,23 @@ export const useCandidacies = ({
   const { graphqlClient } = useGraphQlClient();
   const { isFeatureActive } = useFeatureflipping();
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
-  const { data: getCandidacyByStatusResponse } = useQuery({
-    queryKey: ["getCandidacyByStatusCount", searchFilter, maisonMereAAPId],
-    queryFn: () =>
-      graphqlClient.request(getCandidacyByStatusCount, {
+  const { data: getCandidacyByStatusCountAndCohortesVaeCollectivesResponse } =
+    useQuery({
+      queryKey: [
+        "getCandidacyByStatusCountAndCohortesVaeCollectives",
         searchFilter,
         maisonMereAAPId,
-      }),
-    enabled: !isFeatureActive("DISABLE_CANDIDACIES_PAGE_COUNTERS"),
-  });
+      ],
+      queryFn: () =>
+        graphqlClient.request(
+          getCandidacyByStatusCountAndCohortesVaeCollectives,
+          {
+            searchFilter,
+            maisonMereAAPId,
+          },
+        ),
+      enabled: !isFeatureActive("DISABLE_CANDIDACIES_PAGE_COUNTERS"),
+    });
 
   const { data: getCandidaciesByStatusResponse } = useQuery({
     queryKey: [
@@ -148,11 +163,15 @@ export const useCandidacies = ({
   });
 
   const candidaciesByStatusCount =
-    getCandidacyByStatusResponse?.candidacy_candidacyCountByStatus;
+    getCandidacyByStatusCountAndCohortesVaeCollectivesResponse?.candidacy_candidacyCountByStatus;
   const candidaciesByStatus = getCandidaciesByStatusResponse?.getCandidacies;
+  const cohortesVaeCollectives =
+    getCandidacyByStatusCountAndCohortesVaeCollectivesResponse?.cohortesVaeCollectivesForConnectedAap ||
+    [];
 
   return {
     candidaciesByStatusCount,
     candidaciesByStatus,
+    cohortesVaeCollectives,
   };
 };

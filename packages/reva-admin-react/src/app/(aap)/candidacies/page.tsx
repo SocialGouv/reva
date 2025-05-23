@@ -35,7 +35,11 @@ export default function CandidaciesPage() {
     [searchParams],
   );
 
-  const { candidaciesByStatusCount, candidaciesByStatus } = useCandidacies({
+  const {
+    candidaciesByStatusCount,
+    candidaciesByStatus,
+    cohortesVaeCollectives,
+  } = useCandidacies({
     searchFilter,
     statusFilter: (status as CandidacyStatusFilter) ?? "ACTIVE_HORS_ABANDON",
     sortByFilter:
@@ -69,6 +73,7 @@ export default function CandidaciesPage() {
       candidaciesByStatusCount={
         candidaciesByStatusCount as CandidacyCountByStatus
       }
+      cohortesVaeCollectives={cohortesVaeCollectives}
     >
       {maisonMereAAPId ? (
         <div>

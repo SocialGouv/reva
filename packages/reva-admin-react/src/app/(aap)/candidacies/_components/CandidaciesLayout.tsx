@@ -4,15 +4,17 @@ import {
   CandidacyCountByStatus,
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
-import SideMenu from "@codegouvfr/react-dsfr/SideMenu";
+import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 import { MaisonMereAAP } from "./MaisonMereAAP";
 
 const CandidacyLayoutSideMenu = ({
   candidaciesByStatusCount,
+  cohortesVaeCollectives,
 }: {
   candidaciesByStatusCount: CandidacyCountByStatus;
+  cohortesVaeCollectives: { id: string; nom: string }[];
 }) => {
   const searchParams = useSearchParams();
   const candidacyStatus = searchParams.get("status");
@@ -61,7 +63,7 @@ const CandidacyLayoutSideMenu = ({
   const getCounterText = (status: CandidacyStatusFilter) =>
     showCounters ? `(${candidaciesByStatusCount?.[status] ?? 0})` : "";
 
-  const sideMenuItems = [
+  const sideMenuItems: SideMenuProps.Item[] = [
     {
       linkProps: {
         href: hrefSideMenu("ACTIVE_HORS_ABANDON"),
@@ -256,6 +258,17 @@ const CandidacyLayoutSideMenu = ({
         href: hrefSideMenu("VAE_COLLECTIVE"),
       },
       isActive: isActive("VAE_COLLECTIVE"),
+      ...(!!cohortesVaeCollectives.length
+        ? {
+            items: cohortesVaeCollectives.map((cohorteVaeCollective) => ({
+              text: cohorteVaeCollective.nom,
+              linkProps: {
+                href: "#",
+              },
+              isActive: false,
+            })),
+          }
+        : {}),
     });
   }
 
@@ -281,13 +294,16 @@ const CandidacyLayoutSideMenu = ({
 export const CandidaciesLayout = ({
   children,
   candidaciesByStatusCount,
+  cohortesVaeCollectives,
 }: {
   children: ReactNode;
   candidaciesByStatusCount: CandidacyCountByStatus;
+  cohortesVaeCollectives: { id: string; nom: string }[];
 }) => (
   <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
     <CandidacyLayoutSideMenu
       candidaciesByStatusCount={candidaciesByStatusCount}
+      cohortesVaeCollectives={cohortesVaeCollectives}
     />
     <div className="mt-3 flex-1">{children}</div>
   </div>

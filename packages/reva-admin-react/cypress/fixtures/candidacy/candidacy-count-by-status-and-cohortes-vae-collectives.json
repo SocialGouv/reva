@@ -21,6 +21,7 @@
       "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON": 0,
       "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON": 0,
       "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON": 0
-    }
+    },
+    "cohortesVaeCollectivesForConnectedAap": []
   }
 }
