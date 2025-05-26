@@ -134,12 +134,6 @@ const getCandidaciesFromDb = async ({
     ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
   };
 
-  if (sortByFilter) {
-    whereClause = {
-      ...whereClause,
-    };
-  }
-
   const candidaciesCount = await prismaClient.candidacy.count({
     where: whereClause,
   });
