@@ -15,7 +15,7 @@ const getCertificationAuthorityRaisonSocialeAdminQuery = graphql(`
   }
 `);
 
-const useCertificationAuthority = ({
+export const useCertificationAuthority = ({
   certificationAuthorityId,
 }: {
   certificationAuthorityId: string;

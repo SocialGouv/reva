@@ -163,13 +163,13 @@ export const OrganismFilters = ({
               </p>
             </modalMcfInfo.Component>
             <Checkbox
+              data-test="checkbox-wrapper-mcf"
               small
               options={[
                 {
                   label:
                     "Afficher les accompagnateurs référencés sur Mon Compte Formation (MCF)",
                   nativeInputProps: {
-                    ...{ "data-test": "checkbox-wrapper-mcf-input" },
                     checked: filters.organismSearchMcf,
                     onChange: (e) => {
                       onSearch({

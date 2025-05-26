@@ -16,7 +16,7 @@ const modal = createModal({
   isOpenedByDefault: false,
 });
 
-export const DisableAccount = (props: Props) => {
+export const DisableAccount = (props: Props): JSX.Element | null => {
   const { accountId } = props;
 
   const { isAdmin } = useAuth();

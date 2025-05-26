@@ -6,7 +6,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { useCertificationAuthorityQueries } from "../certificationAuthorityQueries";
 
-const EmptyLocalAccountPage = () => {
+const EmptyLocalAccountPage = (): JSX.Element => {
   const { certifictionAuthority } = useCertificationAuthorityQueries();
 
   const router = useRouter();

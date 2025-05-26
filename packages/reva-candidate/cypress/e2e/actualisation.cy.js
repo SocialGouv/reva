@@ -3,7 +3,7 @@ import { stubQuery } from "../utils/graphql";
 
 const ACTUALISATION_FEATURE = "candidacy_actualisation";
 const CANDIDATE_CONFIRMATION_CHECKBOX =
-  '[data-test="actualisation-candidate-confirmation-checkbox-input"]';
+  '[data-test="actualisation-candidate-confirmation-checkbox"] input[type="checkbox"]';
 const DATE_INPUT = '[data-test="actualisation-date-input"] input';
 const SUBMIT_BUTTON = '[data-test="form-buttons"] button[type="submit"]';
 const RESET_BUTTON = '[data-test="form-buttons"] button[type="reset"]';

@@ -70,9 +70,11 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
     it("should enable form submission when indicating no prerequisites are required", () => {
       visitFeasibilityPrerequisites();
 
-      cy.get('[data-test="has-no-prerequisites-checkbox-input"]').check({
-        force: true,
-      });
+      cy.get('[data-test="has-no-prerequisites-checkbox"]')
+        .find('input[type="checkbox"]')
+        .check({
+          force: true,
+        });
 
       cy.get('[data-test="form-buttons"]')
         .should("exist")
@@ -114,9 +116,11 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
       cy.get('[data-test="prerequisite-input-0"]').should("exist");
       cy.get('[data-test="prerequisite-input-1"]').should("exist");
 
-      cy.get('[data-test="has-no-prerequisites-checkbox-input"]').check({
-        force: true,
-      });
+      cy.get('[data-test="has-no-prerequisites-checkbox"]')
+        .find('input[type="checkbox"]')
+        .check({
+          force: true,
+        });
 
       cy.get('[data-test="prerequisite-input-0"]').should("not.exist");
       cy.get('[data-test="prerequisite-input-1"]').should("not.exist");

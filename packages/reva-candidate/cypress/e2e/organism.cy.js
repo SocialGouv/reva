@@ -78,7 +78,7 @@ context("Candidacy with certification selected", () => {
 
   it("on site filters should be enabled only when on site is selected", function () {
     cy.get('[data-test="input-wrapper-zip"] input').should("be.disabled");
-    cy.get('[data-test="checkbox-wrapper-pmr-input"]').should("be.disabled");
+    cy.get('[data-test="checkbox-wrapper-pmr"] input').should("be.disabled");
 
     cy.get('[data-test="button-select-onsite"]').click();
 
@@ -88,7 +88,7 @@ context("Candidacy with certification selected", () => {
       "true",
     );
     cy.get('[data-test="input-wrapper-zip"] input').should("not.be.disabled");
-    cy.get('[data-test="checkbox-wrapper-pmr-input"]').should(
+    cy.get('[data-test="checkbox-wrapper-pmr"] input').should(
       "not.be.disabled",
     );
 
@@ -96,7 +96,7 @@ context("Candidacy with certification selected", () => {
     cy.get('[data-test="button-select-remote"]').click();
 
     cy.get('[data-test="input-wrapper-zip"] input').should("be.disabled");
-    cy.get('[data-test="checkbox-wrapper-pmr-input"]').should("be.disabled");
+    cy.get('[data-test="checkbox-wrapper-pmr"] input').should("be.disabled");
   });
 
   it("zip value is reset when on site is deselected", function () {
@@ -185,7 +185,7 @@ context("Candidacy with no organism results", () => {
           "true",
         );
         cy.get('[data-test="input-wrapper-zip"] input').type("44000");
-        cy.get('[data-test="checkbox-wrapper-pmr-input"]').check({
+        cy.get('[data-test="checkbox-wrapper-pmr"] input').check({
           force: true,
         });
 
@@ -201,7 +201,7 @@ context("Candidacy with no organism results", () => {
           "have.value",
           "",
         );
-        cy.get('[data-test="checkbox-wrapper-pmr-input"]').should(
+        cy.get('[data-test="checkbox-wrapper-pmr"] input').should(
           "not.be.checked",
         );
       });
@@ -223,12 +223,12 @@ context("Candidacy with no organism results", () => {
       });
 
       it(`mcf filter can be reset with ${filterButton}`, function () {
-        cy.get('[data-test="checkbox-wrapper-mcf-input"]').check({
+        cy.get('[data-test="checkbox-wrapper-mcf"] input').check({
           force: true,
         });
 
         cy.get(`[data-test="${filterButton}"]`).click();
-        cy.get('[data-test="checkbox-wrapper-mcf-input"]').should(
+        cy.get('[data-test="checkbox-wrapper-mcf"] input').should(
           "not.be.checked",
         );
       });

@@ -1,7 +1,8 @@
 import { GraphQLClient } from "graphql-request";
+import { GraphQLClientRequestHeaders } from "graphql-request/build/esm/types";
 
 interface GraphQLClientParams {
-  headers?: HeadersInit;
+  headers?: GraphQLClientRequestHeaders;
 }
 
 export const getGraphQLClient = (params: GraphQLClientParams) => {

@@ -21,7 +21,7 @@ const getCertificationAuthorityLocalAccountLabelAdminQuery = graphql(`
   }
 `);
 
-const useCertificationAuthorityLocalAccount = ({
+export const useCertificationAuthorityLocalAccount = ({
   certificationAuthorityLocalAccountId,
 }: {
   certificationAuthorityLocalAccountId: string;

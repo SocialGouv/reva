@@ -23,8 +23,7 @@ export const EmptyStateCertificationSearch = ({
         </p>
       )}
       <p>
-        Si votre recherche n'aboutit pas, contactez-nous à
-        support@vae.gouv.fr.{" "}
+        Si votre recherche n'aboutit pas, contactez-nous à support@vae.gouv.fr.{" "}
       </p>
     </div>
   );

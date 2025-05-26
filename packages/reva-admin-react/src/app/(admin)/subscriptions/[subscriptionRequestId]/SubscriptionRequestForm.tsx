@@ -34,13 +34,13 @@ const rejectSubscriptionRequestMutation = graphql(`
   }
 `);
 
-const schema = z.object({
+export const schema = z.object({
   decision: z.enum(["rejected", "validated"]),
   rejectionReason: z.string().default(""),
   internalComment: z.string().default(""),
 });
 
-type FormData = z.infer<typeof schema>;
+export type FormData = z.infer<typeof schema>;
 
 export const SubscriptionRequestForm = ({
   subscriptionRequestId,

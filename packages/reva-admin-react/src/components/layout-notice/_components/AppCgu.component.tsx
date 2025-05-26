@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import Notice from "@codegouvfr/react-dsfr/Notice";
 
-export const AapCgu = () => {
+export const AapCgu = (): JSX.Element | null => {
   return (
     <Notice
       data-test="new-cgu-notice"

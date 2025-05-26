@@ -182,13 +182,7 @@ export default function ActualisationPage() {
           options={[
             {
               label: "Je confirme être toujours en cours de parcours VAE.",
-              nativeInputProps: {
-                ...{
-                  "data-test":
-                    "actualisation-candidate-confirmation-checkbox-input",
-                },
-                ...register("candidateConfirmation"),
-              },
+              nativeInputProps: register("candidateConfirmation"),
             },
           ]}
           className="mb-10"

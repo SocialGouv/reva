@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-const competenceBlocFormSchema = z.object({
+export const competenceBlocFormSchema = z.object({
   label: z.string().min(1, "Merci de remplir ce champ").default(""),
   competences: z
     .object({

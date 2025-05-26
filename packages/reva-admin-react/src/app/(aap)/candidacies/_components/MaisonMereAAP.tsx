@@ -11,7 +11,11 @@ const getMaisonMereAAPRaisonSocialeAdminQuery = graphql(`
   }
 `);
 
-const useMaisonMereAAP = ({ maisonMereAAPId }: { maisonMereAAPId: string }) => {
+export const useMaisonMereAAP = ({
+  maisonMereAAPId,
+}: {
+  maisonMereAAPId: string;
+}) => {
   const { graphqlClient } = useGraphQlClient();
 
   const { data: maisonMereAAPData } = useQuery({

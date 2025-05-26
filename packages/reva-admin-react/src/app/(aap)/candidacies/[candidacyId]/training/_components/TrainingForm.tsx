@@ -84,8 +84,7 @@ export interface TrainingFormValues {
   candidacyFinancingMethodOtherSourceText?: string;
   candidacyFinancingMethodOtherSourceChecked?: boolean;
 }
-
-interface TrainingFormProps {
+export interface TrainingFormProps {
   defaultValues: NullablePartial<TrainingFormValues>;
   basicSkillsFromReferential: { id: string; label: string }[];
   trainingsFromReferential: { id: string; label: string }[];

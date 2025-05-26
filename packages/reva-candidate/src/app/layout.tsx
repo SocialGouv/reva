@@ -4,15 +4,16 @@ import "@/styles/globals.css";
 import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 
-import { DsfrHead } from "@/components/dsfr/DsfrHead";
-import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
-// import { getHtmlAttributes } from "@/components/dsfr/server-only-index";
-
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
+import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
+import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 
+import { DsfrHead } from "@/components/dsfr/DsfrHead";
+import { StartDsfr } from "@/components/dsfr/StartDsfr";
+import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 
@@ -40,22 +41,16 @@ export default function RootLayout({
   const matomoBaseUrl = process.env.NEXT_PUBLIC_MATOMO_URL;
   const matomoContainerName = process.env.NEXT_PUBLIC_MATOMO_CONTAINER_NAME;
 
-  const lang = "fr";
-
   return (
-    <html
-      //should use  <html {...getHtmlAttributes({ lang })} ... but calling getHtmlAttributes clashes with tailwind css overrides for unknown reasons
-      // {...getHtmlAttributes({ lang })}
-      lang={lang}
-    >
+    <html {...getHtmlAttributes({ defaultColorScheme })} lang="fr">
       <head>
-        <StartDsfrOnHydration />
+        <StartDsfr />
         <DsfrHead />
 
         <title>France VAE</title>
       </head>
       <body>
-        <DsfrProvider lang={lang}>
+        <DsfrProvider>
           <KeycloakProvider>
             <QueryClientProvider client={queryClient}>
               <Toaster position="top-right" />

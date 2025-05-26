@@ -40,14 +40,14 @@ function auth({ url, token }: { url: string; token: string }) {
         }),
       );
 
-      // const originalLocalStorageRemoveItem = win.localStorage.removeItem;
+      const originalLocalStorageRemoveItem = win.localStorage.removeItem;
 
-      // // We prevent Keycloak from removing the dummy state from localStorage
-      // cy.stub(win.localStorage, "removeItem").callsFake((key) => {
-      //   if (!key.startsWith("kc-")) {
-      //     originalLocalStorageRemoveItem(key);
-      //   }
-      // });
+      // We prevent Keycloak from removing the dummy state from localStorage
+      cy.stub(win.localStorage, "removeItem").callsFake((key) => {
+        if (!key.startsWith("kc-")) {
+          originalLocalStorageRemoveItem(key);
+        }
+      });
     },
   });
 }

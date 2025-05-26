@@ -38,12 +38,9 @@ export default function CandidacyDropOutDecisionPage() {
           candidacyId: candidacy?.id,
           dropOutConfirmed,
         });
-
-        router.push(
-          dropOutConfirmed
-            ? "/candidacy-dropout-decision/dropout-confirmation"
-            : "/",
-        );
+        dropOutConfirmed
+          ? router.push("/candidacy-dropout-decision/dropout-confirmation")
+          : router.push("/");
       }
     } catch (e) {
       graphqlErrorToast(e);

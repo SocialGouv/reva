@@ -86,7 +86,7 @@ const getCandidacyQuery = graphql(`
   }
 `);
 
-type FeasibilityInputType = {
+export type FeasibilityInputType = {
   candidacyId: string;
   certificationAuthorityId: string;
   feasibilityFile: File;

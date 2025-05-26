@@ -78,7 +78,7 @@ const updateJuryResultMutation = graphql(`
   }
 `);
 
-type ScheduleJuryInputType = {
+export type ScheduleJuryInputType = {
   candidacyId: string;
   date: string;
   time?: string;

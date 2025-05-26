@@ -25,7 +25,7 @@ const KeycloakContext = React.createContext<{
 } | null>(null);
 
 interface KeycloakProviderProps {
-  children: React.ReactNode;
+  children: JSX.Element | JSX.Element[];
 }
 
 export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {

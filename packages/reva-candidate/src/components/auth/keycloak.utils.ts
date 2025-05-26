@@ -1,5 +1,4 @@
 import { setCookie, deleteCookie, getCookie } from "cookies-next";
-
 import { errorToast } from "../toast/toast";
 
 const storageKey = "tokens";
@@ -14,7 +13,7 @@ export const getTokens = (): Tokens | undefined => {
   try {
     const tokensData = getCookie(storageKey);
     if (tokensData) {
-      const tokens = JSON.parse(tokensData as string);
+      const tokens = JSON.parse(tokensData);
       return tokens;
     }
   } catch (error) {

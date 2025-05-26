@@ -53,17 +53,12 @@ export function CguCertificateurForm() {
         <fieldset>
           <hr className="mt-6 mb-8" />
           <Checkbox
-            id="cgu-certificateur-charter-acceptance"
+            data-test="cgu-certificateur-charter-acceptance"
             options={[
               {
                 label:
                   "Je reconnais avoir lu et pris connaissance de la charte certificateur.",
-                nativeInputProps: {
-                  ...{
-                    "data-test": "cgu-certificateur-charter-acceptance-input",
-                  },
-                  ...register("charterAcceptance"),
-                },
+                nativeInputProps: register("charterAcceptance"),
               },
             ]}
           />
@@ -73,10 +68,7 @@ export function CguCertificateurForm() {
               {
                 label:
                   "J'accepte les nouvelles conditions générales d'utilisation.",
-                nativeInputProps: {
-                  ...{ "data-test": "cgu-certificateur-cgu-acceptance-input" },
-                  ...register("cguAcceptance"),
-                },
+                nativeInputProps: register("cguAcceptance"),
               },
             ]}
           />

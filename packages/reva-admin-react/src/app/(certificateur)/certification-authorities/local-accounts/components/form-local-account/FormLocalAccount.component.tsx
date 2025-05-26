@@ -35,7 +35,7 @@ interface Props {
   onDeleteButtonClick?: () => void;
 }
 
-export const FormLocalAccount = (props: Props) => {
+export const FormLocalAccount = (props: Props): JSX.Element => {
   const {
     localAccount,
     onSubmit,

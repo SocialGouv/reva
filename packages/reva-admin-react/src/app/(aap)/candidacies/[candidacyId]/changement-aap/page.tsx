@@ -304,7 +304,7 @@ const ReorientationPage = () => {
   );
 };
 
-const NoResult = () => {
+const NoResult = (): JSX.Element => {
   return (
     <div className="flex flex-col items-center gap-6">
       <Image

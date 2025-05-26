@@ -1,6 +1,6 @@
 {
   "ts-node": {
-    "files": true
+    "files": true,
   },
   "compilerOptions": {
     "module": "commonjs",
@@ -22,6 +22,6 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+  },
 }

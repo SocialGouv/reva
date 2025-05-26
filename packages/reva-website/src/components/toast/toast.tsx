@@ -1,7 +1,6 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import toast from "react-hot-toast";
 
-// eslint-disable-next-line import/no-unused-modules
 export const successToast = (
   props:
     | {
@@ -33,18 +32,16 @@ export const successToast = (
   );
 };
 
-const errorToast = (message: string) =>
+export const errorToast = (message: string) =>
   toast.custom(() => (
     <Alert severity="error" title={message} className="bg-white" />
   ));
 
-// eslint-disable-next-line import/no-unused-modules
 export const infoToast = (message: string) =>
   toast.custom(() => (
     <Alert severity="info" title={message} className="bg-white" />
   ));
 
-// eslint-disable-next-line import/no-unused-modules
 export const warningToast = (message: string) =>
   toast.custom(() => (
     <Alert severity="warning" title={message} className="bg-white" />

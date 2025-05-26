@@ -7,7 +7,7 @@ interface Props {
   defaultDisplay?: boolean;
 }
 
-export const FancyPreview = (props: Props) => {
+export const FancyPreview = (props: Props): JSX.Element | null => {
   const { title, name, src, defaultDisplay = true } = props;
 
   const [display, setDisplay] = useState<boolean>(defaultDisplay);

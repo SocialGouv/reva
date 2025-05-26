@@ -61,13 +61,13 @@ export const OrganismDistanceFilter = ({
           }}
         />
         <Checkbox
+          data-test="checkbox-wrapper-pmr"
           className="mt-8"
           options={[
             {
               label:
                 "Afficher uniquement les sites pouvant recevoir des personnes à mobilité réduite (PMR)",
               nativeInputProps: {
-                ...{ "data-test": "checkbox-wrapper-pmr-input" },
                 disabled,
                 onChange: handleChangePmr,
                 checked: filters.organismSearchPmr,

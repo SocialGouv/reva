@@ -10,6 +10,7 @@ export const AppointmentTiles = ({
 }: {
   candidacy: CandidacyUseCandidateForDashboard;
 }) => {
+  const appointments: JSX.Element[] = [];
   // When the candidacy has a failed jury result,
   // the user can submit another dossier de validation
   const failedJuryResults = [
@@ -24,39 +25,36 @@ export const AppointmentTiles = ({
   const canSubmitAgainAfterJury = failedJuryResults.includes(
     candidacy.jury?.result || "",
   );
-
-  const hasFirstAppointment =
+  if (
     candidacy.firstAppointmentOccuredAt &&
-    isAfter(candidacy.firstAppointmentOccuredAt, new Date());
+    isAfter(candidacy.firstAppointmentOccuredAt, new Date())
+  ) {
+    appointments.push(
+      <RendezVousPedagogiqueTile
+        firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
+      />,
+    );
+  }
 
-  const isReadyForJury =
+  if (
     candidacy.readyForJuryEstimatedAt &&
     (candidacy.activeDossierDeValidation?.decision !== "PENDING" ||
-      canSubmitAgainAfterJury);
+      canSubmitAgainAfterJury)
+  ) {
+    appointments.push(
+      <ReadyForJuryTile
+        readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt}
+      />,
+    );
+  }
 
-  const hasDateOfJurySession =
-    candidacy.jury && isAfter(candidacy.jury.dateOfSession, new Date());
+  if (candidacy.jury && isAfter(candidacy.jury.dateOfSession, new Date())) {
+    appointments.push(<JurySessionTile jury={candidacy.jury} />);
+  }
 
-  const hasNoAppointment =
-    !hasFirstAppointment && !isReadyForJury && !hasDateOfJurySession;
+  if (appointments.length === 0) {
+    appointments.push(<NoRendezVousTile />);
+  }
 
-  return (
-    <>
-      {hasFirstAppointment && (
-        <RendezVousPedagogiqueTile
-          firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt!}
-        />
-      )}
-
-      {isReadyForJury && (
-        <ReadyForJuryTile
-          readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt!}
-        />
-      )}
-
-      {hasDateOfJurySession && <JurySessionTile jury={candidacy.jury} />}
-
-      {hasNoAppointment && <NoRendezVousTile />}
-    </>
-  );
+  return appointments;
 };
