@@ -1,5 +1,6 @@
 import { GenderEnum } from "@/constants";
 import { Candidate, Gender } from "@/graphql/generated/graphql";
+import { getDateWithoutTz } from "@/utils/getDateWithoutTz";
 import { format } from "date-fns";
 
 function getGenderPrefix(gender: Gender) {
@@ -56,6 +57,7 @@ export default function CandidateSection({
   const bornLabel = gender ? getGenderBornLabel(gender) : "";
 
   const isFrance = country ? country?.label == "France" : false;
+  const birthdateWithoutTz = getDateWithoutTz(birthdate);
 
   return (
     <div>
@@ -72,7 +74,9 @@ export default function CandidateSection({
       </div>
       <p className="mb-2 flex gap-2">
         {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
-        {birthdate && <span>le : {format(birthdate, "dd/MM/yyyy")}</span>}
+        {birthdateWithoutTz && (
+          <span>le : {format(birthdateWithoutTz, "dd/MM/yyyy")}</span>
+        )}
         <span>
           à {birthCity}
           {country && isFrance && birthDepartment
