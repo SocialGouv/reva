@@ -122,6 +122,7 @@ const unsafeResolvers = {
         searchFilter?: string;
         sortByFilter?: CandidacySortByFilter;
         maisonMereAAPId?: string;
+        cohorteVaeCollectiveId?: string;
       },
       context: GraphqlContext,
     ) => {

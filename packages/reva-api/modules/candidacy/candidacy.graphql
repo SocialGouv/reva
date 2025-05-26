@@ -249,6 +249,7 @@ type Query {
     searchFilter: String
     sortByFilter: CandidacySortByFilter
     maisonMereAAPId: ID
+    cohorteVaeCollectiveId: ID
   ): CandidacyPage!
   getRandomOrganismsForCandidacy(
     candidacyId: UUID!

@@ -21,6 +21,7 @@ export const getCandidacies = async ({
   searchFilter,
   sortByFilter,
   maisonMereAAPId,
+  cohorteVaeCollectiveId,
 }: {
   hasRole(role: string): boolean;
   iAMId: string;
@@ -30,6 +31,7 @@ export const getCandidacies = async ({
   searchFilter?: string;
   sortByFilter?: CandidacySortByFilter;
   maisonMereAAPId?: string;
+  cohorteVaeCollectiveId?: string;
 }) => {
   const realOffset = offset || 0;
   const realLimit = limit || 10000;
@@ -67,6 +69,7 @@ export const getCandidacies = async ({
       statusFilter,
       searchFilter,
       sortByFilter,
+      cohorteVaeCollectiveId,
     });
   } else if (hasRole("manage_candidacy")) {
     candidaciesAndTotal = await getCandidaciesFromDb({
@@ -76,6 +79,7 @@ export const getCandidacies = async ({
       statusFilter,
       searchFilter,
       sortByFilter,
+      cohorteVaeCollectiveId,
     });
   }
 
@@ -96,6 +100,7 @@ const getCandidaciesFromDb = async ({
   statusFilter,
   searchFilter,
   sortByFilter,
+  cohorteVaeCollectiveId,
 }: {
   limit: number;
   offset: number;
@@ -103,6 +108,7 @@ const getCandidaciesFromDb = async ({
   statusFilter?: CandidacyStatusFilter;
   searchFilter?: string;
   sortByFilter?: CandidacySortByFilter;
+  cohorteVaeCollectiveId?: string;
 }) => {
   let whereClause: Prisma.CandidacyWhereInput = organismAccountKeycloakId
     ? {
@@ -133,6 +139,13 @@ const getCandidaciesFromDb = async ({
     ...getWhereClauseFromStatusFilter(statusFilter),
     ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
   };
+
+  if (cohorteVaeCollectiveId) {
+    whereClause = {
+      ...whereClause,
+      cohorteVaeCollectiveId,
+    };
+  }
 
   const candidaciesCount = await prismaClient.candidacy.count({
     where: whereClause,
