@@ -29,6 +29,9 @@ export default function CandidaciesPage() {
   const maisonMereAAPId = searchParams.get("maisonMereAAPId") as
     | string
     | undefined;
+  const cohorteVaeCollectiveId = searchParams.get("cohorteVaeCollectiveId") as
+    | string
+    | undefined;
 
   const params = useMemo(
     () => new URLSearchParams(searchParams),
@@ -46,6 +49,7 @@ export default function CandidaciesPage() {
       (sortByFilter as CandidacySortByFilter) ?? "DATE_CREATION_DESC",
     currentPage,
     maisonMereAAPId,
+    cohorteVaeCollectiveId,
   });
 
   useEffect(() => {

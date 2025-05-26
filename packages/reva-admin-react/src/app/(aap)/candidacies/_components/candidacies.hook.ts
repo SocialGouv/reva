@@ -55,6 +55,7 @@ const getCandidaciesByStatus = graphql(`
     $sortByFilter: CandidacySortByFilter
     $offset: Int
     $maisonMereAAPId: ID
+    $cohorteVaeCollectiveId: ID
   ) {
     getCandidacies(
       searchFilter: $searchFilter
@@ -63,6 +64,7 @@ const getCandidaciesByStatus = graphql(`
       limit: 10
       offset: $offset
       maisonMereAAPId: $maisonMereAAPId
+      cohorteVaeCollectiveId: $cohorteVaeCollectiveId
     ) {
       rows {
         id
@@ -114,12 +116,14 @@ export const useCandidacies = ({
   sortByFilter,
   currentPage,
   maisonMereAAPId,
+  cohorteVaeCollectiveId,
 }: {
   searchFilter: string;
   statusFilter: CandidacyStatusFilter;
   sortByFilter: CandidacySortByFilter;
   currentPage: number;
   maisonMereAAPId?: string;
+  cohorteVaeCollectiveId?: string;
 }) => {
   const RECORDS_PER_PAGE = 10;
   const { graphqlClient } = useGraphQlClient();
@@ -151,6 +155,7 @@ export const useCandidacies = ({
       sortByFilter,
       currentPage,
       maisonMereAAPId,
+      cohorteVaeCollectiveId,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesByStatus, {
@@ -159,6 +164,7 @@ export const useCandidacies = ({
         sortByFilter,
         offset,
         maisonMereAAPId,
+        cohorteVaeCollectiveId,
       }),
   });
 

@@ -37,7 +37,10 @@ const CandidacyLayoutSideMenu = ({
 
   const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
 
-  const hrefSideMenu = (status: CandidacyStatusFilter) => {
+  const hrefSideMenu = (
+    status: CandidacyStatusFilter,
+    extraParams?: Record<string, string>,
+  ) => {
     const params = new URLSearchParams();
     params.set("page", "1");
     params.set("status", status);
@@ -52,11 +55,23 @@ const CandidacyLayoutSideMenu = ({
       params.set("maisonMereAAPId", maisonMereAAPId);
     }
 
+    //add extra params to the url params
+    Object.entries(extraParams || {}).forEach(([key, value]) => {
+      params.set(key, value);
+    });
+
     return `/candidacies?${params.toString()}`;
   };
 
-  const isActive = (status: CandidacyStatusFilter) =>
-    candidacyStatus === status;
+  const isActive = (
+    status: CandidacyStatusFilter,
+    extraParams?: Record<string, string>,
+  ) =>
+    candidacyStatus === status &&
+    //if isActive depends on extraParams we check if they are all present in the url
+    Object.entries(extraParams || {}).every(
+      ([key, value]) => searchParams.get(key) === value,
+    );
 
   const showCounters = !isFeatureActive("DISABLE_CANDIDACIES_PAGE_COUNTERS");
 
@@ -252,20 +267,25 @@ const CandidacyLayoutSideMenu = ({
     });
   }
   if (isVaeCollectiveFeatureActive) {
+    const cohorteSelected = !!searchParams.get("cohorteVaeCollectiveId");
     sideMenuItems.push({
       text: `VAE Collective ${getCounterText("VAE_COLLECTIVE")}`,
       linkProps: {
         href: hrefSideMenu("VAE_COLLECTIVE"),
       },
-      isActive: isActive("VAE_COLLECTIVE"),
+      isActive: isActive("VAE_COLLECTIVE") && !cohorteSelected,
       ...(!!cohortesVaeCollectives.length
         ? {
             items: cohortesVaeCollectives.map((cohorteVaeCollective) => ({
               text: cohorteVaeCollective.nom,
               linkProps: {
-                href: "#",
+                href: hrefSideMenu("VAE_COLLECTIVE", {
+                  cohorteVaeCollectiveId: cohorteVaeCollective.id,
+                }),
               },
-              isActive: false,
+              isActive: isActive("VAE_COLLECTIVE", {
+                cohorteVaeCollectiveId: cohorteVaeCollective.id,
+              }),
             })),
           }
         : {}),
