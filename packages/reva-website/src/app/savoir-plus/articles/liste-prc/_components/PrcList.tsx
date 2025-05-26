@@ -1,26 +1,24 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 
-export const PrcList = ({
-  prcs,
-}: {
-  prcs: ({
-    documentId: string;
+type PrcList = ({
+  documentId: string;
+  nom: string;
+  email: string;
+  adresse: string;
+  mandataire?: string | null;
+  region?: string | null;
+  telephone?: string | null;
+  departement?: {
+    __typename?: "Departement";
     nom: string;
-    email: string;
-    adresse: string;
-    mandataire?: string | null;
-    region?: string | null;
-    telephone?: string | null;
-    departement?: {
-      __typename?: "Departement";
-      nom: string;
-      code: string;
-    } | null;
-  } | null)[];
-}) => {
+    code: string;
+  } | null;
+} | null)[];
+
+const ListComponent = ({ prcs }: { prcs: PrcList }) => {
   const searchParams = useSearchParams();
   const searchFilter = searchParams?.get("search") || "";
   const displayedPrcs = useMemo(() => {
@@ -105,5 +103,13 @@ export const PrcList = ({
         ))}
       </div>
     </>
+  );
+};
+
+export const PrcList = ({ prcs }: { prcs: PrcList }) => {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <ListComponent prcs={prcs} />
+    </Suspense>
   );
 };
