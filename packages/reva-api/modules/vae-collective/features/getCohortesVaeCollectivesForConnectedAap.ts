@@ -8,7 +8,7 @@ export const getCohortesVaeCollectivesForConnectedAap = async ({
   userRoles: KeyCloakUserRole[];
 }) => {
   //Si l'aap est gestionnaire de maison mère on
-  //retourne toutes les cohortes de vae collectives associées à un organisme faisant partie de la maison mère de l'aap
+  //retourne toutes les cohortes de vae collectives associées à une candidature faisant partie de la maison mère de l'aap
   if (userRoles.includes("gestion_maison_mere_aap")) {
     const userMaisonMereAAP = await prismaClient.maisonMereAAP.findFirst({
       where: {
@@ -20,13 +20,9 @@ export const getCohortesVaeCollectivesForConnectedAap = async ({
     }
     return prismaClient.cohorteVaeCollective.findMany({
       where: {
-        certificationCohorteVaeCollectives: {
+        candidacy: {
           some: {
-            certificationCohorteVaeCollectiveOnOrganisms: {
-              some: {
-                organism: { maisonMereAAPId: userMaisonMereAAP.id },
-              },
-            },
+            organism: { maisonMereAAPId: userMaisonMereAAP.id },
           },
         },
       },
@@ -34,7 +30,7 @@ export const getCohortesVaeCollectivesForConnectedAap = async ({
   }
 
   //Si l'aap est un aap non gestionnaire de maison mère on
-  //retourne toutes les cohortes de vae collectives associées à son organisme
+  //retourne toutes les cohortes de vae collectives dont au moins une candidature est associée à son organisme
   else if (userRoles.includes("manage_candidacy")) {
     const userOrganism = await prismaClient.organism.findFirst({
       where: {
@@ -46,13 +42,9 @@ export const getCohortesVaeCollectivesForConnectedAap = async ({
     }
     return prismaClient.cohorteVaeCollective.findMany({
       where: {
-        certificationCohorteVaeCollectives: {
+        candidacy: {
           some: {
-            certificationCohorteVaeCollectiveOnOrganisms: {
-              some: {
-                organismId: userOrganism.id,
-              },
-            },
+            organismId: userOrganism.id,
           },
         },
       },
