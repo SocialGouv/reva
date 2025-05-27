@@ -6,6 +6,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { request } from "graphql-request";
 import { HelpSection } from "./_components/HelpSection";
 import { draftMode } from "next/headers";
+import { ArticleDAide } from "@/graphql/generated/graphql";
 
 export const metadata = {
   title: "France VAE | Espace d'information ",
@@ -49,7 +50,7 @@ const SavoirPlusPage = async () => {
                   defaultExpanded={!index}
                   key={sa?.documentId}
                 >
-                  <HelpSection articles={articles} />
+                  <HelpSection articles={articles as ArticleDAide[]} />
                 </Accordion>
               );
             })}
