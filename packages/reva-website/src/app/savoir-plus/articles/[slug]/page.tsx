@@ -6,10 +6,11 @@ import request from "graphql-request";
 import { draftMode } from "next/headers";
 
 export const generateMetadata = async ({
-  params: { slug },
+  params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) => {
+  const { slug } = await params;
   const articleResponse = await getArticleDAide(slug, false);
   const article = articleResponse?.articleDAides[0];
   return {
