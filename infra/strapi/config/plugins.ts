@@ -42,7 +42,7 @@ module.exports = ({ env }) => ({
           uid: "api::region.region",
           draft: {
             alwaysVisible: true,
-            url: `${env("WEBSITE_URL")}/websiteapi/app/preview`,
+            url: `${env("WEBSITE_URL")}/websiteapi/preview`,
             query: {
               type: "region",
               slug: "{slug}",
@@ -57,7 +57,7 @@ module.exports = ({ env }) => ({
           uid: "api::article-region.article-region",
           draft: {
             alwaysVisible: true,
-            url: `${env("WEBSITE_URL")}/websiteapi/app/preview`,
+            url: `${env("WEBSITE_URL")}/websiteapi/preview`,
             query: {
               type: "article-region",
               slug: "{slug}",
