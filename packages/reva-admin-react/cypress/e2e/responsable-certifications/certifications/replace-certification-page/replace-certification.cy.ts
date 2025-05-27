@@ -1,4 +1,4 @@
-import { stubQuery, stubMutation } from "../../../utils/graphql";
+import { stubQuery, stubMutation } from "../../../../utils/graphql";
 import certificationBpBoucher from "./fixtures/certification-bp-boucher.json";
 import fcCertificationRncp3890 from "./fixtures/get-fc-certification-rncp-3890.json";
 import replaceCertificationResponse from "./fixtures/replace-certification-mutation-response.json";

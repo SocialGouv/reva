@@ -342,4 +342,53 @@ context("when i access the update certification page ", () => {
       cy.get('[data-test="form-buttons"]').should("not.exist");
     });
   });
+
+  const validStatusForReplacement: CertificationStatus[] = [
+    "VALIDE_PAR_CERTIFICATEUR",
+    "INACTIVE",
+  ];
+
+  context("replace certification", () => {
+    validStatusForReplacement.forEach((withStatus) =>
+      it(`should display the replace certification button and navigate to replace page when clicked when status is ${withStatus}`, function () {
+        interceptCertification({ withStatus });
+
+        cy.certificateurRegistryManager(
+          "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+        );
+        cy.wait("@activeFeaturesForConnectedUser");
+        cy.wait("@getOrganismForAAPVisibilityCheck");
+        cy.wait("@getMaisonMereCGUQuery");
+        cy.wait(
+          "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
+        );
+
+        cy.get('[data-test="replace-certification-button"]').click();
+
+        cy.url().should(
+          "eq",
+          "http://localhost:3003/admin2/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b/replace/",
+        );
+      }),
+    );
+
+    it("should not display the replace certification button when the certification has to be validated", function () {
+      interceptCertification({ withStatus: "A_VALIDER_PAR_CERTIFICATEUR" });
+      cy.certificateurRegistryManager(
+        "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
+      );
+      cy.wait("@activeFeaturesForConnectedUser");
+      cy.wait("@getOrganismForAAPVisibilityCheck");
+      cy.wait("@getMaisonMereCGUQuery");
+      cy.wait(
+        "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
+      );
+
+      cy.get(
+        '[data-test="certification-registry-manager-update-certification-page"]',
+      ).should("exist");
+
+      cy.get('[data-test="replace-certification-button"]').should("not.exist");
+    });
+  });
 });

@@ -75,6 +75,10 @@ const PageContent = ({
   const { isAdmin } = useAuth();
   //Temporirarilry set isEditable to true to allow admins to update existing certifications
 
+  const isReplaceButtonEnabled = isAdmin
+    ? true
+    : certification.status != "A_VALIDER_PAR_CERTIFICATEUR";
+
   const isValidationButtonEnabled = isAdmin
     ? true
     : certification.status == "A_VALIDER_PAR_CERTIFICATEUR";
@@ -276,9 +280,48 @@ const PageContent = ({
           certificationAdditionalInfo={certification.additionalInfo}
         />
 
+        {isReplaceButtonEnabled && (
+          <div>
+            <hr className="mb-0" />
+            <h2>Remplacement de la certification par une nouvelle version</h2>
+            <p>
+              <span className="text-lg font-medium text-neutral-900">
+                Besoin de mettre à jour cette certification ?
+              </span>
+              <br />
+              <br />
+              Vous pouvez renseigner le nouveau code RNCP et renouveler à
+              l'identique les informations de cette certification, avec celles
+              de France Compétences et du Formacode : le jury, les blocs de
+              compétences, les prérequis obligatoires et les ressources
+              complémentaires.
+              <br />
+              <br />
+              Si vous rencontrez des difficultés, vous pouvez contacter France
+              VAE à{" "}
+              <a className="fr-link" href="mailto:contact@vae.gouv.fr">
+                contact@vae.gouv.fr
+              </a>
+            </p>
+            <div className="flex justify-end">
+              <Button
+                data-test="replace-certification-button"
+                priority="primary"
+                onClick={() =>
+                  router.push(
+                    `/responsable-certifications/certifications/${certification.id}/replace`,
+                  )
+                }
+              >
+                Remplacer cette certification
+              </Button>
+            </div>
+          </div>
+        )}
+
         {isValidationButtonEnabled && (
           <>
-            <div className=" h-[1px] w-[100%] bg-dsfr-light-decisions-border-border-default-grey" />
+            <hr />
 
             <div>
               <h2 className="mb-4">Validation de la certification</h2>

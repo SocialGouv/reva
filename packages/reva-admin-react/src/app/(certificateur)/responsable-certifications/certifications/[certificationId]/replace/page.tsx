@@ -204,7 +204,7 @@ export default function ReplaceCertificationPage() {
         <Button
           priority="secondary"
           linkProps={{
-            href: `/certifications/${certificationId}`,
+            href: `/responsable-certifications/certifications/${certificationId}`,
             target: "_self",
           }}
         >
