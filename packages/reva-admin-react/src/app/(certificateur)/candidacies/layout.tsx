@@ -3,7 +3,7 @@ import { useAuth } from "@/components/auth/auth";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
+import { SideMenu, SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
@@ -89,6 +89,8 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const isCandidacyActualisationActive = isFeatureActive(
     "candidacy_actualisation",
   );
+
+  const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
 
   const { data: getFeasibilityCountByCategoryResponse } = useQuery({
     queryKey: [
@@ -266,6 +268,14 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     }),
   ];
 
+  const vaeCollectiveItems: SideMenuProps["items"] = [
+    menuItem({
+      text: "VAE collective",
+      path: "/candidacies/feasibilities",
+      category: "VAE_COLLECTIVE",
+    }),
+  ];
+
   const menuItems = [
     {
       items: feasibilityItems,
@@ -274,7 +284,8 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
         currentPathname.startsWith("/candidacies/feasibilities") &&
         searchParams.get("CATEGORY") != "REJECTED" &&
         searchParams.get("CATEGORY") != "DROPPED_OUT" &&
-        searchParams.get("CATEGORY") != "ARCHIVED",
+        searchParams.get("CATEGORY") != "ARCHIVED" &&
+        searchParams.get("CATEGORY") != "VAE_COLLECTIVE",
     },
     {
       items: dossierDeValidationItems,
@@ -288,6 +299,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       text: `Jurys (${juryCount})`,
       expandedByDefault: currentPathname.startsWith("/candidacies/juries"),
     },
+    ...(isVaeCollectiveFeatureActive ? vaeCollectiveItems : []),
     menuItem({
       text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
       path: "/candidacies/feasibilities",
