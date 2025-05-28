@@ -31,6 +31,7 @@ const getFeasibilityCountByCategoryQuery = graphql(`
       DROPPED_OUT
       CADUQUE
       CONTESTATION
+      VAE_COLLECTIVE
     }
   }
 `);
@@ -270,7 +271,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const vaeCollectiveItems: SideMenuProps["items"] = [
     menuItem({
-      text: "VAE collective",
+      text: `VAE collective (${feasibilityCountByCategory?.VAE_COLLECTIVE || 0})`,
       path: "/candidacies/feasibilities",
       category: "VAE_COLLECTIVE",
     }),
