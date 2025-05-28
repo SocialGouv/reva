@@ -1,15 +1,27 @@
-import { WhiteCard } from "@/components/card/white-card/WhiteCard";
-import Button from "@codegouvfr/react-dsfr/Button";
 import {
   SearchList,
   SearchListProps,
 } from "@/components/search/search-list/SearchList";
+import Card from "@codegouvfr/react-dsfr/Card";
+import Tag from "@codegouvfr/react-dsfr/Tag";
+import { format } from "date-fns";
 
 type CandidacySearchResult<T> = T & {
   id: string;
+  feasibilityFileSentAt?: number | null;
   candidacy: {
     id: string;
-    certification?: { label: string } | null;
+    cohorteVaeCollective?: {
+      nom: string;
+      projetVaeCollective: {
+        nom: string;
+        commanditaireVaeCollective: {
+          raisonSociale: string;
+        };
+      };
+    } | null;
+    certification?: { label: string; codeRncp: string } | null;
+    organism?: { label: string; nomPublic?: string | null } | null;
     candidate?: {
       department?: { code: string; label: string } | null;
       firstname: string;
@@ -23,7 +35,6 @@ export const CandidacySearchList = <T,>({
   searchFilter,
   searchResultsPage,
   searchResultLink,
-  children,
 }: SearchListProps<CandidacySearchResult<T>> & {
   searchResultLink: (candidacyId: string) => string;
 }) => {
@@ -35,32 +46,61 @@ export const CandidacySearchList = <T,>({
       searchResultsPage={searchResultsPage}
     >
       {(r) => (
-        <WhiteCard key={r.id} className="grid grid-cols-2 gap-2">
-          <h3 className="text-xl font-semibold col-span-2 mb-0">
-            {r.candidacy.certification?.label}
-          </h3>
-          <dl className="col-span-2 grid grid-cols-2 gap-2">
-            <dt className="sr-only">Prénom et nom</dt>
-            <dd className="text-lg uppercase">
-              {r.candidacy.candidate?.firstname}{" "}
-              {r.candidacy.candidate?.lastname}
-            </dd>
-            <dt className="sr-only">Département</dt>
-            <dd className="text-lg">
-              {r.candidacy.candidate?.department?.label} (
-              {r.candidacy.candidate?.department?.code})
-            </dd>
-          </dl>
-          {children?.(r)}
-          <Button
-            className="ml-auto col-start-2"
-            linkProps={{
-              href: searchResultLink(r.candidacy.id),
-            }}
-          >
-            Accéder à la candidature
-          </Button>
-        </WhiteCard>
+        <Card
+          title={`${r.candidacy.candidate?.firstname} ${r.candidacy.candidate?.lastname}`}
+          shadow
+          size="small"
+          start={
+            <ul className="list-none m-0 mb-1 p-0">
+              {!!r.candidacy.cohorteVaeCollective && (
+                <li>
+                  <Tag small>VAE Collective</Tag>
+                </li>
+              )}
+            </ul>
+          }
+          detail={`${r.candidacy.candidate?.department?.label} (${r.candidacy.candidate?.department?.code})`}
+          desc={
+            <div>
+              <span>
+                RNCP {r.candidacy.certification?.codeRncp}{" "}
+                {r.candidacy.certification?.label}
+              </span>
+              {r.candidacy.organism && (
+                <>
+                  <br />
+                  <span>
+                    {r.candidacy.organism?.nomPublic ||
+                      r.candidacy.organism?.label}
+                  </span>
+                </>
+              )}
+              {!!r.candidacy.cohorteVaeCollective && (
+                <>
+                  <br />
+                  <span>
+                    {
+                      r.candidacy.cohorteVaeCollective.projetVaeCollective
+                        .commanditaireVaeCollective.raisonSociale
+                    }{" "}
+                    - (
+                    {r.candidacy.cohorteVaeCollective.projetVaeCollective.nom}{" "}
+                    <br /> - Cohorte : {r.candidacy.cohorteVaeCollective.nom})
+                  </span>
+                </>
+              )}
+            </div>
+          }
+          endDetail={
+            r.feasibilityFileSentAt &&
+            `Dossier envoyé le ${format(r.feasibilityFileSentAt, "d MMM yyyy")}`
+          }
+          linkProps={{
+            href: searchResultLink(r.candidacy.id),
+          }}
+          key={r.id}
+          enlargeLink
+        />
       )}
     </SearchList>
   );

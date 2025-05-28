@@ -4,7 +4,6 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { FeasibilityCategoryFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
@@ -33,8 +32,13 @@ const getFeasibilitiesQuery = graphql(`
         id
         feasibilityFileSentAt
         candidacy {
+          organism {
+            nomPublic
+            label
+          }
           id
           certification {
+            codeRncp
             label
           }
           candidate {
@@ -43,6 +47,15 @@ const getFeasibilitiesQuery = graphql(`
             department {
               code
               label
+            }
+          }
+          cohorteVaeCollective {
+            nom
+            projetVaeCollective {
+              nom
+              commanditaireVaeCollective {
+                raisonSociale
+              }
             }
           }
         }
@@ -207,16 +220,7 @@ const FeasibilitiesPage = () => {
           searchResultLink={(candidacyId) =>
             `/candidacies/${candidacyId}/feasibility`
           }
-        >
-          {(r) =>
-            r.feasibilityFileSentAt && (
-              <p className="text-lg col-span-2 mb-0">
-                Dossier envoyé le{" "}
-                {format(r.feasibilityFileSentAt, "d MMM yyyy")}
-              </p>
-            )
-          }
-        </CandidacySearchList>
+        />
       </div>
     )
   );
