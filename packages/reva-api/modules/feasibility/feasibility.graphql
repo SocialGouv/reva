@@ -76,6 +76,7 @@ enum FeasibilityCategoryFilter {
   DROPPED_OUT
   CADUQUE
   CONTESTATION
+  VAE_COLLECTIVE
 }
 
 type Query {

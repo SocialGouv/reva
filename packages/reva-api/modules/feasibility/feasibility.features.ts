@@ -678,6 +678,14 @@ export const getActiveFeasibilities = async ({
         candidacy: { candidacyDropOut: { isNot: null } },
       };
       break;
+
+    case "VAE_COLLECTIVE":
+      queryWhereClause = {
+        ...queryWhereClause,
+        candidacy: { cohorteVaeCollectiveId: { not: null } },
+      };
+      break;
+
     default:
       queryWhereClause = {
         ...queryWhereClause,

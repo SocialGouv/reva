@@ -6,4 +6,5 @@ export type FeasibilityCategoryFilter =
   | "ADMISSIBLE"
   | "INCOMPLETE"
   | "ARCHIVED"
+  | "VAE_COLLECTIVE"
   | "DROPPED_OUT";
