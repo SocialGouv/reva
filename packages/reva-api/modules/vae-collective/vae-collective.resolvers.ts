@@ -5,6 +5,7 @@ import { getCohorteVAECollectiveById } from "./features/getCohorteVAECollectiveB
 import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
 import { getProjetVaeCollectiveById } from "./features/getProjetVaeCollectiveById";
 import { getCohortesVaeCollectivesForConnectedAap } from "./features/getCohortesVaeCollectivesForConnectedAap";
+import { getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount } from "./features/getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount";
 
 const unsafeResolvers = {
   CohorteVaeCollective: {
@@ -45,6 +46,14 @@ const unsafeResolvers = {
         userKeycloakId: context.auth.userInfo?.sub || "",
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
+    cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount:
+      async (_parent: unknown, _args: unknown, context: GraphqlContext) =>
+        getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount(
+          {
+            userKeycloakId: context.auth.userInfo?.sub || "",
+            userRoles: context.auth.userInfo?.realm_access?.roles || [],
+          },
+        ),
   },
 };
 
