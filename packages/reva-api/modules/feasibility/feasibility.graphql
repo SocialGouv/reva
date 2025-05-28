@@ -93,6 +93,7 @@ type Query {
     searchFilter: String
     certificationAuthorityId: ID
     certificationAuthorityLocalAccountId: ID
+    cohorteVaeCollectiveId: ID
   ): FeasibilityPage!
   feasibility(feasibilityId: ID!): Feasibility
   feasibility_getActiveFeasibilityByCandidacyId(candidacyId: ID!): Feasibility

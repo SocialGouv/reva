@@ -56,6 +56,7 @@ const unsafeResolvers = {
         searchFilter?: string;
         certificationAuthorityId?: string;
         certificationAuthorityLocalAccountId?: string;
+        cohorteVaeCollectiveId?: string;
       },
       context: any,
     ) =>

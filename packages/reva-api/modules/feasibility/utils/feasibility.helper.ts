@@ -52,9 +52,13 @@ export const excludeRejectedArchivedDraftAndDroppedOutCandidacyAndIrrelevantStat
     },
   };
 
-export const getWhereClauseFromStatusFilter = (
-  statusFilter?: FeasibilityStatusFilter,
-) => {
+export const getWhereClauseFromStatusFilter = ({
+  statusFilter,
+  cohorteVaeCollectiveId,
+}: {
+  statusFilter?: FeasibilityStatusFilter;
+  cohorteVaeCollectiveId?: string;
+}) => {
   let whereClause: Prisma.FeasibilityWhereInput = { isActive: true };
 
   switch (statusFilter) {
@@ -129,7 +133,9 @@ export const getWhereClauseFromStatusFilter = (
     case "VAE_COLLECTIVE":
       whereClause = {
         ...whereClause,
-        candidacy: { cohorteVaeCollectiveId: { not: null } },
+        candidacy: cohorteVaeCollectiveId
+          ? { cohorteVaeCollectiveId }
+          : { cohorteVaeCollectiveId: { not: null } },
       };
       break;
   }

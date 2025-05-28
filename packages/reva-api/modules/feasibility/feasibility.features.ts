@@ -458,12 +458,14 @@ export const getActiveFeasibilityCountByCategory = async ({
   searchFilter,
   certificationAuthorityId,
   certificationAuthorityLocalAccountId,
+  cohorteVaeCollectiveId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   searchFilter?: string;
   certificationAuthorityId?: string;
   certificationAuthorityLocalAccountId?: string;
+  cohorteVaeCollectiveId?: string;
 }) => {
   type FeasibilityCountByCategoryType = Record<FeasibilityStatusFilter, number>;
 
@@ -603,13 +605,19 @@ export const getActiveFeasibilityCountByCategory = async ({
 
         candidacyClause = {
           ...candidacyClause,
-          ...getWhereClauseFromStatusFilter(statusFilter).candidacy,
+          ...getWhereClauseFromStatusFilter({
+            statusFilter,
+            cohorteVaeCollectiveId,
+          }).candidacy,
           ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
         };
 
         whereClause = {
           ...whereClause,
-          ...getWhereClauseFromStatusFilter(statusFilter),
+          ...getWhereClauseFromStatusFilter({
+            statusFilter,
+            cohorteVaeCollectiveId,
+          }),
           candidacy: candidacyClause,
         };
 
@@ -647,6 +655,7 @@ export const getActiveFeasibilities = async ({
   searchFilter,
   certificationAuthorityId,
   certificationAuthorityLocalAccountId,
+  cohorteVaeCollectiveId,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
@@ -656,6 +665,7 @@ export const getActiveFeasibilities = async ({
   searchFilter?: string;
   certificationAuthorityId?: string;
   certificationAuthorityLocalAccountId?: string;
+  cohorteVaeCollectiveId?: string;
 }): Promise<PaginatedListResult<Feasibility>> => {
   let queryWhereClause: Prisma.FeasibilityWhereInput = { isActive: true };
 
@@ -683,7 +693,9 @@ export const getActiveFeasibilities = async ({
     case "VAE_COLLECTIVE":
       queryWhereClause = {
         ...queryWhereClause,
-        candidacy: { cohorteVaeCollectiveId: { not: null } },
+        candidacy: cohorteVaeCollectiveId
+          ? { cohorteVaeCollectiveId }
+          : { cohorteVaeCollectiveId: { not: null } },
       };
       break;
 
