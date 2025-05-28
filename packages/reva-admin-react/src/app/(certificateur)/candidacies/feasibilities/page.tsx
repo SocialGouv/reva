@@ -19,6 +19,7 @@ const getFeasibilitiesQuery = graphql(`
     $categoryFilter: FeasibilityCategoryFilter
     $certificationAuthorityId: ID
     $certificationAuthorityLocalAccountId: ID
+    $cohorteVaeCollectiveId: ID
   ) {
     feasibilities(
       categoryFilter: $categoryFilter
@@ -27,6 +28,7 @@ const getFeasibilitiesQuery = graphql(`
       searchFilter: $searchFilter
       certificationAuthorityId: $certificationAuthorityId
       certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
+      cohorteVaeCollectiveId: $cohorteVaeCollectiveId
     ) {
       rows {
         id
@@ -86,6 +88,8 @@ const FeasibilitiesPage = () => {
 
   const category = searchParams.get("CATEGORY");
 
+  const cohorteVaeCollectiveId = searchParams.get("cohorteVaeCollectiveId");
+
   const { replace } = useRouter();
 
   useEffect(() => {
@@ -108,6 +112,7 @@ const FeasibilitiesPage = () => {
       category,
       certificationAuthorityId,
       certificationAuthorityLocalAccountId,
+      cohorteVaeCollectiveId,
     ],
     queryFn: () =>
       graphqlClient.request(getFeasibilitiesQuery, {
@@ -119,6 +124,7 @@ const FeasibilitiesPage = () => {
           : category) as FeasibilityCategoryFilter,
         certificationAuthorityId,
         certificationAuthorityLocalAccountId,
+        cohorteVaeCollectiveId,
       }),
   });
 

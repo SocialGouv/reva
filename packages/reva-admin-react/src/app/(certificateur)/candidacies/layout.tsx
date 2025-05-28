@@ -10,7 +10,7 @@ import { ReactNode } from "react";
 import { CertificationAuthority } from "./(components)/CertificationAuthority";
 import { CertificationAuthorityLocalAccount } from "./(components)/CertificationAuthorityLocalAccount";
 
-const getFeasibilityCountByCategoryQuery = graphql(`
+const getFeasibilityCountAndCohortesVaeCollectivesByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory(
     $searchFilter: String
     $certificationAuthorityId: ID
@@ -32,6 +32,10 @@ const getFeasibilityCountByCategoryQuery = graphql(`
       CADUQUE
       CONTESTATION
       VAE_COLLECTIVE
+    }
+    cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount {
+      id
+      nom
     }
   }
 `);
@@ -93,7 +97,9 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
 
   const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
 
-  const { data: getFeasibilityCountByCategoryResponse } = useQuery({
+  const {
+    data: getFeasibilityCountAndCohortesVaeCollectivesByCategoryResponse,
+  } = useQuery({
     queryKey: [
       "feasibilities",
       "getFeasibilityCountByCategory",
@@ -102,11 +108,14 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       certificationAuthorityLocalAccountId,
     ],
     queryFn: () =>
-      graphqlClient.request(getFeasibilityCountByCategoryQuery, {
-        searchFilter,
-        certificationAuthorityId,
-        certificationAuthorityLocalAccountId,
-      }),
+      graphqlClient.request(
+        getFeasibilityCountAndCohortesVaeCollectivesByCategoryQuery,
+        {
+          searchFilter,
+          certificationAuthorityId,
+          certificationAuthorityLocalAccountId,
+        },
+      ),
   });
 
   const { data: getDossierDeValidationCountByCategoryResponse } = useQuery({
@@ -139,7 +148,11 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       }),
   });
 
-  const hrefSideMenu = (path: string, category: string) => {
+  const hrefSideMenu = (
+    path: string,
+    category: string,
+    additionalParams?: Record<string, string>,
+  ) => {
     const params = new URLSearchParams();
     params.set("page", "1");
     params.set("CATEGORY", category);
@@ -157,6 +170,12 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       );
     }
 
+    if (additionalParams) {
+      Object.entries(additionalParams).forEach(([key, value]) => {
+        params.set(key, value);
+      });
+    }
+
     return `${path}/?${params.toString()}`;
   };
 
@@ -169,7 +188,9 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     text: string;
     path: string;
     category: string;
+    extraParams?: Record<string, string>;
     defaultMenuItem?: boolean;
+    subMenuItems?: SideMenuProps["items"];
   }) => ({
     isActive:
       (currentPathname.startsWith(path) &&
@@ -191,13 +212,17 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   }
 
   const feasibilityCountByCategory =
-    getFeasibilityCountByCategoryResponse?.feasibilityCountByCategory;
+    getFeasibilityCountAndCohortesVaeCollectivesByCategoryResponse?.feasibilityCountByCategory;
 
   const dossierDeValidationCountByCategory =
     getDossierDeValidationCountByCategoryResponse?.dossierDeValidation_dossierDeValidationCountByCategory;
 
   const juryCountByCategory =
     getJuryCountByCategoryResponse?.jury_juryCountByCategory;
+
+  const cohortesVaeCollectives =
+    getFeasibilityCountAndCohortesVaeCollectivesByCategoryResponse?.cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount ||
+    [];
 
   const feasibilityItems = [
     menuItem({
@@ -269,12 +294,37 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     }),
   ];
 
+  const cohorteVaeCollectiveSelected = !!searchParams.get(
+    "cohorteVaeCollectiveId",
+  );
   const vaeCollectiveItems: SideMenuProps["items"] = [
-    menuItem({
+    {
       text: `VAE collective (${feasibilityCountByCategory?.VAE_COLLECTIVE || 0})`,
-      path: "/candidacies/feasibilities",
-      category: "VAE_COLLECTIVE",
-    }),
+      linkProps: { href: "/candidacies/feasibilities?CATEGORY=VAE_COLLECTIVE" },
+      isActive:
+        searchParams.get("CATEGORY") === "VAE_COLLECTIVE" &&
+        !cohorteVaeCollectiveSelected,
+      ...(!!cohortesVaeCollectives.length
+        ? {
+            items: cohortesVaeCollectives.map((cohorteVaeCollective) => ({
+              text: cohorteVaeCollective.nom,
+              isActive:
+                searchParams.get("CATEGORY") === "VAE_COLLECTIVE" &&
+                searchParams.get("cohorteVaeCollectiveId") ===
+                  cohorteVaeCollective.id,
+              linkProps: {
+                href: hrefSideMenu(
+                  "/candidacies/feasibilities",
+                  "VAE_COLLECTIVE",
+                  {
+                    cohorteVaeCollectiveId: cohorteVaeCollective.id,
+                  },
+                ),
+              },
+            })),
+          }
+        : {}),
+    },
   ];
 
   const menuItems = [
