@@ -43,6 +43,7 @@ const getCandidacyCaducitesQuery = graphql(`
           }
         }
         certification {
+          codeRncp
           label
         }
         lastActivityDate
