@@ -34,6 +34,7 @@ const getJuriesQuery = graphql(`
         candidacy {
           id
           certification {
+            codeRncp
             label
           }
           candidate {

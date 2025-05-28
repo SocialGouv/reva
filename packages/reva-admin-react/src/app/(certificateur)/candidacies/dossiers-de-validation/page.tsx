@@ -34,6 +34,7 @@ const getDossiersDeValidationQuery = graphql(`
         candidacy {
           id
           certification {
+            codeRncp
             label
           }
           candidate {
