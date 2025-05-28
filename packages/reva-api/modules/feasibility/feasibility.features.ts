@@ -479,6 +479,7 @@ export const getActiveFeasibilityCountByCategory = async ({
     DRAFT: 0,
     CADUQUE: 0,
     CONTESTATION: 0,
+    VAE_COLLECTIVE: 0,
   };
 
   if (!hasRole("admin") && !hasRole("manage_feasibility")) {

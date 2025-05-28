@@ -11,7 +11,8 @@ export type FeasibilityStatusFilter =
   | "ARCHIVED"
   | "DROPPED_OUT"
   | "CADUQUE"
-  | "CONTESTATION";
+  | "CONTESTATION"
+  | "VAE_COLLECTIVE";
 
 export const excludeArchivedAndDroppedOutCandidacyAndIrrelevantStatuses: Prisma.FeasibilityWhereInput =
   {
@@ -123,6 +124,12 @@ export const getWhereClauseFromStatusFilter = (
           candidacyDropOut: { is: null },
           status: { not: "ARCHIVE" },
         },
+      };
+      break;
+    case "VAE_COLLECTIVE":
+      whereClause = {
+        ...whereClause,
+        candidacy: { cohorteVaeCollectiveId: { not: null } },
       };
       break;
   }

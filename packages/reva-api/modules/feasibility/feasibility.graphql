@@ -58,6 +58,7 @@ type FeasibilityCountByCategory {
   DROPPED_OUT: Int!
   CADUQUE: Int!
   CONTESTATION: Int!
+  VAE_COLLECTIVE: Int!
 }
 
 type FeasibilityPage {
