@@ -12,6 +12,7 @@ import * as FILE from "../shared/file/file.service";
 import * as SEND_NEW_FEASIBILITY_EMAIL from "./emails/sendNewFeasibilitySubmittedEmail";
 import { getGraphQLClient } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
+import { createFeasibilityDematerializedHelper } from "../../test/helpers/entities/create-feasibility-dematerialized-helper";
 
 test("should count all (2) feasibilities for admin user", async () => {
   await createFeasibilityUploadedPdfHelper({
@@ -601,92 +602,198 @@ test("should only return the certification authorities available for the departm
 });
 
 describe("VAE collective", () => {
-  /**
-   * Test get certification authorities by a candidate restricted by a VAE collective cohort
-   */
-  test("should only return the certification authorities available for the VAE collective cohort", async () => {
-    const certificationVaeCollective = await createCertificationHelper();
-    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
-      certificationCohorteVaeCollectives: {
-        create: { certificationId: certificationVaeCollective.id },
-      },
-    });
+  describe("candidate", () => {
+    /**
+     * Test get certification authorities by a candidate restricted by a VAE collective cohort
+     */
+    test("should only return the certification authorities available to the candidacy vae collective cohort", async () => {
+      const certificationVaeCollective = await createCertificationHelper();
+      const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+        certificationCohorteVaeCollectives: {
+          create: { certificationId: certificationVaeCollective.id },
+        },
+      });
 
-    const candidacy = await createCandidacyHelper({
-      candidacyArgs: {
-        cohorteVaeCollectiveId: cohorteVaeCollective.id,
-        certificationId: certificationVaeCollective.id,
-      },
-    });
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: {
+          cohorteVaeCollectiveId: cohorteVaeCollective.id,
+          certificationId: certificationVaeCollective.id,
+        },
+      });
 
-    // Create first certification authority
-    const certificationAuthority1 = await createCertificationAuthorityHelper({
-      certificationAuthorityOnCertification: {
-        create: { certificationId: certificationVaeCollective.id },
-      },
-      certificationAuthorityOnDepartment: {
-        create: { departmentId: candidacy.candidate!.departmentId },
-      },
-    });
+      // Create first certification authority
+      const certificationAuthority1 = await createCertificationAuthorityHelper({
+        certificationAuthorityOnCertification: {
+          create: { certificationId: certificationVaeCollective.id },
+        },
+        certificationAuthorityOnDepartment: {
+          create: { departmentId: candidacy.candidate!.departmentId },
+        },
+      });
 
-    // Create second certification authority
-    await createCertificationAuthorityHelper({
-      certificationAuthorityOnCertification: {
-        create: { certificationId: certificationVaeCollective.id },
-      },
-      certificationAuthorityOnDepartment: {
-        create: { departmentId: candidacy.candidate!.departmentId },
-      },
-    });
+      // Create second certification authority
+      await createCertificationAuthorityHelper({
+        certificationAuthorityOnCertification: {
+          create: { certificationId: certificationVaeCollective.id },
+        },
+        certificationAuthorityOnDepartment: {
+          create: { departmentId: candidacy.candidate!.departmentId },
+        },
+      });
 
-    const graphqlClient = getGraphQLClient({
-      headers: {
-        authorization: authorizationHeaderForUser({
-          role: "candidate",
-          keycloakId: candidacy?.candidate?.keycloakId,
-        }),
-      },
-    });
+      const graphqlClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "candidate",
+            keycloakId: candidacy?.candidate?.keycloakId,
+          }),
+        },
+      });
 
-    const getCandidacy = graphql(`
-      query candidate_getCandidateWithCandidacyAndCertificationAuthroites {
-        candidate_getCandidateWithCandidacy {
-          candidacy {
-            certificationId
-            certificationAuthorities {
-              id
-              label
+      const getCandidacy = graphql(`
+        query candidate_getCandidateWithCandidacyAndCertificationAuthroites {
+          candidate_getCandidateWithCandidacy {
+            candidacy {
+              certificationId
+              certificationAuthorities {
+                id
+                label
+              }
             }
           }
         }
-      }
-    `);
+      `);
 
-    const res = await graphqlClient.request(getCandidacy);
-    expect(
-      res.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorities
-        .length,
-    ).toBe(2);
+      const res = await graphqlClient.request(getCandidacy);
+      expect(
+        res.candidate_getCandidateWithCandidacy.candidacy
+          .certificationAuthorities.length,
+      ).toBe(2);
 
-    // Restrict certification to first certification authority
-    await prismaClient.certificationCohorteVaeCollectiveOnCertificationAuthority.create(
-      {
-        data: {
-          certificationAuthorityId: certificationAuthority1.id,
-          certificationCohorteVaeCollectiveId:
-            cohorteVaeCollective.certificationCohorteVaeCollectives[0].id,
+      // Restrict certification to first certification authority
+      await prismaClient.certificationCohorteVaeCollectiveOnCertificationAuthority.create(
+        {
+          data: {
+            certificationAuthorityId: certificationAuthority1.id,
+            certificationCohorteVaeCollectiveId:
+              cohorteVaeCollective.certificationCohorteVaeCollectives[0].id,
+          },
         },
-      },
-    );
+      );
 
-    const resWithRestriction = await graphqlClient.request(getCandidacy);
-    expect(
-      resWithRestriction.candidate_getCandidateWithCandidacy.candidacy
-        .certificationAuthorities.length,
-    ).toBe(1);
-    expect(
-      resWithRestriction.candidate_getCandidateWithCandidacy.candidacy
-        .certificationAuthorities[0].id,
-    ).toBe(certificationAuthority1.id);
+      const resWithRestriction = await graphqlClient.request(getCandidacy);
+      expect(
+        resWithRestriction.candidate_getCandidateWithCandidacy.candidacy
+          .certificationAuthorities.length,
+      ).toBe(1);
+      expect(
+        resWithRestriction.candidate_getCandidateWithCandidacy.candidacy
+          .certificationAuthorities[0].id,
+      ).toBe(certificationAuthority1.id);
+    });
+  });
+
+  describe("searching for a specific VAE collective cohorte", () => {
+    describe("certification authority", () => {
+      test("should return feasibility when its candidacy belongs to a given vae collective cohorte and the candidacy is associated to the certification authority", async () => {
+        const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: {
+            cohorteVaeCollectiveId: cohorteVaeCollective.id,
+          },
+        });
+
+        const certificationAuthority =
+          await createCertificationAuthorityHelper();
+
+        const feasibility = await createFeasibilityDematerializedHelper({
+          candidacyId: candidacy.id,
+          certificationAuthorityId: certificationAuthority.id,
+        });
+
+        const graphqlClient = getGraphQLClient({
+          headers: {
+            authorization: authorizationHeaderForUser({
+              role: "manage_certification_authority_local_account",
+              keycloakId: certificationAuthority.Account[0].keycloakId,
+            }),
+          },
+        });
+
+        const getFeasibilities = graphql(`
+          query feasibilities_feasibilitiesForCohorteVAECollective(
+            $cohorteVaeCollectiveId: ID!
+          ) {
+            feasibilities(
+              categoryFilter: VAE_COLLECTIVE
+              cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+            ) {
+              rows {
+                id
+              }
+            }
+          }
+        `);
+
+        const res = await graphqlClient.request(getFeasibilities, {
+          cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        });
+
+        expect(res.feasibilities.rows).toHaveLength(1);
+        expect(res.feasibilities.rows[0].id).toBe(feasibility.id);
+      });
+
+      test("should not return feasibility when its candidacy belongs to a given vae collective cohorte and the candidacy is NOT associated to the certification authority", async () => {
+        const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: {
+            cohorteVaeCollectiveId: cohorteVaeCollective.id,
+          },
+        });
+
+        const certificationAuthority =
+          await createCertificationAuthorityHelper();
+
+        await createFeasibilityDematerializedHelper({
+          candidacyId: candidacy.id,
+          certificationAuthorityId: certificationAuthority.id,
+        });
+
+        const secondCertificationAuthority =
+          await createCertificationAuthorityHelper();
+
+        const graphqlClient = getGraphQLClient({
+          headers: {
+            authorization: authorizationHeaderForUser({
+              role: "manage_certification_authority_local_account",
+              keycloakId: secondCertificationAuthority.Account[0].keycloakId,
+            }),
+          },
+        });
+
+        const getFeasibilities = graphql(`
+          query feasibilities_feasibilitiesForCohorteVAECollective(
+            $cohorteVaeCollectiveId: ID!
+          ) {
+            feasibilities(
+              categoryFilter: VAE_COLLECTIVE
+              cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+            ) {
+              rows {
+                id
+              }
+            }
+          }
+        `);
+
+        const res = await graphqlClient.request(getFeasibilities, {
+          cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        });
+
+        expect(res.feasibilities.rows).toHaveLength(0);
+      });
+    });
   });
 });
