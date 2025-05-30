@@ -13,6 +13,7 @@ import * as SEND_NEW_FEASIBILITY_EMAIL from "./emails/sendNewFeasibilitySubmitte
 import { getGraphQLClient } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
 import { createFeasibilityDematerializedHelper } from "../../test/helpers/entities/create-feasibility-dematerialized-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
 
 test("should count all (2) feasibilities for admin user", async () => {
   await createFeasibilityUploadedPdfHelper({
@@ -769,6 +770,120 @@ describe("VAE collective", () => {
             authorization: authorizationHeaderForUser({
               role: "manage_certification_authority_local_account",
               keycloakId: secondCertificationAuthority.Account[0].keycloakId,
+            }),
+          },
+        });
+
+        const getFeasibilities = graphql(`
+          query feasibilities_feasibilitiesForCohorteVAECollective(
+            $cohorteVaeCollectiveId: ID!
+          ) {
+            feasibilities(
+              categoryFilter: VAE_COLLECTIVE
+              cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+            ) {
+              rows {
+                id
+              }
+            }
+          }
+        `);
+
+        const res = await graphqlClient.request(getFeasibilities, {
+          cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        });
+
+        expect(res.feasibilities.rows).toHaveLength(0);
+      });
+    });
+
+    describe("certification authority local account", () => {
+      test("should return feasibility when its candidacy belongs to a given vae collective cohorte and the candidacy is associated to the certification authority local account", async () => {
+        const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+        });
+
+        const certificationAuthority =
+          await createCertificationAuthorityHelper();
+
+        const localAccount =
+          await createCertificationAuthorityLocalAccountHelper({
+            certificationAuthorityId: certificationAuthority.id,
+            certificationAuthorityLocalAccountOnCandidacy: {
+              create: {
+                candidacyId: candidacy.id,
+              },
+            },
+          });
+
+        const feasibility = await createFeasibilityDematerializedHelper({
+          candidacyId: candidacy.id,
+          certificationAuthorityId: certificationAuthority.id,
+        });
+
+        const graphqlClient = getGraphQLClient({
+          headers: {
+            authorization: authorizationHeaderForUser({
+              role: "manage_feasibility",
+              keycloakId: localAccount.account.keycloakId,
+            }),
+          },
+        });
+
+        const getFeasibilities = graphql(`
+          query feasibilities_feasibilitiesForCohorteVAECollective(
+            $cohorteVaeCollectiveId: ID!
+          ) {
+            feasibilities(
+              categoryFilter: VAE_COLLECTIVE
+              cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+            ) {
+              rows {
+                id
+              }
+            }
+          }
+        `);
+
+        const res = await graphqlClient.request(getFeasibilities, {
+          cohorteVaeCollectiveId: cohorteVaeCollective.id,
+        });
+
+        expect(res.feasibilities.rows).toHaveLength(1);
+        expect(res.feasibilities.rows[0].id).toBe(feasibility.id);
+      });
+
+      test("should not return feasibility when its candidacy belongs to a given vae collective cohorte and the candidacy is NOT associated to the certification authority local account", async () => {
+        const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+        });
+
+        const certificationAuthority =
+          await createCertificationAuthorityHelper();
+
+        await createCertificationAuthorityLocalAccountHelper({
+          certificationAuthorityId: certificationAuthority.id,
+          certificationAuthorityLocalAccountOnCandidacy: {
+            create: {
+              candidacyId: candidacy.id,
+            },
+          },
+        });
+
+        const secondLocalAccount =
+          await createCertificationAuthorityLocalAccountHelper({
+            certificationAuthorityId: certificationAuthority.id,
+          });
+
+        const graphqlClient = getGraphQLClient({
+          headers: {
+            authorization: authorizationHeaderForUser({
+              role: "manage_feasibility",
+              keycloakId: secondLocalAccount.account.keycloakId,
             }),
           },
         });
