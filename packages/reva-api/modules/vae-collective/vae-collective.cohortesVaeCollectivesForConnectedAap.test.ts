@@ -1,26 +1,33 @@
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createCohorteVaeCollectiveHelper } from "../../test/helpers/entities/create-vae-collective-helper";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
+import { getGraphQLClient } from "../../test/jestGraphqlClient";
+import { graphql } from "../graphql/generated";
 
 const getCohortesForAap = async ({
   aapKeycloakId,
 }: {
   aapKeycloakId: string;
 }) => {
-  return await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: aapKeycloakId,
-    }),
-    payload: {
-      requestType: "query",
-      endpoint: "cohortesVaeCollectivesForConnectedAap",
-      returnFields: "{ id nom }",
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: aapKeycloakId,
+      }),
     },
   });
+
+  const getCohortes = graphql(`
+    query cohortesVaeCollectivesForConnectedAap {
+      cohortesVaeCollectivesForConnectedAap {
+        id
+      }
+    }
+  `);
+
+  return graphqlClient.request(getCohortes);
 };
 
 describe("cohortes vae collectives for aap", () => {
@@ -35,9 +42,7 @@ describe("cohortes vae collectives for aap", () => {
       aapKeycloakId: candidacy.organism?.accounts[0].keycloakId || "",
     });
 
-    const obj = resp.json();
-
-    expect(obj.data.cohortesVaeCollectivesForConnectedAap.length).toBe(1);
+    expect(resp.cohortesVaeCollectivesForConnectedAap.length).toBe(1);
   });
 
   test("should return an empty array when a candidacy is belonging to a cohorte and is NOT associated to the aap", async () => {
@@ -53,8 +58,6 @@ describe("cohortes vae collectives for aap", () => {
       aapKeycloakId: secondOrganism.accounts[0].keycloakId || "",
     });
 
-    const obj = resp.json();
-
-    expect(obj.data.cohortesVaeCollectivesForConnectedAap.length).toBe(0);
+    expect(resp.cohortesVaeCollectivesForConnectedAap.length).toBe(0);
   });
 });

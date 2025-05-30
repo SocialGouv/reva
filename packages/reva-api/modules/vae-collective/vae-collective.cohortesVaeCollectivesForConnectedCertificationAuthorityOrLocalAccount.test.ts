@@ -1,31 +1,37 @@
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createCohorteVaeCollectiveHelper } from "../../test/helpers/entities/create-vae-collective-helper";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createFeasibilityDematerializedHelper } from "../../test/helpers/entities/create-feasibility-dematerialized-helper";
 import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
+import { getGraphQLClient } from "../../test/jestGraphqlClient";
+import { graphql } from "../graphql/generated";
 
-const getCohortesForCertificationAuthorityOrLocalAccount = async ({
+const getCohortesForCertificationAuthorityOrLocalAccount = ({
   userKeycloakId,
   userRole,
 }: {
   userKeycloakId: string;
   userRole: KeyCloakUserRole;
 }) => {
-  return await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: userRole,
-      keycloakId: userKeycloakId,
-    }),
-    payload: {
-      requestType: "query",
-      endpoint:
-        "cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount",
-      returnFields: "{ id nom }",
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: userRole,
+        keycloakId: userKeycloakId,
+      }),
     },
   });
+
+  const getCohortes = graphql(`
+    query cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount {
+      cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount {
+        id
+      }
+    }
+  `);
+
+  return graphqlClient.request(getCohortes);
 };
 
 describe("cohortes vae collectives for certification authority or local account", () => {
@@ -49,10 +55,8 @@ describe("cohortes vae collectives for certification authority or local account"
         userRole: "manage_certification_authority_local_account",
       });
 
-      const obj = resp.json();
-
       expect(
-        obj.data
+        resp
           .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
           .length,
       ).toBe(1);
@@ -81,10 +85,8 @@ describe("cohortes vae collectives for certification authority or local account"
         userRole: "manage_certification_authority_local_account",
       });
 
-      const obj = resp.json();
-
       expect(
-        obj.data
+        resp
           .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
           .length,
       ).toBe(0);
@@ -117,10 +119,8 @@ describe("cohortes vae collectives for certification authority or local account"
         userRole: "manage_feasibility",
       });
 
-      const obj = resp.json();
-
       expect(
-        obj.data
+        resp
           .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
           .length,
       ).toBe(1);
@@ -152,10 +152,8 @@ describe("cohortes vae collectives for certification authority or local account"
         userRole: "manage_feasibility",
       });
 
-      const obj = resp.json();
-
       expect(
-        obj.data
+        resp
           .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
           .length,
       ).toBe(0);
