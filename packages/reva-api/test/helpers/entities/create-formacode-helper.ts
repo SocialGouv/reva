@@ -7,7 +7,7 @@ export const createFormaCodeHelper = async (
 ) => {
   prismaClient.formacode.create({
     data: {
-      code: faker.lorem.word(),
+      code: faker.string.alpha(),
       label: faker.lorem.word(),
       type: "DOMAIN",
     },
@@ -15,7 +15,7 @@ export const createFormaCodeHelper = async (
 
   return prismaClient.formacode.create({
     data: {
-      code: faker.lorem.word(),
+      code: faker.string.alpha(),
       label: faker.lorem.word(),
       type: "SUB_DOMAIN",
       ...formaCodeArgs,
