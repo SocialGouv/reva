@@ -4,6 +4,7 @@ import { authorizationHeaderForUser } from "../../test/helpers/authorization-hel
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createFeasibilityDematerializedHelper } from "../../test/helpers/entities/create-feasibility-dematerialized-helper";
 import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
 
 const getCohortesForCertificationAuthorityOrLocalAccount = async ({
   userKeycloakId,
@@ -28,62 +29,136 @@ const getCohortesForCertificationAuthorityOrLocalAccount = async ({
 };
 
 describe("cohortes vae collectives for certification authority or local account", () => {
-  test("should return a cohorte when a candidacy is belonging to it and is associated to the certification authority", async () => {
-    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+  describe("certification authority", () => {
+    test("should return a cohorte when a candidacy is belonging to it and is associated to the certification authority", async () => {
+      const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
 
-    const candidacy = await createCandidacyHelper({
-      candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+      });
+
+      const certificationAuthority = await createCertificationAuthorityHelper();
+
+      await createFeasibilityDematerializedHelper({
+        candidacyId: candidacy.id,
+        certificationAuthorityId: certificationAuthority.id,
+      });
+
+      const resp = await getCohortesForCertificationAuthorityOrLocalAccount({
+        userKeycloakId: certificationAuthority.Account[0].keycloakId || "",
+        userRole: "manage_certification_authority_local_account",
+      });
+
+      const obj = resp.json();
+
+      expect(
+        obj.data
+          .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
+          .length,
+      ).toBe(1);
     });
 
-    const certificationAuthority = await createCertificationAuthorityHelper();
+    test("should return an empty array when a candidacy is belonging to a cohorte and is NOT associated to the certification authority", async () => {
+      const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
 
-    await createFeasibilityDematerializedHelper({
-      candidacyId: candidacy.id,
-      certificationAuthorityId: certificationAuthority.id,
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+      });
+
+      const certificationAuthority = await createCertificationAuthorityHelper();
+
+      await createFeasibilityDematerializedHelper({
+        candidacyId: candidacy.id,
+        certificationAuthorityId: certificationAuthority.id,
+      });
+
+      const secondCertificationAuthority =
+        await createCertificationAuthorityHelper();
+
+      const resp = await getCohortesForCertificationAuthorityOrLocalAccount({
+        userKeycloakId:
+          secondCertificationAuthority.Account[0].keycloakId || "",
+        userRole: "manage_certification_authority_local_account",
+      });
+
+      const obj = resp.json();
+
+      expect(
+        obj.data
+          .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
+          .length,
+      ).toBe(0);
     });
-
-    const resp = await getCohortesForCertificationAuthorityOrLocalAccount({
-      userKeycloakId: certificationAuthority.Account[0].keycloakId || "",
-      userRole: "manage_certification_authority_local_account",
-    });
-
-    const obj = resp.json();
-
-    expect(
-      obj.data
-        .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
-        .length,
-    ).toBe(1);
   });
 
-  test("should return an empty array when a candidacy is belonging to a cohorte and is NOT associated to the certification authority", async () => {
-    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
+  describe("certification authority local account", () => {
+    test("should return a cohorte when a candidacy is belonging to it and is associated to the certification authority local account", async () => {
+      const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
 
-    const candidacy = await createCandidacyHelper({
-      candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+      });
+
+      const certificationAuthority = await createCertificationAuthorityHelper();
+
+      const localAccount = await createCertificationAuthorityLocalAccountHelper(
+        {
+          certificationAuthorityId: certificationAuthority.id,
+          certificationAuthorityLocalAccountOnCandidacy: {
+            create: {
+              candidacyId: candidacy.id,
+            },
+          },
+        },
+      );
+
+      const resp = await getCohortesForCertificationAuthorityOrLocalAccount({
+        userKeycloakId: localAccount.account.keycloakId,
+        userRole: "manage_feasibility",
+      });
+
+      const obj = resp.json();
+
+      expect(
+        obj.data
+          .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
+          .length,
+      ).toBe(1);
     });
 
-    const certificationAuthority = await createCertificationAuthorityHelper();
+    test("should return an empty array when a candidacy is belonging to a cohorte and is NOT associated to the certification authority local account", async () => {
+      const cohorteVaeCollective = await createCohorteVaeCollectiveHelper();
 
-    await createFeasibilityDematerializedHelper({
-      candidacyId: candidacy.id,
-      certificationAuthorityId: certificationAuthority.id,
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: { cohorteVaeCollectiveId: cohorteVaeCollective.id },
+      });
+
+      const certificationAuthority = await createCertificationAuthorityHelper();
+
+      await createCertificationAuthorityLocalAccountHelper({
+        certificationAuthorityId: certificationAuthority.id,
+        certificationAuthorityLocalAccountOnCandidacy: {
+          create: {
+            candidacyId: candidacy.id,
+          },
+        },
+      });
+
+      const secondLocalAccount =
+        await createCertificationAuthorityLocalAccountHelper();
+
+      const resp = await getCohortesForCertificationAuthorityOrLocalAccount({
+        userKeycloakId: secondLocalAccount.account.keycloakId,
+        userRole: "manage_feasibility",
+      });
+
+      const obj = resp.json();
+
+      expect(
+        obj.data
+          .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
+          .length,
+      ).toBe(0);
     });
-
-    const secondCertificationAuthority =
-      await createCertificationAuthorityHelper();
-
-    const resp = await getCohortesForCertificationAuthorityOrLocalAccount({
-      userKeycloakId: secondCertificationAuthority.Account[0].keycloakId || "",
-      userRole: "manage_certification_authority_local_account",
-    });
-
-    const obj = resp.json();
-
-    expect(
-      obj.data
-        .cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount
-        .length,
-    ).toBe(0);
   });
 });
