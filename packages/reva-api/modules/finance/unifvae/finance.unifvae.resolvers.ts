@@ -5,7 +5,8 @@ import {
   getPaymentRequestUnifvaeFromCandidacyId,
 } from "./features/finance.unifvae.features";
 import { resolversSecurityMap } from "./security";
-
+import { isFundingRequestUnifvaeSent } from "./features/isFundingRequestUnifvaeSent";
+import { isPaymentRequestUnifvaeSent } from "./features/isPaymentRequestUnifvaeSent";
 const withSkillsAndTrainings = (f: any) =>
   f
     ? {
@@ -33,6 +34,10 @@ const unsafeResolvers = {
       ),
     paymentRequestUnifvae: async ({ id: candidacyId }: { id: string }) =>
       getPaymentRequestUnifvaeFromCandidacyId(candidacyId),
+    isFundingRequestUnifvaeSent: async ({ id: candidacyId }: { id: string }) =>
+      isFundingRequestUnifvaeSent({ candidacyId }),
+    isPaymentRequestUnifvaeSent: async ({ id: candidacyId }: { id: string }) =>
+      isPaymentRequestUnifvaeSent({ candidacyId }),
   },
 
   Query: {},

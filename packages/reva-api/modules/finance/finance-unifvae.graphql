@@ -71,6 +71,8 @@ input PaymentRequestUnifvaeInput {
 type Candidacy {
   fundingRequestUnifvae: FundingRequestUnifvae
   paymentRequestUnifvae: PaymentRequestUnifvae
+  isFundingRequestUnifvaeSent: Boolean!
+  isPaymentRequestUnifvaeSent: Boolean!
 }
 
 type Query {

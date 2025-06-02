@@ -9,6 +9,8 @@ import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCa
 import { resolversSecurityMap } from "./security";
 import { getFundingRequestByCandidacyId } from "./features/getFundingRequestByCandidacyId";
 import mercurius from "mercurius";
+import { isFundingRequestSent } from "./features/isFundingRequestSent";
+import { isPaymentRequestSent } from "./features/isPaymentRequestSent";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -18,6 +20,10 @@ const unsafeResolvers = {
       }),
     fundingRequest: ({ id: candidacyId }: Candidacy) =>
       getFundingRequestByCandidacyId({ candidacyId }),
+    isFundingRequestSent: async ({ id: candidacyId }: Candidacy) =>
+      isFundingRequestSent({ candidacyId }),
+    isPaymentRequestSent: async ({ id: candidacyId }: Candidacy) =>
+      isPaymentRequestSent({ candidacyId }),
   },
   Query: {
     candidate_getFundingRequest: async (

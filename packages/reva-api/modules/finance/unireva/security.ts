@@ -11,4 +11,6 @@ export const resolversSecurityMap = {
 
   "Candidacy.fundingRequest": isAdminOrCandidacyCompanion,
   "Candidacy.paymentRequest": isAdminOrCandidacyCompanion,
+  "Candidacy.isFundingRequestSent": isAdminOrCandidacyCompanion,
+  "Candidacy.isPaymentRequestSent": isAdminOrCandidacyCompanion,
 };

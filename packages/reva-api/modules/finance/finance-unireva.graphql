@@ -1,6 +1,8 @@
 extend type Candidacy {
   paymentRequest: PaymentRequest
   fundingRequest: FundingRequest
+  isFundingRequestSent: Boolean!
+  isPaymentRequestSent: Boolean!
 }
 
 type PaymentRequest {

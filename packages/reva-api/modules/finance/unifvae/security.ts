@@ -7,4 +7,6 @@ export const resolversSecurityMap = {
 
   "Candidacy.fundingRequestUnifvae": isAdminOrCandidacyCompanion,
   "Candidacy.paymentRequestUnifvae": isAdminOrCandidacyCompanion,
+  "Candidacy.isFundingRequestUnifvaeSent": isAdminOrCandidacyCompanion,
+  "Candidacy.isPaymentRequestUnifvaeSent": isAdminOrCandidacyCompanion,
 };
