@@ -153,6 +153,10 @@ export default function CandidaciesPage() {
                 candidacy.cohorteVaeCollective?.projetVaeCollective.nom
               }
               vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
+              status={candidacy.status}
+              feasibility={candidacy.feasibility}
+              jury={candidacy.jury}
+              dropout={candidacy.candidacyDropOut}
             />
           )}
         </SearchList>

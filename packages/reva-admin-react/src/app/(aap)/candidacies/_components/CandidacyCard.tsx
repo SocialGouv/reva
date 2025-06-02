@@ -1,10 +1,109 @@
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
+import { format, isAfter } from "date-fns";
 
 import Tag from "@codegouvfr/react-dsfr/Tag";
 
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
-import { OrganismModaliteAccompagnement } from "@/graphql/generated/graphql";
+import {
+  CandidacyStatusStep,
+  FeasibilityDecision,
+  JuryResult,
+  OrganismModaliteAccompagnement,
+} from "@/graphql/generated/graphql";
+
+type Feasibility = {
+  dematerializedFeasibilityFile?: {
+    sentToCandidateAt?: number | null;
+    isReadyToBeSentToCertificationAuthority: boolean;
+    isReadyToBeSentToCandidate: boolean;
+    candidateConfirmationAt?: number | null;
+    swornStatementFileId?: string | null;
+  } | null;
+  decision?: FeasibilityDecision | null;
+  feasibilityFileSentAt?: number | null;
+} | null;
+
+type Jury = {
+  dateOfSession: number;
+  result?: JuryResult | null;
+} | null;
+
+type Dropout = {
+  createdAt: number;
+} | null;
+
+const StatusTag = ({
+  status,
+  feasibility,
+  jury,
+  dropout,
+}: {
+  status: CandidacyStatusStep;
+  feasibility?: Feasibility;
+  jury?: Jury;
+  dropout?: Dropout;
+}) => {
+  const isSentToCandidate =
+    !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;
+  const hasCandidateConfirmed =
+    !!feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt;
+  const isJuryUpcoming = jury && isAfter(jury.dateOfSession, new Date());
+
+  const resultIsSuccess =
+    jury?.result === "FULL_SUCCESS_OF_FULL_CERTIFICATION" ||
+    jury?.result === "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION";
+  const resultIsPartialSuccess =
+    jury?.result === "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION" ||
+    jury?.result === "PARTIAL_SUCCESS_PENDING_CONFIRMATION" ||
+    jury?.result === "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION";
+
+  switch (true) {
+    case status === "ARCHIVE":
+      return <Tag small>Candidature supprimée</Tag>;
+    case !!dropout:
+      return <Tag small>Candidature abandonnée</Tag>;
+    case status === "PROJET":
+      return <Tag small>Projet en cours d'édition</Tag>;
+    case status === "VALIDATION":
+      return <Tag small>Nouvelle candidature</Tag>;
+    case status === "PRISE_EN_CHARGE":
+      return <Tag small>Candidature prise en charge</Tag>;
+    case status === "PARCOURS_ENVOYE":
+      return <Tag small>Parcours envoyé</Tag>;
+    case status === "PARCOURS_CONFIRME":
+      return <Tag small>Parcours confirmé par le candidat</Tag>;
+    case isSentToCandidate &&
+      !hasCandidateConfirmed &&
+      feasibility.decision === "DRAFT":
+      return <Tag small>Dossier de faisabilité envoyé au candidat</Tag>;
+    case isSentToCandidate &&
+      hasCandidateConfirmed &&
+      feasibility.decision === "DRAFT":
+      return <Tag small>Dossier de faisabilité confirmé par le candidat</Tag>;
+    case status === "DOSSIER_FAISABILITE_ENVOYE":
+      return <Tag small>Dossier de faisabilité envoyé au certificateur</Tag>;
+    case status === "DOSSIER_FAISABILITE_INCOMPLET":
+      return <Tag small>Dossier de faisabilité incomplet</Tag>;
+    case status === "DOSSIER_FAISABILITE_RECEVABLE":
+      return <Tag small>Recevable</Tag>;
+    case status === "DOSSIER_FAISABILITE_NON_RECEVABLE":
+      return <Tag small>Non recevable</Tag>;
+    case status === "DOSSIER_DE_VALIDATION_ENVOYE" && !jury:
+      return <Tag small>Dossier de validation envoyé</Tag>;
+    case status === "DOSSIER_DE_VALIDATION_SIGNALE":
+      return <Tag small>Dossier de validation signalé</Tag>;
+    case isJuryUpcoming:
+      return <Tag small>Jury programmé</Tag>;
+    case jury && !isJuryUpcoming && !jury.result:
+      return <Tag small>En attente de résultat</Tag>;
+    case resultIsPartialSuccess:
+      return <Tag small>Réussite partielle</Tag>;
+    case resultIsSuccess:
+      return <Tag small>Réussite totale</Tag>;
+    default:
+      return null;
+  }
+};
 
 export const CandidacyCard = ({
   candidacyId,
@@ -22,6 +121,10 @@ export const CandidacyCard = ({
   vaeCollectiveCommanditaireLabel,
   vaeCollectiveProjetLabel,
   vaeCollectiveCohortLabel,
+  status,
+  feasibility,
+  jury,
+  dropout,
 }: {
   candidacyId: string;
   candidateFirstname: string;
@@ -38,6 +141,10 @@ export const CandidacyCard = ({
   vaeCollectiveCommanditaireLabel?: string;
   vaeCollectiveProjetLabel?: string;
   vaeCollectiveCohortLabel?: string;
+  status: CandidacyStatusStep;
+  feasibility?: Feasibility;
+  jury?: Jury;
+  dropout?: Dropout;
 }) => {
   const router = useRouter();
 
@@ -65,6 +172,12 @@ export const CandidacyCard = ({
             {fundable ? "Finançable France VAE" : "Financement droit commun"}
           </Tag>
           {vaeCollective && <Tag small>VAE collective</Tag>}
+          <StatusTag
+            status={status}
+            jury={jury}
+            feasibility={feasibility}
+            dropout={dropout}
+          />
         </div>
 
         {departmentLabel && departmentCode && (

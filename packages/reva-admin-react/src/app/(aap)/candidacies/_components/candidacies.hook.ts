@@ -91,6 +91,25 @@ const getCandidaciesByStatus = graphql(`
           status
           createdAt
         }
+        status
+        feasibility {
+          dematerializedFeasibilityFile {
+            sentToCandidateAt
+            isReadyToBeSentToCertificationAuthority
+            isReadyToBeSentToCandidate
+            candidateConfirmationAt
+            swornStatementFileId
+          }
+          decision
+          feasibilityFileSentAt
+        }
+        candidacyDropOut {
+          createdAt
+        }
+        jury {
+          dateOfSession
+          result
+        }
         cohorteVaeCollective {
           nom
           projetVaeCollective {
