@@ -7,7 +7,7 @@ import {
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
-import { getCertificationById } from "../../referential/features/getCertificationById";
+import { prismaClient } from "../../../prisma/client";
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
@@ -31,33 +31,42 @@ export const getDroppedOutCandidacyMenu = async ({
   const getFundingRequestMenuEntry = async (): Promise<
     CandidacyMenuEntry | undefined
   > => {
+    //si le financement de la candidature est "hors plateforme", pas de page de demande de financement dans le menu
     if (candidacy.financeModule === "hors_plateforme") {
-      return undefined;
-    }
-
-    const certification = await getCertificationById({
-      certificationId: candidacy.certificationId,
-    });
-
-    if (!certification) {
       return;
     }
 
-    const editableStatus: CandidacyStatusStep[] = [
-      "DOSSIER_FAISABILITE_RECEVABLE",
-      "DOSSIER_FAISABILITE_NON_RECEVABLE",
-      "DOSSIER_FAISABILITE_INCOMPLET",
-    ];
+    //si le financement est unireva, pas de page de financement dans le menu si la candidature n'a pas de demande de financement (on a fermé les demandes de financement)
+    if (candidacy.financeModule === "unireva") {
+      const fundingRequest = await prismaClient.fundingRequest.findUnique({
+        where: { candidacyId: candidacy.id },
+        select: { id: true },
+      });
+
+      if (!fundingRequest) {
+        return;
+      }
+    }
+
+    //si le financement est unifvae, pas de page de financement dans le menu si la candidature n'a pas de demande de financement (on a fermé les demandes de financement)
+    if (candidacy.financeModule === "unifvae") {
+      const fundingRequestUnifvae =
+        await prismaClient.fundingRequestUnifvae.findFirst({
+          where: { candidacyId: candidacy.id },
+          select: { id: true },
+        });
+
+      if (!fundingRequestUnifvae) {
+        return;
+      }
+    }
+
     return {
       label: "Demande de prise en charge",
       url: buildUrl({
         suffix: "funding",
       }),
-      status: editableStatus.includes(
-        activeCandidacyStatus as CandidacyStatusStep,
-      )
-        ? "ACTIVE_WITH_EDIT_HINT"
-        : "ACTIVE_WITHOUT_HINT",
+      status: "ACTIVE_WITHOUT_HINT",
     };
   };
 

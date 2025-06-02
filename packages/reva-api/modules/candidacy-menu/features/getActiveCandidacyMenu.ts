@@ -135,37 +135,33 @@ export const getActiveCandidacyMenu = async ({
   const getFundingRequestMenuEntry = async (): Promise<
     CandidacyMenuEntry | undefined
   > => {
-    //pas de page de demande de financemnt si le financement de la candidature est "hors plateforme"
+    //si le financement de la candidature est "hors plateforme", pas de page de demande de financement dans le menu
     if (candidacy.financeModule === "hors_plateforme") {
       return;
     }
 
-    const fundingRequest = await prismaClient.fundingRequest.findUnique({
-      where: { candidacyId: candidacy.id },
-      select: { id: true },
-    });
+    //si le financement est unireva, pas de page de financement dans le menu si la candidature n'a pas de demande de financement (on a fermé les demandes de financement)
+    if (candidacy.financeModule === "unireva") {
+      const fundingRequest = await prismaClient.fundingRequest.findUnique({
+        where: { candidacyId: candidacy.id },
+        select: { id: true },
+      });
 
-    if (!fundingRequest) {
-      return;
+      if (!fundingRequest) {
+        return;
+      }
     }
 
-    let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
+    //si le financement est unifvae, pas de page de financement dans le menu si la candidature n'a pas de demande de financement (on a fermé les demandes de financement)
+    if (candidacy.financeModule === "unifvae") {
+      const fundingRequestUnifvae =
+        await prismaClient.fundingRequestUnifvae.findFirst({
+          where: { candidacyId: candidacy.id },
+          select: { id: true },
+        });
 
-    if (candidacy.financeModule === "unireva") {
-      if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
-        menuEntryStatus = "ACTIVE_WITHOUT_HINT";
-      }
-    } else if (candidacy.financeModule === "unifvae") {
-      if (isStatusEqualOrAbove("DOSSIER_FAISABILITE_RECEVABLE")) {
-        const editableStatus: CandidacyStatusStep[] = [
-          "DOSSIER_FAISABILITE_RECEVABLE",
-          "DOSSIER_FAISABILITE_NON_RECEVABLE",
-        ];
-        if (editableStatus.includes(activeCandidacyStatus)) {
-          menuEntryStatus = "ACTIVE_WITH_EDIT_HINT";
-        } else {
-          menuEntryStatus = "ACTIVE_WITHOUT_HINT";
-        }
+      if (!fundingRequestUnifvae) {
+        return;
       }
     }
     return {
@@ -173,7 +169,7 @@ export const getActiveCandidacyMenu = async ({
       url: buildUrl({
         suffix: "funding",
       }),
-      status: menuEntryStatus,
+      status: "ACTIVE_WITHOUT_HINT",
     };
   };
 
