@@ -3,7 +3,6 @@ import { CandidacyBackButton } from "@/components/candidacy-back-button/Candidac
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +14,8 @@ import { z } from "zod";
 import { Info } from "../../_components/form/Info";
 import { costsAndHoursTotal } from "../paymentRequestUniRevaPaymentUtils";
 import { usePaymentRequestUniRevaConfirmationPage } from "./paymentRequestUniRevaConfirmation.hook";
+import { isCandidacyPaymentRequestAlreadySent } from "@/utils/isCandidacyPaymentRequestAlreadySent";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const paymentRequestUniRevaConfirmationSchema = z.object({
   payementRequestConfirmation: z.literal(true, {
@@ -36,6 +37,13 @@ const PaymentRequestUniRevaConfirmationPage = () => {
   const router = useRouter();
 
   const queryClient = useQueryClient();
+
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isFundingAndPaymentRequestsFromCandidacyStatusesRemoved =
+    isFeatureActive(
+      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    );
 
   const { candidacy, confirmPaymentRequestUniReva, getCandidacyStatus } =
     usePaymentRequestUniRevaConfirmationPage();
@@ -71,14 +79,10 @@ const PaymentRequestUniRevaConfirmationPage = () => {
     handleReset();
   }, [handleReset]);
 
-  const activeCandidacyStatus = candidacy?.status;
-
-  const paymentRequestAlreadySent =
-    activeCandidacyStatus &&
-    isCandidacyStatusEqualOrAbove(
-      activeCandidacyStatus,
-      "DEMANDE_PAIEMENT_ENVOYEE",
-    );
+  const paymentRequestAlreadySent = isCandidacyPaymentRequestAlreadySent({
+    isFundingAndPaymentRequestsFromCandidacyStatusesRemoved,
+    candidacy,
+  });
 
   const { totalCost } = costsAndHoursTotal(candidacy?.paymentRequest || {});
 

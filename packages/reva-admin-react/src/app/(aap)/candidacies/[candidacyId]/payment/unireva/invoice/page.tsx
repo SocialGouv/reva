@@ -17,10 +17,11 @@ import {
   PaymentRequestUniRevaInvoiceFormData,
   paymentRequestUniRevaInvoiceSchema,
 } from "./paymentRequestUniRevaInvoiceFormSchema";
-import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { costsAndHoursTotal } from "../paymentRequestUniRevaPaymentUtils";
 import { CostWithEstimateInput } from "./_components/CostWithEstimateInput";
 import { HourWithEstimateInput } from "./_components/HourWithEstimateInput";
+import { isCandidacyPaymentRequestAlreadySent } from "@/utils/isCandidacyPaymentRequestAlreadySent";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const PaymentRequestUniRevaInvoicePage = () => {
   const { candidacyId } = useParams<{
@@ -28,6 +29,13 @@ const PaymentRequestUniRevaInvoicePage = () => {
   }>();
 
   const router = useRouter();
+
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isFundingAndPaymentRequestsFromCandidacyStatusesRemoved =
+    isFeatureActive(
+      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    );
 
   const { candidacy, getCandidacyStatus, createOrUpdatePaymentRequestUniReva } =
     usePaymentRequestUniRevaInvoicePage();
@@ -74,14 +82,10 @@ const PaymentRequestUniRevaInvoicePage = () => {
     [candidacy],
   );
 
-  const activeCandidacyStatus = candidacy?.status;
-
-  const paymentRequestAlreadySent =
-    activeCandidacyStatus &&
-    isCandidacyStatusEqualOrAbove(
-      activeCandidacyStatus,
-      "DEMANDE_PAIEMENT_ENVOYEE",
-    );
+  const paymentRequestAlreadySent = isCandidacyPaymentRequestAlreadySent({
+    isFundingAndPaymentRequestsFromCandidacyStatusesRemoved,
+    candidacy,
+  });
 
   const {
     register,

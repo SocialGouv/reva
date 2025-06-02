@@ -60,6 +60,8 @@ const getCandidacyQuery = graphql(`
         proofReceivedByAdmin
         dropOutConfirmedByCandidate
       }
+      isPaymentRequestSent
+      isPaymentRequestUnifvaeSent
     }
   }
 `);

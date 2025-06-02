@@ -21,9 +21,10 @@ import {
   PaymentRequestUniFvaeInvoiceFormData,
   paymentRequestUniFvaeInvoiceSchema,
 } from "./paymentRequestUniFvaeInvoiceFormSchema";
-import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { isAfter, sub } from "date-fns";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { isCandidacyPaymentRequestAlreadySent } from "@/utils/isCandidacyPaymentRequestAlreadySent";
 
 const PaymentRequestUniFvaeInvoicePage = () => {
   const { candidacyId } = useParams<{
@@ -31,6 +32,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
   }>();
 
   const router = useRouter();
+  const { isFeatureActive } = useFeatureflipping();
 
   const {
     candidacy,
@@ -38,6 +40,11 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     createOrUpdatePaymentRequestUnifvae,
     getGender,
   } = usePaymentRequestUniFvaeInvoicePage();
+
+  const isFundingAndPaymentRequestsFromCandidacyStatusesRemoved =
+    isFeatureActive(
+      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    );
 
   const defaultValues = useMemo(
     () => ({
@@ -72,14 +79,10 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     [candidacy],
   );
 
-  const activeCandidacyStatus = candidacy?.status;
-
-  const paymentRequestAlreadySent =
-    activeCandidacyStatus &&
-    isCandidacyStatusEqualOrAbove(
-      activeCandidacyStatus,
-      "DEMANDE_PAIEMENT_ENVOYEE",
-    );
+  const paymentRequestAlreadySent = isCandidacyPaymentRequestAlreadySent({
+    isFundingAndPaymentRequestsFromCandidacyStatusesRemoved,
+    candidacy,
+  });
 
   const {
     register,

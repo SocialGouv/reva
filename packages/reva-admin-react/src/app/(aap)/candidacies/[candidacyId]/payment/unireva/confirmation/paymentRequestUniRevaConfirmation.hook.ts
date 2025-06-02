@@ -34,6 +34,8 @@ const getCandidacyQuery = graphql(`
         examEffectiveHourCount
         examEffectiveCost
       }
+      isPaymentRequestSent
+      isPaymentRequestUnifvaeSent
     }
   }
 `);
