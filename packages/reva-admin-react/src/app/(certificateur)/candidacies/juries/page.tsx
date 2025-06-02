@@ -45,6 +45,23 @@ const getJuriesQuery = graphql(`
               code
             }
           }
+          status
+          candidacyDropOut {
+            createdAt
+          }
+          jury {
+            dateOfSession
+            result
+          }
+          cohorteVaeCollective {
+            nom
+            projetVaeCollective {
+              nom
+              commanditaireVaeCollective {
+                raisonSociale
+              }
+            }
+          }
         }
         dateOfSession
       }

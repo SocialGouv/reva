@@ -51,6 +51,14 @@ const getFeasibilitiesQuery = graphql(`
               label
             }
           }
+          status
+          candidacyDropOut {
+            createdAt
+          }
+          jury {
+            dateOfSession
+            result
+          }
           cohorteVaeCollective {
             nom
             projetVaeCollective {

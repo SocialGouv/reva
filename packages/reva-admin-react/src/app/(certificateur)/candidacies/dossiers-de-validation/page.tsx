@@ -45,6 +45,23 @@ const getDossiersDeValidationQuery = graphql(`
               code
             }
           }
+          status
+          candidacyDropOut {
+            createdAt
+          }
+          jury {
+            dateOfSession
+            result
+          }
+          cohorteVaeCollective {
+            nom
+            projetVaeCollective {
+              nom
+              commanditaireVaeCollective {
+                raisonSociale
+              }
+            }
+          }
         }
         dossierDeValidationFile {
           url
