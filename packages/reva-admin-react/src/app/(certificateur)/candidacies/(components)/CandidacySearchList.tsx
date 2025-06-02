@@ -85,7 +85,7 @@ type CandidacySearchResult<T> = T & {
     certification?: { label: string; codeRncp: string } | null;
     organism?: { label: string; nomPublic?: string | null } | null;
     jury?: Jury;
-    dropout?: Dropout;
+    candidacyDropOut?: Dropout;
     candidate?: {
       department?: { code: string; label: string } | null;
       firstname: string;
@@ -125,7 +125,7 @@ export const CandidacySearchList = <T,>({
                 <StatusTag
                   status={r.candidacy.status}
                   jury={r.candidacy.jury}
-                  dropout={r.candidacy.dropout}
+                  dropout={r.candidacy.candidacyDropOut}
                 />
               </li>
             </ul>

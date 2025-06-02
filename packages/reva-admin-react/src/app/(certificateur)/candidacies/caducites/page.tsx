@@ -34,6 +34,23 @@ const getCandidacyCaducitesQuery = graphql(`
         feasibility {
           feasibilityFileSentAt
         }
+        status
+        candidacyDropOut {
+          createdAt
+        }
+        jury {
+          dateOfSession
+          result
+        }
+        cohorteVaeCollective {
+          nom
+          projetVaeCollective {
+            nom
+            commanditaireVaeCollective {
+              raisonSociale
+            }
+          }
+        }
         candidate {
           firstname
           lastname
@@ -205,6 +222,10 @@ const CaducitesPage = () => {
                 certification: row.certification,
                 candidate: row.candidate,
                 feasibility: row.feasibility,
+                jury: row.jury,
+                dropout: row.candidacyDropOut,
+                status: row.status,
+                cohorteVaeCollective: row.cohorteVaeCollective,
               },
             })),
           }}
