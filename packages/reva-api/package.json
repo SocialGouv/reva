@@ -65,7 +65,6 @@
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.10.0",
     "mercurius": "^15.1.0",
-    "mjml": "^4.15.3",
     "pino": "^9.5.0",
     "pino-datadog-transport": "^3.0.4",
     "sib-api-v3-sdk": "^8.5.0",
