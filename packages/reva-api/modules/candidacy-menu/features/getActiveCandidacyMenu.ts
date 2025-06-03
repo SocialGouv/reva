@@ -10,6 +10,7 @@ import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
 import { prismaClient } from "../../../prisma/client";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const getActiveCandidacyMenu = async ({
   candidacy,
@@ -39,6 +40,11 @@ export const getActiveCandidacyMenu = async ({
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
   const hasAlreadyAppointment = !!candidacy.firstAppointmentOccuredAt;
+
+  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
+    await isFeatureActiveForUser({
+      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    });
 
   const getMeetingsMenuEntry = (): CandidacyMenuEntry => ({
     label: "Rendez-vous pédagogique",
@@ -180,14 +186,28 @@ export const getActiveCandidacyMenu = async ({
     let url = "#";
 
     if (activeFeasibility?.decision === "ADMISSIBLE") {
-      const editableStatus: CandidacyStatusStep[] =
-        candidacy.financeModule === "hors_plateforme"
-          ? [
-              "DOSSIER_FAISABILITE_RECEVABLE",
-              "DOSSIER_FAISABILITE_NON_RECEVABLE",
-              "DOSSIER_DE_VALIDATION_SIGNALE",
-            ]
-          : ["DEMANDE_FINANCEMENT_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"];
+      const editableStatus: CandidacyStatusStep[] = [];
+
+      if (candidacy.financeModule === "hors_plateforme") {
+        editableStatus.push(
+          "DOSSIER_FAISABILITE_RECEVABLE",
+          "DOSSIER_FAISABILITE_NON_RECEVABLE",
+          "DOSSIER_DE_VALIDATION_SIGNALE",
+        );
+      } else {
+        if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+          editableStatus.push(
+            "DOSSIER_FAISABILITE_RECEVABLE",
+            "DOSSIER_FAISABILITE_NON_RECEVABLE",
+            "DOSSIER_DE_VALIDATION_SIGNALE",
+          );
+        } else {
+          editableStatus.push(
+            "DOSSIER_DE_VALIDATION_SIGNALE",
+            "DEMANDE_FINANCEMENT_ENVOYE",
+          );
+        }
+      }
 
       const isCandidacyStatusAdvancedEnoughToEditDossierDeValidation =
         isCandidacyStatusEqualOrAboveGivenStatus(activeCandidacyStatus);
