@@ -34,7 +34,7 @@ const IndexMentionsLegalesPage = () => {
           title="Directeur de la publication"
         >
           <SectionParagraph>
-            Monsieur Jérôme Marchand-Arvier, Délégué général à l’emploi et à la
+            Monsieur Benjamin Maurice, Délégué général à l’emploi et à la
             formation professionnelle. 
           </SectionParagraph>
         </ContentSection>
