@@ -53,7 +53,7 @@ it("should send a certification to the certification registry manager if the cer
       SendNewCertificationAvailableToCertificationRegistryManagerEmailModule,
       "sendNewCertificationAvailableToCertificationRegistryManagerEmail",
     )
-    .mockImplementation(() => Promise.resolve(""));
+    .mockImplementation(() => Promise.resolve());
 
   const response = await injectGraphql({
     fastify: (global as any).fastify,

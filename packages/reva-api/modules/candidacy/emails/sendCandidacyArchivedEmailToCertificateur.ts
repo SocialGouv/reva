@@ -1,13 +1,5 @@
-import mjml2html from "mjml";
-
 import { prismaClient } from "../../../prisma/client";
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
-import {
-  getBackofficeUrl,
-  sendEmailUsingTemplate,
-  sendGenericEmail,
-  templateMail,
-} from "../../shared/email";
+import { getBackofficeUrl, sendEmailUsingTemplate } from "../../shared/email";
 
 export const sendCandidacyArchivedEmailToCertificateur = async (
   candidacyId: string,
@@ -44,33 +36,9 @@ export const sendCandidacyArchivedEmailToCertificateur = async (
     path: `/candidacies/${candidacyId}/feasibility`,
   });
 
-  const useBrevoTemplate = await isFeatureActiveForUser({
-    feature: "USE_BREVO_EMAIL_TEMPLATES_FOR_CERTIFICATEURS",
+  return sendEmailUsingTemplate({
+    to: { email: contactEmail },
+    templateId: 567,
+    params: { candidateFullName, feasibilityUrl },
   });
-
-  if (useBrevoTemplate) {
-    return sendEmailUsingTemplate({
-      to: { email: contactEmail },
-      templateId: 567,
-      params: { candidateFullName, feasibilityUrl },
-    });
-  } else {
-    const htmlContent = mjml2html(
-      templateMail({
-        content: `
-        <p>Bonjour,</p>
-        <p>Nous vous informons que la candidature de ${candidateFullName} a été supprimée. Pour retrouver la candidature en question, cliquez sur le lien ci-dessous.</p>
-        <p>L'équipe France VAE.</p>
-        `,
-        labelCTA: "Accéder à la candidature",
-        url: feasibilityUrl,
-      }),
-    );
-
-    return sendGenericEmail({
-      to: { email: contactEmail },
-      htmlContent: htmlContent.html,
-      subject: "Une candidature a été supprimée",
-    });
-  }
 };

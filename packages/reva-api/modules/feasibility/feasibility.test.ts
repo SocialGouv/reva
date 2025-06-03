@@ -467,9 +467,16 @@ test("should validate upload of feasibility file", async () => {
     emails.push(certificationAuthority?.contactEmail);
   }
 
-  expect(
-    await sendNewFeasibilitySubmittedEmaillMock.mock.results[0].value,
-  ).toBe(`email sent to ${emails.map((email) => email).join(", ")}`);
+  const feasibilityUrl = new URL(
+    `/admin2/candidacies/${candidacy.id}/feasibility`,
+    process.env.BASE_URL,
+  );
+
+  expect(sendNewFeasibilitySubmittedEmaillMock).toHaveBeenCalledWith({
+    emails,
+    feasibilityUrl: feasibilityUrl.toString(),
+  });
+  expect(sendNewFeasibilitySubmittedEmaillMock).toHaveBeenCalledTimes(1);
 
   expect(resp.statusCode).toEqual(200);
 });
