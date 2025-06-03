@@ -7,7 +7,6 @@ const DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE =
 const interceptCandidacy = (candidate) => {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-    stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     stubQuery(
       req,
       "candidate_getCandidateWithCandidacyForHome",
@@ -36,10 +35,10 @@ const interceptCandidacy = (candidate) => {
     );
   });
   cy.login();
-
   cy.wait("@candidate_getCandidateWithCandidacy");
   cy.wait("@candidate_getCandidateWithCandidacyForHome");
   cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+  cy.wait("@activeFeaturesForConnectedUser");
 };
 
 context("Type accompagnement", () => {

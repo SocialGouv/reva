@@ -1,3 +1,4 @@
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { CandidacyUseCandidateForDashboard } from "./dashboard.hooks";
 import { AapContactTile } from "./tiles/AapContactTile";
 import { ActualisationTile } from "./tiles/ActualisationTile";
@@ -13,14 +14,29 @@ export const DashboardSidebar = ({
   candidacy: CandidacyUseCandidateForDashboard;
   className?: string;
 }) => {
-  const lastActiveStatus = candidacy.status;
+  const { isFeatureActive } = useFeatureFlipping();
 
-  const isLastActiveStatusValidForActualisationBanner =
-    lastActiveStatus === "DOSSIER_FAISABILITE_RECEVABLE" ||
-    lastActiveStatus === "DOSSIER_DE_VALIDATION_SIGNALE" ||
-    lastActiveStatus === "DEMANDE_FINANCEMENT_ENVOYE" ||
-    (lastActiveStatus === "DEMANDE_PAIEMENT_ENVOYEE" &&
-      candidacy?.activeDossierDeValidation?.decision === "INCOMPLETE");
+  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
+    isFeatureActive(
+      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    );
+
+  const { status, activeDossierDeValidation } = candidacy;
+
+  let isLastActiveStatusValidForActualisationBanner = false;
+
+  if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+    status === "DOSSIER_FAISABILITE_RECEVABLE" ||
+      status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
+      activeDossierDeValidation?.decision === "INCOMPLETE";
+  } else {
+    isLastActiveStatusValidForActualisationBanner =
+      status === "DOSSIER_FAISABILITE_RECEVABLE" ||
+      status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
+      status === "DEMANDE_FINANCEMENT_ENVOYE" ||
+      (status === "DEMANDE_PAIEMENT_ENVOYEE" &&
+        activeDossierDeValidation?.decision === "INCOMPLETE");
+  }
 
   const displayActualisationTile =
     isLastActiveStatusValidForActualisationBanner &&

@@ -5,6 +5,7 @@ import {
 } from "../../banner-thresholds";
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 import { BaseBanner } from "./BaseBanner";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 const HOURGLASS_IMAGE = "/candidat/images/image-hourglass.png";
 const HOURGLASS_IMAGE_ALT = "Sablier";
@@ -19,6 +20,13 @@ export const ActualisationBanner = ({
   const { lastActivityDate, status, feasibility, activeDossierDeValidation } =
     candidacy;
 
+  const { isFeatureActive } = useFeatureFlipping();
+
+  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
+    isFeatureActive(
+      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    );
+
   const actualisationBannerThresholdDate = addDays(
     lastActivityDate as number,
     ACTUALISATION_THRESHOLD_DAYS,
@@ -29,12 +37,20 @@ export const ActualisationBanner = ({
     actualisationBannerThresholdDate,
   );
 
-  const isLastActiveStatusValidForActualisationBanner =
+  let isLastActiveStatusValidForActualisationBanner = false;
+
+  if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
     status === "DOSSIER_FAISABILITE_RECEVABLE" ||
-    status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
-    status === "DEMANDE_FINANCEMENT_ENVOYE" ||
-    (status === "DEMANDE_PAIEMENT_ENVOYEE" &&
-      activeDossierDeValidation?.decision === "INCOMPLETE");
+      status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
+      activeDossierDeValidation?.decision === "INCOMPLETE";
+  } else {
+    isLastActiveStatusValidForActualisationBanner =
+      status === "DOSSIER_FAISABILITE_RECEVABLE" ||
+      status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
+      status === "DEMANDE_FINANCEMENT_ENVOYE" ||
+      (status === "DEMANDE_PAIEMENT_ENVOYEE" &&
+        activeDossierDeValidation?.decision === "INCOMPLETE");
+  }
 
   const shouldDisplayActualisationBanner =
     todayIsAfterActualisationBannerThresholdDate &&

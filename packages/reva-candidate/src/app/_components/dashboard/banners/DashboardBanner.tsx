@@ -9,6 +9,7 @@ import { CandidacySubmissionBanner } from "./CandidacySubmissionBanner";
 import { DossierDeValidationBanner } from "./DossierDeValidationBanner";
 import { FeasibilityBanner } from "./FeasibilityBanner";
 import { JuryBanner } from "./JuryBanner";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 type BannerProps = {
   candidacy: CandidacyUseCandidateForDashboard;
@@ -17,6 +18,13 @@ type BannerProps = {
 };
 
 export const DashboardBanner = (props: BannerProps) => {
+  const { isFeatureActive } = useFeatureFlipping();
+
+  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
+    isFeatureActive(
+      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    );
+
   if (!props.candidacy) {
     return null;
   }
@@ -35,16 +43,23 @@ export const DashboardBanner = (props: BannerProps) => {
     typeAccompagnement,
   } = candidacy;
 
-  const lastActiveStatus = status;
   const candidacyIsAutonome = typeAccompagnement === "AUTONOME";
   const candidacyIsAccompagne = typeAccompagnement === "ACCOMPAGNE";
 
-  const isLastActiveStatusValidForActualisationBanner =
-    lastActiveStatus === "DOSSIER_FAISABILITE_RECEVABLE" ||
-    lastActiveStatus === "DOSSIER_DE_VALIDATION_SIGNALE" ||
-    lastActiveStatus === "DEMANDE_FINANCEMENT_ENVOYE" ||
-    (lastActiveStatus === "DEMANDE_PAIEMENT_ENVOYEE" &&
-      activeDossierDeValidation?.decision === "INCOMPLETE");
+  let isLastActiveStatusValidForActualisationBanner = false;
+
+  if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+    status === "DOSSIER_FAISABILITE_RECEVABLE" ||
+      status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
+      activeDossierDeValidation?.decision === "INCOMPLETE";
+  } else {
+    isLastActiveStatusValidForActualisationBanner =
+      status === "DOSSIER_FAISABILITE_RECEVABLE" ||
+      status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
+      status === "DEMANDE_FINANCEMENT_ENVOYE" ||
+      (status === "DEMANDE_PAIEMENT_ENVOYEE" &&
+        activeDossierDeValidation?.decision === "INCOMPLETE");
+  }
 
   let todayIsAfterActualisationBannerThresholdDate = false;
 

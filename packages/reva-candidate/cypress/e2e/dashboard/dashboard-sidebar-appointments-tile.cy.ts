@@ -24,6 +24,7 @@ interface CandidateFixture {
 context("Dashboard Sidebar - Appointment Tiles", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(
         req,
@@ -36,6 +37,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.visit("/");
   });
