@@ -84,8 +84,7 @@ export const selectOrganismForCandidacy = async ({
       data: { firstAppointmentOccuredAt: null },
     });
 
-    const { candidate, organism, firstAppointmentOccuredAt, certificationId } =
-      candidacy;
+    const { candidate, organism, certificationId } = candidacy;
     const certification = await prismaClient.certification.findUnique({
       where: { id: certificationId || "" },
     });
@@ -113,7 +112,6 @@ export const selectOrganismForCandidacy = async ({
         email: organism.contactAdministrativeEmail,
         candidateFullName: `${candidate.firstname} ${candidate.lastname}`,
         certificationName: certification.label,
-        date: firstAppointmentOccuredAt,
       });
 
       await sendNewCandidacyEmail({

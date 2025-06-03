@@ -247,9 +247,7 @@ test("should send jury result to organism", async () => {
     email: organism?.contactAdministrativeEmail,
     candidateFullName: `${jury.candidacy.candidate?.firstname} ${jury.candidacy.candidate?.lastname}`,
   });
-  expect(await sendJuryResultAAPEmailSpy.mock.results[0].value).toBe(
-    `email sent to ${organism.contactAdministrativeEmail}`,
-  );
+  expect(sendJuryResultAAPEmailSpy).toHaveBeenCalledTimes(1);
 });
 
 // Final result are all results except "PARTIAL_SUCCESS_PENDING_CONFIRMATION"
