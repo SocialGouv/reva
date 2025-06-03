@@ -101,6 +101,7 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
       data: {
         candidacyId,
         certificationAuthorityLocalAccountId,
+        hasBeenTransfered: true,
       },
     });
 

@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+import { assignCandidaciesToCertificationAuthorityLocalAccount } from "./assignCandidaciesToCertificationAuthorityLocalAccount";
 
 export const updateCertificationAuthorityLocalAccountDepartments = async ({
   certificationAuthorityLocalAccountId,
@@ -7,23 +8,36 @@ export const updateCertificationAuthorityLocalAccountDepartments = async ({
   certificationAuthorityLocalAccountId: string;
   departmentIds: string[];
 }) => {
-  const [, , certificationAuthorityLocalAccount] =
-    await prismaClient.$transaction([
-      //delete old departments associations and create the new ones
-      prismaClient.certificationAuthorityLocalAccountOnDepartment.deleteMany({
-        where: { certificationAuthorityLocalAccountId },
-      }),
-      prismaClient.certificationAuthorityLocalAccountOnDepartment.createMany({
-        data: departmentIds.map((did) => ({
-          certificationAuthorityLocalAccountId,
-          departmentId: did,
-        })),
-      }),
+  await prismaClient.$transaction(async (tx) => {
+    // Remove linked candidacies based on current department ids, ignore direct assign of candidacies
+    await tx.certificationAuthorityLocalAccountOnCandidacy.deleteMany({
+      where: {
+        hasBeenTransfered: null,
+        certificationAuthorityLocalAccountId,
+      },
+    });
 
-      prismaClient.certificationAuthorityLocalAccount.findUnique({
-        where: { id: certificationAuthorityLocalAccountId },
-      }),
-    ]);
+    // delete current departments associations
+    await tx.certificationAuthorityLocalAccountOnDepartment.deleteMany({
+      where: { certificationAuthorityLocalAccountId },
+    });
 
-  return certificationAuthorityLocalAccount;
+    // add new departments associations
+    await tx.certificationAuthorityLocalAccountOnDepartment.createMany({
+      data: departmentIds.map((departmentId) => ({
+        certificationAuthorityLocalAccountId,
+        departmentId,
+      })),
+    });
+  });
+
+  // assign candidacies to certification authority local account based on new departments
+  await assignCandidaciesToCertificationAuthorityLocalAccount({
+    certificationAuthorityLocalAccountId,
+  });
+
+  // return updated certification authority local account
+  return prismaClient.certificationAuthorityLocalAccount.findUnique({
+    where: { id: certificationAuthorityLocalAccountId },
+  });
 };

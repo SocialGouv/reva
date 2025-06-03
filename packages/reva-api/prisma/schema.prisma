@@ -1117,6 +1117,7 @@ model CertificationAuthorityLocalAccountOnCandidacy {
   certificationAuthorityLocalAccountId String                             @map("certification_authority_local_account_id") @db.Uuid
   candidacyId                          String                             @map("candidacy_id") @db.Uuid
   candidacy                            Candidacy                          @relation(map: "calaoc_candidacy", fields: [candidacyId], references: [id], onDelete: NoAction)
+  hasBeenTransfered                    Boolean?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
