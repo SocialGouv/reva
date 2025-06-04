@@ -1,5 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
-import { RNCPCertification, RNCPReferential } from "../rncp";
+import { RNCPReferential } from "../rncp";
+import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 
 export const updateCertificationWithRncpFields = async (params: {
   codeRncp: string;
@@ -63,19 +64,4 @@ export const updateCertificationWithRncpFields = async (params: {
         : null,
     },
   });
-};
-
-const getLevelFromRNCPCertification = (
-  certification: RNCPCertification,
-): number => {
-  try {
-    const strLevel =
-      certification.NOMENCLATURE_EUROPE?.INTITULE.split(" ").reverse()[0] || "";
-    const level = parseInt(strLevel, 10);
-    return level;
-  } catch {
-    throw new Error(
-      `Le niveau de la certification pour le code RNCP ${certification.ID_FICHE} n'a pas pu être formatté`,
-    );
-  }
 };

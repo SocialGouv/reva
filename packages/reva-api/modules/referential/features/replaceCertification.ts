@@ -3,6 +3,7 @@ import { prismaClient } from "../../../prisma/client";
 import { RNCPCertification, RNCPReferential } from "../rncp";
 import { getFormacodes, Formacode } from "./getFormacodes";
 import { getSubdomains } from "./getDomainsByFormacodes";
+import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 import { getCertificationById } from "./getCertificationById";
 
 export const replaceCertification = async (params: {
@@ -224,21 +225,6 @@ export const replaceCertification = async (params: {
   }
 
   return newCertification;
-};
-
-const getLevelFromRNCPCertification = (
-  certification: RNCPCertification,
-): number => {
-  try {
-    const strLevel =
-      certification.NOMENCLATURE_EUROPE?.INTITULE.split(" ").reverse()[0] || "";
-    const level = parseInt(strLevel, 10);
-    return level;
-  } catch {
-    throw new Error(
-      `Le niveau de la certification pour le code RNCP ${certification.ID_FICHE} n'a pas pu être formatté`,
-    );
-  }
 };
 
 const createCompetenceBlocs = async ({
