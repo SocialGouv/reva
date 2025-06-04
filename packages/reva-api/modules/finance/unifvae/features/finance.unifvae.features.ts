@@ -6,6 +6,7 @@ import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandi
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import { UploadedFile } from "../../../shared/file";
 import { applyBusinessValidationRules } from "../validation";
+import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 
 export const getFundingRequestUnifvaeFromCandidacyId = async (
   candidacyId: string,
@@ -44,13 +45,27 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       Feasibility: true,
       certification: true,
       candidacyContestationCaducite: true,
+      fundingRequestUnifvae: true,
+      FundingRequest: true,
     },
   });
+
+  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
+    await isFeatureActiveForUser({
+      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    });
+
   if (!candidacy) {
     throw new Error(
       "Impossible de créer la demande de paiement. La candidature n'a pas été trouvée",
     );
   }
+
+  const isFundingRequestSent =
+    (candidacy.financeModule === "unireva" &&
+      candidacy.FundingRequest !== null) ||
+    (candidacy.financeModule === "unifvae" &&
+      candidacy.fundingRequestUnifvae !== null);
 
   if (
     candidacy.isCertificationPartial == undefined ||
@@ -78,12 +93,20 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   if (!isCandidacyDroppedOut && !hasConfirmedCandidacyCaducite) {
     const feasibilityRejected =
       candidacy?.Feasibility?.find((f) => f.isActive)?.decision === "REJECTED";
-    // Either the feasibility has been rejected and thus the active candidacy status must be "DEMANDE_FINANCEMENT_ENVOYE" ...
+    // Either the feasibility has been rejected and thus the funding request has been sent ...
     if (feasibilityRejected) {
-      if (activeCandidacyStatus !== "DEMANDE_FINANCEMENT_ENVOYE") {
-        throw new Error(
-          "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée ",
-        );
+      if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+        if (!isFundingRequestSent) {
+          throw new Error(
+            "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
+          );
+        }
+      } else {
+        if (activeCandidacyStatus !== "DEMANDE_FINANCEMENT_ENVOYE") {
+          throw new Error(
+            "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée ",
+          );
+        }
       }
     }
     // ... Or the feasibility file is not rejected and the active candidacy status must be "DOSSIER_DE_VALIDATION_ENVOYE"
@@ -96,14 +119,22 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   // If the candidate has dropped out ...
   else {
     // If the candidate has dropped out we ensure that the funding request has been sent
-    if (
-      !candidacy.candidacyStatuses?.some(
-        (s) => s.status === "DEMANDE_FINANCEMENT_ENVOYE",
-      )
-    ) {
-      throw new Error(
-        "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
-      );
+    if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+      if (!isFundingRequestSent) {
+        throw new Error(
+          "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
+        );
+      }
+    } else {
+      if (
+        !candidacy.candidacyStatuses?.some(
+          (s) => s.status === "DEMANDE_FINANCEMENT_ENVOYE",
+        )
+      ) {
+        throw new Error(
+          "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
+        );
+      }
     }
     // If the candidate has dropped out for less than 4 months and no proof of dropout has been received by the france vae admin
     // and the candidate has not confirmed his dropout, we prevent the payment request creation
@@ -125,17 +156,39 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   //maximum total cost allowed for unifvae payment request depends on the funding request creation date
   //and the type of certification
 
-  const fundingRequestSentBefore20231219 = candidacy.candidacyStatuses.some(
-    (cs) =>
-      cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
-      isBefore(cs.createdAt, new Date(2023, 11, 19)),
-  );
+  let fundingRequestSentAt = null;
+  if (candidacy.financeModule === "unifvae") {
+    fundingRequestSentAt = candidacy.fundingRequestUnifvae?.createdAt;
+  } else if (candidacy.financeModule === "unireva") {
+    fundingRequestSentAt = candidacy.FundingRequest?.createdAt;
+  }
 
-  const fundingRequestSentBefore20240602 = candidacy.candidacyStatuses.some(
-    (cs) =>
-      cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
-      isBefore(cs.createdAt, new Date(2024, 5, 2)),
-  );
+  let fundingRequestSentBefore20231219,
+    fundingRequestSentBefore20240602 = false;
+
+  if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+    if (fundingRequestSentAt) {
+      fundingRequestSentBefore20231219 = isBefore(
+        fundingRequestSentAt,
+        new Date(2023, 11, 19),
+      );
+      fundingRequestSentBefore20240602 = isBefore(
+        fundingRequestSentAt,
+        new Date(2024, 5, 2),
+      );
+    }
+  } else {
+    fundingRequestSentBefore20231219 = candidacy.candidacyStatuses.some(
+      (cs) =>
+        cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
+        isBefore(cs.createdAt, new Date(2023, 11, 19)),
+    );
+    fundingRequestSentBefore20240602 = candidacy.candidacyStatuses.some(
+      (cs) =>
+        cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
+        isBefore(cs.createdAt, new Date(2024, 5, 2)),
+    );
+  }
 
   const DEAS_DEAP_AND_DEAES_RNCP_CODES = [
     "4495",
