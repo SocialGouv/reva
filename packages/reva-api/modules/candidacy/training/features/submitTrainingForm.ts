@@ -10,6 +10,9 @@ import { getCandidateById } from "../../../candidate/features/getCandidateById";
 import { getCandidacy } from "../../features/getCandidacy";
 import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../../referential/referential.types";
 import { prismaClient } from "../../../../prisma/client";
+import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
+import { getFundingRequestUnifvaeFromCandidacyId } from "../../../finance/unifvae/features/finance.unifvae.features";
+import { getFundingRequestByCandidacyId } from "../../../finance/unireva/features/getFundingRequestByCandidacyId";
 
 export const submitTraining = async ({
   candidacyId,
@@ -39,15 +42,50 @@ export const submitTraining = async ({
     }[];
   };
 } & CandidacyAuditLogUserInfo) => {
-  if (
-    await existsCandidacyHavingHadStatus({
-      candidacyId,
-      status: "DEMANDE_FINANCEMENT_ENVOYE",
-    })
-  ) {
-    throw new Error(
-      `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`,
-    );
+  let candidacy = await getCandidacy({ candidacyId });
+
+  if (!candidacy) {
+    throw new Error("La candidature n'a pas été trouvée");
+  }
+
+  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
+    await isFeatureActiveForUser({
+      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    });
+
+  if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+    let existingFundingRequest = false;
+    if (candidacy.financeModule === "unifvae") {
+      const fundingRequestUnifvae =
+        await getFundingRequestUnifvaeFromCandidacyId(candidacyId);
+      if (fundingRequestUnifvae) {
+        existingFundingRequest = true;
+      }
+    }
+    if (candidacy.financeModule === "unireva") {
+      const fundingRequest = await getFundingRequestByCandidacyId({
+        candidacyId,
+      });
+      if (fundingRequest) {
+        existingFundingRequest = true;
+      }
+    }
+    if (existingFundingRequest) {
+      throw new Error(
+        `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`,
+      );
+    }
+  } else {
+    if (
+      await existsCandidacyHavingHadStatus({
+        candidacyId,
+        status: "DEMANDE_FINANCEMENT_ENVOYE",
+      })
+    ) {
+      throw new Error(
+        `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`,
+      );
+    }
   }
 
   if (
@@ -59,12 +97,6 @@ export const submitTraining = async ({
     throw new Error(
       `Ce parcours ne peut pas être envoyé car la candidature n'est pas encore prise en charge.`,
     );
-  }
-
-  let candidacy = await getCandidacy({ candidacyId });
-
-  if (!candidacy) {
-    throw new Error("La candidature n'a pas été trouvée");
   }
 
   if (candidacy.financeModule === "hors_plateforme") {
