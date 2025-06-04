@@ -9,7 +9,7 @@ interface Props {
   transparentBg?: boolean;
 }
 
-export const FancyPreview = (props: Props): JSX.Element | null => {
+export const FancyPreview = (props: Props) => {
   const {
     title,
     name,

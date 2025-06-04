@@ -6,7 +6,7 @@ interface Props {
   src: string;
 }
 
-export const FancyPreview = (props: Props): JSX.Element | null => {
+export const FancyPreview = (props: Props) => {
   const { title, name, src } = props;
 
   const [display, setDisplay] = useState<boolean>(true);

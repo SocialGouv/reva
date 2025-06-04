@@ -10,7 +10,6 @@ export const AppointmentTiles = ({
 }: {
   candidacy: CandidacyUseCandidateForDashboard;
 }) => {
-  const appointments: JSX.Element[] = [];
   // When the candidacy has a failed jury result,
   // the user can submit another dossier de validation
   const failedJuryResults = [
@@ -25,36 +24,39 @@ export const AppointmentTiles = ({
   const canSubmitAgainAfterJury = failedJuryResults.includes(
     candidacy.jury?.result || "",
   );
-  if (
-    candidacy.firstAppointmentOccuredAt &&
-    isAfter(candidacy.firstAppointmentOccuredAt, new Date())
-  ) {
-    appointments.push(
-      <RendezVousPedagogiqueTile
-        firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}
-      />,
-    );
-  }
 
-  if (
+  const hasFirstAppointment =
+    candidacy.firstAppointmentOccuredAt &&
+    isAfter(candidacy.firstAppointmentOccuredAt, new Date());
+
+  const isReadyForJury =
     candidacy.readyForJuryEstimatedAt &&
     (candidacy.activeDossierDeValidation?.decision !== "PENDING" ||
-      canSubmitAgainAfterJury)
-  ) {
-    appointments.push(
-      <ReadyForJuryTile
-        readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt}
-      />,
-    );
-  }
+      canSubmitAgainAfterJury);
 
-  if (candidacy.jury && isAfter(candidacy.jury.dateOfSession, new Date())) {
-    appointments.push(<JurySessionTile jury={candidacy.jury} />);
-  }
+  const hasDateOfJurySession =
+    candidacy.jury && isAfter(candidacy.jury.dateOfSession, new Date());
 
-  if (appointments.length === 0) {
-    appointments.push(<NoRendezVousTile />);
-  }
+  const hasNoAppointment =
+    !hasFirstAppointment && !isReadyForJury && !hasDateOfJurySession;
 
-  return appointments;
+  return (
+    <>
+      {hasFirstAppointment && (
+        <RendezVousPedagogiqueTile
+          firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt!}
+        />
+      )}
+
+      {isReadyForJury && (
+        <ReadyForJuryTile
+          readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt!}
+        />
+      )}
+
+      {hasDateOfJurySession && <JurySessionTile jury={candidacy.jury} />}
+
+      {hasNoAppointment && <NoRendezVousTile />}
+    </>
+  );
 };

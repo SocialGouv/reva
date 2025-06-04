@@ -22,7 +22,7 @@ interface Props {
   fullWidth?: boolean;
 }
 
-export const TreeSelect = (props: Props): JSX.Element => {
+export const TreeSelect = (props: Props) => {
   const {
     title,
     label,
@@ -41,7 +41,7 @@ export const TreeSelect = (props: Props): JSX.Element => {
 
   const filteredItems = getFilteredItems(search, items);
 
-  const renderItems = (items: TreeSelectItem[]): JSX.Element => {
+  const renderItems = (items: TreeSelectItem[]) => {
     return (
       <>
         {items.map((item) => {

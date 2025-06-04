@@ -25,7 +25,7 @@ const getTypologyLabel = (typology: Typology) => {
   }
 };
 
-export interface OrganismSummaryProps {
+interface OrganismSummaryProps {
   companyName: string;
   accountFirstname: string;
   accountLastname: string;

@@ -51,9 +51,9 @@ export const BaseBanner = ({
       <div className="flex flex-col">
         <div className="flex bg-white items-center border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 lg:ml-3 lg:pl-0 mt-4 lg:mt-16 lg:h-[110px]">
           <BannerImage src={imageSrc} alt={imageAlt} />
-          <p className="my-0 lg:ml-4" data-test={testId}>
+          <div className="my-0 lg:ml-4" data-test={testId}>
             {content}
-          </p>
+          </div>
         </div>
         {actionButton && (
           <div className="self-end mt-2">

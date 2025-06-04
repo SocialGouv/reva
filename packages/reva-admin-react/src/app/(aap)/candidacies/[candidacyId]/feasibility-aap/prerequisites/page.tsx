@@ -151,6 +151,7 @@ export default function PrerequisitesPage() {
             {
               label: "Il n'y a pas de prérequis pour cette certification.",
               nativeInputProps: {
+                ...{ "data-test": "has-no-prerequisites-checkbox-input" },
                 ...register("hasNoPrerequisites"),
                 onChange: handleCheckboxChange,
               },

@@ -5,7 +5,7 @@ interface Props {
   website?: string | null;
 }
 
-export const OrganismThumb = (props: Props): JSX.Element => {
+export const OrganismThumb = (props: Props) => {
   const { label, email, phone, website } = props;
 
   return (

@@ -2,18 +2,19 @@
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
 
 const CandidacyLifecycleLayout = ({
   children,
-  params: { candidacyId },
+  params,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   params: { candidacyId: string };
 }) => {
   const path = usePathname();
 
   const isDropOutPath = path.endsWith("/drop-out/");
+
+  const { candidacyId } = params;
 
   return (
     <>

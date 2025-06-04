@@ -8,7 +8,7 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const schema = z.object({
+const schema = z.object({
   highestDegreeId: z.string().min(1, "Merci de remplir ce champ"),
   highestDegreeLabel: z.string(),
   niveauDeFormationLePlusEleveDegreeId: z

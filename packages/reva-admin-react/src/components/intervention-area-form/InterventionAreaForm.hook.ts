@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
-export const schema = z.object({
+
+const schema = z.object({
   regions: z
     .array(
       z.object({

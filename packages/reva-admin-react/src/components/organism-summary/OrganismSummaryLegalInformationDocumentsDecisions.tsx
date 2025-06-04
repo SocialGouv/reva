@@ -34,7 +34,7 @@ export const OrganismSummaryLegalInformationDocumentsDecisions = ({
   </Accordion>
 );
 
-export const OrganismSummaryLegalInformationDocumentsDecision = ({
+const OrganismSummaryLegalInformationDocumentsDecision = ({
   decisionTakenAt,
   aapComment,
   aapUpdatedDocumentsAt,

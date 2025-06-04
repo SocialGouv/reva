@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   basePath: "/admin2",
   reactStrictMode:
     process.env.NEXT_PUBLIC_REACT_STRICT_MODE != undefined
       ? JSON.parse(process.env.NEXT_PUBLIC_REACT_STRICT_MODE)
       : true,
   transpilePackages: ["@codegouvfr/react-dsfr"],
-  swcMinify: true,
   trailingSlash: true,
   images: {
     remotePatterns: [

@@ -27,7 +27,7 @@ export const MainTitle = ({
   </h1>
 );
 
-export const SectionHeader = ({
+const SectionHeader = ({
   className,
   children,
 }: {

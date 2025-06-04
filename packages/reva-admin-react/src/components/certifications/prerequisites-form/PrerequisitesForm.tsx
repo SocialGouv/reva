@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const prerequisitesFormSchema = z.object({
+const prerequisitesFormSchema = z.object({
   prerequisites: z
     .object({
       id: z.string().optional(),

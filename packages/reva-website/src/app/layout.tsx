@@ -3,14 +3,20 @@ import "@/styles/globals.css";
 import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 import "@/styles/ckeditor5-content-styles.css";
-import { DsfrProvider } from "../dsfr-bootstrap";
-import { StartDsfrOnHydration } from "../dsfr-bootstrap";
+
+import { DsfrHead } from "./_components/dsfr/DsfrHead";
+import { DsfrProvider, StartDsfrOnHydration } from "./_components/dsfr";
+// import { getHtmlAttributes } from "./_components/dsfr/server-only-index";
+
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import Script from "next/script";
-import { DsfrHead } from "./_components/dsfr/DsfrHead";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-export default function RootLayout({ children }: { children: JSX.Element }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const matomoBaseUrl = process.env.NEXT_PUBLIC_MATOMO_URL;
   const matomoContainerName = process.env.NEXT_PUBLIC_MATOMO_CONTAINER_NAME;
   const lang = "fr";
@@ -19,7 +25,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
     //should use  <html {...getHtmlAttributes({ lang })} ... but calling getHtmlAttributes clashes with tailwind css overrides for unknown reasons
     <html
-      lang="fr"
+      lang={lang}
       data-fr-scheme="light"
       data-fr-theme="light"
       data-fr-js="true"

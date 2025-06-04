@@ -2,7 +2,7 @@
 // Add reply with fixtures
 
 // Utility to match GraphQL mutation based on the operation name
-export const hasOperationName = (req, operationName) => {
+const hasOperationName = (req, operationName) => {
   const { body } = req;
   return (
     body.hasOwnProperty("operationName") && body.operationName === operationName
@@ -13,9 +13,12 @@ export const hasOperationName = (req, operationName) => {
 export const stubQuery = (req, operationName, fixture, statusCode = 200) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
-    typeof fixture == "string" && fixture.endsWith(".json")
-      ? req.reply({ statusCode, fixture })
-      : req.reply(statusCode, fixture);
+
+    if (typeof fixture == "string" && fixture.endsWith(".json")) {
+      req.reply({ statusCode, fixture });
+    } else {
+      req.reply(statusCode, fixture);
+    }
   }
 };
 
@@ -23,8 +26,11 @@ export const stubQuery = (req, operationName, fixture, statusCode = 200) => {
 export const stubMutation = (req, operationName, fixture, statusCode = 200) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
-    typeof fixture == "string" && fixture.endsWith(".json")
-      ? req.reply({ statusCode, fixture })
-      : req.reply(statusCode, fixture);
+
+    if (typeof fixture == "string" && fixture.endsWith(".json")) {
+      req.reply({ statusCode, fixture });
+    } else {
+      req.reply(statusCode, fixture);
+    }
   }
 };

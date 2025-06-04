@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fs = require("fs"); // eslint-disable-line @typescript-eslint/no-require-imports
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const fs = require("fs");
 
 const uncrawlableRobotsTxt = `User-agent: *\nDisallow: /`;
 

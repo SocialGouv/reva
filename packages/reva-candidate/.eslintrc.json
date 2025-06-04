@@ -6,23 +6,25 @@
   ],
   "rules": {
     "react/no-unescaped-entities": "off",
+
+    "import/no-unused-modules": [
+      2,
+      {
+        "unusedExports": true,
+        "ignoreExports": ["**/**.d.ts", "**/page.tsx", "**/layout.tsx"]
+      }
+    ],
+
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "args": "all",
+        "args": "after-used",
         "argsIgnorePattern": "^_",
         "caughtErrors": "all",
         "caughtErrorsIgnorePattern": "^_",
         "destructuredArrayIgnorePattern": "^_",
         "varsIgnorePattern": "^_",
         "ignoreRestSiblings": true
-      }
-    ],
-    "import/no-unused-modules": [
-      2,
-      {
-        "unusedExports": true,
-        "ignoreExports": ["**/page.tsx", "**/layout.tsx"]
       }
     ]
   }
