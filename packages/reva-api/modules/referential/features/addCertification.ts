@@ -1,10 +1,10 @@
-import { CertificationCompetenceBloc } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 
-import { RNCPCertification, RNCPReferential } from "../rncp";
+import { RNCPReferential } from "../rncp";
 import { getFormacodes, Formacode } from "./getFormacodes";
 import { getSubdomains } from "./getDomainsByFormacodes";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
+import { createCompetenceBlocsFromRncp } from "./createCompetenceBlocsFromRncp";
 
 export const addCertification = async (params: { codeRncp: string }) => {
   const { codeRncp } = params;
@@ -103,57 +103,11 @@ export const addCertification = async (params: { codeRncp: string }) => {
     })),
   });
 
-  // Create default competence blocs
-  await createDefaultBlocs({
+  // Create competence blocs from RNCP for the new certification
+  await createCompetenceBlocsFromRncp({
     certificationId: certification.id,
     rncpCertification,
   });
 
   return certification;
-};
-
-const createDefaultBlocs = async ({
-  certificationId,
-  rncpCertification,
-}: {
-  certificationId: string;
-  rncpCertification: RNCPCertification;
-}): Promise<CertificationCompetenceBloc[]> => {
-  if (rncpCertification) {
-    for (const bloc of rncpCertification.BLOCS_COMPETENCES) {
-      const createdBloc = await prismaClient.certificationCompetenceBloc.create(
-        {
-          data: {
-            code: bloc.CODE,
-            label: bloc.LIBELLE,
-            FCCompetences: bloc.LISTE_COMPETENCES,
-            certificationId,
-          },
-        },
-      );
-
-      await prismaClient.certificationCompetence.createMany({
-        data: bloc.PARSED_COMPETENCES.map((competence, index) => ({
-          index,
-          label: competence,
-          blocId: createdBloc.id,
-        })),
-      });
-    }
-  }
-
-  const competenceBlocs: CertificationCompetenceBloc[] =
-    await prismaClient.certificationCompetenceBloc.findMany({
-      where: {
-        certificationId: certificationId,
-      },
-      include: {
-        competences: {
-          orderBy: { index: "asc" },
-        },
-      },
-      orderBy: { createdAt: "asc" },
-    });
-
-  return competenceBlocs;
 };
