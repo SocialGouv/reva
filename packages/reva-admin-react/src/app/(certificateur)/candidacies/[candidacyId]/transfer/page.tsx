@@ -59,7 +59,7 @@ export default function TransferCandidacyPage() {
               <p className="text-xl">Vers un autre compte collaborateur</p>
 
               <p className="text-dsfrGray-mentionGrey text-xs font-normal">
-                Tous les collaborateurs proposés par votre gestionnaire de
+                Tous les collaborateurs proposés par vos gestionnaires de
                 candidatures, sans restriction de certifications.
               </p>
             </div>

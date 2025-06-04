@@ -22,7 +22,9 @@ export const getCertificationAuthorityLocalAccountsToTransferCandidacy =
       },
       include: {
         candidate: true,
-        Feasibility: { where: { isActive: true } },
+        Feasibility: {
+          where: { isActive: true },
+        },
       },
     });
 
@@ -54,8 +56,35 @@ export const getCertificationAuthorityLocalAccountsToTransferCandidacy =
       );
     }
 
+    let certificationAuthorityIds = [feasibility.certificationAuthorityId];
+
+    const certificationAuthorityStructureRelation =
+      await prismaClient.certificationAuthorityOnCertificationAuthorityStructure.findFirst(
+        {
+          where: {
+            certificationAuthorityId: feasibility.certificationAuthorityId,
+          },
+        },
+      );
+
+    if (certificationAuthorityStructureRelation) {
+      const certificationAuthorities =
+        await prismaClient.certificationAuthorityOnCertificationAuthorityStructure.findMany(
+          {
+            where: {
+              certificationAuthorityStructureId:
+                certificationAuthorityStructureRelation.certificationAuthorityStructureId,
+            },
+          },
+        );
+
+      certificationAuthorityIds = certificationAuthorities.map(
+        ({ certificationAuthorityId }) => certificationAuthorityId,
+      );
+    }
+
     const whereClause: Prisma.CertificationAuthorityLocalAccountWhereInput = {
-      certificationAuthorityId: feasibility.certificationAuthorityId,
+      certificationAuthorityId: { in: certificationAuthorityIds },
       certificationAuthorityLocalAccountOnCertification: {
         some: {
           certificationAuthorityLocalAccount: {
