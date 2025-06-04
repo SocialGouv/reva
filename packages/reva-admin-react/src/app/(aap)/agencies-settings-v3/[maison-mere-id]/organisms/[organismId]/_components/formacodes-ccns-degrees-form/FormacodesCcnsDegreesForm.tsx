@@ -14,6 +14,7 @@ import {
   useActiveCertifications,
   useFormacodesCcnsDegreesForm,
 } from "./formacodesCcnsDegreesForm.hook";
+import Link from "next/link";
 
 const schema = z.object({
   organismDegrees: z
@@ -300,10 +301,12 @@ const FormacodesCcnsDegreesForm = ({
             <fieldset className="col-span-2 flex flex-col bg-neutral-100 p-6">
               <h3>Certifications proposées aux candidats :</h3>
               {certifications.map((certification) => (
-                <span
+                <Link
                   key={certification.id}
-                  className="border-t last:border-b py-2 text-sm"
-                >{`${certification.codeRncp} - ${certification.label}`}</span>
+                  href={`/certification-details/${certification.id}`}
+                  target="_blank"
+                  className="py-2 text-sm bg-none text-dsfr-blue-france-sun-113 border-dsfr-light-decisions-border-border-default-grey border-t last:border-b"
+                >{`${certification.codeRncp} - ${certification.label}`}</Link>
               ))}
             </fieldset>
           )}

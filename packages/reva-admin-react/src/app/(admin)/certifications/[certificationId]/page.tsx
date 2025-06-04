@@ -4,14 +4,13 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useUpdateCertificationPage } from "./updateCertification.hook";
 import { useParams, useRouter } from "next/navigation";
 import { ReactNode } from "react";
-import { format } from "date-fns";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { NoCertificationRegistryManagerAlert } from "./structure/_components/NoCertificationRegistryManagerAlert";
 import { NoCertificationAuthorityAlert } from "./structure/_components/NoCertificationAuthorityAlert";
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
-import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
+import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
+import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],
@@ -29,21 +28,6 @@ export default function UpdateCertificationPage() {
     <PageContent certification={certification} />
   ) : null;
 }
-
-const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
-  {
-    id: "MONTHLY",
-    label: "Tous les mois",
-  },
-  {
-    id: "TRIMESTERLY",
-    label: "Trimestrielle",
-  },
-  {
-    id: "YEARLY",
-    label: "1 fois / an",
-  },
-] as const;
 
 const PageContent = ({
   certification,
@@ -112,105 +96,7 @@ const PageContent = ({
           </div>
         )}
 
-        <EnhancedSectionCard
-          data-test="certification-description-card"
-          title="Descriptif de la certification"
-          titleIconClass="fr-icon-award-fill"
-        >
-          <div className="flex flex-col gap-4">
-            <Info title="Visibilité sur France VAE">
-              {certification.availableAt && certification.expiresAt ? (
-                <div>{`du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.expiresAt, "dd/MM/yyyy")}`}</div>
-              ) : (
-                "À compléter"
-              )}
-            </Info>
-
-            <div>
-              <label className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification.codeRncp}`}</label>
-              <h3 className="mb-0">{certification.label}</h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Info title="Niveau">{certification.degree.label}</Info>
-              <Info title="Type de certification">
-                {certification.typeDiplome || "Inconnu"}
-              </Info>
-              <Info title="Date de publication">
-                {certification.rncpPublishedAt
-                  ? format(certification.rncpPublishedAt, "dd/MM/yyyy")
-                  : "Inconnue"}
-              </Info>
-              <Info title="Date d’échéance">
-                {certification.rncpExpiresAt
-                  ? format(certification.rncpExpiresAt, "dd/MM/yyyy")
-                  : "Inconnue"}
-              </Info>
-            </div>
-
-            <h3 className="mb-0">Jury</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {certification.juryTypeSoutenanceOrale && (
-                <Info title="Entretien : ">
-                  {(certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
-                    certification.juryTypeSoutenanceOrale == "PRESENTIEL") && (
-                    <Tag>Présentiel</Tag>
-                  )}
-                  {(certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
-                    certification.juryTypeSoutenanceOrale == "A_DISTANCE") && (
-                    <Tag>À distance</Tag>
-                  )}
-                </Info>
-              )}
-              {certification.juryTypeMiseEnSituationProfessionnelle && (
-                <Info title="Mise en situation professionnelle : ">
-                  {(certification.juryTypeMiseEnSituationProfessionnelle ==
-                    "LES_DEUX" ||
-                    certification.juryTypeMiseEnSituationProfessionnelle ==
-                      "PRESENTIEL") && <Tag>Présentiel</Tag>}
-                  {(certification.juryTypeMiseEnSituationProfessionnelle ==
-                    "LES_DEUX" ||
-                    certification.juryTypeMiseEnSituationProfessionnelle ==
-                      "A_DISTANCE") && <Tag>À distance</Tag>}
-                </Info>
-              )}
-
-              <Info title="Fréquence des jurys">
-                {certification.juryFrequencyOther ||
-                  JuryFrequencies.find(
-                    ({ id }) => id == certification.juryFrequency,
-                  )?.label ||
-                  "À compléter"}
-              </Info>
-              {certification.juryPlace && (
-                <Info title="Lieu où se déroulera le passage : ">
-                  {certification.juryPlace}
-                </Info>
-              )}
-            </div>
-
-            <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {certification.domains.length == 0 && (
-                <div>Aucun formacode associé</div>
-              )}
-              {certification.domains.map((domain) => (
-                <div key={domain.id} className="flex flex-col gap-2">
-                  <div>{domain.label}</div>
-                  <div
-                    key={domain.id}
-                    className="flex flex-row flex-wrap gap-2"
-                  >
-                    {domain.children.map((subDomain) => (
-                      <Tag key={subDomain.id}>
-                        {`${subDomain.code} ${subDomain.label}`}
-                      </Tag>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </EnhancedSectionCard>
+        <CertificationSummaryCard certification={certification} />
 
         <CertificationCompetenceBlocsSummaryCard
           isEditable={isEditable}
@@ -227,28 +113,12 @@ const PageContent = ({
           }
         />
 
-        <EnhancedSectionCard
-          data-test="prerequisites-summary-card"
+        <CertificationPrerequisitesCard
+          prerequisites={certification.prerequisites}
           isEditable={isEditable}
-          title="Prérequis obligatoires"
-          titleIconClass="fr-icon-success-fill"
           customButtonTitle="Modifier"
           buttonOnClickHref={`/certifications/${certification.id}/prerequisites`}
-        >
-          {certification.prerequisites.length ? (
-            <ul className="ml-10" data-test="prerequisite-list">
-              {certification.prerequisites.map((p) => (
-                <li key={p.id} data-test="prerequisite">
-                  {p.label}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="ml-10 mb-0" data-test="no-prerequisite-message">
-              Aucun prérequis renseigné pour cette certification.
-            </p>
-          )}
-        </EnhancedSectionCard>
+        />
 
         <CertificationAdditionalInfoSummaryCard
           isAdmin

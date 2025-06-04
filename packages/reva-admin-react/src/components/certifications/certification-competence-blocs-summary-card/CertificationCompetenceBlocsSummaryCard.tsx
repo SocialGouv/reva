@@ -2,22 +2,31 @@ import { SectionCard } from "@/components/card/section-card/SectionCard";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
+type CompetenceBloc = {
+  id: string;
+  code?: string | null;
+  label: string;
+  competences: { id: string; label: string }[];
+};
+
 export const CertificationCompetenceBlocsSummaryCard = ({
   isEditable,
   competenceBlocs,
   onAddBlocCompetenceButtonClick,
   onUpdateCompetenceBlocButtonClick,
-}: {
-  isEditable: boolean;
-  competenceBlocs: {
-    id: string;
-    code?: string | null;
-    label: string;
-    competences: { id: string; label: string }[];
-  }[];
-  onAddBlocCompetenceButtonClick?: () => void;
-  onUpdateCompetenceBlocButtonClick: (blocId: string) => void;
-}) => (
+}:
+  | {
+      isEditable: true;
+      competenceBlocs: CompetenceBloc[];
+      onAddBlocCompetenceButtonClick: () => void;
+      onUpdateCompetenceBlocButtonClick: (blocId: string) => void;
+    }
+  | {
+      isEditable: false;
+      competenceBlocs: CompetenceBloc[];
+      onAddBlocCompetenceButtonClick?: () => void;
+      onUpdateCompetenceBlocButtonClick?: (blocId: string) => void;
+    }) => (
   <SectionCard
     title="Blocs de compétences"
     data-test="competence-blocs-summary-card"
@@ -33,11 +42,13 @@ export const CertificationCompetenceBlocsSummaryCard = ({
           }
         : { hasButton: false })()}
   >
-    <p>
-      La modification de bloc est possible, mais doit rester exceptionnelle.
-      Merci de l’utiliser uniquement en cas d’erreur importante à modifier
-      (exemple : erreur sur l’intitulé).
-    </p>
+    {isEditable && (
+      <p>
+        La modification de bloc est possible, mais doit rester exceptionnelle.
+        Merci de l’utiliser uniquement en cas d’erreur importante à modifier
+        (exemple : erreur sur l’intitulé).
+      </p>
+    )}
 
     <ul className="pl-0" data-test="competence-blocs-list">
       {competenceBlocs.map((bloc) => (

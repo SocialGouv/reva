@@ -11,7 +11,7 @@ export const CertificationAdditionalInfoSummaryCard = ({
 }: {
   isAdmin?: boolean;
   isEditable?: boolean;
-  updateButtonHref: string;
+  updateButtonHref?: string;
   certificationAdditionalInfo?: {
     linkToReferential: string;
     linkToCorrespondenceTable?: string | null;
