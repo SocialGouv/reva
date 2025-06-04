@@ -26,7 +26,8 @@ export const DashboardSidebar = ({
   let isLastActiveStatusValidForActualisationBanner = false;
 
   if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-    status === "DOSSIER_FAISABILITE_RECEVABLE" ||
+    isLastActiveStatusValidForActualisationBanner =
+      status === "DOSSIER_FAISABILITE_RECEVABLE" ||
       status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
       activeDossierDeValidation?.decision === "INCOMPLETE";
   } else {
