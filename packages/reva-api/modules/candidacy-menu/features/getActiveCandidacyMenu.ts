@@ -244,23 +244,53 @@ export const getActiveCandidacyMenu = async ({
     }
 
     const activeFeasibility = candidacy.Feasibility.find((f) => f.isActive);
-
-    const minimumStatusForPaymentRequest: CandidacyStatusStep =
-      candidacy.financeModule !== "unireva" &&
-      activeFeasibility?.decision !== "REJECTED"
-        ? "DOSSIER_DE_VALIDATION_ENVOYE"
-        : "DEMANDE_FINANCEMENT_ENVOYE";
-
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
-    if (
-      isStatusEqualOrAbove(minimumStatusForPaymentRequest) ||
-      candidacyHasConfirmedCaducite
-    ) {
-      menuEntryStatus =
-        activeCandidacyStatus === minimumStatusForPaymentRequest
-          ? "ACTIVE_WITH_EDIT_HINT"
-          : "ACTIVE_WITHOUT_HINT";
+    if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+      // cas d'une candidature unifvae avec feasibility non rejetée (cas "standard")
+      if (
+        candidacy.financeModule === "unifvae" &&
+        activeFeasibility?.decision !== "REJECTED"
+      ) {
+        // Pour débloquer la demande de paiement, il faut soit être au-dessus du statut "DOSSIER_DE_VALIDATION_ENVOYE" ou au dessus
+        if (
+          isStatusEqualOrAbove("DOSSIER_DE_VALIDATION_ENVOYE") ||
+          candidacyHasConfirmedCaducite
+        ) {
+          menuEntryStatus =
+            activeCandidacyStatus === "DOSSIER_DE_VALIDATION_ENVOYE"
+              ? "ACTIVE_WITH_EDIT_HINT"
+              : "ACTIVE_WITHOUT_HINT";
+        }
+      }
+      // cas d'une candidature unireva ou d'une candidature unifvae avec feasibility rejetée
+      else {
+        // il faut qu'une demande de financement ait été faite pour débloquer la demande de paiement
+        if (
+          (candidacy.financeModule === "unireva" &&
+            candidacy.FundingRequest !== null) ||
+          (candidacy.financeModule === "unireva" &&
+            candidacy.fundingRequestUnifvae !== null)
+        ) {
+          menuEntryStatus = "ACTIVE_WITHOUT_HINT";
+        }
+      }
+    } else {
+      const minimumStatusForPaymentRequest: CandidacyStatusStep =
+        candidacy.financeModule !== "unireva" &&
+        activeFeasibility?.decision !== "REJECTED"
+          ? "DOSSIER_DE_VALIDATION_ENVOYE"
+          : "DEMANDE_FINANCEMENT_ENVOYE";
+
+      if (
+        isStatusEqualOrAbove(minimumStatusForPaymentRequest) ||
+        candidacyHasConfirmedCaducite
+      ) {
+        menuEntryStatus =
+          activeCandidacyStatus === minimumStatusForPaymentRequest
+            ? "ACTIVE_WITH_EDIT_HINT"
+            : "ACTIVE_WITHOUT_HINT";
+      }
     }
 
     const isCandidacyUniReva = candidacy.financeModule === "unireva";

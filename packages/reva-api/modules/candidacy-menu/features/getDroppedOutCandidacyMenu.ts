@@ -8,6 +8,7 @@ import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
 import { prismaClient } from "../../../prisma/client";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
@@ -15,6 +16,11 @@ export const getDroppedOutCandidacyMenu = async ({
   candidacy: CandidacyForMenu;
 }): Promise<CandidacyMenuEntry[]> => {
   const activeCandidacyStatus = candidacy.status;
+
+  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
+    await isFeatureActiveForUser({
+      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+    });
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
     activeCandidacyStatus as CandidacyStatusStep,
@@ -79,13 +85,24 @@ export const getDroppedOutCandidacyMenu = async ({
 
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
-    if (isStatusEqualOrAbove("DEMANDE_FINANCEMENT_ENVOYE")) {
-      menuEntryStatus =
-        activeCandidacyStatus === "DEMANDE_FINANCEMENT_ENVOYE"
-          ? "ACTIVE_WITH_EDIT_HINT"
-          : "ACTIVE_WITHOUT_HINT";
+    if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
+      // il faut qu'une demande de financement ait été faite pour débloquer la demande de paiement
+      if (
+        (candidacy.financeModule === "unireva" &&
+          candidacy.FundingRequest !== null) ||
+        (candidacy.financeModule === "unireva" &&
+          candidacy.fundingRequestUnifvae !== null)
+      ) {
+        menuEntryStatus = "ACTIVE_WITHOUT_HINT";
+      }
+    } else {
+      if (isStatusEqualOrAbove("DEMANDE_FINANCEMENT_ENVOYE")) {
+        menuEntryStatus =
+          activeCandidacyStatus === "DEMANDE_FINANCEMENT_ENVOYE"
+            ? "ACTIVE_WITH_EDIT_HINT"
+            : "ACTIVE_WITHOUT_HINT";
+      }
     }
-
     const isCandidacyUniReva = candidacy.financeModule === "unireva";
 
     const paymentPageUrl = isCandidacyUniReva
