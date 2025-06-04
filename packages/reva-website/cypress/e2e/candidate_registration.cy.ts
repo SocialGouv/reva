@@ -226,7 +226,7 @@ describe("candidate two-steps registration", () => {
 
         cy.get(
           '[data-testid="candidate-registration-form-public-employee-checkbox-wrapper"] fieldset',
-        ).should("not.have.class", "fr-fieldset--error");
+        ).should("not.exist");
 
         cy.get('[data-testid="candidate-registration-submit-button"]').click();
 
