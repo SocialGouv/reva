@@ -18,7 +18,7 @@ export const CertificationCompetenceBlocsSummaryCard = ({
   | {
       isEditable: true;
       competenceBlocs: CompetenceBloc[];
-      onAddBlocCompetenceButtonClick: () => void;
+      onAddBlocCompetenceButtonClick?: () => void;
       onUpdateCompetenceBlocButtonClick: (blocId: string) => void;
     }
   | {
