@@ -1,10 +1,11 @@
 import { prismaClient } from "../../../prisma/client";
 
-import { RNCPCertification, RNCPReferential } from "../rncp";
+import { RNCPReferential } from "../rncp";
 import { getFormacodes, Formacode } from "./getFormacodes";
 import { getSubdomains } from "./getDomainsByFormacodes";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 import { getCertificationById } from "./getCertificationById";
+import { createCompetenceBlocsFromRncp } from "../utils/competenceBlocs.helpers";
 
 export const replaceCertification = async (params: {
   codeRncp: string;
@@ -144,8 +145,8 @@ export const replaceCertification = async (params: {
     })),
   });
 
-  // Create certification competence blocs for the new certification
-  await createCompetenceBlocs({
+  // Create competence blocs from RNCP for the new certification
+  await createCompetenceBlocsFromRncp({
     certificationId: newCertification.id,
     rncpCertification,
   });
@@ -225,50 +226,4 @@ export const replaceCertification = async (params: {
   }
 
   return newCertification;
-};
-
-const createCompetenceBlocs = async ({
-  certificationId,
-  rncpCertification,
-}: {
-  certificationId: string;
-  rncpCertification: RNCPCertification;
-}) => {
-  if (rncpCertification) {
-    for (const bloc of rncpCertification.BLOCS_COMPETENCES) {
-      const createdBloc = await prismaClient.certificationCompetenceBloc.create(
-        {
-          data: {
-            code: bloc.CODE,
-            label: bloc.LIBELLE,
-            FCCompetences: bloc.LISTE_COMPETENCES,
-            certificationId,
-          },
-        },
-      );
-
-      await prismaClient.certificationCompetence.createMany({
-        data: bloc.PARSED_COMPETENCES.map((competence, index) => ({
-          index,
-          label: competence,
-          blocId: createdBloc.id,
-        })),
-      });
-    }
-  }
-
-  const competenceBlocs =
-    await prismaClient.certificationCompetenceBloc.findMany({
-      where: {
-        certificationId,
-      },
-      include: {
-        competences: {
-          orderBy: { index: "asc" },
-        },
-      },
-      orderBy: { createdAt: "asc" },
-    });
-
-  return competenceBlocs;
 };
