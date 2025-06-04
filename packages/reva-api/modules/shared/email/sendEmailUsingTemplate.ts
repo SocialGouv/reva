@@ -3,6 +3,11 @@
 import SibApiV3Sdk from "sib-api-v3-sdk";
 import { logger } from "../logger";
 
+// https://developers.brevo.com/docs/how-it-works#requests
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications["api-key"];
+apiKey.apiKey = process.env.SENDINBLUE_API_KEY || "secret";
+
 export const sendEmailUsingTemplate = async ({
   to,
   templateId,
