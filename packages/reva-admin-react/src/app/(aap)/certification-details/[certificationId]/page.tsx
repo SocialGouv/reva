@@ -1,10 +1,11 @@
 "use client";
 import { useCertificationDetailsPage } from "./getCertificationDetails.hook";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
 import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useCertificationDetailsPage>["certification"],
@@ -15,16 +16,28 @@ export default function CertificationDetailsPage() {
   const { certificationId } = useParams<{
     certificationId: string;
   }>();
+  const searchParams = useSearchParams();
+  const candidacyId = searchParams.get("candidacyId");
 
   const { certification, getCertificationQueryStatus } =
     useCertificationDetailsPage({ certificationId });
   return getCertificationQueryStatus === "success" && certification ? (
-    <>
-      <h1>
+    <div className="flex flex-col gap-12">
+      <h1 className="m-0">
         RNCP {certification.codeRncp} - {certification.label}
       </h1>
+      {candidacyId && (
+        <Button
+          data-test="candidacy-change-certification-button"
+          linkProps={{
+            href: `/candidacies/${candidacyId}/reorientation`,
+          }}
+        >
+          Changer de certification
+        </Button>
+      )}
       <PageContent certification={certification} />
-    </>
+    </div>
   ) : null;
 }
 
