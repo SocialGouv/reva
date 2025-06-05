@@ -4,19 +4,21 @@ export const DownloadTile = ({
   url,
   mimeType,
   fileSizeInBytes,
+  onUrlClick,
 }: {
   name: string;
   description?: string;
   url: string;
   mimeType: string;
   fileSizeInBytes?: number;
+  onUrlClick?: () => void;
 }) => {
   return (
     <div className="fr-tile fr-tile--download fr-enlarge-link">
       <div className="fr-tile__body">
         <div className="fr-tile__content">
           <h3 className="fr-tile__title">
-            <a href={url} target="_blank">
+            <a href={url} target="_blank" onClick={onUrlClick}>
               {name}
             </a>
           </h3>
