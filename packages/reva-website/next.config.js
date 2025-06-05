@@ -25,7 +25,7 @@ const nextConfig = {
     return config;
   },
   eslint: {
-    dirs: ["pages", "app", "components", "lib", "src", "cypress"],
+    dirs: ["app", "components", "lib", "src", "cypress"],
   },
 };
 

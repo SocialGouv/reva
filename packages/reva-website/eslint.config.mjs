@@ -31,8 +31,6 @@ export default defineConfig([
             "**/route.ts",
             "**/page.tsx",
             "**/layout.tsx",
-            "**/pages/**/**.ts",
-            "**/pages/**/**.tsx",
           ],
         },
       ],
