@@ -98,3 +98,9 @@ type Query {
   feasibility(feasibilityId: ID!): Feasibility
   feasibility_getActiveFeasibilityByCandidacyId(candidacyId: ID!): Feasibility
 }
+
+type Mutation {
+  feasibility_updateFeasibilityFileTemplateFirstReadAt(
+    candidacyId: ID!
+  ): Candidacy!
+}

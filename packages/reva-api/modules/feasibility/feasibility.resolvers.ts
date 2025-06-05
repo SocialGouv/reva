@@ -11,6 +11,7 @@ import { resolversSecurityMap } from "./feasibility.security";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
 import { getCandidacy } from "../candidacy/features/getCandidacy";
+import { updateFeasibilityFileTemplateFirstReadAt } from "./features/updateFeasibilityFileTemplateFirstReadAt";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -75,6 +76,12 @@ const unsafeResolvers = {
       _parent: unknown,
       { candidacyId }: { candidacyId: string },
     ) => getActiveFeasibilityByCandidacyid({ candidacyId }),
+  },
+  Mutation: {
+    feasibility_updateFeasibilityFileTemplateFirstReadAt: (
+      _parent: unknown,
+      { candidacyId }: { candidacyId: string },
+    ) => updateFeasibilityFileTemplateFirstReadAt({ candidacyId }),
   },
 };
 
