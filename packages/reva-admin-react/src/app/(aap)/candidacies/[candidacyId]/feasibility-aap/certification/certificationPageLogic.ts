@@ -6,8 +6,12 @@ import { useParams } from "next/navigation";
 const getCandidacyById = graphql(`
   query getCandidacyByIdForAapFeasibilityCertificationPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      id
+      status
       isCertificationPartial
       certification {
+        id
+        isAapAvailable
         label
         codeRncp
         competenceBlocs {

@@ -12,6 +12,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+import { CertificationCard } from "../../_components/CertificationCard";
 
 const schema = z.object({
   option: z.string(),
@@ -126,15 +127,11 @@ const CertificationPage = () => {
         Choisissez les blocs de compétences sur lesquels le candidat souhaite se
         positionner
       </p>
-      <div className="flex gap-2">
-        <span className="fr-icon fr-icon--lg fr-icon-award-fill" />
-        <div className="flex flex-col">
-          <p className="text-xl font-bold mb-0">{certification?.label}</p>
-          <p className="text-sm text-dsfr-light-text-mention-grey">
-            RNCP {certification?.codeRncp}
-          </p>
+      {candidacy && (
+        <div className="mb-6">
+          <CertificationCard candidacy={candidacy} />
         </div>
-      </div>
+      )}
       <a
         href={`https://www.francecompetences.fr/recherche/rncp/${certification?.codeRncp}/`}
         target="_blank"
@@ -142,9 +139,10 @@ const CertificationPage = () => {
       >
         Lire les détails de la fiche diplôme
       </a>
+      <hr className="mt-6" />
       {certification && (
         <form
-          className="mt-6"
+          className=""
           onSubmit={handleFormSubmit}
           onReset={(e) => {
             e.preventDefault();

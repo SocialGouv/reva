@@ -11,7 +11,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format, toDate } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import { CertificationCard } from "./_components/CertificationCard";
+import { CertificationCard } from "../_components/CertificationCard";
 import { checkCandidateFields } from "./_components/checkCandidateFields";
 import useCandidateSummary from "./_components/useCandidateSummary";
 
