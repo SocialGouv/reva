@@ -54,11 +54,11 @@ export const CertificationCompetenceBlocsSummaryCard = ({
       {competenceBlocs.map((bloc) => (
         <li
           data-test="competence-bloc"
-          className="flex items-start justify-between gap-6"
+          className="flex items-start justify-between gap-6 border-b border-dsfr-light-decisions-border-border-default-grey"
           key={bloc.id}
         >
           <Accordion
-            className="flex-1"
+            className="flex-1 before:shadow-none"
             label={bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label}
           >
             <ul data-test="competences-list">
