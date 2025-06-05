@@ -1,7 +1,8 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useAuth } from "@/components/auth/auth";
+import Card from "@codegouvfr/react-dsfr/Card";
+import Tag from "@codegouvfr/react-dsfr/Tag";
+import Image from "next/image";
 
 export const CertificationCard = ({
   candidacy,
@@ -9,7 +10,12 @@ export const CertificationCard = ({
   candidacy: {
     id: string;
     status: CandidacyStatusStep;
-    certification?: { codeRncp: string; label: string } | null;
+    certification?: {
+      id: string;
+      codeRncp: string;
+      label: string;
+      isAapAvailable: boolean;
+    } | null;
     candidacyDropOut?: unknown;
   };
 }) => {
@@ -28,33 +34,38 @@ export const CertificationCard = ({
     !candidacy.candidacyDropOut;
 
   return (
-    <GrayCard>
-      <h4 className="flex items-center justify-between">
-        La certification choisie
-        {canUpdateCertification && (
-          <Button
-            priority="secondary"
-            linkProps={{
-              target: "_self",
-              href: `/candidacies/${candidacy.id}/reorientation`,
-            }}
-          >
-            Changer la certification
-          </Button>
-        )}
-      </h4>
-      {certification ? (
-        <>
-          <p className="mb-2 text-xl font-semibold text-gray-900">
-            {certification.label}
-          </p>
-          <p className="text-xs text-gray-600 mb-0">
-            RNCP {certification.codeRncp}
-          </p>
-        </>
-      ) : (
-        <p className="mb-0">Aucune certification</p>
-      )}
-    </GrayCard>
+    <Card
+      start={
+        <Tag small className="mb-3">
+          {certification?.isAapAvailable
+            ? "VAE en autonomie ou accompagnée"
+            : "VAE en autonomie"}
+        </Tag>
+      }
+      title={certification?.label}
+      detail={
+        <div className="flex items-center gap-2 mb-3">
+          <Image
+            src="/admin2/icons/verified-badge.svg"
+            alt="Verified badge icon"
+            width={16}
+            height={16}
+          />
+          RNCP {certification?.codeRncp}
+        </div>
+      }
+      endDetail={
+        canUpdateCertification && (
+          <span>
+            Pour changer de certification, consultez la fiche détaillée de cette
+            certification
+          </span>
+        )
+      }
+      linkProps={{
+        href: `/certification-details/${certification?.id}?candidacyId=${candidacy.id}`,
+      }}
+      enlargeLink
+    />
   );
 };

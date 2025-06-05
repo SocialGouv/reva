@@ -31,8 +31,10 @@ const getCandidacyById = graphql(`
       }
       status
       certification {
+        id
         codeRncp
         label
+        isAapAvailable
       }
       candidate {
         id

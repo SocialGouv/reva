@@ -114,6 +114,8 @@ const CandidacySummaryPage = () => {
       {!!candidate && (
         <>
           <ul className="flex flex-col gap-8 pl-0 mt-8">
+            <CertificationCard candidacy={candidacy} />
+
             <EnhancedSectionCard
               data-test="candidate-information"
               title="Les informations du candidat"
@@ -202,7 +204,6 @@ const CandidacySummaryPage = () => {
                 )}
               </EnhancedSectionCard>
             )}
-            <CertificationCard candidacy={candidacy} />
             <EnhancedSectionCard title="Certificateur">
               <div className="ml-10 mr-6">
                 <p className="text-xl font-bold mb-0 leading-loose">
