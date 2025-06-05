@@ -226,6 +226,7 @@ model Candidacy {
   cohorteVaeCollectiveId                        String?                                         @map("cohorte_vae_collective_id") @db.Uuid
   cohorteVaeCollective                          CohorteVaeCollective?                           @relation(fields: [cohorteVaeCollectiveId], references: [id], onDelete: NoAction)
   certificationAuthorityLocalAccountOnCandidacy CertificationAuthorityLocalAccountOnCandidacy[]
+  feasibilityFileTemplateFirstReadAt            DateTime?                                       @map("feasibility_file_template_first_read_at") @db.Timestamptz(6)
 
   @@index([organismId])
   @@index([candidateId])
