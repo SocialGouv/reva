@@ -41,7 +41,8 @@ const schema = z.object({
 export type FeasibilityFormData = z.infer<typeof schema>;
 
 export const SendFeasibilityForm = (): React.ReactNode => {
-  const { candidacy, queryStatus } = useFeasibilityPage();
+  const { candidacy, queryStatus, updateFeasibilityFileTemplateFirstReadAt } =
+    useFeasibilityPage();
   const candidacyId = candidacy?.id;
   const { sendFeasibility } = useSendFeasibilityForm(candidacyId);
   const router = useRouter();
@@ -51,6 +52,9 @@ export const SendFeasibilityForm = (): React.ReactNode => {
   const certificationAuthorities = candidacy.certificationAuthorities || [];
   const canUpload =
     !candidacy.feasibility || candidacy.feasibility.decision == "INCOMPLETE";
+
+  const handleFeasibilityFileTemplateDownload = () =>
+    updateFeasibilityFileTemplateFirstReadAt.mutateAsync({ candidacyId });
 
   const {
     register,
@@ -239,6 +243,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
           url="/candidat/files/Dossier_faisabilité_candidat_autonome.pdf"
           mimeType="application/pdf"
           fileSizeInBytes={2407563}
+          onUrlClick={handleFeasibilityFileTemplateDownload}
         />
         <hr className="pb-1" />
         {canUpload && (

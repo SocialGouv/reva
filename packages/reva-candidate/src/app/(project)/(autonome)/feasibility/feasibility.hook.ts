@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 
 const getCandidacyQuery = graphql(`
   query getCandidateWithCandidacyForFeasibilityPage {
@@ -66,6 +66,16 @@ const getCandidacyQuery = graphql(`
   }
 `);
 
+const updateFeasibilityFileTemplateFirstReadAtMutation = graphql(`
+  mutation updateFeasibilityFileTemplateFirstReadAt($candidacyId: ID!) {
+    feasibility_updateFeasibilityFileTemplateFirstReadAt(
+      candidacyId: $candidacyId
+    ) {
+      id
+    }
+  }
+`);
+
 export const useFeasibilityPage = () => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -74,8 +84,15 @@ export const useFeasibilityPage = () => {
     queryFn: () => graphqlClient.request(getCandidacyQuery),
   });
 
+  const updateFeasibilityFileTemplateFirstReadAt = useMutation({
+    mutationFn: ({ candidacyId }: { candidacyId: string }) =>
+      graphqlClient.request(updateFeasibilityFileTemplateFirstReadAtMutation, {
+        candidacyId,
+      }),
+  });
+
   const candidacy =
     getCandidateResponse?.candidate_getCandidateWithCandidacy?.candidacy;
 
-  return { candidacy, queryStatus };
+  return { candidacy, queryStatus, updateFeasibilityFileTemplateFirstReadAt };
 };
