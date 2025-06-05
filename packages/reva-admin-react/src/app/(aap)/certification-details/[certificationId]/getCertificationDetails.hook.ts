@@ -67,10 +67,29 @@ const getCertificationQuery = graphql(`
   }
 `);
 
+const getCandidacyById = graphql(`
+  query getCandidacyForCertificationDetailsPage($candidacyId: ID!) {
+    getCandidacyById(id: $candidacyId) {
+      candidacyDropOut {
+        createdAt
+      }
+      id
+      status
+      certification {
+        id
+        codeRncp
+        label
+      }
+    }
+  }
+`);
+
 export const useCertificationDetailsPage = ({
   certificationId,
+  candidacyId,
 }: {
   certificationId: string;
+  candidacyId?: string | null;
 }) => {
   const { graphqlClient } = useGraphQlClient();
 
@@ -89,10 +108,24 @@ export const useCertificationDetailsPage = ({
       }),
   });
 
+  const { data: getCandidacyQueryResponse } = useQuery({
+    queryKey: [
+      candidacyId,
+      "candidacies",
+      "getCandidacyForCertificationDetailsPage",
+    ],
+    queryFn: () =>
+      candidacyId
+        ? graphqlClient.request(getCandidacyById, { candidacyId })
+        : null,
+  });
+
   const certification = getCertificationQueryResponse?.getCertification;
+  const candidacy = getCandidacyQueryResponse?.getCandidacyById;
 
   return {
     certification,
+    candidacy,
     getCertificationQueryStatus,
   };
 };

@@ -6,6 +6,7 @@ import { CertificationAdditionalInfoSummaryCard } from "@/components/certificati
 import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useAuth } from "@/components/auth/auth";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useCertificationDetailsPage>["certification"],
@@ -19,14 +20,31 @@ export default function CertificationDetailsPage() {
   const searchParams = useSearchParams();
   const candidacyId = searchParams.get("candidacyId");
 
-  const { certification, getCertificationQueryStatus } =
-    useCertificationDetailsPage({ certificationId });
-  return getCertificationQueryStatus === "success" && certification ? (
+  const { certification, getCertificationQueryStatus, candidacy } =
+    useCertificationDetailsPage({ certificationId, candidacyId });
+
+  const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();
+  const canUpdateCertification =
+    (isAdmin || isGestionnaireMaisonMereAAP || isOrganism) &&
+    candidacy?.status &&
+    [
+      "PRISE_EN_CHARGE",
+      "PARCOURS_ENVOYE",
+      "PARCOURS_CONFIRME",
+      "DOSSIER_FAISABILITE_INCOMPLET",
+    ].includes(candidacy?.status) &&
+    !candidacy.candidacyDropOut;
+
+  if (!certification || getCertificationQueryStatus !== "success") {
+    return null;
+  }
+
+  return (
     <div className="flex flex-col gap-12">
       <h1 className="m-0">
         RNCP {certification.codeRncp} - {certification.label}
       </h1>
-      {candidacyId && (
+      {candidacy && canUpdateCertification && (
         <Button
           data-test="candidacy-change-certification-button"
           linkProps={{
@@ -38,7 +56,7 @@ export default function CertificationDetailsPage() {
       )}
       <PageContent certification={certification} />
     </div>
-  ) : null;
+  );
 }
 
 const PageContent = ({
