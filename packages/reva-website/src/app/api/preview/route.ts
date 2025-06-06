@@ -1,6 +1,5 @@
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import { draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -16,7 +15,7 @@ const getArticleRegionByIdQuery = graphql(`
 `);
 
 const getArticleRegionById = async (id: string) => {
-  return request(STRAPI_GRAPHQL_API_URL, getArticleRegionByIdQuery, {
+  return strapi.request(getArticleRegionByIdQuery, {
     id,
   });
 };

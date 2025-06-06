@@ -1,9 +1,8 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { request } from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import { HelpSection } from "./_components/HelpSection";
 import { draftMode } from "next/headers";
 import { ArticleDAide } from "@/graphql/generated/graphql";
@@ -86,7 +85,7 @@ const sectionsQuery = graphql(`
 `);
 
 const getSectionDAides = async (preview = false) => {
-  return request(STRAPI_GRAPHQL_API_URL, sectionsQuery, {
+  return strapi.request(sectionsQuery, {
     publicationState: preview ? "DRAFT" : "PUBLISHED",
   });
 };
