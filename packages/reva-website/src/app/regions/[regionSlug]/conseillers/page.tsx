@@ -1,8 +1,7 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Table } from "@codegouvfr/react-dsfr/Table";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import Head from "next/head";
 import Image from "next/image";
 import { ReactNode } from "react";
@@ -41,13 +40,9 @@ const RegionAdvisorsPage = async ({
 }) => {
   const { regionSlug } = await params;
 
-  const getRegionsBySlugResponse = await request(
-    STRAPI_GRAPHQL_API_URL,
-    getRegionsBySlugQuery,
-    {
-      filters: { slug: { eq: decodeURIComponent(regionSlug) } },
-    },
-  );
+  const getRegionsBySlugResponse = await strapi.request(getRegionsBySlugQuery, {
+    filters: { slug: { eq: decodeURIComponent(regionSlug) } },
+  });
   const region = getRegionsBySlugResponse?.regions[0];
   const prcs = region?.departements
     .map((d) =>

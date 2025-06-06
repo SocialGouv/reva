@@ -1,17 +1,16 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import {
   ArticleActualite,
   ArticleDAide,
   ArticleFaq,
 } from "@/graphql/generated/graphql";
+import { strapi } from "@/graphql/strapi";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import Notice from "@codegouvfr/react-dsfr/Notice";
-import request from "graphql-request";
 import type { Metadata } from "next";
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
@@ -554,10 +553,7 @@ const homePageItemsQuery = graphql(`
 `);
 
 const getHomePageItemsFromStrapi = async () => {
-  const homePageItems = await request(
-    STRAPI_GRAPHQL_API_URL,
-    homePageItemsQuery,
-  );
+  const homePageItems = await strapi.request(homePageItemsQuery);
 
   return {
     articlesDAide: [

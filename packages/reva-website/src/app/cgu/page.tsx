@@ -1,9 +1,8 @@
 import { Cgu } from "@/components/cgu/Cgu";
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { NeutralBackground } from "@/components/layout/neutral-background/NeutralBackground";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import Head from "next/head";
 
 export const revalidate = 0; // Opt out of cache
@@ -45,5 +44,5 @@ const getCguQuery = graphql(`
 `);
 
 const getCgu = async () => {
-  return request(STRAPI_GRAPHQL_API_URL, getCguQuery);
+  return strapi.request(getCguQuery);
 };
