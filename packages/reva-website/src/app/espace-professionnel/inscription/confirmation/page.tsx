@@ -19,7 +19,7 @@ const ProfessionalSpaceInscriptionConfirmationPage = () => {
           data-test="has-subscribed-successfully"
         >
           <div className="flex flex-col justify-center">
-            <h1>Votre demande d'inscription est enregistrée </h1>
+            <h1>Votre demande d'inscription est enregistrée</h1>
             <p className="text-xl">
               Pour finaliser votre inscription sur la plateforme France VAE,
               vous devez d'abord consulter et répondre à ce questionnaire de

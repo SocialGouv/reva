@@ -12,13 +12,15 @@ export default function CandidateRegistrationConfirmationPage() {
       <CandidateBackground>
         <div className="flex pt-6 pb-4">
           <div className="flex-1 py-6">
-            <h1>
-              Votre demande de création de compte a bien été enregistrée !
-            </h1>
+            <h1>Dernière étape, activez votre compte !</h1>
             <div className="pr-24 mb-10">
               <p className="fr-text--lead">
-                Un lien d'activation (valable pendant 3 heures) va se glisser
-                dans votre boîte mail dans quelques instants.
+                Votre demande de création de compte a bien été enregistrée.{" "}
+                <strong>
+                  Pour l'activer, cliquez sur le lien contenu dans l'email
+                </strong>{" "}
+                que nous venons de vous envoyer. Attention, ce lien est valable
+                3 heures.
               </p>
               <p className="fr-text--sm">
                 Attention, nos mails peuvent se perdre dans votre dossier de
