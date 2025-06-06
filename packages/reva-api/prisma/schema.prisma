@@ -103,7 +103,7 @@ model Certification {
   additionalInfo                                         CertificationAdditionalInfo?
   certificationStatusHistory                             CertificationStatusHistory[]
   CertificationCohorteVaeCollective                      CertificationCohorteVaeCollective[]
-  CertificationEmail                                     CertificationEmail[]
+  certificationEmails                                    CertificationEmail[]
 
   @@map("certification")
 }
@@ -178,7 +178,7 @@ model CertificationEmail {
 
 enum CertificationEmailType {
   CERTIFICATION_WILL_EXPIRE_IN_1_MONTH
-  CERTIFICATION_WILL_EXPIRE_TODAY
+  CERTIFICATION_HAS_EXPIRED
 }
 
 enum FinanceModule {
