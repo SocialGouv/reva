@@ -103,6 +103,7 @@ model Certification {
   additionalInfo                                         CertificationAdditionalInfo?
   certificationStatusHistory                             CertificationStatusHistory[]
   CertificationCohorteVaeCollective                      CertificationCohorteVaeCollective[]
+  CertificationEmail                                     CertificationEmail[]
 
   @@map("certification")
 }
@@ -163,6 +164,21 @@ model CertificationAdditionalInfo {
   certification                     Certification @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: Cascade)
 
   @@map("certification_additional_info")
+}
+
+model CertificationEmail {
+  id              String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationId String                 @map("certification_id") @db.Uuid
+  certification   Certification          @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  emailType       CertificationEmailType @map("email_type")
+  sentAt          DateTime               @default(now()) @map("sent_at") @db.Timestamptz(6)
+
+  @@map("certification_email")
+}
+
+enum CertificationEmailType {
+  CERTIFICATION_WILL_EXPIRE_IN_1_MONTH
+  CERTIFICATION_WILL_EXPIRE_TODAY
 }
 
 enum FinanceModule {
