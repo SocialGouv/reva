@@ -1,7 +1,6 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import { Metadata } from "next/types";
 import { PrcList } from "./_components/PrcList";
 
@@ -64,7 +63,7 @@ const articleQuery = graphql(`
 `);
 
 const getArticleDAide = async (slug: string, preview = false) => {
-  const articles = await request(STRAPI_GRAPHQL_API_URL, articleQuery, {
+  const articles = await strapi.request(articleQuery, {
     filters: { slug: { eq: slug } },
     publicationState: preview ? "DRAFT" : "PUBLISHED",
   });
@@ -90,7 +89,7 @@ const getPrcsQuery = graphql(`
 `);
 
 const getPRCs = async () => {
-  return request(STRAPI_GRAPHQL_API_URL, getPrcsQuery);
+  return strapi.request(getPrcsQuery);
 };
 
 export default ListePrcPage;

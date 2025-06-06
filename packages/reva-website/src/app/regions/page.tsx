@@ -1,8 +1,7 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Card } from "@codegouvfr/react-dsfr/Card";
-import { request } from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import Head from "next/head";
 import { draftMode } from "next/headers";
 
@@ -19,7 +18,7 @@ const getRegionsQuery = graphql(`
 `);
 
 const getRegions = async (preview = false) => {
-  return request(STRAPI_GRAPHQL_API_URL, getRegionsQuery, {
+  return strapi.request(getRegionsQuery, {
     publicationState: preview ? "DRAFT" : "PUBLISHED",
   });
 };

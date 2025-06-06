@@ -1,8 +1,7 @@
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { ArticleDAide } from "@/graphql/generated/graphql";
 import { Card } from "@codegouvfr/react-dsfr/Card";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 
 const articlesQuery = graphql(`
   query getArticlesForCertificationPageUsefulResources {
@@ -30,9 +29,8 @@ export const UsefulResources = async ({
 }: {
   classname?: string;
 }) => {
-  const articlesDAideFromStrapi = (
-    await request(STRAPI_GRAPHQL_API_URL, articlesQuery)
-  ).articleDAides;
+  const articlesDAideFromStrapi = (await strapi.request(articlesQuery))
+    .articleDAides;
 
   const articlesDAide = [
     "comment-bien-choisir-son-diplome",

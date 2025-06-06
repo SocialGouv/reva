@@ -1,8 +1,7 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import Head from "next/head";
 import { draftMode } from "next/headers";
 import Image from "next/image";
@@ -27,7 +26,7 @@ const getArticleRegionsBySlug = async (
   articleSlug: string,
   preview = false,
 ) => {
-  return request(STRAPI_GRAPHQL_API_URL, getArticleRegionsBySlugQuery, {
+  return strapi.request(getArticleRegionsBySlugQuery, {
     filters: {
       regions: { slug: { eq: regionSlug } },
       slug: { eq: articleSlug },

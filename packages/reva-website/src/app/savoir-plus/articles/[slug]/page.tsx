@@ -1,8 +1,7 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import { draftMode } from "next/headers";
 
 export const generateMetadata = async ({
@@ -90,7 +89,7 @@ const articleQuery = graphql(`
 `);
 
 const getArticleDAide = async (slug: string, preview = false) => {
-  const articles = await request(STRAPI_GRAPHQL_API_URL, articleQuery, {
+  const articles = await strapi.request(articleQuery, {
     filters: { slug: { eq: slug } },
     publicationState: preview ? "DRAFT" : "PUBLISHED",
   });

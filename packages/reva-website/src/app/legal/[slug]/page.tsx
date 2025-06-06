@@ -1,9 +1,8 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { NeutralBackground } from "@/components/layout/neutral-background/NeutralBackground";
 import { graphql } from "@/graphql/generated";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import Head from "next/head";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import { draftMode } from "next/headers";
 import { StrapiBlocksRenderer } from "@/app/_components/blocks-renderer/StrapiBlocksRenderer";
 
@@ -26,14 +25,10 @@ const LegalDocumentationPage = async ({
 }) => {
   const { isEnabled: preview } = await draftMode();
   const { slug } = await params;
-  const getLegalArticleResponse = await request(
-    STRAPI_GRAPHQL_API_URL,
-    getLegalArticle,
-    {
-      nom: slug,
-      publicationState: preview ? "DRAFT" : "PUBLISHED",
-    },
-  );
+  const getLegalArticleResponse = await strapi.request(getLegalArticle, {
+    nom: slug,
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
   const legalArticle = getLegalArticleResponse?.legals[0] ?? null;
 
   if (!legalArticle) {

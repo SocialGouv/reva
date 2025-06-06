@@ -1,10 +1,9 @@
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import request from "graphql-request";
+import { strapi } from "@/graphql/strapi";
 import { Metadata } from "next";
 import { draftMode } from "next/headers";
 
@@ -23,7 +22,7 @@ export const metadata: Metadata = {
 
 const FaqPage = async () => {
   const { isEnabled: preview } = await draftMode();
-  const sections = await request(STRAPI_GRAPHQL_API_URL, sectionFaqs, {
+  const sections = await strapi.request(sectionFaqs, {
     publicationState: preview ? "DRAFT" : "PUBLISHED",
     itemFilter: preview ? null : { publishedAt: { notNull: true } },
     sectionFilter: preview ? null : { publishedAt: { notNull: true } },
