@@ -31,15 +31,6 @@ interface CertificationData {
   rncpId: string;
 }
 
-interface CertificationRegistryManagerWithCertifications {
-  account: {
-    email: string;
-  };
-  certificationAuthorityStructure: {
-    certifications: CertificationData[];
-  };
-}
-
 const getCertificationUrl = (certificationId: string) =>
   getBackofficeUrl({
     path: `/certifications/${certificationId}`,
@@ -56,28 +47,25 @@ const formatCertificationsParamsForBrevo = (
     url: getCertificationUrl(id),
   }));
 };
-
-// Envoi d'email de notification pour les certifications
+// Envoi d'un email de notification à un responsable de certification avec une ou plusieurs certifications qui vont expirer ou sont expirées
 const sendCertificationNotificationEmailToCertificationRegistryManager =
   async ({
-    certificationRegistryManager,
+    certifications,
+    certificationRegistryManagerEmail,
     templateId,
     emailType,
   }: {
-    certificationRegistryManager: CertificationRegistryManagerWithCertifications;
+    certifications: CertificationData[];
+    certificationRegistryManagerEmail: string;
     templateId: number;
     emailType: CertificationEmailType;
   }) => {
-    const certifications =
-      certificationRegistryManager.certificationAuthorityStructure
-        .certifications;
-
     if (certifications.length) {
       const certificationsParams =
         formatCertificationsParamsForBrevo(certifications);
 
       await sendEmailUsingTemplate({
-        to: { email: certificationRegistryManager.account.email },
+        to: { email: certificationRegistryManagerEmail },
         templateId,
         params: {
           certifications: certificationsParams,
@@ -97,7 +85,11 @@ export const sendEmailsForCertificationExpiration = async () => {
   try {
     const today = startOfToday(); // Utilisation cohérente de minuit pour toutes les comparaisons de dates
 
-    // Recherche des responsables de certifications qui expirent dans 1 mois
+    // Recherche des responsables de certifications avec des certifications qui expirent dans 1 mois
+    // Double filtrage Prisma :
+    // 1. Le "some" dans le premier "where" sélectionne les responsables ayant AU MOINS UNE certification qui expire dans 30 jours
+    // 2. Le "where" dans l'include ne retourne que les certifications de ce responsable qui remplissent TOUTES les conditions
+    //    (expiration dans 30 jours + statut validé + pas d'email déjà envoyé)
     const certificationRegistryManagersWithCertificationsToExpireIn1Month =
       await prismaClient.certificationRegistryManager.findMany({
         where: {
@@ -110,7 +102,6 @@ export const sendEmailsForCertificationExpiration = async () => {
                   gt: today,
                 },
                 status: "VALIDE_PAR_CERTIFICATEUR",
-                visible: true,
               },
             },
           },
@@ -130,7 +121,6 @@ export const sendEmailsForCertificationExpiration = async () => {
                     gt: today,
                   },
                   status: "VALIDE_PAR_CERTIFICATEUR",
-                  visible: true,
                   // Évite les doublons : pas d'email de ce type envoyé dans les 31 derniers jours
                   certificationEmails: {
                     none: {
@@ -157,13 +147,21 @@ export const sendEmailsForCertificationExpiration = async () => {
     // Envoi des emails pour les certifications qui expirent bientôt
     for (const certificationRegistryManager of certificationRegistryManagersWithCertificationsToExpireIn1Month) {
       await sendCertificationNotificationEmailToCertificationRegistryManager({
-        certificationRegistryManager,
+        certifications:
+          certificationRegistryManager.certificationAuthorityStructure
+            .certifications,
+        certificationRegistryManagerEmail:
+          certificationRegistryManager.account.email,
         templateId: EMAIL_TEMPLATE_IDS.CERTIFICATION_WILL_EXPIRE_IN_1_MONTH,
         emailType: CERTIFICATION_EMAIL_TYPES.WILL_EXPIRE_IN_1_MONTH,
       });
     }
 
-    // Recherche des responsables avec des certifications expirées hier
+    // Recherche des responsables de certifications avec des certifications expirées hier
+    // Double filtrage Prisma :
+    // 1. Le "some" dans le premier "where" sélectionne les responsables ayant AU MOINS UNE certification expirée hier
+    // 2. Le "where" dans l'include ne retourne que les certifications de ce responsable qui remplissent TOUTES les conditions
+    //    (expiration hier + statut validé + aucun email d'expiration déjà envoyé)
     const certificationRegistryManagersWithCertificationsHasExpired =
       await prismaClient.certificationRegistryManager.findMany({
         where: {
@@ -176,7 +174,6 @@ export const sendEmailsForCertificationExpiration = async () => {
                   lt: today,
                 },
                 status: "VALIDE_PAR_CERTIFICATEUR",
-                visible: false,
               },
             },
           },
@@ -196,7 +193,6 @@ export const sendEmailsForCertificationExpiration = async () => {
                     lt: today,
                   },
                   status: "VALIDE_PAR_CERTIFICATEUR",
-                  visible: false,
                   // Un seul email d'expiration par certification (pas de condition sur sentAt)
                   certificationEmails: {
                     none: {
@@ -219,7 +215,11 @@ export const sendEmailsForCertificationExpiration = async () => {
     // Envoi des emails pour les certifications expirées
     for (const certificationRegistryManager of certificationRegistryManagersWithCertificationsHasExpired) {
       await sendCertificationNotificationEmailToCertificationRegistryManager({
-        certificationRegistryManager,
+        certifications:
+          certificationRegistryManager.certificationAuthorityStructure
+            .certifications,
+        certificationRegistryManagerEmail:
+          certificationRegistryManager.account.email,
         templateId: EMAIL_TEMPLATE_IDS.CERTIFICATION_HAS_EXPIRED,
         emailType: CERTIFICATION_EMAIL_TYPES.HAS_EXPIRED,
       });

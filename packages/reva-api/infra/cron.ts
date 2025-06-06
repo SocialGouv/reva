@@ -182,8 +182,8 @@ CronJob.from({
 // Envoi d'emails aux certificateurs de notification d'expiration de certification
 // - Alerte 1 mois avant l'expiration
 // - Notification le jour de l'expiration
-// IMPORTANT: Ce batch doit s'exécuter APRÈS batch.activate-or-deactivate-certifications
-// car il vient après la potentielle désactivation d'une certification
+// Ce batch doit s'exécuter APRÈS batch.activate-or-deactivate-certifications
+// pour une raison de confort utilisateur, il vient après la potentielle désactivation d'une certification
 CronJob.from({
   cronTime:
     process.env.BATCH_SEND_EMAILS_FOR_CERTIFICATION_EXPIRATION_CRONTIME ||
