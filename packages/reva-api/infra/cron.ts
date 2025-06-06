@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
 import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
 import { sendEmailsForAutoCandidacyCaducite } from "../modules/candidacy/features/sendEmailsForAutoCandidacyCaducite";
+import { sendEmailsForCertificationExpiration } from "../modules/certification-authority/features/sendEmailsForCertificationExpiration";
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
 import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
@@ -21,6 +22,7 @@ dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
+const EVERY_DAY_AT_3_AM = "0 3 * * *";
 const EVERY_HOUR = "0 * * * *";
 
 const paymentRequestProofUpload = CronJob.from({
@@ -94,7 +96,7 @@ async function isFeatureActive(featureKey: string): Promise<boolean> {
 CronJob.from({
   cronTime:
     process.env.BATCH_ACTIVATE_OR_DEACTIVATE_CERTIFICATIONS_CRONTIME ||
-    "*/5 * * * *",
+    EVERY_DAY_AT_2_AM,
   onTick: () =>
     runBatchIfActive({
       batchKey: "batch.activate-or-deactivate-certifications",
@@ -171,6 +173,27 @@ CronJob.from({
       batchCallback: async () => {
         logger.info("Running batch.send-emails-for-auto-candidacy-caducite");
         await sendEmailsForAutoCandidacyCaducite();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Envoi d'emails aux certificateurs de notification d'expiration de certification
+// - Alerte 1 mois avant l'expiration
+// - Notification le jour de l'expiration
+// IMPORTANT: Ce batch doit s'exécuter APRÈS batch.activate-or-deactivate-certifications
+// car il vient après la potentielle désactivation d'une certification
+CronJob.from({
+  cronTime:
+    process.env.BATCH_SEND_EMAILS_FOR_CERTIFICATION_EXPIRATION_CRONTIME ||
+    EVERY_DAY_AT_3_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.send-emails-for-certification-expiration",
+      batchCallback: async () => {
+        logger.info("Running batch.send-emails-for-certification-expiration");
+        await sendEmailsForCertificationExpiration();
       },
     }),
   start: true,
