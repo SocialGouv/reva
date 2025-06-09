@@ -9,6 +9,18 @@ export type CertificationAuthorityLogEventTypeAndDetails =
       details?: undefined;
     }
   | {
+      eventType: "FEASIBILITY_MARKED_AS_COMPLETE";
+      details: {
+        candidacyId: string;
+      };
+    }
+  | {
+      eventType: "FEASIBILITY_MARKED_AS_INCOMPLETE";
+      details: {
+        candidacyId: string;
+      };
+    }
+  | {
       eventType: "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED";
       details: {
         candidacyId: string;

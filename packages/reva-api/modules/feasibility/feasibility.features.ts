@@ -49,6 +49,7 @@ import {
 } from "./utils/feasibility.helper";
 import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "./features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
+import { logCertificationAuthorityAuditEvent } from "../certification-authority-log/features/logCertificationAuthorityAuditEvent";
 
 const adminBaseUrl =
   process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
@@ -1131,6 +1132,19 @@ const markFeasibilityAsIncomplete = async ({
       eventType: "FEASIBILITY_MARKED_AS_INCOMPLETE",
     });
 
+    await logCertificationAuthorityAuditEvent({
+      certificationAuthorityId: feasibility?.certificationAuthorityId as string,
+      userInfo: {
+        userKeycloakId: keycloakId,
+        userEmail,
+        userRoles,
+      },
+      details: {
+        candidacyId: feasibility?.candidacyId as string,
+      },
+      eventType: "FEASIBILITY_MARKED_AS_INCOMPLETE",
+    });
+
     return updatedFeasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
@@ -1182,6 +1196,21 @@ const markFeasibilityAsComplete = async ({
         userKeycloakId: keycloakId,
         userEmail,
         userRoles,
+        eventType: "FEASIBILITY_MARKED_AS_COMPLETE",
+      });
+
+      await logCertificationAuthorityAuditEvent({
+        tx,
+        certificationAuthorityId:
+          feasibility?.certificationAuthorityId as string,
+        userInfo: {
+          userKeycloakId: keycloakId,
+          userEmail,
+          userRoles,
+        },
+        details: {
+          candidacyId: feasibility?.candidacyId as string,
+        },
         eventType: "FEASIBILITY_MARKED_AS_COMPLETE",
       });
 
