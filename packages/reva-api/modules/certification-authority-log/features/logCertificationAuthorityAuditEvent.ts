@@ -14,7 +14,6 @@ interface CertificationAuthorityAuditLogUserInfo {
 
 type LogCertificationAuthorityAuditEventParams = {
   certificationAuthorityId: string;
-  certificationAuthorityLocalAccountId?: string;
   tx?: Prisma.TransactionClient; //optional transaction to use
   userInfo: CertificationAuthorityAuditLogUserInfo;
 } & CertificationAuthorityLogEventTypeAndDetails;
@@ -22,7 +21,6 @@ type LogCertificationAuthorityAuditEventParams = {
 export const logCertificationAuthorityAuditEvent = ({
   eventType,
   certificationAuthorityId,
-  certificationAuthorityLocalAccountId,
   userInfo,
   details,
   tx,
@@ -42,7 +40,6 @@ export const logCertificationAuthorityAuditEvent = ({
   return (tx || prismaClient).certificationAuthorityLog.create({
     data: {
       certificationAuthorityId,
-      certificationAuthorityLocalAccountId,
       userKeycloakId: userInfo.userKeycloakId,
       userEmail: userInfo.userEmail,
       eventType,
