@@ -1,6 +1,7 @@
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
+import { logCertificationAuthorityAuditEvent } from "../../certification-authority-log/features/logCertificationAuthorityAuditEvent";
 import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
 import {
   sendDVReportedToCandidateAutonomeEmail,
@@ -128,6 +129,19 @@ export const signalDossierDeValidationProblem = async ({
     userRoles,
     userEmail,
     eventType: "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED",
+  });
+
+  await logCertificationAuthorityAuditEvent({
+    certificationAuthorityId: feasibility?.certificationAuthorityId as string,
+    eventType: "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED",
+    details: {
+      candidacyId: dossierDeValidation.candidacyId,
+    },
+    userInfo: {
+      userKeycloakId,
+      userRoles,
+      userEmail,
+    },
   });
 
   return updatedDossierDeValidation;
