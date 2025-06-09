@@ -2,10 +2,8 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { useParams } from "next/navigation";
-import { fr } from "date-fns/locale";
-import { Log, DayLog } from "@/components/logs/day-log/DayLog";
+import { DayLog, groupLogsByDay } from "@/components/logs/day-log/DayLog";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 const getAAPLogsQuery = graphql(`
@@ -46,16 +44,7 @@ const AAPLogsPage = () => {
   const maisonMere = getAAPLogsResponse?.organism_getMaisonMereAAPById;
   const aapLogs = maisonMere?.aapLogs || [];
 
-  const logsGroupedByDay = aapLogs.reduce((acc: Record<string, Log[]>, log) => {
-    const dayKey = format(log.createdAt, "do MMMM yyyy", { locale: fr });
-
-    if (!acc[dayKey]) {
-      acc[dayKey] = [];
-    }
-    acc[dayKey].push(log);
-
-    return acc;
-  }, {});
+  const logsGroupedByDay = groupLogsByDay(aapLogs);
 
   return (
     maisonMere && (

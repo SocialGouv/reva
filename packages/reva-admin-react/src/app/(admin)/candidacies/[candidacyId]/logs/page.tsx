@@ -3,10 +3,11 @@ import { CandidacyBackButton } from "@/components/candidacy-back-button/Candidac
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { useParams } from "next/navigation";
-import { Log, DayLog } from "../../../../../components/logs/day-log/DayLog";
-import { fr } from "date-fns/locale";
+import {
+  DayLog,
+  groupLogsByDay,
+} from "../../../../../components/logs/day-log/DayLog";
 
 const getCandidacyLogsQuery = graphql(`
   query getCandidacyLogs($candidacyId: ID!) {
@@ -53,19 +54,7 @@ const CandidacyLogsPage = () => {
   const candidate = candidacy?.candidate;
   const candidacyLogs = candidacy?.candidacyLogs || [];
 
-  const logsGroupedByDay = candidacyLogs.reduce(
-    (acc: Record<string, Log[]>, log) => {
-      const dayKey = format(log.createdAt, "do MMMM yyyy", { locale: fr });
-
-      if (!acc[dayKey]) {
-        acc[dayKey] = [];
-      }
-      acc[dayKey].push(log);
-
-      return acc;
-    },
-    {},
-  );
+  const logsGroupedByDay = groupLogsByDay(candidacyLogs);
 
   return (
     candidacy && (

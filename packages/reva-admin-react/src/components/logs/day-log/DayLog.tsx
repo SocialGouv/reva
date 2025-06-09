@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { capitalize, toLower, toUpper, truncate } from "lodash";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import { fr } from "date-fns/locale";
 
 type LogUserProfile = "ADMIN" | "AAP" | "CERTIFICATEUR" | "CANDIDAT";
 type LogUser = { firstname: string; lastname: string };
@@ -29,7 +30,7 @@ const getUserProfileText = ({
   }
 };
 
-export type Log = {
+type Log = {
   id: string;
   createdAt: number;
   userProfile: LogUserProfile;
@@ -37,6 +38,18 @@ export type Log = {
   message: string;
   details?: string | null;
 };
+
+export const groupLogsByDay = (logs: Log[]) =>
+  logs.reduce((acc: Record<string, Log[]>, log) => {
+    const dayKey = format(log.createdAt, "do MMMM yyyy", { locale: fr });
+
+    if (!acc[dayKey]) {
+      acc[dayKey] = [];
+    }
+    acc[dayKey].push(log);
+
+    return acc;
+  }, {});
 
 export const DayLog = ({ day, logs }: { day: string; logs: Log[] }) => {
   return (
