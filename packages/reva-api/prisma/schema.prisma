@@ -1526,6 +1526,7 @@ model AAPLog {
 }
 
 enum CertificationAuthorityLogUserProfile {
+  ADMIN
   CERTIFICATION_AUTHORITY
   CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT
 }
