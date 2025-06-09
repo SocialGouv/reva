@@ -5,7 +5,6 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import request from "graphql-request";
 import Head from "next/head";
 import { draftMode } from "next/headers";
-import Image from "next/image";
 
 const getArticleRegionsBySlugQuery = graphql(`
   query getArticleRegionsBySlugForRegionArticlePage(
@@ -15,9 +14,6 @@ const getArticleRegionsBySlugQuery = graphql(`
     articleRegions(filters: $filters, status: $publicationState) {
       titre
       contenu
-      vignette {
-        url
-      }
     }
   }
 `);
@@ -58,13 +54,6 @@ const RegionArticlePage = async ({
       </Head>
       <BackButton regionSlug={regionSlug} className="mb-12" />
       <h1 className="mb-12">{article?.titre}</h1>
-      <Image
-        className="mb-12"
-        src={article?.vignette?.url || ""}
-        width={800}
-        height={446}
-        alt="Vignette de l'article"
-      />
       <div
         className="mb-12 ck-content"
         dangerouslySetInnerHTML={{
