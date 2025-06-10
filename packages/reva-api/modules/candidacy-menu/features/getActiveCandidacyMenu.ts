@@ -269,7 +269,7 @@ export const getActiveCandidacyMenu = async ({
         if (
           (candidacy.financeModule === "unireva" &&
             candidacy.FundingRequest !== null) ||
-          (candidacy.financeModule === "unireva" &&
+          (candidacy.financeModule === "unifvae" &&
             candidacy.fundingRequestUnifvae !== null)
         ) {
           menuEntryStatus = "ACTIVE_WITHOUT_HINT";
