@@ -225,11 +225,11 @@ const getSQLSelectSumClauseFromStatusFilter = (
 
     case "DEMANDE_FINANCEMENT_ENVOYEE":
       return getSumClause(
-        `fundingRequest.id is not null or fundingRequestUnifvae.id is not null`,
+        `(candidacy.finance_module = 'unireva' and fundingRequest.id is not null) or (candidacy.finance_module = 'unifvae' and fundingRequestUnifvae.id is not null)`,
       );
     case "DEMANDE_PAIEMENT_ENVOYEE":
       return getSumClause(
-        `paymentRequest.confirmed_at is not null or paymentRequestUnifvae.confirmed_at is not null`,
+        `(candidacy.finance_module = 'unireva' and paymentRequest.confirmed_at is not null) or (candidacy.finance_module = 'unifvae' and paymentRequestUnifvae.confirmed_at is not null)`,
       );
   }
 };
