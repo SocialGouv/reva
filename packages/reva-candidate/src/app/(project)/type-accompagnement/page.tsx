@@ -1,22 +1,31 @@
 "use client";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { useTypeAccompagnementPage } from "./typeAccompagnement.hook";
 import { useState } from "react";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useTypeAccompagnementPage } from "./typeAccompagnement.hook";
 
-import { useRouter } from "next/navigation";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useRouter } from "next/navigation";
 
 type TypeAccompagnement = "AUTONOME" | "ACCOMPAGNE";
+
+const typeAccompagnementWarningModal = createModal({
+  id: "type-accompagnement-warning",
+  isOpenedByDefault: false,
+});
 
 export default function ChooseTypeAccompagnementPage() {
   const { typeAccompagnement, queryStatus, updateTypeAccompagnement } =
     useTypeAccompagnementPage();
+
+  const openTypeAccompagnementWarningModal = () =>
+    typeAccompagnementWarningModal.open();
 
   const router = useRouter();
 
@@ -53,7 +62,13 @@ export default function ChooseTypeAccompagnementPage() {
         mieux.
       </p>
       {queryStatus === "success" && typeAccompagnement && (
-        <Form defaultValues={{ typeAccompagnement }} onSubmit={handleSubmit} />
+        <Form
+          defaultValues={{ typeAccompagnement }}
+          onSubmit={handleSubmit}
+          openTypeAccompagnementWarningModal={
+            openTypeAccompagnementWarningModal
+          }
+        />
       )}
     </PageLayout>
   );
@@ -62,9 +77,11 @@ export default function ChooseTypeAccompagnementPage() {
 const Form = ({
   defaultValues,
   onSubmit,
+  openTypeAccompagnementWarningModal,
 }: {
   defaultValues: { typeAccompagnement: TypeAccompagnement };
-  onSubmit?: (data: { typeAccompagnement: TypeAccompagnement }) => void;
+  onSubmit: (data: { typeAccompagnement: TypeAccompagnement }) => Promise<void>;
+  openTypeAccompagnementWarningModal: () => void;
 }) => {
   const [typeAccompagnement, setTypeAccompagnement] = useState(
     defaultValues.typeAccompagnement,
@@ -73,73 +90,102 @@ const Form = ({
   const disabled = typeAccompagnement == defaultValues.typeAccompagnement;
 
   return (
-    <form
-      className="mt-12"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit?.({ typeAccompagnement });
-      }}
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        <fieldset>
-          <RadioButtons
-            legend="Que souhaitez-vous faire pour ce parcours ? "
-            options={[
-              {
-                label: "Je souhaite réaliser ma VAE avec un accompagnateur",
-                nativeInputProps: {
-                  value: "ACCOMPAGNE",
-                  className: "type-accompagnement-accompagne-radio-button",
-                  checked: typeAccompagnement === "ACCOMPAGNE",
-                  onChange: () => setTypeAccompagnement("ACCOMPAGNE"),
+    <>
+      <form
+        className="mt-12"
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit({ typeAccompagnement });
+        }}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <fieldset>
+            <RadioButtons
+              legend="Que souhaitez-vous faire pour ce parcours ? "
+              options={[
+                {
+                  label: "Je souhaite réaliser ma VAE avec un accompagnateur",
+                  nativeInputProps: {
+                    value: "ACCOMPAGNE",
+                    className: "type-accompagnement-accompagne-radio-button",
+                    checked: typeAccompagnement === "ACCOMPAGNE",
+                    onChange: () => setTypeAccompagnement("ACCOMPAGNE"),
+                  },
                 },
-              },
-              {
-                label: "Je souhaite réaliser ma VAE en toute autonomie",
-                nativeInputProps: {
-                  value: "AUTONOME",
-                  className: "type-accompagnement-autonome-radio-button",
-                  checked: typeAccompagnement === "AUTONOME",
-                  onChange: () => setTypeAccompagnement("AUTONOME"),
+                {
+                  label: "Je souhaite réaliser ma VAE en toute autonomie",
+                  nativeInputProps: {
+                    value: "AUTONOME",
+                    className: "type-accompagnement-autonome-radio-button",
+                    checked: typeAccompagnement === "AUTONOME",
+                    onChange: () => setTypeAccompagnement("AUTONOME"),
+                  },
                 },
-              },
-            ]}
-          />
-        </fieldset>
-        <CallOut title="À quoi sert un accompagnateur ?">
-          <p className="mt-2">
-            C’est un expert de la VAE qui vous aide à chaque grande étape de
-            votre parcours : rédaction du dossier de faisabilité, communication
-            avec le certificateur, préparation au passage devant le jury, etc.
-          </p>
-          <p className="mt-4">
-            <b>Bon à savoir : </b>Ces acompagnements peuvent être financés par
-            votre{" "}
-            <a
-              href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
-              target="_blank"
-            >
-              Compte Personnel de Formation
-            </a>
-            . À noter : si vous faites votre parcours en autonomie, les frais de
-            passage devant le jury et les formations complémentaires seront
-            entièrement à votre charge.
-          </p>
-        </CallOut>
-      </div>
-      <div className="mt-8 flex flex-col md:flex-row gap-4">
-        <Button priority="tertiary" linkProps={{ href: "/" }}>
-          Retour
-        </Button>
+              ]}
+            />
+          </fieldset>
+          <CallOut title="À quoi sert un accompagnateur ?">
+            <p className="mt-2">
+              C’est un expert de la VAE qui vous aide à chaque grande étape de
+              votre parcours : rédaction du dossier de faisabilité,
+              communication avec le certificateur, préparation au passage devant
+              le jury, etc.
+            </p>
+            <p className="mt-4">
+              <b>Bon à savoir : </b>Ces acompagnements peuvent être financés par
+              votre{" "}
+              <a
+                href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
+                target="_blank"
+              >
+                Compte Personnel de Formation
+              </a>
+              . À noter : si vous faites votre parcours en autonomie, les frais
+              de passage devant le jury et les formations complémentaires seront
+              entièrement à votre charge.
+            </p>
+          </CallOut>
+        </div>
+        <div className="mt-8 flex flex-col md:flex-row gap-4">
+          <Button priority="tertiary" linkProps={{ href: "/" }}>
+            Retour
+          </Button>
 
-        <Button
-          className="md:ml-auto"
-          data-test="submit-type-accompagnement-form-button"
-          disabled={disabled}
+          <Button
+            className="md:ml-auto"
+            data-test="submit-type-accompagnement-form-button"
+            disabled={disabled}
+            onClick={() => {
+              openTypeAccompagnementWarningModal();
+            }}
+            type="button"
+          >
+            Enregistrer
+          </Button>
+        </div>
+        <typeAccompagnementWarningModal.Component
+          size="large"
+          title="Vous vous apprêtez à changer de modalité de parcours"
+          iconId="fr-icon-warning-fill"
+          buttons={[
+            {
+              children: "Annuler",
+              type: "button",
+            },
+            {
+              children: "Confirmer",
+              nativeButtonProps: {
+                "data-test": "submit-type-accompagnement-modal-button",
+              },
+            },
+          ]}
         >
-          Enregistrer
-        </Button>
-      </div>
-    </form>
+          Tout changement de modalité de parcours impliquera une mise à jour de
+          votre espace. Vous devrez ajouter à nouveau les informations
+          essentielles au démarrage de votre parcours. Souhaitez-vous continuer
+          ?
+        </typeAccompagnementWarningModal.Component>
+      </form>
+    </>
   );
 };
