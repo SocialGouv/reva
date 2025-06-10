@@ -96,6 +96,7 @@ context("Type accompagnement", () => {
     cy.get(".type-accompagnement-accompagne-radio-button").should("be.checked");
 
     cy.get('[data-test="submit-type-accompagnement-form-button"]').click();
+    cy.get('[data-test="submit-type-accompagnement-modal-button"]').click();
     cy.wait("@updateTypeAccompagnementForTypeAccompagnementPage");
 
     cy.location("pathname").should("equal", "/candidat/");
