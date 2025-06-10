@@ -220,13 +220,12 @@ const FormacodesCcnsDegreesForm = ({
               <div className="flex flex-col">
                 {domains.map((domain) => (
                   <Accordion
-                    className="[&_div]:pb-0"
                     key={domain.code}
                     label={domain.label}
                     defaultExpanded
                   >
                     <Checkbox
-                      className="[&_label]:block [&_label]:first-letter:uppercase"
+                      className="[&_label]:block [&_label]:first-letter:uppercase mb-0"
                       options={subDomains
                         .filter(
                           (subDomain) => subDomain.parentCode == domain.code,
