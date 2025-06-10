@@ -31,31 +31,26 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
 );
 
 const HomePage = async () => {
-  try {
-    const homePageItemsResult = await getHomePageItemsFromStrapi();
-    const articlesDaide = homePageItemsResult.articlesDAide;
-    const articlesFAQ = homePageItemsResult.articlesFAQ;
-    const articlesActualite = homePageItemsResult.articlesActualite;
-    const homePageNoticeText = homePageItemsResult.homePageNoticeText;
+  const homePageItemsResult = await getHomePageItemsFromStrapi();
+  const articlesDaide = homePageItemsResult.articlesDAide;
+  const articlesFAQ = homePageItemsResult.articlesFAQ;
+  const articlesActualite = homePageItemsResult.articlesActualite;
+  const homePageNoticeText = homePageItemsResult.homePageNoticeText;
 
-    return (
-      <MainLayout className="relative">
-        {homePageNoticeText && (
-          <Notice data-testid="home-notice-text" title={homePageNoticeText} />
-        )}
-        <HomeContainer>
-          <HomePageContent
-            articleDAides={articlesDaide as ArticleDAide[]}
-            articlesFAQ={articlesFAQ as ArticleFaq[]}
-            articlesActualite={articlesActualite as ArticleActualite[]}
-          />
-        </HomeContainer>
-      </MainLayout>
-    );
-  } catch (e) {
-    console.error("Erreur strapi au premier chargement du website...", e);
-    return "Erreur au premier chargement...";
-  }
+  return (
+    <MainLayout className="relative">
+      {homePageNoticeText && (
+        <Notice data-testid="home-notice-text" title={homePageNoticeText} />
+      )}
+      <HomeContainer>
+        <HomePageContent
+          articleDAides={articlesDaide as ArticleDAide[]}
+          articlesFAQ={articlesFAQ as ArticleFaq[]}
+          articlesActualite={articlesActualite as ArticleActualite[]}
+        />
+      </HomeContainer>
+    </MainLayout>
+  );
 };
 
 const HomePageContent = ({
