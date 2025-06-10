@@ -43,7 +43,9 @@ export const CertificationPageContent = ({
         ]}
       />
       <div className="flex flex-col gap-4">
-        <h1 className="m-0">{certification?.label}</h1>
+        <h1 data-testid="certification-label" className="m-0">
+          {certification?.label}
+        </h1>
         <div className="flex flex-row items-center gap-4">
           <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
 
