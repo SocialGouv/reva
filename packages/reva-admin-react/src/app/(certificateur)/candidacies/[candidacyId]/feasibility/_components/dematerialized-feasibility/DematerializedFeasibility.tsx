@@ -1,3 +1,4 @@
+import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
 import { BannerCaduciteConfirmed } from "@/components/dff-summary/_components/BannerCaduciteConfirmed";
 import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
@@ -30,7 +31,6 @@ import {
   createOrUpdateCertificationAuthorityDecision,
   useDematerializedFeasibility,
 } from "./dematerializedFeasibility.hook";
-import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 
 const FeasibilityBanner = ({
   isWaitingForDecision,
@@ -236,6 +236,9 @@ export const DematerializedFeasibility = () => {
     ? pendingCaduciteContestation.contestationSentAt
     : null;
 
+  const candidateName = `${candidacy.candidate?.firstname ?? ""} ${candidacy.candidate?.lastname ?? ""}`;
+  const certificationName = candidacy.certification?.label ?? "";
+
   return (
     <>
       <DffSummary
@@ -281,7 +284,11 @@ export const DematerializedFeasibility = () => {
             <FeasibilityCompletionForm onSubmit={handleCompletionFormSubmit} />
           )}
           {isFeasibilityWaitingToBeValidated && (
-            <FeasibilityValidationForm onSubmit={handleValidationFormSubmit} />
+            <FeasibilityValidationForm
+              onSubmit={handleValidationFormSubmit}
+              candidateName={candidateName}
+              certificationName={certificationName}
+            />
           )}
         </>
       )}

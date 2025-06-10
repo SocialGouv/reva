@@ -1,3 +1,4 @@
+import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { BackButton } from "@/components/back-button/BackButton";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
@@ -15,7 +16,6 @@ import {
   FeasibilityValidationFormData,
 } from "../FeasibilityValidationForm";
 import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
-import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 
 export const FeasibilityUploadedPdf = () => {
   const { candidacy, feasibility, submitFeasibilityDecision } =
@@ -93,6 +93,9 @@ export const FeasibilityUploadedPdf = () => {
   const isCandidacyActualisationFeatureActive = isFeatureActive(
     "candidacy_actualisation",
   );
+
+  const candidateName = `${candidacy?.candidate?.firstname ?? ""} ${candidacy?.candidate?.lastname ?? ""}`;
+  const certificationName = candidacy?.certification?.label ?? "";
 
   return (
     <div className="flex flex-col flex-1 mb-2 w-full">
@@ -205,6 +208,8 @@ export const FeasibilityUploadedPdf = () => {
               {isFeasibilityWaitingToBeValidated && (
                 <FeasibilityValidationForm
                   onSubmit={handleValidationFormSubmit}
+                  candidateName={candidateName}
+                  certificationName={certificationName}
                 />
               )}
             </>
