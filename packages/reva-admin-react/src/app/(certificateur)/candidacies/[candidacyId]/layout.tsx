@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 const getCandidacyQuery = graphql(`
   query getCandidacyWithCandidateInfoForLayout($candidacyId: ID!) {
@@ -32,11 +31,6 @@ const getCandidacyQuery = graphql(`
 `);
 
 const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isTranferCandidacyToCertificationAuthorityLocalAccountActive =
-    isFeatureActive("CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT_ON_CANDIDACY");
-
   const currentPathname = usePathname();
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -96,9 +90,7 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
           <ul>Transférer la candidature</ul>
         </>,
 
-        isTranferCandidacyToCertificationAuthorityLocalAccountActive
-          ? `/candidacies/${candidacyId}/transfer`
-          : `/candidacies/${candidacyId}/transfer-to-certification-authority?page=1`,
+        `/candidacies/${candidacyId}/transfer`,
       ),
     );
   }
