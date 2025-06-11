@@ -145,5 +145,5 @@ export const useActiveCertifications = (
       graphqlClient.request(getActiveCertificationsQuery, { filters }),
   });
 
-  return { certifications: data?.getActiveCertifications || [] };
+  return { certifications: data?.getActiveCertifications };
 };

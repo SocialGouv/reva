@@ -7,7 +7,7 @@ import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -180,11 +180,21 @@ const FormacodesCcnsDegreesForm = ({
     organismTypology === "expertBranche" ||
     organismTypology === "expertBrancheEtFiliere";
 
-  const { certifications } = useActiveCertifications({
+  const { certifications: activeCertifications } = useActiveCertifications({
     domaines: selectedFormacodes,
     branches: selectedBranches,
     levels: selectedLevels,
   });
+
+  const [certifications, setCertifications] = useState(
+    activeCertifications || [],
+  );
+
+  useEffect(() => {
+    if (activeCertifications) {
+      setCertifications(activeCertifications);
+    }
+  }, [activeCertifications]);
 
   return (
     <div className="flex flex-col flex-1">
