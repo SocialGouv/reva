@@ -3,13 +3,7 @@ import { capitalize, toLower, toUpper, truncate } from "lodash";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { fr } from "date-fns/locale";
 
-type LogUserProfile =
-  | "ADMIN"
-  | "AAP"
-  | "CANDIDAT"
-  | "CERTIFICATEUR"
-  | "CERTIFICATION_AUTHORITY"
-  | "CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT";
+type LogUserProfile = "ADMIN" | "AAP" | "CERTIFICATEUR" | "CANDIDAT";
 type LogUser = { firstname: string; lastname: string };
 
 const getUserProfileText = ({
@@ -30,10 +24,7 @@ const getUserProfileText = ({
     case "AAP":
       return "AAP";
     case "CERTIFICATEUR":
-    case "CERTIFICATION_AUTHORITY":
       return "Certificateur";
-    case "CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT":
-      return "Certificateur (compte local)";
     case "CANDIDAT":
       return "Candidat";
   }

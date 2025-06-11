@@ -58,16 +58,7 @@ const CertificationAuthorityAdminComponent = ({
         <h1 className="flex-1">{certificationAuthority.label}</h1>
 
         <Impersonate accountId={certificationAuthority?.account?.id} />
-        <div>
-          <Button
-            priority="secondary"
-            linkProps={{
-              href: `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/logs`,
-            }}
-          >
-            Journal des actions
-          </Button>
-        </div>
+
         <div>
           <Button
             priority="secondary"

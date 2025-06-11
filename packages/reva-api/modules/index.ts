@@ -44,8 +44,6 @@ import { subscriptionRequestResolvers } from "./subscription/subscription.resolv
 import { aapLogResolvers } from "./aap-log/aap-log.resolvers";
 import { aapLogLoaders } from "./aap-log/aap-log.loaders";
 import { vaeCollectiveResolvers } from "./vae-collective/vae-collective.resolvers";
-import { certificationAuthorityLogResolvers } from "./certification-authority-log/certification-authority-log.resolvers";
-import { certificationAuthorityLogLoaders } from "./certification-authority-log/certification-authority-log.loaders";
 
 // Resolvers
 
@@ -76,7 +74,6 @@ const resolvers = mergeResolvers([
   certificationResolvers,
   candidacyContestationCaduciteResolvers,
   vaeCollectiveResolvers,
-  certificationAuthorityLogResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
@@ -101,7 +98,6 @@ export const graphqlConfiguration: MercuriusOptions = {
     ...referentialLoaders,
     ...candidacyLogLoaders,
     ...aapLogLoaders,
-    ...certificationAuthorityLogLoaders,
   },
   validationRules:
     process.env.NODE_ENV === "production"
