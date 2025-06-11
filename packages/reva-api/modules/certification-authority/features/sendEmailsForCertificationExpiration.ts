@@ -99,7 +99,7 @@ export const sendEmailsForCertificationExpiration = async () => {
                 expiresAt: {
                   // Fenêtre de 30 jours : après aujourd'hui jusqu'au 30ème jour inclus
                   lte: addDays(today, NOTIFICATION_PERIOD_DAYS),
-                  gt: today,
+                  gte: today,
                 },
                 status: "VALIDE_PAR_CERTIFICATEUR",
               },
@@ -118,7 +118,7 @@ export const sendEmailsForCertificationExpiration = async () => {
                 where: {
                   expiresAt: {
                     lte: addDays(today, NOTIFICATION_PERIOD_DAYS),
-                    gt: today,
+                    gte: today,
                   },
                   status: "VALIDE_PAR_CERTIFICATEUR",
                   // Évite les doublons : pas d'email de ce type envoyé dans les 31 derniers jours
@@ -171,7 +171,7 @@ export const sendEmailsForCertificationExpiration = async () => {
                 expiresAt: {
                   // Toute la journée d'hier : de 00:00:00 hier à 23:59:59 hier
                   gte: subDays(today, 1),
-                  lt: today,
+                  lte: today,
                 },
                 status: "VALIDE_PAR_CERTIFICATEUR",
               },
@@ -190,7 +190,7 @@ export const sendEmailsForCertificationExpiration = async () => {
                 where: {
                   expiresAt: {
                     gte: subDays(today, 1),
-                    lt: today,
+                    lte: today,
                   },
                   status: "VALIDE_PAR_CERTIFICATEUR",
                   // Un seul email d'expiration par certification (pas de condition sur sentAt)
