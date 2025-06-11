@@ -103,6 +103,18 @@ export default function UpdateLocalAccountPage() {
       <p className="mb-12">
         Retrouvez l’ensemble des informations liées à ce compte local.
       </p>
+      <Button
+        className="ml-auto mb-4"
+        priority="tertiary no outline"
+        iconId="ri-inbox-2-fill"
+        linkProps={{
+          href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccount?.id}`,
+          target: "_blank",
+          className: "after:content-none",
+        }}
+      >
+        Voir les candidatures
+      </Button>
       <div className="w-full flex flex-col gap-8">
         <LocalAccountGeneralInformationSummaryCard
           contactFullName={certificationAuthorityLocalAccount?.contactFullName}
