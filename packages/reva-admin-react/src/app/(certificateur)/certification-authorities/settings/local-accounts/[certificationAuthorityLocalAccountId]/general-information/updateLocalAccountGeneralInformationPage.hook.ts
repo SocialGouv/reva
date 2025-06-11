@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { UpdateCertificationAuthorityLocalAccountInput } from "@/graphql/generated/graphql";
+import { UpdateCertificationAuthorityLocalAccountGeneralInformationInput } from "@/graphql/generated/graphql";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const getCertificationAuthorityLocalAccountQuery = graphql(`
@@ -22,12 +22,6 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
       certificationAuthority {
         label
       }
-      departments {
-        id
-      }
-      certifications {
-        id
-      }
     }
   }
 `);
@@ -35,9 +29,9 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
 const updateCertificationAuthorityLocalAccountGeneralInformationMutation =
   graphql(`
     mutation updateCertificationAuthorityLocalAccountGeneralInformationForUpdateLocalAccountGeneralInformationPage(
-      $input: UpdateCertificationAuthorityLocalAccountInput!
+      $input: UpdateCertificationAuthorityLocalAccountGeneralInformationInput!
     ) {
-      certification_authority_updateCertificationAuthorityLocalAccount(
+      certification_authority_updateCertificationAuthorityLocalAccountGeneralInformation(
         input: $input
       ) {
         id
@@ -67,7 +61,7 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
   const updateCertificationAuthorityLocalAccount = useMutation({
     mutationFn: (
       input: Omit<
-        UpdateCertificationAuthorityLocalAccountInput,
+        UpdateCertificationAuthorityLocalAccountGeneralInformationInput,
         "certificationAuthorityLocalAccountId"
       >,
     ) =>

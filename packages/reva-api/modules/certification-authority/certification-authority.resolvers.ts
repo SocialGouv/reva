@@ -16,7 +16,7 @@ import { resolversSecurityMap } from "./certification-authority.security";
 import {
   CertificationAuthority,
   CreateCertificationAuthorityLocalAccountInput,
-  UpdateCertificationAuthorityLocalAccountInput,
+  UpdateCertificationAuthorityLocalAccountGeneralInformationInput,
 } from "./certification-authority.types";
 import { canUserManageCertificationAuthorityLocalAccount } from "./features/canUserManageCertifiationAuthorityLocalAccount";
 import { certificationAuthorityAcceptCgu } from "./features/certificationAuthorityAcceptCgu";
@@ -51,7 +51,7 @@ import { updateCertificationAuthorityById } from "./features/updateCertification
 import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
 import { updateCertificationAuthorityDepartments } from "./features/updateCertificationAuthorityDepartments";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
-import { updateCertificationAuthorityLocalAccount } from "./features/updateCertificationAuthorityLocalAccount";
+import { updateCertificationAuthorityLocalAccountGeneralInformation } from "./features/updateCertificationAuthorityLocalAccountGeneralInformation";
 import { updateCertificationAuthorityLocalAccountCertifications } from "./features/updateCertificationAuthorityLocalAccountCertifications";
 import { updateCertificationAuthorityLocalAccountDepartments } from "./features/updateCertificationAuthorityLocalAccountDepartments";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
@@ -250,26 +250,31 @@ const unsafeResolvers = {
         ...params.input,
       }),
 
-    certification_authority_updateCertificationAuthorityLocalAccount: async (
-      _parent: unknown,
-      params: {
-        input: UpdateCertificationAuthorityLocalAccountInput;
-      },
-      context: GraphqlContext,
-    ) => {
-      const canManage = await canUserManageCertificationAuthorityLocalAccount({
-        certificationAuthorityLocalAccountId:
-          params.input.certificationAuthorityLocalAccountId,
-        userKeycloakId: context.auth.userInfo?.sub || "",
-        userRoles: context.auth.userInfo?.realm_access?.roles || [],
-      });
-      if (!canManage) {
-        throw new Error(
-          "L'utilisateur n'est pas autorisé à modifier ce compte local d'autorité de certification",
+    certification_authority_updateCertificationAuthorityLocalAccountGeneralInformation:
+      async (
+        _parent: unknown,
+        params: {
+          input: UpdateCertificationAuthorityLocalAccountGeneralInformationInput;
+        },
+        context: GraphqlContext,
+      ) => {
+        const canManage = await canUserManageCertificationAuthorityLocalAccount(
+          {
+            certificationAuthorityLocalAccountId:
+              params.input.certificationAuthorityLocalAccountId,
+            userKeycloakId: context.auth.userInfo?.sub || "",
+            userRoles: context.auth.userInfo?.realm_access?.roles || [],
+          },
         );
-      }
-      return updateCertificationAuthorityLocalAccount(params.input);
-    },
+        if (!canManage) {
+          throw new Error(
+            "L'utilisateur n'est pas autorisé à modifier ce compte local d'autorité de certification",
+          );
+        }
+        return updateCertificationAuthorityLocalAccountGeneralInformation(
+          params.input,
+        );
+      },
     certification_authority_updateCertificationAuthorityDepartmentsAndCertifications:
       async (
         _parent: unknown,

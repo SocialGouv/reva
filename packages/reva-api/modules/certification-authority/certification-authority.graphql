@@ -124,13 +124,11 @@ input CertificationRegistryManagerInput {
   accountEmail: String!
 }
 
-input UpdateCertificationAuthorityLocalAccountInput {
+input UpdateCertificationAuthorityLocalAccountGeneralInformationInput {
   certificationAuthorityLocalAccountId: String!
   contactFullName: String
   contactEmail: String
   contactPhone: String
-  departmentIds: [String!]!
-  certificationIds: [String!]!
 }
 
 input UpdateCertificationAuthorityDepartmentsAndCertificationsInput {
@@ -226,8 +224,8 @@ type Mutation {
     input: CreateCertificationAuthorityLocalAccountInput!
   ): CertificationAuthorityLocalAccount!
 
-  certification_authority_updateCertificationAuthorityLocalAccount(
-    input: UpdateCertificationAuthorityLocalAccountInput!
+  certification_authority_updateCertificationAuthorityLocalAccountGeneralInformation(
+    input: UpdateCertificationAuthorityLocalAccountGeneralInformationInput!
   ): CertificationAuthorityLocalAccount!
 
   certification_authority_updateCertificationAuthorityLocalAccountDepartments(

@@ -25,11 +25,9 @@ export interface CreateCertificationAuthorityLocalAccountInput {
   contactPhone?: string | null;
 }
 
-export interface UpdateCertificationAuthorityLocalAccountInput {
+export interface UpdateCertificationAuthorityLocalAccountGeneralInformationInput {
   certificationAuthorityLocalAccountId: string;
   contactFullName?: string | null;
   contactEmail?: string | null;
   contactPhone?: string | null;
-  departmentIds: string[];
-  certificationIds: string[];
 }

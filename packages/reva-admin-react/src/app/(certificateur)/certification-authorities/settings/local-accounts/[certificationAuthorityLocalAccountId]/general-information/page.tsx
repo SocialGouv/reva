@@ -29,12 +29,6 @@ export default function AddLocalAccountPage() {
         contactFullName: data.contactFullName,
         contactEmail: data.contactEmail,
         contactPhone: data.contactPhone,
-        departmentIds:
-          certificationAuthorityLocalAccount?.departments.map((d) => d.id) ||
-          [],
-        certificationIds:
-          certificationAuthorityLocalAccount?.certifications.map((c) => c.id) ||
-          [],
       });
 
       successToast("modifications enregistrées");
