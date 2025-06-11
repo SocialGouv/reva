@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
+import { useAuth } from "@/components/auth/auth";
 
 const getCandidacyQuery = graphql(`
   query getCandidacyWithCandidateInfoForLayout($candidacyId: ID!) {
@@ -32,6 +33,7 @@ const getCandidacyQuery = graphql(`
 
 const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
+  const { isAdmin } = useAuth();
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
@@ -91,6 +93,18 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
         </>,
 
         `/candidacies/${candidacyId}/transfer`,
+      ),
+    );
+  }
+
+  if (isAdmin) {
+    footerItems.push(
+      menuItem(
+        <>
+          <ul>Journal des actions</ul>
+        </>,
+
+        `/candidacies/${candidacyId}/logs`,
       ),
     );
   }
