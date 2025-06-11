@@ -1728,6 +1728,7 @@ model CertificationOnFormacode {
   certificationId String        @map("certification_id") @db.Uuid
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
+  isMain          Boolean       @default(false) @map("is_main")
 
   @@unique([formacodeId, certificationId])
   @@map("certification_on_formacode")

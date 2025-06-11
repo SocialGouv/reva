@@ -15,6 +15,10 @@ type Domain = {
   children: SubDomain[];
 };
 
+type CertificationFormacode = Formacode & {
+  isMain: boolean;
+};
+
 export const getDomainsByFormacodes = async ({
   FORMACODES,
 }: {
@@ -22,7 +26,7 @@ export const getDomainsByFormacodes = async ({
 }): Promise<Domain[]> => {
   const referential = await getFormacodes();
 
-  const subDomains: Formacode[] = getSubdomains(FORMACODES, referential);
+  const subDomains = getSubdomains(FORMACODES, referential);
 
   const domains: Domain[] = [];
 
@@ -61,10 +65,13 @@ export const getDomainsByFormacodes = async ({
 export const getSubdomains = (
   FORMACODES: RNCPCertification["FORMACODES"],
   referential: Formacode[],
-): Formacode[] => {
-  const subDomains: Formacode[] = [];
+): CertificationFormacode[] => {
+  const subDomains: CertificationFormacode[] = [];
 
-  for (const rncpFormacode of FORMACODES) {
+  for (let index = 0; index < FORMACODES.length; index++) {
+    const isMain = index == 0;
+
+    const rncpFormacode = FORMACODES[index];
     const formacode = getFormacodeByCode(rncpFormacode.CODE, referential);
 
     if (!formacode) {
@@ -85,7 +92,10 @@ export const getSubdomains = (
       subDomain &&
       subDomains.findIndex((domain) => domain.code == subDomain.code) == -1
     ) {
-      subDomains.push(subDomain);
+      subDomains.push({
+        ...subDomain,
+        isMain,
+      });
     }
   }
 

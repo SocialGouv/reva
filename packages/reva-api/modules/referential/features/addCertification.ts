@@ -1,7 +1,7 @@
 import { prismaClient } from "../../../prisma/client";
 
 import { RNCPReferential } from "../rncp";
-import { getFormacodes, Formacode } from "./getFormacodes";
+import { getFormacodes } from "./getFormacodes";
 import { getSubdomains } from "./getDomainsByFormacodes";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 import { createCompetenceBlocsFromRncp } from "./createCompetenceBlocsFromRncp";
@@ -90,16 +90,14 @@ export const addCertification = async (params: { codeRncp: string }) => {
   // Link certification to sub domains
   const referential = await getFormacodes();
 
-  const subDomains: Formacode[] = getSubdomains(
-    rncpCertification.FORMACODES,
-    referential,
-  );
+  const subDomains = getSubdomains(rncpCertification.FORMACODES, referential);
 
   // Create all links
   await prismaClient.certificationOnFormacode.createMany({
     data: subDomains.map((subDomain) => ({
       formacodeId: subDomain.id,
       certificationId: certification.id,
+      isMain: subDomain.isMain,
     })),
   });
 
