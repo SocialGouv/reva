@@ -4,6 +4,10 @@ import { RNCPReferential } from "../rncp";
 import { getFormacodes, Formacode } from "./getFormacodes";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 
+type CertificationFormacode = Formacode & {
+  isMain: boolean;
+};
+
 export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
   codeRncp: string;
 }) => {
@@ -58,9 +62,12 @@ export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
   // Link certification to sub domains
   const referential = await getFormacodes();
 
-  const subDomains: Formacode[] = [];
+  const subDomains: CertificationFormacode[] = [];
 
-  for (const rncpFormacode of rncpCertification.FORMACODES) {
+  for (let index = 0; index < rncpCertification.FORMACODES.length; index++) {
+    const isMain = index == 0;
+
+    const rncpFormacode = rncpCertification.FORMACODES[index];
     const formacode = getFormacodeByCode(rncpFormacode.CODE, referential);
 
     if (!formacode) {
@@ -81,7 +88,10 @@ export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
       subDomain &&
       subDomains.findIndex((domain) => domain.code == subDomain.code) == -1
     ) {
-      subDomains.push(subDomain);
+      subDomains.push({
+        ...subDomain,
+        isMain,
+      });
     }
   }
 
@@ -95,6 +105,7 @@ export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
     data: subDomains.map((subDomain) => ({
       formacodeId: subDomain.id,
       certificationId: certification.id,
+      isMain: subDomain.isMain,
     })),
   });
 };
