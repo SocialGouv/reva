@@ -4,7 +4,6 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
 export const Header = () => {
   const currentPathname = usePathname();
@@ -17,11 +16,6 @@ export const Header = () => {
     isCertificationRegistryManager,
   } = useAuth();
   const { authenticated, logout } = useKeycloakContext();
-  const { isFeatureActive } = useFeatureflipping();
-
-  const isParametresCertificateurFeatureActive = isFeatureActive(
-    "PARAMETRES_CERTIFICATEUR",
-  );
 
   const candidaciesLabel = isAdmin
     ? "Certificateurs/Candidatures"
@@ -104,29 +98,16 @@ export const Header = () => {
         )
       ),
     },
-    ...(isParametresCertificateurFeatureActive
-      ? [
-          {
-            text: "Paramètres",
-            linkProps: {
-              href: "/certification-authorities/settings/",
-              target: "_self",
-            },
-            isActive: currentPathname.startsWith(
-              "/certification-authorities/settings",
-            ),
-          },
-        ]
-      : [
-          {
-            text: "Gestion des comptes locaux",
-            linkProps: {
-              href: "/certification-authorities/local-accounts/",
-              target: "_self",
-            },
-            isActive: currentPathname.startsWith("/certification-authorities"),
-          },
-        ]),
+    {
+      text: "Paramètres",
+      linkProps: {
+        href: "/certification-authorities/settings/",
+        target: "_self",
+      },
+      isActive: currentPathname.startsWith(
+        "/certification-authorities/settings",
+      ),
+    },
   ];
 
   const navigation = authenticated
