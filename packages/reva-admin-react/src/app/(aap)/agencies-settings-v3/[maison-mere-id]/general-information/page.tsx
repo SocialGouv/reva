@@ -1,7 +1,6 @@
 "use client";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { CompanyBadges } from "@/components/company-preview";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { LegalStatus, MaisonMereAap } from "@/graphql/generated/graphql";
@@ -19,10 +18,6 @@ import { useGeneralInformationPage } from "./generalInformationPage.hook";
 
 const GeneralInformationPage = () => {
   const router = useRouter();
-  const { isFeatureActive } = useFeatureflipping();
-  const isAttestationReferencementActive = isFeatureActive(
-    "attestation_referencement",
-  );
   const {
     maisonMereAAP,
     maisonMereAAPId,
@@ -140,7 +135,7 @@ const GeneralInformationPage = () => {
         pouvez signaler un changement au support si ces informations ne sont
         plus à jour.
       </p>
-      {isAttestationReferencementActive && etablissement && (
+      {etablissement && (
         <AttestationReferencement
           raisonSociale={etablissement.raisonSociale}
           siret={etablissement.siret}

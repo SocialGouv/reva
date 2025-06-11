@@ -3,78 +3,70 @@ import { stubQuery } from "../../utils/graphql";
 function visitGeneralInformation({
   statutValidation = "A_JOUR",
   dateFermeture = null,
-  isAttestationReferencementActive = false,
   qualiopiStatus = true,
   siegeSocial = true,
 }: {
   statutValidation?: string;
   dateFermeture?: string | null;
-  isAttestationReferencementActive?: boolean;
   qualiopiStatus?: boolean;
   siegeSocial?: boolean;
 }) {
-  cy.fixture("features/active-features.json").then((activeFeatures) => {
-    activeFeatures.data.activeFeaturesForConnectedUser =
-      isAttestationReferencementActive
-        ? [
-            ...activeFeatures.data.activeFeaturesForConnectedUser,
-            "attestation_referencement",
-          ]
-        : activeFeatures.data.activeFeaturesForConnectedUser;
-
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "getMaisonMereCGUQuery",
-        "account/gestionnaire-cgu-accepted.json",
-      );
-      stubQuery(req, "activeFeaturesForConnectedUser", activeFeatures);
-      stubQuery(req, "getOrganismForAAPVisibilityCheck", {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(
+      req,
+      "getMaisonMereCGUQuery",
+      "account/gestionnaire-cgu-accepted.json",
+    );
+    stubQuery(
+      req,
+      "activeFeaturesForConnectedUser",
+      "features/active-features.json",
+    );
+    stubQuery(req, "getOrganismForAAPVisibilityCheck", {
+      account_getAccountForConnectedUser: {
+        organism: {
+          id: "0415e62b-cb2e-4251-b45b-eb0df9082b2d",
+          isVisibleInCandidateSearchResults: true,
+        },
+      },
+    });
+    stubQuery(req, "getAccountInfo", "account/admin-info.json");
+    stubQuery(req, "getAccountMaisonMereGeneralInformation", {
+      data: {
         account_getAccountForConnectedUser: {
-          organism: {
-            id: "0415e62b-cb2e-4251-b45b-eb0df9082b2d",
-            isVisibleInCandidateSearchResults: true,
-          },
-        },
-      });
-      stubQuery(req, "getAccountInfo", "account/admin-info.json");
-      stubQuery(req, "getAccountMaisonMereGeneralInformation", {
-        data: {
-          account_getAccountForConnectedUser: {
-            maisonMereAAP: {
-              id: "733540e0-1bb1-4b8d-a66d-97fc992ff522",
-              siret: "82493729600021",
-              phone: "0663530236",
-              managerFirstname: null,
-              managerLastname: null,
-              statutValidationInformationsJuridiquesMaisonMereAAP:
-                statutValidation,
-              legalInformationDocumentsDecisions: [],
-              gestionnaire: {
-                firstname: "Thomas",
-                lastname: "Maison Mere",
-                email: "dosanjos.thomas+mm@gmail.com",
-              },
-            },
-          },
-        },
-      });
-      stubQuery(req, "getEtablissementForAgenciesSettings", {
-        data: {
-          getEtablissement: {
+          maisonMereAAP: {
+            id: "733540e0-1bb1-4b8d-a66d-97fc992ff522",
             siret: "82493729600021",
-            raisonSociale: "THOMAS DOS ANJOS",
-            formeJuridique: {
-              code: "1000",
-              libelle: "Entrepreneur individuel",
-              legalStatus: "EI",
+            phone: "0663530236",
+            managerFirstname: null,
+            managerLastname: null,
+            statutValidationInformationsJuridiquesMaisonMereAAP:
+              statutValidation,
+            legalInformationDocumentsDecisions: [],
+            gestionnaire: {
+              firstname: "Thomas",
+              lastname: "Maison Mere",
+              email: "dosanjos.thomas+mm@gmail.com",
             },
-            siegeSocial,
-            dateFermeture,
-            qualiopiStatus,
           },
         },
-      });
+      },
+    });
+    stubQuery(req, "getEtablissementForAgenciesSettings", {
+      data: {
+        getEtablissement: {
+          siret: "82493729600021",
+          raisonSociale: "THOMAS DOS ANJOS",
+          formeJuridique: {
+            code: "1000",
+            libelle: "Entrepreneur individuel",
+            legalStatus: "EI",
+          },
+          siegeSocial,
+          dateFermeture,
+          qualiopiStatus,
+        },
+      },
     });
   });
 
@@ -134,15 +126,6 @@ describe("General Information Page", () => {
   });
 
   context("Attestation de référencement", () => {
-    it("should make attestation section visible when feature flag is enabled", () => {
-      visitGeneralInformation({
-        isAttestationReferencementActive: true,
-      });
-      cy.get('[data-test="download-attestation-referencement"]').should(
-        "exist",
-      );
-    });
-
     const attestationDownloadTestCases = [
       {
         scenario: "establishment is active and account information is current",
@@ -175,7 +158,6 @@ describe("General Information Page", () => {
           visitGeneralInformation({
             statutValidation: accountValidationStatus,
             dateFermeture: establishmentClosingDate,
-            isAttestationReferencementActive: true,
           });
 
           cy.get('[data-test="download-attestation-referencement"]').should(
