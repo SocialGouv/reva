@@ -1,5 +1,5 @@
 import { CertificationEmailType } from "@prisma/client";
-import { addDays, format, subDays } from "date-fns";
+import { addDays, format, startOfToday, subDays, subHours } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
 import { getBackofficeUrl, sendEmailUsingTemplate } from "../../shared/email";
 import { logger } from "../../shared/logger";
@@ -83,8 +83,7 @@ const sendCertificationNotificationEmailToCertificationRegistryManager =
 
 export const sendEmailsForCertificationExpiration = async () => {
   try {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    const today = startOfToday();
     // Recherche des responsables de certifications avec des certifications qui expirent dans 1 mois
     // Double filtrage Prisma :
     // 1. Le "some" dans le premier "where" sélectionne les responsables ayant AU MOINS UNE certification qui expire dans 30 jours
@@ -169,8 +168,8 @@ export const sendEmailsForCertificationExpiration = async () => {
             certifications: {
               some: {
                 expiresAt: {
-                  // Toute la journée d'hier : de 00:00:00 hier à 23:59:59 hier
-                  gte: subDays(today, 1),
+                  // 18h avant hier pour couvrir les certifications à minuit UTC+2 quand la CI utilise UTC
+                  gte: subHours(subDays(today, 1), 6),
                   lt: today,
                 },
                 status: "VALIDE_PAR_CERTIFICATEUR",
@@ -189,7 +188,7 @@ export const sendEmailsForCertificationExpiration = async () => {
               certifications: {
                 where: {
                   expiresAt: {
-                    gte: subDays(today, 1),
+                    gte: subHours(subDays(today, 1), 6),
                     lt: today,
                   },
                   status: "VALIDE_PAR_CERTIFICATEUR",
