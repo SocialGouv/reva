@@ -1,5 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger";
+import { updateAccountById } from "../../account/features/updateAccount";
 import { UpdateCertificationAuthorityLocalAccountGeneralInformationInput } from "../certification-authority.types";
 
 export const updateCertificationAuthorityLocalAccountGeneralInformation =
@@ -12,7 +12,38 @@ export const updateCertificationAuthorityLocalAccountGeneralInformation =
     contactEmail,
     contactPhone,
   }: UpdateCertificationAuthorityLocalAccountGeneralInformationInput) => {
-    logger.info({ accountFirstname, accountLastname, accountEmail });
+    const oldAccounts = await prismaClient.account.findMany({
+      where: {
+        certificationAuthorityLocalAccount: {
+          some: {
+            id: certificationAuthorityLocalAccountId,
+          },
+        },
+      },
+    });
+
+    if (oldAccounts.length > 1) {
+      throw new Error(
+        "Plusieurs comptes utilisateurs du compte local certification trouvés",
+      );
+    }
+
+    const oldAccount = oldAccounts[0];
+
+    if (!oldAccount) {
+      throw new Error(
+        "Compte utilisateur du compte local certification non trouvé",
+      );
+    }
+
+    await updateAccountById({
+      accountId: oldAccount.id,
+      accountData: {
+        email: accountEmail,
+        firstname: accountFirstname || "",
+        lastname: accountLastname || "",
+      },
+    });
 
     return prismaClient.certificationAuthorityLocalAccount.update({
       where: {
