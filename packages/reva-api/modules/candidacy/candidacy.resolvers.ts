@@ -530,6 +530,7 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         dropOutReasonId: payload.dropOut.dropOutReasonId,
         otherReasonContent: payload.dropOut.otherReasonContent,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
 
       if (candidacy?.candidate?.email) {

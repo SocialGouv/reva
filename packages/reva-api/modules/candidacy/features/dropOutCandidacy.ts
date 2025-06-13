@@ -3,8 +3,10 @@ import { getCandidacyById } from "./getCandidacyById";
 import { logger } from "../../shared/logger";
 import { getDropOutReasonById } from "../../referential/features/getDropOutReasonById";
 import { prismaClient } from "../../../prisma/client";
+import { isCandidacyStatusEqualOrAboveGivenStatus } from "../../candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
 
 interface DropOutCandidacyParams {
+  userRoles: KeyCloakUserRole[];
   candidacyId: string;
   dropOutReasonId: string;
   otherReasonContent?: string;
@@ -63,6 +65,17 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
     throw new Error(
       `${FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON} La raison d'abandon ${params.dropOutReasonId} n'a pas pu être sélectionnée: ${error}`,
     );
+  }
+
+  if (!params.userRoles.includes("admin")) {
+    const feasibilitySent = isCandidacyStatusEqualOrAboveGivenStatus(
+      candidacyStatus,
+    )("DOSSIER_FAISABILITE_ENVOYE");
+    if (feasibilitySent) {
+      throw new Error(
+        "La candidature ne peut être abandonnée car le dossier de faisabilité a déjà été envoyé",
+      );
+    }
   }
 
   try {

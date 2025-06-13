@@ -12,6 +12,7 @@ describe("drop out candidacy", () => {
       await dropOutCandidacy({
         candidacyId: "wr0ng1d",
         dropOutReasonId: dropoutReason!.id,
+        userRoles: ["manage_candidacy"],
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
   });
@@ -22,6 +23,7 @@ describe("drop out candidacy", () => {
       await dropOutCandidacy({
         candidacyId: candidacyDropOut.candidacy.id,
         dropOutReasonId: dropoutReason!.id,
+        userRoles: ["manage_candidacy"],
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT);
   });
@@ -31,6 +33,7 @@ describe("drop out candidacy", () => {
       await dropOutCandidacy({
         candidacyId: candidacy.id,
         dropOutReasonId: "wr0ng1d",
+        userRoles: ["manage_candidacy"],
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON);
   });
@@ -41,6 +44,7 @@ describe("drop out candidacy", () => {
     await dropOutCandidacy({
       candidacyId: candidacy.id,
       dropOutReasonId: dropoutReason.id,
+      userRoles: ["manage_candidacy"],
     });
     const candidacyDropOut = await prismaClient.candidacyDropOut.findUnique({
       where: {
