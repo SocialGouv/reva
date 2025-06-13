@@ -64,9 +64,9 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
   );
 
   //an admin can dropout a candidacy if it's not dropped out nor archived
-  const canDroput = isAdmin
+  const canDropout = isAdmin
     ? !isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented
-    : //an aap can droput a candidacy if it's not dropped out nor archived nor if its feasibility file has been sent
+    : //an aap can dropout a candidacy if it's not dropped out nor archived nor if its feasibility file has been sent
       !isCandidacyDroppedOut &&
       !isCandidacyArchivedAndNotReoriented &&
       !feasibilitySent;
@@ -90,7 +90,7 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     isCandidacyDroppedOut,
     canBeArchived,
     canBeRestored,
-    canDroput,
+    canDropout,
     canCancelDropout,
     canSwitchFinanceModuleToHorsPlateforme,
     canSwitchTypeAccompagnementToAutonome,

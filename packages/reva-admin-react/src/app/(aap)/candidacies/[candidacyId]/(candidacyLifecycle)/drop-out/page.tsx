@@ -20,7 +20,7 @@ const CandidacyDropoutComponent = ({
   candidacy: NonNullable<CandidacyForDropout>;
   activeDropoutReasons: NonNullable<ActiveDropoutReasons>;
 }) => {
-  const { canDroput } = useCandidacyStatus(candidacy);
+  const { canDropout } = useCandidacyStatus(candidacy);
   const { validateDropoutCandidacyById } = useDropout();
 
   const { isAdmin } = useAuth();
@@ -96,7 +96,7 @@ const CandidacyDropoutComponent = ({
     );
   }
 
-  if (!canDroput) {
+  if (!canDropout) {
     return (
       <Alert
         title=""

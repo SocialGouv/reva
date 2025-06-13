@@ -22,7 +22,7 @@ export const CandidacySummaryBottomButtons = ({
   const {
     canBeArchived,
     canBeRestored,
-    canDroput,
+    canDropout,
     canCancelDropout,
     canSwitchFinanceModuleToHorsPlateforme,
     canSwitchTypeAccompagnementToAutonome,
@@ -40,7 +40,7 @@ export const CandidacySummaryBottomButtons = ({
               Actions administratives
             </p>
           </div>
-          {canDroput && (
+          {canDropout && (
             <AdminAction
               title="Déclarer l'abandon du candidat"
               description="Le candidat ne pourra plus déposer de dossier de faisabilité sur le même diplôme durant cette année civile."
@@ -71,7 +71,7 @@ export const CandidacySummaryBottomButtons = ({
           canBeArchived={canBeArchived}
           canBeRestored={canBeRestored}
           canCancelDropout={canCancelDropout}
-          canDroput={canDroput}
+          canDropout={canDropout}
           canSwitchFinanceModuleToHorsPlateforme={
             canSwitchFinanceModuleToHorsPlateforme
           }

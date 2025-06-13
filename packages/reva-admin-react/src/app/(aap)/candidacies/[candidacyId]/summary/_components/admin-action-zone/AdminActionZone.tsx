@@ -9,7 +9,7 @@ export const AdminActionZone = ({
   candidacyId,
   canBeArchived,
   canBeRestored,
-  canDroput,
+  canDropout,
   canCancelDropout,
   canSwitchFinanceModuleToHorsPlateforme,
   canSwitchTypeAccompagnementToAutonome,
@@ -20,7 +20,7 @@ export const AdminActionZone = ({
   candidacyId: string;
   canBeArchived: boolean;
   canBeRestored: boolean;
-  canDroput: boolean;
+  canDropout: boolean;
   canCancelDropout: boolean;
   canSwitchFinanceModuleToHorsPlateforme: boolean;
   canSwitchTypeAccompagnementToAutonome: boolean;
@@ -90,7 +90,7 @@ export const AdminActionZone = ({
         </p>
       </div>
 
-      {canDroput && (
+      {canDropout && (
         <AdminAction
           title="Déclarer l'abandon du candidat"
           description="Le candidat ne pourra plus déposer de dossier de faisabilité sur le même diplôme durant cette année civile."
