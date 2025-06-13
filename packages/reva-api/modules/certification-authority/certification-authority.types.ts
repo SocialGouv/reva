@@ -27,6 +27,9 @@ export interface CreateCertificationAuthorityLocalAccountInput {
 
 export interface UpdateCertificationAuthorityLocalAccountGeneralInformationInput {
   certificationAuthorityLocalAccountId: string;
+  accountFirstname?: string | null;
+  accountLastname: string;
+  accountEmail: string;
   contactFullName?: string | null;
   contactEmail?: string | null;
   contactPhone?: string | null;

@@ -126,6 +126,9 @@ input CertificationRegistryManagerInput {
 
 input UpdateCertificationAuthorityLocalAccountGeneralInformationInput {
   certificationAuthorityLocalAccountId: String!
+  accountFirstname: String
+  accountLastname: String!
+  accountEmail: String!
   contactFullName: String
   contactEmail: String
   contactPhone: String

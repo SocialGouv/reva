@@ -58,11 +58,17 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
       }),
   });
 
+  const certificationAuthorityLocalAccount =
+    data?.certification_authority_getCertificationAuthorityLocalAccount;
+
   const updateCertificationAuthorityLocalAccount = useMutation({
     mutationFn: (
       input: Omit<
         UpdateCertificationAuthorityLocalAccountGeneralInformationInput,
-        "certificationAuthorityLocalAccountId"
+        | "certificationAuthorityLocalAccountId"
+        | "accountFirstname"
+        | "accountLastname"
+        | "accountEmail"
       >,
     ) =>
       graphqlClient.request(
@@ -70,6 +76,12 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
         {
           input: {
             ...input,
+            accountFirstname:
+              certificationAuthorityLocalAccount?.account.firstname || "",
+            accountLastname:
+              certificationAuthorityLocalAccount?.account.lastname || "",
+            accountEmail:
+              certificationAuthorityLocalAccount?.account.email || "",
             certificationAuthorityLocalAccountId,
           },
         },
@@ -80,9 +92,6 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
       });
     },
   });
-
-  const certificationAuthorityLocalAccount =
-    data?.certification_authority_getCertificationAuthorityLocalAccount;
 
   return {
     certificationAuthorityLocalAccount,
