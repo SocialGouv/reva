@@ -65,10 +65,7 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
     mutationFn: (
       input: Omit<
         UpdateCertificationAuthorityLocalAccountGeneralInformationInput,
-        | "certificationAuthorityLocalAccountId"
-        | "accountFirstname"
-        | "accountLastname"
-        | "accountEmail"
+        "certificationAuthorityLocalAccountId"
       >,
     ) =>
       graphqlClient.request(
@@ -76,12 +73,6 @@ export const useUpdateLocalAccountGeneralInformationPage = ({
         {
           input: {
             ...input,
-            accountFirstname:
-              certificationAuthorityLocalAccount?.account.firstname || "",
-            accountLastname:
-              certificationAuthorityLocalAccount?.account.lastname || "",
-            accountEmail:
-              certificationAuthorityLocalAccount?.account.email || "",
             certificationAuthorityLocalAccountId,
           },
         },

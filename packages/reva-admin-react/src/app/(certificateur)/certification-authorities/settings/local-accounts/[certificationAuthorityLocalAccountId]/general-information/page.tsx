@@ -26,6 +26,9 @@ export default function AddLocalAccountPage() {
   const handleFormSubmit = async (data: LocalAccountFormData) => {
     try {
       await updateCertificationAuthorityLocalAccount.mutateAsync({
+        accountFirstname: data.accountFirstname,
+        accountLastname: data.accountFirstname,
+        accountEmail: data.accountEmail,
         contactFullName: data.contactFullName,
         contactEmail: data.contactEmail,
         contactPhone: data.contactPhone,
@@ -98,7 +101,6 @@ export default function AddLocalAccountPage() {
           contactEmail: certificationAuthorityLocalAccount?.contactEmail ?? "",
           contactPhone: certificationAuthorityLocalAccount?.contactPhone ?? "",
         }}
-        disableAccountFields
       />
     </div>
   );
