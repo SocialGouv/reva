@@ -58,8 +58,18 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
 
   const canBeRestored = isCandidacyArchivedAndNotReoriented && isAdmin;
 
-  const canDroput =
-    !isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented;
+  const feasibilitySent = isCandidacyStatusEqualOrAbove(
+    candidacy.status,
+    "DOSSIER_FAISABILITE_ENVOYE",
+  );
+
+  //an admin can dropout a candidacy if it's not dropped out nor archived
+  const canDroput = isAdmin
+    ? !isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented
+    : //an aap can droput a candidacy if it's not dropped out nor archived nor if its feasibility file has been sent
+      !isCandidacyDroppedOut &&
+      !isCandidacyArchivedAndNotReoriented &&
+      !feasibilitySent;
 
   const canCancelDropout =
     isCandidacyDroppedOut &&
