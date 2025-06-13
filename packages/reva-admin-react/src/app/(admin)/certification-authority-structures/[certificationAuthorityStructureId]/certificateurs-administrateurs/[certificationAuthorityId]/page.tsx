@@ -82,7 +82,6 @@ const CertificationAuthorityAdminComponent = ({
           hrefPrefix={`/certification-authority-structures/${certificationAuthority.certificationAuthorityStructures[0].id}/certificateurs-administrateurs/${certificationAuthority.id}`}
           certificationAuthority={certificationAuthority}
         />
-        )
         <InterventionAreaSummaryCard
           regions={regionsAndDepartments}
           updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthority.id}/zone-intervention`}
