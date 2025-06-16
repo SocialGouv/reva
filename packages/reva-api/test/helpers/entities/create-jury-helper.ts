@@ -15,14 +15,16 @@ export const createJuryHelper = async (args?: Partial<Jury>) => {
     throw new Error("candidacy not found");
   }
 
-  const certificationAuthority = await createCertificationAuthorityHelper();
+  const certificationAuthorityId =
+    args?.certificationAuthorityId ||
+    (await createCertificationAuthorityHelper()).id;
 
   return prismaClient.jury.create({
     data: {
-      isActive: args?.isActive ?? true,
       candidacyId: candidacy.id,
-      certificationAuthorityId: certificationAuthority.id,
       dateOfSession: new Date(),
+      isActive: true,
+      certificationAuthorityId,
       ...args,
     },
     include: {

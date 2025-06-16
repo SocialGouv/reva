@@ -246,6 +246,11 @@ export const getCandidacyLogMessage = ({
         ? log("Action exceptionnelle effectuée", details.message)
         : log("Action exceptionnelle effectuée");
 
+    case "JURY_DECISION_REVOKED":
+      return details?.reason
+        ? log("Décision du jury annulée", details.reason)
+        : log("Décision du jury annulée");
+
     default:
       return log("Événement inconnu");
   }

@@ -11,6 +11,7 @@ import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCat
 import { getHistoryJuryByCandidacyId } from "./features/getHistoryJuryByCandidacyId";
 import { getExamInfo } from "./features/getExamInfo";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
+import { revokeJuryDecision } from "./features/revokeJuryDecision";
 import { updateExamInfo } from "./features/updateExamInfo";
 import { updateResultOfJury } from "./features/updateResultOfJury";
 import { ExamInfo, JuryInfo } from "./jury.types";
@@ -134,6 +135,22 @@ const unsafeResolvers = {
         juryInfo: params.input,
         roles: context.auth.userInfo.realm_access?.roles || [],
         hasRole: context.auth.hasRole,
+        keycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth?.userInfo?.email,
+      });
+    },
+    jury_revokeDecision: async (
+      _parent: unknown,
+      params: {
+        juryId: string;
+        reason?: string;
+      },
+      context: GraphqlContext,
+    ) => {
+      return revokeJuryDecision({
+        juryId: params.juryId,
+        reason: params.reason,
+        roles: context.auth.userInfo?.realm_access?.roles || [],
         keycloakId: context.auth.userInfo?.sub,
         userEmail: context.auth?.userInfo?.email,
       });
