@@ -136,6 +136,20 @@ export type CandidacyLogEventTypeAndDetails =
         certificationAuthorityId?: string;
         certificationAuthorityLabel?: string;
       };
+    }
+  | {
+      eventType: "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY";
+      details: {
+        certificationAuthorityId: string;
+        certificationAuthorityLabel: string;
+      };
+    }
+  | {
+      eventType: "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT";
+      details: {
+        certificationAuthorityLocalAccountId: string;
+        certificationAuthorityLocalAccountAccountEmail: string;
+      };
     };
 
 export type CandidacyLog = {

@@ -1,5 +1,9 @@
 import { prismaClient } from "../../../prisma/client";
 import {
+  CandidacyAuditLogUserInfo,
+  logCandidacyAuditEvent,
+} from "../../candidacy-log/features/logCandidacyAuditEvent";
+import {
   sendCandidacyTransferToNewCertificationAuthorityEmail,
   sendCandidacyTransferToPreviousCertificationAuthorityEmail,
   sendCandidacyTransferedToOrganismEmail,
@@ -11,10 +15,12 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
   candidacyId,
   certificationAuthorityId,
   transferReason,
+  userInfo,
 }: {
   candidacyId: string;
   certificationAuthorityId: string;
   transferReason: string;
+  userInfo: CandidacyAuditLogUserInfo;
 }) => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: {
@@ -123,6 +129,16 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     newCertificationAuthority.label;
 
   const candidateName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
+
+  await logCandidacyAuditEvent({
+    candidacyId,
+    eventType: "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY",
+    details: {
+      certificationAuthorityId: newCertificationAuthority.id,
+      certificationAuthorityLabel: newCertificationAuthority.label,
+    },
+    ...userInfo,
+  });
 
   if (previousCertificationAuthority?.contactEmail) {
     sendCandidacyTransferToPreviousCertificationAuthorityEmail({

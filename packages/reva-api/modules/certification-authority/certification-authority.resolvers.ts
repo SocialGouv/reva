@@ -58,6 +58,7 @@ import { updateCertificationAuthorityStructure } from "./features/updateCertific
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 import { updateCertificationAuthorityV2ById } from "./features/updateCertificationAuthorityV2";
 import { getCertificationAuthorityLocalAccountByAccountId } from "./features/getCertificationAuthorityLocalAccountByAccountId";
+import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 
 const unsafeResolvers = {
   Account: {
@@ -386,7 +387,12 @@ const unsafeResolvers = {
           certificationAuthorityId: string;
           transferReason: string;
         },
-      ) => transferCandidacyToAnotherCertificationAuthority(params),
+        context: GraphqlContext,
+      ) =>
+        transferCandidacyToAnotherCertificationAuthority({
+          ...params,
+          userInfo: buildCandidacyAuditLogUserInfo(context),
+        }),
 
     certification_authority_transferCandidacyToCertificationAuthorityLocalAccount:
       async (
@@ -400,7 +406,7 @@ const unsafeResolvers = {
       ) => {
         await transferCandidacyToCertificationAuthorityLocalAccount({
           ...params,
-          keycloakId: context.auth.userInfo?.sub,
+          userInfo: buildCandidacyAuditLogUserInfo(context),
         });
 
         return true;

@@ -229,6 +229,18 @@ export const getCandidacyLogMessage = ({
         `téléphone: ${details.phone}, ${details.email ? `, email: ${details.email || ""}` : ""}`,
       );
 
+    case "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY":
+      return log(
+        "Candidature transférée à un autre gestionnaire de candidature",
+        `certificateur: ${details.certificationAuthorityLabel}`,
+      );
+
+    case "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT":
+      return log(
+        "Candidature transférée à un autre compte certificateur local",
+        `email du compte local: ${details.certificationAuthorityLocalAccountAccountEmail}`,
+      );
+
     case "ADMIN_CUSTOM_ACTION":
       return details?.message
         ? log("Action exceptionnelle effectuée", details.message)

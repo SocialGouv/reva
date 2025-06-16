@@ -1,5 +1,9 @@
 import { prismaClient } from "../../../prisma/client";
 import {
+  CandidacyAuditLogUserInfo,
+  logCandidacyAuditEvent,
+} from "../../candidacy-log/features/logCandidacyAuditEvent";
+import {
   sendCandidacyTransferToNewCertificationAuthorityEmail,
   sendCandidacyTransferToPreviousCertificationAuthorityEmail,
   sendCandidacyTransferedToOrganismEmail,
@@ -11,13 +15,13 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
     candidacyId: string;
     certificationAuthorityLocalAccountId: string;
     transferReason: string;
-    keycloakId?: string;
+    userInfo: CandidacyAuditLogUserInfo;
   }) => {
     const {
       candidacyId,
       certificationAuthorityLocalAccountId,
       transferReason,
-      keycloakId,
+      userInfo,
     } = params;
 
     const candidacy = await prismaClient.candidacy.findUnique({
@@ -127,9 +131,21 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
     const organismName = (candidacy.organism?.nomPublic ??
       candidacy.organism?.label) as string;
 
-    if (keycloakId) {
+    await logCandidacyAuditEvent({
+      candidacyId,
+      eventType:
+        "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT",
+      details: {
+        certificationAuthorityLocalAccountId,
+        certificationAuthorityLocalAccountAccountEmail:
+          certificationAuthorityLocalAccount.account.email,
+      },
+      ...userInfo,
+    });
+
+    if (userInfo.userKeycloakId) {
       const account = await prismaClient.account.findUnique({
-        where: { keycloakId },
+        where: { keycloakId: userInfo.userKeycloakId },
         include: {
           certificationAuthorityLocalAccount: true,
         },
@@ -148,14 +164,14 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
               : previousCertificationAuthorityName;
         }
 
-        sendCandidacyTransferToPreviousCertificationAuthorityEmail({
+        await sendCandidacyTransferToPreviousCertificationAuthorityEmail({
           email: account.email,
           previousCertificationAuthorityName,
           newCertificationAuthorityName,
           candidateName,
         });
       } else if (previousCertificationAuthority?.contactEmail) {
-        sendCandidacyTransferToPreviousCertificationAuthorityEmail({
+        await sendCandidacyTransferToPreviousCertificationAuthorityEmail({
           email: previousCertificationAuthority.contactEmail,
           previousCertificationAuthorityName,
           newCertificationAuthorityName,
@@ -174,14 +190,14 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
     });
 
     if (candidacy.candidate?.email) {
-      sendCandidacyTransferToCandidate({
+      await sendCandidacyTransferToCandidate({
         email: candidacy.candidate?.email,
         newCertificationAuthorityName,
       });
     }
 
     if (organismEmail) {
-      sendCandidacyTransferedToOrganismEmail({
+      await sendCandidacyTransferedToOrganismEmail({
         email: organismEmail,
         organismName,
         candidateName,
