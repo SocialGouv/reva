@@ -71,9 +71,9 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
     const feasibilitySent = isCandidacyStatusEqualOrAboveGivenStatus(
       candidacyStatus,
     )("DOSSIER_FAISABILITE_ENVOYE");
-    if (feasibilitySent) {
+    if (!feasibilitySent) {
       throw new Error(
-        "La candidature ne peut être abandonnée car le dossier de faisabilité a déjà été envoyé",
+        "La candidature ne peut être abandonnée car le dossier de faisabilité n'a pas été envoyé",
       );
     }
   }

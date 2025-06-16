@@ -38,9 +38,25 @@ describe("drop out candidacy", () => {
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON);
   });
 
-  test("should return candidacy with drop out reason", async () => {
+  test("should fail because the candidacy is not in the DOSSIER_FAISABILITE_ENVOYE status", async () => {
     const dropoutReason = await createDropOutReasonHelper();
     const candidacy = await createCandidacyHelper();
+    await expect(async () => {
+      await dropOutCandidacy({
+        candidacyId: candidacy.id,
+        dropOutReasonId: dropoutReason.id,
+        userRoles: ["manage_candidacy"],
+      });
+    }).rejects.toThrow(
+      "La candidature ne peut être abandonnée car le dossier de faisabilité n'a pas été envoyé",
+    );
+  });
+
+  test("should return candidacy with drop out reason", async () => {
+    const dropoutReason = await createDropOutReasonHelper();
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
+    });
     await dropOutCandidacy({
       candidacyId: candidacy.id,
       dropOutReasonId: dropoutReason.id,
