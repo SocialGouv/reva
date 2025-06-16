@@ -54,6 +54,12 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           candidacyId,
         });
 
+        if (!feasibility) {
+          return reply.status(500).send({
+            err: "Dossier de faisabilité non trouvé.",
+          });
+        }
+
         const authorized = await canDownloadFeasibilityFiles({
           hasRole: request.auth.hasRole,
           feasibility: feasibility,

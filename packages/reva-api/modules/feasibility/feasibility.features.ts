@@ -409,19 +409,31 @@ export const createFeasibility = async ({
   return feasibility;
 };
 
-export const getActiveFeasibilityByCandidacyid = ({
+export const getActiveFeasibilityByCandidacyid = async ({
   candidacyId,
 }: {
   candidacyId: string;
-}) =>
-  prismaClient.feasibility.findFirst({
-    where: { candidacyId, isActive: true },
+}) => {
+  //Prisma graphql optimization. We start with the candidacy since we can use a unique index
+  //It allows prisma to automatically batch the queries in the case of a n+1 graphql query (all the active feasibilities of many candidacies)
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
     include: {
-      certificationAuthority: true,
-      feasibilityUploadedPdf: true,
-      dematerializedFeasibilityFile: true,
+      Feasibility: {
+        where: { isActive: true },
+        include: {
+          certificationAuthority: true,
+          feasibilityUploadedPdf: true,
+          dematerializedFeasibilityFile: true,
+        },
+      },
     },
   });
+
+  const activeFeasibility = candidacy?.Feasibility[0];
+
+  return activeFeasibility;
+};
 
 export const getFileNameAndUrl = async ({
   candidacyId,
