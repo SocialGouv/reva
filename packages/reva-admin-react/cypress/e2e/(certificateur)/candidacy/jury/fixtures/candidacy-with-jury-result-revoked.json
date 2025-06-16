@@ -1,0 +1,30 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "test-candidacy-id",
+      "certification": {
+        "id": "test-certification-id",
+        "label": "Test Certification",
+        "codeRncp": "RNCP12345",
+        "typeDiplome": "LICENCE"
+      },
+      "jury": {
+        "id": "test-jury-id",
+        "dateOfSession": "2024-01-15T10:00:00.000Z",
+        "timeOfSession": "10:00",
+        "timeSpecified": true,
+        "addressOfSession": "adresse",
+        "informationOfSession": "Test information",
+        "result": null,
+        "dateOfResult": null,
+        "informationOfResult": null,
+        "convocationFile": null
+      },
+      "historyJury": [],
+      "activeDossierDeValidation": {
+        "updatedAt": "2024-01-01T00:00:00.000Z",
+        "decision": "FAVORABLE"
+      }
+    }
+  }
+}

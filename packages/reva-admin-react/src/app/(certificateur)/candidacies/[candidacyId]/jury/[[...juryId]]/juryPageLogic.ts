@@ -78,6 +78,14 @@ const updateJuryResultMutation = graphql(`
   }
 `);
 
+const revokeJuryDecisionMutation = graphql(`
+  mutation jury_revokeDecision($juryId: ID!, $reason: String) {
+    jury_revokeDecision(juryId: $juryId, reason: $reason) {
+      id
+    }
+  }
+`);
+
 type ScheduleJuryInputType = {
   candidacyId: string;
   date: string;
@@ -150,9 +158,21 @@ export const useJuryPageLogic = () => {
     },
   });
 
+  const revokeJuryDecision = useMutation({
+    mutationFn: ({ juryId, reason }: { juryId: string; reason?: string }) =>
+      graphqlClient.request(revokeJuryDecisionMutation, {
+        juryId,
+        reason,
+      }),
+    onSuccess: () => {
+      getCandidacy.refetch();
+    },
+  });
+
   return {
     getCandidacy,
     scheduleJury,
     updateJuryResult,
+    revokeJuryDecision,
   };
 };

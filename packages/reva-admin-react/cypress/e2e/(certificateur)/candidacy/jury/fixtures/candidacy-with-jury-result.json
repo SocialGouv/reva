@@ -1,0 +1,55 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "test-candidacy-id",
+      "financeModule": "hors_plateforme",
+      "candidacyDropOut": null,
+      "reorientationReason": null,
+      "status": "JURY",
+      "candidacyStatuses": [
+        {
+          "status": "JURY",
+          "isActive": true
+        }
+      ],
+      "jury": {
+        "id": "test-jury-id",
+        "dateOfSession": "2025-01-15T10:00:00.000Z",
+        "result": "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+        "dateOfResult": "2025-01-15T14:00:00.000Z",
+        "informationOfResult": "Test comment",
+        "convocationFile": null
+      },
+      "historyJury": [],
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "john.doe@example.com",
+        "phone": "0612345678"
+      },
+      "organism": {
+        "label": "Test Organism",
+        "contactAdministrativeEmail": "admin@example.com"
+      },
+      "certification": {
+        "id": "cert-id",
+        "label": "Test Certification",
+        "codeRncp": "12345",
+        "level": 3
+      },
+      "feasibility": {
+        "certificationAuthority": {
+          "label": "Test Authority",
+          "contactFullName": "Authority Contact",
+          "contactEmail": "authority@example.com",
+          "contactPhone": "0123456789"
+        }
+      },
+      "certificationAuthorityLocalAccounts": [],
+      "activeDossierDeValidation": {
+        "id": "test-dossier-id",
+        "decision": "PENDING"
+      }
+    }
+  }
+}

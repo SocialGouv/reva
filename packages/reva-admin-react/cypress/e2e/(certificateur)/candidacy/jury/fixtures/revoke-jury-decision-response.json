@@ -1,0 +1,16 @@
+{
+  "data": {
+    "jury_revokeDecision": {
+      "id": "test-jury-id",
+      "dateOfSession": "2025-01-15T10:00:00.000Z",
+      "timeOfSession": "10:00",
+      "timeSpecified": true,
+      "addressOfSession": "adresse",
+      "informationOfSession": "Test information",
+      "result": null,
+      "dateOfResult": null,
+      "informationOfResult": null,
+      "convocationFile": null
+    }
+  }
+}
