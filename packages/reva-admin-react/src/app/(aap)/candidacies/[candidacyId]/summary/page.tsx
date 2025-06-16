@@ -78,6 +78,9 @@ const CandidacySummaryPage = () => {
     (!candidacy.feasibility?.feasibilityFileSentAt ||
       candidacy.feasibility?.decision === "INCOMPLETE");
 
+  const canViewCertificationAuthorityProfile =
+    isAdmin && candidacy.feasibility?.certificationAuthority;
+
   return (
     <>
       <div>
@@ -204,7 +207,14 @@ const CandidacySummaryPage = () => {
                 )}
               </EnhancedSectionCard>
             )}
-            <EnhancedSectionCard title="Certificateur">
+            <EnhancedSectionCard
+              title="Certificateur"
+              {...(canViewCertificationAuthorityProfile && {
+                customButtonTitle: "Voir son profil",
+                isEditable: true,
+                buttonOnClickHref: `/certification-authority-structures/${candidacy.feasibility?.certificationAuthority?.certificationAuthorityStructures?.[0]?.id}/certificateurs-administrateurs/${candidacy.feasibility?.certificationAuthority?.id}/`,
+              })}
+            >
               <div className="ml-10 mr-6">
                 <p className="text-xl font-bold mb-0 leading-loose">
                   {candidacy.feasibility?.certificationAuthority?.label}

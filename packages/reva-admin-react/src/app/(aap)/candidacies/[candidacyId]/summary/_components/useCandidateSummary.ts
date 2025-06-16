@@ -90,10 +90,14 @@ const getCandidacyById = graphql(`
       feasibilityFormat
       feasibility {
         certificationAuthority {
+          id
           label
           contactFullName
           contactEmail
           contactPhone
+          certificationAuthorityStructures {
+            id
+          }
         }
         feasibilityFileSentAt
         decision
