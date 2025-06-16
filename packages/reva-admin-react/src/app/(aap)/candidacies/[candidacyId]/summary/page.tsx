@@ -20,7 +20,8 @@ const CandidacySummaryPage = () => {
     candidacyId: string;
   }>();
 
-  const { candidacy } = useCandidateSummary(candidacyId);
+  const { candidacy, certificationAuthorityStructure } =
+    useCandidateSummary(candidacyId);
 
   const { takeOverCandidacy } = useTakeOverCandidacy();
 
@@ -79,7 +80,7 @@ const CandidacySummaryPage = () => {
       candidacy.feasibility?.decision === "INCOMPLETE");
 
   const canViewCertificationAuthorityProfile =
-    isAdmin && candidacy.feasibility?.certificationAuthority;
+    isAdmin && certificationAuthorityStructure;
 
   return (
     <>
@@ -212,7 +213,7 @@ const CandidacySummaryPage = () => {
               {...(canViewCertificationAuthorityProfile && {
                 customButtonTitle: "Voir son profil",
                 isEditable: true,
-                buttonOnClickHref: `/certification-authority-structures/${candidacy.feasibility?.certificationAuthority?.certificationAuthorityStructures?.[0]?.id}/certificateurs-administrateurs/${candidacy.feasibility?.certificationAuthority?.id}/`,
+                buttonOnClickHref: `/certification-authority-structures/${certificationAuthorityStructure.id}/certificateurs-administrateurs/${candidacy.feasibility?.certificationAuthority?.id}/`,
               })}
             >
               <div className="ml-10 mr-6">

@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
@@ -95,9 +96,6 @@ const getCandidacyById = graphql(`
           contactFullName
           contactEmail
           contactPhone
-          certificationAuthorityStructures {
-            id
-          }
         }
         feasibilityFileSentAt
         decision
@@ -106,8 +104,26 @@ const getCandidacyById = graphql(`
   }
 `);
 
+const getCandidacyFeasibilityCertificationAuthorityStructures = graphql(`
+  query getCandidacyFeasibilityCertificationAuthorityStructures(
+    $candidacyId: ID!
+  ) {
+    getCandidacyById(id: $candidacyId) {
+      feasibility {
+        certificationAuthority {
+          certificationAuthorityStructures {
+            id
+            label
+          }
+        }
+      }
+    }
+  }
+`);
+
 const useCandidateSummary = (candidacyId: string) => {
   const { graphqlClient } = useGraphQlClient();
+  const { isAdmin } = useAuth();
 
   const { data: getCandidacyByIdData, isLoading: getCandidacyIsLoading } =
     useQuery({
@@ -118,11 +134,37 @@ const useCandidateSummary = (candidacyId: string) => {
         }),
     });
 
+  //Separate query for the certification authority structure since execution it with an aap profile would cause an error
+  const {
+    data: getCandidacyFeasibilityCertificationAuthorityStructuresData,
+    isLoading: getCandidacyFeasibilityCertificationAuthorityStructuresIsLoading,
+  } = useQuery({
+    queryKey: [
+      candidacyId,
+      "getCandidacyFeasibilityCertificationAuthorityStructures",
+    ],
+    queryFn: () =>
+      graphqlClient.request(
+        getCandidacyFeasibilityCertificationAuthorityStructures,
+        {
+          candidacyId,
+        },
+      ),
+    enabled: isAdmin,
+  });
+
   const candidacy = getCandidacyByIdData?.getCandidacyById;
+
+  const certificationAuthorityStructure =
+    getCandidacyFeasibilityCertificationAuthorityStructuresData
+      ?.getCandidacyById?.feasibility?.certificationAuthority
+      ?.certificationAuthorityStructures[0];
 
   return {
     candidacy,
     getCandidacyIsLoading,
+    certificationAuthorityStructure,
+    getCandidacyFeasibilityCertificationAuthorityStructuresIsLoading,
   };
 };
 
