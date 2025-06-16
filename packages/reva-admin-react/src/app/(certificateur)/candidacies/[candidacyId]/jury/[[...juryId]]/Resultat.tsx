@@ -24,6 +24,11 @@ const modal = createModal({
   isOpenedByDefault: false,
 });
 
+const revokeModal = createModal({
+  id: "revoke-jury-decision",
+  isOpenedByDefault: false,
+});
+
 const juryResultLabels: { [key in JuryResult]: string } = {
   FULL_SUCCESS_OF_FULL_CERTIFICATION:
     "Réussite totale à une certification visée en totalité",
@@ -68,8 +73,15 @@ const schema = z.object({
 
 type ResultatFormData = z.infer<typeof schema>;
 
+const revokeSchema = z.object({
+  reason: z.string().optional(),
+});
+
+type RevokeFormData = z.infer<typeof revokeSchema>;
+
 export const Resultat = () => {
-  const { getCandidacy, updateJuryResult } = useJuryPageLogic();
+  const { getCandidacy, updateJuryResult, revokeJuryDecision } =
+    useJuryPageLogic();
   const { isAdmin } = useAuth();
   const availableResultOptions = [
     "FULL_SUCCESS_OF_FULL_CERTIFICATION",
@@ -89,6 +101,13 @@ export const Resultat = () => {
     getValues,
     formState: { errors, isValid, isSubmitting },
   } = useForm<ResultatFormData>({ resolver: zodResolver(schema) });
+
+  const {
+    register: revokeRegister,
+    handleSubmit: handleRevokeSubmit,
+    formState: { isSubmitting: isRevokeSubmitting },
+    reset: resetRevokeForm,
+  } = useForm<RevokeFormData>({ resolver: zodResolver(revokeSchema) });
 
   const handleFormSubmit = handleSubmit(() => {
     modal.open();
@@ -114,6 +133,21 @@ export const Resultat = () => {
       }
     }
   };
+
+  const handleRevokeDecision = handleRevokeSubmit(async (data) => {
+    if (candidacy?.jury?.id) {
+      try {
+        await revokeJuryDecision.mutateAsync({
+          juryId: candidacy.jury.id,
+          reason: data.reason,
+        });
+        revokeModal.close();
+        resetRevokeForm();
+      } catch (error) {
+        graphqlErrorToast(error);
+      }
+    }
+  });
 
   if (getCandidacy.isLoading || !candidacy) {
     return null;
@@ -163,6 +197,14 @@ export const Resultat = () => {
                 informationOfResult: jury.informationOfResult,
               }}
             />
+
+            {isAdmin && (
+              <div className="flex justify-end">
+                <Button priority="secondary" onClick={() => revokeModal.open()}>
+                  Annuler la décision
+                </Button>
+              </div>
+            )}
 
             {jury.result != "FULL_SUCCESS_OF_FULL_CERTIFICATION" &&
               jury.result != "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION" && (
@@ -260,6 +302,44 @@ export const Resultat = () => {
               )}
             </div>
           </modal.Component>
+
+          <revokeModal.Component
+            title={
+              <div className="flex gap-2">
+                <span
+                  className="fr-icon--lg fr-icon-warning-fill"
+                  aria-hidden="true"
+                />
+                Annuler une décision prise par un certificateur.
+              </div>
+            }
+            buttons={[
+              {
+                priority: "secondary",
+                children: "Retour",
+              },
+              {
+                priority: "primary",
+                onClick: handleRevokeDecision,
+                children: "Confirmer",
+                disabled: isRevokeSubmitting,
+              },
+            ]}
+            size="large"
+          >
+            <p>
+              Vous êtes sur le point d'annuler une décision prise par un
+              certificateur. Cette action l'obligera à prononcer sa décision de
+              nouveau. Vous ne pourrez pas prendre de décision définitive à sa
+              place.
+            </p>
+            <Input
+              label="Commentaire : (Optionnel)"
+              nativeTextAreaProps={{ rows: 3, ...revokeRegister("reason") }}
+              textArea
+            />
+            <p>Voulez vous confirmer l'annulation de cette décision ?</p>
+          </revokeModal.Component>
         </>
       </div>
     </>
