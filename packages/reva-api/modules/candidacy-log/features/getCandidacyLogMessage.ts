@@ -123,7 +123,7 @@ export const getCandidacyLogMessage = ({
       return log(
         "Dossier de recevabilité envoyé",
         details?.certificationAuthorityLabel
-          ? `au certificateur ${details.certificationAuthorityLabel}`
+          ? `certificateur ${details.certificationAuthorityLabel}`
           : "",
       );
 
@@ -201,7 +201,7 @@ export const getCandidacyLogMessage = ({
       return log(
         "Dossier de recevabilité envoyé au certificateur",
         details?.certificationAuthorityLabel
-          ? `au certificateur ${details.certificationAuthorityLabel}`
+          ? `certificateur ${details.certificationAuthorityLabel}`
           : "",
       );
 
