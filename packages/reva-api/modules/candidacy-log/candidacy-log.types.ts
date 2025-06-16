@@ -31,7 +31,6 @@ export type CandidacyLogEventTypeAndDetails =
         | "CANDIDACY_DROP_OUT_CANCELED"
         | "CANDIDACY_DROP_OUT_VALIDATED"
         | "ADMISSIBILITY_FVAE_UPDATED"
-        | "FEASIBILITY_SENT"
         | "FEASIBILITY_VALIDATED"
         | "FEASIBILITY_REJECTED"
         | "FEASIBILITY_MARKED_AS_COMPLETE"
@@ -45,7 +44,6 @@ export type CandidacyLogEventTypeAndDetails =
         | "CADUCITE_CONFIRMED"
         | "DFF_SENT_TO_CANDIDATE"
         | "DFF_VALIDATED_BY_CANDIDATE"
-        | "DFF_SENT_TO_CERTIFICATION_AUTHORITY"
         | "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE"
         | "CANDIDACY_DROPOUT_CANCELED_BY_CANDIDATE"
         | "CANDIDACY_CONTESTATION_CADADUCITE_DECISION_CONFIRMED"
@@ -122,6 +120,22 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "CANDIDATE_CONTACT_DETAILS_UPDATED";
       details: { phone: string; email?: string };
+    }
+  | {
+      eventType: "FEASIBILITY_SENT";
+      //details, certificationAuthorityId and certificationAuthorityLabel are optional because at first we did not log them. So there is some existing logs without them.
+      details?: {
+        certificationAuthorityId?: string;
+        certificationAuthorityLabel?: string;
+      };
+    }
+  | {
+      eventType: "DFF_SENT_TO_CERTIFICATION_AUTHORITY";
+      //details, certificationAuthorityId and certificationAuthorityLabel are optional because at first we did not log them. So there is some existing logs without them.
+      details?: {
+        certificationAuthorityId?: string;
+        certificationAuthorityLabel?: string;
+      };
     };
 
 export type CandidacyLog = {

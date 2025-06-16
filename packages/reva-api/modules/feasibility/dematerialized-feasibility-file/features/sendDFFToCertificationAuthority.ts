@@ -124,6 +124,10 @@ export const sendDFFToCertificationAuthority = async ({
     userKeycloakId: context.auth.userInfo?.sub,
     userEmail: context.auth.userInfo?.email,
     userRoles: context.auth.userInfo?.realm_access?.roles || [],
+    details: {
+      certificationAuthorityId: certificationAuthority?.id,
+      certificationAuthorityLabel: certificationAuthority?.label,
+    },
   });
 
   return "Ok";

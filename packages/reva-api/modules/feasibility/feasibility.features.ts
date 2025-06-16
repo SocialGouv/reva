@@ -400,6 +400,10 @@ export const createFeasibility = async ({
     userEmail,
     userRoles,
     eventType: "FEASIBILITY_SENT",
+    details: {
+      certificationAuthorityId: certificationAuthority?.id,
+      certificationAuthorityLabel: certificationAuthority?.label,
+    },
   });
 
   return feasibility;

@@ -120,7 +120,12 @@ export const getCandidacyLogMessage = ({
       );
 
     case "FEASIBILITY_SENT":
-      return log("Dossier de recevabilité envoyé");
+      return log(
+        "Dossier de recevabilité envoyé",
+        details?.certificationAuthorityLabel
+          ? `au certificateur ${details.certificationAuthorityLabel}`
+          : "",
+      );
 
     case "FEASIBILITY_MARKED_AS_COMPLETE":
       return log("Dossier de recevabilité complet");
@@ -193,7 +198,12 @@ export const getCandidacyLogMessage = ({
       return log("Dossier de recevabilité validé");
 
     case "DFF_SENT_TO_CERTIFICATION_AUTHORITY":
-      return log("Dossier de recevabilité envoyé au certificateur");
+      return log(
+        "Dossier de recevabilité envoyé au certificateur",
+        details?.certificationAuthorityLabel
+          ? `au certificateur ${details.certificationAuthorityLabel}`
+          : "",
+      );
 
     case "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE":
       return log("Abandon de la candidature confirmé");
