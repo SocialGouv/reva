@@ -89,4 +89,5 @@ type Query {
 type Mutation {
   jury_updateExamInfo(candidacyId: UUID!, examInfo: ExamInfoInput!): ExamInfo!
   jury_updateResult(juryId: ID!, input: JuryInfoInput!): Jury!
+  jury_revokeDecision(juryId: ID!, reason: String): Jury!
 }

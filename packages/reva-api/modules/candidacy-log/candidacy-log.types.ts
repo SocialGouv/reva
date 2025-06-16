@@ -150,6 +150,10 @@ export type CandidacyLogEventTypeAndDetails =
         certificationAuthorityLocalAccountId: string;
         certificationAuthorityLocalAccountAccountEmail: string;
       };
+    }
+  | {
+      eventType: "JURY_DECISION_REVOKED";
+      details: { reason?: string };
     };
 
 export type CandidacyLog = {

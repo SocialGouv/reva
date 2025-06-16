@@ -3,6 +3,7 @@ import {
   isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   isAdminOrCandidacyCompanion,
   isAnyone,
+  isAdmin,
 } from "../shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -13,6 +14,7 @@ export const resolversSecurityMap = {
 
   "Mutation.jury_updateExamInfo": isAdminOrCandidacyCompanion,
   "Mutation.jury_updateResult": isAnyone,
+  "Mutation.jury_revokeDecision": isAdmin,
 
   "Candidacy.jury": isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   "Candidacy.examInfo":
