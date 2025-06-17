@@ -6,6 +6,11 @@ dotenv.config({ path: "./.env" });
 
 const fastify = Fastify({
   logger: true,
+  ajv: {
+    customOptions: {
+      strict: false,
+    },
+  },
 });
 
 fastify.register(routesApiV1, {
@@ -19,3 +24,11 @@ try {
   fastify.log.error(err);
   process.exit(1);
 }
+
+export const options = {
+  ajv: {
+    customOptions: {
+      strict: false,
+    },
+  },
+};

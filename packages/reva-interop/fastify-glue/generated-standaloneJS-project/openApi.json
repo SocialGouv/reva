@@ -1,0 +1,1495 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API France VAE",
+    "version": "0.0.0",
+    "description": "Document de travail pour la future API de gestion des candidatures, des dossiers de faisabilité, des dossiers de validation et des informations jury.\n"
+  },
+  "servers": [
+    {
+      "url": "https://vae.gouv.fr/api"
+    }
+  ],
+  "security": [
+    {
+      "jwt_bearer_token": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Candidature",
+      "description": "Gestion des candidatures"
+    },
+    {
+      "name": "Dossier de faisabilité",
+      "description": "Gestion des dossiers de faisabilité"
+    },
+    {
+      "name": "Dossier de validation",
+      "description": "Gestion des dossiers de validation"
+    },
+    {
+      "name": "Informations jury",
+      "description": "Gestion de la session et des résultats liés au jury"
+    }
+  ],
+  "paths": {
+    "/v1/candidatures/{candidatureId}": {
+      "get": {
+        "tags": [
+          "Candidature"
+        ],
+        "summary": "Récupérer les détails d'une candidature",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails de la candidature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidatureResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/candidatures/{candidatureId}/dossierDeFaisabilite": {
+      "get": {
+        "tags": [
+          "Dossier de faisabilité"
+        ],
+        "summary": "Récupérer le dernier dossier de faisabilité d'une candidature",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dossier de faisabilité",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DossierDeFaisabiliteResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/candidatures/{candidatureId}/dossierDeFaisabilite/decisions": {
+      "get": {
+        "tags": [
+          "Dossier de faisabilité"
+        ],
+        "summary": "Récupérer la liste des décisions du dossier de faisabilité",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des décisions sur le dossier de faisabilité",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DossierDeFaisabiliteDecisionsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Dossier de faisabilité"
+        ],
+        "summary": "Créer une nouvelle décision sur le dossier de faisabilité",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Informations pour la décision",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/DossierDeFaisabiliteDecisionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Nouvelle décision créée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DossierDeFaisabiliteDecisionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dossiersDeFaisabilite": {
+      "get": {
+        "tags": [
+          "Dossier de faisabilité"
+        ],
+        "summary": "Récupérer la liste des dossiers de faisabilité",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "decalage",
+            "in": "query",
+            "description": "Décalage pour la pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 0
+            }
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "description": "Limite du nombre de résultats",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "name": "recherche",
+            "in": "query",
+            "description": "Recherche par mots-clés (nom, prénom, email...)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "example": "Alice+Doe"
+            }
+          },
+          {
+            "name": "statut",
+            "in": "query",
+            "description": "Filtre par statut du dossier de faisabilité",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/StatutDossierDeFaisabilite"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des dossiers de faisabilité",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DossiersDeFaisabiliteResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dossiersDeValidation": {
+      "get": {
+        "tags": [
+          "Dossier de validation"
+        ],
+        "summary": "Récupérer la liste des dossiers de validation",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "decalage",
+            "in": "query",
+            "description": "Décalage pour la pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 0
+            }
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "description": "Limite du nombre de résultats",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "name": "recherche",
+            "in": "query",
+            "description": "Filtre de recherche",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "example": "Alice+Doe"
+            }
+          },
+          {
+            "name": "statut",
+            "in": "query",
+            "description": "Filtre par statut du dossier de validation",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/StatutDossierDeValidation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des dossiers de validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DossiersDeValidationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/candidatures/{candidatureId}/dossierDeValidation": {
+      "get": {
+        "tags": [
+          "Dossier de validation"
+        ],
+        "summary": "Récupérer le dernier dossier de validation d'une candidature",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails du dossier de validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DossierDeValidationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/candidatures/{candidatureId}/dossierDeValidation/decisions": {
+      "get": {
+        "tags": [
+          "Dossier de validation"
+        ],
+        "summary": "Récupérer la liste des décisions sur le dossier de validation",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des décisions sur le dossier de validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DossierDeValidationDecisionsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Dossier de validation"
+        ],
+        "summary": "Créer une nouvelle décision sur le dossier de validation",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Informations pour la nouvelle décision",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DossierDeValidationDecisionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Nouvelle décision créée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DossierDeValidationDecisionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/informationsJury": {
+      "get": {
+        "tags": [
+          "Informations jury"
+        ],
+        "summary": "Récupérer la liste des informations jury",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "decalage",
+            "in": "query",
+            "description": "Décalage pour la pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 0
+            }
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "description": "Limite du nombre de résultats",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "name": "recherche",
+            "in": "query",
+            "description": "Filtre de recherche",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "example": "Alice+Doe"
+            }
+          },
+          {
+            "name": "statut",
+            "in": "query",
+            "description": "Filtre par statut de jury",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/StatutJury"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des candidats à l'étape jury",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationsJuryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/candidatures/{candidatureId}/informationJury": {
+      "get": {
+        "tags": [
+          "Informations jury"
+        ],
+        "summary": "Récupérer les informations du jury d'un candidat",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informations du jury du candidat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationJuryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/candidatures/{candidatureId}/informationJury/session": {
+      "get": {
+        "tags": [
+          "Informations jury"
+        ],
+        "summary": "Récupérer les informations de la session du jury pour un candidat",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informations de la session du jury",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionJuryResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Informations jury"
+        ],
+        "summary": "Mettre à jour les informations de la session du jury pour un candidat",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Informations sur la session du jury",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionJuryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Informations de session mises à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionJuryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/candidatures/{candidatureId}/informationJury/resultat": {
+      "get": {
+        "tags": [
+          "Informations jury"
+        ],
+        "summary": "Récupérer le résultat du jury pour un candidat",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Résultat du jury",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultatJuryResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Informations jury"
+        ],
+        "summary": "Mettre à jour le résultat du jury pour un candidat",
+        "security": [
+          {
+            "jwt_bearer_token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidatureId",
+            "in": "path",
+            "description": "ID de la candidature",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CandidatureId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Informations sur le résultat du jury",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultatJuryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Résultat du jury mis à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultatJuryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "jwt_bearer_token": {
+        "type": "http",
+        "description": "Votre jeton d'authentification doit être placé dans le header 'Authorization: Bearer VOTRE_JWT'.",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "StatutDossierDeFaisabilite": {
+        "type": "string",
+        "enum": [
+          "EN_ATTENTE",
+          "IRRECEVABLE",
+          "RECEVABLE",
+          "INCOMPLET",
+          "COMPLET",
+          "ARCHIVE",
+          "ABANDONNE"
+        ],
+        "description": "Statut pour filtrer les dossiers de faisabilité.\n",
+        "example": "EN_ATTENTE"
+      },
+      "StatutDossierDeValidation": {
+        "type": "string",
+        "enum": [
+          "EN_ATTENTE",
+          "SIGNALE",
+          "VERIFIE"
+        ],
+        "description": "Statut pour filtrer les dossiers de validation.\n",
+        "example": "VERIFIE"
+      },
+      "StatutJury": {
+        "type": "string",
+        "enum": [
+          "PROGRAMME",
+          "PASSE"
+        ],
+        "description": "Statut pour filtrer les jurys.\n",
+        "example": "PROGRAMME"
+      },
+      "ResultatJury": {
+        "type": "string",
+        "enum": [
+          "SUCCES_TOTAL_CERTIFICATION_COMPLETE",
+          "SUCCES_TOTAL_CERTIFICATION_COMPLETE_SOUS_RESERVE",
+          "SUCCES_PARTIEL_CERTIFICATION_COMPLETE",
+          "SUCCES_TOTAL_CERTIFICATION_PARTIELLE",
+          "SUCCES_PARTIEL_CERTIFICATION_PARTIELLE",
+          "ECHEC",
+          "CANDIDAT_EXCUSE",
+          "CANDIDAT_ABSENT"
+        ],
+        "description": "Résultat d'un jury.\n",
+        "example": "SUCCES_TOTAL_CERTIFICATION_COMPLETE_SOUS_RESERVE"
+      },
+      "DecisionDossierDeValidation": {
+        "type": "string",
+        "enum": [
+          "SIGNALE",
+          "VERIFIE"
+        ],
+        "description": "Décision sur le dossier de validation.\n",
+        "example": "SIGNALE"
+      },
+      "DecisionDossierDeFaisabilite": {
+        "type": "string",
+        "enum": [
+          "IRRECEVABLE",
+          "RECEVABLE",
+          "INCOMPLET",
+          "COMPLET"
+        ],
+        "description": "Décision sur le dossier de faisabilité.\n",
+        "example": "INCOMPLET"
+      },
+      "Genre": {
+        "type": "string",
+        "enum": [
+          "HOMME",
+          "FEMME",
+          "NON_SPECIFIE"
+        ],
+        "example": "FEMME",
+        "description": "Genre du candidat"
+      },
+      "TypologieCandidat": {
+        "type": "string",
+        "enum": [
+          "NON_SPECIFIE",
+          "SALARIE_PRIVE",
+          "SALARIE_PUBLIC",
+          "SALARIE_PUBLIC_HOSPITALIER",
+          "SALARIE_ALTERNANT",
+          "SALARIE_INTERIMAIRE",
+          "SALARIE_INTERMITTENT",
+          "SALARIE_EN_CONTRATS_AIDES",
+          "TRAVAILLEUR_NON_SALARIE",
+          "CONJOINT_COLLABORATEUR",
+          "DEMANDEUR_EMPLOI",
+          "AIDANTS_FAMILIAUX",
+          "AIDANTS_FAMILIAUX_AGRICOLES",
+          "BENEVOLE",
+          "STAGIAIRE",
+          "TITULAIRE_MANDAT_ELECTIF",
+          "AUTRE"
+        ],
+        "description": "Typologie du candidat",
+        "example": "SALARIE_PRIVE"
+      },
+      "DureeExperience": {
+        "type": "string",
+        "enum": [
+          "INCONNU",
+          "MOINS_D_UN_AN",
+          "ENTRE_UN_ET_TROIS_ANS",
+          "PLUS_DE_TROIS_ANS",
+          "PLUS_DE_CINQ_ANS",
+          "PLUS_DE_DIX_ANS"
+        ],
+        "description": "Durée de l'expérience",
+        "example": "ENTRE_UN_ET_TROIS_ANS"
+      },
+      "CandidatureId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "ID de la candidature",
+        "example": "123e4567-e89b-12d3-a456-426614174000"
+      },
+      "DossierDeFaisabiliteDecisionInput": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/DecisionDossierDeFaisabilite"
+          },
+          "commentaire": {
+            "type": "string",
+            "description": "Motifs de la décision",
+            "example": "La pièce d'identité n'est pas lisible."
+          },
+          "document": {
+            "type": "string",
+            "format": "binary",
+            "description": "Le courrier de recevabilité éventuel"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "DossierDeValidationDecisionInput": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/DecisionDossierDeValidation"
+          },
+          "commentaire": {
+            "type": "string",
+            "description": "Motifs de la décision",
+            "example": "Le dossier n'est pas lisible."
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "SessionJuryInput": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date de la session du jury",
+            "example": "2023-12-15"
+          },
+          "heure": {
+            "type": "string",
+            "format": "time",
+            "description": "Heure de la session du jury",
+            "example": "14:30"
+          },
+          "adresseSession": {
+            "type": "string",
+            "description": "Adresse où se tient la session",
+            "example": "876 rue de l'Université, 75007 Paris"
+          },
+          "informationsSession": {
+            "type": "string",
+            "description": "Informations supplémentaires sur la session",
+            "example": "Se présenter 15 minutes avant le début de la session."
+          },
+          "document": {
+            "type": "string",
+            "format": "binary",
+            "description": "La convocation officielle éventuelle"
+          }
+        }
+      },
+      "ResultatJuryInput": {
+        "type": "object",
+        "properties": {
+          "resultat": {
+            "$ref": "#/components/schemas/ResultatJury"
+          },
+          "commentaire": {
+            "type": "string",
+            "description": "Informations supplémentaires sur le résultat",
+            "example": "Validation totale sous réserve de présentation de l’AFGSU."
+          }
+        },
+        "required": [
+          "resultat"
+        ]
+      },
+      "DossiersDeFaisabiliteResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DossierDeFaisabilite"
+            }
+          },
+          "info": {
+            "$ref": "#/components/schemas/InfoPagination"
+          }
+        }
+      },
+      "DossierDeFaisabiliteResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DossierDeFaisabilite"
+          }
+        }
+      },
+      "DossierDeFaisabiliteDecisionsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DossierDeFaisabiliteDecision"
+            }
+          }
+        }
+      },
+      "DossierDeFaisabiliteDecisionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DossierDeFaisabiliteDecision"
+          }
+        }
+      },
+      "DossiersDeValidationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DossierDeValidation"
+            }
+          },
+          "info": {
+            "$ref": "#/components/schemas/InfoPagination"
+          }
+        }
+      },
+      "DossierDeValidationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DossierDeValidation"
+          }
+        }
+      },
+      "DossierDeValidationDecisionsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DossierDeValidationDecision"
+            }
+          }
+        }
+      },
+      "DossierDeValidationDecisionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DossierDeValidationDecision"
+          }
+        }
+      },
+      "InformationsJuryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InformationJury"
+            }
+          },
+          "info": {
+            "$ref": "#/components/schemas/InfoPagination"
+          }
+        }
+      },
+      "InformationJuryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/InformationJury"
+          }
+        }
+      },
+      "SessionJuryResponse": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date de la session du jury",
+            "example": "2023-12-15"
+          },
+          "heure": {
+            "type": "string",
+            "format": "time",
+            "description": "Heure de la session du jury",
+            "example": "14:30"
+          },
+          "adresseSession": {
+            "type": "string",
+            "description": "Adresse où se tient la session",
+            "example": "876 rue de l'Université, 75007 Paris"
+          },
+          "informationsSession": {
+            "type": "string",
+            "description": "Informations supplémentaires sur la session",
+            "example": "Veuillez apporter une pièce d'identité."
+          }
+        }
+      },
+      "ResultatJuryResponse": {
+        "type": "object",
+        "properties": {
+          "resultat": {
+            "$ref": "#/components/schemas/ResultatJury"
+          },
+          "dateEnvoi": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date d'envoi du résultat du jury",
+            "example": "2023-10-01T10:00:00Z"
+          },
+          "commentaire": {
+            "type": "string",
+            "description": "Informations supplémentaires sur le résultat",
+            "example": "Validation totale sous réserve de présentation de l’AFGSU."
+          }
+        }
+      },
+      "CandidatureResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Candidature"
+          }
+        }
+      },
+      "InfoPagination": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "description": "Nombre total d'éléments",
+            "example": 100
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Nombre total de pages",
+            "example": 10
+          },
+          "pageCourante": {
+            "type": "integer",
+            "description": "Page courante",
+            "example": 1
+          }
+        }
+      },
+      "Candidature": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/CandidatureId"
+          },
+          "certification": {
+            "$ref": "#/components/schemas/Certification"
+          },
+          "candidat": {
+            "$ref": "#/components/schemas/Candidat"
+          },
+          "organisme": {
+            "$ref": "#/components/schemas/Organisme"
+          }
+        }
+      },
+      "Certification": {
+        "type": "object",
+        "properties": {
+          "codeRncp": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "35830"
+          },
+          "nom": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Diplôme d'Etat Aide soignant - DEAS"
+          },
+          "estViseePartiellement": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "Candidat": {
+        "type": "object",
+        "properties": {
+          "genre": {
+            "$ref": "#/components/schemas/Genre"
+          },
+          "prenom": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Alice"
+          },
+          "prenom2": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Marie"
+          },
+          "prenom3": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Claire"
+          },
+          "nom": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Doe"
+          },
+          "nomUsage": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Poe"
+          },
+          "communeNaissance": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Paris"
+          },
+          "departementNaissance": {
+            "$ref": "#/components/schemas/Departement"
+          },
+          "dateNaissance": {
+            "type": "string",
+            "format": "date",
+            "example": "1980-01-01"
+          },
+          "nationalite": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Française"
+          },
+          "situation": {
+            "$ref": "#/components/schemas/Situation"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 255,
+            "format": "email",
+            "example": "alice.doe@example.com"
+          },
+          "telephone": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "example": "+33612345678"
+          },
+          "adresse": {
+            "$ref": "#/components/schemas/Adresse"
+          }
+        }
+      },
+      "Situation": {
+        "type": "object",
+        "properties": {
+          "niveauCertificationObtenuePlusEleve": {
+            "$ref": "#/components/schemas/Diplome"
+          },
+          "intituleCertificationObtenuePlusEleve": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Baccalauréat Scientifique"
+          },
+          "niveauFormationPlusEleve": {
+            "$ref": "#/components/schemas/Diplome"
+          },
+          "typologie": {
+            "$ref": "#/components/schemas/TypologieCandidat"
+          }
+        }
+      },
+      "Organisme": {
+        "type": "object",
+        "properties": {
+          "nom": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Organisme de Formation ABC"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "siteWeb": {
+            "type": "string",
+            "maxLength": 255,
+            "format": "uri",
+            "example": "https://www.organisme-abc.fr"
+          }
+        }
+      },
+      "Contact": {
+        "type": "object",
+        "properties": {
+          "nom": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 255,
+            "format": "email",
+            "example": "contact@organisme-abc.fr"
+          },
+          "telephone": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "+33123456789"
+          }
+        }
+      },
+      "Adresse": {
+        "type": "object",
+        "properties": {
+          "departement": {
+            "$ref": "#/components/schemas/Departement"
+          },
+          "codePostal": {
+            "type": "string",
+            "pattern": "^\\d{5}$",
+            "description": "Code postal",
+            "example": "75001"
+          },
+          "rue": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Rue",
+            "example": "1234 rue de la Paix"
+          },
+          "complementAdresse": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Complément d'adresse",
+            "example": "Bâtiment A"
+          },
+          "ville": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Ville",
+            "example": "Paris"
+          },
+          "pays": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Pays",
+            "example": "France"
+          }
+        }
+      },
+      "Departement": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 5,
+            "description": "Code du département",
+            "example": "973"
+          },
+          "nom": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Nom du département",
+            "example": "Guyane"
+          }
+        }
+      },
+      "Diplome": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Code du diplôme (N1_SANS, N2_CLEA, N3_CAP_BEP, N4_BAC, N5_BAC_2, N6_BAC_3_4, N7_BAC_5 ou N8_BAC_8)\n",
+            "example": "N4_BAC"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Niveau 4 : Baccalauréat"
+          },
+          "labelLong": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "Niveau 4 (Bac pro, Brevet professionnel, CQP 4, MC 4, Titre professionnel 4, DE 4)"
+          },
+          "niveau": {
+            "type": "integer",
+            "example": 4
+          }
+        }
+      },
+      "DossierDeFaisabilite": {
+        "type": "object",
+        "properties": {
+          "candidatureId": {
+            "$ref": "#/components/schemas/CandidatureId"
+          },
+          "dateEnvoi": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-10-01T10:00:00Z"
+          },
+          "documents": {
+            "type": "array",
+            "description": "Le dossier de faisabilité, la pièce d'identité et autres documents éventuels",
+            "items": {
+              "$ref": "#/components/schemas/Fichier"
+            }
+          },
+          "experiences": {
+            "type": "array",
+            "description": "Les expériences du candidat",
+            "items": {
+              "$ref": "#/components/schemas/Experience"
+            }
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutDossierDeFaisabilite"
+          }
+        }
+      },
+      "Experience": {
+        "type": "object",
+        "properties": {
+          "titre": {
+            "type": "string",
+            "description": "Titre de l'expérience",
+            "example": "Boulanger"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de l'expérience",
+            "example": "Préparation et cuisson de pains et viennoiseries"
+          },
+          "duree": {
+            "$ref": "#/components/schemas/DureeExperience"
+          },
+          "dateDemarrage": {
+            "type": "string",
+            "format": "date",
+            "description": "Date de démarrage de l'expérience",
+            "example": "2021-01-01"
+          }
+        }
+      },
+      "DossierDeFaisabiliteDecision": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/DecisionDossierDeFaisabilite"
+          },
+          "commentaire": {
+            "type": "string",
+            "description": "Motifs éventuels de la décision",
+            "example": "La pièce d'identité n'est pas lisible."
+          },
+          "dateEnvoi": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date d'envoi de la décision",
+            "example": "2023-10-05T15:00:00Z"
+          },
+          "document": {
+            "$ref": "#/components/schemas/Fichier"
+          }
+        }
+      },
+      "DossierDeValidation": {
+        "type": "object",
+        "properties": {
+          "candidatureId": {
+            "$ref": "#/components/schemas/CandidatureId"
+          },
+          "dateEnvoi": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-11-01T10:00:00Z"
+          },
+          "documents": {
+            "type": "array",
+            "description": "La dossier de validation et autres documents éventuels",
+            "items": {
+              "$ref": "#/components/schemas/Fichier"
+            }
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutDossierDeValidation"
+          }
+        }
+      },
+      "DossierDeValidationDecision": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/DecisionDossierDeValidation"
+          },
+          "commentaire": {
+            "type": "string",
+            "description": "Commentaire sur la décision",
+            "example": "Le dossier n'est pas lisible."
+          },
+          "dateEnvoi": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date d'envoi de la décision",
+            "example": "2023-11-05T16:00:00Z"
+          }
+        }
+      },
+      "InformationJury": {
+        "type": "object",
+        "properties": {
+          "candidatureId": {
+            "$ref": "#/components/schemas/CandidatureId"
+          },
+          "statut": {
+            "$ref": "#/components/schemas/StatutJury"
+          }
+        }
+      },
+      "Fichier": {
+        "type": "object",
+        "properties": {
+          "nom": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "document.pdf"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://files.vae.gouv.fr/abc/document.pdf"
+          },
+          "typeMime": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "application/pdf"
+          }
+        }
+      }
+    }
+  }
+}
