@@ -61,6 +61,7 @@ import { getAdditionalInfoByCertificationId } from "./features/getAdditionalInfo
 import { updateCertificationAdditionalInfo } from "./features/updateCertificationAdditionalInfo";
 import { getFileNameAndUrl } from "../shared/file/getFileNameAndUrl";
 import { isAapAvailableForCertificationId } from "./features/isAapAvailableForCertificationId";
+import { getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId } from "./features/getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId";
 
 const unsafeReferentialResolvers = {
   Candidacy: {
@@ -107,6 +108,14 @@ const unsafeReferentialResolvers = {
     }: {
       dossierDeValidationTemplateFileId: string;
     }) => getFileNameAndUrl({ fileId: dossierDeValidationTemplateFileId }),
+    additionalDocuments: ({
+      id: certificationAdditionalInfoId,
+    }: {
+      id: string;
+    }) =>
+      getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId({
+        certificationAdditionalInfoId,
+      }),
   },
   FCCertification: {
     DOMAINS: ({

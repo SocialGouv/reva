@@ -71,6 +71,7 @@ type CertificationAdditionalInfo {
   certificationExpertContactEmail: String
   usefulResources: String
   commentsForAAP: String
+  additionalDocuments: [File!]!
 }
 
 type CertificationPrerequisite {
@@ -453,7 +454,9 @@ type Mutation {
     certificationCompetenceBlocId: ID!
   ): CertificationCompetenceBloc!
   referential_addCertification(input: AddCertificationInput!): Certification!
-  referential_replaceCertification(input: ReplaceCertificationInput!): Certification!
+  referential_replaceCertification(
+    input: ReplaceCertificationInput!
+  ): Certification!
   referential_updateCertificationStructureAndCertificationAuthorities(
     input: UpdateCertificationStructureAndCertificationAuthoritiesInput
   ): Certification!
