@@ -7,6 +7,7 @@ import { createOrganismHelper } from "../../../test/helpers/entities/create-orga
 import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createCertificationAuthorityHelper } from "../../../test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
+import { createFileHelper } from "../../../test/helpers/entities/create-file-helper";
 import {
   getGraphQLClient,
   getGraphQLError,
@@ -303,6 +304,8 @@ test("should preserve jury history when revoking decision", async () => {
   const { candidacy, certificationAuthority } =
     await setupTestCandidacyWithFeasibility();
 
+  const convocationFile = await createFileHelper();
+
   const originalDateOfSession = new Date("2025-01-15");
   const originalDateOfResult = new Date("2025-02-15");
   const jury = await createJuryHelper({
@@ -312,6 +315,7 @@ test("should preserve jury history when revoking decision", async () => {
     dateOfResult: originalDateOfResult,
     dateOfSession: originalDateOfSession,
     informationOfResult: "première décision",
+    convocationFileId: convocationFile.id,
   });
 
   const graphqlClient = getGraphQLClient({
@@ -346,6 +350,7 @@ test("should preserve jury history when revoking decision", async () => {
     informationOfResult: "première décision",
     dateOfSession: originalDateOfSession,
     dateOfResult: originalDateOfResult,
+    convocationFileId: convocationFile.id,
   });
 
   const allArchivedJuries = await prismaClient.jury.findMany({
@@ -357,4 +362,50 @@ test("should preserve jury history when revoking decision", async () => {
     where: { id: result.jury_revokeDecision.id },
   });
   expect(newJury?.dateOfSession).toEqual(originalDateOfSession);
+});
+
+test("should successfully revoke a jury decision when jury has a convocation file", async () => {
+  const { candidacy, certificationAuthority } =
+    await setupTestCandidacyWithFeasibility();
+
+  const convocationFile = await createFileHelper();
+
+  const jury = await createJuryHelper({
+    candidacyId: candidacy.id,
+    certificationAuthorityId: certificationAuthority.id,
+    result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+    convocationFileId: convocationFile.id,
+  });
+
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "00000000-0000-0000-0000-000000000001",
+      }),
+    },
+  });
+
+  const revokeJuryDecisionMutation = graphql(`
+    mutation revokeJuryDecisionWithConvocationFile(
+      $juryId: ID!
+      $reason: String
+    ) {
+      jury_revokeDecision(juryId: $juryId, reason: $reason) {
+        id
+      }
+    }
+  `);
+
+  const result = await graphqlClient.request(revokeJuryDecisionMutation, {
+    juryId: jury.id,
+    reason: "erreur de saisie",
+  });
+
+  expect(result.jury_revokeDecision.id).toBeDefined();
+
+  const newJury = await prismaClient.jury.findUnique({
+    where: { id: result.jury_revokeDecision.id },
+  });
+  expect(newJury?.convocationFileId).toEqual(convocationFile.id);
 });
