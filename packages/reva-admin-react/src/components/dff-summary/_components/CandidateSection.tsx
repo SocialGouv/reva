@@ -57,7 +57,6 @@ export default function CandidateSection({
   const bornLabel = gender ? getGenderBornLabel(gender) : "";
 
   const isFrance = country ? country?.label == "France" : false;
-  const birthdateWithoutTz = getDateWithoutTz(birthdate);
 
   return (
     <div>
@@ -74,9 +73,7 @@ export default function CandidateSection({
       </div>
       <p className="mb-2 flex gap-2">
         {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
-        {birthdateWithoutTz && (
-          <span>le : {format(birthdateWithoutTz, "dd/MM/yyyy")}</span>
-        )}
+        {birthdate && <span>le : {format(birthdate, "dd/MM/yyyy")}</span>}
         <span>
           à {birthCity}
           {country && isFrance && birthDepartment
