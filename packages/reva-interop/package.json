@@ -1,0 +1,32 @@
+{
+  "name": "reva-interop",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "France VAE's interoperability API to interface with other official entities",
+  "engines": {
+    "npm": "10",
+    "node": "22"
+  },
+  "main": "index.ts",
+  "scripts": {
+    "dev": "nodemon -e ts,json,graphql --exec tsx -w . ./index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.1",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.34.0"
+  },
+  "dependencies": {
+    "@fastify/swagger": "^9.5.1",
+    "dotenv": "^16.5.0",
+    "fastify": "^5.4.0"
+  }
+}
