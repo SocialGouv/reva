@@ -1248,7 +1248,7 @@ model Jury {
   certificationAuthority                     CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId                   String                 @map("certification_authority_id") @db.Uuid
   convocationFile                            File?                  @relation("convocation_file", fields: [convocationFileId], references: [id])
-  convocationFileId                          String?                @unique @map("convocation_file_id") @db.Uuid
+  convocationFileId                          String?                @map("convocation_file_id") @db.Uuid
   dateOfSession                              DateTime               @map("date_of_session") @db.Timestamptz(6)
   timeOfSession                              String?                @map("time_of_session")
   timeSpecified                              Boolean                @default(false) @map("time_specified")
@@ -1281,7 +1281,7 @@ model File {
   linkedAsDecisionFileBy                                                      Feasibility[]                            @relation("decision_file")
   DossierDeValidationFile                                                     DossierDeValidation?                     @relation("dossier_de_validation_file")
   DossierDeValidationOtherFiles                                               DossierDeValidationOtherFilesOnFile[]
-  Jury                                                                        Jury?                                    @relation("convocation_file")
+  Jury                                                                        Jury[]                                   @relation("convocation_file")
   linkedAsMaisonMereAAPAttestationUrssafFile                                  MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_attestation_urssaf_file")
   linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFile                      MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_justificatif_identite_dirigeant_file")
   linkedAsLettreDeDelegationFile                                              MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_lettre_de_delegation_file")
