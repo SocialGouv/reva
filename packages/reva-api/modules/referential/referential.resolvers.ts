@@ -59,7 +59,7 @@ import { updateCertificationDescription } from "./features/updateCertificationDe
 import { validateCertification } from "./features/validateCertification";
 import { getAdditionalInfoByCertificationId } from "./features/getAdditionalInfoByCertificationId";
 import { updateCertificationAdditionalInfo } from "./features/updateCertificationAdditionalInfo";
-import { getFileNameAndUrl } from "./features/getDvTemplateNameAndUrl";
+import { getFileNameAndUrl } from "../shared/file/getFileNameAndUrl";
 import { isAapAvailableForCertificationId } from "./features/isAapAvailableForCertificationId";
 
 const unsafeReferentialResolvers = {

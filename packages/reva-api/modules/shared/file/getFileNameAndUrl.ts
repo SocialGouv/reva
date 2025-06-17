@@ -2,12 +2,12 @@ import {
   getDownloadLink,
   OOS_DOMAIN,
   FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
-} from "../../../modules/shared/file";
+} from ".";
 import { prismaClient } from "../../../prisma/client";
 
 export const getFileNameAndUrl = async ({ fileId }: { fileId: string }) => {
   if (fileId) {
-    const file = await prismaClient.file.findFirst({
+    const file = await prismaClient.file.findUnique({
       where: { id: fileId },
       select: { name: true, path: true, mimeType: true },
     });
