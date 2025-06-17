@@ -14,6 +14,7 @@ import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/p
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
 import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
 import { sendReminderToCandidateWithScheduledJury } from "../modules/jury/features/sendReminderToCandidateWithScheduledJury";
+import { sendReminderToCertificationAuthorityFillJuryResults } from "../modules/jury/features/sendReminderToCertificationAuthorityFillJuryResults";
 import { setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate } from "../modules/referential/features/setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate";
 import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
@@ -122,6 +123,22 @@ CronJob.from({
           "Running send-reminder-to-candidate-with-scheduled-jury batch",
         );
         await sendReminderToCandidateWithScheduledJury();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Send reminder to candidate with scheduled jury
+CronJob.from({
+  cronTime:
+    process.env.BATCH_SEND_REMINDER_TO_FILL_JURY_RESULTS || EVERY_DAY_AT_1_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.send-reminder-to-fill-jury-results",
+      batchCallback: async () => {
+        logger.info("Running send-reminder-to-fill-jury-results batch");
+        await sendReminderToCertificationAuthorityFillJuryResults();
       },
     }),
   start: true,

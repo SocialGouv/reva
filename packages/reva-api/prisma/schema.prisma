@@ -1255,26 +1255,27 @@ model DossierDeValidationOtherFilesOnFile {
 }
 
 model Jury {
-  id                                         String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                                  Candidacy              @relation(fields: [candidacyId], references: [id])
-  candidacyId                                String                 @map("candidacy_id") @db.Uuid
-  certificationAuthority                     CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId                   String                 @map("certification_authority_id") @db.Uuid
-  convocationFile                            File?                  @relation("convocation_file", fields: [convocationFileId], references: [id])
-  convocationFileId                          String?                @map("convocation_file_id") @db.Uuid
-  dateOfSession                              DateTime               @map("date_of_session") @db.Timestamptz(6)
-  timeOfSession                              String?                @map("time_of_session")
-  timeSpecified                              Boolean                @default(false) @map("time_specified")
-  addressOfSession                           String?                @map("address_of_session")
-  informationOfSession                       String?                @map("information_of_session")
-  result                                     String?                @map("result")
-  dateOfResult                               DateTime?              @map("date_of_result") @db.Timestamptz(6)
-  informationOfResult                        String?                @map("information_of_result")
-  isResultTemporary                          Boolean?               @map("is_result_temporary")
-  isActive                                   Boolean                @default(true) @map("is_active")
-  createdAt                                  DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                                  DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
-  reminderToCandidateWithScheduledJurySendAt DateTime?              @map("reminder_to_candidate_with_scheduled_jury_send_at") @db.Timestamptz(6)
+  id                                                    String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                                             Candidacy              @relation(fields: [candidacyId], references: [id])
+  candidacyId                                           String                 @map("candidacy_id") @db.Uuid
+  certificationAuthority                                CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId                              String                 @map("certification_authority_id") @db.Uuid
+  convocationFile                                       File?                  @relation("convocation_file", fields: [convocationFileId], references: [id])
+  convocationFileId                                     String?                @map("convocation_file_id") @db.Uuid
+  dateOfSession                                         DateTime               @map("date_of_session") @db.Timestamptz(6)
+  timeOfSession                                         String?                @map("time_of_session")
+  timeSpecified                                         Boolean                @default(false) @map("time_specified")
+  addressOfSession                                      String?                @map("address_of_session")
+  informationOfSession                                  String?                @map("information_of_session")
+  result                                                String?                @map("result")
+  dateOfResult                                          DateTime?              @map("date_of_result") @db.Timestamptz(6)
+  informationOfResult                                   String?                @map("information_of_result")
+  isResultTemporary                                     Boolean?               @map("is_result_temporary")
+  isActive                                              Boolean                @default(true) @map("is_active")
+  createdAt                                             DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                             DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
+  reminderToCandidateWithScheduledJurySendAt            DateTime?              @map("reminder_to_candidate_with_scheduled_jury_send_at") @db.Timestamptz(6)
+  reminderToCertificationAuthorityFillJuryResultsSentAt DateTime?              @map("reminder_to_certification_authority_fill_jury_results_sent_at") @db.Timestamptz(6)
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])
