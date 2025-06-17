@@ -57,6 +57,12 @@ export default async (batchKey: string) => {
           );
 
           // Upload file
+          console.log(
+            "typeof fileContent is ",
+            typeof spoolerFile?.fileContent,
+          );
+          console.log("fileContent is ", spoolerFile?.fileContent);
+
           const stream = Readable.from(spoolerFile?.fileContent);
           await ftpClient.uploadFrom(
             stream,
