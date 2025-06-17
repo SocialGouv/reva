@@ -36,35 +36,15 @@ export const updateCertificationAdditionalInfo = async ({
   }
 
   let dossierDeValidationTemplateId: string | undefined;
+
   if (dossierDeValidationTemplate) {
     dossierDeValidationTemplateId = uuidV4();
-
-    const uploadedDossierDeValidationTemplate = await getUploadedFile(
-      dossierDeValidationTemplate,
-    );
-
-    if (uploadedDossierDeValidationTemplate._buf.length > MAX_UPLOAD_SIZE) {
-      throw new Error(
-        `Le fichier ${uploadedDossierDeValidationTemplate.filename} est trop volumineux (${(uploadedDossierDeValidationTemplate._buf.length / 1024 / 1024).toFixed(2)} Mo). La taille maximale autorisée est de ${MAX_UPLOAD_SIZE / 1024 / 1024} Mo.`,
-      );
-    }
-
     const filePath = `certifications/${certificationId}/dv_templates/${dossierDeValidationTemplateId}`;
-
-    await uploadFileToS3({
-      data: uploadedDossierDeValidationTemplate._buf,
+    await uploadFile({
+      fileId: dossierDeValidationTemplateId,
       filePath,
-      mimeType: uploadedDossierDeValidationTemplate.mimetype,
+      graphqlUploadedFile: dossierDeValidationTemplate,
       allowedFileTypes: allowFileTypeByDocumentType.dossierDeValidationTemplate,
-    });
-
-    await prismaClient.file.create({
-      data: {
-        id: dossierDeValidationTemplateId,
-        path: filePath,
-        mimeType: uploadedDossierDeValidationTemplate.mimetype,
-        name: uploadedDossierDeValidationTemplate.filename,
-      },
     });
   }
 
@@ -92,6 +72,44 @@ export const updateCertificationAdditionalInfo = async ({
       certificationId,
       dossierDeValidationTemplateFileId: dossierDeValidationTemplateId,
       ...otherInfo,
+    },
+  });
+};
+
+const uploadFile = async ({
+  fileId,
+  filePath,
+  graphqlUploadedFile,
+  allowedFileTypes,
+}: {
+  fileId: string;
+  filePath: string;
+  graphqlUploadedFile: GraphqlUploadedFile;
+  allowedFileTypes: string[];
+}) => {
+  fileId = uuidV4();
+
+  const uploadedFile = await getUploadedFile(graphqlUploadedFile);
+
+  if (uploadedFile._buf.length > MAX_UPLOAD_SIZE) {
+    throw new Error(
+      `Le fichier ${uploadedFile.filename} est trop volumineux (${(uploadedFile._buf.length / 1024 / 1024).toFixed(2)} Mo). La taille maximale autorisée est de ${MAX_UPLOAD_SIZE / 1024 / 1024} Mo.`,
+    );
+  }
+
+  await uploadFileToS3({
+    data: uploadedFile._buf,
+    filePath,
+    mimeType: uploadedFile.mimetype,
+    allowedFileTypes,
+  });
+
+  await prismaClient.file.create({
+    data: {
+      id: fileId,
+      path: filePath,
+      mimeType: uploadedFile.mimetype,
+      name: uploadedFile.filename,
     },
   });
 };
