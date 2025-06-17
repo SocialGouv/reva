@@ -152,7 +152,7 @@ model CertificationAdditionalInfo {
   linkToReferential                 String                                          @map("link_to_referential")
   linkToCorrespondenceTable         String?                                         @map("link_to_corresponence_table")
   dossierDeValidationTemplateFileId String?                                         @map("dossier_de_validation_file_id") @db.Uuid
-  dossierDeValidationTemplate       File?                                           @relation(fields: [dossierDeValidationTemplateFileId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  dossierDeValidationTemplate       File?                                           @relation(fields: [dossierDeValidationTemplateFileId], references: [id])
   dossierDeValidationLink           String?                                         @map("dossier_de_validation_link")
   linkToJuryGuide                   String?                                         @map("link_to_jury_guide")
   certificationExpertContactDetails String?                                         @map("certification_expert_contact_details")

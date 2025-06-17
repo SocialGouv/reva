@@ -68,21 +68,25 @@ export const updateCertificationAdditionalInfo = async ({
     });
   }
 
+  // remove existing dossier de validation template if it exists
   if (existingInfo?.dossierDeValidationTemplate) {
     await deleteFile(existingInfo.dossierDeValidationTemplate.path);
 
-    // at this point existingInfo will be cascade delete
     await prismaClient.file.delete({
       where: {
         id: existingInfo.dossierDeValidationTemplate.id,
       },
     });
-  } else if (existingInfo) {
+  }
+
+  // remove existing additional info if it exists before recreating it
+  if (existingInfo) {
     await prismaClient.certificationAdditionalInfo.delete({
       where: { id: existingInfo.id },
     });
   }
 
+  //(re)create additional info
   return prismaClient.certificationAdditionalInfo.create({
     data: {
       certificationId,
