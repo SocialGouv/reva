@@ -147,23 +147,36 @@ model CertificationCompetence {
 }
 
 model CertificationAdditionalInfo {
-  id                                String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  createdAt                         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  linkToReferential                 String        @map("link_to_referential")
-  linkToCorrespondenceTable         String?       @map("link_to_corresponence_table")
-  dossierDeValidationTemplateFileId String?       @map("dossier_de_validation_file_id") @db.Uuid
-  dossierDeValidationTemplate       File?         @relation(fields: [dossierDeValidationTemplateFileId], references: [id], onUpdate: NoAction, onDelete: Cascade)
-  dossierDeValidationLink           String?       @map("dossier_de_validation_link")
-  linkToJuryGuide                   String?       @map("link_to_jury_guide")
-  certificationExpertContactDetails String?       @map("certification_expert_contact_details")
-  certificationExpertContactPhone   String?       @map("certification_expert_contact_phone") @db.VarChar(50)
-  certificationExpertContactEmail   String?       @map("certification_expert_contact_email") @db.VarChar(255)
-  usefulResources                   String?       @map("useful_resources")
-  commentsForAAP                    String?       @map("comments_for_aap")
-  certificationId                   String        @unique @map("certification_id") @db.Uuid
-  certification                     Certification @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  id                                String                                          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt                         DateTime                                        @default(now()) @map("created_at") @db.Timestamptz(6)
+  linkToReferential                 String                                          @map("link_to_referential")
+  linkToCorrespondenceTable         String?                                         @map("link_to_corresponence_table")
+  dossierDeValidationTemplateFileId String?                                         @map("dossier_de_validation_file_id") @db.Uuid
+  dossierDeValidationTemplate       File?                                           @relation(fields: [dossierDeValidationTemplateFileId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  dossierDeValidationLink           String?                                         @map("dossier_de_validation_link")
+  linkToJuryGuide                   String?                                         @map("link_to_jury_guide")
+  certificationExpertContactDetails String?                                         @map("certification_expert_contact_details")
+  certificationExpertContactPhone   String?                                         @map("certification_expert_contact_phone") @db.VarChar(50)
+  certificationExpertContactEmail   String?                                         @map("certification_expert_contact_email") @db.VarChar(255)
+  usefulResources                   String?                                         @map("useful_resources")
+  commentsForAAP                    String?                                         @map("comments_for_aap")
+  certificationId                   String                                          @unique @map("certification_id") @db.Uuid
+  certification                     Certification                                   @relation(fields: [certificationId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  additionalDocuments               CertificationAdditionalInfoAdditionalDocument[]
 
   @@map("certification_additional_info")
+}
+
+model CertificationAdditionalInfoAdditionalDocument {
+  id                            String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt                     DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                     DateTime?                   @updatedAt @map("updated_at") @db.Timestamptz(6)
+  fileId                        String                      @map("file_id") @db.Uuid
+  file                          File                        @relation(fields: [fileId], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  CertificationAdditionalInfo   CertificationAdditionalInfo @relation(fields: [certificationAdditionalInfoId], references: [id], onDelete: NoAction)
+  certificationAdditionalInfoId String                      @db.Uuid
+
+  @@map("certification_additional_info_additional_document")
 }
 
 model CertificationEmail {
@@ -1269,30 +1282,31 @@ model Jury {
 }
 
 model File {
-  id                                                                          String                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                                                                        String                                   @map("name") @db.VarChar(255)
-  mimeType                                                                    String                                   @map("mime_type") @db.VarChar(255)
-  createdAt                                                                   DateTime                                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  id                                                                          String                                          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                                                                        String                                          @map("name") @db.VarChar(255)
+  mimeType                                                                    String                                          @map("mime_type") @db.VarChar(255)
+  createdAt                                                                   DateTime                                        @default(now()) @map("created_at") @db.Timestamptz(6)
   path                                                                        String
-  linkedAsFeasibilityFileBy                                                   FeasibilityUploadedPdf[]                 @relation("feasibility_file")
-  linkedAsIDFileBy                                                            FeasibilityUploadedPdf[]                 @relation("ID_file")
-  linkedAsDocumentaryProofFileBy                                              FeasibilityUploadedPdf[]                 @relation("documentary_proof_file")
-  linkedAsCertificateOfAttendanceFileBy                                       FeasibilityUploadedPdf[]                 @relation("certificate_of_attendance_file")
-  linkedAsDecisionFileBy                                                      Feasibility[]                            @relation("decision_file")
-  DossierDeValidationFile                                                     DossierDeValidation?                     @relation("dossier_de_validation_file")
+  linkedAsFeasibilityFileBy                                                   FeasibilityUploadedPdf[]                        @relation("feasibility_file")
+  linkedAsIDFileBy                                                            FeasibilityUploadedPdf[]                        @relation("ID_file")
+  linkedAsDocumentaryProofFileBy                                              FeasibilityUploadedPdf[]                        @relation("documentary_proof_file")
+  linkedAsCertificateOfAttendanceFileBy                                       FeasibilityUploadedPdf[]                        @relation("certificate_of_attendance_file")
+  linkedAsDecisionFileBy                                                      Feasibility[]                                   @relation("decision_file")
+  DossierDeValidationFile                                                     DossierDeValidation?                            @relation("dossier_de_validation_file")
   DossierDeValidationOtherFiles                                               DossierDeValidationOtherFilesOnFile[]
-  Jury                                                                        Jury[]                                   @relation("convocation_file")
-  linkedAsMaisonMereAAPAttestationUrssafFile                                  MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_attestation_urssaf_file")
-  linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFile                      MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_justificatif_identite_dirigeant_file")
-  linkedAsLettreDeDelegationFile                                              MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_lettre_de_delegation_file")
-  linkedAsJustificatifIdentiteDelegataireFile                                 MaisonMereAAPLegalInformationDocuments[] @relation("mmaap_justificatif_identite_delegataire_file")
-  linkedAsMaisonMereAAPAttestationUrssafFileInSubscriptionRequest             SubscriptionRequest[]                    @relation("sr_attestation_urssaf_file")
-  linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFileInSubscriptionRequest SubscriptionRequest[]                    @relation("sr_justificatif_identite_dirigeant_file")
-  linkedAsLettreDeDelegationFileInSubscriptionRequest                         SubscriptionRequest[]                    @relation("sr_lettre_de_delegation_file")
-  linkedAsJustificatifIdentiteDelegataireFileInSubscriptionRequest            SubscriptionRequest[]                    @relation("sr_justificatif_identite_delegataire_file")
-  linkedAsDFFAttachment                                                       DFFAttachment?                           @relation("dff_attachment")
-  linkedAsSwornStatementFile                                                  DematerializedFeasibilityFile?           @relation("sworn_statement_file")
+  Jury                                                                        Jury[]                                          @relation("convocation_file")
+  linkedAsMaisonMereAAPAttestationUrssafFile                                  MaisonMereAAPLegalInformationDocuments[]        @relation("mmaap_attestation_urssaf_file")
+  linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFile                      MaisonMereAAPLegalInformationDocuments[]        @relation("mmaap_justificatif_identite_dirigeant_file")
+  linkedAsLettreDeDelegationFile                                              MaisonMereAAPLegalInformationDocuments[]        @relation("mmaap_lettre_de_delegation_file")
+  linkedAsJustificatifIdentiteDelegataireFile                                 MaisonMereAAPLegalInformationDocuments[]        @relation("mmaap_justificatif_identite_delegataire_file")
+  linkedAsMaisonMereAAPAttestationUrssafFileInSubscriptionRequest             SubscriptionRequest[]                           @relation("sr_attestation_urssaf_file")
+  linkedAsMaisonMereAAPJustificatifIdentiteDirigeantFileInSubscriptionRequest SubscriptionRequest[]                           @relation("sr_justificatif_identite_dirigeant_file")
+  linkedAsLettreDeDelegationFileInSubscriptionRequest                         SubscriptionRequest[]                           @relation("sr_lettre_de_delegation_file")
+  linkedAsJustificatifIdentiteDelegataireFileInSubscriptionRequest            SubscriptionRequest[]                           @relation("sr_justificatif_identite_delegataire_file")
+  linkedAsDFFAttachment                                                       DFFAttachment?                                  @relation("dff_attachment")
+  linkedAsSwornStatementFile                                                  DematerializedFeasibilityFile?                  @relation("sworn_statement_file")
   linkedAsCertificationAdditionalInfo                                         CertificationAdditionalInfo[]
+  linkedAsCertificationAdditionalInfoAdditionalDocuments                      CertificationAdditionalInfoAdditionalDocument[]
 
   @@map("file")
 }
