@@ -1,5 +1,13 @@
 import { readFileSync } from "fs";
-import { FastifyInstance } from "fastify";
+import {
+  FastifyInstance,
+  FastifyBaseLogger,
+  RawReplyDefaultExpression,
+  RawRequestDefaultExpression,
+  RawServerDefault,
+} from "fastify";
+import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
+
 import fastifySwagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import { addSchemas } from "./schemas.js";
@@ -7,9 +15,17 @@ import { addInputSchemas } from "./inputSchemas.js";
 import { addResponseSchemas } from "./responseSchemas.js";
 import { validateJwt } from "./authMiddleware.js";
 
+type FastifyJsonSchemaTypeProvider = FastifyInstance<
+  RawServerDefault,
+  RawRequestDefaultExpression<RawServerDefault>,
+  RawReplyDefaultExpression<RawServerDefault>,
+  FastifyBaseLogger,
+  JsonSchemaToTsProvider
+>;
+
 const logo = readFileSync("./static/fvae_logo.svg");
 
-async function routesApiV1(fastify: FastifyInstance) {
+async function routesApiV1(fastify: FastifyJsonSchemaTypeProvider) {
   await fastify.register(fastifySwagger, {
     openapi: {
       openapi: "3.0.0",

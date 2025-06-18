@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import dotenv from "dotenv";
 import routesApiV1 from "./routes/v1/index.js";
 
@@ -11,7 +12,7 @@ const fastify = Fastify({
       strict: false,
     },
   },
-});
+}).withTypeProvider<JsonSchemaToTsProvider>();
 
 await fastify.register(routesApiV1, {
   prefix: "/v1",
