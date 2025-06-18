@@ -13,7 +13,7 @@ const fastify = Fastify({
   },
 });
 
-fastify.register(routesApiV1, {
+await fastify.register(routesApiV1, {
   prefix: "/v1",
 });
 
