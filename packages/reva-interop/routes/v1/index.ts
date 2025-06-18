@@ -13,11 +13,14 @@ async function routesApiV1(fastify: FastifyInstance) {
         description:
           "France VAE's interoperability API to interface with other official entities",
         version: "1.0.0",
+        // "x-logo": {
+        //   url: "https://vae.gouv.fr/fvae_logo.svg",
+        // },
       },
       servers: [
         {
           url: process.env.BASE_URL || "http://localhost:3005/",
-          description: "Development server",
+          description: `${process.env.NODE_ENV?.toUpperCase()} server`,
         },
       ],
       tags: [
@@ -625,7 +628,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     </style>
   </head>
   <body>
-    <redoc spec-url='${process.env.BASE_URL || "http://localhost:3005"}/v1/schema.json'></redoc>
+    <redoc spec-url='${process.env.BASE_URL || "http://localhost:3005"}/v1/schema.json' schema-expansion-level="all" json-sample-expand-level="all" hide-schema-titles></redoc>
     <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
   </body>
 </html>`;
