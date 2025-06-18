@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import fastifySwagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 import { addSchemas } from "./schemas.js";
 import { addInputSchemas } from "./inputSchemas.js";
 import { addResponseSchemas } from "./responseSchemas.js";
@@ -13,9 +14,6 @@ async function routesApiV1(fastify: FastifyInstance) {
         description:
           "France VAE's interoperability API to interface with other official entities",
         version: "1.0.0",
-        // "x-logo": {
-        //   url: "https://vae.gouv.fr/fvae_logo.svg",
-        // },
       },
       servers: [
         {
@@ -53,6 +51,15 @@ async function routesApiV1(fastify: FastifyInstance) {
         },
       },
     },
+  });
+
+  await fastify.register(swaggerUi, {
+    indexPrefix: "/v1",
+    uiConfig: {
+      docExpansion: "list",
+      deepLinking: false,
+    },
+    staticCSP: true,
   });
 
   addSchemas(fastify);
@@ -119,7 +126,11 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return {
+        data: {
+          id: "test",
+        },
+      };
     },
   });
 
@@ -147,7 +158,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -175,7 +186,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -212,7 +223,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -256,7 +267,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -300,7 +311,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -328,7 +339,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -356,7 +367,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -393,7 +404,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -437,7 +448,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -465,7 +476,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -494,7 +505,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -532,7 +543,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -560,7 +571,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
@@ -598,13 +609,13 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
     },
     handler: () => {
-      console.log("route handler");
+      return "OK";
     },
   });
 
-  fastify.get("/schema.json", { schema: { hide: true } }, async () => {
-    return fastify.swagger();
-  });
+  // fastify.get("/schema.json", { schema: { hide: true } }, async () => {
+  //   return fastify.swagger();
+  // });
 
   fastify.get("/docs", { schema: { hide: true } }, async (_request, reply) => {
     reply.type("html");
@@ -628,7 +639,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     </style>
   </head>
   <body>
-    <redoc spec-url='${process.env.BASE_URL || "http://localhost:3005"}/v1/schema.json' schema-expansion-level="all" json-sample-expand-level="all" hide-schema-titles></redoc>
+    <redoc spec-url='${process.env.BASE_URL || "http://localhost:3005"}/v1/documentation/json' schema-expansion-level="1" json-sample-expand-level="3" hide-schema-titles></redoc>
     <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
   </body>
 </html>`;
