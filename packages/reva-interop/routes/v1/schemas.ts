@@ -423,10 +423,17 @@ export const addSchemas = (fastify: FastifyInstance) => {
     properties: {
       id: {
         type: "string",
+        format: "uuid",
         example: "123e4567-e89b-12d3-a456-426614174000",
       },
       certification: {
         $ref: "http://vae.gouv.fr/components/schemas/Certification",
+      },
+      candidat: {
+        $ref: "http://vae.gouv.fr/components/schemas/Candidat",
+      },
+      organisme: {
+        $ref: "http://vae.gouv.fr/components/schemas/Organisme",
       },
     },
   });
