@@ -7,7 +7,7 @@ import { Candidacy } from "@/graphql/generated/graphql";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ChoixCandidatBlock } from "./_components/ChoixCandidatBlock";
 import { InformationCandidatBlock } from "./_components/InformationCandidatBlock";
@@ -139,8 +139,16 @@ const FundingPage = () => {
 
   const {
     register,
+    reset,
     formState: { isSubmitting, errors },
   } = methods;
+
+  const resetForm = useCallback(
+    () => reset(candidacyFormData),
+    [reset, candidacyFormData],
+  );
+
+  useEffect(resetForm, [resetForm]);
 
   if (candidacyIsLoading) {
     return null;
