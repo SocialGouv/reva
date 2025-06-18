@@ -20,6 +20,24 @@ async function routesApiV1(fastify: FastifyInstance) {
           description: "Development server",
         },
       ],
+      tags: [
+        {
+          name: "Candidature",
+          description: "Gestion des candidatures",
+        },
+        {
+          name: "Dossier de faisabilité",
+          description: "Gestion des dossiers de faisabilité",
+        },
+        {
+          name: "Dossier de validation",
+          description: "Gestion des dossiers de validation",
+        },
+        {
+          name: "Informations jury",
+          description: "Gestion de la session et des résultats liés au jury",
+        },
+      ],
       components: {
         securitySchemes: {
           bearerAuth: {
@@ -80,6 +98,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer les détails d'une candidature",
       security: [{ bearerAuth: [] }],
+      tags: ["Candidature"],
       params: {
         type: "object",
         properties: {
@@ -91,6 +110,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
       response: {
         200: {
+          description: "Détails de la candidature",
           $ref: "http://vae.gouv.fr/components/schemas/CandidatureResponse",
         },
       },
@@ -106,6 +126,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer le dernier dossier de faisabilité d'une candidature",
       security: [{ bearerAuth: [] }],
+      tags: ["Dossier de faisabilité"],
       params: {
         type: "object",
         properties: {
@@ -117,6 +138,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
       response: {
         200: {
+          desciption: "Dossier de faisabilité",
           $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteResponse",
         },
       },
@@ -132,6 +154,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer la liste des décisions du dossier de faisabilité",
       security: [{ bearerAuth: [] }],
+      tags: ["Dossier de faisabilité"],
       params: {
         type: "object",
         properties: {
@@ -143,6 +166,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       },
       response: {
         200: {
+          description: " Liste des décisions sur le dossier de faisabilité",
           $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionsResponse",
         },
       },
@@ -158,6 +182,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Créer une nouvelle décision sur le dossier de faisabilité",
       security: [{ bearerAuth: [] }],
+      tags: ["Dossier de faisabilité"],
       body: {
         content: {
           "application/json": {
@@ -194,6 +219,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer la liste des dossiers de faisabilité",
       security: [{ bearerAuth: [] }],
+      tags: ["Dossier de faisabilité"],
       querystring: {
         type: "object",
         properties: {
@@ -237,6 +263,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer la liste des dossiers de validation",
       security: [{ bearerAuth: [] }],
+      tags: ["Dossier de validation"],
       querystring: {
         type: "object",
         properties: {
@@ -280,6 +307,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer le dernier dossier de validation d'une candidature",
       security: [{ bearerAuth: [] }],
+      tags: ["Dossier de validation"],
       params: {
         type: "object",
         properties: {
@@ -307,6 +335,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer la liste des décisions sur le dossier de validation",
       security: [{ bearerAuth: [] }],
+      tags: ["Dossier de validation"],
       params: {
         type: "object",
         properties: {
@@ -334,6 +363,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Créer une nouvelle décision sur le dossier de validation",
       security: [{ bearerAuth: [] }],
+      tags: ["Dossier de validation"],
       body: {
         content: {
           "application/json": {
@@ -370,6 +400,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer la liste des informations jury",
       security: [{ bearerAuth: [] }],
+      tags: ["Informations jury"],
       querystring: {
         type: "object",
         properties: {
@@ -413,6 +444,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer les informations du jury d'un candidat",
       security: [{ bearerAuth: [] }],
+      tags: ["Informations jury"],
       params: {
         type: "object",
         properties: {
@@ -441,6 +473,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       summary:
         "Récupérer les informations de la session du jury pour un candidat",
       security: [{ bearerAuth: [] }],
+      tags: ["Informations jury"],
       params: {
         type: "object",
         properties: {
@@ -469,6 +502,7 @@ async function routesApiV1(fastify: FastifyInstance) {
       summary:
         "Mettre à jour les informations de la session du jury pour un candidat",
       security: [{ bearerAuth: [] }],
+      tags: ["Informations jury"],
       body: {
         content: {
           "application/json": {
@@ -505,6 +539,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Récupérer le résultat du jury pour un candidat",
       security: [{ bearerAuth: [] }],
+      tags: ["Informations jury"],
       params: {
         type: "object",
         properties: {
@@ -532,6 +567,7 @@ async function routesApiV1(fastify: FastifyInstance) {
     schema: {
       summary: "Mettre à jour le résultat du jury pour un candidat",
       security: [{ bearerAuth: [] }],
+      tags: ["Informations jury"],
       body: {
         content: {
           "application/json": {
