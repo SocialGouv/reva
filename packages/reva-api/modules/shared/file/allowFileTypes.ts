@@ -1,4 +1,4 @@
-const allowedFileTypesMap = {
+export const allowedFileTypesMap = {
   image: ["image/png", "image/jpeg", "image/jpg"],
   pdf: ["application/pdf"],
 };

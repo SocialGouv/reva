@@ -432,6 +432,7 @@ input CertificationAdditionalInfoInput {
   certificationExpertContactEmail: String
   usefulResources: String
   commentsForAAP: String
+  additionalDocuments: [Upload!]
 }
 
 input UpdateCertificationAdditionalInfoInput {

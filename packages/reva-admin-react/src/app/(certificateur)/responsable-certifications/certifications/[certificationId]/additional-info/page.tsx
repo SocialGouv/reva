@@ -160,6 +160,7 @@ const AdditionalInfoForm = ({
         additionalInfo: {
           ...data,
           dossierDeValidationTemplate,
+          additionalDocuments: [],
         },
       });
       successToast("Modification enregistrée");

@@ -6,7 +6,10 @@ import {
   getUploadedFile,
   uploadFileToS3,
 } from "../../../modules/shared/file";
-import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
+import {
+  allowedFileTypesMap,
+  allowFileTypeByDocumentType,
+} from "../../../modules/shared/file/allowFileTypes";
 
 const MAX_UPLOAD_SIZE = 15728640; // 15Mo
 
@@ -21,10 +24,12 @@ export const updateCertificationAdditionalInfo = async ({
       },
       include: {
         dossierDeValidationTemplate: true,
+        additionalDocuments: { include: { file: true } },
       },
     });
 
-  const { dossierDeValidationTemplate, ...otherInfo } = additionalInfo;
+  const { dossierDeValidationTemplate, additionalDocuments, ...otherInfo } =
+    additionalInfo;
 
   if (
     (!otherInfo.dossierDeValidationLink && !dossierDeValidationTemplate) ||
@@ -33,19 +38,6 @@ export const updateCertificationAdditionalInfo = async ({
     throw new Error(
       "La trame du dossier de validation est requise et doit être transmise soit par PDF, soit sous forme de lien.",
     );
-  }
-
-  let dossierDeValidationTemplateId: string | undefined;
-
-  if (dossierDeValidationTemplate) {
-    dossierDeValidationTemplateId = uuidV4();
-    const filePath = `certifications/${certificationId}/dv_templates/${dossierDeValidationTemplateId}`;
-    await uploadFile({
-      fileId: dossierDeValidationTemplateId,
-      filePath,
-      graphqlUploadedFile: dossierDeValidationTemplate,
-      allowedFileTypes: allowFileTypeByDocumentType.dossierDeValidationTemplate,
-    });
   }
 
   // remove existing dossier de validation template if it exists
@@ -57,6 +49,51 @@ export const updateCertificationAdditionalInfo = async ({
         id: existingInfo.dossierDeValidationTemplate.id,
       },
     });
+  }
+
+  let dossierDeValidationTemplateId: string | undefined;
+
+  // upload dossier de validation template if it exists
+  if (dossierDeValidationTemplate) {
+    dossierDeValidationTemplateId = uuidV4();
+    const filePath = `certifications/${certificationId}/dv_templates/${dossierDeValidationTemplateId}`;
+    await uploadFile({
+      fileId: dossierDeValidationTemplateId,
+      filePath,
+      graphqlUploadedFile: dossierDeValidationTemplate,
+      allowedFileTypes: allowFileTypeByDocumentType.dossierDeValidationTemplate,
+    });
+  }
+
+  // remove existing additional documents if they exist
+  if (existingInfo?.additionalDocuments) {
+    for (const additionalDocument of existingInfo.additionalDocuments) {
+      await deleteFile(additionalDocument.file.path);
+      await prismaClient.file.delete({
+        where: { id: additionalDocument.file.id },
+      });
+      await prismaClient.certificationAdditionalInfoAdditionalDocument.delete({
+        where: { id: additionalDocument.id },
+      });
+    }
+  }
+
+  // upload additional documents if they exist
+  const additionalDocumentsIds: string[] = [];
+  const additionalDocumentAllowedFileTypes = [
+    ...allowedFileTypesMap.pdf,
+    ...allowedFileTypesMap.image,
+  ];
+  for (const additionalDocument of additionalDocuments) {
+    const fileId = uuidV4();
+    const filePath = `certifications/${certificationId}/additional_documents/${fileId}`;
+    await uploadFile({
+      fileId,
+      filePath,
+      graphqlUploadedFile: additionalDocument,
+      allowedFileTypes: additionalDocumentAllowedFileTypes,
+    });
+    additionalDocumentsIds.push(fileId);
   }
 
   // remove existing additional info if it exists before recreating it
@@ -71,6 +108,13 @@ export const updateCertificationAdditionalInfo = async ({
     data: {
       certificationId,
       dossierDeValidationTemplateFileId: dossierDeValidationTemplateId,
+      additionalDocuments: {
+        createMany: {
+          data: additionalDocumentsIds.map((id) => ({
+            fileId: id,
+          })),
+        },
+      },
       ...otherInfo,
     },
   });

@@ -136,6 +136,7 @@ interface CertificationAdditionalInfo {
   certificationExpertContactEmail?: string;
   usefulResources?: string;
   commentsForAAP?: string;
+  additionalDocuments: GraphqlUploadedFile[];
 }
 
 export interface UpdateCertificationAdditionalInfoInput {
