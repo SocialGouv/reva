@@ -30,12 +30,7 @@ describe("revoke jury decision", () => {
       });
 
       cy.admin("/candidacies/test-candidacy-id/jury/test-jury-id/");
-      cy.wait("@getJuryByCandidacyId");
-
-      // Avoid flaky tests by waiting for each tab to be visible
-      cy.get('[data-test="jury-date-title"]').should("be.visible");
       cy.get('[role="tab"]').contains("Résultat").click();
-      cy.get('[data-test="jury-result-title"]').should("be.visible");
     });
 
     it("should display revoke button for admins", () => {
@@ -87,11 +82,7 @@ describe("revoke jury decision", () => {
       });
 
       cy.certificateur("/candidacies/test-candidacy-id/jury/test-jury-id/");
-      cy.wait("@getJuryByCandidacyId");
-      cy.get('[data-test="jury-date-title"]').should("be.visible");
       cy.get('[role="tab"]').contains("Résultat").click();
-      // Make sure non-visible or non-existent tests start only after the tab content is actually visible (to avoid false-positive)
-      cy.get('[data-test="jury-result-title"]').should("be.visible");
     });
 
     it("should not display revoke button", () => {

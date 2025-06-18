@@ -164,7 +164,9 @@ export const Resultat = () => {
 
   return (
     <>
-      <h3>Résultat suite au passage devant le jury</h3>
+      <h3 data-test="jury-result-title">
+        Résultat suite au passage devant le jury
+      </h3>
 
       <div className="flex flex-col gap-10">
         {!result && (

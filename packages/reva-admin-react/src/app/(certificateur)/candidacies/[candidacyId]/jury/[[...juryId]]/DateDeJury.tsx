@@ -141,7 +141,9 @@ export const DateDeJury = () => {
 
   return (
     <>
-      <h3>Date de passage devant le jury à programmer</h3>
+      <h3 data-test="jury-date-title">
+        Date de passage devant le jury à programmer
+      </h3>
 
       <div className="flex flex-col gap-10">
         {!jury && (
