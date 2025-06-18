@@ -2,15 +2,14 @@ import { readFileSync } from "fs";
 import { FastifyInstance } from "fastify";
 import fastifySwagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-import * as jose from "jose";
 import { addSchemas } from "./schemas.js";
 import { addInputSchemas } from "./inputSchemas.js";
 import { addResponseSchemas } from "./responseSchemas.js";
+import { validateJwt } from "./authMiddleware.js";
 
 const logo = readFileSync("./static/fvae_logo.svg");
 
 async function routesApiV1(fastify: FastifyInstance) {
-  const secretKey = new TextEncoder().encode(process.env.SECRET_KEY);
   await fastify.register(fastifySwagger, {
     openapi: {
       openapi: "3.0.0",
@@ -85,23 +84,7 @@ async function routesApiV1(fastify: FastifyInstance) {
   addInputSchemas(fastify);
   addResponseSchemas(fastify);
 
-  fastify.addHook("onRequest", async (request, _reply) => {
-    if (request.url === "/v1/docs" || request.url === "/v1/schema.json") {
-      return;
-    }
-    console.log("Validate Bearer token here");
-    const jwt =
-      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmdmFlLWludGVyb3AtYXNwIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoyNzE2MjM5MDIyfQ.Z7wZ5z-TlG9R1SUI-oGcfFs_H3TGze-Xpc-8yUlV7SERCPuVwmpkyQTd273p6-2LyoJooehefZBIC-kt43hfzg";
-
-    const { payload, protectedHeader } = await jose.jwtVerify(jwt, secretKey, {
-      issuer: "fvae-interop-asp",
-      requiredClaims: ["iat", "exp", "sub"],
-      // maxTokenAge: "1h",
-    });
-
-    console.log(protectedHeader);
-    console.log(payload);
-  });
+  fastify.addHook("onRequest", validateJwt);
 
   // Declare a route
   fastify.get("/", {
