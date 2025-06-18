@@ -8,10 +8,11 @@ import { useUpdateAdditionalInfoPage } from "./useCertificationAdditionalInfo.ho
 import { useParams, useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { File as GQLFile } from "@/graphql/generated/graphql";
 import { useMemo } from "react";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 
 export default function CertificationAdditionalInfoPage() {
   const { certificationId } = useParams<{ certificationId: string }>();
@@ -56,6 +57,11 @@ const schema = z
           .optional(),
       })
       .optional(),
+    additionalDocuments: z
+      .object({
+        0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
+      })
+      .array(),
     dossierDeValidationLink: z.string().optional(),
     linkToReferential: z.string().min(1, "Merci de remplir ce champ"),
     linkToCorrespondenceTable: z.string().optional(),
@@ -109,6 +115,12 @@ const AdditionalInfoForm = ({
         previewUrl?: string | null;
         mimeType: string;
       } | null;
+      additionalDocuments?: {
+        url: string;
+        name: string;
+        previewUrl?: string | null;
+        mimeType: string;
+      }[];
       dossierDeValidationLink?: string | null;
     } | null;
   };
@@ -117,6 +129,8 @@ const AdditionalInfoForm = ({
   const {
     register,
     handleSubmit,
+    control,
+    reset,
     formState: { errors, isDirty, isSubmitting },
     watch,
   } = useForm<FormData>({
@@ -137,6 +151,10 @@ const AdditionalInfoForm = ({
       dossierDeValidationTemplate: undefined,
       dossierDeValidationLink:
         certification.additionalInfo?.dossierDeValidationLink || "",
+      additionalDocuments:
+        certification.additionalInfo?.additionalDocuments?.map((doc) => ({
+          0: { name: doc.name } as File,
+        })) || [],
     },
   });
   const defaultDossierDeValidationTemplate = useMemo(
@@ -147,6 +165,31 @@ const AdditionalInfoForm = ({
     [certification.additionalInfo?.dossierDeValidationTemplate],
   );
 
+  const {
+    fields: additionalDocumentsFields,
+    append: appendAdditionalDocument,
+    remove: removeAdditionalDocument,
+  } = useFieldArray<FormData>({
+    control,
+    name: "additionalDocuments",
+  });
+
+  const defaultAdditionalDocuments = useMemo(() => {
+    // map defaultFile for the FancyUpload component
+    // look for the file name of the FancyUpload and find a match in the certification additionalDocuments
+    // if found, return the file
+    return additionalDocumentsFields?.map((file) =>
+      getFancyDefaultFile(
+        certification?.additionalInfo?.additionalDocuments?.find(
+          (doc) => doc.name === file[0]?.name,
+        ),
+      ),
+    );
+  }, [
+    additionalDocumentsFields,
+    certification.additionalInfo?.additionalDocuments,
+  ]);
+
   const { updateCertificationAdditionalInfo } = useUpdateAdditionalInfoPage({
     certificationId: certification.id,
   });
@@ -155,12 +198,13 @@ const AdditionalInfoForm = ({
     try {
       const dossierDeValidationTemplate =
         data.dossierDeValidationTemplate?.[0] ?? null;
+      const additionalDocuments = data.additionalDocuments.map((d) => d?.[0]);
       await updateCertificationAdditionalInfo.mutateAsync({
         certificationId: certification.id,
         additionalInfo: {
           ...data,
           dossierDeValidationTemplate,
-          additionalDocuments: [],
+          additionalDocuments,
         },
       });
       successToast("Modification enregistrée");
@@ -175,8 +219,12 @@ const AdditionalInfoForm = ({
   const [watchedDossierDeValidationTemplate, watchedDossierDeValidationLink] =
     watch(["dossierDeValidationTemplate", "dossierDeValidationLink"]);
 
+  const handleReset = () => {
+    reset();
+  };
+
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)}>
+    <form onSubmit={handleSubmit(onFormSubmit)} onReset={handleReset}>
       <h2>Documentation sur la certification</h2>
       <Input
         data-test="referential-link-input"
@@ -265,7 +313,43 @@ const AdditionalInfoForm = ({
           }}
         />
       </div>
-      <h2>Informations complémentaires</h2>
+      <h2>Documentation libre</h2>
+      <p>
+        Vous pouvez ajouter ici tous les documents complémentaires que vous
+        jugez utiles pour accompagner les candidats et les AAP dans leur
+        parcours VAE.
+      </p>
+      <div className="flex flex-col gap-4">
+        {additionalDocumentsFields.map((field, index) => (
+          <FancyUpload
+            key={field.id}
+            dataTest="additional-document-upload"
+            title="Importer un fichier"
+            description="Exemples de documents utiles : référentiels d'activités et de compétences, guides pratiques, grilles d'évaluation, exemples de dossiers, fiches méthodologiques, etc."
+            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
+            state={errors.additionalDocuments?.[index] ? "error" : "default"}
+            stateRelatedMessage={
+              errors.additionalDocuments?.[index]?.[0]?.message
+            }
+            nativeInputProps={{
+              ...register(`additionalDocuments.${index}`),
+            }}
+            onClickDelete={() => removeAdditionalDocument(index)}
+            defaultFile={defaultAdditionalDocuments?.[index]}
+          />
+        ))}
+      </div>
+      <hr />
+      <Button
+        className="mb-4"
+        priority="tertiary no outline"
+        type="button"
+        iconId="fr-icon-add-line"
+        onClick={() => appendAdditionalDocument({ 0: {} as File })}
+      >
+        Ajouter une pièce jointe
+      </Button>
+      <h2>Informations facultatives</h2>
       <Input
         label="Ressources pour aider au parcours VAE (optionnel) :"
         textArea

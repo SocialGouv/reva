@@ -21,6 +21,12 @@ const getCertificationQuery = graphql(`
           previewUrl
           mimeType
         }
+        additionalDocuments {
+          url
+          name
+          previewUrl
+          mimeType
+        }
         dossierDeValidationLink
         linkToJuryGuide
         certificationExpertContactDetails
