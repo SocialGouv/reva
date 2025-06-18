@@ -72,9 +72,6 @@ export const updateCertificationAdditionalInfo = async ({
       await prismaClient.file.delete({
         where: { id: additionalDocument.file.id },
       });
-      await prismaClient.certificationAdditionalInfoAdditionalDocument.delete({
-        where: { id: additionalDocument.id },
-      });
     }
   }
 
