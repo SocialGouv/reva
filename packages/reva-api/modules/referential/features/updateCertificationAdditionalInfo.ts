@@ -87,8 +87,6 @@ const uploadFile = async ({
   graphqlUploadedFile: GraphqlUploadedFile;
   allowedFileTypes: string[];
 }) => {
-  fileId = uuidV4();
-
   const uploadedFile = await getUploadedFile(graphqlUploadedFile);
 
   if (uploadedFile._buf.length > MAX_UPLOAD_SIZE) {
