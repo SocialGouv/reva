@@ -1,9 +1,12 @@
 import { FastifyInstance } from "fastify";
 import fastifySwagger from "@fastify/swagger";
+import { readFileSync } from "fs";
 import swaggerUi from "@fastify/swagger-ui";
 import { addSchemas } from "./schemas.js";
 import { addInputSchemas } from "./inputSchemas.js";
 import { addResponseSchemas } from "./responseSchemas.js";
+
+const logo = readFileSync("./static/fvae_logo.svg");
 
 async function routesApiV1(fastify: FastifyInstance) {
   await fastify.register(fastifySwagger, {
@@ -54,6 +57,20 @@ async function routesApiV1(fastify: FastifyInstance) {
   });
 
   await fastify.register(swaggerUi, {
+    logo: {
+      type: `image/svg+xml`,
+      content: Buffer.from(logo),
+      href: "/v1/documentation",
+    },
+    theme: {
+      css: [
+        {
+          filename: "custom.css",
+          content:
+            ".swagger-ui .topbar { background-color: #fff !important; img { height: 80px } }",
+        },
+      ],
+    },
     indexPrefix: "/v1",
     uiConfig: {
       docExpansion: "list",
@@ -612,10 +629,6 @@ async function routesApiV1(fastify: FastifyInstance) {
       return "OK";
     },
   });
-
-  // fastify.get("/schema.json", { schema: { hide: true } }, async () => {
-  //   return fastify.swagger();
-  // });
 
   fastify.get("/docs", { schema: { hide: true } }, async (_request, reply) => {
     reply.type("html");
