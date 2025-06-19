@@ -1,4 +1,3 @@
-// import { GraphQLClient } from "graphql-request";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
 
 export const getGraphQlClient = (accessToken: string) => {
