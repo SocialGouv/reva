@@ -1,5 +1,6 @@
 import {
   defaultSecurity,
+  isAdmin,
   isAdminCandidacyCompanionOrFeasibilityManager,
   isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
   isAnyone,
@@ -18,6 +19,8 @@ export const resolversSecurityMap = {
 
   "Mutation.feasibility_updateFeasibilityFileTemplateFirstReadAt":
     isOwnerOfCandidacy,
+
+  "Mutation.feasibility_revokeCertificationAuthorityDecision": isAdmin,
 
   "Candidacy.feasibility":
     isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
