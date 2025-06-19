@@ -154,6 +154,10 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "JURY_DECISION_REVOKED";
       details: { reason?: string };
+    }
+  | {
+      eventType: "FEASIBILITY_DECISION_REVOKED";
+      details?: { reason?: string };
     };
 
 export type CandidacyLog = {

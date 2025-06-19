@@ -12,6 +12,7 @@ import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
 import { getCandidacy } from "../candidacy/features/getCandidacy";
 import { updateFeasibilityFileTemplateFirstReadAt } from "./features/updateFeasibilityFileTemplateFirstReadAt";
+import { revokeCertificationAuthorityDecision } from "./features/revokeCertificationAuthorityDecision";
 
 const unsafeResolvers = {
   Candidacy: {
@@ -82,6 +83,12 @@ const unsafeResolvers = {
       _parent: unknown,
       { candidacyId }: { candidacyId: string },
     ) => updateFeasibilityFileTemplateFirstReadAt({ candidacyId }),
+    feasibility_revokeCertificationAuthorityDecision: (
+      _parent: unknown,
+      { feasibilityId, reason }: { feasibilityId: string; reason?: string },
+      context: GraphqlContext,
+    ) =>
+      revokeCertificationAuthorityDecision({ feasibilityId, reason, context }),
   },
 };
 

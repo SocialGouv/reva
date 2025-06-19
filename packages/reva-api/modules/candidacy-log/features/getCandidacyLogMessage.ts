@@ -248,8 +248,13 @@ export const getCandidacyLogMessage = ({
 
     case "JURY_DECISION_REVOKED":
       return details?.reason
-        ? log("Décision du jury annulée", details.reason)
-        : log("Décision du jury annulée");
+        ? log("Décision du jury révoquée", details.reason)
+        : log("Décision du jury révoquée");
+
+    case "FEASIBILITY_DECISION_REVOKED":
+      return details?.reason
+        ? log("Décision de recevabilité révoquée", details.reason)
+        : log("Décision de recevabilité révoquée");
 
     default:
       return log("Événement inconnu");

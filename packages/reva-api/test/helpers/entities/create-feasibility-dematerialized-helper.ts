@@ -1,10 +1,10 @@
-import { Feasibility, FeasibilityFormat } from "@prisma/client";
+import { FeasibilityFormat, Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacyHelper } from "./create-candidacy-helper";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../../../modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 
 export const createFeasibilityDematerializedHelper = async (
-  feasibilityArgs?: Partial<Feasibility>,
+  feasibilityArgs?: Partial<Prisma.FeasibilityUncheckedCreateInput>,
 ) => {
   const candidacy = await createCandidacyHelper();
 
