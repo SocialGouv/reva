@@ -22,5 +22,6 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
+    "noStrictGenericChecks": false
   }
 }

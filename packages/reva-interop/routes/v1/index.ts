@@ -1,31 +1,16 @@
 import { readFileSync } from "fs";
-import {
-  FastifyInstance,
-  FastifyBaseLogger,
-  RawReplyDefaultExpression,
-  RawRequestDefaultExpression,
-  RawServerDefault,
-} from "fastify";
-import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
-
+import { FastifyPluginAsyncJsonSchemaToTs } from "@fastify/type-provider-json-schema-to-ts";
 import fastifySwagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import { addSchemas } from "./schemas.js";
 import { addInputSchemas } from "./inputSchemas.js";
 import { addResponseSchemas } from "./responseSchemas.js";
 import { validateJwt } from "./authMiddleware.js";
-
-type FastifyJsonSchemaTypeProvider = FastifyInstance<
-  RawServerDefault,
-  RawRequestDefaultExpression<RawServerDefault>,
-  RawReplyDefaultExpression<RawServerDefault>,
-  FastifyBaseLogger,
-  JsonSchemaToTsProvider
->;
+import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
 
 const logo = readFileSync("./static/fvae_logo.svg");
 
-async function routesApiV1(fastify: FastifyJsonSchemaTypeProvider) {
+const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   await fastify.register(fastifySwagger, {
     openapi: {
       openapi: "3.0.0",
@@ -100,6 +85,7 @@ async function routesApiV1(fastify: FastifyJsonSchemaTypeProvider) {
   addInputSchemas(fastify);
   addResponseSchemas(fastify);
 
+  fastify.decorateRequest("graphqlClient");
   fastify.addHook("onRequest", validateJwt);
 
   // Declare a route
@@ -153,12 +139,16 @@ async function routesApiV1(fastify: FastifyJsonSchemaTypeProvider) {
         },
       },
     },
-    handler: () => {
-      return {
-        data: {
-          id: "test",
-        },
-      };
+    handler: async (request, reply) => {
+      const r = await getCandidacyDetails(
+        request.graphqlClient,
+        (request.params as { candidatureId: string }).candidatureId,
+      );
+      if (r) {
+        reply.send(r);
+      } else {
+        reply.status(204).send();
+      }
     },
   });
 
@@ -208,7 +198,7 @@ async function routesApiV1(fastify: FastifyJsonSchemaTypeProvider) {
       },
       response: {
         200: {
-          description: " Liste des décisions sur le dossier de faisabilité",
+          description: "Liste des décisions sur le dossier de faisabilité",
           $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionsResponse",
         },
       },
@@ -668,6 +658,6 @@ async function routesApiV1(fastify: FastifyJsonSchemaTypeProvider) {
   </body>
 </html>`;
   });
-}
+};
 
 export default routesApiV1;
