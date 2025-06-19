@@ -64,6 +64,7 @@ function interceptCertification({
                     name: "Template de dossier de validation",
                     previewUrl: "https://www.google.fr",
                   },
+                  additionalDocuments: [],
                 }
               : undefined,
             status:

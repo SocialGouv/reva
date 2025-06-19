@@ -26,6 +26,10 @@ export const CertificationAdditionalInfoSummaryCard = ({
       previewUrl?: string | null;
     } | null;
     dossierDeValidationLink?: string | null;
+    additionalDocuments: {
+      name: string;
+      previewUrl?: string | null;
+    }[];
   } | null;
 }) => (
   <EnhancedSectionCard
@@ -113,6 +117,21 @@ export const CertificationAdditionalInfoSummaryCard = ({
               </p>
             )}
           </div>
+        </section>
+        <section className="flex flex-col gap-4">
+          <h3 className="mb-0">Documentation libre :</h3>
+          {certificationAdditionalInfo.additionalDocuments.map(
+            (document) =>
+              document.previewUrl && (
+                <FancyPreview
+                  key={document.name}
+                  src={document.previewUrl}
+                  title={document.name}
+                  name={document.name}
+                  defaultDisplay={false}
+                />
+              ),
+          )}
         </section>
         <section className="flex flex-col gap-4">
           <h3 className="mb-0">Informations complémentaires :</h3>

@@ -35,6 +35,10 @@ const getCertificationQuery = graphql(`
         certificationExpertContactEmail
         usefulResources
         commentsForAAP
+        additionalDocuments {
+          name
+          previewUrl
+        }
       }
       degree {
         id
