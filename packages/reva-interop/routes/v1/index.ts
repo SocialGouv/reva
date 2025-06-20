@@ -22,7 +22,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       },
       servers: [
         {
-          url: process.env.BASE_URL || "http://localhost:3005/",
+          url: process.env.BASE_URL || "http://localhost:8080",
           description: `${process.env.NODE_ENV?.toUpperCase()} server`,
         },
       ],
@@ -653,7 +653,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     </style>
   </head>
   <body>
-    <redoc spec-url='${process.env.BASE_URL || "http://localhost:3005"}/v1/documentation/json' schema-expansion-level="1" json-sample-expand-level="3" hide-schema-titles></redoc>
+    <redoc spec-url='${process.env.BASE_URL || "http://localhost:8080"}/v1/documentation/json' schema-expansion-level="1" json-sample-expand-level="3" hide-schema-titles></redoc>
     <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
   </body>
 </html>`;
