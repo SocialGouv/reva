@@ -167,6 +167,7 @@ type CandidacyCountByStatus {
   VAE_COLLECTIVE: Int!
   DEMANDE_FINANCEMENT_ENVOYEE: Int!
   DEMANDE_PAIEMENT_ENVOYEE: Int!
+  DEMANDE_PAIEMENT_A_ENVOYER: Int!
 }
 
 type CandidacyPage {
@@ -199,6 +200,7 @@ enum CandidacyStatusFilter {
   VAE_COLLECTIVE
   DEMANDE_FINANCEMENT_ENVOYEE
   DEMANDE_PAIEMENT_ENVOYEE
+  DEMANDE_PAIEMENT_A_ENVOYER
 }
 
 enum CandidacySortByFilter {

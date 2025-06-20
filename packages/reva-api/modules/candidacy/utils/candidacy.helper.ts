@@ -201,6 +201,29 @@ export const getWhereClauseFromStatusFilter = (
         ],
       };
       break;
+    case "DEMANDE_PAIEMENT_A_ENVOYER":
+      whereClause = {
+        ...whereClause,
+        OR: [
+          {
+            financeModule: "unireva",
+            FundingRequest: { isNot: null },
+            OR: [
+              { paymentRequest: null },
+              { paymentRequest: { confirmedAt: null } },
+            ],
+          },
+          {
+            financeModule: "unifvae",
+            fundingRequestUnifvae: { isNot: null },
+            OR: [
+              { paymentRequestUnifvae: null },
+              { paymentRequestUnifvae: { confirmedAt: null } },
+            ],
+          },
+        ],
+      };
+      break;
   }
   return whereClause;
 };
