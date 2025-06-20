@@ -21,6 +21,8 @@ interface Props {
   isCandidacyActualisationFeatureActive: boolean;
   pendingCaduciteContestationSentAt?: number | null;
   hasConfirmedCaduciteContestation: boolean;
+  onRevokeDecision?: () => void;
+  isAdmin?: boolean;
 }
 
 export function FeasibilityBanner({
@@ -35,6 +37,8 @@ export function FeasibilityBanner({
   isCandidacyActualisationFeatureActive,
   pendingCaduciteContestationSentAt,
   hasConfirmedCaduciteContestation,
+  onRevokeDecision,
+  isAdmin = false,
 }: Props) {
   switch (true) {
     case isCandidacyActualisationFeatureActive &&
@@ -93,20 +97,29 @@ export function FeasibilityBanner({
     case decision === "REJECTED":
       return (
         <>
-          <Alert
-            className="mb-12"
-            severity="error"
-            data-test="feasibility-decision-rejected"
-            title={`Dossier déclaré comme "non recevable" le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
-            description={
-              <p>
-                Si vous avez précisé les motifs de cette décision, ils seront
-                transmis au candidat : {'"'}
-                {decisionComment}
-                {'"'}
-              </p>
-            }
-          />
+          <div>
+            <Alert
+              className="mb-4"
+              severity="error"
+              data-test="feasibility-decision-rejected"
+              title={`Dossier déclaré comme "non recevable" le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
+              description={
+                <p>
+                  Si vous avez précisé les motifs de cette décision, ils seront
+                  transmis au candidat : {'"'}
+                  {decisionComment}
+                  {'"'}
+                </p>
+              }
+            />
+            {isAdmin && (
+              <div className="flex justify-end mb-4">
+                <Button priority="secondary" onClick={onRevokeDecision}>
+                  Annuler la décision
+                </Button>
+              </div>
+            )}
+          </div>
 
           {feasibilityHistory.length > 0 && (
             <FeasibilityDecisionHistory history={feasibilityHistory} />
@@ -146,13 +159,22 @@ export function FeasibilityBanner({
     case decision === "ADMISSIBLE":
       return (
         <>
-          <Alert
-            className="mb-12"
-            severity="success"
-            data-test="feasibility-decision-admissible"
-            small
-            description={`Recevabilité acceptée le  ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
-          />
+          <div>
+            <Alert
+              className="mb-4"
+              severity="success"
+              data-test="feasibility-decision-admissible"
+              small
+              description={`Recevabilité acceptée le  ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
+            />
+            {isAdmin && (
+              <div className="flex justify-end mb-4">
+                <Button priority="secondary" onClick={onRevokeDecision}>
+                  Annuler la décision
+                </Button>
+              </div>
+            )}
+          </div>
           {feasibilityHistory.length > 0 && (
             <FeasibilityDecisionHistory history={feasibilityHistory} />
           )}

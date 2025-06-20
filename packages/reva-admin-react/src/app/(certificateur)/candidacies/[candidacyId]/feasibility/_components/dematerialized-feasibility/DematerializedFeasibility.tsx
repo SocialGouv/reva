@@ -13,6 +13,7 @@ import {
   FeasibilityHistory,
 } from "@/graphql/generated/graphql";
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+import { useAuth } from "@/components/auth/auth";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQueryClient } from "@tanstack/react-query";
@@ -27,6 +28,7 @@ import {
   FeasibilityValidationForm,
   FeasibilityValidationFormData,
 } from "../FeasibilityValidationForm";
+import { useRevokeFeasibilityDecisionModal } from "../useRevokeFeasibilityDecisionModal.hook";
 import {
   createOrUpdateCertificationAuthorityDecision,
   useDematerializedFeasibility,
@@ -43,6 +45,8 @@ const FeasibilityBanner = ({
   candidacyId,
   isCandidacyActualisationFeatureActive,
   hasConfirmedCaduciteContestation,
+  onRevokeDecision,
+  isAdmin,
 }: {
   isWaitingForDecision: boolean;
   feasibilityDecisionSentAt: Date | null;
@@ -54,6 +58,8 @@ const FeasibilityBanner = ({
   candidacyId: string;
   isCandidacyActualisationFeatureActive: boolean;
   hasConfirmedCaduciteContestation: boolean;
+  onRevokeDecision?: () => void;
+  isAdmin?: boolean;
 }) => {
   if (
     hasConfirmedCaduciteContestation &&
@@ -110,6 +116,8 @@ const FeasibilityBanner = ({
         decision={feasibilityDecision}
         decisionComment={feasibilityDecisionComment}
         history={feasibilityHistory}
+        onRevokeDecision={onRevokeDecision}
+        isAdmin={isAdmin}
       />
     );
   }
@@ -119,14 +127,20 @@ const FeasibilityBanner = ({
 
 export const DematerializedFeasibility = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
-  const { dematerializedFeasibilityFile, candidacy, feasibility } =
-    useDematerializedFeasibility();
+  const {
+    dematerializedFeasibilityFile,
+    candidacy,
+    feasibility,
+    revokeDecision,
+  } = useDematerializedFeasibility();
   const { isFeatureActive } = useFeatureflipping();
   const isCandidacyActualisationFeatureActive = isFeatureActive(
     "candidacy_actualisation",
   );
   const urqlClient = useUrqlClient();
   const queryClient = useQueryClient();
+  const { isAdmin } = useAuth();
+  const revokeDecisionModal = useRevokeFeasibilityDecisionModal();
 
   const isCandidacyArchived = candidacy?.status === "ARCHIVE";
 
@@ -206,7 +220,7 @@ export const DematerializedFeasibility = () => {
     }
   };
 
-  if (!candidacy || !dematerializedFeasibilityFile) return null;
+  if (!candidacy || !dematerializedFeasibilityFile || !feasibility) return null;
 
   const organism = candidacy.organism;
 
@@ -240,7 +254,22 @@ export const DematerializedFeasibility = () => {
   const certificationName = candidacy.certification?.label ?? "";
 
   return (
-    <>
+    <div
+      data-test={`feasibility-page-dematerialized-${feasibility?.decision?.toLowerCase() || "pending"}`}
+    >
+      <revokeDecisionModal.Component
+        onConfirmButtonClick={async (data: { reason: string }) => {
+          try {
+            await revokeDecision.mutateAsync({
+              feasibilityId: feasibility.id,
+              reason: data.reason,
+            });
+            queryClient.invalidateQueries({ queryKey: [candidacyId] });
+          } catch (e) {
+            graphqlErrorToast(e);
+          }
+        }}
+      />
       <DffSummary
         dematerializedFeasibilityFile={
           dematerializedFeasibilityFile as DematerializedFeasibilityFile
@@ -262,6 +291,8 @@ export const DematerializedFeasibility = () => {
               isCandidacyActualisationFeatureActive
             }
             hasConfirmedCaduciteContestation={hasConfirmedCaduciteContestation}
+            onRevokeDecision={() => revokeDecisionModal.open()}
+            isAdmin={isAdmin}
           />
         }
         displayGiveYourDecisionSubtitle
@@ -292,6 +323,6 @@ export const DematerializedFeasibility = () => {
           )}
         </>
       )}
-    </>
+    </div>
   );
 };
