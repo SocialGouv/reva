@@ -50,6 +50,12 @@ http:
       middlewares:
         - removeHeader
 
+    interop-staging:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/interop`)"
+      service: interop-staging
+      middlewares:
+        - removeHeader
+
     # Should be removed after the creation of the /api path
     payment-request-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/payment-request/proof`)"
@@ -235,6 +241,12 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-staging.osc-fr1.scalingo.io/api"
+
+    interop-staging:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-staging.osc-fr1.scalingo.io/interop"
 
     # --- END STAGING ---
 
