@@ -1,0 +1,18 @@
+{
+  "data": {
+    "feasibilityCountByCategory": {
+      "ALL": 151,
+      "PENDING": 28,
+      "REJECTED": 20,
+      "ADMISSIBLE": 99,
+      "COMPLETE": 9,
+      "INCOMPLETE": 15,
+      "ARCHIVED": 16,
+      "DROPPED_OUT": 66,
+      "CADUQUE": 37,
+      "CONTESTATION": 1,
+      "VAE_COLLECTIVE": 1
+    },
+    "cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount": []
+  }
+}
