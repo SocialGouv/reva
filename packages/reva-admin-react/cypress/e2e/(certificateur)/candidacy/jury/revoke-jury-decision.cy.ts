@@ -2,6 +2,12 @@ import { stubQuery, stubMutation } from "../../../../utils/graphql";
 import candidacyWithJuryResult from "./fixtures/candidacy-with-jury-result.json";
 import revokeDecisionResponse from "./fixtures/revoke-jury-decision-response.json";
 import candidacyWithJuryResultRevoked from "./fixtures/candidacy-with-jury-result-revoked.json";
+import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
+import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-category.json";
+import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
+import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
+import organismForAAPVisibilityCheck from "../../fixtures/organism-for-aap-visibility-check.json";
+import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
 
 describe("revoke jury decision", () => {
   beforeEach(() => {
@@ -12,24 +18,57 @@ describe("revoke jury decision", () => {
         },
       });
 
-      stubQuery(req, "getOrganismForAAPVisibilityCheck", {
-        data: null,
-        errors: [],
-      });
+      stubQuery(
+        req,
+        "getOrganismForAAPVisibilityCheck",
+        organismForAAPVisibilityCheck,
+      );
 
-      stubQuery(req, "getAccountInfo", "account/admin-info.json");
+      stubQuery(req, "getMaisonMereCGUQuery", maisonMereCGU);
+
+      stubQuery(
+        req,
+        "getCandidacyWithCandidateInfoForLayout",
+        candidacyInfoForLayout,
+      );
+
+      stubQuery(
+        req,
+        "getFeasibilityCountByCategory",
+        feasibilityCountByCategory,
+      );
+
+      stubQuery(
+        req,
+        "getDossierDeValidationCountByCategory",
+        dossierDeValidationCountByCategory,
+      );
+
+      stubQuery(req, "getJuryCountByCategory", juryCountByCategory);
+
+      stubQuery(req, "getJuryByCandidacyId", candidacyWithJuryResult);
     });
   });
 
   context("As an admin viewing a jury decision", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "getJuryByCandidacyId", candidacyWithJuryResult);
-
         stubMutation(req, "jury_revokeDecision", revokeDecisionResponse);
       });
 
       cy.admin("/candidacies/test-candidacy-id/jury/test-jury-id/");
+
+      cy.wait([
+        "@activeFeaturesForConnectedUser",
+        "@getOrganismForAAPVisibilityCheck",
+        "@getMaisonMereCGUQuery",
+        "@getCandidacyWithCandidateInfoForLayout",
+        "@getFeasibilityCountByCategory",
+        "@getDossierDeValidationCountByCategory",
+        "@getJuryCountByCategory",
+        "@getJuryByCandidacyId",
+      ]);
+
       cy.get('[role="tab"]').contains("Résultat").click();
     });
 
@@ -77,11 +116,19 @@ describe("revoke jury decision", () => {
 
   context("As a non-admin user", () => {
     beforeEach(() => {
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "getJuryByCandidacyId", candidacyWithJuryResult);
-      });
-
       cy.certificateur("/candidacies/test-candidacy-id/jury/test-jury-id/");
+
+      cy.wait([
+        "@activeFeaturesForConnectedUser",
+        "@getOrganismForAAPVisibilityCheck",
+        "@getMaisonMereCGUQuery",
+        "@getCandidacyWithCandidateInfoForLayout",
+        "@getFeasibilityCountByCategory",
+        "@getDossierDeValidationCountByCategory",
+        "@getJuryCountByCategory",
+        "@getJuryByCandidacyId",
+      ]);
+
       cy.get('[role="tab"]').contains("Résultat").click();
     });
 

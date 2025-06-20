@@ -1,0 +1,15 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "e6c641c5-08e8-4a3c-b878-09891d4f0099",
+      "typeAccompagnement": "ACCOMPAGNE",
+      "candidate": {
+        "firstname": "Tom",
+        "lastname": "Mot"
+      },
+      "jury": null,
+      "candidacyContestationsCaducite": [],
+      "isCaduque": false
+    }
+  }
+}
