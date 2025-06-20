@@ -20,7 +20,10 @@ await fastify.register(routesApiV1, {
 
 try {
   await fastify.ready();
-  await fastify.listen({ port: (process.env.PORT || 8080) as number });
+  await fastify.listen({
+    port: (process.env.PORT || 8080) as number,
+    host: "0.0.0.0",
+  });
 } catch (err) {
   fastify.log.error(err);
   process.exit(1);
