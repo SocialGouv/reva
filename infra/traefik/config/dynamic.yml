@@ -246,7 +246,7 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://reva-staging.osc-fr1.scalingo.io/interop"
+          - url: "https://reva-staging-interop.osc-fr1.scalingo.io/"
 
     # --- END STAGING ---
 
