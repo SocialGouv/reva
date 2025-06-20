@@ -253,6 +253,13 @@ const CandidacyLayoutSideMenu = ({
             },
             isActive: isActive("DEMANDE_PAIEMENT_ENVOYEE"),
           },
+          {
+            text: `Demandes de paiement à envoyer ${getCounterText("DEMANDE_PAIEMENT_A_ENVOYER")}`,
+            linkProps: {
+              href: hrefSideMenu("DEMANDE_PAIEMENT_A_ENVOYER"),
+            },
+            isActive: isActive("DEMANDE_PAIEMENT_A_ENVOYER"),
+          },
         ]
       : []),
   ];

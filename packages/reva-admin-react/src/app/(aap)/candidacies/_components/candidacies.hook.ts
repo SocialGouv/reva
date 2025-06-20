@@ -40,6 +40,7 @@ const getCandidacyByStatusCountAndCohortesVaeCollectives = graphql(`
       CADUQUE
       DEMANDE_FINANCEMENT_ENVOYEE
       DEMANDE_PAIEMENT_ENVOYEE
+      DEMANDE_PAIEMENT_A_ENVOYER
     }
     cohortesVaeCollectivesForConnectedAap {
       id
