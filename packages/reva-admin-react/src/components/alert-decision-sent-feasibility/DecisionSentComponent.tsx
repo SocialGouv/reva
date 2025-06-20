@@ -1,5 +1,6 @@
 import { FeasibilityDecision } from "@/graphql/generated/graphql";
 import Alert, { AlertProps } from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { FeasibilityDecisionHistory } from "../feasibility-decision-history/FeasibilityDecisionHistory";
 
@@ -21,11 +22,15 @@ export const DecisionSentComponent = ({
   decision,
   decisionComment,
   history,
+  onRevokeDecision,
+  isAdmin = false,
 }: {
   decisionSentAt: Date | null;
   decision: FeasibilityDecision;
   decisionComment?: string | null;
   history?: FeasibilityHistory[];
+  onRevokeDecision?: () => void;
+  isAdmin?: boolean;
 }) => {
   if (!decisionSentAt || decision === "COMPLETE") {
     return null;
@@ -38,19 +43,29 @@ export const DecisionSentComponent = ({
   };
 
   const canDisplayHistory = !!history?.length && history.length > 1;
+  const canRevoke = ["ADMISSIBLE", "REJECTED"].includes(decision);
 
   return (
     <>
-      <Alert
-        title={titleMap[decision as keyof typeof titleMap]}
-        severity={
-          severityMap[
-            decision as keyof typeof severityMap
-          ] as AlertProps.Severity
-        }
-        description={decisionComment ? `”${decisionComment}”` : ""}
-        className="mb-6"
-      />
+      <div>
+        <Alert
+          title={titleMap[decision as keyof typeof titleMap]}
+          severity={
+            severityMap[
+              decision as keyof typeof severityMap
+            ] as AlertProps.Severity
+          }
+          description={decisionComment ? `”${decisionComment}”` : ""}
+          className="mb-4"
+        />
+        {canRevoke && isAdmin && (
+          <div className="flex justify-end mb-4">
+            <Button priority="secondary" onClick={onRevokeDecision}>
+              Annuler la décision
+            </Button>
+          </div>
+        )}
+      </div>
       {canDisplayHistory && (
         <FeasibilityDecisionHistory
           className="mb-12"

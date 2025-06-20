@@ -2,7 +2,7 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { REST_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
@@ -92,6 +92,20 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
   }
 `);
 
+const revokeCertificationAuthorityDecisionMutation = graphql(`
+  mutation revokeCertificationAuthorityDecisionPdf(
+    $feasibilityId: ID!
+    $reason: String
+  ) {
+    feasibility_revokeCertificationAuthorityDecision(
+      feasibilityId: $feasibilityId
+      reason: $reason
+    ) {
+      id
+    }
+  }
+`);
+
 export const useFeasibilityUploadedPdf = () => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
@@ -139,9 +153,19 @@ export const useFeasibilityUploadedPdf = () => {
     return result;
   };
 
+  const revokeDecisionMutation = useMutation({
+    mutationFn: async (data: { feasibilityId: string; reason: string }) => {
+      return graphqlClient.request(
+        revokeCertificationAuthorityDecisionMutation,
+        data,
+      );
+    },
+  });
+
   return {
     feasibility,
     candidacy,
     submitFeasibilityDecision,
+    revokeDecision: revokeDecisionMutation,
   };
 };

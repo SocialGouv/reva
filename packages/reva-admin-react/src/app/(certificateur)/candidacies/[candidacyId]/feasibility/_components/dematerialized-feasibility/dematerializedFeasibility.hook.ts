@@ -1,11 +1,12 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
   query feasibilityGetActiveFeasibilityByCandidacyId($candidacyId: ID!) {
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
+      id
       decision
       decisionComment
       decisionSentAt
@@ -191,6 +192,20 @@ export const createOrUpdateCertificationAuthorityDecision = graphql(`
   }
 `);
 
+const revokeCertificationAuthorityDecisionMutation = graphql(`
+  mutation revokeCertificationAuthorityDecision(
+    $feasibilityId: ID!
+    $reason: String
+  ) {
+    feasibility_revokeCertificationAuthorityDecision(
+      feasibilityId: $feasibilityId
+      reason: $reason
+    ) {
+      id
+    }
+  }
+`);
+
 export const useDematerializedFeasibility = () => {
   const { graphqlClient } = useGraphQlClient();
   const { candidacyId } = useParams<{
@@ -215,10 +230,20 @@ export const useDematerializedFeasibility = () => {
   const dematerializedFeasibilityFileId = dematerializedFeasibilityFile?.id;
   const candidacy = feasibility?.candidacy;
 
+  const revokeDecisionMutation = useMutation({
+    mutationFn: async (data: { feasibilityId: string; reason: string }) => {
+      return graphqlClient.request(
+        revokeCertificationAuthorityDecisionMutation,
+        data,
+      );
+    },
+  });
+
   return {
     dematerializedFeasibilityFileId,
     dematerializedFeasibilityFile,
     candidacy,
     feasibility,
+    revokeDecision: revokeDecisionMutation,
   };
 };

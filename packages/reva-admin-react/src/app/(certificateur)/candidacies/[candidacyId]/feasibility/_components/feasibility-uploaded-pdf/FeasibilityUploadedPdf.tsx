@@ -2,10 +2,13 @@ import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSec
 import { BackButton } from "@/components/back-button/BackButton";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { errorToast } from "@/components/toast/toast";
+import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
+import { useAuth } from "@/components/auth/auth";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { FeasibilityBanner } from "../FeasibilityBanner";
 import {
   FeasibilityCompletionForm,
@@ -15,13 +18,18 @@ import {
   FeasibilityValidationForm,
   FeasibilityValidationFormData,
 } from "../FeasibilityValidationForm";
+import { useRevokeFeasibilityDecisionModal } from "../useRevokeFeasibilityDecisionModal.hook";
 import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
 
 export const FeasibilityUploadedPdf = () => {
-  const { candidacy, feasibility, submitFeasibilityDecision } =
+  const { candidacyId } = useParams<{ candidacyId: string }>();
+  const { candidacy, feasibility, submitFeasibilityDecision, revokeDecision } =
     useFeasibilityUploadedPdf();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { isFeatureActive } = useFeatureflipping();
+  const { isAdmin } = useAuth();
+  const revokeDecisionModal = useRevokeFeasibilityDecisionModal();
 
   const handleCompletionFormSubmit = async (
     data: FeasibilityCompletionFormData,
@@ -98,7 +106,25 @@ export const FeasibilityUploadedPdf = () => {
   const certificationName = candidacy?.certification?.label ?? "";
 
   return (
-    <div className="flex flex-col flex-1 mb-2 w-full">
+    <div
+      className="flex flex-col flex-1 mb-2 w-full"
+      data-test={`feasibility-page-pdf-${feasibility?.decision?.toLowerCase() || "pending"}`}
+    >
+      {feasibility && (
+        <revokeDecisionModal.Component
+          onConfirmButtonClick={async (data: { reason: string }) => {
+            try {
+              await revokeDecision.mutateAsync({
+                feasibilityId: feasibility.id,
+                reason: data.reason,
+              });
+              queryClient.invalidateQueries({ queryKey: [candidacyId] });
+            } catch (e) {
+              graphqlErrorToast(e);
+            }
+          }}
+        />
+      )}
       <BackButton href="/candidacies/feasibilities">
         Tous les dossiers
       </BackButton>
@@ -124,6 +150,8 @@ export const FeasibilityUploadedPdf = () => {
               hasConfirmedCaduciteContestation={
                 hasConfirmedCaduciteContestation
               }
+              onRevokeDecision={() => revokeDecisionModal.open()}
+              isAdmin={isAdmin}
             />
             <h2 className="mb-6 mt-12">Certification visée</h2>
             <p className="text-lg font-bold mb-0">
