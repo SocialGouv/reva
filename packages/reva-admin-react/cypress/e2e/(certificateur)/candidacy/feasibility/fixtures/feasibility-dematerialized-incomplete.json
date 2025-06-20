@@ -1,0 +1,125 @@
+{
+  "data": {
+    "feasibility_getActiveFeasibilityByCandidacyId": {
+      "id": "test-feasibility-demat-id",
+      "decision": "INCOMPLETE",
+      "decisionComment": "Dossier incomplet",
+      "decisionSentAt": 1734688992667,
+      "history": [
+        {
+          "id": "test-history-incomplete",
+          "decision": "INCOMPLETE",
+          "decisionComment": "Dossier incomplet",
+          "decisionSentAt": 1734688992667
+        }
+      ],
+      "dematerializedFeasibilityFile": {
+        "id": "test-dff-id",
+        "swornStatementFile": {
+          "name": "test-document.pdf",
+          "previewUrl": "https://example.com/preview-sworn-statement",
+          "mimeType": "application/pdf"
+        },
+        "sentToCandidateAt": 1734688767749,
+        "aapDecision": "FAVORABLE",
+        "aapDecisionComment": "Avis favorable",
+        "candidateDecisionComment": "",
+        "prerequisites": [],
+        "firstForeignLanguage": "",
+        "secondForeignLanguage": "",
+        "option": "",
+        "blocsDeCompetences": [],
+        "certificationCompetenceDetails": [],
+        "attachments": [],
+        "eligibilityRequirement": "FULL_ELIGIBILITY_REQUIREMENT",
+        "eligibilityValidUntil": null
+      },
+      "candidacy": {
+        "id": "46206f6b-0a59-4478-9338-45e3a8d968e4",
+        "organism": {
+          "contactAdministrativePhone": "0123456789",
+          "contactAdministrativeEmail": "admin@organism.com",
+          "adresseVille": "Paris",
+          "adresseCodePostal": "75001",
+          "adresseInformationsComplementaires": "",
+          "adresseNumeroEtNomDeRue": "1 rue de la Paix",
+          "emailContact": "contact@organism.com",
+          "telephone": "0123456789",
+          "nomPublic": "Test Organism Public",
+          "label": "Test Organism"
+        },
+        "candidate": {
+          "highestDegree": {
+            "longLabel": "Niveau 4 : Baccalauréat"
+          },
+          "niveauDeFormationLePlusEleve": {
+            "longLabel": "Niveau 4 : Baccalauréat"
+          },
+          "highestDegreeLabel": "",
+          "firstname": "John",
+          "firstname2": "",
+          "firstname3": "",
+          "lastname": "Doe",
+          "email": "john.doe@example.com",
+          "givenName": "",
+          "birthdate": 631152000000,
+          "birthCity": "Paris",
+          "birthDepartment": {
+            "label": "Paris",
+            "code": "75",
+            "region": {
+              "code": "11",
+              "label": "Île-de-France"
+            }
+          },
+          "country": {
+            "id": "208ef9d1-4d18-475b-9f5f-575da5f7218c",
+            "label": "France"
+          },
+          "nationality": "française",
+          "gender": "man",
+          "phone": "0123456789",
+          "city": "Paris",
+          "street": "10 rue de la République",
+          "zip": "75001"
+        },
+        "certification": {
+          "certificationAuthorities": [
+            {
+              "id": "test-cert-authority-id",
+              "label": "Test Certification Authority"
+            }
+          ],
+          "label": "Test Certification",
+          "codeRncp": "RNCP12345",
+          "level": 4,
+          "degree": {
+            "longLabel": "Niveau 4 (Baccalauréat)",
+            "level": 4
+          }
+        },
+        "experiences": [
+          {
+            "title": "Test Experience",
+            "startedAt": 1579651200000,
+            "duration": "betweenOneAndThreeYears",
+            "description": "Test description"
+          }
+        ],
+        "goals": [],
+        "basicSkills": [],
+        "mandatoryTrainings": [],
+        "certificateSkills": "",
+        "candidacyDropOut": null,
+        "isCaduque": false,
+        "lastActivityDate": 1734688992667,
+        "candidacyContestationsCaducite": [],
+        "individualHourCount": 20,
+        "collectiveHourCount": 10,
+        "additionalHourCount": 5,
+        "status": "DOSSIER_FAISABILITE_INCOMPLET",
+        "certificationAuthorityLocalAccounts": []
+      }
+    }
+  }
+}
