@@ -1,0 +1,49 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "46206f6b-0a59-4478-9338-45e3a8d968e4",
+      "certification": {
+        "label": "Test Certification"
+      },
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "phone": "0123456789",
+        "email": "john.doe@example.com"
+      },
+      "organism": null,
+      "certificationAuthorityLocalAccounts": [],
+      "candidacyDropOut": null,
+      "status": "DOSSIER_FAISABILITE_NON_RECEVABLE",
+      "typeAccompagnement": "AUTONOME",
+      "feasibility": {
+        "id": "test-feasibility-pdf-id",
+        "decision": "REJECTED",
+        "decisionComment": "Dossier non recevable",
+        "decisionSentAt": 1734688992667,
+        "certificationAuthority": {
+          "id": "test-certification-authority-id",
+          "label": "Test Certification Authority",
+          "contactFullName": "John Authority",
+          "contactEmail": "john.authority@example.com",
+          "contactPhone": "0123456789"
+        },
+        "history": [],
+        "feasibilityUploadedPdf": {
+          "IDFile": null,
+          "feasibilityFile": {
+            "url": "https://example.com/feasibility-file",
+            "name": "dossier-faisabilite.pdf",
+            "previewUrl": "https://example.com/preview-feasibility"
+          },
+          "documentaryProofFile": null,
+          "certificateOfAttendanceFile": null
+        }
+      },
+      "feasibilityFormat": "UPLOADED_PDF",
+      "isCaduque": false,
+      "lastActivityDate": 1734688992667,
+      "candidacyContestationsCaducite": []
+    }
+  }
+}
