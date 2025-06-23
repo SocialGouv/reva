@@ -68,10 +68,14 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
   }
 
   if (!params.userRoles.includes("admin")) {
-    const feasibilitySent = isCandidacyStatusEqualOrAboveGivenStatus(
+    const isFeasibilitySent = isCandidacyStatusEqualOrAboveGivenStatus(
       candidacyStatus,
     )("DOSSIER_FAISABILITE_ENVOYE");
-    if (!feasibilitySent) {
+
+    const isFeasibilityIncomplete =
+      candidacyStatus === "DOSSIER_FAISABILITE_INCOMPLET";
+
+    if (!isFeasibilitySent && !isFeasibilityIncomplete) {
       throw new Error(
         "La candidature ne peut être abandonnée car le dossier de faisabilité n'a pas été envoyé",
       );

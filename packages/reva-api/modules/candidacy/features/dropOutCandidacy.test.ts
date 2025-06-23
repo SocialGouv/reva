@@ -1,3 +1,4 @@
+import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacyDropOutHelper } from "../../../test/helpers/entities/create-candidacy-drop-out-helper";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
@@ -52,10 +53,13 @@ describe("drop out candidacy", () => {
     );
   });
 
-  test("should return candidacy with drop out reason", async () => {
+  test.each<CandidacyStatusStep>([
+    "DOSSIER_FAISABILITE_INCOMPLET",
+    "DOSSIER_FAISABILITE_ENVOYE",
+  ])("should allow AAP to drop out candidacy at %s status", async (status) => {
     const dropoutReason = await createDropOutReasonHelper();
     const candidacy = await createCandidacyHelper({
-      candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
+      candidacyActiveStatus: status,
     });
     await dropOutCandidacy({
       candidacyId: candidacy.id,
