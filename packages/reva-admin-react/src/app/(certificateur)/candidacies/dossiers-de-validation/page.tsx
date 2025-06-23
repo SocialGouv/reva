@@ -4,7 +4,6 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { DossierDeValidationCategoryFilter } from "@/graphql/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
@@ -228,14 +227,7 @@ const DossiersDeValidationPage = () => {
           searchResultLink={(candidacyId) =>
             `/candidacies/${candidacyId}/dossier-de-validation`
           }
-        >
-          {(r) => (
-            <p className="text-lg col-span-2 mb-0">
-              Dossier envoyé le{" "}
-              {format(r?.dossierDeValidationSentAt, "d MMM yyyy")}
-            </p>
-          )}
-        </CandidacySearchList>
+        />
       </div>
     )
   );

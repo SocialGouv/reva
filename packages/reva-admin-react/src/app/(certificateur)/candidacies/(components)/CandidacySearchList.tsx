@@ -70,6 +70,7 @@ const StatusTag = ({
 type CandidacySearchResult<T> = T & {
   id: string;
   feasibilityFileSentAt?: number | null;
+  dossierDeValidationSentAt?: number | null;
   candidacy: {
     id: string;
     status: CandidacyStatusStep;
@@ -163,8 +164,16 @@ export const CandidacySearchList = <T,>({
             </div>
           }
           endDetail={
-            r.feasibilityFileSentAt &&
-            `Dossier envoyé le ${format(r.feasibilityFileSentAt, "d MMM yyyy")}`
+            <>
+              <div>
+                {r.feasibilityFileSentAt &&
+                  `Dossier envoyé le ${format(r.feasibilityFileSentAt, "d MMM yyyy")}`}
+              </div>
+              <div>
+                {r.dossierDeValidationSentAt &&
+                  `Dossier de validation envoyé le ${format(r.dossierDeValidationSentAt, "d MMM yyyy")}`}
+              </div>
+            </>
           }
           linkProps={{
             href: searchResultLink(r.candidacy.id),
