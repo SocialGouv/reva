@@ -210,13 +210,7 @@ const JuriesPage = () => {
           searchFilter={searchFilter}
           searchResultsPage={juryPage}
           searchResultLink={(candidacyId) => `/candidacies/${candidacyId}/jury`}
-        >
-          {(r) => (
-            <p className="text-lg col-span-2 mb-0">
-              Jury programmé le {format(r?.dateOfSession, "d MMM yyyy")}
-            </p>
-          )}
-        </CandidacySearchList>
+        />
       </div>
     )
   );

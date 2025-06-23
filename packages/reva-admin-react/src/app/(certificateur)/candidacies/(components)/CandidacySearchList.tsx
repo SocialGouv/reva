@@ -71,6 +71,7 @@ type CandidacySearchResult<T> = T & {
   id: string;
   feasibilityFileSentAt?: number | null;
   dossierDeValidationSentAt?: number | null;
+  dateOfSession?: number | null;
   candidacy: {
     id: string;
     status: CandidacyStatusStep;
@@ -172,6 +173,10 @@ export const CandidacySearchList = <T,>({
               <div>
                 {r.dossierDeValidationSentAt &&
                   `Dossier de validation envoyé le ${format(r.dossierDeValidationSentAt, "d MMM yyyy")}`}
+              </div>
+              <div>
+                {r.dateOfSession &&
+                  `Jury programmé le ${format(r.dateOfSession, "d MMM yyyy")}`}
               </div>
             </>
           }
