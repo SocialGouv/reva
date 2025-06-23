@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { CandidacySearchList } from "../(components)/CandidacySearchList";
-import { format } from "date-fns";
 import Button from "@codegouvfr/react-dsfr/Button";
 
 const RECORDS_PER_PAGE = 10;
