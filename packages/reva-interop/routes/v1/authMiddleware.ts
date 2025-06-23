@@ -19,7 +19,10 @@ export const validateJwt = async (
   request: FastifyRequest,
   _reply: FastifyReply,
 ) => {
-  if (request.url === "/v1/docs" || request.url === "/v1/schema.json") {
+  if (
+    request.url === "/interop/v1/docs" ||
+    request.url === "/interop/v1/schema.json"
+  ) {
     return;
   }
   const jwt =

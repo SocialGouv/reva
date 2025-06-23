@@ -15,7 +15,7 @@ const fastify = Fastify({
 }).withTypeProvider<JsonSchemaToTsProvider>();
 
 await fastify.register(routesApiV1, {
-  prefix: "/v1",
+  prefix: "/interop/v1",
 });
 
 try {
