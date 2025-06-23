@@ -69,9 +69,9 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
         },
         data: {
           reorientationReasonId: params.reorientationReasonId,
-          archivalReason: params.archivalReason,
-          archivalReasonAdditionalInformation:
-            params.archivalReasonAdditionalInformation,
+          archivingReason: params.archivingReason,
+          archivingReasonAdditionalInformation:
+            params.archivingReasonAdditionalInformation,
         },
       });
     });

@@ -65,8 +65,8 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
           id: params.candidacyId,
         },
         data: {
-          archivalReason: null,
-          archivalReasonAdditionalInformation: null,
+          archivingReason: null,
+          archivingReasonAdditionalInformation: null,
           reorientationReasonId: null,
         },
       });

@@ -256,8 +256,8 @@ model Candidacy {
   cohorteVaeCollective                          CohorteVaeCollective?                           @relation(fields: [cohorteVaeCollectiveId], references: [id], onDelete: NoAction)
   certificationAuthorityLocalAccountOnCandidacy CertificationAuthorityLocalAccountOnCandidacy[]
   feasibilityFileTemplateFirstReadAt            DateTime?                                       @map("feasibility_file_template_first_read_at") @db.Timestamptz(6)
-  archivalReason                                CandidacyArchivalReason?
-  archivalReasonAdditionalInformation           String?                                         @map("archival_reason_additional_information")
+  archivingReason                               CandidacyArchivingReason?
+  archivingReasonAdditionalInformation          String?                                         @map("archiving_reason_additional_information")
 
   @@index([organismId])
   @@index([candidateId])
@@ -781,7 +781,7 @@ model CandidacyDropOut {
   @@map("candidacy_drop_out")
 }
 
-enum CandidacyArchivalReason {
+enum CandidacyArchivingReason {
   INACTIVITE_CANDIDAT
   REORIENTATION_HORS_FRANCE_VAE
   PROBLEME_FINANCEMENT

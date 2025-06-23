@@ -1,6 +1,6 @@
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { CandidacyArchivalReason } from "@/graphql/generated/graphql";
+import { CandidacyArchivingReason } from "@/graphql/generated/graphql";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
@@ -22,13 +22,13 @@ const getCandidacyById = graphql(`
 const archiveCandidacyByIdMutation = graphql(`
   mutation archiveCandidacyById(
     $candidacyId: ID!
-    $archivalReason: CandidacyArchivalReason
-    $archivalReasonAdditionalInformation: String
+    $archivingReason: CandidacyArchivingReason
+    $archivingReasonAdditionalInformation: String
   ) {
     candidacy_archiveById(
       candidacyId: $candidacyId
-      archivalReason: $archivalReason
-      archivalReasonAdditionalInformation: $archivalReasonAdditionalInformation
+      archivingReason: $archivingReason
+      archivingReasonAdditionalInformation: $archivingReasonAdditionalInformation
     ) {
       id
     }
@@ -53,16 +53,16 @@ export const useArchive = () => {
 
   const archiveCandidacy = useMutation({
     mutationFn: ({
-      archivalReason,
-      archivalReasonAdditionalInformation,
+      archivingReason,
+      archivingReasonAdditionalInformation,
     }: {
-      archivalReason: CandidacyArchivalReason;
-      archivalReasonAdditionalInformation?: string;
+      archivingReason: CandidacyArchivingReason;
+      archivingReasonAdditionalInformation?: string;
     }) =>
       graphqlClient.request(archiveCandidacyByIdMutation, {
         candidacyId,
-        archivalReason,
-        archivalReasonAdditionalInformation,
+        archivingReason,
+        archivingReasonAdditionalInformation,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [candidacyId] });

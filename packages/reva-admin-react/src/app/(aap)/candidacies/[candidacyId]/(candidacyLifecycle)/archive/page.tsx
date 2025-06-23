@@ -9,14 +9,14 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { useMemo } from "react";
-import { CandidacyArchivalReason } from "@/graphql/generated/graphql";
+import { CandidacyArchivingReason } from "@/graphql/generated/graphql";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const archiveSchema = z.object({
-  archivalReason: z.enum(
+  archivingReason: z.enum(
     [
       "INACTIVITE_CANDIDAT",
       "MULTI_CANDIDATURES",
@@ -29,7 +29,7 @@ const archiveSchema = z.object({
       message: "Merci de remplir ce champ",
     },
   ),
-  archivalReasonAdditionalInformation: z.string().optional(),
+  archivingReasonAdditionalInformation: z.string().optional(),
 });
 
 type ArchiveFormData = z.infer<typeof archiveSchema>;
@@ -54,10 +54,10 @@ const CandidacyArchiveComponent = ({
     resolver: zodResolver(archiveSchema),
   });
 
-  const archivalReason = useWatch({ control, name: "archivalReason" });
+  const archivingReason = useWatch({ control, name: "archivingReason" });
 
-  const availableArchivalReasons: {
-    value: CandidacyArchivalReason;
+  const availableArchivingReasons: {
+    value: CandidacyArchivingReason;
     label: string;
   }[] = useMemo(() => {
     const feasibilityResultKnown =
@@ -121,10 +121,10 @@ const CandidacyArchiveComponent = ({
   const handleFormSubmit = handleSubmit(
     async (data) => {
       if (
-        data.archivalReason === "AUTRE" &&
-        !data.archivalReasonAdditionalInformation
+        data.archivingReason === "AUTRE" &&
+        !data.archivingReasonAdditionalInformation
       ) {
-        setError("archivalReasonAdditionalInformation", {
+        setError("archivingReasonAdditionalInformation", {
           message: "Merci de remplir ce champ",
         });
       } else {
@@ -150,24 +150,27 @@ const CandidacyArchiveComponent = ({
       </p>
       <form onSubmit={handleFormSubmit}>
         <RadioButtons
-          options={availableArchivalReasons.map((r) => ({
+          options={availableArchivingReasons.map((r) => ({
             label: r.label,
-            nativeInputProps: { value: r.value, ...register("archivalReason") },
+            nativeInputProps: {
+              value: r.value,
+              ...register("archivingReason"),
+            },
           }))}
-          state={errors.archivalReason ? "error" : "default"}
-          stateRelatedMessage={errors.archivalReason?.message}
+          state={errors.archivingReason ? "error" : "default"}
+          stateRelatedMessage={errors.archivingReason?.message}
         />
-        {archivalReason === "AUTRE" && (
+        {archivingReason === "AUTRE" && (
           <Input
             label="S’il s’agit d’une autre raison, merci de l’indiquer ici :"
             nativeInputProps={{
-              ...register("archivalReasonAdditionalInformation"),
+              ...register("archivingReasonAdditionalInformation"),
             }}
             state={
-              errors.archivalReasonAdditionalInformation ? "error" : "default"
+              errors.archivingReasonAdditionalInformation ? "error" : "default"
             }
             stateRelatedMessage={
-              errors.archivalReasonAdditionalInformation?.message
+              errors.archivingReasonAdditionalInformation?.message
             }
           />
         )}

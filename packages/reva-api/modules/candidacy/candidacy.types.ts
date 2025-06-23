@@ -104,7 +104,7 @@ export enum CandidacyCaduciteStatus {
   CONTESTATION = "CONTESTATION",
 }
 
-type CandidacyArchivalReason =
+type CandidacyArchivingReason =
   | "INACTIVITE_CANDIDAT"
   | "REORIENTATION_HORS_FRANCE_VAE"
   | "PROBLEME_FINANCEMENT"
@@ -115,6 +115,6 @@ type CandidacyArchivalReason =
 export interface ArchiveCandidacyParams {
   candidacyId: string;
   reorientationReasonId: string | null;
-  archivalReason?: CandidacyArchivalReason | null;
-  archivalReasonAdditionalInformation?: string | null;
+  archivingReason?: CandidacyArchivingReason | null;
+  archivingReasonAdditionalInformation?: string | null;
 }

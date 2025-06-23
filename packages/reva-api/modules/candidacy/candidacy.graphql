@@ -242,7 +242,7 @@ type CandidacyCaducitePaginated {
   info: PaginationInfo!
 }
 
-enum CandidacyArchivalReason {
+enum CandidacyArchivingReason {
   INACTIVITE_CANDIDAT
   REORIENTATION_HORS_FRANCE_VAE
   PROBLEME_FINANCEMENT
@@ -341,8 +341,8 @@ type Mutation {
   candidacy_archiveById(
     candidacyId: ID!
     reorientationReasonId: UUID
-    archivalReason: CandidacyArchivalReason
-    archivalReasonAdditionalInformation: String
+    archivingReason: CandidacyArchivingReason
+    archivingReasonAdditionalInformation: String
   ): Candidacy!
   candidacy_unarchiveById(candidacyId: ID!): Candidacy!
   candidacy_updateAppointmentInformations(
