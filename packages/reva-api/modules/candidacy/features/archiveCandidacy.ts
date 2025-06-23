@@ -7,11 +7,8 @@ import {
   // FunctionalError,
 } from "../../shared/error/functionalError";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
+import { ArchiveCandidacyParams } from "../candidacy.types";
 
-interface ArchiveCandidacyParams {
-  candidacyId: string;
-  reorientationReasonId: string | null;
-}
 export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
   let candidacy;
   try {
@@ -72,6 +69,9 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
         },
         data: {
           reorientationReasonId: params.reorientationReasonId,
+          archivalReason: params.archivalReason,
+          archivalReasonAdditionalInformation:
+            params.archivalReasonAdditionalInformation,
         },
       });
     });

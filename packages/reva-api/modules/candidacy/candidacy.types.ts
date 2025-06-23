@@ -103,3 +103,18 @@ export enum CandidacyCaduciteStatus {
   CADUQUE = "CADUQUE",
   CONTESTATION = "CONTESTATION",
 }
+
+type CandidacyArchivalReason =
+  | "INACTIVITE_CANDIDAT"
+  | "REORIENTATION_HORS_FRANCE_VAE"
+  | "PROBLEME_FINANCEMENT"
+  | "AUTRE"
+  | "MULTI_CANDIDATURES"
+  | "PASSAGE_AUTONOME_A_ACCOMPAGNE";
+
+export interface ArchiveCandidacyParams {
+  candidacyId: string;
+  reorientationReasonId: string | null;
+  archivalReason?: CandidacyArchivalReason | null;
+  archivalReasonAdditionalInformation?: string | null;
+}

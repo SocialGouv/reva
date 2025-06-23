@@ -17,6 +17,7 @@ import {
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
 import {
+  ArchiveCandidacyParams,
   Candidacy,
   CandidacyBusinessEvent,
   CandidacyCaduciteStatus,
@@ -348,13 +349,10 @@ const unsafeResolvers = {
 
     candidacy_archiveById: async (
       _: unknown,
-      payload: any,
+      payload: ArchiveCandidacyParams,
       context: GraphqlContext,
     ) => {
-      const candidacy = await archiveCandidacy({
-        candidacyId: payload.candidacyId,
-        reorientationReasonId: payload.reorientationReasonId,
-      });
+      const candidacy = await archiveCandidacy(payload);
 
       sendCandidacyArchivedEmailToCertificateur(candidacy.id);
 

@@ -58,10 +58,25 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
     if (!latestStatusBeforeArchive) {
       throw new Error("Statut de la candidature avant archivage non trouvé");
     }
-    return updateCandidacyStatus({
-      candidacyId: params.candidacyId,
-      status: latestStatusBeforeArchive.status,
+
+    const newCandidacy = await prismaClient.$transaction(async (tx) => {
+      await tx.candidacy.update({
+        where: {
+          id: params.candidacyId,
+        },
+        data: {
+          archivalReason: null,
+          archivalReasonAdditionalInformation: null,
+        },
+      });
+      return updateCandidacyStatus({
+        candidacyId: params.candidacyId,
+        status: latestStatusBeforeArchive.status,
+        tx,
+      });
     });
+
+    return newCandidacy;
   } catch (e) {
     logger.error(e);
     throw new Error(
