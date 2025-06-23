@@ -6,6 +6,7 @@ import {
   useUnarchive,
 } from "./_components/useUnarchive";
 import { useCandidacyStatus } from "../../_components/candidacy.hook";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const CandidacyUnarchiveComponent = ({
   candidacy,
@@ -26,8 +27,18 @@ const CandidacyUnarchiveComponent = ({
   }
 
   return (
-    <div className="flex flex-col items-end mt-6">
-      <UnarchiveButton />
+    <div className="flex flex-col mt-6">
+      <div className="flex justify-between">
+        <Button
+          priority="tertiary"
+          linkProps={{
+            href: `/candidacies/${candidacy.id}/summary`,
+          }}
+        >
+          Retour
+        </Button>
+        <UnarchiveButton />
+      </div>
     </div>
   );
 };

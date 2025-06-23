@@ -3,6 +3,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import { ArchiveButton } from "./_components/ArchiveButton";
 import { CandidacyForArchive, useArchive } from "./_components/useArchive";
 import { useCandidacyStatus } from "../../_components/candidacy.hook";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const CandidacyArchiveComponent = ({
   candidacy,
@@ -42,7 +43,17 @@ const CandidacyArchiveComponent = ({
         className="my-4"
         description="La suppression permet au candidat de refaire une candidature dans le cadre de France VAE (modification du diplôme, changement d’AAP, modification de ses coordonnées, …)"
       />
-      <ArchiveButton />
+      <div className="flex justify-between">
+        <Button
+          priority="tertiary"
+          linkProps={{
+            href: `/candidacies/${candidacy.id}/summary`,
+          }}
+        >
+          Retour
+        </Button>
+        <ArchiveButton />
+      </div>
     </div>
   );
 };
