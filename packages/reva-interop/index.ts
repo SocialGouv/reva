@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
+import cors from "@fastify/cors";
 import dotenv from "dotenv";
 import routesApiV1 from "./routes/v1/index.js";
 
@@ -15,8 +16,18 @@ const fastify = Fastify({
 }).withTypeProvider<JsonSchemaToTsProvider>();
 
 await fastify.register(routesApiV1, {
-  prefix: "/v1",
+  prefix: "/interop/v1",
 });
+
+if (process.env.CORS_ORIGIN) {
+  await fastify.register(cors, {
+    origin: process.env.CORS_ORIGIN.split(","),
+  });
+} else {
+  await fastify.register(cors, {
+    origin: true,
+  });
+}
 
 try {
   await fastify.ready();

@@ -51,7 +51,7 @@ http:
         - removeHeader
 
     interop-staging:
-      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/interop`)"
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/interop/v1`)"
       service: interop-staging
       middlewares:
         - removeHeader
@@ -246,7 +246,7 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://reva-staging-interop.osc-fr1.scalingo.io/"
+          - url: "http://reva-staging-interop.osc-fr1.scalingo.io/interop/v1"
 
     # --- END STAGING ---
 

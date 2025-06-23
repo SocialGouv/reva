@@ -62,7 +62,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     logo: {
       type: `image/svg+xml`,
       content: Buffer.from(logo),
-      href: "/v1/documentation",
+      href: "/interop/v1/documentation",
     },
     theme: {
       css: [
@@ -73,7 +73,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         },
       ],
     },
-    indexPrefix: "/v1",
+    indexPrefix: "/interop/v1",
     uiConfig: {
       docExpansion: "list",
       deepLinking: false,
@@ -89,32 +89,6 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   fastify.addHook("onRequest", validateJwt);
 
   // Declare a route
-  fastify.get("/", {
-    schema: {
-      // request needs to have a querystring with a `name` parameter
-      querystring: {
-        type: "object",
-        properties: {
-          name: { type: "string" },
-        },
-        required: ["name"],
-      },
-      // the response needs to be an object with an `hello` property of type 'string'
-      response: {
-        200: {
-          type: "object",
-          properties: {
-            hello: { type: "string" },
-            other: { type: "string" },
-          },
-          required: ["hello"],
-        },
-      },
-    },
-    handler: async (_request, _reply) => {
-      return { hello: "world" };
-    },
-  });
 
   fastify.route({
     method: "GET",
@@ -653,7 +627,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     </style>
   </head>
   <body>
-    <redoc spec-url='http://localhost:${process.env.PORT || 8080}/v1/documentation/json' schema-expansion-level="1" json-sample-expand-level="3" hide-schema-titles></redoc>
+    <redoc spec-url='http://localhost:${process.env.PORT || 8080}/interop/v1/documentation/json' schema-expansion-level="1" json-sample-expand-level="3" hide-schema-titles></redoc>
     <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
   </body>
 </html>`;
