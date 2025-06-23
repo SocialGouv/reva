@@ -67,6 +67,7 @@ export const unarchiveCandidacy = async (params: UnarchiveCandidacyParams) => {
         data: {
           archivalReason: null,
           archivalReasonAdditionalInformation: null,
+          reorientationReasonId: null,
         },
       });
       return updateCandidacyStatus({
