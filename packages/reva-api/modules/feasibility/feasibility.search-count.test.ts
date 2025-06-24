@@ -54,6 +54,7 @@ beforeEach(async () => {
   await archiveCandidacy({
     candidacyId: candidacyToArchive.candidacy.id,
     reorientationReasonId: null,
+    archivingReason: "INACTIVITE_CANDIDAT",
   });
 });
 

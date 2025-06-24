@@ -341,7 +341,7 @@ type Mutation {
   candidacy_archiveById(
     candidacyId: ID!
     reorientationReasonId: UUID
-    archivingReason: CandidacyArchivingReason
+    archivingReason: CandidacyArchivingReason!
     archivingReasonAdditionalInformation: String
   ): Candidacy!
   candidacy_unarchiveById(candidacyId: ID!): Candidacy!

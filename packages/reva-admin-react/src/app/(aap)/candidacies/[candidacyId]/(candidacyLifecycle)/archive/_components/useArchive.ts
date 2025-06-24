@@ -22,7 +22,7 @@ const getCandidacyById = graphql(`
 const archiveCandidacyByIdMutation = graphql(`
   mutation archiveCandidacyById(
     $candidacyId: ID!
-    $archivingReason: CandidacyArchivingReason
+    $archivingReason: CandidacyArchivingReason!
     $archivingReasonAdditionalInformation: String
   ) {
     candidacy_archiveById(

@@ -10,6 +10,7 @@ describe("archive candidacy", () => {
       await archiveCandidacy({
         candidacyId: "badId",
         reorientationReasonId: null,
+        archivingReason: "INACTIVITE_CANDIDAT",
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST);
   });
@@ -21,6 +22,7 @@ describe("archive candidacy", () => {
       await archiveCandidacy({
         candidacyId: candidacyArchived.id,
         reorientationReasonId: null,
+        archivingReason: "INACTIVITE_CANDIDAT",
       });
     }).rejects.toThrow(FunctionalCodeError.CANDIDACY_ALREADY_ARCHIVED);
   });
@@ -30,6 +32,7 @@ describe("archive candidacy", () => {
       await archiveCandidacy({
         candidacyId: candidacy.id,
         reorientationReasonId: "wr0ng1d",
+        archivingReason: "INACTIVITE_CANDIDAT",
       });
     }).rejects.toThrow(
       FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON,
@@ -48,6 +51,7 @@ describe("archive candidacy", () => {
     const archivedCandidacy = await archiveCandidacy({
       candidacyId: candidacy.id,
       reorientationReasonId: reorientationReason.id,
+      archivingReason: "INACTIVITE_CANDIDAT",
     });
 
     expect(archivedCandidacy.reorientationReasonId).not.toBeNull();
@@ -62,6 +66,7 @@ describe("archive candidacy", () => {
     const archivedCandidacy = await archiveCandidacy({
       candidacyId: candidacy.id,
       reorientationReasonId: null,
+      archivingReason: "INACTIVITE_CANDIDAT",
     });
 
     expect(archivedCandidacy.reorientationReasonId).toBeNull();
