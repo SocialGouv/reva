@@ -17,6 +17,11 @@ const getCandidacyById = graphql(`
         label
         disabled
       }
+      archivingReason
+      candidacyStatuses {
+        status
+        createdAt
+      }
     }
   }
 `);
@@ -36,6 +41,27 @@ const archiveCandidacyByIdMutation = graphql(`
     }
   }
 `);
+
+export const getArchivingReasonLabel = (
+  archivingReason?: CandidacyArchivingReason | null,
+) => {
+  switch (archivingReason) {
+    case "INACTIVITE_CANDIDAT":
+      return "Inactivité du candidat";
+    case "MULTI_CANDIDATURES":
+      return "Multi-candidatures";
+    case "PASSAGE_AUTONOME_A_ACCOMPAGNE":
+      return "Passage autonome à accompagné";
+    case "REORIENTATION_HORS_FRANCE_VAE":
+      return "Ré-orientation hors France VAE";
+    case "PROBLEME_FINANCEMENT":
+      return "Problème de financement";
+    case "AUTRE":
+      return "Autre";
+    default:
+      return "Inconnue";
+  }
+};
 
 export const useArchive = () => {
   const { candidacyId } = useParams<{
@@ -90,27 +116,30 @@ export const useArchive = () => {
 
     return feasibilityResultKnown
       ? [
-          { value: "MULTI_CANDIDATURES", label: "Multi-candidatures" },
+          {
+            value: "MULTI_CANDIDATURES",
+            label: getArchivingReasonLabel("MULTI_CANDIDATURES"),
+          },
           {
             value: "PASSAGE_AUTONOME_A_ACCOMPAGNE",
-            label: "Passage autonome à accompagné",
+            label: getArchivingReasonLabel("PASSAGE_AUTONOME_A_ACCOMPAGNE"),
           },
-          { value: "AUTRE", label: "Autre" },
+          { value: "AUTRE", label: getArchivingReasonLabel("AUTRE") },
         ]
       : [
           {
             value: "INACTIVITE_CANDIDAT",
-            label: "Inactivité du candidat",
+            label: getArchivingReasonLabel("INACTIVITE_CANDIDAT"),
           },
           {
             value: "REORIENTATION_HORS_FRANCE_VAE",
-            label: "Ré-orientation hors France VAE",
+            label: getArchivingReasonLabel("REORIENTATION_HORS_FRANCE_VAE"),
           },
-          { value: "PROBLEME_FINANCEMENT", label: "Problème de financement" },
           {
-            value: "AUTRE",
-            label: "Autre",
+            value: "PROBLEME_FINANCEMENT",
+            label: getArchivingReasonLabel("PROBLEME_FINANCEMENT"),
           },
+          { value: "AUTRE", label: getArchivingReasonLabel("AUTRE") },
         ];
   }, [candidacy]);
 

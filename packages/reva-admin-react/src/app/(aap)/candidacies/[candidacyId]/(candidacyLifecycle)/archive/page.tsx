@@ -1,6 +1,10 @@
 "use client";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { CandidacyForArchive, useArchive } from "./_components/useArchive";
+import {
+  CandidacyForArchive,
+  getArchivingReasonLabel,
+  useArchive,
+} from "./_components/useArchive";
 import { useCandidacyStatus } from "../../_components/candidacy.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -11,6 +15,7 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { format } from "date-fns";
 
 const archiveSchema = z.object({
   archivingReason: z.enum(
@@ -36,8 +41,7 @@ const CandidacyArchiveComponent = ({
 }: {
   candidacy: NonNullable<CandidacyForArchive>;
 }) => {
-  const { canBeArchived, candidacyCurrentActiveStatus } =
-    useCandidacyStatus(candidacy);
+  const { canBeArchived } = useCandidacyStatus(candidacy);
 
   const router = useRouter();
   const { archiveCandidacy, availableArchivingReasons } = useArchive();
@@ -52,17 +56,6 @@ const CandidacyArchiveComponent = ({
   });
 
   const archivingReason = useWatch({ control, name: "archivingReason" });
-
-  if (candidacyCurrentActiveStatus === "ARCHIVE") {
-    return (
-      <Alert
-        title=""
-        severity="info"
-        className="my-4"
-        description={`La candidature est archivée. Réorientation : ${candidacy.reorientationReason?.label ?? "Le candidat n'a pas été réorienté"}`}
-      />
-    );
-  }
 
   if (!canBeArchived) {
     return (
@@ -144,6 +137,42 @@ const CandidacyArchiveComponent = ({
   );
 };
 
+const ViewArchivedCandidacyComponent = ({
+  candidacy,
+}: {
+  candidacy: NonNullable<CandidacyForArchive>;
+}) => {
+  const archivedAt = candidacy.candidacyStatuses.find(
+    (s) => s.status === "ARCHIVE",
+  )?.createdAt;
+
+  return (
+    <div className="flex flex-col gap-y-2">
+      <p className="text-xl leading-relaxed">
+        Vous avez archivé cette candidature.
+        <br />
+        Retrouvez les informations liées à cette archivage ici.
+      </p>
+      <div className="flex justify-between">
+        <span>Date d’archivage</span>
+        <span>{archivedAt ? format(archivedAt, "dd/MM/yyyy") : ""}</span>
+      </div>
+      <hr className="mt-2 pb-4" />
+      <div className="flex justify-between">
+        <span>Raison</span>
+        <span>{getArchivingReasonLabel(candidacy.archivingReason)}</span>
+      </div>
+      <hr className="mt-2 pb-4" />
+      <Alert
+        title=""
+        severity="info"
+        className="mt-4"
+        description="Vous pensez avoir fait une erreur ? Contactez le support afin de résoudre le problème."
+      />
+    </div>
+  );
+};
+
 const CandidacyArchivePage = () => {
   const { candidacy } = useArchive();
 
@@ -154,7 +183,11 @@ const CandidacyArchivePage = () => {
   return (
     <>
       <h1>Archivage de la candidature</h1>
-      <CandidacyArchiveComponent candidacy={candidacy} />
+      {candidacy.status === "ARCHIVE" ? (
+        <ViewArchivedCandidacyComponent candidacy={candidacy} />
+      ) : (
+        <CandidacyArchiveComponent candidacy={candidacy} />
+      )}
     </>
   );
 };
