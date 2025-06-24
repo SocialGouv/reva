@@ -132,7 +132,6 @@ export default function Login() {
                 Mot de passe
                 <Checkbox
                   small
-                  className="mt-7"
                   options={[
                     {
                       label: "Afficher",
