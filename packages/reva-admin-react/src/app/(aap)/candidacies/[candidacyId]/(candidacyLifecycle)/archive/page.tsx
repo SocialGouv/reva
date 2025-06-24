@@ -8,9 +8,6 @@ import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { useMemo } from "react";
-import { CandidacyArchivingReason } from "@/graphql/generated/graphql";
-import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useRouter } from "next/navigation";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
@@ -43,7 +40,7 @@ const CandidacyArchiveComponent = ({
     useCandidacyStatus(candidacy);
 
   const router = useRouter();
-  const { archiveCandidacy } = useArchive();
+  const { archiveCandidacy, availableArchivingReasons } = useArchive();
   const {
     register,
     control,
@@ -55,46 +52,6 @@ const CandidacyArchiveComponent = ({
   });
 
   const archivingReason = useWatch({ control, name: "archivingReason" });
-
-  const availableArchivingReasons: {
-    value: CandidacyArchivingReason;
-    label: string;
-  }[] = useMemo(() => {
-    const feasibilityResultKnown =
-      isCandidacyStatusEqualOrAbove(
-        candidacyCurrentActiveStatus,
-        "DOSSIER_FAISABILITE_RECEVABLE",
-      ) ||
-      isCandidacyStatusEqualOrAbove(
-        candidacyCurrentActiveStatus,
-        "DOSSIER_FAISABILITE_NON_RECEVABLE",
-      );
-
-    return feasibilityResultKnown
-      ? [
-          { value: "MULTI_CANDIDATURES", label: "Multi-candidatures" },
-          {
-            value: "PASSAGE_AUTONOME_A_ACCOMPAGNE",
-            label: "Passage autonome à accompagné",
-          },
-          { value: "AUTRE", label: "Autre" },
-        ]
-      : [
-          {
-            value: "INACTIVITE_CANDIDAT",
-            label: "Inactivité du candidat",
-          },
-          {
-            value: "REORIENTATION_HORS_FRANCE_VAE",
-            label: "Ré-orientation hors France VAE",
-          },
-          { value: "PROBLEME_FINANCEMENT", label: "Problème de financement" },
-          {
-            value: "AUTRE",
-            label: "Autre",
-          },
-        ];
-  }, [candidacyCurrentActiveStatus]);
 
   if (candidacyCurrentActiveStatus === "ARCHIVE") {
     return (
