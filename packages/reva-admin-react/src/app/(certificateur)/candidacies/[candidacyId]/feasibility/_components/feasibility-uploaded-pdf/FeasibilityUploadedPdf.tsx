@@ -152,6 +152,7 @@ export const FeasibilityUploadedPdf = () => {
               }
               onRevokeDecision={() => revokeDecisionModal.open()}
               isAdmin={isAdmin}
+              candidacyStatus={candidacy.status}
             />
             <h2 className="mb-6 mt-12">Certification visée</h2>
             <p className="text-lg font-bold mb-0">

@@ -227,5 +227,44 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
         cy.get("button").contains("Annuler la décision").should("not.exist");
       });
     });
+
+    ["DOSSIER_DE_VALIDATION_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"].forEach(
+      (status) => {
+        it(`should NOT display revoke button when candidacy status is ${status}`, () => {
+          const fixture = structuredClone(feasibilityDematerializedAdmissible);
+          fixture.data.feasibility_getActiveFeasibilityByCandidacyId.candidacy.status =
+            status;
+
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubQuery(
+              req,
+              "feasibilityGetActiveFeasibilityByCandidacyId",
+              fixture,
+            );
+          });
+
+          cy.admin(candidacyUrl);
+
+          cy.wait([
+            "@activeFeaturesForConnectedUser",
+            "@getOrganismForAAPVisibilityCheck",
+            "@getMaisonMereCGUQuery",
+            "@getCandidacyWithCandidateInfoForLayout",
+            "@getFeasibilityCountByCategory",
+            "@getDossierDeValidationCountByCategory",
+            "@getJuryCountByCategory",
+            "@getCandidacyWithFeasibilityQuery",
+            "@candidacy_canAccessCandidacy",
+            "@feasibilityGetActiveFeasibilityByCandidacyId",
+          ]);
+
+          cy.get(
+            `[data-test="feasibility-page-dematerialized-admissible"]`,
+          ).should("exist");
+
+          cy.get("button").contains("Annuler la décision").should("not.exist");
+        });
+      },
+    );
   });
 });

@@ -20,6 +20,11 @@ export const revokeCertificationAuthorityDecision = async ({
       candidacyId: true,
       decision: true,
       feasibilityFormat: true,
+      candidacy: {
+        select: {
+          status: true,
+        },
+      },
     },
   });
 
@@ -30,6 +35,17 @@ export const revokeCertificationAuthorityDecision = async ({
   if (!["ADMISSIBLE", "REJECTED"].includes(feasibility.decision)) {
     throw new Error(
       "La décision ne peut être annulée que pour les dossiers recevables ou non recevables",
+    );
+  }
+
+  if (
+    ![
+      "DOSSIER_FAISABILITE_RECEVABLE",
+      "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    ].includes(feasibility.candidacy.status)
+  ) {
+    throw new Error(
+      "La décision ne peut être annulée que lorsque la candidature est à l'étape DOSSIER_FAISABILITE_RECEVABLE ou DOSSIER_FAISABILITE_NON_RECEVABLE",
     );
   }
 
