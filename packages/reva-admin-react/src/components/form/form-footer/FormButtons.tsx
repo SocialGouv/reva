@@ -49,6 +49,7 @@ export const FormButtons = ({
   formState: { isDirty, isSubmitting, canSubmit = true },
   className,
   disabled,
+  hideResetButton,
 }: {
   backUrl?: string;
   formState: {
@@ -59,6 +60,7 @@ export const FormButtons = ({
   submitButtonLabel?: string;
   className?: string;
   disabled?: boolean;
+  hideResetButton?: boolean;
 }) => {
   const router = useRouter();
 
@@ -92,14 +94,16 @@ export const FormButtons = ({
           </Button>
         )}
         <div className="flex gap-x-2 ml-auto">
-          <Button
-            type="reset"
-            priority="tertiary no outline"
-            disabled={!isDirty || disabled}
-            aria-label="Réinitialiser le formulaire"
-          >
-            Réinitialiser
-          </Button>
+          {!hideResetButton && (
+            <Button
+              type="reset"
+              priority="tertiary no outline"
+              disabled={!isDirty || disabled}
+              aria-label="Réinitialiser le formulaire"
+            >
+              Réinitialiser
+            </Button>
+          )}
           <Button
             type="submit"
             disabled={isSubmitting || !isDirty || !canSubmit || disabled}
