@@ -340,7 +340,6 @@ type Mutation {
   ): Candidate
   candidacy_archiveById(
     candidacyId: ID!
-    reorientationReasonId: UUID
     archivingReason: CandidacyArchivingReason!
     archivingReasonAdditionalInformation: String
   ): Candidacy!

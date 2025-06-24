@@ -361,9 +361,6 @@ const unsafeResolvers = {
         context,
         result: candidacy,
         eventType: CandidacyBusinessEvent.ARCHIVED_CANDIDACY,
-        extraInfo: {
-          reorientationReasonId: payload.reorientationReasonId,
-        },
       });
 
       await logCandidacyAuditEvent({

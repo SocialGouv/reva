@@ -114,7 +114,6 @@ type CandidacyArchivingReason =
 
 export interface ArchiveCandidacyParams {
   candidacyId: string;
-  reorientationReasonId?: string | null;
   archivingReason: CandidacyArchivingReason;
   archivingReasonAdditionalInformation?: string | null;
 }

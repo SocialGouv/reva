@@ -1,5 +1,4 @@
 import { getCandidacyById } from "./getCandidacyById";
-import { getReorientationReasonById } from "../../referential/features/getReorientationReasonById";
 import { prismaClient } from "../../../prisma/client";
 import { logger } from "../../shared/logger";
 import {
@@ -38,23 +37,6 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
     );
   }
 
-  if (params.reorientationReasonId) {
-    try {
-      const r = await getReorientationReasonById({
-        reorientationReasonId: params.reorientationReasonId || "",
-      });
-      if (!r) {
-        throw new Error(
-          `${FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON} "La raison de réorientation n'est pas valide`,
-        );
-      }
-    } catch (error) {
-      throw new Error(
-        `${FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON} "La raison de réorientation n'est pas valide: ${error}`,
-      );
-    }
-  }
-
   try {
     return prismaClient.$transaction(async (tx) => {
       await updateCandidacyStatus({
@@ -68,7 +50,6 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
           id: params.candidacyId,
         },
         data: {
-          reorientationReasonId: params.reorientationReasonId,
           archivingReason: params.archivingReason,
           archivingReasonAdditionalInformation:
             params.archivingReasonAdditionalInformation,
