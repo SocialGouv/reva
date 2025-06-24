@@ -79,12 +79,40 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
       throw new Error("Compte local de l'autorité de certification non trouvé");
     }
 
+    // Vérifier que le compte collaborateur cible est bien rattaché à un gestionnaire de candidatures associé à la structure certificatrice
+    let certificationAuthorityIds = [feasibility.certificationAuthorityId];
+    const certificationAuthorityStructureRelation =
+      await prismaClient.certificationAuthorityOnCertificationAuthorityStructure.findFirst(
+        {
+          where: {
+            certificationAuthorityId: feasibility.certificationAuthorityId,
+          },
+        },
+      );
+
+    if (certificationAuthorityStructureRelation) {
+      const certificationAuthorities =
+        await prismaClient.certificationAuthorityOnCertificationAuthorityStructure.findMany(
+          {
+            where: {
+              certificationAuthorityStructureId:
+                certificationAuthorityStructureRelation.certificationAuthorityStructureId,
+            },
+          },
+        );
+
+      certificationAuthorityIds = certificationAuthorities.map(
+        ({ certificationAuthorityId }) => certificationAuthorityId,
+      );
+    }
+
     if (
-      certificationAuthorityLocalAccount.certificationAuthorityId !=
-      feasibility.certificationAuthorityId
+      !certificationAuthorityIds.includes(
+        certificationAuthorityLocalAccount.certificationAuthorityId,
+      )
     ) {
       throw new Error(
-        "Le compte local n'appartient pas à l'authorité de certification associée au dossier de faisabilité de la candidature",
+        "Le compte local n'appartient pas à aucun des gestionnaires de candidatures associés à l'autorité de certification",
       );
     }
 
@@ -94,6 +122,19 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
       },
       data: {
         certificationAuthorityTransferReason: transferReason,
+      },
+    });
+
+    await prismaClient.feasibility.update({
+      where: {
+        id: feasibility.id,
+      },
+      data: {
+        certificationAuthority: {
+          connect: {
+            id: certificationAuthorityLocalAccount.certificationAuthorityId,
+          },
+        },
       },
     });
 
