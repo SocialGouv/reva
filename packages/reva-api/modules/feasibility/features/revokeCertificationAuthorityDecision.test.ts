@@ -1,4 +1,8 @@
-import { FeasibilityStatus } from "@prisma/client";
+import {
+  CandidacyStatusStep,
+  FeasibilityFormat,
+  FeasibilityStatus,
+} from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
@@ -69,14 +73,33 @@ describe("revokeCertificationAuthorityDecision", () => {
       },
     });
 
+  const getStatusForDecision = (
+    decision: FeasibilityStatus,
+  ): CandidacyStatusStep => {
+    const decisionToStatusMap: Record<FeasibilityStatus, CandidacyStatusStep> =
+      {
+        ADMISSIBLE: "DOSSIER_FAISABILITE_RECEVABLE",
+        REJECTED: "DOSSIER_FAISABILITE_NON_RECEVABLE",
+        INCOMPLETE: "DOSSIER_FAISABILITE_INCOMPLET",
+        COMPLETE: "DOSSIER_FAISABILITE_COMPLET",
+        PENDING: "DOSSIER_FAISABILITE_ENVOYE",
+        DRAFT: "PARCOURS_CONFIRME",
+      };
+
+    return decisionToStatusMap[decision];
+  };
+
   const createFeasibilityWithDecision = async (
     decision: FeasibilityStatus,
-    format: "dematerialized" | "pdf" = "dematerialized",
+    format: FeasibilityFormat = "DEMATERIALIZED",
   ) => {
-    const candidacy = await createCandidacyHelper();
+    const status = getStatusForDecision(decision);
+    const candidacy = await createCandidacyHelper({
+      candidacyArgs: { status },
+    });
 
     let feasibility;
-    if (format === "pdf") {
+    if (format === "UPLOADED_PDF") {
       feasibility = await createFeasibilityUploadedPdfHelper({
         candidacyId: candidacy.id,
         decision,
@@ -103,11 +126,26 @@ describe("revokeCertificationAuthorityDecision", () => {
   };
 
   describe("successful revocation scenarios", () => {
-    test.each([
-      { decision: "ADMISSIBLE" as const, format: "dematerialized" as const },
-      { decision: "REJECTED" as const, format: "dematerialized" as const },
-      { decision: "ADMISSIBLE" as const, format: "pdf" as const },
-      { decision: "REJECTED" as const, format: "pdf" as const },
+    test.each<{
+      decision: FeasibilityStatus;
+      format: FeasibilityFormat;
+    }>([
+      {
+        decision: "ADMISSIBLE",
+        format: "DEMATERIALIZED",
+      },
+      {
+        decision: "REJECTED",
+        format: "DEMATERIALIZED",
+      },
+      {
+        decision: "ADMISSIBLE",
+        format: "UPLOADED_PDF",
+      },
+      {
+        decision: "REJECTED",
+        format: "UPLOADED_PDF",
+      },
     ])(
       "should revoke $decision decision for $format feasibility",
       async ({ decision, format }) => {
@@ -138,7 +176,7 @@ describe("revokeCertificationAuthorityDecision", () => {
 
         // For PDF, history only shows INCOMPLETE decisions
         // For dematerialized, it shows all decisions from feasibilityDecision table
-        if (format === "pdf") {
+        if (format === "UPLOADED_PDF") {
           expect(history.length).toBe(0);
         } else {
           expect(history.length).toBe(2);
@@ -207,11 +245,13 @@ describe("revokeCertificationAuthorityDecision", () => {
   });
 
   describe("error scenarios", () => {
-    test.each([
-      { decision: "COMPLETE" as const },
-      { decision: "INCOMPLETE" as const },
-      { decision: "PENDING" as const },
-      { decision: "DRAFT" as const },
+    test.each<{
+      decision: FeasibilityStatus;
+    }>([
+      { decision: "COMPLETE" },
+      { decision: "INCOMPLETE" },
+      { decision: "PENDING" },
+      { decision: "DRAFT" },
     ])("should fail to revoke $decision decision", async ({ decision }) => {
       const { feasibility } = await createFeasibilityWithDecision(decision);
       const adminClient = getAdminClient();
@@ -247,6 +287,38 @@ describe("revokeCertificationAuthorityDecision", () => {
       } catch (error) {
         const gqlError = getGraphQLError(error);
         expect(gqlError).toContain("Aucun dossier de faisabilité trouvé");
+      }
+    });
+
+    test.each<CandidacyStatusStep>([
+      "DOSSIER_DE_VALIDATION_ENVOYE",
+      "DOSSIER_DE_VALIDATION_SIGNALE",
+    ])("should fail when candidacy status is %s", async (status) => {
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: { status },
+      });
+
+      const feasibility = await createFeasibilityDematerializedHelper({
+        candidacyId: candidacy.id,
+        decision: "ADMISSIBLE",
+        decisionSentAt: new Date(),
+      });
+
+      const adminClient = getAdminClient();
+
+      try {
+        await adminClient.request(
+          revokeCertificationAuthorityDecisionMutation,
+          {
+            feasibilityId: feasibility.id,
+          },
+        );
+        shouldNotGoHere();
+      } catch (error) {
+        const gqlError = getGraphQLError(error);
+        expect(gqlError).toContain(
+          "La décision ne peut être annulée que lorsque la candidature est à l'étape DOSSIER_FAISABILITE_RECEVABLE ou DOSSIER_FAISABILITE_NON_RECEVABLE",
+        );
       }
     });
   });

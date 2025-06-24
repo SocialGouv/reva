@@ -47,6 +47,7 @@ const FeasibilityBanner = ({
   hasConfirmedCaduciteContestation,
   onRevokeDecision,
   isAdmin,
+  candidacyStatus,
 }: {
   isWaitingForDecision: boolean;
   feasibilityDecisionSentAt: Date | null;
@@ -60,6 +61,7 @@ const FeasibilityBanner = ({
   hasConfirmedCaduciteContestation: boolean;
   onRevokeDecision?: () => void;
   isAdmin?: boolean;
+  candidacyStatus: string;
 }) => {
   if (
     hasConfirmedCaduciteContestation &&
@@ -118,6 +120,7 @@ const FeasibilityBanner = ({
         history={feasibilityHistory}
         onRevokeDecision={onRevokeDecision}
         isAdmin={isAdmin}
+        candidacyStatus={candidacyStatus}
       />
     );
   }
@@ -293,6 +296,7 @@ export const DematerializedFeasibility = () => {
             hasConfirmedCaduciteContestation={hasConfirmedCaduciteContestation}
             onRevokeDecision={() => revokeDecisionModal.open()}
             isAdmin={isAdmin}
+            candidacyStatus={candidacy.status}
           />
         }
         displayGiveYourDecisionSubtitle

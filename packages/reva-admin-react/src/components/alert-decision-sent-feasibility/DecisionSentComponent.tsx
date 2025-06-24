@@ -24,6 +24,7 @@ export const DecisionSentComponent = ({
   history,
   onRevokeDecision,
   isAdmin = false,
+  candidacyStatus,
 }: {
   decisionSentAt: Date | null;
   decision: FeasibilityDecision;
@@ -31,6 +32,7 @@ export const DecisionSentComponent = ({
   history?: FeasibilityHistory[];
   onRevokeDecision?: () => void;
   isAdmin?: boolean;
+  candidacyStatus?: string;
 }) => {
   if (!decisionSentAt || decision === "COMPLETE") {
     return null;
@@ -43,7 +45,14 @@ export const DecisionSentComponent = ({
   };
 
   const canDisplayHistory = !!history?.length && history.length > 1;
-  const canRevoke = ["ADMISSIBLE", "REJECTED"].includes(decision);
+  const canRevoke =
+    ["ADMISSIBLE", "REJECTED"].includes(decision) &&
+    isAdmin &&
+    candidacyStatus &&
+    [
+      "DOSSIER_FAISABILITE_RECEVABLE",
+      "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    ].includes(candidacyStatus);
 
   return (
     <>
@@ -58,7 +67,7 @@ export const DecisionSentComponent = ({
           description={decisionComment ? `”${decisionComment}”` : ""}
           className="mb-4"
         />
-        {canRevoke && isAdmin && (
+        {canRevoke && (
           <div className="flex justify-end mb-4">
             <Button priority="secondary" onClick={onRevokeDecision}>
               Annuler la décision

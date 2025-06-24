@@ -23,6 +23,7 @@ interface Props {
   hasConfirmedCaduciteContestation: boolean;
   onRevokeDecision?: () => void;
   isAdmin?: boolean;
+  candidacyStatus: string;
 }
 
 export function FeasibilityBanner({
@@ -39,7 +40,14 @@ export function FeasibilityBanner({
   hasConfirmedCaduciteContestation,
   onRevokeDecision,
   isAdmin = false,
+  candidacyStatus,
 }: Props) {
+  const canRevokeDecision =
+    isAdmin &&
+    [
+      "DOSSIER_FAISABILITE_RECEVABLE",
+      "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    ].includes(candidacyStatus);
   switch (true) {
     case isCandidacyActualisationFeatureActive &&
       hasConfirmedCaduciteContestation &&
@@ -112,7 +120,7 @@ export function FeasibilityBanner({
                 </p>
               }
             />
-            {isAdmin && (
+            {canRevokeDecision && (
               <div className="flex justify-end mb-4">
                 <Button priority="secondary" onClick={onRevokeDecision}>
                   Annuler la décision
@@ -167,7 +175,7 @@ export function FeasibilityBanner({
               small
               description={`Recevabilité acceptée le  ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             />
-            {isAdmin && (
+            {canRevokeDecision && (
               <div className="flex justify-end mb-4">
                 <Button priority="secondary" onClick={onRevokeDecision}>
                   Annuler la décision

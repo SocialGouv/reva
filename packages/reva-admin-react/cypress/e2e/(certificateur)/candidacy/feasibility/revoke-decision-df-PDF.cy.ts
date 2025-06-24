@@ -223,5 +223,43 @@ describe("Revoke PDF Feasibility Decision", () => {
         cy.get("button").contains("Annuler la décision").should("not.exist");
       });
     });
+
+    ["DOSSIER_DE_VALIDATION_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"].forEach(
+      (status) => {
+        it(`should NOT display revoke button when candidacy status is ${status}`, () => {
+          const modifiedFixture = structuredClone(candidacyPdfAdmissible);
+          modifiedFixture.data.getCandidacyById.status = status;
+
+          cy.intercept("POST", "/api/graphql", (req) => {
+            stubQuery(
+              req,
+              "getCandidacyWithFeasibilityUploadedPdfQuery",
+              modifiedFixture,
+            );
+          });
+
+          cy.admin(candidacyUrl);
+
+          cy.wait([
+            "@activeFeaturesForConnectedUser",
+            "@getOrganismForAAPVisibilityCheck",
+            "@getMaisonMereCGUQuery",
+            "@getCandidacyWithCandidateInfoForLayout",
+            "@getFeasibilityCountByCategory",
+            "@getDossierDeValidationCountByCategory",
+            "@getJuryCountByCategory",
+            "@getCandidacyWithFeasibilityQuery",
+            "@candidacy_canAccessCandidacy",
+            "@getCandidacyWithFeasibilityUploadedPdfQuery",
+          ]);
+
+          cy.get(
+            `[data-test="feasibility-page-pdf-admissible"]`,
+          ).should("exist");
+
+          cy.get("button").contains("Annuler la décision").should("not.exist");
+        });
+      },
+    );
   });
 });
