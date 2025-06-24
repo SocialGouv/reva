@@ -72,4 +72,30 @@ describe("archive candidacy", () => {
     expect(archivedCandidacy.reorientationReasonId).toBeNull();
     expect(archivedCandidacy.status).toBe("ARCHIVE");
   });
+
+  test("should return the correct archiving reason when archiving a candidacy", async () => {
+    const candidacy = await createCandidacyHelper();
+    const archivedCandidacy = await archiveCandidacy({
+      candidacyId: candidacy.id,
+      archivingReason: "MULTI_CANDIDATURES",
+    });
+
+    expect(archivedCandidacy.archivingReason).not.toBeNull();
+    expect(archivedCandidacy.archivingReason).toEqual("MULTI_CANDIDATURES");
+  });
+
+  test("should return the correct archiving reason additional information when archiving a candidacy", async () => {
+    const candidacy = await createCandidacyHelper();
+    const archivedCandidacy = await archiveCandidacy({
+      candidacyId: candidacy.id,
+      archivingReason: "AUTRE",
+      archivingReasonAdditionalInformation: "additional information",
+    });
+
+    expect(archivedCandidacy.archivingReason).not.toBeNull();
+    expect(archivedCandidacy.archivingReason).toEqual("AUTRE");
+    expect(archivedCandidacy.archivingReasonAdditionalInformation).toEqual(
+      "additional information",
+    );
+  });
 });
