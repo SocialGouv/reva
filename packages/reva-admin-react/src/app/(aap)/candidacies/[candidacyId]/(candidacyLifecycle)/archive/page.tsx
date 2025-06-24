@@ -176,6 +176,7 @@ const CandidacyArchiveComponent = ({
         )}
         <FormButtons
           backUrl={`/candidacies/${candidacy.id}/summary`}
+          hideResetButton
           formState={{
             isDirty: isDirty,
             isSubmitting: isSubmitting,
