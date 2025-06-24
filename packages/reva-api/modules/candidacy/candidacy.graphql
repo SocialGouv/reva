@@ -80,6 +80,7 @@ type Candidacy {
   isCaduque: Boolean!
   hasMoreThanOneCertificationAvailable: Boolean!
   certificationAuthorityLocalAccounts: [CandidacyCertificationAuthorityLocalAccount]
+  archivingReason: CandidacyArchivingReason
 }
 enum TypeAccompagnement {
   ACCOMPAGNE
