@@ -57,6 +57,7 @@ export const ArchiveCandidacyForm = ({
     formState: { errors, isDirty, isSubmitting },
   } = useForm<ArchiveFormData>({
     resolver: zodResolver(archiveSchema),
+    shouldUnregister: true, //update the form when the archiving reason changes from "AUTRE" to another reason and reset the additional information field.
   });
 
   const archivingReason = useWatch({ control, name: "archivingReason" });
