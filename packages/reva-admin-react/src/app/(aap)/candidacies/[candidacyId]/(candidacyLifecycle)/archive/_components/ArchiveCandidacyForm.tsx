@@ -10,6 +10,13 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useState } from "react";
+
+const modal = createModal({
+  id: "confirm-candidacy-archiving",
+  isOpenedByDefault: false,
+});
 
 const archiveSchema = z.object({
   archivingReason: z.enum(
@@ -39,6 +46,9 @@ export const ArchiveCandidacyForm = ({
 
   const router = useRouter();
   const { archiveCandidacy, availableArchivingReasons } = useArchive();
+  const [formDataToConfirm, setFormDataToConfirm] =
+    useState<ArchiveFormData | null>(null);
+
   const {
     register,
     control,
@@ -62,6 +72,20 @@ export const ArchiveCandidacyForm = ({
     );
   }
 
+  const confirmArchiving = async () => {
+    try {
+      if (!formDataToConfirm) {
+        console.error("no form data to confirm");
+        return;
+      }
+      await archiveCandidacy.mutateAsync(formDataToConfirm);
+      successToast("Modifications enregistrées");
+      router.push(`/candidacies/${candidacy.id}/summary`);
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
+
   const handleFormSubmit = handleSubmit(
     async (data) => {
       if (
@@ -72,13 +96,8 @@ export const ArchiveCandidacyForm = ({
           message: "Merci de remplir ce champ",
         });
       } else {
-        try {
-          await archiveCandidacy.mutateAsync(data);
-          successToast("Modifications enregistrées");
-          router.push(`/candidacies/${candidacy.id}/summary`);
-        } catch (e) {
-          graphqlErrorToast(e);
-        }
+        setFormDataToConfirm(data);
+        modal.open();
       }
     },
     (e) => console.error(e),
@@ -86,6 +105,46 @@ export const ArchiveCandidacyForm = ({
 
   return (
     <div className="flex flex-col gap-y-2">
+      <modal.Component
+        iconId="fr-icon-warning-fill"
+        title={<span className="ml-2">Archiver la candidature ?</span>}
+        className="modal-confirm-candidacy-archiving"
+        size="large"
+        buttons={[
+          {
+            priority: "secondary",
+            children: "Annuler",
+          },
+          {
+            priority: "primary",
+            onClick: confirmArchiving,
+            children: "Confirmer",
+          },
+        ]}
+      >
+        <div className="flex flex-col gap-4">
+          <p>
+            Vous êtes sur le point d’archiver la candidature de{" "}
+            <strong>
+              {candidacy.candidate?.firstname} {candidacy.candidate?.lastname}
+            </strong>{" "}
+            sur la certification{" "}
+            <strong>
+              RNCP {candidacy.certification?.codeRncp}:{" "}
+              {candidacy.certification?.label}.
+            </strong>
+          </p>
+          <p>
+            En confirmant cet archivage, vous comprenez que{" "}
+            <strong>
+              le candidat devra créer une nouvelle candidature afin de pouvoir
+              recommencer un parcours de VAE.
+            </strong>
+          </p>
+          <p>Confirmez vous l’archivage de la candidature ?</p>
+        </div>
+      </modal.Component>
+
       <FormOptionalFieldsDisclaimer />
       <p>
         L’archivage permet au candidat de refaire une candidature dans le cadre

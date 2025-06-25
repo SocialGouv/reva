@@ -22,6 +22,14 @@ const getCandidacyById = graphql(`
         status
         createdAt
       }
+      candidate {
+        firstname
+        lastname
+      }
+      certification {
+        codeRncp
+        label
+      }
     }
   }
 `);
