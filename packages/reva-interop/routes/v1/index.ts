@@ -1,9 +1,28 @@
 import { readFileSync } from "fs";
-import { FastifyPluginAsyncJsonSchemaToTs } from "@fastify/type-provider-json-schema-to-ts";
+import {
+  FastifyPluginAsyncJsonSchemaToTs,
+  JsonSchemaToTsProvider,
+} from "@fastify/type-provider-json-schema-to-ts";
 import fastifySwagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-import { addSchemas } from "./schemas.js";
-import { addInputSchemas } from "./inputSchemas.js";
+import {
+  addSchemas,
+  candidacyIdSchema,
+  decisionDossierDeFaisabiliteSchema,
+  decisionDossierDeValidationSchema,
+  dossierDeFaisabiliteDecisionSchema,
+  dossierDeValidationSchema,
+  resultatJurySchema,
+  statutDossierDeFaisabiliteSchema,
+  statutDossierDeValidationSchema,
+  statutJurySchema,
+} from "./schemas.js";
+import {
+  addInputSchemas,
+  dossierDeValidationDecisionInputSchema,
+  resultatJuryInputSchema,
+  sessionJuryInputSchema,
+} from "./inputSchemas.js";
 import { addResponseSchemas } from "./responseSchemas.js";
 import { validateJwt } from "./authMiddleware.js";
 import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
@@ -90,520 +109,657 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
 
   // Declare a route
 
-  fastify.route({
-    method: "GET",
-    url: "/candidatures/:candidatureId",
-    schema: {
-      summary: "Récupérer les détails d'une candidature",
-      security: [{ bearerAuth: [] }],
-      tags: ["Candidature"],
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: { references: [typeof candidacyIdSchema] };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId",
+      schema: {
+        summary: "Récupérer les détails d'une candidature",
+        security: [{ bearerAuth: [] }],
+        tags: ["Candidature"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Détails de la candidature",
+            $ref: "http://vae.gouv.fr/components/schemas/CandidatureResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        200: {
-          description: "Détails de la candidature",
-          $ref: "http://vae.gouv.fr/components/schemas/CandidatureResponse",
-        },
+      handler: async (request, reply) => {
+        const r = await getCandidacyDetails(
+          request.graphqlClient,
+          (request.params as { candidatureId: string }).candidatureId,
+        );
+        if (r) {
+          reply.send(r);
+        } else {
+          reply.status(204).send();
+        }
       },
-    },
-    handler: async (request, reply) => {
-      const r = await getCandidacyDetails(
-        request.graphqlClient,
-        (request.params as { candidatureId: string }).candidatureId,
-      );
-      if (r) {
-        reply.send(r);
-      } else {
-        reply.status(204).send();
-      }
-    },
-  });
+    });
 
-  fastify.route({
-    method: "GET",
-    url: "/candidatures/:candidatureId/dossierDeFaisabilite",
-    schema: {
-      summary: "Récupérer le dernier dossier de faisabilité d'une candidature",
-      security: [{ bearerAuth: [] }],
-      tags: ["Dossier de faisabilité"],
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: { references: [typeof candidacyIdSchema] };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/dossierDeFaisabilite",
+      schema: {
+        summary:
+          "Récupérer le dernier dossier de faisabilité d'une candidature",
+        security: [{ bearerAuth: [] }],
+        tags: ["Dossier de faisabilité"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            desciption: "Dossier de faisabilité",
+            $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        200: {
-          desciption: "Dossier de faisabilité",
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteResponse",
-        },
+      handler: () => {
+        return "OK";
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+    });
 
-  fastify.route({
-    method: "GET",
-    url: "/candidatures/:candidatureId/dossierDeFaisabilite/decisions",
-    schema: {
-      summary: "Récupérer la liste des décisions du dossier de faisabilité",
-      security: [{ bearerAuth: [] }],
-      tags: ["Dossier de faisabilité"],
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: { references: [typeof candidacyIdSchema] };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/dossierDeFaisabilite/decisions",
+      schema: {
+        summary: "Récupérer la liste des décisions du dossier de faisabilité",
+        security: [{ bearerAuth: [] }],
+        tags: ["Dossier de faisabilité"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Liste des décisions sur le dossier de faisabilité",
+            $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionsResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        200: {
-          description: "Liste des décisions sur le dossier de faisabilité",
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionsResponse",
+      handler: () => {
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [
+            typeof decisionDossierDeFaisabiliteSchema,
+            typeof dossierDeFaisabiliteDecisionSchema,
+            typeof candidacyIdSchema,
+          ];
+        };
+      }>
+    >()
+    .route({
+      method: "POST",
+      url: "/candidatures/:candidatureId/dossierDeFaisabilite/decisions",
+      schema: {
+        summary: "Créer une nouvelle décision sur le dossier de faisabilité",
+        security: [{ bearerAuth: [] }],
+        tags: ["Dossier de faisabilité"],
+        body: {
+          type: "object",
+          properties: {
+            decision: {
+              $ref: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabilite",
+            },
+            commentaire: {
+              type: "string",
+              description: "Motifs de la décision",
+              example: "La pièce d'identité n'est pas lisible.",
+            },
+            document: {
+              type: "string",
+              format: "binary",
+              description: "Le courrier de recevabilité éventuel",
+            },
+          },
+          required: ["decision"],
+        },
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          201: {
+            description: "Nouvelle décision créée avec succès",
+            $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionResponse",
+          },
         },
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+      handler: (request) => {
+        console.log("request.body", request.body);
+        return "OK";
+      },
+    });
 
-  fastify.route({
-    method: "POST",
-    url: "/candidatures/:candidatureId/dossierDeFaisabilite/decisions",
-    schema: {
-      summary: "Créer une nouvelle décision sur le dossier de faisabilité",
-      security: [{ bearerAuth: [] }],
-      tags: ["Dossier de faisabilité"],
-      body: {
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionInput",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof statutDossierDeFaisabiliteSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/dossiersDeFaisabilite",
+      schema: {
+        summary: "Récupérer la liste des dossiers de faisabilité",
+        security: [{ bearerAuth: [] }],
+        tags: ["Dossier de faisabilité"],
+        querystring: {
+          type: "object",
+          properties: {
+            decalage: {
+              type: "integer",
+              example: 0,
+              description: "Décalage pour la pagination",
+            },
+            limite: {
+              type: "integer",
+              example: 10,
+              description: "Limite du nombre de résultats",
+            },
+            recherche: {
+              type: "string",
+              maxLength: 100,
+              example: "Alice+Doe",
+              description: "Recherche par mots-clés (nom, prénom, email...)",
+            },
+            statut: {
+              $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeFaisabilite",
+              description: "Filtre par statut du dossier de faisabilité",
             },
           },
         },
-      },
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+        response: {
+          200: {
+            description: "Liste des dossiers de faisabilité",
+            $ref: "http://vae.gouv.fr/components/schemas/DossiersDeFaisabiliteResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        201: {
-          description: "Nouvelle décision créée avec succès",
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionResponse",
-        },
+      handler: (request) => {
+        console.log("request.query", request.query);
+        return "OK";
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+    });
 
-  fastify.route({
-    method: "GET",
-    url: "/dossiersDeFaisabilite",
-    schema: {
-      summary: "Récupérer la liste des dossiers de faisabilité",
-      security: [{ bearerAuth: [] }],
-      tags: ["Dossier de faisabilité"],
-      querystring: {
-        type: "object",
-        properties: {
-          decalage: {
-            type: "integer",
-            example: 0,
-            description: "Décalage pour la pagination",
-          },
-          limite: {
-            type: "integer",
-            example: 10,
-            description: "Limite du nombre de résultats",
-          },
-          recherche: {
-            type: "string",
-            maxLength: 100,
-            example: "Alice+Doe",
-            description: "Recherche par mots-clés (nom, prénom, email...)",
-          },
-          statut: {
-            $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeFaisabilite",
-            description: "Filtre par statut du dossier de faisabilité",
-          },
-        },
-      },
-      response: {
-        200: {
-          description: "Liste des dossiers de faisabilité",
-          $ref: "http://vae.gouv.fr/components/schemas/DossiersDeFaisabiliteResponse",
-        },
-      },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
-
-  fastify.route({
-    method: "GET",
-    url: "/dossiersDeValidation",
-    schema: {
-      summary: "Récupérer la liste des dossiers de validation",
-      security: [{ bearerAuth: [] }],
-      tags: ["Dossier de validation"],
-      querystring: {
-        type: "object",
-        properties: {
-          decalage: {
-            type: "integer",
-            example: 0,
-            description: "Décalage pour la pagination",
-          },
-          limite: {
-            type: "integer",
-            example: 10,
-            description: "Limite du nombre de résultats",
-          },
-          recherche: {
-            type: "string",
-            maxLength: 100,
-            example: "Alice+Doe",
-            description: "Filtre de recherche",
-          },
-          statut: {
-            $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeValidation",
-            description: "Filtre par statut du dossier de validation",
-          },
-        },
-      },
-      response: {
-        200: {
-          description: "Liste des dossiers de validation",
-          $ref: "http://vae.gouv.fr/components/schemas/DossiersDeValidationResponse",
-        },
-      },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
-
-  fastify.route({
-    method: "GET",
-    url: "/candidatures/:candidatureId/dossierDeValidation",
-    schema: {
-      summary: "Récupérer le dernier dossier de validation d'une candidature",
-      security: [{ bearerAuth: [] }],
-      tags: ["Dossier de validation"],
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
-          },
-        },
-        required: ["candidatureId"],
-      },
-      response: {
-        200: {
-          description: "Détails du dossier de validation",
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidation",
-        },
-      },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
-
-  fastify.route({
-    method: "GET",
-    url: "/candidatures/:candidatureId/dossierDeValidation/decisions",
-    schema: {
-      summary: "Récupérer la liste des décisions sur le dossier de validation",
-      security: [{ bearerAuth: [] }],
-      tags: ["Dossier de validation"],
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
-          },
-        },
-        required: ["candidatureId"],
-      },
-      response: {
-        200: {
-          description: "Liste des décisions sur le dossier de validation",
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionsResponse",
-        },
-      },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
-
-  fastify.route({
-    method: "POST",
-    url: "/candidatures/:candidatureId/dossierDeValidation/decisions",
-    schema: {
-      summary: "Créer une nouvelle décision sur le dossier de validation",
-      security: [{ bearerAuth: [] }],
-      tags: ["Dossier de validation"],
-      body: {
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionInput",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof statutDossierDeValidationSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/dossiersDeValidation",
+      schema: {
+        summary: "Récupérer la liste des dossiers de validation",
+        security: [{ bearerAuth: [] }],
+        tags: ["Dossier de validation"],
+        querystring: {
+          type: "object",
+          properties: {
+            decalage: {
+              type: "integer",
+              example: 0,
+              description: "Décalage pour la pagination",
+            },
+            limite: {
+              type: "integer",
+              example: 10,
+              description: "Limite du nombre de résultats",
+            },
+            recherche: {
+              type: "string",
+              maxLength: 100,
+              example: "Alice+Doe",
+              description: "Filtre de recherche",
+            },
+            statut: {
+              $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeValidation",
+              description: "Filtre par statut du dossier de validation",
             },
           },
         },
-      },
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+        response: {
+          200: {
+            description: "Liste des dossiers de validation",
+            $ref: "http://vae.gouv.fr/components/schemas/DossiersDeValidationResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        201: {
-          description: "Nouvelle décision créée avec succès",
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionResponse",
-        },
+      handler: (request) => {
+        console.log("request.query", request.query);
+        return "OK";
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+    });
 
-  fastify.route({
-    method: "GET",
-    url: "/informationsJury",
-    schema: {
-      summary: "Récupérer la liste des informations jury",
-      security: [{ bearerAuth: [] }],
-      tags: ["Informations jury"],
-      querystring: {
-        type: "object",
-        properties: {
-          decalage: {
-            type: "integer",
-            example: 0,
-            description: "Décalage pour la pagination",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [
+            typeof candidacyIdSchema,
+            typeof dossierDeValidationSchema,
+          ];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/dossierDeValidation",
+      schema: {
+        summary: "Récupérer le dernier dossier de validation d'une candidature",
+        security: [{ bearerAuth: [] }],
+        tags: ["Dossier de validation"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
           },
-          limite: {
-            type: "integer",
-            example: 10,
-            description: "Limite du nombre de résultats",
-          },
-          recherche: {
-            type: "string",
-            maxLength: 100,
-            example: "Alice+Doe",
-            description: "Filtre de recherche",
-          },
-          statut: {
-            $ref: "http://vae.gouv.fr/components/schemas/StatutJury",
-            description: "Filtre par statut de jury",
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Détails du dossier de validation",
+            $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidation",
           },
         },
       },
-      response: {
-        200: {
-          description: "Liste des candidats à l'étape jury",
-          $ref: "http://vae.gouv.fr/components/schemas/InformationsJuryResponse",
-        },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        return "OK";
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+    });
 
-  fastify.route({
-    method: "GET",
-    url: "/candidatures/:candidatureId/informationJury",
-    schema: {
-      summary: "Récupérer les informations du jury d'un candidat",
-      security: [{ bearerAuth: [] }],
-      tags: ["Informations jury"],
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/dossierDeValidation/decisions",
+      schema: {
+        summary:
+          "Récupérer la liste des décisions sur le dossier de validation",
+        security: [{ bearerAuth: [] }],
+        tags: ["Dossier de validation"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Liste des décisions sur le dossier de validation",
+            $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionsResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        200: {
-          description: "Informations du jury du candidat",
-          $ref: "http://vae.gouv.fr/components/schemas/InformationJuryResponse",
-        },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        return "OK";
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+    });
 
-  fastify.route({
-    method: "GET",
-    url: "/candidatures/:candidatureId/informationJury/session",
-    schema: {
-      summary:
-        "Récupérer les informations de la session du jury pour un candidat",
-      security: [{ bearerAuth: [] }],
-      tags: ["Informations jury"],
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [
+            typeof candidacyIdSchema,
+            typeof dossierDeValidationDecisionInputSchema,
+            typeof decisionDossierDeValidationSchema,
+          ];
+        };
+      }>
+    >()
+    .route({
+      method: "POST",
+      url: "/candidatures/:candidatureId/dossierDeValidation/decisions",
+      schema: {
+        summary: "Créer une nouvelle décision sur le dossier de validation",
+        security: [{ bearerAuth: [] }],
+        tags: ["Dossier de validation"],
+        body: {
+          $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionInput",
+        },
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          201: {
+            description: "Nouvelle décision créée avec succès",
+            $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        200: {
-          description: "Informations de la session du jury du candidat",
-          $ref: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
-        },
+      handler: (request) => {
+        console.log("request.body", request.body);
+        console.log("request.params", request.params);
+        return "OK";
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+    });
 
-  fastify.route({
-    method: "PUT",
-    url: "/candidatures/:candidatureId/informationJury/session",
-    schema: {
-      summary:
-        "Mettre à jour les informations de la session du jury pour un candidat",
-      security: [{ bearerAuth: [] }],
-      tags: ["Informations jury"],
-      body: {
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "http://vae.gouv.fr/components/schemas/SessionJuryInput",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof statutJurySchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/informationsJury",
+      schema: {
+        summary: "Récupérer la liste des informations jury",
+        security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        querystring: {
+          type: "object",
+          properties: {
+            decalage: {
+              type: "integer",
+              example: 0,
+              description: "Décalage pour la pagination",
+            },
+            limite: {
+              type: "integer",
+              example: 10,
+              description: "Limite du nombre de résultats",
+            },
+            recherche: {
+              type: "string",
+              maxLength: 100,
+              example: "Alice+Doe",
+              description: "Filtre de recherche",
+            },
+            statut: {
+              $ref: "http://vae.gouv.fr/components/schemas/StatutJury",
+              description: "Filtre par statut de jury",
             },
           },
         },
-      },
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+        response: {
+          200: {
+            description: "Liste des candidats à l'étape jury",
+            $ref: "http://vae.gouv.fr/components/schemas/InformationsJuryResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        200: {
-          description: "Informations de session mises à jour avec succès",
-          $ref: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
-        },
+      handler: (request) => {
+        console.log("request.query", request.query);
+        return "OK";
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+    });
 
-  fastify.route({
-    method: "GET",
-    url: "/candidatures/:candidatureId/informationJury/resultat",
-    schema: {
-      summary: "Récupérer le résultat du jury pour un candidat",
-      security: [{ bearerAuth: [] }],
-      tags: ["Informations jury"],
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
-          },
-        },
-        required: ["candidatureId"],
-      },
-      response: {
-        200: {
-          description: "Résultat du jury du candidat",
-          $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
-        },
-      },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
-
-  fastify.route({
-    method: "PUT",
-    url: "/candidatures/:candidatureId/informationJury/resultat",
-    schema: {
-      summary: "Mettre à jour le résultat du jury pour un candidat",
-      security: [{ bearerAuth: [] }],
-      tags: ["Informations jury"],
-      body: {
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryInput",
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/informationJury",
+      schema: {
+        summary: "Récupérer les informations du jury d'un candidat",
+        security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
             },
           },
+          required: ["candidatureId"],
         },
-      },
-      params: {
-        type: "object",
-        properties: {
-          candidatureId: {
-            $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+        response: {
+          200: {
+            description: "Informations du jury du candidat",
+            $ref: "http://vae.gouv.fr/components/schemas/InformationJuryResponse",
           },
         },
-        required: ["candidatureId"],
       },
-      response: {
-        200: {
-          description: "Résultat du jury mis à jour avec succès",
-          $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
+      handler: (request) => {
+        console.log("request.params", request.params);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/informationJury/session",
+      schema: {
+        summary:
+          "Récupérer les informations de la session du jury pour un candidat",
+        security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Informations de la session du jury du candidat",
+            $ref: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
+          },
         },
       },
-    },
-    handler: () => {
-      return "OK";
-    },
-  });
+      handler: (request) => {
+        console.log("request.params", request.params);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema, typeof sessionJuryInputSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "PUT",
+      url: "/candidatures/:candidatureId/informationJury/session",
+      schema: {
+        summary:
+          "Mettre à jour les informations de la session du jury pour un candidat",
+        security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        body: {
+          $ref: "http://vae.gouv.fr/components/schemas/SessionJuryInput",
+        },
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Informations de session mises à jour avec succès",
+            $ref: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        console.log("request.body", request.body);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/informationJury/resultat",
+      schema: {
+        summary: "Récupérer le résultat du jury pour un candidat",
+        security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Résultat du jury du candidat",
+            $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [
+            typeof candidacyIdSchema,
+            typeof resultatJuryInputSchema,
+            typeof resultatJurySchema,
+          ];
+        };
+      }>
+    >()
+    .route({
+      method: "PUT",
+      url: "/candidatures/:candidatureId/informationJury/resultat",
+      schema: {
+        summary: "Mettre à jour le résultat du jury pour un candidat",
+        security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        body: {
+          $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryInput",
+        },
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Résultat du jury mis à jour avec succès",
+            $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        console.log("request.body", request.body);
+        return "OK";
+      },
+    });
 
   fastify.get("/docs", { schema: { hide: true } }, async (_request, reply) => {
     reply.type("html");
