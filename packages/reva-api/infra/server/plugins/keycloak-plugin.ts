@@ -50,8 +50,6 @@ const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (
 
   Keycloak.prototype["accessDenied"] = prototypes["accessDenied"];
 
-  const keycloak = new Keycloak({}, config);
-
   app.addHook("onRequest", async (req: FastifyRequest, _res: any) => {
     if (req.headers.authorization) {
       const validateAuthToken = process.env.NODE_ENV !== "test";
@@ -66,8 +64,38 @@ const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (
       }
 
       if (decodedToken?.azp === config.clientId) {
+        // check if request should be handled by plugin instance(we have multiple realms and so multiple plugin instances)
+        try {
+          const keycloak = new Keycloak({}, config);
+          const userInfo = await keycloak.grantManager.userInfo<
+            string,
+            KeycloakConnectUserInfo
+          >(token);
+
+          req.auth = {
+            hasRole: (role: KeyCloakUserRole) => {
+              return (
+                userInfo?.realm_access?.roles as KeyCloakUserRole[]
+              )?.includes(role);
+            },
+            token,
+            userInfo,
+          };
+        } catch (e) {
+          logger.error(e);
+        }
+      } else if (
+        decodedToken?.azp ===
+        process.env.KEYCLOAK_REVA_ADMIN_IMPERSONATE_CLIENT_ID
+      ) {
         //check if request should be handled by plugin instance(we have multiple realms and so multiple plugin instances)
         try {
+          const keycloak = new Keycloak({}, {
+            "auth-server-url":
+              process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
+            realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
+          } as any);
+
           const userInfo = await keycloak.grantManager.userInfo<
             string,
             KeycloakConnectUserInfo

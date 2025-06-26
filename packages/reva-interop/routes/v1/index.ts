@@ -172,7 +172,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       handler: async (request, reply) => {
         const r = await getCandidacyDetails(
           request.graphqlClient,
-          (request.params as { candidatureId: string }).candidatureId,
+          request.params.candidatureId,
         );
         if (r) {
           reply.send(r);
