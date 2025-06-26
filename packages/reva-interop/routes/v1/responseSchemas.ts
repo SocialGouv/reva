@@ -1,5 +1,15 @@
 import { FastifyInstance } from "fastify";
 
+export const candidatureResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/CandidatureResponse",
+  type: "object",
+  properties: {
+    data: {
+      $ref: "http://vae.gouv.fr/components/schemas/Candidature",
+    },
+  },
+} as const;
+
 export const addResponseSchemas = (fastify: FastifyInstance) => {
   fastify.addSchema({
     $id: "http://vae.gouv.fr/components/schemas/DossiersDeFaisabiliteResponse",
@@ -175,15 +185,7 @@ export const addResponseSchemas = (fastify: FastifyInstance) => {
     },
   });
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/CandidatureResponse",
-    type: "object",
-    properties: {
-      data: {
-        $ref: "http://vae.gouv.fr/components/schemas/Candidature",
-      },
-    },
-  });
+  fastify.addSchema(candidatureResponseSchema);
 
   fastify.addSchema({
     $id: "http://vae.gouv.fr/components/schemas/InfoPagination",

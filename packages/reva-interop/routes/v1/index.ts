@@ -7,15 +7,25 @@ import fastifySwagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import {
   addSchemas,
+  adresseSchema,
   candidacyIdSchema,
+  candidatSchema,
+  candidatureSchema,
+  certificationSchema,
   decisionDossierDeFaisabiliteSchema,
   decisionDossierDeValidationSchema,
+  departementSchema,
+  diplomeSchema,
   dossierDeFaisabiliteDecisionSchema,
   dossierDeValidationSchema,
+  genreSchema,
+  organismeSchema,
   resultatJurySchema,
+  situationSchema,
   statutDossierDeFaisabiliteSchema,
   statutDossierDeValidationSchema,
   statutJurySchema,
+  typologieCandidatSchema,
 } from "./schemas.js";
 import {
   addInputSchemas,
@@ -23,7 +33,10 @@ import {
   resultatJuryInputSchema,
   sessionJuryInputSchema,
 } from "./inputSchemas.js";
-import { addResponseSchemas } from "./responseSchemas.js";
+import {
+  addResponseSchemas,
+  candidatureResponseSchema,
+} from "./responseSchemas.js";
 import { validateJwt } from "./authMiddleware.js";
 import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
 
@@ -112,7 +125,25 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   fastify
     .withTypeProvider<
       JsonSchemaToTsProvider<{
-        ValidatorSchemaOptions: { references: [typeof candidacyIdSchema] };
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema];
+        };
+        SerializerSchemaOptions: {
+          references: [
+            typeof candidacyIdSchema,
+            typeof candidatSchema,
+            typeof genreSchema,
+            typeof candidatureSchema,
+            typeof candidatureResponseSchema,
+            typeof certificationSchema,
+            typeof situationSchema,
+            typeof typologieCandidatSchema,
+            typeof adresseSchema,
+            typeof diplomeSchema,
+            typeof departementSchema,
+            typeof organismeSchema,
+          ];
+        };
       }>
     >()
     .route({
