@@ -139,6 +139,7 @@ export const AdminActionZone = ({
 
       {canBeArchived && (
         <AdminAction
+          data-testid="archive-candidacy-button"
           title="Archiver la candidature"
           description="Le candidat pourra refaire une candidature dans le cadre de France VAE (modification du diplôme, changement d’AAP, …)"
           detail="Accessible jusqu’au dépôt du dossier de faisabilité."
@@ -169,6 +170,7 @@ export const AdminAction = ({
   disabledDescription,
   description,
   detail,
+  "data-test": dataTest,
 }: {
   title: string;
   linkProps?: ComponentProps<typeof Tile>["linkProps"];
@@ -177,8 +179,10 @@ export const AdminAction = ({
   disabledDescription?: string;
   description?: string;
   detail?: string;
+  "data-test"?: string;
 }) => (
   <Tile
+    data-test={dataTest}
     title={title}
     enlargeLinkOrButton
     orientation="horizontal"

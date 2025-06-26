@@ -53,6 +53,7 @@ export const CandidacySummaryBottomButtons = ({
           )}
           {canBeArchived && (
             <AdminAction
+              data-test="archive-candidacy-button"
               title="Archiver la candidature"
               description="Le candidat pourra refaire une candidature dans le cadre de France VAE (modification du diplôme, changement d’AAP, …)"
               detail="Accessible jusqu’au dépôt du dossier de faisabilité."

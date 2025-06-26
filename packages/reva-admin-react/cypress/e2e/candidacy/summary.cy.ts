@@ -1,4 +1,5 @@
 import {
+  CandidacyStatusStep,
   FeasibilityFormat,
   FinanceModule,
   OrganismModaliteAccompagnement,
@@ -11,17 +12,22 @@ function visitSummary({
   modaliteAccompagnement,
   isCaduque = false,
   isCandidacyActualisationActive = false,
+  candidacyStatus,
 }: {
   feasibilityFormat: FeasibilityFormat;
   financeModule: FinanceModule;
   modaliteAccompagnement: OrganismModaliteAccompagnement;
   isCaduque?: boolean;
   isCandidacyActualisationActive?: boolean;
+  candidacyStatus?: CandidacyStatusStep;
 }) {
   cy.fixture("candidacy/candidacy.json").then((candidacy) => {
     cy.fixture("candidacy/candidacy-menu.json").then((candidacyMenu) => {
       candidacy.data.getCandidacyById.feasibilityFormat = feasibilityFormat;
       candidacy.data.getCandidacyById.financeModule = financeModule;
+      candidacy.data.getCandidacyById.status = candidacyStatus
+        ? candidacyStatus
+        : candidacy.data.getCandidacyById.status;
       candidacyMenu.data.getCandidacyById.feasibilityFormat = feasibilityFormat;
       candidacyMenu.data.getCandidacyById.financeModule = financeModule;
       candidacyMenu.data.getCandidacyById.organism.modaliteAccompagnement =
@@ -265,5 +271,56 @@ context("Candidacy summary page", () => {
         });
       },
     );
+  });
+
+  context.only("AAP actions", () => {
+    it("display the archive candidacy button when candidacy can be archived", function () {
+      visitSummary({
+        feasibilityFormat: "DEMATERIALIZED",
+        financeModule: "unifvae",
+        modaliteAccompagnement: "A_DISTANCE",
+      });
+      cy.wait("@getCandidacySummaryById");
+      cy.get('[data-test="archive-candidacy-button"]').should("exist");
+    });
+
+    it("do not display the archive candidacy button when the candidacy status is equal or above DOSSIER_FAISABILITE_RECEVABLE", function () {
+      visitSummary({
+        feasibilityFormat: "DEMATERIALIZED",
+        financeModule: "unifvae",
+        modaliteAccompagnement: "A_DISTANCE",
+        candidacyStatus: "DOSSIER_FAISABILITE_RECEVABLE",
+      });
+      cy.wait("@getCandidacySummaryById");
+      cy.get('[data-test="candidate-information"]').should("exist");
+      cy.get('[data-test="archive-candidacy-button"]').should("not.exist");
+    });
+
+    it("do not display the archive candidacy button when candidacy is already archived without being reoriented", function () {
+      visitSummary({
+        feasibilityFormat: "DEMATERIALIZED",
+        financeModule: "unifvae",
+        modaliteAccompagnement: "A_DISTANCE",
+        candidacyStatus: "ARCHIVE",
+      });
+      cy.wait("@getCandidacySummaryById");
+      cy.get('[data-test="candidate-information"]').should("exist");
+      cy.get('[data-test="archive-candidacy-button"]').should("not.exist");
+    });
+
+    it("leads me to the archive candidacy page when the archive candidacy button is clicked", function () {
+      visitSummary({
+        feasibilityFormat: "DEMATERIALIZED",
+        financeModule: "unifvae",
+        modaliteAccompagnement: "A_DISTANCE",
+      });
+      cy.wait("@getCandidacySummaryById");
+      cy.get('[data-test="archive-candidacy-button"]').click();
+      cy.url().should(
+        "eq",
+        Cypress.config().baseUrl +
+          "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/archive/",
+      );
+    });
   });
 });
