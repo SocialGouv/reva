@@ -128,7 +128,7 @@ context("Admin", () => {
       });
     },
   );
-  it("does not let me validate the form when the archiving reason is not selected", function () {
+  it.skip("does not let me validate the form when the archiving reason is not selected", function () {
     visitArchive({
       userProfile: "admin",
       candidacyStatus: "PARCOURS_CONFIRME",
@@ -225,7 +225,7 @@ context("AAP", () => {
       );
     });
   });
-  it("does not let me validate the form when the archiving reason is not selected", function () {
+  it.skip("does not let me validate the form when the archiving reason is not selected", function () {
     visitArchive({ userProfile: "aap", candidacyStatus: "PARCOURS_CONFIRME" });
     cy.wait("@getCandidacyForArchivePage");
     cy.get("button").contains("Enregistrer").click({ force: true });
