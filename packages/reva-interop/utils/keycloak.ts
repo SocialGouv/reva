@@ -48,7 +48,10 @@ export const getUserAccessToken = async (params: {
       },
     );
 
-    const { access_token } = (await response.json()) as any;
+    const { access_token } = (await response.json()) as {
+      access_token?: string;
+      [key: string]: unknown;
+    };
     if (access_token) {
       return access_token;
     }

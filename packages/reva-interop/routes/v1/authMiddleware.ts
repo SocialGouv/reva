@@ -22,7 +22,7 @@ export const validateJwt = async (
 ) => {
   if (
     request.url === "/interop/v1/docs" ||
-    request.url === "/interop/v1/schema.json"
+    request.url.startsWith("/interop/v1/documentation")
   ) {
     return;
   }
@@ -30,7 +30,7 @@ export const validateJwt = async (
   const jwt = getTokenFromRequest(request);
 
   // const jwt =
-  //   "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmdmFlLWludGVyb3AtYXNwIiwiYXVkIjoiZnZhZS1pbnRlcm9wIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoyNzE2MjM5MDIyfQ.YLk6X46H2ZDK2FJXwQj1Pyw1eF2Le2Lp9XTFC9ngY5BUQ_ihPKbC6IYoaeJmhnffDWq34gtCsdJVsOgySMFwkg";
+  //   "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmdmFlLWludGVyb3AtYXNwIiwiYXVkIjoiZnZhZS1pbnRlcm9wIiwic3ViIjoiYWNiMzY3ODgtNDA3Yy00MTRlLTlkMzMtMjMzYjJhMWNhMjQwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjM3MTYyMzkwMjJ9.cRKBfFM9TrpANOdNZTOGKS4QZ4C-PzD0RKtnYUVz1whBUGGGA2btlPk4GQQzp7QHRusFu44vgxuw8XGg1Kg6Ug";
 
   const { payload, protectedHeader } = await jose.jwtVerify(jwt, secretKey, {
     issuer: "fvae-interop-asp",

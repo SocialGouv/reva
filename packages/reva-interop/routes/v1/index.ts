@@ -3,8 +3,11 @@ import {
   FastifyPluginAsyncJsonSchemaToTs,
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
+import multipart from "@fastify/multipart";
+import formBody from "@fastify/formbody";
 import fastifySwagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
+import * as jose from "jose";
 import {
   addSchemas,
   adresseSchema,
@@ -76,8 +79,32 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           description: "Gestion de la session et des résultats liés au jury",
         },
       ],
+      security: [
+        {
+          oauth: [],
+        },
+        {
+          bearerAuth: [],
+        },
+      ],
       components: {
         securitySchemes: {
+          oauth: {
+            type: "oauth2",
+            flows: {
+              authorizationCode: {
+                authorizationUrl:
+                  "http://localhost:8888/auth/realms/reva/protocol/openid-connect/auth",
+
+                tokenUrl: "/interop/v1/documentation/openid-connect/token",
+                scopes: {
+                  openid: "openid",
+                  profile: "profile",
+                  roles: "roles",
+                },
+              },
+            },
+          },
           bearerAuth: {
             type: "http",
             scheme: "bearer",
@@ -91,6 +118,11 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   });
 
   await fastify.register(swaggerUi, {
+    initOAuth: {
+      clientId: "reva-admin",
+      realm: "reva",
+      scopes: "openid profile roles",
+    },
     logo: {
       type: `image/svg+xml`,
       content: Buffer.from(logo),
@@ -110,8 +142,10 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       docExpansion: "list",
       deepLinking: false,
     },
-    staticCSP: true,
   });
+
+  fastify.register(formBody);
+  fastify.register(multipart);
 
   addSchemas(fastify);
   addInputSchemas(fastify);
@@ -120,7 +154,50 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   fastify.decorateRequest("graphqlClient");
   fastify.addHook("onRequest", validateJwt);
 
-  // Declare a route
+  fastify.post(
+    "/documentation/openid-connect/token",
+    { schema: { hide: true } },
+    async (request) => {
+      const requestBody = request.body as {
+        grant_type: string;
+        code: string;
+        client_id: string;
+        redirect_uri: string;
+      };
+      const tokenReply = await fetch(
+        `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_REVA_ADMIN_REALM}/protocol/openid-connect/token`,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          method: "POST",
+          body: new URLSearchParams({
+            grant_type: requestBody.grant_type,
+            code: requestBody.code,
+            client_id: requestBody.client_id,
+            redirect_uri: requestBody.redirect_uri,
+          }),
+        },
+      );
+      const tokenJson = await tokenReply.json();
+      const idToken = tokenJson.id_token;
+      const decodedIdToken = jose.decodeJwt(idToken);
+
+      const secretKey = new TextEncoder().encode(process.env.SECRET_KEY);
+
+      const jwt = await new jose.SignJWT()
+        .setAudience("fvae-interop")
+        .setIssuer("fvae-interop-asp")
+        .setSubject(decodedIdToken.sub!)
+        .setExpirationTime("1h")
+        .setProtectedHeader({ alg: "HS512" })
+        .setIssuedAt()
+        .sign(secretKey);
+      return {
+        access_token: jwt,
+      };
+    },
+  );
 
   fastify
     .withTypeProvider<
@@ -151,7 +228,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId",
       schema: {
         summary: "Récupérer les détails d'une candidature",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }, { oauth: [] }],
         tags: ["Candidature"],
         params: {
           type: "object",
@@ -175,7 +252,16 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           request.params.candidatureId,
         );
         if (r) {
-          reply.send(r);
+          reply.send({
+            data: {
+              id: r.id,
+              candidat: {
+                prenom: r.candidate?.firstname,
+                nom: r.candidate?.lastname,
+                email: r.candidate?.email,
+              },
+            },
+          });
         } else {
           reply.status(204).send();
         }
@@ -194,7 +280,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary:
           "Récupérer le dernier dossier de faisabilité d'une candidature",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Dossier de faisabilité"],
         params: {
           type: "object",
@@ -228,7 +314,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId/dossierDeFaisabilite/decisions",
       schema: {
         summary: "Récupérer la liste des décisions du dossier de faisabilité",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Dossier de faisabilité"],
         params: {
           type: "object",
@@ -268,7 +354,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId/dossierDeFaisabilite/decisions",
       schema: {
         summary: "Créer une nouvelle décision sur le dossier de faisabilité",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Dossier de faisabilité"],
         body: {
           type: "object",
@@ -324,7 +410,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/dossiersDeFaisabilite",
       schema: {
         summary: "Récupérer la liste des dossiers de faisabilité",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Dossier de faisabilité"],
         querystring: {
           type: "object",
@@ -377,7 +463,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/dossiersDeValidation",
       schema: {
         summary: "Récupérer la liste des dossiers de validation",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Dossier de validation"],
         querystring: {
           type: "object",
@@ -433,7 +519,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId/dossierDeValidation",
       schema: {
         summary: "Récupérer le dernier dossier de validation d'une candidature",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Dossier de validation"],
         params: {
           type: "object",
@@ -471,7 +557,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary:
           "Récupérer la liste des décisions sur le dossier de validation",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Dossier de validation"],
         params: {
           type: "object",
@@ -512,7 +598,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId/dossierDeValidation/decisions",
       schema: {
         summary: "Créer une nouvelle décision sur le dossier de validation",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Dossier de validation"],
         body: {
           $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionInput",
@@ -553,7 +639,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/informationsJury",
       schema: {
         summary: "Récupérer la liste des informations jury",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Informations jury"],
         querystring: {
           type: "object",
@@ -606,7 +692,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId/informationJury",
       schema: {
         summary: "Récupérer les informations du jury d'un candidat",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Informations jury"],
         params: {
           type: "object",
@@ -644,7 +730,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary:
           "Récupérer les informations de la session du jury pour un candidat",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Informations jury"],
         params: {
           type: "object",
@@ -682,7 +768,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary:
           "Mettre à jour les informations de la session du jury pour un candidat",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Informations jury"],
         body: {
           $ref: "http://vae.gouv.fr/components/schemas/SessionJuryInput",
@@ -723,7 +809,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId/informationJury/resultat",
       schema: {
         summary: "Récupérer le résultat du jury pour un candidat",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Informations jury"],
         params: {
           type: "object",
@@ -764,7 +850,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId/informationJury/resultat",
       schema: {
         summary: "Mettre à jour le résultat du jury pour un candidat",
-        security: [{ bearerAuth: [] }],
+        // security: [{ bearerAuth: [] }],
         tags: ["Informations jury"],
         body: {
           $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryInput",
