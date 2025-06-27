@@ -2,10 +2,10 @@ import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 import { stubMutation, stubQuery } from "../../../utils/graphql";
 
 function visitArchive({
-  userType,
+  userProfile,
   candidacyStatus,
 }: {
-  userType: "admin" | "aap";
+  userProfile: "admin" | "aap";
   candidacyStatus?: CandidacyStatusStep;
 }) {
   cy.fixture("candidacy/candidacy.json").then((candidacy) => {
@@ -37,9 +37,9 @@ function visitArchive({
     });
   });
 
-  if (userType === "admin") {
+  if (userProfile === "admin") {
     cy.admin("/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/archive");
-  } else if (userType === "aap") {
+  } else if (userProfile === "aap") {
     cy.collaborateur(
       "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/archive",
     );
@@ -48,7 +48,7 @@ function visitArchive({
 
 context("Admin", () => {
   it("display the page when i access it", function () {
-    visitArchive({ userType: "admin" });
+    visitArchive({ userProfile: "admin" });
     cy.wait("@getCandidacyForArchivePage");
     cy.get('[data-test="archive-candidacy-title"]').should(
       "have.text",
@@ -67,8 +67,9 @@ context("Admin", () => {
   statusesBeforeFeasibilityResultsAreKnown.forEach(
     (status: CandidacyStatusStep) => {
       it(`shows the correct archival reasons when the feasibility result is not known and the candidacy status is ${status}`, function () {
-        visitArchive({ userType: "admin", candidacyStatus: status });
+        visitArchive({ userProfile: "admin", candidacyStatus: status });
         cy.wait("@getCandidacyForArchivePage");
+        cy.get('[data-test="archiving-reason-radio-buttons"]').should("exist");
         cy.get(
           '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
         ).should("exist");
@@ -98,11 +99,13 @@ context("Admin", () => {
     "DOSSIER_DE_VALIDATION_ENVOYE",
     "DOSSIER_DE_VALIDATION_SIGNALE",
   ];
+
   statusesAfterFeasibilityResultsAreKnown.forEach(
     (status: CandidacyStatusStep) => {
       it(`shows the correct archival reasons when the feasibility result is known and the candidacy status is ${status}`, function () {
-        visitArchive({ userType: "admin", candidacyStatus: status });
+        visitArchive({ userProfile: "admin", candidacyStatus: status });
         cy.wait("@getCandidacyForArchivePage");
+        cy.get('[data-test="archiving-reason-radio-buttons"]').should("exist");
         cy.get(
           '[data-test="archiving-reason-radio-button-MULTI_CANDIDATURES"]',
         ).should("exist");
@@ -126,14 +129,111 @@ context("Admin", () => {
     },
   );
   it("does not let me validate the form when the archiving reason is not selected", function () {
-    visitArchive({ userType: "admin", candidacyStatus: "PARCOURS_CONFIRME" });
+    visitArchive({
+      userProfile: "admin",
+      candidacyStatus: "PARCOURS_CONFIRME",
+    });
     cy.wait("@getCandidacyForArchivePage");
     cy.get("button").contains("Enregistrer").click({ force: true });
     cy.get("p.fr-message--error").contains("Merci de remplir ce champ");
   });
 
   it("let me validate the form when the archiving reason is  selected", function () {
-    visitArchive({ userType: "admin", candidacyStatus: "PARCOURS_CONFIRME" });
+    visitArchive({
+      userProfile: "admin",
+      candidacyStatus: "PARCOURS_CONFIRME",
+    });
+    cy.wait("@getCandidacyForArchivePage");
+    cy.get(
+      '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
+    ).click({ force: true });
+    cy.get("button").contains("Enregistrer").click();
+    cy.get("button").contains("Confirmer").click();
+    cy.wait("@archiveCandidacyById");
+    cy.url().should(
+      "eq",
+      Cypress.config().baseUrl +
+        "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/summary/",
+    );
+  });
+});
+
+context("AAP", () => {
+  it("display the page when i access it", function () {
+    visitArchive({ userProfile: "aap" });
+    cy.wait("@getCandidacyForArchivePage");
+    cy.get('[data-test="archive-candidacy-title"]').should(
+      "have.text",
+      "Archivage de la candidature",
+    );
+  });
+
+  const statusesBeforeFeasibilityHasBeenSent: CandidacyStatusStep[] = [
+    "PRISE_EN_CHARGE",
+    "PARCOURS_ENVOYE",
+    "PARCOURS_CONFIRME",
+  ];
+
+  statusesBeforeFeasibilityHasBeenSent.forEach(
+    (status: CandidacyStatusStep) => {
+      it(`shows the correct archival reasons when the feasibility result is not known and the candidacy status is ${status}`, function () {
+        visitArchive({ userProfile: "aap", candidacyStatus: status });
+        cy.wait("@getCandidacyForArchivePage");
+        cy.get('[data-test="archiving-reason-radio-buttons"]').should("exist");
+        cy.get(
+          '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
+        ).should("exist");
+        cy.get(
+          '[data-test="archiving-reason-radio-button-REORIENTATION_HORS_FRANCE_VAE"]',
+        ).should("exist");
+        cy.get(
+          '[data-test="archiving-reason-radio-button-PROBLEME_FINANCEMENT"]',
+        ).should("exist");
+        cy.get('[data-test="archiving-reason-radio-button-AUTRE"]').should(
+          "exist",
+        );
+
+        cy.get(
+          '[data-test="archiving-reason-radio-button-MULTI_CANDIDATURES"]',
+        ).should("not.exist");
+        cy.get(
+          '[data-test="archiving-reason-radio-button-PASSAGE_AUTONOME_A_ACCOMPAGNE"]',
+        ).should("not.exist");
+      });
+    },
+  );
+
+  const statusesAfterFeasibilityHasBeenSent: CandidacyStatusStep[] = [
+    "DOSSIER_FAISABILITE_ENVOYE",
+    "DOSSIER_FAISABILITE_COMPLET",
+    "DOSSIER_FAISABILITE_INCOMPLET",
+    "DOSSIER_FAISABILITE_RECEVABLE",
+    "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    "DOSSIER_DE_VALIDATION_ENVOYE",
+    "DOSSIER_DE_VALIDATION_SIGNALE",
+  ];
+
+  statusesAfterFeasibilityHasBeenSent.forEach((status: CandidacyStatusStep) => {
+    it(`shows me an alert when the feasibility result is known and the candidacy status is ${status}`, function () {
+      visitArchive({ userProfile: "aap", candidacyStatus: status });
+      cy.wait("@getCandidacyForArchivePage");
+      cy.get('[data-test="candidacy-cannot-be-archived-alert"]').should(
+        "exist",
+      );
+      cy.get('[data-test="archiving-reason-radio-buttons"]').should(
+        "not.exist",
+      );
+    });
+  });
+  it("does not let me validate the form when the archiving reason is not selected", function () {
+    visitArchive({ userProfile: "aap", candidacyStatus: "PARCOURS_CONFIRME" });
+    cy.wait("@getCandidacyForArchivePage");
+    cy.get("button").contains("Enregistrer").click({ force: true });
+    cy.get("p.fr-message--error").contains("Merci de remplir ce champ");
+  });
+
+  it("let me validate the form when the archiving reason is  selected", function () {
+    visitArchive({ userProfile: "aap", candidacyStatus: "PARCOURS_CONFIRME" });
     cy.wait("@getCandidacyForArchivePage");
     cy.get(
       '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',

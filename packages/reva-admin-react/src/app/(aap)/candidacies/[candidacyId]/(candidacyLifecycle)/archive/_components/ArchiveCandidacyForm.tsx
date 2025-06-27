@@ -65,6 +65,7 @@ export const ArchiveCandidacyForm = ({
   if (!canBeArchived) {
     return (
       <Alert
+        data-test="candidacy-cannot-be-archived-alert"
         title=""
         severity="warning"
         className="my-4"
