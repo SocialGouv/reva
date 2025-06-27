@@ -154,9 +154,11 @@ export const ArchiveCandidacyForm = ({
       </p>
       <form onSubmit={handleFormSubmit}>
         <RadioButtons
+          data-test="archiving-reason-radio-buttons"
           options={availableArchivingReasons.map((r) => ({
             label: r.label,
             nativeInputProps: {
+              "data-test": `archiving-reason-radio-button-${r.value}`,
               value: r.value,
               ...register("archivingReason"),
             },
