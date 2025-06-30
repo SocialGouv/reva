@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+if [[ "${KC_FEATURES_PREVIEW_ENABLE}" == "true" ]]; then
+cat << EOF
+---
+addons:
+ - scalingo-postgresql
+config_vars:
+  PATH: "/app/bin:/app/keycloak/bin:/app/java/bin:/usr/local/bin:/usr/bin:/bin"
+default_process_types:
+  web: /app/keycloak/bin/kc.sh --verbose start --hostname-strict-https=false --features=preview
+EOF
+else
 cat << EOF
 ---
 addons:
@@ -9,3 +20,4 @@ config_vars:
 default_process_types:
   web: /app/keycloak/bin/kc.sh --verbose start --hostname-strict-https=false
 EOF
+fi
