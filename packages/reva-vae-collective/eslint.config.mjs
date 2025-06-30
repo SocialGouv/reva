@@ -1,3 +1,4 @@
+import { defineConfig } from "eslint/config";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
@@ -9,8 +10,42 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
+export default defineConfig([
+  {
+    extends: compat.extends(
+      "next/core-web-vitals",
+      "next/typescript",
+      "plugin:prettier/recommended",
+    ),
 
-export default eslintConfig;
+    rules: {
+      "react/no-unescaped-entities": "off",
+
+      "import/no-unused-modules": [
+        2,
+        {
+          unusedExports: true,
+          ignoreExports: [
+            "eslint.config.mjs",
+            "**/**.d.ts",
+            "**/page.tsx",
+            "**/layout.tsx",
+          ],
+        },
+      ],
+
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          args: "after-used",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
+]);
