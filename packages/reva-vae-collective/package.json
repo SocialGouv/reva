@@ -8,7 +8,7 @@
   },
   "scripts": {
     "predev": "react-dsfr update-icons",
-    "dev": "next dev -p 3005 --turbopack",
+    "dev": "next dev -p 3005",
     "prebuild": "react-dsfr update-icons",
     "build": "next build",
     "start": "next start",
