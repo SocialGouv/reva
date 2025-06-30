@@ -1,25 +1,23 @@
+/** The following styles must be imported in this specific order.
+    To work around the https://github.com/vercel/next.js/issues/16630 issue,
+    we use inlined imports via postcss and cascade layers to control ordering.
+    1-  Reset the styles for browser consistency with the tailwind base
+    2 - Add DSFR icon styles (it has to come before DSFR default styles)
+    3 - Set default DSFR styles to html tags
+    4 - Add Tailwind utilities and other classes that, coming last, can override DSFR styles
+**/
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer tw_base, dsfr_icons, dsfr, tw_components_utils;
+
+@import "@codegouvfr/react-dsfr/dsfr/utility/icons/icons.min.css"
+  layer(dsfr_icons);
+@import "@codegouvfr/react-dsfr/dsfr/dsfr.min.css" layer(dsfr);
+
+@layer tw_base {
+  @tailwind base;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer tw_components_utils {
+  @tailwind components;
+  @tailwind utilities;
 }
