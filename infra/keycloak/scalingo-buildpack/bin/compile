@@ -85,7 +85,18 @@ info "Using KC_DB=${KC_DB}" | indent
 
 step "Building keycloak server ready to production with ${KC_DB} vendor"
 export KC_DB="${KC_DB}"
-"${KEYCLOAK_PATH}/bin/kc.sh" build
+
+if [[ -f "$ENV_DIR/KC_FEATURES_PREVIEW_ENABLE" ]]; then
+  KC_FEATURES_PREVIEW_ENABLE=$(cat "$ENV_DIR/KC_FEATURES_PREVIEW_ENABLE")
+fi
+
+if [[ $KC_FEATURES_PREVIEW_ENABLE == "true" ]]; then
+  step "PREVIEW FEATURES ENABLE"
+  "${KEYCLOAK_PATH}/bin/kc.sh" build --features="preview"
+else
+  step "PREVIEW FEATURES DISABLE"
+  "${KEYCLOAK_PATH}/bin/kc.sh" build
+fi
 
 step "Showing keycloak server config"
 "${KEYCLOAK_PATH}/bin/kc.sh" show-config
