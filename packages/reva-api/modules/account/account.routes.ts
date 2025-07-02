@@ -1,6 +1,8 @@
 import { FastifyPluginAsync } from "fastify";
 
 import { impersonate } from "./features/impersonate";
+import { unsafeHandleFranceConnectCallback } from "./features/unsafeHandleFranceConnectCallback";
+import { logger } from "../shared/logger";
 
 export const accountRoute: FastifyPluginAsync = async (server) => {
   server.get<{ Querystring: { token: string } }>("/account/impersonate", {
@@ -31,6 +33,33 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
       }
 
       reply.status(401).send();
+    },
+  });
+
+  server.get<{
+    Querystring: { code: string; session_state?: string; iss?: string };
+  }>("/account/franceconnect/callback", {
+    schema: {
+      querystring: {
+        type: "object",
+        properties: {
+          code: { type: "string" },
+          session_state: { type: "string" },
+          iss: { type: "string" },
+        },
+        required: ["code"],
+      },
+    },
+    handler: async (request, reply) => {
+      const { code } = request.query;
+
+      try {
+        const redirectUrl = await unsafeHandleFranceConnectCallback(code);
+        reply.redirect(redirectUrl);
+      } catch (error) {
+        logger.error(`[France Connect Callback] ${error}`);
+        reply.status(401).send({ error: "Authentication failed" });
+      }
     },
   });
 };

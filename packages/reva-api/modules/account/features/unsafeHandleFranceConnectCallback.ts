@@ -1,0 +1,266 @@
+import jwt from "jsonwebtoken";
+import { z } from "zod";
+import { prismaClient } from "../../../prisma/client";
+import { getCandidateByKeycloakId } from "../../candidate/features/getCandidateByKeycloakId";
+import { CandidacyStatusStep, Gender } from "@prisma/client";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+
+const FranceConnectClaimsSchema = z.object({
+  sub: z.string(),
+  email: z.string().email(),
+  given_name: z.string(),
+  family_name: z.string(),
+  preferred_username: z.string().optional(),
+  gender: z.enum(["male", "female"]),
+  birthdate: z.string(),
+  birthplace: z.string().optional(),
+  birthcountry: z.string().optional(),
+});
+
+type FranceConnectClaims = z.infer<typeof FranceConnectClaimsSchema>;
+
+const TokenResponseSchema = z.object({
+  access_token: z.string(),
+  id_token: z.string(),
+  refresh_token: z.string(),
+  session_state: z.string(),
+});
+
+type TokenResponse = z.infer<typeof TokenResponseSchema>;
+
+const AccessTokenPayloadSchema = z.object({
+  sub: z.string(),
+  email: z.string().email(),
+});
+
+/**
+ * Do not use this function in production.
+ * This code test data retrieval from France Connect sandbox.
+ * TODO: add production-ready handler with:
+ * - token signature verification
+ * - state verification
+ * - nonce verification
+ * - claims verification (iss, aud, exp, iat...)
+ * - PKCE
+ * - error handling and logging
+ *
+ * => Explore the opportunity to use standard libraries like openid-client
+ **/
+export const unsafeHandleFranceConnectCallback = async (
+  code: string,
+): Promise<string> => {
+  const franceConnectEnabled = await isFeatureActiveForUser({
+    feature: "FRANCE_CONNECT_AUTH_FOR_CANDIDATE",
+  });
+
+  if (!franceConnectEnabled) {
+    throw new Error("FranceConnect authentication is not enabled");
+  }
+
+  // For extra safety (in case the feature flag is set by mistake on production):
+  if (process.env.BASE_URL?.includes(".gouv.fr")) {
+    throw new Error("FranceConnect is not available in production");
+  }
+  const tokens = await unsafeExchangeAuthorizationCode(code);
+
+  const decodedIdToken = jwt.decode(tokens.id_token);
+  const idTokenResult = FranceConnectClaimsSchema.safeParse(decodedIdToken);
+
+  if (!idTokenResult.success) {
+    console.error(idTokenResult.error.message);
+    throw new Error("Invalid ID token structure");
+  }
+
+  const idTokenPayload = idTokenResult.data;
+
+  const decodedAccessToken = jwt.decode(tokens.access_token);
+  const accessTokenResult =
+    AccessTokenPayloadSchema.safeParse(decodedAccessToken);
+
+  if (!accessTokenResult.success) {
+    console.error(accessTokenResult.error.message);
+    throw new Error("Invalid access token structure");
+  }
+
+  const accessTokenPayload = accessTokenResult.data;
+
+  const keycloakId = accessTokenPayload.sub;
+
+  await getOrCreateCandidate(keycloakId, idTokenPayload);
+
+  // TODO: add support for candidate app env var
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.BASE_URL
+      : "http://localhost:3004";
+  const redirectUrl = new URL(`${baseUrl}/candidat`);
+
+  if (tokens.session_state) {
+    redirectUrl.searchParams.set("session_state", tokens.session_state);
+  }
+
+  return redirectUrl.toString();
+};
+
+// Read the comment above about unsafe usage of this function
+const unsafeExchangeAuthorizationCode = async (
+  code: string,
+): Promise<TokenResponse> => {
+  const tokenEndpoint = `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_APP_REALM}/protocol/openid-connect/token`;
+
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.BASE_URL
+      : "http://localhost:8080";
+
+  const redirectUri = new URL(
+    `/api/account/franceconnect/callback`,
+    baseUrl,
+  ).toString();
+
+  const params = {
+    grant_type: "authorization_code",
+    code: code,
+    client_id: process.env.KEYCLOAK_APP_REVA_APP || "reva-app",
+    client_secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET || "",
+    redirect_uri: redirectUri,
+  };
+
+  const response = await fetch(tokenEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams(params),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("Token exchange failed", errorText);
+    throw new Error("Failed to exchange authorization code");
+  }
+
+  const responseData = await response.json();
+
+  const result = TokenResponseSchema.safeParse(responseData);
+  if (!result.success) {
+    console.error("Invalid token response structure:", result.error.message);
+    throw new Error("Invalid token response from Keycloak");
+  }
+
+  return result.data;
+};
+
+const getOrCreateCandidate = async (
+  keycloakId: string,
+  userInfo: FranceConnectClaims,
+) => {
+  const candidate = await getCandidateByKeycloakId({ keycloakId });
+
+  if (candidate) {
+    return await updateCandidateWithFranceConnectInfo(candidate.id, userInfo);
+  }
+
+  return await createCandidateFromFranceConnect(keycloakId, userInfo);
+};
+
+const updateCandidateWithFranceConnectInfo = async (
+  candidateId: string,
+  userInfo: FranceConnectClaims,
+) => {
+  const { given_name, family_name, gender, birthdate } = userInfo;
+
+  const updateData = {
+    updatedAt: new Date(),
+    ...(given_name && { firstname: given_name }),
+    ...(family_name && { lastname: family_name }),
+    ...(gender && { gender: mapGender(gender) }),
+    ...(birthdate && { birthdate: parseFranceConnectDate(birthdate) }),
+  };
+
+  return prismaClient.candidate.update({
+    where: { id: candidateId },
+    data: updateData,
+  });
+};
+
+const createCandidateFromFranceConnect = async (
+  keycloakId: string,
+  userInfo: FranceConnectClaims,
+) => {
+  const department = await getDefaultDepartment();
+
+  const candidateData = {
+    keycloakId,
+    email: userInfo.email,
+    firstname: userInfo.given_name,
+    lastname: userInfo.family_name,
+    gender: mapGender(userInfo.gender),
+    birthdate: parseFranceConnectDate(userInfo.birthdate),
+    // TODO: replace with actual candidate phone and department (or make these fields optional):
+    phone: "",
+    departmentId: department.id,
+    // TODO: fill this from France Connect if available:
+    givenName: undefined,
+    // TODO: handle empty birthplace (foreign country)
+    // TODO: fill these fields from France Connect birthplace INSEE code:
+    birthcountry: undefined,
+    birthDepartmentId: undefined,
+    birthCity: undefined,
+  };
+
+  return prismaClient.$transaction(async (tx) => {
+    const candidate = await tx.candidate.create({
+      data: candidateData,
+    });
+
+    await tx.candidacy.create({
+      data: {
+        // TODO: replace with actual typeAccompagnement:
+        typeAccompagnement: "AUTONOME",
+        // TODO: support VAE collective cohorts:
+        cohorteVaeCollectiveId: undefined,
+        candidateId: candidate.id,
+        admissibility: { create: {} },
+        examInfo: { create: {} },
+        status: CandidacyStatusStep.PROJET,
+        financeModule: "hors_plateforme",
+        candidacyStatuses: {
+          create: {
+            status: CandidacyStatusStep.PROJET,
+          },
+        },
+      },
+    });
+
+    return candidate;
+  });
+};
+
+const mapGender = (franceConnectGender: string): Gender | null => {
+  switch (franceConnectGender) {
+    case "male":
+      return Gender.man;
+    case "female":
+      return Gender.woman;
+    default:
+      return null;
+  }
+};
+
+const parseFranceConnectDate = (dateString: string): Date | null => {
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date;
+};
+
+const getDefaultDepartment = async () => {
+  const department = await prismaClient.department.findFirst({
+    where: { code: "75" },
+  });
+
+  if (!department) {
+    throw new Error("Default department not found");
+  }
+
+  return department;
+};

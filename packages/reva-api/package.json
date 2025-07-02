@@ -72,7 +72,8 @@
     "pino": "^9.7.0",
     "pino-datadog-transport": "^3.0.6",
     "sib-api-v3-sdk": "^8.5.0",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
