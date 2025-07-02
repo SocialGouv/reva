@@ -47,3 +47,13 @@ export const useFeatureFlipping = () => {
 
   return { activeFeatures, isFeatureActive, status };
 };
+
+export const useAnonymousFeatureFlipping = () => {
+  const { activeFeatures, isFeatureActive, init, status } =
+    useFeatureFlippingStore();
+  const { graphqlClient } = useGraphQlClient();
+
+  init(graphqlClient);
+
+  return { activeFeatures, isFeatureActive, status };
+};

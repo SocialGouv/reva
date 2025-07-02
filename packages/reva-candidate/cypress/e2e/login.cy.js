@@ -5,6 +5,7 @@ const email = "email@example.com";
 context("Login", () => {
   it("submit email", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "candidate_askForLogin", "login.json");
     });
 

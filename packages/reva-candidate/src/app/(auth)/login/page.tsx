@@ -11,7 +11,10 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
+import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
+import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 import { useLogin } from "./login.hooks";
 
@@ -29,6 +32,7 @@ export default function Login() {
   const isPending = askForLogin.isPending || loginWithWithCredentials.isPending;
 
   const { resetKeycloakInstance } = useKeycloakContext();
+  const { isFeatureActive } = useAnonymousFeatureFlipping();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,7 +69,16 @@ export default function Login() {
   return (
     <PageLayout title="Connexion" data-test="login-home" className="p-6 pt-8">
       <h1 className="mb-10">Connexion à France VAE</h1>
-
+      {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") && (
+        <div className="flex flex-col gap-4 mb-6">
+          <FranceConnectButton url={getFranceConnectLoginUrl()} />
+          <div className="flex flex-row items-center gap-3">
+            <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
+            ou
+            <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
+          </div>
+        </div>
+      )}
       <form className="flex flex-col gap-6" onSubmit={onSubmit}>
         <div className="flex flex-col gap-4">
           <h2 className="mb-0">Se connecter avec un lien</h2>
