@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  basePath: "/vae-collective",
   /* config options here */
   webpack: (config) => {
     config.module.rules.push({
