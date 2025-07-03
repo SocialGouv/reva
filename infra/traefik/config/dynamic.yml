@@ -56,6 +56,12 @@ http:
       middlewares:
         - removeHeader
 
+    vae-collective-staging:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/vae-collective`)"
+      service: vae-collective-staging
+      middlewares:
+        - removeHeader
+
     # Should be removed after the creation of the /api path
     payment-request-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/payment-request/proof`)"
@@ -247,6 +253,12 @@ http:
         passHostHeader: false
         servers:
           - url: "http://reva-staging-interop.osc-fr1.scalingo.io/interop/v1"
+
+    vae-collective-staging:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-staging-vae-collective.osc-fr1.scalingo.io/"
 
     # --- END STAGING ---
 
