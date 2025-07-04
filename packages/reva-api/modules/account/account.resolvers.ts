@@ -11,6 +11,7 @@ import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getImpersonateUrl } from "./features/impersonate";
 import { updateAccountById } from "./features/updateAccount";
 import { disableAccountById } from "./features/disableAccount";
+import { loginWithCredentials } from "./features/loginWithCredentials";
 
 export const resolvers = {
   Mutation: {
@@ -98,6 +99,13 @@ export const resolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
+    account_loginWithCredentials: async (
+      _parent: unknown,
+      params: {
+        email: string;
+        password: string;
+      },
+    ) => loginWithCredentials(params),
   },
   Query: {
     account_getAccountForConnectedUser: async (

@@ -1,4 +1,6 @@
 import { logger } from "../../shared/logger";
+import { getKeycloakAdmin } from "../features/getKeycloakAdmin";
+import Keycloak from "keycloak-connect";
 
 export const impersonateAccount = async (
   keycloakId: string,
@@ -174,4 +176,55 @@ const getKeycloakAccessToken = async (): Promise<string | undefined> => {
   }
 
   return undefined;
+};
+
+export const generateIAMTokenWithPassword = async (
+  userId: string,
+  password: string,
+) => {
+  const keycloakAdmin = await getKeycloakAdmin();
+
+  const user = await keycloakAdmin.users.findOne({
+    id: userId,
+    realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
+  });
+
+  if (!user) {
+    throw new Error(`userId ${userId} not found`);
+  }
+
+  try {
+    //generate a token for the user
+    const _keycloak = new Keycloak(
+      {},
+      {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA as string,
+        serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
+        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
+        credentials: {
+          secret: process.env.KEYCLOAK_ADMIN_CLIENT_SECRET,
+        },
+      },
+    );
+
+    const grant = await _keycloak.grantManager.obtainDirectly(
+      user.username as string,
+      password,
+    );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const refreshToken = grant?.refresh_token?.token;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const accessToken = grant?.access_token?.token;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const idToken = grant?.id_token?.token;
+    return { accessToken, refreshToken, idToken };
+  } catch (e) {
+    logger.error(e);
+    throw new Error(`Erreur lors de la génération du token IAM`);
+  }
 };
