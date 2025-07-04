@@ -1,12 +1,9 @@
-import type { Metadata } from "next";
+"use client";
+
 import "./globals.css";
 import { DsfrHead } from "@/components/dsfr/DsfrHead";
 import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
-
-export const metadata: Metadata = {
-  title: "France VAE | L’outil qui facilite le suivi des candidats à la VAE",
-  description: "Espace commanditaire France VAE",
-};
+import { KeycloakProvider } from "@/components/auth/keycloakContext";
 
 const lang = "fr";
 
@@ -28,7 +25,9 @@ export default function RootLayout({
         <DsfrHead />
       </head>
       <body>
-        <DsfrProvider lang={lang}>{children}</DsfrProvider>
+        <DsfrProvider lang={lang}>
+          <KeycloakProvider>{children}</KeycloakProvider>
+        </DsfrProvider>
       </body>
     </html>
   );
