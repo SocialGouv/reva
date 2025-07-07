@@ -158,6 +158,7 @@ export const useCguCertificateur = () => {
   return {
     acceptCertificateurCgu,
     isCertificationRegistryManager,
+    isAdminCertificationAuthority,
     cguCertificateur,
     canAccessCguCertificateur,
     certificationAuthorityManagerFirstname,

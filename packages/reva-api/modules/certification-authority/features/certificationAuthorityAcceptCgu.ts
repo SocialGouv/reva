@@ -3,8 +3,9 @@ import { getLastProfessionalCguCertificateur } from "./getLastProfessionalCguCer
 
 export const certificationAuthorityAcceptCgu = async (context: {
   keycloakId: string;
+  roles: KeyCloakUserRole[];
 }): Promise<boolean> => {
-  const { keycloakId } = context;
+  const { keycloakId, roles } = context;
 
   const lastProfessionalCgu = await getLastProfessionalCguCertificateur();
   if (!lastProfessionalCgu) {
@@ -19,23 +20,55 @@ export const certificationAuthorityAcceptCgu = async (context: {
     throw new Error(`Compte utilisateur non trouvé`);
   }
 
-  const userRegistryManager =
-    await prismaClient.certificationRegistryManager.findFirst({
+  let userRegistryManager = null;
+  if (roles.includes("manage_certification_registry")) {
+    userRegistryManager =
+      await prismaClient.certificationRegistryManager.findFirst({
+        where: {
+          accountId: account.id,
+        },
+        select: {
+          certificationAuthorityStructure: {
+            select: {
+              id: true,
+              cguVersion: true,
+            },
+          },
+        },
+      });
+  }
+
+  let certificationAuthorityAdmin = null;
+  if (!userRegistryManager) {
+    certificationAuthorityAdmin = await prismaClient.account.findFirst({
       where: {
-        accountId: account.id,
+        id: account.id,
       },
       select: {
-        certificationAuthorityStructure: {
+        certificationAuthority: {
           select: {
-            id: true,
-            cguVersion: true,
+            certificationAuthorityOnCertificationAuthorityStructure: {
+              select: {
+                id: true,
+                certificationAuthorityStructure: {
+                  select: {
+                    id: true,
+                    cguVersion: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
     });
+  }
 
   const certificationAuthorityStructure =
-    userRegistryManager?.certificationAuthorityStructure;
+    userRegistryManager?.certificationAuthorityStructure ||
+    certificationAuthorityAdmin?.certificationAuthority
+      ?.certificationAuthorityOnCertificationAuthorityStructure[0]
+      ?.certificationAuthorityStructure;
   if (!certificationAuthorityStructure) {
     throw new Error(`Structure de certification non trouvée`);
   }

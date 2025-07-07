@@ -448,6 +448,7 @@ const unsafeResolvers = {
     ) =>
       certificationAuthorityAcceptCgu({
         keycloakId: context.auth.userInfo?.sub || "",
+        roles: context.auth.userInfo?.realm_access?.roles || [],
       }),
     certification_authority_createCertificationAuthorityStructure: async (
       _parent: unknown,

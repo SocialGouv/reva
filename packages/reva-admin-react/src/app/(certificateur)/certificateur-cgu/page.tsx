@@ -13,6 +13,7 @@ export default function CertificateurCguPage() {
     cguCertificateur,
     canAccessCguCertificateur,
     isCertificationRegistryManager,
+    isAdminCertificationAuthority,
     certificationAuthorityManagerFirstname,
     certificationAuthorityManagerLastname,
     cguAcceptanceRequired,
@@ -28,7 +29,12 @@ export default function CertificateurCguPage() {
     return null;
   }
 
-  if (!isCertificationRegistryManager && !showCgu && cguAcceptanceRequired) {
+  if (
+    !isCertificationRegistryManager &&
+    !isAdminCertificationAuthority &&
+    !showCgu &&
+    cguAcceptanceRequired
+  ) {
     return (
       <CguAwaitingManagerValidationNotice
         certificationAuthorityManagerFirstname={
@@ -56,7 +62,8 @@ export default function CertificateurCguPage() {
         chapo={parsedChapo}
         updatedAt={cguCertificateur.dateDeMiseAJour}
       />
-      {isCertificationRegistryManager && cguAcceptanceRequired ? (
+      {(isCertificationRegistryManager || isAdminCertificationAuthority) &&
+      cguAcceptanceRequired ? (
         <CguCertificateurForm />
       ) : (
         <Button priority="secondary" onClick={() => setShowCgu(false)}>
