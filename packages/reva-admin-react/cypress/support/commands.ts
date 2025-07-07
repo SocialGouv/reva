@@ -68,6 +68,10 @@ Cypress.Commands.add("certificateur", (url = "/") => {
   auth({ url, token: "auth/certificateur-token.json" });
 });
 
+Cypress.Commands.add("certificateurLocalAccount", (url = "/") => {
+  auth({ url, token: "auth/certificateur-local-account-token.json" });
+});
+
 Cypress.Commands.add("certificateurRegistryManager", (url = "/") => {
   auth({ url, token: "auth/certificateur-registry-manager-token.json" });
 });

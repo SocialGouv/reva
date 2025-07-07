@@ -23,6 +23,11 @@ declare namespace Cypress {
     certificateur(url?: string): void;
 
     /**
+     * Logs-in as a certificateur local account
+     */
+    certificateurLocalAccount(url?: string): void;
+
+    /**
      * Logs-in as a certificateur registry manager
      */
     certificateurRegistryManager(url?: string): void;
