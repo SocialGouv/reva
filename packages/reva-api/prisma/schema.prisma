@@ -1016,11 +1016,12 @@ model ExamInfo {
 }
 
 model CertificationAuthorityStructure {
-  id             String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label          String          @unique @db.VarChar(200)
-  cguVersion     Int?            @map("cgu_version")
-  cguAcceptedAt  DateTime?       @map("cgu_accepted_at")
-  certifications Certification[]
+  id                    String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                 String          @unique @db.VarChar(200)
+  cguVersion            Int?            @map("cgu_version")
+  cguAcceptedAt         DateTime?       @map("cgu_accepted_at")
+  cguAcceptanceRequired Boolean         @default(true) @map("cgu_acceptance_required")
+  certifications        Certification[]
 
   certificationRegistryManager                            CertificationRegistryManager?
   certificationAuthorityOnCertificationAuthorityStructure CertificationAuthorityOnCertificationAuthorityStructure[]
