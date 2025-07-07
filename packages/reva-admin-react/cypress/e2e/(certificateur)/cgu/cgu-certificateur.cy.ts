@@ -102,19 +102,19 @@ function visitCguCertificateur({
                 ],
               }
             : null,
+          certificationAuthorityLocalAccount: !isRegistryManagerOrAuthorityAdmin
+            ? {
+                certificationAuthority: {
+                  certificationAuthorityStructures: [
+                    {
+                      cguAcceptanceRequired: true,
+                      cgu: cguStructure,
+                    },
+                  ],
+                },
+              }
+            : null,
         },
-        certificationAuthorityLocalAccount: !isRegistryManagerOrAuthorityAdmin
-          ? {
-              certificationAuthority: {
-                certificationAuthorityStructures: [
-                  {
-                    cguAcceptanceRequired: true,
-                    cgu: cguStructure,
-                  },
-                ],
-              },
-            }
-          : null,
       },
     });
 
@@ -286,7 +286,7 @@ describe("CGU Certificateur Page", () => {
     });
   });
 
-  describe.skip("Local Account", () => {
+  describe("Local Account", () => {
     beforeEach(() => {
       visitCguCertificateur({ isRegistryManagerOrAuthorityAdmin: false });
     });
