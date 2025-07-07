@@ -50,14 +50,45 @@ function visitCguCertificateur({
       },
     });
 
+    stubQuery(req, "getCertificationAuthorityStructureCGUQuery", {
+      data: {
+        account_getAccountForConnectedUser: {
+          certificationRegistryManager: isRegistryManager
+            ? {
+                certificationAuthorityStructure: {
+                  cguAcceptanceRequired: true,
+                  cgu: cguStructure,
+                },
+              }
+            : null,
+          certificationAuthority: !isRegistryManager
+            ? {
+                certificationAuthorityStructures: [
+                  { cguAcceptanceRequired: true, cgu: cguStructure },
+                ],
+              }
+            : null,
+        },
+      },
+    });
+
     stubQuery(req, "getCertificationAuthorityStructureCGUInCguPageQuery", {
       data: {
         account_getAccountForConnectedUser: {
           certificationRegistryManager: isRegistryManager
-            ? { certificationAuthorityStructure: { cgu: cguStructure } }
+            ? {
+                certificationAuthorityStructure: {
+                  cguAcceptanceRequired: true,
+                  cgu: cguStructure,
+                },
+              }
             : null,
           certificationAuthority: !isRegistryManager
-            ? { certificationAuthorityStructures: [{ cgu: cguStructure }] }
+            ? {
+                certificationAuthorityStructures: [
+                  { cguAcceptanceRequired: true, cgu: cguStructure },
+                ],
+              }
             : null,
         },
       },

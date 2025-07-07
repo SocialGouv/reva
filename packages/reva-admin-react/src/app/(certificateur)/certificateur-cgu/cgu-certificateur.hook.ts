@@ -28,6 +28,7 @@ const getCertificationAuthorityStructureCGUInCguPageQuery = graphql(`
     account_getAccountForConnectedUser {
       certificationRegistryManager {
         certificationAuthorityStructure {
+          cguAcceptanceRequired
           cgu {
             isLatestVersion
           }
@@ -41,6 +42,7 @@ const getCertificationAuthorityStructureCGUInCguPageQuery = graphql(`
               lastname
             }
           }
+          cguAcceptanceRequired
           cgu {
             isLatestVersion
           }
@@ -55,6 +57,7 @@ const getCertificationAuthorityStructureCGUInCguPageQuery = graphql(`
                 lastname
               }
             }
+            cguAcceptanceRequired
             cgu {
               isLatestVersion
             }
@@ -105,6 +108,8 @@ export const useCguCertificateur = () => {
       ?.certificationAuthorityStructures?.[0];
 
   const cguStructure = certificationAuthorityStructure?.cgu;
+  const cguAcceptanceRequired =
+    certificationAuthorityStructure?.cguAcceptanceRequired;
 
   const canAccessCguCertificateur =
     isCertificateur &&
@@ -158,5 +163,6 @@ export const useCguCertificateur = () => {
     certificationAuthorityManagerFirstname,
     certificationAuthorityManagerLastname,
     isLoadingGetCertificationAuthorityStructureCGU,
+    cguAcceptanceRequired,
   };
 };

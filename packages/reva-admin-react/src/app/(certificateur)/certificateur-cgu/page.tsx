@@ -15,6 +15,7 @@ export default function CertificateurCguPage() {
     isCertificationRegistryManager,
     certificationAuthorityManagerFirstname,
     certificationAuthorityManagerLastname,
+    cguAcceptanceRequired,
   } = useCguCertificateur();
 
   const [showCgu, setShowCgu] = useState(false);
@@ -27,7 +28,7 @@ export default function CertificateurCguPage() {
     return null;
   }
 
-  if (!isCertificationRegistryManager && !showCgu) {
+  if (!isCertificationRegistryManager && !showCgu && cguAcceptanceRequired) {
     return (
       <CguAwaitingManagerValidationNotice
         certificationAuthorityManagerFirstname={
@@ -55,7 +56,7 @@ export default function CertificateurCguPage() {
         chapo={parsedChapo}
         updatedAt={cguCertificateur.dateDeMiseAJour}
       />
-      {isCertificationRegistryManager ? (
+      {isCertificationRegistryManager && cguAcceptanceRequired ? (
         <CguCertificateurForm />
       ) : (
         <Button priority="secondary" onClick={() => setShowCgu(false)}>
