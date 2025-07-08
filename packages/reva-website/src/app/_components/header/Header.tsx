@@ -1,4 +1,5 @@
 "use client";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -6,6 +7,8 @@ import { useEffect, useState } from "react";
 export const Header = (props: { className?: string }) => {
   const pathname = usePathname() || "";
   const [isClient, setIsClient] = useState(false);
+  const { isFeatureActive } = useFeatureflipping();
+  const showNewProMenu = isFeatureActive("WEBSITE_PRO_MENU_DROPDOWN");
 
   useEffect(() => {
     setIsClient(true);
@@ -29,13 +32,45 @@ export const Header = (props: { className?: string }) => {
       },
       text: "Candidats",
     },
-    {
-      isActive: !!pathname.match(/\/espace-professionnel/)?.length,
-      linkProps: {
-        href: "/espace-professionnel",
-      },
-      text: "Professionnels",
-    },
+    showNewProMenu
+      ? {
+          isActive: !!pathname.match(/\/espace-professionnel/)?.length,
+          menuLinks: [
+            {
+              linkProps: {
+                href: "/savoir-plus/articles/lancez-votre-projet-de-vae-collective/",
+              },
+              isActive: !!pathname.match(
+                /\/savoir-plus\/articles\/lancez-votre-projet-de-vae-collective/,
+              )?.length,
+              text: "Porteurs de projets de VAE collective",
+            },
+            {
+              linkProps: {
+                href: "/espace-professionnel",
+              },
+              isActive: !!pathname.match(/\/espace-professionnel/)?.length,
+              text: "Architectes Accompagnateurs de Parcours",
+            },
+            {
+              linkProps: {
+                href: "/savoir-plus/articles/espace-certificateurs/",
+              },
+              isActive: !!pathname.match(
+                /\/savoir-plus\/articles\/espace-certificateurs/,
+              )?.length,
+              text: "Certificateurs",
+            },
+          ],
+          text: "Professionnels",
+        }
+      : {
+          isActive: !!pathname.match(/\/espace-professionnel/)?.length,
+          linkProps: {
+            href: "/espace-professionnel",
+          },
+          text: "Professionnels",
+        },
     {
       isActive: !!pathname.match(/\/savoir-plus/)?.length,
       text: "Espace d'informations",
