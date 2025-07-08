@@ -54,6 +54,7 @@ export function CguCertificateurForm() {
           <hr className="mt-6 mb-8" />
           <Checkbox
             id="cgu-certificateur-charter-acceptance"
+            className="mb-3"
             options={[
               {
                 label:
