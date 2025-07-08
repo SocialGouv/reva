@@ -261,8 +261,8 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
                 nomUsage: r.candidate?.givenName ?? "",
                 dateNaissance: r.candidate?.birthdate
                   ? new Date(r.candidate?.birthdate).toISOString()
-                  : null,
-                communeNaissance: r.candidate?.birthCity,
+                  : undefined,
+                communeNaissance: r.candidate?.birthCity ?? "",
                 departementNaissance: {
                   code: r.candidate?.birthDepartment?.code,
                   nom: r.candidate?.birthDepartment?.label,
@@ -270,7 +270,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
                 nationalite: r.candidate?.country?.label,
                 situation: {
                   intituleCertificationObtenuePlusEleve:
-                    r.candidate?.highestDegreeLabel,
+                    r.candidate?.highestDegreeLabel ?? "",
                   niveauCertificationObtenuePlusEleve: {
                     code: r.candidate?.highestDegree?.code,
                   },
@@ -279,8 +279,8 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
                 telephone: r.candidate?.phone,
                 email: r.candidate?.email,
                 adresse: {
-                  codePostal: r.candidate?.zip,
-                  ville: r.candidate?.city,
+                  codePostal: r.candidate?.zip ?? "",
+                  ville: r.candidate?.city ?? "",
                   pays: r.candidate?.country?.label,
                   adresse: r.candidate?.street,
                   departement: {

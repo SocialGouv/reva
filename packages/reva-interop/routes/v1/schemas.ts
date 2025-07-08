@@ -117,6 +117,7 @@ export const candidatSchema = {
       type: "string",
       format: "date",
       example: "1980-01-01",
+      nullable: true,
     },
     nationalite: {
       type: "string",
