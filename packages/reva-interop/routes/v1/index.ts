@@ -50,7 +50,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     openapi: {
       openapi: "3.0.0",
       info: {
-        title: `France VAE Interoperability API (${process.env.NODE_ENV})`,
+        title: `France VAE Interoperability API (${process.env.ENVIRONMENT})`,
         description:
           "France VAE's interoperability API to interface with other official entities",
         version: "1.0.0",
@@ -58,7 +58,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       servers: [
         {
           url: `${process.env.BASE_URL}`,
-          description: `${process.env.NODE_ENV?.toUpperCase()} server`,
+          description: `${process.env.ENVIRONMENT?.toUpperCase()} server`,
         },
       ],
       tags: [
@@ -261,7 +261,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
                 nomUsage: r.candidate?.givenName ?? "",
                 dateNaissance: r.candidate?.birthdate
                   ? new Date(r.candidate?.birthdate).toISOString()
-                  : undefined,
+                  : "",
                 communeNaissance: r.candidate?.birthCity ?? "",
                 departementNaissance: {
                   code: r.candidate?.birthDepartment?.code,
