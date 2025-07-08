@@ -7,6 +7,61 @@ export const getCandidacyWithFeasibilityQuery = graphql(`
       id
       status
       feasibilityFormat
+      organism {
+        label
+        nomPublic
+        emailContact
+        siteInternet
+        telephone
+        contactAdministrativeEmail
+        contactAdministrativePhone
+      }
+      certification {
+        label
+        codeRncp
+      }
+      isCertificationPartial
+      candidate {
+        firstname
+        firstname2
+        firstname3
+        givenName
+        birthCity
+        birthDepartment {
+          label
+          code
+        }
+        birthdate
+        nationality
+        niveauDeFormationLePlusEleve {
+          code
+          level
+          label
+          longLabel
+        }
+        highestDegree {
+          code
+          level
+          label
+          longLabel
+        }
+        highestDegreeLabel
+        lastname
+        gender
+        email
+        phone
+        city
+        zip
+        street
+        addressComplement
+        country {
+          label
+        }
+        department {
+          code
+          label
+        }
+      }
     }
   }
 `);

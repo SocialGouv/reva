@@ -258,7 +258,36 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
               candidat: {
                 prenom: r.candidate?.firstname,
                 nom: r.candidate?.lastname,
+                nomUsage: r.candidate?.givenName ?? "",
+                dateNaissance: r.candidate?.birthdate
+                  ? new Date(r.candidate?.birthdate).toISOString()
+                  : null,
+                communeNaissance: r.candidate?.birthCity,
+                departementNaissance: {
+                  code: r.candidate?.birthDepartment?.code,
+                  nom: r.candidate?.birthDepartment?.label,
+                },
+                nationalite: r.candidate?.country?.label,
+                situation: {
+                  intituleCertificationObtenuePlusEleve:
+                    r.candidate?.highestDegreeLabel,
+                  niveauCertificationObtenuePlusEleve: {
+                    code: r.candidate?.highestDegree?.code,
+                  },
+                },
+                sexe: r.candidate?.gender,
+                telephone: r.candidate?.phone,
                 email: r.candidate?.email,
+                adresse: {
+                  codePostal: r.candidate?.zip,
+                  ville: r.candidate?.city,
+                  pays: r.candidate?.country?.label,
+                  adresse: r.candidate?.street,
+                  departement: {
+                    code: r.candidate?.department?.code,
+                    nom: r.candidate?.department?.label,
+                  },
+                },
               },
             },
           });
