@@ -5,8 +5,8 @@ import Form from "next/form";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { login } from "./actions";
-import { PasswordInput } from "./_components/password-input/PasswordInput";
 import { useFormStatus } from "react-dom";
+import { PasswordInput } from "@codegouvfr/react-dsfr/blocks/PasswordInput";
 
 export default function LoginPage() {
   const { pending } = useFormStatus();
@@ -28,7 +28,10 @@ export default function LoginPage() {
           label="Email"
         />
 
-        <PasswordInput />
+        <PasswordInput
+          label="Mot de passe"
+          nativeInputProps={{ name: "password" }}
+        />
 
         <Button className="w-full justify-center" disabled={pending}>
           Se connecter
