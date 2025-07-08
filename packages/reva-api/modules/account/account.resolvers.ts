@@ -12,6 +12,7 @@ import { getImpersonateUrl } from "./features/impersonate";
 import { updateAccountById } from "./features/updateAccount";
 import { disableAccountById } from "./features/disableAccount";
 import { loginWithCredentials } from "./features/loginWithCredentials";
+import { ClientApp } from "./account.type";
 
 export const resolvers = {
   Mutation: {
@@ -104,6 +105,7 @@ export const resolvers = {
       params: {
         email: string;
         password: string;
+        clientApp: ClientApp;
       },
     ) => loginWithCredentials(params),
   },

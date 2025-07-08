@@ -1,4 +1,5 @@
 import { logger } from "../../shared/logger";
+import { ClientApp } from "../account.type";
 import { getKeycloakAdmin } from "../features/getKeycloakAdmin";
 import Keycloak from "keycloak-connect";
 
@@ -181,6 +182,7 @@ const getKeycloakAccessToken = async (): Promise<string | undefined> => {
 export const generateIAMTokenWithPassword = async (
   userId: string,
   password: string,
+  clientApp: ClientApp,
 ) => {
   const keycloakAdmin = await getKeycloakAdmin();
 
@@ -194,13 +196,21 @@ export const generateIAMTokenWithPassword = async (
   }
 
   try {
+    let clientId = "";
+    if (clientApp === "REVA_ADMIN") {
+      clientId = process.env.KEYCLOAK_ADMIN_CLIENTID_REVA as string;
+    } else if (clientApp === "REVA_VAE_COLLECTIVE") {
+      clientId = process.env
+        .KEYCLOAK_ADMIN_CLIENTID_REVA_VAE_COLLECTIVE as string;
+    }
+
     //generate a token for the user
     const _keycloak = new Keycloak(
       {},
       {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA as string,
+        clientId,
         serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
         realm: process.env.KEYCLOAK_ADMIN_REALM_REVA as string,
         credentials: {

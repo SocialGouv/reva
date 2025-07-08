@@ -1,12 +1,15 @@
+import { ClientApp } from "../account.type";
 import { getAccountFromEmail } from "../database/accounts";
 import { generateIAMTokenWithPassword } from "../utils/keycloak.utils";
 
 export const loginWithCredentials = async ({
   email,
   password,
+  clientApp,
 }: {
   email: string;
   password: string;
+  clientApp: ClientApp;
 }) => {
   const account = await getAccountFromEmail(email);
 
@@ -17,6 +20,7 @@ export const loginWithCredentials = async ({
   const tokens = await generateIAMTokenWithPassword(
     account.keycloakId,
     password,
+    clientApp,
   );
 
   return {

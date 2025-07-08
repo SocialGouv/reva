@@ -55,7 +55,13 @@ type Mutation {
   account_loginWithCredentials(
     email: String!
     password: String!
+    clientApp: ClientApp!
   ): AccountLogged!
+}
+
+enum ClientApp {
+  REVA_ADMIN
+  REVA_VAE_COLLECTIVE
 }
 
 type AccountsPaginated {
