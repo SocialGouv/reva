@@ -201,6 +201,11 @@ const PageContent = ({
                   {certification.juryPlace}
                 </Info>
               )}
+              <Info title="Estimation des frais de jury">
+                {certification.juryEstimatedCost
+                  ? `${certification.juryEstimatedCost}€`
+                  : "À compléter"}
+              </Info>
             </div>
 
             <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
