@@ -42,6 +42,7 @@ export default function CertificationSummaryCard({
     juryPlace?: string | null;
     juryFrequency?: CertificationJuryFrequency | null;
     juryFrequencyOther?: string | null;
+    juryEstimatedCost?: number | null;
     domains: {
       id: string;
       label: string;
@@ -132,6 +133,11 @@ export default function CertificationSummaryCard({
               {certification.juryPlace}
             </Info>
           )}
+          <Info title="Estimation des frais de jury">
+            {certification.juryEstimatedCost
+              ? `${certification.juryEstimatedCost}€`
+              : "À compléter"}
+          </Info>
         </div>
 
         <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
