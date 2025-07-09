@@ -81,9 +81,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
             type: "oauth2",
             flows: {
               authorizationCode: {
-                authorizationUrl:
-                  "http://localhost:8888/auth/realms/reva/protocol/openid-connect/auth",
-
+                authorizationUrl: `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_REVA_ADMIN_REALM}/protocol/openid-connect/auth`,
                 tokenUrl: "/interop/v1/documentation/openid-connect/token",
                 scopes: {
                   openid: "openid",
