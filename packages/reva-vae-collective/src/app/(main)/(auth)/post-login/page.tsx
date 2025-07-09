@@ -2,12 +2,13 @@
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { redirect, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function PostLoginPage() {
   const searchParams = useSearchParams();
   const tokens = searchParams.get("tokens");
-  const { resetKeycloakInstance } = useKeycloakContext();
+  const { resetKeycloakInstance, authenticated } = useKeycloakContext();
+  const [ready, setReady] = useState(false);
 
   const decodedToken: {
     accessToken: string;
@@ -16,7 +17,15 @@ export default function PostLoginPage() {
   } = JSON.parse(tokens || "{}");
 
   useEffect(() => {
-    resetKeycloakInstance(decodedToken);
-    redirect("/");
-  }, [decodedToken, resetKeycloakInstance]);
+    if (!ready) {
+      resetKeycloakInstance(decodedToken);
+      setReady(true);
+    }
+  }, [resetKeycloakInstance, decodedToken, ready]);
+
+  useEffect(() => {
+    if (ready && authenticated) {
+      redirect("/");
+    }
+  }, [ready, authenticated]);
 }

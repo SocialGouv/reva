@@ -8,8 +8,6 @@ import { redirect } from "next/navigation";
 export const login = async (formData: FormData) => {
   const { email, password } = Object.fromEntries(formData.entries());
 
-  console.log({ formData });
-
   const result = throwUrqlErrors(
     await client.mutation(
       gql`
