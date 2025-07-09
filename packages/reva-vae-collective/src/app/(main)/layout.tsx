@@ -1,3 +1,4 @@
+import { AuthGuard } from "@/components/auth/authGuard";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
@@ -39,7 +40,7 @@ export default function RootLayout({
           <div
             className={`flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12`}
           >
-            {children}
+            <AuthGuard>{children}</AuthGuard>
           </div>
         </div>
       </main>
