@@ -16,11 +16,8 @@ const getVaeCollectiveCohortForRegistrationPageQuery = graphql(`
       id
       codeInscription
       nom
-      projetVaeCollective {
-        nom
-        commanditaireVaeCollective {
-          raisonSociale
-        }
+      commanditaireVaeCollective {
+        raisonSociale
       }
     }
   }
@@ -93,12 +90,9 @@ export default function CandidateVaeCollectiveRegistrationPage() {
               <div className="text-dsfrGray-mentionGrey text-xs">
                 <span className="fr-icon--sm fr-icon-building-fill mr-2" />
                 {
-                  cohorteVaeCollective?.projetVaeCollective
-                    ?.commanditaireVaeCollective?.raisonSociale
+                  cohorteVaeCollective?.commanditaireVaeCollective
+                    ?.raisonSociale
                 }
-              </div>
-              <div className="text-dsfrGray-titleGrey text-[22px] font-bold">
-                {cohorteVaeCollective?.projetVaeCollective?.nom}
               </div>
               <div className="text-dsfrGray-mentionGrey text-sm">
                 {cohorteVaeCollective?.nom}

@@ -146,11 +146,8 @@ export default function CandidaciesPage() {
               fundable={candidacy.financeModule !== "hors_plateforme"}
               vaeCollective={!!candidacy.cohorteVaeCollective}
               vaeCollectiveCommanditaireLabel={
-                candidacy.cohorteVaeCollective?.projetVaeCollective
-                  .commanditaireVaeCollective.raisonSociale
-              }
-              vaeCollectiveProjetLabel={
-                candidacy.cohorteVaeCollective?.projetVaeCollective.nom
+                candidacy.cohorteVaeCollective?.commanditaireVaeCollective
+                  .raisonSociale
               }
               vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
               status={candidacy.status}

@@ -1854,32 +1854,20 @@ model CandidacyEmail {
 }
 
 model CommanditaireVaeCollective {
-  id                  String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  raisonSociale       String                @map("raison_sociale") @db.VarChar(255)
-  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt           DateTime?             @map("updated_at") @db.Timestamptz(6)
-  projetVaeCollective ProjetVaeCollective[]
+  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  raisonSociale        String                 @map("raison_sociale") @db.VarChar(255)
+  createdAt            DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime?              @map("updated_at") @db.Timestamptz(6)
+  cohorteVaeCollective CohorteVaeCollective[]
 
   @@map("commanditaire_vae_collective")
-}
-
-model ProjetVaeCollective {
-  id                           String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  nom                          String                     @db.VarChar(255)
-  createdAt                    DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                    DateTime?                  @map("updated_at") @db.Timestamptz(6)
-  commanditaireVaeCollectiveId String                     @map("commanditaire_vae_collective_id") @db.Uuid
-  commanditaireVaeCollective   CommanditaireVaeCollective @relation(fields: [commanditaireVaeCollectiveId], references: [id])
-  cohorteVaeCollective         CohorteVaeCollective[]
-
-  @@map("projet_vae_collective")
 }
 
 model CohorteVaeCollective {
   id                                 String                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   nom                                String                              @map("nom") @db.VarChar(255)
-  projetVaeCollectiveId              String                              @map("projet_vae_collective_id") @db.Uuid
-  projetVaeCollective                ProjetVaeCollective                 @relation(fields: [projetVaeCollectiveId], references: [id])
+  commanditaireVaeCollectiveId       String                              @map("commanditaire_vae_collective_id") @db.Uuid
+  commanditaireVaeCollective         CommanditaireVaeCollective          @relation(fields: [commanditaireVaeCollectiveId], references: [id])
   createdAt                          DateTime                            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                          DateTime?                           @map("updated_at") @db.Timestamptz(6)
   certificationCohorteVaeCollectives CertificationCohorteVaeCollective[]

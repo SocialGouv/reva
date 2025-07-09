@@ -44,11 +44,8 @@ const getCandidacyCaducitesQuery = graphql(`
         }
         cohorteVaeCollective {
           nom
-          projetVaeCollective {
-            nom
-            commanditaireVaeCollective {
-              raisonSociale
-            }
+          commanditaireVaeCollective {
+            raisonSociale
           }
         }
         candidate {

@@ -82,11 +82,8 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         cohorteVaeCollective {
           id
           nom
-          projetVaeCollective {
-            nom
-            commanditaireVaeCollective {
-              raisonSociale
-            }
+          commanditaireVaeCollective {
+            raisonSociale
           }
         }
       }

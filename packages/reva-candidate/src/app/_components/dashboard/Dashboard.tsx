@@ -84,14 +84,13 @@ const Dashboard = () => {
           <span>
             <span className="fr-icon--sm fr-icon-building-fill mr-2" />
             {
-              candidacy?.cohorteVaeCollective?.projetVaeCollective
-                ?.commanditaireVaeCollective?.raisonSociale
+              candidacy?.cohorteVaeCollective?.commanditaireVaeCollective
+                ?.raisonSociale
             }
           </span>
         }
         desc={
           <div className="text-dsfrGray-titleGrey text-xl font-bold">
-            {candidacy?.cohorteVaeCollective?.projetVaeCollective?.nom} -{" "}
             {candidacy?.cohorteVaeCollective?.nom}
           </div>
         }

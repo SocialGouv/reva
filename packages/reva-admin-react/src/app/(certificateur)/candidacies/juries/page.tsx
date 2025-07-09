@@ -54,11 +54,8 @@ const getJuriesQuery = graphql(`
           }
           cohorteVaeCollective {
             nom
-            projetVaeCollective {
-              nom
-              commanditaireVaeCollective {
-                raisonSociale
-              }
+            commanditaireVaeCollective {
+              raisonSociale
             }
           }
         }

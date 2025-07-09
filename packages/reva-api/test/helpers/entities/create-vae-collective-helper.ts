@@ -9,20 +9,17 @@ export const createCohorteVaeCollectiveHelper = async (
     data: {
       nom: faker.lorem.sentence(),
       codeInscription: faker.lorem.word(),
-      projetVaeCollective: {
+
+      commanditaireVaeCollective: {
         create: {
-          nom: faker.lorem.sentence(),
-          commanditaireVaeCollective: {
-            create: {
-              raisonSociale: faker.lorem.sentence(),
-            },
-          },
+          raisonSociale: faker.lorem.sentence(),
         },
       },
+
       ...args,
     },
     include: {
-      projetVaeCollective: { include: { commanditaireVaeCollective: true } },
+      commanditaireVaeCollective: true,
       certificationCohorteVaeCollectives: {
         include: { certification: true },
       },

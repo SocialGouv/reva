@@ -113,11 +113,9 @@ const getCandidaciesByStatus = graphql(`
         }
         cohorteVaeCollective {
           nom
-          projetVaeCollective {
-            nom
-            commanditaireVaeCollective {
-              raisonSociale
-            }
+          nom
+          commanditaireVaeCollective {
+            raisonSociale
           }
         }
       }

@@ -61,11 +61,8 @@ const getFeasibilitiesQuery = graphql(`
           }
           cohorteVaeCollective {
             nom
-            projetVaeCollective {
-              nom
-              commanditaireVaeCollective {
-                raisonSociale
-              }
+            commanditaireVaeCollective {
+              raisonSociale
             }
           }
         }

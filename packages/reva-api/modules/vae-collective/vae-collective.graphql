@@ -8,15 +8,8 @@ type CohorteVaeCollective {
   id: ID!
   nom: String!
   codeInscription: String!
-  projetVaeCollective: ProjetVaeCollective!
-}
-
-type ProjetVaeCollective {
-  id: ID!
-  nom: String!
   commanditaireVaeCollective: CommanditaireVaeCollective!
 }
-
 type CommanditaireVaeCollective {
   id: ID!
   raisonSociale: String!

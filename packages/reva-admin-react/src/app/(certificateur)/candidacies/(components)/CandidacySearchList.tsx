@@ -77,11 +77,8 @@ type CandidacySearchResult<T> = T & {
     status: CandidacyStatusStep;
     cohorteVaeCollective?: {
       nom: string;
-      projetVaeCollective: {
-        nom: string;
-        commanditaireVaeCollective: {
-          raisonSociale: string;
-        };
+      commanditaireVaeCollective: {
+        raisonSociale: string;
       };
     } | null;
     certification?: { label: string; codeRncp: string } | null;
@@ -153,12 +150,10 @@ export const CandidacySearchList = <T,>({
                   <br />
                   <span>
                     {
-                      r.candidacy.cohorteVaeCollective.projetVaeCollective
+                      r.candidacy.cohorteVaeCollective
                         .commanditaireVaeCollective.raisonSociale
                     }{" "}
-                    - (
-                    {r.candidacy.cohorteVaeCollective.projetVaeCollective.nom}{" "}
-                    <br /> - Cohorte : {r.candidacy.cohorteVaeCollective.nom})
+                    (Cohorte : {r.candidacy.cohorteVaeCollective.nom})
                   </span>
                 </>
               )}
