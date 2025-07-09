@@ -1,8 +1,10 @@
 "use client";
 
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
+import { useKeycloakContext } from "../auth/keycloakContext";
 
 export const Header = () => {
+  const { logout } = useKeycloakContext();
   return (
     <DsfrHeader
       brandTop={
@@ -16,6 +18,16 @@ export const Header = () => {
         href: "/../",
         title: "Accueil - France VAE",
       }}
+      quickAccessItems={[
+        {
+          buttonProps: {
+            onClick: () => logout(),
+            className: "!text-sm !px-3 !py-1 !mb-4 !mx-1",
+          },
+          iconId: "ri-logout-box-r-line",
+          text: "Se déconnecter",
+        },
+      ]}
       classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
     />
   );
