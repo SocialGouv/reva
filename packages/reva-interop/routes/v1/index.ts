@@ -10,25 +10,15 @@ import swaggerUi from "@fastify/swagger-ui";
 import * as jose from "jose";
 import {
   addSchemas,
-  adresseSchema,
   candidacyIdSchema,
-  candidatSchema,
-  candidatureSchema,
-  certificationSchema,
   decisionDossierDeFaisabiliteSchema,
   decisionDossierDeValidationSchema,
-  departementSchema,
-  diplomeSchema,
   dossierDeFaisabiliteDecisionSchema,
   dossierDeValidationSchema,
-  genreSchema,
-  organismeSchema,
   resultatJurySchema,
-  situationSchema,
   statutDossierDeFaisabiliteSchema,
   statutDossierDeValidationSchema,
   statutJurySchema,
-  typologieCandidatSchema,
 } from "./schemas.js";
 import {
   addInputSchemas,
@@ -36,12 +26,10 @@ import {
   resultatJuryInputSchema,
   sessionJuryInputSchema,
 } from "./inputSchemas.js";
-import {
-  addResponseSchemas,
-  candidatureResponseSchema,
-} from "./responseSchemas.js";
+import { addResponseSchemas } from "./responseSchemas.js";
 import { validateJwt } from "./authMiddleware.js";
 import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
+import { mapCandidacyObject } from "../../utils/mappers/candidacy.js";
 
 const logo = readFileSync("./static/fvae_logo.svg");
 
@@ -205,22 +193,6 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         ValidatorSchemaOptions: {
           references: [typeof candidacyIdSchema];
         };
-        SerializerSchemaOptions: {
-          references: [
-            typeof candidacyIdSchema,
-            typeof candidatSchema,
-            typeof genreSchema,
-            typeof candidatureSchema,
-            typeof candidatureResponseSchema,
-            typeof certificationSchema,
-            typeof situationSchema,
-            typeof typologieCandidatSchema,
-            typeof adresseSchema,
-            typeof diplomeSchema,
-            typeof departementSchema,
-            typeof organismeSchema,
-          ];
-        };
       }>
     >()
     .route({
@@ -253,43 +225,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         );
         if (r) {
           reply.send({
-            data: {
-              id: r.id,
-              candidat: {
-                prenom: r.candidate?.firstname,
-                nom: r.candidate?.lastname,
-                nomUsage: r.candidate?.givenName ?? "",
-                dateNaissance: r.candidate?.birthdate
-                  ? new Date(r.candidate?.birthdate).toISOString()
-                  : "",
-                communeNaissance: r.candidate?.birthCity ?? "",
-                departementNaissance: {
-                  code: r.candidate?.birthDepartment?.code,
-                  nom: r.candidate?.birthDepartment?.label,
-                },
-                nationalite: r.candidate?.country?.label,
-                situation: {
-                  intituleCertificationObtenuePlusEleve:
-                    r.candidate?.highestDegreeLabel ?? "",
-                  niveauCertificationObtenuePlusEleve: {
-                    code: r.candidate?.highestDegree?.code,
-                  },
-                },
-                sexe: r.candidate?.gender,
-                telephone: r.candidate?.phone,
-                email: r.candidate?.email,
-                adresse: {
-                  codePostal: r.candidate?.zip ?? "",
-                  ville: r.candidate?.city ?? "",
-                  pays: r.candidate?.country?.label,
-                  adresse: r.candidate?.street,
-                  departement: {
-                    code: r.candidate?.department?.code,
-                    nom: r.candidate?.department?.label,
-                  },
-                },
-              },
-            },
+            data: mapCandidacyObject(r),
           });
         } else {
           reply.status(204).send();

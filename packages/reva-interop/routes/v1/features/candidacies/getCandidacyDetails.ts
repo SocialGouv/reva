@@ -7,6 +7,7 @@ export const getCandidacyWithFeasibilityQuery = graphql(`
       id
       status
       feasibilityFormat
+      typology
       organism {
         label
         nomPublic

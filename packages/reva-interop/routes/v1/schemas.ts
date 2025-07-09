@@ -11,20 +11,31 @@ export const candidacyIdSchema = {
 export const situationSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Situation",
   type: "object",
+  required: [
+    "niveauCertificationObtenuePlusEleve",
+    "intituleCertificationObtenuePlusEleve",
+    "niveauFormationPlusEleve",
+    "typologie",
+  ],
+  additionalProperties: false,
   properties: {
     niveauCertificationObtenuePlusEleve: {
       $ref: "http://vae.gouv.fr/components/schemas/Diplome",
+      nullable: true,
     },
     intituleCertificationObtenuePlusEleve: {
       type: "string",
       maxLength: 255,
       example: "Baccalauréat Scientifique",
+      nullable: true,
     },
     niveauFormationPlusEleve: {
       $ref: "http://vae.gouv.fr/components/schemas/Diplome",
+      nullable: true,
     },
     typologie: {
       $ref: "http://vae.gouv.fr/components/schemas/TypologieCandidat",
+      nullable: true,
     },
   },
 } as const;
@@ -32,6 +43,7 @@ export const situationSchema = {
 export const organismeSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Organisme",
   type: "object",
+  required: ["nom", "contact", "siteWeb"],
   properties: {
     nom: {
       type: "string",
@@ -46,13 +58,15 @@ export const organismeSchema = {
       maxLength: 255,
       format: "uri",
       example: "https://www.organisme-abc.fr",
+      nullable: true,
     },
   },
 } as const;
 
-const contactSchema = {
+export const contactSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Contact",
   type: "object",
+  required: ["nom", "email", "telephone"],
   properties: {
     nom: {
       type: "string",
@@ -69,6 +83,7 @@ const contactSchema = {
       type: "string",
       maxLength: 255,
       example: "+33123456789",
+      nullable: true,
     },
   },
 } as const;
@@ -76,9 +91,23 @@ const contactSchema = {
 export const candidatSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Candidat",
   type: "object",
+  required: [
+    "genre",
+    "prenom",
+    "nom",
+    "dateNaissance",
+    "departementNaissance",
+    "communeNaissance",
+    "nationalite",
+    "email",
+    "telephone",
+    "adresse",
+    "situation",
+  ],
   properties: {
     genre: {
       $ref: "http://vae.gouv.fr/components/schemas/Genre",
+      nullable: true,
     },
     prenom: {
       type: "string",
@@ -89,11 +118,13 @@ export const candidatSchema = {
       type: "string",
       maxLength: 255,
       example: "Marie",
+      nullable: true,
     },
     prenom3: {
       type: "string",
       maxLength: 255,
       example: "Claire",
+      nullable: true,
     },
     nom: {
       type: "string",
@@ -104,14 +135,17 @@ export const candidatSchema = {
       type: "string",
       maxLength: 255,
       example: "Poe",
+      nullable: true,
     },
     communeNaissance: {
       type: "string",
       maxLength: 255,
       example: "Paris",
+      nullable: true,
     },
     departementNaissance: {
       $ref: "http://vae.gouv.fr/components/schemas/Departement",
+      nullable: true,
     },
     dateNaissance: {
       type: "string",
@@ -123,6 +157,7 @@ export const candidatSchema = {
       type: "string",
       maxLength: 255,
       example: "Française",
+      nullable: true,
     },
     situation: {
       $ref: "http://vae.gouv.fr/components/schemas/Situation",
@@ -165,6 +200,7 @@ export const typologieCandidatSchema = {
     "BENEVOLE",
     "STAGIAIRE",
     "TITULAIRE_MANDAT_ELECTIF",
+    "RETRAITE",
     "AUTRE",
   ],
   description: "Typologie du candidat",
@@ -222,6 +258,7 @@ export const departementSchema = {
 export const adresseSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Adresse",
   type: "object",
+  required: ["codePostal", "rue", "ville", "departement", "pays"],
   properties: {
     departement: {
       $ref: "http://vae.gouv.fr/components/schemas/Departement",
@@ -231,12 +268,14 @@ export const adresseSchema = {
       pattern: "^\\d{5}$",
       description: "Code postal",
       example: "75001",
+      nullable: true,
     },
     rue: {
       type: "string",
       maxLength: 255,
       description: "Rue",
       example: "1234 rue de la Paix",
+      nullable: true,
     },
     complementAdresse: {
       type: "string",
@@ -249,12 +288,14 @@ export const adresseSchema = {
       maxLength: 255,
       description: "Ville",
       example: "Paris",
+      nullable: true,
     },
     pays: {
       type: "string",
       maxLength: 255,
       description: "Pays",
       example: "France",
+      nullable: true,
     },
   },
 } as const;
@@ -262,6 +303,7 @@ export const adresseSchema = {
 export const certificationSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Certification",
   type: "object",
+  required: ["codeRncp", "nom", "estViseePartiellement"],
   properties: {
     codeRncp: {
       type: "string",
@@ -276,6 +318,7 @@ export const certificationSchema = {
     estViseePartiellement: {
       type: "boolean",
       example: false,
+      nullable: true,
     },
   },
 } as const;
@@ -283,6 +326,7 @@ export const certificationSchema = {
 export const candidatureSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Candidature",
   type: "object",
+  required: ["id", "certification", "candidat"],
   properties: {
     id: {
       type: "string",
@@ -297,6 +341,7 @@ export const candidatureSchema = {
     },
     organisme: {
       $ref: "http://vae.gouv.fr/components/schemas/Organisme",
+      nullable: true,
     },
   },
 } as const;
