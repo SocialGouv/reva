@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/components/auth/auth";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -7,8 +8,12 @@ import { useEffect, useState } from "react";
 export default function PostLoginPage() {
   const searchParams = useSearchParams();
   const tokens = searchParams.get("tokens");
+  const commanditaireVaeCollectiveId = searchParams.get(
+    "commanditaireVaeCollectiveId",
+  );
   const { resetKeycloakInstance, authenticated } = useKeycloakContext();
   const [ready, setReady] = useState(false);
+  const { isVAECollectiveManager, isAdmin } = useAuth();
 
   const decodedToken: {
     accessToken: string;
@@ -25,7 +30,19 @@ export default function PostLoginPage() {
 
   useEffect(() => {
     if (ready && authenticated) {
-      redirect("/");
+      if (isVAECollectiveManager) {
+        redirect(`/commanditaires/${commanditaireVaeCollectiveId}`);
+      }
+
+      if (isAdmin) {
+        redirect("/commanditaires");
+      }
     }
-  }, [ready, authenticated]);
+  }, [
+    ready,
+    authenticated,
+    isVAECollectiveManager,
+    isAdmin,
+    commanditaireVaeCollectiveId,
+  ]);
 }

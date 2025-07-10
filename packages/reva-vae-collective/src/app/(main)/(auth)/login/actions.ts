@@ -26,6 +26,11 @@ export const login = async (_state: FormState, formData: FormData) => {
             refreshToken
             idToken
           }
+          account {
+            commanditaireVaeCollective {
+              id
+            }
+          }
         }
       }
     `,
@@ -38,10 +43,12 @@ export const login = async (_state: FormState, formData: FormData) => {
     } as FormState;
   } else {
     redirect(
-      "/post-login?tokens=" +
-        encodeURI(
-          JSON.stringify(result.data?.account_loginWithCredentials.tokens),
-        ),
+      encodeURI(
+        `/post-login?tokens=
+          ${JSON.stringify(
+            result.data?.account_loginWithCredentials.tokens,
+          )}&commanditaireVaeCollectiveId=${result.data?.account_loginWithCredentials.account.commanditaireVaeCollective?.id}`,
+      ),
     );
   }
 };
