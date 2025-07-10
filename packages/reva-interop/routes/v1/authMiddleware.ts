@@ -26,14 +26,16 @@ export const validateJwt = async (
   ) {
     return;
   }
+  if (!process.env.ENVIRONMENT || process.env.ENVIRONMENT === "") {
+    throw new Error("ENVIRONMENT env var is missing");
+  }
 
   const jwt = getTokenFromRequest(request);
 
   // const jwt =
   //   "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmdmFlLWludGVyb3AtYXNwIiwiYXVkIjoiZnZhZS1pbnRlcm9wIiwic3ViIjoiYWNiMzY3ODgtNDA3Yy00MTRlLTlkMzMtMjMzYjJhMWNhMjQwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjM3MTYyMzkwMjJ9.cRKBfFM9TrpANOdNZTOGKS4QZ4C-PzD0RKtnYUVz1whBUGGGA2btlPk4GQQzp7QHRusFu44vgxuw8XGg1Kg6Ug";
-
   const { payload } = await jose.jwtVerify(jwt, secretKey, {
-    issuer: "fvae-interop-asp",
+    issuer: `fvae-interop-${process.env.ENVIRONMENT}`,
     requiredClaims: ["iat", "exp", "sub"],
     audience: "fvae-interop",
     algorithms: ["HS512"],

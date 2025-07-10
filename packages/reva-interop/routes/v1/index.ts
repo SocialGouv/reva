@@ -202,7 +202,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
 
       const jwt = await new jose.SignJWT()
         .setAudience("fvae-interop")
-        .setIssuer("fvae-interop-asp")
+        .setIssuer(`fvae-interop-${process.env.ENVIRONMENT}`)
         .setSubject(decodedIdToken.sub!)
         .setExpirationTime("1h")
         .setProtectedHeader({ alg: "HS512" })
