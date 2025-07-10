@@ -5,8 +5,19 @@ import { getCohorteVAECollectiveById } from "./features/getCohorteVAECollectiveB
 import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
 import { getCohortesVaeCollectivesForConnectedAap } from "./features/getCohortesVaeCollectivesForConnectedAap";
 import { getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount } from "./features/getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount";
+import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
 
 const unsafeResolvers = {
+  Account: {
+    commanditaireVaeCollective: async ({
+      id: gestionnaireAccountId,
+    }: {
+      id: string;
+    }) =>
+      getCommanditaireVaeCollectiveByGestionnaireAccountId({
+        gestionnaireAccountId,
+      }),
+  },
   CohorteVaeCollective: {
     commanditaireVaeCollective: async ({
       commanditaireVaeCollectiveId,

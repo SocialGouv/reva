@@ -18,3 +18,7 @@ type CommanditaireVaeCollective {
 type Candidacy {
   cohorteVaeCollective: CohorteVaeCollective
 }
+
+type Account {
+  commanditaireVaeCollective: CommanditaireVaeCollective
+}
