@@ -43,6 +43,44 @@ import { mapFeasibilities } from "../../utils/mappers/feasibility.js";
 const logo = readFileSync("./static/fvae_logo.svg");
 
 const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
+  const security: Array<{ [key: string]: string[] }> = [
+    {
+      bearerAuth: [],
+    },
+  ];
+  const securitySchemes: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  } = {
+    bearerAuth: {
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+      description:
+        "Votre jeton d'authentification doit être placé dans le header 'Authorization: Bearer VOTRE_JWT'.",
+    },
+  };
+
+  if (process.env.ENVIRONMENT !== "production") {
+    security.push({
+      oauth: [],
+    });
+    securitySchemes["oauth"] = {
+      type: "oauth2",
+      flows: {
+        authorizationCode: {
+          authorizationUrl: `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_REVA_ADMIN_REALM}/protocol/openid-connect/auth`,
+          tokenUrl: "/interop/v1/documentation/openid-connect/token",
+          scopes: {
+            openid: "openid",
+            profile: "profile",
+            roles: "roles",
+          },
+        },
+      },
+    };
+  }
+
   await fastify.register(fastifySwagger, {
     openapi: {
       openapi: "3.0.0",
@@ -76,38 +114,9 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           description: "Gestion de la session et des résultats liés au jury",
         },
       ],
-      security: [
-        {
-          oauth: [],
-        },
-        {
-          bearerAuth: [],
-        },
-      ],
+      security,
       components: {
-        securitySchemes: {
-          oauth: {
-            type: "oauth2",
-            flows: {
-              authorizationCode: {
-                authorizationUrl: `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_REVA_ADMIN_REALM}/protocol/openid-connect/auth`,
-                tokenUrl: "/interop/v1/documentation/openid-connect/token",
-                scopes: {
-                  openid: "openid",
-                  profile: "profile",
-                  roles: "roles",
-                },
-              },
-            },
-          },
-          bearerAuth: {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-            description:
-              "Votre jeton d'authentification doit être placé dans le header 'Authorization: Bearer VOTRE_JWT'.",
-          },
-        },
+        securitySchemes,
       },
     },
   });
@@ -151,14 +160,25 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
 
   fastify.post(
     "/documentation/openid-connect/token",
-    { schema: { hide: true } },
+    {
+      schema: {
+        hide: true,
+        consumes: ["application/x-www-form-urlencoded"],
+        produces: ["application/x-www-form-urlencoded"],
+        body: {
+          type: "object",
+          required: ["grant_type", "code", "client_id", "redirect_uri"],
+          properties: {
+            grant_type: { type: "string" },
+            code: { type: "string" },
+            client_id: { type: "string" },
+            redirect_uri: { type: "string" },
+          },
+        },
+      },
+    },
     async (request) => {
-      const requestBody = request.body as {
-        grant_type: string;
-        code: string;
-        client_id: string;
-        redirect_uri: string;
-      };
+      const requestBody = request.body;
       const tokenReply = await fetch(
         `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_REVA_ADMIN_REALM}/protocol/openid-connect/token`,
         {
