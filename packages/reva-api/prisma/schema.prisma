@@ -470,6 +470,7 @@ model Account {
   certificationAuthorityLocalAccount CertificationAuthorityLocalAccount[]
   certificationRegistryManager       CertificationRegistryManager[]
   disabledAt                         DateTime?                            @map("disabled_at") @db.Timestamptz(6)
+  commanditaireVaeCollective         CommanditaireVaeCollective[]
 
   @@index([email])
   @@index([organismId])
@@ -1854,11 +1855,13 @@ model CandidacyEmail {
 }
 
 model CommanditaireVaeCollective {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  raisonSociale        String                 @map("raison_sociale") @db.VarChar(255)
-  createdAt            DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime?              @map("updated_at") @db.Timestamptz(6)
-  cohorteVaeCollective CohorteVaeCollective[]
+  id                    String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  raisonSociale         String                 @map("raison_sociale") @db.VarChar(255)
+  createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime?              @map("updated_at") @db.Timestamptz(6)
+  cohorteVaeCollective  CohorteVaeCollective[]
+  gestionnaireAccountId String?                @map("gestionnaire_account_id") @db.Uuid
+  gestionnaire          Account?               @relation(fields: [gestionnaireAccountId], references: [id])
 
   @@map("commanditaire_vae_collective")
 }
