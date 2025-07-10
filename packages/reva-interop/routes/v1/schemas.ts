@@ -349,6 +349,7 @@ export const candidatureSchema = {
 export const fichierSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Fichier",
   type: "object",
+  required: ["nom", "url", "typeMime"],
   properties: {
     nom: {
       type: "string",
@@ -383,6 +384,13 @@ export const informationJurySchema = {
 export const dossierDeFaisabiliteSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabilite",
   type: "object",
+  required: [
+    "candidatureId",
+    "dateEnvoi",
+    "statut",
+    "experiences",
+    // "documents",
+  ],
   properties: {
     candidatureId: {
       $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
@@ -391,6 +399,7 @@ export const dossierDeFaisabiliteSchema = {
       type: "string",
       format: "date-time",
       example: "2023-10-01T10:00:00Z",
+      nullable: true,
     },
     documents: {
       type: "array",
@@ -399,6 +408,7 @@ export const dossierDeFaisabiliteSchema = {
       items: {
         $ref: "http://vae.gouv.fr/components/schemas/Fichier",
       },
+      nullable: true,
     },
     experiences: {
       type: "array",
@@ -406,9 +416,11 @@ export const dossierDeFaisabiliteSchema = {
       items: {
         $ref: "http://vae.gouv.fr/components/schemas/Experience",
       },
+      nullable: true,
     },
     statut: {
       $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeFaisabilite",
+      nullable: true,
     },
   },
 } as const;
@@ -528,6 +540,7 @@ export const statutDossierDeFaisabiliteSchema = {
     "COMPLET",
     "ARCHIVE",
     "ABANDONNE",
+    "VAE_COLLECTIVE",
   ],
   description: "Statut pour filtrer les dossiers de faisabilité",
   example: "EN_ATTENTE",

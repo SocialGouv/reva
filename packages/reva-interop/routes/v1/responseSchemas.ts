@@ -10,22 +10,48 @@ export const candidatureResponseSchema = {
   },
 } as const;
 
-export const addResponseSchemas = (fastify: FastifyInstance) => {
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/DossiersDeFaisabiliteResponse",
-    type: "object",
-    properties: {
-      data: {
-        type: "array",
-        items: {
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabilite",
-        },
-      },
-      info: {
-        $ref: "http://vae.gouv.fr/components/schemas/InfoPagination",
+export const pageInfoSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/InfoPagination",
+  type: "object",
+  required: ["totalElements", "totalPages", "pageCourante"],
+  properties: {
+    totalElements: {
+      type: "integer",
+      description: "Nombre total d'éléments",
+      example: 100,
+    },
+    totalPages: {
+      type: "integer",
+      description: "Nombre total de pages",
+      example: 10,
+    },
+    pageCourante: {
+      type: "integer",
+      description: "Page courante",
+      example: 1,
+    },
+  },
+} as const;
+
+export const dossiersDeFaisabiliteResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/DossiersDeFaisabiliteResponse",
+  type: "object",
+  required: ["data", "info"],
+  properties: {
+    data: {
+      type: "array",
+      items: {
+        $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabilite",
       },
     },
-  });
+    info: {
+      $ref: "http://vae.gouv.fr/components/schemas/InfoPagination",
+    },
+  },
+} as const;
+
+export const addResponseSchemas = (fastify: FastifyInstance) => {
+  fastify.addSchema(dossiersDeFaisabiliteResponseSchema);
 
   fastify.addSchema({
     $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteResponse",
@@ -187,25 +213,5 @@ export const addResponseSchemas = (fastify: FastifyInstance) => {
 
   fastify.addSchema(candidatureResponseSchema);
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/InfoPagination",
-    type: "object",
-    properties: {
-      totalElements: {
-        type: "integer",
-        description: "Nombre total d'éléments",
-        example: 100,
-      },
-      totalPages: {
-        type: "integer",
-        description: "Nombre total de pages",
-        example: 10,
-      },
-      pageCourante: {
-        type: "integer",
-        description: "Page courante",
-        example: 1,
-      },
-    },
-  });
+  fastify.addSchema(pageInfoSchema);
 };

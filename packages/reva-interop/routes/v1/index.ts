@@ -14,7 +14,10 @@ import {
   decisionDossierDeFaisabiliteSchema,
   decisionDossierDeValidationSchema,
   dossierDeFaisabiliteDecisionSchema,
+  dossierDeFaisabiliteSchema,
   dossierDeValidationSchema,
+  experienceSchema,
+  fichierSchema,
   resultatJurySchema,
   statutDossierDeFaisabiliteSchema,
   statutDossierDeValidationSchema,
@@ -26,10 +29,16 @@ import {
   resultatJuryInputSchema,
   sessionJuryInputSchema,
 } from "./inputSchemas.js";
-import { addResponseSchemas } from "./responseSchemas.js";
+import {
+  addResponseSchemas,
+  dossiersDeFaisabiliteResponseSchema,
+  pageInfoSchema,
+} from "./responseSchemas.js";
 import { validateJwt } from "./authMiddleware.js";
 import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
 import { mapCandidacyObject } from "../../utils/mappers/candidacy.js";
+import { getFeasibilities } from "./features/feasibilities/getFeasibilities.js";
+import { mapFeasibilities } from "../../utils/mappers/feasibility.js";
 
 const logo = readFileSync("./static/fvae_logo.svg");
 
@@ -366,6 +375,17 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         ValidatorSchemaOptions: {
           references: [typeof statutDossierDeFaisabiliteSchema];
         };
+        SerializerSchemaOptions: {
+          references: [
+            typeof dossiersDeFaisabiliteResponseSchema,
+            typeof pageInfoSchema,
+            typeof candidacyIdSchema,
+            typeof fichierSchema,
+            typeof experienceSchema,
+            typeof dossierDeFaisabiliteSchema,
+            typeof statutDossierDeFaisabiliteSchema,
+          ];
+        };
       }>
     >()
     .route({
@@ -382,10 +402,12 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
               type: "integer",
               example: 0,
               description: "Décalage pour la pagination",
+              default: 0,
             },
             limite: {
               type: "integer",
               example: 10,
+              default: 10,
               description: "Limite du nombre de résultats",
             },
             recherche: {
@@ -407,9 +429,20 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (request) => {
-        console.log("request.query", request.query);
-        return "OK";
+      handler: async (request, reply) => {
+        const { decalage, limite, recherche, statut } = request.query;
+        const dossiersDeFaisabilite = await getFeasibilities(
+          request.graphqlClient,
+          decalage,
+          limite,
+          statut,
+          recherche,
+        );
+        if (dossiersDeFaisabilite) {
+          reply.send(mapFeasibilities(dossiersDeFaisabilite));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 
