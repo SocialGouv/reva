@@ -4,7 +4,13 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useState } from "react";
 
-export const PasswordInput = () => {
+export const PasswordInput = ({
+  state,
+  stateRelatedMessage,
+}: {
+  state?: "error" | "default";
+  stateRelatedMessage?: string;
+}) => {
   const [revealPassword, setRevealPassword] = useState<boolean>(false);
 
   return (
@@ -17,6 +23,8 @@ export const PasswordInput = () => {
         type: revealPassword ? "text" : "password",
         spellCheck: "false",
       }}
+      state={state}
+      stateRelatedMessage={stateRelatedMessage}
       label={
         <div className="flex flex-row justify-between items-center overflow-hidden max-h-6">
           Mot de passe
