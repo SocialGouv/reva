@@ -6,6 +6,7 @@ import {
 import {
   candidacyIdSchema,
   dossierDeFaisabiliteSchema,
+  dureeExperienceSchema,
   experienceSchema,
   fichierSchema,
   statutDossierDeFaisabiliteSchema,
@@ -13,6 +14,7 @@ import {
 import { mapPageInfo } from "./pageInfo.js";
 import { getFeasibilities } from "../../routes/v1/features/feasibilities/getFeasibilities.js";
 import { GetGqlRowType, GetGqlResponseType } from "../types.js";
+import { Duration } from "../../graphql/generated/graphql.js";
 
 type MappedFeasibilitiesResponse = FromSchema<
   typeof dossiersDeFaisabiliteResponseSchema,
@@ -21,6 +23,7 @@ type MappedFeasibilitiesResponse = FromSchema<
       typeof pageInfoSchema,
       typeof candidacyIdSchema,
       typeof fichierSchema,
+      typeof dureeExperienceSchema,
       typeof experienceSchema,
       typeof dossierDeFaisabiliteSchema,
       typeof statutDossierDeFaisabiliteSchema,
@@ -35,6 +38,7 @@ type MappedFeasibility = FromSchema<
       typeof pageInfoSchema,
       typeof candidacyIdSchema,
       typeof fichierSchema,
+      typeof dureeExperienceSchema,
       typeof experienceSchema,
       typeof statutDossierDeFaisabiliteSchema,
     ];
@@ -54,6 +58,18 @@ const statusMapFromGqlToInterop: Record<
   COMPLETE: "COMPLET",
   ARCHIVED: "ARCHIVE",
   VAE_COLLECTIVE: "VAE_COLLECTIVE",
+};
+
+const expDurationMapFromGqlToInterop: Record<
+  Duration,
+  (typeof dureeExperienceSchema)["enum"][number]
+> = {
+  unknown: "INCONNU",
+  lessThanOneYear: "MOINS_D_UN_AN",
+  betweenOneAndThreeYears: "ENTRE_UN_ET_TROIS_ANS",
+  moreThanThreeYears: "PLUS_DE_TROIS_ANS",
+  moreThanFiveYears: "PLUS_DE_CINQ_ANS",
+  moreThanTenYears: "PLUS_DE_DIX_ANS",
 };
 
 export const mapFeasibility = (
@@ -77,7 +93,12 @@ export const mapFeasibility = (
       ? new Date(feasibility.feasibilityFileSentAt).toISOString()
       : null,
     statut: status,
-    experiences: feasibility.candidacy.experiences,
+    experiences: feasibility.candidacy.experiences.map((experience) => ({
+      titre: experience.title,
+      duree: expDurationMapFromGqlToInterop[experience.duration],
+      description: experience.description,
+      dateDemarrage: new Date(experience.startedAt).toISOString(),
+    })),
     documents: null,
   };
 };

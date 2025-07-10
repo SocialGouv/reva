@@ -428,6 +428,7 @@ export const dossierDeFaisabiliteSchema = {
 export const experienceSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Experience",
   type: "object",
+  required: ["titre", "description", "duree", "dateDemarrage"],
   properties: {
     titre: {
       type: "string",
