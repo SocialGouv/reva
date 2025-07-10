@@ -20,7 +20,7 @@ export const CguAwaitingManagerValidationNotice = ({
       <div>
         <h1>Mise à jour des conditions générales d'utilisation</h1>
         <p>
-          Les conditions générales d'utilisations ont été mise à jour. Seuls le
+          Les conditions générales d'utilisation ont été mises à jour. Seuls le
           responsable des certifications de votre structure ou votre
           administrateur peuvent actuellement les valider.
         </p>
