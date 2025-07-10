@@ -9,6 +9,8 @@ import Head from "next/head";
 import PageContent from "./_components/PageContent";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 const activeFeaturesQuery = graphql(`
   query activeFeaturesForConnectedUser {
     activeFeaturesForConnectedUser
