@@ -6,6 +6,7 @@ import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVa
 import { getCohortesVaeCollectivesForConnectedAap } from "./features/getCohortesVaeCollectivesForConnectedAap";
 import { getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount } from "./features/getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount";
 import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
+import { getCohortesVaeCollectivesByCommanditaireVaeCollectiveId } from "./features/getCohortesVaeCollectivesByCommanditaireVaeCollectiveId";
 
 const unsafeResolvers = {
   Account: {
@@ -25,13 +26,22 @@ const unsafeResolvers = {
       commanditaireVaeCollectiveId: string;
     }) => getCommanditaireVaeCollectiveById({ commanditaireVaeCollectiveId }),
   },
-
   Candidacy: {
     cohorteVaeCollective: async ({
       cohorteVaeCollectiveId,
     }: {
       cohorteVaeCollectiveId?: string;
     }) => getCohorteVAECollectiveById({ cohorteVaeCollectiveId }),
+  },
+  CommanditaireVaeCollective: {
+    cohorteVaeCollectives: async ({
+      id: commanditaireVaeCollectiveId,
+    }: {
+      id: string;
+    }) =>
+      getCohortesVaeCollectivesByCommanditaireVaeCollectiveId({
+        commanditaireVaeCollectiveId,
+      }),
   },
   Query: {
     vaeCollective_getCommanditaireVaeCollective: async (

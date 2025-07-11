@@ -16,6 +16,7 @@ type CohorteVaeCollective {
 type CommanditaireVaeCollective {
   id: ID!
   raisonSociale: String!
+  cohorteVaeCollectives: [CohorteVaeCollective!]!
 }
 
 type Candidacy {

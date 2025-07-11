@@ -1859,7 +1859,7 @@ model CommanditaireVaeCollective {
   raisonSociale         String                 @map("raison_sociale") @db.VarChar(255)
   createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt             DateTime?              @map("updated_at") @db.Timestamptz(6)
-  cohorteVaeCollective  CohorteVaeCollective[]
+  cohorteVaeCollectives CohorteVaeCollective[]
   gestionnaireAccountId String?                @map("gestionnaire_account_id") @db.Uuid
   gestionnaire          Account?               @relation(fields: [gestionnaireAccountId], references: [id])
 
