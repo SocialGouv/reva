@@ -70,6 +70,18 @@ export const buildApp = async (
         realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
       } as any,
     });
+
+    app.register(keycloakPlugin, {
+      config: {
+        clientId:
+          process.env.KEYCLOAK_ADMIN_CLIENTID_REVA_COLLECTIVE ||
+          "reva-vae-collective",
+        "bearer-only": true,
+        "auth-server-url":
+          process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
+        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
+      } as any,
+    });
   }
 
   app.register(keycloakPlugin, {
