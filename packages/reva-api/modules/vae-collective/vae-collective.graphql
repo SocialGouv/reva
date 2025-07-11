@@ -2,6 +2,9 @@ type Query {
   cohorteVaeCollective(codeInscription: String!): CohorteVaeCollective
   cohortesVaeCollectivesForConnectedAap: [CohorteVaeCollective!]!
   cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount: [CohorteVaeCollective!]!
+  vaeCollective_getCommanditaireVaeCollective(
+    commanditaireVaeCollectiveId: ID!
+  ): CommanditaireVaeCollective!
 }
 
 type CohorteVaeCollective {

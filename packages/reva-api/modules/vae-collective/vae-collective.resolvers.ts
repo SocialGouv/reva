@@ -34,6 +34,12 @@ const unsafeResolvers = {
     }) => getCohorteVAECollectiveById({ cohorteVaeCollectiveId }),
   },
   Query: {
+    vaeCollective_getCommanditaireVaeCollective: async (
+      _parent: unknown,
+      {
+        commanditaireVaeCollectiveId,
+      }: { commanditaireVaeCollectiveId: string },
+    ) => getCommanditaireVaeCollectiveById({ commanditaireVaeCollectiveId }),
     cohorteVaeCollective: async (
       _parent: unknown,
       { codeInscription }: { codeInscription: string },
