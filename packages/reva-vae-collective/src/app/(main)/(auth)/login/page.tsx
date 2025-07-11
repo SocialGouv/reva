@@ -12,9 +12,11 @@ export default function LoginPage() {
   const [state, action, pending] = useActionState(login, {});
 
   return (
-    <div className="p-6 pt-8 mx-auto">
-      <h1 className="mb-10">Connexion à France VAE</h1>
-      <Form className="flex flex-col gap-6" action={action}>
+    <div className="fr-container">
+      <h1 className="mb-12">
+        Connexion à l’espace Porteur de projet VAE collective
+      </h1>
+      <Form className="max-w-lg flex flex-col gap-6 " action={action}>
         <Input
           className="mb-0"
           hintText="Format attendu : nom@domaine.fr"
@@ -26,7 +28,7 @@ export default function LoginPage() {
             autoComplete: "username",
             spellCheck: "false",
           }}
-          label="Email"
+          label="Identifiant"
         />
 
         <PasswordInput
