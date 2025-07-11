@@ -51,7 +51,7 @@ export default async function CommanditairePage({
   const commanditaire = await loadCommanditaire(commanditaireId);
 
   if (!commanditaire.cohorteVaeCollectives.length) {
-    redirect(`/commanditaires/${commanditaireId}/aucune-cohorte/`);
+    redirect(`/commanditaires/${commanditaireId}/cohortes/aucune-cohorte/`);
   }
 
   return (
