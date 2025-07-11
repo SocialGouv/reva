@@ -31,14 +31,10 @@ export default function RootLayout({
 
       <Header />
 
-      <main
-        role="main"
-        id="content"
-        className="flex flex-col flex-1 lg:bg-candidate"
-      >
+      <main role="main" id="content" className="flex flex-col flex-1">
         <div>
           <div
-            className={`flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12`}
+            className={`md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12 fr-container`}
           >
             <AuthGuard>{children}</AuthGuard>
           </div>

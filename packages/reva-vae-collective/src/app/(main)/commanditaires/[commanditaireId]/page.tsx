@@ -1,6 +1,7 @@
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { gql } from "@urql/core";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function CommanditairePage({
   params,
@@ -48,6 +49,10 @@ export default async function CommanditairePage({
   const commanditaireId = (await params).commanditaireId;
 
   const commanditaire = await loadCommanditaire(commanditaireId);
+
+  if (!commanditaire.cohorteVaeCollectives.length) {
+    redirect(`/commanditaires/${commanditaireId}/aucune-cohorte/`);
+  }
 
   return (
     <div className="fr-container">
