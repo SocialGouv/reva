@@ -1,15 +1,24 @@
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { gql } from "@urql/core";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Card } from "@codegouvfr/react-dsfr/Card";
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
+import { format } from "date-fns";
 
 const loadCommanditaire = async (
   commanditaireVaeCollectiveId: string,
 ): Promise<{
   id: string;
   raisonSociale: string;
-  cohorteVaeCollectives: { id: string; nom: string }[];
+  cohorteVaeCollectives: {
+    id: string;
+    nom: string;
+    codeInscription: string;
+    createdAt: number;
+  }[];
 }> => {
   const cookieStore = await cookies();
   const tokens = cookieStore.get("tokens");
@@ -32,6 +41,8 @@ const loadCommanditaire = async (
             cohorteVaeCollectives {
               id
               nom
+              codeInscription
+              createdAt
             }
           }
         }
@@ -60,13 +71,39 @@ export default async function CohortesPage({
   }
 
   return (
-    <div className="fr-container">
-      <h1 className="mb-12">Bienvenue dans votre espace France VAE</h1>
-
-      <h2>Vos cohortes:</h2>
-      <ul>
+    <div className="fr-container flex flex-col">
+      <h1 className="mb-12">Cohortes</h1>
+      <Button
+        className="ml-auto mb-4"
+        priority="secondary"
+        linkProps={{
+          href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/nouvelle-cohorte/`,
+        }}
+      >
+        Créer une cohorte
+      </Button>
+      <ul className="flex flex-col gap-4 list-none px-0 my-0">
         {commanditaire?.cohorteVaeCollectives.map((cohorte) => (
-          <li key={cohorte.id}>{cohorte.nom}</li>
+          <li key={cohorte.id}>
+            <Card
+              enlargeLink
+              size="small"
+              title={cohorte.nom}
+              start={
+                !cohorte.codeInscription && (
+                  <Badge severity="warning" small className="mb-3">
+                    En cours de parmètrage
+                  </Badge>
+                )
+              }
+              end={
+                <p className="text-xs text-dsfrGray-mentionGrey mb-0">
+                  Créée le {format(cohorte.createdAt, "dd/MM/yyyy")}
+                </p>
+              }
+              linkProps={{ href: `./${cohorte.id}` }}
+            />
+          </li>
         ))}
       </ul>
     </div>
