@@ -101,7 +101,9 @@ export default async function CohortesPage({
                   Créée le {format(cohorte.createdAt, "dd/MM/yyyy")}
                 </p>
               }
-              linkProps={{ href: `./${cohorte.id}` }}
+              linkProps={{
+                href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorte.id}`,
+              }}
             />
           </li>
         ))}
