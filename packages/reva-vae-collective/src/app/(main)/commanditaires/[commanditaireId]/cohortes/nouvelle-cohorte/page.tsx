@@ -24,7 +24,13 @@ export default function NouvelleCohortePage() {
         />
         <input type="hidden" name="commanditaireId" value={commanditaireId} />
         <div className="flex justify-between mt-6">
-          <Button linkProps={{ href: "../" }}>Annuler</Button>
+          <Button
+            linkProps={{
+              href: `/commanditaires/${commanditaireId}/cohortes/`,
+            }}
+          >
+            Annuler
+          </Button>
           <Button disabled={pending}>Créer</Button>
         </div>
       </form>
