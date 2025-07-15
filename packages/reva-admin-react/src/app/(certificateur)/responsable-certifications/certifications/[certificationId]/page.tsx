@@ -201,7 +201,7 @@ const PageContent = ({
                   {certification.juryPlace}
                 </Info>
               )}
-              <Info title="Estimation des frais de jury">
+              <Info title="Estimation des frais de certification">
                 {certification.juryEstimatedCost
                   ? `${certification.juryEstimatedCost}€`
                   : "À compléter"}
