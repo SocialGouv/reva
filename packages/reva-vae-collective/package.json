@@ -18,6 +18,7 @@
     "@codegouvfr/react-dsfr": "^1.25.3",
     "@urql/core": "^5.2.0",
     "cookies-next": "^6.0.0",
+    "date-fns": "^4.1.0",
     "jwt-decode": "^4.0.0",
     "keycloak-js": "^26.2.0",
     "next": "15.3.4",
