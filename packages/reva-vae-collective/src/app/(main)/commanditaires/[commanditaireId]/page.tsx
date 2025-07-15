@@ -1,3 +1,4 @@
+import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { gql } from "@urql/core";
 import { cookies } from "next/headers";
@@ -24,23 +25,27 @@ export default async function CommanditairePage({
 
     const { accessToken } = JSON.parse(tokens.value);
 
-    const result = await client.query(
-      gql`
-        query CommanditaireVaeCollective($commanditaireVaeCollectiveId: ID!) {
-          vaeCollective_getCommanditaireVaeCollective(
-            commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
-          ) {
-            id
-            raisonSociale
-            cohorteVaeCollectives {
+    const result = throwUrqlErrors(
+      await client.query(
+        gql`
+          query CommanditaireVaeCollective($commanditaireVaeCollectiveId: ID!) {
+            vaeCollective_getCommanditaireVaeCollective(
+              commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+            ) {
               id
-              nom
+              raisonSociale
+              cohorteVaeCollectives {
+                id
+                nom
+              }
             }
           }
-        }
-      `,
-      { commanditaireVaeCollectiveId },
-      { fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } } },
+        `,
+        { commanditaireVaeCollectiveId },
+        {
+          fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+        },
+      ),
     );
 
     return result.data?.vaeCollective_getCommanditaireVaeCollective;

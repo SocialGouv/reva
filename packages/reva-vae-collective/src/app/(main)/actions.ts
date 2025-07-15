@@ -3,6 +3,7 @@ import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { gql } from "@urql/core";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 
 export const redirectCommanditaireVaeCollective = async () => {
   const cookieStore = await cookies();
@@ -18,18 +19,20 @@ export const redirectCommanditaireVaeCollective = async () => {
     redirect("/login");
   }
 
-  const result = await client.query(
-    gql`
-      query getCommanditaireVaeCollectiveAccount {
-        account_getAccountForConnectedUser {
-          commanditaireVaeCollective {
-            id
+  const result = throwUrqlErrors(
+    await client.query(
+      gql`
+        query getCommanditaireVaeCollectiveAccount {
+          account_getAccountForConnectedUser {
+            commanditaireVaeCollective {
+              id
+            }
           }
         }
-      }
-    `,
-    {},
-    { fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } } },
+      `,
+      {},
+      { fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } } },
+    ),
   );
 
   redirect(
