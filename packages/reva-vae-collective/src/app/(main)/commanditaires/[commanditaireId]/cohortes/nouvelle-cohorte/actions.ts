@@ -1,15 +1,43 @@
 "use server";
 
+import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
+import { client } from "@/helpers/graphql/urql-client/urqlClient";
+import { gql } from "@urql/core";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 type FormState = {
   errors?: {
     name?: { message: string };
   };
 };
 
-export const createCohort = async (_state: FormState, formData: FormData) => {
-  const { name } = Object.fromEntries(formData.entries());
+const createCohortMutation = gql`
+  mutation createCohorteVaeCollective(
+    $commanditaireVaeCollectiveId: ID!
+    $nomCohorteVaeCollective: String!
+  ) {
+    vaeCollective_createCohorteVaeCollective(
+      commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+      nomCohorteVaeCollective: $nomCohorteVaeCollective
+    ) {
+      id
+    }
+  }
+`;
 
-  console.log(name);
+export const createCohort = async (_state: FormState, formData: FormData) => {
+  const cookieStore = await cookies();
+  const tokens = cookieStore.get("tokens");
+  if (!tokens) {
+    throw new Error("Session expirée, veuillez vous reconnecter");
+  }
+
+  const { accessToken } = JSON.parse(tokens.value);
+
+  const { name, commanditaireId } = Object.fromEntries(formData.entries());
+
+  console.log(name, commanditaireId);
 
   if (!name) {
     return {
@@ -27,5 +55,22 @@ export const createCohort = async (_state: FormState, formData: FormData) => {
     } as FormState;
   }
 
-  return {};
+  throwUrqlErrors(
+    await client.mutation(
+      createCohortMutation,
+      {
+        commanditaireVaeCollectiveId: commanditaireId,
+        nomCohorteVaeCollective: name,
+      },
+      {
+        fetchOptions: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      },
+    ),
+  );
+
+  redirect(`/commanditaires/${commanditaireId}/cohortes`);
 };
