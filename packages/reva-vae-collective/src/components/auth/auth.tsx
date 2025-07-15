@@ -17,8 +17,6 @@ export const useAuth = () => {
       resource_access: { "reva-vae-collective": { roles: string[] } };
     }>(accessToken);
 
-    console.log(decodedToken);
-
     roles = decodedToken.resource_access["reva-vae-collective"]
       .roles as UserRole[];
     isAdmin = roles.includes("admin");
