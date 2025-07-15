@@ -36,6 +36,6 @@ export const redirectCommanditaireVaeCollective = async () => {
   );
 
   redirect(
-    `/commanditaires/${result.data?.account_getAccountForConnectedUser.commanditaireVaeCollective.id}`,
+    `/commanditaires/${result.data?.account_getAccountForConnectedUser.commanditaireVaeCollective.id}/cohortes`,
   );
 };

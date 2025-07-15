@@ -31,7 +31,7 @@ export default function PostLoginPage() {
   useEffect(() => {
     if (ready && authenticated) {
       if (isVAECollectiveManager) {
-        redirect(`/commanditaires/${commanditaireVaeCollectiveId}`);
+        redirect(`/commanditaires/${commanditaireVaeCollectiveId}/cohortes`);
       }
 
       if (isAdmin) {
