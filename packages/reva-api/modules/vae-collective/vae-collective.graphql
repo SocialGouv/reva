@@ -3,6 +3,7 @@ type CohorteVaeCollective {
   nom: String!
   codeInscription: String!
   commanditaireVaeCollective: CommanditaireVaeCollective!
+  createdAt: Timestamp!
 }
 type CommanditaireVaeCollective {
   id: ID!
