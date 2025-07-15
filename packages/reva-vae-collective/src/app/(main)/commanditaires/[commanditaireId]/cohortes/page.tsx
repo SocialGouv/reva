@@ -4,53 +4,53 @@ import { gql } from "@urql/core";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function CommanditairePage({
+const loadCommanditaire = async (
+  commanditaireVaeCollectiveId: string,
+): Promise<{
+  id: string;
+  raisonSociale: string;
+  cohorteVaeCollectives: { id: string; nom: string }[];
+}> => {
+  const cookieStore = await cookies();
+  const tokens = cookieStore.get("tokens");
+
+  if (!tokens) {
+    throw new Error("Session expirée, veuillez vous reconnecter");
+  }
+
+  const { accessToken } = JSON.parse(tokens.value);
+
+  const result = throwUrqlErrors(
+    await client.query(
+      gql`
+        query CommanditaireVaeCollective($commanditaireVaeCollectiveId: ID!) {
+          vaeCollective_getCommanditaireVaeCollective(
+            commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          ) {
+            id
+            raisonSociale
+            cohorteVaeCollectives {
+              id
+              nom
+            }
+          }
+        }
+      `,
+      { commanditaireVaeCollectiveId },
+      {
+        fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+      },
+    ),
+  );
+
+  return result.data?.vaeCollective_getCommanditaireVaeCollective;
+};
+
+export default async function CohortesPage({
   params,
 }: {
   params: Promise<{ commanditaireId: string }>;
 }) {
-  const loadCommanditaire = async (
-    commanditaireVaeCollectiveId: string,
-  ): Promise<{
-    id: string;
-    raisonSociale: string;
-    cohorteVaeCollectives: { id: string; nom: string }[];
-  }> => {
-    const cookieStore = await cookies();
-    const tokens = cookieStore.get("tokens");
-
-    if (!tokens) {
-      throw new Error("Session expirée, veuillez vous reconnecter");
-    }
-
-    const { accessToken } = JSON.parse(tokens.value);
-
-    const result = throwUrqlErrors(
-      await client.query(
-        gql`
-          query CommanditaireVaeCollective($commanditaireVaeCollectiveId: ID!) {
-            vaeCollective_getCommanditaireVaeCollective(
-              commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
-            ) {
-              id
-              raisonSociale
-              cohorteVaeCollectives {
-                id
-                nom
-              }
-            }
-          }
-        `,
-        { commanditaireVaeCollectiveId },
-        {
-          fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
-        },
-      ),
-    );
-
-    return result.data?.vaeCollective_getCommanditaireVaeCollective;
-  };
-
   const commanditaireId = (await params).commanditaireId;
 
   const commanditaire = await loadCommanditaire(commanditaireId);
