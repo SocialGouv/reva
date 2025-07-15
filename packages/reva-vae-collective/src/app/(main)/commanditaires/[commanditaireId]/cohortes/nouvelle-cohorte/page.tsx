@@ -25,6 +25,7 @@ export default function NouvelleCohortePage() {
         <input type="hidden" name="commanditaireId" value={commanditaireId} />
         <div className="flex justify-between mt-6">
           <Button
+            priority="secondary"
             linkProps={{
               href: `/commanditaires/${commanditaireId}/cohortes/`,
             }}
