@@ -347,6 +347,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       url: "/candidatures/:candidatureId/dossierDeFaisabilite/decisions",
       schema: {
         summary: "Créer une nouvelle décision sur le dossier de faisabilité",
+        consumes: ["multipart/form-data"],
         // security: [{ bearerAuth: [] }],
         tags: ["Dossier de faisabilité"],
         body: {
@@ -786,6 +787,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary:
           "Mettre à jour les informations de la session du jury pour un candidat",
+        consumes: ["multipart/form-data"],
         // security: [{ bearerAuth: [] }],
         tags: ["Informations jury"],
         body: {
