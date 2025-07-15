@@ -12,7 +12,14 @@ export default function AucuneCohortePage() {
           accès direct pour consulter le pilotage de celles-ci.
         </p>
         <p className="text-xl">Commencez en créant votre première cohorte.</p>
-        <Button className="mt-4">Créer une cohorte</Button>
+        <Button
+          className="mt-4"
+          linkProps={{
+            href: "./nouvelle-cohorte",
+          }}
+        >
+          Créer une cohorte
+        </Button>
       </div>
       <div>
         <Image src={applicationPolygon} alt="icône application" />
