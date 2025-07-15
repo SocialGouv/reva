@@ -1874,7 +1874,7 @@ model CohorteVaeCollective {
   createdAt                          DateTime                            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                          DateTime?                           @map("updated_at") @db.Timestamptz(6)
   certificationCohorteVaeCollectives CertificationCohorteVaeCollective[]
-  codeInscription                    String                              @unique @map("code_inscription") @db.VarChar(15)
+  codeInscription                    String?                             @unique @map("code_inscription") @db.VarChar(15)
   candidacy                          Candidacy[]
 
   @@map("cohorte_vae_collective")
