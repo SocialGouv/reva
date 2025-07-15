@@ -1,12 +1,3 @@
-type Query {
-  cohorteVaeCollective(codeInscription: String!): CohorteVaeCollective
-  cohortesVaeCollectivesForConnectedAap: [CohorteVaeCollective!]!
-  cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount: [CohorteVaeCollective!]!
-  vaeCollective_getCommanditaireVaeCollective(
-    commanditaireVaeCollectiveId: ID!
-  ): CommanditaireVaeCollective!
-}
-
 type CohorteVaeCollective {
   id: ID!
   nom: String!
@@ -25,4 +16,20 @@ type Candidacy {
 
 type Account {
   commanditaireVaeCollective: CommanditaireVaeCollective
+}
+
+type Query {
+  cohorteVaeCollective(codeInscription: String!): CohorteVaeCollective
+  cohortesVaeCollectivesForConnectedAap: [CohorteVaeCollective!]!
+  cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount: [CohorteVaeCollective!]!
+  vaeCollective_getCommanditaireVaeCollective(
+    commanditaireVaeCollectiveId: ID!
+  ): CommanditaireVaeCollective!
+}
+
+type Mutation {
+  vaeCollective_createCohorteVaeCollective(
+    commanditaireVaeCollectiveId: ID!
+    nomCohorteVaeCollective: String!
+  ): CohorteVaeCollective!
 }

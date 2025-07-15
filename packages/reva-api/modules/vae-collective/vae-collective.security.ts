@@ -12,4 +12,7 @@ export const vaeCollectiveResolversSecurityMap = {
   "Query.cohortesVaeCollectivesForConnectedAap": isAnyone, // La sécurité est gérée dans la feature (filtre par rapport au rôle de l'utilisateur)
   "Query.vaeCollective_getCommanditaireVaeCollective":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
+
+  "Mutation.vaeCollective_createCohorteVaeCollective":
+    isAdminOrGestionnaireOfCommanditaireVaeCollective,
 };

@@ -7,6 +7,7 @@ import { getCohortesVaeCollectivesForConnectedAap } from "./features/getCohortes
 import { getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount } from "./features/getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount";
 import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
 import { getCohortesVaeCollectivesByCommanditaireVaeCollectiveId } from "./features/getCohortesVaeCollectivesByCommanditaireVaeCollectiveId";
+import { createCohorteVaeCollective } from "./features/createCohorteVaeCollective";
 
 const unsafeResolvers = {
   Account: {
@@ -74,6 +75,22 @@ const unsafeResolvers = {
             userRoles: context.auth.userInfo?.realm_access?.roles || [],
           },
         ),
+  },
+  Mutation: {
+    vaeCollective_createCohorteVaeCollective: async (
+      _parent: unknown,
+      {
+        commanditaireVaeCollectiveId,
+        nomCohorteVaeCollective,
+      }: {
+        commanditaireVaeCollectiveId: string;
+        nomCohorteVaeCollective: string;
+      },
+    ) =>
+      createCohorteVaeCollective({
+        commanditaireVaeCollectiveId,
+        nomCohorteVaeCollective,
+      }),
   },
 };
 
