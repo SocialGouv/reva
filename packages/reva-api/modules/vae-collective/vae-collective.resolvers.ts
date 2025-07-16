@@ -103,6 +103,10 @@ const unsafeResolvers = {
             userRoles: context.auth.userInfo?.realm_access?.roles || [],
           },
         ),
+    vaeCollective_getCohorteVaeCollectiveById: async (
+      _parent: unknown,
+      { cohorteVaeCollectiveId }: { cohorteVaeCollectiveId: string },
+    ) => getCohorteVAECollectiveById({ cohorteVaeCollectiveId }),
   },
   Mutation: {
     vaeCollective_createCohorteVaeCollective: async (

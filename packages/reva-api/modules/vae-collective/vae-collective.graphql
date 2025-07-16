@@ -38,6 +38,10 @@ type Query {
   vaeCollective_getCommanditaireVaeCollective(
     commanditaireVaeCollectiveId: ID!
   ): CommanditaireVaeCollective!
+  vaeCollective_getCohorteVaeCollectiveById(
+    commanditaireVaeCollectiveId: ID!
+    cohorteVaeCollectiveId: ID!
+  ): CohorteVaeCollective!
 }
 
 type Mutation {

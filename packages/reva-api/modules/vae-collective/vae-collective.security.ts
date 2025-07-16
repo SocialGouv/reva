@@ -13,6 +13,9 @@ export const vaeCollectiveResolversSecurityMap = {
   "Query.vaeCollective_getCommanditaireVaeCollective":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
 
+  "Query.vaeCollective_getCohorteVaeCollectiveById":
+    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+
   "Mutation.vaeCollective_createCohorteVaeCollective":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
 
