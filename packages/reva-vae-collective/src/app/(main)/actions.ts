@@ -1,19 +1,12 @@
 "use server";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { gql } from "@urql/core";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
+import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 
 export const redirectCommanditaireVaeCollective = async () => {
-  const cookieStore = await cookies();
-  const tokens = cookieStore.get("tokens");
-
-  if (!tokens) {
-    throw new Error("Session expirée, veuillez vous reconnecter");
-  }
-
-  const { accessToken } = JSON.parse(tokens.value);
+  const accessToken = await getAccessTokenFromCookie();
 
   if (!accessToken) {
     redirect("/login");

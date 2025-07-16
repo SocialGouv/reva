@@ -2,11 +2,11 @@ import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlEr
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { gql } from "@urql/core";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
+import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 
 const loadCommanditaire = async (
   commanditaireVaeCollectiveId: string,
@@ -34,14 +34,7 @@ const loadCommanditaire = async (
     }[];
   }[];
 }> => {
-  const cookieStore = await cookies();
-  const tokens = cookieStore.get("tokens");
-
-  if (!tokens) {
-    throw new Error("Session expirée, veuillez vous reconnecter");
-  }
-
-  const { accessToken } = JSON.parse(tokens.value);
+  const accessToken = await getAccessTokenFromCookie();
 
   const result = throwUrqlErrors(
     await client.query(

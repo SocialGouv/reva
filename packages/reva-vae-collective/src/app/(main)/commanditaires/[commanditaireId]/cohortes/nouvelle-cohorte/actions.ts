@@ -1,9 +1,9 @@
 "use server";
 
+import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { gql } from "@urql/core";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 type FormState = {
@@ -27,13 +27,7 @@ const createCohortMutation = gql`
 `;
 
 export const createCohort = async (_state: FormState, formData: FormData) => {
-  const cookieStore = await cookies();
-  const tokens = cookieStore.get("tokens");
-  if (!tokens) {
-    throw new Error("Session expirée, veuillez vous reconnecter");
-  }
-
-  const { accessToken } = JSON.parse(tokens.value);
+  const accessToken = await getAccessTokenFromCookie();
 
   const { name, commanditaireId } = Object.fromEntries(formData.entries());
 
