@@ -18,6 +18,20 @@ const loadCommanditaire = async (
     nom: string;
     codeInscription: string;
     createdAt: number;
+    certificationCohorteVaeCollectives: {
+      id: string;
+      certification: {
+        id: string;
+        label: string;
+      };
+      certificationCohorteVaeCollectiveOnOrganisms: {
+        id: string;
+        organism: {
+          id: string;
+          label: string;
+        };
+      }[];
+    }[];
   }[];
 }> => {
   const cookieStore = await cookies();
@@ -43,6 +57,20 @@ const loadCommanditaire = async (
               nom
               codeInscription
               createdAt
+              certificationCohorteVaeCollectives {
+                id
+                certification {
+                  id
+                  label
+                }
+                certificationCohorteVaeCollectiveOnOrganisms {
+                  id
+                  organism {
+                    id
+                    label
+                  }
+                }
+              }
             }
           }
         }
@@ -53,7 +81,7 @@ const loadCommanditaire = async (
       },
     ),
   );
-
+  console.log({ result: JSON.stringify(result.data, null, 2) });
   return result.data?.vaeCollective_getCommanditaireVaeCollective;
 };
 
@@ -83,30 +111,52 @@ export default async function CohortesPage({
         Créer une cohorte
       </Button>
       <ul className="flex flex-col gap-4 list-none px-0 my-0">
-        {commanditaire?.cohorteVaeCollectives.map((cohorte) => (
-          <li key={cohorte.id}>
-            <Card
-              enlargeLink
-              size="small"
-              title={cohorte.nom}
-              start={
-                !cohorte.codeInscription && (
-                  <Badge severity="warning" small className="mb-3">
-                    En cours de paramètrage
-                  </Badge>
-                )
-              }
-              end={
-                <p className="text-xs text-dsfrGray-mentionGrey mb-0">
-                  Créée le {format(cohorte.createdAt, "dd/MM/yyyy")}
-                </p>
-              }
-              linkProps={{
-                href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorte.id}`,
-              }}
-            />
-          </li>
-        ))}
+        {commanditaire?.cohorteVaeCollectives.map((cohorte) => {
+          const certification = cohorte.certificationCohorteVaeCollectives[0];
+          const organism =
+            certification?.certificationCohorteVaeCollectiveOnOrganisms?.[0];
+          return (
+            <li key={cohorte.id}>
+              <Card
+                enlargeLink
+                size="small"
+                title={cohorte.nom}
+                start={
+                  !cohorte.codeInscription && (
+                    <Badge severity="warning" small className="mb-3">
+                      En cours de paramètrage
+                    </Badge>
+                  )
+                }
+                desc={
+                  <>
+                    {certification && (
+                      <span className="text-sm">
+                        {certification.certification.label}
+                      </span>
+                    )}
+                    {organism && (
+                      <>
+                        <br />
+                        <span className="text-sm">
+                          {organism.organism.label}
+                        </span>
+                      </>
+                    )}
+                  </>
+                }
+                end={
+                  <p className="text-xs text-dsfrGray-mentionGrey mb-0">
+                    Créée le {format(cohorte.createdAt, "dd/MM/yyyy")}
+                  </p>
+                }
+                linkProps={{
+                  href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorte.id}`,
+                }}
+              ></Card>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
