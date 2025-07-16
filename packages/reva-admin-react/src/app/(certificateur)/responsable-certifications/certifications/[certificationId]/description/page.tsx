@@ -510,7 +510,7 @@ const PageContent = ({
                 <h4 className="m-0">Coûts</h4>
                 <Input
                   className="mr-auto"
-                  label="Estimation des frais de jury (optionnel) :"
+                  label="Estimation des frais de certification (optionnel) :"
                   hintText="Veuillez saisir un nombre à 2 décimales."
                   nativeInputProps={{
                     type: "number",
