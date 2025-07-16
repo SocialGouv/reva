@@ -31,8 +31,6 @@ export const createCohort = async (_state: FormState, formData: FormData) => {
 
   const { name, commanditaireId } = Object.fromEntries(formData.entries());
 
-  console.log(name, commanditaireId);
-
   if (!name) {
     return {
       errors: {

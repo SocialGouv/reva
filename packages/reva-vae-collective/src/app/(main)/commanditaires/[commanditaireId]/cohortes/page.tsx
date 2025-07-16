@@ -74,7 +74,6 @@ const loadCommanditaire = async (
       },
     ),
   );
-  console.log({ result: JSON.stringify(result.data, null, 2) });
   return result.data?.vaeCollective_getCommanditaireVaeCollective;
 };
 
