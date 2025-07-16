@@ -3,8 +3,20 @@ type CohorteVaeCollective {
   nom: String!
   codeInscription: String
   commanditaireVaeCollective: CommanditaireVaeCollective!
+  certificationCohorteVaeCollectives: [CertificationCohorteVaeCollective!]!
   createdAt: Timestamp!
 }
+type CertificationCohorteVaeCollective {
+  id: ID!
+  certification: Certification!
+  certificationCohorteVaeCollectiveOnOrganisms: [CertificationCohorteVaeCollectiveOnOrganism!]!
+}
+
+type CertificationCohorteVaeCollectiveOnOrganism {
+  id: ID!
+  organism: Organism!
+}
+
 type CommanditaireVaeCollective {
   id: ID!
   raisonSociale: String!

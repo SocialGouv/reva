@@ -6,7 +6,9 @@ export const getCertificationCohortesByCohorteId = ({
   cohorteVaeCollectiveId?: string;
 }) =>
   cohorteVaeCollectiveId
-    ? prismaClient.certificationCohorteVaeCollective.findMany({
-        where: { cohorteVaeCollectiveId },
-      })
+    ? prismaClient.cohorteVaeCollective
+        .findUnique({
+          where: { id: cohorteVaeCollectiveId },
+        })
+        .certificationCohorteVaeCollectives()
     : null;

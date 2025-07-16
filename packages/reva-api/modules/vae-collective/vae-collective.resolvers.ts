@@ -8,6 +8,10 @@ import { getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccou
 import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
 import { getCohortesVaeCollectivesByCommanditaireVaeCollectiveId } from "./features/getCohortesVaeCollectivesByCommanditaireVaeCollectiveId";
 import { createCohorteVaeCollective } from "./features/createCohorteVaeCollective";
+import { getCertificationById } from "../referential/features/getCertificationById";
+import { getOrganismById } from "../organism/features/getOrganism";
+import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "./features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
+import { getCertificationCohortesByCohorteId } from "./features/getCertificationCohortesByCohorteId";
 
 const unsafeResolvers = {
   Account: {
@@ -26,6 +30,30 @@ const unsafeResolvers = {
     }: {
       commanditaireVaeCollectiveId: string;
     }) => getCommanditaireVaeCollectiveById({ commanditaireVaeCollectiveId }),
+    certificationCohorteVaeCollectives: async ({
+      id: cohorteVaeCollectiveId,
+    }: {
+      id: string;
+    }) =>
+      getCertificationCohortesByCohorteId({
+        cohorteVaeCollectiveId,
+      }),
+  },
+  CertificationCohorteVaeCollective: {
+    certification: async ({ certificationId }: { certificationId: string }) =>
+      getCertificationById({ certificationId }),
+    certificationCohorteVaeCollectiveOnOrganisms: async ({
+      id: certificationCohorteVaeCollectiveId,
+    }: {
+      id: string;
+    }) =>
+      getCertificationCohorteOnOrganismsByCertificationCohorteId({
+        certificationCohorteVaeCollectiveId,
+      }),
+  },
+  CertificationCohorteVaeCollectiveOnOrganism: {
+    organism: async ({ organismId }: { organismId: string }) =>
+      getOrganismById({ organismId }),
   },
   Candidacy: {
     cohorteVaeCollective: async ({
