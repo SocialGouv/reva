@@ -92,7 +92,7 @@ export default async function CohortesPage({
               start={
                 !cohorte.codeInscription && (
                   <Badge severity="warning" small className="mb-3">
-                    En cours de parmètrage
+                    En cours de paramètrage
                   </Badge>
                 )
               }
