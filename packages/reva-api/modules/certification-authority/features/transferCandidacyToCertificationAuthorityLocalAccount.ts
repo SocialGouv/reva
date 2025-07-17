@@ -122,17 +122,40 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
       },
       data: {
         certificationAuthorityTransferReason: transferReason,
-      },
-    });
-
-    await prismaClient.feasibility.update({
-      where: {
-        id: feasibility.id,
-      },
-      data: {
-        certificationAuthority: {
-          connect: {
-            id: certificationAuthorityLocalAccount.certificationAuthorityId,
+        Feasibility: {
+          updateMany: {
+            where: {
+              candidacyId,
+              isActive: true,
+            },
+            data: {
+              certificationAuthorityId:
+                certificationAuthorityLocalAccount.certificationAuthorityId,
+            },
+          },
+        },
+        dossierDeValidation: {
+          updateMany: {
+            where: {
+              candidacyId,
+              isActive: true,
+            },
+            data: {
+              certificationAuthorityId:
+                certificationAuthorityLocalAccount.certificationAuthorityId,
+            },
+          },
+        },
+        Jury: {
+          updateMany: {
+            where: {
+              candidacyId,
+              isActive: true,
+            },
+            data: {
+              certificationAuthorityId:
+                certificationAuthorityLocalAccount.certificationAuthorityId,
+            },
           },
         },
       },
