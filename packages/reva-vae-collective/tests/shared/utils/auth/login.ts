@@ -62,4 +62,6 @@ export const login = async ({
       JSON.stringify(tokensForPostLoginUrl),
     )}`,
   );
+
+  await page.waitForTimeout(500); //wait for the post-login page to be loaded and keycloak to be initialized
 };
