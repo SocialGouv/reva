@@ -47,7 +47,7 @@ export const login = async (_state: FormState, formData: FormData) => {
         `/post-login?tokens=
           ${JSON.stringify(
             result.data?.account_loginWithCredentials.tokens,
-          )}&commanditaireVaeCollectiveId=${result.data?.account_loginWithCredentials.account.commanditaireVaeCollective?.id}`,
+          )}&commanditaireVaeCollectiveId=${result.data?.account_loginWithCredentials.account.commanditaireVaeCollective?.id}&redirectAfterLogin=true`,
       ),
     );
   }

@@ -11,6 +11,8 @@ export default function PostLoginPage() {
   const commanditaireVaeCollectiveId = searchParams.get(
     "commanditaireVaeCollectiveId",
   );
+  const redirectAfterLogin = searchParams.get("redirectAfterLogin");
+
   const { resetKeycloakInstance, authenticated } = useKeycloakContext();
   const [ready, setReady] = useState(false);
   const { isVAECollectiveManager, isAdmin } = useAuth();
@@ -29,7 +31,7 @@ export default function PostLoginPage() {
   }, [resetKeycloakInstance, decodedToken, ready]);
 
   useEffect(() => {
-    if (ready && authenticated) {
+    if (ready && authenticated && redirectAfterLogin) {
       if (isVAECollectiveManager) {
         redirect(`/commanditaires/${commanditaireVaeCollectiveId}/cohortes`);
       }
@@ -44,5 +46,6 @@ export default function PostLoginPage() {
     isVAECollectiveManager,
     isAdmin,
     commanditaireVaeCollectiveId,
+    redirectAfterLogin,
   ]);
 }
