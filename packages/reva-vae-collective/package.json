@@ -12,7 +12,9 @@
     "prebuild": "react-dsfr update-icons",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.25.3",
