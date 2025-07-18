@@ -39,7 +39,9 @@ const loadCommanditaire = async (
   const result = throwUrqlErrors(
     await client.query(
       gql`
-        query CommanditaireVaeCollective($commanditaireVaeCollectiveId: ID!) {
+        query commanditaireVaeCollectiveForCohortesPage(
+          $commanditaireVaeCollectiveId: ID!
+        ) {
           vaeCollective_getCommanditaireVaeCollective(
             commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
           ) {
@@ -74,6 +76,7 @@ const loadCommanditaire = async (
       },
     ),
   );
+
   return result.data?.vaeCollective_getCommanditaireVaeCollective;
 };
 

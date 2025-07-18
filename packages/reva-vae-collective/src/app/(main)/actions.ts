@@ -15,7 +15,7 @@ export const redirectCommanditaireVaeCollective = async () => {
   const result = throwUrqlErrors(
     await client.query(
       gql`
-        query getCommanditaireVaeCollectiveAccount {
+        query getCommanditaireVaeCollectiveAccountForRedirectCommanditaireVaeCollectiveAction {
           account_getAccountForConnectedUser {
             commanditaireVaeCollective {
               id

@@ -9,7 +9,7 @@ const getCohorteById = async (
 
   const result = await client.query(
     `
-    query getCohorteById($commanditaireVaeCollectiveId: ID!, $cohorteVaeCollectiveId: ID!) {
+    query getCohorteByIdForCohortePage($commanditaireVaeCollectiveId: ID!, $cohorteVaeCollectiveId: ID!) {
       vaeCollective_getCohorteVaeCollectiveById(commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId, cohorteVaeCollectiveId: $cohorteVaeCollectiveId) {
         id
         nom
