@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices } from "next/experimental/testmode/playwright";
 
 /**
  * Read environment variables from file.
@@ -74,9 +74,10 @@ export default defineConfig({
   webServer: {
     command: "npm run dev -- -p 4005",
     url: "http://localhost:4005/vae-collective/",
-    reuseExistingServer: false,
+    stdout: "ignore",
     env: {
       APP_ENV: "test",
+      GRAPHQL_API_URL: "https://reva-api/api/graphql",
     },
   },
 });

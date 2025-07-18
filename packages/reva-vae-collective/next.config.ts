@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
     });
     return config;
   },
+  experimental: {
+    testProxy: process.env.APP_ENV === "test",
+  },
 };
 
 // eslint-disable-next-line import/no-unused-modules
