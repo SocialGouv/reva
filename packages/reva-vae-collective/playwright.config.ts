@@ -12,7 +12,7 @@ import { defineConfig, devices } from "next/experimental/testmode/playwright";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testMatch: "tests/*.spec.ts",
+  testMatch: "tests/**/*.spec.ts",
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
