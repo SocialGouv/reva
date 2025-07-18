@@ -111,8 +111,9 @@ export default async function CohortesPage({
           const organism =
             certification?.certificationCohorteVaeCollectiveOnOrganisms?.[0];
           return (
-            <li key={cohorte.id}>
+            <li key={cohorte.id} data-testid="cohorte-list">
               <Card
+                data-testid="cohorte-card"
                 enlargeLink
                 size="small"
                 title={cohorte.nom}
@@ -126,14 +127,14 @@ export default async function CohortesPage({
                 desc={
                   <>
                     {certification && (
-                      <span className="text-sm">
+                      <span className="text-sm" data-testid="certification">
                         {certification.certification.label}
                       </span>
                     )}
                     {organism && (
                       <>
                         <br />
-                        <span className="text-sm">
+                        <span className="text-sm" data-testid="organism">
                           {organism.organism.label}
                         </span>
                       </>
