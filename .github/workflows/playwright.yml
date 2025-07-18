@@ -4,29 +4,53 @@ env:
   NEXT_PUBLIC_WEBSITE_API_GRAPHQL: "https://reva.incubateur.net/api/graphql"
   NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL: "https://strapi.vae.gouv.fr"
 jobs:
-  test:
+  playwright-reva-website:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./packages/reva-website
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: "npm"
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Build to retrieve graphql schema from API folder
-      run: npm run build
-    - name: Run Playwright tests
-      run: npm run test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Build to retrieve graphql schema from API folder
+        run: npm run build
+      - name: Run Playwright tests
+        run: npm run test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+  playwright-reva-vae-collective:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-vae-collective
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npm run test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
