@@ -35,7 +35,7 @@ const getCohorteById = async (
 export default async function CohortePage({
   params,
 }: {
-  params: { commanditaireId: string; cohorteVaeCollectiveId: string };
+  params: Promise<{ commanditaireId: string; cohorteVaeCollectiveId: string }>;
 }) {
   const { commanditaireId, cohorteVaeCollectiveId } = await params;
 
