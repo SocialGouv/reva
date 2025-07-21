@@ -63,13 +63,18 @@ const unsafeResolvers = {
     }) => getCohorteVAECollectiveById({ cohorteVaeCollectiveId }),
   },
   CommanditaireVaeCollective: {
-    cohorteVaeCollectives: async ({
-      id: commanditaireVaeCollectiveId,
-    }: {
-      id: string;
-    }) =>
+    cohorteVaeCollectives: async (
+      {
+        id: commanditaireVaeCollectiveId,
+      }: {
+        id: string;
+      },
+      { offset, limit }: { offset: number; limit: number },
+    ) =>
       getCohortesVaeCollectivesByCommanditaireVaeCollectiveId({
         commanditaireVaeCollectiveId,
+        offset,
+        limit,
       }),
   },
   Query: {

@@ -20,7 +20,12 @@ type CertificationCohorteVaeCollectiveOnOrganism {
 type CommanditaireVaeCollective {
   id: ID!
   raisonSociale: String!
-  cohorteVaeCollectives: [CohorteVaeCollective!]!
+  cohorteVaeCollectives(offset: Int, limit: Int): CohorteVaeCollectivePage!
+}
+
+type CohorteVaeCollectivePage {
+  rows: [CohorteVaeCollective!]!
+  info: PaginationInfo!
 }
 
 type Candidacy {

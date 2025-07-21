@@ -17,7 +17,7 @@ test.describe("Commanditaire with no cohorte", () => {
               vaeCollective_getCommanditaireVaeCollective: {
                 id: "115c2693-b625-491b-8b91-c7b3875d86a0",
                 raisonSociale: "moncommanditaire",
-                cohorteVaeCollectives: [],
+                cohorteVaeCollectives: { rows: [] },
               },
             },
           });
@@ -50,40 +50,42 @@ test.describe("Commanditaire with multiple cohortes", () => {
               vaeCollective_getCommanditaireVaeCollective: {
                 id: "115c2693-b625-491b-8b91-c7b3875d86a0",
                 raisonSociale: "moncommanditaire",
-                cohorteVaeCollectives: [
-                  {
-                    id: "dd419130-551f-40ca-9b49-730eeb95ed2d",
-                    nom: "maCohorte",
-                    codeInscription: null,
-                    createdAt: 1752593034738,
-                    certificationCohorteVaeCollectives: [
-                      {
-                        id: "25004fd9-efdc-4746-9bbd-ffd22565ab2c",
-                        certification: {
-                          id: "dcee4c57-e7fe-47a9-bdb2-ec479880cfdf",
-                          label:
-                            "Titre à finalité professionnelle Conducteur accompagnateur de personnes à mobilité réduite - CAPMR",
-                        },
-                        certificationCohorteVaeCollectiveOnOrganisms: [
-                          {
-                            id: "f2acf943-76ba-483e-92b6-e9d9108cd943",
-                            organism: {
-                              id: "0837631c-797f-435c-bda9-b41e75117543",
-                              label: "Demain",
-                            },
+                cohorteVaeCollectives: {
+                  rows: [
+                    {
+                      id: "dd419130-551f-40ca-9b49-730eeb95ed2d",
+                      nom: "maCohorte",
+                      codeInscription: null,
+                      createdAt: 1752593034738,
+                      certificationCohorteVaeCollectives: [
+                        {
+                          id: "25004fd9-efdc-4746-9bbd-ffd22565ab2c",
+                          certification: {
+                            id: "dcee4c57-e7fe-47a9-bdb2-ec479880cfdf",
+                            label:
+                              "Titre à finalité professionnelle Conducteur accompagnateur de personnes à mobilité réduite - CAPMR",
                           },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    id: "dd419130-551f-40ca-9b49-730eeb95ed2d",
-                    nom: "maDeuxiemeCohorte",
-                    codeInscription: null,
-                    createdAt: 1752593034738,
-                    certificationCohorteVaeCollectives: [],
-                  },
-                ],
+                          certificationCohorteVaeCollectiveOnOrganisms: [
+                            {
+                              id: "f2acf943-76ba-483e-92b6-e9d9108cd943",
+                              organism: {
+                                id: "0837631c-797f-435c-bda9-b41e75117543",
+                                label: "Demain",
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      id: "dd419130-551f-40ca-9b49-730eeb95ed2d",
+                      nom: "maDeuxiemeCohorte",
+                      codeInscription: null,
+                      createdAt: 1752593034738,
+                      certificationCohorteVaeCollectives: [],
+                    },
+                  ],
+                },
               },
             },
           });

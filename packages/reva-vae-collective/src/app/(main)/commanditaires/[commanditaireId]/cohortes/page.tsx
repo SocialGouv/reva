@@ -14,25 +14,27 @@ const loadCommanditaire = async (
   id: string;
   raisonSociale: string;
   cohorteVaeCollectives: {
-    id: string;
-    nom: string;
-    codeInscription: string;
-    createdAt: number;
-    certificationCohorteVaeCollectives: {
+    rows: {
       id: string;
-      certification: {
+      nom: string;
+      codeInscription: string;
+      createdAt: number;
+      certificationCohorteVaeCollectives: {
         id: string;
-        label: string;
-      };
-      certificationCohorteVaeCollectiveOnOrganisms: {
-        id: string;
-        organism: {
+        certification: {
           id: string;
           label: string;
         };
+        certificationCohorteVaeCollectiveOnOrganisms: {
+          id: string;
+          organism: {
+            id: string;
+            label: string;
+          };
+        }[];
       }[];
     }[];
-  }[];
+  };
 }> => {
   const accessToken = await getAccessTokenFromCookie();
 
@@ -48,21 +50,23 @@ const loadCommanditaire = async (
             id
             raisonSociale
             cohorteVaeCollectives {
-              id
-              nom
-              codeInscription
-              createdAt
-              certificationCohorteVaeCollectives {
+              rows {
                 id
-                certification {
+                nom
+                codeInscription
+                createdAt
+                certificationCohorteVaeCollectives {
                   id
-                  label
-                }
-                certificationCohorteVaeCollectiveOnOrganisms {
-                  id
-                  organism {
+                  certification {
                     id
                     label
+                  }
+                  certificationCohorteVaeCollectiveOnOrganisms {
+                    id
+                    organism {
+                      id
+                      label
+                    }
                   }
                 }
               }
@@ -76,7 +80,6 @@ const loadCommanditaire = async (
       },
     ),
   );
-
   return result.data?.vaeCollective_getCommanditaireVaeCollective;
 };
 
@@ -89,7 +92,7 @@ export default async function CohortesPage({
 
   const commanditaire = await loadCommanditaire(commanditaireId);
 
-  if (!commanditaire.cohorteVaeCollectives.length) {
+  if (!commanditaire.cohorteVaeCollectives.rows.length) {
     redirect(`/commanditaires/${commanditaireId}/cohortes/aucune-cohorte/`);
   }
 
@@ -106,7 +109,7 @@ export default async function CohortesPage({
         Créer une cohorte
       </Button>
       <ul className="flex flex-col gap-4 list-none px-0 my-0">
-        {commanditaire?.cohorteVaeCollectives.map((cohorte) => {
+        {commanditaire?.cohorteVaeCollectives?.rows?.map((cohorte) => {
           const certification = cohorte.certificationCohorteVaeCollectives[0];
           const organism =
             certification?.certificationCohorteVaeCollectiveOnOrganisms?.[0];
