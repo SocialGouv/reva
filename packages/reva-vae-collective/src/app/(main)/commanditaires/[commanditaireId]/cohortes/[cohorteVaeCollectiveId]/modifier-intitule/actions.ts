@@ -14,7 +14,7 @@ type FormState = {
 };
 
 const updateNomCohorteVaeCollectiveMutation = gql`
-  mutation updateNomCohorteVaeCollectiveMutation(
+  mutation updateNomCohorteVaeCollective(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
     $nomCohorteVaeCollective: String!
