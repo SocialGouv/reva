@@ -33,7 +33,9 @@ test("it shoule let me create a new cohorte when the cohorte name is 5 character
     "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/nouvelle-cohorte",
   );
 
-  await page.getByRole("textbox", { name: "Cohor" }).fill("maCohorte");
+  await page
+    .getByRole("textbox", { name: "Nom de la cohorte" })
+    .fill("maCohorte");
 
   await page.getByRole("button", { name: "Créer" }).click();
 
