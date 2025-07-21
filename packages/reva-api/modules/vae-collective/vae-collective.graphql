@@ -54,4 +54,9 @@ type Mutation {
     commanditaireVaeCollectiveId: ID!
     nomCohorteVaeCollective: String!
   ): CohorteVaeCollective!
+  vaeCollective_updateNomCohorteVaeCollective(
+    commanditaireVaeCollectiveId: ID!
+    cohorteVaeCollectiveId: ID!
+    nomCohorteVaeCollective: String!
+  ): CohorteVaeCollective!
 }

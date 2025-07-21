@@ -12,6 +12,7 @@ import { getCertificationById } from "../referential/features/getCertificationBy
 import { getOrganismById } from "../organism/features/getOrganism";
 import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "./features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
 import { getCertificationCohortesByCohorteId } from "./features/getCertificationCohortesByCohorteId";
+import { updateNomCohorteVaeCollective } from "./features/updateNomCohorteVaeCollective";
 
 const unsafeResolvers = {
   Account: {
@@ -126,6 +127,20 @@ const unsafeResolvers = {
     ) =>
       createCohorteVaeCollective({
         commanditaireVaeCollectiveId,
+        nomCohorteVaeCollective,
+      }),
+    vaeCollective_updateNomCohorteVaeCollective: async (
+      _parent: unknown,
+      {
+        cohorteVaeCollectiveId,
+        nomCohorteVaeCollective,
+      }: {
+        cohorteVaeCollectiveId: string;
+        nomCohorteVaeCollective: string;
+      },
+    ) =>
+      updateNomCohorteVaeCollective({
+        cohorteVaeCollectiveId,
         nomCohorteVaeCollective,
       }),
   },

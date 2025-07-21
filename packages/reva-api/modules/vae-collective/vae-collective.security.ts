@@ -19,6 +19,9 @@ export const vaeCollectiveResolversSecurityMap = {
   "Mutation.vaeCollective_createCohorteVaeCollective":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
 
+  "Mutation.vaeCollective_updateNomCohorteVaeCollective":
+    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+
   "CohorteVaeCollective.certificationCohorteVaeCollectives":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
 };
