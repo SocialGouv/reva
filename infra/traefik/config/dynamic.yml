@@ -157,6 +157,7 @@ http:
       service: auth-sandbox-vae-gouv-fr
       middlewares:
         - removeHeader
+
     interop-staging:
       rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/interop`)"
       service: interop-sandbox
@@ -335,7 +336,7 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://auth-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
+          - url: "https://reva-sandbox-auth.osc-fr1.scalingo.io/"
 
     api-sandbox:
       loadBalancer:
