@@ -144,6 +144,27 @@ http:
 
     # --- END PRODUCTION VAE.GOUV.FR ---
 
+    # --- BEGIN SANDBOX ---
+
+    api-sandbox-vae-gouv-fr:
+      rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/api`)"
+      service: api-sandbox
+      middlewares:
+        - removeHeader
+
+    auth-sandbox-vae-gouv-fr:
+      rule: "Host(`auth.sandbox.vae.gouv.fr`)"
+      service: auth-sandbox-vae-gouv-fr
+      middlewares:
+        - removeHeader
+    interop-staging:
+      rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/interop`)"
+      service: interop-sandbox
+      middlewares:
+        - removeHeader
+
+    # --- END SANDBOX ---
+
     # Enable dashboard on /dashboard with basic auth
     dashboard:
       rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
@@ -307,3 +328,23 @@ http:
           - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/api"
 
     # --- END PRODUCTION  ---
+
+    # --- BEGIN SANDBOX ---
+
+    auth-sandbox-vae-gouv-fr:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://auth-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
+
+    api-sandbox:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-sandbox-api.osc-fr1.scalingo.io/api"
+
+    interop-sandbox:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-sandbox-interop.osc-fr1.scalingo.io/interop"
