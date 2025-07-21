@@ -47,7 +47,7 @@ export const createCohort = async (_state: FormState, formData: FormData) => {
     } as FormState;
   }
 
-  throwUrqlErrors(
+  const result = throwUrqlErrors(
     await client.mutation(
       createCohortMutation,
       {
@@ -64,5 +64,7 @@ export const createCohort = async (_state: FormState, formData: FormData) => {
     ),
   );
 
-  redirect(`/commanditaires/${commanditaireId}/cohortes`);
+  redirect(
+    `/commanditaires/${commanditaireId}/cohortes/${result.data.vaeCollective_createCohorteVaeCollective.id}`,
+  );
 };

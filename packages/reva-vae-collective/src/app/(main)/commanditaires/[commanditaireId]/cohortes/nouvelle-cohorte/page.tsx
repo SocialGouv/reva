@@ -15,6 +15,7 @@ export default function NouvelleCohortePage() {
       <h1 className="mb-12">Nouvelle cohorte</h1>
       <form action={action} className="flex flex-col">
         <Input
+          data-testid="cohort-name-input"
           label="Nom de la cohorte"
           nativeInputProps={{
             name: "name",
