@@ -2,6 +2,7 @@ import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-c
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import Link from "next/link";
 
 const getCohorteById = async (
   commanditaireVaeCollectiveId: string,
@@ -44,7 +45,7 @@ export default async function CohortePage({
   const cohorte = await getCohorteById(commanditaireId, cohorteVaeCollectiveId);
 
   return (
-    <div>
+    <div className="flex flex-col w-full">
       <Breadcrumb
         className="mt-0 mb-4"
         currentPageLabel={cohorte.nom}
@@ -57,7 +58,15 @@ export default async function CohortePage({
           },
         ]}
       />
-      <h1>{cohorte.nom}</h1>
+      <div className="flex justify-between items-center">
+        <h1>{cohorte.nom}</h1>
+        <Link
+          className="text-sm bg-none p-2 fr-link fr-icon-edit-line fr-link--icon-left mb-6"
+          href={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/modifier-intitule`}
+        >
+          Modifier l’intitulé
+        </Link>
+      </div>
       <p>
         Paramétrez votre cohorte, afin de générer un lien unique à transmettre
         aux candidats devant intégrer cette cohorte.
