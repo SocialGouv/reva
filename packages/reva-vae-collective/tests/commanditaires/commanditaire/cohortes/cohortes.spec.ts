@@ -17,7 +17,12 @@ test.describe("Commanditaire with no cohorte", () => {
               vaeCollective_getCommanditaireVaeCollective: {
                 id: "115c2693-b625-491b-8b91-c7b3875d86a0",
                 raisonSociale: "moncommanditaire",
-                cohorteVaeCollectives: { rows: [] },
+                cohorteVaeCollectives: {
+                  rows: [],
+                  info: {
+                    totalRows: 0,
+                  },
+                },
               },
             },
           });
@@ -85,6 +90,9 @@ test.describe("Commanditaire with multiple cohortes", () => {
                       certificationCohorteVaeCollectives: [],
                     },
                   ],
+                  info: {
+                    totalRows: 2,
+                  },
                 },
               },
             },

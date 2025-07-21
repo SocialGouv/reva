@@ -7,10 +7,17 @@ import { Card } from "@codegouvfr/react-dsfr/Card";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
+import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 
-const loadCommanditaire = async (
-  commanditaireVaeCollectiveId: string,
-): Promise<{
+const RECORDS_PER_PAGE = 10;
+
+const loadCommanditaireAndCohortes = async ({
+  commanditaireVaeCollectiveId,
+  cohortePage = 1,
+}: {
+  commanditaireVaeCollectiveId: string;
+  cohortePage?: number;
+}): Promise<{
   id: string;
   raisonSociale: string;
   cohorteVaeCollectives: {
@@ -34,6 +41,9 @@ const loadCommanditaire = async (
         }[];
       }[];
     }[];
+    info: {
+      totalRows: number;
+    };
   };
 }> => {
   const accessToken = await getAccessTokenFromCookie();
@@ -43,13 +53,18 @@ const loadCommanditaire = async (
       gql`
         query commanditaireVaeCollectiveForCohortesPage(
           $commanditaireVaeCollectiveId: ID!
+          $offset: Int!
+          $limit: Int!
         ) {
           vaeCollective_getCommanditaireVaeCollective(
             commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
           ) {
             id
             raisonSociale
-            cohorteVaeCollectives {
+            cohorteVaeCollectives(offset: $offset, limit: $limit) {
+              info {
+                totalRows
+              }
               rows {
                 id
                 nom
@@ -74,7 +89,11 @@ const loadCommanditaire = async (
           }
         }
       `,
-      { commanditaireVaeCollectiveId },
+      {
+        commanditaireVaeCollectiveId,
+        offset: (cohortePage - 1) * RECORDS_PER_PAGE,
+        limit: RECORDS_PER_PAGE,
+      },
       {
         fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
       },
@@ -85,14 +104,20 @@ const loadCommanditaire = async (
 
 export default async function CohortesPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ commanditaireId: string }>;
+  searchParams: Promise<{ page: number }>;
 }) {
-  const commanditaireId = (await params).commanditaireId;
+  const { commanditaireId } = await params;
+  const { page } = await searchParams;
 
-  const commanditaire = await loadCommanditaire(commanditaireId);
+  const commanditaire = await loadCommanditaireAndCohortes({
+    commanditaireVaeCollectiveId: commanditaireId,
+    cohortePage: page,
+  });
 
-  if (!commanditaire.cohorteVaeCollectives.rows.length) {
+  if (commanditaire.cohorteVaeCollectives.info.totalRows === 0) {
     redirect(`/commanditaires/${commanditaireId}/cohortes/aucune-cohorte/`);
   }
 
@@ -108,6 +133,7 @@ export default async function CohortesPage({
       >
         Créer une cohorte
       </Button>
+
       <ul className="flex flex-col gap-4 list-none px-0 my-0">
         {commanditaire?.cohorteVaeCollectives?.rows?.map((cohorte) => {
           const certification = cohorte.certificationCohorteVaeCollectives[0];
@@ -157,6 +183,19 @@ export default async function CohortesPage({
           );
         })}
       </ul>
+      <Pagination
+        classes={{
+          root: "mt-12 ml-auto",
+        }}
+        defaultPage={page}
+        showFirstLast={false}
+        count={Math.ceil(
+          commanditaire.cohorteVaeCollectives.info.totalRows / RECORDS_PER_PAGE,
+        )}
+        getPageLinkProps={(page) => ({
+          href: `/vae-collective/commanditaires/${commanditaireId}/cohortes?page=${page}`,
+        })}
+      />
     </div>
   );
 }
