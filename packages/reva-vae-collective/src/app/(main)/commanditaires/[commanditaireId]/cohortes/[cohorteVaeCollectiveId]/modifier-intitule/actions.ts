@@ -79,7 +79,7 @@ export const updateNomCohorteVaeCollective = async (
 
   if (!name) {
     return {
-      ...state,
+      name,
       errors: {
         name: { message: "Merci de remplir ce champ" },
       },
@@ -88,7 +88,7 @@ export const updateNomCohorteVaeCollective = async (
 
   if (name.toString().length < 5) {
     return {
-      ...state,
+      name,
       errors: {
         name: { message: "Ce champ doit contenir au moins 5 caractères" },
       },
