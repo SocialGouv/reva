@@ -158,7 +158,7 @@ http:
       middlewares:
         - removeHeader
 
-    interop-staging:
+    interop-sandbox:
       rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/interop`)"
       service: interop-sandbox
       middlewares:
