@@ -49,7 +49,7 @@ type SearchResponse = {
       if (!adresseCodePostal) continue;
 
       const res = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${adresseCodePostal}&limit=1"`,
+        `https://data.geopf.fr/geocodage/search?type=municipality&q=${adresseCodePostal}&limit=1"`,
       );
 
       const { features }: SearchResponse = await res.json();
