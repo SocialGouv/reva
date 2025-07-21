@@ -364,7 +364,7 @@ const fetchCoordinatesWithRetry = async ({
   zip: string;
   retry?: number;
 }): Promise<[number, number] | undefined> => {
-  const query = `https://api-adresse.data.gouv.fr/search/?q=centre&postcode=${zip}&limit=1`;
+  const query = `https://data.geopf.fr/geocodage/search?type=municipality&q=${zip}&limit=1`;
   const res = await fetch(query);
 
   const {
