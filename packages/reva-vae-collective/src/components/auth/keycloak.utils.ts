@@ -1,6 +1,6 @@
 import { setCookie, deleteCookie, getCookie } from "cookies-next";
 
-const storageKey = "tokens";
+const storageKey = "VAE_COLLECTIVE_AUTH_TOKENS";
 
 export interface Tokens {
   accessToken: string;
