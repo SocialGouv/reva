@@ -10,6 +10,7 @@ import {
 } from "@/config/config";
 
 import { Tokens, getTokens, removeTokens, saveTokens } from "./keycloak.utils";
+import { AuthLoader } from "./AuthLoader";
 
 type KeycloakUser = {
   id: string;
@@ -98,7 +99,7 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
         keycloakUser: getKeycloakUser(),
       }}
     >
-      {ready && children}
+      {ready ? children : <AuthLoader />}
     </KeycloakContext.Provider>
   );
 };
