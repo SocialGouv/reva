@@ -13,6 +13,7 @@ import { getOrganismById } from "../organism/features/getOrganism";
 import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "./features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
 import { getCertificationCohortesByCohorteId } from "./features/getCertificationCohortesByCohorteId";
 import { updateNomCohorteVaeCollective } from "./features/updateNomCohorteVaeCollective";
+import { deleteCohorteVAECollective } from "./features/deleteCohorteVAECollective";
 
 const unsafeResolvers = {
   Account: {
@@ -143,6 +144,10 @@ const unsafeResolvers = {
         cohorteVaeCollectiveId,
         nomCohorteVaeCollective,
       }),
+    vaeCollective_deleteCohorteVaeCollective: async (
+      _parent: unknown,
+      { cohorteVaeCollectiveId }: { cohorteVaeCollectiveId: string },
+    ) => deleteCohorteVAECollective({ cohorteVaeCollectiveId }),
   },
 };
 
