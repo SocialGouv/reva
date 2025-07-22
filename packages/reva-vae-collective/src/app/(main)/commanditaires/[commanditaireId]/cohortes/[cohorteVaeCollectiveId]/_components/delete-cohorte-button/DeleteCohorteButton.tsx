@@ -12,10 +12,12 @@ export const DeleteCohorteButton = ({
   commanditaireId,
   cohorteVaeCollectiveId,
   nomCohorte,
+  disabled,
 }: {
   commanditaireId: string;
   cohorteVaeCollectiveId: string;
   nomCohorte: string;
+  disabled?: boolean;
 }) => {
   const onConfirmButtonClick = () => {
     deleteCohorte({
@@ -60,6 +62,7 @@ export const DeleteCohorteButton = ({
         buttonProps={{
           onClick: () => modal.open(),
         }}
+        disabled={disabled}
       />
     </>
   );

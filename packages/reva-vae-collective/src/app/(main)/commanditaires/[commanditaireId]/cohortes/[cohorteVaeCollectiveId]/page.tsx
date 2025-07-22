@@ -17,6 +17,7 @@ const getCohorteById = async (
       vaeCollective_getCohorteVaeCollectiveById(commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId, cohorteVaeCollectiveId: $cohorteVaeCollectiveId) {
         id
         nom
+        status
       }
     }
     `,
@@ -78,6 +79,7 @@ export default async function CohortePage({
         commanditaireId={commanditaireId}
         cohorteVaeCollectiveId={cohorteVaeCollectiveId}
         nomCohorte={cohorte.nom}
+        disabled={cohorte.status !== "BROUILLON"}
       />
 
       <Button
