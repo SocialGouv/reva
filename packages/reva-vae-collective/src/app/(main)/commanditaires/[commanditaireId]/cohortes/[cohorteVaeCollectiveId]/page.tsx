@@ -3,6 +3,7 @@ import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Link from "next/link";
+import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
 
 const getCohorteById = async (
   commanditaireVaeCollectiveId: string,
@@ -71,6 +72,14 @@ export default async function CohortePage({
         Paramétrez votre cohorte, afin de générer un lien unique à transmettre
         aux candidats devant intégrer cette cohorte.
       </p>
+      <hr />
+
+      <DeleteCohorteButton
+        commanditaireId={commanditaireId}
+        cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+        nomCohorte={cohorte.nom}
+      />
+
       <Button
         className="mt-12"
         priority="secondary"

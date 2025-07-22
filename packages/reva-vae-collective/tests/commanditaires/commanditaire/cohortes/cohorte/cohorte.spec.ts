@@ -32,7 +32,7 @@ test("it should render the cohorte detail page", async ({ page }) => {
     "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
   );
 
-  await expect(page.getByRole("heading")).toHaveText("macohorte");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("macohorte");
 });
 
 test("it should go back to the cohortes list page when i click on the back button", async ({
