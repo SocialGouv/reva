@@ -5,7 +5,13 @@ type CohorteVaeCollective {
   commanditaireVaeCollective: CommanditaireVaeCollective!
   certificationCohorteVaeCollectives: [CertificationCohorteVaeCollective!]!
   createdAt: Timestamp!
+  status: CohorteVaeCollectiveStatus!
 }
+enum CohorteVaeCollectiveStatus {
+  BROUILLON
+  PUBLIE
+}
+
 type CertificationCohorteVaeCollective {
   id: ID!
   certification: Certification!
