@@ -60,7 +60,7 @@ test.describe("Commanditaire with multiple cohortes", () => {
                     {
                       id: "dd419130-551f-40ca-9b49-730eeb95ed2d",
                       nom: "maCohorte",
-                      codeInscription: null,
+                      status: "BROUILLON",
                       createdAt: 1752593034738,
                       certificationCohorteVaeCollectives: [
                         {
@@ -85,7 +85,7 @@ test.describe("Commanditaire with multiple cohortes", () => {
                     {
                       id: "dd419130-551f-40ca-9b49-730eeb95ed2d",
                       nom: "maDeuxiemeCohorte",
-                      codeInscription: null,
+                      status: "PUBLIE",
                       createdAt: 1752593034738,
                       certificationCohorteVaeCollectives: [],
                     },
@@ -129,6 +129,27 @@ test.describe("Commanditaire with multiple cohortes", () => {
     await expect(
       page.getByTestId("cohorte-card").first().getByTestId("organism"),
     ).toHaveText("Demain");
+  });
+
+  test("it should display the cohortes status badge only when the cohorte status is 'BROUILLON'", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(
+      "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes",
+    );
+
+    await expect(
+      page
+        .getByTestId("cohorte-card")
+        .first()
+        .getByTestId("draft-status-badge"),
+    ).toBeVisible();
+
+    await expect(
+      page.getByTestId("cohorte-card").nth(1).getByTestId("draft-status-badge"),
+    ).toBeHidden();
   });
 
   test("it should lead me to the create cohorte page when i click on the create cohorte button", async ({

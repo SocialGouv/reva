@@ -24,7 +24,7 @@ const loadCommanditaireAndCohortes = async ({
     rows: {
       id: string;
       nom: string;
-      codeInscription: string;
+      status: "BROUILLON" | "PUBLIE";
       createdAt: number;
       certificationCohorteVaeCollectives: {
         id: string;
@@ -68,7 +68,7 @@ const loadCommanditaireAndCohortes = async ({
               rows {
                 id
                 nom
-                codeInscription
+                status
                 createdAt
                 certificationCohorteVaeCollectives {
                   id
@@ -147,8 +147,13 @@ export default async function CohortesPage({
                 size="small"
                 title={cohorte.nom}
                 start={
-                  !cohorte.codeInscription && (
-                    <Badge severity="warning" small className="mb-3">
+                  cohorte.status === "BROUILLON" && (
+                    <Badge
+                      severity="warning"
+                      small
+                      className="mb-3"
+                      data-testid="draft-status-badge"
+                    >
                       En cours de paramètrage
                     </Badge>
                   )
