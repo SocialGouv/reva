@@ -196,8 +196,10 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         },
       );
       const tokenJson = await tokenReply.json();
+      console.log("tokenJson", tokenJson);
       const idToken = tokenJson.id_token;
       const decodedIdToken = jose.decodeJwt(idToken);
+      console.log("decodedIdToken", decodedIdToken);
 
       const secretKey = new TextEncoder().encode(process.env.SECRET_KEY);
 
