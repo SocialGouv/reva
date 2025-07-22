@@ -1876,8 +1876,14 @@ model CohorteVaeCollective {
   certificationCohorteVaeCollectives CertificationCohorteVaeCollective[]
   codeInscription                    String?                             @unique @map("code_inscription") @db.VarChar(15)
   candidacy                          Candidacy[]
+  status                             CohorteVaeCollectiveStatus          @default(BROUILLON) @map("status")
 
   @@map("cohorte_vae_collective")
+}
+
+enum CohorteVaeCollectiveStatus {
+  BROUILLON
+  PUBLIE
 }
 
 model CertificationCohorteVaeCollective {
