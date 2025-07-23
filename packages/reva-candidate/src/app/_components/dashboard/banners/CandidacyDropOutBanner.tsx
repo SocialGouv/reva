@@ -23,7 +23,7 @@ export const CandidacyDropOutBanner = ({
       Votre parcours est en abandon depuis le{" "}
       {format(toDate(candidacyDropOut.createdAt), "dd/MM/yyyy")}.{" "}
       {dropOutConfirmed
-        ? "Cela fait suite soit à la décision de votre accompagnateur (que vous avez confirmée) soit à un délai d'inactivité de plus de 4 mois."
+        ? "Cela fait suite soit à la décision de votre accompagnateur (que vous avez confirmée) soit à un délai d'inactivité de plus de 6 mois."
         : "Vous avez 6 mois pour enregistrer votre décision : accepter l'abandon ou continuer votre parcours."}
     </div>
   );

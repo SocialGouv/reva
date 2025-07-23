@@ -11,9 +11,9 @@ import { authorizationHeaderForUser } from "../../../../test/helpers/authorizati
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { createFeatureHelper } from "../../../../test/helpers/entities/create-feature-helper";
 import { createFundingRequestUnifvaeHelper } from "../../../../test/helpers/entities/create-funding-request-unifvae-helper";
+import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 
 const injectGraphqlPaymentRequestCreation = async ({
   keycloakId,
@@ -108,7 +108,7 @@ describe("Unifvae ayment request", () => {
       const obj = resp.json();
       expect(obj).toHaveProperty("errors");
       expect(obj.errors[0].message).toBe(
-        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 4 mois après la mise en abandon du candidat.",
+        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
       );
 
       await prismaClient.candidacy.update({
@@ -428,7 +428,7 @@ describe("Unifvae ayment request", () => {
       const obj = resp.json();
       expect(obj).toHaveProperty("errors");
       expect(obj.errors[0].message).toBe(
-        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 4 mois après la mise en abandon du candidat.",
+        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
       );
 
       await prismaClient.candidacy.update({

@@ -2,16 +2,16 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
 
+import { useAuth } from "@/components/auth/auth";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useCandidacyStatus } from "../../_components/candidacy.hook";
 import { DropoutForm } from "./_components/DropoutForm";
 import {
   ActiveDropoutReasons,
   CandidacyForDropout,
   useDropout,
 } from "./_components/useDropout";
-import { useCandidacyStatus } from "../../_components/candidacy.hook";
-import { useAuth } from "@/components/auth/auth";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 
 const CandidacyDropoutComponent = ({
   candidacy,
@@ -112,7 +112,7 @@ const CandidacyDropoutComponent = ({
       <p className="m-0">
         Si vous déclarez l’abandon du candidat, il ne pourra plus déposer de
         dossier sur le même diplôme durant cette année civile. Le candidat devra
-        valider l’abandon depuis son espace ou, sans réponse sous 4 mois, il
+        valider l’abandon depuis son espace ou, sans réponse sous 6 mois, il
         sera automatiquement acté.
       </p>
       <DropoutForm activeDropoutReasons={activeDropoutReasons} />
