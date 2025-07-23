@@ -1,30 +1,30 @@
 "use client";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
-import { usePaymentRequestUniFvaeInvoicePage } from "./paymentRequestUniFvaeInvoice.hook";
-import { useCallback, useEffect, useMemo } from "react";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useParams, useRouter } from "next/navigation";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { isCandidacyPaymentRequestAlreadySent } from "@/utils/isCandidacyPaymentRequestAlreadySent";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isAfter, sub } from "date-fns";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { CostInput } from "../../_components/form/CostInput";
 import { HourInput } from "../../_components/form/HourInput";
 import { Info } from "../../_components/form/Info";
 import { Section } from "../../_components/form/Section";
 import { TableRow } from "../../_components/form/TableRow";
+import { usePaymentRequestUniFvaeInvoicePage } from "./paymentRequestUniFvaeInvoice.hook";
 import {
   PaymentRequestUniFvaeInvoiceFormData,
   paymentRequestUniFvaeInvoiceSchema,
 } from "./paymentRequestUniFvaeInvoiceFormSchema";
-import { isAfter, sub } from "date-fns";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { isCandidacyPaymentRequestAlreadySent } from "@/utils/isCandidacyPaymentRequestAlreadySent";
 
 const PaymentRequestUniFvaeInvoicePage = () => {
   const { candidacyId } = useParams<{
@@ -202,7 +202,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
             className="my-4"
             severity="error"
             title="La demande de paiement n’est pas disponible"
-            description="Vous y aurez accès 4 mois après la mise en abandon du candidat ou si le candidat valide l'abandon depuis son espace."
+            description="Vous y aurez accès 6 mois après la mise en abandon du candidat ou si le candidat valide l'abandon depuis son espace."
           />
         )}
       <Alert

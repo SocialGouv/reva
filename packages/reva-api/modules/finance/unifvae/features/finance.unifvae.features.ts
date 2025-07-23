@@ -4,9 +4,9 @@ import { isAfter, isBefore, sub } from "date-fns";
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 import { UploadedFile } from "../../../shared/file";
 import { applyBusinessValidationRules } from "../validation";
-import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 
 export const getFundingRequestUnifvaeFromCandidacyId = async (
   candidacyId: string,
@@ -148,7 +148,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       )
     ) {
       throw new Error(
-        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 4 mois après la mise en abandon du candidat.",
+        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
       );
     }
   }
