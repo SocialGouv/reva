@@ -58,7 +58,7 @@ export const DeleteCohorteButton = ({
         small
         enlargeLinkOrButton
         orientation="horizontal"
-        desc="La suppression d’une cohorte est irréversible."
+        detail="La suppression d’une cohorte est irréversible."
         buttonProps={{
           onClick: () => modal.open(),
         }}
