@@ -1,32 +1,5 @@
 import { prismaClient } from "../prisma/client";
-
-type SearchResponse = {
-  features: [
-    {
-      type: string;
-      geometry: {
-        type: string;
-        coordinates: [number, number];
-      };
-      properties: {
-        label: string;
-        score: number;
-        housenumber: string;
-        id: string;
-        type: string;
-        name: string;
-        postcode: string;
-        citycode: string;
-        x: number;
-        y: number;
-        city: string;
-        context: string;
-        importance: number;
-        street: string;
-      };
-    },
-  ];
-};
+import { fetchCoordinatesFromZipCode } from "../modules/shared/geocoding";
 
 (async () => {
   try {
@@ -55,29 +28,14 @@ type SearchResponse = {
       // add wait time to avoid rate limiting
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const res = await fetch(
-        `https://data.geopf.fr/geocodage/search?type=municipality&q=${adresseCodePostal}&limit=1`,
-      );
+      const result = await fetchCoordinatesFromZipCode(adresseCodePostal);
 
-      if (!res.ok) {
-        console.error(
-          `Failed to fetch coordinates for zip code ${adresseCodePostal}: ${res.statusText}`,
-        );
+      if (!result.success) {
+        console.error(result.error);
         continue;
       }
 
-      const { features }: SearchResponse = await res.json();
-      if (!features.length) {
-        console.error(`No feature found for zip code ${adresseCodePostal}`);
-        continue;
-      }
-      const [
-        {
-          geometry: { coordinates },
-        },
-      ] = features;
-
-      const [longitude, latitude] = coordinates;
+      const [longitude, latitude] = result.coordinates;
 
       const [{ ll_to_earth: llToEarth }]: { ll_to_earth: string }[] =
         await prismaClient.$queryRaw`SELECT CAST(ll_to_earth(${latitude}, ${longitude}) AS TEXT)`;

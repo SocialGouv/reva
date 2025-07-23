@@ -4,6 +4,7 @@ import { Organism, RemoteZone } from "../../organism/organism.types";
 import { getDepartmentById } from "../../referential/features/getDepartmentById";
 import { SearchOrganismFilter } from "../candidacy.types";
 import { Prisma } from "@prisma/client";
+import { fetchCoordinatesFromZipCode } from "../../shared/geocoding";
 
 export const searchOrganismsForCandidacy = async ({
   candidacyId,
@@ -209,13 +210,13 @@ const getAAPsWithZipCode = async ({
     return { rows: [], totalRows: 0 };
   }
 
-  const coordinates = await getCoordinates(zip);
+  const result = await fetchCoordinatesFromZipCode(zip);
 
-  if (!coordinates) {
+  if (!result.success) {
     return { rows: [], totalRows: 0 };
   }
 
-  const [longitude, latitude] = coordinates as [number, number];
+  const [longitude, latitude] = result.coordinates;
 
   /*
     This query filters AAPs with specific conditions:
@@ -329,77 +330,4 @@ const getRemoteZoneFromDepartment = async ({
     default:
       return "FRANCE_METROPOLITAINE";
   }
-};
-
-// Used to cache coordinates based on zip.
-const coordinatesArray: { zip: string; coordinates: [number, number] }[] = [];
-
-//exported for testing purposes
-export const getCoordinates = async (
-  zip: string,
-): Promise<[number, number] | undefined> => {
-  const coordinates = coordinatesArray.find((c) => c.zip == zip)?.coordinates;
-  if (coordinates) {
-    return coordinates;
-  }
-
-  const fetchedCoordinates = await fetchCoordinatesWithRetry({ zip });
-  if (fetchedCoordinates) {
-    coordinatesArray.push({ zip, coordinates: fetchedCoordinates });
-  }
-
-  return fetchedCoordinates;
-};
-
-function wait(milliseconds: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, milliseconds);
-  });
-}
-
-const fetchCoordinatesWithRetry = async ({
-  zip,
-  retry = 0,
-}: {
-  zip: string;
-  retry?: number;
-}): Promise<[number, number] | undefined> => {
-  const query = `https://data.geopf.fr/geocodage/search?type=municipality&q=${zip}&limit=1`;
-  const res = await fetch(query);
-
-  const {
-    features,
-  }: {
-    features: [
-      {
-        geometry: {
-          type: string;
-          coordinates: [number, number];
-        };
-      },
-    ];
-  } = await res.json();
-
-  if (!features.length) {
-    if (retry < 5) {
-      await wait(1000);
-
-      return fetchCoordinatesWithRetry({
-        zip,
-        retry: retry + 1,
-      });
-    }
-
-    throw new Error(
-      "Le service semble être indisponible. Veuillez vérifier que le code postal renseigné est correct ou réessayez ultérieurement.",
-    );
-  }
-
-  const [
-    {
-      geometry: { coordinates },
-    },
-  ] = features;
-
-  return coordinates;
 };
