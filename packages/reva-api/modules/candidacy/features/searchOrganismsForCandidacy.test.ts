@@ -9,7 +9,7 @@ import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create
 import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import { createCohorteVaeCollectiveHelper } from "../../../test/helpers/entities/create-vae-collective-helper";
-import * as searchOrganismsForCandidacyModule from "./searchOrganismsForCandidacy";
+import * as geocodingModule from "../../shared/geocoding";
 
 const searchOrganisms = async ({
   keycloakId,
@@ -656,9 +656,11 @@ describe("searchOrganismsForCandidacy", () => {
 
     describe("zip code search", () => {
       test("should search organisms and return all organisms when there is no VAE collective organism restriction", async () => {
-        const getCoordinatesMock = jest
-          .spyOn(searchOrganismsForCandidacyModule, "getCoordinates")
-          .mockImplementation(() => Promise.resolve([2.345578, 48.864]));
+        const fetchCoordinatesMock = jest
+          .spyOn(geocodingModule, "fetchCoordinatesFromZipCode")
+          .mockImplementation(() =>
+            Promise.resolve({ success: true, coordinates: [2.345578, 48.864] }),
+          );
 
         const certification = await createCertificationHelper({
           certificationOnConventionCollective: {
@@ -712,15 +714,17 @@ describe("searchOrganismsForCandidacy", () => {
         });
 
         expect(resp.statusCode).toEqual(200);
-        expect(getCoordinatesMock).toHaveBeenCalledTimes(1);
+        expect(fetchCoordinatesMock).toHaveBeenCalledTimes(1);
         const results = resp.json().data.getRandomOrganismsForCandidacy;
         expect(results.totalRows).toBe(2);
       });
 
       test("should search organisms and only return the restricted organisms there is a VAE collective organism restriction", async () => {
-        const getCoordinatesMock = jest
-          .spyOn(searchOrganismsForCandidacyModule, "getCoordinates")
-          .mockImplementation(() => Promise.resolve([2.345578, 48.864]));
+        const fetchCoordinatesMock = jest
+          .spyOn(geocodingModule, "fetchCoordinatesFromZipCode")
+          .mockImplementation(() =>
+            Promise.resolve({ success: true, coordinates: [2.345578, 48.864] }),
+          );
 
         const certification = await createCertificationHelper({
           certificationOnConventionCollective: {
@@ -779,7 +783,7 @@ describe("searchOrganismsForCandidacy", () => {
         });
 
         expect(resp.statusCode).toEqual(200);
-        expect(getCoordinatesMock).toHaveBeenCalledTimes(1);
+        expect(fetchCoordinatesMock).toHaveBeenCalledTimes(1);
         const results = resp.json().data.getRandomOrganismsForCandidacy;
         expect(results.totalRows).toBe(1);
       });
