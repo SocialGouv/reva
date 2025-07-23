@@ -17,7 +17,7 @@ const getCertificationStructureAndGestionnairesQuery = graphql(`
         id
       }
     }
-    certification_authority_getCertificationAuthorityStructures(limit: 100) {
+    certification_authority_getCertificationAuthorityStructures(limit: 500) {
       rows {
         id
         label
