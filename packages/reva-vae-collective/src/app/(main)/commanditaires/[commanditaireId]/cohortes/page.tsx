@@ -107,14 +107,16 @@ export default async function CohortesPage({
   searchParams,
 }: {
   params: Promise<{ commanditaireId: string }>;
-  searchParams: Promise<{ page: number }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { commanditaireId } = await params;
   const { page } = await searchParams;
 
+  const currentPage = page ? Number(page) : 1;
+
   const commanditaire = await loadCommanditaireAndCohortes({
     commanditaireVaeCollectiveId: commanditaireId,
-    cohortePage: page,
+    cohortePage: currentPage,
   });
 
   if (commanditaire.cohorteVaeCollectives.info.totalRows === 0) {
@@ -188,12 +190,13 @@ export default async function CohortesPage({
           );
         })}
       </ul>
+
       <Pagination
         classes={{
           root: "mt-12 ml-auto",
         }}
-        defaultPage={page}
         showFirstLast={false}
+        defaultPage={currentPage}
         count={Math.ceil(
           commanditaire.cohorteVaeCollectives.info.totalRows / RECORDS_PER_PAGE,
         )}
