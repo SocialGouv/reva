@@ -4,6 +4,7 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Link from "next/link";
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
+import { CertificationCard } from "./_components/certification-card/CertificationCard";
 
 const getCohorteById = async (
   commanditaireVaeCollectiveId: string,
@@ -18,6 +19,14 @@ const getCohorteById = async (
         id
         nom
         status
+        certificationCohorteVaeCollectives {
+          id
+          certification {
+            id
+            label
+            codeRncp
+          }
+        }
       }
     }
     `,
@@ -69,11 +78,21 @@ export default async function CohortePage({
           Modifier l’intitulé
         </Link>
       </div>
-      <p>
+      <p className="mb-12">
         Paramétrez votre cohorte, afin de générer un lien unique à transmettre
         aux candidats devant intégrer cette cohorte.
       </p>
-      <hr />
+
+      <CertificationCard
+        commanditaireId={commanditaireId}
+        cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+        certification={
+          cohorte.certificationCohorteVaeCollectives?.[0]?.certification
+        }
+        disabled={cohorte.status !== "BROUILLON"}
+      />
+
+      <hr className="mt-8 mb-2" />
 
       <DeleteCohorteButton
         commanditaireId={commanditaireId}
