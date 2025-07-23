@@ -240,14 +240,14 @@ const CandidacyLayoutSideMenu = ({
     ...(isFundingAndPaymentRequestsFromCandidacyStatusesRemoved
       ? [
           {
-            text: `Demandes de financement envoyée ${getCounterText("DEMANDE_FINANCEMENT_ENVOYEE")}`,
+            text: `Demandes de financement envoyées ${getCounterText("DEMANDE_FINANCEMENT_ENVOYEE")}`,
             linkProps: {
               href: hrefSideMenu("DEMANDE_FINANCEMENT_ENVOYEE"),
             },
             isActive: isActive("DEMANDE_FINANCEMENT_ENVOYEE"),
           },
           {
-            text: `Demandes de paiement envoyée ${getCounterText("DEMANDE_PAIEMENT_ENVOYEE")}`,
+            text: `Demandes de paiement envoyées ${getCounterText("DEMANDE_PAIEMENT_ENVOYEE")}`,
             linkProps: {
               href: hrefSideMenu("DEMANDE_PAIEMENT_ENVOYEE"),
             },
