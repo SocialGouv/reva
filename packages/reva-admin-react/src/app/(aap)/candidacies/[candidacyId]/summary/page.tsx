@@ -127,7 +127,7 @@ const CandidacySummaryPage = () => {
               status={
                 isCandidateInformationCompleted ? "COMPLETED" : "TO_COMPLETE"
               }
-              isEditable={isCandidateEditable}
+              isEditable={isCandidateEditable || isAdmin}
             >
               <dl>
                 <dt className="sr-only">Prénom et nom</dt>
