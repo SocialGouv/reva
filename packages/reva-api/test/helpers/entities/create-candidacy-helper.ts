@@ -15,8 +15,9 @@ import { createOrganismHelper } from "./create-organism-helper";
 export const createCandidacyHelper = async (args?: {
   candidacyArgs?: Partial<Candidacy>;
   candidacyActiveStatus?: CandidacyStatusStep;
+  certificationId?: string;
 }) => {
-  const { candidacyArgs, candidacyActiveStatus } = args ?? {};
+  const { candidacyArgs, candidacyActiveStatus, certificationId } = args ?? {};
 
   const certification = await createCertificationHelper();
   const candidate = await createCandidateHelper();
@@ -61,7 +62,7 @@ export const createCandidacyHelper = async (args?: {
           ],
         },
       },
-      certificationId: certification.id,
+      certificationId: certificationId ?? certification.id,
       candidateId: candidate.id,
       organismId: organism.id,
       candidacyStatuses: {
