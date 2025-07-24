@@ -6,16 +6,17 @@ import {
 } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { prismaClient } from "../../prisma/client";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
+
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidateById } from "../candidate/features/getCandidateById";
 import { getOrganismById } from "../organism/features/getOrganism";
 import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../shared/error/functionalError";
-import { logger } from "../shared/logger";
 
 import {
   ArchiveCandidacyParams,

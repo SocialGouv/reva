@@ -1,4 +1,5 @@
-import { logger } from "../../shared/logger";
+import { logger } from "@/modules/shared/logger";
+
 import { RNCPCertification } from "../rncp";
 
 import { getFormacodes, Formacode } from "./getFormacodes";

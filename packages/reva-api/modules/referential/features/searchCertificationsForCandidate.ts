@@ -1,8 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { deburr } from "lodash";
 
-import { prismaClient } from "../../../prisma/client";
-import { processPaginationInfo } from "../../shared/list/pagination";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { prismaClient } from "@/prisma/client";
+
 import { Certification } from "../referential.types";
 
 export const searchCertificationsForCandidate = async ({
@@ -46,7 +47,7 @@ export const searchCertificationsForCandidate = async ({
   }
 
   const organismQuery = Prisma.sql`${Prisma.raw(`from certification c, active_organism_by_available_certification_based_on_formacode available_certification
-    where c.id=available_certification.certification_id`)} 
+    where c.id=available_certification.certification_id`)}
       ${Prisma.sql` and available_certification.organism_id=uuid(${organismId})`}
       ${
         searchTextInTsQueryFormat

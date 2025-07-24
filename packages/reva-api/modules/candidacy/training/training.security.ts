@@ -2,7 +2,7 @@ import {
   defaultSecurity,
   isAnyone,
   isOwnerOrCanManageCandidacy,
-} from "../../shared/security/presets";
+} from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
   "Query.*": isAnyone,

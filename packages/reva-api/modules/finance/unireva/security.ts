@@ -1,5 +1,5 @@
-import { hasRole } from "../../shared/security/middlewares";
-import { isAdminOrCandidacyCompanion } from "../../shared/security/presets";
+import { hasRole } from "@/modules/shared/security/middlewares";
+import { isAdminOrCandidacyCompanion } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
   "Query.candidate_getFundingRequest": [hasRole(["admin", "manage_candidacy"])],

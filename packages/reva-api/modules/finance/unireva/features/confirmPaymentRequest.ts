@@ -1,10 +1,11 @@
 import { FundingRequest } from "@prisma/client";
 
-import { prismaClient } from "../../../../prisma/client";
-import { getCandidacy } from "../../../candidacy/features/getCandidacy";
-import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
-import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
-import { getOrganismById } from "../../../organism/features/getOrganism";
+import { getCandidacy } from "@/modules/candidacy/features/getCandidacy";
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+import { getOrganismById } from "@/modules/organism/features/getOrganism";
+import { prismaClient } from "@/prisma/client";
+
 import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
 import { PaymentRequest, PaymentRequestBatchContent } from "../finance.types";
 

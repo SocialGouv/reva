@@ -1,9 +1,9 @@
-import { prismaClient } from "../../prisma/client";
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
-import { createDossierDeValidationHelper } from "../../test/helpers/entities/create-dossier-de-validation-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
+import { createDossierDeValidationHelper } from "@/test/helpers/entities/create-dossier-de-validation-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 let dossiersDeValidation: Awaited<
   ReturnType<typeof createDossierDeValidationHelper>

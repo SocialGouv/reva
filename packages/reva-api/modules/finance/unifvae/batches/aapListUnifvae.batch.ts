@@ -2,8 +2,9 @@ import { Readable } from "stream";
 
 import * as csv from "fast-csv";
 
-import { prismaClient } from "../../../../prisma/client";
-import { logger } from "../../../shared/logger";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
+
 import { sendStreamToFtp } from "../../shared/ftp";
 
 export const batchAapListUnifvae = async (batchKey: string) => {

@@ -1,7 +1,7 @@
 import {
   getBackofficeUrl,
   sendEmailUsingTemplate,
-} from "../../../shared/email";
+} from "@/modules/shared/email";
 
 export const sendFeasibilityConfirmedByCandidateWithoutSwornAttestmentToAAP =
   async ({

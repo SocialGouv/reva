@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { Prisma, CertificationStatus, FeasibilityFormat } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { createCertificationAuthorityHelper } from "./create-certification-authority-helper";
 

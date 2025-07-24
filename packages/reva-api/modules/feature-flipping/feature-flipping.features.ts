@@ -1,6 +1,6 @@
 import { uniq } from "lodash";
 
-import { prismaClient } from "../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const activeFeaturesForConnectedUser = async ({
   userKeycloakId,

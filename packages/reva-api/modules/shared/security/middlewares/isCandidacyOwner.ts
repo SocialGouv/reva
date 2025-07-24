@@ -1,7 +1,7 @@
 import debug from "debug";
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
-import { canManageCandidacy } from "../../../candidacy/features/canManageCandidacy";
+import { canManageCandidacy } from "@/modules/candidacy/features/canManageCandidacy";
 
 const log = debug("gql:security");
 

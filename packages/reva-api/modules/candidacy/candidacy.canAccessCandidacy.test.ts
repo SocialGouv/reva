@@ -1,15 +1,16 @@
 import { faker } from "@faker-js/faker";
 
-import { prismaClient } from "../../prisma/client";
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createAccountHelper } from "../../test/helpers/entities/create-account-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
-import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
-import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
-import { createFeasibilityDematerializedHelper } from "../../test/helpers/entities/create-feasibility-dematerialized-helper";
-import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
-import { getGraphQLClient } from "../../test/jestGraphqlClient";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
+import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import { getGraphQLClient } from "@/test/jestGraphqlClient";
+
 import { graphql } from "../graphql/generated";
 
 const canAccessCandidacyQuery = graphql(`

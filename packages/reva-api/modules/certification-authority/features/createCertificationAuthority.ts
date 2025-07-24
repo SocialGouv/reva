@@ -1,5 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
-import { createAccount } from "../../account/features/createAccount";
+import { createAccount } from "@/modules/account/features/createAccount";
+import { prismaClient } from "@/prisma/client";
 
 export const createCertificationAuthority = async ({
   label,

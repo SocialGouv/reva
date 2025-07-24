@@ -1,9 +1,9 @@
 import { Candidate, Department } from "@prisma/client";
 import { isBefore, sub } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { CandidateUpdateInput } from "../../candidate/candidate.types";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { CandidateUpdateInput } from "@/modules/candidate/candidate.types";
+import { prismaClient } from "@/prisma/client";
 
 import { updateCandidateEmailAndSendNotifications } from "./updateCandidateEmailAndSendNotifications";
 

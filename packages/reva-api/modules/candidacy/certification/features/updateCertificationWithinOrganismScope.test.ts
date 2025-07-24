@@ -4,18 +4,15 @@ import {
   OrganismTypology,
 } from "@prisma/client";
 
-import { prismaClient } from "../../../../prisma/client";
-import { TRAINING_INPUT } from "../../../../test/fixtures";
-import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
-import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
-import { createOrganismHelper } from "../../../../test/helpers/entities/create-organism-helper";
-import {
-  getGraphQLClient,
-  getGraphQLError,
-} from "../../../../test/jestGraphqlClient";
-import { shouldNotGoHere } from "../../../../test/jestHelpers";
-import { graphql } from "../../../graphql/generated";
+import { graphql } from "@/modules/graphql/generated";
+import { prismaClient } from "@/prisma/client";
+import { TRAINING_INPUT } from "@/test/fixtures";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+import { shouldNotGoHere } from "@/test/jestHelpers";
 
 const actionSocialeFormacode = {
   formacode: {

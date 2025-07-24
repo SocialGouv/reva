@@ -1,7 +1,7 @@
 import { CandidacyStatusStep, Feasibility } from "@prisma/client";
 
-import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../../../modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
-import { prismaClient } from "../../../prisma/client";
+import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
+import { prismaClient } from "@/prisma/client";
 
 import { createCandidacyHelper } from "./create-candidacy-helper";
 import { createFileHelper } from "./create-file-helper";

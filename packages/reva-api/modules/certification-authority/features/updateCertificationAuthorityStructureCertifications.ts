@@ -1,4 +1,4 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 // Cette fonction met à jour les liaisons entre une structure certificatrice et ses certifications.
 // Attention : l'opération de mise à jour remplace toutes les liaisons existantes par les nouvelles.

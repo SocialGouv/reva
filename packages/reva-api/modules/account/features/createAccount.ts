@@ -1,11 +1,12 @@
 import { Account } from "@prisma/client";
 
-import { getCertificationAuthorityById } from "../../feasibility/feasibility.features";
-import { getOrganismById } from "../../organism/database/organisms";
+import { getCertificationAuthorityById } from "@/modules/feasibility/feasibility.features";
+import { getOrganismById } from "@/modules/organism/database/organisms";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../shared/error/functionalError";
+} from "@/modules/shared/error/functionalError";
+
 import { createAccountProfile } from "../database/accounts";
 
 import * as IAM from "./keycloak";

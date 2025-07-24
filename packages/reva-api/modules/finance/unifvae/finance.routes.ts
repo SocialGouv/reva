@@ -1,8 +1,8 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
-import { UploadedFile } from "../../shared/file";
+import { canManageCandidacy } from "@/modules/candidacy/features/canManageCandidacy";
+import { UploadedFile } from "@/modules/shared/file";
 
 import { addUploadedFileAndConfirmPayment } from "./features/finance.unifvae.features";
 

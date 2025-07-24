@@ -1,4 +1,4 @@
-import { defaultSecurity } from "../../shared/security/presets";
+import { defaultSecurity } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
   "Query.*": defaultSecurity,

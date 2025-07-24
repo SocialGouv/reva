@@ -1,5 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
-import { getFileNameAndUrl } from "../../shared/file/getFileNameAndUrl";
+import { getFileNameAndUrl } from "@/modules/shared/file/getFileNameAndUrl";
+import { prismaClient } from "@/prisma/client";
 
 export const getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId =
   async ({

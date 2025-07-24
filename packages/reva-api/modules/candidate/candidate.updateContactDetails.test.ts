@@ -1,6 +1,6 @@
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 const mockAdminKeycloakUuid = "1b0e7046-ca61-4259-b716-785f36ab79b2";
 

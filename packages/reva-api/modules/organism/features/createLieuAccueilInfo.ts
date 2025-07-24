@@ -1,14 +1,15 @@
-import { prismaClient } from "../../../prisma/client";
 import {
   AAPAuditLogUserInfo,
   logAAPAuditEvent,
-} from "../../aap-log/features/logAAPAuditEvent";
-import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
+} from "@/modules/aap-log/features/logAAPAuditEvent";
+import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../shared/error/functionalError";
-import { logger } from "../../shared/logger";
+} from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
+
 import { createOrganism } from "../database/organisms";
 import { CreateLieuAccueilInfoInput } from "../organism.types";
 

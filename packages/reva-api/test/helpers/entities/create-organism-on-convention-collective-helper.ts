@@ -1,6 +1,6 @@
 import { OrganismOnConventionCollective } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { createCCNHelper } from "./create-convention-collective-helper";
 import { createOrganismHelper } from "./create-organism-helper";

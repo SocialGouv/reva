@@ -1,18 +1,18 @@
 import { FeasibilityDecision } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import {
   deleteFile,
   emptyUploadedFileStream,
   getUploadedFile,
   UploadedFile,
   uploadFilesToS3,
-} from "../../../../modules/shared/file";
-import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
-import { prismaClient } from "../../../../prisma/client";
-import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
-import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { deleteFeasibilityIDFile } from "../../../feasibility/features/deleteFeasibilityIDFile";
+} from "@/modules/shared/file";
+import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+import { prismaClient } from "@/prisma/client";
+
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
@@ -22,6 +22,7 @@ import {
   sendFeasibilityValidatedToCandidateAccompagneEmail,
   sendFeasibilityValidatedToCandidateAutonomeEmail,
 } from "../../emails";
+import { deleteFeasibilityIDFile } from "../../features/deleteFeasibilityIDFile";
 import { updateCandidacyLastActivityDateToNow } from "../../features/updateCandidacyLastActivityDateToNow";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput } from "../dematerialized-feasibility-file.types";
 

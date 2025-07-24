@@ -1,5 +1,5 @@
-import { createCandidacy } from "../../candidacy/features/createCandidacy";
-import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
+import { createCandidacy } from "@/modules/candidacy/features/createCandidacy";
+import { getFirstActiveCandidacyByCandidateId } from "@/modules/candidacy/features/getFirstActiveCandidacyByCandidateId";
 
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 

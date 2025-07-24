@@ -12,4 +12,7 @@ module.exports = {
   },
   globalSetup: "./test/jestGlobalSetup.ts",
   setupFilesAfterEnv: ["./test/jestSetupFilesAfterEnv.ts"],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/$1",
+  },
 };

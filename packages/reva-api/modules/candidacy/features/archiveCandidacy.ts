@@ -1,9 +1,10 @@
-import { prismaClient } from "../../../prisma/client";
 import {
   FunctionalCodeError,
   // FunctionalError,
-} from "../../shared/error/functionalError";
-import { logger } from "../../shared/logger";
+} from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
+
 import { ArchiveCandidacyParams } from "../candidacy.types";
 
 import { getCandidacyById } from "./getCandidacyById";

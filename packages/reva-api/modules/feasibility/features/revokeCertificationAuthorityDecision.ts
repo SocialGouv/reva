@@ -1,6 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
-import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
 
 export const revokeCertificationAuthorityDecision = async ({
   feasibilityId,

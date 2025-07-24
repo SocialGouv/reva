@@ -1,6 +1,6 @@
 import { Organism } from "@prisma/client";
 
-import { prismaClient } from "../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export async function attachOrganismToAllDegreesHelper(
   organism: Organism | null,

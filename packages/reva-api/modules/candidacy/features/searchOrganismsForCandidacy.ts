@@ -1,10 +1,11 @@
 import { Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
-import { Organism, RemoteZone } from "../../organism/organism.types";
-import { getDepartmentById } from "../../referential/features/getDepartmentById";
-import { fetchCoordinatesFromZipCode } from "../../shared/geocoding";
+import { getLastProfessionalCgu } from "@/modules/organism/features/getLastProfessionalCgu";
+import { Organism, RemoteZone } from "@/modules/organism/organism.types";
+import { getDepartmentById } from "@/modules/referential/features/getDepartmentById";
+import { fetchCoordinatesFromZipCode } from "@/modules/shared/geocoding";
+import { prismaClient } from "@/prisma/client";
+
 import { SearchOrganismFilter } from "../candidacy.types";
 
 export const searchOrganismsForCandidacy = async ({

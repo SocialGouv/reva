@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { validateAccompagnement } from "./accompagnement";
 import { validateComplementFormatif } from "./complement-formatif";

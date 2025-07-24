@@ -1,7 +1,8 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+import { prismaClient } from "@/prisma/client";
+
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,

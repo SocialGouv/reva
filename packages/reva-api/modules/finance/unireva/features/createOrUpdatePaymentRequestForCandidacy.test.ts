@@ -1,8 +1,9 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import * as getCandidacyByIdModule from "../../../candidacy/features/getCandidacyById";
-import * as getAfgsuTrainingIdModule from "../../../candidacy/training/features/getAfgsuTrainingId";
-import * as getCandidateByIdModule from "../../../candidate/features/getCandidateById";
+import * as getCandidacyByIdModule from "@/modules/candidacy/features/getCandidacyById";
+import * as getAfgsuTrainingIdModule from "@/modules/candidacy/training/features/getAfgsuTrainingId";
+import * as getCandidateByIdModule from "@/modules/candidate/features/getCandidateById";
+
 import * as fundingRequestsDb from "../database/fundingRequests";
 import * as paymentRequestsDb from "../database/paymentRequest";
 import { FundingRequest, PaymentRequest } from "../finance.types";

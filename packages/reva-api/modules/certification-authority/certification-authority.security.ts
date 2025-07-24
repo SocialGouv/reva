@@ -1,4 +1,4 @@
-import { hasRole } from "../shared/security/middlewares";
+import { hasRole } from "@/modules/shared/security/middlewares";
 import {
   defaultSecurity,
   isAdmin,
@@ -11,7 +11,7 @@ import {
   isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
   isAdminOrManager,
   isAnyone,
-} from "../shared/security/presets";
+} from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden

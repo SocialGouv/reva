@@ -1,10 +1,11 @@
 import { FeasibilityFormat } from "@prisma/client";
 
-import { prismaClient } from "../../../../prisma/client";
 import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
-} from "../../../candidacy-log/features/logCandidacyAuditEvent";
+} from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
+
 import { getCertificationByCandidacyId } from "../../certification/features/getCertificationByCandidacyId";
 import { existsCandidacyWithActiveStatus } from "../../features/existsCandidacyWithActiveStatus";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";

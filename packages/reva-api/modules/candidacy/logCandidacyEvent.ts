@@ -1,5 +1,6 @@
+import { BusinessEventType } from "@/modules/shared/logger/businessLogger";
+
 import { logGraphqlEvent } from "../logGraphqlEvent";
-import { BusinessEventType } from "../shared/logger/businessLogger";
 
 export const logCandidacyEvent = ({
   context,

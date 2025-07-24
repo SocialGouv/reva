@@ -1,12 +1,13 @@
 import { CandidacyStatusStep, FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
-import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
-import { prismaClient } from "../../../prisma/client";
-import { getAccountById } from "../../account/features/getAccount";
-import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { UploadedFile, uploadFileToS3 } from "../../shared/file";
+import { getAccountById } from "@/modules/account/features/getAccount";
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { UploadedFile, uploadFileToS3 } from "@/modules/shared/file";
+import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+import { prismaClient } from "@/prisma/client";
+
 import { sendNewDVToCertificationAuthoritiesEmail } from "../emails";
 import { sendDVSentByCandidateToAapEmail } from "../emails/sendDVSentByCandidateToAapEmail";
 import { sendDVSentToCandidateEmail } from "../emails/sendDVSentToCandidateEmail";

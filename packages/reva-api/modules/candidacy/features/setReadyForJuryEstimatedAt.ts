@@ -6,7 +6,7 @@ import {
   startOfToday,
 } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { updateCandidacyLastActivityIfNotAlreadyCaduque } from "./updateCandidacyLastActivityIfNotAlreadyCaduque";
 

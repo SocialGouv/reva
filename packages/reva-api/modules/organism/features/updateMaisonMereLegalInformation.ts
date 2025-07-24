@@ -1,9 +1,10 @@
-import { prismaClient } from "../../../prisma/client";
 import {
   AAPAuditLogUserInfo,
   logAAPAuditEvent,
-} from "../../aap-log/features/logAAPAuditEvent";
-import { updateAccountById } from "../../account/features/updateAccount";
+} from "@/modules/aap-log/features/logAAPAuditEvent";
+import { updateAccountById } from "@/modules/account/features/updateAccount";
+import { prismaClient } from "@/prisma/client";
+
 import { UpdateMaisonMereLegalInformationInput } from "../organism.types";
 
 import { updateMaisonMereAndAapGestionBranch } from "./updateMaisonMereAndAapGestionBranch";

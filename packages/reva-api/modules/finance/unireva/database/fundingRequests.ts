@@ -1,4 +1,4 @@
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const getFundingRequest = async (params: { candidacyId: string }) =>
   prismaClient.fundingRequest.findFirst({

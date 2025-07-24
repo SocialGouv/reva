@@ -1,8 +1,9 @@
-import { prismaClient } from "../../../prisma/client";
 import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
-} from "../../candidacy-log/features/logCandidacyAuditEvent";
+} from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
+
 import {
   sendCandidacyTransferToNewCertificationAuthorityEmail,
   sendCandidacyTransferToPreviousCertificationAuthorityEmail,

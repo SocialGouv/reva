@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { OrganismInformationsCommerciales } from "../organism.types";
 
 export const createOrUpdateInformationsCommerciales = ({

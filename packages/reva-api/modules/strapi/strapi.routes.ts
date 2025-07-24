@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 
-import { prismaClient } from "../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 interface CguEntry {
   nom: string;

@@ -3,7 +3,7 @@ import {
   CertificationStatus,
 } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 type Competence = {
   id?: string;

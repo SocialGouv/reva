@@ -6,13 +6,14 @@ import {
 } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { getAccountById } from "../account/features/getAccount";
-import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../shared/error/functionalError";
-import { logger } from "../shared/logger";
+} from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
+
+import { getAccountById } from "../account/features/getAccount";
+import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 
 import { resolversSecurityMap } from "./certification-authority.security";
 import {

@@ -1,5 +1,5 @@
-import { sendEmailUsingTemplate } from "../../shared/email";
-import { UploadedFile } from "../../shared/file";
+import { sendEmailUsingTemplate } from "@/modules/shared/email";
+import { UploadedFile } from "@/modules/shared/file";
 
 export const sendFeasibilityValidatedToCandidateAccompagneEmail = async ({
   email,

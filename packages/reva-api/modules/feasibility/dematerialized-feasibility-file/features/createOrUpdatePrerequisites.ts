@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput } from "../dematerialized-feasibility-file.types";
 
 import { getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId } from "./getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId";

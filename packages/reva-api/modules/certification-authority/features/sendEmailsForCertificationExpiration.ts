@@ -1,9 +1,12 @@
 import { CertificationEmailType } from "@prisma/client";
 import { addDays, format, startOfToday, subDays, subHours } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
-import { getBackofficeUrl, sendEmailUsingTemplate } from "../../shared/email";
-import { logger } from "../../shared/logger";
+import {
+  getBackofficeUrl,
+  sendEmailUsingTemplate,
+} from "@/modules/shared/email";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
 
 const EMAIL_TEMPLATE_IDS = {
   CERTIFICATION_WILL_EXPIRE_IN_1_MONTH: 592,

@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { Account } from "../account.types";
 import { notifyNewEmailAddress, notifyPreviousEmailAddress } from "../mail";
 

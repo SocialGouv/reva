@@ -7,8 +7,20 @@ import {
 } from "@prisma/client";
 import { v4 } from "uuid";
 
-import { allowFileTypeByDocumentType } from "../../modules/shared/file/allowFileTypes";
-import { prismaClient } from "../../prisma/client";
+import {
+  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+  OOS_DOMAIN,
+  S3File,
+  UploadedFile,
+  getDownloadLink,
+  uploadFileToS3,
+  uploadFilesToS3,
+} from "@/modules/shared/file";
+import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
+import { prismaClient } from "@/prisma/client";
+
 import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
@@ -19,17 +31,6 @@ import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
-import {
-  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
-  OOS_DOMAIN,
-  S3File,
-  UploadedFile,
-  getDownloadLink,
-  uploadFileToS3,
-  uploadFilesToS3,
-} from "../shared/file";
-import { processPaginationInfo } from "../shared/list/pagination";
-import { getWhereClauseFromSearchFilter } from "../shared/search/search";
 
 import {
   sendFeasibilityDecisionTakenToAAPEmail,

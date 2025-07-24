@@ -1,6 +1,7 @@
 import { CertificationCompetenceBloc } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { RNCPCertification } from "../rncp";
 
 export const createCompetenceBlocsFromRncp = async ({

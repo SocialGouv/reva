@@ -1,9 +1,10 @@
-import { prismaClient } from "../../../prisma/client";
 import {
   AAPAuditLogUserInfo,
   logAAPAuditEvent,
-} from "../../aap-log/features/logAAPAuditEvent";
-import { createAccount } from "../../account/features/createAccount";
+} from "@/modules/aap-log/features/logAAPAuditEvent";
+import { createAccount } from "@/modules/account/features/createAccount";
+import { prismaClient } from "@/prisma/client";
+
 import { CreateOrganismAccountInput } from "../organism.types";
 
 export const createOrganismAccount = async ({

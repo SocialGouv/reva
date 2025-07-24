@@ -6,16 +6,17 @@ import {
 } from "@prisma/client";
 import mercurius from "mercurius";
 
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
+
 import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
 import { getDegreeById } from "../referential/features/getDegreeByid";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../shared/error/functionalError";
-import { logger } from "../shared/logger";
 
 import {
   sendLegalInformationDocumentsApprovalEmail,

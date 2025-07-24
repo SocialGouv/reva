@@ -1,10 +1,10 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { TRAINING_INPUT } from "../../../test/fixtures";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../referential/referential.types";
+import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "@/modules/referential/referential.types";
+import { TRAINING_INPUT } from "@/test/fixtures";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 test("AAP should not be able to submit a training form if its status is in 'PROJET'", async () => {
   const candidacy = await createCandidacyHelper({

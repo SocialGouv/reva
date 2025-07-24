@@ -1,4 +1,5 @@
-import { sendEmailUsingTemplate } from "../../shared/email";
+import { sendEmailUsingTemplate } from "@/modules/shared/email";
+
 import { generateJwt } from "../auth.helper";
 
 export const sendForgotPasswordEmail = async (email: string) => {

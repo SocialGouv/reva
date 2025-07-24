@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { Certification } from "../referential.types";
 
 export const getActiveCertifications = async (filters?: {

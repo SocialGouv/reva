@@ -1,6 +1,6 @@
 import { FormacodeType } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export type Formacode = {
   id: string;

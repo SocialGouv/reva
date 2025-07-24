@@ -1,10 +1,11 @@
-import { updateAccountById } from "../..//account/features/updateAccount";
-import { prismaClient } from "../../../prisma/client";
 import {
   AAPAuditLogUserInfo,
   logAAPAuditEvent,
-} from "../../aap-log/features/logAAPAuditEvent";
-import { getAccountById } from "../../account/features/getAccount";
+} from "@/modules/aap-log/features/logAAPAuditEvent";
+import { getAccountById } from "@/modules/account/features/getAccount";
+import { updateAccountById } from "@/modules/account/features/updateAccount";
+import { prismaClient } from "@/prisma/client";
+
 import { UpdateOrganimsAccountAndOrganismInput } from "../organism.types";
 
 export const updateOrganismAccountAndOrganism = async ({

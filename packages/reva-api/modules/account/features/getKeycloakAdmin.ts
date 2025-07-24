@@ -1,6 +1,6 @@
 import KeycloakAdminClientClass from "@keycloak/keycloak-admin-client";
 
-import { logger } from "../../shared/logger";
+import { logger } from "@/modules/shared/logger";
 
 const dynamicImport = async (packageName: string) =>
   new Function(`return import('${packageName}')`)();

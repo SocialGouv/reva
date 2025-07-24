@@ -1,10 +1,10 @@
 import { RemoteZone } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
 import {
   AAPAuditLogUserInfo,
   logAAPAuditEvent,
-} from "../../aap-log/features/logAAPAuditEvent";
+} from "@/modules/aap-log/features/logAAPAuditEvent";
+import { prismaClient } from "@/prisma/client";
 
 export const createOrUpdateRemoteOrganismGeneralInformation = async ({
   organismId,

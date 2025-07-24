@@ -1,6 +1,6 @@
 import { StatutValidationInformationsJuridiquesMaisonMereAAP } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { deleteOldMaisonMereAAPLegalInformationDocuments } from "./deleteOldMaisonMereAAPLegalInformationDocuments";
 

@@ -1,7 +1,8 @@
 import { subMonths } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger/logger";
+import { logger } from "@/modules/shared/logger/logger";
+import { prismaClient } from "@/prisma/client";
+
 import { sendAutoCandidacyDropOutConfirmationEmailToAap } from "../emails/sendAutoCandidacyDropOutConfirmationEmailToAap";
 import { sendAutoCandidacyDropOutConfirmationEmailToCandidate } from "../emails/sendAutoCandidacyDropOutConfirmationEmailToCandidate";
 

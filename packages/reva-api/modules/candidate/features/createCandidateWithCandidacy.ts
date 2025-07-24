@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
-import { createCandidacy } from "../../candidacy/features/createCandidacy";
+import { createCandidacy } from "@/modules/candidacy/features/createCandidacy";
+import { prismaClient } from "@/prisma/client";
+
 import { TypeAccompagnement } from "../candidate.types";
 
 interface CreateCandidateWithCandidacyInput {

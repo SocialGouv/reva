@@ -1,8 +1,8 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
-import { createReorientationReasonHelper } from "../../../test/helpers/entities/create-reorientation-reason-helper";
-import { FunctionalCodeError } from "../../shared/error/functionalError";
+import { FunctionalCodeError } from "@/modules/shared/error/functionalError";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createReorientationReasonHelper } from "@/test/helpers/entities/create-reorientation-reason-helper";
 
 import { unarchiveCandidacy } from "./unarchiveCandidacy";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";

@@ -3,8 +3,8 @@ import {
   SubscriptionRequestStatus,
 } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { buildMaisonMereFilters } from "../../organism/features/getMaisonMereAAPs";
+import { buildMaisonMereFilters } from "@/modules/organism/features/getMaisonMereAAPs";
+import { prismaClient } from "@/prisma/client";
 
 import { buildSubscriptionFilters } from "./getSubscriptionRequests";
 

@@ -1,18 +1,19 @@
-import { prismaClient } from "../../../prisma/client";
-import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
-import { TokenService } from "../../account/utils/token.service";
-import { updateCertification } from "../../candidacy/certification/features/updateCertification";
-import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
-import { updateCandidacyOrganism } from "../../candidacy/features/updateCandidacyOrganism";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCertificationById } from "../../referential/features/getCertificationById";
-import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
+import { getKeycloakAdmin } from "@/modules/account/features/getKeycloakAdmin";
+import { TokenService } from "@/modules/account/utils/token.service";
+import { updateCertification } from "@/modules/candidacy/certification/features/updateCertification";
+import { getFirstActiveCandidacyByCandidateId } from "@/modules/candidacy/features/getFirstActiveCandidacyByCandidateId";
+import { updateCandidacyOrganism } from "@/modules/candidacy/features/updateCandidacyOrganism";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationById } from "@/modules/referential/features/getCertificationById";
+import { isCertificationAvailable } from "@/modules/referential/features/isCertificationAvailable";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../shared/error/functionalError";
-import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "../../vae-collective/features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
-import { getCertificationCohortesByCohorteId } from "../../vae-collective/features/getCertificationCohortesByCohorteId";
+} from "@/modules/shared/error/functionalError";
+import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "@/modules/vae-collective/features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
+import { getCertificationCohortesByCohorteId } from "@/modules/vae-collective/features/getCertificationCohortesByCohorteId";
+import { prismaClient } from "@/prisma/client";
+
 import {
   createCandidateAccountInIAM,
   getCandidateAccountInIAM,

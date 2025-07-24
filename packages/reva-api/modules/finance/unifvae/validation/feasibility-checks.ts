@@ -7,7 +7,7 @@
 
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 const hourFields = [
   "basicSkillsHourCount",

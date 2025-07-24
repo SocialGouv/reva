@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
+
 import { RNCPReferential } from "../rncp";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 

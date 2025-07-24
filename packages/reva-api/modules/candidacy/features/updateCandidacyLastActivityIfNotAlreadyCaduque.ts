@@ -1,4 +1,4 @@
-import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
+import { updateCandidacyLastActivityDateToNow } from "@/modules/feasibility/features/updateCandidacyLastActivityDateToNow";
 
 import { getCandidacyIsCaduque } from "./getCandidacyIsCaduque";
 

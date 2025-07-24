@@ -1,6 +1,7 @@
 import Keycloak from "keycloak-connect";
 
-import { logger } from "../../shared/logger";
+import { logger } from "@/modules/shared/logger";
+
 import { ClientApp } from "../account.type";
 import { getKeycloakAdmin } from "../features/getKeycloakAdmin";
 

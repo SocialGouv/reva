@@ -1,6 +1,6 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
-import { isUserCertificationRegistryManagerOfCertification } from "../../../certification-authority/features/isUserCertificationRegistryManagerOfCertification";
+import { isUserCertificationRegistryManagerOfCertification } from "@/modules/certification-authority/features/isUserCertificationRegistryManagerOfCertification";
 
 export const isCertificationRegistryManagerOfCertification =
   (next: IFieldResolver<unknown>) =>

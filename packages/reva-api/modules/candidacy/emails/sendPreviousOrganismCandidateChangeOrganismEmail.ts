@@ -1,4 +1,4 @@
-import { sendEmailUsingTemplate } from "../../shared/email";
+import { sendEmailUsingTemplate } from "@/modules/shared/email";
 
 export const sendPreviousOrganismCandidateChangeOrganismEmail = async ({
   email,

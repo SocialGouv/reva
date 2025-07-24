@@ -6,19 +6,17 @@ import {
   CertificationStatus,
 } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createCertificationAuthorityHelper } from "../../../test/helpers/entities/create-certification-authority-helper";
-import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
-import { createCertificationAuthorityStructureHelper } from "../../../test/helpers/entities/create-certification-authority-structure-helper";
-import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
-import { createCCNHelper } from "../../../test/helpers/entities/create-convention-collective-helper";
-import { createFormaCodeHelper } from "../../../test/helpers/entities/create-formacode-helper";
-import {
-  getGraphQLClient,
-  getGraphQLError,
-} from "../../../test/jestGraphqlClient";
-import { graphql } from "../../graphql/generated";
+import { graphql } from "@/modules/graphql/generated";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createCCNHelper } from "@/test/helpers/entities/create-convention-collective-helper";
+import { createFormaCodeHelper } from "@/test/helpers/entities/create-formacode-helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+
 import { RNCPReferential } from "../rncp/referential";
 
 const replaceCertificationMutation = graphql(`

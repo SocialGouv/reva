@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput } from "../dematerialized-feasibility-file.types";
 
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";

@@ -1,8 +1,8 @@
 import {
   sendPreviousEmailCandidateEmail,
   sendNewEmailCandidateEmail,
-} from "../../candidacy/emails";
-import { updateCandidateEmail } from "../../candidacy/features/updateCandidateEmail";
+} from "@/modules/candidacy/emails";
+import { updateCandidateEmail } from "@/modules/candidacy/features/updateCandidateEmail";
 
 export const updateCandidateEmailAndSendNotifications = async ({
   previousEmail,

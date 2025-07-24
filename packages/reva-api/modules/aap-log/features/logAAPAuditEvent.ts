@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { AAPLogEventTypeAndDetails, AAPLogUserProfile } from "../aap-log.types";
 
 export const buildAAPAuditLogUserInfoFromContext = (

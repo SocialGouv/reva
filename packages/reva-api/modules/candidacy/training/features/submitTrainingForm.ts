@@ -1,15 +1,16 @@
 import { CandidateTypology } from "@prisma/client";
 
-import { prismaClient } from "../../../../prisma/client";
 import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
-} from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCandidateById } from "../../../candidate/features/getCandidateById";
-import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
-import { getFundingRequestUnifvaeFromCandidacyId } from "../../../finance/unifvae/features/finance.unifvae.features";
-import { getFundingRequestByCandidacyId } from "../../../finance/unireva/features/getFundingRequestByCandidacyId";
-import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../../referential/referential.types";
+} from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getCandidateById } from "@/modules/candidate/features/getCandidateById";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+import { getFundingRequestUnifvaeFromCandidacyId } from "@/modules/finance/unifvae/features/finance.unifvae.features";
+import { getFundingRequestByCandidacyId } from "@/modules/finance/unireva/features/getFundingRequestByCandidacyId";
+import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "@/modules/referential/referential.types";
+import { prismaClient } from "@/prisma/client";
+
 import { getCandidacy } from "../../features/getCandidacy";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { sendTrainingEmail } from "../emails";

@@ -8,8 +8,8 @@
     "node": "22"
   },
   "scripts": {
-    "dev": "nodemon -e ts,json,graphql -w . ./index.ts | npx pino-pretty",
-    "build": "npm run prisma:generate && npm run graphql:generate && npm run graphql:generate-ts && npm run build:ts && npm run sync:graphql",
+      "dev": "nodemon -e ts,json,graphql -w . --exec \"ts-node -r tsconfig-paths/register\" ./index.ts | npx pino-pretty",
+      "build": "npm run prisma:generate && npm run graphql:generate && npm run graphql:generate-ts && npm run build:ts && npm run sync:graphql",
     "build:ts": "rimraf ./dist && tsc -p tsconfig.json",
     "sync:graphql": "rsync -R ./modules/*.graphql ./dist && rsync -R ./modules/**/*.graphql ./dist && rsync -R ./modules/**/**/*.graphql ./dist/modules ",
     "start": "npm run prisma:migrate:deploy && node dist/index.js",
@@ -109,6 +109,7 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29.3.4",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.4",
     "typescript": "5.8.3"
   }

@@ -1,6 +1,6 @@
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createMaisonMereAapHelper } from "@/test/helpers/entities/create-maison-mere-aap-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 test("API should respond with error unauthorized user", async () => {
   const mmAap = await createMaisonMereAapHelper();

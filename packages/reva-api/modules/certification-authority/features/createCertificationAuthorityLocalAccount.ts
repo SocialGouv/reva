@@ -1,8 +1,9 @@
 import { Account } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { createAccount } from "../../account/features/createAccount";
-import { FunctionalError } from "../../shared/error/functionalError";
+import { createAccount } from "@/modules/account/features/createAccount";
+import { FunctionalError } from "@/modules/shared/error/functionalError";
+import { prismaClient } from "@/prisma/client";
+
 import { CreateCertificationAuthorityLocalAccountInput } from "../certification-authority.types";
 
 import { assignCandidaciesToCertificationAuthorityLocalAccount } from "./assignCandidaciesToCertificationAuthorityLocalAccount";

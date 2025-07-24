@@ -1,21 +1,21 @@
 import { File } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
 import {
-  AAPAuditLogUserInfo,
   logAAPAuditEvent,
-} from "../../aap-log/features/logAAPAuditEvent";
-import { getAccountFromEmail } from "../../account/database/accounts";
-import { createAccount } from "../../account/features/createAccount";
-import * as IAM from "../../account/features/keycloak";
-import { createOrganism } from "../../organism/database/organisms";
-import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
-import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
-import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
-import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
-import { getDegrees } from "../../referential/features/getDegrees";
-import { deleteFile } from "../../shared/file";
-import { logger } from "../../shared/logger";
+  AAPAuditLogUserInfo,
+} from "@/modules/aap-log/features/logAAPAuditEvent";
+import { getAccountFromEmail } from "@/modules/account/database/accounts";
+import { createAccount } from "@/modules/account/features/createAccount";
+import * as IAM from "@/modules/account/features/keycloak";
+import { createOrganism } from "@/modules/organism/database/organisms";
+import { assignMaisonMereAAPToOrganism } from "@/modules/organism/features/assignMaisonMereAAPToOrganism";
+import { createMaisonMereAAP } from "@/modules/organism/features/createMaisonMereAAP";
+import { getLastProfessionalCgu } from "@/modules/organism/features/getLastProfessionalCgu";
+import { getMaisonMereAapBySiretAndTypology } from "@/modules/organism/features/getMaisonMereAapBySiretAndTypology";
+import { getDegrees } from "@/modules/referential/features/getDegrees";
+import { deleteFile } from "@/modules/shared/file";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
 
 export const validateSubscriptionRequest = async ({
   subscriptionRequestId,

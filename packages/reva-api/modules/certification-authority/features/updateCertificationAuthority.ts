@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
-import { updateAccountById } from "../../account/features/updateAccount";
+import { updateAccountById } from "@/modules/account/features/updateAccount";
+import { prismaClient } from "@/prisma/client";
+
 import { CertificationAuthority } from "../certification-authority.types";
 
 export const updateCertificationAuthorityById = async (

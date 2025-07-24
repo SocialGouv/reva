@@ -1,5 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
-import { processPaginationInfo } from "../../shared/list/pagination";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { prismaClient } from "@/prisma/client";
 
 export const getCohortesVaeCollectivesByCommanditaireVaeCollectiveId = async ({
   commanditaireVaeCollectiveId,

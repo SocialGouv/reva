@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker/locale/fr";
 import { Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const createCohorteVaeCollectiveHelper = async (
   args?: Partial<Prisma.CohorteVaeCollectiveCreateInput>,

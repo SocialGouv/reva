@@ -2,7 +2,7 @@ import {
   defaultSecurity,
   isAdminOrCertificationAuthority,
   isOwnerOfCandidacy,
-} from "../../shared/security/presets";
+} from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
   // Sécurité par défaut

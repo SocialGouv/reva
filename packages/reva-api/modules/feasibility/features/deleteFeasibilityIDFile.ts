@@ -1,5 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
-import { deleteFile } from "../../shared/file";
+import { deleteFile } from "@/modules/shared/file";
+import { prismaClient } from "@/prisma/client";
 
 export const deleteFeasibilityIDFile = async (feasibilityId: string) => {
   const feasibility = await prismaClient.feasibility.findUnique({

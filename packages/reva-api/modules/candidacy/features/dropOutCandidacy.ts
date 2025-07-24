@@ -1,8 +1,8 @@
-import { prismaClient } from "../../../prisma/client";
-import { isCandidacyStatusEqualOrAboveGivenStatus } from "../../candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
-import { getDropOutReasonById } from "../../referential/features/getDropOutReasonById";
-import { FunctionalCodeError } from "../../shared/error/functionalError";
-import { logger } from "../../shared/logger";
+import { isCandidacyStatusEqualOrAboveGivenStatus } from "@/modules/candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
+import { getDropOutReasonById } from "@/modules/referential/features/getDropOutReasonById";
+import { FunctionalCodeError } from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
 
 import { getCandidacyById } from "./getCandidacyById";
 

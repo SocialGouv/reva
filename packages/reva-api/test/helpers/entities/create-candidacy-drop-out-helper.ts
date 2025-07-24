@@ -1,6 +1,6 @@
 import { CandidacyDropOut } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { createCandidacyHelper } from "./create-candidacy-helper";
 import { createDropOutReasonHelper } from "./create-drop-out-reason-helper";

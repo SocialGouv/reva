@@ -1,6 +1,6 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const isCandidateOwnerOfCandidacyFeature = async ({
   candidacyId,

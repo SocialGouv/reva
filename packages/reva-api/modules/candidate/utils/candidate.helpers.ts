@@ -1,4 +1,4 @@
-import { buildContainsFilterClause } from "../../shared/search/search";
+import { buildContainsFilterClause } from "@/modules/shared/search/search";
 
 export const candidateSearchWord = (word: string) => {
   const containsFilter = buildContainsFilterClause(word);

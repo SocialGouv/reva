@@ -1,4 +1,8 @@
-import { defaultSecurity, isAdmin, isAnyone } from "../shared/security/presets";
+import {
+  defaultSecurity,
+  isAdmin,
+  isAnyone,
+} from "@/modules/shared/security/presets";
 
 export const featureFlippingResolversSecurityMap = {
   // Sécurité par défaut

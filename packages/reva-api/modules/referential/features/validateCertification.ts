@@ -1,7 +1,8 @@
 import { CertificationStatus } from "@prisma/client";
 import { startOfToday, isAfter, isBefore, isEqual } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { ValidateCertificationInput } from "../referential.types";
 
 import { getCertificationById } from "./getCertificationById";

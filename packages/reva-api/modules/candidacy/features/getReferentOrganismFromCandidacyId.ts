@@ -1,5 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
 
 export const getReferentOrganismFromCandidacyId = async ({
   candidacyId,

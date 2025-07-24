@@ -1,4 +1,4 @@
-import { isAdminOrCandidacyCompanion } from "../../shared/security/presets";
+import { isAdminOrCandidacyCompanion } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
   "Mutation.candidacy_createFundingRequestUnifvae": isAdminOrCandidacyCompanion,

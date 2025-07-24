@@ -2,7 +2,7 @@ import {
   defaultSecurity,
   isAdminOrGestionnaireOfCommanditaireVaeCollective,
   isAnyone,
-} from "../shared/security/presets";
+} from "@/modules/shared/security/presets";
 
 export const vaeCollectiveResolversSecurityMap = {
   "Mutation.*": defaultSecurity,

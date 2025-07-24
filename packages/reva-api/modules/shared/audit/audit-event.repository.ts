@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { AuditEvent } from "./audit-event.entity";
 import { AuditEventDataInterface } from "./audit-event.type";

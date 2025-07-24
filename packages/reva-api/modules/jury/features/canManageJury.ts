@@ -1,8 +1,8 @@
 import { FeasibilityStatus } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
-import { getCertificationAuthorityLocalAccountByAccountId } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
+import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import { prismaClient } from "@/prisma/client";
 
 export const canManageJury = async ({
   candidacyId,

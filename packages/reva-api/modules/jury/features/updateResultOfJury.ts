@@ -1,8 +1,9 @@
 import { isBefore, startOfDay } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { updateCandidacyLastActivityDateToNow } from "@/modules/feasibility/features/updateCandidacyLastActivityDateToNow";
+import { prismaClient } from "@/prisma/client";
+
 import {
   sendJuryResultAAPEmail,
   sendJuryResultCandidateEmail,

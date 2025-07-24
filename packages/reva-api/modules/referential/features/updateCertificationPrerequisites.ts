@@ -1,6 +1,7 @@
 import { CertificationStatus } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { UpdateCertificationPrerequisitesInput } from "../referential.types";
 
 import { getCertificationById } from "./getCertificationById";

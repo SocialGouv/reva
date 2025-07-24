@@ -1,9 +1,10 @@
-import { prismaClient } from "../../../../prisma/client";
-import { getAccountById } from "../../../account/features/getAccount";
-import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
-import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../../../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
-import { getBackofficeUrl } from "../../../shared/email";
+import { getAccountById } from "@/modules/account/features/getAccount";
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
+import { getBackofficeUrl } from "@/modules/shared/email";
+import { prismaClient } from "@/prisma/client";
+
 import { sendNewFeasibilitySubmittedEmail } from "../../emails";
 
 export const sendDFFToCertificationAuthority = async ({

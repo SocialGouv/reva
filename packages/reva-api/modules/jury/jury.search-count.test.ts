@@ -1,11 +1,11 @@
 import { startOfTomorrow, startOfYesterday } from "date-fns";
 
-import { prismaClient } from "../../prisma/client";
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
-import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
+import { createJuryHelper } from "@/test/helpers/entities/create-jury-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 let juries: Awaited<ReturnType<typeof createJuryHelper>>[] = [];
 

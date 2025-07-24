@@ -1,18 +1,18 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 import {
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_ONE_MINUTE,
   PAYMENT_REQUEST,
-} from "../../../../test/fixtures";
-import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
-import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
-import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { createFeatureHelper } from "../../../../test/helpers/entities/create-feature-helper";
-import { createFundingRequestUnifvaeHelper } from "../../../../test/helpers/entities/create-funding-request-unifvae-helper";
-import { injectGraphql } from "../../../../test/helpers/graphql-helper";
+} from "@/test/fixtures";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
+import { createFundingRequestUnifvaeHelper } from "@/test/helpers/entities/create-funding-request-unifvae-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 const injectGraphqlPaymentRequestCreation = async ({
   keycloakId,

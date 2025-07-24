@@ -1,6 +1,6 @@
-import { hasRole, whenHasRole } from "../shared/security/middlewares";
-import { whenHasRoleButNotOthers } from "../shared/security/middlewares/whenHasRoleButNotOthers";
-import { isAdmin } from "../shared/security/presets";
+import { hasRole, whenHasRole } from "@/modules/shared/security/middlewares";
+import { whenHasRoleButNotOthers } from "@/modules/shared/security/middlewares/whenHasRoleButNotOthers";
+import { isAdmin } from "@/modules/shared/security/presets";
 
 import { isGestionnaireOfMaisonMereAAP } from "./security/isGestionnaireOfMaisonMereAAP.security";
 import { isOwnerOfOrganism } from "./security/isOwnerOfOrganism";

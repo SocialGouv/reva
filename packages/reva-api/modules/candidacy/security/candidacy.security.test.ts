@@ -1,13 +1,13 @@
-import { prismaClient } from "../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
-import { createCandidateHelper } from "../../../test/helpers/entities/create-candidate-helper";
-import { createCertificationAuthorityHelper } from "../../../test/helpers/entities/create-certification-authority-helper";
-import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
-import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
-import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 const getCandidacy = ({
   role,

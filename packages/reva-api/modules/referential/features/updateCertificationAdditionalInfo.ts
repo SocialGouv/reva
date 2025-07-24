@@ -4,12 +4,13 @@ import {
   deleteFile,
   getUploadedFile,
   uploadFileToS3,
-} from "../../../modules/shared/file";
+} from "@/modules/shared/file";
 import {
   allowedFileTypesMap,
   allowFileTypeByDocumentType,
-} from "../../../modules/shared/file/allowFileTypes";
-import { prismaClient } from "../../../prisma/client";
+} from "@/modules/shared/file/allowFileTypes";
+import { prismaClient } from "@/prisma/client";
+
 import { UpdateCertificationAdditionalInfoInput } from "../referential.types";
 
 const MAX_UPLOAD_SIZE = 15728640; // 15Mo

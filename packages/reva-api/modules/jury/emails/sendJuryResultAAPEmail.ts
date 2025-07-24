@@ -1,4 +1,7 @@
-import { getBackofficeUrl, sendEmailUsingTemplate } from "../../shared/email";
+import {
+  getBackofficeUrl,
+  sendEmailUsingTemplate,
+} from "@/modules/shared/email";
 
 export const sendJuryResultAAPEmail = async ({
   candidacyId,

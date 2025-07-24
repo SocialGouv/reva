@@ -1,9 +1,9 @@
 import {
   FUNDING_REQUEST_FULL_CERT_OK_HOURS_DECIMAL,
   FUNDING_REQUEST_NO_HOURS,
-} from "../../../../test/fixtures";
-import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
-import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+} from "@/test/fixtures";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 
 import { validateFeasibilityChecks } from "./feasibility-checks";
 

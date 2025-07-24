@@ -1,11 +1,12 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
-import { Candidacy } from "../candidacy/candidacy.types";
-import { getCandidacy } from "../candidacy/features/getCandidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../shared/error/functionalError";
+} from "@/modules/shared/error/functionalError";
+
+import { Candidacy } from "../candidacy/candidacy.types";
+import { getCandidacy } from "../candidacy/features/getCandidacy";
 
 import { getActiveJuries } from "./features/getActiveJuries";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";

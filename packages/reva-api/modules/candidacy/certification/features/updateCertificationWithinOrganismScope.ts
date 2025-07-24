@@ -1,13 +1,14 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../../../prisma/client";
-import { Role } from "../../../account/account.types";
-import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCertificationById } from "../../../referential/features/getCertificationById";
+import { Role } from "@/modules/account/account.types";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationById } from "@/modules/referential/features/getCertificationById";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../shared/error/functionalError";
+} from "@/modules/shared/error/functionalError";
+import { prismaClient } from "@/prisma/client";
+
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 
 import { updateCertification } from "./updateCertification";

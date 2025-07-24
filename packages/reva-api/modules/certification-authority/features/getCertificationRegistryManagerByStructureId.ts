@@ -1,6 +1,6 @@
 import { CertificationRegistryManager } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export async function getCertificationRegistryManagerByStructureId(
   structureId: string,

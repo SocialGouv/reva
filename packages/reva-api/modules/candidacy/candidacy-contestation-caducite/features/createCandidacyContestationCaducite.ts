@@ -1,8 +1,9 @@
 import { CertificationAuthorityContestationDecision } from "@prisma/client";
 import { isBefore, startOfToday } from "date-fns";
 
-import { logCandidacyAuditEvent } from "../../../../modules/candidacy-log/features/logCandidacyAuditEvent";
-import { prismaClient } from "../../../../prisma/client";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
+
 import { CreateCandidacyContestationCaduciteInput } from "../candidacy-contestation-caducite.types";
 import { sendCandidacyContestationCaduciteCreatedEmailToCertificationAuthority } from "../emails/sendCandidacyContestationCaduciteCreatedEmailToCertificationAuthority";
 

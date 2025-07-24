@@ -1,7 +1,7 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
-import { prismaClient } from "../../prisma/client";
-import { getFileNameAndUrl } from "../shared/file/getFileNameAndUrl";
+import { getFileNameAndUrl } from "@/modules/shared/file/getFileNameAndUrl";
+import { prismaClient } from "@/prisma/client";
 
 import { addCertification } from "./features/addCertification";
 import { createCertificationCompetenceBloc } from "./features/createCertificationCompetenceBloc";

@@ -1,6 +1,7 @@
 import { CertificationStatus } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { CreateCompetenceBlocInput } from "../referential.types";
 
 import { getCertificationById } from "./getCertificationById";

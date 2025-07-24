@@ -1,6 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
-import { getCertificationById } from "../../referential/features/getCertificationById";
+import { getCertificationById } from "@/modules/referential/features/getCertificationById";
 
 import { resolversSecurityMap } from "./certification.security";
 import { updateCertificationOfCandidacy } from "./features/updateCertificationOfCandidacy";

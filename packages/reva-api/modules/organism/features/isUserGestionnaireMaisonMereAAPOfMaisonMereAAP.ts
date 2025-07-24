@@ -1,4 +1,4 @@
-import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
+import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
 
 import { getMaisonMereAAPById } from "./getMaisonMereAAPById";
 

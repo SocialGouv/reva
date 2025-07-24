@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { AAPLogUserProfile } from "../aap-log.types";
 
 export const getAAPLogUsers = async ({

@@ -1,7 +1,8 @@
 import { isBefore } from "date-fns";
 
-import { logCandidacyAuditEvent } from "../../../modules/candidacy-log/features/logCandidacyAuditEvent";
-import { prismaClient } from "../../../prisma/client";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
+
 import { sendConfirmationActualisationEmailToAap } from "../emails/sendConfirmationActualisationEmailToAap";
 import { sendConfirmationActualisationEmailToCandidate } from "../emails/sendConfirmationActualisationEmailToCandidate";
 

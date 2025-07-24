@@ -1,7 +1,7 @@
 import { MaisonMereAAP } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
 
 export const getMaisonMereAapBySiretAndTypology = async (
   siret: string,

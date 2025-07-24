@@ -3,7 +3,7 @@ import {
   isAdminOrCandidacyCompanion,
   isAdminOrOwnerOfCandidacy,
   isAnyone,
-} from "../../shared/security/presets";
+} from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
   "Query.*": isAnyone,

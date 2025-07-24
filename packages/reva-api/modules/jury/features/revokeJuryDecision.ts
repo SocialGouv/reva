@@ -1,6 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
-import { getCandidacyById } from "../../candidacy/features/getCandidacyById";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCandidacyById } from "@/modules/candidacy/features/getCandidacyById";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
 
 export const revokeJuryDecision = async ({
   juryId,

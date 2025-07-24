@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { RNCPReferential } from "../rncp";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 

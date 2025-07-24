@@ -4,8 +4,8 @@ import mercurius from "mercurius";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../shared/error/functionalError";
-import { logger } from "../shared/logger";
+} from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
 
 import { ClientApp } from "./account.type";
 import { createAccount } from "./features/createAccount";

@@ -1,5 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
-import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
+import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
+import { prismaClient } from "@/prisma/client";
 
 export const isUserCertificationRegistryManagerOfCertification = async ({
   userRoles,

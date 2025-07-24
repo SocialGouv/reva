@@ -1,6 +1,7 @@
 import { CandidacyLogUserProfile, Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { CandidacyLogEventTypeAndDetails } from "../candidacy-log.types";
 
 export interface CandidacyAuditLogUserInfo {

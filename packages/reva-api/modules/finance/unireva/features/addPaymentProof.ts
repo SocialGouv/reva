@@ -1,4 +1,5 @@
-import { UploadedFile } from "../../../shared/file";
+import { UploadedFile } from "@/modules/shared/file";
+
 import { addFileToUploadSpooler } from "../database/fileUploadSpooler";
 import { getFundingRequest } from "../database/fundingRequests";
 import { getPaymentRequestByCandidacyId } from "../database/paymentRequest";

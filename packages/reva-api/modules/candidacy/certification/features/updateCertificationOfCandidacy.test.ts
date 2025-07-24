@@ -2,12 +2,12 @@ import { randomUUID } from "crypto";
 
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../../../prisma/client";
-import { TRAINING_INPUT } from "../../../../test/fixtures";
-import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
-import { createCertificationHelper } from "../../../../test/helpers/entities/create-certification-helper";
-import { injectGraphql } from "../../../../test/helpers/graphql-helper";
+import { prismaClient } from "@/prisma/client";
+import { TRAINING_INPUT } from "@/test/fixtures";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 const submitTraining = async ({
   keycloakId,

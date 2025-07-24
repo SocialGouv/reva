@@ -2,8 +2,8 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { Candidacy } from "../../candidacy/candidacy.types";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { Candidacy } from "@/modules/candidacy/candidacy.types";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 
 import { confirmPaymentRequest } from "./features/confirmPaymentRequest";
 import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpdatePaymentRequestForCandidacy";

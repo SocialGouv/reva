@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker/.";
 import { LegalStatus, MaisonMereAAP } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { createAccountHelper } from "./create-account-helper";
 

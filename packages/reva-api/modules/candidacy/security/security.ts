@@ -1,6 +1,6 @@
-import { hasRole } from "../../shared/security/middlewares/hasRole";
-import { isCandidateOwnerOfCandidacy } from "../../shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
-import { whenHasRole } from "../../shared/security/middlewares/whenHasRole";
+import { hasRole } from "@/modules/shared/security/middlewares/hasRole";
+import { isCandidateOwnerOfCandidacy } from "@/modules/shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
+import { whenHasRole } from "@/modules/shared/security/middlewares/whenHasRole";
 import {
   defaultSecurity,
   isAdmin,
@@ -12,7 +12,7 @@ import {
   isOwnerOfCandidacy,
   isOwnerOfCandidate,
   isOwnerOrCanManageCandidacy,
-} from "../../shared/security/presets";
+} from "@/modules/shared/security/presets";
 
 import { canAccessCandidacy } from "./canAccessCandidacy.security";
 

@@ -6,7 +6,7 @@ import {
   startOfDay,
 } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const updateAppointmentInformations = async (params: {
   candidacyId: string;

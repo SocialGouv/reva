@@ -1,10 +1,11 @@
 import { v4 } from "uuid";
 
-import { prismaClient } from "../../../prisma/client";
-import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { S3File, UploadedFile, uploadFileToS3 } from "../../shared/file";
-import { allowFileTypeByDocumentType } from "../../shared/file/allowFileTypes";
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { S3File, UploadedFile, uploadFileToS3 } from "@/modules/shared/file";
+import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+import { prismaClient } from "@/prisma/client";
+
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityValidatedToCandidateAccompagneEmail,

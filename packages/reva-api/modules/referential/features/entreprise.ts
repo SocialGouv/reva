@@ -1,6 +1,6 @@
 import { isAfter } from "date-fns";
 
-import { logger } from "../../shared/logger";
+import { logger } from "@/modules/shared/logger";
 
 const URL = "https://entreprise.api.gouv.fr/v3";
 

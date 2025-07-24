@@ -1,6 +1,6 @@
 import { parse } from "date-fns";
 
-import { logger } from "../../shared/logger";
+import { logger } from "@/modules/shared/logger";
 
 const URL = "https://api.francecompetences.fr/referentiels/v2.0/fiches";
 

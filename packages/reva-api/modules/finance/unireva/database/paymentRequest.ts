@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { PaymentRequest } from "../finance.types";
 
 export const getPaymentRequestByCandidacyId = async (params: {

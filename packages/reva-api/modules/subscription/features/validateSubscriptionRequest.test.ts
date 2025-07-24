@@ -1,9 +1,9 @@
 import { Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import * as IAM from "../../account/features/keycloak";
+import * as IAM from "@/modules/account/features/keycloak";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 const subRequest = {
   id: "e9d5ddcf-fea3-4801-b25b-b79f1e0b7d65",

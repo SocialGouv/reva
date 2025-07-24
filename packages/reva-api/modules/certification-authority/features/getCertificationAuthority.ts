@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { CertificationAuthority } from "../certification-authority.types";
 
 export const getCertificationAuthorityById = async (params: {

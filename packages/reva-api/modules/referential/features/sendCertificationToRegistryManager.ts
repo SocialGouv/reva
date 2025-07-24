@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { sendNewCertificationAvailableToCertificationRegistryManagerEmail } from "../emails/sendNewCertificationAvailableToCertificationRegistryManagerEmail";
 import { SendCertificationToRegistryManagerInput } from "../referential.types";
 

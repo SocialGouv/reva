@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../../prisma/client";
-import { updateCandidacyCertificationCompletion } from "../../../candidacy/features/updateCandidacyCertificationCompletion";
+import { updateCandidacyCertificationCompletion } from "@/modules/candidacy/features/updateCandidacyCertificationCompletion";
+import { prismaClient } from "@/prisma/client";
+
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
 
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";

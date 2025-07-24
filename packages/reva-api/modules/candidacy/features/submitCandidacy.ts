@@ -1,7 +1,8 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { getCandidateById } from "../../candidate/features/getCandidateById";
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { getCandidateById } from "@/modules/candidate/features/getCandidateById";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+
 import {
   sendConfirmationCandidacySubmissionEmail,
   sendNewCandidacyEmail,

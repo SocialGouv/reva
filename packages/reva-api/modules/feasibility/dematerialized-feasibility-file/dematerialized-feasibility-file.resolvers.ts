@@ -1,8 +1,8 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { DematerializedFeasibilityFile } from "@prisma/client";
 
-import { getCertificationCompetenceById } from "../../referential/features/getCertificationCompetenceById";
-import { getCompetenceBlocById } from "../../referential/features/getCompetenceBlocById";
+import { getCertificationCompetenceById } from "@/modules/referential/features/getCertificationCompetenceById";
+import { getCompetenceBlocById } from "@/modules/referential/features/getCompetenceBlocById";
 
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {

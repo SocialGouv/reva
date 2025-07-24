@@ -1,12 +1,13 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
 import { subDays } from "date-fns";
 
-import { candidateSearchWord } from "../../candidate/utils/candidate.helpers";
+import { candidateSearchWord } from "@/modules/candidate/utils/candidate.helpers";
 import {
   CADUCITE_THRESHOLD_DAYS,
   WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
-} from "../../shared/candidacy/candidacyCaducite";
-import { buildContainsFilterClause } from "../../shared/search/search";
+} from "@/modules/shared/candidacy/candidacyCaducite";
+import { buildContainsFilterClause } from "@/modules/shared/search/search";
+
 import { CandidacyStatusFilter } from "../candidacy.types";
 
 export const getStatusFromStatusFilter = (statusFilter: string) => {

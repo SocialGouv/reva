@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { Gender } from "../../../candidate/candidate.types";
+import { Gender } from "@/modules/candidate/candidate.types";
 
 import { validHoursCountAndCosts } from "./valid-numbers";
 

@@ -1,4 +1,4 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const getMaisonMereAAPById = ({ id }: { id: string }) =>
   prismaClient.maisonMereAAP.findUnique({

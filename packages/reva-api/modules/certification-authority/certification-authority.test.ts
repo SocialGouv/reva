@@ -1,16 +1,14 @@
 import { Account } from "@prisma/client";
 
-import { graphql } from "../../modules/graphql/generated";
-import { UpdateCertificationAuthorityInput } from "../../modules/graphql/generated/graphql";
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
-import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
-import { createCertificationAuthorityStructureHelper } from "../../test/helpers/entities/create-certification-authority-structure-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
-import {
-  getGraphQLClient,
-  getGraphQLError,
-} from "../../test/jestGraphqlClient";
+import { graphql } from "@/modules/graphql/generated";
+import { UpdateCertificationAuthorityInput } from "@/modules/graphql/generated/graphql";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+
 import * as createAccount from "../account/features/createAccount";
 
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";

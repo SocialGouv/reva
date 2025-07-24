@@ -1,11 +1,9 @@
-import { prismaClient } from "../../prisma/client";
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
-import {
-  getGraphQLClient,
-  getGraphQLError,
-} from "../../test/jestGraphqlClient";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+
 import * as getKeycloakAdminModule from "../account/features/getKeycloakAdmin";
 import { graphql } from "../graphql/generated";
 

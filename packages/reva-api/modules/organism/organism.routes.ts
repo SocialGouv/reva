@@ -1,8 +1,8 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { UploadedFile } from "../shared/file";
-import { logger } from "../shared/logger";
+import { UploadedFile } from "@/modules/shared/file";
+import { logger } from "@/modules/shared/logger";
 
 import { isUserGestionnaireMaisonMereAAPOfMaisonMereAAP } from "./features/isUserGestionnaireMaisonMereAAPOfMaisonMereAAP";
 import { submitMaisonMereAAPLegalInformationDocuments } from "./features/submitMaisonMereAAPLegalInformationDocuments";

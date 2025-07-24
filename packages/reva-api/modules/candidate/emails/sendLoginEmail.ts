@@ -1,4 +1,5 @@
-import { sendEmailUsingTemplate } from "../../shared/email";
+import { sendEmailUsingTemplate } from "@/modules/shared/email";
+
 import { getCandidateLoginUrl } from "../utils/candidate.url.helpers";
 
 export const sendLoginEmail = async (email: string) =>

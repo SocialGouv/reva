@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { CandidacyLogUserProfile } from "../candidacy-log.types";
 
 export const getCandidacyLogUsers = async ({

@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../../prisma/client";
-import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
+
 import { UpdateCandidacyContestationCaduciteInput } from "../candidacy-contestation-caducite.types";
 import { sendCandidacyContestationCaduciteConfirmedEmailToAap } from "../emails/sendCandidacyContestationCaduciteConfirmedEmailToAap";
 import { sendCandidacyContestationCaduciteConfirmedEmailToCandidate } from "../emails/sendCandidacyContestationCaduciteConfirmedEmailToCandidate";

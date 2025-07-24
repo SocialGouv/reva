@@ -1,9 +1,9 @@
-import { hasRole } from "../shared/security/middlewares";
+import { hasRole } from "@/modules/shared/security/middlewares";
 import {
   defaultSecurity,
   isAdminOrCertificationRegistryManagerOfCertification,
   isAnyone,
-} from "../shared/security/presets";
+} from "@/modules/shared/security/presets";
 
 export const referentialResolversSecurityMap = {
   "Mutation.*": defaultSecurity,

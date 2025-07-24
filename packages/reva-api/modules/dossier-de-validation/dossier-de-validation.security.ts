@@ -1,8 +1,8 @@
-import { hasRole } from "../shared/security/middlewares";
+import { hasRole } from "@/modules/shared/security/middlewares";
 import {
   defaultSecurity,
   isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
-} from "../shared/security/presets";
+} from "@/modules/shared/security/presets";
 
 import { canManageDossierDeValidation } from "./security/canManageDossierDeValidation";
 

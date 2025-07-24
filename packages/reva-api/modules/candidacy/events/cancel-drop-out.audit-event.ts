@@ -3,7 +3,8 @@ import {
   findAuditEventContent,
   findFirstAuditEventContent,
   saveAuditEvent,
-} from "../../shared/audit";
+} from "@/modules/shared/audit";
+
 import { CandidacyDropOut } from "../candidacy.types";
 
 import { AuditEventType } from "./audit-event.type";

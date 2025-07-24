@@ -1,6 +1,6 @@
 import { DossierDeValidation } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { createCandidacyHelper } from "./create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "./create-certification-authority-helper";

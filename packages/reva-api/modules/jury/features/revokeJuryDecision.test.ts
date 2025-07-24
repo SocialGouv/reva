@@ -1,19 +1,16 @@
-import { prismaClient } from "../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
-import { createCertificationAuthorityHelper } from "../../../test/helpers/entities/create-certification-authority-helper";
-import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
-import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
-import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { createFileHelper } from "../../../test/helpers/entities/create-file-helper";
-import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
-import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
-import {
-  getGraphQLClient,
-  getGraphQLError,
-} from "../../../test/jestGraphqlClient";
-import { shouldNotGoHere } from "../../../test/jestHelpers";
-import { graphql } from "../../graphql/generated";
+import { graphql } from "@/modules/graphql/generated";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+import { createFileHelper } from "@/test/helpers/entities/create-file-helper";
+import { createJuryHelper } from "@/test/helpers/entities/create-jury-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+import { shouldNotGoHere } from "@/test/jestHelpers";
 
 async function setupTestCandidacyWithFeasibility() {
   const organism = await createOrganismHelper();

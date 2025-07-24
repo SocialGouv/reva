@@ -1,6 +1,6 @@
 import { CompetenceBlocsPartCompletionEnum } from "@prisma/client";
 
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 

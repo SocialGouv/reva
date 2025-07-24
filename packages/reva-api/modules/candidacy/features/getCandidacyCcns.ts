@@ -1,8 +1,8 @@
 import { CandidacyConventionCollective, Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { Role } from "../../account/account.types";
-import { processPaginationInfo } from "../../shared/list/pagination";
+import { Role } from "@/modules/account/account.types";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { prismaClient } from "@/prisma/client";
 
 const buildContainsFilterClause =
   (searchFilter: string) => (field: string) => ({

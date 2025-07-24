@@ -1,9 +1,9 @@
 import { Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
-import { Organism } from "../../organism/organism.types";
-import { processPaginationInfo } from "../../shared/list/pagination";
+import { getLastProfessionalCgu } from "@/modules/organism/features/getLastProfessionalCgu";
+import { Organism } from "@/modules/organism/organism.types";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { prismaClient } from "@/prisma/client";
 
 export const searchOrganismsForCandidacyAsAdmin = async ({
   candidacyId,

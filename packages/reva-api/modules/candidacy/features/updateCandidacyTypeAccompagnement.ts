@@ -1,9 +1,9 @@
 import { Candidacy, CandidacyTypeAccompagnement } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { isCandidacyStatusEqualOrAboveGivenStatus } from "../../candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
-import { getActiveFeasibilityByCandidacyid } from "../../feasibility/feasibility.features";
-import { getCertificationById } from "../../referential/features/getCertificationById";
+import { isCandidacyStatusEqualOrAboveGivenStatus } from "@/modules/candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
+import { getActiveFeasibilityByCandidacyid } from "@/modules/feasibility/feasibility.features";
+import { getCertificationById } from "@/modules/referential/features/getCertificationById";
+import { prismaClient } from "@/prisma/client";
 
 import { getCandidacyById } from "./getCandidacyById";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";

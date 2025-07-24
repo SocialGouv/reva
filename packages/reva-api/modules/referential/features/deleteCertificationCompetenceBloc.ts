@@ -1,6 +1,6 @@
 import { CertificationStatus } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 import { getCertificationById } from "./getCertificationById";
 

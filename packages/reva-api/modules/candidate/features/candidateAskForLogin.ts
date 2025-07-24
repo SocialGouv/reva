@@ -1,4 +1,5 @@
-import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
+import { getKeycloakAdmin } from "@/modules/account/features/getKeycloakAdmin";
+
 import { sendLoginEmail, sendUnknownUserEmail } from "../emails";
 
 export const askForLogin = async (email: string) => {

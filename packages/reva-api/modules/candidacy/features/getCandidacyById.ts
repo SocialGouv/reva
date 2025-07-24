@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 type CandidacyInclude = Prisma.CandidacyInclude | undefined;
 type CandidacyReturnType<T extends CandidacyInclude> =

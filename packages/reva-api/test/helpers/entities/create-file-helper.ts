@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker/.";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const createFileHelper = async (fileArgs?: Partial<File>) =>
   prismaClient.file.create({

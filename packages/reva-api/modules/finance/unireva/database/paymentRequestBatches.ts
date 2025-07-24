@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { PaymentRequestBatchContent } from "../finance.types";
 
 export const createPaymentRequestBatch = async ({

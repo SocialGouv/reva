@@ -1,4 +1,5 @@
-import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
+import { getKeycloakAdmin } from "@/modules/account/features/getKeycloakAdmin";
+
 import { sendForgotPasswordEmail, sendUnknownUserEmail } from "../emails";
 
 export const candidateForgotPassword = async (email: string) => {

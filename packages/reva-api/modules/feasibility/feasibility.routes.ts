@@ -1,10 +1,10 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { prismaClient } from "../../prisma/client";
-import { UploadedFile, getDownloadLink } from "../shared/file";
-import { logger } from "../shared/logger";
-import { isCandidateOwnerOfCandidacyFeature } from "../shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
+import { UploadedFile, getDownloadLink } from "@/modules/shared/file";
+import { logger } from "@/modules/shared/logger";
+import { isCandidateOwnerOfCandidacyFeature } from "@/modules/shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
+import { prismaClient } from "@/prisma/client";
 
 import {
   canDownloadFeasibilityFiles,

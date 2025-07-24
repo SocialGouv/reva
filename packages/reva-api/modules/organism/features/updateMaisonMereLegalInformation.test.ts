@@ -1,13 +1,13 @@
 import { Account } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
+import * as updateAccount from "@/modules/account/features/updateAccount";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createMaisonMereAapHelper } from "@/test/helpers/entities/create-maison-mere-aap-helper";
 import {
   GraphqlRequestDefinition,
   injectGraphql,
-} from "../../../test/helpers/graphql-helper";
-import * as updateAccount from "../../account/features/updateAccount";
+} from "@/test/helpers/graphql-helper";
 
 const newMaisonMereAAP1Data = (siret: string) => ({
   raisonSociale: "Nouvelle raison sociale",

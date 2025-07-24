@@ -1,4 +1,4 @@
-import { sendEmailUsingTemplate } from "../../shared/email";
+import { sendEmailUsingTemplate } from "@/modules/shared/email";
 
 export const notifyNewEmailAddress = async ({ email }: { email: string }) => {
   return sendEmailUsingTemplate({

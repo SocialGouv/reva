@@ -4,8 +4,8 @@ import {
   type StatutValidationInformationsJuridiquesMaisonMereAAP,
 } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { processPaginationInfo } from "../../shared/list/pagination";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { prismaClient } from "@/prisma/client";
 
 export const buildMaisonMereFilters: (
   searchFilter: string,

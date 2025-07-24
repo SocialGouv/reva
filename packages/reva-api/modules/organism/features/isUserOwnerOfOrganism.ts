@@ -1,4 +1,4 @@
-import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
+import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
 
 export const isUserOwnerOfOrganism = async ({
   userRoles,

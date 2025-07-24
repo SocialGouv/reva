@@ -1,6 +1,6 @@
 import { startOfToday } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate = () =>
   prismaClient.$transaction([

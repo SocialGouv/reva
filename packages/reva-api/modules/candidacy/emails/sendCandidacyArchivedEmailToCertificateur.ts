@@ -1,5 +1,8 @@
-import { prismaClient } from "../../../prisma/client";
-import { getBackofficeUrl, sendEmailUsingTemplate } from "../../shared/email";
+import {
+  getBackofficeUrl,
+  sendEmailUsingTemplate,
+} from "@/modules/shared/email";
+import { prismaClient } from "@/prisma/client";
 
 export const sendCandidacyArchivedEmailToCertificateur = async (
   candidacyId: string,

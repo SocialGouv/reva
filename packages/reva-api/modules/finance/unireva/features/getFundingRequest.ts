@@ -1,6 +1,7 @@
-import { getCandidacy } from "../../../candidacy/features/getCandidacy";
-import { getBasicSkillsByCandidacyId } from "../../../candidacy/training/features/getBasicSkillsByCandidacyId";
-import { getMandatoryTrainingsByCandidacyId } from "../../../candidacy/training/features/getMandatoryTrainingsByCandidacyId ";
+import { getCandidacy } from "@/modules/candidacy/features/getCandidacy";
+import { getBasicSkillsByCandidacyId } from "@/modules/candidacy/training/features/getBasicSkillsByCandidacyId";
+import { getMandatoryTrainingsByCandidacyId } from "@/modules/candidacy/training/features/getMandatoryTrainingsByCandidacyId ";
+
 import { getFundingRequest as getFundingRequestDb } from "../database/fundingRequests";
 
 export const getFundingRequest = async ({

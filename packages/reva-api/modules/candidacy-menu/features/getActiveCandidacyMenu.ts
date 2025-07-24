@@ -1,9 +1,10 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { getCandidacyHasConfirmedCaducite } from "../../candidacy/features/getCandidacyHasConfirmedCaducite";
-import { getCandidacyIsCaduque } from "../../candidacy/features/getCandidacyIsCaduque";
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { getCandidacyHasConfirmedCaducite } from "@/modules/candidacy/features/getCandidacyHasConfirmedCaducite";
+import { getCandidacyIsCaduque } from "@/modules/candidacy/features/getCandidacyIsCaduque";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+import { prismaClient } from "@/prisma/client";
+
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,

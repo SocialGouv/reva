@@ -1,11 +1,11 @@
 import { FinanceModule } from "@prisma/client";
 import { findLastIndex } from "lodash";
 
-import { prismaClient } from "../../../prisma/client";
 import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
-} from "../../candidacy-log/features/logCandidacyAuditEvent";
+} from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "./getCandidacy";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";

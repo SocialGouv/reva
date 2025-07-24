@@ -1,5 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
-import { fetchCoordinatesFromZipCode } from "../../shared/geocoding";
+import { fetchCoordinatesFromZipCode } from "@/modules/shared/geocoding";
+import { prismaClient } from "@/prisma/client";
 
 export const getLLToEarthFromZip = async ({ zip }: { zip?: string | null }) => {
   if (!zip) {

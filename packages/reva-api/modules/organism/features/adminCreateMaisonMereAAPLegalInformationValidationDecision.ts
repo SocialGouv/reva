@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { LegalInformationValidationDecisionInput } from "../organism.types";
 
 export const adminCreateMaisonMereAAPLegalInformationValidationDecision =

@@ -1,8 +1,9 @@
-import { prismaClient } from "../../../prisma/client";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../shared/error/functionalError";
+} from "@/modules/shared/error/functionalError";
+import { prismaClient } from "@/prisma/client";
+
 import {
   generateIAMTokenWithPassword,
   getCandidateAccountInIAM,

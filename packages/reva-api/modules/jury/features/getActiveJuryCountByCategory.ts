@@ -1,10 +1,11 @@
 import { Account, Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { getAccountByKeycloakId } from "../../account/features/getAccountByKeycloakId";
-import { candidacySearchWord } from "../../candidacy/utils/candidacy.helper";
-import { getCertificationAuthorityLocalAccountByAccountId } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
-import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
+import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
+import { candidacySearchWord } from "@/modules/candidacy/utils/candidacy.helper";
+import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
+import { prismaClient } from "@/prisma/client";
+
 import { JuryStatusFilter } from "../types/juryStatusFilter.type";
 import { getWhereClauseFromJuryStatusFilter } from "../utils/getWhereClauseFromJuryStatusFilter.helper";
 

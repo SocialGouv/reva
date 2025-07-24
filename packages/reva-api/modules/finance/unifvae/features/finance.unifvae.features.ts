@@ -1,11 +1,12 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { isAfter, isBefore, sub } from "date-fns";
 
-import { prismaClient } from "../../../../prisma/client";
-import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
-import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
-import { UploadedFile } from "../../../shared/file";
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+import { UploadedFile } from "@/modules/shared/file";
+import { prismaClient } from "@/prisma/client";
+
 import { applyBusinessValidationRules } from "../validation";
 
 export const getFundingRequestUnifvaeFromCandidacyId = async (

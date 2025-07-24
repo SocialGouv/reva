@@ -1,10 +1,11 @@
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
-import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
-import { createFeasibilityDematerializedHelper } from "../../test/helpers/entities/create-feasibility-dematerialized-helper";
-import { createCohorteVaeCollectiveHelper } from "../../test/helpers/entities/create-vae-collective-helper";
-import { getGraphQLClient } from "../../test/jestGraphqlClient";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
+import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
+import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
+import { getGraphQLClient } from "@/test/jestGraphqlClient";
+
 import { graphql } from "../graphql/generated";
 
 const getCohortesForCertificationAuthorityOrLocalAccount = ({

@@ -1,9 +1,10 @@
 import { Country, Department } from "@prisma/client";
 
-import { prismaClient } from "../../prisma/client";
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
+
 import * as SendNewEmailCandidateEmailModule from "../candidacy/emails/sendNewEmailCandidateEmail";
 import * as SendPreviousEmailCandidateEmailModule from "../candidacy/emails/sendPreviousEmailCandidateEmail";
 

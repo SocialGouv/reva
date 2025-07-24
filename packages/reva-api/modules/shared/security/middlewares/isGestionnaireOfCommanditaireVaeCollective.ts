@@ -1,6 +1,6 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 const UNAUTHORIZED_ACCESS_ERROR =
   "Vous n'êtes pas autorisé à accéder à cette ressource";

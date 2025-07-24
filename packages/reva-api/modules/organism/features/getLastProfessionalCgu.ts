@@ -1,4 +1,4 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const getLastProfessionalCgu = (params?: { maxCreatedAt?: Date }) =>
   prismaClient.professionalCgu.findFirst({

@@ -1,13 +1,14 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getOrganismById } from "../../organism/features/getOrganism";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getOrganismById } from "@/modules/organism/features/getOrganism";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../shared/error/functionalError";
-import { logger } from "../../shared/logger";
+} from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
+
 import {
   sendNewCandidacyEmail,
   sendPreviousOrganismCandidateChangeOrganismEmail,

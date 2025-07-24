@@ -1,11 +1,9 @@
 import { startOfDay, startOfToday } from "date-fns";
 
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
-import {
-  getGraphQLClient,
-  getGraphQLError,
-} from "../../test/jestGraphqlClient";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyDropOutHelper } from "@/test/helpers/entities/create-candidacy-drop-out-helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+
 import { graphql } from "../graphql/generated";
 
 import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./emails/sendCandidacyDropOutConfirmedEmailToAap";

@@ -1,15 +1,16 @@
 import { startOfYesterday } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
-import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
-import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
-import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
-import { getGraphQLClient } from "../../../test/jestGraphqlClient";
-import { graphql } from "../../graphql/generated";
-import { JuryResult } from "../../graphql/generated/graphql";
+import { graphql } from "@/modules/graphql/generated";
+import { JuryResult } from "@/modules/graphql/generated/graphql";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+import { createJuryHelper } from "@/test/helpers/entities/create-jury-helper";
+import { getGraphQLClient } from "@/test/jestGraphqlClient";
+
 import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
 import * as SendJuryResultCandidateEmailModule from "../emails/sendJuryResultCandidateEmail";
 

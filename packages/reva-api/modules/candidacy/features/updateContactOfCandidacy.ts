@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
-import { Candidate } from "../../candidate/candidate.types";
+import { Candidate } from "@/modules/candidate/candidate.types";
+import { prismaClient } from "@/prisma/client";
+
 import {
   sendNewEmailCandidateEmail,
   sendPreviousEmailCandidateEmail,

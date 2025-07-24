@@ -1,7 +1,8 @@
 import { $Enums, Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { processPaginationInfo } from "../../shared/list/pagination";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { prismaClient } from "@/prisma/client";
+
 import { Certification, CertificationStatus } from "../referential.types";
 
 export const searchCertificationsV2ForRegistryManager = async ({

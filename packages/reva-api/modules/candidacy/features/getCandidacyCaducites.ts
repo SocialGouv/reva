@@ -1,15 +1,16 @@
 import { Candidacy, Prisma } from "@prisma/client";
 import { subDays } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
-import { getCertificationAuthorityLocalAccountByAccountId } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
-import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "../../feasibility/features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
+import { getCertificationAuthorityLocalAccountByAccountId } from "@/modules/certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
+import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "@/modules/feasibility/features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
 import {
   CADUCITE_THRESHOLD_DAYS,
   WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
-} from "../../shared/candidacy/candidacyCaducite";
-import { processPaginationInfo } from "../../shared/list/pagination";
-import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
+} from "@/modules/shared/candidacy/candidacyCaducite";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
+import { prismaClient } from "@/prisma/client";
+
 import { CandidacyCaduciteStatus } from "../candidacy.types";
 import { candidacySearchWord } from "../utils/candidacy.helper";
 

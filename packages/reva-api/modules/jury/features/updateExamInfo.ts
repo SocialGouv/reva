@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { prismaClient } from "@/prisma/client";
+
 import { ExamInfo } from "../jury.types";
 
 export const updateExamInfo = async ({

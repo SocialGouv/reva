@@ -1,7 +1,8 @@
-import { prismaClient } from "../../../prisma/client";
-import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { updateCandidacyLastActivityDateToNow } from "@/modules/feasibility/features/updateCandidacyLastActivityDateToNow";
+import { prismaClient } from "@/prisma/client";
+
 import {
   sendDVReportedToCandidateAutonomeEmail,
   sendDVReportedToOrganismEmail,

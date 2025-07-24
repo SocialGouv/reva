@@ -2,9 +2,9 @@ import { CandidacyStatusStep, Gender } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 
-import { prismaClient } from "../../../prisma/client";
-import { getCandidateByKeycloakId } from "../../candidate/features/getCandidateByKeycloakId";
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
+import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandidateByKeycloakId";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+import { prismaClient } from "@/prisma/client";
 
 const FranceConnectClaimsSchema = z.object({
   sub: z.string(),

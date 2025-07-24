@@ -1,8 +1,9 @@
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
-import { createCohorteVaeCollectiveHelper } from "../../test/helpers/entities/create-vae-collective-helper";
-import { getGraphQLClient } from "../../test/jestGraphqlClient";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
+import { getGraphQLClient } from "@/test/jestGraphqlClient";
+
 import { graphql } from "../graphql/generated";
 
 const getCohortesForAap = async ({

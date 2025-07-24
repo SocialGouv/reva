@@ -1,4 +1,4 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const createCertificationAuthorityStructure = async (label: string) => {
   const certificationAuthorityStructure =

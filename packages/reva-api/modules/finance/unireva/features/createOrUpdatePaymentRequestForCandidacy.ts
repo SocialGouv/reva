@@ -1,11 +1,12 @@
-import { getCandidacyById } from "../../../candidacy/features/getCandidacyById";
-import { getAfgsuTrainingId } from "../../../candidacy/training/features/getAfgsuTrainingId";
-import { Candidate } from "../../../candidate/candidate.types";
-import { getCandidateById } from "../../../candidate/features/getCandidateById";
+import { getCandidacyById } from "@/modules/candidacy/features/getCandidacyById";
+import { getAfgsuTrainingId } from "@/modules/candidacy/training/features/getAfgsuTrainingId";
+import { Candidate } from "@/modules/candidate/candidate.types";
+import { getCandidateById } from "@/modules/candidate/features/getCandidateById";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../shared/error/functionalError";
+} from "@/modules/shared/error/functionalError";
+
 import { getFundingRequest } from "../database/fundingRequests";
 import {
   createPaymentRequest,

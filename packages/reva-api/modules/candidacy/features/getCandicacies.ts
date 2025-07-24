@@ -1,8 +1,9 @@
 import { Candidacy, Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { processPaginationInfo } from "../../shared/list/pagination";
-import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
+import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
+import { prismaClient } from "@/prisma/client";
+
 import {
   CandidacySortByFilter,
   CandidacyStatusFilter,

@@ -1,5 +1,5 @@
-import { CandidacyBusinessEvent } from "../../candidacy/candidacy.types";
-import { CandidateBusinessEvent } from "../../candidate/candidate.types";
+import { CandidacyBusinessEvent } from "@/modules/candidacy/candidacy.types";
+import { CandidateBusinessEvent } from "@/modules/candidate/candidate.types";
 
 export type BusinessTargetType =
   | "CANDIDATE"

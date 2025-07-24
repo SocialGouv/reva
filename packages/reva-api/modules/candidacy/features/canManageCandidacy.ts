@@ -1,9 +1,9 @@
 import debug from "debug";
 
-import { prismaClient } from "../../../prisma/client";
-import { Role } from "../../account/account.types";
-import { getMaisonMereAAPById } from "../../organism/features/getMaisonMereAAPById";
-import { getOrganismById } from "../../organism/features/getOrganism";
+import { Role } from "@/modules/account/account.types";
+import { getMaisonMereAAPById } from "@/modules/organism/features/getMaisonMereAAPById";
+import { getOrganismById } from "@/modules/organism/features/getOrganism";
+import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "./getCandidacy";
 

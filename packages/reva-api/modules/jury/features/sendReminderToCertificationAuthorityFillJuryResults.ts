@@ -1,8 +1,9 @@
 import { endOfDay, startOfDay, sub } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
-import { getAccountById } from "../../account/features/getAccount";
-import { logger } from "../../shared/logger";
+import { getAccountById } from "@/modules/account/features/getAccount";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
+
 import { sendFillJuryResultsCertificationAuthorityEmail } from "../emails";
 
 export const sendReminderToCertificationAuthorityFillJuryResults = async () => {

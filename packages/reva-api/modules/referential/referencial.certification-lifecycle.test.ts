@@ -1,9 +1,9 @@
 import { CertificationStatus } from "@prisma/client";
 
-import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
-import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
-import { createFormaCodeHelper } from "../../test/helpers/entities/create-formacode-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createFormaCodeHelper } from "@/test/helpers/entities/create-formacode-helper";
+import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 import * as SendNewCertificationAvailableToCertificationRegistryManagerEmailModule from "./emails/sendNewCertificationAvailableToCertificationRegistryManagerEmail";
 import { RNCPReferential } from "./rncp/referential";

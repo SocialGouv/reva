@@ -1,8 +1,8 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { logger } from "../../../modules/shared/logger";
-import { prismaClient } from "../../../prisma/client";
-import { FunctionalCodeError } from "../../shared/error/functionalError";
+import { FunctionalCodeError } from "@/modules/shared/error/functionalError";
+import { logger } from "@/modules/shared/logger";
+import { prismaClient } from "@/prisma/client";
 
 import { getCandidacyById } from "./getCandidacyById";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";

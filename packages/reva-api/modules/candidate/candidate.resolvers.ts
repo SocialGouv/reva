@@ -1,6 +1,7 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
-import { prismaClient } from "../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
 import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 

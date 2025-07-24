@@ -4,17 +4,14 @@ import {
   FeasibilityStatus,
 } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
-import { createFeasibilityDematerializedHelper } from "../../../test/helpers/entities/create-feasibility-dematerialized-helper";
-import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import {
-  getGraphQLClient,
-  getGraphQLError,
-} from "../../../test/jestGraphqlClient";
-import { shouldNotGoHere } from "../../../test/jestHelpers";
-import { graphql } from "../../graphql/generated";
+import { graphql } from "@/modules/graphql/generated";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
+import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+import { shouldNotGoHere } from "@/test/jestHelpers";
 
 const revokeCertificationAuthorityDecisionMutation = graphql(`
   mutation feasibility_revokeCertificationAuthorityDecision(

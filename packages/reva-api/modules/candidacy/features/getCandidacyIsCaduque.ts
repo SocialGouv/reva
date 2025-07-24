@@ -1,10 +1,10 @@
 import { subDays } from "date-fns";
 
-import { prismaClient } from "../../../prisma/client";
 import {
   CADUCITE_THRESHOLD_DAYS,
   WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
-} from "../../shared/candidacy/candidacyCaducite";
+} from "@/modules/shared/candidacy/candidacyCaducite";
+import { prismaClient } from "@/prisma/client";
 
 export const getCandidacyIsCaduque = async ({
   candidacyId,

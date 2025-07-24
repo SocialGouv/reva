@@ -1,6 +1,6 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
 
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const existsCandidacyWithActiveStatus = async ({
   candidacyId,

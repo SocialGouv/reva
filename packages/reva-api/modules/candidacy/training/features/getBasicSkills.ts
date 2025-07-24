@@ -1,3 +1,3 @@
-import { prismaClient } from "../../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
 
 export const getBasicSkills = () => prismaClient.basicSkill.findMany();

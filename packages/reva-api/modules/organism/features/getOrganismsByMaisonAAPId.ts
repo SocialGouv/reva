@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/client";
+import { prismaClient } from "@/prisma/client";
+
 import { Organism } from "../organism.types";
 
 export const getOrganismsByMaisonAAPId = ({
