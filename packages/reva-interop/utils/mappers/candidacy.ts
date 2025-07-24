@@ -118,7 +118,7 @@ export const mapCandidacyObject = (
     },
     certification: {
       codeRncp: candidacy.certification.codeRncp,
-      estViseePartiellement: candidacy.isCertificationPartial || null,
+      estViseePartiellement: candidacy.isCertificationPartial ?? null,
       nom: candidacy.certification.label,
     },
     organisme: candidacy.organism
