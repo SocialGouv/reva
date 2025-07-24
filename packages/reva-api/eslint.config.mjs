@@ -54,7 +54,7 @@ export default defineConfig([
         2,
         {
           unusedExports: true,
-          ignoreExports: ["eslint.config.mjs", "codegen.ts", "test/helpers"],
+          ignoreExports: ["eslint.config.mjs", "codegen.ts"],
         },
       ],
 
