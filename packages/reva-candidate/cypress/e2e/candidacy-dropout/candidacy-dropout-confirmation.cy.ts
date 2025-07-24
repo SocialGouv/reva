@@ -1,4 +1,5 @@
 import { stubQuery } from "../../utils/graphql";
+
 import candidateDropOut from "./fixtures/candidate-dropped-out.json";
 function interceptCandidacy() {
   cy.intercept("POST", "/api/graphql", (req) => {

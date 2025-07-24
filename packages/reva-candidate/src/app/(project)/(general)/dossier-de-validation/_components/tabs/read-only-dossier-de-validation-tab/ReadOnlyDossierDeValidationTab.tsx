@@ -1,6 +1,8 @@
-import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
+
+import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
+
 import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
 
 interface FilePreview {

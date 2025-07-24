@@ -2,6 +2,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+
 import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 const FeasibilityBadge = ({
   feasibility,

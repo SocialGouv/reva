@@ -1,5 +1,7 @@
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
+
 import { FeasibilityHistory } from "@/graphql/generated/graphql";
+
 import CaduciteBanner from "./CaduciteBanner";
 import FeasibilityDecisionDisplay from "./FeasibilityDecisionDisplay";
 

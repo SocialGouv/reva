@@ -1,7 +1,9 @@
-import { useRouter } from "next/navigation";
 import Tile from "@codegouvfr/react-dsfr/Tile";
-import { CompleteIncompleteBadge } from "./CompleteIncompleteBadge";
+import { useRouter } from "next/navigation";
+
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+
+import { CompleteIncompleteBadge } from "./CompleteIncompleteBadge";
 
 export const OrganismTile = ({
   hasSelectedOrganism,

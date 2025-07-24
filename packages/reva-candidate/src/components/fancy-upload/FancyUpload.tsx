@@ -1,3 +1,5 @@
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import {
   ReactNode,
   DetailedHTMLProps,
@@ -9,9 +11,6 @@ import {
   useMemo,
 } from "react";
 import { v4 } from "uuid";
-
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
-import { Upload } from "@codegouvfr/react-dsfr/Upload";
 
 import { FancyPreview } from "../fancy-preview/FancyPreview";
 

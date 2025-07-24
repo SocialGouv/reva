@@ -1,4 +1,5 @@
 import { stubMutation, stubQuery } from "../../utils/graphql";
+
 import candidateDropOut from "./fixtures/candidate-dropped-out.json";
 
 function interceptCandidacy() {

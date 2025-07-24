@@ -1,4 +1,5 @@
 import Tile from "@codegouvfr/react-dsfr/Tile";
+
 import { CompleteIncompleteBadge } from "./CompleteIncompleteBadge";
 
 export const GoalsTile = ({

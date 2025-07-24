@@ -1,6 +1,10 @@
 import { addDays, isAfter } from "date-fns";
+
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+
 import { ACTUALISATION_THRESHOLD_DAYS } from "../../banner-thresholds";
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
+
 import { ActualisationBanner } from "./ActualisationBanner";
 import { AppointmentsBanner } from "./AppointmentsBanner";
 import { CandidacyCaduciteBanner } from "./CandidacyCaduciteBanner";
@@ -9,7 +13,6 @@ import { CandidacySubmissionBanner } from "./CandidacySubmissionBanner";
 import { DossierDeValidationBanner } from "./DossierDeValidationBanner";
 import { FeasibilityBanner } from "./FeasibilityBanner";
 import { JuryBanner } from "./JuryBanner";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 type BannerProps = {
   candidacy: CandidacyUseCandidateForDashboard;

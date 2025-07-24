@@ -1,13 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { BackButton } from "@/components/back-button/BackButton";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
-import { useState } from "react";
+
 import CandidacySubmissionSuccessNotice from "./CandidacySubmissionSuccessNotice";
 import CandidateSectionSubmitCandidacy from "./CandidateSectionSubmitCandidacy";
 import CertificationSectionSubmitCandidacy from "./CertificationSectionSubmitCandidacy";

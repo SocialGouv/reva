@@ -1,5 +1,7 @@
 import { isAfter } from "date-fns";
+
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
+
 import { JurySessionTile } from "./JurySessionTile";
 import { NoRendezVousTile } from "./NoRendezVousTile";
 import { ReadyForJuryTile } from "./ReadyForJuryTile";

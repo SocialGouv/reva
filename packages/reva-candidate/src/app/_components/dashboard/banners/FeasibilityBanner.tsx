@@ -1,4 +1,5 @@
 import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
+
 import { BaseBanner } from "./BaseBanner";
 
 interface FeasibilityBannerProps {

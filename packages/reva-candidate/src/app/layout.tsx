@@ -4,29 +4,28 @@ import "@/styles/globals.css";
 import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 
-import { DsfrHead } from "@/components/dsfr/DsfrHead";
-import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
 // import { getHtmlAttributes } from "@/components/dsfr/server-only-index";
 
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
-
-import { Footer } from "@/components/footer/Footer";
-import { Header } from "@/components/header/Header";
-
-import { AuthGuard } from "@/components/auth/auth.guard";
-import { KeycloakProvider } from "@/components/auth/keycloak.context";
-import { CandidacyGuard } from "@/components/candidacy/candidacy.context";
-
-import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { HTMLAttributes } from "react";
 import { Toaster } from "react-hot-toast";
-import { WhiteBoxContainer } from "./_components/WhiteBoxContainer";
+
+import { AuthGuard } from "@/components/auth/auth.guard";
+import { KeycloakProvider } from "@/components/auth/keycloak.context";
+import { CandidacyGuard } from "@/components/candidacy/candidacy.context";
+import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
+import { DsfrHead } from "@/components/dsfr/DsfrHead";
+import { Footer } from "@/components/footer/Footer";
+import { Header } from "@/components/header/Header";
+import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
+
 import { LayoutNotice } from "./_components/layout-notice/LayoutNotice";
+import { WhiteBoxContainer } from "./_components/WhiteBoxContainer";
 
 const queryClient = new QueryClient();
 

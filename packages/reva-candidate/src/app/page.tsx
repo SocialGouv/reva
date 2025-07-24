@@ -1,8 +1,7 @@
 "use client";
 
-import { PageLayout } from "@/layouts/page.layout";
-
 import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
+import { PageLayout } from "@/layouts/page.layout";
 
 import Dashboard from "./_components/dashboard/Dashboard";
 import { useHome } from "./home.hook";

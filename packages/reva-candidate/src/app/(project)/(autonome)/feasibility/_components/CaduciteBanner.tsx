@@ -1,8 +1,9 @@
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 export default function CaduciteBanner() {
   const { candidacy } = useCandidacy();

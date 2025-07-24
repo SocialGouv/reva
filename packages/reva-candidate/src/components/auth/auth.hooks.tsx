@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { graphql } from "@/graphql/generated";
-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 const CANDIDATE_LOGIN_WITH_TOKEN = graphql(`
   mutation candidate_loginWithToken($token: String!) {

@@ -1,4 +1,5 @@
 import { addDays, addWeeks, format, subDays, subMonths } from "date-fns";
+
 import { stubQuery } from "../utils/graphql";
 
 const ACTUALISATION_FEATURE = "candidacy_actualisation";

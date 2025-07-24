@@ -1,6 +1,8 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 const getCandidacyQuery = graphql(`
   query getCandidateWithCandidacyForFeasibilityPage {

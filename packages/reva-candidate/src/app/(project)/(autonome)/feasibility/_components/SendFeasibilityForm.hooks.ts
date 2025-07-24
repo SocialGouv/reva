@@ -1,6 +1,7 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { REST_API_URL } from "@/config/config";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type FeasibilityInputType = {
   candidacyId: string;

@@ -1,8 +1,10 @@
-import { STRAPI_GRAPHQL_API_URL, WEBSITE_BASE_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
-import { ArticleDAide } from "@/graphql/generated/graphql";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import request from "graphql-request";
+
+import { STRAPI_GRAPHQL_API_URL, WEBSITE_BASE_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
+import { ArticleDAide } from "@/graphql/generated/graphql";
 
 const articlesQuery = graphql(`
   query getArticlesForCertificationPageUsefulResources {

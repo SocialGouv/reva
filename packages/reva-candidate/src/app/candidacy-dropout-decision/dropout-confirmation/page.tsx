@@ -1,8 +1,9 @@
 "use client";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import dropOutConfirmationImage from "./assets/dropout_confirmation_image.png";
 import Image from "next/image";
+
+import dropOutConfirmationImage from "./assets/dropout_confirmation_image.png";
 
 export default function CandidacyDropOutConfirmationPage() {
   return (

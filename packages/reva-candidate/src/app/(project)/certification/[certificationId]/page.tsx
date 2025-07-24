@@ -1,10 +1,11 @@
+import { CertificationPage } from "@/components/certification-page/CertificationPage";
+import { getSsrGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { PageLayout } from "@/layouts/page.layout";
 
-import { CertificationPage } from "@/components/certification-page/CertificationPage";
 import { graphql } from "@/graphql/generated";
-import { getSsrGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import CertificationChangeButtons from "./_components/CertificationChangeButtons";
+
 import CertificationBreadcrumbs from "./_components/CertificationBreadcrumbs";
+import CertificationChangeButtons from "./_components/CertificationChangeButtons";
 
 const GET_CERTIFICATION = graphql(`
   query getCertificationById($certificationId: ID!) {

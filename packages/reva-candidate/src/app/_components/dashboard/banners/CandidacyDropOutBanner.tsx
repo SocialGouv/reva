@@ -1,6 +1,9 @@
-import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 import { format, toDate } from "date-fns";
+
+import { isDropOutConfirmed } from "@/utils/dropOutHelper";
+
 import { CandidacyDropOutUseCandidateForDashboard } from "../dashboard.hooks";
+
 import { BaseBanner } from "./BaseBanner";
 
 const WARNING_IMAGE = "/candidat/images/fvae_warning.png";

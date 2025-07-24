@@ -1,5 +1,6 @@
 "use client";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+
 import { useCandidacyForCertification } from "./certification.hooks";
 
 export default function CertificationBreadcrumbs({

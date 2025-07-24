@@ -1,19 +1,22 @@
 "use client";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { ReadyForJuryEstimatedDateTab } from "./_components/tabs/ready-for-jury-estimated-date-tab/ReadyForJuryEstimatedAtTab";
-import { useDossierDeValidationPage } from "./dossierDeValidation.hook";
 
-import { JuryResult } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
+
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { JuryResult } from "@/graphql/generated/graphql";
+
 import {
   DossierDeValidationFormData,
   DossierDeValidationTab,
 } from "./_components/tabs/dossier-de-validation-tab/DossierDeValidationTab";
 import { ReadOnlyDossierDeValidationTab } from "./_components/tabs/read-only-dossier-de-validation-tab/ReadOnlyDossierDeValidationTab";
 import { ReadOnlyReadyForJuryEstimatedDateTab } from "./_components/tabs/read-only-ready-for-jury-estimated-date-tab/ReadOnlyReadyForJuryEstimatedDateTab";
+import { ReadyForJuryEstimatedDateTab } from "./_components/tabs/ready-for-jury-estimated-date-tab/ReadyForJuryEstimatedAtTab";
+import { useDossierDeValidationPage } from "./dossierDeValidation.hook";
 
 const failedJuryResults: JuryResult[] = [
   "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",

@@ -1,9 +1,10 @@
-import { graphql } from "@/graphql/generated";
+import { useMutation } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { useUrqlClient } from "@/components/graphql/urql-client/UrqlClient";
+
+import { graphql } from "@/graphql/generated";
 import { DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput } from "@/graphql/generated/graphql";
-import { useMutation } from "@tanstack/react-query";
 
 const CREATE_OR_UPDATE_SWORN_STATEMENT = graphql(`
   mutation dematerialized_feasibility_file_createOrUpdateSwornStatement(

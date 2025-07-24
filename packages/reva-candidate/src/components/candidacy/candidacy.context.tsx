@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { PageLayout } from "@/layouts/page.layout";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
+
 import { graphql } from "@/graphql/generated";
 
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-
-import { PageLayout } from "@/layouts/page.layout";
-
-import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
 import { Loader } from "../legacy/atoms/Icons";
 
 const GET_CANDIDATE_WITH_CANDIDACY = graphql(`

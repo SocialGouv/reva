@@ -1,20 +1,18 @@
 "use client";
 
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
+import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import Link from "next/link";
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-
-import { PageLayout } from "@/layouts/page.layout";
-
-import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
-import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton";
-import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
+import { PageLayout } from "@/layouts/page.layout";
 
 import { useLogin } from "./login.hooks";
 

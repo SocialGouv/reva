@@ -1,5 +1,3 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
@@ -8,6 +6,10 @@ import { format } from "date-fns";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+
 import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
 
 const dossierDeValidationSchema = z.object({

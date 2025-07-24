@@ -1,6 +1,7 @@
-import { PageLayout } from "@/layouts/page.layout";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
+
+import { PageLayout } from "@/layouts/page.layout";
 
 export default function WaitingForTraining() {
   return (

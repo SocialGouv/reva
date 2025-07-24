@@ -1,10 +1,9 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-import { graphql } from "@/graphql/generated";
-
-import { SearchOrganismFilter } from "@/graphql/generated/graphql";
-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
+import { graphql } from "@/graphql/generated";
+import { SearchOrganismFilter } from "@/graphql/generated/graphql";
 
 const GET_ORGANISMS_FOR_CANDIDACY = graphql(`
   query getRandomOrganismsForCandidacy(

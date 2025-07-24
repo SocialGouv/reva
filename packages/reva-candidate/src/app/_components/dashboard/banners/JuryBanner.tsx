@@ -1,7 +1,10 @@
-import { CustomErrorBadge } from "@/components/legacy/organisms/CustomErrorBadge/CustomErrorBadge";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { format, isAfter } from "date-fns";
+
+import { CustomErrorBadge } from "@/components/legacy/organisms/CustomErrorBadge/CustomErrorBadge";
+
 import { JuryUseCandidateForDashboard } from "../dashboard.hooks";
+
 import { BaseBanner } from "./BaseBanner";
 
 interface JuryBannerProps {

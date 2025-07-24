@@ -1,7 +1,6 @@
-import { useMemo } from "react";
-
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { useMemo } from "react";
 
 import {
   Certification,

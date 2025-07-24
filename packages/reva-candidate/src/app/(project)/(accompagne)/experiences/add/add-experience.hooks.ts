@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
+
 import { graphql } from "@/graphql/generated";
 import {
   CandidacyStatusStep,
   ExperienceInput,
 } from "@/graphql/generated/graphql";
-
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
 
 const getCandidateQuery = graphql(`
   query getCandidateForAddExperience {

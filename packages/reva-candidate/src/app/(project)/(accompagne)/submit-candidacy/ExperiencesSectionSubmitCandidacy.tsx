@@ -1,5 +1,6 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { format } from "date-fns";
+
 import { ExperiencesUseSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 
 const durationLabel = {

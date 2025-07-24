@@ -1,4 +1,5 @@
 import { stubQuery } from "../../utils/graphql";
+
 import candidateAutonomeAdmissibleFeasibilityStep from "./fixtures/candidate-autonome-admissible-feasibility-step.json";
 import candidateAutonomeFeasibilityStep from "./fixtures/candidate-autonome-feasibility-step.json";
 import candidateAutonomeIncompleteFeasibilityStep from "./fixtures/candidate-autonome-incomplete-feasibility-step.json";

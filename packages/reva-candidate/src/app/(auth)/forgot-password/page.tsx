@@ -1,14 +1,12 @@
 "use client";
 
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-
-import { PageLayout } from "@/layouts/page.layout";
-
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { PageLayout } from "@/layouts/page.layout";
 
 import { useForgotPassword } from "./forgot-password.hooks";
 

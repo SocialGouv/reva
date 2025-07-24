@@ -1,4 +1,5 @@
 import { GenderEnum } from "@/constants";
+
 import { Gender } from "@/graphql/generated/graphql";
 
 export function getGenderPrefix(gender: Gender) {

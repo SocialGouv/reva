@@ -1,4 +1,5 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
+
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 import { CertificationTile } from "../tiles/CertificationTile";
 import { DossierValidationTile } from "../tiles/DossierValidationTile";
@@ -9,6 +10,7 @@ import { OrganismTile } from "../tiles/OrganismTile";
 import { SubmitCandidacyTile } from "../tiles/SubmitCandidacyTile";
 import { TrainingTile } from "../tiles/TrainingTile";
 import { TypeAccompagnementTile } from "../tiles/TypeAccompagnementTile";
+
 import { DashboardTilesSection } from "./DashboardTilesSection";
 
 export const DashboardVaeCollectiveTilesGroup = ({

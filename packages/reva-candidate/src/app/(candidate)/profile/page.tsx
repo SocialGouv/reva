@@ -1,5 +1,6 @@
 "use client";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+
 import CandidateInformationForm from "./_components/CandidateInformationForm";
 import { useProfile } from "./_components/useProfile";
 

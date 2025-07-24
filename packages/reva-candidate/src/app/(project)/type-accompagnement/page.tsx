@@ -1,17 +1,18 @@
 "use client";
 
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
-import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { useState } from "react";
-import { useTypeAccompagnementPage } from "./typeAccompagnement.hook";
 
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { useRouter } from "next/navigation";
+import { useTypeAccompagnementPage } from "./typeAccompagnement.hook";
 
 type TypeAccompagnement = "AUTONOME" | "ACCOMPAGNE";
 

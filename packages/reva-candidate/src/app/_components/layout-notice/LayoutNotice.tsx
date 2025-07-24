@@ -1,7 +1,8 @@
-import { useHome } from "@/app/home.hook";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import { useHome } from "@/app/home.hook";
 
 const TUTORIAL_URL_DASHBOARD_AUTONOME =
   "https://scribehow.com/shared/Tutoriel__Candidat_sans_accompagnement_autonome__0NQyq175SDaI0Epy7bdyLA?referrer=documents";

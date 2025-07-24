@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { graphql } from "@/graphql/generated";
-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 const GET_CANDIDATE_WITH_CANDIDACY_QUERY = graphql(`
   query getCandidateWithCandidacyForTrainingValidation {

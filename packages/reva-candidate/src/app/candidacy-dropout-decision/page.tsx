@@ -1,14 +1,16 @@
 "use client";
 
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useDropOutDecisionPage } from "./dropOutDecision.hooks";
+
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { useRouter } from "next/navigation";
+
+import { useDropOutDecisionPage } from "./dropOutDecision.hooks";
 
 const schema = z.object({
   dropOutConfirmed: z.enum(["DROP_OUT_CONFIRMED", "DROP_OUT_CANCELED"], {

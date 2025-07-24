@@ -1,8 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
+
 import { graphql } from "@/graphql/generated";
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
-import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
-import { useQuery } from "@tanstack/react-query";
 
 const getCandidateQuery = graphql(`
   query getCandidateForExperiencesPage {

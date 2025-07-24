@@ -1,10 +1,5 @@
 "use client";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -16,6 +11,13 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { useActualisation } from "./actualisation.hooks";
 
 const schema = z

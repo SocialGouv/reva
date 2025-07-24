@@ -1,5 +1,6 @@
-import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 import Tag from "@codegouvfr/react-dsfr/Tag";
+
+import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
 export const JuryTab = ({
   juryTypeMiseEnSituationProfessionnelle,

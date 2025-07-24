@@ -1,6 +1,7 @@
-import { TypeAccompagnement } from "@/graphql/generated/graphql";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import Tile from "@codegouvfr/react-dsfr/Tile";
+
+import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 export const TypeAccompagnementTile = ({
   typeAccompagnement,

@@ -1,4 +1,5 @@
 import { DossierDeValidationUseCandidateForDashboard } from "../dashboard.hooks";
+
 import { BaseBanner } from "./BaseBanner";
 
 interface DossierDeValidationBannerProps {

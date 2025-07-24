@@ -1,9 +1,11 @@
 "use client";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useCandidacyForCertification } from "./certification.hooks";
-import { useParams, useRouter } from "next/navigation";
-import { graphqlErrorToast } from "@/components/toast/toast";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { useParams, useRouter } from "next/navigation";
+
+import { graphqlErrorToast } from "@/components/toast/toast";
+
+import { useCandidacyForCertification } from "./certification.hooks";
 
 const certificationWarningModal = createModal({
   id: "certification-warning",

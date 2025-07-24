@@ -1,22 +1,20 @@
 "use client";
 
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Select } from "@codegouvfr/react-dsfr/Select";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format, parseISO, toDate } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
-
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Select } from "@codegouvfr/react-dsfr/Select";
-
-import { ExperienceDuration } from "@/constants";
-
-import { PageLayout } from "@/layouts/page.layout";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { ExperienceDuration } from "@/constants";
+import { PageLayout } from "@/layouts/page.layout";
+
 import { useUpdateExperience } from "./update-experience.hooks";
 
 const durationOptions: { label: string; value: ExperienceDuration }[] = [

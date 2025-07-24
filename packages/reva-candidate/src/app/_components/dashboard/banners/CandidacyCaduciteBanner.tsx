@@ -1,5 +1,7 @@
 import { format } from "date-fns";
+
 import { CandidacyContestationsCaduciteUseCandidateForDashboard } from "../dashboard.hooks";
+
 import { BaseBanner } from "./BaseBanner";
 
 const WARNING_IMAGE = "/candidat/images/image-warning-hand.png";

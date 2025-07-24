@@ -1,6 +1,5 @@
-import { format } from "date-fns";
-
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import { format } from "date-fns";
 
 import { Experience } from "@/graphql/generated/graphql";
 

@@ -1,5 +1,9 @@
 "use client";
 
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+import { Card } from "@codegouvfr/react-dsfr/Card";
+import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 import {
   redirect,
   usePathname,
@@ -7,16 +11,13 @@ import {
   useSearchParams,
 } from "next/navigation";
 
-import { PageLayout } from "@/layouts/page.layout";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
-import { Card } from "@codegouvfr/react-dsfr/Card";
+import { PageLayout } from "@/layouts/page.layout";
+
 import {
   useCandidacyForCertificationSearch,
   useSetCertification,
 } from "./search-certification.hooks";
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
 export default function SetCertification() {
   const router = useRouter();

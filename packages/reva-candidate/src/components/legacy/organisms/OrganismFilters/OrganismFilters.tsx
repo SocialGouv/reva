@@ -1,9 +1,9 @@
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { OrganismDistanceFilter } from "./OrganismDistanceFilter";
 
 const tagFilledStyle = (isSelected: boolean) =>

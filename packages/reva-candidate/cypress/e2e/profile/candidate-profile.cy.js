@@ -1,5 +1,7 @@
 import { format } from "date-fns";
+
 import { stubQuery } from "../../utils/graphql";
+
 import candidateData from "./fixtures/candidate.json";
 import countries from "./fixtures/countries.json";
 import departments from "./fixtures/departments.json";

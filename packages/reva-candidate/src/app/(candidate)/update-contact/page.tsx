@@ -1,17 +1,15 @@
 "use client";
 
+import Button from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-import Button from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
-
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUpdateContact } from "./update-contact.hooks";
 
 export default function UpdateContact() {

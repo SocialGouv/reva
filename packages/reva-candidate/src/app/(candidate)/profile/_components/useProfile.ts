@@ -1,7 +1,9 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 import { CandidateUpdateInformationBySelfInput } from "@/graphql/generated/graphql";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCandidateQuery = graphql(`
   query getCandidateForProfilePage {

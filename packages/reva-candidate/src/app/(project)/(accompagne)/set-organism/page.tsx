@@ -1,25 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
-
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
-
-import { Organism } from "@/graphql/generated/graphql";
-
-import { PageLayout } from "@/layouts/page.layout";
+import { redirect, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
+import { EmptyState } from "@/components/empty-state/EmptyState";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/OrganismCard";
 import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/OrganismFilters";
+import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { PageLayout } from "@/layouts/page.layout";
+
+import { Organism } from "@/graphql/generated/graphql";
 
 import { useSetOrganism } from "./set-organism.hooks";
-import { graphqlErrorToast } from "@/components/toast/toast";
-import { EmptyState } from "@/components/empty-state/EmptyState";
-import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 const RECORDS_PER_PAGE = 10;
 const MAX_RECORDS = 50;

@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 
 import { getGenderPrefix } from "@/utils/getGenderPrefix.util";
+
 import { CandidateUseSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
 
 export default function CandidateSectionSubmitCandidacy({

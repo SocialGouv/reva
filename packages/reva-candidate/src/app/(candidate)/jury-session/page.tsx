@@ -1,12 +1,14 @@
 "use client";
-import { useKeycloakContext } from "@/components/auth/keycloak.context";
-import { BackButton } from "@/components/back-button/BackButton";
-import { handleAuthenticatedDownload } from "@/utils/handleAuthenticatedDownload.util";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { BackButton } from "@/components/back-button/BackButton";
+import { handleAuthenticatedDownload } from "@/utils/handleAuthenticatedDownload.util";
+
 import { JuryUseJurySession, useJurySession } from "./jury-session.hook";
 
 const JuryInformation = ({

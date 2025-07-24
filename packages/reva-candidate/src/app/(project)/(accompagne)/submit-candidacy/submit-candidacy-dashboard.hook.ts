@@ -1,7 +1,9 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
-import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 import { useSuspenseQuery } from "@tanstack/react-query";
+
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
+
+import { graphql } from "@/graphql/generated";
 
 const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   query candidate_getCandidateWithCandidacyForCandidacySubmitDashboard {

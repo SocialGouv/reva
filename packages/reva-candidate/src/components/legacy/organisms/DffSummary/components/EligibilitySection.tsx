@@ -1,7 +1,8 @@
-import { DffEligibilityRequirement } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { format } from "date-fns";
+
+import { DffEligibilityRequirement } from "@/graphql/generated/graphql";
 
 const EligibiltyBadge = ({
   eligibilityRequirement,

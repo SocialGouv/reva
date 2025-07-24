@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { graphql } from "@/graphql/generated";
-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 const SUBMIT_CANDIDACY = graphql(`
   mutation submit_candidacy($candidacyId: ID!) {

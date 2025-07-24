@@ -1,17 +1,16 @@
 "use client";
 
-import { ChangeEvent, useEffect, useReducer } from "react";
-import { useRouter } from "next/navigation";
-
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useEffect, useReducer } from "react";
 
+import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateTraining } from "./validate-training.hooks";
-import { graphqlErrorToast } from "@/components/toast/toast";
-import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
 
 type Condition =
   | "conditionOne"

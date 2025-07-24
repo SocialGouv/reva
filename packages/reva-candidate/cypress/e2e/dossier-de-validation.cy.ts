@@ -1,6 +1,7 @@
 import { addDays, addMonths, format } from "date-fns";
 
 import { JuryResult, TypeAccompagnement } from "@/graphql/generated/graphql";
+
 import { stubMutation, stubQuery } from "../utils/graphql";
 
 const DATE_NOW = new Date();

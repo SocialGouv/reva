@@ -1,5 +1,6 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
+
 import { ExperiencesUseCandidateForDashboard } from "../dashboard.hooks";
 
 export const ExperiencesTile = ({

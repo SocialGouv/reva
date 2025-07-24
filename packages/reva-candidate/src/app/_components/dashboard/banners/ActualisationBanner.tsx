@@ -1,11 +1,14 @@
 import { addDays, format, isAfter } from "date-fns";
+
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+
 import {
   ACTUALISATION_THRESHOLD_DAYS,
   CADUQUITE_THRESHOLD_DAYS,
 } from "../../banner-thresholds";
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
+
 import { BaseBanner } from "./BaseBanner";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 const HOURGLASS_IMAGE = "/candidat/images/image-hourglass.png";
 const HOURGLASS_IMAGE_ALT = "Sablier";

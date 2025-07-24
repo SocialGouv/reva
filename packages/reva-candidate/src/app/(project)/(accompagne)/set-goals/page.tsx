@@ -1,18 +1,16 @@
 "use client";
 
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
-
-import { graphqlErrorToast } from "@/components/toast/toast";
 import { useSetGoals } from "./set-goals.hooks";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 export default function SetGoals() {
   const router = useRouter();

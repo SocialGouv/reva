@@ -1,7 +1,8 @@
-import { BackButton } from "@/components/back-button/BackButton";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useRouter } from "next/navigation";
+
+import { BackButton } from "@/components/back-button/BackButton";
 
 const backConfirmationModal = createModal({
   id: "back-confirmation-modal",

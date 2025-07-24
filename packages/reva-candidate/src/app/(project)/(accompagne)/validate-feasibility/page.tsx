@@ -1,26 +1,22 @@
 "use client";
 
+import Button from "@codegouvfr/react-dsfr/Button";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import Download from "@codegouvfr/react-dsfr/Download";
+import { useQueryClient } from "@tanstack/react-query";
+import { GraphQLError } from "graphql";
+import dynamic from "next/dynamic";
 import { redirect, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
-import Button from "@codegouvfr/react-dsfr/Button";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
-import Download from "@codegouvfr/react-dsfr/Download";
-
-import { PageLayout } from "@/layouts/page.layout";
-
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
-
 import { graphqlErrorToast } from "@/components/toast/toast";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { useQueryClient } from "@tanstack/react-query";
+import { PageLayout } from "@/layouts/page.layout";
 
-import dynamic from "next/dynamic";
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
-import { GraphQLError } from "graphql";
 
 // The ButtonConvertHtmlToPdf component uses html2pdf, which relies on the window object and causes issues during server-side rendering (SSR) builds.
 // We use dynamic import to ensure the component is only loaded on the client side.

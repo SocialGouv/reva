@@ -1,15 +1,13 @@
 "use client";
 
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-
-import { PageLayout } from "@/layouts/page.layout";
-
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
+import { PageLayout } from "@/layouts/page.layout";
 
 import { useResetPassword } from "./reset-password.hooks";
 

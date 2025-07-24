@@ -1,30 +1,26 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import Link from "next/link";
 import {
   redirect,
   usePathname,
   useRouter,
   useSearchParams,
 } from "next/navigation";
-
-import { Button } from "@codegouvfr/react-dsfr/Button";
-
-import { PageLayout } from "@/layouts/page.layout";
+import { FormEvent, useMemo, useState } from "react";
 
 import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
-
-import { Pagination } from "@/components/pagination/Pagination";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
-import { Results } from "@/components/legacy/organisms/Results";
 import { Card, CardSkeleton } from "@/components/legacy/organisms/Card";
+import { Results } from "@/components/legacy/organisms/Results";
+import { Pagination } from "@/components/pagination/Pagination";
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { PageLayout } from "@/layouts/page.layout";
 
 import { useSetCertification } from "./set-certification.hooks";
-import Link from "next/link";
-import { graphqlErrorToast } from "@/components/toast/toast";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
 export default function SetCertification() {
   const router = useRouter();

@@ -4,10 +4,10 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 
-import { graphql } from "@/graphql/generated";
-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
+
+import { graphql } from "@/graphql/generated";
 
 const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
   query searchCertificationsForCandidateDashboard(

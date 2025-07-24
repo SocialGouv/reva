@@ -1,12 +1,14 @@
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Notice from "@codegouvfr/react-dsfr/Notice";
+import { toDate } from "date-fns";
+
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
+
 import {
   FeasibilityDecision,
   FeasibilityHistory,
 } from "@/graphql/generated/graphql";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Notice from "@codegouvfr/react-dsfr/Notice";
-import { toDate } from "date-fns";
 
 interface Props {
   decision: FeasibilityDecision;

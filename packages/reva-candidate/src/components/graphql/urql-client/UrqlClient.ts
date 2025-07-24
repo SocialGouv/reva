@@ -1,9 +1,8 @@
-import { Client, fetchExchange } from "urql";
 import { authExchange } from "@urql/exchange-auth";
-
-import { GRAPHQL_API_URL } from "@/config/config";
+import { Client, fetchExchange } from "urql";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { GRAPHQL_API_URL } from "@/config/config";
 
 export const useUrqlClient = () => {
   const { accessToken } = useKeycloakContext();

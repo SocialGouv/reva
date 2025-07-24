@@ -1,9 +1,9 @@
 "use client";
 
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
+import { usePathname } from "next/navigation";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
-import { usePathname } from "next/navigation";
 
 const getNavigation = ({
   authenticated,

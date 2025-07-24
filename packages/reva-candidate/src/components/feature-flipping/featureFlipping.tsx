@@ -1,9 +1,11 @@
-import { useKeycloakContext } from "@/components/auth/keycloak.context";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 import { GraphQLClient } from "graphql-request";
 import { useEffect } from "react";
 import { create } from "zustand";
+
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 const activeFeaturesQuery = graphql(`
   query activeFeaturesForConnectedUser {

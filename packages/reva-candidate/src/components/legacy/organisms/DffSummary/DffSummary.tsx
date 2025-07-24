@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
+
 import {
   Candidate,
   Certification,
@@ -8,8 +10,6 @@ import {
   DffEligibilityRequirement,
   Prerequisite,
 } from "@/graphql/generated/graphql";
-
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
 
 import { BannerSummary } from "./components/BannerSummary";
 import CandidateSection from "./components/CandidateSection";

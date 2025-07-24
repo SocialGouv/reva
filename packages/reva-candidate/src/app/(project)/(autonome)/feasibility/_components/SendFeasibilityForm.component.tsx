@@ -1,26 +1,27 @@
-import {
-  errorToast,
-  graphqlErrorToast,
-  successToast,
-} from "@/components/toast/toast";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Select from "@codegouvfr/react-dsfr/Select";
-import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
-
 import { DownloadTile } from "@/components/download-tile/DownloadTile";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { BackButton } from "@/components/legacy/molecules/BackButton";
+import {
+  errorToast,
+  graphqlErrorToast,
+  successToast,
+} from "@/components/toast/toast";
 import Tooltip from "@/components/tooltip/Tooltip";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
+
 import { useFeasibilityPage } from "../feasibility.hook";
+
 import { FeasibilityBanner } from "./FeasibilityBanner";
+import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
 import { UploadForm } from "./UploadForm";
 
 const schema = z.object({

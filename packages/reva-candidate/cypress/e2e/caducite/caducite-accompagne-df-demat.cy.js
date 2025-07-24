@@ -1,4 +1,5 @@
 import { subDays } from "date-fns";
+
 import { stubQuery } from "../../utils/graphql";
 
 const CADUCITE_THRESHOLD_DAYS = 183;

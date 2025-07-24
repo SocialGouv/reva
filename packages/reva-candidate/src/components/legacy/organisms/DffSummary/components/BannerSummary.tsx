@@ -1,9 +1,10 @@
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+
+import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 export function BannerSummary() {
   const router = useRouter();

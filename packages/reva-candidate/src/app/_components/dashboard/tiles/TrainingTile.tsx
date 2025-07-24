@@ -1,8 +1,9 @@
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { isAfter, isBefore } from "date-fns";
 import { useRouter } from "next/navigation";
+
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 const TrainingStatusBadge = ({
   candidacyStatus,

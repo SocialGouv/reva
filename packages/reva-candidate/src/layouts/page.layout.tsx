@@ -1,7 +1,8 @@
 "use client";
 
-import { BackToHomeButton } from "@/components/legacy/molecules/BackToHomeButton/BackToHomeButton";
 import { ReactNode } from "react";
+
+import { BackToHomeButton } from "@/components/legacy/molecules/BackToHomeButton/BackToHomeButton";
 
 interface Props {
   children?: ReactNode;

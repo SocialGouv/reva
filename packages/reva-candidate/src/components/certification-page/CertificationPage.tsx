@@ -1,11 +1,13 @@
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
+
+import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
+
+import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
 // import { UsefulResources } from "./useful-resources/UserfulResources";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
-import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
-import { JuryTab } from "./tabs/JuryTab";
 import { UsefulResources } from "./useful-resources/UserfulResources";
 
 export const CertificationPage = async ({

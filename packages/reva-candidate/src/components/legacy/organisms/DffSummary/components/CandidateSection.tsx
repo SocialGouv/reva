@@ -1,8 +1,9 @@
 import { format } from "date-fns";
 
-import { Candidate } from "@/graphql/generated/graphql";
 import { getGenderBornLabel } from "@/utils/getGenderBornLabel.util";
 import { getGenderPrefix } from "@/utils/getGenderPrefix.util";
+
+import { Candidate } from "@/graphql/generated/graphql";
 
 export default function CandidateSection({
   candidate,

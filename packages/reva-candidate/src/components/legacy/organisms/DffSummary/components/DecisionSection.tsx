@@ -1,7 +1,8 @@
-import { DfFileAapDecision } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-
 import Input from "@codegouvfr/react-dsfr/Input";
+
+import { DfFileAapDecision } from "@/graphql/generated/graphql";
+
 import { CustomErrorBadge } from "../../CustomErrorBadge/CustomErrorBadge";
 
 export default function DecisionSection({

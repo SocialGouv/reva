@@ -1,6 +1,5 @@
-import { useCallback, useEffect } from "react";
-
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect } from "react";
 
 import { PageLayout } from "@/layouts/page.layout";
 

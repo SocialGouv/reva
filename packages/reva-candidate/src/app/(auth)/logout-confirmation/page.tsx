@@ -1,8 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { useRouter } from "next/navigation";
 
 import { PageLayout } from "@/layouts/page.layout";
 

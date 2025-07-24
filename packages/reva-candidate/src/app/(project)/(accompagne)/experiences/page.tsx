@@ -1,11 +1,13 @@
 "use client";
-import { Duration } from "@/graphql/generated/graphql";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Card from "@codegouvfr/react-dsfr/Card";
 import { format } from "date-fns";
 import Link from "next/link";
+
+import { Duration } from "@/graphql/generated/graphql";
+
 import { useExperiences } from "./experiences.hooks";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 const durationToString: {
   [key in Duration]: string;

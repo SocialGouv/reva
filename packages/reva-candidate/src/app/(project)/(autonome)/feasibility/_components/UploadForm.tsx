@@ -1,7 +1,9 @@
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { type FeasibilityFormData } from "./SendFeasibilityForm.component";
-import { useForm } from "react-hook-form";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { useForm } from "react-hook-form";
+
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+
+import { type FeasibilityFormData } from "./SendFeasibilityForm.component";
 
 type UploadFormType = ReturnType<typeof useForm<FeasibilityFormData>>;
 type UploadFormProps = {

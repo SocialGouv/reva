@@ -3,6 +3,7 @@ import { CertificationTile } from "../tiles/CertificationTile";
 import { DossierValidationTile } from "../tiles/DossierValidationTile";
 import { FeasibilityTile } from "../tiles/FeasibilityTile";
 import { TypeAccompagnementTile } from "../tiles/TypeAccompagnementTile";
+
 import { DashboardTilesSection } from "./DashboardTilesSection";
 
 export const DashboardAutonomeTilesGroup = ({
