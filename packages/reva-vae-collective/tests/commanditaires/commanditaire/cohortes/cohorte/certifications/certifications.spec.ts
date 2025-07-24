@@ -1,0 +1,68 @@
+import {
+  test,
+  expect,
+  graphql,
+  HttpResponse,
+} from "next/experimental/testmode/playwright/msw";
+import { login } from "../../../../../shared/utils/auth/login";
+const fvae = graphql.link("https://reva-api/api/graphql");
+
+test.use({
+  mswHandlers: [
+    [
+      fvae.query("getCohorteByIdForSearchCertificationsPage", () =>
+        HttpResponse.json({
+          data: {
+            vaeCollective_getCohorteVaeCollectiveById: {
+              id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+              nom: "macohorte",
+            },
+          },
+        }),
+      ),
+
+      fvae.query("searchCertificationsForCandidateForCertificationsPage", () =>
+        HttpResponse.json({
+          data: {
+            searchCertificationsForCandidate: {
+              rows: [
+                {
+                  id: 1,
+                  label: "certification1",
+                  codeRncp: "rncp1",
+                  domains: [],
+                },
+                {
+                  id: 2,
+                  label: "certification2",
+                  codeRncp: "rncp2",
+                  domains: [],
+                },
+              ],
+              info: {
+                totalRows: 2,
+                totalPages: 1,
+                currentPage: 1,
+              },
+            },
+          },
+        }),
+      ),
+    ],
+    { scope: "test" },
+  ],
+});
+
+test("it should display the certifications list", async ({ page }) => {
+  await login({ page, role: "gestionnaireVaeCollective" });
+
+  await page.goto(
+    "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications",
+  );
+
+  await expect(
+    page.getByRole("heading", { name: "Certifications" }),
+  ).toBeVisible();
+
+  await expect(page.getByTestId("certification-list")).toHaveCount(2);
+});

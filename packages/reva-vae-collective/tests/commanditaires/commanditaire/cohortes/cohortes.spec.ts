@@ -116,7 +116,7 @@ test.describe("Commanditaire with multiple cohortes", () => {
 
     await expect(page.getByText("Cohortes")).toBeVisible();
 
-    await expect(page.getByTestId("cohorte-list")).toHaveCount(2);
+    await expect(page.getByTestId("cohorte-card")).toHaveCount(2);
 
     await expect(
       page.getByTestId("cohorte-card").first().getByRole("heading"),

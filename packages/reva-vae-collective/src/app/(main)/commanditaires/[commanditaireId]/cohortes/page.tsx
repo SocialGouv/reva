@@ -142,7 +142,7 @@ export default async function CohortesPage({
           const organism =
             certification?.certificationCohorteVaeCollectiveOnOrganisms?.[0];
           return (
-            <li key={cohorte.id} data-testid="cohorte-list">
+            <li key={cohorte.id}>
               <Card
                 data-testid="cohorte-card"
                 enlargeLink
