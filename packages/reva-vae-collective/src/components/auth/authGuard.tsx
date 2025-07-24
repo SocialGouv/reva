@@ -1,5 +1,6 @@
 "use client";
 import { redirect, usePathname } from "next/navigation";
+
 import { useKeycloakContext } from "./keycloakContext";
 
 export const AuthGuard = ({ children }: { children: React.ReactNode }) => {

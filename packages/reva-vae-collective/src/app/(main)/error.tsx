@@ -1,8 +1,9 @@
 "use client"; // Error boundaries must be Client Components
 
-import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useEffect } from "react";
+
+import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 // eslint-disable-next-line import/no-unused-modules
 export default function Error({

@@ -1,10 +1,12 @@
-import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
-import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Link from "next/link";
-import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
+
+import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
+import { client } from "@/helpers/graphql/urql-client/urqlClient";
+
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
+import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
 
 const getCohorteById = async (
   commanditaireVaeCollectiveId: string,

@@ -1,6 +1,7 @@
 "use client";
-import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
+
 import { deleteCohorte } from "./actions";
 
 const modal = createModal({

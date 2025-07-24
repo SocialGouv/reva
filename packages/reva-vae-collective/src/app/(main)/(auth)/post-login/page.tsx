@@ -1,9 +1,10 @@
 "use client";
 
-import { useAuth } from "@/components/auth/auth";
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import { useAuth } from "@/components/auth/auth";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 export default function PostLoginPage() {
   const searchParams = useSearchParams();

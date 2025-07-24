@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useState } from "react";
 
 export const PasswordInput = ({

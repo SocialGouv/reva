@@ -1,9 +1,11 @@
 "use client";
-import { useAuth } from "@/components/auth/auth";
 import { redirect } from "next/navigation";
-import { redirectCommanditaireVaeCollective } from "./actions";
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useEffect } from "react";
+
+import { useAuth } from "@/components/auth/auth";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
+
+import { redirectCommanditaireVaeCollective } from "./actions";
 
 export default function Home() {
   const { authenticated } = useKeycloakContext();

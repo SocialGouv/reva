@@ -1,10 +1,11 @@
 "use server";
 
+import { gql } from "@urql/core";
+import { redirect } from "next/navigation";
+
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
-import { gql } from "@urql/core";
-import { redirect } from "next/navigation";
 
 const deleteCohorteMutation = gql`
   mutation deleteCohorteMutation(

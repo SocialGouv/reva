@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
 import Keycloak, { KeycloakInitOptions } from "keycloak-js";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   KEYCLOAK_CLIENT_ID,
@@ -9,8 +9,8 @@ import {
   KEYCLOAK_URL,
 } from "@/config/config";
 
-import { Tokens, getTokens, removeTokens, saveTokens } from "./keycloak.utils";
 import { AuthLoader } from "./AuthLoader";
+import { Tokens, getTokens, removeTokens, saveTokens } from "./keycloak.utils";
 
 type KeycloakUser = {
   id: string;

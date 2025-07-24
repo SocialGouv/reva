@@ -1,8 +1,9 @@
+import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
+import { Metadata } from "next";
+
 import { AuthGuard } from "@/components/auth/authGuard";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
-import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "France VAE | L’outil qui facilite le suivi des candidats à la VAE",

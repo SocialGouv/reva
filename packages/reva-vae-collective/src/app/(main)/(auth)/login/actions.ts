@@ -1,8 +1,9 @@
 "use server";
 
-import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { gql } from "@urql/core";
 import { redirect } from "next/navigation";
+
+import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
 type FormState = {
   errors?: {

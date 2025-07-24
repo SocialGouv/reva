@@ -1,9 +1,9 @@
 "use client";
 
 import "./globals.css";
-import { DsfrHead } from "@/components/dsfr/DsfrHead";
-import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
 import { KeycloakProvider } from "@/components/auth/keycloakContext";
+import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
+import { DsfrHead } from "@/components/dsfr/DsfrHead";
 
 const lang = "fr";
 

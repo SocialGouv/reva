@@ -1,12 +1,12 @@
 "use client";
 
-import Form from "next/form";
-
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { login } from "./actions";
+import Form from "next/form";
 import { useActionState } from "react";
+
 import { PasswordInput } from "./_components/password-input/PasswordInput";
+import { login } from "./actions";
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState(login, {});

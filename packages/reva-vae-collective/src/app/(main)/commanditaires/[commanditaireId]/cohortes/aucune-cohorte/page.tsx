@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import applicationPolygon from "./assets/application-polygon.svg";
 import Image from "next/image";
+
+import applicationPolygon from "./assets/application-polygon.svg";
 
 export default function AucuneCohortePage() {
   return (

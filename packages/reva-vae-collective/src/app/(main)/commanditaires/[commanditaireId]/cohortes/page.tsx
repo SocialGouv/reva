@@ -1,13 +1,14 @@
+import { Badge } from "@codegouvfr/react-dsfr/Badge";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Card } from "@codegouvfr/react-dsfr/Card";
+import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
+import { gql } from "@urql/core";
+import { format } from "date-fns";
+import { redirect } from "next/navigation";
+
+import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { gql } from "@urql/core";
-import { redirect } from "next/navigation";
-import { Card } from "@codegouvfr/react-dsfr/Card";
-import { Badge } from "@codegouvfr/react-dsfr/Badge";
-import { format } from "date-fns";
-import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
-import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 
 const RECORDS_PER_PAGE = 10;
 

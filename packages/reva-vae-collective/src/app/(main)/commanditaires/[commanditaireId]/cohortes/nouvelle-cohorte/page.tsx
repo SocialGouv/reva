@@ -2,9 +2,10 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { createCohort } from "./actions";
-import { useActionState } from "react";
 import { useParams } from "next/navigation";
+import { useActionState } from "react";
+
+import { createCohort } from "./actions";
 
 export default function NouvelleCohortePage() {
   const [state, action, pending] = useActionState(createCohort, {});

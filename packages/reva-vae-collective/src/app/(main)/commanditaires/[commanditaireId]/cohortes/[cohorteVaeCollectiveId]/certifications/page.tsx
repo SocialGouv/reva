@@ -1,9 +1,10 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { getCohorteById, searchCertifications } from "./actions";
-import { CertificationsSearchBar } from "./_components/certifications-search-bar/CertificationsSearchBar";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
+
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
+import { CertificationsSearchBar } from "./_components/certifications-search-bar/CertificationsSearchBar";
+import { getCohorteById, searchCertifications } from "./actions";
 
 const RECORDS_PER_PAGE = 10;
 

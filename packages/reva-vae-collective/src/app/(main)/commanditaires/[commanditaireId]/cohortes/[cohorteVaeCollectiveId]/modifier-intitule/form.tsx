@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
-import { updateNomCohorteVaeCollective } from "./actions";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { useActionState } from "react";
+
+import { updateNomCohorteVaeCollective } from "./actions";
 
 export const UpdateNomCohorteForm = ({
   commanditaireId,
