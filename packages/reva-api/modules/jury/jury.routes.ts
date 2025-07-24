@@ -4,6 +4,7 @@ import { FastifyPluginAsync } from "fastify";
 import { prismaClient } from "../../prisma/client";
 import { UploadedFile, getDownloadLink } from "../shared/file";
 import { logger } from "../shared/logger";
+
 import { canManageJury } from "./features/canManageJury";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { isCandidacyOwner } from "./features/isCandidacyOwner";

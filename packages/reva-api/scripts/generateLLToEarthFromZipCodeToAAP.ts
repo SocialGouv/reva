@@ -1,5 +1,5 @@
-import { prismaClient } from "../prisma/client";
 import { fetchCoordinatesFromZipCode } from "../modules/shared/geocoding";
+import { prismaClient } from "../prisma/client";
 
 (async () => {
   try {

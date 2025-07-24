@@ -3,6 +3,7 @@ import { FastifyPluginAsync } from "fastify";
 
 import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
 import { UploadedFile } from "../../shared/file";
+
 import { addPaymentProof } from "./features/addPaymentProof";
 
 interface PaymentRequestProofBody {

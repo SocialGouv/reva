@@ -1,14 +1,15 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { prismaClient } from "../../../prisma/client";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
 } from "../candidacy-menu.types";
+
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
-import { prismaClient } from "../../../prisma/client";
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,

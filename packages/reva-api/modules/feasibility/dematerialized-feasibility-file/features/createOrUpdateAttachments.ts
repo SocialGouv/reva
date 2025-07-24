@@ -1,4 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
+
+import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../../../prisma/client";
 import {
   UploadedFile,
@@ -11,9 +13,9 @@ import {
   DematerializedFeasibilityFileCreateOrUpdateAttachmentsInput,
   DematerializedFeasibilityFileType,
 } from "../dematerialized-feasibility-file.types";
+
 import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./getDematerializedFeasibilityFileWithAttachmentsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
-import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 
 const MAX_UPLOAD_SIZE = 15728640; // 15Mo
 

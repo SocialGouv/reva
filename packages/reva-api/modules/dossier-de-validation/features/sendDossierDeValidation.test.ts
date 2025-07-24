@@ -1,9 +1,10 @@
 import { FastifyInstance } from "fastify";
+
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
-import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createDossierDeValidationHelper } from "../../../test/helpers/entities/create-dossier-de-validation-helper";
+import { createFeasibilityUploadedPdfHelper } from "../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createJuryHelper } from "../../../test/helpers/entities/create-jury-helper";
 import * as FILE from "../../shared/file/file.service";
 import * as SEND_NEW_DV_TO_CANDIDATE_EMAIL from "../emails/sendDVSentToCandidateEmail";

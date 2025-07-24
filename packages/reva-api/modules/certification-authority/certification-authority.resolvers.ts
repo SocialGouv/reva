@@ -7,11 +7,13 @@ import {
 import mercurius from "mercurius";
 
 import { getAccountById } from "../account/features/getAccount";
+import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+
 import { resolversSecurityMap } from "./certification-authority.security";
 import {
   CertificationAuthority,
@@ -31,6 +33,7 @@ import { getCertificationAuthoritiesByCertificationId } from "./features/getCert
 import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
 import { getCertificationAuthoritiesToTransferCandidacy } from "./features/getCertificationAuthoritiesToTransferCandidacy";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
+import { getCertificationAuthorityLocalAccountByAccountId } from "./features/getCertificationAuthorityLocalAccountByAccountId";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
 import { getCertificationAuthorityLocalAccountById } from "./features/getCertificationAuthorityLocalAccountById";
 import { getCertificationAuthorityLocalAccountsToTransferCandidacy } from "./features/getCertificationAuthorityLocalAccountsToTransferCandidacy";
@@ -51,14 +54,12 @@ import { updateCertificationAuthorityById } from "./features/updateCertification
 import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
 import { updateCertificationAuthorityDepartments } from "./features/updateCertificationAuthorityDepartments";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
-import { updateCertificationAuthorityLocalAccountGeneralInformation } from "./features/updateCertificationAuthorityLocalAccountGeneralInformation";
 import { updateCertificationAuthorityLocalAccountCertifications } from "./features/updateCertificationAuthorityLocalAccountCertifications";
 import { updateCertificationAuthorityLocalAccountDepartments } from "./features/updateCertificationAuthorityLocalAccountDepartments";
+import { updateCertificationAuthorityLocalAccountGeneralInformation } from "./features/updateCertificationAuthorityLocalAccountGeneralInformation";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 import { updateCertificationAuthorityV2ById } from "./features/updateCertificationAuthorityV2";
-import { getCertificationAuthorityLocalAccountByAccountId } from "./features/getCertificationAuthorityLocalAccountByAccountId";
-import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 
 const unsafeResolvers = {
   Account: {

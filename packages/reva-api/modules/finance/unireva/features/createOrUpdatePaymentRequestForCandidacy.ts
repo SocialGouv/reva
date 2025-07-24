@@ -1,24 +1,24 @@
+import { getCandidacyById } from "../../../candidacy/features/getCandidacyById";
+import { getAfgsuTrainingId } from "../../../candidacy/training/features/getAfgsuTrainingId";
 import { Candidate } from "../../../candidate/candidate.types";
+import { getCandidateById } from "../../../candidate/features/getCandidateById";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../shared/error/functionalError";
-import { FundingRequest, PaymentRequest } from "../finance.types";
-import {
-  getTotalCost,
-  validateIndividualCosts,
-  validateTotalCost,
-} from "./costValidationUtils";
-
-import { getAfgsuTrainingId } from "../../../candidacy/training/features/getAfgsuTrainingId";
 import { getFundingRequest } from "../database/fundingRequests";
 import {
   createPaymentRequest,
   getPaymentRequestByCandidacyId,
   updatePaymentRequest,
 } from "../database/paymentRequest";
-import { getCandidacyById } from "../../../candidacy/features/getCandidacyById";
-import { getCandidateById } from "../../../candidate/features/getCandidateById";
+import { FundingRequest, PaymentRequest } from "../finance.types";
+
+import {
+  getTotalCost,
+  validateIndividualCosts,
+  validateTotalCost,
+} from "./costValidationUtils";
 
 export const createOrUpdatePaymentRequestForCandidacy = async ({
   candidacyId,

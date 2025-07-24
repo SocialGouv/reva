@@ -4,6 +4,7 @@ import { isBefore, sub } from "date-fns";
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { CandidateUpdateInput } from "../../candidate/candidate.types";
+
 import { updateCandidateEmailAndSendNotifications } from "./updateCandidateEmailAndSendNotifications";
 
 export const updateCandidate = async ({

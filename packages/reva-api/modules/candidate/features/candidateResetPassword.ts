@@ -9,6 +9,7 @@ import {
   resetPassword,
 } from "../auth.helper";
 import { CandidateResetPasswordInput } from "../candidate.types";
+
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 
 export const candidateResetPassword = async ({

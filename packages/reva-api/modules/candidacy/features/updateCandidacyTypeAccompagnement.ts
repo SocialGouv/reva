@@ -1,10 +1,12 @@
 import { Candidacy, CandidacyTypeAccompagnement } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
-import { getCandidacyById } from "./getCandidacyById";
-import { getCertificationById } from "../../referential/features/getCertificationById";
-import { updateCandidacyStatus } from "./updateCandidacyStatus";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "../../candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
 import { getActiveFeasibilityByCandidacyid } from "../../feasibility/feasibility.features";
+import { getCertificationById } from "../../referential/features/getCertificationById";
+
+import { getCandidacyById } from "./getCandidacyById";
+import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 export const updateCandidacyTypeAccompagnement = async ({
   candidacyId,

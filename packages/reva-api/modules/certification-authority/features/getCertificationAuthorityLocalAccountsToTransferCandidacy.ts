@@ -1,6 +1,7 @@
+import { Prisma } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
-import { Prisma } from "@prisma/client";
 
 export const getCertificationAuthorityLocalAccountsToTransferCandidacy =
   async ({

@@ -1,18 +1,20 @@
 import { CandidateTypology } from "@prisma/client";
+
+import { prismaClient } from "../../../../prisma/client";
 import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { sendTrainingEmail } from "../emails";
-import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
-import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { getCandidateById } from "../../../candidate/features/getCandidateById";
-import { getCandidacy } from "../../features/getCandidacy";
-import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../../referential/referential.types";
-import { prismaClient } from "../../../../prisma/client";
 import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 import { getFundingRequestUnifvaeFromCandidacyId } from "../../../finance/unifvae/features/finance.unifvae.features";
 import { getFundingRequestByCandidacyId } from "../../../finance/unireva/features/getFundingRequestByCandidacyId";
+import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "../../../referential/referential.types";
+import { getCandidacy } from "../../features/getCandidacy";
+import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
+import { sendTrainingEmail } from "../emails";
+
+import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
 
 export const submitTraining = async ({
   candidacyId,

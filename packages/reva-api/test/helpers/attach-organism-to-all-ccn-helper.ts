@@ -1,4 +1,5 @@
 import { Organism } from "@prisma/client";
+
 import { prismaClient } from "../../prisma/client";
 
 export async function attachOrganismToAllConventionCollectiveHelper(

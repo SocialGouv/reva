@@ -9,6 +9,7 @@ import {
   FunctionalError,
 } from "../../../shared/error/functionalError";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
+
 import { updateCertification } from "./updateCertification";
 
 export const updateCertificationWithinOrganismScope = async ({

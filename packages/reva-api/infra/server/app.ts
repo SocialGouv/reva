@@ -8,7 +8,7 @@ import fastify, {
   FastifyPluginOptions,
   FastifyServerOptions,
 } from "fastify";
-import MercuriusGQLUpload from "./mercurius-upload";
+
 import { accountRoute } from "../../modules/account/account.routes";
 import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
@@ -18,10 +18,12 @@ import { juryRoute } from "../../modules/jury/jury.routes";
 import { organismRoutes } from "../../modules/organism/organism.routes";
 import { FILE_PREVIEW_ROUTE_PATH, OOS_DOMAIN } from "../../modules/shared/file";
 import { logger } from "../../modules/shared/logger";
+import { strapiWebhookRoute } from "../../modules/strapi/strapi.routes";
+
 import { mercuriusGraphQL } from "./mercurius";
+import MercuriusGQLUpload from "./mercurius-upload";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
-import { strapiWebhookRoute } from "../../modules/strapi/strapi.routes";
 
 const ADMIN_REACT_ROUTE_PATH = "/admin2";
 const CANDIDATE_ROUTE_PATH = "/candidat";

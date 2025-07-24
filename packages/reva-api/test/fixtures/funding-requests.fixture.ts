@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Decimal } from "@prisma/client/runtime/library";
+
 import { Gender } from "../../modules/candidate/candidate.types";
 
 const zero = new Decimal(0);

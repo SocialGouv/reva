@@ -6,13 +6,14 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+
+import { ClientApp } from "./account.type";
 import { createAccount } from "./features/createAccount";
+import { disableAccountById } from "./features/disableAccount";
 import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getImpersonateUrl } from "./features/impersonate";
-import { updateAccountById } from "./features/updateAccount";
-import { disableAccountById } from "./features/disableAccount";
 import { loginWithCredentials } from "./features/loginWithCredentials";
-import { ClientApp } from "./account.type";
+import { updateAccountById } from "./features/updateAccount";
 
 export const resolvers = {
   Mutation: {

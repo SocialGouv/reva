@@ -1,5 +1,6 @@
 import { FeasibilityStatus, Prisma } from "@prisma/client";
 import { subDays } from "date-fns";
+
 import {
   CADUCITE_THRESHOLD_DAYS,
   WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,

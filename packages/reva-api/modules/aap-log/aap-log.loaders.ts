@@ -1,5 +1,6 @@
-import { getAAPLogUsers } from "./features/getAAPLogUsers";
 import { AAPLog } from "@prisma/client";
+
+import { getAAPLogUsers } from "./features/getAAPLogUsers";
 
 export const aapLogLoaders = {
   AAPLog: {

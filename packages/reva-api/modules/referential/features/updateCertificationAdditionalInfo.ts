@@ -1,6 +1,5 @@
 import { v4 as uuidV4 } from "uuid";
-import { UpdateCertificationAdditionalInfoInput } from "../referential.types";
-import { prismaClient } from "../../../prisma/client";
+
 import {
   deleteFile,
   getUploadedFile,
@@ -10,6 +9,8 @@ import {
   allowedFileTypesMap,
   allowFileTypeByDocumentType,
 } from "../../../modules/shared/file/allowFileTypes";
+import { prismaClient } from "../../../prisma/client";
+import { UpdateCertificationAdditionalInfoInput } from "../referential.types";
 
 const MAX_UPLOAD_SIZE = 15728640; // 15Mo
 

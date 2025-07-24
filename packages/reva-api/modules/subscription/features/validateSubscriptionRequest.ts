@@ -1,20 +1,21 @@
 import { File } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
+import {
+  AAPAuditLogUserInfo,
+  logAAPAuditEvent,
+} from "../../aap-log/features/logAAPAuditEvent";
 import { getAccountFromEmail } from "../../account/database/accounts";
 import { createAccount } from "../../account/features/createAccount";
 import * as IAM from "../../account/features/keycloak";
 import { createOrganism } from "../../organism/database/organisms";
 import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
+import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
+import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
+import { getDegrees } from "../../referential/features/getDegrees";
 import { deleteFile } from "../../shared/file";
 import { logger } from "../../shared/logger";
-import { getDegrees } from "../../referential/features/getDegrees";
-import { getMaisonMereAapBySiretAndTypology } from "../../organism/features/getMaisonMereAapBySiretAndTypology";
-import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
-import {
-  AAPAuditLogUserInfo,
-  logAAPAuditEvent,
-} from "../../aap-log/features/logAAPAuditEvent";
 
 export const validateSubscriptionRequest = async ({
   subscriptionRequestId,

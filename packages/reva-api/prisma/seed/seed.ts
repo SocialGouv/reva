@@ -1,9 +1,10 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
+import { addExtensions } from "./add-extensions";
 import { injectCsvRows } from "./read-csv";
 import { seedCandidacyConventionCollective } from "./referentials/seed-candidacy-convention-collective";
-import { seedFormacodes } from "./referentials/seed-formacodes";
 import { seedCertifications } from "./referentials/seed-certifications";
+import { seedFormacodes } from "./referentials/seed-formacodes";
 import { insertBasicSkillsIfNone } from "./referentials/table-basic-skills";
 import { insertDegreesIfNone } from "./referentials/table-degrees";
 import { upsertDepartments } from "./referentials/table-departments";
@@ -13,7 +14,6 @@ import { upsertRegions } from "./referentials/table-regions";
 import { insertReorientationReasonsIfNone } from "./referentials/table-reorientation-reasons";
 import { upsertTrainings } from "./referentials/table-trainings";
 import { insertVulnerabilityIndicatorsIfNone } from "./referentials/table-vulnerability-indicators";
-import { addExtensions } from "./add-extensions";
 
 async function main() {
   const seedRestrictedToContainer = process.env.RESTRICT_SEED_TO_CONTAINER;

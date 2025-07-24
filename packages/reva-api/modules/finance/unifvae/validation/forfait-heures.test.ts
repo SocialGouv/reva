@@ -1,6 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
 import { FUNDING_REQUEST_NO_HOURS } from "../../../../test/fixtures";
+
 import { valideForfaitHeures } from "./forfait-heures";
 
 describe("individualHourCount rules", () => {

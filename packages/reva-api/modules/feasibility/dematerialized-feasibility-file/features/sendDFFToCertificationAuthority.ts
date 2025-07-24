@@ -1,8 +1,8 @@
-import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../../../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { prismaClient } from "../../../../prisma/client";
-import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
 import { getAccountById } from "../../../account/features/getAccount";
+import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
+import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../../../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { getBackofficeUrl } from "../../../shared/email";
 import { sendNewFeasibilitySubmittedEmail } from "../../emails";
 

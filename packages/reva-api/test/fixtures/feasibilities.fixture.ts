@@ -1,9 +1,10 @@
+import { randomUUID } from "crypto";
+
 import {
   Feasibility,
   FeasibilityFormat,
   FeasibilityStatus,
 } from "@prisma/client";
-import { randomUUID } from "crypto";
 
 const FEASIBILITY_BASE: Feasibility = {
   id: randomUUID(),

@@ -1,7 +1,8 @@
-import { FunctionalCodeError } from "../../shared/error/functionalError";
-import { getCandidacyById } from "./getCandidacyById";
-import { logger } from "../../shared/logger";
 import { prismaClient } from "../../../prisma/client";
+import { FunctionalCodeError } from "../../shared/error/functionalError";
+import { logger } from "../../shared/logger";
+
+import { getCandidacyById } from "./getCandidacyById";
 
 interface ValidateDropOutCandidacyParams {
   candidacyId: string;

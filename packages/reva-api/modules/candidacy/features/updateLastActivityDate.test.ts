@@ -1,5 +1,7 @@
 import { randomUUID } from "crypto";
+
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
+
 import { updateLastActivityDate } from "./updateLastActivityDate";
 
 const CONTEXT = {

@@ -7,6 +7,7 @@ import { getCertificationAuthorityLocalAccountByAccountId } from "../../certific
 import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
 import { DossierDeValidationStatusFilter } from "../types/dossierDeValidationStatusFilter.type";
 import { getWhereClauseFromDossierDeValidationStatusFilter } from "../utils/getWhereClauseFromDossierDeValidationStatusFilter.helper";
+
 import { getDossierDeValidationListQueryWhereClauseForUserWithManageRole } from "./getDossierDeValidationListQueryWhereClauseForUserWithManageRole";
 
 export const getActiveDossierDeValidationCountByCategory = async ({

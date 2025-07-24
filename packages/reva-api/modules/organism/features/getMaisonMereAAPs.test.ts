@@ -1,4 +1,5 @@
 import { StatutValidationInformationsJuridiquesMaisonMereAAP } from ".prisma/client";
+
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";

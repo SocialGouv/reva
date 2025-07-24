@@ -1,6 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
 import { FUNDING_REQUEST_FULL_CERT_OK_HOURS_DECIMAL } from "../../../../test/fixtures";
+
 import { validateAccompagnement } from "./accompagnement";
 
 test("Should yield an error when no cost associated to hour count for accompaniment", () => {

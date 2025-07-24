@@ -7,6 +7,7 @@ import {
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { createAccountProfile } from "../database/accounts";
+
 import * as IAM from "./keycloak";
 
 export const createAccount = async (params: {

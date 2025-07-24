@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+
 import { getLastProfessionalCguCertificateur } from "./getLastProfessionalCguCertificateur";
 
 export const certificationAuthorityAcceptCgu = async (context: {

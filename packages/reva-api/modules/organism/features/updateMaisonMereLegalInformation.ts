@@ -5,6 +5,7 @@ import {
 } from "../../aap-log/features/logAAPAuditEvent";
 import { updateAccountById } from "../../account/features/updateAccount";
 import { UpdateMaisonMereLegalInformationInput } from "../organism.types";
+
 import { updateMaisonMereAndAapGestionBranch } from "./updateMaisonMereAndAapGestionBranch";
 
 export const updateMaisonMereLegalInformation = async ({

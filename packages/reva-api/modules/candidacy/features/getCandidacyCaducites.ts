@@ -1,5 +1,6 @@
 import { Candidacy, Prisma } from "@prisma/client";
 import { subDays } from "date-fns";
+
 import { prismaClient } from "../../../prisma/client";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "../../feasibility/features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";

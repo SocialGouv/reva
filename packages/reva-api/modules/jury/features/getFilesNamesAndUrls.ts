@@ -1,9 +1,9 @@
+import { prismaClient } from "../../../prisma/client";
 import {
   FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
   getDownloadLink,
   OOS_DOMAIN,
 } from "../../shared/file";
-import { prismaClient } from "../../../prisma/client";
 
 export const getFilesNamesAndUrls = async ({
   candidacyId,

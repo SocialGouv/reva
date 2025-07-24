@@ -1,9 +1,11 @@
 import { CandidacyStatusStep } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacyDropOutHelper } from "../../../test/helpers/entities/create-candidacy-drop-out-helper";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { createDropOutReasonHelper } from "../../../test/helpers/entities/create-drop-out-reason-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
+
 import { dropOutCandidacy } from "./dropOutCandidacy";
 
 describe("drop out candidacy", () => {

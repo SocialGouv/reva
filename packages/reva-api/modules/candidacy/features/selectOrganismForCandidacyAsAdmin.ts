@@ -1,8 +1,6 @@
 import { prismaClient } from "../../../prisma/client";
-
-import { getOrganismById } from "../../organism/features/getOrganism";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-
+import { getOrganismById } from "../../organism/features/getOrganism";
 import {
   FunctionalCodeError,
   FunctionalError,

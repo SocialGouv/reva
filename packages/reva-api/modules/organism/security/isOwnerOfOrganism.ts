@@ -1,4 +1,5 @@
 import { IFieldResolver, MercuriusContext } from "mercurius";
+
 import { isUserOwnerOfOrganism } from "../features/isUserOwnerOfOrganism";
 
 export const isOwnerOfOrganism =

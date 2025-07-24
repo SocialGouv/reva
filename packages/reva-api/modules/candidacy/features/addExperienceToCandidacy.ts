@@ -1,7 +1,8 @@
-import { ExperienceInput } from "../candidacy.types";
-import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "../../../prisma/client";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { ExperienceInput } from "../candidacy.types";
+
+import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
 export const addExperienceToCandidacy = async ({
   candidacyId,

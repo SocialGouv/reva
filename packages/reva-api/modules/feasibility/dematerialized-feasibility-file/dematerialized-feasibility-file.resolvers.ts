@@ -1,9 +1,9 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-
 import { DematerializedFeasibilityFile } from "@prisma/client";
 
 import { getCertificationCompetenceById } from "../../referential/features/getCertificationCompetenceById";
 import { getCompetenceBlocById } from "../../referential/features/getCompetenceBlocById";
+
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {
   DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput,
@@ -28,9 +28,9 @@ import { createOrUpdateEligibilityRequirement } from "./features/createOrUpdateE
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
+import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
 import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
-import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
 import { sendDFFToCandidate } from "./features/sendDFFToCandidate";

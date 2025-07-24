@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+
 import { CandidacyLog } from "../candidacy-log.types";
 
 type LogMessage = {

@@ -1,3 +1,4 @@
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import {
   MaisonMereAAPLegalInformationDocumentsDecisionEnum,
   Organism,
@@ -5,7 +6,6 @@ import {
 } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
@@ -16,6 +16,7 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+
 import {
   sendLegalInformationDocumentsApprovalEmail,
   sendLegalInformationDocumentsUpdateNeededEmail,

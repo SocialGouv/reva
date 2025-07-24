@@ -1,17 +1,18 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
+import { getCandidacy } from "../candidacy/features/getCandidacy";
+
 import { dossierDeValidationResolversSecurityMap } from "./dossier-de-validation.security";
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";
-import { getHistoryDossierDeValidationByCandidacyId } from "./features/getHistoryDossierDeValidationByCandidacyId";
 import { getActiveDossierDeValidationCountByCategory } from "./features/getActiveDossierDeValidationCountByCategory";
 import { getActiveDossiersDeValidation } from "./features/getActiveDossiersDeValidation";
 import { getDossierDeValidationById } from "./features/getDossierDeValidationById";
 import { getDossierDeValidationHistory } from "./features/getDossierDeValidationHistory";
 import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDossierDeValidationOtherFilesNamesAndUrls";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
+import { getHistoryDossierDeValidationByCandidacyId } from "./features/getHistoryDossierDeValidationByCandidacyId";
 import { signalDossierDeValidationProblem } from "./features/signalDossierDeValidationProblem";
 import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
-import { getCandidacy } from "../candidacy/features/getCandidacy";
 
 const unsafeResolvers = {
   DossierDeValidation: {

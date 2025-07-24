@@ -1,5 +1,6 @@
 import { CertificationEmailType } from "@prisma/client";
 import { addDays, format, startOfToday, subDays, subHours } from "date-fns";
+
 import { prismaClient } from "../../../prisma/client";
 import { getBackofficeUrl, sendEmailUsingTemplate } from "../../shared/email";
 import { logger } from "../../shared/logger";

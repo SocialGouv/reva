@@ -1,5 +1,6 @@
 import { logger } from "../../shared/logger";
 import { RNCPCertification } from "../rncp";
+
 import { getFormacodes, Formacode } from "./getFormacodes";
 
 type SubDomain = {

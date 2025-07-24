@@ -1,12 +1,13 @@
-import { getCandidacyById } from "./getCandidacyById";
 import { prismaClient } from "../../../prisma/client";
-import { logger } from "../../shared/logger";
 import {
   FunctionalCodeError,
   // FunctionalError,
 } from "../../shared/error/functionalError";
-import { updateCandidacyStatus } from "./updateCandidacyStatus";
+import { logger } from "../../shared/logger";
 import { ArchiveCandidacyParams } from "../candidacy.types";
+
+import { getCandidacyById } from "./getCandidacyById";
+import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
   let candidacy;

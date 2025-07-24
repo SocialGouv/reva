@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Candidate, Gender } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 
 export const createCandidateHelper = async (

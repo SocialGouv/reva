@@ -1,23 +1,24 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { Candidacy } from "../candidacy/candidacy.types";
+import { getCandidacy } from "../candidacy/features/getCandidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../shared/error/functionalError";
+
 import { getActiveJuries } from "./features/getActiveJuries";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCategory";
-import { getHistoryJuryByCandidacyId } from "./features/getHistoryJuryByCandidacyId";
 import { getExamInfo } from "./features/getExamInfo";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
+import { getHistoryJuryByCandidacyId } from "./features/getHistoryJuryByCandidacyId";
 import { revokeJuryDecision } from "./features/revokeJuryDecision";
 import { updateExamInfo } from "./features/updateExamInfo";
 import { updateResultOfJury } from "./features/updateResultOfJury";
 import { ExamInfo, JuryInfo } from "./jury.types";
 import { resolversSecurityMap } from "./security";
 import { JuryStatusFilter } from "./types/juryStatusFilter.type";
-import { getCandidacy } from "../candidacy/features/getCandidacy";
 
 const unsafeResolvers = {
   Candidacy: {

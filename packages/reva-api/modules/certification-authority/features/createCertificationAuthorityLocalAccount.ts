@@ -4,6 +4,7 @@ import { prismaClient } from "../../../prisma/client";
 import { createAccount } from "../../account/features/createAccount";
 import { FunctionalError } from "../../shared/error/functionalError";
 import { CreateCertificationAuthorityLocalAccountInput } from "../certification-authority.types";
+
 import { assignCandidaciesToCertificationAuthorityLocalAccount } from "./assignCandidaciesToCertificationAuthorityLocalAccount";
 
 export const createCertificationAuthorityLocalAccount = async ({

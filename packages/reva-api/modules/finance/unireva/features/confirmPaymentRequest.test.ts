@@ -1,7 +1,9 @@
-import { Decimal } from "@prisma/client/runtime/library";
-import { PaymentRequest } from "../finance.types";
-import { mapPaymentRequestBatchContent } from "./confirmPaymentRequest";
 import { FundingRequest } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
+
+import { PaymentRequest } from "../finance.types";
+
+import { mapPaymentRequestBatchContent } from "./confirmPaymentRequest";
 
 describe("payment request", () => {
   describe("tests on mapping code", () => {

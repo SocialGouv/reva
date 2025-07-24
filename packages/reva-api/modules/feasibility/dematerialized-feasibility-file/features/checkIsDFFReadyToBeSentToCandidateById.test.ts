@@ -1,13 +1,13 @@
 import {
-  checkIsDFFReadyToBeSentToCandidateById,
-  CheckIsDFFReadyToBeSentToCandidateByIdArgs,
-} from "./checkIsDFFReadyToBeSentToCandidateById";
-
-import {
   CompetenceBlocsPartCompletionEnum,
   DFFDecision,
   DFFEligibilityRequirement,
 } from "@prisma/client";
+
+import {
+  checkIsDFFReadyToBeSentToCandidateById,
+  CheckIsDFFReadyToBeSentToCandidateByIdArgs,
+} from "./checkIsDFFReadyToBeSentToCandidateById";
 
 const ATTACHMENTS_PART_COMPLETE = true;
 const ATTACHMENTS_PART_INCOMPLETE = false;

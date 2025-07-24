@@ -1,6 +1,8 @@
 import { CandidacyStatusStep } from "@prisma/client";
+
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
+
 import { archiveCandidacy } from "./archiveCandidacy";
 
 describe("archive candidacy", () => {

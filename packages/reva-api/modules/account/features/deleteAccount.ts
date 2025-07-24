@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+
 import { getKeycloakAdmin } from "./getKeycloakAdmin";
 
 export const deleteAccount = async ({ accountId }: { accountId: string }) => {

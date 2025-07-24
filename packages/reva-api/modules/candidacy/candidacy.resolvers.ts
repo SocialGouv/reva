@@ -16,6 +16,7 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+
 import {
   ArchiveCandidacyParams,
   Candidacy,
@@ -40,6 +41,7 @@ import { getCandidacies } from "./features/getCandicacies";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCaducites } from "./features/getCandidacyCaducites";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
+import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
 import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
@@ -51,12 +53,15 @@ import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatus
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
 import { getExperiencesByCandidacyId } from "./features/getExperiencesByCandidacyId";
 import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandidacy";
+import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
+import { selectOrganismForCandidacyAsAdmin } from "./features/selectOrganismForCandidacyAsAdmin";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
 import { submitCandidacy } from "./features/submitCandidacy";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
+import { updateCandidacyFinanceModule } from "./features/updateCandidacyFinanceModule";
 import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
 import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypologyAndCcn";
 import { updateCandidateCandidacyDropoutDecision } from "./features/updateCandidateCandidacyDropoutDecision";
@@ -67,10 +72,6 @@ import { updateLastActivityDate } from "./features/updateLastActivityDate";
 import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import { resolversSecurityMap } from "./security/security";
-import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
-import { selectOrganismForCandidacyAsAdmin } from "./features/selectOrganismForCandidacyAsAdmin";
-import { updateCandidacyFinanceModule } from "./features/updateCandidacyFinanceModule";
-import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
 
 const unsafeResolvers = {
   Candidacy: {

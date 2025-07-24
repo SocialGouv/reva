@@ -1,5 +1,6 @@
-import * as util from "util";
 import stream from "stream";
+import * as util from "util";
+
 import fp from "fastify-plugin";
 import { processRequest, UploadOptions } from "graphql-upload-minimal";
 

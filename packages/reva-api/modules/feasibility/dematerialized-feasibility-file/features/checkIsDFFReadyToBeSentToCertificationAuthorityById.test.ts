@@ -1,10 +1,10 @@
-import { checkIsDFFReadyToBeSentToCertificationAuthorityById } from "./checkIsDFFReadyToBeSentToCertificationAuthorityById";
-
 import {
   CompetenceBlocsPartCompletionEnum,
   DFFDecision,
   DFFEligibilityRequirement,
 } from "@prisma/client";
+
+import { checkIsDFFReadyToBeSentToCertificationAuthorityById } from "./checkIsDFFReadyToBeSentToCertificationAuthorityById";
 
 const ATTACHMENTS_PART_COMPLETE = true;
 const ATTACHMENTS_PART_INCOMPLETE = false;

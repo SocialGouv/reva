@@ -1,10 +1,11 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+
+import { featureFlippingResolversSecurityMap } from "./feature-filipping.security";
 import {
   activeFeaturesForConnectedUser,
   getFeatures,
   toggleFeature,
 } from "./feature-flipping.features";
-import { featureFlippingResolversSecurityMap } from "./feature-filipping.security";
 
 const unsafeResolvers = {
   Query: {

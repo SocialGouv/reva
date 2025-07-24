@@ -1,7 +1,9 @@
 import { CertificationStatus } from "@prisma/client";
-import { UpdateCertificationDescriptionInput } from "../referential.types";
-import { getCertificationById } from "./getCertificationById";
+
 import { prismaClient } from "../../../prisma/client";
+import { UpdateCertificationDescriptionInput } from "../referential.types";
+
+import { getCertificationById } from "./getCertificationById";
 
 export const updateCertificationDescription = async ({
   certificationId,

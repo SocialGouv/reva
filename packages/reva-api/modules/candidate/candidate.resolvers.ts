@@ -2,6 +2,8 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { prismaClient } from "../../prisma/client";
 import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
+import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
+
 import {
   CandidateProfileUpdateInput,
   CandidateUpdateInput,
@@ -17,10 +19,9 @@ import { getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists } from ".
 import { getHighestDegreeById } from "./features/getHighestDegreeById";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
 import { updateCandidate } from "./features/updateCandidate";
+import { updateCandidateContactDetails } from "./features/updateCandidateContactDetails";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
 import { resolversSecurityMap } from "./security/security";
-import { updateCandidateContactDetails } from "./features/updateCandidateContactDetails";
-import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 
 const unsafeResolvers = {
   Candidate: {

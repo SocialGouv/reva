@@ -4,6 +4,7 @@ import {
 } from "../../../../test/fixtures";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
+
 import { validateFeasibilityChecks } from "./feasibility-checks";
 
 describe("FundingRequesUnifvae Feasibility checks", () => {

@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+
 import { getLastProfessionalCgu } from "./getLastProfessionalCgu";
 
 export const acceptCgu = async (context: {

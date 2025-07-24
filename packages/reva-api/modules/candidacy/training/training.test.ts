@@ -1,4 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
+
 import { TRAINING_INPUT } from "../../../test/fixtures";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";

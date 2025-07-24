@@ -1,4 +1,5 @@
 import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
+
 import { getCandidacyIsCaduque } from "./getCandidacyIsCaduque";
 
 export const updateCandidacyLastActivityIfNotAlreadyCaduque = async ({

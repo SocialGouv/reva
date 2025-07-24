@@ -1,5 +1,6 @@
 import { Candidate } from "../../candidate/candidate.types";
 import { CandidacyMenu, CandidacyMenuEntry } from "../candidacy-menu.types";
+
 import { getActiveCandidacyMenu } from "./getActiveCandidacyMenu";
 import { getCandidacyForMenu } from "./getCandidacyForMenu";
 import { getDeletedCandidacyMenu } from "./getDeletedCandidacyMenu";

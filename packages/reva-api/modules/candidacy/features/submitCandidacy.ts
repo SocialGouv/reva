@@ -6,6 +6,7 @@ import {
   sendConfirmationCandidacySubmissionEmail,
   sendNewCandidacyEmail,
 } from "../emails";
+
 import { getCandidacyById } from "./getCandidacyById";
 import { getReferentOrganismFromCandidacyId } from "./getReferentOrganismFromCandidacyId";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";

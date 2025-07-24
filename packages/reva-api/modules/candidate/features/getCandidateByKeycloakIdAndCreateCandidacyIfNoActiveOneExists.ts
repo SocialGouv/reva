@@ -1,5 +1,6 @@
 import { createCandidacy } from "../../candidacy/features/createCandidacy";
 import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
+
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 
 export const getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists =

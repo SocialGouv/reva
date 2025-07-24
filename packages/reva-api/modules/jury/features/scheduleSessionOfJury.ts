@@ -1,6 +1,7 @@
 import { add, endOfDay, isAfter, isBefore, startOfDay } from "date-fns";
 import { v4 as uuidV4 } from "uuid";
 
+import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { UploadedFile, uploadFileToS3 } from "../../shared/file";
@@ -8,7 +9,6 @@ import {
   sendJuryScheduledAAPEmail,
   sendJuryScheduledCandidateEmail,
 } from "../emails";
-import { allowFileTypeByDocumentType } from "../../../modules/shared/file/allowFileTypes";
 
 interface ScheduleSessionOfJury {
   candidacyId: string;

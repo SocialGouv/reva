@@ -1,4 +1,7 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+
+import { getCandidacy } from "../candidacy/features/getCandidacy";
+
 import {
   getActiveFeasibilities,
   getActiveFeasibilityByCandidacyid,
@@ -10,9 +13,8 @@ import {
 import { resolversSecurityMap } from "./feasibility.security";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
-import { getCandidacy } from "../candidacy/features/getCandidacy";
-import { updateFeasibilityFileTemplateFirstReadAt } from "./features/updateFeasibilityFileTemplateFirstReadAt";
 import { revokeCertificationAuthorityDecision } from "./features/revokeCertificationAuthorityDecision";
+import { updateFeasibilityFileTemplateFirstReadAt } from "./features/updateFeasibilityFileTemplateFirstReadAt";
 
 const unsafeResolvers = {
   Candidacy: {

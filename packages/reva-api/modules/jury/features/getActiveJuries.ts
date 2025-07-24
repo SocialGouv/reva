@@ -7,6 +7,7 @@ import { processPaginationInfo } from "../../shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "../../shared/search/search";
 import { JuryStatusFilter } from "../types/juryStatusFilter.type";
 import { getWhereClauseFromJuryStatusFilter } from "../utils/getWhereClauseFromJuryStatusFilter.helper";
+
 import { getJuryListQueryWhereClauseForUserWithManageRole } from "./getJuryListQueryWhereClauseForUserWithManageRole";
 
 export const getActiveJuries = async ({

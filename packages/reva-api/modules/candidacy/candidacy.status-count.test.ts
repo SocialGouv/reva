@@ -1,4 +1,5 @@
 import { CandidacyStatusStep, Candidate, Certification } from "@prisma/client";
+
 import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
@@ -6,10 +7,10 @@ import { createCandidacyHelper } from "../../test/helpers/entities/create-candid
 import { createCandidateHelper } from "../../test/helpers/entities/create-candidate-helper";
 import { createJuryHelper } from "../../test/helpers/entities/create-jury-helper";
 import { createOrganismHelper } from "../../test/helpers/entities/create-organism-helper";
-import { CandidacyStatusFilter } from "./candidacy.types";
-
 import { getGraphQLClient } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
+
+import { CandidacyStatusFilter } from "./candidacy.types";
 
 const createCandidacies = async ({
   status,

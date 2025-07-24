@@ -1,10 +1,18 @@
 import { prismaClient } from "../../../prisma/client";
-import { TokenService } from "../../account/utils/token.service";
 import { getKeycloakAdmin } from "../../account/features/getKeycloakAdmin";
+import { TokenService } from "../../account/utils/token.service";
+import { updateCertification } from "../../candidacy/certification/features/updateCertification";
+import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
+import { updateCandidacyOrganism } from "../../candidacy/features/updateCandidacyOrganism";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationById } from "../../referential/features/getCertificationById";
+import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
+import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "../../vae-collective/features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
+import { getCertificationCohortesByCohorteId } from "../../vae-collective/features/getCertificationCohortesByCohorteId";
 import {
   createCandidateAccountInIAM,
   getCandidateAccountInIAM,
@@ -14,16 +22,9 @@ import {
   CandidateAuthenticationInput,
   CandidateRegistrationInput,
 } from "../candidate.types";
-import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
+
 import { createCandidateWithCandidacy } from "./createCandidateWithCandidacy";
-import { getFirstActiveCandidacyByCandidateId } from "../../candidacy/features/getFirstActiveCandidacyByCandidateId";
-import { isCertificationAvailable } from "../../referential/features/isCertificationAvailable";
-import { getCertificationById } from "../../referential/features/getCertificationById";
-import { updateCertification } from "../../candidacy/certification/features/updateCertification";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
-import { getCertificationCohortesByCohorteId } from "../../vae-collective/features/getCertificationCohortesByCohorteId";
-import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "../../vae-collective/features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
-import { updateCandidacyOrganism } from "../../candidacy/features/updateCandidacyOrganism";
+import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 
 export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(

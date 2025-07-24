@@ -2,18 +2,18 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
+import { getCertificationById } from "../../../referential/features/getCertificationById";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../shared/error/functionalError";
 import { logger } from "../../../shared/logger";
-
-import { getCertificationById } from "../../../referential/features/getCertificationById";
 import { canCandidateUpdateCandidacy } from "../../features/canCandidateUpdateCandidacy";
 import { updateCandidacyOrganism } from "../../features/updateCandidacyOrganism";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
-import { updateCertification } from "./updateCertification";
 import { resetTrainingInformation } from "../../training/features/resetTrainingInformation";
+
+import { updateCertification } from "./updateCertification";
 
 export const updateCertificationOfCandidacy = async ({
   candidacyId,

@@ -1,12 +1,14 @@
 import { FinanceModule } from "@prisma/client";
+import { findLastIndex } from "lodash";
+
 import { prismaClient } from "../../../prisma/client";
 import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "../../candidacy-log/features/logCandidacyAuditEvent";
+
 import { getCandidacy } from "./getCandidacy";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
-import { findLastIndex } from "lodash";
 
 export const updateCandidacyFinanceModule = async ({
   candidacyId,

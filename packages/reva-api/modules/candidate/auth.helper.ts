@@ -2,8 +2,8 @@ import CryptoJS from "crypto-js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Keycloak from "keycloak-connect";
 
-import { logger } from "../shared/logger";
 import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
+import { logger } from "../shared/logger";
 
 export const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);

@@ -3,8 +3,9 @@ import { FastifyPluginAsync } from "fastify";
 
 import { UploadedFile } from "../shared/file";
 import { logger } from "../shared/logger";
-import { submitMaisonMereAAPLegalInformationDocuments } from "./features/submitMaisonMereAAPLegalInformationDocuments";
+
 import { isUserGestionnaireMaisonMereAAPOfMaisonMereAAP } from "./features/isUserGestionnaireMaisonMereAAPOfMaisonMereAAP";
+import { submitMaisonMereAAPLegalInformationDocuments } from "./features/submitMaisonMereAAPLegalInformationDocuments";
 
 interface UpdatedMaisonMereAAPLegalInformationRequestBody {
   managerFirstname: { value: string };

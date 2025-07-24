@@ -1,6 +1,5 @@
 import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
-
 import { DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput } from "../dematerialized-feasibility-file.types";
 import {
   sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP,

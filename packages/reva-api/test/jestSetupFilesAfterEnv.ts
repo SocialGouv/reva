@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+
 import { clearDatabase } from "./jestClearDatabase";
 import { getFastifyInstance } from "./jestFastifyInstance";
 

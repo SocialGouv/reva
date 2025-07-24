@@ -1,11 +1,11 @@
 import { prismaClient } from "../../../prisma/client";
-
 import { RNCPReferential } from "../rncp";
-import { getFormacodes } from "./getFormacodes";
-import { getSubdomains } from "./getDomainsByFormacodes";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
-import { getCertificationById } from "./getCertificationById";
+
 import { createCompetenceBlocsFromRncp } from "./createCompetenceBlocsFromRncp";
+import { getCertificationById } from "./getCertificationById";
+import { getSubdomains } from "./getDomainsByFormacodes";
+import { getFormacodes } from "./getFormacodes";
 
 export const replaceCertification = async (params: {
   codeRncp: string;

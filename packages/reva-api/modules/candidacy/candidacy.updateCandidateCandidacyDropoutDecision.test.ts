@@ -1,14 +1,15 @@
 import { startOfDay, startOfToday } from "date-fns";
+
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "../../test/helpers/entities/create-candidacy-drop-out-helper";
-import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./emails/sendCandidacyDropOutConfirmedEmailToAap";
-import * as SendCandidacyDropOutConfirmedEmailToCandidateModule from "./emails/sendCandidacyDropOutConfirmedEmailToCandidate";
-
 import {
   getGraphQLClient,
   getGraphQLError,
 } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
+
+import * as SendCandidacyDropOutConfirmedEmailToAapModule from "./emails/sendCandidacyDropOutConfirmedEmailToAap";
+import * as SendCandidacyDropOutConfirmedEmailToCandidateModule from "./emails/sendCandidacyDropOutConfirmedEmailToCandidate";
 
 describe("candidate drop out decision", () => {
   test("should mark the drop out as confirmed when the candidate confirms it and sent an email to the aap", async () => {

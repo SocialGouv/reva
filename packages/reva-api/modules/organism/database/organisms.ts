@@ -1,4 +1,5 @@
 import { OrganismModaliteAccompagnement } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 
 export const getOrganismById = async (organismId: string) =>

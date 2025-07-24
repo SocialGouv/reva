@@ -1,9 +1,10 @@
 import { prismaClient } from "../../../prisma/client";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "../../../test/helpers/entities/create-certification-authority-helper";
-import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "../../../test/helpers/entities/create-certification-authority-local-account-helper";
+import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
 import { createFeasibilityDematerializedHelper } from "../../../test/helpers/entities/create-feasibility-dematerialized-helper";
+
 import { assignCandidaciesToCertificationAuthorityLocalAccount } from "./assignCandidaciesToCertificationAuthorityLocalAccount";
 
 /**

@@ -1,9 +1,9 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { resolversSecurityMap } from "./aap-log.security";
-import { getAAPLogs } from "./features/getAAPLogs";
 import { AAPLog } from "./aap-log.types";
 import { getAAPLogMessage } from "./features/getAAPLogMessage";
+import { getAAPLogs } from "./features/getAAPLogs";
 
 const unsafeResolvers = {
   MaisonMereAAP: {

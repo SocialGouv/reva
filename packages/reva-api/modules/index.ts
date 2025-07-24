@@ -12,18 +12,20 @@ import {
   VoidResolver,
   VoidTypeDefinition,
 } from "graphql-scalars";
+import { GraphQLUpload } from "graphql-upload-minimal";
 import mercurius, { MercuriusOptions } from "mercurius";
 
-import { GraphQLUpload } from "graphql-upload-minimal";
+import { aapLogLoaders } from "./aap-log/aap-log.loaders";
+import { aapLogResolvers } from "./aap-log/aap-log.resolvers";
 import { loaders as accountLoaders } from "./account/account.loaders";
 import { resolvers as accountResolvers } from "./account/account.resolvers";
-import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
-import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
-import { candidacyMenuResolvers } from "./candidacy-menu/candidacy-menu.resolvers";
 import { candidacyContestationCaduciteResolvers } from "./candidacy/candidacy-contestation-caducite/candidacy-contestation-caducite.resolvers";
 import { candidacyResolvers } from "./candidacy/candidacy.resolvers";
 import { certificationResolvers } from "./candidacy/certification/certification.resolvers";
 import { trainingResolvers } from "./candidacy/training/training.resolvers";
+import { candidacyLogLoaders } from "./candidacy-log/candidacy-log.loaders";
+import { candidacyLogResolvers } from "./candidacy-log/candidacy-log.resolvers";
+import { candidacyMenuResolvers } from "./candidacy-menu/candidacy-menu.resolvers";
 import { candidateResolvers } from "./candidate/candidate.resolvers";
 import { certificationAuthorityLoaders } from "./certification-authority/certification-authority.loaders";
 import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
@@ -41,8 +43,6 @@ import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
-import { aapLogResolvers } from "./aap-log/aap-log.resolvers";
-import { aapLogLoaders } from "./aap-log/aap-log.loaders";
 import { vaeCollectiveResolvers } from "./vae-collective/vae-collective.resolvers";
 
 // Resolvers

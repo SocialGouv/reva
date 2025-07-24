@@ -1,12 +1,13 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import _import from "eslint-plugin-import";
-import tsParser from "@typescript-eslint/parser";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
+
+import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import { defineConfig, globalIgnores } from "eslint/config";
+import importPlugin from "eslint-plugin-import";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,7 +33,7 @@ export default defineConfig([
 
     plugins: {
       "@typescript-eslint": fixupPluginRules(typescriptEslint),
-      import: fixupPluginRules(_import),
+      import: fixupPluginRules(importPlugin),
     },
 
     languageOptions: {
@@ -53,14 +54,13 @@ export default defineConfig([
         2,
         {
           unusedExports: true,
-          ignoreExports: ["eslint.config.mjs"],
+          ignoreExports: ["eslint.config.mjs", "codegen.ts"],
         },
       ],
 
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-var-requires": "off",
       "@typescript-eslint/no-explicit-any": "off",
-
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
@@ -73,8 +73,24 @@ export default defineConfig([
           ignoreRestSiblings: true,
         },
       ],
-
       "no-empty": "warn",
+      "import/order": [
+        "error",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+            "object",
+            "type",
+          ],
+          "newlines-between": "always",
+          alphabetize: { order: "asc", caseInsensitive: true },
+        },
+      ],
     },
   },
 ]);

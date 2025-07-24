@@ -1,7 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
-
 import {
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_ONE_MINUTE,

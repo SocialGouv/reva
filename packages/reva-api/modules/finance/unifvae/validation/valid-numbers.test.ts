@@ -1,6 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
 import { Gender } from "../../../candidate/candidate.types";
+
 import { validHoursCountAndCosts } from "./valid-numbers";
 
 const fundingRequestBase = {

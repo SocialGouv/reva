@@ -4,16 +4,17 @@ import { prismaClient } from "../../prisma/client";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "../../test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationHelper } from "../../test/helpers/entities/create-certification-helper";
+import { createFeasibilityDematerializedHelper } from "../../test/helpers/entities/create-feasibility-dematerialized-helper";
 import { createFeasibilityUploadedPdfHelper } from "../../test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { createCohorteVaeCollectiveHelper } from "../../test/helpers/entities/create-vae-collective-helper";
-import * as FILE from "../shared/file/file.service";
-import * as SEND_NEW_FEASIBILITY_EMAIL from "./emails/sendNewFeasibilitySubmittedEmail";
+import { injectGraphql } from "../../test/helpers/graphql-helper";
 import { getGraphQLClient } from "../../test/jestGraphqlClient";
 import { graphql } from "../graphql/generated";
-import { createFeasibilityDematerializedHelper } from "../../test/helpers/entities/create-feasibility-dematerialized-helper";
-import { createCertificationAuthorityLocalAccountHelper } from "../../test/helpers/entities/create-certification-authority-local-account-helper";
+import * as FILE from "../shared/file/file.service";
+
+import * as SEND_NEW_FEASIBILITY_EMAIL from "./emails/sendNewFeasibilitySubmittedEmail";
 
 test("should count all (2) feasibilities for admin user", async () => {
   await createFeasibilityUploadedPdfHelper({

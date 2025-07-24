@@ -1,9 +1,9 @@
-import { prismaClient } from "../../../prisma/client";
 import {
   FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
   OOS_DOMAIN,
   getDownloadLink,
 } from "../..//shared/file";
+import { prismaClient } from "../../../prisma/client";
 
 export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
   async ({

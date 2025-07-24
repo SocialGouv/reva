@@ -1,4 +1,5 @@
 import { prismaClient } from "../../../prisma/client";
+
 import { assignCandidaciesToCertificationAuthorityLocalAccount } from "./assignCandidaciesToCertificationAuthorityLocalAccount";
 
 export const updateCertificationAuthorityLocalAccountCertifications = async ({

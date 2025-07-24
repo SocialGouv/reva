@@ -1,6 +1,5 @@
-import { prismaClient } from "../prisma/client";
-
 import { updateCertificationWithRncpFields } from "../modules/referential/features/updateCertificationWithRncpFields";
+import { prismaClient } from "../prisma/client";
 
 const updateAvailableCertificationsWithRncpFields = async () => {
   const certifications = await prismaClient.certification.findMany({

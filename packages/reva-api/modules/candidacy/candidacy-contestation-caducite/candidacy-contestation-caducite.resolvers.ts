@@ -1,6 +1,6 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-
 import { Candidacy } from "@prisma/client";
+
 import { resolversSecurityMap } from "./candidacy-contestation-caducite.security";
 import {
   CreateCandidacyContestationCaduciteInput,

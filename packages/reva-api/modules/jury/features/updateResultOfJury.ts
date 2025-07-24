@@ -8,6 +8,7 @@ import {
   sendJuryResultCandidateEmail,
 } from "../emails";
 import { JuryInfo } from "../jury.types";
+
 import { canManageJury } from "./canManageJury";
 
 interface UpdateResultOfJury {

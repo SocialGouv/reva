@@ -4,6 +4,7 @@ import {
   sendNewEmailCandidateEmail,
   sendPreviousEmailCandidateEmail,
 } from "../emails";
+
 import { updateCandidateEmail } from "./updateCandidateEmail";
 export const updateContactOfCandidacy = async (params: {
   candidateId: string;

@@ -1,16 +1,18 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+import mercurius from "mercurius";
+
 import { Candidacy } from "../../candidacy/candidacy.types";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
+
 import { confirmPaymentRequest } from "./features/confirmPaymentRequest";
 import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpdatePaymentRequestForCandidacy";
 import { getFundingRequest } from "./features/getFundingRequest";
-import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
-import { resolversSecurityMap } from "./security";
 import { getFundingRequestByCandidacyId } from "./features/getFundingRequestByCandidacyId";
-import mercurius from "mercurius";
+import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 import { isFundingRequestSent } from "./features/isFundingRequestSent";
 import { isPaymentRequestSent } from "./features/isPaymentRequestSent";
+import { resolversSecurityMap } from "./security";
 
 const unsafeResolvers = {
   Candidacy: {

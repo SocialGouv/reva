@@ -1,6 +1,8 @@
 import { faker } from "@faker-js/faker/.";
-import { prismaClient } from "../../../prisma/client";
 import { Prisma } from "@prisma/client";
+
+import { prismaClient } from "../../../prisma/client";
+
 import { createCandidacyHelper } from "./create-candidacy-helper";
 
 export const createFundingRequestUnifvaeHelper = async (

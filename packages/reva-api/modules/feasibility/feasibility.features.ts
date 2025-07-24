@@ -5,18 +5,19 @@ import {
   CertificationAuthority,
   Prisma,
 } from "@prisma/client";
-
 import { v4 } from "uuid";
+
 import { allowFileTypeByDocumentType } from "../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../prisma/client";
 import { Account } from "../account/account.types";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
-import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { updateCandidacyFinanceModule } from "../candidacy/features/updateCandidacyFinanceModule";
 import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStatus";
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
+import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
+import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import {
   FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
@@ -29,6 +30,7 @@ import {
 } from "../shared/file";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "../shared/search/search";
+
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
@@ -40,6 +42,7 @@ import {
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { canManageFeasibility } from "./features/canManageFeasibility";
 import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
+import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "./features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
 import { validateFeasibility } from "./features/validateFeasibility";
 import {
   FeasibilityStatusFilter,
@@ -47,8 +50,6 @@ import {
   excludeRejectedArchivedDraftAndDroppedOutCandidacyAndIrrelevantStatuses,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
-import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "./features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
-import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 
 const adminBaseUrl =
   process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";

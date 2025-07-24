@@ -1,12 +1,13 @@
 import { Decimal } from "@prisma/client/runtime/library";
-import { FundingRequest, PaymentRequest } from "../finance.types";
-import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymentRequestForCandidacy";
 
 import * as getCandidacyByIdModule from "../../../candidacy/features/getCandidacyById";
 import * as getAfgsuTrainingIdModule from "../../../candidacy/training/features/getAfgsuTrainingId";
 import * as getCandidateByIdModule from "../../../candidate/features/getCandidateById";
 import * as fundingRequestsDb from "../database/fundingRequests";
 import * as paymentRequestsDb from "../database/paymentRequest";
+import { FundingRequest, PaymentRequest } from "../finance.types";
+
+import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymentRequestForCandidacy";
 
 const defaultValidPaymentRequest: PaymentRequest = {
   id: "1234",

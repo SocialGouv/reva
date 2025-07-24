@@ -9,6 +9,7 @@ import {
   sendCandidacyTransferedToOrganismEmail,
   sendCandidacyTransferToCandidate,
 } from "../emails";
+
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "./assignCandidacyToCertificationAuthorityLocalAccounts";
 
 export const transferCandidacyToAnotherCertificationAuthority = async ({

@@ -1,13 +1,15 @@
-import { PaymentRequest, PaymentRequestBatchContent } from "../finance.types";
 import { FundingRequest } from "@prisma/client";
+
+import { prismaClient } from "../../../../prisma/client";
 import { getCandidacy } from "../../../candidacy/features/getCandidacy";
+import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
+import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
+import { getOrganismById } from "../../../organism/features/getOrganism";
 import { createPaymentRequestBatch } from "../database/paymentRequestBatches";
+import { PaymentRequest, PaymentRequestBatchContent } from "../finance.types";
+
 import { getFundingRequestByCandidacyId } from "./getFundingRequestByCandidacyId";
 import { getPaymentRequestByCandidacyId } from "./getPaymentRequestByCandidacyId";
-import { getOrganismById } from "../../../organism/features/getOrganism";
-import { updateCandidacyStatus } from "../../../candidacy/features/updateCandidacyStatus";
-import { prismaClient } from "../../../../prisma/client";
-import { isFeatureActiveForUser } from "../../../feature-flipping/feature-flipping.features";
 
 export const confirmPaymentRequest = async ({
   candidacyId,

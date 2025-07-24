@@ -1,4 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
+
+import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 import { prismaClient } from "../../../../prisma/client";
 import {
   deleteFile,
@@ -7,8 +9,8 @@ import {
   uploadFilesToS3,
 } from "../../../shared/file";
 import { DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput } from "../dematerialized-feasibility-file.types";
+
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
-import { allowFileTypeByDocumentType } from "../../../../modules/shared/file/allowFileTypes";
 
 export const createOrUpdateSwornStatement = async ({
   input: { swornStatement },

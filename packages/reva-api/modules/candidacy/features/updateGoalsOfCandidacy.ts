@@ -1,9 +1,10 @@
+import { prismaClient } from "../../../prisma/client";
 import {
   logCandidacyAuditEvent,
   CandidacyAuditLogUserInfo,
 } from "../../candidacy-log/features/logCandidacyAuditEvent";
+
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
-import { prismaClient } from "../../../prisma/client";
 import { getCandidacy } from "./getCandidacy";
 
 export const updateGoalsOfCandidacy = async ({

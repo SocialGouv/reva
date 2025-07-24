@@ -5,6 +5,7 @@ import {
   saveAuditEvent,
 } from "../../shared/audit";
 import { CandidacyDropOut } from "../candidacy.types";
+
 import { AuditEventType } from "./audit-event.type";
 
 export async function cancelDropOutCandidacyEvent(

@@ -3,6 +3,7 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "../../candidacy-log/features/logCandidacyAuditEvent";
+
 import { updateCandidateEmailAndSendNotifications } from "./updateCandidateEmailAndSendNotifications";
 
 export const updateCandidateContactDetails = async ({

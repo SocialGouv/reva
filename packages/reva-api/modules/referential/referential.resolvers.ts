@@ -1,20 +1,53 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { prismaClient } from "../../prisma/client";
+import { getFileNameAndUrl } from "../shared/file/getFileNameAndUrl";
+
+import { addCertification } from "./features/addCertification";
+import { createCertificationCompetenceBloc } from "./features/createCertificationCompetenceBloc";
+import { deleteCertificationCompetenceBloc } from "./features/deleteCertificationCompetenceBloc";
+import {
+  findEtablissement,
+  findEtablissementDiffusible,
+  findKbis,
+  findQualiopiStatus,
+} from "./features/entreprise";
+import { getActiveCertifications } from "./features/getActiveCertifications";
+import { getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId } from "./features/getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId";
+import { getAdditionalInfoByCertificationId } from "./features/getAdditionalInfoByCertificationId";
+import { getCandidacyFinancingMethods } from "./features/getCandidacyFinancingMethods";
 import { getCertificationById } from "./features/getCertificationById";
+import { getCertificationCompetenceBlocById } from "./features/getCertificationCompetenceBlocById";
 import { getCertificationCompetencesByBlocId } from "./features/getCertificationCompetencesByBlocId";
+import { getCertificationPrerequisitesByCertificationId } from "./features/getCertificationPrerequisitesByCertificationId";
+import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
 import { getConventionsCollectivesByCertificationId } from "./features/getConventionsCollectivesByCertificationId";
 import { getDegreeByLevel } from "./features/getDegreeByLevel";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
+import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
+import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
 import { getDropOutReasons } from "./features/getDropOutReasons";
+import { getAvailableFormacodes } from "./features/getFormacodes";
 import { getGoals } from "./features/getGoals";
 import { getRegionById } from "./features/getRegionById";
 import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
+import { isAapAvailableForCertificationId } from "./features/isAapAvailableForCertificationId";
+import { replaceCertification } from "./features/replaceCertification";
+import { resetCompetenceBlocsByCertificationId } from "./features/resetCompetenceBlocsByCertificationId";
 import { searchCertificationsForAdmin } from "./features/searchCertificationsForAdmin";
+import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
+import { searchCertificationsV2ForRegistryManager } from "./features/searchCertificationsV2ForRegistryManager";
+import { sendCertificationToRegistryManager } from "./features/sendCertificationToRegistryManager";
+import { updateCertificationAdditionalInfo } from "./features/updateCertificationAdditionalInfo";
+import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
+import { updateCertificationDescription } from "./features/updateCertificationDescription";
+import { updateCertificationPrerequisites } from "./features/updateCertificationPrerequisites";
+import { updateCertificationStructureAndCertificationAuthorities } from "./features/updateCertificationStructureAndCertificationAuthorities";
 import { updateCompetenceBlocsByCertificationId } from "./features/updateCompetenceBlocsByCertificationId";
+import { validateCertification } from "./features/validateCertification";
 import { referentialResolversSecurityMap } from "./referential.security";
 import {
   CreateCompetenceBlocInput,
@@ -30,38 +63,6 @@ import {
   ReplaceCertificationInput,
 } from "./referential.types";
 import { RNCPCertification, RNCPReferential } from "./rncp";
-import {
-  findEtablissement,
-  findEtablissementDiffusible,
-  findKbis,
-  findQualiopiStatus,
-} from "./features/entreprise";
-import { searchCertificationsForCandidate } from "./features/searchCertificationsForCandidate";
-import { getAvailableFormacodes } from "./features/getFormacodes";
-import { getActiveCertifications } from "./features/getActiveCertifications";
-import { getCandidacyFinancingMethods } from "./features/getCandidacyFinancingMethods";
-import { getCertificationCompetenceBlocById } from "./features/getCertificationCompetenceBlocById";
-import { updateCertificationCompetenceBloc } from "./features/updateCertificationCompetenceBloc";
-import { addCertification } from "./features/addCertification";
-import { replaceCertification } from "./features/replaceCertification";
-import { deleteCertificationCompetenceBloc } from "./features/deleteCertificationCompetenceBloc";
-import { getCompetenceBlocsByCertificationId } from "./features/getCompetenceBlocsByCertificationId";
-import { getDomainsByCertificationId } from "./features/getDomainsByCertificationId";
-import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
-import { createCertificationCompetenceBloc } from "./features/createCertificationCompetenceBloc";
-import { updateCertificationStructureAndCertificationAuthorities } from "./features/updateCertificationStructureAndCertificationAuthorities";
-import { sendCertificationToRegistryManager } from "./features/sendCertificationToRegistryManager";
-import { resetCompetenceBlocsByCertificationId } from "./features/resetCompetenceBlocsByCertificationId";
-import { searchCertificationsV2ForRegistryManager } from "./features/searchCertificationsV2ForRegistryManager";
-import { getCertificationPrerequisitesByCertificationId } from "./features/getCertificationPrerequisitesByCertificationId";
-import { updateCertificationPrerequisites } from "./features/updateCertificationPrerequisites";
-import { updateCertificationDescription } from "./features/updateCertificationDescription";
-import { validateCertification } from "./features/validateCertification";
-import { getAdditionalInfoByCertificationId } from "./features/getAdditionalInfoByCertificationId";
-import { updateCertificationAdditionalInfo } from "./features/updateCertificationAdditionalInfo";
-import { getFileNameAndUrl } from "../shared/file/getFileNameAndUrl";
-import { isAapAvailableForCertificationId } from "./features/isAapAvailableForCertificationId";
-import { getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId } from "./features/getAdditionalDocumentsFilaNamesAndUrlsByCertificationAdditionalInfoId";
 
 const unsafeReferentialResolvers = {
   Candidacy: {

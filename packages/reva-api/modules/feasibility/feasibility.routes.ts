@@ -4,6 +4,8 @@ import { FastifyPluginAsync } from "fastify";
 import { prismaClient } from "../../prisma/client";
 import { UploadedFile, getDownloadLink } from "../shared/file";
 import { logger } from "../shared/logger";
+import { isCandidateOwnerOfCandidacyFeature } from "../shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
+
 import {
   canDownloadFeasibilityFiles,
   canUserManageCandidacy,
@@ -11,7 +13,6 @@ import {
   getActiveFeasibilityByCandidacyid,
   handleFeasibilityDecision,
 } from "./feasibility.features";
-import { isCandidateOwnerOfCandidacyFeature } from "../shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: { value: string };

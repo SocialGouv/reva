@@ -1,11 +1,12 @@
 import { prismaClient } from "../../../prisma/client";
-import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyStatus } from "../../candidacy/features/updateCandidacyStatus";
+import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { updateCandidacyLastActivityDateToNow } from "../../feasibility/features/updateCandidacyLastActivityDateToNow";
 import {
   sendDVReportedToCandidateAutonomeEmail,
   sendDVReportedToOrganismEmail,
 } from "../emails";
+
 import { getDossierDeValidationById } from "./getDossierDeValidationById";
 
 export const signalDossierDeValidationProblem = async ({

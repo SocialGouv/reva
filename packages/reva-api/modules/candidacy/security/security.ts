@@ -13,6 +13,7 @@ import {
   isOwnerOfCandidate,
   isOwnerOrCanManageCandidacy,
 } from "../../shared/security/presets";
+
 import { canAccessCandidacy } from "./canAccessCandidacy.security";
 
 const isAdminOrOwnerOfCandidacy = [

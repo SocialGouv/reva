@@ -1,16 +1,17 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { prismaClient } from "../../../prisma/client";
 import { getCandidacyHasConfirmedCaducite } from "../../candidacy/features/getCandidacyHasConfirmedCaducite";
 import { getCandidacyIsCaduque } from "../../candidacy/features/getCandidacyIsCaduque";
+import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 import {
   CandidacyMenuEntry,
   CandidacyMenuEntryStatus,
 } from "../candidacy-menu.types";
+
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
-import { prismaClient } from "../../../prisma/client";
-import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 export const getActiveCandidacyMenu = async ({
   candidacy,

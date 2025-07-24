@@ -1,3 +1,5 @@
+import { buffer } from "stream/consumers";
+
 import {
   DeleteObjectCommand,
   GetObjectAclCommand,
@@ -8,8 +10,8 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { filetypeinfo } from "magic-bytes.js";
 
-import { buffer } from "stream/consumers";
 import { logger } from "../logger";
+
 import { UploadedFile } from "./file.interface";
 
 export type S3File = {

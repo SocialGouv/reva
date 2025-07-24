@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { buildApp } from "../infra/server/app";
+
 import keycloakPluginMock from "./mocks/keycloak-plugin.mock";
 
 export const getFastifyInstance = async () => {

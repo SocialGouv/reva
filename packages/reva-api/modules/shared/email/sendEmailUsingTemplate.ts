@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import SibApiV3Sdk from "sib-api-v3-sdk";
+
 import { logger } from "../logger";
 
 // https://developers.brevo.com/docs/how-it-works#requests

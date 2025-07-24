@@ -1,7 +1,8 @@
+import { Prisma } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import { getLastProfessionalCgu } from "../../organism/features/getLastProfessionalCgu";
 import { Organism } from "../../organism/organism.types";
-import { Prisma } from "@prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 
 export const searchOrganismsForCandidacyAsAdmin = async ({

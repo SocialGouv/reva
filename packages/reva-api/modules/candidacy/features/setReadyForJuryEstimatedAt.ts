@@ -7,6 +7,7 @@ import {
 } from "date-fns";
 
 import { prismaClient } from "../../../prisma/client";
+
 import { updateCandidacyLastActivityIfNotAlreadyCaduque } from "./updateCandidacyLastActivityIfNotAlreadyCaduque";
 
 export const setReadyForJuryEstimatedAt = async ({

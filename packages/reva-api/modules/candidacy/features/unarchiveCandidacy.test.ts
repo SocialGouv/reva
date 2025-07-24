@@ -1,7 +1,9 @@
 import { CandidacyStatusStep } from "@prisma/client";
+
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { createReorientationReasonHelper } from "../../../test/helpers/entities/create-reorientation-reason-helper";
 import { FunctionalCodeError } from "../../shared/error/functionalError";
+
 import { unarchiveCandidacy } from "./unarchiveCandidacy";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";
 

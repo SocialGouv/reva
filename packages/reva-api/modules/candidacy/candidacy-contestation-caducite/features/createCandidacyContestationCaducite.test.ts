@@ -1,12 +1,15 @@
+import { randomUUID } from "crypto";
+
 import { faker } from "@faker-js/faker/.";
 import { CertificationAuthorityContestationDecision } from "@prisma/client";
-import { randomUUID } from "crypto";
 import { addDays, subDays } from "date-fns";
+
 import { prismaClient } from "../../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";
 import { createFeasibilityDematerializedHelper } from "../../../../test/helpers/entities/create-feasibility-dematerialized-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
+
 import { createCandidacyContestationCaducite } from "./createCandidacyContestationCaducite";
 
 const VALID_CONTESTATION_REASON = "Valid contestation reason";

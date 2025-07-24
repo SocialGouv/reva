@@ -1,8 +1,9 @@
+import { CandidacyStatusStep, Gender } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
+
 import { prismaClient } from "../../../prisma/client";
 import { getCandidateByKeycloakId } from "../../candidate/features/getCandidateByKeycloakId";
-import { CandidacyStatusStep, Gender } from "@prisma/client";
 import { isFeatureActiveForUser } from "../../feature-flipping/feature-flipping.features";
 
 const FranceConnectClaimsSchema = z.object({

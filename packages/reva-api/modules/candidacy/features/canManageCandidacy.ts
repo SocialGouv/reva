@@ -3,8 +3,9 @@ import debug from "debug";
 import { prismaClient } from "../../../prisma/client";
 import { Role } from "../../account/account.types";
 import { getMaisonMereAAPById } from "../../organism/features/getMaisonMereAAPById";
-import { getCandidacy } from "./getCandidacy";
 import { getOrganismById } from "../../organism/features/getOrganism";
+
+import { getCandidacy } from "./getCandidacy";
 
 const log = debug("domain:canManageCandidacy");
 

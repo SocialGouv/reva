@@ -1,6 +1,6 @@
+import { getCandidateAppUrl } from "../../candidate/utils/candidate.url.helpers";
 import { sendEmailUsingTemplate } from "../../shared/email";
 import { UploadedFile } from "../../shared/file";
-import { getCandidateAppUrl } from "../../candidate/utils/candidate.url.helpers";
 
 export const sendJuryScheduledCandidateEmail = async ({
   email,

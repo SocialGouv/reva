@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker/.";
-import { prismaClient } from "../../../prisma/client";
 import { Prisma } from "@prisma/client";
+
+import { prismaClient } from "../../../prisma/client";
 
 export const createFeatureHelper = async ({
   args,

@@ -1,8 +1,9 @@
 import { FastifyPluginAsync } from "fastify";
 
+import { logger } from "../shared/logger";
+
 import { impersonate } from "./features/impersonate";
 import { unsafeHandleFranceConnectCallback } from "./features/unsafeHandleFranceConnectCallback";
-import { logger } from "../shared/logger";
 
 export const accountRoute: FastifyPluginAsync = async (server) => {
   server.get<{ Querystring: { token: string } }>("/account/impersonate", {

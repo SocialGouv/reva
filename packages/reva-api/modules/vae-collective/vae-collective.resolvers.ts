@@ -1,19 +1,21 @@
-import { getCohorteVAECollectiveByCodeInscription } from "./features/getCohorteVAECollectiveByCodeInscription";
-import { vaeCollectiveResolversSecurityMap } from "./vae-collective.security";
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import { getCohorteVAECollectiveById } from "./features/getCohorteVAECollectiveById";
-import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
-import { getCohortesVaeCollectivesForConnectedAap } from "./features/getCohortesVaeCollectivesForConnectedAap";
-import { getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount } from "./features/getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount";
-import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
-import { getCohortesVaeCollectivesByCommanditaireVaeCollectiveId } from "./features/getCohortesVaeCollectivesByCommanditaireVaeCollectiveId";
-import { createCohorteVaeCollective } from "./features/createCohorteVaeCollective";
-import { getCertificationById } from "../referential/features/getCertificationById";
+
 import { getOrganismById } from "../organism/features/getOrganism";
+import { getCertificationById } from "../referential/features/getCertificationById";
+
+import { createCohorteVaeCollective } from "./features/createCohorteVaeCollective";
+import { deleteCohorteVAECollective } from "./features/deleteCohorteVAECollective";
 import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "./features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
 import { getCertificationCohortesByCohorteId } from "./features/getCertificationCohortesByCohorteId";
+import { getCohortesVaeCollectivesByCommanditaireVaeCollectiveId } from "./features/getCohortesVaeCollectivesByCommanditaireVaeCollectiveId";
+import { getCohortesVaeCollectivesForConnectedAap } from "./features/getCohortesVaeCollectivesForConnectedAap";
+import { getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount } from "./features/getCohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount";
+import { getCohorteVAECollectiveByCodeInscription } from "./features/getCohorteVAECollectiveByCodeInscription";
+import { getCohorteVAECollectiveById } from "./features/getCohorteVAECollectiveById";
+import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
+import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
 import { updateNomCohorteVaeCollective } from "./features/updateNomCohorteVaeCollective";
-import { deleteCohorteVAECollective } from "./features/deleteCohorteVAECollective";
+import { vaeCollectiveResolversSecurityMap } from "./vae-collective.security";
 
 const unsafeResolvers = {
   Account: {

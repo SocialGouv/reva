@@ -1,7 +1,7 @@
 import { CandidacyStatusStep } from "@prisma/client";
+
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../test/helpers/entities/create-candidacy-helper";
-
 import {
   getGraphQLClient,
   getGraphQLError,

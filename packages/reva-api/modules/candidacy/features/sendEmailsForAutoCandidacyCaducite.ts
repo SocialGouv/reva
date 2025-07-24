@@ -1,5 +1,6 @@
 import { CandidacyEmailType } from "@prisma/client";
 import { addDays, format, subDays } from "date-fns";
+
 import { prismaClient } from "../../../prisma/client";
 import {
   ACTUALISATION_THRESHOLD_DAYS,

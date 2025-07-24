@@ -1,12 +1,13 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+
 import {
   createOrUpdatePaymentRequestUnifvae,
   getFundingRequestUnifvaeFromCandidacyId,
   getPaymentRequestUnifvaeFromCandidacyId,
 } from "./features/finance.unifvae.features";
-import { resolversSecurityMap } from "./security";
 import { isFundingRequestUnifvaeSent } from "./features/isFundingRequestUnifvaeSent";
 import { isPaymentRequestUnifvaeSent } from "./features/isPaymentRequestUnifvaeSent";
+import { resolversSecurityMap } from "./security";
 const withSkillsAndTrainings = (f: any) =>
   f
     ? {

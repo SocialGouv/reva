@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker/.";
+
 import { prismaClient } from "../../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../../test/helpers/entities/create-candidacy-helper";

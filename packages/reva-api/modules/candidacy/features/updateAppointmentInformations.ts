@@ -1,4 +1,3 @@
-import { prismaClient } from "../../../prisma/client";
 import {
   isAfter,
   addMonths,
@@ -6,6 +5,8 @@ import {
   startOfToday,
   startOfDay,
 } from "date-fns";
+
+import { prismaClient } from "../../../prisma/client";
 
 export const updateAppointmentInformations = async (params: {
   candidacyId: string;

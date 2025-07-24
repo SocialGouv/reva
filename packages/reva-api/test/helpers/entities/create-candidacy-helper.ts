@@ -4,8 +4,10 @@ import {
   CandidateTypology,
   FinanceModule,
 } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import { BASIC_SKILL_1, BASIC_SKILL_2 } from "../../../test/fixtures";
+
 import { createCandidateHelper } from "./create-candidate-helper";
 import { createCertificationHelper } from "./create-certification-helper";
 import { createOrganismHelper } from "./create-organism-helper";

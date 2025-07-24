@@ -2,6 +2,7 @@ import {
   CandidacyStatusStep,
   CandidacyTypeAccompagnement,
 } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 
 export const createCandidacy = async ({

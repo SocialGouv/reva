@@ -1,10 +1,10 @@
 import { prismaClient } from "../../../prisma/client";
-
 import { RNCPReferential } from "../rncp";
-import { getFormacodes } from "./getFormacodes";
-import { getSubdomains } from "./getDomainsByFormacodes";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
+
 import { createCompetenceBlocsFromRncp } from "./createCompetenceBlocsFromRncp";
+import { getSubdomains } from "./getDomainsByFormacodes";
+import { getFormacodes } from "./getFormacodes";
 
 export const addCertification = async (params: { codeRncp: string }) => {
   const { codeRncp } = params;

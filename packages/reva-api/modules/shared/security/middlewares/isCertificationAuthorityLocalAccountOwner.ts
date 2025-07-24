@@ -1,5 +1,6 @@
 import debug from "debug";
 import { IFieldResolver, MercuriusContext } from "mercurius";
+
 import { prismaClient } from "../../../../prisma/client";
 
 const log = debug("gql:security");

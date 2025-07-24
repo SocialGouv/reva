@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Account } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 
 export const createAccountHelper = async (accountArgs?: Partial<Account>) =>

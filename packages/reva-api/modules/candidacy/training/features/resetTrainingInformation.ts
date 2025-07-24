@@ -1,7 +1,8 @@
-import { prismaClient } from "../../../../prisma/client";
-import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 import { CandidacyStatusStep } from "@prisma/client";
+
+import { prismaClient } from "../../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../../candidacy-log/features/logCandidacyAuditEvent";
+import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
 
 export const resetTrainingInformation = async ({
   candidacyId,

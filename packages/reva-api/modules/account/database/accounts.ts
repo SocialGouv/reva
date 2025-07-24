@@ -1,5 +1,6 @@
-import { prismaClient } from "../../../prisma/client";
 import { Account } from ".prisma/client";
+
+import { prismaClient } from "../../../prisma/client";
 
 export const createAccountProfile = async (params: {
   email: string;

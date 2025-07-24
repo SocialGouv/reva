@@ -1,6 +1,6 @@
 import { CertificationCompetenceBloc } from "@prisma/client";
-import { prismaClient } from "../../../prisma/client";
 
+import { prismaClient } from "../../../prisma/client";
 import { RNCPReferential } from "../rncp";
 
 export const resetCompetenceBlocsByCertificationId = async (params: {

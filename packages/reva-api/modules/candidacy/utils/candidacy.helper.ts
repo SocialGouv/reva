@@ -1,6 +1,6 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
-
 import { subDays } from "date-fns";
+
 import { candidateSearchWord } from "../../candidate/utils/candidate.helpers";
 import {
   CADUCITE_THRESHOLD_DAYS,

@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 
 import { CandidacyMenuEntry } from "../candidacy-menu.types";
+
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
 

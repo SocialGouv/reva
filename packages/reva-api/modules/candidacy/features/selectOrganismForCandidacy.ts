@@ -1,4 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import { logCandidacyAuditEvent } from "../../candidacy-log/features/logCandidacyAuditEvent";
 import { getOrganismById } from "../../organism/features/getOrganism";
@@ -12,6 +13,7 @@ import {
   sendPreviousOrganismCandidateChangeOrganismEmail,
 } from "../emails";
 import { resetTrainingInformation } from "../training/features/resetTrainingInformation";
+
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 import { updateCandidacyOrganism } from "./updateCandidacyOrganism";
 import { updateCandidacyStatus } from "./updateCandidacyStatus";

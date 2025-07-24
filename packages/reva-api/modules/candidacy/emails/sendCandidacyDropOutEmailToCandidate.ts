@@ -1,5 +1,5 @@
-import { sendEmailUsingTemplate } from "../../shared/email";
 import { getCandidateLoginUrl } from "../../candidate/utils/candidate.url.helpers";
+import { sendEmailUsingTemplate } from "../../shared/email";
 
 export const sendCandidacyDropOutEmailToCandidate = async (email: string) =>
   sendEmailUsingTemplate({

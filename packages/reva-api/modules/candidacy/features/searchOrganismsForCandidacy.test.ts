@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker/.";
+
 import { prismaClient } from "../../../prisma/client";
 import { attachOrganismToAllConventionCollectiveHelper } from "../../../test/helpers/attach-organism-to-all-ccn-helper";
 import { attachOrganismToAllDegreesHelper } from "../../../test/helpers/attach-organism-to-all-degrees-helper";
@@ -7,8 +8,8 @@ import { createCandidacyHelper } from "../../../test/helpers/entities/create-can
 import { createCertificationHelper } from "../../../test/helpers/entities/create-certification-helper";
 import { createMaisonMereAapHelper } from "../../../test/helpers/entities/create-maison-mere-aap-helper";
 import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import { createCohorteVaeCollectiveHelper } from "../../../test/helpers/entities/create-vae-collective-helper";
+import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import * as geocodingModule from "../../shared/geocoding";
 
 const searchOrganisms = async ({

@@ -1,5 +1,5 @@
-import { sendEmailUsingTemplate } from "../../../shared/email";
 import { getCandidateAppUrl } from "../../../candidate/utils/candidate.url.helpers";
+import { sendEmailUsingTemplate } from "../../../shared/email";
 
 export const sendDFFNotificationToCandidateEmail = async ({
   email,

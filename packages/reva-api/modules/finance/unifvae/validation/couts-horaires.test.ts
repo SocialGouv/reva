@@ -1,6 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
 import { FUNDING_REQUEST_NO_HOURS } from "../../../../test/fixtures";
+
 import { validateCoutsHoraires } from "./couts-horaires";
 
 test("Should yield an error when individualCost > 70", () => {

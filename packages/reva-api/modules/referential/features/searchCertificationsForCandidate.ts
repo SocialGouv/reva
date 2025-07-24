@@ -1,6 +1,6 @@
+import { Prisma } from "@prisma/client";
 import { deburr } from "lodash";
 
-import { Prisma } from "@prisma/client";
 import { prismaClient } from "../../../prisma/client";
 import { processPaginationInfo } from "../../shared/list/pagination";
 import { Certification } from "../referential.types";

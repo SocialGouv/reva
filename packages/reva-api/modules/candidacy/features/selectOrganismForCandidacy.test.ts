@@ -1,11 +1,11 @@
-import { prismaClient } from "../../../prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
-
 import { CandidacyStatusStep } from "@prisma/client";
+
+import { prismaClient } from "../../../prisma/client";
 import { TRAINING_INPUT } from "../../../test/fixtures";
+import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { createCandidacyHelper } from "../../../test/helpers/entities/create-candidacy-helper";
 import { createOrganismHelper } from "../../../test/helpers/entities/create-organism-helper";
+import { injectGraphql } from "../../../test/helpers/graphql-helper";
 
 const selectNewOrganism = async ({
   keycloakId,

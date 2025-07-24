@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import { WHERE_CLAUSE_RAW_CANDIDACY_CADUQUE_AND_ACTUALISATION } from "../../shared/candidacy/candidacyCaducite";
 import {

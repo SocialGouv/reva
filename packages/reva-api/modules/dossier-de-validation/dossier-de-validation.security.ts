@@ -3,6 +3,7 @@ import {
   defaultSecurity,
   isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,
 } from "../shared/security/presets";
+
 import { canManageDossierDeValidation } from "./security/canManageDossierDeValidation";
 
 export const dossierDeValidationResolversSecurityMap = {

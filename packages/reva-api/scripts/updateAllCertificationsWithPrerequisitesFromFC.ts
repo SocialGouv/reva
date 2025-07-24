@@ -1,6 +1,5 @@
-import { prismaClient } from "../prisma/client";
-
 import { updateCertificationWithPrerequisitesFromFC } from "../modules/referential/features/updateCertificationWithPrerequisitesFromFC";
+import { prismaClient } from "../prisma/client";
 
 const updateAllCertificationsWithPrerequisitesFromFC = async () => {
   const certifications = await prismaClient.certification.findMany({

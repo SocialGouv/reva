@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker/.";
 import { DropOutReason } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 
 export const createDropOutReasonHelper = async (

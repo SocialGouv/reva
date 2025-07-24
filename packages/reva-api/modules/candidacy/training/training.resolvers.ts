@@ -1,13 +1,14 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { Candidacy } from "../candidacy.types";
+
 import { confirmTrainingFormByCandidate } from "./features/confirmTrainingFormByCandidate";
+import { getBasicSkills } from "./features/getBasicSkills";
+import { getBasicSkillsByCandidacyId } from "./features/getBasicSkillsByCandidacyId";
 import { getMandatoryTrainingsByCandidacyId } from "./features/getMandatoryTrainingsByCandidacyId ";
 import { getTrainings } from "./features/getTrainings";
 import { submitTraining } from "./features/submitTrainingForm";
 import { resolversSecurityMap } from "./training.security";
-import { getBasicSkillsByCandidacyId } from "./features/getBasicSkillsByCandidacyId";
-import { getBasicSkills } from "./features/getBasicSkills";
 
 const unsafeResolvers = {
   Candidacy: {
