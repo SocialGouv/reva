@@ -1,5 +1,3 @@
-import { useHooks } from "./FeasibiltyStatus.hooks";
-
 import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { AuthenticatedLink } from "@/components/authenticated-link/AuthenticatedLink";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
@@ -7,6 +5,8 @@ import {
   FeasibilityDecisionHistory,
   FeasibilityDecisionInfo,
 } from "@/components/feasibility-decison-history";
+
+import { useHooks } from "./FeasibiltyStatus.hooks";
 
 interface Props {
   candidacyId: string;

@@ -1,8 +1,4 @@
 "use client";
-import {
-  createOrUpdateAttachments,
-  useAttachments,
-} from "./_components/attachments.hook";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
@@ -17,6 +13,11 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
 import { File as GQLFile } from "@/graphql/generated/graphql";
+
+import {
+  createOrUpdateAttachments,
+  useAttachments,
+} from "./_components/attachments.hook";
 
 const ACCEPTED_FILE_TYPES = ".pdf, .jpg, .jpeg, .png" as const;
 const MAX_FILE_SIZE = "15Mo" as const;

@@ -2,9 +2,9 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams } from "next/navigation";
 
-import FormacodesCcnsDegreesForm from "../../_components/formacodes-ccns-degrees-form/FormacodesCcnsDegreesForm";
-
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+
+import FormacodesCcnsDegreesForm from "../../_components/formacodes-ccns-degrees-form/FormacodesCcnsDegreesForm";
 
 const InformationsRemotePage = () => {
   const { organismId, "maison-mere-id": maisonMereAAPId } = useParams<{

@@ -1,9 +1,10 @@
 "use client";
-import { useFeaturesPage } from "./featuresPage.hook";
 
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { useFeaturesPage } from "./featuresPage.hook";
 
 const FeaturesPage = () => {
   const { features, getFeaturesStatus, toggleFeature } = useFeaturesPage();

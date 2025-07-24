@@ -1,6 +1,6 @@
-import cguCertificateurFixture from "./fixtures/cgu-certificateur.json";
-
 import { stubQuery } from "../../../utils/graphql";
+
+import cguCertificateurFixture from "./fixtures/cgu-certificateur.json";
 
 const SELECTORS = {
   CGU_FORM: '[data-test="cgu-certificateur-form"]',

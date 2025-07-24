@@ -1,3 +1,9 @@
+import { subDays } from "date-fns";
+
+import { Candidacy } from "@/graphql/generated/graphql";
+
+import { stubQuery } from "../../../../utils/graphql";
+
 import {
   DATE_NOW,
   DEFAULT_BLOCS_COMPETENCES,
@@ -13,12 +19,6 @@ import {
   DFF_FULL_ELIGIBILITY,
   DFF_PARTIAL_ELIGIBILITY,
 } from "./dff-mocks";
-
-import { subDays } from "date-fns";
-
-import { stubQuery } from "../../../../utils/graphql";
-
-import { Candidacy } from "@/graphql/generated/graphql";
 
 const FEASIBILITY_ADMISSIBLE_DECISION = {
   ...DEFAULT_FEASIBILITY_FILE,

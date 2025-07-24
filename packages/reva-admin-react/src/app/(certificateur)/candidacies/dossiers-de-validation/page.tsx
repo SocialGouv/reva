@@ -4,12 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 
-import { CandidacySearchList } from "../(components)/CandidacySearchList";
-
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { DossierDeValidationCategoryFilter } from "@/graphql/generated/graphql";
+
+import { CandidacySearchList } from "../(components)/CandidacySearchList";
 
 const RECORDS_PER_PAGE = 10;
 

@@ -1,8 +1,4 @@
 "use client";
-import {
-  useActiveCertifications,
-  useFormacodesCcnsDegreesForm,
-} from "./formacodesCcnsDegreesForm.hook";
 
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
@@ -17,6 +13,11 @@ import * as z from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import {
+  useActiveCertifications,
+  useFormacodesCcnsDegreesForm,
+} from "./formacodesCcnsDegreesForm.hook";
 
 const schema = z.object({
   organismDegrees: z

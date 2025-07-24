@@ -1,8 +1,8 @@
+import { stubQuery, stubMutation } from "../../../../utils/graphql";
+
 import certificationAuthorityLocalAccountNoContactDetailsFixture from "./fixtures/certification-authority-local-account-no-contact-details.json";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
 import deleteCertificationAuthorityLocalAccountFixture from "./fixtures/delete-certification-authority-local-account-mutation-response.json";
-
-import { stubQuery, stubMutation } from "../../../../utils/graphql";
 
 function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {
   cy.intercept("POST", "/api/graphql", (req) => {

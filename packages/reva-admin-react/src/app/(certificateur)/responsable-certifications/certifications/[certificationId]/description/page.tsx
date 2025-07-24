@@ -1,5 +1,4 @@
 "use client";
-import { useUpdateCertificationDescriptionPage } from "./updateCertificationDescription.hook";
 
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -19,6 +18,8 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FranceCompetencesLogo } from "@/components/logo/france-competences-logo/FranceCompetencesLogo";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
+
+import { useUpdateCertificationDescriptionPage } from "./updateCertificationDescription.hook";
 
 const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   {

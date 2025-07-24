@@ -1,13 +1,13 @@
 "use client";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+
+import { useCandidacyStatus } from "../../_components/candidacy.hook";
+
 import { CancelDropoutButton } from "./_components/CancelDropoutButton";
 import {
   CandidacyForCancelDropout,
   useCancelDropout,
 } from "./_components/useCancelDropout";
-
-import Alert from "@codegouvfr/react-dsfr/Alert";
-
-import { useCandidacyStatus } from "../../_components/candidacy.hook";
 
 const CandidacyArchiveComponent = ({
   candidacy,

@@ -1,5 +1,4 @@
 "use client";
-import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
 
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -12,6 +11,8 @@ import LocalAccountGeneralInformationSummaryCard from "@/components/certificatio
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
 
 export default function UpdateLocalAccountPage() {
   const router = useRouter();

@@ -1,7 +1,7 @@
+import { stubQuery } from "../../../../utils/graphql";
+
 import activeFeaturesFixture from "./fixtures/active-features.json";
 import certificationAuthorityFixture from "./fixtures/certification-authority.json";
-
-import { stubQuery } from "../../../../utils/graphql";
 
 function interceptQueries() {
   cy.intercept("POST", "/api/graphql", (req) => {

@@ -1,5 +1,4 @@
 "use client";
-import AccountSetup from "./_components/account-setup/AccountSetup";
 
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
@@ -9,6 +8,8 @@ import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+
+import AccountSetup from "./_components/account-setup/AccountSetup";
 
 const accountWithMaisonMereQuery = graphql(`
   query getAccountInfo {

@@ -1,15 +1,15 @@
 "use client";
 
-import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
-
 import { useParams, useRouter } from "next/navigation";
-
-import { AdminCertificationAuthorityLocalAccountBreadcrumb } from "../_components/admin-certification-authority-local-account-breadcrumb/AdminCertificationAuthorityLocalAccountBreadcrumb";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
 import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { AdminCertificationAuthorityLocalAccountBreadcrumb } from "../_components/admin-certification-authority-local-account-breadcrumb/AdminCertificationAuthorityLocalAccountBreadcrumb";
+
+import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
 
 export default function InterventionAreaPage() {
   const router = useRouter();

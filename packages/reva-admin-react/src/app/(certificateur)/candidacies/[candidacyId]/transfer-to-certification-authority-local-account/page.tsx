@@ -1,10 +1,4 @@
 "use client";
-import {
-  CertificationAuthorityLocalAccountSearchList,
-  CertificationAuthorityLocalAccountValidation,
-  EmptyStateCertificationAuthorityLocalAccountSearch,
-  useTransferCandidacy,
-} from "./_components";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -14,6 +8,13 @@ import {
   CertificationAuthorityLocalAccount,
   CertificationAuthorityLocalAccountPaginated,
 } from "@/graphql/generated/graphql";
+
+import {
+  CertificationAuthorityLocalAccountSearchList,
+  CertificationAuthorityLocalAccountValidation,
+  EmptyStateCertificationAuthorityLocalAccountSearch,
+  useTransferCandidacy,
+} from "./_components";
 
 export default function TransferCandidacyPage() {
   const router = useRouter();

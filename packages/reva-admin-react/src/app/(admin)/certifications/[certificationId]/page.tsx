@@ -1,7 +1,4 @@
 "use client";
-import { NoCertificationAuthorityAlert } from "./structure/_components/NoCertificationAuthorityAlert";
-import { NoCertificationRegistryManagerAlert } from "./structure/_components/NoCertificationRegistryManagerAlert";
-import { useUpdateCertificationPage } from "./updateCertification.hook";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useParams, useRouter } from "next/navigation";
@@ -13,6 +10,10 @@ import { CertificationCompetenceBlocsSummaryCard } from "@/components/certificat
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { NoCertificationAuthorityAlert } from "./structure/_components/NoCertificationAuthorityAlert";
+import { NoCertificationRegistryManagerAlert } from "./structure/_components/NoCertificationRegistryManagerAlert";
+import { useUpdateCertificationPage } from "./updateCertification.hook";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],

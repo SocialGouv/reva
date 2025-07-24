@@ -1,5 +1,3 @@
-import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
-
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -10,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+
+import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
 
 type FormData = z.infer<typeof schema>;
 

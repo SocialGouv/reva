@@ -1,6 +1,6 @@
-import { ZoneInterventionList } from "../types/interventionZone.type";
-
 import { DEPARTMENTS_DOM } from "@/constants";
+
+import { ZoneInterventionList } from "../types/interventionZone.type";
 
 export const sortDepartmentsByAlphabeticalOrderAndDOM = (
   departmentsToSort: ZoneInterventionList,

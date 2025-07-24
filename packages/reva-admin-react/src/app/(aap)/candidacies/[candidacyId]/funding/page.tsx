@@ -1,9 +1,4 @@
 "use client";
-import { ChoixCandidatBlock } from "./_components/ChoixCandidatBlock";
-import { InformationCandidatBlock } from "./_components/InformationCandidatBlock";
-import { ParcoursPersonnaliseBlock } from "./_components/ParcoursPersonnaliseBlock";
-import { ResponsableFinancementBlock } from "./_components/ResponsableFinancementBlock";
-import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
@@ -18,6 +13,12 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GenderEnum } from "@/constants";
 import { Candidacy } from "@/graphql/generated/graphql";
+
+import { ChoixCandidatBlock } from "./_components/ChoixCandidatBlock";
+import { InformationCandidatBlock } from "./_components/InformationCandidatBlock";
+import { ParcoursPersonnaliseBlock } from "./_components/ParcoursPersonnaliseBlock";
+import { ResponsableFinancementBlock } from "./_components/ResponsableFinancementBlock";
+import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 
 const errorNumber = "Veuillez saisir une valeur numérique.";
 

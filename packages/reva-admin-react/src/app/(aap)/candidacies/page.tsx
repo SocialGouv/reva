@@ -1,10 +1,4 @@
 "use client";
-import {
-  CandidaciesLayout,
-  CandidacyCard,
-  useCandidacies,
-} from "./_components";
-import { FilterBar } from "./_components/FilterBar";
 
 import Button from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
@@ -17,6 +11,13 @@ import {
   CandidacySortByFilter,
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
+
+import {
+  CandidaciesLayout,
+  CandidacyCard,
+  useCandidacies,
+} from "./_components";
+import { FilterBar } from "./_components/FilterBar";
 
 export default function CandidaciesPage() {
   const pathname = usePathname();

@@ -1,7 +1,5 @@
 "use client";
 
-import { useExamInfoPage } from "./examInfo";
-
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +13,8 @@ import { CandidacyBackButton } from "@/components/candidacy-back-button/Candidac
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { useExamInfoPage } from "./examInfo";
 
 const examInfoSchema = z.object({
   estimatedExamDate: z.string(),

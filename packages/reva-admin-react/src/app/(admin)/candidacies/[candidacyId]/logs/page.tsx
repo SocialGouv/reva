@@ -2,14 +2,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
+import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
+
 import {
   DayLog,
   groupLogsByDay,
 } from "../../../../../components/logs/day-log/DayLog";
-
-import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 
 const getCandidacyLogsQuery = graphql(`
   query getCandidacyLogs($candidacyId: ID!) {

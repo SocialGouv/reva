@@ -1,7 +1,3 @@
-import { NoCertificationAuthorityAlert } from "./NoCertificationAuthorityAlert";
-import { NoCertificationRegistryManagerAlert } from "./NoCertificationRegistryManagerAlert";
-import { useStructureForm } from "./structureForm.hook";
-
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -12,6 +8,10 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+
+import { NoCertificationAuthorityAlert } from "./NoCertificationAuthorityAlert";
+import { NoCertificationRegistryManagerAlert } from "./NoCertificationRegistryManagerAlert";
+import { useStructureForm } from "./structureForm.hook";
 
 type CertificationForForm = {
   id: string;

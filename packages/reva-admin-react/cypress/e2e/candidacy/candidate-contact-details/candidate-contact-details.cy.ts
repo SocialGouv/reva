@@ -1,6 +1,6 @@
-import candidacyWithCandidateContactDetails from "./fixtures/candidacy-with-candidate-contact-details.json";
-
 import { stubMutation, stubQuery } from "../../../utils/graphql";
+
+import candidacyWithCandidateContactDetails from "./fixtures/candidacy-with-candidate-contact-details.json";
 
 function interceptQueries() {
   cy.intercept("POST", "/api/graphql", (req) => {

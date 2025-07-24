@@ -1,8 +1,8 @@
+import { stubMutation, stubQuery } from "../../../utils/graphql";
+
 import certificationAuthoritiesEducNat from "./fixtures/certification-authorities-educ-nat.json";
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 import updateCertificationStructureMutationResponse from "./fixtures/update-certification-structure-mutation-response.json";
-
-import { stubMutation, stubQuery } from "../../../utils/graphql";
 
 function interceptCertification() {
   cy.intercept("POST", "/api/graphql", (req) => {

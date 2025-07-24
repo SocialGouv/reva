@@ -1,11 +1,11 @@
-import { useHooks } from "./DisableAccount.hooks";
-
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 
+import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+
 import { useAuth } from "../auth/auth";
 
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+import { useHooks } from "./DisableAccount.hooks";
 
 interface Props {
   accountId: string;

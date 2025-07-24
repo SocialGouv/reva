@@ -1,5 +1,4 @@
 "use client";
-import { SubscriptionRequestForm } from "./SubscriptionRequestForm";
 
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -10,6 +9,8 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
 import { graphql } from "@/graphql/generated";
+
+import { SubscriptionRequestForm } from "./SubscriptionRequestForm";
 
 const getSubscriptionRequest = graphql(`
   query getSubscriptionRequest($subscriptionRequestId: ID!) {

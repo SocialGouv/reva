@@ -6,11 +6,11 @@ import Image from "next/image";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { useCertifications } from "../../certifications.hooks";
-
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { CertificationStatus } from "@/graphql/generated/graphql";
+
+import { useCertifications } from "../../certifications.hooks";
 
 const NoCertificationsToValidate = () => {
   return (

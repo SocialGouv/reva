@@ -1,16 +1,5 @@
 "use client";
 
-import { AttachmentsSection } from "./_components/AttachmentsSection";
-import { CandidateDecisionCommentSection } from "./_components/CandidateDecisionCommentSection";
-import { CertificationSection } from "./_components/CertificationSection";
-import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
-import { DecisionSection } from "./_components/DecisionSection";
-import { EligibilitySection } from "./_components/EligibilitySection";
-import { PrerequisitesSection } from "./_components/PrerequisitesSection";
-import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
-import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
-import { SwornStatementSection } from "./_components/SwornStatementSection";
-
 import { toDate } from "date-fns";
 
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
@@ -32,6 +21,17 @@ import {
   Prerequisite,
 } from "@/graphql/generated/graphql";
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+
+import { AttachmentsSection } from "./_components/AttachmentsSection";
+import { CandidateDecisionCommentSection } from "./_components/CandidateDecisionCommentSection";
+import { CertificationSection } from "./_components/CertificationSection";
+import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
+import { DecisionSection } from "./_components/DecisionSection";
+import { EligibilitySection } from "./_components/EligibilitySection";
+import { PrerequisitesSection } from "./_components/PrerequisitesSection";
+import { SendFileCandidateSection } from "./_components/SendFileCandidateSection";
+import { SendFileCertificationAuthoritySection } from "./_components/SendFileCertificateurSection";
+import { SwornStatementSection } from "./_components/SwornStatementSection";
 
 const FeasibilityBanner = ({
   decisionSentAt,

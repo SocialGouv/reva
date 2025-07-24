@@ -1,9 +1,9 @@
+import { stubQuery } from "../../../../utils/graphql";
+
 import {
   DF_FORMATED_DATE_6_MONTHS_AGO,
   DF_FORMATED_DATE_6_MONTHS_FROM_NOW,
 } from "./dff-mocks";
-
-import { stubQuery } from "../../../../utils/graphql";
 
 function visitFeasibilityEligibility() {
   cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {

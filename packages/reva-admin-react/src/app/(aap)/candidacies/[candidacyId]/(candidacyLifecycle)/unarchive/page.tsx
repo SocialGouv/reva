@@ -1,14 +1,15 @@
 "use client";
-import { UnarchiveButton } from "./_components/UnarchiveButton";
-import {
-  CandidacyForUnarchive,
-  useUnarchive,
-} from "./_components/useUnarchive";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 
 import { useCandidacyStatus } from "../../_components/candidacy.hook";
+
+import { UnarchiveButton } from "./_components/UnarchiveButton";
+import {
+  CandidacyForUnarchive,
+  useUnarchive,
+} from "./_components/useUnarchive";
 
 const CandidacyUnarchiveComponent = ({
   candidacy,

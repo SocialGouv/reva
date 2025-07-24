@@ -1,8 +1,8 @@
-import { DossierDeValidationCard } from "./DossierDeValidationCard";
-
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 import { DossierDeValidationType } from "../types";
+
+import { DossierDeValidationCard } from "./DossierDeValidationCard";
 
 interface Props {
   historyDossierDeValidation: DossierDeValidationType[];

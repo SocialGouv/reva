@@ -1,7 +1,5 @@
 "use client";
 
-import { useUpdateLocalAccountCertificationsPage } from "./updateLocalAccountCertificationsPage.hook";
-
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -11,6 +9,8 @@ import { CertificationsForm } from "@/components/certifications-form/Certificati
 import { CertificationsFormData } from "@/components/certifications-form/CertificationsForm.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { useUpdateLocalAccountCertificationsPage } from "./updateLocalAccountCertificationsPage.hook";
 
 export default function InterventionAreaPage() {
   const router = useRouter();

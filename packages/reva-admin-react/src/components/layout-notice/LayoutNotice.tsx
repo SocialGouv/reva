@@ -1,14 +1,14 @@
+import { usePathname } from "next/navigation";
+
+import { useAuth } from "../auth/auth";
+import { useKeycloakContext } from "../auth/keycloakContext";
+
 import {
   AAPNotVisibleInSearchResultNotice,
   useAAPVisibilityCheck,
 } from "./_components/AAPNotVisibleInSearchResultNotice";
 import { AapCgu } from "./_components/AppCgu.component";
 import { useAppCgu } from "./_components/AppCgu.hooks";
-
-import { usePathname } from "next/navigation";
-
-import { useAuth } from "../auth/auth";
-import { useKeycloakContext } from "../auth/keycloakContext";
 
 export const LayoutNotice = () => {
   const { authenticated } = useKeycloakContext();

@@ -1,14 +1,14 @@
-import { OrganismCardDescription } from "./OrganismCardDescription";
-import { OrganismCardDistance } from "./OrganismCardDistance";
-import { OrganismCardInformationsCommerciales } from "./OrganismCardInformationsCommerciales";
-import { OrganismCardTitle } from "./OrganismCardTitle";
-
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 import {
   ConformiteNormeAccessibilite,
   OrganismModaliteAccompagnement,
 } from "@/graphql/generated/graphql";
+
+import { OrganismCardDescription } from "./OrganismCardDescription";
+import { OrganismCardDistance } from "./OrganismCardDistance";
+import { OrganismCardInformationsCommerciales } from "./OrganismCardInformationsCommerciales";
+import { OrganismCardTitle } from "./OrganismCardTitle";
 
 type Organism = {
   id: string;

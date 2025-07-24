@@ -1,5 +1,4 @@
 "use client";
-import { useMaisonMereAAP } from "./_components/maisonMereAAP.hook";
 
 import Button from "@codegouvfr/react-dsfr/Button";
 import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
@@ -9,6 +8,8 @@ import { SettingsSummaryForGestionnaire } from "@/app/(aap)/agencies-settings-v3
 import { Impersonate } from "@/components/impersonate";
 import { successToast } from "@/components/toast/toast";
 import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
+
+import { useMaisonMereAAP } from "./_components/maisonMereAAP.hook";
 
 const MaisonMereAapPage = () => {
   const { "maison-mere-id": maisonMereAAPId }: { "maison-mere-id": string } =

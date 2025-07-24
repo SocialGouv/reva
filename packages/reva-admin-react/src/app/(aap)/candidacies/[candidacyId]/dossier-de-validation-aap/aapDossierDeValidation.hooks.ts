@@ -1,5 +1,3 @@
-import { DossierDeValidationFormData } from "./_components/DossierDeValidationTab";
-
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/dist/client/components/navigation";
 
@@ -7,6 +5,8 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { REST_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
+
+import { DossierDeValidationFormData } from "./_components/DossierDeValidationTab";
 
 const getCandidacyQuery = graphql(`
   query getCandidacyForDossierDeValidationAapPage($candidacyId: ID!) {

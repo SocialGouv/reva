@@ -1,8 +1,8 @@
-import { ResultatCard } from "./ResultatCard";
-
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 import { JuryResult } from "@/graphql/generated/graphql";
+
+import { ResultatCard } from "./ResultatCard";
 
 type JuryType = {
   id: string;

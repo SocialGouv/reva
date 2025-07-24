@@ -1,6 +1,4 @@
 "use client";
-import { CertificationAuthority } from "./(components)/CertificationAuthority";
-import { CertificationAuthorityLocalAccount } from "./(components)/CertificationAuthorityLocalAccount";
 
 import { SideMenu, SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +9,9 @@ import { useAuth } from "@/components/auth/auth";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+
+import { CertificationAuthority } from "./(components)/CertificationAuthority";
+import { CertificationAuthorityLocalAccount } from "./(components)/CertificationAuthorityLocalAccount";
 
 const getFeasibilityCountAndCohortesVaeCollectivesByCategoryQuery = graphql(`
   query getFeasibilityCountByCategory(

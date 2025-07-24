@@ -1,5 +1,4 @@
 "use client";
-import { useEligibility } from "./_components/eligibility.hook";
 
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -15,6 +14,8 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { useEligibility } from "./_components/eligibility.hook";
 
 const schema = z
   .object({

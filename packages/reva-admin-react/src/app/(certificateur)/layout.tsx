@@ -1,8 +1,8 @@
 "use client";
 
-import { useCertificateurLayout } from "./certificateur-layout.hook";
-
 import { redirect } from "next/navigation";
+
+import { useCertificateurLayout } from "./certificateur-layout.hook";
 
 export default function CertificateurLayout({
   children,

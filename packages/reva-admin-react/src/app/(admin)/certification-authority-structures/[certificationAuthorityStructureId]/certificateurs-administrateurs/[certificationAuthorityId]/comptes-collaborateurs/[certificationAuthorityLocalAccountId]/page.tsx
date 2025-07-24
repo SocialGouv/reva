@@ -1,13 +1,9 @@
 "use client";
 
-import { useComptesCollaborateursPage } from "./comptesCollaborateurs.hooks";
-
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { useParams, useRouter } from "next/navigation";
-
-import { CertificationAuthorityStructureBreadcrumb } from "../../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 import LocalAccountGeneraInformationCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
@@ -15,6 +11,10 @@ import InterventionAreaSummaryCard from "@/components/certification-authority/su
 import { Impersonate } from "@/components/impersonate";
 import { successToast } from "@/components/toast/toast";
 import { graphqlErrorToast } from "@/components/toast/toast";
+
+import { CertificationAuthorityStructureBreadcrumb } from "../../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
+
+import { useComptesCollaborateursPage } from "./comptesCollaborateurs.hooks";
 
 const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   const router = useRouter();

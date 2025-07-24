@@ -66,17 +66,17 @@ export default defineConfig([
       ],
 
       "import/order": [
-        "error",
+        "warn",
         {
           groups: [
             "builtin",
-            "sibling",
             "external",
+            "internal",
             "parent",
+            "sibling",
             "index",
             "object",
             "type",
-            "internal",
           ],
           "newlines-between": "always",
           alphabetize: { order: "asc", caseInsensitive: true },

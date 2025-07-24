@@ -1,5 +1,3 @@
-import { CertificationCompetenceAccordion } from "./CertificationCompetenceAccordion";
-
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useMemo } from "react";
@@ -10,6 +8,8 @@ import {
   DffCertificationCompetenceBloc,
   Prerequisite,
 } from "@/graphql/generated/graphql";
+
+import { CertificationCompetenceAccordion } from "./CertificationCompetenceAccordion";
 
 export default function CertificationSection({
   option,

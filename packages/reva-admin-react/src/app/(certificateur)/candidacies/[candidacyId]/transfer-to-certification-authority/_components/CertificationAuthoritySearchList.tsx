@@ -1,5 +1,3 @@
-import { CertificationAuthorityCard } from "./CertificationAuthorityCard";
-
 import Button from "@codegouvfr/react-dsfr/Button";
 
 import { SearchList } from "@/components/search/search-list/SearchList";
@@ -7,6 +5,8 @@ import {
   CertificationAuthority,
   CertificationAuthorityPaginated,
 } from "@/graphql/generated/graphql";
+
+import { CertificationAuthorityCard } from "./CertificationAuthorityCard";
 
 export const CertificationAuthoritySearchList = ({
   certificationAuthorities,

@@ -1,14 +1,3 @@
-import {
-  FormCandidateInformationData,
-  candidateInformationSchema,
-} from "./candidateInformationSchema";
-import {
-  Candidacy,
-  Countries,
-  Departments,
-  useUpdateCandidateInformation,
-} from "./useCandidateInformation";
-
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
@@ -26,6 +15,17 @@ import {
   Candidate,
   CandidateUpdateInformationInput,
 } from "@/graphql/generated/graphql";
+
+import {
+  FormCandidateInformationData,
+  candidateInformationSchema,
+} from "./candidateInformationSchema";
+import {
+  Candidacy,
+  Countries,
+  Departments,
+  useUpdateCandidateInformation,
+} from "./useCandidateInformation";
 
 const CandidateInformationForm = ({
   candidacyId,

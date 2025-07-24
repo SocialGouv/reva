@@ -1,7 +1,5 @@
 "use client";
 
-import { useCaduciteContestation } from "./caduciteContestation.hook";
-
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +13,8 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { errorToast, successToast } from "@/components/toast/toast";
 import { CertificationAuthorityContestationDecision } from "@/graphql/generated/graphql";
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+
+import { useCaduciteContestation } from "./caduciteContestation.hook";
 
 const schema = z.object({
   certificationAuthorityContestationDecision: z.enum(

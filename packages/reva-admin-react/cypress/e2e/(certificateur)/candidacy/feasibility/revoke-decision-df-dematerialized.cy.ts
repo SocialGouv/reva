@@ -1,9 +1,3 @@
-import feasibilityDematerializedAdmissible from "./fixtures/feasibility-dematerialized-admissible.json";
-import feasibilityDematerializedComplete from "./fixtures/feasibility-dematerialized-complete.json";
-import feasibilityDematerializedIncomplete from "./fixtures/feasibility-dematerialized-incomplete.json";
-import feasibilityDematerializedRejected from "./fixtures/feasibility-dematerialized-rejected.json";
-import revokeDecisionResponse from "./fixtures/revoke-decision-response.json";
-
 import { stubQuery, stubMutation } from "../../../../utils/graphql";
 import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
 import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
@@ -11,6 +5,12 @@ import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-cate
 import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
 import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
 import organismForAAPVisibilityCheck from "../../fixtures/organism-for-aap-visibility-check.json";
+
+import feasibilityDematerializedAdmissible from "./fixtures/feasibility-dematerialized-admissible.json";
+import feasibilityDematerializedComplete from "./fixtures/feasibility-dematerialized-complete.json";
+import feasibilityDematerializedIncomplete from "./fixtures/feasibility-dematerialized-incomplete.json";
+import feasibilityDematerializedRejected from "./fixtures/feasibility-dematerialized-rejected.json";
+import revokeDecisionResponse from "./fixtures/revoke-decision-response.json";
 
 describe("Revoke Dematerialized Feasibility Decision", () => {
   const candidacyUrl =

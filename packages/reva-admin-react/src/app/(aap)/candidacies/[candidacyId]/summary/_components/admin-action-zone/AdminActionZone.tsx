@@ -1,11 +1,11 @@
-import { useAdminActionZone } from "./adminActionZone.hooks";
-import { useConfirmFinanceModuleSwitchToHorsPlateformeModal } from "./modals/confirmFinanceModuleSwitchToHorsPlateformeModal.hook";
-import { useConfirmTypeAccompagnementSwitchToAutonomeModal } from "./modals/confirmTypeAccompagnementSwitchToAutonomeModal.hook";
-
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { ComponentProps } from "react";
 
 import { graphqlErrorToast } from "@/components/toast/toast";
+
+import { useAdminActionZone } from "./adminActionZone.hooks";
+import { useConfirmFinanceModuleSwitchToHorsPlateformeModal } from "./modals/confirmFinanceModuleSwitchToHorsPlateformeModal.hook";
+import { useConfirmTypeAccompagnementSwitchToAutonomeModal } from "./modals/confirmTypeAccompagnementSwitchToAutonomeModal.hook";
 
 export const AdminActionZone = ({
   candidacyId,

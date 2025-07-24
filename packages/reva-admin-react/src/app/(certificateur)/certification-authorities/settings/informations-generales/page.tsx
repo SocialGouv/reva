@@ -1,7 +1,7 @@
 "use client";
-import { useCertificationAuthority } from "./certificationAuthorityGeneralInfo.hooks";
-
 import { CertificationAuthorityGeneralInfoForm } from "@/components/certification-authority/forms/certification-authority-general-info/CertificationAuthorityGeneralInfoForm";
+
+import { useCertificationAuthority } from "./certificationAuthorityGeneralInfo.hooks";
 
 const CertificationAuthorityGeneralInfoAdminPage = () => {
   const { certificationAuthority, getCertificationAuthorityStatus } =

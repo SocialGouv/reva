@@ -1,5 +1,4 @@
 "use client";
-import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
 
 import { useQuery } from "@tanstack/react-query";
 import { toDate } from "date-fns";
@@ -14,6 +13,8 @@ import {
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
+
+import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
 
 const getMaisonMereAAP = graphql(`
   query getMaisonMereAAPById($maisonMereAAPId: ID!) {

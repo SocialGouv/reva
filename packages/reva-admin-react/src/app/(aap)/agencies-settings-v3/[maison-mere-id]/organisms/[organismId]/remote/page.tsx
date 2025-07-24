@@ -7,13 +7,13 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-import { getRemoteZoneLabel } from "../../../../_components/getRemoteZoneLabel";
-import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
-
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
+
+import { getRemoteZoneLabel } from "../../../../_components/getRemoteZoneLabel";
+import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 
 const getOrganismQuery = graphql(`
   query getOrganismForOrganismRemotePage($organismId: ID!) {

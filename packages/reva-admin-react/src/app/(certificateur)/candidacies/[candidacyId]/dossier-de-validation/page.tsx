@@ -1,7 +1,4 @@
 "use client";
-import { DossierDeValidationCard } from "./_components/DossierDeValidationCard";
-import { HistoryDossierDeValidationView } from "./_components/HistoryDossierDeValidationView";
-import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
 
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -9,6 +6,10 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { format } from "date-fns";
 
 import { BackButton } from "@/components/back-button/BackButton";
+
+import { DossierDeValidationCard } from "./_components/DossierDeValidationCard";
+import { HistoryDossierDeValidationView } from "./_components/HistoryDossierDeValidationView";
+import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
 
 const DossierDeValidationPage = () => {
   return (

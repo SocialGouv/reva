@@ -1,14 +1,14 @@
-import {
-  checkIfAllItemsSelected,
-  getFilteredItems,
-} from "./TreeSelect.helpers";
-import { TreeSelectItem } from "./TreeSelect.types";
-
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useState } from "react";
+
+import {
+  checkIfAllItemsSelected,
+  getFilteredItems,
+} from "./TreeSelect.helpers";
+import { TreeSelectItem } from "./TreeSelect.types";
 
 interface Props {
   title: string;
