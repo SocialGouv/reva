@@ -15,6 +15,14 @@ const compat = new FlatCompat({
 
 export default defineConfig([
   {
+    settings: {
+      "import/resolver": {
+        typescript: {
+          alwaysTryTypes: true,
+          project: ["./tsconfig.json"],
+        },
+      },
+    },
     extends: fixupConfigRules(
       compat.extends(
         "next/core-web-vitals",
