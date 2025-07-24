@@ -1,5 +1,11 @@
 "use client";
 
+import { useOrganismInformationForm } from "./organismInformationForm.hook";
+import {
+  OrganismInformationFormData,
+  organismInformationFormSchema,
+} from "./organismInformationFormSchema";
+
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
@@ -11,12 +17,6 @@ import { useForm } from "react-hook-form";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { useOrganismInformationForm } from "./organismInformationForm.hook";
-import {
-  OrganismInformationFormData,
-  organismInformationFormSchema,
-} from "./organismInformationFormSchema";
 
 const OrganismInformationForm = ({
   mutationOnSubmit,

@@ -1,15 +1,15 @@
-import { useAuth } from "@/components/auth/auth";
-import { FinanceModule, TypeAccompagnement } from "@/graphql/generated/graphql";
+import {
+  AdminAction,
+  AdminActionZone,
+} from "./admin-action-zone/AdminActionZone";
 
 import {
   CandidacyForStatus,
   useCandidacyStatus,
 } from "../../_components/candidacy.hook";
 
-import {
-  AdminAction,
-  AdminActionZone,
-} from "./admin-action-zone/AdminActionZone";
+import { useAuth } from "@/components/auth/auth";
+import { FinanceModule, TypeAccompagnement } from "@/graphql/generated/graphql";
 
 export const CandidacySummaryBottomButtons = ({
   candidacyId,

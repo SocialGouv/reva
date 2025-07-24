@@ -1,4 +1,6 @@
 "use client";
+import { useUpdateCertificationPage } from "./updateCertification.hook";
+
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import Notice from "@codegouvfr/react-dsfr/Notice";
@@ -14,8 +16,6 @@ import { CertificationCompetenceBlocsSummaryCard } from "@/components/certificat
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
-
-import { useUpdateCertificationPage } from "./updateCertification.hook";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],

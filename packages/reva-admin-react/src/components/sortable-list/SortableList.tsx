@@ -1,3 +1,5 @@
+import { DragHandle, SortableItem, SortableOverlay } from "./components";
+
 import {
   DndContext,
   KeyboardSensor,
@@ -11,8 +13,6 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import React from "react";
-
-import { DragHandle, SortableItem, SortableOverlay } from "./components";
 
 import type { UniqueIdentifier } from "@dnd-kit/core";
 import type { ReactNode } from "react";

@@ -1,8 +1,8 @@
 "use client";
+import { useCertificationAuthoritySettings } from "./certificationAuthoritySettingsPage.hook";
+
 import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
-
-import { useCertificationAuthoritySettings } from "./certificationAuthoritySettingsPage.hook";
 
 export default function CertificationAuthoritySettingsPage() {
   const { certificationAuthority, getCertificationAuthorityStatus } =

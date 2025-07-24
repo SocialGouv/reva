@@ -1,9 +1,14 @@
 "use client";
+import { checkCandidateFields } from "./_components/checkCandidateFields";
+import useCandidateSummary from "./_components/useCandidateSummary";
+
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format, toDate } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
+
+import { CertificationCard } from "../_components/CertificationCard";
 
 import { CandidacySummaryBottomButtons } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidacySummaryBottomButtons";
 import { CandidateExperiencesSectionCard } from "@/app/(aap)/candidacies/[candidacyId]/summary/_components/CandidateExperiencesSectionCard";
@@ -12,11 +17,6 @@ import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Impersonate } from "@/components/impersonate";
-
-import { CertificationCard } from "../_components/CertificationCard";
-
-import { checkCandidateFields } from "./_components/checkCandidateFields";
-import useCandidateSummary from "./_components/useCandidateSummary";
 
 const CandidacySummaryPage = () => {
   const { candidacyId } = useParams<{

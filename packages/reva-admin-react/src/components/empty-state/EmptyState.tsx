@@ -1,6 +1,6 @@
-import Image from "next/image";
-
 import hexagonBackground from "./hexagonBackground.svg";
+
+import Image from "next/image";
 
 export const EmptyState = ({
   title,

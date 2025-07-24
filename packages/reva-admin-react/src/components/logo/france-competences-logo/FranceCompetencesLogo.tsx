@@ -1,6 +1,6 @@
-import Image from "next/image";
-
 import logo from "./assets/france_competences_logo.png";
+
+import Image from "next/image";
 
 export const FranceCompetencesLogo = () => (
   <Image

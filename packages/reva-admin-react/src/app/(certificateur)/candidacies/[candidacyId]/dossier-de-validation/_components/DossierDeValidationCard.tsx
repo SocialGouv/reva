@@ -1,8 +1,8 @@
 import { format } from "date-fns";
 
-import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
-
 import { DossierDeValidationType } from "../types";
+
+import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 
 interface Props {
   dossierDeValidation: DossierDeValidationType;

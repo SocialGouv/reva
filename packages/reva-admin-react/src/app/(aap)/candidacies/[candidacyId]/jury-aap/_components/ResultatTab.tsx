@@ -1,10 +1,10 @@
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
-import { useRouter } from "next/navigation";
-
 import { HistoryResultatView } from "./HistoryResultatView";
 import { useJuryAAP } from "./jury-aap.hook";
 import { ResultatCard } from "./ResultatCard";
+
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
+import { useRouter } from "next/navigation";
 
 export const ResultatTab = () => {
   const router = useRouter();

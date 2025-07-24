@@ -12,7 +12,7 @@
     "prebuild": "react-dsfr update-icons && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
     "build": "next build && node copy-assets.js",
     "start": "node .next/standalone/server.js",
-    "lint": "npm run graphql:generate && eslint --color src",
+    "lint": "eslint --color src",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "cypress:open": "cypress open",

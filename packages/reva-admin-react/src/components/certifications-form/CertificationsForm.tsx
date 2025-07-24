@@ -1,11 +1,11 @@
 "use client";
-import { FormButtons } from "../form/form-footer/FormButtons";
-import { TreeSelect } from "../tree-select";
-
 import {
   CertificationsFormData,
   useCertificationsForm,
 } from "./CertificationsForm.hook";
+
+import { FormButtons } from "../form/form-footer/FormButtons";
+import { TreeSelect } from "../tree-select";
 
 type CertificationsFormProps = {
   certifications: { id: string; label: string; selected: boolean }[];

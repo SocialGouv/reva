@@ -1,15 +1,10 @@
+import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
+
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-
-import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
-import { useAuth } from "@/components/auth/auth";
-import { BackButton } from "@/components/back-button/BackButton";
-import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import { FeasibilityBanner } from "../FeasibilityBanner";
 import {
@@ -22,7 +17,12 @@ import {
 } from "../FeasibilityValidationForm";
 import { useRevokeFeasibilityDecisionModal } from "../useRevokeFeasibilityDecisionModal.hook";
 
-import { useFeasibilityUploadedPdf } from "./feasibilityUploadedPdf.hook";
+import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
+import { useAuth } from "@/components/auth/auth";
+import { BackButton } from "@/components/back-button/BackButton";
+import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 
 export const FeasibilityUploadedPdf = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();

@@ -1,6 +1,6 @@
-import { stubQuery } from "../../../../utils/graphql";
-
 import { DF_CERTIFICATION } from "./dff-mocks";
+
+import { stubQuery } from "../../../../utils/graphql";
 
 function visitFeasibilityCertification() {
   cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {

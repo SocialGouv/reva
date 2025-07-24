@@ -1,5 +1,7 @@
 "use client";
 
+import { IgnoreCguCertificateurModalContent } from "./IgnoreCguCertificateurModalContent";
+
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
@@ -7,12 +9,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
 import { useCguCertificateur } from "../cgu-certificateur.hook";
 
-import { IgnoreCguCertificateurModalContent } from "./IgnoreCguCertificateurModalContent";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 const zodSchema = z.object({
   charterAcceptance: z.literal<boolean>(true),

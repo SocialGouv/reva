@@ -1,4 +1,10 @@
 "use client";
+import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
+import {
+  OTHER_FINANCING_METHOD_ID,
+  useTrainingPage,
+} from "./trainingPage.hook";
+
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
 
@@ -7,12 +13,6 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { getTypologyLabel } from "@/utils/candidateTypology.util";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
-
-import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
-import {
-  OTHER_FINANCING_METHOD_ID,
-  useTrainingPage,
-} from "./trainingPage.hook";
 
 const TrainingPage = () => {
   const {

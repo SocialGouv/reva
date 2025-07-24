@@ -1,3 +1,9 @@
+import candidacyPdfAdmissible from "./fixtures/feasibility-pdf-admissible.json";
+import candidacyPdfComplete from "./fixtures/feasibility-pdf-complete.json";
+import candidacyPdfIncomplete from "./fixtures/feasibility-pdf-incomplete.json";
+import candidacyPdfRejected from "./fixtures/feasibility-pdf-rejected.json";
+import revokeDecisionResponse from "./fixtures/revoke-decision-response.json";
+
 import { stubQuery, stubMutation } from "../../../../utils/graphql";
 import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
 import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
@@ -5,12 +11,6 @@ import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-cate
 import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
 import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
 import organismForAAPVisibilityCheck from "../../fixtures/organism-for-aap-visibility-check.json";
-
-import candidacyPdfAdmissible from "./fixtures/feasibility-pdf-admissible.json";
-import candidacyPdfComplete from "./fixtures/feasibility-pdf-complete.json";
-import candidacyPdfIncomplete from "./fixtures/feasibility-pdf-incomplete.json";
-import candidacyPdfRejected from "./fixtures/feasibility-pdf-rejected.json";
-import revokeDecisionResponse from "./fixtures/revoke-decision-response.json";
 
 describe("Revoke PDF Feasibility Decision", () => {
   const candidacyUrl =

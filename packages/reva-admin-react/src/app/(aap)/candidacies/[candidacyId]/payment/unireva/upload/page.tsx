@@ -6,6 +6,8 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Section } from "../../_components/form/Section";
+
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
@@ -13,8 +15,6 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { errorToast, successToast } from "@/components/toast/toast";
 import { REST_API_URL } from "@/config/config";
-
-import { Section } from "../../_components/form/Section";
 
 const paymentRequestUniRevaUploadSchema = z.object({
   invoiceFile: z.object({

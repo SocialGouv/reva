@@ -1,4 +1,9 @@
 "use client";
+import {
+  createOrUpdateSwornStatement,
+  useSwornStatement,
+} from "./_components/swornStatement.hook";
+
 import Download from "@codegouvfr/react-dsfr/Download";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
@@ -12,11 +17,6 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
 import { File as GQLFile } from "@/graphql/generated/graphql";
-
-import {
-  createOrUpdateSwornStatement,
-  useSwornStatement,
-} from "./_components/swornStatement.hook";
 
 const schema = z
   .object({

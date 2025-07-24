@@ -1,4 +1,6 @@
 "use client";
+import { useReplaceCertificationPage } from "./replaceCertification.hook";
+
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
@@ -13,8 +15,6 @@ import * as z from "zod";
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { useReplaceCertificationPage } from "./replaceCertification.hook";
 
 const zodSchema = z.object({
   rncp: z.string().min(1, "Champs requis"),

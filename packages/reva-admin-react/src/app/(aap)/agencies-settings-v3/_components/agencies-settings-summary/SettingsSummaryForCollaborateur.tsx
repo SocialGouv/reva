@@ -1,11 +1,11 @@
+import { useCollaborateurSettings } from "./settingsForCollaborateur.hook";
+
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-
 import { AAPSettingsSummarySectionRemote } from "../AAPSettingsSummarySectionRemote";
 
-import { useCollaborateurSettings } from "./settingsForCollaborateur.hook";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
 export const SettingsSummaryForCollaborateur = () => {
   const { organism, account, maisonMereAAPId } = useCollaborateurSettings();

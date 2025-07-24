@@ -1,16 +1,16 @@
 "use client";
+import { useCertificationAuthority } from "./certificationAuthority.hooks";
+
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams } from "next/navigation";
-
-import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
-import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
-import { Impersonate } from "@/components/impersonate";
 
 import { CertificationsSummaryCard } from "../../../../../../components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "../../../../../../components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
-import { useCertificationAuthority } from "./certificationAuthority.hooks";
+import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
+import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
+import { Impersonate } from "@/components/impersonate";
 
 const CertificationAuthorityAdminComponent = ({
   certificationAuthority,

@@ -9,12 +9,12 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
+import { CertificationCard } from "../../_components/CertificationCard";
+
 import { useCertificationPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/certification/certificationPageLogic";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { CertificationCard } from "../../_components/CertificationCard";
 
 const schema = z.object({
   option: z.string(),

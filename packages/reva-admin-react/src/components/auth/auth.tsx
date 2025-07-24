@@ -1,8 +1,8 @@
+import { UserRole } from "./types";
+
 import { jwtDecode } from "jwt-decode";
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
-
-import { UserRole } from "./types";
 
 export const useAuth = () => {
   const { accessToken } = useKeycloakContext();

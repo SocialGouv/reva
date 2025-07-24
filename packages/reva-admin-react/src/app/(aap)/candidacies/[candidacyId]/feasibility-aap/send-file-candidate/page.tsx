@@ -1,4 +1,6 @@
 "use client";
+import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
+
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format, toDate } from "date-fns";
@@ -11,8 +13,6 @@ import {
   Candidacy,
   DematerializedFeasibilityFile,
 } from "@/graphql/generated/graphql";
-
-import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
 
 const FeasibilityBanner = ({
   sentToCandidateAt,

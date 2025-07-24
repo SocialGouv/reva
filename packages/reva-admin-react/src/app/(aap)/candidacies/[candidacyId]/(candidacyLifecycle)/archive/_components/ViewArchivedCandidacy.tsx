@@ -1,7 +1,7 @@
+import { CandidacyForArchive, getArchivingReasonLabel } from "./useArchive";
+
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
-
-import { CandidacyForArchive, getArchivingReasonLabel } from "./useArchive";
 
 export const ViewArchivedCandidacy = ({
   candidacy,

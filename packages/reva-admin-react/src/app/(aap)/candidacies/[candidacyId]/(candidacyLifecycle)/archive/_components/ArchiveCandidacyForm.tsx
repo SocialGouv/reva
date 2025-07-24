@@ -1,3 +1,5 @@
+import { CandidacyForArchive, useArchive } from "./useArchive";
+
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
@@ -8,13 +10,11 @@ import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
+import { useCandidacyStatus } from "../../../_components/candidacy.hook";
+
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
-
-import { useCandidacyStatus } from "../../../_components/candidacy.hook";
-
-import { CandidacyForArchive, useArchive } from "./useArchive";
 
 const modal = createModal({
   id: "confirm-candidacy-archiving",

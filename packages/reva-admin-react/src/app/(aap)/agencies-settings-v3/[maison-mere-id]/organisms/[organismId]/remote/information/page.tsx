@@ -1,4 +1,10 @@
 "use client";
+import { useInformationRemotePage } from "./informationRemote.hook";
+import {
+  InformationRemoteFormData,
+  informationRemoteFormSchema,
+} from "./informationRemoteFormSchema";
+
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -12,12 +18,6 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { RemoteZone } from "@/graphql/generated/graphql";
-
-import { useInformationRemotePage } from "./informationRemote.hook";
-import {
-  InformationRemoteFormData,
-  informationRemoteFormSchema,
-} from "./informationRemoteFormSchema";
 
 const InformationsRemotePage = () => {
   const { organismId, "maison-mere-id": maisonMereAAPId } = useParams<{

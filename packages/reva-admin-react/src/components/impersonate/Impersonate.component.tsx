@@ -1,10 +1,10 @@
+import { useHooks } from "./Impersonate.hooks";
+
 import Button from "@codegouvfr/react-dsfr/Button";
 
 import { useAuth } from "../auth/auth";
 import { CopyClipBoard } from "../copy-clip-board";
 import { useFeatureflipping } from "../feature-flipping/featureFlipping";
-
-import { useHooks } from "./Impersonate.hooks";
 
 interface Props {
   candidateId?: string;

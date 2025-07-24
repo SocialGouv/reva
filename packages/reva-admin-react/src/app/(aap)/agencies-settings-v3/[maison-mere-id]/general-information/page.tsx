@@ -1,4 +1,9 @@
 "use client";
+import { AdminToggleGestionBranch } from "./_components/AdminToggleGestionBranch";
+import { AttestationReferencement } from "./_components/AttestationReferencement";
+import { LegalInformationUpdateBlock } from "./_components/legal-information-update-block/LegalInformationUpdateBlock";
+import { useGeneralInformationPage } from "./generalInformationPage.hook";
+
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -12,11 +17,6 @@ import { CompanyBadges } from "@/components/company-preview";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { LegalStatus, MaisonMereAap } from "@/graphql/generated/graphql";
-
-import { AdminToggleGestionBranch } from "./_components/AdminToggleGestionBranch";
-import { AttestationReferencement } from "./_components/AttestationReferencement";
-import { LegalInformationUpdateBlock } from "./_components/legal-information-update-block/LegalInformationUpdateBlock";
-import { useGeneralInformationPage } from "./generalInformationPage.hook";
 
 const GeneralInformationPage = () => {
   const router = useRouter();

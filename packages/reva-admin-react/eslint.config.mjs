@@ -62,13 +62,13 @@ export default defineConfig([
         {
           groups: [
             "builtin",
-            "external",
-            "internal",
-            "parent",
             "sibling",
+            "external",
+            "parent",
             "index",
             "object",
             "type",
+            "internal",
           ],
           "newlines-between": "always",
           alphabetize: { order: "asc", caseInsensitive: true },

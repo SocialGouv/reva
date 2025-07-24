@@ -1,12 +1,12 @@
-import { FormButtons } from "../form/form-footer/FormButtons";
-import { TreeSelect } from "../tree-select";
-
 import {
   Deparment,
   InterventionAreaFormData,
   Region,
   useInterventionAreaFormLogic,
 } from "./InterventionAreaForm.hook";
+
+import { FormButtons } from "../form/form-footer/FormButtons";
+import { TreeSelect } from "../tree-select";
 
 type InterventionAreaFormProps = {
   entityDepartments: Deparment[];

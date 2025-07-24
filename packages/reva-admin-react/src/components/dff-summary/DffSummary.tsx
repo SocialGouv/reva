@@ -1,16 +1,4 @@
 "use client";
-import dynamic from "next/dynamic";
-
-import {
-  Candidacy,
-  Candidate,
-  DematerializedFeasibilityFile,
-  DffAttachment,
-  DffEligibilityRequirement,
-  Prerequisite,
-} from "@/graphql/generated/graphql";
-
-import { ContactInfosSection } from "../../app/contact-infos-section/ContactInfosSection";
 
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
@@ -21,6 +9,19 @@ import EligibilitySection from "./_components/EligibilitySection";
 import ExperiencesSection from "./_components/ExperiencesSection";
 import GoalsSection from "./_components/GoalsSection";
 import ParcoursSection from "./_components/ParcoursSection";
+
+import dynamic from "next/dynamic";
+
+import { ContactInfosSection } from "../../app/contact-infos-section/ContactInfosSection";
+
+import {
+  Candidacy,
+  Candidate,
+  DematerializedFeasibilityFile,
+  DffAttachment,
+  DffEligibilityRequirement,
+  Prerequisite,
+} from "@/graphql/generated/graphql";
 
 // The ButtonConvertHtmlToPdf component uses html2pdf, which relies on the window object and causes issues during server-side rendering (SSR) builds.
 // We use dynamic import to ensure the component is only loaded on the client side.

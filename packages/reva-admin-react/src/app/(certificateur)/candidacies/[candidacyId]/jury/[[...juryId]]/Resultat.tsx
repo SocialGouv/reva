@@ -1,4 +1,8 @@
 "use client";
+import { HistoryResultatView } from "./HistoryResultatView";
+import { useJuryPageLogic } from "./juryPageLogic";
+import { ResultatCard } from "./ResultatCard";
+
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
@@ -14,10 +18,6 @@ import { useAuth } from "@/components/auth/auth";
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { JuryResult } from "@/graphql/generated/graphql";
-
-import { HistoryResultatView } from "./HistoryResultatView";
-import { useJuryPageLogic } from "./juryPageLogic";
-import { ResultatCard } from "./ResultatCard";
 
 const modal = createModal({
   id: "confirm-result",

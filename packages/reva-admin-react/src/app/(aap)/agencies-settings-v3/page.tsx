@@ -1,10 +1,10 @@
 "use client";
+import { useGestionnaireMaisonMereAAPSettings } from "./_components/agencies-settings-summary/settingsForGestionnaire.hook";
+
 import { SettingsSummaryForCollaborateur } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/SettingsSummaryForCollaborateur";
 import { SettingsSummaryForGestionnaire } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/SettingsSummaryForGestionnaire";
 import { useAuth } from "@/components/auth/auth";
 import { MaisonMereAap, Organism } from "@/graphql/generated/graphql";
-
-import { useGestionnaireMaisonMereAAPSettings } from "./_components/agencies-settings-summary/settingsForGestionnaire.hook";
 
 const AgenciesSettingsPage = () => {
   const { isGestionnaireMaisonMereAAP, isAdmin } = useAuth();

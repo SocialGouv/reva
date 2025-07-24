@@ -1,5 +1,8 @@
 "use client";
 
+import { OrganismCard } from "./_components/OrganismCard/OrganismCard";
+import { OrganismThumb } from "./_components/OrganismThumb/OrganismThumb.component";
+
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -11,9 +14,6 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
-
-import { OrganismCard } from "./_components/OrganismCard/OrganismCard";
-import { OrganismThumb } from "./_components/OrganismThumb/OrganismThumb.component";
 
 const modal = createModal({
   id: "confirm-changement-aap",

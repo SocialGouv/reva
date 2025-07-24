@@ -1,3 +1,5 @@
+import { MaisonMereAAP } from "./MaisonMereAAP";
+
 import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
@@ -8,8 +10,6 @@ import {
   CandidacyCountByStatus,
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
-
-import { MaisonMereAAP } from "./MaisonMereAAP";
 
 const CandidacyLayoutSideMenu = ({
   candidaciesByStatusCount,

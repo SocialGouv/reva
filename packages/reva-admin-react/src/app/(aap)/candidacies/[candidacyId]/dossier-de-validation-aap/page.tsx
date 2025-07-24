@@ -1,5 +1,16 @@
 "use client";
 
+import {
+  DossierDeValidationFormData,
+  DossierDeValidationTab,
+} from "./_components/DossierDeValidationTab";
+import { ReadOnlyDossierDeValidationView } from "./_components/ReadOnlyDossierDeValidationView";
+import {
+  ReadyForJuryEstimatedAtSchemaFormData,
+  ReadyForJuryEstimatedDateTab,
+} from "./_components/ReadyForJuryEstimatedDateTab";
+import { useAapDossierDeValidationPage } from "./aapDossierDeValidation.hooks";
+
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { parseISO } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
@@ -11,17 +22,6 @@ import {
   graphqlErrorToast,
   successToast,
 } from "@/components/toast/toast";
-
-import {
-  DossierDeValidationFormData,
-  DossierDeValidationTab,
-} from "./_components/DossierDeValidationTab";
-import { ReadOnlyDossierDeValidationView } from "./_components/ReadOnlyDossierDeValidationView";
-import {
-  ReadyForJuryEstimatedAtSchemaFormData,
-  ReadyForJuryEstimatedDateTab,
-} from "./_components/ReadyForJuryEstimatedDateTab";
-import { useAapDossierDeValidationPage } from "./aapDossierDeValidation.hooks";
 
 const AapDossierDeValidationPage = () => {
   const router = useRouter();

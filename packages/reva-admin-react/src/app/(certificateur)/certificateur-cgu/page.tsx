@@ -1,14 +1,14 @@
 "use client";
+import { CguAwaitingManagerValidationNotice } from "./_components/CguAwaitingManagerValidationNotice";
+import { CguCertificateurForm } from "./_components/CguCertificateurForm";
+import { useCguCertificateur } from "./cgu-certificateur.hook";
+
 import Button from "@codegouvfr/react-dsfr/Button";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 
 import { Cgu } from "@/components/cgu/Cgu";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-
-import { CguAwaitingManagerValidationNotice } from "./_components/CguAwaitingManagerValidationNotice";
-import { CguCertificateurForm } from "./_components/CguCertificateurForm";
-import { useCguCertificateur } from "./cgu-certificateur.hook";
 
 export default function CertificateurCguPage() {
   const {

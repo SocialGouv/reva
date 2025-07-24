@@ -1,11 +1,11 @@
+import closeIcon from "./assets/close.svg";
+import helpIcon from "./assets/help.svg";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useCallback } from "react";
 
 import { useAuth } from "../auth/auth";
-
-import closeIcon from "./assets/close.svg";
-import helpIcon from "./assets/help.svg";
 
 const aapHelpLinks = [
   {

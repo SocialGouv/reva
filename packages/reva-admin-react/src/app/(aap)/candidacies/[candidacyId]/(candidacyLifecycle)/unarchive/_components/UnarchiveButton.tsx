@@ -1,7 +1,7 @@
+import { useUnarchive } from "./useUnarchive";
+
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
-
-import { useUnarchive } from "./useUnarchive";
 
 export const UnarchiveButton = () => {
   const router = useRouter();

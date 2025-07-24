@@ -1,6 +1,6 @@
-import { stubQuery } from "../../../../utils/graphql";
-
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
+
+import { stubQuery } from "../../../../utils/graphql";
 
 function interceptCertification() {
   cy.intercept("POST", "/api/graphql", (req) => {

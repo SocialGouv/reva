@@ -1,12 +1,12 @@
 "use client";
+import { useAccountSetup } from "./accountSetup.hook";
+
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { graphqlErrorToast } from "@/components/toast/toast";
-
-import { useAccountSetup } from "./accountSetup.hook";
 
 export default function AccountSetup({
   maisonMereAAPId,

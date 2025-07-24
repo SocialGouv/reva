@@ -1,14 +1,14 @@
 "use client";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
-
 import {
   CertificationStructureFormData,
   StructureForm,
 } from "./_components/StructureForm";
 import { useUpdateCertificationStructurePage } from "./updateCertificationStructure.hook";
+
+import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+
+import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 
 export default function UpdateCertificationStructurePage() {
   const { certificationId } = useParams<{

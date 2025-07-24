@@ -1,5 +1,7 @@
 "use client";
 
+import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
+
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useRouter } from "next/navigation";
 
@@ -8,7 +10,6 @@ import { InterventionAreaForm } from "@/components/intervention-area-form/Interv
 import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
-import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
 export default function InterventionAreaPage() {
   const router = useRouter();
 

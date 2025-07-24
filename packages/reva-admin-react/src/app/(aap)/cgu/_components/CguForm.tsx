@@ -9,10 +9,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { useAppCgu } from "../page.hooks";
+
 import { IgnoreCguModalContent } from "@/app/(aap)/cgu/_components/IgnoreCguModalContent";
 import { graphqlErrorToast } from "@/components/toast/toast";
-
-import { useAppCgu } from "../page.hooks";
 
 const zodSchema = z.object({
   cguAcceptance: z.literal<boolean>(true),

@@ -1,13 +1,13 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useAddLieuAccueilPage } from "./addLieuAccueil.hook";
 
-import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
+import { useParams } from "next/navigation";
 
 import OrganismInformationForm from "../_components/OrganismInformationForm";
 import { OrganismInformationFormData } from "../_components/organismInformationFormSchema";
 
-import { useAddLieuAccueilPage } from "./addLieuAccueil.hook";
+import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 
 const AddLieuAccueilPage = () => {
   const { createLieuAccueilInfo, isAdmin } = useAddLieuAccueilPage();

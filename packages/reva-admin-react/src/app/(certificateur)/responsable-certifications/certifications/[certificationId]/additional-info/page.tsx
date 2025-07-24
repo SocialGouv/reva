@@ -1,4 +1,6 @@
 "use client";
+import { useUpdateAdditionalInfoPage } from "./useCertificationAdditionalInfo.hook";
+
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -13,8 +15,6 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { File as GQLFile } from "@/graphql/generated/graphql";
-
-import { useUpdateAdditionalInfoPage } from "./useCertificationAdditionalInfo.hook";
 
 export default function CertificationAdditionalInfoPage() {
   const { certificationId } = useParams<{ certificationId: string }>();

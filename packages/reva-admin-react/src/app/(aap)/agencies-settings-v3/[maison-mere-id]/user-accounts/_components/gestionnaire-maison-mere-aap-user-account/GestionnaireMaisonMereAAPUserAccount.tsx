@@ -1,14 +1,14 @@
 "use client";
 
+import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
+import { UserAccountForm, UserAccountFormData } from "./UserAccountForm";
+
 import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import { DisableAccount } from "@/components/disable-account";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
-import { UserAccountForm, UserAccountFormData } from "./UserAccountForm";
 
 const GestionnaireMaisonMereAAPUserAccount = () => {
   const { userAccountId } = useParams<{ userAccountId: string }>();

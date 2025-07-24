@@ -1,4 +1,7 @@
 "use client";
+import { CcnSearchList } from "./_components/ccn-search-list/CcnSearchList";
+import { useTypologyPage } from "./typologyPage.hook";
+
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Select } from "@codegouvfr/react-dsfr/Select";
@@ -15,9 +18,6 @@ import {
   AVAILABLE_CANDIDATE_TYPOLOGIES,
   getTypologyLabel,
 } from "@/utils/candidateTypology.util";
-
-import { CcnSearchList } from "./_components/ccn-search-list/CcnSearchList";
-import { useTypologyPage } from "./typologyPage.hook";
 
 const typologyFormSchema = z.object({
   typology: z.enum(AVAILABLE_CANDIDATE_TYPOLOGIES),

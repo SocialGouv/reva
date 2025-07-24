@@ -1,3 +1,6 @@
+import { DossierDeValidationCard } from "./DossierDeValidationCard";
+import { HistoryDossierDeValidationView } from "./HistoryDossierDeValidationView";
+
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -5,13 +8,10 @@ import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-
 import { DossierDeValidationType } from "../types";
 
-import { DossierDeValidationCard } from "./DossierDeValidationCard";
-import { HistoryDossierDeValidationView } from "./HistoryDossierDeValidationView";
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const dossierDeValidationSchema = z.object({
   dossierDeValidationChecked: z.literal(true, {

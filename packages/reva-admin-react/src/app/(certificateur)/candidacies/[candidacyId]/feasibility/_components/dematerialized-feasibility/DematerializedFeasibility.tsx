@@ -1,9 +1,24 @@
+import {
+  createOrUpdateCertificationAuthorityDecision,
+  useDematerializedFeasibility,
+} from "./dematerializedFeasibility.hook";
+
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, toDate } from "date-fns";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+
+import {
+  FeasibilityCompletionForm,
+  FeasibilityCompletionFormData,
+} from "../FeasibilityCompletionForm";
+import {
+  FeasibilityValidationForm,
+  FeasibilityValidationFormData,
+} from "../FeasibilityValidationForm";
+import { useRevokeFeasibilityDecisionModal } from "../useRevokeFeasibilityDecisionModal.hook";
 
 import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
@@ -21,21 +36,6 @@ import {
   FeasibilityHistory,
 } from "@/graphql/generated/graphql";
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
-
-import {
-  FeasibilityCompletionForm,
-  FeasibilityCompletionFormData,
-} from "../FeasibilityCompletionForm";
-import {
-  FeasibilityValidationForm,
-  FeasibilityValidationFormData,
-} from "../FeasibilityValidationForm";
-import { useRevokeFeasibilityDecisionModal } from "../useRevokeFeasibilityDecisionModal.hook";
-
-import {
-  createOrUpdateCertificationAuthorityDecision,
-  useDematerializedFeasibility,
-} from "./dematerializedFeasibility.hook";
 
 const FeasibilityBanner = ({
   isWaitingForDecision,

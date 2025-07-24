@@ -1,6 +1,6 @@
-import { stubQuery } from "../../../../../utils/graphql";
-
 import certificationAuthorityAndStructureFixture from "./fixtures/certification-authority-and-structure.json";
+
+import { stubQuery } from "../../../../../utils/graphql";
 
 function interceptAddLocalAccount() {
   cy.intercept("POST", "/api/graphql", (req) => {

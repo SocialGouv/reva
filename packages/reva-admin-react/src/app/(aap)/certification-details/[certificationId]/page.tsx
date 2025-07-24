@@ -1,4 +1,6 @@
 "use client";
+import { useCertificationDetailsPage } from "./getCertificationDetails.hook";
+
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useParams, useSearchParams } from "next/navigation";
 
@@ -7,8 +9,6 @@ import { CertificationAdditionalInfoSummaryCard } from "@/components/certificati
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
-
-import { useCertificationDetailsPage } from "./getCertificationDetails.hook";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useCertificationDetailsPage>["certification"],

@@ -1,6 +1,6 @@
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
-
 import { isCandidacyStatusEqualOrAbove } from "./isCandidacyStatusEqualOrAbove";
+
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 export const isCandidacyPaymentRequestAlreadySent = ({
   isFundingAndPaymentRequestsFromCandidacyStatusesRemoved,

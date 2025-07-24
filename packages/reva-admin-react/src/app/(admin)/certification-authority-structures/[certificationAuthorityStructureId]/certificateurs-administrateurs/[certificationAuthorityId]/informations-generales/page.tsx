@@ -1,11 +1,11 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useCertificationAuthority } from "./certificationAuthorityGeneralInfo.hooks";
 
-import { CertificationAuthorityGeneralInfoForm } from "@/components/certification-authority/forms/certification-authority-general-info/CertificationAuthorityGeneralInfoForm";
+import { useParams } from "next/navigation";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
-import { useCertificationAuthority } from "./certificationAuthorityGeneralInfo.hooks";
+import { CertificationAuthorityGeneralInfoForm } from "@/components/certification-authority/forms/certification-authority-general-info/CertificationAuthorityGeneralInfoForm";
 
 const CertificationAuthorityGeneralInfoAdminPage = () => {
   const { certificationAuthority, getCertificationAuthorityStatus } =

@@ -1,11 +1,11 @@
+import { stubQuery } from "../../utils/graphql";
+
 import {
   CandidacyStatusStep,
   FeasibilityFormat,
   FinanceModule,
   OrganismModaliteAccompagnement,
 } from "@/graphql/generated/graphql";
-
-import { stubQuery } from "../../utils/graphql";
 
 function visitSummary({
   feasibilityFormat,

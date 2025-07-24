@@ -1,4 +1,6 @@
 "use client";
+import { CertificationCard } from "./_components/certification-card";
+
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
@@ -12,8 +14,6 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
-
-import { CertificationCard } from "./_components/certification-card";
 
 const modal = createModal({
   id: "confirm-reorientation",

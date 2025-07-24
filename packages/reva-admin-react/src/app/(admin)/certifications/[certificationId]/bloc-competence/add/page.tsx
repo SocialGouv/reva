@@ -1,4 +1,6 @@
 "use client";
+import { useAddCompetenceBlocPage } from "./addCompetenceBloc.hook";
+
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useRouter } from "next/navigation";
 
@@ -8,8 +10,6 @@ import {
 } from "@/components/certifications/competence-bloc-form/CompetenceBlocForm";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { useAddCompetenceBlocPage } from "./addCompetenceBloc.hook";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useAddCompetenceBlocPage>["certification"],

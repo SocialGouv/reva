@@ -1,5 +1,7 @@
 "use client";
 
+import { useFinancingMethodsPage } from "./financing-methods.hook";
+
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,8 +13,6 @@ import { z } from "zod";
 import { useAuth } from "@/components/auth/auth";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
-
-import { useFinancingMethodsPage } from "./financing-methods.hook";
 
 export default function FinancingMethodsPage() {
   const router = useRouter();

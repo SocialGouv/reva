@@ -1,6 +1,10 @@
 "use client";
+import { useUpdateLocalAccountGeneralInformationPage } from "./updateLocalAccountGeneralInformationPage.hook";
+
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useParams, useRouter } from "next/navigation";
+
+import { AdminCertificationAuthorityLocalAccountBreadcrumb } from "../_components/admin-certification-authority-local-account-breadcrumb/AdminCertificationAuthorityLocalAccountBreadcrumb";
 
 import {
   CertificationAuthorityLocalAccountGeneralInformationForm,
@@ -8,10 +12,6 @@ import {
 } from "@/components/certification-authority/local-account/general-information-form/CertificationAuthorityLocalAccountGeneralInformationForm";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { AdminCertificationAuthorityLocalAccountBreadcrumb } from "../_components/admin-certification-authority-local-account-breadcrumb/AdminCertificationAuthorityLocalAccountBreadcrumb";
-
-import { useUpdateLocalAccountGeneralInformationPage } from "./updateLocalAccountGeneralInformationPage.hook";
 
 export default function AddLocalAccountPage() {
   const router = useRouter();

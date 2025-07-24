@@ -1,6 +1,6 @@
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
-
 import { DateDeJuryCard } from "./DateDeJuryCard";
+
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 
 type JuryType = {
   id: string;

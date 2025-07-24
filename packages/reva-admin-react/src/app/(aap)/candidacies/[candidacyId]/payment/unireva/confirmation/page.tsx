@@ -1,4 +1,6 @@
 "use client";
+import { usePaymentRequestUniRevaConfirmationPage } from "./paymentRequestUniRevaConfirmation.hook";
+
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,17 +10,15 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Info } from "../../_components/form/Info";
+import { costsAndHoursTotal } from "../paymentRequestUniRevaPaymentUtils";
+
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { isCandidacyPaymentRequestAlreadySent } from "@/utils/isCandidacyPaymentRequestAlreadySent";
-
-import { Info } from "../../_components/form/Info";
-import { costsAndHoursTotal } from "../paymentRequestUniRevaPaymentUtils";
-
-import { usePaymentRequestUniRevaConfirmationPage } from "./paymentRequestUniRevaConfirmation.hook";
 
 const paymentRequestUniRevaConfirmationSchema = z.object({
   payementRequestConfirmation: z.literal(true, {

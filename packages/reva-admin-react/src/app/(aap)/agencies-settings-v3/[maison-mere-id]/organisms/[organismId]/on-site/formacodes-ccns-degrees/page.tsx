@@ -1,10 +1,10 @@
 "use client";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-
 import FormacodesCcnsDegreesForm from "../../_components/formacodes-ccns-degrees-form/FormacodesCcnsDegreesForm";
 import { useOnSiteOrganism } from "../_components/onSiteOrganism.hook";
+
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 const FormacodesCcnsDegreesOnSitePage = () => {
   const { organismId, organismName, maisonMereAAPId } = useOnSiteOrganism();

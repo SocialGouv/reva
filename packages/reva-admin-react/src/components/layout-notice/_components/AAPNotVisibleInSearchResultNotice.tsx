@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
+import { useGraphQlClient } from "../../graphql/graphql-client/GraphqlClient";
+
 import { NoticeAlert } from "@/components/notice/NoticeAlert";
 import { graphql } from "@/graphql/generated";
-
-import { useGraphQlClient } from "../../graphql/graphql-client/GraphqlClient";
 
 const getOrganismQuery = graphql(`
   query getOrganismForAAPVisibilityCheck {

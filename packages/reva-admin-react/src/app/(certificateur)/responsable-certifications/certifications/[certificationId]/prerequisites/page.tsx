@@ -1,18 +1,18 @@
 "use client";
+import { useUpdatePrerequisitesPage } from "./updatePrerequisites.hook";
+
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import {
   PrerequisitesForm,
   PrerequisitesFormData,
 } from "../../../../../../components/certifications/prerequisites-form/PrerequisitesForm";
 
-import { useUpdatePrerequisitesPage } from "./updatePrerequisites.hook";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdatePrerequisitesPage>["certification"],

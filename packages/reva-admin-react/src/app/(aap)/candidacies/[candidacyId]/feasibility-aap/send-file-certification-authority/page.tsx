@@ -1,4 +1,7 @@
 "use client";
+import CertificationAuthoritySection from "./_components/CertificationAuthoritySection";
+import { useSendFileCertificationAuthority } from "./_components/sendFileCertificationAuthority.hook";
+
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format, toDate } from "date-fns";
@@ -18,9 +21,6 @@ import {
   DematerializedFeasibilityFile,
   FeasibilityDecision,
 } from "@/graphql/generated/graphql";
-
-import CertificationAuthoritySection from "./_components/CertificationAuthoritySection";
-import { useSendFileCertificationAuthority } from "./_components/sendFileCertificationAuthority.hook";
 
 const HasBeenSentComponent = ({
   sentToCertificationAuthorityAt,
