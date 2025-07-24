@@ -1,13 +1,32 @@
 import { readFileSync } from "fs";
+
+import formBody from "@fastify/formbody";
+import multipart from "@fastify/multipart";
+import fastifySwagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 import {
   FastifyPluginAsyncJsonSchemaToTs,
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
-import multipart from "@fastify/multipart";
-import formBody from "@fastify/formbody";
-import fastifySwagger from "@fastify/swagger";
-import swaggerUi from "@fastify/swagger-ui";
 import * as jose from "jose";
+
+import { mapCandidacyObject } from "../../utils/mappers/candidacy.js";
+import { mapFeasibilities } from "../../utils/mappers/feasibility.js";
+
+import { validateJwt } from "./authMiddleware.js";
+import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
+import { getFeasibilities } from "./features/feasibilities/getFeasibilities.js";
+import {
+  addInputSchemas,
+  dossierDeValidationDecisionInputSchema,
+  resultatJuryInputSchema,
+  sessionJuryInputSchema,
+} from "./inputSchemas.js";
+import {
+  addResponseSchemas,
+  dossiersDeFaisabiliteResponseSchema,
+  pageInfoSchema,
+} from "./responseSchemas.js";
 import {
   addSchemas,
   candidacyIdSchema,
@@ -24,22 +43,6 @@ import {
   statutDossierDeValidationSchema,
   statutJurySchema,
 } from "./schemas.js";
-import {
-  addInputSchemas,
-  dossierDeValidationDecisionInputSchema,
-  resultatJuryInputSchema,
-  sessionJuryInputSchema,
-} from "./inputSchemas.js";
-import {
-  addResponseSchemas,
-  dossiersDeFaisabiliteResponseSchema,
-  pageInfoSchema,
-} from "./responseSchemas.js";
-import { validateJwt } from "./authMiddleware.js";
-import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
-import { mapCandidacyObject } from "../../utils/mappers/candidacy.js";
-import { getFeasibilities } from "./features/feasibilities/getFeasibilities.js";
-import { mapFeasibilities } from "../../utils/mappers/feasibility.js";
 
 const logo = readFileSync("./static/fvae_logo.svg");
 

@@ -1,4 +1,7 @@
 import { FromSchema } from "json-schema-to-ts";
+
+import { Duration } from "../../graphql/generated/graphql.js";
+import { getFeasibilities } from "../../routes/v1/features/feasibilities/getFeasibilities.js";
 import {
   dossiersDeFaisabiliteResponseSchema,
   pageInfoSchema,
@@ -11,10 +14,9 @@ import {
   fichierSchema,
   statutDossierDeFaisabiliteSchema,
 } from "../../routes/v1/schemas.js";
-import { mapPageInfo } from "./pageInfo.js";
-import { getFeasibilities } from "../../routes/v1/features/feasibilities/getFeasibilities.js";
 import { GetGqlRowType, GetGqlResponseType } from "../types.js";
-import { Duration } from "../../graphql/generated/graphql.js";
+
+import { mapPageInfo } from "./pageInfo.js";
 
 type MappedFeasibilitiesResponse = FromSchema<
   typeof dossiersDeFaisabiliteResponseSchema,

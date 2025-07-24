@@ -1,5 +1,7 @@
 import { FromSchema } from "json-schema-to-ts";
+
 import { getCandidacyDetails } from "../../routes/v1/features/candidacies/getCandidacyDetails.js";
+import { candidatureResponseSchema } from "../../routes/v1/responseSchemas.js";
 import {
   adresseSchema,
   candidacyIdSchema,
@@ -14,7 +16,6 @@ import {
   situationSchema,
   typologieCandidatSchema,
 } from "../../routes/v1/schemas.js";
-import { candidatureResponseSchema } from "../../routes/v1/responseSchemas.js";
 
 export const mapCandidateGender = (
   gender?: string | null,

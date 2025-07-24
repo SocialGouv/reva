@@ -1,5 +1,6 @@
-import { graphql } from "../../../../graphql/generated/index.js";
 import { Client } from "@urql/core";
+
+import { graphql } from "../../../../graphql/generated/index.js";
 
 const getCandidacyWithFeasibilityQuery = graphql(`
   query getCandidacyWithFeasibilityQuery($candidacyId: ID!) {

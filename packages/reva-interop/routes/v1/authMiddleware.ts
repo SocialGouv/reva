@@ -1,8 +1,9 @@
+import { Client } from "@urql/core";
 import dotenv from "dotenv";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as jose from "jose";
+
 import { getGraphQlClient } from "../../utils/graphqlClient.js";
-import { Client } from "@urql/core";
 import { getUserAccessToken } from "../../utils/keycloak.js";
 
 declare module "fastify" {

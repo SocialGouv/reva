@@ -1,6 +1,7 @@
-import Fastify from "fastify";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import dotenv from "dotenv";
+import Fastify from "fastify";
+
 import routesApiV1 from "./routes/v1/index.js";
 
 dotenv.config({ path: "./.env" });

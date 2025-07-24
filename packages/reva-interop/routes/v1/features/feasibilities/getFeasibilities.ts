@@ -1,4 +1,5 @@
 import { Client } from "@urql/core";
+
 import { graphql } from "../../../../graphql/generated/gql.js";
 import { FeasibilityCategoryFilter } from "../../../../graphql/generated/graphql.js";
 

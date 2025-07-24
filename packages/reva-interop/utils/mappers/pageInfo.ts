@@ -1,4 +1,5 @@
 import { FromSchema } from "json-schema-to-ts";
+
 import { pageInfoSchema } from "../../routes/v1/responseSchemas.js";
 
 type MappedPageInfo = FromSchema<typeof pageInfoSchema>;
