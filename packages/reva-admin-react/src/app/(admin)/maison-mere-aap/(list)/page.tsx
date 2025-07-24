@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
+
 import { graphql } from "@/graphql/generated";
 
 const getMaisonMereAAPs = graphql(`

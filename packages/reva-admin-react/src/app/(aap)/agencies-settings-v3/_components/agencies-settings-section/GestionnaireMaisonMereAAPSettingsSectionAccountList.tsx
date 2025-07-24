@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
 import { Impersonate } from "@/components/impersonate";
+
 import { Account } from "@/graphql/generated/graphql";
 
 export const GestionnaireMaisonMereAAPSettingsSectionAccountList = ({

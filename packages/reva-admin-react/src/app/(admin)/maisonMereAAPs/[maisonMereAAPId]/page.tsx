@@ -12,6 +12,7 @@ import {
   OrganismSummary,
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
+
 import { graphql } from "@/graphql/generated";
 
 import ValidationDecisionForm from "./(components)/ValidationDecisionForm";

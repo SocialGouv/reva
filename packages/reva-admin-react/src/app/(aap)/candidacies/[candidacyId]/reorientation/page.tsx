@@ -12,6 +12,7 @@ import { CandidacyBackButton } from "@/components/candidacy-back-button/Candidac
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { graphql } from "@/graphql/generated";
 
 import { CertificationCard } from "./_components/certification-card";

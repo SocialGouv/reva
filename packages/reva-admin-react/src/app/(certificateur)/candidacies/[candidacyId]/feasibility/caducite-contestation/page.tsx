@@ -11,8 +11,9 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { errorToast, successToast } from "@/components/toast/toast";
-import { CertificationAuthorityContestationDecision } from "@/graphql/generated/graphql";
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+
+import { CertificationAuthorityContestationDecision } from "@/graphql/generated/graphql";
 
 import { useCaduciteContestation } from "./caduciteContestation.hook";
 

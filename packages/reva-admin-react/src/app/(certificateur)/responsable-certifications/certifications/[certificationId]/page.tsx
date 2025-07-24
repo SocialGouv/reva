@@ -14,6 +14,7 @@ import { CertificationAdditionalInfoSummaryCard } from "@/components/certificati
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
 
 import { useUpdateCertificationPage } from "./updateCertification.hook";

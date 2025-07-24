@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { DayLog, groupLogsByDay } from "@/components/logs/day-log/DayLog";
+
 import { graphql } from "@/graphql/generated";
 
 const getAAPLogsQuery = graphql(`

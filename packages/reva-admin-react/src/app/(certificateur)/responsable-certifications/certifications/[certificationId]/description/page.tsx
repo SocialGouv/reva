@@ -17,6 +17,7 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FranceCompetencesLogo } from "@/components/logo/france-competences-logo/FranceCompetencesLogo";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
 
 import { useUpdateCertificationDescriptionPage } from "./updateCertificationDescription.hook";

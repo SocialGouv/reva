@@ -14,6 +14,7 @@ import { z } from "zod";
 import { useAuth } from "@/components/auth/auth";
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { graphqlErrorToast } from "@/components/toast/toast";
+
 import { JuryResult } from "@/graphql/generated/graphql";
 
 import { HistoryResultatView } from "./HistoryResultatView";

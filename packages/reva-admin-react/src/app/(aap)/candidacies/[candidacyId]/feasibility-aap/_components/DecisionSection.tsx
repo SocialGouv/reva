@@ -5,6 +5,7 @@ import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToCom
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
+
 import { DfFileAapDecision } from "@/graphql/generated/graphql";
 
 export const DecisionSection = ({

@@ -2,6 +2,7 @@ import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 
 import { CompanyPreview } from "../company-preview";

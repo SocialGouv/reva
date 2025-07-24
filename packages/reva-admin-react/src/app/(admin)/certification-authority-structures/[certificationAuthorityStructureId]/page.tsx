@@ -9,6 +9,7 @@ import ResponsableReferentielCard from "@/app/(admin)/certification-authority-st
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SectionCard } from "@/components/card/section-card/SectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 
 import { CertificationsSummaryCard } from "../../../../components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";

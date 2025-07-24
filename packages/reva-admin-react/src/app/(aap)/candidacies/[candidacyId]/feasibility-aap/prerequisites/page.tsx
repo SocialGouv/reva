@@ -11,10 +11,10 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
+import type { PrerequisiteInput as PrerequisiteInputType } from "@/graphql/generated/graphql";
+
 import { PrerequisiteInput } from "./_components/PrerequisiteInput";
 import { usePrerequisites } from "./_components/prerequisites.hook";
-
-import type { PrerequisiteInput as PrerequisiteInputType } from "@/graphql/generated/graphql";
 
 const schema = z.object({
   hasNoPrerequisites: z.boolean(),

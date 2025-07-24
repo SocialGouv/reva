@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 import {
   CandidacySortByFilter,

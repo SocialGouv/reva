@@ -4,11 +4,12 @@ import { format, toDate } from "date-fns";
 import Link from "next/link";
 
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
+import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+
 import {
   FeasibilityDecision,
   FeasibilityHistory,
 } from "@/graphql/generated/graphql";
-import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 
 interface Props {
   decision: FeasibilityDecision;

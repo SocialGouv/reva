@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast } from "@/components/toast/toast";
+
 import { graphql } from "@/graphql/generated";
 
 const getCandidacyById = graphql(`

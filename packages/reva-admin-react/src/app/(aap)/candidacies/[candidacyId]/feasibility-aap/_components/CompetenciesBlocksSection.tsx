@@ -7,6 +7,7 @@ import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToCom
 import { SectionCard } from "@/components/card/section-card/SectionCard";
 import { CertificationCompetenceAccordion } from "@/components/dff-summary/_components/CertificationCompetenceAccordion";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
+
 import {
   CertificationCompetenceDetails,
   CompetenceBlocsPartCompletion,

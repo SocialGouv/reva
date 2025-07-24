@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 
 import { SearchList } from "@/components/search/search-list/SearchList";
+
 import {
   CandidacyCountByStatus,
   CandidacySortByFilter,

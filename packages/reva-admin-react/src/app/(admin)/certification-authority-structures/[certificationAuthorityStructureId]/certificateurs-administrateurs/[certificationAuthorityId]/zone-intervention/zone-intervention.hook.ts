@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityQuery = graphql(`

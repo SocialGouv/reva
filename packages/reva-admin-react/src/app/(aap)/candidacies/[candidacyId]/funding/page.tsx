@@ -12,6 +12,7 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GenderEnum } from "@/constants";
+
 import { Candidacy } from "@/graphql/generated/graphql";
 
 import { ChoixCandidatBlock } from "./_components/ChoixCandidatBlock";

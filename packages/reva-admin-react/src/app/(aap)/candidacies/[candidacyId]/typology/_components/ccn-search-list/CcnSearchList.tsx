@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
+
 import { graphql } from "@/graphql/generated";
 
 const RECORDS_PER_PAGE = 10;

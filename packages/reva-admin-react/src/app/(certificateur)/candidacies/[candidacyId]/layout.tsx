@@ -10,6 +10,7 @@ import { useAuth } from "@/components/auth/auth";
 import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { NotAuthorized } from "@/components/not-authorized";
+
 import { graphql } from "@/graphql/generated";
 
 const getCandidacyQuery = graphql(`

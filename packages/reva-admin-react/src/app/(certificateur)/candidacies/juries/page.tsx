@@ -6,6 +6,7 @@ import { useEffect, useMemo } from "react";
 
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 import { JuryCategoryFilter } from "@/graphql/generated/graphql";
 

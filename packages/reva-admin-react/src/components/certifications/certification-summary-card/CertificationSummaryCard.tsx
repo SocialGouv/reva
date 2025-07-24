@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { type ReactNode } from "react";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+
 import {
   CertificationJuryFrequency,
   CertificationJuryTypeOfModality,

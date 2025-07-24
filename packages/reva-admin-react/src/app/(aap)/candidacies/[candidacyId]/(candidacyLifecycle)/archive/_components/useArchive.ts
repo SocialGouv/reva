@@ -3,9 +3,10 @@ import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
+
 import { graphql } from "@/graphql/generated";
 import { CandidacyArchivingReason } from "@/graphql/generated/graphql";
-import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
 const getCandidacyById = graphql(`
   query getCandidacyForArchivePage($candidacyId: ID!) {

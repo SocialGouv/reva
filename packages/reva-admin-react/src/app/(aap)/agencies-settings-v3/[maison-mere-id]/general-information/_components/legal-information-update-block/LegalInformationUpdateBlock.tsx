@@ -3,6 +3,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
+
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 
 interface Decision {

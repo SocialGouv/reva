@@ -14,13 +14,14 @@ import { DffSummary } from "@/components/dff-summary/DffSummary";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
+import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+
 import {
   Candidacy,
   DematerializedFeasibilityFile,
   FeasibilityDecision,
   FeasibilityHistory,
 } from "@/graphql/generated/graphql";
-import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 
 import {
   FeasibilityCompletionForm,

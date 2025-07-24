@@ -66,7 +66,7 @@ export default defineConfig([
       ],
 
       "import/order": [
-        "warn",
+        "error",
         {
           groups: [
             "builtin",
@@ -78,8 +78,19 @@ export default defineConfig([
             "object",
             "type",
           ],
+          pathGroups: [
+            {
+              pattern: "@/graphql/**",
+              group: "internal",
+              position: "after",
+            },
+          ],
+          pathGroupsExcludedImportTypes: ["builtin"],
           "newlines-between": "always",
-          alphabetize: { order: "asc", caseInsensitive: true },
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
         },
       ],
     },

@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { RemoteZone } from "@/graphql/generated/graphql";
 
 import { useInformationRemotePage } from "./informationRemote.hook";

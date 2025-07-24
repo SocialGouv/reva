@@ -12,6 +12,7 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { CompanyBadges } from "@/components/company-preview";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { LegalStatus, MaisonMereAap } from "@/graphql/generated/graphql";
 
 import { AdminToggleGestionBranch } from "./_components/AdminToggleGestionBranch";

@@ -8,6 +8,8 @@ import { BannerCaduciteConfirmed } from "@/components/dff-summary/_components/Ba
 import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
+
 import {
   Candidacy,
   Certification,
@@ -20,7 +22,6 @@ import {
   FeasibilityHistory,
   Prerequisite,
 } from "@/graphql/generated/graphql";
-import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 
 import { AttachmentsSection } from "./_components/AttachmentsSection";
 import { CandidateDecisionCommentSection } from "./_components/CandidateDecisionCommentSection";

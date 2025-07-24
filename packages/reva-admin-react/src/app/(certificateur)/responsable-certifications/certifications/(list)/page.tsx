@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { SearchList } from "@/components/search/search-list/SearchList";
+
 import { CertificationStatus } from "@/graphql/generated/graphql";
 
 import { useCertifications } from "../../certifications.hooks";

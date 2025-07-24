@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 
 const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`

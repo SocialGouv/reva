@@ -3,6 +3,7 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
 
 import { useAuth } from "@/components/auth/auth";
+
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 export const CertificationCard = ({

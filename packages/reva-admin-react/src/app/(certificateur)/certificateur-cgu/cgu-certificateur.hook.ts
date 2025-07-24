@@ -4,6 +4,7 @@ import request from "graphql-request";
 import { useAuth } from "@/components/auth/auth";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 
 const acceptCertificateurCGUMutation = graphql(`

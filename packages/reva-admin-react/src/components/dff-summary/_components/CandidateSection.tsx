@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 
 import { GenderEnum } from "@/constants";
+
 import { Candidate, Gender } from "@/graphql/generated/graphql";
 
 function getGenderPrefix(gender: Gender) {

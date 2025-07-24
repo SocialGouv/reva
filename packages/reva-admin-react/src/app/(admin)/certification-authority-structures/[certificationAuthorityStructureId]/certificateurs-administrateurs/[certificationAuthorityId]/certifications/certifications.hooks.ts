@@ -6,6 +6,7 @@ import {
 import { useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityAndCertificationsQuery = graphql(`

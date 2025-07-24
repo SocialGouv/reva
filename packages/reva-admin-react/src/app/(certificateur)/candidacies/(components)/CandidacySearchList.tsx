@@ -6,6 +6,7 @@ import {
   SearchList,
   SearchListProps,
 } from "@/components/search/search-list/SearchList";
+
 import { CandidacyStatusStep, JuryResult } from "@/graphql/generated/graphql";
 
 type Jury = {

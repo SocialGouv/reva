@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 
 import { useAuth } from "@/components/auth/auth";
+import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
+
 import {
   CandidacyStatusStep,
   FinanceModule,
   TypeAccompagnement,
 } from "@/graphql/generated/graphql";
-import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
 export type CandidacyForStatus = {
   id: string;

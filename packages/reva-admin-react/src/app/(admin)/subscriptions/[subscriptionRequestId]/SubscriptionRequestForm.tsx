@@ -11,6 +11,7 @@ import { z } from "zod";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast } from "@/components/toast/toast";
+
 import { graphql } from "@/graphql/generated";
 
 const validateSubscriptionRequestMutation = graphql(`

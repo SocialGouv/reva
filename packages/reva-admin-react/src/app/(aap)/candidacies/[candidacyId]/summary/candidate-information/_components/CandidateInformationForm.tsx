@@ -11,6 +11,7 @@ import { AutocompleteAddress } from "@/components/autocomplete-address/Autocompl
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
+
 import {
   Candidate,
   CandidateUpdateInformationInput,

@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import request from "graphql-request";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 
 const getMaisonMereCGUQuery = graphql(`

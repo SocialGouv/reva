@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 
 import { AddCertificationAuthorityLocalAccountPageContent } from "@/components/certification-authority/local-account/add-local-account-page-content/AddCertificationAuthorityLocalAccountPageContent";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityAndStructureForAdminAddLocalAccountPage =

@@ -1,6 +1,7 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 
 import { SearchList } from "@/components/search/search-list/SearchList";
+
 import {
   CertificationAuthorityLocalAccount,
   CertificationAuthorityLocalAccountPaginated,

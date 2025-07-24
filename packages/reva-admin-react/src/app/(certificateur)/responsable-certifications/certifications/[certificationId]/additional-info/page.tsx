@@ -13,6 +13,7 @@ import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { File as GQLFile } from "@/graphql/generated/graphql";
 
 import { useUpdateAdditionalInfoPage } from "./useCertificationAdditionalInfo.hook";

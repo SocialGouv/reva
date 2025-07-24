@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
 import { graphql } from "@/graphql/generated";
 
 import { getRemoteZoneLabel } from "../../../../_components/getRemoteZoneLabel";
