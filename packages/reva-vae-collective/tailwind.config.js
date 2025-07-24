@@ -10,6 +10,7 @@ module.exports = {
       colors: {
         dsfr: {
           "light-text-mention-grey": "#666666",
+          "light-text-label-grey": "#161616",
         },
       },
     },
