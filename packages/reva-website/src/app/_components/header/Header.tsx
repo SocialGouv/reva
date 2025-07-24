@@ -2,6 +2,7 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ConnectionDropdown } from "./ConnectionDropdown";
 
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
@@ -147,24 +148,7 @@ export const Header = (props: { className?: string }) => {
       }}
       serviceTitle="Le service public de la VAE"
       classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
-      quickAccessItems={[
-        {
-          iconId: "fr-icon-briefcase-fill",
-          linkProps: {
-            href: "/admin2",
-            className: "fr-link--icon-right",
-          },
-          text: "Connexion professionnel",
-        },
-        {
-          iconId: "fr-icon-account-circle-fill",
-          linkProps: {
-            href: `/candidat/login`,
-            className: "fr-link--icon-right",
-          },
-          text: "Connexion candidat",
-        },
-      ]}
+      quickAccessItems={[<ConnectionDropdown key="connection" />]}
       navigation={isClient ? navigation : []}
     />
   );
