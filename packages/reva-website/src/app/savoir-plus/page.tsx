@@ -1,11 +1,14 @@
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { graphql } from "@/graphql/generated";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { strapi } from "@/graphql/strapi";
-import { HelpSection } from "./_components/HelpSection";
 import { draftMode } from "next/headers";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+
+import { graphql } from "@/graphql/generated";
 import { ArticleDAide } from "@/graphql/generated/graphql";
+import { strapi } from "@/graphql/strapi";
+
+import { HelpSection } from "./_components/HelpSection";
 
 export const metadata = {
   title: "France VAE | Espace d'information ",

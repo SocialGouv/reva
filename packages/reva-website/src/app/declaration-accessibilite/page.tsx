@@ -1,5 +1,6 @@
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import Head from "next/head";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 
 const DeclarationAccessibilitePage = () => {
   return (

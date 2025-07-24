@@ -1,7 +1,8 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { Suspense, useMemo } from "react";
+
+import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 
 type PrcList = ({
   documentId: string;

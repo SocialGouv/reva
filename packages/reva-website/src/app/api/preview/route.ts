@@ -1,7 +1,8 @@
-import { graphql } from "@/graphql/generated";
-import { strapi } from "@/graphql/strapi";
 import { draftMode } from "next/headers";
 import { redirect } from "next/navigation";
+
+import { graphql } from "@/graphql/generated";
+import { strapi } from "@/graphql/strapi";
 
 const getArticleRegionByIdQuery = graphql(`
   query getArticleRegionsByIdForPreview($id: ID!) {

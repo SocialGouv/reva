@@ -1,14 +1,17 @@
-import BackGroundUnions from "@/components/candidate-space/BackGroundUnions";
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import Head from "next/head";
-import request from "graphql-request";
-import { graphql } from "@/graphql/generated";
-import { GRAPHQL_API_URL } from "@/config/config";
-import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import Image from "next/image";
 import Card from "@codegouvfr/react-dsfr/Card";
+import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import request from "graphql-request";
+import Head from "next/head";
+import Image from "next/image";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import BackGroundUnions from "@/components/candidate-space/BackGroundUnions";
+import { GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
+
 import { ClientSearchbar } from "./_components/ClientSearchbar";
 
 const searchCertificationsQuery = graphql(`

@@ -1,7 +1,9 @@
-import { GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
 import request from "graphql-request";
 import { create } from "zustand";
+
+import { GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
 
 const activeFeaturesQuery = graphql(`
   query activeFeaturesForConnectedUser {

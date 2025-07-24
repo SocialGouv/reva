@@ -1,10 +1,12 @@
+import Head from "next/head";
+import { draftMode } from "next/headers";
+
+import { StrapiBlocksRenderer } from "@/app/_components/blocks-renderer/StrapiBlocksRenderer";
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { NeutralBackground } from "@/components/layout/neutral-background/NeutralBackground";
+
 import { graphql } from "@/graphql/generated";
-import Head from "next/head";
 import { strapi } from "@/graphql/strapi";
-import { draftMode } from "next/headers";
-import { StrapiBlocksRenderer } from "@/app/_components/blocks-renderer/StrapiBlocksRenderer";
 
 const getLegalArticle = graphql(`
   query getLegalArticle($nom: String!, $publicationState: PublicationStatus!) {

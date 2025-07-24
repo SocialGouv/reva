@@ -1,3 +1,6 @@
+import Head from "next/head";
+import { ReactNode } from "react";
+
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import {
   ContentSection,
@@ -5,8 +8,6 @@ import {
   SectionList,
   SectionParagraph,
 } from "@/components/legals-content/LegalsContent";
-import Head from "next/head";
-import { ReactNode } from "react";
 
 const IndexConfidentialitePage = () => {
   return (

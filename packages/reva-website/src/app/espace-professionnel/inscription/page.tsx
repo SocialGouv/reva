@@ -1,13 +1,16 @@
-import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
+import request from "graphql-request";
+import Head from "next/head";
+import { redirect } from "next/navigation";
+
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { ProfessionalSpaceSubscriptionProvider } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
 import { GRAPHQL_API_URL } from "@/config/config";
+
 import { graphql } from "@/graphql/generated";
-import request from "graphql-request";
 import { strapi } from "@/graphql/strapi";
-import Head from "next/head";
+
 import PageContent from "./_components/PageContent";
-import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 

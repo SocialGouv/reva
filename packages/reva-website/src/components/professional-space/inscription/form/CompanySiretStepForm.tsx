@@ -1,7 +1,3 @@
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
-import { graphql } from "@/graphql/generated";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -11,6 +7,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
+
+import { graphql } from "@/graphql/generated";
 
 import { CompanyPreview } from "../component/CompanyPreview";
 

@@ -1,9 +1,9 @@
 "use client";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { truncate } from "lodash";
-import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect, useMemo } from "react";
 
 type ArticlesFromStrapi = {
   documentId: string;

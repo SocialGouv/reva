@@ -1,8 +1,9 @@
-import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 
 const ProfessionalSpaceInscriptionConfirmationPage = () => {
   return (

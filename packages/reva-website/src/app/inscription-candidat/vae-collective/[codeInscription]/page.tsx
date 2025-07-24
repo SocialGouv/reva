@@ -1,14 +1,17 @@
 "use client";
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { CandidateRegistrationStep2 } from "../../_components/steps/CandidateRegistrationStep2";
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
-import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useRouter } from "next/navigation";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import request from "graphql-request";
+import { useParams, useRouter } from "next/navigation";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
 import { GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
+
+import { CandidateRegistrationStep2 } from "../../_components/steps/CandidateRegistrationStep2";
 
 const getVaeCollectiveCohortForRegistrationPageQuery = graphql(`
   query getVaeCollectiveCohortForRegistrationPage($codeInscription: String!) {

@@ -1,10 +1,13 @@
+import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
-import request from "graphql-request";
-import { graphql } from "@/graphql/generated";
-import { GRAPHQL_API_URL } from "@/config/config";
-import { CertificationPageContent } from "./_components/certification-page-content/CertificationPageContent";
+
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
+
+import { CertificationPageContent } from "./_components/certification-page-content/CertificationPageContent";
 
 export default async function CertificationPage({
   params,

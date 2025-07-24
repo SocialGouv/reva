@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { TypeAccompagnement } from "@/graphql/generated/graphql";
-import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import { useState } from "react";
+
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+
+import { TypeAccompagnement } from "@/graphql/generated/graphql";
+
+import { CandidateRegistrationSidebar } from "./CandidateRegistrationSidebar";
 import { CandidateRegistrationStep1 } from "./steps/CandidateRegistrationStep1";
 import { CandidateRegistrationStep2 } from "./steps/CandidateRegistrationStep2";
-import { CandidateRegistrationSidebar } from "./CandidateRegistrationSidebar";
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 export interface CandidateFormData {
   firstname: string;

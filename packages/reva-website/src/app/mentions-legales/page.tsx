@@ -1,10 +1,11 @@
+import Head from "next/head";
+
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import {
   ContentSection,
   MainTitle,
   SectionParagraph,
 } from "@/components/legals-content/LegalsContent";
-import Head from "next/head";
 
 const IndexMentionsLegalesPage = () => {
   return (

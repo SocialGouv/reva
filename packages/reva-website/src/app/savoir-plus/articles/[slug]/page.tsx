@@ -1,8 +1,10 @@
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { strapi } from "@/graphql/strapi";
 import { draftMode } from "next/headers";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+
+import { graphql } from "@/graphql/generated";
+import { strapi } from "@/graphql/strapi";
 
 export const generateMetadata = async ({
   params,

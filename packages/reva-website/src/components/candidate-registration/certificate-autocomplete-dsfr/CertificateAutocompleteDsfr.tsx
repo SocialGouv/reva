@@ -1,10 +1,12 @@
+import request from "graphql-request";
+
 import {
   AutocompleteDsfr,
   AutocompleteOption,
 } from "@/components/form/autocomplete-dsfr/AutoCompleteDsfr";
 import { GRAPHQL_API_URL } from "@/config/config";
+
 import { graphql } from "@/graphql/generated";
-import request from "graphql-request";
 
 const searchCertificationsQuery = graphql(`
   query searchCertificationsQuery($searchText: String!) {

@@ -1,11 +1,13 @@
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { graphql } from "@/graphql/generated";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
-import { strapi } from "@/graphql/strapi";
 import Head from "next/head";
 import { draftMode } from "next/headers";
 import Image from "next/image";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+
+import { graphql } from "@/graphql/generated";
+import { strapi } from "@/graphql/strapi";
 
 const getRegionsBySlugQuery = graphql(`
   query getRegionsBySlugQueryForRegionHomePage(

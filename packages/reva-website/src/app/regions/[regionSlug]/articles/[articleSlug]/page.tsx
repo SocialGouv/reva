@@ -1,9 +1,11 @@
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { strapi } from "@/graphql/strapi";
 import Head from "next/head";
 import { draftMode } from "next/headers";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+
+import { graphql } from "@/graphql/generated";
+import { strapi } from "@/graphql/strapi";
 
 const getArticleRegionsBySlugQuery = graphql(`
   query getArticleRegionsBySlugForRegionArticlePage(

@@ -1,5 +1,6 @@
-import { ArticleDAide } from "@/graphql/generated/graphql";
 import Card from "@codegouvfr/react-dsfr/Card";
+
+import { ArticleDAide } from "@/graphql/generated/graphql";
 
 export const ArticleCard = ({ article }: { article: ArticleDAide }) => {
   if (!article) return null;

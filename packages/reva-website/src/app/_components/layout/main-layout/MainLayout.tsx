@@ -1,8 +1,9 @@
-import { Footer } from "@/components/footer/Footer";
-import { Header } from "@/app/_components/header/Header";
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import Link from "next/link";
 import { ReactNode } from "react";
+
+import { Header } from "@/app/_components/header/Header";
+import { Footer } from "@/components/footer/Footer";
 
 export const MainLayout = (props: {
   children?: ReactNode;

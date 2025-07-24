@@ -1,6 +1,7 @@
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import Head from "next/head";
 import Link from "next/link";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 
 const SiteMapPage = () => {
   return (

@@ -4,13 +4,14 @@ import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 import "@/styles/ckeditor5-content-styles.css";
 
-import { DsfrHead } from "./_components/dsfr/DsfrHead";
-import { DsfrProvider, StartDsfrOnHydration } from "./_components/dsfr";
-// import { getHtmlAttributes } from "./_components/dsfr/server-only-index";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Script from "next/script";
 
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
-import Script from "next/script";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { DsfrProvider, StartDsfrOnHydration } from "./_components/dsfr";
+import { DsfrHead } from "./_components/dsfr/DsfrHead";
+// import { getHtmlAttributes } from "./_components/dsfr/server-only-index";
 
 export default function RootLayout({
   children,

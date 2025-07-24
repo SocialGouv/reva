@@ -1,11 +1,13 @@
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { PICTOGRAMS } from "@/components/pictograms";
-import { graphql } from "@/graphql/generated";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import { strapi } from "@/graphql/strapi";
 import { Metadata } from "next";
 import { draftMode } from "next/headers";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { PICTOGRAMS } from "@/components/pictograms";
+
+import { graphql } from "@/graphql/generated";
+import { strapi } from "@/graphql/strapi";
 
 export const metadata: Metadata = {
   title: "France VAE | FAQ",

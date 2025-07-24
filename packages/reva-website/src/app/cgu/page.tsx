@@ -1,9 +1,11 @@
-import { Cgu } from "@/components/cgu/Cgu";
+import Head from "next/head";
+
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { Cgu } from "@/components/cgu/Cgu";
 import { NeutralBackground } from "@/components/layout/neutral-background/NeutralBackground";
+
 import { graphql } from "@/graphql/generated";
 import { strapi } from "@/graphql/strapi";
-import Head from "next/head";
 
 export const revalidate = 0; // Opt out of cache
 

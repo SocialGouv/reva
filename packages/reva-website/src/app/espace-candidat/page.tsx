@@ -1,3 +1,6 @@
+import { Metadata } from "next";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import AccompagnementDemarche from "@/app/espace-candidat/_components/AccompagnementDemarche";
 import Articles from "@/app/espace-candidat/_components/Articles";
 import CommentFinancerVotreParcours from "@/app/espace-candidat/_components/CommentFinancerVotreParcours";
@@ -5,8 +8,6 @@ import FaitesValiderVosCompetencesParUnDiplome from "@/app/espace-candidat/_comp
 import QuiPeutFaireUneVAE from "@/app/espace-candidat/_components/QuiPeutFaireUneVAE";
 import VousAvezBesoinDePlusDaide from "@/app/espace-candidat/_components/VousAvezBesoinDePlusDaide";
 import BackGroundUnions from "@/components/candidate-space/BackGroundUnions";
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "France VAE | L’outil qui facilite le suivi des candidats à la VAE",

@@ -1,11 +1,13 @@
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { SectionParagraph } from "@/components/section-content/SectionContent";
-import { GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
 import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { SectionParagraph } from "@/components/section-content/SectionContent";
+import { GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
 
 const activeFeaturesQuery = graphql(`
   query activeFeaturesForConnectedUser {

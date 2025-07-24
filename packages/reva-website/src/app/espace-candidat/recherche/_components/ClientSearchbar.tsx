@@ -1,6 +1,7 @@
 "use client";
-import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import { useRouter } from "next/navigation";
+
+import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 
 export const ClientSearchbar = ({ searchText }: { searchText: string }) => {
   const router = useRouter();

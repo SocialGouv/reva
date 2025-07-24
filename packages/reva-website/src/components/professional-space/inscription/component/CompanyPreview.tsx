@@ -1,6 +1,7 @@
-import { EtablissementDiffusible } from "@/graphql/generated/graphql";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+
+import { EtablissementDiffusible } from "@/graphql/generated/graphql";
 
 const CompanySummaryItem = ({
   title,

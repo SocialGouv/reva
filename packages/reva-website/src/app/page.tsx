@@ -1,5 +1,14 @@
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Card } from "@codegouvfr/react-dsfr/Card";
+import Notice from "@codegouvfr/react-dsfr/Notice";
+import Image, { getImageProps } from "next/image";
+import Link from "next/link";
+import { ReactNode } from "react";
+
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
+
 import { graphql } from "@/graphql/generated";
 import {
   ArticleActualite,
@@ -7,14 +16,8 @@ import {
   ArticleFaq,
 } from "@/graphql/generated/graphql";
 import { strapi } from "@/graphql/strapi";
-import Accordion from "@codegouvfr/react-dsfr/Accordion";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Card } from "@codegouvfr/react-dsfr/Card";
-import Notice from "@codegouvfr/react-dsfr/Notice";
+
 import type { Metadata } from "next";
-import Image, { getImageProps } from "next/image";
-import Link from "next/link";
-import { ReactNode } from "react";
 
 export const revalidate = 600;
 

@@ -1,6 +1,7 @@
-import { TypeAccompagnement } from "@/graphql/generated/graphql";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
+
+import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 interface Props {
   isAapAvailable?: boolean;

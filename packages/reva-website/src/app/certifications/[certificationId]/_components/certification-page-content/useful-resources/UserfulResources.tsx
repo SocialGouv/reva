@@ -1,6 +1,7 @@
+import { Card } from "@codegouvfr/react-dsfr/Card";
+
 import { graphql } from "@/graphql/generated";
 import { ArticleDAide } from "@/graphql/generated/graphql";
-import { Card } from "@codegouvfr/react-dsfr/Card";
 import { strapi } from "@/graphql/strapi";
 
 const articlesQuery = graphql(`

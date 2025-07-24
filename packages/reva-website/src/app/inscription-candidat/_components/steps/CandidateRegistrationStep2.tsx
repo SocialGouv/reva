@@ -1,16 +1,18 @@
-import { graphql } from "@/graphql/generated";
-import Input from "@codegouvfr/react-dsfr/Input";
-import Select from "@codegouvfr/react-dsfr/Select";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import Input from "@codegouvfr/react-dsfr/Input";
+import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import request from "graphql-request";
 import { useEffect, useState } from "react";
 import { useController, useForm } from "react-hook-form";
 import * as z from "zod";
-import { GRAPHQL_API_URL } from "@/config/config";
+
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import { GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
 
 const getDepartmentsQuery = graphql(`
   query getDepartments {

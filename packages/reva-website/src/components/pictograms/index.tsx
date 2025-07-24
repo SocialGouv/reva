@@ -66,6 +66,7 @@ import success from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/succe
 import system from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/system.svg";
 import technicalError from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/technical-error.svg";
 import warning from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/warning.svg";
+
 import accessibility from "./assets/accessibility.svg";
 import binders from "./assets/binders.svg";
 

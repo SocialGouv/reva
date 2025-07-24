@@ -1,8 +1,9 @@
 "use client";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 export const Header = (props: { className?: string }) => {
   const pathname = usePathname() || "";

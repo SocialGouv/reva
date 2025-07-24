@@ -1,5 +1,6 @@
-import { graphql } from "@/graphql/generated";
 import request from "graphql-request";
+
+import { graphql } from "@/graphql/generated";
 
 import regionsAndDeps from "./departements-region.json";
 

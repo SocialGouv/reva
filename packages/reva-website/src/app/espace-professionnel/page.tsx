@@ -1,13 +1,14 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import Notice from "@codegouvfr/react-dsfr/Notice";
+import Head from "next/head";
+import Image from "next/image";
+
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import {
   Hexagon,
   SectionHeader,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import Notice from "@codegouvfr/react-dsfr/Notice";
-import Head from "next/head";
-import Image from "next/image";
 
 const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line mr-2 " aria-hidden="true" />

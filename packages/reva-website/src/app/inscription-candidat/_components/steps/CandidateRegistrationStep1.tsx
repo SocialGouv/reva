@@ -1,4 +1,5 @@
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
+
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 export const CandidateRegistrationStep1 = ({

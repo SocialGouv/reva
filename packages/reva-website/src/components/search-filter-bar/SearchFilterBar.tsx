@@ -1,5 +1,5 @@
-import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
 import { useEffect, useState } from "react";
 
 export const SearchFilterBar = ({

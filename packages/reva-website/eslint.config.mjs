@@ -1,7 +1,8 @@
-import { defineConfig } from "eslint/config";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+
 import { FlatCompat } from "@eslint/eslintrc";
+import { defineConfig } from "eslint/config";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,7 +32,39 @@ export default defineConfig([
             "**/route.ts",
             "**/page.tsx",
             "**/layout.tsx",
+            "cypress.config.ts",
+            "playwright.config.ts",
+            "codegen.ts",
           ],
+        },
+      ],
+
+      "import/order": [
+        "error",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+            "object",
+            "type",
+          ],
+          pathGroups: [
+            {
+              pattern: "@/graphql/**",
+              group: "internal",
+              position: "after",
+            },
+          ],
+          pathGroupsExcludedImportTypes: ["builtin"],
+          "newlines-between": "always",
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
         },
       ],
 
@@ -47,6 +80,12 @@ export default defineConfig([
           ignoreRestSiblings: true,
         },
       ],
+    },
+  },
+  {
+    files: ["*.js"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
 ]);

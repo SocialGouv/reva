@@ -1,7 +1,8 @@
 "use client";
-import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+import { CertificateAutocompleteDsfr } from "@/components/candidate-registration/certificate-autocomplete-dsfr/CertificateAutocompleteDsfr";
 
 const FaitesValiderVosCompetencesParUnDiplome = () => {
   const router = useRouter();

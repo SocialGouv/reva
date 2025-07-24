@@ -1,17 +1,20 @@
 "use client";
-import {
-  CandidateFormData,
-  CandidateRegistrationForm,
-} from "./_components/CandidateRegistrationForm";
-import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
-import { Certification } from "@/graphql/generated/graphql";
 import request from "graphql-request";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Suspense } from "react";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
+import { GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
+import { Certification } from "@/graphql/generated/graphql";
+
+import {
+  CandidateFormData,
+  CandidateRegistrationForm,
+} from "./_components/CandidateRegistrationForm";
 
 const getCertificationQuery = graphql(`
   query getCertification($certificationId: ID!) {

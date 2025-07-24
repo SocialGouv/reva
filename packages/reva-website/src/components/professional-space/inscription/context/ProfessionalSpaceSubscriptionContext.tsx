@@ -1,8 +1,4 @@
 "use client";
-import { graphqlErrorToast } from "@/components/toast/toast";
-import { GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
-import { CreateSubscriptionRequestInput } from "@/graphql/generated/graphql";
 import { useRouter } from "next/navigation";
 import {
   ReactNode,
@@ -13,6 +9,12 @@ import {
   useState,
 } from "react";
 import { Client, fetchExchange } from "urql";
+
+import { graphqlErrorToast } from "@/components/toast/toast";
+import { GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
+import { CreateSubscriptionRequestInput } from "@/graphql/generated/graphql";
 
 const createSubscriptionRequest = graphql(`
   mutation createSubscriptionRequest(

@@ -1,9 +1,11 @@
-import { ArticleCard } from "@/components/article-card/ArticleCard";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated";
-import { ArticleDAide } from "@/graphql/generated/graphql";
 import { GraphQLClient } from "graphql-request";
 import Link from "next/link";
+
+import { ArticleCard } from "@/components/article-card/ArticleCard";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
+
+import { graphql } from "@/graphql/generated";
+import { ArticleDAide } from "@/graphql/generated/graphql";
 
 const articlesQuery = graphql(`
   query getArticlesDAide($filters: ArticleDAideFiltersInput!) {

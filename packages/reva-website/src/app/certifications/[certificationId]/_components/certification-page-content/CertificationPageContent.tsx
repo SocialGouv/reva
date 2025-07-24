@@ -1,13 +1,15 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { MetierTab } from "./tabs/MetierTab";
-import { UsefulResources } from "./useful-resources/UserfulResources";
-import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
+
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
+
 import { JuryTab } from "./tabs/JuryTab";
+import { MetierTab } from "./tabs/MetierTab";
+import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
+import { UsefulResources } from "./useful-resources/UserfulResources";
 
 export const CertificationPageContent = ({
   certification,

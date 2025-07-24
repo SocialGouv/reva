@@ -4,6 +4,7 @@ import { AccountInfoStepForm } from "@/components/professional-space/inscription
 import { CguStep } from "@/components/professional-space/inscription/form/CguStep";
 import { CompanyDocumentsStepForm } from "@/components/professional-space/inscription/form/CompanyDocumentsStepForm";
 import { CompanySiretStepForm } from "@/components/professional-space/inscription/form/CompanySiretStepForm";
+
 import { GetCguQuery } from "@/graphql/generated/graphql";
 
 const PageContent = ({ getCguResponse }: { getCguResponse: GetCguQuery }) => {

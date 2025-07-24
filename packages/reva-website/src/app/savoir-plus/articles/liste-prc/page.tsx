@@ -1,7 +1,10 @@
+import { Metadata } from "next/types";
+
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+
 import { graphql } from "@/graphql/generated";
 import { strapi } from "@/graphql/strapi";
-import { Metadata } from "next/types";
+
 import { PrcList } from "./_components/PrcList";
 
 export async function generateMetadata(): Promise<Metadata> {

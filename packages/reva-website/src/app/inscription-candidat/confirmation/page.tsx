@@ -1,10 +1,11 @@
 "use client";
-import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
-import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
-import { PICTOGRAMS } from "@/components/pictograms";
-import hexagonBackground from "@/components/pictograms/assets/hexagonBackground.svg";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
+
+import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
+import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
+import { PICTOGRAMS } from "@/components/pictograms";
+import hexagonBackground from "@/components/pictograms/assets/hexagonBackground.svg";
 
 export default function CandidateRegistrationConfirmationPage() {
   return (
