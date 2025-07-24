@@ -48,6 +48,7 @@ const main = async () => {
       certificationAuthorityId: certificationAuthority2.id,
       decision: feasibilityDecision,
       decisionComment: "Un commentaire sur la décision",
+      feasibilityFileSentAt: new Date(),
     });
 
     if (feasibilityDecision !== "DRAFT") {
