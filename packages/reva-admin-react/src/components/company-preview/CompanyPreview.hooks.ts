@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { graphql } from "@/graphql/generated";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
 
 const getEtablissementQuery = graphql(`
   query getEtablissement($siret: ID!) {

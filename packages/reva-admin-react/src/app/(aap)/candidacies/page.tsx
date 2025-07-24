@@ -1,19 +1,21 @@
 "use client";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { toDate } from "date-fns";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
+
 import { SearchList } from "@/components/search/search-list/SearchList";
 import {
   CandidacyCountByStatus,
   CandidacySortByFilter,
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+
 import {
   CandidaciesLayout,
   CandidacyCard,
   useCandidacies,
 } from "./_components";
-import { toDate } from "date-fns";
 import { FilterBar } from "./_components/FilterBar";
 
 export default function CandidaciesPage() {

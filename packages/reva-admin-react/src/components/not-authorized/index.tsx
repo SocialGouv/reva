@@ -1,5 +1,6 @@
-import { PICTOGRAMS } from "../pictograms/Pictograms";
 import { EmptyState } from "@/components/empty-state/EmptyState";
+
+import { PICTOGRAMS } from "../pictograms/Pictograms";
 
 export const NotAuthorized = () => {
   return (

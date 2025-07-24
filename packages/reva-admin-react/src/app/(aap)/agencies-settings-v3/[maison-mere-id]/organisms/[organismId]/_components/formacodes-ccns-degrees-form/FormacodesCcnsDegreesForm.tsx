@@ -1,20 +1,22 @@
 "use client";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
+
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import {
   useActiveCertifications,
   useFormacodesCcnsDegreesForm,
 } from "./formacodesCcnsDegreesForm.hook";
-import Link from "next/link";
 
 const schema = z.object({
   organismDegrees: z

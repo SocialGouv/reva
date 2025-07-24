@@ -1,14 +1,16 @@
 "use client";
-import { useEffect } from "react";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import Image from "next/image";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useCertifications } from "../../certifications.hooks";
-import { CertificationStatus } from "@/graphql/generated/graphql";
 import { format } from "date-fns";
+import Image from "next/image";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { SearchList } from "@/components/search/search-list/SearchList";
-import Badge from "@codegouvfr/react-dsfr/Badge";
+import { CertificationStatus } from "@/graphql/generated/graphql";
+
+import { useCertifications } from "../../certifications.hooks";
 
 const NoCertificationsToValidate = () => {
   return (

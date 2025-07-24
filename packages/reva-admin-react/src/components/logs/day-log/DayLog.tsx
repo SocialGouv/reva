@@ -1,7 +1,7 @@
-import { format } from "date-fns";
-import { capitalize, toLower, toUpper, truncate } from "lodash";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { capitalize, toLower, toUpper, truncate } from "lodash";
 
 type LogUserProfile = "ADMIN" | "AAP" | "CERTIFICATEUR" | "CANDIDAT";
 type LogUser = { firstname: string; lastname: string };

@@ -1,5 +1,6 @@
-import TileGroup from "@/components/tile-group/TileGroup";
 import Tile from "@codegouvfr/react-dsfr/Tile";
+
+import TileGroup from "@/components/tile-group/TileGroup";
 
 type ContactInfosSectionProps = {
   certificationAuthority?: {

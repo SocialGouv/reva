@@ -1,4 +1,5 @@
 import { stubQuery } from "../../../../utils/graphql";
+
 import { DF_CERTIFICATION } from "./dff-mocks";
 
 function visitFeasibilityCertification() {

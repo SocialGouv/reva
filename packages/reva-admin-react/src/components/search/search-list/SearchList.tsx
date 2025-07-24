@@ -1,8 +1,9 @@
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ReactNode, useCallback, useMemo } from "react";
+
 import { Pagination } from "@/components/pagination/Pagination";
 import { SearchFilterBar } from "@/components/search-filter-bar/SearchFilterBar";
 import { SearchResultsHeader } from "@/components/search-results-header/SearchResultsHeader";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ReactNode, useCallback, useMemo } from "react";
 
 type SearchResultsPage<T> = {
   info: { totalRows: number; totalPages: number; currentPage: number };

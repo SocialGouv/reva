@@ -1,12 +1,14 @@
 "use client";
 
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+import { useParams, useRouter } from "next/navigation";
+
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
-import { useParams, useRouter } from "next/navigation";
 import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountInterventionAreaPage.hook";
 export default function InterventionAreaPage() {
   const router = useRouter();
 

@@ -1,8 +1,9 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 
 const getCandidacyById = graphql(`
   query getCandidacyForUnarchivePage($candidacyId: ID!) {

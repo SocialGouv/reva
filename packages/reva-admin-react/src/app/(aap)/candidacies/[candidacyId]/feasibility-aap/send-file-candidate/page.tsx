@@ -1,15 +1,17 @@
 "use client";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { format, toDate } from "date-fns";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+
 import { DffSummary } from "@/components/dff-summary/DffSummary";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import {
   Candidacy,
   DematerializedFeasibilityFile,
 } from "@/graphql/generated/graphql";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { format, toDate } from "date-fns";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+
 import { useSendFileCandidate } from "./_components/sendFileCandidate.hook";
 
 const FeasibilityBanner = ({

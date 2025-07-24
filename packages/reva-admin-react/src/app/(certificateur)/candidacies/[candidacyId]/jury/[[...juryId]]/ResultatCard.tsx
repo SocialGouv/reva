@@ -1,6 +1,7 @@
-import { JuryResult } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { format } from "date-fns";
+
+import { JuryResult } from "@/graphql/generated/graphql";
 
 const juryResultLabels: { [key in JuryResult]: string } = {
   FULL_SUCCESS_OF_FULL_CERTIFICATION:

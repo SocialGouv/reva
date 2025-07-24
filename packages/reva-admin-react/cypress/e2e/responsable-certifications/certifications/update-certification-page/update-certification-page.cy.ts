@@ -1,5 +1,7 @@
 import { CertificationStatus } from "@/graphql/generated/graphql";
+
 import { stubQuery } from "../../../../utils/graphql";
+
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 
 function interceptCertification({

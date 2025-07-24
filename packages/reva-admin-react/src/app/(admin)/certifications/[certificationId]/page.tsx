@@ -1,16 +1,18 @@
 "use client";
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useUpdateCertificationPage } from "./updateCertification.hook";
 import { useParams, useRouter } from "next/navigation";
 import { ReactNode } from "react";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { NoCertificationRegistryManagerAlert } from "./structure/_components/NoCertificationRegistryManagerAlert";
-import { NoCertificationAuthorityAlert } from "./structure/_components/NoCertificationAuthorityAlert";
-import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
+
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
-import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
+import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
+import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { NoCertificationAuthorityAlert } from "./structure/_components/NoCertificationAuthorityAlert";
+import { NoCertificationRegistryManagerAlert } from "./structure/_components/NoCertificationRegistryManagerAlert";
+import { useUpdateCertificationPage } from "./updateCertification.hook";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationPage>["certification"],

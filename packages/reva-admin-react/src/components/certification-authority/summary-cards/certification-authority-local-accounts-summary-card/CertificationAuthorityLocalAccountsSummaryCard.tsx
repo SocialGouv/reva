@@ -1,7 +1,8 @@
-import { SectionCard } from "@/components/card/section-card/SectionCard";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
+
+import { SectionCard } from "@/components/card/section-card/SectionCard";
 
 export const CertificationAuthorityLocalAccountsSummaryCard = ({
   accounts,

@@ -1,14 +1,16 @@
 "use client";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import { useUpdateLocalAccountCertificationsPage } from "./updateLocalAccountCertificationsPage.hook";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+
 import { CertificationsForm } from "@/components/certifications-form/CertificationsForm";
 import { CertificationsFormData } from "@/components/certifications-form/CertificationsForm.hook";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { useRouter } from "next/navigation";
+
+import { useUpdateLocalAccountCertificationsPage } from "./updateLocalAccountCertificationsPage.hook";
 export default function InterventionAreaPage() {
   const router = useRouter();
   const { certificationAuthorityLocalAccountId } = useParams<{

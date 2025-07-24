@@ -3,11 +3,10 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-
-import { graphql } from "@/graphql/generated";
+import { useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { useMemo } from "react";
+import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityAndCertificationsQuery = graphql(`
   query getCertificationAuthorityForAdminCertificationsPage($id: ID!) {

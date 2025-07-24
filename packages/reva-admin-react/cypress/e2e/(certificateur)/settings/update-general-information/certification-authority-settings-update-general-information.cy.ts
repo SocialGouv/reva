@@ -1,4 +1,5 @@
 import { stubQuery } from "../../../../utils/graphql";
+
 import certificationAuthorityFixture from "./fixtures/certification-authority-info.json";
 
 function interceptUpdateGeneralInformation() {

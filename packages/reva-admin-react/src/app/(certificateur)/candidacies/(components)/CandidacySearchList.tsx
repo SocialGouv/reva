@@ -1,10 +1,11 @@
+import Card from "@codegouvfr/react-dsfr/Card";
+import Tag from "@codegouvfr/react-dsfr/Tag";
+import { format, isAfter } from "date-fns";
+
 import {
   SearchList,
   SearchListProps,
 } from "@/components/search/search-list/SearchList";
-import Card from "@codegouvfr/react-dsfr/Card";
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import { format, isAfter } from "date-fns";
 import { CandidacyStatusStep, JuryResult } from "@/graphql/generated/graphql";
 
 type Jury = {

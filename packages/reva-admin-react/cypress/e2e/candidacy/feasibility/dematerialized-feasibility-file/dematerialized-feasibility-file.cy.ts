@@ -1,6 +1,9 @@
-import { Candidacy } from "@/graphql/generated/graphql";
 import { subDays } from "date-fns";
+
+import { Candidacy } from "@/graphql/generated/graphql";
+
 import { stubQuery } from "../../../../utils/graphql";
+
 import {
   DATE_NOW,
   DEFAULT_BLOCS_COMPETENCES,

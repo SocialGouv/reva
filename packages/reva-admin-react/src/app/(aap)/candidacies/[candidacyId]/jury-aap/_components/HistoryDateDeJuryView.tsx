@@ -1,4 +1,5 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+
 import { DateDeJuryCard } from "./DateDeJuryCard";
 
 type JuryType = {

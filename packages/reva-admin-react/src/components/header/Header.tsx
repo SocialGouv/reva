@@ -1,9 +1,10 @@
 "use client";
+import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
+import { usePathname } from "next/navigation";
+
 import { useAuth } from "@/components/auth/auth";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { ADMIN_ELM_URL } from "@/config/config";
-import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
-import { usePathname } from "next/navigation";
 
 export const Header = () => {
   const currentPathname = usePathname();

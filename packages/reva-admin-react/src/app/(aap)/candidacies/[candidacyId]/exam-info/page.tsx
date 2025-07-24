@@ -1,18 +1,19 @@
 "use client";
 
-import { useParams } from "next/navigation";
-
-import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, parse, toDate } from "date-fns";
+import { useParams } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { useExamInfoPage } from "./examInfo";
 
 const examInfoSchema = z.object({

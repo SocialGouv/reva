@@ -1,4 +1,6 @@
 "use client";
+import dynamic from "next/dynamic";
+
 import {
   Candidacy,
   Candidate,
@@ -7,11 +9,12 @@ import {
   DffEligibilityRequirement,
   Prerequisite,
 } from "@/graphql/generated/graphql";
-import dynamic from "next/dynamic";
+
+import { ContactInfosSection } from "../../app/contact-infos-section/ContactInfosSection";
+
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
 import CandidateSection from "./_components/CandidateSection";
-import { ContactInfosSection } from "../../app/contact-infos-section/ContactInfosSection";
 import CertificationSection from "./_components/CertificationSection";
 import DecisionSection from "./_components/DecisionSection";
 import EligibilitySection from "./_components/EligibilitySection";

@@ -1,6 +1,7 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { ComponentProps, ReactNode } from "react";
+
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 type HasButton =
   | {

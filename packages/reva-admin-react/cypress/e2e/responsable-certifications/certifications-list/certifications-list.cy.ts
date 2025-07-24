@@ -1,4 +1,5 @@
 import { stubQuery } from "../../../utils/graphql";
+
 import certifications from "./fixtures/certifications.json";
 
 function interceptCertifications(status: string, visible = true) {

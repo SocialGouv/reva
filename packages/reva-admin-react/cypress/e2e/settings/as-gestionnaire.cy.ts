@@ -1,5 +1,6 @@
-import { stubQuery } from "../../utils/graphql";
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
+
+import { stubQuery } from "../../utils/graphql";
 
 function visitSettings({
   informationsJuridiques = "A_JOUR",

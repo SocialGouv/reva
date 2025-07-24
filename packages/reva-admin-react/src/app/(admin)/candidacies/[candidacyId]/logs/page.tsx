@@ -1,9 +1,11 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+
 import {
   DayLog,
   groupLogsByDay,

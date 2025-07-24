@@ -1,6 +1,7 @@
-import { Experience } from "@/graphql/generated/graphql";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { format } from "date-fns";
+
+import { Experience } from "@/graphql/generated/graphql";
 
 export default function ExperiencesSection({
   experiences,

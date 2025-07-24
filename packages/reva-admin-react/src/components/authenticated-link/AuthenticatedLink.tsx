@@ -1,5 +1,6 @@
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { SyntheticEvent } from "react";
+
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 export const AuthenticatedLink = ({
   url,

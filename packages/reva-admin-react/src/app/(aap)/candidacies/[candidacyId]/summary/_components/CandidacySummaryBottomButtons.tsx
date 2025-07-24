@@ -1,9 +1,11 @@
+import { useAuth } from "@/components/auth/auth";
+import { FinanceModule, TypeAccompagnement } from "@/graphql/generated/graphql";
+
 import {
   CandidacyForStatus,
   useCandidacyStatus,
 } from "../../_components/candidacy.hook";
-import { useAuth } from "@/components/auth/auth";
-import { FinanceModule, TypeAccompagnement } from "@/graphql/generated/graphql";
+
 import {
   AdminAction,
   AdminActionZone,

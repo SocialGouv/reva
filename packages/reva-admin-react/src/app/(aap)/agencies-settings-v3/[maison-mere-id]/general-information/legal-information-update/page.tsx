@@ -1,5 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
+
 import { LegalInformationUpdateForm } from "../_components/legal-information-update-block/LegalInformationUpdateForm";
 
 export default function LegalInformationUpdateBlockPage() {

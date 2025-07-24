@@ -1,8 +1,9 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { addMonths, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import jsPDF from "jspdf";
+
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 const generateAttestationPDF = async ({
   raisonSociale,

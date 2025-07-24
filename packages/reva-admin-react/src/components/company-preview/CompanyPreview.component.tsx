@@ -1,8 +1,11 @@
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { format, toDate } from "date-fns";
+
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+
 import { GrayCard } from "../card/gray-card/GrayCard";
+
 import { useEtablissement } from "./CompanyPreview.hooks";
 
 interface CompanyProps {

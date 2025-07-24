@@ -4,15 +4,15 @@ import "@/styles/globals.css";
 import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 
-import { DsfrHead } from "@/components/dsfr/DsfrHead";
-import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
 // import { getHtmlAttributes } from "@/components/dsfr/server-only-index";
 
-import { Footer } from "@/components/footer/Footer";
-import { Header } from "@/components/header/Header";
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { setDefaultOptions } from "date-fns";
+import { fr } from "date-fns/locale";
 import Keycloak from "keycloak-js";
+import Script from "next/script";
+import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 
 import { useAuth } from "@/components/auth/auth";
@@ -20,10 +20,16 @@ import {
   KeycloakProvider,
   useKeycloakContext,
 } from "@/components/auth/keycloakContext";
+import { useCrisp } from "@/components/crisp/useCrisp";
+import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
+import { DsfrHead } from "@/components/dsfr/DsfrHead";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { Footer } from "@/components/footer/Footer";
+import { Header } from "@/components/header/Header";
+import { HelpBubble } from "@/components/help-bubble/HelpBubble";
+import { LayoutNotice } from "@/components/layout-notice/LayoutNotice";
 import { Produktly } from "@/components/script/Produktly";
 import { tarteaucitronScript } from "@/components/script/Tarteaucitron";
-
-import { LayoutNotice } from "@/components/layout-notice/LayoutNotice";
 import {
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_REALM,
@@ -32,13 +38,6 @@ import {
   MATOMO_URL,
   PRODUKTLY_CLIENT_TOKEN,
 } from "@/config/config";
-import { setDefaultOptions } from "date-fns";
-import { fr } from "date-fns/locale";
-import Script from "next/script";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { useCrisp } from "@/components/crisp/useCrisp";
-import { useEffect } from "react";
-import { HelpBubble } from "@/components/help-bubble/HelpBubble";
 
 const keycloakInstance =
   typeof window !== "undefined"

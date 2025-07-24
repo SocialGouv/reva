@@ -1,20 +1,21 @@
-import {
-  Candidate,
-  CandidateUpdateInformationInput,
-} from "@/graphql/generated/graphql";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format, parseISO, toDate } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants";
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-import { format, parseISO, toDate } from "date-fns";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import {
+  Candidate,
+  CandidateUpdateInformationInput,
+} from "@/graphql/generated/graphql";
+
 import {
   FormCandidateInformationData,
   candidateInformationSchema,

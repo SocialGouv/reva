@@ -1,16 +1,18 @@
 "use client";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { useRouter } from "next/navigation";
+
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { getTypologyLabel } from "@/utils/candidateTypology.util";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useRouter } from "next/navigation";
+
 import { TrainingForm, TrainingFormValues } from "./_components/TrainingForm";
 import {
   OTHER_FINANCING_METHOD_ID,
   useTrainingPage,
 } from "./trainingPage.hook";
-import { getTypologyLabel } from "@/utils/candidateTypology.util";
 
 const TrainingPage = () => {
   const {

@@ -1,6 +1,7 @@
-import { SectionCard } from "@/components/card/section-card/SectionCard";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+
+import { SectionCard } from "@/components/card/section-card/SectionCard";
 
 type CompetenceBloc = {
   id: string;

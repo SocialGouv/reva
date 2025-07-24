@@ -1,11 +1,14 @@
 "use client";
-import { useCertificationAuthority } from "./zone-intervention.hook";
 import { useParams } from "next/navigation";
-import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
-import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
 import { useCallback } from "react";
+
+import { InterventionAreaForm } from "@/components/intervention-area-form/InterventionAreaForm";
+import { InterventionAreaFormData } from "@/components/intervention-area-form/InterventionAreaForm.hook";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
+
+import { useCertificationAuthority } from "./zone-intervention.hook";
 
 const CertificationAuthorityComponent = ({
   certificationAuthority,

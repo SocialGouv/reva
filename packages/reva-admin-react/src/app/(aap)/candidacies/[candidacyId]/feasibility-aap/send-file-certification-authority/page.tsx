@@ -1,4 +1,10 @@
 "use client";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { format, toDate } from "date-fns";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
@@ -12,11 +18,7 @@ import {
   DematerializedFeasibilityFile,
   FeasibilityDecision,
 } from "@/graphql/generated/graphql";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { format, toDate } from "date-fns";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+
 import CertificationAuthoritySection from "./_components/CertificationAuthoritySection";
 import { useSendFileCertificationAuthority } from "./_components/sendFileCertificationAuthority.hook";
 

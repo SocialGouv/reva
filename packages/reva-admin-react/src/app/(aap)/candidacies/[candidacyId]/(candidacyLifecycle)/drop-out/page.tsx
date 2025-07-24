@@ -1,11 +1,13 @@
 "use client";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 
 import { useAuth } from "@/components/auth/auth";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import Button from "@codegouvfr/react-dsfr/Button";
+
 import { useCandidacyStatus } from "../../_components/candidacy.hook";
+
 import { DropoutForm } from "./_components/DropoutForm";
 import {
   ActiveDropoutReasons,

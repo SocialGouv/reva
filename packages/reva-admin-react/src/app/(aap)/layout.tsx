@@ -1,12 +1,14 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
+import { ReactNode } from "react";
+
+import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
-import { ReactNode } from "react";
+
 import AccountSetup from "./_components/account-setup/AccountSetup";
-import { usePathname } from "next/navigation";
-import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 
 const accountWithMaisonMereQuery = graphql(`
   query getAccountInfo {

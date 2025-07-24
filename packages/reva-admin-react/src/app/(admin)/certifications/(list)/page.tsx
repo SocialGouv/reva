@@ -1,15 +1,16 @@
 "use client";
+import Badge from "@codegouvfr/react-dsfr/Badge";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { useSearchParams } from "next/navigation";
+
+import { useAuth } from "@/components/auth/auth";
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 import { CertificationStatus } from "@/graphql/generated/graphql";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { format } from "date-fns";
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import { useAuth } from "@/components/auth/auth";
 
 const getCertificationsQuery = graphql(`
   query getCertificationsV2ForListPage(

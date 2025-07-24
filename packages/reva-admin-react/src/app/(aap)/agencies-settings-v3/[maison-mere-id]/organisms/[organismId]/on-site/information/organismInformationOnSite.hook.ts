@@ -1,10 +1,10 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { CreateOrUpdateOnSiteOrganismGeneralInformationInput } from "@/graphql/generated/graphql";
-
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 
 const getOrganismQuery = graphql(`
   query getOrganismForInformationOnSitePage($organismId: ID!) {

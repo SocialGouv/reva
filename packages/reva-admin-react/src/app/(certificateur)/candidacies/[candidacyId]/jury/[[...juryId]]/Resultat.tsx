@@ -1,6 +1,7 @@
 "use client";
 import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
@@ -9,15 +10,14 @@ import { format, isAfter, startOfDay } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { useAuth } from "@/components/auth/auth";
+import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { JuryResult } from "@/graphql/generated/graphql";
 
-import { useJuryPageLogic } from "./juryPageLogic";
-import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
-import { ResultatCard } from "./ResultatCard";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { HistoryResultatView } from "./HistoryResultatView";
-import { useAuth } from "@/components/auth/auth";
+import { useJuryPageLogic } from "./juryPageLogic";
+import { ResultatCard } from "./ResultatCard";
 
 const modal = createModal({
   id: "confirm-result",

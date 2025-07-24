@@ -1,5 +1,6 @@
-import { CertificationAuthority } from "@/graphql/generated/graphql";
 import { ReactNode } from "react";
+
+import { CertificationAuthority } from "@/graphql/generated/graphql";
 
 export const CertificationAuthorityCard = ({
   certificationAuthority,

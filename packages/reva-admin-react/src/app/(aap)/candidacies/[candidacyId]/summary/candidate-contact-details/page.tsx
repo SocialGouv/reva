@@ -1,14 +1,16 @@
 "use client";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useCandidateContactDetailsPageLogic } from "./candidateContactDetails.hook";
-import { useParams, useRouter } from "next/navigation";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { useAuth } from "@/components/auth/auth";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { useCandidateContactDetailsPageLogic } from "./candidateContactDetails.hook";
 
 const schema = z.object({
   phone: z.string().min(1, "Merci de remplir ce champ"),

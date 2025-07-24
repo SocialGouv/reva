@@ -1,8 +1,3 @@
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { errorToast, successToast } from "@/components/toast/toast";
-import { REST_API_URL } from "@/config/config";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +5,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { errorToast, successToast } from "@/components/toast/toast";
+import { REST_API_URL } from "@/config/config";
 
 const schema = z
   .object({

@@ -1,6 +1,3 @@
-import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
@@ -8,6 +5,10 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+
+import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const decisionWarningModal = createModal({
   id: "decision-warning",

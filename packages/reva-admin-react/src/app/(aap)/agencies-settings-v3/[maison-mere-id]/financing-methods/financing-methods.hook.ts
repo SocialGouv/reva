@@ -1,7 +1,7 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getMaisonMereAAPQuery = graphql(`
   query getAccountMaisonMereFinancingMethods($maisonMereAAPId: ID!) {

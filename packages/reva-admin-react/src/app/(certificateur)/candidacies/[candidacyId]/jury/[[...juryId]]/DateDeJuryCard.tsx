@@ -1,5 +1,6 @@
-import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { format } from "date-fns";
+
+import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 
 type FileType = { url: string; previewUrl?: string | null; name: string };
 

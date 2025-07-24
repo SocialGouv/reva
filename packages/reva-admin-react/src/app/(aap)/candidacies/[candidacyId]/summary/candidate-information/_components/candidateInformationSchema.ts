@@ -1,6 +1,7 @@
-import { GenderEnum } from "@/constants";
 import { isBefore, sub, toDate } from "date-fns";
 import { z } from "zod";
+
+import { GenderEnum } from "@/constants";
 
 const defaultErrorMessage = "Merci de remplir ce champ";
 

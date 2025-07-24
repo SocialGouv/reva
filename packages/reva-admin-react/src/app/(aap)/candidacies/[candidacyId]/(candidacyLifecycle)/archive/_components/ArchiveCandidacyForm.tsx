@@ -1,17 +1,20 @@
-import { useRouter } from "next/navigation";
-import { useCandidacyStatus } from "../../../_components/candidacy.hook";
-import { CandidacyForArchive, useArchive } from "./useArchive";
-import { z } from "zod";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
-import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
+
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+
+import { useCandidacyStatus } from "../../../_components/candidacy.hook";
+
+import { CandidacyForArchive, useArchive } from "./useArchive";
 
 const modal = createModal({
   id: "confirm-candidacy-archiving",

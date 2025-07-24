@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import Notice from "@codegouvfr/react-dsfr/Notice";
+import Link from "next/link";
 
 export const AapCgu = () => {
   return (

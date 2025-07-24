@@ -1,7 +1,8 @@
 "use client";
 
-import { AapCandidacyLayout } from "@/components/aap-candidacy-layout/AapCandidacyLayout";
 import { ReactNode } from "react";
+
+import { AapCandidacyLayout } from "@/components/aap-candidacy-layout/AapCandidacyLayout";
 
 const CandidacyLayout = ({ children }: { children: ReactNode }) => (
   <AapCandidacyLayout>{children}</AapCandidacyLayout>

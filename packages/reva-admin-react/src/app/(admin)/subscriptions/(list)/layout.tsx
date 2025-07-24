@@ -1,10 +1,11 @@
 "use client";
-import { ReactNode, useCallback, useMemo } from "react";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
-import { usePathname, useSearchParams } from "next/navigation";
-import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
+import { usePathname, useSearchParams } from "next/navigation";
+import { ReactNode, useCallback, useMemo } from "react";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
 
 const menuItem = (
   text: string,

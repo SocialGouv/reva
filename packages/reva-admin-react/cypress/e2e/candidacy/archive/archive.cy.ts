@@ -1,4 +1,5 @@
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+
 import { stubMutation, stubQuery } from "../../../utils/graphql";
 
 function visitArchive({

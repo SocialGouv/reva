@@ -1,6 +1,7 @@
+import Badge from "@codegouvfr/react-dsfr/Badge";
+
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import Badge from "@codegouvfr/react-dsfr/Badge";
 
 export default function GeneralInformationCard({
   hrefPrefix,

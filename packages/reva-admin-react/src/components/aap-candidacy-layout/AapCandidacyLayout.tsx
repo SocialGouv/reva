@@ -1,16 +1,18 @@
 "use client";
-import { CandidacyModalities } from "@/components/aap-candidacy-layout/CandidacyModalities";
-import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
-import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ReactNode } from "react";
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
+
+import { CandidacyModalities } from "@/components/aap-candidacy-layout/CandidacyModalities";
+import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
+import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { NotAuthorized } from "@/components/not-authorized";
+import { graphql } from "@/graphql/generated";
+
+import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {

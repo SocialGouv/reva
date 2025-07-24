@@ -1,8 +1,9 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { Duration } from "@/graphql/generated/graphql";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import Link from "next/link";
+
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { Duration } from "@/graphql/generated/graphql";
 
 const durationToString: {
   [key in Duration]: string;

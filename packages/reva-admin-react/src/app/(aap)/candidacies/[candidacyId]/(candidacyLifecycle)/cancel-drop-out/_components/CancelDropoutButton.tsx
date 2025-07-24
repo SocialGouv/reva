@@ -1,6 +1,7 @@
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useCancelDropout } from "./useCancelDropout";
 import { useRouter } from "next/navigation";
+
+import { useCancelDropout } from "./useCancelDropout";
 
 export const CancelDropoutButton = () => {
   const router = useRouter();

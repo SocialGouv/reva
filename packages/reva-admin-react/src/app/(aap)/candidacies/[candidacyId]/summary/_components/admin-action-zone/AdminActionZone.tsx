@@ -1,7 +1,9 @@
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { ComponentProps } from "react";
-import { useAdminActionZone } from "./adminActionZone.hooks";
+
 import { graphqlErrorToast } from "@/components/toast/toast";
+
+import { useAdminActionZone } from "./adminActionZone.hooks";
 import { useConfirmFinanceModuleSwitchToHorsPlateformeModal } from "./modals/confirmFinanceModuleSwitchToHorsPlateformeModal.hook";
 import { useConfirmTypeAccompagnementSwitchToAutonomeModal } from "./modals/confirmTypeAccompagnementSwitchToAutonomeModal.hook";
 

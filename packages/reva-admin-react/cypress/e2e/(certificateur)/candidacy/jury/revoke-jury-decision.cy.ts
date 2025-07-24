@@ -1,13 +1,14 @@
 import { stubQuery, stubMutation } from "../../../../utils/graphql";
+import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
+import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
+import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-category.json";
+import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
+import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
+import organismForAAPVisibilityCheck from "../../fixtures/organism-for-aap-visibility-check.json";
+
+import candidacyWithJuryResultRevoked from "./fixtures/candidacy-with-jury-result-revoked.json";
 import candidacyWithJuryResult from "./fixtures/candidacy-with-jury-result.json";
 import revokeDecisionResponse from "./fixtures/revoke-jury-decision-response.json";
-import candidacyWithJuryResultRevoked from "./fixtures/candidacy-with-jury-result-revoked.json";
-import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
-import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-category.json";
-import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
-import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
-import organismForAAPVisibilityCheck from "../../fixtures/organism-for-aap-visibility-check.json";
-import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
 
 describe("revoke jury decision", () => {
   beforeEach(() => {

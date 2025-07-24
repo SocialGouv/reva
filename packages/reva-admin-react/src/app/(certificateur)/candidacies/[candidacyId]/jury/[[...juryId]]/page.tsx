@@ -2,11 +2,11 @@
 
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
-import { useJuryPageLogic } from "./juryPageLogic";
+import { BackButton } from "@/components/back-button/BackButton";
 
 import { DateDeJury } from "./DateDeJury";
+import { useJuryPageLogic } from "./juryPageLogic";
 import { Resultat } from "./Resultat";
-import { BackButton } from "@/components/back-button/BackButton";
 
 const JuryPage = () => {
   const { getCandidacy } = useJuryPageLogic();

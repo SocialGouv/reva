@@ -1,9 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+
 import { useUpdateUserAccountPage } from "./collaborateurUserAccount.hook";
 import { UserAccountForm } from "./UserAccountForm";
-import { useMemo } from "react";
 
 const CollaborateurUserAccount = () => {
   const { userAccount, collaborateurOrganismsInfoStatus } =

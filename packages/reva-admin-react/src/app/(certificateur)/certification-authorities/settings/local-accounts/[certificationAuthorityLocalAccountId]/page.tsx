@@ -1,15 +1,17 @@
 "use client";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useParams } from "next/navigation";
-import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
-import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
-import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
-import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
-import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { createModal } from "@codegouvfr/react-dsfr/Modal/Modal";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+
+import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
+import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
+import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
 
 export default function UpdateLocalAccountPage() {
   const router = useRouter();

@@ -1,7 +1,6 @@
-import { useRouter } from "next/navigation";
-import { format, isAfter } from "date-fns";
-
 import Tag from "@codegouvfr/react-dsfr/Tag";
+import { format, isAfter } from "date-fns";
+import { useRouter } from "next/navigation";
 
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import {

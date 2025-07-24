@@ -1,17 +1,19 @@
 "use client";
-import { useAuth } from "@/components/auth/auth";
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+
+import { useAuth } from "@/components/auth/auth";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
+
 import { getRemoteZoneLabel } from "../../../../_components/getRemoteZoneLabel";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
 
 const getOrganismQuery = graphql(`
   query getOrganismForOrganismRemotePage($organismId: ID!) {

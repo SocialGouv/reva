@@ -1,6 +1,5 @@
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 export const AddCertificationAuthorityLocalAccountPageContent = ({
   generalInformationPageUrl,

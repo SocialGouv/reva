@@ -1,8 +1,9 @@
 "use client";
-import { CertificationStatus } from "@/graphql/generated/graphql";
 import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
+
+import { CertificationStatus } from "@/graphql/generated/graphql";
 
 export default function CertificationsLayout({
   children,

@@ -1,5 +1,6 @@
-import { stubQuery } from "../../utils/graphql";
 import { sub } from "date-fns";
+
+import { stubQuery } from "../../utils/graphql";
 
 function visitPayment({
   dropOutCreationDate,

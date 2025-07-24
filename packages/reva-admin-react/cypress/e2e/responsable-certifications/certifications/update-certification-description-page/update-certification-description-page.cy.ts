@@ -1,4 +1,5 @@
 import { stubQuery } from "../../../../utils/graphql";
+
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 
 function interceptCertification() {

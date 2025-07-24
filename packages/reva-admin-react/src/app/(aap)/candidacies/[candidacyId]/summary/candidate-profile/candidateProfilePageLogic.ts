@@ -1,12 +1,13 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { graphql } from "@/graphql/generated";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { graphql } from "@/graphql/generated";
 
 const schema = z.object({
   highestDegreeId: z.string().min(1, "Merci de remplir ce champ"),

@@ -1,4 +1,5 @@
 import { stubQuery } from "../../../../utils/graphql";
+
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
 import updateCertificationAuthorityLocalAccountDepartmentsFixture from "./fixtures/update-certification-authority-local-account-departments-mutation-response.json";
 

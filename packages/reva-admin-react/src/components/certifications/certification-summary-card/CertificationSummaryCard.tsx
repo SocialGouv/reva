@@ -1,11 +1,12 @@
+import Tag from "@codegouvfr/react-dsfr/Tag";
+import { format } from "date-fns";
+import { type ReactNode } from "react";
+
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import {
   CertificationJuryFrequency,
   CertificationJuryTypeOfModality,
 } from "@/graphql/generated/graphql";
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import { format } from "date-fns";
-import { type ReactNode } from "react";
 
 const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   {

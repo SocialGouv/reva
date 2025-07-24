@@ -1,5 +1,13 @@
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useQueryClient } from "@tanstack/react-query";
+import { format, toDate } from "date-fns";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
 import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
+import { useAuth } from "@/components/auth/auth";
 import { BannerCaduciteConfirmed } from "@/components/dff-summary/_components/BannerCaduciteConfirmed";
 import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
@@ -13,13 +21,7 @@ import {
   FeasibilityHistory,
 } from "@/graphql/generated/graphql";
 import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
-import { useAuth } from "@/components/auth/auth";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { useQueryClient } from "@tanstack/react-query";
-import { format, toDate } from "date-fns";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+
 import {
   FeasibilityCompletionForm,
   FeasibilityCompletionFormData,
@@ -29,6 +31,7 @@ import {
   FeasibilityValidationFormData,
 } from "../FeasibilityValidationForm";
 import { useRevokeFeasibilityDecisionModal } from "../useRevokeFeasibilityDecisionModal.hook";
+
 import {
   createOrUpdateCertificationAuthorityDecision,
   useDematerializedFeasibility,

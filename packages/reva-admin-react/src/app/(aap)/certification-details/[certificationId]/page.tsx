@@ -1,12 +1,14 @@
 "use client";
-import { useCertificationDetailsPage } from "./getCertificationDetails.hook";
-import { useParams, useSearchParams } from "next/navigation";
-import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
-import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
-import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
-import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useParams, useSearchParams } from "next/navigation";
+
 import { useAuth } from "@/components/auth/auth";
+import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
+import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
+import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
+import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
+
+import { useCertificationDetailsPage } from "./getCertificationDetails.hook";
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useCertificationDetailsPage>["certification"],

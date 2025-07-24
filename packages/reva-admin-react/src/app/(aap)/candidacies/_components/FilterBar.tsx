@@ -1,8 +1,7 @@
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 import { CandidacySortByFilter } from "@/graphql/generated/graphql";
-
-import { Select } from "@codegouvfr/react-dsfr/Select";
 
 export const FilterBar = () => {
   const searchParams = useSearchParams();

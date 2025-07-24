@@ -1,5 +1,6 @@
 "use client";
 import { Cgu } from "@/components/cgu/Cgu";
+
 import { CguForm } from "./_components/CguForm";
 import { useAppCgu } from "./page.hooks";
 

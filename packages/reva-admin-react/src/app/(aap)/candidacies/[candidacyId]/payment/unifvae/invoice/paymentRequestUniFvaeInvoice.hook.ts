@@ -1,8 +1,9 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { Gender } from "@/graphql/generated/graphql";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 
 const getCandidacyQuery = graphql(`
   query getCandidacyForPaymentRequestUnifvaeInvoicePage($candidacyId: ID!) {

@@ -1,7 +1,7 @@
 "use client";
+import { ArchiveCandidacyForm } from "./_components/ArchiveCandidacyForm";
 import { useArchive } from "./_components/useArchive";
 import { ViewArchivedCandidacy } from "./_components/ViewArchivedCandidacy";
-import { ArchiveCandidacyForm } from "./_components/ArchiveCandidacyForm";
 
 const CandidacyArchivePage = () => {
   const { candidacy } = useArchive();

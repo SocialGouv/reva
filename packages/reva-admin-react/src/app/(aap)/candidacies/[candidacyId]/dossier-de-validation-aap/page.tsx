@@ -1,5 +1,7 @@
 "use client";
 
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
+import { parseISO } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
@@ -9,7 +11,7 @@ import {
   graphqlErrorToast,
   successToast,
 } from "@/components/toast/toast";
-import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
+
 import {
   DossierDeValidationFormData,
   DossierDeValidationTab,
@@ -20,7 +22,6 @@ import {
   ReadyForJuryEstimatedDateTab,
 } from "./_components/ReadyForJuryEstimatedDateTab";
 import { useAapDossierDeValidationPage } from "./aapDossierDeValidation.hooks";
-import { parseISO } from "date-fns";
 
 const AapDossierDeValidationPage = () => {
   const router = useRouter();

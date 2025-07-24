@@ -1,6 +1,5 @@
-import { ReactNode } from "react";
-
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { ReactNode } from "react";
 
 export const SearchResultsHeader = ({
   defaultSearchFilter,

@@ -1,9 +1,11 @@
-import { CertificationAuthority } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { CertificationAuthority } from "@/graphql/generated/graphql";
+
 import { CertificationAuthorityCard } from "./CertificationAuthorityCard";
 
 const schema = z.object({

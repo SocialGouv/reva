@@ -1,5 +1,6 @@
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
 export default function ResponsableReferentielCard({
   certificationAuthorityStructureId,

@@ -1,10 +1,10 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { REST_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated";
 import { JuryInfoInput } from "@/graphql/generated/graphql";
 
 const getJuryByCandidacyIdQuery = graphql(`

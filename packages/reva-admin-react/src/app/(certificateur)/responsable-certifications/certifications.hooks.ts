@@ -1,7 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { CertificationStatus } from "@/graphql/generated/graphql";
-import { useQuery } from "@tanstack/react-query";
 
 const getCertificationsQuery = graphql(`
   query getCertificationsV2ForRegistryManager(

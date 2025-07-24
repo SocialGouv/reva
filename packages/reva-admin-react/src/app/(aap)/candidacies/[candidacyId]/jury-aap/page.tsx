@@ -1,8 +1,10 @@
 "use client";
 
-import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 import Tabs from "@codegouvfr/react-dsfr/Tabs";
 import { useParams } from "next/navigation";
+
+import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+
 import { DateDeJuryTab } from "./_components/DateDeJuryTab";
 import { ResultatTab } from "./_components/ResultatTab";
 

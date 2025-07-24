@@ -1,9 +1,10 @@
+import { useParams } from "next/navigation";
+
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import {
   Certification,
   DematerializedFeasibilityFile,
 } from "@/graphql/generated/graphql";
-import { useParams } from "next/navigation";
 export const CertificationSection = ({
   isFeasibilityEditable,
   dematerializedFeasibilityFile,

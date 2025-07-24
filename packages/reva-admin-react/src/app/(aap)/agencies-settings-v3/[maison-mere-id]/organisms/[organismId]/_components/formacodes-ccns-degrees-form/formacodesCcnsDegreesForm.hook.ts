@@ -1,9 +1,10 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { ActiveCertificationsFiltersInput } from "@/graphql/generated/graphql";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 
 const organismAndReferentialQuery = graphql(`
   query getOrganismForFormacodesCcnsDegreesForm($organismId: ID!) {

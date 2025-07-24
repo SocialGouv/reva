@@ -1,6 +1,7 @@
+import { useMutation } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useMutation } from "@tanstack/react-query";
 
 const updateAccounSetupMutation = graphql(`
   mutation updateAccountSetupAfterFirstLogin(

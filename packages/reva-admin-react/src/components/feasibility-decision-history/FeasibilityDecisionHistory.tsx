@@ -1,7 +1,8 @@
-import { FeasibilityDecision as FeasibilityDecisionEnum } from "@/graphql/generated/graphql";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { formatDate } from "date-fns";
 import { ReactNode } from "react";
+
+import { FeasibilityDecision as FeasibilityDecisionEnum } from "@/graphql/generated/graphql";
 
 type FeasibilityHistory = {
   id: string;

@@ -1,8 +1,9 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
+
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 
 interface Decision {
   id: string;

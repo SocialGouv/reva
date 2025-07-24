@@ -1,6 +1,8 @@
 import { usePathname } from "next/navigation";
+
 import { useAuth } from "../auth/auth";
 import { useKeycloakContext } from "../auth/keycloakContext";
+
 import {
   AAPNotVisibleInSearchResultNotice,
   useAAPVisibilityCheck,

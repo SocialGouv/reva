@@ -1,5 +1,5 @@
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import Input from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 

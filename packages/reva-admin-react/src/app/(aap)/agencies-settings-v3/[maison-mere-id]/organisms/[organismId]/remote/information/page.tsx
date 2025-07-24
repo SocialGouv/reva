@@ -1,8 +1,4 @@
 "use client";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { RemoteZone } from "@/graphql/generated/graphql";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -11,6 +7,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
+
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { RemoteZone } from "@/graphql/generated/graphql";
+
 import { useInformationRemotePage } from "./informationRemote.hook";
 import {
   InformationRemoteFormData,

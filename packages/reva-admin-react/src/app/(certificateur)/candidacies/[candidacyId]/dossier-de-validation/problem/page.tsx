@@ -1,8 +1,4 @@
 "use client";
-import { useDossierDeValidationProblemPageLogic } from "@/app/(certificateur)/candidacies/[candidacyId]/dossier-de-validation/problem/dossierDeValidationProblemPageLogic";
-import { BackButton } from "@/components/back-button/BackButton";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +6,11 @@ import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { useDossierDeValidationProblemPageLogic } from "@/app/(certificateur)/candidacies/[candidacyId]/dossier-de-validation/problem/dossierDeValidationProblemPageLogic";
+import { BackButton } from "@/components/back-button/BackButton";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 const schema = z.object({
   decisionComment: z.string().min(1, "Merci de remplir ce champ"),

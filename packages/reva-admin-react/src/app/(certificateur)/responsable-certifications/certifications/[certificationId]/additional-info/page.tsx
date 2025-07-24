@@ -1,18 +1,20 @@
 "use client";
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
-import Input from "@codegouvfr/react-dsfr/Input";
-import { useUpdateAdditionalInfoPage } from "./useCertificationAdditionalInfo.hook";
-import { useParams, useRouter } from "next/navigation";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { File as GQLFile } from "@/graphql/generated/graphql";
-import { useMemo } from "react";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams, useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { File as GQLFile } from "@/graphql/generated/graphql";
+
+import { useUpdateAdditionalInfoPage } from "./useCertificationAdditionalInfo.hook";
 
 export default function CertificationAdditionalInfoPage() {
   const { certificationId } = useParams<{ certificationId: string }>();

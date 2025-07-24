@@ -1,7 +1,9 @@
-import { NoticeAlert } from "@/components/notice/NoticeAlert";
-import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+
+import { NoticeAlert } from "@/components/notice/NoticeAlert";
+import { graphql } from "@/graphql/generated";
+
 import { useGraphQlClient } from "../../graphql/graphql-client/GraphqlClient";
 
 const getOrganismQuery = graphql(`

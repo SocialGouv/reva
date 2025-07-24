@@ -1,20 +1,19 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { graphql } from "@/graphql/generated";
 
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { OrganismThumb } from "./_components/OrganismThumb/OrganismThumb.component";
+import { graphql } from "@/graphql/generated";
+
 import { OrganismCard } from "./_components/OrganismCard/OrganismCard";
+import { OrganismThumb } from "./_components/OrganismThumb/OrganismThumb.component";
 
 const modal = createModal({
   id: "confirm-changement-aap",

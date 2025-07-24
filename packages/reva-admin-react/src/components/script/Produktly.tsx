@@ -1,5 +1,6 @@
-import { PRODUKTLY_CLIENT_TOKEN } from "@/config/config";
 import Script from "next/script";
+
+import { PRODUKTLY_CLIENT_TOKEN } from "@/config/config";
 
 export const Produktly = () => (
   <Script id="init-produktly">

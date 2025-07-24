@@ -1,10 +1,11 @@
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { Prerequisite } from "@/graphql/generated/graphql";
 import { fr } from "@codegouvfr/react-dsfr";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
+
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { Prerequisite } from "@/graphql/generated/graphql";
 
 export const PrerequisitesSection = ({
   prerequisites,

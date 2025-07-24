@@ -1,6 +1,7 @@
+import { useParams } from "next/navigation";
+
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import { useParams } from "next/navigation";
 
 export const SwornStatementSection = ({
   sentToCandidateAt,

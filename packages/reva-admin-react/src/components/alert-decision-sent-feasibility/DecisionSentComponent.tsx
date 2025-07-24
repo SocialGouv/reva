@@ -1,7 +1,9 @@
-import { FeasibilityDecision } from "@/graphql/generated/graphql";
 import Alert, { AlertProps } from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
+
+import { FeasibilityDecision } from "@/graphql/generated/graphql";
+
 import { FeasibilityDecisionHistory } from "../feasibility-decision-history/FeasibilityDecisionHistory";
 
 type FeasibilityHistory = {

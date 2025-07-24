@@ -1,5 +1,11 @@
 "use client";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import Input from "@codegouvfr/react-dsfr/Input";
+import Notice from "@codegouvfr/react-dsfr/Notice";
+import Select from "@codegouvfr/react-dsfr/Select";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 import { TZDate } from "@date-fns/tz";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format, toDate } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { ReactNode, useMemo } from "react";
@@ -7,20 +13,12 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import Input from "@codegouvfr/react-dsfr/Input";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import Notice from "@codegouvfr/react-dsfr/Notice";
-import Select from "@codegouvfr/react-dsfr/Select";
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import { useUpdateCertificationDescriptionPage } from "./updateCertificationDescription.hook";
-
 import { FranceCompetencesLogo } from "@/components/logo/france-competences-logo/FranceCompetencesLogo";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
+
+import { useUpdateCertificationDescriptionPage } from "./updateCertificationDescription.hook";
 
 const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   {

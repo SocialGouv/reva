@@ -1,13 +1,15 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { useParams } from "next/navigation";
+
 import { CompanyPreview } from "@/components/company-preview";
-import { SubscriptionRequestForm } from "./SubscriptionRequestForm";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { useParams } from "next/navigation";
+
+import { SubscriptionRequestForm } from "./SubscriptionRequestForm";
 
 const getSubscriptionRequest = graphql(`
   query getSubscriptionRequest($subscriptionRequestId: ID!) {

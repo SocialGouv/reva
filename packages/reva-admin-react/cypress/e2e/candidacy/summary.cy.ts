@@ -4,6 +4,7 @@ import {
   FinanceModule,
   OrganismModaliteAccompagnement,
 } from "@/graphql/generated/graphql";
+
 import { stubQuery } from "../../utils/graphql";
 
 function visitSummary({

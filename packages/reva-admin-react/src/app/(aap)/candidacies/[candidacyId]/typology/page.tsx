@@ -1,21 +1,23 @@
 "use client";
-import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { useTypologyPage } from "./typologyPage.hook";
-import { Select } from "@codegouvfr/react-dsfr/Select";
-import { z } from "zod";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { CcnSearchList } from "./_components/ccn-search-list/CcnSearchList";
-import { useEffect } from "react";
-import { graphqlErrorToast } from "@/components/toast/toast";
+import { Select } from "@codegouvfr/react-dsfr/Select";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
+
+import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast } from "@/components/toast/toast";
 import {
   AVAILABLE_CANDIDATE_TYPOLOGIES,
   getTypologyLabel,
 } from "@/utils/candidateTypology.util";
+
+import { CcnSearchList } from "./_components/ccn-search-list/CcnSearchList";
+import { useTypologyPage } from "./typologyPage.hook";
 
 const typologyFormSchema = z.object({
   typology: z.enum(AVAILABLE_CANDIDATE_TYPOLOGIES),

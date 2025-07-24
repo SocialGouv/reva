@@ -1,9 +1,10 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { sortBy } from "lodash";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
+
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityQuery = graphql(`
   query getCertificationAuthorityForAdmin($certificationAuthorityId: ID!) {

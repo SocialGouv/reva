@@ -1,9 +1,9 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { RemoteZone } from "@/graphql/generated/graphql";
-
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getOrganismQuery = graphql(`
   query getOrganismForInformationRemotePage($organismId: ID!) {

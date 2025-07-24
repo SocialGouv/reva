@@ -1,23 +1,20 @@
 "use client";
-import { format } from "date-fns";
-import { useParams, useRouter } from "next/navigation";
-import { ReactNode } from "react";
-
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-
-import { SmallNotice } from "@/components/small-notice/SmallNotice";
-
-import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
+import { format } from "date-fns";
+import { useParams, useRouter } from "next/navigation";
+import { ReactNode } from "react";
 
 import { useAuth } from "@/components/auth/auth";
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
+import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
+import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
+
 import { useUpdateCertificationPage } from "./updateCertification.hook";
 
 type CertificationForPage = Exclude<

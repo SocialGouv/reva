@@ -1,13 +1,15 @@
-import { graphqlErrorToast } from "@/components/toast/toast";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { ActiveDropoutReasons, useDropout } from "./useDropout";
+
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { useMemo } from "react";
+import { graphqlErrorToast } from "@/components/toast/toast";
+
+import { ActiveDropoutReasons, useDropout } from "./useDropout";
 
 const schema = z.object({
   otherReasonContent: z.string().optional(),

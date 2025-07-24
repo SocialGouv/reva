@@ -1,13 +1,16 @@
 "use client";
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import Link from "next/link";
+
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
+
 import { useOnSiteOrganism } from "./_components/onSiteOrganism.hook";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
 
 export default function OnSitePage() {
   const { organism, organismId, organismName, maisonMereAAPId, isAdmin } =

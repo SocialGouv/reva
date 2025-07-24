@@ -1,4 +1,5 @@
 import { stubMutation, stubQuery } from "../../../utils/graphql";
+
 import certificationBPBoucher from "./fixtures/certification-bp-boucher.json";
 import updateCertificationPrerequisitesMutationResponse from "./fixtures/update-prerequisites-bp-boucher-mutation-response.json";
 

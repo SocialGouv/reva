@@ -1,3 +1,5 @@
+import { addMonths, format } from "date-fns";
+
 import {
   CompetenceBlocsPartCompletion,
   DematerializedFeasibilityFile,
@@ -5,7 +7,6 @@ import {
   DfFileAapDecision,
   DfFileCertificationAuthorityDecision,
 } from "@/graphql/generated/graphql";
-import { addMonths, format } from "date-fns";
 
 export const DFF_FULL_ELIGIBILITY =
   "FULL_ELIGIBILITY_REQUIREMENT" as DffEligibilityRequirement;

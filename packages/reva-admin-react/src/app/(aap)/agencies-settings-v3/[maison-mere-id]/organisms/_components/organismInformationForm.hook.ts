@@ -1,7 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-
-import { useQuery } from "@tanstack/react-query";
 
 const GestionnaireMaisonMerAAPOrganismInfoQuery = graphql(`
   query getGestionnaireMaisonMerAAPOrganismInfoQuery {

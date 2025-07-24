@@ -1,15 +1,16 @@
 import { stubQuery, stubMutation } from "../../../../utils/graphql";
+import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
+import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
+import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-category.json";
+import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
+import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
+import organismForAAPVisibilityCheck from "../../fixtures/organism-for-aap-visibility-check.json";
+
 import candidacyPdfAdmissible from "./fixtures/feasibility-pdf-admissible.json";
-import candidacyPdfRejected from "./fixtures/feasibility-pdf-rejected.json";
 import candidacyPdfComplete from "./fixtures/feasibility-pdf-complete.json";
 import candidacyPdfIncomplete from "./fixtures/feasibility-pdf-incomplete.json";
+import candidacyPdfRejected from "./fixtures/feasibility-pdf-rejected.json";
 import revokeDecisionResponse from "./fixtures/revoke-decision-response.json";
-import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
-import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-category.json";
-import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
-import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
-import organismForAAPVisibilityCheck from "../../fixtures/organism-for-aap-visibility-check.json";
-import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
 
 describe("Revoke PDF Feasibility Decision", () => {
   const candidacyUrl =
@@ -253,9 +254,9 @@ describe("Revoke PDF Feasibility Decision", () => {
             "@getCandidacyWithFeasibilityUploadedPdfQuery",
           ]);
 
-          cy.get(
-            `[data-test="feasibility-page-pdf-admissible"]`,
-          ).should("exist");
+          cy.get(`[data-test="feasibility-page-pdf-admissible"]`).should(
+            "exist",
+          );
 
           cy.get("button").contains("Annuler la décision").should("not.exist");
         });

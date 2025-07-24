@@ -1,10 +1,11 @@
+import Badge from "@codegouvfr/react-dsfr/Badge";
+import { useParams } from "next/navigation";
+
 import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToComplete";
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { DfFileAapDecision } from "@/graphql/generated/graphql";
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import { useParams } from "next/navigation";
 
 export const DecisionSection = ({
   aapDecision,

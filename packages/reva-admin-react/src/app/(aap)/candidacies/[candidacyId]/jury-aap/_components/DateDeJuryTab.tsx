@@ -1,7 +1,8 @@
-import { useJuryAAP } from "./jury-aap.hook";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+
 import { DateDeJuryCard } from "./DateDeJuryCard";
 import { HistoryDateDeJuryView } from "./HistoryDateDeJuryView";
+import { useJuryAAP } from "./jury-aap.hook";
 
 export const DateDeJuryTab = () => {
   const { candidacy } = useJuryAAP();

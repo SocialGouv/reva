@@ -1,8 +1,9 @@
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
-import { useAuth } from "@/components/auth/auth";
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
+
+import { useAuth } from "@/components/auth/auth";
+import { CandidacyStatusStep } from "@/graphql/generated/graphql";
 
 export const CertificationCard = ({
   candidacy,

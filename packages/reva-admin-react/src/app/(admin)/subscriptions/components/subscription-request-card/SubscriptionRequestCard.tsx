@@ -1,6 +1,7 @@
-import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
+
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 export const SubscriptionRequestCard = ({
   companyName,

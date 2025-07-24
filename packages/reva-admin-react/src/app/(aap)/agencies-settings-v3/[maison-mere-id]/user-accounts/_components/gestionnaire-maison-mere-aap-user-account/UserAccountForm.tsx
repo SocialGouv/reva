@@ -1,12 +1,12 @@
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
-
 import { z } from "zod";
+
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const userAccountFormSchema = z.object({
   firstname: z

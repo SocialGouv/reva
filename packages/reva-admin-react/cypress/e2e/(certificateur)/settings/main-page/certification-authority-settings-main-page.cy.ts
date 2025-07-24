@@ -1,8 +1,8 @@
 import { stubQuery } from "../../../../utils/graphql";
-import certificationAuthoritySettingsFixture from "./fixtures/certification-authority-settings.json";
-import certificationAuthoritySettingsNoContactInfoFixture from "./fixtures/certification-authority-settings-no-contact-info.json";
 
 import activeFeaturesFixture from "./fixtures/active-features.json";
+import certificationAuthoritySettingsNoContactInfoFixture from "./fixtures/certification-authority-settings-no-contact-info.json";
+import certificationAuthoritySettingsFixture from "./fixtures/certification-authority-settings.json";
 
 function interceptSettings(hasContactInfo = true) {
   cy.intercept("POST", "/api/graphql", (req) => {

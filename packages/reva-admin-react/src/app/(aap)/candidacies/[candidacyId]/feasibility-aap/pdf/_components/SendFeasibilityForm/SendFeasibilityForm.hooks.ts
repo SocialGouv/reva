@@ -1,8 +1,9 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { REST_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getCandidacyQuery = graphql(`
   query getCandidacySendFeasibilityForm($candidacyId: ID!) {

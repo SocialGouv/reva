@@ -1,7 +1,8 @@
-import { Candidacy } from "@/graphql/generated/graphql";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useFormContext } from "react-hook-form";
+
+import { Candidacy } from "@/graphql/generated/graphql";
 
 const genders = [
   { label: "Madame", value: "woman" },

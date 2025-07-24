@@ -1,6 +1,7 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 const getCertificationAuthorityLocalAccountQuery = graphql(`
   query getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage(
     $certificationAuthorityLocalAccountId: ID!

@@ -1,4 +1,5 @@
 import { DEPARTMENTS_DOM } from "@/constants";
+
 import { ZoneInterventionList } from "../types/interventionZone.type";
 
 export const sortDepartmentsByAlphabeticalOrderAndDOM = (

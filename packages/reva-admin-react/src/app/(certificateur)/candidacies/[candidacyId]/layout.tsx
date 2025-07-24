@@ -1,15 +1,16 @@
 "use client";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
-import { NotAuthorized } from "@/components/not-authorized";
-import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
+
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
 import { useAuth } from "@/components/auth/auth";
+import { useCanAccessCandidacy } from "@/components/can-access-candidacy/canAccessCandidacy";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { NotAuthorized } from "@/components/not-authorized";
+import { graphql } from "@/graphql/generated";
 
 const getCandidacyQuery = graphql(`
   query getCandidacyWithCandidateInfoForLayout($candidacyId: ID!) {

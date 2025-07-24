@@ -1,11 +1,12 @@
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 import { DossierDeValidationType } from "../types";
 

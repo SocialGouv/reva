@@ -1,7 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
-import { useQuery } from "@tanstack/react-query";
 
 const getCandidateFundingRequestReva = graphql(`
   query getCandidateFundingRequestReva($candidacyId: UUID!) {

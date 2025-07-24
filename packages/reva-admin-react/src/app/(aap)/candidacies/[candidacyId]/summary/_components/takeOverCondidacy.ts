@@ -1,9 +1,10 @@
+import { useQueryClient } from "@tanstack/react-query";
+
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
-import { useQueryClient } from "@tanstack/react-query";
 
 const TakeOverCandidacyMutation = graphql(`
   mutation takeOverCandidacyMutation($candidacyId: ID!) {

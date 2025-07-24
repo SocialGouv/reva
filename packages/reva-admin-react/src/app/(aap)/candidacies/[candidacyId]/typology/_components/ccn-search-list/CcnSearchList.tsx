@@ -1,9 +1,10 @@
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { SearchList } from "@/components/search/search-list/SearchList";
-import { graphql } from "@/graphql/generated";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { SearchList } from "@/components/search/search-list/SearchList";
+import { graphql } from "@/graphql/generated";
 
 const RECORDS_PER_PAGE = 10;
 const getCcnsQuery = graphql(`

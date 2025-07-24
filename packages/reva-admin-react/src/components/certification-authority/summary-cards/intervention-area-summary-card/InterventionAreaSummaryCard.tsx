@@ -1,6 +1,7 @@
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Tag from "@codegouvfr/react-dsfr/Tag";
+
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
 export default function InterventionAreaSummaryCard({
   regions,

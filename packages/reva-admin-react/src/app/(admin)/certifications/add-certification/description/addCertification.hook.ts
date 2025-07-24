@@ -1,6 +1,7 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getFCCertificationQuery = graphql(`
   query getFCCertificationForAddCertificationPage($rncp: ID!) {

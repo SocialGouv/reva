@@ -1,8 +1,9 @@
+import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { graphql } from "@/graphql/generated";
-import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const organismQuery = graphql(`
   query getOrganismForOrganismVisibilityToggle($organismId: ID!) {

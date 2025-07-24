@@ -1,5 +1,3 @@
-import React from "react";
-import type { ReactNode } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -7,16 +5,19 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import type { UniqueIdentifier } from "@dnd-kit/core";
 import {
   SortableContext,
   arrayMove,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-
-import "./SortableList.css";
+import React from "react";
 
 import { DragHandle, SortableItem, SortableOverlay } from "./components";
+
+import type { UniqueIdentifier } from "@dnd-kit/core";
+import type { ReactNode } from "react";
+
+import "./SortableList.css";
 
 interface BaseItem {
   id: UniqueIdentifier;

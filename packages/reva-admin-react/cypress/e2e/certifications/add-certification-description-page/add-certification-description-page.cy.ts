@@ -1,6 +1,7 @@
 import { stubMutation, stubQuery } from "../../../utils/graphql";
-import getCertificationRncp3890 from "./fixtures/get-fc-certification-rnc-3890.json";
+
 import addCertificationRncp3890 from "./fixtures/add-fc-certification-rnc-3890.json";
+import getCertificationRncp3890 from "./fixtures/get-fc-certification-rnc-3890.json";
 
 function interceptCertification() {
   cy.intercept("POST", "/api/graphql", (req) => {

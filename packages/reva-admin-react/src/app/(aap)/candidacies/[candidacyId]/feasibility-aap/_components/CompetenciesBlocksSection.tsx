@@ -1,3 +1,7 @@
+import Badge from "@codegouvfr/react-dsfr/Badge";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useParams } from "next/navigation";
+
 import { BadgeCompleted } from "@/components/badge/badge-completed/BadgeCompleted";
 import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToComplete";
 import { SectionCard } from "@/components/card/section-card/SectionCard";
@@ -8,9 +12,6 @@ import {
   CompetenceBlocsPartCompletion,
   DffCertificationCompetenceBloc,
 } from "@/graphql/generated/graphql";
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { useParams } from "next/navigation";
 
 const CompetencesSectionBadge = ({
   completion,

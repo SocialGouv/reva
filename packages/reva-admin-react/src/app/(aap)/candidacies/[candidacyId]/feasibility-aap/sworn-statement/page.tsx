@@ -1,16 +1,18 @@
 "use client";
-import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { useUrqlClient } from "@/components/urql-client";
-import { File as GQLFile } from "@/graphql/generated/graphql";
 import Download from "@codegouvfr/react-dsfr/Download";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { useUrqlClient } from "@/components/urql-client";
+import { File as GQLFile } from "@/graphql/generated/graphql";
+
 import {
   createOrUpdateSwornStatement,
   useSwornStatement,

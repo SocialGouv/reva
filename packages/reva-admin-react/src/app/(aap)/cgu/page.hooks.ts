@@ -1,9 +1,8 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-
-import { graphql } from "@/graphql/generated";
+import request from "graphql-request";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import request from "graphql-request";
+import { graphql } from "@/graphql/generated";
 
 const getMaisonMereCGUQuery = graphql(`
   query getMaisonMereCGUQuery {

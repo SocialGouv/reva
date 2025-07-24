@@ -1,5 +1,6 @@
-import { OrganismModaliteAccompagnement } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
+
+import { OrganismModaliteAccompagnement } from "@/graphql/generated/graphql";
 
 const accompagnementConfigMap = {
   A_DISTANCE: {

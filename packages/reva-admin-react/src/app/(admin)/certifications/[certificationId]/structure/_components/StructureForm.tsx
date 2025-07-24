@@ -1,15 +1,17 @@
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { useStructureForm } from "./structureForm.hook";
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-import { useCallback, useEffect } from "react";
+
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+
 import { NoCertificationAuthorityAlert } from "./NoCertificationAuthorityAlert";
 import { NoCertificationRegistryManagerAlert } from "./NoCertificationRegistryManagerAlert";
+import { useStructureForm } from "./structureForm.hook";
 
 type CertificationForForm = {
   id: string;

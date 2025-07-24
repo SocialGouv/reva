@@ -2,8 +2,8 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 
 import { DossierDeValidationType } from "../types";
 
-import { HistoryDossierDeValidationView } from "./HistoryDossierDeValidationView";
 import { DossierDeValidationCard } from "./DossierDeValidationCard";
+import { HistoryDossierDeValidationView } from "./HistoryDossierDeValidationView";
 
 interface Props {
   dossierDeValidation: DossierDeValidationType;

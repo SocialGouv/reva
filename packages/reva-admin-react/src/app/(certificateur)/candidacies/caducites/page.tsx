@@ -1,14 +1,16 @@
 "use client";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
-import { CandidacyCaduciteStatus } from "@/graphql/generated/graphql";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
-import { CandidacySearchList } from "../(components)/CandidacySearchList";
+
 import { useAuth } from "@/components/auth/auth";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { graphql } from "@/graphql/generated";
+import { CandidacyCaduciteStatus } from "@/graphql/generated/graphql";
+
+import { CandidacySearchList } from "../(components)/CandidacySearchList";
 
 const RECORDS_PER_PAGE = 10;
 

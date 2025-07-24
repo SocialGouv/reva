@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Fragment, useCallback } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+
 import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
 
 const trainingFormSchema = z.object({

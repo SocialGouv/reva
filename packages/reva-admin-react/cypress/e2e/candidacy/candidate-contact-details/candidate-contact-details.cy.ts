@@ -1,4 +1,5 @@
 import { stubMutation, stubQuery } from "../../../utils/graphql";
+
 import candidacyWithCandidateContactDetails from "./fixtures/candidacy-with-candidate-contact-details.json";
 
 function interceptQueries() {

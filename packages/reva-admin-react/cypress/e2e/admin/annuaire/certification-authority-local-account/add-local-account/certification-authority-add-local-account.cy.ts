@@ -1,4 +1,5 @@
 import { stubQuery } from "../../../../../utils/graphql";
+
 import certificationAuthorityAndStructureFixture from "./fixtures/certification-authority-and-structure.json";
 
 function interceptAddLocalAccount() {

@@ -1,9 +1,11 @@
+import Button from "@codegouvfr/react-dsfr/Button";
+
 import { SearchList } from "@/components/search/search-list/SearchList";
 import {
   CertificationAuthorityLocalAccount,
   CertificationAuthorityLocalAccountPaginated,
 } from "@/graphql/generated/graphql";
-import Button from "@codegouvfr/react-dsfr/Button";
+
 import { CertificationAuthorityLocalAccountCard } from "./CertificationAuthorityLocalAccountCard";
 
 export const CertificationAuthorityLocalAccountSearchList = ({

@@ -1,15 +1,18 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useInformationGeneralesPage } from "./informationsGenerales.hooks";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { useCallback, useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
 import { CertificationAuthorityStructureBreadcrumb } from "../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
+
+import { useInformationGeneralesPage } from "./informationsGenerales.hooks";
 
 const schema = z.object({
   label: z.string().min(1, "Merci de remplir ce champ."),

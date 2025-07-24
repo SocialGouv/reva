@@ -1,4 +1,8 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
+import { toDate } from "date-fns";
+import { useParams } from "next/navigation";
+
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { LegalDocumentList } from "@/components/legal-document-list/LegalDocumentList";
@@ -8,9 +12,7 @@ import {
   Typology,
 } from "@/components/organism-summary/OrganismSummary";
 import { graphql } from "@/graphql/generated";
-import { useQuery } from "@tanstack/react-query";
-import { toDate } from "date-fns";
-import { useParams } from "next/navigation";
+
 import ValidationDecisionForm from "./(components)/ValidationDecisionForm";
 
 const getMaisonMereAAP = graphql(`

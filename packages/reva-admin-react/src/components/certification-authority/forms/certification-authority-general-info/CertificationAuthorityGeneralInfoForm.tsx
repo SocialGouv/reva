@@ -1,13 +1,15 @@
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
-import { z } from "zod";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import Input from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+
+import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
 
 type FormData = z.infer<typeof schema>;
 

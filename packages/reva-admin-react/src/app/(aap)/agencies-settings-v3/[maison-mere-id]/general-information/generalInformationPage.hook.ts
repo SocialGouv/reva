@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
@@ -5,13 +12,6 @@ import {
   MaisonMereAap,
   UpdateMaisonMereLegalInformationInput,
 } from "@/graphql/generated/graphql";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import { useCallback, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 const generalInformationQueries = graphql(`
   query getAccountMaisonMereGeneralInformation {

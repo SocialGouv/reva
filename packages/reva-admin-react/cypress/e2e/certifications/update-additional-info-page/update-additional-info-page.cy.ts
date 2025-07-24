@@ -1,4 +1,5 @@
 import { stubQuery } from "../../../utils/graphql";
+
 import certificationWithInfo from "./fixtures/certification-with-additional-info.json";
 import updateCertificationAdditionalInfoMutationResponse from "./fixtures/update-additional-info-mutation-response.json";
 

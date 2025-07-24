@@ -1,6 +1,7 @@
 import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { UseFormRegister } from "react-hook-form";
+
 import { PrerequisitesFormData } from "../page";
 
 export const PrerequisiteInput = ({

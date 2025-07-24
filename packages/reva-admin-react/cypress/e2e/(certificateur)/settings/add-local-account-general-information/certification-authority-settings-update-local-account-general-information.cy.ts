@@ -1,6 +1,7 @@
 import { stubMutation, stubQuery } from "../../../../utils/graphql";
-import certificationAuthorityFixture from "./fixtures/certification-authority.json";
+
 import addCertificationAuthorityLocalAccountMutationFixture from "./fixtures/add-certification-authority-local-account-mutation-response.json";
+import certificationAuthorityFixture from "./fixtures/certification-authority.json";
 
 function interceptAddLocalAccountGeneralInformation() {
   cy.intercept("POST", "/api/graphql", (req) => {

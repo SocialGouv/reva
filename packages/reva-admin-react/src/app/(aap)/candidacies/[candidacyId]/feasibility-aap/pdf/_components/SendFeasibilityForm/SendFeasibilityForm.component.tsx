@@ -1,23 +1,21 @@
-import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Select from "@codegouvfr/react-dsfr/Select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { FeasibilityHistory } from "@/graphql/generated/graphql";
-
+import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
+import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
+import { FeasibilityHistory } from "@/graphql/generated/graphql";
 
 import { useSendFeasibilityForm } from "./SendFeasibilityForm.hooks";
-import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 
 const schema = z.object({
   feasibilityFile: z.object({

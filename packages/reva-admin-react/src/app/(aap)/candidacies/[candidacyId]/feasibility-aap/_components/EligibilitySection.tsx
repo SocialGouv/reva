@@ -1,9 +1,10 @@
-import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-import { DffEligibilityRequirement } from "@/graphql/generated/graphql";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { format } from "date-fns";
 import { useParams } from "next/navigation";
+
+import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { DffEligibilityRequirement } from "@/graphql/generated/graphql";
 
 const EligibiltyBadge = ({
   eligibilityRequirement,

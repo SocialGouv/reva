@@ -1,6 +1,7 @@
 import { stubQuery, stubMutation } from "../../../../utils/graphql";
-import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
+
 import certificationAuthorityLocalAccountNoContactDetailsFixture from "./fixtures/certification-authority-local-account-no-contact-details.json";
+import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
 import deleteCertificationAuthorityLocalAccountFixture from "./fixtures/delete-certification-authority-local-account-mutation-response.json";
 
 function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {

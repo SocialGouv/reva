@@ -1,7 +1,8 @@
 "use client";
-import { useAuth } from "@/components/auth/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+
+import { useAuth } from "@/components/auth/auth";
 
 const PostLoginPage = () => {
   const router = useRouter();

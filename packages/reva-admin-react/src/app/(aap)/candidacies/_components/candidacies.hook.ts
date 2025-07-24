@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
@@ -5,7 +7,6 @@ import {
   CandidacySortByFilter,
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
-import { useQuery } from "@tanstack/react-query";
 
 const getCandidacyByStatusCountAndCohortesVaeCollectives = graphql(`
   query getCandidacyByStatusCountAndCohortesVaeCollectives(

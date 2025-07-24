@@ -1,8 +1,10 @@
 "use client";
-import Image from "next/image";
 import Button from "@codegouvfr/react-dsfr/Button";
+import Image from "next/image";
 import { redirect } from "next/navigation";
+
 import { CertificationStatus } from "@/graphql/generated/graphql";
+
 import { useCertifications } from "./certifications.hooks";
 
 const NoCertifications = () => {

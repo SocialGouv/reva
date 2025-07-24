@@ -1,7 +1,8 @@
+import Link from "next/link";
+
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
-import Link from "next/link";
 
 export const CertificationAdditionalInfoSummaryCard = ({
   isAdmin,

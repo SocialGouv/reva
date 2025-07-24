@@ -1,10 +1,13 @@
 "use client";
 
-import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useMemo } from "react";
+
+import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
+
 import OrganismInformationForm from "../../../_components/OrganismInformationForm";
 import { OrganismInformationFormData } from "../../../_components/organismInformationFormSchema";
+
 import { useOrganismInformationOnSite } from "./organismInformationOnSite.hook";
 
 const InformationsOnSitePage = () => {

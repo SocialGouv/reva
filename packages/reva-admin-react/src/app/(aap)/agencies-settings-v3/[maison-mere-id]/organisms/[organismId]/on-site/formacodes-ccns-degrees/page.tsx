@@ -1,6 +1,8 @@
 "use client";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+
 import FormacodesCcnsDegreesForm from "../../_components/formacodes-ccns-degrees-form/FormacodesCcnsDegreesForm";
 import { useOnSiteOrganism } from "../_components/onSiteOrganism.hook";
 

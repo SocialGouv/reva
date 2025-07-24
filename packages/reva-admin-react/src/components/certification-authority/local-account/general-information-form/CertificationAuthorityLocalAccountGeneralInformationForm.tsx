@@ -1,10 +1,11 @@
 "use client";
 
-import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Input } from "@codegouvfr/react-dsfr/Input";
+
+import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
 const schema = z.object({
   accountFirstname: z.string().optional().default(""),

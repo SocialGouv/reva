@@ -1,9 +1,12 @@
 "use client";
 
-import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 import { useParams } from "next/navigation";
+
+import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
+
 import OrganismInformationForm from "../_components/OrganismInformationForm";
 import { OrganismInformationFormData } from "../_components/organismInformationFormSchema";
+
 import { useAddLieuAccueilPage } from "./addLieuAccueil.hook";
 
 const AddLieuAccueilPage = () => {

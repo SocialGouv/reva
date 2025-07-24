@@ -1,6 +1,8 @@
 import path from "path";
-import type { CodegenConfig } from "@graphql-codegen/cli";
+
 import dotenv from "dotenv";
+
+import type { CodegenConfig } from "@graphql-codegen/cli";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 

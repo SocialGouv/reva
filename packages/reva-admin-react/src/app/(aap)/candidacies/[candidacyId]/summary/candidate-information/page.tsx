@@ -1,8 +1,10 @@
 "use client";
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useParams } from "next/navigation";
+
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+
 import CandidateInformationForm from "./_components/CandidateInformationForm";
 import { useCandidateSummary } from "./_components/useCandidateInformation";
 
