@@ -58,7 +58,6 @@ export default async function CertificationsPage({
       <CertificationsSearchBar
         commanditaireId={commanditaireId}
         cohorteVaeCollectiveId={cohorteVaeCollectiveId}
-        page={currentPage}
       />
 
       <ul className="mt-12 list-none px-0 flex flex-col gap-4">

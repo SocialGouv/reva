@@ -5,15 +5,13 @@ import { redirect } from "next/navigation";
 export const CertificationsSearchBar = ({
   commanditaireId,
   cohorteVaeCollectiveId,
-  page,
 }: {
   commanditaireId: string;
   cohorteVaeCollectiveId: string;
-  page: number;
 }) => {
   const handleSearchButtonClick = (searchText: string) =>
     redirect(
-      `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications?searchText=${searchText}&page=${page}`,
+      `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications?searchText=${searchText}&page=1`,
     );
 
   return (
