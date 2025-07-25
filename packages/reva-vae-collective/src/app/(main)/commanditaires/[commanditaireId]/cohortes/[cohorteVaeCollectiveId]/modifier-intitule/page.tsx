@@ -10,6 +10,10 @@ export default async function UpdateCohortNamePage({
 
   const cohorte = await getCohorteById(commanditaireId, cohorteVaeCollectiveId);
 
+  if (!cohorte) {
+    throw new Error("Cohorte non trouvée");
+  }
+
   return (
     <div className="flex flex-col w-full">
       <h1 className="mb-12">{cohorte?.nom}</h1>

@@ -52,26 +52,28 @@ export const getCohorteById = async (
 ) => {
   const accessToken = await getAccessTokenFromCookie();
 
-  const result = await client.query(
-    getCohorteByIdQuery,
-    {
-      commanditaireVaeCollectiveId,
-      cohorteVaeCollectiveId,
-    },
-    {
-      fetchOptions: {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+  const result = throwUrqlErrors(
+    await client.query(
+      getCohorteByIdQuery,
+      {
+        commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId,
+      },
+      {
+        fetchOptions: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
       },
-    },
+    ),
   );
 
   return result.data?.vaeCollective_getCohorteVaeCollectiveById;
 };
 
 export const updateNomCohorteVaeCollective = async (
-  state: FormState,
+  _state: FormState,
   formData: FormData,
 ) => {
   const accessToken = await getAccessTokenFromCookie();

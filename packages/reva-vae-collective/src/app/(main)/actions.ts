@@ -30,7 +30,13 @@ export const redirectCommanditaireVaeCollective = async () => {
     ),
   );
 
+  if (
+    !result.data?.account_getAccountForConnectedUser?.commanditaireVaeCollective
+  ) {
+    throw new Error("Cohorte non trouvée");
+  }
+
   redirect(
-    `/commanditaires/${result.data?.account_getAccountForConnectedUser.commanditaireVaeCollective.id}/cohortes`,
+    `/commanditaires/${result.data.account_getAccountForConnectedUser.commanditaireVaeCollective.id}/cohortes`,
   );
 };

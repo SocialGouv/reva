@@ -109,5 +109,9 @@ export const searchCertifications = async ({
     ),
   );
 
-  return result.data?.searchCertificationsForCandidate;
+  if (!result.data?.searchCertificationsForCandidate) {
+    throw new Error("Certifications non trouvées");
+  }
+
+  return result.data.searchCertificationsForCandidate;
 };

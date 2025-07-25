@@ -66,7 +66,11 @@ export const createCohort = async (_state: FormState, formData: FormData) => {
     ),
   );
 
+  if (!result.data?.vaeCollective_createCohorteVaeCollective) {
+    throw new Error("Cohorte non trouvée");
+  }
+
   redirect(
-    `/commanditaires/${commanditaireId}/cohortes/${result.data.vaeCollective_createCohorteVaeCollective.id}`,
+    `/commanditaires/${commanditaireId}/cohortes/${result.data?.vaeCollective_createCohorteVaeCollective.id}`,
   );
 };

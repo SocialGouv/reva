@@ -19,35 +19,7 @@ const loadCommanditaireAndCohortes = async ({
 }: {
   commanditaireVaeCollectiveId: string;
   cohortePage?: number;
-}): Promise<{
-  id: string;
-  raisonSociale: string;
-  cohorteVaeCollectives: {
-    rows: {
-      id: string;
-      nom: string;
-      status: "BROUILLON" | "PUBLIE";
-      createdAt: number;
-      certificationCohorteVaeCollectives: {
-        id: string;
-        certification: {
-          id: string;
-          label: string;
-        };
-        certificationCohorteVaeCollectiveOnOrganisms: {
-          id: string;
-          organism: {
-            id: string;
-            label: string;
-          };
-        }[];
-      }[];
-    }[];
-    info: {
-      totalRows: number;
-    };
-  };
-}> => {
+}) => {
   const accessToken = await getAccessTokenFromCookie();
 
   const result = throwUrqlErrors(
@@ -120,6 +92,10 @@ export default async function CohortesPage({
     commanditaireVaeCollectiveId: commanditaireId,
     cohortePage: currentPage,
   });
+
+  if (!commanditaire) {
+    throw new Error("Commanditaire non trouvé");
+  }
 
   if (commanditaire.cohorteVaeCollectives.info.totalRows === 0) {
     redirect(`/commanditaires/${commanditaireId}/cohortes/aucune-cohorte/`);

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
+import { graphql } from "@/graphql/generated";
+
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
 
@@ -15,23 +17,29 @@ const getCohorteById = async (
   const accessToken = await getAccessTokenFromCookie();
 
   const result = await client.query(
-    `
-    query getCohorteByIdForCohortePage($commanditaireVaeCollectiveId: ID!, $cohorteVaeCollectiveId: ID!) {
-      vaeCollective_getCohorteVaeCollectiveById(commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId, cohorteVaeCollectiveId: $cohorteVaeCollectiveId) {
-        id
-        nom
-        status
-        certificationCohorteVaeCollectives {
+    graphql(`
+      query getCohorteByIdForCohortePage(
+        $commanditaireVaeCollectiveId: ID!
+        $cohorteVaeCollectiveId: ID!
+      ) {
+        vaeCollective_getCohorteVaeCollectiveById(
+          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+        ) {
           id
-          certification {
+          nom
+          status
+          certificationCohorteVaeCollectives {
             id
-            label
-            codeRncp
+            certification {
+              id
+              label
+              codeRncp
+            }
           }
         }
       }
-    }
-    `,
+    `),
     {
       commanditaireVaeCollectiveId,
       cohorteVaeCollectiveId,
@@ -44,6 +52,10 @@ const getCohorteById = async (
       },
     },
   );
+
+  if (!result.data?.vaeCollective_getCohorteVaeCollectiveById) {
+    throw new Error("Cohorte non trouvée");
+  }
 
   return result.data.vaeCollective_getCohorteVaeCollectiveById;
 };

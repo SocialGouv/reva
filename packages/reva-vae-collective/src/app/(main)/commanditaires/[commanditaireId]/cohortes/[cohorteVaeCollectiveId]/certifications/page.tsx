@@ -23,6 +23,10 @@ export default async function CertificationsPage({
 
   const cohorte = await getCohorteById(commanditaireId, cohorteVaeCollectiveId);
 
+  if (!cohorte) {
+    throw new Error("Cohorte non trouvée");
+  }
+
   const certifications = await searchCertifications({
     searchText,
     offset: (currentPage - 1) * RECORDS_PER_PAGE,
@@ -61,22 +65,15 @@ export default async function CertificationsPage({
       />
 
       <ul className="mt-12 list-none px-0 flex flex-col gap-4">
-        {certifications?.rows.map(
-          (certification: {
-            id: string;
-            label: string;
-            codeRncp: string;
-            domains: [{ children: { id: string; label: string }[] }];
-          }) => (
-            <li key={certification.id}>
-              <CertificationCard
-                commanditaireId={commanditaireId}
-                cohorteVaeCollectiveId={cohorteVaeCollectiveId}
-                certification={certification}
-              />
-            </li>
-          ),
-        )}
+        {certifications?.rows.map((certification) => (
+          <li key={certification.id}>
+            <CertificationCard
+              commanditaireId={commanditaireId}
+              cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+              certification={certification}
+            />
+          </li>
+        ))}
       </ul>
 
       <div className="flex mt-12 items-start">
