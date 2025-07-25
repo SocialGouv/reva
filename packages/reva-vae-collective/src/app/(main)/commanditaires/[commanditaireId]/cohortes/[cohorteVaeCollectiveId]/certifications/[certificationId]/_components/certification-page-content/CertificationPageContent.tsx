@@ -6,6 +6,7 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
+import { SelectCertificationButton } from "./select-certification-button/SelectCertificationButton";
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
@@ -98,6 +99,12 @@ export const CertificationPageContent = ({
             imageUrl="/vae-collective/certifications/pictograms/information.svg"
             imageAlt="icône information"
           />
+          <SelectCertificationButton
+            className="ml-auto mt-auto"
+            commanditaireVaeCollectiveId={commanditaireId}
+            cohorteVaeCollectiveId={cohorteVaeCollective.id}
+            certificationId={certification.id}
+          />
         </div>
       </div>
 
@@ -135,15 +142,21 @@ export const CertificationPageContent = ({
           },
         ]}
       />
-      <Button
-        className="mt-12"
-        priority="secondary"
-        linkProps={{
-          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollective.id}/certifications`,
-        }}
-      >
-        Retour
-      </Button>
+      <div className="flex justify-between mt-12">
+        <Button
+          priority="secondary"
+          linkProps={{
+            href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollective.id}/certifications`,
+          }}
+        >
+          Retour
+        </Button>
+        <SelectCertificationButton
+          commanditaireVaeCollectiveId={commanditaireId}
+          cohorteVaeCollectiveId={cohorteVaeCollective.id}
+          certificationId={certification.id}
+        />
+      </div>
     </div>
   </div>
 );
