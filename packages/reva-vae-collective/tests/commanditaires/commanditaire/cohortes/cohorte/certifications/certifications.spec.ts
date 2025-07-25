@@ -95,7 +95,7 @@ test("it should lead to the certification page when i click on a certification c
 
   await page.getByTestId("certification-card").first().click();
 
-  await expect(page.url()).toContain(
+  await page.waitForURL(
     "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications/1",
   );
 });
