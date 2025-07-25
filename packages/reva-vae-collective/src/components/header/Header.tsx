@@ -22,7 +22,7 @@ export const Header = () => {
         </>
       }
       homeLinkProps={{
-        href: "/",
+        href: "/../",
         title: "Accueil - France VAE",
       }}
       operatorLogo={{
