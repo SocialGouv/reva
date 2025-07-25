@@ -46,6 +46,8 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Build to retrieve graphql schema from API folder
+        run: npm run build
       - name: Run Playwright tests
         run: npm run test
       - uses: actions/upload-artifact@v4
