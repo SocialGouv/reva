@@ -10,7 +10,7 @@ export default function LogoutConfirmation() {
       <Button
         data-test="logout-confirmation-back-to-home"
         className="mt-6"
-        linkProps={{ href: "/vae-collective/login" }}
+        linkProps={{ href: "/login" }}
       >
         Retournez à la page d’accueil
       </Button>

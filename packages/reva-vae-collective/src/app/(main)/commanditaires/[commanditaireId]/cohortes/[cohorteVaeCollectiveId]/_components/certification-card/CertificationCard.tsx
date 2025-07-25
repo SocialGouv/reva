@@ -42,7 +42,7 @@ const EmptyCertificationCard = ({
     enlargeLinkOrButton
     orientation="horizontal"
     linkProps={{
-      href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
+      href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
     }}
     disabled={disabled}
   />
@@ -82,7 +82,7 @@ const FilledCertificationCard = ({
     enlargeLinkOrButton
     orientation="horizontal"
     linkProps={{
-      href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
+      href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
     }}
     disabled={disabled}
   />

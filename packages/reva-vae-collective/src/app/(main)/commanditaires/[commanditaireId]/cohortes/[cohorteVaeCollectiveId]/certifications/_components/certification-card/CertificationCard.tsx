@@ -47,7 +47,7 @@ export const CertificationCard = ({
     }
     enlargeLink
     linkProps={{
-      href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certification.id}`,
+      href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certification.id}`,
     }}
   />
 );

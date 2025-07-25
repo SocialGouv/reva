@@ -131,7 +131,7 @@ export default async function CohortesPage({
         className="ml-auto mb-4"
         priority="secondary"
         linkProps={{
-          href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/nouvelle-cohorte/`,
+          href: `/commanditaires/${commanditaireId}/cohortes/nouvelle-cohorte/`,
         }}
       >
         Créer une cohorte
@@ -184,7 +184,7 @@ export default async function CohortesPage({
                   </p>
                 }
                 linkProps={{
-                  href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorte.id}`,
+                  href: `/commanditaires/${commanditaireId}/cohortes/${cohorte.id}`,
                 }}
               ></Card>
             </li>
@@ -202,7 +202,7 @@ export default async function CohortesPage({
           commanditaire.cohorteVaeCollectives.info.totalRows / RECORDS_PER_PAGE,
         )}
         getPageLinkProps={(page) => ({
-          href: `/vae-collective/commanditaires/${commanditaireId}/cohortes?page=${page}`,
+          href: `/commanditaires/${commanditaireId}/cohortes?page=${page}`,
         })}
       />
     </div>

@@ -66,7 +66,7 @@ export default async function CohortePage({
           {
             label: "Cohortes",
             linkProps: {
-              href: `/vae-collective/commanditaires/${commanditaireId}/cohortes`,
+              href: `/commanditaires/${commanditaireId}/cohortes`,
             },
           },
         ]}
@@ -107,7 +107,7 @@ export default async function CohortePage({
         className="mt-12"
         priority="secondary"
         linkProps={{
-          href: `/vae-collective/commanditaires/${commanditaireId}/cohortes`,
+          href: `/commanditaires/${commanditaireId}/cohortes`,
         }}
       >
         Retour

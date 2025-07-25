@@ -38,13 +38,13 @@ export default async function CertificationsPage({
           {
             label: "Cohortes",
             linkProps: {
-              href: `/vae-collective/commanditaires/${commanditaireId}/cohortes`,
+              href: `/commanditaires/${commanditaireId}/cohortes`,
             },
           },
           {
             label: cohorte.nom,
             linkProps: {
-              href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}`,
+              href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}`,
             },
           },
         ]}
@@ -84,7 +84,7 @@ export default async function CertificationsPage({
         <Button
           priority="secondary"
           linkProps={{
-            href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}`,
+            href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}`,
           }}
         >
           Retour
@@ -98,7 +98,7 @@ export default async function CertificationsPage({
           defaultPage={currentPage}
           count={Math.ceil(certifications.info.totalRows / RECORDS_PER_PAGE)}
           getPageLinkProps={(page) => ({
-            href: `/vae-collective/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications?page=${page}&searchText=${searchText || ""}`,
+            href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications?page=${page}&searchText=${searchText || ""}`,
           })}
         />
       </div>
