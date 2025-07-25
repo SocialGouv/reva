@@ -2,7 +2,10 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+
 export const ConnectionDropdown = () => {
+  const { isFeatureActive } = useFeatureflipping();
   const menuId = `dropdown-connection-menu`;
 
   // We use the fr-translate* classes to inherit the opened/closed chevron icon
@@ -34,6 +37,13 @@ export const ConnectionDropdown = () => {
                 Professionnels de la VAE
               </a>
             </li>
+            {isFeatureActive("VAE_COLLECTIVE") && (
+              <li>
+                <a className="fr-nav__link" href="/vae-collective">
+                  Porteur de projet VAE collective
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>
