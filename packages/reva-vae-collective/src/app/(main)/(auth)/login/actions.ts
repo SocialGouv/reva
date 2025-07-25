@@ -1,9 +1,10 @@
 "use server";
 
-import { gql } from "@urql/core";
 import { redirect } from "next/navigation";
 
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 type FormState = {
   errors?: {
@@ -11,32 +12,34 @@ type FormState = {
   };
 };
 
+const loginMutation = graphql(`
+  mutation Login($email: String!, $password: String!) {
+    account_loginWithCredentials(
+      email: $email
+      password: $password
+      clientApp: REVA_VAE_COLLECTIVE
+    ) {
+      tokens {
+        accessToken
+        refreshToken
+        idToken
+      }
+      account {
+        commanditaireVaeCollective {
+          id
+        }
+      }
+    }
+  }
+`);
+
 export const login = async (_state: FormState, formData: FormData) => {
   const { email, password } = Object.fromEntries(formData.entries());
 
-  const result = await client.mutation(
-    gql`
-      mutation Login($email: String!, $password: String!) {
-        account_loginWithCredentials(
-          email: $email
-          password: $password
-          clientApp: REVA_VAE_COLLECTIVE
-        ) {
-          tokens {
-            accessToken
-            refreshToken
-            idToken
-          }
-          account {
-            commanditaireVaeCollective {
-              id
-            }
-          }
-        }
-      }
-    `,
-    { email, password },
-  );
+  const result = await client.mutation(loginMutation, {
+    email: email.toString(),
+    password: password.toString(),
+  });
 
   if (result.error) {
     return {

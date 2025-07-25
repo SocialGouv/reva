@@ -1,11 +1,12 @@
 "use server";
 
-import { gql } from "@urql/core";
 import { redirect } from "next/navigation";
 
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 type FormState = {
   errors?: {
@@ -13,7 +14,7 @@ type FormState = {
   };
 };
 
-const createCohortMutation = gql`
+const createCohortMutation = graphql(`
   mutation createCohorteVaeCollective(
     $commanditaireVaeCollectiveId: ID!
     $nomCohorteVaeCollective: String!
@@ -25,7 +26,7 @@ const createCohortMutation = gql`
       id
     }
   }
-`;
+`);
 
 export const createCohort = async (_state: FormState, formData: FormData) => {
   const accessToken = await getAccessTokenFromCookie();
@@ -52,8 +53,8 @@ export const createCohort = async (_state: FormState, formData: FormData) => {
     await client.mutation(
       createCohortMutation,
       {
-        commanditaireVaeCollectiveId: commanditaireId,
-        nomCohorteVaeCollective: name,
+        commanditaireVaeCollectiveId: commanditaireId.toString(),
+        nomCohorteVaeCollective: name.toString(),
       },
       {
         fetchOptions: {

@@ -1,10 +1,11 @@
 "use server";
-import { gql } from "@urql/core";
 import { redirect } from "next/navigation";
 
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 export const redirectCommanditaireVaeCollective = async () => {
   const accessToken = await getAccessTokenFromCookie();
@@ -15,7 +16,7 @@ export const redirectCommanditaireVaeCollective = async () => {
 
   const result = throwUrqlErrors(
     await client.query(
-      gql`
+      graphql(`
         query getCommanditaireVaeCollectiveAccountForRedirectCommanditaireVaeCollectiveAction {
           account_getAccountForConnectedUser {
             commanditaireVaeCollective {
@@ -23,7 +24,7 @@ export const redirectCommanditaireVaeCollective = async () => {
             }
           }
         }
-      `,
+      `),
       {},
       { fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } } },
     ),

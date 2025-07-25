@@ -1,11 +1,12 @@
 "use server";
 
-import { gql } from "@urql/core";
 import { redirect } from "next/navigation";
 
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 type FormState = {
   name: string;
@@ -14,7 +15,7 @@ type FormState = {
   };
 };
 
-const updateNomCohorteVaeCollectiveMutation = gql`
+const updateNomCohorteVaeCollectiveMutation = graphql(`
   mutation updateNomCohorteVaeCollective(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
@@ -28,8 +29,9 @@ const updateNomCohorteVaeCollectiveMutation = gql`
       id
     }
   }
-`;
-const getCohorteByIdQuery = gql`
+`);
+
+const getCohorteByIdQuery = graphql(`
   query getCohorteByIdForUpdateCohorteNamePage(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
@@ -42,7 +44,7 @@ const getCohorteByIdQuery = gql`
       nom
     }
   }
-`;
+`);
 
 export const getCohorteById = async (
   commanditaireVaeCollectiveId: string,
@@ -65,7 +67,7 @@ export const getCohorteById = async (
     },
   );
 
-  return result.data.vaeCollective_getCohorteVaeCollectiveById;
+  return result.data?.vaeCollective_getCohorteVaeCollectiveById;
 };
 
 export const updateNomCohorteVaeCollective = async (
@@ -100,9 +102,9 @@ export const updateNomCohorteVaeCollective = async (
     await client.mutation(
       updateNomCohorteVaeCollectiveMutation,
       {
-        commanditaireVaeCollectiveId: commanditaireId,
-        cohorteVaeCollectiveId: cohorteVaeCollectiveId,
-        nomCohorteVaeCollective: name,
+        commanditaireVaeCollectiveId: commanditaireId.toString(),
+        cohorteVaeCollectiveId: cohorteVaeCollectiveId.toString(),
+        nomCohorteVaeCollective: name.toString(),
       },
       {
         fetchOptions: {

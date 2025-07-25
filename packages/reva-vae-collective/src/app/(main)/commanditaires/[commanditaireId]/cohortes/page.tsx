@@ -2,13 +2,14 @@ import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
-import { gql } from "@urql/core";
 import { format } from "date-fns";
 import { redirect } from "next/navigation";
 
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
+
+import { graphql } from "@/graphql/generated";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -51,7 +52,7 @@ const loadCommanditaireAndCohortes = async ({
 
   const result = throwUrqlErrors(
     await client.query(
-      gql`
+      graphql(`
         query commanditaireVaeCollectiveForCohortesPage(
           $commanditaireVaeCollectiveId: ID!
           $offset: Int!
@@ -89,7 +90,7 @@ const loadCommanditaireAndCohortes = async ({
             }
           }
         }
-      `,
+      `),
       {
         commanditaireVaeCollectiveId,
         offset: (cohortePage - 1) * RECORDS_PER_PAGE,

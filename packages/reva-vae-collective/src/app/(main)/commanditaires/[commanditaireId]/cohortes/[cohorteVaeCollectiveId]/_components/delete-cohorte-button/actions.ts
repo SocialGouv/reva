@@ -1,13 +1,14 @@
 "use server";
 
-import { gql } from "@urql/core";
 import { redirect } from "next/navigation";
 
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
-const deleteCohorteMutation = gql`
+import { graphql } from "@/graphql/generated";
+
+const deleteCohorteMutation = graphql(`
   mutation deleteCohorteMutation(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
@@ -17,7 +18,7 @@ const deleteCohorteMutation = gql`
       cohorteVaeCollectiveId: $cohorteVaeCollectiveId
     )
   }
-`;
+`);
 
 export const deleteCohorte = async ({
   commanditaireVaeCollectiveId,

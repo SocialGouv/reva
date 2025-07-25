@@ -1,11 +1,12 @@
 "use server";
-import { gql } from "@urql/core";
 
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
-const getCohorteByIdQuery = gql`
+import { graphql } from "@/graphql/generated";
+
+const getCohorteByIdQuery = graphql(`
   query getCohorteByIdForSearchCertificationsPage(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
@@ -18,7 +19,7 @@ const getCohorteByIdQuery = gql`
       nom
     }
   }
-`;
+`);
 
 export const getCohorteById = async (
   commanditaireVaeCollectiveId: string,
@@ -26,25 +27,27 @@ export const getCohorteById = async (
 ) => {
   const accessToken = await getAccessTokenFromCookie();
 
-  const result = await client.query(
-    getCohorteByIdQuery,
-    {
-      commanditaireVaeCollectiveId,
-      cohorteVaeCollectiveId,
-    },
-    {
-      fetchOptions: {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+  const result = throwUrqlErrors(
+    await client.query(
+      getCohorteByIdQuery,
+      {
+        commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId,
+      },
+      {
+        fetchOptions: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
       },
-    },
+    ),
   );
 
-  return result.data.vaeCollective_getCohorteVaeCollectiveById;
+  return result.data?.vaeCollective_getCohorteVaeCollectiveById;
 };
 
-const searchCertificationsForCandidateQuery = gql`
+const searchCertificationsForCandidateQuery = graphql(`
   query searchCertificationsForCandidateForCertificationsPage(
     $searchText: String
     $offset: Int
@@ -75,7 +78,8 @@ const searchCertificationsForCandidateQuery = gql`
       }
     }
   }
-`;
+`);
+
 export const searchCertifications = async ({
   searchText,
   offset,
