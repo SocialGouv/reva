@@ -20,7 +20,7 @@ export default function Error({
   return (
     <div className="flex flex-col-reverse items-center md:flex-row gap-[150px]">
       <div className="flex flex-col gap-4">
-        <h1>Erreur inatendue</h1>
+        <h1>Erreur inattendue</h1>
         <p>
           Désolé, le service rencontre un problème, nous travaillons pour le
           résoudre le plus rapidement possible.
