@@ -1,11 +1,16 @@
-"use client";
-
 import "./globals.css";
+import { setLink } from "@codegouvfr/react-dsfr/link";
+import Link from "next/link";
+
 import { KeycloakProvider } from "@/components/auth/keycloakContext";
 import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
 import { DsfrHead } from "@/components/dsfr/DsfrHead";
 
 const lang = "fr";
+
+//force use of next/link for dsfr
+//otherwise sometimes it uses the wrong link when a page is first rendered
+setLink({ Link });
 
 export default function RootLayout({
   children,
