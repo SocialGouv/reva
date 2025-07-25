@@ -34,19 +34,26 @@ const EmptyCertificationCard = ({
   commanditaireId: string;
   cohorteVaeCollectiveId: string;
   disabled: boolean;
-}) => (
-  <Tile
-    data-testid="empty-certification-card"
-    title="Choisir la certification visée par cette cohorte"
-    small
-    enlargeLinkOrButton
-    orientation="horizontal"
-    linkProps={{
-      href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
-    }}
-    disabled={disabled}
-  />
-);
+}) => {
+  const additionalProps = disabled
+    ? { disabled: true, buttonProps: { disabled: true } }
+    : {
+        enlargeLinkOrButton: true,
+        linkProps: {
+          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
+        },
+      };
+
+  return (
+    <Tile
+      data-testid="empty-certification-card"
+      title="Choisir la certification visée par cette cohorte"
+      small
+      orientation="horizontal"
+      {...additionalProps}
+    />
+  );
+};
 
 const FilledCertificationCard = ({
   commanditaireId,
@@ -58,32 +65,39 @@ const FilledCertificationCard = ({
   cohorteVaeCollectiveId: string;
   certification: { label: string; codeRncp: string };
   disabled: boolean;
-}) => (
-  <Tile
-    data-testid="filled-certification-card"
-    title={certification.label}
-    start={
-      <div className="flex items-center gap-1 text-xs text-dsfr-light-text-mention-grey">
-        <span className="ri-verified-badge-line fr-icon--sm" />
-        RNCP {certification.codeRncp}
-      </div>
-    }
-    detail={
-      <>
-        Pour changer de certification, consultez la fiche détaillée de cette
-        certification.
-        <br />
-        Le changement de certification supprimera la sélection de l’Architecte
-        Accompagnateur de parcours en cours s’il ne s’est pas positionné sur la
-        nouvelle certification.
-      </>
-    }
-    small
-    enlargeLinkOrButton
-    orientation="horizontal"
-    linkProps={{
-      href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
-    }}
-    disabled={disabled}
-  />
-);
+}) => {
+  const additionalProps = disabled
+    ? { disabled: true, buttonProps: { disabled: true } }
+    : {
+        enlargeLinkOrButton: true,
+        linkProps: {
+          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
+        },
+      };
+
+  return (
+    <Tile
+      data-testid="filled-certification-card"
+      title={certification.label}
+      start={
+        <div className="flex items-center gap-1 text-xs text-dsfr-light-text-mention-grey">
+          <span className="ri-verified-badge-line fr-icon--sm" />
+          RNCP {certification.codeRncp}
+        </div>
+      }
+      detail={
+        <>
+          Pour changer de certification, consultez la fiche détaillée de cette
+          certification.
+          <br />
+          Le changement de certification supprimera la sélection de l’Architecte
+          Accompagnateur de parcours en cours s’il ne s’est pas positionné sur
+          la nouvelle certification.
+        </>
+      }
+      small
+      orientation="horizontal"
+      {...additionalProps}
+    />
+  );
+};

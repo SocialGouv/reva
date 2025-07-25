@@ -253,8 +253,8 @@ test.describe("certification card", () => {
         );
 
         await expect(
-          await page.getByTestId("empty-certification-card").locator("a"),
-        ).toHaveAttribute("aria-disabled", "true");
+          await page.getByTestId("empty-certification-card").locator("button"),
+        ).toBeDisabled();
       });
     });
   });
@@ -364,8 +364,8 @@ test.describe("certification card", () => {
         );
 
         await expect(
-          await page.getByTestId("filled-certification-card").locator("a"),
-        ).toHaveAttribute("aria-disabled", "true");
+          await page.getByTestId("filled-certification-card").locator("button"),
+        ).toBeDisabled();
       });
     });
   });
