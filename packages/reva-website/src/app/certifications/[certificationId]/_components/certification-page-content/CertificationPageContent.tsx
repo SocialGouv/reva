@@ -27,7 +27,6 @@ export const CertificationPageContent = ({
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
     juryEstimatedCost?: number | null;
     juryPlace?: string | null;
-    certificationAuthorityStructure?: { label: string } | null;
   };
 }) => (
   <div className="flex-1 flex pb-8 min-h-screen">
@@ -60,7 +59,6 @@ export const CertificationPageContent = ({
         <div className="flex flex-col md:flex-row gap-6 mt-8">
           <Tile
             title={certification.typeDiplome}
-            desc={certification?.certificationAuthorityStructure?.label}
             classes={{ content: "p-0" }}
             className="w-[282px]"
             small
