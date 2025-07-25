@@ -25,6 +25,11 @@ export const Header = () => {
         href: "/",
         title: "Accueil - France VAE",
       }}
+      operatorLogo={{
+        alt: "France VAE",
+        imgUrl: "/vae-collective/images/fvae_logo.svg",
+        orientation: "horizontal",
+      }}
       quickAccessItems={
         authenticated
           ? ([
