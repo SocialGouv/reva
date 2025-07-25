@@ -1,23 +1,26 @@
 "use client";
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { useId } from "react";
 
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 export const ConnectionDropdown = () => {
   const { isFeatureActive } = useFeatureflipping();
-  const menuId = `dropdown-connection-menu`;
+
+  const id = useId();
+  const menuId = `dropdown-connection-menu-${id}`;
 
   // We use the fr-translate* classes to inherit the opened/closed chevron icon
   // and remove the translate icon with content-none.
   return (
-    <div className="fr-translate fr-nav" data-fr-js-navigation="true">
-      <div className="fr-nav__item fr-nav__item--align-right">
+    <div className="fr-translate fr-nav mx-0" data-fr-js-navigation="true">
+      <div className="fr-nav__item">
         <Button
           aria-controls={menuId}
           aria-expanded="false"
           title="Se connecter"
-          className="fr-translate__btn before:content-none mb-0"
+          className="fr-translate__btn before:content-none mb-0 px-2 mx-0 lg:mx-2"
         >
           Se connecter
         </Button>
