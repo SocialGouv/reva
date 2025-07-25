@@ -26,7 +26,6 @@ export const CertificationPage = async ({
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
     juryEstimatedCost?: number | null;
     juryPlace?: string | null;
-    certificationAuthorityStructure?: { label: string } | null;
   };
 }) => (
   <>
@@ -44,7 +43,6 @@ export const CertificationPage = async ({
       <div className="flex flex-col md:flex-row gap-6 mt-8">
         <Tile
           title={certification.typeDiplome}
-          desc={certification?.certificationAuthorityStructure?.label}
           classes={{ content: "p-0" }}
           className="w-[282px] h-auto"
           small

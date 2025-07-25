@@ -15,9 +15,6 @@ const GET_CERTIFICATION = graphql(`
         id
         label
       }
-      certificationAuthorityStructure {
-        label
-      }
       juryPlace
       juryEstimatedCost
       juryTypeSoutenanceOrale
