@@ -1,6 +1,6 @@
 type NonNullable<T> = T extends null | undefined ? never : T;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, import/no-unused-modules
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GetGqlPageInfo<T extends (...args: any) => any> = NonNullable<
   Awaited<ReturnType<T>>
 >["info"];

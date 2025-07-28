@@ -17,7 +17,7 @@ import {
   typologieCandidatSchema,
 } from "../../routes/v1/schemas.js";
 
-const mapCandidateGender = (
+export const mapCandidateGender = (
   gender?: string | null,
 ): "HOMME" | "FEMME" | "NON_SPECIFIE" | null => {
   if (!gender) return null;

@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 
-const dossierDeFaisabiliteDecisionInputSchema = {
+export const dossierDeFaisabiliteDecisionInputSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionInput",
   type: "object",
   properties: {

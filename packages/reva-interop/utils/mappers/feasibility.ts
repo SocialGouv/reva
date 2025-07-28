@@ -74,7 +74,7 @@ const expDurationMapFromGqlToInterop: Record<
   moreThanTenYears: "PLUS_DE_DIX_ANS",
 };
 
-const mapFeasibility = (
+export const mapFeasibility = (
   feasibility: GetGqlRowType<typeof getFeasibilities>,
 ): MappedFeasibility | undefined => {
   let status: (typeof statutDossierDeFaisabiliteSchema)["enum"][number];
