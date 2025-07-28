@@ -224,8 +224,9 @@ http:
     sandboxInteropIpWhitelist:
       ipWhiteList:
         sourceRange:
-        {{- range (splitList "," (env "SANDBOX_INTEROP_IP_WHITELIST")) }}
-          - {{ . }}
+        {{- $whitelist := splitList "," (env "SANDBOX_INTEROP_IP_WHITELIST") }}
+        {{- range $ip := $whitelist }}
+          - {{ $ip | quote }}
         {{- end }}
 
     sandboxInteropRateLimit:
