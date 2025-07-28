@@ -204,6 +204,7 @@ export const transferCandidacyToCertificationAuthorityLocalAccount =
         certificationAuthorityLocalAccountId,
         certificationAuthorityLocalAccountAccountEmail:
           certificationAuthorityLocalAccount.account.email,
+        certificationAuthorityTransferReason: transferReason,
       },
       ...userInfo,
     });

@@ -142,6 +142,7 @@ export type CandidacyLogEventTypeAndDetails =
       details: {
         certificationAuthorityId: string;
         certificationAuthorityLabel: string;
+        certificationAuthorityTransferReason: string;
       };
     }
   | {
@@ -149,6 +150,7 @@ export type CandidacyLogEventTypeAndDetails =
       details: {
         certificationAuthorityLocalAccountId: string;
         certificationAuthorityLocalAccountAccountEmail: string;
+        certificationAuthorityTransferReason: string;
       };
     }
   | {

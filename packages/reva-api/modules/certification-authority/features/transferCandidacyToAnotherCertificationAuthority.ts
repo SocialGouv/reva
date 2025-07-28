@@ -138,6 +138,7 @@ export const transferCandidacyToAnotherCertificationAuthority = async ({
     details: {
       certificationAuthorityId: newCertificationAuthority.id,
       certificationAuthorityLabel: newCertificationAuthority.label,
+      certificationAuthorityTransferReason: transferReason,
     },
     ...userInfo,
   });
