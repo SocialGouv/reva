@@ -228,6 +228,9 @@ http:
         {{- range $ip := $whitelist }}
           - {{ $ip | quote }}
         {{- end }}
+        ipStrategy:
+          excludedIPs:
+            - "10.0.0.1/24"
 
     sandboxInteropRateLimit:
       rateLimit:
