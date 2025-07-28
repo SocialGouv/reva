@@ -7,7 +7,7 @@ import { graphql } from "@/graphql/generated";
 import { CertificationPageContent } from "./_components/certification-page-content/CertificationPageContent";
 
 const getCertificationAndCohorteInfoQuery = graphql(`
-  query getCertificationForCertificationPage(
+  query getCertificationAndCohorteInfoForCertificationPage(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
     $certificationId: ID!
