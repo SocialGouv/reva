@@ -57,7 +57,7 @@ const CandidateProfilePage = () => {
             ></option>
             {degrees?.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.longLabel}
+                Niveau {d.level}
               </option>
             ))}
           </Select>
@@ -76,7 +76,7 @@ const CandidateProfilePage = () => {
             ></option>
             {degrees?.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.longLabel}
+                Niveau {d.level}
               </option>
             ))}
           </Select>

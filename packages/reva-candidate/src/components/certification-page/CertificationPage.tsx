@@ -53,7 +53,6 @@ export const CertificationPage = async ({
         />
         <Tile
           title={`Niveau ${certification.level}`}
-          desc={getLevelDesc(certification.level)}
           classes={{ content: "p-0" }}
           className="w-[282px] h-auto"
           small
@@ -102,26 +101,3 @@ export const CertificationPage = async ({
     <UsefulResources />
   </>
 );
-
-const getLevelDesc = (level: number) => {
-  switch (level) {
-    case 1:
-      return "Sans qualification";
-    case 2:
-      return "Cléa";
-    case 3:
-      return "CAP, BEP";
-    case 4:
-      return "Baccalauréat";
-    case 5:
-      return "Bac + 2";
-    case 6:
-      return "Bac + 3 et Bac + 4";
-    case 7:
-      return "Bac + 5";
-    case 8:
-      return "Bac + 8";
-    default:
-      return "";
-  }
-};

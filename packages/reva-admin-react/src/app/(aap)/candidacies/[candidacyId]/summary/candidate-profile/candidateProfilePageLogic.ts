@@ -27,12 +27,11 @@ const getCandidateProfileQuery = graphql(`
         id
         highestDegree {
           id
-          longLabel
+          level
         }
         highestDegreeLabel
         niveauDeFormationLePlusEleve {
           id
-          label
         }
       }
     }
@@ -43,7 +42,6 @@ const getReferentialQuery = graphql(`
   query getReferentialForCandidateProfile {
     getDegrees {
       id
-      longLabel
       level
     }
   }
