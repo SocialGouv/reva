@@ -54,6 +54,7 @@ type Organism {
   adresseVille: String
   conformeNormesAccessibilite: ConformiteNormeAccessibilite
 }
+
 enum OrganismModaliteAccompagnement {
   LIEU_ACCUEIL
   A_DISTANCE
@@ -63,6 +64,10 @@ type OrganismOnDegree {
   id: UUID!
   organism: Organism!
   degree: Degree!
+}
+type OrganismPage {
+  rows: [Organism!]!
+  info: PaginationInfo!
 }
 
 enum MaisonMereAAPLegalInformationDocumentsDecisionEnum {
@@ -166,6 +171,12 @@ type Query {
     legalValidationStatus: StatutValidationInformationsJuridiquesMaisonMereAAP
   ): MaisonMereAAPsPaginated!
   organism_getMaisonMereAAPById(maisonMereAAPId: ID!): MaisonMereAAP!
+  organism_searchOrganisms(
+    offset: Int
+    limit: Int
+    certificationId: ID
+    searchText: String
+  ): OrganismPage!
 }
 
 input UpdateOrganismInput {

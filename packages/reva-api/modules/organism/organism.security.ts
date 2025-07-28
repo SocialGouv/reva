@@ -20,10 +20,16 @@ const isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism = [
   ),
 ];
 
+const isAdminOrGestionnaireVaeCollective = [
+  hasRole(["admin", "manage_vae_collective"]),
+];
+
 export const resolversSecurityMap = {
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
 
   "Query.organism_getMaisonMereAAPById": isAdminOrGestionnaireOfMaisonMereAAP,
+
+  "Query.organism_searchOrganisms": isAdminOrGestionnaireVaeCollective,
 
   "Mutation.organism_updateMaisonMereIsSignalized": isAdmin,
 

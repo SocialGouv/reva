@@ -48,6 +48,7 @@ import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismI
 import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
 import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
 import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
+import { searchOrganisms } from "./features/searchOrganisms";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateMaisonMereAAPFinancingMethods } from "./features/updateMaisonMereAAPFinancingMethods";
 import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccountSetup";
@@ -572,6 +573,15 @@ const unsafeResolvers = {
         maisonMereAAPId: string;
       },
     ) => getMaisonMereAAPById({ id: params.maisonMereAAPId }),
+    organism_searchOrganisms: async (
+      _parent: unknown,
+      params: {
+        offset?: number;
+        limit?: number;
+        certificationId?: string;
+        searchText?: string;
+      },
+    ) => searchOrganisms(params),
   },
 };
 

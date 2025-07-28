@@ -233,11 +233,6 @@ type RamdomOrganisms {
   totalRows: Int!
 }
 
-type OrganismPage {
-  rows: [Organism!]!
-  info: PaginationInfo!
-}
-
 type CandidacyCaducitePaginated {
   rows: [Candidacy!]!
   info: PaginationInfo!
