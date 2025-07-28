@@ -328,7 +328,7 @@ const PageContent = ({
             </h3>
             <Info title="Intitulé">{certification.label}</Info>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Info title="Niveau">{certification.degree.label}</Info>
+              <Info title="Niveau">Niveau {certification.degree.level}</Info>
               <Info title="Type">{certification.typeDiplome || "Inconnu"}</Info>
               <Info title="Date de publication">
                 {certification.rncpPublishedAt

@@ -15,7 +15,6 @@ const organismAndReferentialQuery = graphql(`
       managedDegrees {
         degree {
           id
-          label
         }
       }
       formacodes {
@@ -29,7 +28,6 @@ const organismAndReferentialQuery = graphql(`
     }
     getDegrees {
       id
-      longLabel
       level
     }
     getFormacodes {

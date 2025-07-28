@@ -141,7 +141,7 @@ export default function OnSitePage() {
             <Accordion label="Niveaux" defaultExpanded>
               <div className="flex flex-wrap gap-2">
                 {organism.managedDegrees?.map((d) => (
-                  <Tag key={d.id}>{d.degree.label}</Tag>
+                  <Tag key={d.id}>Niveau {d.degree.level}</Tag>
                 ))}
               </div>
             </Accordion>

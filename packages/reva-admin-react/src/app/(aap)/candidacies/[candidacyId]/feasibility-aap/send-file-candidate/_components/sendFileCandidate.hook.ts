@@ -91,7 +91,6 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             codeRncp
             level
             degree {
-              longLabel
               level
             }
           }
@@ -110,10 +109,10 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           certificateSkills
           candidate {
             highestDegree {
-              longLabel
+              level
             }
             niveauDeFormationLePlusEleve {
-              longLabel
+              level
             }
             highestDegreeLabel
             firstname

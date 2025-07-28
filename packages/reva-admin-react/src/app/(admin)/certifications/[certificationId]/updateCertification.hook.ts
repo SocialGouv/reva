@@ -45,7 +45,7 @@ const getCertificationQuery = graphql(`
       }
       degree {
         id
-        label
+        level
       }
       domains {
         id

@@ -28,7 +28,7 @@ const getOrganismQuery = graphql(`
         id
         degree {
           id
-          label
+          level
         }
       }
       formacodes {

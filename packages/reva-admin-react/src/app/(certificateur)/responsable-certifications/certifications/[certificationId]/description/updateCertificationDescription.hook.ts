@@ -29,7 +29,7 @@ const getCertificationQuery = graphql(`
       juryEstimatedCost
       degree {
         id
-        label
+        level
       }
       domains {
         id

@@ -106,7 +106,7 @@ const FormacodesCcnsDegreesForm = ({
           .filter((d) => d.level > 2)
           .map((d) => ({
             id: d.id,
-            label: d.longLabel,
+            label: `Niveau ${d.level}`,
             level: d.level,
             checked: !!organismManagedDegrees.find((omd) => omd.id === d.id),
           })),

@@ -114,7 +114,6 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           codeRncp
           level
           degree {
-            longLabel
             level
           }
         }
@@ -133,10 +132,10 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         certificateSkills
         candidate {
           highestDegree {
-            longLabel
+            level
           }
           niveauDeFormationLePlusEleve {
-            longLabel
+            level
           }
           highestDegreeLabel
           firstname

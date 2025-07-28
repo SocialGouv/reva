@@ -78,7 +78,7 @@ const getMaisonMereAAP = graphql(`
           id
           degree {
             id
-            longLabel
+            level
           }
         }
       }
@@ -161,7 +161,7 @@ const MaisonMereAAPPage = () => {
                 <Info title="Niveaux de diplômes couverts:">
                   <ul>
                     {o.managedDegrees.map((d) => (
-                      <li key={d.id}>{d.degree.longLabel}</li>
+                      <li key={d.id}>Niveau {d.degree.level}</li>
                     ))}
                   </ul>
                 </Info>
