@@ -31,7 +31,7 @@ export default function CertificationSummaryCard({
     codeRncp: string;
     label: string;
     degree: {
-      label: string;
+      level: number;
     };
     typeDiplome?: string | null;
     rncpEffectiveAt?: number | null;
@@ -80,7 +80,7 @@ export default function CertificationSummaryCard({
           <h3 className="mb-0">{certification.label}</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Info title="Niveau">{certification.degree.label}</Info>
+          <Info title="Niveau">{certification.degree.level}</Info>
           <Info title="Type de certification">
             {certification.typeDiplome || "Inconnu"}
           </Info>
