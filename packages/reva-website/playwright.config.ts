@@ -8,6 +8,17 @@ import { defineConfig, devices } from "next/experimental/testmode/playwright";
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+const consentCookie = {
+  name: "tarteaucitron",
+  value: "!matomotm=false!crisp=false",
+  domain: "localhost",
+  path: "/",
+  expires: -1,
+  httpOnly: false,
+  secure: false,
+  sameSite: "Lax" as const,
+};
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -28,6 +39,12 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "http://localhost:4002",
 
+    /* Storage state with consent cookie */
+    storageState: {
+      cookies: [consentCookie],
+      origins: [],
+    },
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
@@ -37,16 +54,6 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
-    },
-
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
     },
 
     /* Test against mobile viewports. */

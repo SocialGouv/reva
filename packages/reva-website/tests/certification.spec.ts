@@ -13,17 +13,6 @@ const strapi = graphql.link("https://strapi.vae.gouv.fr/graphql");
 
 const chaudronnier = certificationBtsChaudronnierData.data.getCertification;
 
-test.beforeEach(async ({ page }) => {
-  await page.context().addCookies([
-    {
-      name: "tarteaucitron",
-      value: "!matomotm=false!crisp=false",
-      path: "/",
-      domain: "localhost",
-    },
-  ]);
-});
-
 test.use({
   mswHandlers: [
     [
