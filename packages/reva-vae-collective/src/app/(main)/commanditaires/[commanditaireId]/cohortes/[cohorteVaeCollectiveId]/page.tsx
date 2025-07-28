@@ -3,6 +3,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import Link from "next/link";
 
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
+import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
 import { graphql } from "@/graphql/generated";
@@ -16,41 +17,43 @@ const getCohorteById = async (
 ) => {
   const accessToken = await getAccessTokenFromCookie();
 
-  const result = await client.query(
-    graphql(`
-      query getCohorteByIdForCohortePage(
-        $commanditaireVaeCollectiveId: ID!
-        $cohorteVaeCollectiveId: ID!
-      ) {
-        vaeCollective_getCohorteVaeCollectiveById(
-          commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
-          cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+  const result = throwUrqlErrors(
+    await client.query(
+      graphql(`
+        query getCohorteByIdForCohortePage(
+          $commanditaireVaeCollectiveId: ID!
+          $cohorteVaeCollectiveId: ID!
         ) {
-          id
-          nom
-          status
-          certificationCohorteVaeCollectives {
+          vaeCollective_getCohorteVaeCollectiveById(
+            commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+            cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+          ) {
             id
-            certification {
+            nom
+            status
+            certificationCohorteVaeCollectives {
               id
-              label
-              codeRncp
+              certification {
+                id
+                label
+                codeRncp
+              }
             }
           }
         }
-      }
-    `),
-    {
-      commanditaireVaeCollectiveId,
-      cohorteVaeCollectiveId,
-    },
-    {
-      fetchOptions: {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+      `),
+      {
+        commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId,
+      },
+      {
+        fetchOptions: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
       },
-    },
+    ),
   );
 
   if (!result.data?.vaeCollective_getCohorteVaeCollectiveById) {
