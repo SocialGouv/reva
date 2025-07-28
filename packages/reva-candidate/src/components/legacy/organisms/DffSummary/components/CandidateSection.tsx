@@ -74,11 +74,9 @@ export default function CandidateSection({
       </p>
       <h3>Niveau de formation</h3>
       <p className="mb-0">Niveau de formation le plus élevé</p>
-      <p className="mb-2 font-medium">
-        {niveauDeFormationLePlusEleve?.longLabel}
-      </p>
+      <p className="mb-2 font-medium">{niveauDeFormationLePlusEleve?.level}</p>
       <p className="mb-0">Niveau de la certification obtenue la plus élevée</p>
-      <p className="mb-2 font-medium">{highestDegree?.longLabel}</p>
+      <p className="mb-2 font-medium">{highestDegree?.level}</p>
       {highestDegreeLabel && (
         <>
           <p className="mb-0">

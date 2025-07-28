@@ -44,10 +44,10 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         label
       }
       highestDegree {
-        longLabel
+        level
       }
       niveauDeFormationLePlusEleve {
-        longLabel
+        level
       }
       highestDegreeLabel
       candidacy {
@@ -74,7 +74,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           level
           codeRncp
           degree {
-            longLabel
             level
           }
         }
