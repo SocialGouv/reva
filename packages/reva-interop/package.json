@@ -16,7 +16,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --color routes utils"
+    "lint": "eslint --color routes utils",
+    "postinstall": "npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts"
   },
   "author": "",
   "devDependencies": {
