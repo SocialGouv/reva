@@ -1,0 +1,132 @@
+import { Tile } from "@codegouvfr/react-dsfr/Tile";
+
+type Organism = {
+  label: string;
+  adresseNumeroEtNomDeRue?: string | null;
+  adresseCodePostal?: string | null;
+  adresseVille?: string | null;
+  emailContact?: string | null;
+  telephone?: string | null;
+};
+
+export const OrganismCard = ({
+  commanditaireId,
+  cohorteVaeCollectiveId,
+  organism,
+  certificationSelected,
+  disabled,
+  className,
+}: {
+  commanditaireId: string;
+  cohorteVaeCollectiveId: string;
+  organism?: Organism | null;
+  certificationSelected?: boolean;
+  disabled: boolean;
+  className?: string;
+}) =>
+  organism ? (
+    <FilledOrganismCard
+      commanditaireId={commanditaireId}
+      cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+      organism={organism}
+      disabled={disabled}
+      className={className}
+    />
+  ) : (
+    <EmptyOrganismCard
+      commanditaireId={commanditaireId}
+      cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+      disabled={disabled}
+      certificationSelected={certificationSelected}
+      className={className}
+    />
+  );
+
+const EmptyOrganismCard = ({
+  commanditaireId,
+  cohorteVaeCollectiveId,
+  disabled,
+  certificationSelected,
+  className,
+}: {
+  commanditaireId: string;
+  cohorteVaeCollectiveId: string;
+  disabled: boolean;
+  certificationSelected?: boolean;
+  className?: string;
+}) => {
+  const additionalProps = disabled
+    ? { disabled: true, buttonProps: { disabled: true } }
+    : {
+        enlargeLinkOrButton: true,
+        linkProps: {
+          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/aaps`,
+        },
+      };
+
+  return (
+    <Tile
+      data-testid="empty-organism-card"
+      className={className || ""}
+      title="Architecte Accompagnateur de parcours"
+      detail={
+        certificationSelected
+          ? "Choisir un AAP qui sera en charge de cette cohorte."
+          : "Liste accessible une fois la certification sélectionnée."
+      }
+      small
+      orientation="horizontal"
+      {...additionalProps}
+    />
+  );
+};
+
+const FilledOrganismCard = ({
+  commanditaireId,
+  cohorteVaeCollectiveId,
+  organism,
+  disabled,
+  className,
+}: {
+  commanditaireId: string;
+  cohorteVaeCollectiveId: string;
+  organism: Organism;
+  disabled: boolean;
+  className?: string;
+}) => {
+  const additionalProps = disabled
+    ? { disabled: true, buttonProps: { disabled: true } }
+    : {
+        enlargeLinkOrButton: true,
+        linkProps: {
+          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/aaps`,
+        },
+      };
+
+  return (
+    <Tile
+      data-testid="filled-organism-card"
+      className={className || ""}
+      title="Architecte Accompagnateur de parcours"
+      desc={
+        <>
+          {organism.label}
+          <br />
+          {[
+            organism.adresseNumeroEtNomDeRue,
+            organism.adresseCodePostal,
+            organism.adresseVille,
+          ].join(" - ")}
+          <br />
+          {organism.emailContact}
+          <br />
+          {organism.telephone}
+        </>
+      }
+      detail="Changer d'AAP"
+      small
+      orientation="horizontal"
+      {...additionalProps}
+    />
+  );
+};

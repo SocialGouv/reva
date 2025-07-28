@@ -10,6 +10,7 @@ import { graphql } from "@/graphql/generated";
 
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
+import { OrganismCard } from "./_components/organism-card/OrganismCard";
 
 const getCohorteById = async (
   commanditaireVaeCollectiveId: string,
@@ -37,6 +38,18 @@ const getCohorteById = async (
                 id
                 label
                 codeRncp
+              }
+              certificationCohorteVaeCollectiveOnOrganisms {
+                id
+                organism {
+                  id
+                  label
+                  adresseNumeroEtNomDeRue
+                  adresseCodePostal
+                  adresseVille
+                  emailContact
+                  telephone
+                }
               }
             }
           }
@@ -72,6 +85,15 @@ export default async function CohortePage({
 
   const cohorte = await getCohorteById(commanditaireId, cohorteVaeCollectiveId);
 
+  const certification =
+    cohorte.certificationCohorteVaeCollectives?.[0]?.certification;
+
+  const organism =
+    cohorte.certificationCohorteVaeCollectives?.[0]
+      ?.certificationCohorteVaeCollectiveOnOrganisms?.[0]?.organism;
+
+  const certificationSelected = !!certification;
+
   return (
     <div className="flex flex-col w-full">
       <Breadcrumb
@@ -103,10 +125,17 @@ export default async function CohortePage({
       <CertificationCard
         commanditaireId={commanditaireId}
         cohorteVaeCollectiveId={cohorteVaeCollectiveId}
-        certification={
-          cohorte.certificationCohorteVaeCollectives?.[0]?.certification
-        }
+        certification={certification}
         disabled={cohorte.status !== "BROUILLON"}
+      />
+
+      <OrganismCard
+        className="mt-8"
+        commanditaireId={commanditaireId}
+        cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+        organism={organism}
+        disabled={cohorte.status !== "BROUILLON" || !certificationSelected}
+        certificationSelected={certificationSelected}
       />
 
       <hr className="mt-8 mb-2" />
