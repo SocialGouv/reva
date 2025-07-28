@@ -156,7 +156,9 @@ http:
       rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/interop`)"
       service: interop-sandbox
       middlewares:
-        - removeHeader, sandboxInteropIpWhitelist, sandboxInteropRateLimit
+        - removeHeader
+        - sandboxInteropIpWhitelist
+        - sandboxInteropRateLimit
 
     # --- END SANDBOX ---
 
