@@ -162,7 +162,7 @@ http:
       rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/interop`)"
       service: interop-sandbox
       middlewares:
-        - removeHeader
+        - removeHeader, sandboxInteropIpWhitelist, sandboxInteropRateLimit
 
     # --- END SANDBOX ---
 
@@ -225,6 +225,20 @@ http:
       basicAuth:
         users:
           - '{{ env "BASIC_AUTH_USER_PASSWORD" }}' # htpasswd format  BASIC_AUTH_USER_PASSWORD="test:TODEFINED"
+    sandboxInteropIpWhitelist:
+      ipAllowList:
+        sourceRange: '{{ env "SANDBOX_IP_WHITELIST" }}' # comma separated list of IP addresses
+        sourceCriterion:
+          ipStrategy:
+            ipv6Subnet: 96
+
+    sandboxInteropRateLimit:
+      rateLimit:
+        average: 20
+        burst: 50
+        sourceCriterion:
+          ipStrategy:
+            ipv6Subnet: 96
   services:
     # --- BEGIN STAGING ---
 
