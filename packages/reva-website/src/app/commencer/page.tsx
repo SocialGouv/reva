@@ -39,7 +39,7 @@ export default function CommencerPage() {
               title="Je dispose d'un code VAE collective"
               desc="VAE collective"
               linkProps={{
-                href: "/espace-candidat",
+                href: "/inscription-candidat/vae-collective",
               }}
               enlargeLinkOrButton
               orientation="vertical"
