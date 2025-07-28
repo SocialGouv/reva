@@ -15,7 +15,8 @@
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --color routes utils"
   },
   "author": "",
   "devDependencies": {
@@ -34,6 +35,9 @@
     "typescript-eslint": "^8.34.0"
   },
   "dependencies": {
+    "@eslint/compat": "^1.2.9",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.28.0",
     "@fastify/formbody": "^8.0.2",
     "@fastify/multipart": "^9.0.3",
     "@fastify/swagger": "^9.5.1",
@@ -41,6 +45,11 @@
     "@fastify/type-provider-json-schema-to-ts": "^5.0.0",
     "@urql/core": "^5.1.1",
     "dotenv": "^16.5.0",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-import-resolver-typescript": "^4.4.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.4.1",
     "fastify": "^5.4.0",
     "jose": "^6.0.11"
   }

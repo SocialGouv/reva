@@ -368,7 +368,7 @@ export const fichierSchema = {
   },
 } as const;
 
-export const informationJurySchema = {
+const informationJurySchema = {
   $id: "http://vae.gouv.fr/components/schemas/InformationJury",
   type: "object",
   properties: {
@@ -509,7 +509,7 @@ export const decisionDossierDeValidationSchema = {
   example: "SIGNALE",
 } as const;
 
-export const dossierDeValidationDecisionSchema = {
+const dossierDeValidationDecisionSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecision",
   type: "object",
   properties: {
