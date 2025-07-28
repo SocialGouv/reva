@@ -223,7 +223,10 @@ http:
           - '{{ env "BASIC_AUTH_USER_PASSWORD" }}' # htpasswd format  BASIC_AUTH_USER_PASSWORD="test:TODEFINED"
     sandboxInteropIpWhitelist:
       ipWhiteList:
-        sourceRange: '{{ env "SANDBOX_IP_WHITELIST" }}' # comma separated list of IP addresses
+        sourceRange:
+        {{ range splitList "," env "SANDBOX_INTEROP_IP_WHITELIST" }}
+          - {{ . }}
+        {{ end }}
 
     sandboxInteropRateLimit:
       rateLimit:
