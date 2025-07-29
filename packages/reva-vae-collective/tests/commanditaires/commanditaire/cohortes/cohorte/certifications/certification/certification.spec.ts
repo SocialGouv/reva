@@ -86,3 +86,23 @@ test("it should let me select a certification and redirect me to the cohorte det
     "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
   );
 });
+
+test("it should not display the select certification button when the certification selection is disabled", async ({
+  page,
+}) => {
+  await login({ page, role: "gestionnaireVaeCollective" });
+
+  await page.goto(
+    "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications/b122423f-6eb6-4d80-94b2-8e57fd0e4cd7?certificationSelectionDisabled=true",
+  );
+
+  await expect(
+    page.getByRole("heading", {
+      name: "Brevet de technicien supérieur - Construction et aménagement de véhicules",
+    }),
+  ).toBeVisible();
+
+  await expect(
+    page.getByRole("button", { name: "Choisir cette certification" }),
+  ).not.toBeVisible();
+});

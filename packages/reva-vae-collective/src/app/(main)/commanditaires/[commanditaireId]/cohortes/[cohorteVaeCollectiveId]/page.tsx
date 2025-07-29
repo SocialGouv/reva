@@ -126,7 +126,7 @@ export default async function CohortePage({
         href={
           cohorte.status === "BROUILLON"
             ? `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`
-            : `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certification?.id}`
+            : `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certification?.id}?certificationSelectionDisabled=true`
         }
         certification={certification}
       />

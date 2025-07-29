@@ -84,15 +84,24 @@ const getCertificationAndCohorteInfo = async ({
 
 export default async function CertificationPage({
   params,
+  searchParams,
 }: {
   params: Promise<{
     commanditaireId: string;
     cohorteVaeCollectiveId: string;
     certificationId: string;
   }>;
+  searchParams: Promise<{ certificationSelectionDisabled?: string }>;
 }) {
   const { commanditaireId, cohorteVaeCollectiveId, certificationId } =
     await params;
+
+  const {
+    certificationSelectionDisabled: certificationSelectionDisabledAsString,
+  } = await searchParams;
+
+  const certificationSelectionDisabled =
+    certificationSelectionDisabledAsString === "true";
 
   const { cohorteVaeCollective, certification } =
     await getCertificationAndCohorteInfo({
@@ -106,6 +115,7 @@ export default async function CertificationPage({
       commanditaireId={commanditaireId}
       cohorteVaeCollective={cohorteVaeCollective}
       certification={certification}
+      certificationSelectionDisabled={certificationSelectionDisabled}
     />
   );
 }

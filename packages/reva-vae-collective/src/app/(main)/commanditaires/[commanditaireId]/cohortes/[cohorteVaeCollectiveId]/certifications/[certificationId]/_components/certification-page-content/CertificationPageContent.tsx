@@ -15,6 +15,7 @@ export const CertificationPageContent = ({
   commanditaireId,
   cohorteVaeCollective,
   certification,
+  certificationSelectionDisabled,
 }: {
   commanditaireId: string;
   cohorteVaeCollective: {
@@ -35,6 +36,7 @@ export const CertificationPageContent = ({
     juryEstimatedCost?: number | null;
     juryPlace?: string | null;
   };
+  certificationSelectionDisabled?: boolean;
 }) => (
   <div className="flex-1 flex">
     <div className="flex flex-col">
@@ -96,12 +98,14 @@ export const CertificationPageContent = ({
             imageUrl="/vae-collective/certifications/pictograms/information.svg"
             imageAlt="icône information"
           />
-          <SelectCertificationButton
-            className="ml-auto mt-auto"
-            commanditaireVaeCollectiveId={commanditaireId}
-            cohorteVaeCollectiveId={cohorteVaeCollective.id}
-            certificationId={certification.id}
-          />
+          {!certificationSelectionDisabled && (
+            <SelectCertificationButton
+              className="ml-auto mt-auto"
+              commanditaireVaeCollectiveId={commanditaireId}
+              cohorteVaeCollectiveId={cohorteVaeCollective.id}
+              certificationId={certification.id}
+            />
+          )}
         </div>
       </div>
 
@@ -148,11 +152,13 @@ export const CertificationPageContent = ({
         >
           Retour
         </Button>
-        <SelectCertificationButton
-          commanditaireVaeCollectiveId={commanditaireId}
-          cohorteVaeCollectiveId={cohorteVaeCollective.id}
-          certificationId={certification.id}
-        />
+        {!certificationSelectionDisabled && (
+          <SelectCertificationButton
+            commanditaireVaeCollectiveId={commanditaireId}
+            cohorteVaeCollectiveId={cohorteVaeCollective.id}
+            certificationId={certification.id}
+          />
+        )}
       </div>
     </div>
   </div>
