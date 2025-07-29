@@ -10,6 +10,7 @@ import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 import { UsefulResources } from "./useful-resources/UserfulResources";
+import { VaeCollectiveButton } from "./VaeCollectiveButton";
 
 export const CertificationPageContent = ({
   certification,
@@ -79,16 +80,17 @@ export const CertificationPageContent = ({
           />
         </div>
       </div>
-
-      <Button
-        className="mt-12"
-        priority="primary"
-        linkProps={{
-          href: `/inscription-candidat/?certificationId=${certification?.id}`,
-        }}
-      >
-        Choisir ce diplôme
-      </Button>
+      <div className="flex gap-4 mt-12">
+        <Button
+          priority="primary"
+          linkProps={{
+            href: `/inscription-candidat/?certificationId=${certification?.id}`,
+          }}
+        >
+          Choisir ce diplôme
+        </Button>
+        <VaeCollectiveButton />
+      </div>
       <Tabs
         className="mt-12"
         tabs={[
