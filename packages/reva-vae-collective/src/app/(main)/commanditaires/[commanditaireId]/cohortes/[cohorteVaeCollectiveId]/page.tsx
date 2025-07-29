@@ -123,9 +123,12 @@ export default async function CohortePage({
       </p>
 
       <CertificationCard
-        href={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`}
+        href={
+          cohorte.status === "BROUILLON"
+            ? `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`
+            : `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certification?.id}`
+        }
         certification={certification}
-        disabled={cohorte.status !== "BROUILLON"}
       />
 
       <OrganismCard

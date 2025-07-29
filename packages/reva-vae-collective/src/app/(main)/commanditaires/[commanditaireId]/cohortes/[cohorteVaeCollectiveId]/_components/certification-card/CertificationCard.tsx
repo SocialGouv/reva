@@ -2,68 +2,37 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 export const CertificationCard = ({
   certification,
-  disabled,
   href,
 }: {
   href?: string;
   certification?: { label: string; codeRncp: string } | null;
-  disabled?: boolean;
 }) =>
   certification ? (
-    <FilledCertificationCard
-      certification={certification}
-      disabled={disabled}
-      href={href}
-    />
+    <FilledCertificationCard certification={certification} href={href} />
   ) : (
-    <EmptyCertificationCard disabled={disabled} href={href} />
+    <EmptyCertificationCard href={href} />
   );
 
-const EmptyCertificationCard = ({
-  disabled,
-  href,
-}: {
-  disabled?: boolean;
-  href?: string;
-}) => {
-  const additionalProps = disabled
-    ? { disabled: true, buttonProps: { disabled: true } }
-    : {
-        enlargeLinkOrButton: true,
-        linkProps: {
-          href: href as string,
-        },
-      };
-
-  return (
-    <Tile
-      data-testid="empty-certification-card"
-      title="Choisir la certification visée par cette cohorte"
-      small
-      orientation="horizontal"
-      {...additionalProps}
-    />
-  );
-};
+const EmptyCertificationCard = ({ href }: { href?: string }) => (
+  <Tile
+    data-testid="empty-certification-card"
+    title="Choisir la certification visée par cette cohorte"
+    small
+    orientation="horizontal"
+    enlargeLinkOrButton={true}
+    linkProps={{
+      href: href as string,
+    }}
+  />
+);
 
 const FilledCertificationCard = ({
   certification,
-  disabled,
   href,
 }: {
   certification: { label: string; codeRncp: string };
-  disabled?: boolean;
   href?: string;
 }) => {
-  const additionalProps = disabled
-    ? { disabled: true, buttonProps: { disabled: true } }
-    : {
-        enlargeLinkOrButton: true,
-        linkProps: {
-          href: href as string,
-        },
-      };
-
   return (
     <Tile
       data-testid="filled-certification-card"
@@ -86,7 +55,10 @@ const FilledCertificationCard = ({
       }
       small
       orientation="horizontal"
-      {...additionalProps}
+      enlargeLinkOrButton={true}
+      linkProps={{
+        href: href as string,
+      }}
     />
   );
 };

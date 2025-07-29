@@ -221,42 +221,6 @@ test.describe("certification card", () => {
         );
       });
     });
-
-    test.describe("when the cohorte status is 'PUBLIE'", () => {
-      test.use({
-        mswHandlers: [
-          [
-            fvae.query("getCohorteByIdForCohortePage", () => {
-              return HttpResponse.json({
-                data: {
-                  vaeCollective_getCohorteVaeCollectiveById: {
-                    id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
-                    nom: "macohorte",
-                    status: "PUBLIE",
-                    certificationCohorteVaeCollectives: [],
-                  },
-                },
-              });
-            }),
-          ],
-          { scope: "test" },
-        ],
-      });
-
-      test("when i access the page, the empty certification card should be disabled", async ({
-        page,
-      }) => {
-        await login({ page, role: "gestionnaireVaeCollective" });
-
-        await page.goto(
-          "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
-        );
-
-        await expect(
-          await page.getByTestId("empty-certification-card").locator("button"),
-        ).toBeDisabled();
-      });
-    });
   });
 
   test.describe("when the certification is set", () => {
@@ -354,7 +318,7 @@ test.describe("certification card", () => {
         ],
       });
 
-      test("when i access the page, the filled certification card should be disabled", async ({
+      test("when i click on the filled certification card, i should be redirected to the certification details page", async ({
         page,
       }) => {
         await login({ page, role: "gestionnaireVaeCollective" });
@@ -363,9 +327,11 @@ test.describe("certification card", () => {
           "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
         );
 
-        await expect(
-          await page.getByTestId("filled-certification-card").locator("button"),
-        ).toBeDisabled();
+        await page.getByTestId("filled-certification-card").click();
+
+        await expect(page).toHaveURL(
+          "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications/0eda2cbf-78ae-47af-9f28-34d05f972712",
+        );
       });
     });
   });
@@ -454,6 +420,7 @@ test.describe("organism card", () => {
       });
     });
   });
+
   test.describe("when the certification is set", () => {
     test.describe("when the organism is not set", () => {
       test.describe("when the cohorte status is 'BROUILLON'", () => {
