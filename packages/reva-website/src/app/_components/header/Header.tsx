@@ -150,20 +150,24 @@ export const Header = (props: { className?: string }) => {
       }}
       serviceTitle="Le service public de la VAE"
       classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
-      quickAccessItems={[
-        <ConnectionDropdown key="connection" />,
-        <Button
-          key="start"
-          priority="secondary"
-          linkProps={{
-            href: isFeatureActive("VAE_COLLECTIVE")
-              ? "/commencer"
-              : "/espace-candidat",
-          }}
-        >
-          Commencer une VAE
-        </Button>,
-      ]}
+      quickAccessItems={
+        isClient
+          ? [
+              <ConnectionDropdown key="connection" />,
+              <Button
+                key="start"
+                priority="secondary"
+                linkProps={{
+                  href: isFeatureActive("VAE_COLLECTIVE")
+                    ? "/commencer"
+                    : "/espace-candidat",
+                }}
+              >
+                Commencer une VAE
+              </Button>,
+            ]
+          : []
+      }
       navigation={isClient ? navigation : []}
     />
   );
