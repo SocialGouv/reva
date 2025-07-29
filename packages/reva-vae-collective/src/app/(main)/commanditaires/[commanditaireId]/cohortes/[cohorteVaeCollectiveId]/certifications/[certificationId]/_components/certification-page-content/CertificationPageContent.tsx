@@ -1,4 +1,3 @@
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
@@ -40,30 +39,6 @@ export const CertificationPageContent = ({
 }) => (
   <div className="flex-1 flex">
     <div className="flex flex-col">
-      <Breadcrumb
-        className="mt-0 mb-4"
-        currentPageLabel={certification?.label}
-        segments={[
-          {
-            label: "Cohortes",
-            linkProps: {
-              href: `/commanditaires/${commanditaireId}/cohortes/`,
-            },
-          },
-          {
-            label: cohorteVaeCollective.nom,
-            linkProps: {
-              href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollective.id}`,
-            },
-          },
-          {
-            label: "Certifications",
-            linkProps: {
-              href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollective.id}/certifications`,
-            },
-          },
-        ]}
-      />
       <div className="flex flex-col gap-4">
         <h1 data-testid="certification-label" className="m-0">
           {certification?.label}
