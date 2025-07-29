@@ -99,8 +99,6 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
     "candidacy_actualisation",
   );
 
-  const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
-
   const {
     data: getFeasibilityCountAndCohortesVaeCollectivesByCategoryResponse,
   } = useQuery({
@@ -354,7 +352,7 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       text: `Jurys (${juryCount})`,
       expandedByDefault: currentPathname.startsWith("/candidacies/juries"),
     },
-    ...(isVaeCollectiveFeatureActive ? vaeCollectiveItems : []),
+    ...vaeCollectiveItems,
     menuItem({
       text: `Dossiers non recevables (${feasibilityCountByCategory?.REJECTED || 0})`,
       path: "/candidacies/feasibilities",
