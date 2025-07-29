@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
@@ -94,3 +96,53 @@ export const searchOrganismsAndGetCohorteInfo = async ({
     organisms: result.data.organism_searchOrganisms,
   };
 };
+
+const updateCohorteVAECollectiveOrganismQuery = graphql(`
+  mutation updateCohorteVAECollectiveOrganism(
+    $commanditaireVaeCollectiveId: ID!
+    $cohorteVaeCollectiveId: ID!
+    $organismId: ID!
+  ) {
+    vaeCollective_updateCohorteVAECollectiveOrganism(
+      commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
+      cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+      organismId: $organismId
+    ) {
+      id
+    }
+  }
+`);
+
+export async function updateCohorteVAECollectiveOrganism({
+  commanditaireVaeCollectiveId,
+  cohorteVaeCollectiveId,
+  organismId,
+}: {
+  commanditaireVaeCollectiveId: string;
+  cohorteVaeCollectiveId: string;
+  organismId: string;
+}) {
+  const accessToken = await getAccessTokenFromCookie();
+
+  throwUrqlErrors(
+    await client.mutation(
+      updateCohorteVAECollectiveOrganismQuery,
+      {
+        commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId,
+        organismId,
+      },
+      {
+        fetchOptions: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      },
+    ),
+  );
+
+  redirect(
+    `/commanditaires/${commanditaireVaeCollectiveId}/cohortes/${cohorteVaeCollectiveId}`,
+  );
+}

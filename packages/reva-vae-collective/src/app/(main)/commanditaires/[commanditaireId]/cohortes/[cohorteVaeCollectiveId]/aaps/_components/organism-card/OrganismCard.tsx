@@ -3,6 +3,8 @@
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
+import { updateCohorteVAECollectiveOrganism } from "../../actions";
+
 export const OrganismCard = ({
   organism,
   commanditaireId,
@@ -77,7 +79,11 @@ export const OrganismCard = ({
       onClick: (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("clicked");
+        updateCohorteVAECollectiveOrganism({
+          commanditaireVaeCollectiveId: commanditaireId,
+          cohorteVaeCollectiveId,
+          organismId: organism.id,
+        });
       },
     }}
   />
