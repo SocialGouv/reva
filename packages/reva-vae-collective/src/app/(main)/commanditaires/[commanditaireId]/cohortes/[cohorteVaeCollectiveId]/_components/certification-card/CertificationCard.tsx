@@ -1,4 +1,4 @@
-import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import { Card } from "@codegouvfr/react-dsfr/Card";
 
 export const CertificationCard = ({
   certification,
@@ -14,12 +14,11 @@ export const CertificationCard = ({
   );
 
 const EmptyCertificationCard = ({ href }: { href?: string }) => (
-  <Tile
+  <Card
     data-testid="empty-certification-card"
     title="Choisir la certification visée par cette cohorte"
-    small
-    orientation="horizontal"
-    enlargeLinkOrButton={true}
+    size="small"
+    enlargeLink={true}
     linkProps={{
       href: href as string,
     }}
@@ -34,7 +33,7 @@ const FilledCertificationCard = ({
   href?: string;
 }) => {
   return (
-    <Tile
+    <Card
       data-testid="filled-certification-card"
       title={certification.label}
       start={
@@ -43,19 +42,18 @@ const FilledCertificationCard = ({
           RNCP {certification.codeRncp}
         </div>
       }
-      detail={
-        <>
+      endDetail={
+        <span className="text-xs ">
           Pour changer de certification, consultez la fiche détaillée de cette
           certification.
           <br />
           Le changement de certification supprimera la sélection de l’Architecte
           Accompagnateur de parcours en cours s’il ne s’est pas positionné sur
           la nouvelle certification.
-        </>
+        </span>
       }
-      small
-      orientation="horizontal"
-      enlargeLinkOrButton={true}
+      size="small"
+      enlargeLink={true}
       linkProps={{
         href: href as string,
       }}
