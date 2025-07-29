@@ -11,13 +11,9 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 test.use({
   mswHandlers: [
     [
-      fvae.query("getCertificationAndCohorteInfoForCertificationPage", () =>
+      fvae.query("getCertificationInfoForCertificationPage", () =>
         HttpResponse.json({
           data: {
-            vaeCollective_getCohorteVaeCollectiveById: {
-              id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
-              nom: "ma cohorte",
-            },
             getCertification: {
               id: "b122423f-6eb6-4d80-94b2-8e57fd0e4cd7",
               codeRncp: "40029",

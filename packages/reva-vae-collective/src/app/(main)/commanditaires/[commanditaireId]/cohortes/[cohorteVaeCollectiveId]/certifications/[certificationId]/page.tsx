@@ -6,19 +6,8 @@ import { graphql } from "@/graphql/generated";
 
 import { CertificationPageContent } from "./_components/certification-page-content/CertificationPageContent";
 
-const getCertificationAndCohorteInfoQuery = graphql(`
-  query getCertificationAndCohorteInfoForCertificationPage(
-    $commanditaireVaeCollectiveId: ID!
-    $cohorteVaeCollectiveId: ID!
-    $certificationId: ID!
-  ) {
-    vaeCollective_getCohorteVaeCollectiveById(
-      commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
-      cohorteVaeCollectiveId: $cohorteVaeCollectiveId
-    ) {
-      id
-      nom
-    }
+const getCertificationInfoQuery = graphql(`
+  query getCertificationInfoForCertificationPage($certificationId: ID!) {
     getCertification(certificationId: $certificationId) {
       id
       codeRncp
@@ -39,23 +28,17 @@ const getCertificationAndCohorteInfoQuery = graphql(`
   }
 `);
 
-const getCertificationAndCohorteInfo = async ({
-  commanditaireVaeCollectiveId,
-  cohorteVaeCollectiveId,
+const getCertificationInfo = async ({
   certificationId,
 }: {
-  commanditaireVaeCollectiveId: string;
-  cohorteVaeCollectiveId: string;
   certificationId: string;
 }) => {
   const accessToken = await getAccessTokenFromCookie();
 
   const result = throwUrqlErrors(
     await client.query(
-      getCertificationAndCohorteInfoQuery,
+      getCertificationInfoQuery,
       {
-        commanditaireVaeCollectiveId,
-        cohorteVaeCollectiveId,
         certificationId,
       },
       {
@@ -72,14 +55,7 @@ const getCertificationAndCohorteInfo = async ({
     throw new Error("Certification non trouvée");
   }
 
-  if (!result.data?.vaeCollective_getCohorteVaeCollectiveById) {
-    throw new Error("Cohorte non trouvée");
-  }
-
-  return {
-    cohorteVaeCollective: result.data.vaeCollective_getCohorteVaeCollectiveById,
-    certification: result.data.getCertification,
-  };
+  return result.data.getCertification;
 };
 
 export default async function CertificationPage({
@@ -103,17 +79,14 @@ export default async function CertificationPage({
   const certificationSelectionDisabled =
     certificationSelectionDisabledAsString === "true";
 
-  const { cohorteVaeCollective, certification } =
-    await getCertificationAndCohorteInfo({
-      commanditaireVaeCollectiveId: commanditaireId,
-      cohorteVaeCollectiveId,
-      certificationId,
-    });
+  const certification = await getCertificationInfo({
+    certificationId,
+  });
 
   return (
     <CertificationPageContent
       commanditaireId={commanditaireId}
-      cohorteVaeCollective={cohorteVaeCollective}
+      cohorteVaeCollectiveId={cohorteVaeCollectiveId}
       certification={certification}
       certificationSelectionDisabled={certificationSelectionDisabled}
     />

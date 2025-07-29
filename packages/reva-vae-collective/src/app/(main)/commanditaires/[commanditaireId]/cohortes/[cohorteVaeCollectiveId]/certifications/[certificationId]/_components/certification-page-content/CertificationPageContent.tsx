@@ -12,15 +12,12 @@ import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 
 export const CertificationPageContent = ({
   commanditaireId,
-  cohorteVaeCollective,
+  cohorteVaeCollectiveId,
   certification,
   certificationSelectionDisabled,
 }: {
   commanditaireId: string;
-  cohorteVaeCollective: {
-    id: string;
-    nom: string;
-  };
+  cohorteVaeCollectiveId: string;
   certification: {
     id: string;
     label: string;
@@ -77,7 +74,7 @@ export const CertificationPageContent = ({
             <SelectCertificationButton
               className="ml-auto mt-auto"
               commanditaireVaeCollectiveId={commanditaireId}
-              cohorteVaeCollectiveId={cohorteVaeCollective.id}
+              cohorteVaeCollectiveId={cohorteVaeCollectiveId}
               certificationId={certification.id}
             />
           )}
@@ -130,7 +127,7 @@ export const CertificationPageContent = ({
         {!certificationSelectionDisabled && (
           <SelectCertificationButton
             commanditaireVaeCollectiveId={commanditaireId}
-            cohorteVaeCollectiveId={cohorteVaeCollective.id}
+            cohorteVaeCollectiveId={cohorteVaeCollectiveId}
             certificationId={certification.id}
           />
         )}
