@@ -7,45 +7,34 @@ import { useAuth } from "../auth/auth";
 import closeIcon from "./assets/close.svg";
 import helpIcon from "./assets/help.svg";
 
-const aapHelpLinks = [
-  {
-    label: "Nouvelles fonctionnalités",
-    url: "https://www.notion.so/fabnummas/Nouveaut-s-produit-42e539695d68436abe32fcf4b146c192?pvs=4",
-  },
-  {
-    label: "Espace documentaire",
-    url: "https://www.notion.so/fabnummas/f697c4fa5fcf42d49d85428b5e0b40c5?v=9f55d3b4b2e54bd19d390ebe6febe3ea",
-  },
-  {
-    label: "Cahier des charges AAP",
-    url: "https://fabnummas.notion.site/Cahier-des-charges-ea8790303ab447cfb25b5c11c26b0d67",
-  },
-  {
-    label: "En savoir plus sur la VAE",
-    url: "https://vae.gouv.fr/savoir-plus/",
-  },
-  {
-    label: "FAQ AAP",
-    url: "https://vae.gouv.fr/faq/",
-  },
-  {
-    label: "Calendrier des webinaires",
-    url: "https://fabnummas.notion.site/Calendrier-des-webinaires-b93fb857a9ab458e934802ebbc605073",
-  },
-];
-
-const certificationAuthorityHelpLinks = [
+const sharedHelpLinks = [
   {
     label: "Nouvelles fonctionnalités",
     url: "https://fabnummas.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
   },
   {
     label: "Espace documentaire",
-    url: "https://fabnummas.notion.site/Espace-documentaire-des-certificateurs-France-VAE-659cdc012ab24c788cefbda97441510b?pvs=4",
+    url: "https://fabnummas.notion.site/Espace-documentaire-659cdc012ab24c788cefbda97441510b",
+  },
+];
+
+const aapHelpLinks = [
+  ...sharedHelpLinks,
+  {
+    label: "FAQ AAP",
+    url: "https://vae.gouv.fr/faq/",
   },
   {
+    label: "En savoir plus sur la VAE",
+    url: "https://vae.gouv.fr/savoir-plus/",
+  },
+];
+
+const certificationAuthorityHelpLinks = [
+  ...sharedHelpLinks,
+  {
     label: "FAQ",
-    url: "https://vae.gouv.fr/faq/",
+    url: "https://fabnummas.notion.site/FAQ-Certificateurs-1e0653b7be0780d1bcf6d6e6964cac63",
   },
 ];
 
