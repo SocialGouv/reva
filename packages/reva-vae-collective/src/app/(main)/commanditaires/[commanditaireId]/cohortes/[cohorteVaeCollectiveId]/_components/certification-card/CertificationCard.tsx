@@ -1,46 +1,37 @@
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 export const CertificationCard = ({
-  commanditaireId,
-  cohorteVaeCollectiveId,
   certification,
   disabled,
+  href,
 }: {
-  commanditaireId: string;
-  cohorteVaeCollectiveId: string;
+  href?: string;
   certification?: { label: string; codeRncp: string } | null;
-  disabled: boolean;
+  disabled?: boolean;
 }) =>
   certification ? (
     <FilledCertificationCard
-      commanditaireId={commanditaireId}
-      cohorteVaeCollectiveId={cohorteVaeCollectiveId}
       certification={certification}
       disabled={disabled}
+      href={href}
     />
   ) : (
-    <EmptyCertificationCard
-      commanditaireId={commanditaireId}
-      cohorteVaeCollectiveId={cohorteVaeCollectiveId}
-      disabled={disabled}
-    />
+    <EmptyCertificationCard disabled={disabled} href={href} />
   );
 
 const EmptyCertificationCard = ({
-  commanditaireId,
-  cohorteVaeCollectiveId,
   disabled,
+  href,
 }: {
-  commanditaireId: string;
-  cohorteVaeCollectiveId: string;
-  disabled: boolean;
+  disabled?: boolean;
+  href?: string;
 }) => {
   const additionalProps = disabled
     ? { disabled: true, buttonProps: { disabled: true } }
     : {
         enlargeLinkOrButton: true,
         linkProps: {
-          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
+          href: href as string,
         },
       };
 
@@ -56,22 +47,20 @@ const EmptyCertificationCard = ({
 };
 
 const FilledCertificationCard = ({
-  commanditaireId,
-  cohorteVaeCollectiveId,
   certification,
   disabled,
+  href,
 }: {
-  commanditaireId: string;
-  cohorteVaeCollectiveId: string;
   certification: { label: string; codeRncp: string };
-  disabled: boolean;
+  disabled?: boolean;
+  href?: string;
 }) => {
   const additionalProps = disabled
     ? { disabled: true, buttonProps: { disabled: true } }
     : {
         enlargeLinkOrButton: true,
         linkProps: {
-          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`,
+          href: href as string,
         },
       };
 
