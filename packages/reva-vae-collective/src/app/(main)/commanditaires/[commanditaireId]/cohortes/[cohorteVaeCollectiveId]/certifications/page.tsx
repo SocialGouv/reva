@@ -54,7 +54,7 @@ export default async function CertificationsPage({
         ]}
       />
       <h1>Certifications</h1>
-      <p className="mb-12">
+      <p className="text-xl mb-12">
         Sélectionnez la certification visée par vos candidats. Une fiche
         détaillée vous apporte des informations clefs avant de valider votre
         sélection.

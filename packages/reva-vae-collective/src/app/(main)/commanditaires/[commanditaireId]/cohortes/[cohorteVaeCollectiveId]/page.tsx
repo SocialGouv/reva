@@ -117,7 +117,7 @@ export default async function CohortePage({
           Modifier l’intitulé
         </Link>
       </div>
-      <p className="mb-12">
+      <p className="text-xl mb-12">
         Paramétrez votre cohorte, afin de générer un lien unique à transmettre
         aux candidats devant intégrer cette cohorte.
       </p>
