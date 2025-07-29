@@ -53,6 +53,15 @@ test.use({
           },
         }),
       ),
+      fvae.mutation("updateCohorteVAECollectiveOrganism", () =>
+        HttpResponse.json({
+          data: {
+            vaeCollective_updateCohorteVAECollectiveOrganism: {
+              id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+            },
+          },
+        }),
+      ),
     ],
     { scope: "test" },
   ],
@@ -86,4 +95,22 @@ test("it should update the url when i search for an aap", async ({ page }) => {
   await page.waitForURL("**/aaps*searchText*");
 
   await expect(page.url()).toContain("searchText=aap1");
+});
+
+test("it should redirect me to the cohorte page when i click on the organism card", async ({
+  page,
+}) => {
+  await login({ page, role: "gestionnaireVaeCollective" });
+
+  await page.goto(
+    "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/aaps",
+  );
+
+  await page.getByRole("search").locator("input").fill("aap1");
+
+  await page.getByTestId("organism-card").first().click();
+
+  await expect(page.url()).toContain(
+    "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/",
+  );
 });

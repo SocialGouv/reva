@@ -116,7 +116,9 @@ const FilledOrganismCard = ({
             organism.adresseNumeroEtNomDeRue,
             organism.adresseCodePostal,
             organism.adresseVille,
-          ].join(" - ")}
+          ]
+            .filter(Boolean)
+            .join(" - ")}
           <br />
           {organism.emailContact}
           <br />
