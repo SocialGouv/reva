@@ -34,7 +34,6 @@ export const CertificationPageContent = ({
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
     juryEstimatedCost?: number | null;
     juryPlace?: string | null;
-    certificationAuthorityStructure?: { label: string } | null;
   };
 }) => (
   <div className="flex-1 flex">
@@ -79,7 +78,6 @@ export const CertificationPageContent = ({
         <div className="flex flex-col md:flex-row gap-6 mt-8">
           <Tile
             title={certification.typeDiplome}
-            desc={certification?.certificationAuthorityStructure?.label}
             classes={{ content: "p-0" }}
             className="w-[282px]"
             small
@@ -90,7 +88,6 @@ export const CertificationPageContent = ({
           />
           <Tile
             title={`Niveau ${certification.level}`}
-            desc={getLevelDesc(certification.level)}
             classes={{ content: "p-0" }}
             className="w-[282px]"
             small
@@ -160,26 +157,3 @@ export const CertificationPageContent = ({
     </div>
   </div>
 );
-
-const getLevelDesc = (level: number) => {
-  switch (level) {
-    case 1:
-      return "Sans qualification";
-    case 2:
-      return "Cléa";
-    case 3:
-      return "CAP, BEP";
-    case 4:
-      return "Baccalauréat";
-    case 5:
-      return "Bac + 2";
-    case 6:
-      return "Bac + 3 et Bac + 4";
-    case 7:
-      return "Bac + 5";
-    case 8:
-      return "Bac + 8";
-    default:
-      return "";
-  }
-};
