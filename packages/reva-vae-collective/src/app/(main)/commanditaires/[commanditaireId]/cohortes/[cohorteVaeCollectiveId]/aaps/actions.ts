@@ -89,7 +89,6 @@ export const searchOrganismsAndGetCohorteInfo = async ({
     throw new Error("Cohorte non trouvée");
   }
 
-  console.log(result.data.organism_searchOrganisms);
   return {
     cohorte: result.data.vaeCollective_getCohorteVaeCollectiveById,
     organisms: result.data.organism_searchOrganisms,
