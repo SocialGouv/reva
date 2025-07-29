@@ -30,7 +30,7 @@ export default async function AapsPage({
   });
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col fr-container">
       <Breadcrumb
         className="mt-0 mb-4"
         currentPageLabel="Architectes Accompagnateur de Parcours"
