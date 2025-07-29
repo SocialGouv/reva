@@ -2,6 +2,8 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 
+import { AapSelectionAdvice } from "@/components/aap-selection-advice/AapSelectionAdvice";
+
 import { OrganismCard } from "./_components/organism-card/OrganismCard";
 import { OrganismsSearchBar } from "./_components/organisms-search-bar/OrganismsSearchBar";
 import { searchOrganismsAndGetCohorteInfo } from "./actions";
@@ -50,6 +52,12 @@ export default async function AapsPage({
         ]}
       />
       <h1>Architectes Accompagnateur de Parcours</h1>
+
+      <p className="text-xl mb-0 leading-relaxed">
+        Choisissez l’AAP en charge d’accompagner tous vos collaborateurs
+        intégrant cette cohorte.
+      </p>
+      <AapSelectionAdvice className="text-xl mb-12 leading-relaxed" />
 
       <OrganismsSearchBar
         commanditaireId={commanditaireId}

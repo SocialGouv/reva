@@ -5,6 +5,7 @@ import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { format } from "date-fns";
 import { redirect } from "next/navigation";
 
+import { AapSelectionAdvice } from "@/components/aap-selection-advice/AapSelectionAdvice";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
@@ -104,18 +105,7 @@ export default async function CohortesPage({
   return (
     <div className="fr-container flex flex-col">
       <h1 className="">Cohortes</h1>
-      <p className="text-xl mb-12">
-        Vous ne savez pas encore quel Architecte Accompagnateur de parcours
-        choisir, prenez le temps de consulter{" "}
-        <a
-          className="fr-link text-xl"
-          href="https://metabase.vae.gouv.fr/public/dashboard/1ac9acb3-2b30-4932-9fb2-8a0111123fdd"
-          target="_blank"
-        >
-          la liste des AAP référencés sur France VAE
-        </a>{" "}
-        afin d'entamer votre appel d'offre.
-      </p>
+      <AapSelectionAdvice className="text-xl mb-12" />
       <Button
         className="ml-auto mb-4"
         priority="secondary"
