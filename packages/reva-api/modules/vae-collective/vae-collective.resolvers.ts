@@ -15,6 +15,7 @@ import { getCohorteVAECollectiveById } from "./features/getCohorteVAECollectiveB
 import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
 import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
+import { updateCohorteVAECollectiveOrganism } from "./features/updateCohorteVAECollectiveOrganism";
 import { updateNomCohorteVaeCollective } from "./features/updateNomCohorteVaeCollective";
 import { vaeCollectiveResolversSecurityMap } from "./vae-collective.security";
 
@@ -161,6 +162,17 @@ const unsafeResolvers = {
       updateCohorteVAECollectiveCertification({
         cohorteVaeCollectiveId,
         certificationId,
+      }),
+    vaeCollective_updateCohorteVAECollectiveOrganism: async (
+      _parent: unknown,
+      {
+        cohorteVaeCollectiveId,
+        organismId,
+      }: { cohorteVaeCollectiveId: string; organismId: string },
+    ) =>
+      updateCohorteVAECollectiveOrganism({
+        cohorteVaeCollectiveId,
+        organismId,
       }),
   },
 };

@@ -71,6 +71,12 @@ type Mutation {
     certificationId: ID!
   ): CohorteVaeCollective!
 
+  vaeCollective_updateCohorteVAECollectiveOrganism(
+    commanditaireVaeCollectiveId: ID!
+    cohorteVaeCollectiveId: ID!
+    organismId: ID!
+  ): CohorteVaeCollective!
+
   vaeCollective_deleteCohorteVaeCollective(
     commanditaireVaeCollectiveId: ID!
     cohorteVaeCollectiveId: ID!
