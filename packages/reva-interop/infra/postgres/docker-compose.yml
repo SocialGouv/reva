@@ -1,0 +1,12 @@
+name: reva_interop
+
+services:
+  db_reva_interop:
+    image: postgres:16.9
+    container_name: postgresql_reva_interop
+    environment:
+      POSTGRES_DB: reva_interop
+      POSTGRES_USER: reva_interop
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5445:5432

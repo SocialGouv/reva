@@ -5,6 +5,7 @@ import * as jose from "jose";
 
 import { getGraphQlClient } from "../../utils/graphqlClient.js";
 import { getUserAccessToken } from "../../utils/keycloak.js";
+import { findSessionById } from "../../utils/session.js";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -37,18 +38,30 @@ export const validateJwt = async (
   //   "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmdmFlLWludGVyb3AtYXNwIiwiYXVkIjoiZnZhZS1pbnRlcm9wIiwic3ViIjoiYWNiMzY3ODgtNDA3Yy00MTRlLTlkMzMtMjMzYjJhMWNhMjQwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjM3MTYyMzkwMjJ9.cRKBfFM9TrpANOdNZTOGKS4QZ4C-PzD0RKtnYUVz1whBUGGGA2btlPk4GQQzp7QHRusFu44vgxuw8XGg1Kg6Ug";
   const { payload } = await jose.jwtVerify(jwt, secretKey, {
     issuer: `fvae-interop-${process.env.ENVIRONMENT}`,
-    requiredClaims: ["iat", "exp", "sub"],
+    requiredClaims: ["iat", "sub"],
     audience: "fvae-interop",
     algorithms: ["HS512"],
+
     // maxTokenAge: "1h",
   });
 
-  const keycloakId = payload.sub;
-  if (!keycloakId) {
+  const sessionId = payload.sub;
+  if (!sessionId) {
     throw new Error("Unauthorized");
   }
 
-  const keycloakJwt = await getUserAccessToken({ keycloakId });
+  const session = await findSessionById(sessionId);
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  if (session.endedAt) {
+    throw new Error("Unauthorized");
+  }
+
+  const keycloakJwt = await getUserAccessToken({
+    keycloakId: session.keycloakId,
+  });
   if (!keycloakJwt) {
     throw new Error("Unauthorized");
   }

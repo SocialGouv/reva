@@ -12,6 +12,7 @@ import * as jose from "jose";
 
 import { mapCandidacyObject } from "../../utils/mappers/candidacy.js";
 import { mapFeasibilities } from "../../utils/mappers/feasibility.js";
+import { createSession } from "../../utils/session.js";
 
 import { validateJwt } from "./authMiddleware.js";
 import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
@@ -201,16 +202,21 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       const tokenJson = await tokenReply.json();
       const idToken = tokenJson.id_token;
       const decodedIdToken = jose.decodeJwt(idToken);
+      const keycloakId = decodedIdToken.sub;
+      if (!keycloakId) {
+        throw new Error("keycloakId has not been set");
+      }
 
       const secretKey = new TextEncoder().encode(process.env.SECRET_KEY);
+
+      const session = await createSession({ keycloakId });
 
       const jwt = await new jose.SignJWT()
         .setAudience("fvae-interop")
         .setIssuer(`fvae-interop-${process.env.ENVIRONMENT}`)
-        .setSubject(decodedIdToken.sub!)
-        .setExpirationTime("1h")
+        .setSubject(session.id)
         .setProtectedHeader({ alg: "HS512" })
-        .setIssuedAt()
+        .setIssuedAt(session.createdAt)
         .sign(secretKey);
       return {
         access_token: jwt,
