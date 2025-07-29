@@ -38,8 +38,6 @@ const CandidacyLayoutSideMenu = ({
       "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
     );
 
-  const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
-
   const hrefSideMenu = (
     status: CandidacyStatusFilter,
     extraParams?: Record<string, string>,
@@ -276,31 +274,29 @@ const CandidacyLayoutSideMenu = ({
       isActive: isActive("PROJET_HORS_ABANDON"),
     });
   }
-  if (isVaeCollectiveFeatureActive) {
-    const cohorteSelected = !!searchParams.get("cohorteVaeCollectiveId");
-    sideMenuItems.push({
-      text: `VAE Collective ${getCounterText("VAE_COLLECTIVE")}`,
-      linkProps: {
-        href: hrefSideMenu("VAE_COLLECTIVE"),
-      },
-      isActive: isActive("VAE_COLLECTIVE") && !cohorteSelected,
-      ...(!!cohortesVaeCollectives.length
-        ? {
-            items: cohortesVaeCollectives.map((cohorteVaeCollective) => ({
-              text: cohorteVaeCollective.nom,
-              linkProps: {
-                href: hrefSideMenu("VAE_COLLECTIVE", {
-                  cohorteVaeCollectiveId: cohorteVaeCollective.id,
-                }),
-              },
-              isActive: isActive("VAE_COLLECTIVE", {
+  const cohorteSelected = !!searchParams.get("cohorteVaeCollectiveId");
+  sideMenuItems.push({
+    text: `VAE Collective ${getCounterText("VAE_COLLECTIVE")}`,
+    linkProps: {
+      href: hrefSideMenu("VAE_COLLECTIVE"),
+    },
+    isActive: isActive("VAE_COLLECTIVE") && !cohorteSelected,
+    ...(!!cohortesVaeCollectives.length
+      ? {
+          items: cohortesVaeCollectives.map((cohorteVaeCollective) => ({
+            text: cohorteVaeCollective.nom,
+            linkProps: {
+              href: hrefSideMenu("VAE_COLLECTIVE", {
                 cohorteVaeCollectiveId: cohorteVaeCollective.id,
               }),
-            })),
-          }
-        : {}),
-    });
-  }
+            },
+            isActive: isActive("VAE_COLLECTIVE", {
+              cohorteVaeCollectiveId: cohorteVaeCollective.id,
+            }),
+          })),
+        }
+      : {}),
+  });
 
   return (
     <nav
