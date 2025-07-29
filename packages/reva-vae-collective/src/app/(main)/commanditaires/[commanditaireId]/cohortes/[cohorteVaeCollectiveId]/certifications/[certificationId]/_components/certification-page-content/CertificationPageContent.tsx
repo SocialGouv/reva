@@ -122,7 +122,7 @@ export const CertificationPageContent = ({
         <Button
           priority="secondary"
           linkProps={{
-            href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollective.id}/certifications`,
+            href: `../`,
           }}
         >
           Retour
