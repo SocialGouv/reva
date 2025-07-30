@@ -125,7 +125,7 @@ test.describe("delete cohorte button", () => {
               },
             });
           }),
-          fvae.mutation("deleteCohorte", () => {
+          fvae.mutation("deleteCohorteMutation", () => {
             return HttpResponse.json({
               data: {
                 vaeCollective_deleteCohorte: null,
@@ -165,6 +165,32 @@ test.describe("delete cohorte button", () => {
           name: "La suppression d’une cohorte est irreversible.",
         }),
       ).toBeVisible();
+    });
+
+    test("when i click on the modal confirm button, the cohorte should be deleted and i should be redirected to the cohortes list page", async ({
+      page,
+    }) => {
+      await login({ page, role: "gestionnaireVaeCollective" });
+
+      await page.goto(
+        "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+      );
+      await page
+        .getByRole("button", { name: "Supprimer cette cohorte" })
+        .click();
+      await expect(
+        page.getByRole("heading", {
+          name: "La suppression d’une cohorte est irreversible.",
+        }),
+      ).toBeVisible();
+
+      await page
+        .getByRole("button", { name: "Supprimer", exact: true })
+        .click();
+
+      await expect(page).toHaveURL(
+        "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes",
+      );
     });
   });
 });
