@@ -676,3 +676,217 @@ test.describe("organism card", () => {
     });
   });
 });
+
+test.describe("generate cohorte code button", () => {
+  test.describe("when the cohorte status is 'PUBLIE'", () => {
+    test.use({
+      mswHandlers: [
+        [
+          fvae.query("getCohorteByIdForCohortePage", () => {
+            return HttpResponse.json({
+              data: {
+                vaeCollective_getCohorteVaeCollectiveById: {
+                  id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                  nom: "macohorte",
+                  status: "PUBLIE",
+                  certificationCohorteVaeCollectives: [],
+                },
+              },
+            });
+          }),
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("the generate cohorte code button should be disabled", async ({
+      page,
+    }) => {
+      await login({ page, role: "gestionnaireVaeCollective" });
+
+      await page.goto(
+        "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+      );
+
+      await expect(
+        page.getByRole("button", {
+          name: "Générez un lien et un code d’accès à la cohorte",
+        }),
+      ).toBeDisabled();
+    });
+  });
+
+  test.describe("when the cohorte status is 'BROUILLON'", () => {
+    test.describe("when the certification is not set", () => {
+      test.use({
+        mswHandlers: [
+          [
+            fvae.query("getCohorteByIdForCohortePage", () => {
+              return HttpResponse.json({
+                data: {
+                  vaeCollective_getCohorteVaeCollectiveById: {
+                    id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                    nom: "macohorte",
+                    status: "BROUILLON",
+                    certificationCohorteVaeCollectives: [],
+                  },
+                },
+              });
+            }),
+          ],
+          { scope: "test" },
+        ],
+      });
+
+      test("the generate cohorte code button should be disabled", async ({
+        page,
+      }) => {
+        await login({ page, role: "gestionnaireVaeCollective" });
+
+        await page.goto(
+          "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+        );
+
+        await expect(
+          page.getByRole("button", {
+            name: "Générez un lien et un code d’accès à la cohorte",
+          }),
+        ).toBeDisabled();
+      });
+    });
+
+    test.describe("when the certification is set", () => {
+      test.describe("when the organism is not set", () => {
+        test.use({
+          mswHandlers: [
+            [
+              fvae.query("getCohorteByIdForCohortePage", () => {
+                return HttpResponse.json({
+                  data: {
+                    vaeCollective_getCohorteVaeCollectiveById: {
+                      id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                      nom: "macohorte",
+                      status: "BROUILLON",
+                      certificationCohorteVaeCollectives: [
+                        {
+                          id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                          certification: {
+                            id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                            certification: {
+                              label: "Certification 1",
+                              codeRncp: "123456",
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                });
+              }),
+            ],
+            { scope: "test" },
+          ],
+        });
+
+        test("the generate cohorte code button should be disabled", async ({
+          page,
+        }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+
+          await expect(
+            page.getByRole("button", {
+              name: "Générez un lien et un code d’accès à la cohorte",
+            }),
+          ).toBeDisabled();
+        });
+      });
+
+      test.describe("when the organism is set", () => {
+        test.use({
+          mswHandlers: [
+            [
+              fvae.query("getCohorteByIdForCohortePage", () => {
+                return HttpResponse.json({
+                  data: {
+                    vaeCollective_getCohorteVaeCollectiveById: {
+                      id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                      nom: "macohorte",
+                      status: "BROUILLON",
+                      certificationCohorteVaeCollectives: [
+                        {
+                          id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                          certification: {
+                            id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                            certification: {
+                              label: "Certification 1",
+                              codeRncp: "123456",
+                            },
+                          },
+                          certificationCohorteVaeCollectiveOnOrganisms: [
+                            {
+                              id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                              organism: {
+                                id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                                label: "Organism 1",
+                                adresseNumeroEtNomDeRue: "123456",
+                                adresseCodePostal: "123456",
+                                adresseVille: "123456",
+                                emailContact: "123456",
+                                telephone: "123456",
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                });
+              }),
+            ],
+            { scope: "test" },
+          ],
+        });
+
+        test("the generate cohorte code button should be enabled", async ({
+          page,
+        }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+
+          await expect(
+            page.getByRole("button", {
+              name: "Générez un lien et un code d’accès à la cohorte",
+            }),
+          ).toBeEnabled();
+        });
+
+        test("when i click on the generate cohorte code button, a confirmation modal should be displayed", async ({
+          page,
+        }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+          await page
+            .getByRole("button", {
+              name: "Générez un lien et un code d’accès à la cohorte",
+            })
+            .click();
+          await expect(
+            page.getByRole("heading", {
+              name: "La génération du code est irréversible.",
+            }),
+          ).toBeVisible();
+        });
+      });
+    });
+  });
+});

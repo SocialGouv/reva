@@ -10,6 +10,7 @@ import { graphql } from "@/graphql/generated";
 
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
+import { GenerateCohorteCodeButton } from "./_components/generate-cohorte-code-button/GenerateCohorteCodeButton";
 import { OrganismCard } from "./_components/organism-card/OrganismCard";
 
 const getCohorteById = async (
@@ -93,6 +94,7 @@ export default async function CohortePage({
       ?.certificationCohorteVaeCollectiveOnOrganisms?.[0]?.organism;
 
   const certificationSelected = !!certification;
+  const organismSelected = !!organism;
 
   return (
     <div className="flex flex-col w-full">
@@ -141,6 +143,16 @@ export default async function CohortePage({
       />
 
       <hr className="mt-8 mb-2" />
+
+      <GenerateCohorteCodeButton
+        commanditaireId={commanditaireId}
+        cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+        nomCohorte={cohorte.nom}
+        certificationCodeRncp={certification?.codeRncp ?? ""}
+        certificationlabel={certification?.label ?? ""}
+        aapLabel={organism?.label ?? ""}
+        disabled={!organismSelected}
+      />
 
       <DeleteCohorteButton
         commanditaireId={commanditaireId}
