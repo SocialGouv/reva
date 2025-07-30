@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { ProfessionalSpaceSubscriptionProvider } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
-import { getActiveFeatures } from "@/utils/featureFlipping";
+import { isFeatureActive } from "@/utils/featureFlipping";
 
 import { graphql } from "@/graphql/generated";
 import { strapi } from "@/graphql/strapi";
@@ -26,11 +26,9 @@ const getCguQuery = graphql(`
 `);
 
 const ProfessionalSpaceCreationPage = async () => {
-  const activeFeatures = await getActiveFeatures();
-
   const getCguResponse = await strapi.request(getCguQuery);
 
-  const isAAPSubscriptionSuspended = activeFeatures.includes(
+  const isAAPSubscriptionSuspended = await isFeatureActive(
     "AAP_SUBSCRIPTION_SUSPENDED",
   );
 

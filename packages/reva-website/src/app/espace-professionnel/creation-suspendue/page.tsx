@@ -4,12 +4,10 @@ import { redirect } from "next/navigation";
 
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { SectionParagraph } from "@/components/section-content/SectionContent";
-import { getActiveFeatures } from "@/utils/featureFlipping";
+import { isFeatureActive } from "@/utils/featureFlipping";
 
 const SuspendedCreationPage = async () => {
-  const activeFeatures = await getActiveFeatures();
-
-  const isAAPSubscriptionSuspended = activeFeatures.includes(
+  const isAAPSubscriptionSuspended = await isFeatureActive(
     "AAP_SUBSCRIPTION_SUSPENDED",
   );
 

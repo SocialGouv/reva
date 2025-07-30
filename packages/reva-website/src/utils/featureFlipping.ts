@@ -10,7 +10,7 @@ const activeFeaturesQuery = graphql(`
   }
 `);
 
-export async function getActiveFeatures(): Promise<string[]> {
+async function getActiveFeatures(): Promise<string[]> {
   const result = await request(GRAPHQL_API_URL, activeFeaturesQuery);
   return result.activeFeaturesForConnectedUser;
 }
