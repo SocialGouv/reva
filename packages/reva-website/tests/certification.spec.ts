@@ -41,16 +41,16 @@ test("display certification page with correct data info", async ({ page }) => {
   );
 });
 
-test.describe("VAE collective button", () => {
-  test("should not display VAE collective button when feature flag is disabled", async ({
-    page,
-  }) => {
-    await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
-    await expect(
-      page.getByRole("link", { name: "Utiliser un code VAE collective" }),
-    ).not.toBeVisible();
-  });
+test("should not display VAE collective button when feature flag is disabled", async ({
+  page,
+}) => {
+  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  await expect(
+    page.getByRole("link", { name: "Utiliser un code VAE collective" }),
+  ).not.toBeVisible();
+});
 
+test.describe("VAE collective button - with feature flag enabled", () => {
   test.use({
     mswHandlers: [
       [
