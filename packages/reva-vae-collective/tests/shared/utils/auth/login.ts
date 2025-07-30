@@ -63,5 +63,5 @@ export const login = async ({
     )}`,
   );
 
-  await page.waitForTimeout(100); //wait for the post-login page to be loaded and keycloak to be initialized
+  await page.waitForTimeout(500); //wait for the post-login page to be loaded and keycloak to be initialized
 };
