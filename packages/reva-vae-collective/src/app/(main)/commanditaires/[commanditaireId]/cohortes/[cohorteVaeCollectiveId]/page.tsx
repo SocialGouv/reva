@@ -10,7 +10,7 @@ import { graphql } from "@/graphql/generated";
 
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
-import { GenerateCohorteCodeButton } from "./_components/generate-cohorte-code-button/GenerateCohorteCodeButton";
+import { GenerateCohorteCodeInscriptionButton } from "./_components/generate-cohorte-code-inscription-button/GenerateCohorteCodeInscriptionButton";
 import { OrganismCard } from "./_components/organism-card/OrganismCard";
 
 const getCohorteById = async (
@@ -144,7 +144,7 @@ export default async function CohortePage({
 
       <hr className="mt-8 mb-2" />
 
-      <GenerateCohorteCodeButton
+      <GenerateCohorteCodeInscriptionButton
         commanditaireId={commanditaireId}
         cohorteVaeCollectiveId={cohorteVaeCollectiveId}
         nomCohorte={cohorte.nom}

@@ -677,7 +677,7 @@ test.describe("organism card", () => {
   });
 });
 
-test.describe("generate cohorte code button", () => {
+test.describe("generate cohorte code inscription button", () => {
   test.describe("when the cohorte status is 'PUBLIE'", () => {
     test.use({
       mswHandlers: [
@@ -699,7 +699,7 @@ test.describe("generate cohorte code button", () => {
       ],
     });
 
-    test("the generate cohorte code button should be disabled", async ({
+    test("the generate cohorte code inscription button should be disabled", async ({
       page,
     }) => {
       await login({ page, role: "gestionnaireVaeCollective" });
@@ -738,7 +738,7 @@ test.describe("generate cohorte code button", () => {
         ],
       });
 
-      test("the generate cohorte code button should be disabled", async ({
+      test("the generate cohorte code inscription button should be disabled", async ({
         page,
       }) => {
         await login({ page, role: "gestionnaireVaeCollective" });
@@ -788,7 +788,7 @@ test.describe("generate cohorte code button", () => {
           ],
         });
 
-        test("the generate cohorte code button should be disabled", async ({
+        test("the generate cohorte code inscription button should be disabled", async ({
           page,
         }) => {
           await login({ page, role: "gestionnaireVaeCollective" });
@@ -851,7 +851,7 @@ test.describe("generate cohorte code button", () => {
           ],
         });
 
-        test("the generate cohorte code button should be enabled", async ({
+        test("the generate cohorte code inscription button should be enabled", async ({
           page,
         }) => {
           await login({ page, role: "gestionnaireVaeCollective" });
@@ -867,7 +867,7 @@ test.describe("generate cohorte code button", () => {
           ).toBeEnabled();
         });
 
-        test("when i click on the generate cohorte code button, a confirmation modal should be displayed", async ({
+        test("when i click on the generate cohorte code inscription button, a confirmation modal should be displayed", async ({
           page,
         }) => {
           await login({ page, role: "gestionnaireVaeCollective" });

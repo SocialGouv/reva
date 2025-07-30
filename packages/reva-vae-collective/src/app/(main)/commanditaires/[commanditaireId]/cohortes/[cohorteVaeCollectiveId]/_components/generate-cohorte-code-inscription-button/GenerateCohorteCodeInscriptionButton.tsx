@@ -8,7 +8,7 @@ const modal = createModal({
   isOpenedByDefault: false,
 });
 
-export const GenerateCohorteCodeButton = ({
+export const GenerateCohorteCodeInscriptionButton = ({
   commanditaireId,
   cohorteVaeCollectiveId,
   nomCohorte,
