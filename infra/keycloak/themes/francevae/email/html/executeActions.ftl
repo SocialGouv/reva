@@ -26,13 +26,12 @@
 <#--  user_profile_type = gestionnaire_maison_mere_aap  -->
     <#if (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "gestionnaire_maison_mere_aap">
         <#if section="intro">
-            <p>Votre compte a été créé avec succès ! Nous sommes heureux de vous accueillir en tant qu'Architecte
-                Accompagnateur de Parcours (AAP) sur notre plateforme France VAE. Vous serez prochainement visible
-                dans les résultats de recherche des candidats.</p>
+            <p>${user.attributes.nom_maison_mere_aap}</p>
+            <p><strong>Votre compte a été créé avec succès !</strong></p>
+            <p>Nous sommes heureux de vous accueillir en tant qu'Architecte Accompagnateur de Parcours (AAP) sur notre plateforme France VAE. Vous serez prochainement visible dans les résultats de recherche des candidats.</p>
 
             <h2>Prochaine étape : activez votre compte</h2>
-            <p>Pour finaliser votre inscription, cliquez sur le bouton ci-dessous, il vous sera demandé de choisir un
-                mot de passe pour vos prochaines connexions :</p>
+            <p>Pour finaliser votre inscription, cliquez sur le bouton ci-dessous, il vous sera demandé de choisir un mot de passe pour vos prochaines connexions :</p>
         <#elseif section="actionButton">
             <a href="${link}"
                style="display:inline-block;background:#000099;color:white;font-family:Arial, sans-serif;font-size:14px;font-weight:500;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 16px;mso-padding-alt:0px;"
@@ -47,28 +46,22 @@
             <h2>Tout ce qu’il faut savoir pour bien démarrer</h2>
             <ul>
                 <li>
-                    <strong>Paramétrage du compte</strong> : Renseignez les informations essentielles à votre référencement
-                    sur la plateforme et apparaissez rapidement dans les recherches des candidats.
-                    Pour vous accompagner dans votre démarche, suivez notre tutoriel qui vous explique
-                    le paramétrage pas à pas.<br /><br />
+                    <a href="https://scribehow.com/viewer/Parametres_de_compte_de_lespace_professionnel_AAP__L1t9XG60QgORY97mqc-7tw"><strong>Paramétrage du compte</strong></a> : Renseignez les informations essentielles à votre référencement sur la plateforme et apparaissez rapidement dans les recherches des candidats. Pour vous accompagner dans votre démarche, suivez notre tutoriel qui vous explique le paramétrage pas à pas.<br /><br />
                 </li>
-                <li><a href="https://fabnummas.notion.site/Tutoriels-et-autres-pas-pas-5113b725db8c4a598e6d29aa105a1968">
-                    <strong>Tutoriels</strong></a> : Parfois, on a juste besoin d’un petit coup de pouce pour avancer
-                    sereinement sur la plateforme. C’est chose possible grâce à nos tutoriels !<br /><br />
+                <li><a href="https://fabnummas.notion.site/Tutoriels-5113b725db8c4a598e6d29aa105a1968">
+                    <strong>Tutoriels</strong></a> : Parfois, on a juste besoin d'un petit coup de pouce pour avancer sereinement sur la plateforme. C'est chose possible grâce à nos tutoriels !<br /><br />
                 </li>
                 <li>
-                    <a href="https://fabnummas.notion.site/Cahier-des-charges-ea8790303ab447cfb25b5c11c26b0d67">
-                    <strong>Cahier des charges des AAP</strong></a> : Familiarisez-vous avec vos responsabilités et
-                    les attentes du rôle en consultant le cahier des charges.<br /><br />
+                    <a href="https://vae.gouv.fr/cgu/">
+                    <strong>Conditions générales d'utilisation</strong></a> : Familiarisez-vous avec vos responsabilités et les attentes du rôle en consultant le cahier des charges.<br /><br />
                 </li>
                 <li>
-                    <a href="https://fabnummas.notion.site/f697c4fa5fcf42d49d85428b5e0b40c5?v=9f55d3b4b2e54bd19d390ebe6febe3ea">
-                    <strong>Espace documentaire</strong></a> : Découvrez les documents clés pour accompagner efficacement vos premiers candidats.
-                    Cliquez sur l’icône 💡 en bas à droite de votre espace professionnel pour avoir accès à toutes nos ressources.
+                    <a href="https://fabnummas.notion.site/Espace-documentaire-f697c4fa5fcf42d49d85428b5e0b40c5?v=9f55d3b4b2e54bd19d390ebe6febe3ea">
+                    <strong>Espace documentaire</strong></a> : Découvrez les documents clés pour accompagner efficacement vos premiers candidats. Cliquez sur l'icône 💡 en bas à droite de votre espace professionnel pour avoir accès à toutes nos ressources.
                 </li>
             </ul>
             <p>Pour toute question, vous pouvez consulter notre
-                <a href="https://reva.crisp.help/fr/category/architectes-accompagnateurs-de-parcours-1oikyam"
+                <a href="https://vae.gouv.fr/faq/"
                    target="_blank">FAQ
                 </a> ou nous contacter via
                 <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">notre formulaire de contact</a>.
@@ -144,7 +137,7 @@
                 instantanée (en bas à droite de l'écran sur le site France VAE) ou par email à support@vae.gouv.fr</p>
             <p>L'équipe France VAE.</p>
         </#if>
-    
+
      <#--  user_profile_type = certification_registry_manager  -->
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_registry_manager">
         <#if section="intro">
