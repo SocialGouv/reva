@@ -114,6 +114,7 @@ export const validateSubscriptionRequest = async ({
     username: subscriptionRequest.accountEmail ?? "",
     group: "gestionnaire_maison_mere_aap",
     organismId: newOrganism.id,
+    maisonMereAAPRaisonSociale: subscriptionRequest.companyName ?? "",
   });
 
   logger.info(

@@ -19,6 +19,7 @@ export const createAccount = async (params: {
   group: KeyCloakGroup;
   organismId?: string;
   certificationAuthorityId?: string;
+  maisonMereAAPRaisonSociale?: string;
 }): Promise<Account> => {
   //assertions on parameters
   if (!params.email) {
