@@ -129,16 +129,28 @@ export default async function CohortesPage({
                 size="small"
                 title={cohorte.nom}
                 start={
-                  cohorte.status === "BROUILLON" && (
-                    <Badge
-                      severity="warning"
-                      small
-                      className="mb-3"
-                      data-testid="draft-status-badge"
-                    >
-                      En cours de paramètrage
-                    </Badge>
-                  )
+                  <>
+                    {cohorte.status === "BROUILLON" && (
+                      <Badge
+                        severity="warning"
+                        small
+                        className="mb-3"
+                        data-testid="draft-status-badge"
+                      >
+                        En cours de paramètrage
+                      </Badge>
+                    )}
+                    {cohorte.status === "PUBLIE" && (
+                      <Badge
+                        severity="success"
+                        small
+                        className="mb-3"
+                        data-testid="active-status-badge"
+                      >
+                        Active
+                      </Badge>
+                    )}
+                  </>
                 }
                 desc={
                   <>

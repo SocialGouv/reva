@@ -132,7 +132,7 @@ test.describe("Commanditaire with multiple cohortes", () => {
     ).toHaveText("Demain");
   });
 
-  test("it should display the cohortes status badge only when the cohorte status is 'BROUILLON'", async ({
+  test("it should display the draft cohorte status badge only when the cohorte status is 'BROUILLON'", async ({
     page,
   }) => {
     await login({ page, role: "gestionnaireVaeCollective" });
@@ -151,6 +151,28 @@ test.describe("Commanditaire with multiple cohortes", () => {
     await expect(
       page.getByTestId("cohorte-card").nth(1).getByTestId("draft-status-badge"),
     ).toBeHidden();
+  });
+
+  test("it should display the active cohorte status badge only when the cohorte status is 'PUBLIE'", async ({
+    page,
+  }) => {
+    await login({ page, role: "gestionnaireVaeCollective" });
+
+    await page.goto(
+      "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes",
+    );
+    await expect(
+      page
+        .getByTestId("cohorte-card")
+        .first()
+        .getByTestId("active-status-badge"),
+    ).toBeHidden();
+    await expect(
+      page
+        .getByTestId("cohorte-card")
+        .nth(1)
+        .getByTestId("active-status-badge"),
+    ).toBeVisible();
   });
 
   test("it should lead me to the create cohorte page when i click on the create cohorte button", async ({
