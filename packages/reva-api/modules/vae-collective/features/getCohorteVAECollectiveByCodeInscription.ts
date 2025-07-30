@@ -5,6 +5,11 @@ export const getCohorteVAECollectiveByCodeInscription = async ({
 }: {
   codeInscription: string;
 }) =>
-  prismaClient.cohorteVaeCollective.findUnique({
-    where: { codeInscription },
+  prismaClient.cohorteVaeCollective.findFirst({
+    where: {
+      codeInscription: {
+        equals: codeInscription,
+        mode: "insensitive",
+      },
+    },
   });
