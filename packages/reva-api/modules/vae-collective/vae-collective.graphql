@@ -77,6 +77,11 @@ type Mutation {
     organismId: ID!
   ): CohorteVaeCollective!
 
+  vaeCollective_publishCohorteVAECollective(
+    commanditaireVaeCollectiveId: ID!
+    cohorteVaeCollectiveId: ID!
+  ): CohorteVaeCollective!
+
   vaeCollective_deleteCohorteVaeCollective(
     commanditaireVaeCollectiveId: ID!
     cohorteVaeCollectiveId: ID!
