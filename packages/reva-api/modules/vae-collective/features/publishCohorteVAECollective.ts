@@ -65,7 +65,7 @@ const generateCodeInscription = async () => {
   while (tentatives <= 10 && !codeIsUnique) {
     tentativeCode = randomstring.generate({
       length: 8,
-      charset: "abcdefghjkmnpqrstuvwxyz23456789",
+      charset: "ABCDEFGHJKMNPQRSTUVWXYZ23456789",
     });
     codeIsUnique = !(await prismaClient.cohorteVaeCollective.findUnique({
       where: { codeInscription: tentativeCode },
