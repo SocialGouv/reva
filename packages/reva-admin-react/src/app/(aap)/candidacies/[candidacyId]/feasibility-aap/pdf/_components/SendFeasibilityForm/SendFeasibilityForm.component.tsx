@@ -1,7 +1,6 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import Notice from "@codegouvfr/react-dsfr/Notice";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
@@ -276,28 +275,6 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
             />
           </GrayCard>
         </fieldset>
-
-        <Notice
-          title={
-            <>
-              Pour retrouver les dossiers de faisabilité et être guidé dans le
-              remplissage,{" "}
-              <a
-                href="https://fabnummas.notion.site/Dossiers-de-faisabilit-c5bff6e7fa7744859cda85c935fd928f"
-                target="_blank"
-              >
-                consultez la documentation
-              </a>{" "}
-              ou{" "}
-              <a
-                href="https://www.notion.so/fabnummas/NOTICE-D-UTILISATION-DU-DOSSIER-DE-FAISABILITE-92a8744b294a47259396fe1efd226043"
-                target="_blank"
-              >
-                la notice d’utilisation du dossier de faisabilité
-              </a>
-            </>
-          }
-        />
 
         <div className="flex flex-row justify-end">
           <Button
