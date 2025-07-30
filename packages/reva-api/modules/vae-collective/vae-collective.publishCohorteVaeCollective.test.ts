@@ -85,7 +85,7 @@ describe("publish a cohorte vae collective", () => {
 
     expect(publishedCohorteVAECollective.status).toBe("PUBLIE");
     expect(publishedCohorteVAECollective.codeInscription).toMatch(
-      /[abcdefghjklmnpqrstuvwxyz23456789]{8}/,
+      /[abcdefghjkmnpqrstuvwxyz23456789]{8}/,
     );
   });
 
