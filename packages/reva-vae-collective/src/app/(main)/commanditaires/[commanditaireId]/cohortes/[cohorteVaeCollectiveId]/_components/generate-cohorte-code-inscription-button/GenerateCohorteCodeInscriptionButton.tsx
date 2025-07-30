@@ -3,6 +3,8 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import Image from "next/image";
 
+import { publishCohorteVAECollective } from "./actions";
+
 const modal = createModal({
   id: "confirm-cohorte-code-generation",
   isOpenedByDefault: false,
@@ -25,11 +27,11 @@ export const GenerateCohorteCodeInscriptionButton = ({
   aapLabel: string;
   disabled?: boolean;
 }) => {
-  const onConfirmButtonClick = () => {
-    console.log(commanditaireId, cohorteVaeCollectiveId);
-    alert("confirmé");
-  };
-
+  const onConfirmButtonClick = () =>
+    publishCohorteVAECollective({
+      commanditaireVaeCollectiveId: commanditaireId,
+      cohorteVaeCollectiveId,
+    });
   return (
     <>
       <modal.Component

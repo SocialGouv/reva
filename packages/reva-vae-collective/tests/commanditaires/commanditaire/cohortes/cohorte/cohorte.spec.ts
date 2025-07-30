@@ -846,6 +846,15 @@ test.describe("generate cohorte code inscription button", () => {
                   },
                 });
               }),
+              fvae.mutation("publishCohorteVAECollective", () => {
+                return HttpResponse.json({
+                  data: {
+                    vaeCollective_publishCohorteVAECollective: {
+                      id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                    },
+                  },
+                });
+              }),
             ],
             { scope: "test" },
           ],
@@ -885,6 +894,37 @@ test.describe("generate cohorte code inscription button", () => {
               name: "La génération du code est irréversible.",
             }),
           ).toBeVisible();
+        });
+
+        test("when i confirm the modal, it should close", async ({ page }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+          await page
+            .getByRole("button", {
+              name: "Générez un lien et un code d’accès à la cohorte",
+            })
+            .click();
+
+          await expect(
+            page.getByRole("heading", {
+              name: "La génération du code est irréversible.",
+            }),
+          ).toBeVisible();
+
+          await page.getByRole("button", { name: "Générer" }).click();
+
+          await expect(
+            page.getByRole("heading", {
+              name: "La génération du code est irréversible.",
+            }),
+          ).not.toBeVisible();
+
+          await expect(page).toHaveURL(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
         });
       });
     });
