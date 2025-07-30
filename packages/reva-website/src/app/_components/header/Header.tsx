@@ -114,7 +114,7 @@ export const Header = (props: { className?: string }) => {
           linkProps: {
             href: "/faq",
           },
-          isActive: !!pathname.match(/\/savoir-plus/)?.length,
+          isActive: !!pathname.match(/\/faq/)?.length,
           text: "Questions fréquentes",
         },
 
