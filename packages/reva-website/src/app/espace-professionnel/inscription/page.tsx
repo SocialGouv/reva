@@ -1,11 +1,10 @@
-import request from "graphql-request";
 import Head from "next/head";
 import { redirect } from "next/navigation";
 
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { OrganismBackground } from "@/components/layout/blue-layout/OrganismBackground";
 import { ProfessionalSpaceSubscriptionProvider } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
-import { GRAPHQL_API_URL } from "@/config/config";
+import { getActiveFeatures } from "@/utils/featureFlipping";
 
 import { graphql } from "@/graphql/generated";
 import { strapi } from "@/graphql/strapi";
@@ -13,12 +12,6 @@ import { strapi } from "@/graphql/strapi";
 import PageContent from "./_components/PageContent";
 
 export const dynamic = "force-dynamic";
-
-const activeFeaturesQuery = graphql(`
-  query activeFeaturesForConnectedUser {
-    activeFeaturesForConnectedUser
-  }
-`);
 
 const getCguQuery = graphql(`
   query getCgu {
@@ -31,11 +24,6 @@ const getCguQuery = graphql(`
     }
   }
 `);
-
-const getActiveFeatures = async () => {
-  return (await request(GRAPHQL_API_URL, activeFeaturesQuery))
-    .activeFeaturesForConnectedUser;
-};
 
 const ProfessionalSpaceCreationPage = async () => {
   const activeFeatures = await getActiveFeatures();
