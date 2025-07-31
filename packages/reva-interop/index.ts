@@ -6,8 +6,32 @@ import routesApiV1 from "./routes/v1/index.js";
 
 dotenv.config({ path: "./.env" });
 
+const datadogApiKey = process.env.DATADOG_API_KEY;
+const isTestEnv = process.env.NODE_ENV === "test";
+
 const fastify = Fastify({
-  logger: true,
+  logger: {
+    transport: datadogApiKey
+      ? {
+          level: isTestEnv ? "silent" : "info",
+          targets: [
+            {
+              target: "pino-datadog-transport",
+              level: "info",
+              options: {
+                ddClientConf: {
+                  authMethods: {
+                    apiKeyAuth: datadogApiKey,
+                  },
+                },
+                ddServerConf: { site: "datadoghq.eu" },
+              },
+            },
+            { target: "pino/file", level: "info", options: {} },
+          ],
+        }
+      : undefined,
+  },
   ajv: {
     customOptions: {
       strict: false,
