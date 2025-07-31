@@ -153,7 +153,7 @@ http:
         - removeHeader
 
     interop-sandbox-doc:
-      rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/interop/docs`)"
+      rule: "Host(`sandbox.vae.gouv.fr`) && (PathPrefix(`/interop/v1/docs`) || PathPrefix(`/interop/v1/documentation/json`))"
       service: interop-sandbox
       middlewares:
         - removeHeader
