@@ -1,9 +1,10 @@
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
+
+import { BackButton } from "../../_components/back-button/BackButton";
 
 import { SelectCertificationButton } from "./select-certification-button/SelectCertificationButton";
 import { JuryTab } from "./tabs/JuryTab";
@@ -115,15 +116,9 @@ export const CertificationPageContent = ({
           },
         ]}
       />
+
       <div className="flex justify-between mt-12">
-        <Button
-          priority="secondary"
-          linkProps={{
-            href: `../`,
-          }}
-        >
-          Retour
-        </Button>
+        <BackButton />
         {!certificationSelectionDisabled && (
           <SelectCertificationButton
             commanditaireVaeCollectiveId={commanditaireId}
