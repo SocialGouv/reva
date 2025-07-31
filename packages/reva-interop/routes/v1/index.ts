@@ -10,6 +10,7 @@ import {
 } from "@fastify/type-provider-json-schema-to-ts";
 import * as jose from "jose";
 
+import { ERROR_UNAUTHORIZED } from "../../utils/errors.js";
 import { mapCandidacyObject } from "../../utils/mappers/candidacy.js";
 import { mapFeasibilities } from "../../utils/mappers/feasibility.js";
 
@@ -166,12 +167,49 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
 
   fastify.decorateRequest("graphqlClient");
 
+  const securePathes = [
+    "candidatures",
+    "dossiersDeFaisabilite",
+    "dossiersDeValidation",
+    "informationsJury",
+  ];
+
   // Validate JWT for pathes :
   // /candidatures
   // /dossiersDeFaisabilite
   // /dossiersDeValidation
   // /informationsJury
-  fastify.addHook("onRequest", validateJwt);
+  fastify.addHook("onRequest", (request, reply) =>
+    validateJwt(securePathes, request, reply),
+  );
+
+  // Handle errors for pathes :
+  // /candidatures
+  // /dossiersDeFaisabilite
+  // /dossiersDeValidation
+  // /informationsJury
+  fastify.setErrorHandler((error, request, reply) => {
+    const isSecurePath = securePathes.some((path) =>
+      request.url.startsWith(`/interop/v1/${path}`),
+    );
+
+    if (!isSecurePath) {
+      return;
+    }
+
+    if (error.message == ERROR_UNAUTHORIZED) {
+      reply.status(401).send();
+      return;
+    }
+
+    // It means it's FastifyError
+    if (Object.hasOwn(error, "code")) {
+      reply.status(500).send(error);
+      return;
+    }
+
+    reply.status(500).send({ statusCode: 500, error: "Internal Server Error" });
+  });
 
   fastify.post(
     "/documentation/openid-connect/token",

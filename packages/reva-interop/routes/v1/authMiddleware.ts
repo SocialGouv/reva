@@ -2,6 +2,7 @@ import { Client } from "@urql/core";
 import dotenv from "dotenv";
 import { FastifyReply, FastifyRequest } from "fastify";
 
+import { ERROR_UNAUTHORIZED } from "../../utils/errors.js";
 import { getGraphQlClient } from "../../utils/graphqlClient.js";
 import { parseJwt } from "../../utils/jwt.js";
 import { getUserAccessToken } from "../../utils/keycloak.js";
@@ -18,16 +19,10 @@ declare module "fastify" {
 dotenv.config({ path: "./.env" });
 
 export const validateJwt = async (
+  securePathes: string[],
   request: FastifyRequest,
   _reply: FastifyReply,
 ) => {
-  const securePathes = [
-    "candidatures",
-    "dossiersDeFaisabilite",
-    "dossiersDeValidation",
-    "informationsJury",
-  ];
-
   const isSecurePath = securePathes.some((path) =>
     request.url.startsWith(`/interop/v1/${path}`),
   );
@@ -46,23 +41,23 @@ export const validateJwt = async (
 
   const sessionId = payload.sub;
   if (!sessionId) {
-    throw new Error("Unauthorized");
+    throw new Error(ERROR_UNAUTHORIZED);
   }
 
   const session = await findSessionById(sessionId);
   if (!session) {
-    throw new Error("Unauthorized");
+    throw new Error(ERROR_UNAUTHORIZED);
   }
 
   if (session.endedAt) {
-    throw new Error("Unauthorized");
+    throw new Error(ERROR_UNAUTHORIZED);
   }
 
   const keycloakJwt = await getUserAccessToken({
     keycloakId: session.keycloakId,
   });
   if (!keycloakJwt) {
-    throw new Error("Unauthorized");
+    throw new Error(ERROR_UNAUTHORIZED);
   }
 
   const graphqlClient = getGraphQlClient(keycloakJwt);
@@ -81,5 +76,5 @@ const getTokenFromRequest = (request: FastifyRequest) => {
     return token;
   }
 
-  throw new Error("Unauthorized");
+  throw new Error(ERROR_UNAUTHORIZED);
 };
