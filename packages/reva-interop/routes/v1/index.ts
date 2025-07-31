@@ -912,8 +912,8 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     method: "POST",
     url: "/auth/generateJwt",
     schema: {
+      hide: true,
       summary: "Génère un jeton d'accès pour l'utilisateur demandé",
-      // security: [{ bearerAuth: [] }],
       tags: ["Authentification"],
       headers: {
         type: "object",
@@ -945,13 +945,12 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         },
       },
     },
-    handler: async (request) => {
+    handler: async (request, reply) => {
       const { auth_api_key } = request.headers;
 
-      console.log("auth_api_key", request.headers);
-
       if (!auth_api_key || auth_api_key != process.env.AUTH_API_KEY) {
-        throw new Error("Unauthorized");
+        reply.status(401).send();
+        return;
       }
 
       const jwt = await generateJwt({ keycloakId: request.body.userId });
@@ -966,8 +965,8 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     method: "POST",
     url: "/auth/invalidJwt",
     schema: {
+      hide: true,
       summary: "Invalide le jeton d'accès",
-      // security: [{ bearerAuth: [] }],
       tags: ["Authentification"],
       headers: {
         type: "object",
@@ -991,7 +990,8 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       const { auth_api_key } = request.headers;
 
       if (!auth_api_key || auth_api_key != process.env.AUTH_API_KEY) {
-        throw new Error("Unauthorized");
+        reply.status(401).send();
+        return;
       }
 
       await invalidJwt({ token: request.body.token });
