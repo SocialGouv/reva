@@ -13,7 +13,6 @@ const getCandidacyById = graphql(`
       isCertificationPartial
       certification {
         id
-        isAapAvailable
         label
         codeRncp
         competenceBlocs {

@@ -1,5 +1,4 @@
 import Card from "@codegouvfr/react-dsfr/Card";
-import Tag from "@codegouvfr/react-dsfr/Tag";
 import Image from "next/image";
 
 import { useAuth } from "@/components/auth/auth";
@@ -16,7 +15,6 @@ export const CertificationCard = ({
       id: string;
       codeRncp: string;
       label: string;
-      isAapAvailable: boolean;
     } | null;
     candidacyDropOut?: unknown;
   };
@@ -37,13 +35,6 @@ export const CertificationCard = ({
 
   return (
     <Card
-      start={
-        <Tag small className="mb-3">
-          {certification?.isAapAvailable
-            ? "VAE en autonomie ou accompagnée"
-            : "VAE en autonomie"}
-        </Tag>
-      }
       title={certification?.label}
       detail={
         <div className="flex items-center gap-2 mb-3">

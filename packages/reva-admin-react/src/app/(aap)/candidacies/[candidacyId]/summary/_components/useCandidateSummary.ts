@@ -37,7 +37,6 @@ const getCandidacyById = graphql(`
         id
         codeRncp
         label
-        isAapAvailable
       }
       candidate {
         id
