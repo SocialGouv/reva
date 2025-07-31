@@ -24,14 +24,16 @@ const getCertificationQuery = graphql(`
 export default async function CandidateRegistrationPage({
   searchParams,
 }: {
-  searchParams: { certificationId?: string };
+  searchParams: Promise<{ certificationId?: string }>;
 }) {
-  if (!searchParams.certificationId) {
+  const params = await searchParams;
+
+  if (!params.certificationId) {
     redirect("/espace-candidat/");
   }
 
   const result = await request(GRAPHQL_API_URL, getCertificationQuery, {
-    certificationId: searchParams.certificationId,
+    certificationId: params.certificationId,
   });
   const certification = result.getCertification;
 
@@ -40,7 +42,7 @@ export default async function CandidateRegistrationPage({
       <CandidateBackground>
         <CandidateRegistrationContent
           certification={certification}
-          certificationId={searchParams.certificationId}
+          certificationId={params.certificationId}
         />
       </CandidateBackground>
     </MainLayout>
