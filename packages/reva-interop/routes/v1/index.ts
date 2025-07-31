@@ -912,7 +912,9 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     method: "POST",
     url: "/auth/generateJwt",
     schema: {
-      hide: true,
+      hide:
+        process.env.ENVIRONMENT !== "local" &&
+        process.env.ENVIRONMENT !== "staging",
       summary: "Génère un jeton d'accès pour l'utilisateur demandé",
       tags: ["Authentification"],
       headers: {
@@ -965,7 +967,9 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     method: "POST",
     url: "/auth/invalidJwt",
     schema: {
-      hide: true,
+      hide:
+        process.env.ENVIRONMENT !== "local" &&
+        process.env.ENVIRONMENT !== "staging",
       summary: "Invalide le jeton d'accès",
       tags: ["Authentification"],
       headers: {
