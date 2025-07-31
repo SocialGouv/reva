@@ -42,7 +42,7 @@ const ArticleAidePage = async ({
   return (
     <MainLayout preview={preview}>
       {
-        <div className="flex flex-col sm:flex-row w-full gap-8 sm:gap-16 fr-container p-32 pt-16">
+        <div className="flex flex-col sm:flex-row w-full gap-8 sm:gap-16 fr-container p-4 sm:p-32 sm:pt-16">
           <Button
             className="h-fit"
             priority="tertiary"
