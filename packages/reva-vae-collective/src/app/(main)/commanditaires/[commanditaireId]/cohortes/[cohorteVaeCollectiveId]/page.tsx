@@ -144,7 +144,14 @@ export default async function CohortePage({
         commanditaireId={commanditaireId}
         cohorteVaeCollectiveId={cohorteVaeCollectiveId}
         organism={organism}
-        disabled={cohorte.status !== "BROUILLON" || !certificationSelected}
+        //disabled si aucune certification n'est sélectionnée ou  si la cohorte est publiée et aucun organisme n'est sélectionnée
+        //  (ce cas n'est pas sensé se produire aujourd'hui dans l'interface)
+        disabled={
+          !certificationSelected ||
+          (cohorte.status !== "BROUILLON" && !organismSelected)
+        }
+        //readonly si la cohorte est publiée
+        readonly={cohorte.status !== "BROUILLON"}
         certificationSelected={certificationSelected}
       />
 

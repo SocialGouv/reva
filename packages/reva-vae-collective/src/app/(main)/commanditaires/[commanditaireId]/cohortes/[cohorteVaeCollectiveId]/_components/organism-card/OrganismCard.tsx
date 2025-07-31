@@ -15,6 +15,7 @@ export const OrganismCard = ({
   organism,
   certificationSelected,
   disabled,
+  readonly,
   className,
 }: {
   commanditaireId: string;
@@ -22,6 +23,7 @@ export const OrganismCard = ({
   organism?: Organism | null;
   certificationSelected?: boolean;
   disabled: boolean;
+  readonly?: boolean;
   className?: string;
 }) =>
   organism ? (
@@ -30,6 +32,7 @@ export const OrganismCard = ({
       cohorteVaeCollectiveId={cohorteVaeCollectiveId}
       organism={organism}
       disabled={disabled}
+      readonly={readonly}
       className={className}
     />
   ) : (
@@ -86,22 +89,38 @@ const FilledOrganismCard = ({
   cohorteVaeCollectiveId,
   organism,
   disabled,
+  readonly,
   className,
 }: {
   commanditaireId: string;
   cohorteVaeCollectiveId: string;
   organism: Organism;
-  disabled: boolean;
+  disabled?: boolean;
+  readonly?: boolean;
   className?: string;
 }) => {
-  const additionalProps = disabled
-    ? { disabled: true, buttonProps: { disabled: true } }
-    : {
-        enlargeLinkOrButton: true,
-        linkProps: {
-          href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/aaps`,
-        },
-      };
+  const getAdditionalProps = ({
+    disabled,
+    readonly,
+  }: {
+    disabled?: boolean;
+    readonly?: boolean;
+  }) => {
+    if (disabled) {
+      return { disabled: true, buttonProps: { disabled: true } };
+    }
+    if (readonly) {
+      return {};
+    }
+    return {
+      enlargeLinkOrButton: true,
+      linkProps: {
+        href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/aaps`,
+      },
+    };
+  };
+
+  const additionalProps = getAdditionalProps({ disabled, readonly });
 
   return (
     <Tile

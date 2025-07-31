@@ -429,7 +429,7 @@ test.describe("organism card", () => {
           { scope: "test" },
         ],
       });
-      test("when i access the page, the empty organism card should be disabled and display the correct text", async ({
+      test("when i access the page, the empty organism card should be readonly and display the correct text", async ({
         page,
       }) => {
         await login({ page, role: "gestionnaireVaeCollective" });
@@ -439,8 +439,12 @@ test.describe("organism card", () => {
         );
 
         await expect(
-          await page.getByTestId("empty-organism-card").locator("button"),
-        ).toBeDisabled();
+          await page.getByTestId("empty-organism-card"),
+        ).toBeEnabled();
+
+        await expect(
+          await page.getByTestId("empty-organism-card").locator("a"),
+        ).toHaveCount(0);
 
         await expect(
           await page.getByTestId("empty-organism-card"),
@@ -635,6 +639,10 @@ test.describe("organism card", () => {
             "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
           );
 
+          await expect(
+            await page.getByTestId("filled-organism-card").locator("a"),
+          ).toBeDefined();
+
           await page.getByTestId("filled-organism-card").click();
 
           await expect(page).toHaveURL(
@@ -689,7 +697,7 @@ test.describe("organism card", () => {
           ],
         });
 
-        test("when i access the page, the filled organism card should be disabled", async ({
+        test("when i access the page, the filled organism card should be readonly", async ({
           page,
         }) => {
           await login({ page, role: "gestionnaireVaeCollective" });
@@ -699,8 +707,12 @@ test.describe("organism card", () => {
           );
 
           await expect(
-            await page.getByTestId("filled-organism-card").locator("button"),
-          ).toBeDisabled();
+            await page.getByTestId("filled-organism-card"),
+          ).toBeEnabled();
+
+          await expect(
+            await page.getByTestId("filled-organism-card").locator("a"),
+          ).toHaveCount(0);
         });
       });
     });
