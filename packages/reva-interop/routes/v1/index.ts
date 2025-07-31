@@ -12,9 +12,10 @@ import * as jose from "jose";
 
 import { mapCandidacyObject } from "../../utils/mappers/candidacy.js";
 import { mapFeasibilities } from "../../utils/mappers/feasibility.js";
-import { createSession } from "../../utils/session.js";
 
 import { validateJwt } from "./authMiddleware.js";
+import { generateJwt } from "./features/auth/generateJwt.js";
+import { invalidJwt } from "./features/auth/invalideJwt.js";
 import { getCandidacyDetails } from "./features/candidacies/getCandidacyDetails.js";
 import { getFeasibilities } from "./features/feasibilities/getFeasibilities.js";
 import {
@@ -161,6 +162,12 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   addResponseSchemas(fastify);
 
   fastify.decorateRequest("graphqlClient");
+
+  // Validate JWT for pathes :
+  // /candidatures
+  // /dossiersDeFaisabilite
+  // /dossiersDeValidation
+  // /informationsJury
   fastify.addHook("onRequest", validateJwt);
 
   fastify.post(
@@ -207,17 +214,8 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         throw new Error("keycloakId has not been set");
       }
 
-      const secretKey = new TextEncoder().encode(process.env.SECRET_KEY);
+      const jwt = await generateJwt({ keycloakId });
 
-      const session = await createSession({ keycloakId });
-
-      const jwt = await new jose.SignJWT()
-        .setAudience("fvae-interop")
-        .setIssuer(`fvae-interop-${process.env.ENVIRONMENT}`)
-        .setSubject(session.id)
-        .setProtectedHeader({ alg: "HS512" })
-        .setIssuedAt(session.createdAt)
-        .sign(secretKey);
       return {
         access_token: jwt,
       };
@@ -906,6 +904,98 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         return "OK";
       },
     });
+
+  fastify.route({
+    method: "POST",
+    url: "/auth/generateJwt",
+    schema: {
+      summary: "Génère un jeton d'accès pour l'utilisateur demandé",
+      // security: [{ bearerAuth: [] }],
+      tags: ["Authentification"],
+      headers: {
+        type: "object",
+        properties: {
+          auth_api_key: { type: "string" },
+        },
+        required: ["auth_api_key"],
+      },
+      body: {
+        type: "object",
+        properties: {
+          userId: {
+            type: "string",
+            description: "Identifiant de l'utilisateur",
+          },
+        },
+        required: ["userId"],
+      },
+      response: {
+        200: {
+          description: "Génération du JWT avec succès",
+          type: "object",
+          properties: {
+            token: {
+              type: "string",
+              description: "JWT",
+            },
+          },
+        },
+      },
+    },
+    handler: async (request) => {
+      const { auth_api_key } = request.headers;
+
+      console.log("auth_api_key", request.headers);
+
+      if (!auth_api_key || auth_api_key != process.env.AUTH_API_KEY) {
+        throw new Error("Unauthorized");
+      }
+
+      const jwt = await generateJwt({ keycloakId: request.body.userId });
+
+      return {
+        token: jwt,
+      };
+    },
+  });
+
+  fastify.route({
+    method: "POST",
+    url: "/auth/invalidJwt",
+    schema: {
+      summary: "Invalide le jeton d'accès",
+      // security: [{ bearerAuth: [] }],
+      tags: ["Authentification"],
+      headers: {
+        type: "object",
+        properties: {
+          auth_api_key: { type: "string" },
+        },
+        required: ["auth_api_key"],
+      },
+      body: {
+        type: "object",
+        properties: {
+          token: {
+            type: "string",
+            description: "JWT",
+          },
+        },
+        required: ["token"],
+      },
+    },
+    handler: async (request, reply) => {
+      const { auth_api_key } = request.headers;
+
+      if (!auth_api_key || auth_api_key != process.env.AUTH_API_KEY) {
+        throw new Error("Unauthorized");
+      }
+
+      await invalidJwt({ token: request.body.token });
+
+      reply.status(204).send();
+    },
+  });
 
   fastify.get("/docs", { schema: { hide: true } }, async (_request, reply) => {
     reply.type("html");

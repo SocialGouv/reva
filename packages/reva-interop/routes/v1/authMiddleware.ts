@@ -1,11 +1,12 @@
 import { Client } from "@urql/core";
 import dotenv from "dotenv";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as jose from "jose";
 
 import { getGraphQlClient } from "../../utils/graphqlClient.js";
+import { parseJwt } from "../../utils/jwt.js";
 import { getUserAccessToken } from "../../utils/keycloak.js";
-import { findSessionById } from "../../utils/session.js";
+
+import { findSessionById } from "./features/session/findSessionById.js";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -16,34 +17,32 @@ declare module "fastify" {
 
 dotenv.config({ path: "./.env" });
 
-const secretKey = new TextEncoder().encode(process.env.SECRET_KEY);
-
 export const validateJwt = async (
   request: FastifyRequest,
   _reply: FastifyReply,
 ) => {
-  if (
-    request.url === "/interop/v1/docs" ||
-    request.url.startsWith("/interop/v1/documentation")
-  ) {
+  const securePathes = [
+    "candidatures",
+    "dossiersDeFaisabilite",
+    "dossiersDeValidation",
+    "informationsJury",
+  ];
+
+  const isSecurePath = securePathes.some((path) =>
+    request.url.startsWith(`/interop/v1/${path}`),
+  );
+
+  if (!isSecurePath) {
     return;
   }
+
   if (!process.env.ENVIRONMENT || process.env.ENVIRONMENT === "") {
     throw new Error("ENVIRONMENT env var is missing");
   }
 
   const jwt = getTokenFromRequest(request);
 
-  // const jwt =
-  //   "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmdmFlLWludGVyb3AtYXNwIiwiYXVkIjoiZnZhZS1pbnRlcm9wIiwic3ViIjoiYWNiMzY3ODgtNDA3Yy00MTRlLTlkMzMtMjMzYjJhMWNhMjQwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjM3MTYyMzkwMjJ9.cRKBfFM9TrpANOdNZTOGKS4QZ4C-PzD0RKtnYUVz1whBUGGGA2btlPk4GQQzp7QHRusFu44vgxuw8XGg1Kg6Ug";
-  const { payload } = await jose.jwtVerify(jwt, secretKey, {
-    issuer: `fvae-interop-${process.env.ENVIRONMENT}`,
-    requiredClaims: ["iat", "sub"],
-    audience: "fvae-interop",
-    algorithms: ["HS512"],
-
-    // maxTokenAge: "1h",
-  });
+  const payload = await parseJwt({ token: jwt });
 
   const sessionId = payload.sub;
   if (!sessionId) {
