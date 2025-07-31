@@ -127,21 +127,18 @@ export const CandidateRegistrationStep2 = ({
     >
       <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
         <Input
-          data-testid="candidate-registration-form-lastname-input"
           label="Nom"
           state={errors.lastname ? "error" : "default"}
           stateRelatedMessage={errors.lastname?.message}
           nativeInputProps={{ ...register("lastname") }}
         />
         <Input
-          data-testid="candidate-registration-form-firstname-input"
           label="Prénom"
           state={errors.firstname ? "error" : "default"}
           stateRelatedMessage={errors.firstname?.message}
           nativeInputProps={{ ...register("firstname") }}
         />
         <Input
-          data-testid="candidate-registration-form-phone-input"
           label="Téléphone"
           state={errors.phone ? "error" : "default"}
           stateRelatedMessage={errors.phone?.message}
@@ -152,7 +149,6 @@ export const CandidateRegistrationStep2 = ({
           }}
         />
         <Input
-          data-testid="candidate-registration-form-email-input"
           label="Email (utilisé pour la connexion)"
           state={errors.email ? "error" : "default"}
           stateRelatedMessage={errors.email?.message}
@@ -164,7 +160,6 @@ export const CandidateRegistrationStep2 = ({
           }}
         />
         <Select
-          data-testid="candidate-registration-form-department-select"
           label="Département"
           state={errors.departmentId ? "error" : "default"}
           stateRelatedMessage={errors.departmentId?.message}
@@ -183,10 +178,7 @@ export const CandidateRegistrationStep2 = ({
           ))}
         </Select>
       </fieldset>
-      <div
-        className="w-full"
-        data-testid="candidate-registration-form-public-employee-checkbox-wrapper"
-      >
+      <div className="w-full">
         <Checkbox
           small
           options={[

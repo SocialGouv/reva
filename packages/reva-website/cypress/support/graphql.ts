@@ -30,20 +30,3 @@ export const stubQuery = (
     }
   }
 };
-
-// Alias mutation if operationName matches
-export const stubMutation = (
-  req: CyHttpMessages.IncomingHttpRequest,
-  operationName: string,
-  fixture: string | object,
-  statusCode = 200,
-) => {
-  if (hasOperationName(req, operationName)) {
-    req.alias = operationName;
-    if (typeof fixture == "string" && fixture.endsWith(".json")) {
-      req.reply({ statusCode, fixture });
-    } else {
-      req.reply(statusCode, fixture);
-    }
-  }
-};
