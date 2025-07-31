@@ -144,22 +144,25 @@ export default async function CohortePage({
 
       <hr className="mt-8 mb-2" />
 
-      <GenerateCohorteCodeInscriptionButton
-        commanditaireId={commanditaireId}
-        cohorteVaeCollectiveId={cohorteVaeCollectiveId}
-        nomCohorte={cohorte.nom}
-        certificationCodeRncp={certification?.codeRncp ?? ""}
-        certificationlabel={certification?.label ?? ""}
-        aapLabel={organism?.label ?? ""}
-        disabled={!organismSelected}
-      />
+      {cohorte.status === "BROUILLON" && (
+        <>
+          <GenerateCohorteCodeInscriptionButton
+            commanditaireId={commanditaireId}
+            cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+            nomCohorte={cohorte.nom}
+            certificationCodeRncp={certification?.codeRncp ?? ""}
+            certificationlabel={certification?.label ?? ""}
+            aapLabel={organism?.label ?? ""}
+            disabled={!organismSelected}
+          />
 
-      <DeleteCohorteButton
-        commanditaireId={commanditaireId}
-        cohorteVaeCollectiveId={cohorteVaeCollectiveId}
-        nomCohorte={cohorte.nom}
-        disabled={cohorte.status !== "BROUILLON"}
-      />
+          <DeleteCohorteButton
+            commanditaireId={commanditaireId}
+            cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+            nomCohorte={cohorte.nom}
+          />
+        </>
+      )}
 
       <Button
         className="mt-12"
