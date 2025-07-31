@@ -12,6 +12,11 @@ import { CertificationCard } from "./_components/certification-card/Certificatio
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
 import { GenerateCohorteCodeInscriptionButton } from "./_components/generate-cohorte-code-inscription-button/GenerateCohorteCodeInscriptionButton";
 import { OrganismCard } from "./_components/organism-card/OrganismCard";
+import { RegistrationCodeDisplay } from "./_components/registration-code-display/RegistrationCodeDisplay";
+import { RegistrationUrlDisplay } from "./_components/registration-url-display/RegistrationUrlDisplay";
+
+const websiteBaseUrl =
+  (process.env.BASE_URL as string) || "http://localhost:3002";
 
 const getCohorteById = async (
   commanditaireVaeCollectiveId: string,
@@ -33,6 +38,7 @@ const getCohorteById = async (
             id
             nom
             status
+            codeInscription
             certificationCohorteVaeCollectives {
               id
               certification {
@@ -162,6 +168,24 @@ export default async function CohortePage({
             nomCohorte={cohorte.nom}
           />
         </>
+      )}
+
+      {cohorte.status === "PUBLIE" && (
+        <div className="flex flex-col gap-4">
+          <p className="text-lg">
+            Retrouvez, ici, votre code VAE collective permettant l’accès à la
+            cohorte ainsi que le lien direct vers la page d’inscription à
+            transmettre à vos candidats.
+          </p>
+          <div className="flex flex-col xl:flex-row gap-6">
+            <RegistrationCodeDisplay
+              registrationCode={cohorte.codeInscription || ""}
+            />
+            <RegistrationUrlDisplay
+              registrationUrl={`${websiteBaseUrl}/inscription-candidat/vae-collective/${cohorte.codeInscription}`}
+            />
+          </div>
+        </div>
       )}
 
       <Button
