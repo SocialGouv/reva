@@ -7,7 +7,9 @@ import "@/styles/ckeditor5-content-styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Script from "next/script";
 
+import { Produktly } from "@/components/script/Produktly";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
+import { PRODUKTLY_CLIENT_TOKEN } from "@/config/config";
 
 import { DsfrProvider, StartDsfrOnHydration } from "./_components/dsfr";
 import { DsfrHead } from "./_components/dsfr/DsfrHead";
@@ -34,6 +36,7 @@ export default function RootLayout({
       <head>
         <StartDsfrOnHydration />
         <DsfrHead />
+        {PRODUKTLY_CLIENT_TOKEN && <Produktly />}
       </head>
       <body>
         <DsfrProvider lang={lang}>
