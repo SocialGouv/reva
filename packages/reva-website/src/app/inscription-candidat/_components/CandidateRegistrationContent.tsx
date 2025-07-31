@@ -1,6 +1,7 @@
 "use client";
 import request from "graphql-request";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { GRAPHQL_API_URL } from "@/config/config";
 
@@ -12,35 +13,60 @@ import {
   CandidateRegistrationForm,
 } from "./CandidateRegistrationForm";
 
+const getCertificationQuery = graphql(`
+  query getCertification($certificationId: ID!) {
+    getCertification(certificationId: $certificationId) {
+      id
+      label
+      codeRncp
+      typeDiplome
+      isAapAvailable
+    }
+  }
+`);
+
 const askForRegistrationMutation = graphql(`
   mutation candidate_askForRegistration($candidate: CandidateInput!) {
     candidate_askForRegistration(candidate: $candidate)
   }
 `);
 
-interface CandidateRegistrationContentProps {
-  certification: Pick<
+export function CandidateRegistrationContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const certificationId = searchParams?.get("certificationId");
+
+  const [certification, setCertification] = useState<Pick<
     Certification,
     "id" | "label" | "codeRncp" | "typeDiplome" | "isAapAvailable"
-  > | null;
-  certificationId: string;
-}
-
-export function CandidateRegistrationContent({
-  certification,
-  certificationId,
-}: CandidateRegistrationContentProps) {
-  const router = useRouter();
+  > | null>(null);
 
   const handleFormSubmit = async (form: CandidateFormData) => {
     await request(GRAPHQL_API_URL, askForRegistrationMutation, {
       candidate: {
         ...form,
-        certificationId,
+        certificationId: certificationId as string,
       },
     });
     router.push("/inscription-candidat/confirmation");
   };
+
+  useEffect(() => {
+    const updateCertification = async () => {
+      if (certificationId) {
+        setCertification(
+          (
+            await request(GRAPHQL_API_URL, getCertificationQuery, {
+              certificationId: certificationId as string,
+            })
+          ).getCertification,
+        );
+      } else {
+        setCertification(null);
+      }
+    };
+    updateCertification();
+  }, [certificationId]);
 
   return (
     <CandidateRegistrationForm
