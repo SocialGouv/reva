@@ -67,7 +67,10 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     },
   };
 
-  if (process.env.ENVIRONMENT !== "production") {
+  if (
+    process.env.ENVIRONMENT !== "production" &&
+    process.env.ENVIRONMENT !== "sandbox"
+  ) {
     security.push({
       oauth: [],
     });
