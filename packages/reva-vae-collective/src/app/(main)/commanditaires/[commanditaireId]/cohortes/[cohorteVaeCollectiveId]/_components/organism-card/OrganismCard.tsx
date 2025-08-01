@@ -2,6 +2,7 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 type Organism = {
   label: string;
+  nomPublic?: string | null;
   adresseNumeroEtNomDeRue?: string | null;
   adresseCodePostal?: string | null;
   adresseVille?: string | null;
@@ -129,7 +130,7 @@ const FilledOrganismCard = ({
       title="Architecte Accompagnateur de parcours"
       desc={
         <>
-          {organism.label}
+          {organism.nomPublic || organism.label}
           <br />
           {[
             organism.adresseNumeroEtNomDeRue,

@@ -15,6 +15,7 @@ export const OrganismCard = ({
   organism: {
     id: string;
     label: string;
+    nomPublic?: string | null;
     isMaisonMereMCFCompatible?: boolean | null;
     modaliteAccompagnement: "LIEU_ACCUEIL" | "A_DISTANCE";
     conformeNormesAccessibilite?:
@@ -30,7 +31,7 @@ export const OrganismCard = ({
 }) => (
   <Card
     data-testid="organism-card"
-    title={organism.label}
+    title={organism.nomPublic || organism.label}
     start={
       <div className="flex gap-2">
         {organism.isMaisonMereMCFCompatible && <Tag small>MCF</Tag>}

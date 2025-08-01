@@ -51,6 +51,7 @@ const getCohorteById = async (
                 organism {
                   id
                   label
+                  nomPublic
                   adresseNumeroEtNomDeRue
                   adresseCodePostal
                   adresseVille

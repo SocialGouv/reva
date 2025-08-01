@@ -56,6 +56,7 @@ const loadCommanditaireAndCohortes = async ({
                     organism {
                       id
                       label
+                      nomPublic
                     }
                   }
                 }
@@ -163,7 +164,8 @@ export default async function CohortesPage({
                       <>
                         <br />
                         <span className="text-sm" data-testid="organism">
-                          {organism.organism.label}
+                          {organism.organism.nomPublic ||
+                            organism.organism.label}
                         </span>
                       </>
                     )}

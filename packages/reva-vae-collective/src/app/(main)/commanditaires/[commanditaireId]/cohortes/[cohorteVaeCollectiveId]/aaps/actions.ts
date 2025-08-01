@@ -49,6 +49,7 @@ const searchOrganismQuery = graphql(`
       rows {
         id
         label
+        nomPublic
         isMaisonMereMCFCompatible
         modaliteAccompagnement
         conformeNormesAccessibilite
