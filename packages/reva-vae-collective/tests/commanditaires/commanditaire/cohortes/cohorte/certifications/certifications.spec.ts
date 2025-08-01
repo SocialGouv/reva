@@ -11,43 +11,38 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 test.use({
   mswHandlers: [
     [
-      fvae.query("getCohorteByIdForSearchCertificationsPage", () =>
-        HttpResponse.json({
-          data: {
-            vaeCollective_getCohorteVaeCollectiveById: {
-              id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
-              nom: "macohorte",
-            },
-          },
-        }),
-      ),
-
-      fvae.query("searchCertificationsForCandidateForCertificationsPage", () =>
-        HttpResponse.json({
-          data: {
-            searchCertificationsForCandidate: {
-              rows: [
-                {
-                  id: 1,
-                  label: "certification1",
-                  codeRncp: "rncp1",
-                  domains: [],
+      fvae.query(
+        "searchCertificationsAndGetCohorteInfoForCertificationsPage",
+        () =>
+          HttpResponse.json({
+            data: {
+              vaeCollective_getCohorteVaeCollectiveById: {
+                id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                nom: "macohorte",
+              },
+              searchCertificationsForCandidate: {
+                rows: [
+                  {
+                    id: 1,
+                    label: "certification1",
+                    codeRncp: "rncp1",
+                    domains: [],
+                  },
+                  {
+                    id: 2,
+                    label: "certification2",
+                    codeRncp: "rncp2",
+                    domains: [],
+                  },
+                ],
+                info: {
+                  totalRows: 2,
+                  totalPages: 1,
+                  currentPage: 1,
                 },
-                {
-                  id: 2,
-                  label: "certification2",
-                  codeRncp: "rncp2",
-                  domains: [],
-                },
-              ],
-              info: {
-                totalRows: 2,
-                totalPages: 1,
-                currentPage: 1,
               },
             },
-          },
-        }),
+          }),
       ),
     ],
     { scope: "test" },

@@ -4,7 +4,7 @@ import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
 import { CertificationsSearchBar } from "./_components/certifications-search-bar/CertificationsSearchBar";
-import { getCohorteById, searchCertifications } from "./actions";
+import { searchCertificationsAndGetCohorteInfo } from "./actions";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -21,17 +21,18 @@ export default async function CertificationsPage({
 
   const currentPage = page ? Number(page) : 1;
 
-  const cohorte = await getCohorteById(commanditaireId, cohorteVaeCollectiveId);
+  const { certifications, cohorteVaeCollective } =
+    await searchCertificationsAndGetCohorteInfo({
+      commanditaireVaeCollectiveId: commanditaireId,
+      cohorteVaeCollectiveId,
+      searchText,
+      offset: (currentPage - 1) * RECORDS_PER_PAGE,
+      limit: RECORDS_PER_PAGE,
+    });
 
-  if (!cohorte) {
+  if (!cohorteVaeCollective) {
     throw new Error("Cohorte non trouvée");
   }
-
-  const certifications = await searchCertifications({
-    searchText,
-    offset: (currentPage - 1) * RECORDS_PER_PAGE,
-    limit: RECORDS_PER_PAGE,
-  });
 
   return (
     <div className="flex flex-col">
@@ -46,7 +47,7 @@ export default async function CertificationsPage({
             },
           },
           {
-            label: cohorte.nom,
+            label: cohorteVaeCollective.nom,
             linkProps: {
               href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}`,
             },

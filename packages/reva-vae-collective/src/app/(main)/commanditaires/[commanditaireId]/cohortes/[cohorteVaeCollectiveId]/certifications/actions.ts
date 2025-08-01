@@ -6,10 +6,13 @@ import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
 import { graphql } from "@/graphql/generated";
 
-const getCohorteByIdQuery = graphql(`
-  query getCohorteByIdForSearchCertificationsPage(
+const searchCertificationsAndGetCohorteInfoQuery = graphql(`
+  query searchCertificationsAndGetCohorteInfoForCertificationsPage(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
+    $searchText: String
+    $offset: Int
+    $limit: Int
   ) {
     vaeCollective_getCohorteVaeCollectiveById(
       commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
@@ -18,41 +21,6 @@ const getCohorteByIdQuery = graphql(`
       id
       nom
     }
-  }
-`);
-
-export const getCohorteById = async (
-  commanditaireVaeCollectiveId: string,
-  cohorteVaeCollectiveId: string,
-) => {
-  const accessToken = await getAccessTokenFromCookie();
-
-  const result = throwUrqlErrors(
-    await client.query(
-      getCohorteByIdQuery,
-      {
-        commanditaireVaeCollectiveId,
-        cohorteVaeCollectiveId,
-      },
-      {
-        fetchOptions: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      },
-    ),
-  );
-
-  return result.data?.vaeCollective_getCohorteVaeCollectiveById;
-};
-
-const searchCertificationsForCandidateQuery = graphql(`
-  query searchCertificationsForCandidateForCertificationsPage(
-    $searchText: String
-    $offset: Int
-    $limit: Int
-  ) {
     searchCertificationsForCandidate(
       searchText: $searchText
       offset: $offset
@@ -80,11 +48,15 @@ const searchCertificationsForCandidateQuery = graphql(`
   }
 `);
 
-export const searchCertifications = async ({
+export const searchCertificationsAndGetCohorteInfo = async ({
+  commanditaireVaeCollectiveId,
+  cohorteVaeCollectiveId,
   searchText,
   offset,
   limit,
 }: {
+  commanditaireVaeCollectiveId: string;
+  cohorteVaeCollectiveId: string;
   searchText?: string;
   offset?: number;
   limit?: number;
@@ -93,8 +65,10 @@ export const searchCertifications = async ({
 
   const result = throwUrqlErrors(
     await client.query(
-      searchCertificationsForCandidateQuery,
+      searchCertificationsAndGetCohorteInfoQuery,
       {
+        commanditaireVaeCollectiveId,
+        cohorteVaeCollectiveId,
         searchText,
         offset,
         limit,
@@ -110,8 +84,15 @@ export const searchCertifications = async ({
   );
 
   if (!result.data?.searchCertificationsForCandidate) {
-    throw new Error("Certifications non trouvées");
+    throw new Error("aaps non trouvées");
   }
 
-  return result.data.searchCertificationsForCandidate;
+  if (!result.data.vaeCollective_getCohorteVaeCollectiveById) {
+    throw new Error("Cohorte non trouvée");
+  }
+
+  return {
+    certifications: result.data?.searchCertificationsForCandidate,
+    cohorteVaeCollective: result.data.vaeCollective_getCohorteVaeCollectiveById,
+  };
 };
