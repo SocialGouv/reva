@@ -25,7 +25,7 @@ const nextConfig = {
     return config;
   },
   eslint: {
-    dirs: ["app", "components", "lib", "src"],
+    dirs: ["app", "components", "lib", "src", "tests"],
   },
   experimental: {
     testProxy: process.env.APP_ENV === "test",
