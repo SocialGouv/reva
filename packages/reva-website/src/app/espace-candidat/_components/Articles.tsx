@@ -1,11 +1,10 @@
-import { GraphQLClient } from "graphql-request";
 import Link from "next/link";
 
 import { ArticleCard } from "@/components/article-card/ArticleCard";
-import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 
 import { graphql } from "@/graphql/generated";
 import { ArticleDAide } from "@/graphql/generated/graphql";
+import { strapi } from "@/graphql/strapi";
 
 const articlesQuery = graphql(`
   query getArticlesDAide($filters: ArticleDAideFiltersInput!) {
@@ -23,8 +22,6 @@ const articlesQuery = graphql(`
 `);
 
 const Articles = async () => {
-  const graphqlStrapiClient = new GraphQLClient(STRAPI_GRAPHQL_API_URL);
-
   const laVaeCestQuoiSlug = "la-vae-cest-quoi";
   const etapesParcoursFranceVaeSlug = "etapes-parcours-france-vae";
   const pourquoiFaireUneVaeSlug = "pourquoi-faire-une-vae";
@@ -34,7 +31,7 @@ const Articles = async () => {
     etapesParcoursFranceVaeSlug,
   ];
 
-  const articles = await graphqlStrapiClient.request(articlesQuery, {
+  const articles = await strapi.request(articlesQuery, {
     filters: {
       slug: {
         in: articleSlugs,
