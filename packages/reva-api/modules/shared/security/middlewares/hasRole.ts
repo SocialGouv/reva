@@ -1,4 +1,4 @@
-import { IFieldResolver, MercuriusContext } from "mercurius";
+import { ErrorWithProps, IFieldResolver, MercuriusContext } from "mercurius";
 
 export const hasRole =
   (roles: KeyCloakUserRole[]) =>
@@ -10,7 +10,12 @@ export const hasRole =
     info: any,
   ) => {
     if (!context.auth.userInfo) {
-      throw new Error("Votre session a expiré, veuillez vous reconnecter.");
+      throw new ErrorWithProps(
+        "Votre session a expiré, veuillez vous reconnecter.",
+        {
+          code: "UNAUTHENTICATED",
+        },
+      );
     }
 
     if (!roles.some((role) => context.auth.hasRole(role))) {
