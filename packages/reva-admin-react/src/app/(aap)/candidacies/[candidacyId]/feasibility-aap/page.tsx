@@ -227,18 +227,16 @@ const AapFeasibilityPage = () => {
               dematerializedFeasibilityFile?.attachments as DffAttachment[]
             }
           />
-          <hr />
 
-          <h2>Vérifier et envoyer le dossier au candidat</h2>
+          <hr className="pb-0.5" />
 
           <SendFileCandidateSection
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
             }
             isReadyToBeSentToCandidate={
-              dematerializedFeasibilityFile?.isReadyToBeSentToCandidate
+              !!dematerializedFeasibilityFile?.isReadyToBeSentToCandidate
             }
-            hasBeenSentToCertificationAuthority={!!feasibilityFileSentAt}
           />
           {dematerializedFeasibilityFile?.candidateDecisionComment && (
             <CandidateDecisionCommentSection
