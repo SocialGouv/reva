@@ -30,7 +30,7 @@ export default function AddLocalAccountPage() {
     try {
       await updateCertificationAuthorityLocalAccount.mutateAsync({
         accountFirstname: data.accountFirstname,
-        accountLastname: data.accountFirstname,
+        accountLastname: data.accountLastname,
         accountEmail: data.accountEmail,
         contactFullName: data.contactFullName,
         contactEmail: data.contactEmail,
