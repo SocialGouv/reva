@@ -22,7 +22,7 @@ const KeycloakContext = React.createContext<{
   accessToken: string | undefined;
   resetKeycloakInstance: (tokens: Tokens) => void;
   keycloakUser?: KeycloakUser;
-  logout: () => void;
+  logout: ({ redirectUri }?: { redirectUri?: string }) => void;
 } | null>(null);
 
 interface KeycloakProviderProps {
@@ -37,7 +37,11 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
   const [tokens, setTokens] = useState<Tokens | undefined>();
   const [ready, setReady] = useState<boolean>(false);
 
-  const logout = async () => {
+  const logout = async ({
+    redirectUri,
+  }: {
+    redirectUri?: string;
+  } = {}) => {
     if (!keycloakInstance.authenticated) return;
 
     removeTokens();
@@ -46,6 +50,7 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
 
     await keycloakInstance?.logout({
       redirectUri:
+        redirectUri ||
         window.location.origin + "/vae-collective/logout-confirmation",
     });
   };
