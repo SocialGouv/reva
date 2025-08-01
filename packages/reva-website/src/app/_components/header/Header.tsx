@@ -2,21 +2,16 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import { ConnectionDropdown } from "./ConnectionDropdown";
 
-export const Header = (props: { className?: string }) => {
-  const pathname = usePathname() || "";
-  const [isClient, setIsClient] = useState(false);
-  const { isFeatureActive } = useFeatureflipping();
-  const showNewProMenu = isFeatureActive("WEBSITE_PRO_MENU_DROPDOWN");
+interface HeaderProps {
+  showNewProMenu: boolean;
+  showVaeCollective: boolean;
+}
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+export const Header = ({ showNewProMenu, showVaeCollective }: HeaderProps) => {
+  const pathname = usePathname() || "";
 
   const navigation = [
     {
@@ -131,7 +126,6 @@ export const Header = (props: { className?: string }) => {
 
   return (
     <DsfrHeader
-      className={props.className}
       brandTop={
         <>
           République
@@ -150,25 +144,22 @@ export const Header = (props: { className?: string }) => {
       }}
       serviceTitle="Le service public de la VAE"
       classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
-      quickAccessItems={
-        isClient
-          ? [
-              <ConnectionDropdown key="connection" />,
-              <Button
-                key="start"
-                priority="secondary"
-                linkProps={{
-                  href: isFeatureActive("VAE_COLLECTIVE")
-                    ? "/commencer"
-                    : "/espace-candidat",
-                }}
-              >
-                Commencer une VAE
-              </Button>,
-            ]
-          : []
-      }
-      navigation={isClient ? navigation : []}
+      quickAccessItems={[
+        <ConnectionDropdown
+          key="connection"
+          showVaeCollective={showVaeCollective}
+        />,
+        <Button
+          key="start"
+          priority="secondary"
+          linkProps={{
+            href: showVaeCollective ? "/commencer" : "/espace-candidat",
+          }}
+        >
+          Commencer une VAE
+        </Button>,
+      ]}
+      navigation={navigation}
     />
   );
 };

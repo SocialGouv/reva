@@ -10,9 +10,13 @@ const activeFeaturesQuery = graphql(`
   }
 `);
 
-async function getActiveFeatures(): Promise<string[]> {
-  const result = await request(GRAPHQL_API_URL, activeFeaturesQuery);
-  return result.activeFeaturesForConnectedUser;
+export async function getActiveFeatures(): Promise<string[]> {
+  try {
+    const result = await request(GRAPHQL_API_URL, activeFeaturesQuery);
+    return result.activeFeaturesForConnectedUser;
+  } catch {
+    return [];
+  }
 }
 
 export async function isFeatureActive(featureName: string): Promise<boolean> {

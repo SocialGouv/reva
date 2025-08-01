@@ -2,7 +2,7 @@ import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import Link from "next/link";
 import { ReactNode } from "react";
 
-import { Header } from "@/app/_components/header/Header";
+import { HeaderWrapper } from "@/app/_components/header/HeaderWrapper";
 import { Footer } from "@/components/footer/Footer";
 
 export const MainLayout = (props: {
@@ -25,7 +25,7 @@ export const MainLayout = (props: {
             },
           ]}
         />
-        <Header />
+        <HeaderWrapper />
         <div>
           {props.preview ? (
             <div className="relative bg-dsfrBlue-franceSun">
