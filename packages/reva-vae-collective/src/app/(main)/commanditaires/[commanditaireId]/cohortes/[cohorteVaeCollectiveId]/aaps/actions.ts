@@ -8,13 +8,10 @@ import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
 import { graphql } from "@/graphql/generated";
 
-const searchOrganismsAndGetCohorteInfoQuery = graphql(`
-  query searchOrganismsAndGetCohorteInfoForSearchAAPPage(
+const getCohorteByIdQuery = graphql(`
+  query getCohorteByIdForSearchAAPPage(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
-    $searchText: String
-    $offset: Int
-    $limit: Int
   ) {
     vaeCollective_getCohorteVaeCollectiveById(
       commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
@@ -22,8 +19,24 @@ const searchOrganismsAndGetCohorteInfoQuery = graphql(`
     ) {
       id
       nom
+      certificationCohorteVaeCollectives {
+        certification {
+          id
+        }
+      }
     }
+  }
+`);
+
+const searchOrganismQuery = graphql(`
+  query searchOrganismsForSearchAAPPage(
+    $certificationId: ID!
+    $searchText: String
+    $offset: Int
+    $limit: Int
+  ) {
     organism_searchOrganisms(
+      certificationId: $certificationId
       searchText: $searchText
       offset: $offset
       limit: $limit
@@ -63,12 +76,40 @@ export const searchOrganismsAndGetCohorteInfo = async ({
 }) => {
   const accessToken = await getAccessTokenFromCookie();
 
-  const result = throwUrqlErrors(
+  const getCohorteByIdResult = throwUrqlErrors(
     await client.query(
-      searchOrganismsAndGetCohorteInfoQuery,
+      getCohorteByIdQuery,
       {
         commanditaireVaeCollectiveId,
         cohorteVaeCollectiveId,
+      },
+      {
+        fetchOptions: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      },
+    ),
+  );
+
+  if (!getCohorteByIdResult?.data?.vaeCollective_getCohorteVaeCollectiveById) {
+    throw new Error("Cohorte non trouvée");
+  }
+
+  const certificationId =
+    getCohorteByIdResult.data?.vaeCollective_getCohorteVaeCollectiveById
+      ?.certificationCohorteVaeCollectives[0]?.certification?.id;
+
+  if (!certificationId) {
+    throw new Error("Certification non trouvée");
+  }
+
+  const searchOrganismsResult = throwUrqlErrors(
+    await client.query(
+      searchOrganismQuery,
+      {
+        certificationId,
         searchText,
         offset,
         limit,
@@ -83,17 +124,14 @@ export const searchOrganismsAndGetCohorteInfo = async ({
     ),
   );
 
-  if (!result.data?.organism_searchOrganisms) {
+  if (!searchOrganismsResult.data?.organism_searchOrganisms) {
     throw new Error("Organismes non trouvées");
   }
 
-  if (!result.data.vaeCollective_getCohorteVaeCollectiveById) {
-    throw new Error("Cohorte non trouvée");
-  }
-
   return {
-    cohorte: result.data.vaeCollective_getCohorteVaeCollectiveById,
-    organisms: result.data.organism_searchOrganisms,
+    cohorte:
+      getCohorteByIdResult.data.vaeCollective_getCohorteVaeCollectiveById,
+    organisms: searchOrganismsResult.data.organism_searchOrganisms,
   };
 };
 

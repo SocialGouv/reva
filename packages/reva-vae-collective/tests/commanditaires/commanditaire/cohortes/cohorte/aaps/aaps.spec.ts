@@ -11,13 +11,27 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 test.use({
   mswHandlers: [
     [
-      fvae.query("searchOrganismsAndGetCohorteInfoForSearchAAPPage", () =>
+      fvae.query("getCohorteByIdForSearchAAPPage", () =>
         HttpResponse.json({
           data: {
             vaeCollective_getCohorteVaeCollectiveById: {
               id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
               nom: "macohorte",
+              certificationCohorteVaeCollectives: [
+                {
+                  certification: {
+                    id: "certification1",
+                  },
+                },
+              ],
             },
+          },
+        }),
+      ),
+
+      fvae.query("searchOrganismsForSearchAAPPage", () =>
+        HttpResponse.json({
+          data: {
             organism_searchOrganisms: {
               info: {
                 totalRows: 2,
@@ -53,6 +67,7 @@ test.use({
           },
         }),
       ),
+
       fvae.mutation("updateCohorteVAECollectiveOrganism", () =>
         HttpResponse.json({
           data: {
