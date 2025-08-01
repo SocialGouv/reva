@@ -117,7 +117,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='prerequisites-section']").should("exist");
       cy.get("[data-test='decision-section']").should("exist");
       cy.get("[data-test='attachments-section']").should("exist");
-      cy.get("[data-test='send-file-candidate-section']").should("exist");
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "exist",
+      );
       cy.get("[data-test='sworn-statement-section']").should("exist");
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
@@ -189,9 +191,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
@@ -239,9 +245,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
@@ -288,9 +298,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
@@ -344,9 +358,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
         cy.get("[data-test='attachments-section']").within(() => {
           cy.get("[data-test='completed-badge']").should("exist");
         });
-        cy.get("[data-test='send-file-candidate-section']").within(() => {
-          cy.get("button").should("not.be.disabled");
-        });
+        cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+          "not.exist",
+        );
+        cy.get("[data-test='send-file-candidate-tile-ready']").should("exist");
+        cy.get("[data-test='send-file-candidate-tile-sent']").should(
+          "not.exist",
+        );
         cy.get("[data-test='sworn-statement-section']").within(() => {
           cy.get("button").should("be.disabled");
         });
@@ -401,10 +419,14 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("[data-test='sent-file-alert']").should("exist");
-        cy.get("button").should("not.be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
+      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
@@ -456,9 +478,11 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("not.be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should("exist");
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
@@ -532,9 +556,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("not.be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
@@ -587,9 +615,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("not.be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
@@ -642,9 +674,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("not.be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
@@ -710,9 +746,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           cy.get("[data-test='completed-badge']").should("not.exist");
           cy.get("button").should("not.exist");
         });
-        cy.get("[data-test='send-file-candidate-section']").within(() => {
-          cy.get("button").should("not.exist");
-        });
+        cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+          "not.exist",
+        );
+        cy.get("[data-test='send-file-candidate-tile-ready']").should(
+          "not.exist",
+        );
+        cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
         cy.get("[data-test='sworn-statement-section']").within(() => {
           cy.get("button").should("not.exist");
         });
@@ -825,9 +865,11 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("not.be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should("exist");
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
@@ -883,9 +925,13 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='attachments-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-section']").within(() => {
-        cy.get("button").should("not.be.disabled");
-      });
+      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        "not.exist",
+      );
+      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
       cy.get("[data-test='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
