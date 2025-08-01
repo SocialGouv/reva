@@ -5,10 +5,13 @@ import {
   test,
 } from "next/experimental/testmode/playwright/msw";
 
+import chaudronnierCertificationData from "./fixtures/certifications/chaudronnier.json";
 import activeFeaturesEmptyData from "./fixtures/espace-candidat/active_features_empty.json";
 import articlesDAideData from "./fixtures/espace-candidat/articlesDAide.json";
 import candidateCertificateSearchData from "./fixtures/espace-candidat/candidate_certificate_search.json";
 import candidateCertificateSearchEmptyData from "./fixtures/espace-candidat/candidate_certificate_search_empty.json";
+import searchCertificationsEmptyResult from "./fixtures/espace-candidat/recherche/searchCertificationsEmptyResult.json";
+import articlesForCertificationPageUsefulResources from "./fixtures/strapi/articlesForCertificationPageUsefulResources.json";
 
 const strapi = graphql.link("https://strapi.vae.gouv.fr/graphql");
 const fvae = graphql.link("https://reva-api/api/graphql");
@@ -24,11 +27,17 @@ test.describe("with search results", () => {
         strapi.query("getArticlesDAide", () => {
           return HttpResponse.json(articlesDAideData);
         }),
+        strapi.query("getArticlesForCertificationPageUsefulResources", () => {
+          return HttpResponse.json(articlesForCertificationPageUsefulResources);
+        }),
         fvae.query("activeFeaturesForConnectedUser", () => {
           return HttpResponse.json(activeFeaturesEmptyData);
         }),
         fvae.query("searchCertificationsQuery", () => {
           return HttpResponse.json(candidateCertificateSearchData);
+        }),
+        fvae.query("getCertificationForCertificationPage", () => {
+          return HttpResponse.json(chaudronnierCertificationData);
         }),
       ],
       { scope: "test" },
@@ -80,6 +89,9 @@ test.describe("with no search results", () => {
         }),
         fvae.query("searchCertificationsQuery", () => {
           return HttpResponse.json(candidateCertificateSearchEmptyData);
+        }),
+        fvae.query("searchCertificationsQueryForResultPage", () => {
+          return HttpResponse.json(searchCertificationsEmptyResult);
         }),
       ],
       { scope: "test" },
