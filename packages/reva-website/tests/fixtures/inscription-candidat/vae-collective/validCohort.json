@@ -1,0 +1,12 @@
+{
+  "data": {
+    "cohorteVaeCollective": {
+      "id": "bb327ffa-9efc-4f1e-a371-dc8686257d2f",
+      "codeInscription": "ABCD1234",
+      "nom": "cohorte",
+      "commanditaireVaeCollective": {
+        "raisonSociale": "commanditaire"
+      }
+    }
+  }
+}

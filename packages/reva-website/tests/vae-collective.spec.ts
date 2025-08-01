@@ -5,6 +5,8 @@ import {
   test,
 } from "next/experimental/testmode/playwright/msw";
 
+import validCohorte from "./fixtures/inscription-candidat/vae-collective/validCohort.json";
+
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.use({
@@ -33,18 +35,10 @@ test.describe("VAE Collective Code Page", () => {
   }) => {
     msw.use(
       fvae.query("getVaeCollectiveCohort", () => {
-        return HttpResponse.json({
-          data: {
-            cohorteVaeCollective: {
-              id: "bb327ffa-9efc-4f1e-a371-dc8686257d2f",
-              codeInscription: "ABCD1234",
-              nom: "cohorte",
-              commanditaireVaeCollective: {
-                raisonSociale: "commanditaire",
-              },
-            },
-          },
-        });
+        return HttpResponse.json(validCohorte);
+      }),
+      fvae.query("getVaeCollectiveCohortForRegistrationPage", () => {
+        return HttpResponse.json(validCohorte);
       }),
     );
 
