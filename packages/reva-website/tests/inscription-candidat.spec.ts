@@ -5,11 +5,13 @@ import {
   test,
 } from "next/experimental/testmode/playwright/msw";
 
+import articlesDAideData from "./fixtures/espace-candidat/articlesDAide.json";
 import askForRegistrationData from "./fixtures/inscription-candidat/askForRegistration.json";
 import certificationBtsChaudronnierData from "./fixtures/inscription-candidat/certificationChaudronnier.json";
 import certificationBtsEbenisteData from "./fixtures/inscription-candidat/certificationEbeniste.json";
 import departmentsData from "./fixtures/inscription-candidat/departments.json";
 
+const strapi = graphql.link("https://strapi.vae.gouv.fr/graphql");
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 const CERTIFICATION_ID = "7ad608c2-5a4b-40eb-8ef9-7a85421b40f0";
@@ -277,5 +279,20 @@ test.describe("AAP not available on certification", () => {
     await expect(
       page.getByTestId("tile-accompagne").locator("button"),
     ).toBeDisabled();
+  });
+});
+
+test.describe("certification not available", () => {
+  test("should redirect to /espace-candidat/ when no certificationId is provided", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      strapi.query("getArticlesDAide", () => {
+        return HttpResponse.json(articlesDAideData);
+      }),
+    );
+    await page.goto("/inscription-candidat/");
+    await expect(page).toHaveURL("/espace-candidat/");
   });
 });
