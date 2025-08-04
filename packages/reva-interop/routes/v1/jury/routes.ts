@@ -1,0 +1,271 @@
+import {
+  FastifyPluginAsyncJsonSchemaToTs,
+  JsonSchemaToTsProvider,
+} from "@fastify/type-provider-json-schema-to-ts";
+
+import {
+  sessionJuryInputSchema,
+  resultatJuryInputSchema,
+} from "../inputSchemas.js";
+import {
+  statutJurySchema,
+  candidacyIdSchema,
+  resultatJurySchema,
+} from "../schemas.js";
+
+const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof statutJurySchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/informationsJury",
+      schema: {
+        summary: "Récupérer la liste des informations jury",
+        // security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        querystring: {
+          type: "object",
+          properties: {
+            decalage: {
+              type: "integer",
+              example: 0,
+              description: "Décalage pour la pagination",
+            },
+            limite: {
+              type: "integer",
+              example: 10,
+              description: "Limite du nombre de résultats",
+            },
+            recherche: {
+              type: "string",
+              maxLength: 100,
+              example: "Alice+Doe",
+              description: "Filtre de recherche",
+            },
+            statut: {
+              $ref: "http://vae.gouv.fr/components/schemas/StatutJury",
+              description: "Filtre par statut de jury",
+            },
+          },
+        },
+        response: {
+          200: {
+            description: "Liste des candidats à l'étape jury",
+            $ref: "http://vae.gouv.fr/components/schemas/InformationsJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.query", request.query);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/informationJury",
+      schema: {
+        summary: "Récupérer les informations du jury d'un candidat",
+        // security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Informations du jury du candidat",
+            $ref: "http://vae.gouv.fr/components/schemas/InformationJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/informationJury/session",
+      schema: {
+        summary:
+          "Récupérer les informations de la session du jury pour un candidat",
+        // security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Informations de la session du jury du candidat",
+            $ref: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema, typeof sessionJuryInputSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "PUT",
+      url: "/candidatures/:candidatureId/informationJury/session",
+      schema: {
+        summary:
+          "Mettre à jour les informations de la session du jury pour un candidat",
+        consumes: ["multipart/form-data"],
+        // security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        body: {
+          $ref: "http://vae.gouv.fr/components/schemas/SessionJuryInput",
+        },
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Informations de session mises à jour avec succès",
+            $ref: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        console.log("request.body", request.body);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [typeof candidacyIdSchema];
+        };
+      }>
+    >()
+    .route({
+      method: "GET",
+      url: "/candidatures/:candidatureId/informationJury/resultat",
+      schema: {
+        summary: "Récupérer le résultat du jury pour un candidat",
+        // security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Résultat du jury du candidat",
+            $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        return "OK";
+      },
+    });
+
+  fastify
+    .withTypeProvider<
+      JsonSchemaToTsProvider<{
+        ValidatorSchemaOptions: {
+          references: [
+            typeof candidacyIdSchema,
+            typeof resultatJuryInputSchema,
+            typeof resultatJurySchema,
+          ];
+        };
+      }>
+    >()
+    .route({
+      method: "PUT",
+      url: "/candidatures/:candidatureId/informationJury/resultat",
+      schema: {
+        summary: "Mettre à jour le résultat du jury pour un candidat",
+        // security: [{ bearerAuth: [] }],
+        tags: ["Informations jury"],
+        body: {
+          $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryInput",
+        },
+        params: {
+          type: "object",
+          properties: {
+            candidatureId: {
+              $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+            },
+          },
+          required: ["candidatureId"],
+        },
+        response: {
+          200: {
+            description: "Résultat du jury mis à jour avec succès",
+            $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
+          },
+        },
+      },
+      handler: (request) => {
+        console.log("request.params", request.params);
+        console.log("request.body", request.body);
+        return "OK";
+      },
+    });
+};
+
+export default juryRoutesApiV1;
