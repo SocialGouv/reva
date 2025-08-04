@@ -163,6 +163,8 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       request.url.startsWith(`/interop/v1/${path}`),
     );
 
+    console.error(error);
+
     if (!isSecurePath) {
       return;
     }
