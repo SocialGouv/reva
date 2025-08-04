@@ -6,7 +6,8 @@ import Form from "next/form";
 import Link from "next/link";
 import { useActionState } from "react";
 
-import { PasswordInput } from "./_components/password-input/PasswordInput";
+import { PasswordInput } from "@/components/password-input/PasswordInput";
+
 import { login } from "./actions";
 
 export default function LoginPage() {
