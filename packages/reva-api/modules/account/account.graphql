@@ -12,6 +12,7 @@ type Account {
   certificationAuthority: CertificationAuthority
   organism: Organism
   disabledAt: Timestamp
+  keycloakId: String
 }
 
 input AccountInput {
