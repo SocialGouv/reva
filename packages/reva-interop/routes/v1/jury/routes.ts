@@ -61,9 +61,8 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (request) => {
-        console.log("request.query", request.query);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -98,9 +97,8 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (request) => {
-        console.log("request.params", request.params);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -136,9 +134,8 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (request) => {
-        console.log("request.params", request.params);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -178,10 +175,8 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (request) => {
-        console.log("request.params", request.params);
-        console.log("request.body", request.body);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -216,9 +211,8 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (request) => {
-        console.log("request.params", request.params);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -260,10 +254,8 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (request) => {
-        console.log("request.params", request.params);
-        console.log("request.body", request.body);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 };

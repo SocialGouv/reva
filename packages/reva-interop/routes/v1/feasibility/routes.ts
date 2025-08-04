@@ -53,8 +53,8 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: () => {
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -87,8 +87,8 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: () => {
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -147,9 +147,8 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (request) => {
-        console.log("request.body", request.body);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 

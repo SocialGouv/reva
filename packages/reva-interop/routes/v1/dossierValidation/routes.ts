@@ -61,9 +61,8 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (request) => {
-        console.log("request.query", request.query);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -101,9 +100,8 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (request) => {
-        console.log("request.params", request.params);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -139,9 +137,8 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (request) => {
-        console.log("request.params", request.params);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 
@@ -183,10 +180,8 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (request) => {
-        console.log("request.body", request.body);
-        console.log("request.params", request.params);
-        return "OK";
+      handler: (_request, response) => {
+        return response.status(501).send("Not implemented");
       },
     });
 };
