@@ -164,6 +164,16 @@ export const Header = () => {
                   )
                 ),
               },
+              {
+                text: "Paramètres",
+                linkProps: {
+                  href: "/certification-authorities/settings/local-account",
+                  target: "_self",
+                },
+                isActive: currentPathname.startsWith(
+                  "/certification-authorities/settings/local-account",
+                ),
+              },
             ]
           : []),
         ...(isCertificationRegistryManager ? registryManagerTabs : []),
