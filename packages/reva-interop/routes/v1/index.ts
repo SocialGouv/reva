@@ -66,10 +66,14 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     openapi: {
       openapi: "3.0.0",
       info: {
-        title: `France VAE Interoperability API (${process.env.ENVIRONMENT})`,
-        description:
-          "France VAE's interoperability API to interface with other official entities",
+        title: `API d'intéropérabilité France VAE (${process.env.ENVIRONMENT})`,
+        summary:
+          "API d'intéropérabilité de la plateforme France VAE à destination des certificateurs",
         version: "1.0.0",
+      },
+      externalDocs: {
+        url: "https://www.notion.so/fabnummas/Documentation-API-interop-rabilit-France-VAE-241653b7be078088aa44eb63459c75d9",
+        description: "Guide de démarrage",
       },
       servers: [
         {
