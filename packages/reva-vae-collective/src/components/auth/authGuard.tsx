@@ -7,7 +7,13 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const { authenticated } = useKeycloakContext();
   const pathname = usePathname();
 
-  const publicPaths = ["/login", "/post-login", "/logout-confirmation"];
+  const publicPaths = [
+    "/login",
+    "/post-login",
+    "/logout-confirmation",
+    "/forgot-password",
+    "/forgot-password-confirmation",
+  ];
 
   if (!authenticated && !publicPaths.includes(pathname)) {
     redirect("/login");

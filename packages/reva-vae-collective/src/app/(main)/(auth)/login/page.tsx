@@ -3,6 +3,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Form from "next/form";
+import Link from "next/link";
 import { useActionState } from "react";
 
 import { PasswordInput } from "./_components/password-input/PasswordInput";
@@ -37,6 +38,9 @@ export default function LoginPage() {
               state={state.errors?.password ? "error" : "default"}
               stateRelatedMessage={state.errors?.password?.message}
             />
+            <Link href="/forgot-password" className="fr-link mr-auto">
+              Mot de passe oublié ?
+            </Link>
 
             <Button
               className="w-full justify-center self-end mt-auto"
