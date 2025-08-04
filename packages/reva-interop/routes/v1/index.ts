@@ -134,7 +134,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   });
 
   fastify.register(formBody);
-  fastify.register(multipart);
+  fastify.register(multipart, { attachFieldsToBody: "keyValues" });
 
   addSchemas(fastify);
   addInputSchemas(fastify);
