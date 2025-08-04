@@ -2,8 +2,8 @@ import Keycloak from "keycloak-connect";
 
 import { logger } from "@/modules/shared/logger";
 
-import { ClientApp } from "../account.type";
 import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
+import { ClientApp } from "../account.type";
 
 export const impersonateAccount = async (
   keycloakId: string,

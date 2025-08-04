@@ -13,8 +13,8 @@ import { disableAccountById } from "./features/disableAccount";
 import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getImpersonateUrl } from "./features/impersonate";
 import { loginWithCredentials } from "./features/loginWithCredentials";
-import { updateAccountById } from "./features/updateAccount";
 import { sendForgotPasswordEmail } from "./features/sendForgotPasswordEmail";
+import { updateAccountById } from "./features/updateAccount";
 
 export const resolvers = {
   Mutation: {

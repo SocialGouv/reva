@@ -1,4 +1,5 @@
 import { generateJwt } from "@/modules/shared/auth/auth.helper";
+
 import { TypeAccompagnement } from "../candidate.types";
 
 export const getCandidateAppUrl = () => `${process.env.BASE_URL}/candidat`;

@@ -1,9 +1,8 @@
 import { prismaClient } from "@/prisma/client";
 
+import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
 import { Account } from "../account.types";
 import { notifyNewEmailAddress, notifyPreviousEmailAddress } from "../mail";
-
-import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
 
 export const updateAccountById = async (params: {
   accountId: string;

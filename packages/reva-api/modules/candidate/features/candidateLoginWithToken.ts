@@ -1,4 +1,3 @@
-import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { TokenService } from "@/modules/account/utils/token.service";
 import { updateCertification } from "@/modules/candidacy/certification/features/updateCertification";
 import { getFirstActiveCandidacyByCandidateId } from "@/modules/candidacy/features/getFirstActiveCandidacyByCandidateId";
@@ -7,6 +6,12 @@ import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCand
 import { getCertificationById } from "@/modules/referential/features/getCertificationById";
 import { isCertificationAvailable } from "@/modules/referential/features/isCertificationAvailable";
 import {
+  createAccountInIAM,
+  getAccountInIAM,
+  getJWTContent,
+} from "@/modules/shared/auth/auth.helper";
+import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
@@ -14,11 +19,6 @@ import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "@/mo
 import { getCertificationCohortesByCohorteId } from "@/modules/vae-collective/features/getCertificationCohortesByCohorteId";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  createAccountInIAM,
-  getAccountInIAM,
-  getJWTContent,
-} from "@/modules/shared/auth/auth.helper";
 import {
   CandidateAuthenticationInput,
   CandidateRegistrationInput,

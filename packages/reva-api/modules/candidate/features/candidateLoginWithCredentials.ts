@@ -1,13 +1,12 @@
 import {
+  generateIAMTokenWithPassword,
+  getAccountInIAM,
+} from "@/modules/shared/auth/auth.helper";
+import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
 import { prismaClient } from "@/prisma/client";
-
-import {
-  generateIAMTokenWithPassword,
-  getAccountInIAM,
-} from "@/modules/shared/auth/auth.helper";
 
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 

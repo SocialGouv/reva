@@ -1,12 +1,11 @@
 import { prismaClient } from "@/prisma/client";
 
+import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
 import {
   impersonateAccount,
   impersonateCandiate,
 } from "../utils/keycloak.utils";
 import { TokenService } from "../utils/token.service";
-
-import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
 
 export const getImpersonateUrl = async (
   context: {
