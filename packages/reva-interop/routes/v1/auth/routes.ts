@@ -1,6 +1,7 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from "@fastify/type-provider-json-schema-to-ts";
 import * as jose from "jose";
 
+import { createAccount } from "../features/accounts/createAccount.js";
 import { generateJwt } from "../features/auth/generateJwt.js";
 import { invalidJwt } from "../features/auth/invalideJwt.js";
 
@@ -56,6 +57,68 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       };
     },
   );
+
+  fastify.route({
+    method: "POST",
+    url: "/auth/createAccount",
+    schema: {
+      hide:
+        process.env.ENVIRONMENT !== "local" &&
+        process.env.ENVIRONMENT !== "staging",
+      summary:
+        "Crée un compte d'utilisateur rattaché au gestionnaire de candidature passé en paramètre",
+      tags: ["Authentification"],
+      body: {
+        type: "object",
+        properties: {
+          certificationAuthorityId: {
+            type: "string",
+            description: "Identifiant de l'utilisateur",
+          },
+          email: {
+            type: "string",
+            description: "Email de l'utilisateur",
+          },
+          firstname: {
+            type: "string",
+            description: "Prénom de l'utilisateur",
+          },
+          lastname: {
+            type: "string",
+            description: "Nom de famille de l'utilisateur",
+          },
+          username: {
+            type: "string",
+            description: "Nom d'utilisateur",
+          },
+        },
+        required: ["certificationAuthorityId", "email", "username"],
+      },
+      response: {
+        200: {
+          description: "Compte créé avec succès",
+          type: "object",
+          properties: {
+            keycloakId: {
+              type: "string",
+              description: "Identifiant Keycloak du compte créé",
+            },
+          },
+        },
+      },
+    },
+    handler: async (request, reply) => {
+      const account = await createAccount(request.graphqlClient, {
+        ...request.body,
+        group: "certification_authority",
+      });
+      if (!account || !account.keycloakId) {
+        throw new Error("Failed to create account");
+      }
+      reply.send({ keycloakId: account.keycloakId });
+    },
+  });
+
   fastify.route({
     method: "POST",
     url: "/auth/generateJwt",

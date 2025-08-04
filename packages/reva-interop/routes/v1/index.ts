@@ -143,6 +143,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     "dossiersDeFaisabilite",
     "dossiersDeValidation",
     "informationsJury",
+    "auth/createAccount",
   ];
 
   // Validate JWT for pathes :
