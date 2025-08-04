@@ -4,7 +4,196 @@ import { usePathname } from "next/navigation";
 
 import { useAuth } from "@/components/auth/auth";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
-import { ADMIN_ELM_URL } from "@/config/config";
+
+const PATHS = {
+  CANDIDACIES: "/candidacies",
+  CERTIFICATIONS: "/certifications",
+  SUBSCRIPTIONS: "/subscriptions/pending",
+  MAISON_MERE_AAP: "/maison-mere-aap",
+  CERTIFICATION_AUTHORITY_STRUCTURES: "/certification-authority-structures",
+  AGENCIES_SETTINGS: "/agencies-settings-v3",
+  RESPONSABLE_CERTIFICATIONS: "/responsable-certifications/certifications",
+  CERTIFICATION_AUTHORITIES_SETTINGS: "/certification-authorities/settings",
+  CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL:
+    "/certification-authorities/settings/local-account",
+  FEASIBILITIES: "/candidacies/feasibilities",
+} as const;
+
+const LABELS = {
+  CANDIDACIES: "Candidatures",
+  CERTIFICATIONS: "Certifications",
+  VERIFICATIONS: "Vérifications",
+  ANNUAIRES: "Annuaires",
+  PARAMETRES: "Paramètres",
+  CERTIFICATEURS_CANDIDATURES: "Certificateurs/Candidatures",
+  GESTION_CERTIFICATIONS: "Gestion des certifications",
+  STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
+  STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
+} as const;
+
+const createTab = ({
+  text,
+  href,
+  isActive,
+  additionalProps = {},
+}: {
+  text: string;
+  href: string;
+  isActive: boolean;
+  additionalProps?: Record<string, unknown>;
+}) => ({
+  text,
+  linkProps: { href, target: "_self", ...additionalProps },
+  isActive,
+});
+
+const isAAPCandidaciesPath = (pathname: string) => {
+  const exclusionPattern =
+    /\/candidacies\/(?!(dossiers-de-validation|feasibilities|juries|caducites)\/).*/;
+  const subPathPattern =
+    /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/;
+
+  return !!pathname.match(exclusionPattern) && !pathname.match(subPathPattern);
+};
+
+const isCertificationAuthorityCandidaciesPath = (pathname: string) => {
+  const mainPattern =
+    /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)|(caducites)/;
+  const subPathPattern =
+    /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/;
+
+  return !!(pathname.match(mainPattern) || pathname.match(subPathPattern));
+};
+
+const getNavigationTabs = ({
+  currentPathname,
+  isAdmin,
+  isOrganism,
+  isGestionnaireMaisonMereAAP,
+  isCertificationAuthorityLocalAccount,
+  isCertificationRegistryManager,
+  isAdminCertificationAuthority,
+}: {
+  currentPathname: string;
+  isAdmin: boolean;
+  isOrganism: boolean;
+  isGestionnaireMaisonMereAAP: boolean;
+  isCertificationAuthorityLocalAccount: boolean;
+  isCertificationRegistryManager: boolean;
+  isAdminCertificationAuthority: boolean;
+}) => {
+  const adminTabs = [
+    createTab({
+      text: LABELS.CANDIDACIES,
+      href: PATHS.CANDIDACIES,
+      isActive: isAAPCandidaciesPath(currentPathname),
+    }),
+    createTab({
+      text: LABELS.CERTIFICATIONS,
+      href: PATHS.CERTIFICATIONS,
+      isActive: currentPathname.startsWith(PATHS.CERTIFICATIONS),
+    }),
+    createTab({
+      text: LABELS.VERIFICATIONS,
+      href: PATHS.SUBSCRIPTIONS,
+      isActive: currentPathname.startsWith(PATHS.SUBSCRIPTIONS),
+    }),
+    {
+      text: LABELS.ANNUAIRES,
+      isActive: [
+        PATHS.MAISON_MERE_AAP,
+        PATHS.CERTIFICATION_AUTHORITY_STRUCTURES,
+      ].some((path) => currentPathname.startsWith(path)),
+      menuLinks: [
+        createTab({
+          text: LABELS.STRUCTURES_ACCOMPAGNATRICES,
+          href: PATHS.MAISON_MERE_AAP,
+          isActive: currentPathname.startsWith(PATHS.MAISON_MERE_AAP),
+          additionalProps: { "data-test": "maison-mere-aap-link" },
+        }),
+        createTab({
+          text: LABELS.STRUCTURES_CERTIFICATRICES,
+          href: PATHS.CERTIFICATION_AUTHORITY_STRUCTURES,
+          isActive: currentPathname.startsWith(
+            PATHS.CERTIFICATION_AUTHORITY_STRUCTURES,
+          ),
+        }),
+      ],
+    },
+    createTab({
+      text: LABELS.CERTIFICATEURS_CANDIDATURES,
+      href: PATHS.FEASIBILITIES,
+      isActive: isCertificationAuthorityCandidaciesPath(currentPathname),
+    }),
+  ];
+
+  const aapTabs = [
+    createTab({
+      text: LABELS.CANDIDACIES,
+      href: PATHS.CANDIDACIES,
+      isActive: isAAPCandidaciesPath(currentPathname),
+    }),
+    createTab({
+      text: LABELS.PARAMETRES,
+      href: PATHS.AGENCIES_SETTINGS,
+      isActive: currentPathname.startsWith("/agencies-settings"),
+    }),
+  ];
+
+  const registryManagerTabs = [
+    createTab({
+      text: LABELS.GESTION_CERTIFICATIONS,
+      href: PATHS.RESPONSABLE_CERTIFICATIONS,
+      isActive: currentPathname.startsWith(PATHS.RESPONSABLE_CERTIFICATIONS),
+    }),
+  ];
+
+  const certificationAuthorityAdminTabs = [
+    createTab({
+      text: LABELS.CANDIDACIES,
+      href: PATHS.FEASIBILITIES,
+      isActive: isCertificationAuthorityCandidaciesPath(currentPathname),
+    }),
+    createTab({
+      text: LABELS.PARAMETRES,
+      href: PATHS.CERTIFICATION_AUTHORITIES_SETTINGS,
+      isActive: currentPathname.startsWith(
+        PATHS.CERTIFICATION_AUTHORITIES_SETTINGS,
+      ),
+    }),
+  ];
+
+  const certificationAuthorityLocalAccountTabs = [
+    createTab({
+      text: LABELS.CANDIDACIES,
+      href: PATHS.FEASIBILITIES,
+      isActive: isCertificationAuthorityCandidaciesPath(currentPathname),
+    }),
+    createTab({
+      text: LABELS.PARAMETRES,
+      href: PATHS.CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL,
+      isActive: currentPathname.startsWith(
+        PATHS.CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL,
+      ),
+    }),
+  ];
+
+  switch (true) {
+    case isAdmin:
+      return adminTabs;
+    case isGestionnaireMaisonMereAAP:
+    case isOrganism:
+      return aapTabs;
+    case isCertificationAuthorityLocalAccount:
+      return certificationAuthorityLocalAccountTabs;
+    case isCertificationRegistryManager:
+      return registryManagerTabs;
+    case isAdminCertificationAuthority:
+      return certificationAuthorityAdminTabs;
+    default:
+      return [];
+  }
+};
 
 export const Header = () => {
   const currentPathname = usePathname();
@@ -12,184 +201,21 @@ export const Header = () => {
     isAdmin,
     isOrganism,
     isGestionnaireMaisonMereAAP,
-    isCertificationAuthority,
     isAdminCertificationAuthority,
     isCertificationRegistryManager,
+    isCertificationAuthorityLocalAccount,
   } = useAuth();
-  const { authenticated, logout } = useKeycloakContext();
+  const { logout } = useKeycloakContext();
 
-  const candidaciesLabel = isAdmin
-    ? "Certificateurs/Candidatures"
-    : "Candidatures";
-
-  const isCertificationAuthorityLocalAccount =
-    isCertificationAuthority && !isAdminCertificationAuthority;
-
-  const adminTabs = [
-    {
-      text: "Certifications",
-      linkProps: {
-        href: "/certifications",
-        target: "_self",
-      },
-      isActive: currentPathname.startsWith("/certifications"),
-    },
-    {
-      text: "Vérifications",
-      linkProps: {
-        href: "/subscriptions/pending",
-        target: "_self",
-      },
-      isActive: currentPathname.startsWith("/subscriptions"),
-    },
-    {
-      text: "Annuaires",
-      isActive: [
-        "/maison-mere-aap",
-        "/certification-authority-structures",
-      ].some((path) => currentPathname.startsWith(path)),
-      menuLinks: [
-        {
-          text: "Structures accompagnatrices",
-          linkProps: {
-            "data-test": "maison-mere-aap-link",
-            href: "/maison-mere-aap",
-            target: "_self",
-          },
-          isActive: currentPathname.startsWith("/maison-mere-aap"),
-        },
-        {
-          text: "Structures certificatrices",
-          linkProps: {
-            href: "/certification-authority-structures",
-            target: "_self",
-          },
-          isActive: currentPathname.startsWith(
-            "/certification-authority-structures",
-          ),
-        },
-      ],
-    },
-  ];
-
-  const registryManagerTabs = [
-    {
-      text: "Gestion des certifications",
-      linkProps: {
-        href: "/responsable-certifications/certifications",
-        target: "_self",
-      },
-      isActive: currentPathname.startsWith("/responsable-certifications"),
-    },
-  ];
-
-  const adminCertificationAuthorityTabs = [
-    {
-      text: candidaciesLabel,
-      linkProps: {
-        href: "/candidacies/feasibilities",
-        target: "_self",
-      },
-      isActive: !!(
-        currentPathname.match(
-          /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)|(caducites)/,
-        ) ||
-        currentPathname.match(
-          /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/,
-        )
-      ),
-    },
-    {
-      text: "Paramètres",
-      linkProps: {
-        href: "/certification-authorities/settings/",
-        target: "_self",
-      },
-      isActive: currentPathname.startsWith(
-        "/certification-authorities/settings",
-      ),
-    },
-  ];
-
-  const navigation = authenticated
-    ? [
-        ...(isAdmin || isOrganism || isGestionnaireMaisonMereAAP
-          ? [
-              {
-                text: "Candidatures",
-                linkProps: {
-                  href: "/candidacies",
-                },
-                // This isActive flag is set to true only for the AAP tab under candidacies,
-                // excluding specific subpaths like dossiers-de-validation, feasibilities, and juries
-                // which belong to the certification authorities' candidacies.
-                isActive:
-                  !!currentPathname.match(
-                    /\/candidacies\/(?!(dossiers-de-validation|feasibilities|juries|caducites)\/).*/,
-                  ) &&
-                  !currentPathname.match(
-                    /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/,
-                  ),
-              },
-            ]
-          : []),
-
-        ...(!isAdmin && (isOrganism || isGestionnaireMaisonMereAAP)
-          ? [
-              {
-                text: "Paramètres",
-                linkProps: {
-                  href: "/agencies-settings-v3",
-                  target: "_self",
-                },
-                isActive: currentPathname.startsWith("/agencies-settings"),
-              },
-            ]
-          : []),
-        ...(isAdmin ? adminTabs : []),
-        ...(isAdmin || isCertificationAuthorityLocalAccount
-          ? [
-              {
-                text: candidaciesLabel,
-                linkProps: {
-                  href: "/candidacies/feasibilities",
-                  target: "_self",
-                },
-                isActive: !!(
-                  currentPathname.match(
-                    /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)|(caducites)/,
-                  ) ||
-                  currentPathname.match(
-                    /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/,
-                  )
-                ),
-              },
-              {
-                text: "Paramètres",
-                linkProps: {
-                  href: "/certification-authorities/settings/local-account",
-                  target: "_self",
-                },
-                isActive: currentPathname.startsWith(
-                  "/certification-authorities/settings/local-account",
-                ),
-              },
-            ]
-          : []),
-        ...(isCertificationRegistryManager ? registryManagerTabs : []),
-        ...(isAdminCertificationAuthority
-          ? adminCertificationAuthorityTabs
-          : []),
-      ]
-    : [
-        {
-          text: "",
-          linkProps: {
-            href: ADMIN_ELM_URL + "/feasibilities",
-            target: "_self",
-          },
-        },
-      ];
+  const navigation = getNavigationTabs({
+    currentPathname,
+    isAdmin,
+    isOrganism,
+    isGestionnaireMaisonMereAAP,
+    isCertificationAuthorityLocalAccount,
+    isCertificationRegistryManager,
+    isAdminCertificationAuthority,
+  });
 
   return (
     <DsfrHeader
