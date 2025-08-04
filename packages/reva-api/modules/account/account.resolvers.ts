@@ -27,6 +27,7 @@ export const resolvers = {
           lastname?: string;
           group: KeyCloakGroup;
           organismId?: string;
+          certificationAuthorityId?: string;
         };
       },
       context: {

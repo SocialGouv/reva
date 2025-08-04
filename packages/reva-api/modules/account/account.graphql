@@ -22,6 +22,7 @@ input AccountInput {
   lastname: String
   group: AccountGroup!
   organismId: UUID
+  certificationAuthorityId: UUID
 }
 
 input UpdateAccountInput {
