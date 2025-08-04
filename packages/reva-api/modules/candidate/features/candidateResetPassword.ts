@@ -5,10 +5,10 @@ import {
 import { prismaClient } from "@/prisma/client";
 
 import {
-  getCandidateAccountInIAM,
+  getAccountInIAM,
   getJWTContent,
   resetPassword,
-} from "../auth.helper";
+} from "@/modules/shared/auth/auth.helper";
 import { CandidateResetPasswordInput } from "../candidate.types";
 
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
@@ -25,8 +25,9 @@ export const candidateResetPassword = async ({
   )) as CandidateResetPasswordInput;
 
   if (candidateAuthenticationInput.action === "reset-password") {
-    const account = await getCandidateAccountInIAM(
+    const account = await getAccountInIAM(
       candidateAuthenticationInput.email,
+      process.env.KEYCLOAK_APP_REALM as string,
     );
 
     if (!account) {
@@ -44,7 +45,11 @@ export const candidateResetPassword = async ({
       throw new Error("Candidat non trouvé");
     }
 
-    await resetPassword(candidate.keycloakId, password);
+    await resetPassword(
+      candidate.keycloakId,
+      password,
+      process.env.KEYCLOAK_APP_REALM as string,
+    );
 
     // Track password update
     await prismaClient.candidate.update({

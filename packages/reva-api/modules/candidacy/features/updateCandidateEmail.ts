@@ -1,4 +1,4 @@
-import { getKeycloakAdmin } from "@/modules/account/features/getKeycloakAdmin";
+import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { prismaClient } from "@/prisma/client";
 
 export const updateCandidateEmail = async ({

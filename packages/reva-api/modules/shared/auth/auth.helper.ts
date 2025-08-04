@@ -4,7 +4,7 @@ import Keycloak from "keycloak-connect";
 
 import { logger } from "@/modules/shared/logger";
 
-import { getKeycloakAdmin } from "../account/features/getKeycloakAdmin";
+import { getKeycloakAdmin } from "./getKeycloakAdmin";
 
 export const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
@@ -39,13 +39,13 @@ export const getJWTContent = (token: string) => {
   }
 };
 
-export const getCandidateAccountInIAM = async (email: string) => {
+export const getAccountInIAM = async (email: string, realm: string) => {
   try {
     const keycloakAdmin = await getKeycloakAdmin();
     const [userByEmail] = await keycloakAdmin.users.find({
       email,
       exact: true,
-      realm: process.env.KEYCLOAK_APP_REALM,
+      realm,
     });
 
     return userByEmail;
@@ -57,11 +57,14 @@ export const getCandidateAccountInIAM = async (email: string) => {
   }
 };
 
-export const createCandidateAccountInIAM = async (account: {
-  email: string;
-  firstname?: string;
-  lastname?: string;
-}) => {
+export const createAccountInIAM = async (
+  account: {
+    email: string;
+    firstname?: string;
+    lastname?: string;
+  },
+  realm: string,
+) => {
   try {
     const keycloakAdmin = await getKeycloakAdmin();
 
@@ -71,7 +74,7 @@ export const createCandidateAccountInIAM = async (account: {
       // groups: ['candidate'],
       emailVerified: true,
       enabled: true,
-      realm: process.env.KEYCLOAK_APP_REALM,
+      realm,
     });
 
     return id;
@@ -83,12 +86,16 @@ export const createCandidateAccountInIAM = async (account: {
   }
 };
 
-export const resetPassword = async (userId: string, password: string) => {
+export const resetPassword = async (
+  userId: string,
+  password: string,
+  realm: string,
+) => {
   const keycloakAdmin = await getKeycloakAdmin();
 
   const user = await keycloakAdmin.users.findOne({
     id: userId,
-    realm: process.env.KEYCLOAK_APP_REALM as string,
+    realm,
   });
 
   if (!user) {
@@ -115,12 +122,13 @@ export const resetPassword = async (userId: string, password: string) => {
 export const generateIAMTokenWithPassword = async (
   userId: string,
   password: string,
+  realm: string,
 ) => {
   const keycloakAdmin = await getKeycloakAdmin();
 
   const user = await keycloakAdmin.users.findOne({
     id: userId,
-    realm: process.env.KEYCLOAK_APP_REALM as string,
+    realm,
   });
 
   if (!user) {
@@ -136,7 +144,7 @@ export const generateIAMTokenWithPassword = async (
         // @ts-ignore
         clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
         serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
-        realm: process.env.KEYCLOAK_APP_REALM as string,
+        realm,
         credentials: {
           secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET,
         },

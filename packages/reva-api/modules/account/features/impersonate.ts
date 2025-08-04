@@ -6,7 +6,7 @@ import {
 } from "../utils/keycloak.utils";
 import { TokenService } from "../utils/token.service";
 
-import { getKeycloakAdmin } from "./getKeycloakAdmin";
+import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
 
 export const getImpersonateUrl = async (
   context: {

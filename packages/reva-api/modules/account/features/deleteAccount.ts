@@ -1,6 +1,6 @@
 import { prismaClient } from "@/prisma/client";
 
-import { getKeycloakAdmin } from "./getKeycloakAdmin";
+import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
 
 export const deleteAccount = async ({ accountId }: { accountId: string }) => {
   const account = await prismaClient.account.findUnique({

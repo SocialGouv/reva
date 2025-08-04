@@ -2,7 +2,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { Account } from "../account.types";
 
-import { getKeycloakAdmin } from "./getKeycloakAdmin";
+import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
 
 export const disableAccountById = async (params: {
   accountId: string;

@@ -4,7 +4,7 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
 
-import * as getKeycloakAdminModule from "../account/features/getKeycloakAdmin";
+import * as getKeycloakAdminModule from "../shared/auth/getKeycloakAdmin";
 import { graphql } from "../graphql/generated";
 
 test("get existing Candidacy with admin user", async () => {

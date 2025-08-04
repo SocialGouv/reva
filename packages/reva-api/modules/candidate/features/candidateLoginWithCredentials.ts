@@ -6,8 +6,8 @@ import { prismaClient } from "@/prisma/client";
 
 import {
   generateIAMTokenWithPassword,
-  getCandidateAccountInIAM,
-} from "../auth.helper";
+  getAccountInIAM,
+} from "@/modules/shared/auth/auth.helper";
 
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 
@@ -18,7 +18,10 @@ export const candidateLoginWithCredentials = async ({
   email: string;
   password: string;
 }) => {
-  const account = await getCandidateAccountInIAM(email);
+  const account = await getAccountInIAM(
+    email,
+    process.env.KEYCLOAK_APP_REALM as string,
+  );
 
   if (!account) {
     throw new FunctionalError(
@@ -41,7 +44,11 @@ export const candidateLoginWithCredentials = async ({
     data: { lastLoginViaPasswordAt: new Date() },
   });
 
-  const tokens = generateIAMTokenWithPassword(candidate.keycloakId, password);
+  const tokens = generateIAMTokenWithPassword(
+    candidate.keycloakId,
+    password,
+    process.env.KEYCLOAK_APP_REALM as string,
+  );
 
   return {
     tokens,

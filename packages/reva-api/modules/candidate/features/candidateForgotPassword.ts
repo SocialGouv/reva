@@ -1,4 +1,4 @@
-import { getKeycloakAdmin } from "@/modules/account/features/getKeycloakAdmin";
+import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 
 import { sendForgotPasswordEmail, sendUnknownUserEmail } from "../emails";
 

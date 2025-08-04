@@ -1,4 +1,4 @@
-import { getKeycloakAdmin } from "@/modules/account/features/getKeycloakAdmin";
+import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { TokenService } from "@/modules/account/utils/token.service";
 import { updateCertification } from "@/modules/candidacy/certification/features/updateCertification";
 import { getFirstActiveCandidacyByCandidateId } from "@/modules/candidacy/features/getFirstActiveCandidacyByCandidateId";
@@ -15,10 +15,10 @@ import { getCertificationCohortesByCohorteId } from "@/modules/vae-collective/fe
 import { prismaClient } from "@/prisma/client";
 
 import {
-  createCandidateAccountInIAM,
-  getCandidateAccountInIAM,
+  createAccountInIAM,
+  getAccountInIAM,
   getJWTContent,
-} from "../auth.helper";
+} from "@/modules/shared/auth/auth.helper";
 import {
   CandidateAuthenticationInput,
   CandidateRegistrationInput,
@@ -33,8 +33,9 @@ export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   )) as CandidateAuthenticationInput;
 
   if (candidateAuthenticationInput.action === "registration") {
-    const account = await getCandidateAccountInIAM(
+    const account = await getAccountInIAM(
       candidateAuthenticationInput.email,
+      process.env.KEYCLOAK_APP_REALM as string,
     );
 
     if (account) {
@@ -64,11 +65,14 @@ const confirmRegistration = async ({
   candidateRegistrationInput: CandidateRegistrationInput;
 }) => {
   const { certificationId, ...candidateInput } = candidateRegistrationInput;
-  const candidateKeycloakId = await createCandidateAccountInIAM({
-    email: candidateInput.email,
-    firstname: candidateInput.firstname,
-    lastname: candidateInput.lastname,
-  });
+  const candidateKeycloakId = await createAccountInIAM(
+    {
+      email: candidateInput.email,
+      firstname: candidateInput.firstname,
+      lastname: candidateInput.lastname,
+    },
+    process.env.KEYCLOAK_APP_REALM as string,
+  );
 
   const candidate = await createCandidateWithCandidacy({
     ...candidateInput,
@@ -151,7 +155,10 @@ const confirmRegistration = async ({
 };
 
 const loginCandidate = async ({ email }: { email: string }) => {
-  const account = await getCandidateAccountInIAM(email);
+  const account = await getAccountInIAM(
+    email,
+    process.env.KEYCLOAK_APP_REALM as string,
+  );
 
   if (!account) {
     throw new FunctionalError(
