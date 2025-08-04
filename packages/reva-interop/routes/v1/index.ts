@@ -179,9 +179,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   // /dossiersDeFaisabilite
   // /dossiersDeValidation
   // /informationsJury
-  fastify.addHook("onRequest", (request, reply) =>
-    validateJwt(securePathes, request, reply),
-  );
+  fastify.addHook("onRequest", (request) => validateJwt(securePathes, request));
 
   // Handle errors for pathes :
   // /candidatures

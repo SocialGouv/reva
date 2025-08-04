@@ -1,6 +1,6 @@
 import { Client } from "@urql/core";
 import dotenv from "dotenv";
-import { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyRequest } from "fastify";
 
 import { ERROR_UNAUTHORIZED } from "../../utils/errors.js";
 import { getGraphQlClient } from "../../utils/graphqlClient.js";
@@ -12,7 +12,6 @@ import { findSessionById } from "./features/session/findSessionById.js";
 declare module "fastify" {
   interface FastifyRequest {
     graphqlClient: Client;
-    // graphqlQuery: GraphqlQuery<unknown, AnyVariables>;
   }
 }
 
@@ -21,7 +20,7 @@ dotenv.config({ path: "./.env" });
 export const validateJwt = async (
   securePathes: string[],
   request: FastifyRequest,
-  _reply: FastifyReply,
+  // _reply: FastifyReply,
 ) => {
   const isSecurePath = securePathes.some((path) =>
     request.url.startsWith(`/interop/v1/${path}`),
