@@ -14,6 +14,7 @@ import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getImpersonateUrl } from "./features/impersonate";
 import { loginWithCredentials } from "./features/loginWithCredentials";
 import { updateAccountById } from "./features/updateAccount";
+import { sendForgotPasswordEmail } from "./features/sendForgotPasswordEmail";
 
 export const resolvers = {
   Mutation: {
@@ -110,6 +111,10 @@ export const resolvers = {
         clientApp: ClientApp;
       },
     ) => loginWithCredentials(params),
+    account_sendForgotPasswordEmail: async (
+      _parent: unknown,
+      params: { email: string },
+    ) => sendForgotPasswordEmail(params),
   },
   Query: {
     account_getAccountForConnectedUser: async (
