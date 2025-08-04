@@ -18,6 +18,18 @@ import juryRoutesApiV1 from "./jury/routes.js";
 import { addResponseSchemas } from "./responseSchemas.js";
 import { addSchemas } from "./schemas.js";
 
+declare module "openapi-types" {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace OpenAPIV3 {
+    interface InfoObject {
+      "x-logo"?: {
+        url: string;
+        altText?: string;
+      };
+    }
+  }
+}
+
 const logo = readFileSync("./static/fvae_logo.svg");
 
 const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
@@ -70,6 +82,10 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         summary:
           "API d'intéropérabilité de la plateforme France VAE à destination des certificateurs",
         version: "1.0.0",
+        "x-logo": {
+          url: "https://vae.gouv.fr/fvae_logo.svg",
+          altText: "Logo France VAE",
+        },
       },
       externalDocs: {
         url: "https://www.notion.so/fabnummas/Documentation-API-interop-rabilit-France-VAE-241653b7be078088aa44eb63459c75d9",
