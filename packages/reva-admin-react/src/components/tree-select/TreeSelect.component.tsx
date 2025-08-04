@@ -20,6 +20,7 @@ interface Props {
   toggleButtonIsSelected?: boolean;
   fullHeight?: boolean;
   fullWidth?: boolean;
+  hideToggleButton?: boolean;
 }
 
 export const TreeSelect = (props: Props) => {
@@ -33,6 +34,7 @@ export const TreeSelect = (props: Props) => {
     toggleButtonIsSelected,
     fullHeight,
     fullWidth,
+    hideToggleButton,
   } = props;
 
   const isAllSelected = checkIfAllItemsSelected(items);
@@ -109,17 +111,19 @@ export const TreeSelect = (props: Props) => {
           />
         )}
       />
-      <div>
-        <ToggleSwitch
-          disabled={readonly}
-          inputTitle={label}
-          label={label}
-          labelPosition="left"
-          showCheckedHint={false}
-          checked={toggleButtonIsSelected || isAllSelected}
-          onChange={onClickSelectAll}
-        />
-      </div>
+      {!hideToggleButton && (
+        <div>
+          <ToggleSwitch
+            disabled={readonly}
+            inputTitle={label}
+            label={label}
+            labelPosition="left"
+            showCheckedHint={false}
+            checked={toggleButtonIsSelected || isAllSelected}
+            onChange={onClickSelectAll}
+          />
+        </div>
+      )}
       <div
         className={`${
           fullHeight ? "" : "max-h-[500px]"
