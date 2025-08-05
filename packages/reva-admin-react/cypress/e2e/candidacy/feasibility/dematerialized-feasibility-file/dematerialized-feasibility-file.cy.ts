@@ -124,9 +124,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").should(
-        "exist",
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-pending-validation']",
+      ).should("exist");
     });
 
     it("should display 'to complete' badges for eligibility, certification, decision, and attachments sections", function () {
@@ -204,11 +204,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-pending-validation']",
+      ).should("exist");
     });
   });
 
@@ -258,11 +256,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-pending-validation']",
+      ).should("exist");
     });
   });
 
@@ -311,11 +307,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-pending-validation']",
+      ).should("exist");
     });
   });
 
@@ -372,10 +366,8 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           "not.exist",
         );
         cy.get(
-          "[data-test='send-file-certification-authority-section']",
-        ).within(() => {
-          cy.get("button").should("be.disabled");
-        });
+          "[data-test='send-file-certification-authority-tile-pending-validation']",
+        ).should("exist");
       });
     },
   );
@@ -433,11 +425,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-pending-validation']",
+      ).should("exist");
     });
   });
 
@@ -489,11 +479,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-pending-validation']",
+      ).should("exist");
     });
 
     it("should display candidate's comment when candidateDecisionComment exists", () => {
@@ -569,11 +557,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-pending-validation']",
+      ).should("exist");
     });
 
     it("should enable the 'send to certification authority' section if the sworn attestation is completed", () => {
@@ -628,11 +614,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("not.be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-ready']",
+      ).should("exist");
     });
 
     it("should show all sections as completed and enable certification authority section", function () {
@@ -687,11 +671,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("not.be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-ready']",
+      ).should("exist");
     });
   });
 
@@ -715,6 +697,7 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
             sentToCandidateAt: DATE_NOW,
             swornStatementFileId: "some-file-id",
             isReadyToBeSentToCertificationAuthority: true,
+            sentToCertificationAuthorityAt: DATE_NOW,
           },
         };
         visitFeasibility({
@@ -760,10 +743,8 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
           "not.exist",
         );
         cy.get(
-          "[data-test='send-file-certification-authority-section']",
-        ).within(() => {
-          cy.get("button").should("not.be.disabled");
-        });
+          "[data-test='send-file-certification-authority-tile-sent']",
+        ).should("exist");
       });
     },
   );
@@ -876,11 +857,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-pending-validation']",
+      ).should("exist");
     });
 
     it("should display all sections as editable with completed badges when the file is ready to be sent to the certification authority", () => {
@@ -938,11 +917,9 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get("[data-test='candidate-decision-comment-section']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-certification-authority-section']").within(
-        () => {
-          cy.get("button").should("not.be.disabled");
-        },
-      );
+      cy.get(
+        "[data-test='send-file-certification-authority-tile-ready']",
+      ).should("exist");
     });
   });
 
