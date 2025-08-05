@@ -16,28 +16,26 @@ export default function ForgotPasswordPage() {
         passe.
       </p>
 
-      <div className="flex flex-col w-full mx-auto p-6 max-w-xl shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
-        <form className="flex flex-col gap-6 max-w-lg" action={action}>
-          <div className="flex flex-col gap-4">
-            <Input
-              hintText="Format attendu : nom@domaine.fr"
-              nativeInputProps={{
-                id: "email",
-                name: "email",
-                required: true,
-                type: "email",
-                autoComplete: "email",
-                spellCheck: "false",
-              }}
-              label="Email"
-              state={state.errors?.email ? "error" : "default"}
-              stateRelatedMessage={state.errors?.email?.message}
-            />
-          </div>
+      <div className="w-full mx-auto p-6 max-w-xl shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
+        <form className="flex flex-col" action={action}>
+          <Input
+            hintText="Format attendu : nom@domaine.fr"
+            nativeInputProps={{
+              id: "email",
+              name: "email",
+              required: true,
+              type: "email",
+              autoComplete: "email",
+              spellCheck: "false",
+            }}
+            label="Email"
+            state={state.errors?.email ? "error" : "default"}
+            stateRelatedMessage={state.errors?.email?.message}
+          />
 
           <Button
             type="submit"
-            className="w-full justify-center"
+            className="w-full justify-center mt-auto"
             data-test="forgot-password-home-submit"
             disabled={pending}
           >
