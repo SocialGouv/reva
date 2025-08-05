@@ -185,7 +185,7 @@ export default async function CohortePage({
             cohorte ainsi que le lien direct vers la page d’inscription à
             transmettre à vos candidats.
           </p>
-          <div className="flex flex-col xl:flex-row gap-6">
+          <div className="flex flex-col xl:flex-row xl:justify-between gap-6">
             <RegistrationCodeDisplay
               registrationCode={cohorte.codeInscription || ""}
             />
