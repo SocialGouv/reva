@@ -260,16 +260,8 @@ const AapFeasibilityPage = () => {
               feasibilityFileSentAt ? toDate(feasibilityFileSentAt) : null
             }
             isReadyToBeSentToCertificationAuthority={
-              dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
+              !!dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
             }
-            decisionSentAt={
-              feasibility.decisionSentAt
-                ? toDate(feasibility.decisionSentAt)
-                : null
-            }
-            decision={feasibility.decision}
-            decisionComment={feasibility.decisionComment}
-            history={feasibility.history}
           />
         </ul>
       )}
