@@ -104,7 +104,7 @@ export const resetPassword = async (
 
   try {
     await keycloakAdmin.users.resetPassword({
-      realm: process.env.KEYCLOAK_APP_REALM,
+      realm,
       id: userId,
       credential: {
         temporary: false,
