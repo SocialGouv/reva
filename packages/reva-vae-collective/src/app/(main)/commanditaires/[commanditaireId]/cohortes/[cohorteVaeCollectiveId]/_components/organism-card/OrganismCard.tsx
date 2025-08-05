@@ -1,4 +1,5 @@
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
+import { Fragment } from "react";
 
 type Organism = {
   label: string;
@@ -123,6 +124,16 @@ const FilledOrganismCard = ({
 
   const additionalProps = getAdditionalProps({ disabled, readonly });
 
+  const organismLabel = organism.nomPublic || organism.label;
+
+  const organismAddress = [
+    organism.adresseNumeroEtNomDeRue,
+    organism.adresseCodePostal,
+    organism.adresseVille,
+  ]
+    .filter(Boolean)
+    .join(" - ");
+
   return (
     <Tile
       data-testid="filled-organism-card"
@@ -130,19 +141,19 @@ const FilledOrganismCard = ({
       title="Architecte Accompagnateur de parcours"
       desc={
         <>
-          {organism.nomPublic || organism.label}
-          <br />
           {[
-            organism.adresseNumeroEtNomDeRue,
-            organism.adresseCodePostal,
-            organism.adresseVille,
+            organismLabel,
+            organismAddress,
+            organism.emailContact,
+            organism.telephone,
           ]
             .filter(Boolean)
-            .join(" - ")}
-          <br />
-          {organism.emailContact}
-          <br />
-          {organism.telephone}
+            .map((item, index) => (
+              <Fragment key={index}>
+                {index > 0 && <br />}
+                {item}
+              </Fragment>
+            ))}
         </>
       }
       detail="Changer d'AAP"
