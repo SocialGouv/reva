@@ -13,6 +13,8 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     "/logout-confirmation",
     "/forgot-password",
     "/forgot-password-confirmation",
+    "/reset-password",
+    "/reset-password-confirmation",
   ];
 
   if (!authenticated && !publicPaths.includes(pathname)) {
