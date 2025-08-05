@@ -11,6 +11,14 @@ const isTestEnv = process.env.NODE_ENV === "test";
 
 const fastify = Fastify({
   logger: {
+    serializers: {
+      res(reply) {
+        return {
+          statusCode: reply.statusCode,
+          keycloakId: reply.keycloakId,
+        };
+      },
+    },
     transport: datadogApiKey
       ? {
           level: isTestEnv ? "silent" : "info",

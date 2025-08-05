@@ -30,6 +30,12 @@ declare module "openapi-types" {
   }
 }
 
+declare module "fastify" {
+  interface FastifyReply {
+    keycloakId: string;
+  }
+}
+
 const logo = readFileSync("./static/fvae_logo.svg");
 
 const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
@@ -156,8 +162,6 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   addInputSchemas(fastify);
   addResponseSchemas(fastify);
 
-  fastify.decorateRequest("graphqlClient");
-
   const securePathes = [
     "candidatures",
     "dossiersDeFaisabilite",
@@ -171,7 +175,14 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   // /dossiersDeFaisabilite
   // /dossiersDeValidation
   // /informationsJury
+  fastify.decorateRequest("graphqlClient");
+  fastify.decorateRequest("keycloakId");
   fastify.addHook("onRequest", (request) => validateJwt(securePathes, request));
+
+  fastify.decorateReply("keycloakId");
+  fastify.addHook("onResponse", async (request, reply) => {
+    reply.keycloakId = request.keycloakId;
+  });
 
   // Handle errors for pathes :
   // /candidatures

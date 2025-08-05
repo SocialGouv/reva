@@ -12,6 +12,7 @@ import { findSessionById } from "./features/session/findSessionById.js";
 declare module "fastify" {
   interface FastifyRequest {
     graphqlClient: Client;
+    keycloakId: string;
   }
 }
 
@@ -62,6 +63,7 @@ export const validateJwt = async (
   const graphqlClient = getGraphQlClient(keycloakJwt);
 
   request.graphqlClient = graphqlClient;
+  request.keycloakId = session.keycloakId;
 };
 
 const getTokenFromRequest = (request: FastifyRequest) => {
