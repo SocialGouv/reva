@@ -60,6 +60,7 @@ type Mutation {
     clientApp: ClientApp!
   ): AccountLogged!
   account_sendForgotPasswordEmail(email: String!): Void
+  account_resetPassword(token: String!, password: String!): Void
 }
 
 enum ClientApp {

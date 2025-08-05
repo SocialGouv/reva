@@ -13,6 +13,7 @@ import { disableAccountById } from "./features/disableAccount";
 import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getImpersonateUrl } from "./features/impersonate";
 import { loginWithCredentials } from "./features/loginWithCredentials";
+import { resetAccountPassword } from "./features/resetAccountPassword";
 import { sendForgotPasswordEmail } from "./features/sendForgotPasswordEmail";
 import { updateAccountById } from "./features/updateAccount";
 
@@ -115,6 +116,10 @@ export const resolvers = {
       _parent: unknown,
       params: { email: string },
     ) => sendForgotPasswordEmail(params),
+    account_resetPassword: async (
+      _parent: unknown,
+      params: { token: string; password: string },
+    ) => resetAccountPassword(params),
   },
   Query: {
     account_getAccountForConnectedUser: async (
