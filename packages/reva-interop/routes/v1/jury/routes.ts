@@ -45,7 +45,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
             recherche: {
               type: "string",
               maxLength: 100,
-              example: "Alice+Doe",
+              example: "Alice Doe",
               description: "Filtre de recherche",
             },
             statut: {

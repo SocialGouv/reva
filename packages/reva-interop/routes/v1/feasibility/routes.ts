@@ -197,7 +197,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             recherche: {
               type: "string",
               maxLength: 100,
-              example: "Alice+Doe",
+              example: "Alice Doe",
               description: "Recherche par mots-clés (nom, prénom, email...)",
             },
             statut: {
