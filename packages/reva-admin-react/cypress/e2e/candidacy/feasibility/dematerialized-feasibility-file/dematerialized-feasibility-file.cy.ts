@@ -810,6 +810,8 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       const feasibilityIncompleteDecision = {
         ...DEFAULT_FEASIBILITY_FILE,
         decision: DFF_CERTIFICATION_AUTHORITY_DECISION_INCOMPLETE,
+        decisionSentAt: DATE_NOW,
+        decisionComment: "some-comment",
         dematerializedFeasibilityFile: {
           ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
           eligibilityRequirement: DFF_FULL_ELIGIBILITY,
@@ -828,6 +830,7 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityIncompleteDecision,
       });
+      cy.get("[data-test='decision-incomplete-alert']").should("exist");
       cy.get("[data-test='eligibility-section']").within(() => {
         cy.get("[data-test='completed-badge']").should("exist");
       });
