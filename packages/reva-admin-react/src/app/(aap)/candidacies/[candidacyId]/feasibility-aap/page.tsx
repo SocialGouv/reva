@@ -27,6 +27,7 @@ import { AttachmentsSection } from "./_components/AttachmentsSection";
 import { CandidateDecisionCommentSection } from "./_components/CandidateDecisionCommentSection";
 import { CertificationSection } from "./_components/CertificationSection";
 import { CompetenciesBlocksSection } from "./_components/CompetenciesBlocksSection";
+import { DecisionIncompleteAlert } from "./_components/DecisionIncompleteAlert";
 import { DecisionSection } from "./_components/DecisionSection";
 import { EligibilitySection } from "./_components/EligibilitySection";
 import { PrerequisitesSection } from "./_components/PrerequisitesSection";
@@ -96,11 +97,17 @@ const AapFeasibilityPage = () => {
   );
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
+  const decision = feasibility?.decision;
+  const decisionSentAt = feasibility?.decisionSentAt;
+  const decisionComment = feasibility?.decisionComment;
+  const history = feasibility?.history;
+  const feasibilityDecisionIsIncomplete = decision === "INCOMPLETE";
   const isFeasibilityEditable =
-    !feasibilityFileSentAt || feasibility?.decision === "INCOMPLETE";
+    !feasibilityFileSentAt || feasibilityDecisionIsIncomplete;
   const isFeasibilityReceivedOrRejected =
-    feasibility?.decision === "ADMISSIBLE" ||
-    feasibility?.decision === "REJECTED";
+    decision === "ADMISSIBLE" || decision === "REJECTED";
+  const displayDecisionIncompleteAlert =
+    feasibilityDecisionIsIncomplete && decisionSentAt;
 
   const isEligibilityRequirementPartial =
     dematerializedFeasibilityFile?.eligibilityRequirement ===
@@ -130,10 +137,10 @@ const AapFeasibilityPage = () => {
         candidacy={candidacy as Candidacy}
         FeasibilityBanner={
           <FeasibilityBanner
-            decisionSentAt={feasibility.decisionSentAt}
-            decision={feasibility.decision}
-            decisionComment={feasibility.decisionComment}
-            history={feasibility.history}
+            decisionSentAt={decisionSentAt}
+            decision={decision as FeasibilityDecision}
+            decisionComment={decisionComment}
+            history={history}
             dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
             isCandidacyActualisationFeatureActive={
               isCandidacyActualisationFeatureActive
@@ -155,6 +162,13 @@ const AapFeasibilityPage = () => {
         Remplissez toutes les catégories afin de pouvoir envoyer le dossier au
         certificateur.
       </p>
+      {displayDecisionIncompleteAlert && (
+        <DecisionIncompleteAlert
+          decisionSentAt={decisionSentAt}
+          decisionComment={decisionComment || ""}
+          history={history || []}
+        />
+      )}
       {queryStatus === "success" && (
         <ul className="flex flex-col gap-8">
           <EligibilitySection
