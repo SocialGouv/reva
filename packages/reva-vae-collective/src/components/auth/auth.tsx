@@ -14,14 +14,15 @@ export const useAuth = () => {
 
   if (accessToken) {
     const decodedToken = jwtDecode<{
-      resource_access: { "reva-vae-collective": { roles: string[] } };
+      resource_access?: { "reva-vae-collective"?: { roles: string[] } };
     }>(accessToken);
 
-    roles = decodedToken.resource_access["reva-vae-collective"]
-      .roles as UserRole[];
+    roles = (decodedToken?.resource_access?.["reva-vae-collective"]?.roles ||
+      []) as UserRole[];
     isAdmin = roles.includes("admin");
     isVAECollectiveManager = roles.includes("manage_vae_collective");
   }
+
   return {
     roles,
     isAdmin,
