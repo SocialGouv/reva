@@ -10,6 +10,7 @@ const datadogApiKey = process.env.DATADOG_API_KEY;
 const isTestEnv = process.env.NODE_ENV === "test";
 
 const fastify = Fastify({
+  trustProxy: process.env.TRUSTED_PROXIES || false,
   logger: {
     serializers: {
       res(reply) {
