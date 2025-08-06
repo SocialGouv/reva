@@ -126,8 +126,8 @@ export const TreeSelect = (props: Props) => {
       )}
       <div
         className={`${
-          fullHeight ? "" : "max-h-[500px]"
-        } overflow-y-scroll overflow-x-hidden`}
+          fullHeight ? "overflow-y-hidden" : "max-h-[500px] overflow-y-auto"
+        } overflow-x-hidden`}
       >
         {renderItems(filteredItems)}
       </div>
