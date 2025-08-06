@@ -27,6 +27,9 @@ export const validateJwt = async (
     request.url.startsWith(`/interop/v1/${path}`),
   );
 
+  const forwardedFor = request.headers["x-forwarded-for"];
+  console.log("forwardedFor", forwardedFor);
+
   if (!isSecurePath) {
     return;
   }
