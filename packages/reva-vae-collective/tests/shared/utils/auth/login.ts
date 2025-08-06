@@ -8,7 +8,7 @@ export const login = async ({
   role,
 }: {
   page: Page;
-  role: "admin" | "gestionnaireVaeCollective";
+  role: "admin" | "gestionnaireVaeCollective" | "notConnected";
 }) => {
   await page.route(
     "**/auth/realms/reva/protocol/openid-connect/3p-cookies/step1.html",
@@ -41,27 +41,39 @@ export const login = async ({
     },
   );
 
-  const tokens = role === "admin" ? adminToken : gestionnaireVaeCollectiveToken;
+  if (role === "notConnected") {
+    await page.route(
+      "**/realms/reva/protocol/openid-connect/token",
+      async (route) => {
+        await route.fulfill({
+          json: {},
+        });
+      },
+    );
+  } else {
+    const tokens =
+      role === "admin" ? adminToken : gestionnaireVaeCollectiveToken;
 
-  await page.route(
-    "**/realms/reva/protocol/openid-connect/token",
-    async (route) => {
-      await route.fulfill({
-        json: tokens,
-      });
-    },
-  );
+    await page.route(
+      "**/realms/reva/protocol/openid-connect/token",
+      async (route) => {
+        await route.fulfill({
+          json: tokens,
+        });
+      },
+    );
 
-  const tokensForPostLoginUrl = {
-    accessToken: tokens.access_token,
-    refreshToken: tokens.refresh_token,
-  };
+    const tokensForPostLoginUrl = {
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
+    };
 
-  await page.goto(
-    `http://localhost:4005/vae-collective/post-login?tokens=${encodeURIComponent(
-      JSON.stringify(tokensForPostLoginUrl),
-    )}`,
-  );
+    await page.goto(
+      `http://localhost:4005/vae-collective/post-login?tokens=${encodeURIComponent(
+        JSON.stringify(tokensForPostLoginUrl),
+      )}`,
+    );
 
-  await page.waitForTimeout(500); //wait for the post-login page to be loaded and keycloak to be initialized
+    await page.waitForTimeout(500); //wait for the post-login page to be loaded and keycloak to be initialized
+  }
 };
