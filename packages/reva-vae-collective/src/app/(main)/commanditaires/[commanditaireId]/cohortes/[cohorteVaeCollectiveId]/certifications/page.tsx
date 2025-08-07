@@ -1,6 +1,7 @@
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
+
+import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
 import { CertificationsSearchBar } from "./_components/certifications-search-bar/CertificationsSearchBar";
@@ -36,7 +37,7 @@ export default async function CertificationsPage({
 
   return (
     <div className="flex flex-col">
-      <Breadcrumb
+      <RoleDependentBreadcrumb
         className="mt-0 mb-4"
         currentPageLabel="Certifications"
         segments={[

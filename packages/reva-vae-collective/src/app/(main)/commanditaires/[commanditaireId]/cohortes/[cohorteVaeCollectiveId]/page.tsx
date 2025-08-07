@@ -1,7 +1,7 @@
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Link from "next/link";
 
+import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
@@ -105,7 +105,7 @@ export default async function CohortePage({
 
   return (
     <div className="flex flex-col w-full">
-      <Breadcrumb
+      <RoleDependentBreadcrumb
         className="mt-0 mb-4"
         currentPageLabel={cohorte.nom}
         segments={[

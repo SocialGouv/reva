@@ -1,8 +1,8 @@
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 
 import { AapSelectionAdvice } from "@/components/aap-selection-advice/AapSelectionAdvice";
+import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 
 import { OrganismCard } from "./_components/organism-card/OrganismCard";
 import { OrganismsSearchBar } from "./_components/organisms-search-bar/OrganismsSearchBar";
@@ -33,7 +33,7 @@ export default async function AapsPage({
 
   return (
     <div className="flex flex-col fr-container">
-      <Breadcrumb
+      <RoleDependentBreadcrumb
         className="mt-0 mb-4"
         currentPageLabel="Architectes Accompagnateur de Parcours"
         segments={[
