@@ -81,6 +81,11 @@ export const useCertificateurLayout = () => {
   const certificationAuthorityStructureCGU =
     certificationAuthorityStructure?.cgu;
 
+  console.log(
+    "certificationAuthorityStructureCGU",
+    certificationAuthorityStructureCGU,
+  );
+
   const cguAcceptanceRequired =
     certificationAuthorityStructure?.cguAcceptanceRequired;
 

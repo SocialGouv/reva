@@ -1,9 +1,23 @@
 "use client";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
+import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 
 import { useAuth } from "@/components/auth/auth";
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+
+import { graphql } from "@/graphql/generated";
+
+const getCertificationAuthorityMetabaseUrlQuery = graphql(`
+  query getCertificationAuthorityMetabaseUrl {
+    account_getAccountForConnectedUser {
+      certificationAuthority {
+        metabaseDashboardIframeUrl
+      }
+    }
+  }
+`);
 
 const PATHS = {
   CANDIDACIES: "/candidacies",
@@ -17,6 +31,7 @@ const PATHS = {
   CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL:
     "/certification-authorities/settings/local-account",
   FEASIBILITIES: "/candidacies/feasibilities",
+  STATISTIQUES: "/dashboard",
 } as const;
 
 const LABELS = {
@@ -29,6 +44,7 @@ const LABELS = {
   GESTION_CERTIFICATIONS: "Gestion des certifications",
   STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
   STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
+  STATISTIQUES: "Statistiques",
 } as const;
 
 const createTab = ({
@@ -73,6 +89,7 @@ const getNavigationTabs = ({
   isCertificationAuthorityLocalAccount,
   isCertificationRegistryManager,
   isAdminCertificationAuthority,
+  metabaseDashboardIframeUrl,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -81,6 +98,7 @@ const getNavigationTabs = ({
   isCertificationAuthorityLocalAccount: boolean;
   isCertificationRegistryManager: boolean;
   isAdminCertificationAuthority: boolean;
+  metabaseDashboardIframeUrl?: string | null;
 }) => {
   const adminTabs = [
     createTab({
@@ -163,6 +181,16 @@ const getNavigationTabs = ({
     }),
   ];
 
+  if (metabaseDashboardIframeUrl) {
+    certificationAuthorityAdminTabs.push(
+      createTab({
+        text: LABELS.STATISTIQUES,
+        href: PATHS.STATISTIQUES,
+        isActive: currentPathname.startsWith(PATHS.STATISTIQUES),
+      }),
+    );
+  }
+
   const certificationAuthorityLocalAccountTabs = [
     createTab({
       text: LABELS.CANDIDACIES,
@@ -207,6 +235,18 @@ export const Header = () => {
   } = useAuth();
   const { logout } = useKeycloakContext();
 
+  const { graphqlClient } = useGraphQlClient();
+
+  const { data: getCertificationAuthorityMetabaseUrl } = useQuery({
+    queryKey: ["certificateur", "getCertificationAuthorityMetabaseUrl"],
+    queryFn: () =>
+      graphqlClient.request(getCertificationAuthorityMetabaseUrlQuery),
+  });
+
+  const metabaseDashboardIframeUrl =
+    getCertificationAuthorityMetabaseUrl?.account_getAccountForConnectedUser
+      ?.certificationAuthority?.metabaseDashboardIframeUrl;
+
   const navigation = getNavigationTabs({
     currentPathname,
     isAdmin,
@@ -215,6 +255,7 @@ export const Header = () => {
     isCertificationAuthorityLocalAccount,
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
+    metabaseDashboardIframeUrl,
   });
 
   return (
