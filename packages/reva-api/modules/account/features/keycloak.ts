@@ -89,13 +89,17 @@ export const createAccount = async (account: {
   }
 
   try {
-    await keycloakAdmin.users.executeActionsEmail({
-      id,
-      clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA,
-      actions: ["UPDATE_PASSWORD"],
-      lifespan: 4 * 24 * 60 * 60, // 4 days
-      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
-    });
+    // Les comptes créés dans l'environnement de sandbox sont destinés à une utilisation via API
+    // et ne doivent pas recevoir de mail de création de mot de passe
+    if (process.env.APP_ENV !== "sandbox") {
+      await keycloakAdmin.users.executeActionsEmail({
+        id,
+        clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA,
+        actions: ["UPDATE_PASSWORD"],
+        lifespan: 4 * 24 * 60 * 60, // 4 days
+        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
+      });
+    }
   } catch (error) {
     console.error("Error sending email", error);
     throw error;
