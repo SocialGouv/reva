@@ -19,5 +19,6 @@ export const RoleDependentBreadcrumb = (props: BreadcrumbProps) => {
       ]
     : props.segments;
 
-  return <Breadcrumb {...props} segments={segments} />;
+  //do not render if there is no segments to display for the user role
+  return segments.length ? <Breadcrumb {...props} segments={segments} /> : null;
 };
