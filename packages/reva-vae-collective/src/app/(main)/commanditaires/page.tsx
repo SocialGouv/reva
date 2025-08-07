@@ -77,6 +77,7 @@ export default async function CommanditairesPage({
           return (
             <li key={commanditaire.id}>
               <Card
+                data-testid={"commanditaire-card"}
                 enlargeLink
                 size="small"
                 title={commanditaire.raisonSociale}
