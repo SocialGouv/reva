@@ -1,0 +1,25 @@
+meta {
+  name: Créer une nouvelle décision sur le dossier de faisabilité
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/dossierDeFaisabilite/decisions
+  body: multipartForm
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  decision: 
+  commentaire: 
+  document: 
+}

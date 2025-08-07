@@ -1,0 +1,25 @@
+meta {
+  name: Invalide le jeton d'accès
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/interop/v1/auth/invalidJwt
+  body: json
+  auth: bearer
+}
+
+headers {
+  auth_api_key: {{authApiKey}}
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "token": ""
+  }
+}

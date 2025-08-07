@@ -1,0 +1,22 @@
+meta {
+  name: Récupérer la liste des dossiers de validation
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/dossiersDeValidation
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~decalage: 
+  ~limite: 
+  ~recherche: 
+  ~statut: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

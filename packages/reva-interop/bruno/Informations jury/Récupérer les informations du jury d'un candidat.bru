@@ -1,0 +1,19 @@
+meta {
+  name: Récupérer les informations du jury d'un candidat
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/informationJury
+  body: none
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

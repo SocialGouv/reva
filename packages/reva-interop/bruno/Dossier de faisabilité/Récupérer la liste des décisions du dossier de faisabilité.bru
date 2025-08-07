@@ -1,0 +1,19 @@
+meta {
+  name: Récupérer la liste des décisions du dossier de faisabilité
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/dossierDeFaisabilite/decisions
+  body: none
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

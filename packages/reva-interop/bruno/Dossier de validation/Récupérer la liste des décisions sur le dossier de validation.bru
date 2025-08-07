@@ -1,0 +1,19 @@
+meta {
+  name: Récupérer la liste des décisions sur le dossier de validation
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/dossierDeValidation/decisions
+  body: none
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

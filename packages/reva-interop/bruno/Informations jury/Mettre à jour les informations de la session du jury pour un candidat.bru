@@ -1,0 +1,27 @@
+meta {
+  name: Mettre à jour les informations de la session du jury pour un candidat
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/informationJury/session
+  body: multipartForm
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  date: 
+  heure: 
+  adresseSession: 
+  informationsSession: 
+  document: 
+}

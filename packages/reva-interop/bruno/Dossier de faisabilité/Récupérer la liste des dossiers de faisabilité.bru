@@ -1,0 +1,22 @@
+meta {
+  name: Récupérer la liste des dossiers de faisabilité
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/dossiersDeFaisabilite
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~decalage: 
+  ~limite: 
+  ~recherche: 
+  ~statut: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

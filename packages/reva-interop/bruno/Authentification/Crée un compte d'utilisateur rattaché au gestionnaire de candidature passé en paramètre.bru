@@ -1,0 +1,25 @@
+meta {
+  name: Crée un compte d'utilisateur rattaché au gestionnaire de candidature passé en paramètre
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/interop/v1/auth/createAccount
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "certificationAuthorityId": "",
+    "email": "",
+    "firstname": "",
+    "lastname": "",
+    "username": ""
+  }
+}

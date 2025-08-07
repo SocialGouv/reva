@@ -1,0 +1,19 @@
+meta {
+  name: Récupérer les informations de la session du jury pour un candidat
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/informationJury/session
+  body: none
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

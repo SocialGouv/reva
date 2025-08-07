@@ -1,0 +1,19 @@
+meta {
+  name: Récupérer les détails d'une candidature
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId
+  body: none
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

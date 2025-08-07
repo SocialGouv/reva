@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "API d'intéropérabilité France VAE (staging)",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

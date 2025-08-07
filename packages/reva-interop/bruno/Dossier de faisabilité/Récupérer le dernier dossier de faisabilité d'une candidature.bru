@@ -1,0 +1,19 @@
+meta {
+  name: Récupérer le dernier dossier de faisabilité d'une candidature
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/dossierDeFaisabilite
+  body: none
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

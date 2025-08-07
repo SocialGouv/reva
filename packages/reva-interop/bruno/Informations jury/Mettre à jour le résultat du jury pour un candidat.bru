@@ -1,0 +1,26 @@
+meta {
+  name: Mettre à jour le résultat du jury pour un candidat
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/informationJury/resultat
+  body: json
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "resultat": "",
+    "commentaire": ""
+  }
+}

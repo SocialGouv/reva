@@ -1,0 +1,26 @@
+meta {
+  name: Créer une nouvelle décision sur le dossier de validation
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/interop/v1/candidatures/:candidatureId/dossierDeValidation/decisions
+  body: json
+  auth: bearer
+}
+
+params:path {
+  candidatureId: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "decision": "",
+    "commentaire": ""
+  }
+}

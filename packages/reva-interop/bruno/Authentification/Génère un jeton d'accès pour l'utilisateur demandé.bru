@@ -1,0 +1,25 @@
+meta {
+  name: Génère un jeton d'accès pour l'utilisateur demandé
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/interop/v1/auth/generateJwt
+  body: json
+  auth: bearer
+}
+
+headers {
+  auth_api_key: {{authApiKey}}
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "userId": ""
+  }
+}

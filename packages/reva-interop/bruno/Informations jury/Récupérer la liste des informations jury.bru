@@ -1,0 +1,22 @@
+meta {
+  name: Récupérer la liste des informations jury
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/interop/v1/informationsJury
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~decalage: 
+  ~limite: 
+  ~recherche: 
+  ~statut: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
