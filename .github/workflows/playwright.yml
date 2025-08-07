@@ -18,7 +18,17 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm ci
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=`npm list | grep '@playwright/test'|sed 's/.*playwright\/test@//'`" >> $GITHUB_ENV
+      - name: Cache Playwright Binaries
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: playwright-${{ env.PLAYWRIGHT_VERSION }}
       - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
       - name: Build to retrieve graphql schema from API folder
         run: npm run build
@@ -30,6 +40,7 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
   playwright-reva-vae-collective:
     timeout-minutes: 30
     runs-on: ubuntu-latest
@@ -44,7 +55,17 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm ci
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=`npm list | grep '@playwright/test'|sed 's/.*playwright\/test@//'`" >> $GITHUB_ENV
+      - name: Cache Playwright Binaries
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: playwright-${{ env.PLAYWRIGHT_VERSION }}
       - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
       - name: Build to retrieve graphql schema from API folder
         run: npm run build
