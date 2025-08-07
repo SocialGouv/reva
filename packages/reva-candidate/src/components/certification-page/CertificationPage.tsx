@@ -6,7 +6,6 @@ import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
-// import { UsefulResources } from "./useful-resources/UserfulResources";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 import { UsefulResources } from "./useful-resources/UserfulResources";
 
@@ -42,25 +41,27 @@ export const CertificationPage = async ({
       </div>
       <div className="flex flex-col md:flex-row gap-6 mt-8">
         <Tile
-          title={certification.typeDiplome}
-          classes={{ content: "p-0" }}
-          className="w-[282px] h-auto"
-          small
-          orientation="horizontal"
-          imageSvg
-          imageUrl="/candidat/images/pictograms/city-hall.svg"
-          imageAlt="icône mairie"
-        />
-        <Tile
           title={`Niveau ${certification.level}`}
           classes={{ content: "p-0" }}
-          className="w-[282px] h-auto"
+          className="min-w-[282px] h-auto"
           small
           orientation="horizontal"
           imageSvg
           imageUrl="/candidat/images/pictograms/information.svg"
           imageAlt="icône information"
         />
+        {certification.typeDiplome && (
+          <Tile
+            title={certification.typeDiplome}
+            classes={{ content: "p-0" }}
+            className="min-w-[282px] h-auto"
+            small
+            orientation="horizontal"
+            imageSvg
+            imageUrl="/candidat/images/pictograms/city-hall.svg"
+            imageAlt="icône mairie"
+          />
+        )}
       </div>
     </div>
     <Tabs
