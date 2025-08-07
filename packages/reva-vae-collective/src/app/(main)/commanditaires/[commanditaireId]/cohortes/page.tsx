@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { redirect } from "next/navigation";
 
 import { AapSelectionAdvice } from "@/components/aap-selection-advice/AapSelectionAdvice";
+import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
@@ -105,6 +106,12 @@ export default async function CohortesPage({
 
   return (
     <div className="fr-container flex flex-col">
+      <RoleDependentBreadcrumb
+        className="mt-0 mb-4"
+        currentPageLabel="Cohortes"
+        segments={[]}
+      />
+
       <h1 className="">Cohortes</h1>
       <AapSelectionAdvice className="text-xl mb-12" />
       <Button
