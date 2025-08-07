@@ -153,8 +153,6 @@ const unsafeResolvers = {
       cguVersion: number;
       cguAcceptedAt?: Date;
     }) => {
-      console.log("cguVersion", cguVersion);
-
       return {
         version: cguVersion,
         acceptedAt: cguAcceptedAt,
