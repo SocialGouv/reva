@@ -79,15 +79,27 @@ export const createAccount = async (account: {
     nom_maison_mere_aap: account.maisonMereAAPRaisonSociale,
   };
 
-  const { id } = await keycloakAdmin.users.create(payload);
+  let id;
+  try {
+    const resp = await keycloakAdmin.users.create(payload);
+    id = resp.id;
+  } catch (error) {
+    console.error("Error creating user", error);
+    throw error;
+  }
 
-  await keycloakAdmin.users.executeActionsEmail({
-    id,
-    clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA,
-    actions: ["UPDATE_PASSWORD"],
-    lifespan: 4 * 24 * 60 * 60, // 4 days
-    realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
-  });
+  try {
+    await keycloakAdmin.users.executeActionsEmail({
+      id,
+      clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA,
+      actions: ["UPDATE_PASSWORD"],
+      lifespan: 4 * 24 * 60 * 60, // 4 days
+      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
+    });
+  } catch (error) {
+    console.error("Error sending email", error);
+    throw error;
+  }
 
   return id;
 };
