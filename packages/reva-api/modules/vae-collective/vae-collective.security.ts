@@ -1,5 +1,6 @@
 import {
   defaultSecurity,
+  isAdmin,
   isAdminOrGestionnaireOfCommanditaireVaeCollective,
   isAnyone,
 } from "@/modules/shared/security/presets";
@@ -15,6 +16,8 @@ export const vaeCollectiveResolversSecurityMap = {
 
   "Query.vaeCollective_getCohorteVaeCollectiveById":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
+
+  "Query.vaeCollective_commanditaireVaeCollectives": isAdmin,
 
   "Mutation.vaeCollective_createCohorteVaeCollective":
     isAdminOrGestionnaireOfCommanditaireVaeCollective,

@@ -29,6 +29,11 @@ type CommanditaireVaeCollective {
   cohorteVaeCollectives(offset: Int, limit: Int): CohorteVaeCollectivePage!
 }
 
+type CommanditaireVaeCollectivePage {
+  rows: [CommanditaireVaeCollective!]!
+  info: PaginationInfo!
+}
+
 type CohorteVaeCollectivePage {
   rows: [CohorteVaeCollective!]!
   info: PaginationInfo!
@@ -43,6 +48,10 @@ type Account {
 }
 
 type Query {
+  vaeCollective_commanditaireVaeCollectives(
+    offset: Int
+    limit: Int
+  ): CommanditaireVaeCollectivePage!
   cohorteVaeCollective(codeInscription: String!): CohorteVaeCollective
   cohortesVaeCollectivesForConnectedAap: [CohorteVaeCollective!]!
   cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount: [CohorteVaeCollective!]!

@@ -14,6 +14,7 @@ import { getCohorteVAECollectiveByCodeInscription } from "./features/getCohorteV
 import { getCohorteVAECollectiveById } from "./features/getCohorteVAECollectiveById";
 import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
 import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
+import { getCommanditaireVaeCollectives } from "./features/getCommanditaireVaeCollectives";
 import { publishCohorteVAECollective } from "./features/publishCohorteVAECollective";
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
 import { updateCohorteVAECollectiveOrganism } from "./features/updateCohorteVAECollectiveOrganism";
@@ -119,6 +120,10 @@ const unsafeResolvers = {
       _parent: unknown,
       { cohorteVaeCollectiveId }: { cohorteVaeCollectiveId: string },
     ) => getCohorteVAECollectiveById({ cohorteVaeCollectiveId }),
+    vaeCollective_commanditaireVaeCollectives: async (
+      _parent: unknown,
+      { offset, limit }: { offset: number; limit: number; searchText: string },
+    ) => getCommanditaireVaeCollectives({ offset, limit }),
   },
   Mutation: {
     vaeCollective_createCohorteVaeCollective: async (
