@@ -26,6 +26,7 @@ type CertificationCohorteVaeCollectiveOnOrganism {
 type CommanditaireVaeCollective {
   id: ID!
   raisonSociale: String!
+  createdAt: Timestamp!
   cohorteVaeCollectives(offset: Int, limit: Int): CohorteVaeCollectivePage!
 }
 
