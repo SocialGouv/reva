@@ -184,8 +184,7 @@ http:
     add-anti-clickjacking-headers:
       headers:
         customResponseHeaders:
-          Content-Security-Policy: "frame-ancestors 'self';"
-          X-Frame-Options: SAMEORIGIN
+          Content-Security-Policy: "frame-ancestors 'self' https://vae.gouv.fr https://reva.incubateur.net;"
 
     add-security-headers-production:
       headers:
