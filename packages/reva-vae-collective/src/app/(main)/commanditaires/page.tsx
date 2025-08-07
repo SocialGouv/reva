@@ -68,7 +68,7 @@ export default async function CommanditairesPage({
 
   return (
     <div className="fr-container flex flex-col">
-      <h1 className="mb-12">Commanditaires</h1>
+      <h1 className="mb-12">Porteurs de projet VAE collective</h1>
 
       <ul className="flex flex-col gap-4 list-none px-0 my-0">
         {commanditaires.rows.map((commanditaire) => {
