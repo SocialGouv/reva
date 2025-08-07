@@ -48,6 +48,7 @@ import { getCertificationsByCertificationAuthorityId } from "./features/getCerti
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
 import { getLastProfessionalCguCertificateur } from "./features/getLastProfessionalCguCertificateur";
+import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { transferCandidacyToCertificationAuthorityLocalAccount } from "./features/transferCandidacyToCertificationAuthorityLocalAccount";
@@ -98,6 +99,8 @@ const unsafeResolvers = {
       getCertificationAuthorityLocalAccountByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
+    metabaseDashboardIframeUrl: async (parent: CertificationAuthority) =>
+      getMetabaseIframeUrl(parent),
   },
 
   CertificationAuthorityLocalAccount: {
@@ -149,12 +152,16 @@ const unsafeResolvers = {
     }: {
       cguVersion: number;
       cguAcceptedAt?: Date;
-    }) => ({
-      version: cguVersion,
-      acceptedAt: cguAcceptedAt,
-      isLatestVersion:
-        (await getLastProfessionalCguCertificateur())?.version == cguVersion,
-    }),
+    }) => {
+      console.log("cguVersion", cguVersion);
+
+      return {
+        version: cguVersion,
+        acceptedAt: cguAcceptedAt,
+        isLatestVersion:
+          (await getLastProfessionalCguCertificateur())?.version == cguVersion,
+      };
+    },
   },
   CertificationRegistryManager: {
     certificationAuthorityStructure: (parent: CertificationRegistryManager) =>

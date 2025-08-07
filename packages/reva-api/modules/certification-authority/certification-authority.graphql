@@ -16,6 +16,7 @@ type CertificationAuthority {
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
   certificationAuthorityStructures: [CertificationAuthorityStructure!]!
   showLocalAccountsContactInfo: Boolean!
+  metabaseDashboardIframeUrl: String
 }
 
 type CertificationAuthorityLocalAccount {
