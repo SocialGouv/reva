@@ -190,6 +190,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   // /dossiersDeValidation
   // /informationsJury
   fastify.setErrorHandler((error, request, reply) => {
+    console.log("ERROR HANDLER");
     const isSecurePath = securePathes.some((path) =>
       request.url.startsWith(`/interop/v1/${path}`),
     );
@@ -197,18 +198,16 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     request.log.error(error);
 
     if (!isSecurePath) {
-      return;
+      return reply.send(error);
     }
 
     if (error.message == ERROR_UNAUTHORIZED) {
-      reply.status(401).send();
-      return;
+      return reply.status(401).send();
     }
 
     // It means it's FastifyError
     if (Object.hasOwn(error, "code")) {
-      reply.status(500).send(error);
-      return;
+      return reply.status(500).send(error);
     }
 
     reply.status(500).send({ statusCode: 500, error: "Internal Server Error" });

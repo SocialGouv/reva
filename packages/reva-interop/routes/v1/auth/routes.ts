@@ -140,6 +140,7 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         properties: {
           userId: {
             type: "string",
+            format: "uuid",
             description: "Identifiant de l'utilisateur",
           },
         },
