@@ -1,3 +1,5 @@
+import { ActiviteStatut, CandidacyStatusStep } from "@prisma/client";
+
 import {
   generateIAMTokenWithPassword,
   getAccountInIAM,
@@ -41,6 +43,18 @@ export const candidateLoginWithCredentials = async ({
   await prismaClient.candidate.update({
     where: { id: candidate.id },
     data: { lastLoginViaPasswordAt: new Date() },
+  });
+
+  // Mise à jour de la date d'activité pour toutes les candidatures actives du candidat
+  await prismaClient.candidacy.updateMany({
+    where: {
+      candidateId: candidate.id,
+      status: {
+        not: CandidacyStatusStep.ARCHIVE,
+      },
+      activite: ActiviteStatut.ACTIF,
+    },
+    data: { derniereDateActivite: new Date() },
   });
 
   const tokens = generateIAMTokenWithPassword(
