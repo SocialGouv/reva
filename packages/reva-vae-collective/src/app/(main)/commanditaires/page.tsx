@@ -1,5 +1,6 @@
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
+import { format } from "date-fns";
 
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
@@ -33,6 +34,7 @@ const loadCommanditaires = async ({
             rows {
               id
               raisonSociale
+              createdAt
             }
           }
         }
@@ -81,7 +83,12 @@ export default async function CommanditairesPage({
                 linkProps={{
                   href: `/commanditaires/${commanditaire.id}/cohortes`,
                 }}
-              ></Card>
+                end={
+                  <p className="text-xs text-dsfrGray-mentionGrey mb-0">
+                    Créé le {format(commanditaire.createdAt, "dd/MM/yyyy")}
+                  </p>
+                }
+              />
             </li>
           );
         })}
