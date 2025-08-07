@@ -249,6 +249,8 @@ model Candidacy {
   status                                        CandidacyStatusStep                             @default(PROJET)
   typeAccompagnement                            CandidacyTypeAccompagnement                     @default(ACCOMPAGNE) @map("type_accompagnement")
   candidacyOnCandidacyFinancingMethod           CandidacyOnCandidacyFinancingMethod[]
+  activite                                      ActiviteStatut                                  @default(ACTIF)
+  derniereDateActivite                          DateTime?                                       @map("derniere_date_activite") @db.Timestamptz(6)
   lastActivityDate                              DateTime?                                       @map("last_activity_date") @db.Timestamptz(6)
   candidacyContestationCaducite                 CandidacyContestationCaducite[]
   CandidacyEmail                                CandidacyEmail[]
@@ -263,6 +265,12 @@ model Candidacy {
   @@index([candidateId])
   @@index([certificationId])
   @@map("candidacy")
+}
+
+enum ActiviteStatut {
+  ACTIF
+  INACTIF_EN_ATTENTE
+  INACTIF_CONFIRME
 }
 
 enum CandidacyTypeAccompagnement {
