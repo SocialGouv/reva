@@ -30,6 +30,11 @@ function visitSummary({
       candidacyMenu.data.getCandidacyById.organism.modaliteAccompagnement =
         modaliteAccompagnement;
       cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "activeFeaturesForConnectedUser", {
+          data: {
+            activeFeaturesForConnectedUser: [],
+          },
+        });
         stubQuery(
           req,
           "getOrganismForAAPVisibilityCheck",
