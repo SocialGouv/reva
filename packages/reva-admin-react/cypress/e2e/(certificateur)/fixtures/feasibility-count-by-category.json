@@ -9,7 +9,6 @@
       "INCOMPLETE": 15,
       "ARCHIVED": 16,
       "DROPPED_OUT": 66,
-      "CONTESTATION": 1,
       "VAE_COLLECTIVE": 1
     },
     "cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount": []

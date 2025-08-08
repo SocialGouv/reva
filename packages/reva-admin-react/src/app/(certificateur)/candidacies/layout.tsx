@@ -32,7 +32,6 @@ const getFeasibilityCountAndCohortesVaeCollectivesByCategoryQuery = graphql(`
       INCOMPLETE
       ARCHIVED
       DROPPED_OUT
-      CONTESTATION
       VAE_COLLECTIVE
     }
     cohortesVaeCollectivesForConnectedCertificationAuthorityOrLocalAccount {

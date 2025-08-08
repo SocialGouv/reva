@@ -14,7 +14,7 @@ import {
   fichierSchema,
   statutDossierDeFaisabiliteSchema,
 } from "../../routes/v1/schemas.js";
-import { GetGqlRowType, GetGqlResponseType } from "../types.js";
+import { GetGqlResponseType, GetGqlRowType } from "../types.js";
 
 import { mapPageInfo } from "./pageInfo.js";
 
@@ -48,7 +48,6 @@ type MappedFeasibility = FromSchema<
 >;
 
 const statusMapFromGqlToInterop: Record<
-  // Exclude<FeasibilityCategoryFilter, "ALL" | "CADUQUE" | "CONTESTATION">,
   string,
   (typeof statutDossierDeFaisabiliteSchema)["enum"][number]
 > = {
