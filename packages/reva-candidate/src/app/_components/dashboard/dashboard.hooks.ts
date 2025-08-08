@@ -17,15 +17,9 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
           contactEmail
           contactPhone
         }
-        candidacyContestationsCaducite {
-          contestationSentAt
-          certificationAuthorityContestationDecision
-        }
-        lastActivityDate
         status
         typeAccompagnement
         firstAppointmentOccuredAt
-        isCaduque
         candidacyStatuses {
           status
         }
@@ -134,5 +128,3 @@ export type DossierDeValidationUseCandidateForDashboard =
   CandidateForDashboardHookReturnType["candidacy"]["activeDossierDeValidation"];
 export type CandidacyDropOutUseCandidateForDashboard =
   CandidateForDashboardHookReturnType["candidacy"]["candidacyDropOut"];
-export type CandidacyContestationsCaduciteUseCandidateForDashboard =
-  CandidateForDashboardHookReturnType["candidacy"]["candidacyContestationsCaducite"];

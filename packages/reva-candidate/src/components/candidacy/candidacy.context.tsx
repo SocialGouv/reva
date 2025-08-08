@@ -55,9 +55,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
         typeAccompagnement
         status
         firstAppointmentOccuredAt
-        lastActivityDate
         readyForJuryEstimatedAt
-        isCaduque
         candidacyDropOut {
           createdAt
           dropOutConfirmedByCandidate
@@ -207,10 +205,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
             decisionSentAt
             decisionComment
           }
-        }
-        candidacyContestationsCaducite {
-          contestationSentAt
-          certificationAuthorityContestationDecision
         }
       }
     }

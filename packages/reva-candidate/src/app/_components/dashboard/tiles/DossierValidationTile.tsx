@@ -11,24 +11,15 @@ import {
 const DossierValidationBadge = ({
   feasibility,
   activeDossierDeValidation,
-  isCaduque,
   canSubmitAgainAfterJury,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
   activeDossierDeValidation: DossierDeValidationUseCandidateForDashboard;
-  isCaduque: boolean;
   canSubmitAgainAfterJury: boolean;
 }) => {
   const decision = activeDossierDeValidation?.decision;
 
   switch (true) {
-    case isCaduque:
-      return (
-        <Badge severity="error" data-test="dossier-validation-badge-caduque">
-          caduque
-        </Badge>
-      );
-
     case canSubmitAgainAfterJury:
       return (
         <Badge severity="warning" data-test="dossier-validation-badge-to-send">
@@ -66,12 +57,10 @@ const DossierValidationBadge = ({
 export const DossierValidationTile = ({
   feasibility,
   activeDossierDeValidation,
-  isCaduque,
   jury,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
   activeDossierDeValidation: DossierDeValidationUseCandidateForDashboard;
-  isCaduque: boolean;
   jury: JuryUseCandidateForDashboard;
 }) => {
   const router = useRouter();
@@ -95,13 +84,11 @@ export const DossierValidationTile = ({
     <Tile
       data-test="dossier-validation-tile"
       disabled={
-        (feasibility?.decision !== "ADMISSIBLE" && !canSubmitAgainAfterJury) ||
-        isCaduque
+        feasibility?.decision !== "ADMISSIBLE" && !canSubmitAgainAfterJury
       }
       start={
         <DossierValidationBadge
           activeDossierDeValidation={activeDossierDeValidation}
-          isCaduque={isCaduque}
           feasibility={feasibility}
           canSubmitAgainAfterJury={canSubmitAgainAfterJury}
         />

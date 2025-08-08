@@ -6,11 +6,9 @@ import { useMemo } from "react";
 import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 const FeasibilityBadge = ({
   feasibility,
-  isCaduque,
   candidacyIsAutonome,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
-  isCaduque: boolean;
   candidacyIsAutonome: boolean;
 }) => {
   const decision = feasibility?.decision;
@@ -27,12 +25,6 @@ const FeasibilityBadge = ({
     !feasibility?.dematerializedFeasibilityFile?.swornStatementFileId;
 
   switch (true) {
-    case isCaduque:
-      return (
-        <Badge severity="error" data-test="feasibility-badge-caduque">
-          caduque
-        </Badge>
-      );
     case decisionIsDraftOrIncomplete &&
       isDfDemat &&
       isSentToCandidate &&
@@ -92,11 +84,9 @@ const FeasibilityBadge = ({
 
 export const FeasibilityTile = ({
   feasibility,
-  isCaduque,
   candidacyIsAutonome,
 }: {
   feasibility: FeasibilityUseCandidateForDashboard;
-  isCaduque: boolean;
   candidacyIsAutonome: boolean;
 }) => {
   const router = useRouter();
@@ -146,7 +136,6 @@ export const FeasibilityTile = ({
       start={
         <FeasibilityBadge
           feasibility={feasibility}
-          isCaduque={isCaduque}
           candidacyIsAutonome={candidacyIsAutonome}
         />
       }

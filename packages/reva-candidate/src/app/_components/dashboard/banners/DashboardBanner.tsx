@@ -1,13 +1,6 @@
-import { addDays, isAfter } from "date-fns";
-
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
-
-import { ACTUALISATION_THRESHOLD_DAYS } from "../../banner-thresholds";
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 
-import { ActualisationBanner } from "./ActualisationBanner";
 import { AppointmentsBanner } from "./AppointmentsBanner";
-import { CandidacyCaduciteBanner } from "./CandidacyCaduciteBanner";
 import { CandidacyDropOutBanner } from "./CandidacyDropOutBanner";
 import { CandidacySubmissionBanner } from "./CandidacySubmissionBanner";
 import { DossierDeValidationBanner } from "./DossierDeValidationBanner";
@@ -21,13 +14,6 @@ type BannerProps = {
 };
 
 export const DashboardBanner = (props: BannerProps) => {
-  const { isFeatureActive } = useFeatureFlipping();
-
-  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
-    isFeatureActive(
-      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
-    );
-
   if (!props.candidacy) {
     return null;
   }
@@ -35,56 +21,16 @@ export const DashboardBanner = (props: BannerProps) => {
   const { candidacy, candidacyAlreadySubmitted, canSubmitCandidacy } = props;
 
   const {
-    lastActivityDate,
-    isCaduque,
     feasibility,
     status,
     activeDossierDeValidation,
     jury,
     candidacyDropOut,
-    candidacyContestationsCaducite,
     typeAccompagnement,
   } = candidacy;
 
   const candidacyIsAutonome = typeAccompagnement === "AUTONOME";
   const candidacyIsAccompagne = typeAccompagnement === "ACCOMPAGNE";
-
-  let isLastActiveStatusValidForActualisationBanner = false;
-
-  if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-    isLastActiveStatusValidForActualisationBanner =
-      status === "DOSSIER_FAISABILITE_RECEVABLE" ||
-      status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
-      activeDossierDeValidation?.decision === "INCOMPLETE";
-  } else {
-    isLastActiveStatusValidForActualisationBanner =
-      status === "DOSSIER_FAISABILITE_RECEVABLE" ||
-      status === "DOSSIER_DE_VALIDATION_SIGNALE" ||
-      status === "DEMANDE_FINANCEMENT_ENVOYE" ||
-      (status === "DEMANDE_PAIEMENT_ENVOYEE" &&
-        activeDossierDeValidation?.decision === "INCOMPLETE");
-  }
-
-  let todayIsAfterActualisationBannerThresholdDate = false;
-
-  if (lastActivityDate) {
-    const actualisationBannerThresholdDate = addDays(
-      lastActivityDate,
-      ACTUALISATION_THRESHOLD_DAYS,
-    );
-    todayIsAfterActualisationBannerThresholdDate = isAfter(
-      new Date(),
-      actualisationBannerThresholdDate,
-    );
-  }
-
-  const displayActualisationBanner = !!(
-    lastActivityDate &&
-    !isCaduque &&
-    feasibility?.decision === "ADMISSIBLE" &&
-    todayIsAfterActualisationBannerThresholdDate &&
-    isLastActiveStatusValidForActualisationBanner
-  );
 
   const displayDossierDeValidationBanner = !!(
     activeDossierDeValidation?.decision === "PENDING" ||
@@ -108,18 +54,6 @@ export const DashboardBanner = (props: BannerProps) => {
 
   if (jury) {
     return <JuryBanner jury={jury} />;
-  }
-
-  if (isCaduque) {
-    return (
-      <CandidacyCaduciteBanner
-        candidacyContestationsCaducite={candidacyContestationsCaducite}
-      />
-    );
-  }
-
-  if (displayActualisationBanner) {
-    return <ActualisationBanner candidacy={candidacy} />;
   }
 
   if (displayDossierDeValidationBanner) {

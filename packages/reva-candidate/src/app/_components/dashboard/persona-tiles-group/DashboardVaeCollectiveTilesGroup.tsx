@@ -28,7 +28,6 @@ export const DashboardVaeCollectiveTilesGroup = ({
   hasCompletedGoals: boolean;
   className?: string;
 }) => {
-  const candidacyIsCaduque = candidacy?.isCaduque;
   const feasibility = candidacy?.feasibility;
 
   return (
@@ -75,13 +74,11 @@ export const DashboardVaeCollectiveTilesGroup = ({
           />
           <FeasibilityTile
             feasibility={feasibility}
-            isCaduque={candidacyIsCaduque}
             candidacyIsAutonome={false}
           />
           <DossierValidationTile
             feasibility={candidacy.feasibility}
             activeDossierDeValidation={candidacy.activeDossierDeValidation}
-            isCaduque={candidacy.isCaduque}
             jury={candidacy.jury}
           />
         </div>

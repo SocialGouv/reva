@@ -13,7 +13,6 @@ export const DashboardAutonomeTilesGroup = ({
   candidacy: CandidacyUseCandidateForDashboard;
   className?: string;
 }) => {
-  const candidacyIsCaduque = candidacy?.isCaduque;
   const feasibility = candidacy?.feasibility;
 
   return (
@@ -42,13 +41,11 @@ export const DashboardAutonomeTilesGroup = ({
         <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-2 grid-rows-1">
           <FeasibilityTile
             feasibility={feasibility}
-            isCaduque={candidacyIsCaduque}
             candidacyIsAutonome={true}
           />
           <DossierValidationTile
             feasibility={candidacy.feasibility}
             activeDossierDeValidation={candidacy.activeDossierDeValidation}
-            isCaduque={candidacy.isCaduque}
             jury={candidacy.jury}
           />
         </div>
