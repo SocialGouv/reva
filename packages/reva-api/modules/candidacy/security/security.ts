@@ -5,7 +5,6 @@ import {
   defaultSecurity,
   isAdmin,
   isAdminOrCandidacyCompanion,
-  isAdminOrCertificationAuthority,
   isAdminOrManager,
   isAnyone,
   isCandidacyCompanion,
@@ -29,7 +28,6 @@ export const resolversSecurityMap = {
 
   "Query.getCandidacyById": [canAccessCandidacy],
   "Query.candidacy_canAccessCandidacy": isAnyone,
-  "Query.candidacy_getCandidacyCaducites": isAdminOrCertificationAuthority,
 
   "Query.candidacy_searchOrganismsForCandidacyAsAdmin": isAdmin,
 
@@ -62,7 +60,6 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_setReadyForJuryEstimatedAt": isOwnerOrCanManageCandidacy,
-  "Mutation.candidacy_updateLastActivityDate": isOwnerOfCandidacy,
   "Mutation.candidacy_updateCandidateCandidacyDropoutDecision":
     isOwnerOfCandidacy,
   "Mutation.candidacy_updateFinanceModule": isAdmin,

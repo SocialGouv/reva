@@ -14,7 +14,6 @@ import {
 import { deleteFeasibilityIDFile } from "../features/deleteFeasibilityIDFile";
 
 import { canManageFeasibility } from "./canManageFeasibility";
-import { updateCandidacyLastActivityDateToNow } from "./updateCandidacyLastActivityDateToNow";
 
 const adminBaseUrl =
   process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
@@ -139,10 +138,6 @@ export const validateFeasibility = async ({
 
     // Delete ID File from feasibility
     await deleteFeasibilityIDFile(feasibilityId);
-
-    await updateCandidacyLastActivityDateToNow({
-      candidacyId: feasibility.candidacyId,
-    });
 
     await logCandidacyAuditEvent({
       candidacyId: feasibility.candidacyId,

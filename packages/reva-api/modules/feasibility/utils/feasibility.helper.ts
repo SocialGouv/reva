@@ -1,18 +1,10 @@
 import { FeasibilityStatus, Prisma } from "@prisma/client";
-import { subDays } from "date-fns";
-
-import {
-  CADUCITE_THRESHOLD_DAYS,
-  WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
-} from "@/modules/shared/candidacy/candidacyCaducite";
 
 export type FeasibilityStatusFilter =
   | FeasibilityStatus
   | "ALL"
   | "ARCHIVED"
   | "DROPPED_OUT"
-  | "CADUQUE"
-  | "CONTESTATION"
   | "VAE_COLLECTIVE";
 
 export const excludeArchivedAndDroppedOutCandidacyAndIrrelevantStatuses: Prisma.FeasibilityWhereInput =
@@ -97,40 +89,7 @@ export const getWhereClauseFromStatusFilter = ({
         },
       };
       break;
-    case "CADUQUE":
-      whereClause = {
-        ...whereClause,
-        decision: "ADMISSIBLE",
-        candidacy: {
-          ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
-          lastActivityDate: {
-            lte: subDays(new Date(), CADUCITE_THRESHOLD_DAYS),
-          },
-          candidacyContestationCaducite: {
-            none: {
-              certificationAuthorityContestationDecision: {
-                in: ["DECISION_PENDING", "CADUCITE_CONFIRMED"],
-              },
-            },
-          },
-        },
-      };
-      break;
 
-    case "CONTESTATION":
-      whereClause = {
-        ...whereClause,
-        candidacy: {
-          candidacyContestationCaducite: {
-            some: {
-              certificationAuthorityContestationDecision: "DECISION_PENDING",
-            },
-          },
-          candidacyDropOut: { is: null },
-          status: { not: "ARCHIVE" },
-        },
-      };
-      break;
     case "VAE_COLLECTIVE":
       whereClause = {
         ...whereClause,

@@ -93,7 +93,6 @@ export const updateCandidateCandidacyDropoutDecision = async ({
       where: { id: candidacyId },
       data: {
         candidacyDropOut: { delete: true },
-        lastActivityDate: new Date(),
       },
     });
     await logCandidacyAuditEvent({

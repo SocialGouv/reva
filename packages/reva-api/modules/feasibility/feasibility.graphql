@@ -56,8 +56,6 @@ type FeasibilityCountByCategory {
   INCOMPLETE: Int!
   ARCHIVED: Int!
   DROPPED_OUT: Int!
-  CADUQUE: Int!
-  CONTESTATION: Int!
   VAE_COLLECTIVE: Int!
 }
 
@@ -75,8 +73,6 @@ enum FeasibilityCategoryFilter {
   INCOMPLETE
   ARCHIVED
   DROPPED_OUT
-  CADUQUE
-  CONTESTATION
   VAE_COLLECTIVE
 }
 

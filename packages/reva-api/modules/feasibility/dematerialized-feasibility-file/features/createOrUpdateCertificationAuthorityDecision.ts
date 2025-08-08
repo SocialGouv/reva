@@ -23,7 +23,6 @@ import {
   sendFeasibilityValidatedToCandidateAutonomeEmail,
 } from "../../emails";
 import { deleteFeasibilityIDFile } from "../../features/deleteFeasibilityIDFile";
-import { updateCandidacyLastActivityDateToNow } from "../../features/updateCandidacyLastActivityDateToNow";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput } from "../dematerialized-feasibility-file.types";
 
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
@@ -126,10 +125,6 @@ const sendFeasibilityDecisionTakenEmail = async ({
         feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacyId}/feasibility-aap`,
       });
     }
-
-    await updateCandidacyLastActivityDateToNow({
-      candidacyId,
-    });
   }
 };
 

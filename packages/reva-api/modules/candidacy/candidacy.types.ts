@@ -74,7 +74,6 @@ export const candidacyStatusFilters = [
   "VALIDATION_HORS_ABANDON",
   "PROJET_HORS_ABANDON",
   "VAE_COLLECTIVE",
-  "CADUQUE",
   "DEMANDE_FINANCEMENT_ENVOYEE",
   "DEMANDE_PAIEMENT_ENVOYEE",
   "DEMANDE_PAIEMENT_A_ENVOYER",
@@ -97,11 +96,6 @@ export interface SearchOrganismFilter {
   pmr?: boolean;
   zip?: string;
   isMcfCompatible?: boolean;
-}
-
-export enum CandidacyCaduciteStatus {
-  CADUQUE = "CADUQUE",
-  CONTESTATION = "CONTESTATION",
 }
 
 type CandidacyArchivingReason =

@@ -8,8 +8,6 @@ import {
 
 import { prismaClient } from "@/prisma/client";
 
-import { updateCandidacyLastActivityIfNotAlreadyCaduque } from "./updateCandidacyLastActivityIfNotAlreadyCaduque";
-
 export const setReadyForJuryEstimatedAt = async ({
   candidacyId,
   readyForJuryEstimatedAt,
@@ -43,8 +41,6 @@ export const setReadyForJuryEstimatedAt = async ({
       readyForJuryEstimatedAt,
     },
   });
-
-  await updateCandidacyLastActivityIfNotAlreadyCaduque({ candidacyId });
 
   return result;
 };

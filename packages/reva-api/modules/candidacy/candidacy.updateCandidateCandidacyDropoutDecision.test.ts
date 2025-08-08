@@ -1,5 +1,3 @@
-import { startOfDay, startOfToday } from "date-fns";
-
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "@/test/helpers/entities/create-candidacy-drop-out-helper";
 import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
@@ -101,7 +99,6 @@ describe("candidate drop out decision", () => {
           candidacyId: $candidacyId
           dropOutConfirmed: $dropOutConfirmed
         ) {
-          lastActivityDate
           candidacyDropOut {
             dropOutConfirmedByCandidate
           }
@@ -120,13 +117,6 @@ describe("candidate drop out decision", () => {
     expect(
       res.candidacy_updateCandidateCandidacyDropoutDecision.candidacyDropOut,
     ).toEqual(null);
-
-    expect(
-      startOfDay(
-        res.candidacy_updateCandidateCandidacyDropoutDecision
-          .lastActivityDate as number,
-      ),
-    ).toEqual(startOfToday());
   });
 
   test("should not be allowed to cancel a drop out if it has already been confirmed", async () => {

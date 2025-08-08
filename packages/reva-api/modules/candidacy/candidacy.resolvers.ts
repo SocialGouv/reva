@@ -22,7 +22,6 @@ import {
   ArchiveCandidacyParams,
   Candidacy,
   CandidacyBusinessEvent,
-  CandidacyCaduciteStatus,
   CandidacySortByFilter,
   CandidacyStatusFilter,
   SearchOrganismFilter,
@@ -40,7 +39,6 @@ import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getCandidacies } from "./features/getCandicacies";
 import { getCandidacy } from "./features/getCandidacy";
-import { getCandidacyCaducites } from "./features/getCandidacyCaducites";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
 import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
@@ -48,7 +46,6 @@ import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus"
 import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
 import { getCandidacyFinancingMethodById } from "./features/getCandidacyFinancingMethodById";
 import { getCandidacyGoals } from "./features/getCandidacyGoals";
-import { getCandidacyIsCaduque } from "./features/getCandidacyIsCaduque";
 import { getCandidacyOnCandidacyFinancingMethodsByCandidacyId } from "./features/getCandidacyOnCandidacyFinancingMethodsByCandidacyId";
 import { getCandidacyStatusesByCandidacyId } from "./features/getCandidacyStatusesByCandidacyId";
 import { getDropOutReasonById } from "./features/getDropOutReasonById";
@@ -69,7 +66,6 @@ import { updateCandidateCandidacyDropoutDecision } from "./features/updateCandid
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
 import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "./features/updateGoalsOfCandidacy";
-import { updateLastActivityDate } from "./features/updateLastActivityDate";
 import { validateDropOutCandidacy } from "./features/validateDropOutCandidacy";
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import { resolversSecurityMap } from "./security/security";
@@ -97,8 +93,6 @@ const unsafeResolvers = {
       getCandidacyDropOutByCandidacyId({ candidacyId }),
     candidacyOnCandidacyFinancingMethods: ({ id: candidacyId }: Candidacy) =>
       getCandidacyOnCandidacyFinancingMethodsByCandidacyId({ candidacyId }),
-    isCaduque: ({ id: candidacyId }: Candidacy) =>
-      getCandidacyIsCaduque({ candidacyId }),
     certificationAuthorityLocalAccounts: ({ id: candidacyId }: Candidacy) =>
       getCandidacyCertificationAuthorityLocalAccounts({ candidacyId }),
   },
@@ -207,23 +201,6 @@ const unsafeResolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
-    candidacy_getCandidacyCaducites: async (
-      _: unknown,
-      params: {
-        offset?: number;
-        limit?: number;
-        searchFilter?: string;
-        certificationAuthorityId?: string;
-        certificationAuthorityLocalAccountId?: string;
-        status: CandidacyCaduciteStatus;
-      },
-      context: GraphqlContext,
-    ) =>
-      getCandidacyCaducites({
-        ...params,
-        hasRole: context.auth.hasRole,
-        keycloakId: context.auth.userInfo?.sub || "",
-      }),
     candidacy_canAccessCandidacy: async (
       _: unknown,
       { candidacyId }: { candidacyId: string },
@@ -667,14 +644,6 @@ const unsafeResolvers = {
       });
       return result;
     },
-    candidacy_updateLastActivityDate: async (
-      _parent: unknown,
-      input: {
-        candidacyId: string;
-        readyForJuryEstimatedAt: Date;
-      },
-      context: GraphqlContext,
-    ) => updateLastActivityDate({ input, context }),
     candidacy_updateCandidateCandidacyDropoutDecision: async (
       _parent: unknown,
       input: {

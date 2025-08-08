@@ -76,8 +76,6 @@ type Candidacy {
   feasibilityFormat: FeasibilityFormat!
   status: CandidacyStatusStep!
   typeAccompagnement: TypeAccompagnement!
-  lastActivityDate: Timestamp
-  isCaduque: Boolean!
   hasMoreThanOneCertificationAvailable: Boolean!
   certificationAuthorityLocalAccounts: [CandidacyCertificationAuthorityLocalAccount]
   archivingReason: CandidacyArchivingReason
@@ -147,7 +145,6 @@ type CandidacyCountByStatus {
   ACTIVE_HORS_ABANDON: Int!
   ABANDON: Int!
   REORIENTEE: Int!
-  CADUQUE: Int!
   ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: Int!
   PARCOURS_CONFIRME_HORS_ABANDON: Int!
   PRISE_EN_CHARGE_HORS_ABANDON: Int!
@@ -179,7 +176,6 @@ type CandidacyPage {
 enum CandidacyStatusFilter {
   ACTIVE_HORS_ABANDON
   ABANDON
-  CADUQUE
   REORIENTEE
   ARCHIVE_HORS_ABANDON_HORS_REORIENTATION
   PARCOURS_CONFIRME_HORS_ABANDON
@@ -211,11 +207,6 @@ enum CandidacySortByFilter {
   DATE_ENVOI_DESC
 }
 
-enum CandidacyCaduciteStatus {
-  CADUQUE
-  CONTESTATION
-}
-
 enum DistanceStatus {
   ONSITE
   REMOTE
@@ -231,11 +222,6 @@ input SearchOrganismFilter {
 type RamdomOrganisms {
   rows: [Organism!]
   totalRows: Int!
-}
-
-type CandidacyCaducitePaginated {
-  rows: [Candidacy!]!
-  info: PaginationInfo!
 }
 
 enum CandidacyArchivingReason {
@@ -278,14 +264,6 @@ type Query {
     limit: Int
     searchFilter: String
   ): CandidacyConventionCollectivePaginated!
-  candidacy_getCandidacyCaducites(
-    offset: Int
-    limit: Int
-    searchFilter: String
-    certificationAuthorityId: ID
-    certificationAuthorityLocalAccountId: ID
-    status: CandidacyCaduciteStatus!
-  ): CandidacyCaducitePaginated!
   candidacy_canAccessCandidacy(candidacyId: ID!): Boolean!
 }
 
@@ -367,10 +345,6 @@ type Mutation {
     candidacyId: UUID!
     typeAccompagnement: TypeAccompagnement!
     reason: String
-  ): Candidacy!
-  candidacy_updateLastActivityDate(
-    candidacyId: UUID!
-    readyForJuryEstimatedAt: Timestamp!
   ): Candidacy!
   candidacy_updateCandidateCandidacyDropoutDecision(
     candidacyId: UUID!

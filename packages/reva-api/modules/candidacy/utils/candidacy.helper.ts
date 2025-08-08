@@ -1,11 +1,6 @@
 import { CandidacyStatusStep, Prisma } from "@prisma/client";
-import { subDays } from "date-fns";
 
 import { candidateSearchWord } from "@/modules/candidate/utils/candidate.helpers";
-import {
-  CADUCITE_THRESHOLD_DAYS,
-  WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
-} from "@/modules/shared/candidacy/candidacyCaducite";
 import { buildContainsFilterClause } from "@/modules/shared/search/search";
 
 import { CandidacyStatusFilter } from "../candidacy.types";
@@ -157,15 +152,6 @@ export const getWhereClauseFromStatusFilter = (
         ...whereClause,
         candidacyDropOut: null,
         cohorteVaeCollectiveId: { not: null },
-      };
-      break;
-    case "CADUQUE":
-      whereClause = {
-        ...WHERE_CLAUSE_CANDIDACY_CADUQUE_AND_ACTUALISATION,
-        ...whereClause,
-        lastActivityDate: {
-          lte: subDays(new Date(), CADUCITE_THRESHOLD_DAYS),
-        },
       };
       break;
     case "DEMANDE_FINANCEMENT_ENVOYEE":

@@ -1,8 +1,8 @@
 import {
   CandidacyStatusStep,
+  CertificationAuthority,
   Feasibility,
   FeasibilityStatus,
-  CertificationAuthority,
   Prisma,
 } from "@prisma/client";
 import { v4 } from "uuid";
@@ -463,8 +463,6 @@ export const getActiveFeasibilityCountByCategory = async ({
     ARCHIVED: 0,
     DROPPED_OUT: 0,
     DRAFT: 0,
-    CADUQUE: 0,
-    CONTESTATION: 0,
     VAE_COLLECTIVE: 0,
   };
 

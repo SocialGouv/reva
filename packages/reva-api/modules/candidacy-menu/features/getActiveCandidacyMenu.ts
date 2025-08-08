@@ -1,7 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { getCandidacyHasConfirmedCaducite } from "@/modules/candidacy/features/getCandidacyHasConfirmedCaducite";
-import { getCandidacyIsCaduque } from "@/modules/candidacy/features/getCandidacyIsCaduque";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "@/prisma/client";
 
@@ -26,18 +24,6 @@ export const getActiveCandidacyMenu = async ({
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
     activeCandidacyStatus,
   );
-
-  let candidacyHasConfirmedCaducite = false;
-
-  const candidacyIsCaduque = await getCandidacyIsCaduque({
-    candidacyId: candidacy.id,
-  });
-
-  if (candidacyIsCaduque) {
-    candidacyHasConfirmedCaducite = await getCandidacyHasConfirmedCaducite({
-      candidacyId: candidacy.id,
-    });
-  }
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
@@ -217,8 +203,7 @@ export const getActiveCandidacyMenu = async ({
       if (
         editableStatus.some((s) =>
           isCandidacyStatusAdvancedEnoughToEditDossierDeValidation(s),
-        ) &&
-        !candidacyIsCaduque
+        )
       ) {
         menuEntryStatus = editableStatus.includes(activeCandidacyStatus)
           ? "ACTIVE_WITH_EDIT_HINT"
@@ -255,10 +240,7 @@ export const getActiveCandidacyMenu = async ({
         activeFeasibility?.decision !== "REJECTED"
       ) {
         // Pour débloquer la demande de paiement, il faut soit être au-dessus du statut "DOSSIER_DE_VALIDATION_ENVOYE" ou au dessus
-        if (
-          isStatusEqualOrAbove("DOSSIER_DE_VALIDATION_ENVOYE") ||
-          candidacyHasConfirmedCaducite
-        ) {
+        if (isStatusEqualOrAbove("DOSSIER_DE_VALIDATION_ENVOYE")) {
           menuEntryStatus =
             activeCandidacyStatus === "DOSSIER_DE_VALIDATION_ENVOYE"
               ? "ACTIVE_WITH_EDIT_HINT"
@@ -284,10 +266,7 @@ export const getActiveCandidacyMenu = async ({
           ? "DOSSIER_DE_VALIDATION_ENVOYE"
           : "DEMANDE_FINANCEMENT_ENVOYE";
 
-      if (
-        isStatusEqualOrAbove(minimumStatusForPaymentRequest) ||
-        candidacyHasConfirmedCaducite
-      ) {
+      if (isStatusEqualOrAbove(minimumStatusForPaymentRequest)) {
         menuEntryStatus =
           activeCandidacyStatus === minimumStatusForPaymentRequest
             ? "ACTIVE_WITH_EDIT_HINT"

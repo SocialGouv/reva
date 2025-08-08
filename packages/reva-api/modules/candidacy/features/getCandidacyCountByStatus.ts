@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 
-import { WHERE_CLAUSE_RAW_CANDIDACY_CADUQUE_AND_ACTUALISATION } from "@/modules/shared/candidacy/candidacyCaducite";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -222,9 +221,6 @@ const getSQLSelectSumClauseFromStatusFilter = (
       return getSumClause(
         `candidacy.cohorte_vae_collective_id is not null and candidacyDropOut.candidacy_id is null`,
       );
-    case "CADUQUE":
-      return getSumClause(WHERE_CLAUSE_RAW_CANDIDACY_CADUQUE_AND_ACTUALISATION);
-
     case "DEMANDE_FINANCEMENT_ENVOYEE":
       return getSumClause(
         `(candidacy.finance_module = 'unireva' and fundingRequest.id is not null) or (candidacy.finance_module = 'unifvae' and fundingRequestUnifvae.id is not null)`,

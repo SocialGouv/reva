@@ -19,7 +19,6 @@ import { aapLogLoaders } from "./aap-log/aap-log.loaders";
 import { aapLogResolvers } from "./aap-log/aap-log.resolvers";
 import { loaders as accountLoaders } from "./account/account.loaders";
 import { resolvers as accountResolvers } from "./account/account.resolvers";
-import { candidacyContestationCaduciteResolvers } from "./candidacy/candidacy-contestation-caducite/candidacy-contestation-caducite.resolvers";
 import { candidacyResolvers } from "./candidacy/candidacy.resolvers";
 import { certificationResolvers } from "./candidacy/certification/certification.resolvers";
 import { trainingResolvers } from "./candidacy/training/training.resolvers";
@@ -72,7 +71,6 @@ const resolvers = mergeResolvers([
   feasibilityUploadedPdfResolvers,
   trainingResolvers,
   certificationResolvers,
-  candidacyContestationCaduciteResolvers,
   vaeCollectiveResolvers,
 ]);
 resolvers.Void = VoidResolver;

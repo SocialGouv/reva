@@ -45,7 +45,6 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       candidacyDropOut: true,
       Feasibility: true,
       certification: true,
-      candidacyContestationCaducite: true,
       fundingRequestUnifvae: true,
       FundingRequest: true,
     },
@@ -84,14 +83,9 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   const activeCandidacyStatus = candidacy.status;
 
   const isCandidacyDroppedOut = !!candidacy.candidacyDropOut;
-  const hasConfirmedCandidacyCaducite =
-    !!candidacy.candidacyContestationCaducite?.find(
-      (c) =>
-        c.certificationAuthorityContestationDecision === "CADUCITE_CONFIRMED",
-    );
 
   // If the candidate has not dropped out ...
-  if (!isCandidacyDroppedOut && !hasConfirmedCandidacyCaducite) {
+  if (!isCandidacyDroppedOut) {
     const feasibilityRejected =
       candidacy?.Feasibility?.find((f) => f.isActive)?.decision === "REJECTED";
     // Either the feasibility has been rejected and thus the funding request has been sent ...
