@@ -6,7 +6,6 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 
 import { useAuth } from "@/components/auth/auth";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
@@ -94,10 +93,6 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   const { isAdmin, isAdminCertificationAuthority } = useAuth();
 
   const { graphqlClient } = useGraphQlClient();
-  const { isFeatureActive } = useFeatureflipping();
-  const isCandidacyActualisationActive = isFeatureActive(
-    "candidacy_actualisation",
-  );
 
   const {
     data: getFeasibilityCountAndCohortesVaeCollectivesByCategoryResponse,
@@ -358,20 +353,6 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
       path: "/candidacies/feasibilities",
       category: "REJECTED",
     }),
-    ...(isCandidacyActualisationActive
-      ? [
-          menuItem({
-            text: `Recevabilités caduques (${feasibilityCountByCategory?.CADUQUE || 0})`,
-            path: "/candidacies/caducites",
-            category: "CADUQUE",
-          }),
-          menuItem({
-            text: `Contestations caducité (${feasibilityCountByCategory?.CONTESTATION || 0})`,
-            path: "/candidacies/caducites",
-            category: "CONTESTATION",
-          }),
-        ]
-      : []),
     menuItem({
       text: `Dossiers abandonnés (${feasibilityCountByCategory?.DROPPED_OUT || 0})`,
       path: "/candidacies/feasibilities",
