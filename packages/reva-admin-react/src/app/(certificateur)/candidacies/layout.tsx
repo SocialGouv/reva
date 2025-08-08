@@ -32,7 +32,6 @@ const getFeasibilityCountAndCohortesVaeCollectivesByCategoryQuery = graphql(`
       INCOMPLETE
       ARCHIVED
       DROPPED_OUT
-      CADUQUE
       CONTESTATION
       VAE_COLLECTIVE
     }
