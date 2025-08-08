@@ -8,7 +8,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import {
   errorToast,
   graphqlErrorToast,
@@ -49,7 +48,6 @@ const FeasibilityBanner = ({
   decisionSentAt?: number | null;
   decision: FeasibilityDecision;
   decisionComment?: string | null;
-  isCandidacyActualisationFeatureActive: boolean;
 }) => {
   if (feasibilityFileSentAt) {
     if (feasibilityIsPending) {
@@ -76,10 +74,6 @@ export default function SendFileCertificationAuthorityPage() {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
-  const { isFeatureActive } = useFeatureflipping();
-  const isCandidacyActualisationFeatureActive = isFeatureActive(
-    "candidacy_actualisation",
-  );
 
   const {
     dematerializedFeasibilityFile,
@@ -172,9 +166,6 @@ export default function SendFileCertificationAuthorityPage() {
             decisionSentAt={decisionSentAt}
             decision={decision as FeasibilityDecision}
             decisionComment={decisionComment}
-            isCandidacyActualisationFeatureActive={
-              isCandidacyActualisationFeatureActive
-            }
           />
         }
         certificationAuthorityLabel={
