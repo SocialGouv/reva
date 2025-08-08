@@ -13,7 +13,7 @@ export const getCommanditaireVaeCollectives = async ({
       skip: offset,
       take: limit,
       orderBy: {
-        createdAt: "desc",
+        raisonSociale: "asc",
       },
     });
 
