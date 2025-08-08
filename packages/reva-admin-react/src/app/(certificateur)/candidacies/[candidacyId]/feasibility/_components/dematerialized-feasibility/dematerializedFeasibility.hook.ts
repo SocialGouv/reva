@@ -168,12 +168,6 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
         candidacyDropOut {
           createdAt
         }
-        isCaduque
-        lastActivityDate
-        candidacyContestationsCaducite {
-          contestationSentAt
-          certificationAuthorityContestationDecision
-        }
       }
     }
   }

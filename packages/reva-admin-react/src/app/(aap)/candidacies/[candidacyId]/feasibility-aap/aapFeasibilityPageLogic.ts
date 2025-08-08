@@ -130,11 +130,6 @@ const getCandidacyById = graphql(`
           eligibilityValidUntil
         }
       }
-      isCaduque
-      lastActivityDate
-      candidacyContestationsCaducite {
-        certificationAuthorityContestationDecision
-      }
     }
   }
 `);

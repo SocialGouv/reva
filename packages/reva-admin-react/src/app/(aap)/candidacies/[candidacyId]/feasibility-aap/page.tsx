@@ -4,11 +4,7 @@ import { toDate } from "date-fns";
 
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
-import { BannerCaduciteConfirmed } from "@/components/dff-summary/_components/BannerCaduciteConfirmed";
-import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
-import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 
 import {
   Candidacy,
@@ -40,48 +36,19 @@ const FeasibilityBanner = ({
   decision,
   decisionComment,
   history,
-  dateSinceCandidacyIsCaduque,
-  isCandidacyActualisationFeatureActive,
-  hasConfirmedCaduciteContestation,
 }: {
   decisionSentAt: number | null | undefined;
   decision: FeasibilityDecision;
   decisionComment?: string | null;
   history?: FeasibilityHistory[];
-  dateSinceCandidacyIsCaduque: Date | null;
-  isCandidacyActualisationFeatureActive: boolean;
-  hasConfirmedCaduciteContestation: boolean;
-}) => {
-  if (
-    dateSinceCandidacyIsCaduque &&
-    isCandidacyActualisationFeatureActive &&
-    hasConfirmedCaduciteContestation
-  ) {
-    return (
-      <BannerCaduciteConfirmed
-        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-      />
-    );
-  }
-
-  if (dateSinceCandidacyIsCaduque && isCandidacyActualisationFeatureActive) {
-    return (
-      <BannerIsCaduque
-        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-      />
-    );
-  }
-
-  return (
-    <DecisionSentComponent
-      decisionSentAt={decisionSentAt ? toDate(decisionSentAt) : null}
-      decision={decision}
-      decisionComment={decisionComment}
-      history={history}
-    />
-  );
-};
-
+}) => (
+  <DecisionSentComponent
+    decisionSentAt={decisionSentAt ? toDate(decisionSentAt) : null}
+    decision={decision}
+    decisionComment={decisionComment}
+    history={history}
+  />
+);
 const AapFeasibilityPage = () => {
   const {
     certification,
@@ -91,10 +58,6 @@ const AapFeasibilityPage = () => {
     isCertificationPartial,
     candidacy,
   } = useAapFeasibilityPageLogic();
-  const { isFeatureActive } = useFeatureflipping();
-  const isCandidacyActualisationFeatureActive = isFeatureActive(
-    "candidacy_actualisation",
-  );
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
   const decision = feasibility?.decision;
@@ -113,17 +76,6 @@ const AapFeasibilityPage = () => {
     dematerializedFeasibilityFile?.eligibilityRequirement ===
     "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
-  const dateSinceCandidacyIsCaduque = candidacy?.isCaduque
-    ? dateThresholdCandidacyIsCaduque(candidacy.lastActivityDate as number)
-    : null;
-
-  const hasConfirmedCaduciteContestation =
-    !!candidacy?.candidacyContestationsCaducite?.find(
-      (candidacyContestation) =>
-        candidacyContestation?.certificationAuthorityContestationDecision ===
-        "CADUCITE_CONFIRMED",
-    );
-
   if (!feasibility) {
     return null;
   }
@@ -141,11 +93,6 @@ const AapFeasibilityPage = () => {
             decision={decision as FeasibilityDecision}
             decisionComment={decisionComment}
             history={history}
-            dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-            isCandidacyActualisationFeatureActive={
-              isCandidacyActualisationFeatureActive
-            }
-            hasConfirmedCaduciteContestation={hasConfirmedCaduciteContestation}
           />
         }
         certificationAuthorityLabel={

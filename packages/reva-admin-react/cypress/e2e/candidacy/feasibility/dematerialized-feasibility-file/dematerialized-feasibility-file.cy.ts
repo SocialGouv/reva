@@ -1,7 +1,3 @@
-import { subDays } from "date-fns";
-
-import { Candidacy } from "@/graphql/generated/graphql";
-
 import { stubQuery } from "../../../../utils/graphql";
 
 import {
@@ -41,24 +37,13 @@ const FEASIBILITY_ADMISSIBLE_DECISION = {
 
 function visitFeasibility({
   feasibility = DEFAULT_FEASIBILITY_FILE,
-  defaultCandidacy = { isCaduque: false },
-  activeFeatures = [],
 }: {
   feasibility?: object;
-  defaultCandidacy?: Partial<Candidacy>;
-  activeFeatures?: string[];
 } = {}) {
   cy.fixture("candidacy/candidacy-dff.json").then((candidacy) => {
     cy.fixture("features/active-features.json").then((features) => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "activeFeaturesForConnectedUser", {
-          data: {
-            activeFeaturesForConnectedUser: [
-              ...features.data.activeFeaturesForConnectedUser,
-              ...activeFeatures,
-            ],
-          },
-        });
+        stubQuery(req, "activeFeaturesForConnectedUser", features);
         stubQuery(
           req,
           "getMaisonMereCGUQuery",
@@ -71,10 +56,6 @@ function visitFeasibility({
         );
         stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
         candidacy.data.getCandidacyById.feasibility = feasibility;
-        candidacy.data.getCandidacyById = {
-          ...candidacy.data.getCandidacyById,
-          ...defaultCandidacy,
-        };
         stubQuery(req, "getCandidacyByIdForAAPFeasibilityPage", candidacy);
 
         stubQuery(
@@ -923,94 +904,6 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       cy.get(
         "[data-test='send-file-certification-authority-tile-ready']",
       ).should("exist");
-    });
-  });
-
-  context("When the candidacy is caduque", () => {
-    it("should display the caduque banner when candidacy is caduque and actualisation feature is active", () => {
-      const lastActivityDate = subDays(DATE_NOW, 180);
-      visitFeasibility({
-        activeFeatures: ["candidacy_actualisation"],
-        defaultCandidacy: {
-          isCaduque: true,
-          lastActivityDate: lastActivityDate.getTime(),
-        },
-        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
-      });
-      cy.get("[data-test='banner-is-caduque']").should("exist");
-      cy.get("[data-test='banner-caducite-confirmed']").should("not.exist");
-    });
-
-    it("should display only the caducite confirmed banner when contestation is confirmed and actualisation feature is active", () => {
-      const lastActivityDate = subDays(DATE_NOW, 180);
-      visitFeasibility({
-        activeFeatures: ["candidacy_actualisation"],
-        defaultCandidacy: {
-          isCaduque: true,
-          lastActivityDate: lastActivityDate.getTime(),
-          candidacyContestationsCaducite: [
-            {
-              id: "some-id",
-              candidacyId: "some-candidacy-id",
-              contestationReason: "some-reason",
-              contestationSentAt: DATE_NOW,
-              certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
-            },
-          ],
-        },
-        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
-      });
-      cy.get("[data-test='banner-caducite-confirmed']").should("exist");
-      cy.get("[data-test='banner-is-caduque']").should("not.exist");
-    });
-
-    it("should not display caducite confirmed banner when contestation is confirmed but actualisation feature is not active", () => {
-      const lastActivityDate = subDays(DATE_NOW, 180);
-      visitFeasibility({
-        defaultCandidacy: {
-          isCaduque: true,
-          lastActivityDate: lastActivityDate.getTime(),
-          candidacyContestationsCaducite: [
-            {
-              id: "some-id",
-              candidacyId: "some-candidacy-id",
-              contestationReason: "some-reason",
-              contestationSentAt: DATE_NOW,
-              certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
-            },
-          ],
-        },
-        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
-      });
-      cy.get("[data-test='banner-caducite-confirmed']").should("not.exist");
-      cy.get("[data-test='banner-is-caduque']").should("not.exist");
-    });
-
-    it("should not display any caduque banner when actualisation feature is not active", () => {
-      const lastActivityDate = subDays(DATE_NOW, 180);
-      visitFeasibility({
-        defaultCandidacy: {
-          isCaduque: true,
-          lastActivityDate: lastActivityDate.getTime(),
-        },
-        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
-      });
-      cy.get("[data-test='banner-is-caduque']").should("not.exist");
-      cy.get("[data-test='banner-caducite-confirmed']").should("not.exist");
-    });
-
-    it("should not display any caduque banner when candidacy is not caduque", () => {
-      const lastActivityDate = subDays(DATE_NOW, 150);
-      visitFeasibility({
-        activeFeatures: ["candidacy_actualisation"],
-        defaultCandidacy: {
-          isCaduque: false,
-          lastActivityDate: lastActivityDate.getTime(),
-        },
-        feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
-      });
-      cy.get("[data-test='banner-is-caduque']").should("not.exist");
-      cy.get("[data-test='banner-caducite-confirmed']").should("not.exist");
     });
   });
 });

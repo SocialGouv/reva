@@ -1,20 +1,13 @@
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { useQueryClient } from "@tanstack/react-query";
-import { format, toDate } from "date-fns";
-import Link from "next/link";
+import { toDate } from "date-fns";
 import { useParams } from "next/navigation";
 
 import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
 import { useAuth } from "@/components/auth/auth";
-import { BannerCaduciteConfirmed } from "@/components/dff-summary/_components/BannerCaduciteConfirmed";
-import { BannerIsCaduque } from "@/components/dff-summary/_components/BannerIsCaduque";
 import { DffSummary } from "@/components/dff-summary/DffSummary";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { useUrqlClient } from "@/components/urql-client";
-import { dateThresholdCandidacyIsCaduque } from "@/utils/dateThresholdCandidacyIsCaduque";
 
 import {
   Candidacy,
@@ -44,11 +37,6 @@ const FeasibilityBanner = ({
   feasibilityDecision,
   feasibilityDecisionComment,
   feasibilityHistory,
-  dateSinceCandidacyIsCaduque,
-  pendingCaduciteContestationSentAt,
-  candidacyId,
-  isCandidacyActualisationFeatureActive,
-  hasConfirmedCaduciteContestation,
   onRevokeDecision,
   isAdmin,
   candidacyStatus,
@@ -58,63 +46,11 @@ const FeasibilityBanner = ({
   feasibilityDecision: FeasibilityDecision;
   feasibilityDecisionComment?: string | null;
   feasibilityHistory: FeasibilityHistory[];
-  dateSinceCandidacyIsCaduque: Date | null;
-  pendingCaduciteContestationSentAt: number | null;
   candidacyId: string;
-  isCandidacyActualisationFeatureActive: boolean;
-  hasConfirmedCaduciteContestation: boolean;
   onRevokeDecision?: () => void;
   isAdmin?: boolean;
   candidacyStatus: string;
 }) => {
-  if (
-    hasConfirmedCaduciteContestation &&
-    isCandidacyActualisationFeatureActive &&
-    dateSinceCandidacyIsCaduque
-  ) {
-    return (
-      <BannerCaduciteConfirmed
-        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-      />
-    );
-  }
-
-  if (
-    pendingCaduciteContestationSentAt &&
-    isCandidacyActualisationFeatureActive
-  ) {
-    return (
-      <div
-        className="flex flex-col mb-6"
-        data-test="banner-pending-caducite-contestation"
-      >
-        <Alert
-          className="mb-4"
-          severity="warning"
-          title={`Contestation envoyée le ${format(
-            pendingCaduciteContestationSentAt,
-            "dd/MM/yyyy",
-          )}`}
-          description="Le candidat conteste la caducité de sa recevabilité. Consultez les raisons transmises par le candidat et décidez si, oui ou non, vous souhaitez restaurer la recevabilité."
-        />
-        <Link
-          href={`/candidacies/${candidacyId}/feasibility/caducite-contestation`}
-          className="self-end "
-        >
-          <Button>Consulter</Button>
-        </Link>
-      </div>
-    );
-  }
-
-  if (dateSinceCandidacyIsCaduque && isCandidacyActualisationFeatureActive) {
-    return (
-      <BannerIsCaduque
-        dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-      />
-    );
-  }
-
   if (!isWaitingForDecision) {
     return (
       <DecisionSentComponent
@@ -140,10 +76,7 @@ export const DematerializedFeasibility = () => {
     feasibility,
     revokeDecision,
   } = useDematerializedFeasibility();
-  const { isFeatureActive } = useFeatureflipping();
-  const isCandidacyActualisationFeatureActive = isFeatureActive(
-    "candidacy_actualisation",
-  );
+
   const urqlClient = useUrqlClient();
   const queryClient = useQueryClient();
   const { isAdmin } = useAuth();
@@ -235,28 +168,6 @@ export const DematerializedFeasibility = () => {
     ? toDate(feasibility.decisionSentAt)
     : null;
 
-  const dateSinceCandidacyIsCaduque = candidacy.isCaduque
-    ? dateThresholdCandidacyIsCaduque(candidacy.lastActivityDate as number)
-    : null;
-
-  const pendingCaduciteContestation =
-    candidacy?.candidacyContestationsCaducite?.find(
-      (candidacyContestation) =>
-        candidacyContestation?.certificationAuthorityContestationDecision ===
-        "DECISION_PENDING",
-    );
-
-  const hasConfirmedCaduciteContestation =
-    !!candidacy?.candidacyContestationsCaducite?.find(
-      (candidacyContestation) =>
-        candidacyContestation?.certificationAuthorityContestationDecision ===
-        "CADUCITE_CONFIRMED",
-    );
-
-  const pendingCaduciteContestationSentAt = pendingCaduciteContestation
-    ? pendingCaduciteContestation.contestationSentAt
-    : null;
-
   const candidateName = `${candidacy.candidate?.firstname ?? ""} ${candidacy.candidate?.lastname ?? ""}`;
   const certificationName = candidacy.certification?.label ?? "";
 
@@ -289,15 +200,7 @@ export const DematerializedFeasibility = () => {
             feasibilityDecision={feasibility?.decision as FeasibilityDecision}
             feasibilityDecisionComment={feasibility?.decisionComment}
             feasibilityHistory={feasibility?.history as FeasibilityHistory[]}
-            dateSinceCandidacyIsCaduque={dateSinceCandidacyIsCaduque}
-            pendingCaduciteContestationSentAt={
-              pendingCaduciteContestationSentAt
-            }
             candidacyId={candidacyId}
-            isCandidacyActualisationFeatureActive={
-              isCandidacyActualisationFeatureActive
-            }
-            hasConfirmedCaduciteContestation={hasConfirmedCaduciteContestation}
             onRevokeDecision={() => revokeDecisionModal.open()}
             isAdmin={isAdmin}
             candidacyStatus={candidacy.status}
