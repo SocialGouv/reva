@@ -13,8 +13,6 @@ import { NotAuthorized } from "@/components/not-authorized";
 
 import { graphql } from "@/graphql/generated";
 
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
-
 const getCandidacyMenuQuery = graphql(`
   query getCandidacyMenuAndCandidateInfos($candidacyId: ID!) {
     candidacyMenu_getCandidacyMenu(candidacyId: $candidacyId) {
@@ -35,7 +33,6 @@ const getCandidacyMenuQuery = graphql(`
       }
     }
     getCandidacyById(id: $candidacyId) {
-      isCaduque
       financeModule
       organism {
         modaliteAccompagnement
@@ -54,10 +51,6 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
     candidacyId: string;
   }>();
   const { graphqlClient } = useGraphQlClient();
-  const { isFeatureActive } = useFeatureflipping();
-  const isCandidacyActualisationActive = isFeatureActive(
-    "candidacy_actualisation",
-  );
 
   const { data: getCandidacyMenuResponse, isLoading: isLoadingMenu } = useQuery(
     {
@@ -88,8 +81,6 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
 
   const candidate = candidacy?.candidate;
 
-  const isCaduque = !!candidacy?.isCaduque;
-
   return (
     <div className="flex flex-col md:flex-row w-full">
       <CandidacyLayoutSideMenu isLoading={isLoadingMenu}>
@@ -105,8 +96,6 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
         <CandidacyModalities
           fundable={candidacy?.financeModule !== "hors_plateforme"}
           modaliteAccompagnement={candidacy?.organism?.modaliteAccompagnement}
-          isCaduque={isCaduque}
-          isCandidacyActualisationActive={isCandidacyActualisationActive}
         />
 
         <ul className="mb-6">

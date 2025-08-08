@@ -11,15 +11,11 @@ function visitSummary({
   feasibilityFormat,
   financeModule,
   modaliteAccompagnement,
-  isCaduque = false,
-  isCandidacyActualisationActive = false,
   candidacyStatus,
 }: {
   feasibilityFormat: FeasibilityFormat;
   financeModule: FinanceModule;
   modaliteAccompagnement: OrganismModaliteAccompagnement;
-  isCaduque?: boolean;
-  isCandidacyActualisationActive?: boolean;
   candidacyStatus?: CandidacyStatusStep;
 }) {
   cy.fixture("candidacy/candidacy.json").then((candidacy) => {
@@ -33,17 +29,7 @@ function visitSummary({
       candidacyMenu.data.getCandidacyById.financeModule = financeModule;
       candidacyMenu.data.getCandidacyById.organism.modaliteAccompagnement =
         modaliteAccompagnement;
-      candidacyMenu.data.getCandidacyById.isCaduque = isCaduque;
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "activeFeaturesForConnectedUser", {
-          data: {
-            activeFeaturesForConnectedUser: [
-              ...(isCandidacyActualisationActive
-                ? ["candidacy_actualisation"]
-                : []),
-            ],
-          },
-        });
         stubQuery(
           req,
           "getOrganismForAAPVisibilityCheck",
@@ -215,62 +201,6 @@ context("Candidacy summary page", () => {
     );
     cy.get('[data-test="certification-authority-local-account-1"]').contains(
       "023456789",
-    );
-  });
-
-  context("Badge candidacy is caduque", () => {
-    [
-      {
-        isCaduque: true,
-        isCandidacyActualisationActive: true,
-        shouldDisplayBadge: true,
-        description:
-          "display a caducite badge when candidacy is caduque and actualisation feature is active",
-      },
-      {
-        isCaduque: true,
-        isCandidacyActualisationActive: false,
-        shouldDisplayBadge: false,
-        description:
-          "do not display a caducite badge when candidacy is caduque and actualisation feature is not active",
-      },
-      {
-        isCaduque: false,
-        isCandidacyActualisationActive: true,
-        shouldDisplayBadge: false,
-        description:
-          "do not display a caducite badge when candidacy is not caduque and actualisation feature is active",
-      },
-      {
-        isCaduque: false,
-        isCandidacyActualisationActive: false,
-        shouldDisplayBadge: false,
-        description:
-          "do not display a caducite badge when candidacy is not caduque and actualisation feature is not active",
-      },
-    ].forEach(
-      ({
-        isCaduque,
-        isCandidacyActualisationActive,
-        shouldDisplayBadge,
-        description,
-      }) => {
-        it(description, function () {
-          visitSummary({
-            feasibilityFormat: "DEMATERIALIZED",
-            financeModule: "unifvae",
-            modaliteAccompagnement: "A_DISTANCE",
-            isCaduque,
-            isCandidacyActualisationActive,
-          });
-          cy.wait("@getCandidacyMenuAndCandidateInfos");
-          if (shouldDisplayBadge) {
-            cy.get('[data-test="caduque-badge"]').should("exist");
-          } else {
-            cy.get('[data-test="caduque-badge"]').should("not.exist");
-          }
-        });
-      },
     );
   });
 
