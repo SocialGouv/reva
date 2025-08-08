@@ -7,7 +7,6 @@ import dotenv from "dotenv";
 
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
 import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
-import { sendEmailsForAutoCandidacyCaducite } from "../modules/candidacy/features/sendEmailsForAutoCandidacyCaducite";
 import { sendEmailsForCertificationExpiration } from "../modules/certification-authority/features/sendEmailsForCertificationExpiration";
 import { batchAapListUnifvae } from "../modules/finance/unifvae/batches/aapListUnifvae.batch";
 import { batchPaymentRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
@@ -24,7 +23,6 @@ dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
 const EVERY_DAY_AT_3_AM = "0 3 * * *";
-const EVERY_HOUR = "0 * * * *";
 
 const paymentRequestProofUpload = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_PROOF_CRONTIME || "*/2 * * * *",
@@ -173,23 +171,6 @@ CronJob.from({
           "Running batch.send-emails-for-auto-confirmed-candidacy-drop-outs",
         );
         await sendAutoCandidacyDropOutConfirmationEmails();
-      },
-    }),
-  start: true,
-  timeZone: "Europe/Paris",
-});
-
-// Send emails for candidacies that are about to become or have become caduque
-CronJob.from({
-  cronTime:
-    process.env.BATCH_SEND_EMAILS_FOR_AUTO_CANDIDACY_CADUCIE_CRONTIME ||
-    EVERY_HOUR,
-  onTick: () =>
-    runBatchIfActive({
-      batchKey: "batch.send-emails-for-auto-candidacy-caducite",
-      batchCallback: async () => {
-        logger.info("Running batch.send-emails-for-auto-candidacy-caducite");
-        await sendEmailsForAutoCandidacyCaducite();
       },
     }),
   start: true,
