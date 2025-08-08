@@ -3,7 +3,6 @@
     "getCandidacyById": {
       "id": "57bf364b-8c8b-4ff4-889b-66917e26d7d0",
       "isCertificationPartial": false,
-      "isCaduque": false,
       "organism": {
         "label": "Organisme Lorem Ipsum",
         "nomPublic": "Organisme Lorem Ipsum nom public"

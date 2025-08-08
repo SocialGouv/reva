@@ -292,10 +292,7 @@
           "street": "1 rue de lo",
           "zip": "75015"
         },
-        "candidacyDropOut": null,
-        "isCaduque": true,
-        "lastActivityDate": 1721469792768,
-        "candidacyContestationsCaducite": []
+        "candidacyDropOut": null
       }
     }
   }
