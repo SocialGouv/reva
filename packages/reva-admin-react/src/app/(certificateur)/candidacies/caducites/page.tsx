@@ -63,7 +63,6 @@ const getCandidacyCaducitesQuery = graphql(`
           codeRncp
           label
         }
-        lastActivityDate
       }
       info {
         totalRows

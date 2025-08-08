@@ -142,8 +142,6 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             street
             zip
           }
-          isCaduque
-          lastActivityDate
         }
       }
     }

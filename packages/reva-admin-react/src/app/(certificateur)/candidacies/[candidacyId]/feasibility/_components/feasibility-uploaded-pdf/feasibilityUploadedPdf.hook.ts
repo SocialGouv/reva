@@ -84,12 +84,6 @@ const getCandidacyWithFeasibilityUploadedPdfQuery = graphql(`
         }
       }
       feasibilityFormat
-      isCaduque
-      lastActivityDate
-      candidacyContestationsCaducite {
-        contestationSentAt
-        certificationAuthorityContestationDecision
-      }
     }
   }
 `);

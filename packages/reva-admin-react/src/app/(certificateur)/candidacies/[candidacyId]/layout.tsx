@@ -25,10 +25,6 @@ const getCandidacyQuery = graphql(`
       jury {
         dateOfSession
       }
-      candidacyContestationsCaducite {
-        certificationAuthorityContestationDecision
-      }
-      isCaduque
     }
   }
 `);
@@ -53,13 +49,6 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
   const candidate = candidacy?.candidate;
   const juryDateOfSession = candidacy?.jury?.dateOfSession;
   const typeAccompagnement = candidacy?.typeAccompagnement;
-  const isCaduque = candidacy?.isCaduque;
-  const hasPendingCaduciteContestation =
-    candidacy?.candidacyContestationsCaducite?.some(
-      (caducite) =>
-        caducite?.certificationAuthorityContestationDecision ===
-        "DECISION_PENDING",
-    );
 
   const { canAccess } = useCanAccessCandidacy(candidacyId);
 
@@ -132,24 +121,6 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
                   {typeAccompagnement === "AUTONOME" && (
                     <Badge severity="new" className="mt-4">
                       Candidat en autonomie
-                    </Badge>
-                  )}
-                  {isCaduque && !hasPendingCaduciteContestation && (
-                    <Badge
-                      severity="error"
-                      className="mt-4"
-                      data-test="caduque-badge"
-                    >
-                      Recevabilité caduque
-                    </Badge>
-                  )}
-                  {hasPendingCaduciteContestation && (
-                    <Badge
-                      severity="warning"
-                      className="mt-4"
-                      data-test="contestation-badge"
-                    >
-                      Contestation caducité
                     </Badge>
                   )}
                 </>

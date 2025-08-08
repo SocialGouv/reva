@@ -65,8 +65,6 @@ const getCandidacyQuery = graphql(`
           decisionComment
         }
       }
-      isCaduque
-      lastActivityDate
     }
   }
 `);
