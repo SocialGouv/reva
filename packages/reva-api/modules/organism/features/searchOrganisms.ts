@@ -43,7 +43,7 @@ export const searchOrganisms = async ({
   }
 
   const results = await prismaClient.$queryRaw<Organism[]>`
-          select distinct o.id,
+          select  o.id,
                  o.label,
                  o.nom_public as "nomPublic",
                  o.email_contact as "emailContact",
@@ -69,7 +69,7 @@ export const searchOrganisms = async ({
   const count = Number(
     (
       await prismaClient.$queryRaw<{ count: number }[]>`
-          select count(distinct (o.id))
+          select count( (o.id))
             ${fromClause}
             ${whereClause}`
     )[0].count,
