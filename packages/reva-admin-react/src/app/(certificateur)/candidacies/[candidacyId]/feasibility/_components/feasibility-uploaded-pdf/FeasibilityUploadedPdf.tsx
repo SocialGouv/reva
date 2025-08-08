@@ -1,14 +1,12 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { useAuth } from "@/components/auth/auth";
 import { BackButton } from "@/components/back-button/BackButton";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import { FeasibilityBanner } from "../FeasibilityBanner";
@@ -30,7 +28,6 @@ export const FeasibilityUploadedPdf = () => {
     useFeasibilityUploadedPdf();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { isFeatureActive } = useFeatureflipping();
   const { isAdmin } = useAuth();
   const revokeDecisionModal = useRevokeFeasibilityDecisionModal();
 
@@ -87,24 +84,6 @@ export const FeasibilityUploadedPdf = () => {
   const documentaryProofFile = uploadedPdf?.documentaryProofFile;
   const certificateOfAttendanceFile = uploadedPdf?.certificateOfAttendanceFile;
 
-  const pendingCaduciteContestation =
-    candidacy?.candidacyContestationsCaducite?.find(
-      (candidacyContestation) =>
-        candidacyContestation?.certificationAuthorityContestationDecision ===
-        "DECISION_PENDING",
-    );
-
-  const hasConfirmedCaduciteContestation =
-    !!candidacy?.candidacyContestationsCaducite?.find(
-      (candidacyContestation) =>
-        candidacyContestation?.certificationAuthorityContestationDecision ===
-        "CADUCITE_CONFIRMED",
-    );
-
-  const isCandidacyActualisationFeatureActive = isFeatureActive(
-    "candidacy_actualisation",
-  );
-
   const candidateName = `${candidacy?.candidate?.firstname ?? ""} ${candidacy?.candidate?.lastname ?? ""}`;
   const certificationName = candidacy?.certification?.label ?? "";
 
@@ -140,19 +119,7 @@ export const FeasibilityUploadedPdf = () => {
               decisionComment={feasibility.decisionComment}
               decisionSentAt={feasibility.decisionSentAt}
               feasibilityHistory={feasibility.history}
-              isCaduque={candidacy.isCaduque}
-              lastActivityDate={candidacy.lastActivityDate}
               candidacyId={candidacy.id}
-              hasPendingCaduciteContestation={!!pendingCaduciteContestation}
-              isCandidacyActualisationFeatureActive={
-                isCandidacyActualisationFeatureActive
-              }
-              pendingCaduciteContestationSentAt={
-                pendingCaduciteContestation?.contestationSentAt
-              }
-              hasConfirmedCaduciteContestation={
-                hasConfirmedCaduciteContestation
-              }
               onRevokeDecision={() => revokeDecisionModal.open()}
               isAdmin={isAdmin}
               candidacyStatus={candidacy.status}
