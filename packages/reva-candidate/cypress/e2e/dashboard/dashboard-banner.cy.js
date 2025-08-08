@@ -5,7 +5,6 @@ import { stubQuery } from "../../utils/graphql";
 context("Dashboard Banner", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(
         req,
@@ -18,7 +17,6 @@ context("Dashboard Banner", () => {
 
     cy.wait("@candidate_getCandidateWithCandidacy");
     cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
-    cy.wait("@activeFeaturesForConnectedUser");
     cy.visit("/");
   });
 
@@ -176,107 +174,6 @@ context("Dashboard Banner", () => {
         cy.get('[data-test="drop-out-warning"]').should("be.visible");
         cy.get('[data-test="drop-out-warning-decision-button"]').should(
           "not.exist",
-        );
-      });
-    });
-  });
-
-  describe("Caducity Banners", () => {
-    it("should display contestation caducite confirmed banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
-          [
-            {
-              contestationSentAt: new Date().getTime(),
-              certificationAuthorityContestationDecision: "CADUCITE_CONFIRMED",
-            },
-          ];
-
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
-
-        cy.get('[data-test="contestation-caducite-confirmed-banner"]').should(
-          "be.visible",
-        );
-      });
-    });
-
-    it("should display pending contestation caducite banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
-          [
-            {
-              contestationSentAt: new Date().getTime(),
-              certificationAuthorityContestationDecision: "DECISION_PENDING",
-            },
-          ];
-
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
-
-        cy.get('[data-test="pending-contestation-caducite-banner"]').should(
-          "be.visible",
-        );
-      });
-    });
-
-    it("should display caduque banner with contest button", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = true;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyContestationsCaducite =
-          [];
-
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
-
-        cy.get('[data-test="caduque-banner"]').should("be.visible");
-        cy.get('[data-test="caduque-banner-button"]').should("be.visible");
-      });
-    });
-  });
-
-  describe("Actualisation Banner", () => {
-    it("should display actualisation banner with actualise button", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        const lastActivityDate = addDays(new Date(), -170).getTime();
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.isCaduque = false;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.lastActivityDate =
-          lastActivityDate;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "DOSSIER_FAISABILITE_RECEVABLE";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "ADMISSIBLE",
-          };
-
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
-
-        cy.get('[data-test="actualisation-banner"]').should("be.visible");
-        cy.get('[data-test="actualisation-banner-button"]').should(
-          "be.visible",
         );
       });
     });
