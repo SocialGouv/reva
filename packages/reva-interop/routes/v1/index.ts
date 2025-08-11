@@ -113,14 +113,17 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           description:
             "Fonctionnalités non implémentées par la plateforme à ce jour",
         },
-        {
-          name: "Authentification",
-          description: "Gestion de l'authentification et des utilisateurs",
-          externalDocs: {
-            url: "https://github.com/SocialGouv/reva/tree/master/packages/reva-interop/routes/v1/auth",
-            description: "Comment utiliser ces routes",
-          },
-        },
+        process.env.ENVIRONMENT !== "sandbox" &&
+        process.env.ENVIRONMENT !== "production"
+          ? {
+              name: "Authentification",
+              description: "Gestion de l'authentification et des utilisateurs",
+              externalDocs: {
+                url: "https://github.com/SocialGouv/reva/tree/master/packages/reva-interop/routes/v1/auth",
+                description: "Comment utiliser ces routes",
+              },
+            }
+          : undefined,
         {
           name: "Candidature",
           description: "Gestion des candidatures",
@@ -137,7 +140,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           name: "Informations jury",
           description: "Gestion de la session et des résultats liés au jury",
         },
-      ],
+      ].filter((t) => typeof t !== "undefined"),
       security,
       components: {
         securitySchemes,
