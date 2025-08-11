@@ -116,6 +116,10 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         {
           name: "Authentification",
           description: "Gestion de l'authentification et des utilisateurs",
+          externalDocs: {
+            url: "https://github.com/SocialGouv/reva/tree/master/packages/reva-interop/routes/v1/auth",
+            description: "Comment utiliser ces routes",
+          },
         },
         {
           name: "Candidature",
