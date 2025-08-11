@@ -142,6 +142,13 @@ http:
       middlewares:
         - removeHeader
 
+    vae-collective-production-vae-gouv-fr:
+      rule: "Host(`vae.gouv.fr`) && PathPrefix(`/vae-collective`)"
+      service: vae-collective-production
+      middlewares:
+        - removeHeader
+
+
     # --- END PRODUCTION VAE.GOUV.FR ---
 
     # --- BEGIN SANDBOX ---
@@ -344,6 +351,13 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/api"
+
+    vae-collective-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod-vae-collective.osc-secnum-fr1.scalingo.io/"
+
 
     # --- END PRODUCTION  ---
 
