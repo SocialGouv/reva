@@ -6783,7 +6783,8 @@ tarteaucitron.services.produktly = {
     "key": "produktly",
     "type": "api",
     "name": "Produktly",
-    "uri": "https://www.produktly.com/privacy",
+    "readmoreLink": "https://www.produktly.com/privacy",
+    "uri": "https://www.produktly.com",
     "needConsent": true,
     "cookies": ["__stripe_mid","__stripe_sid","_ga","sessionId"],
     "js": function () {
@@ -6796,7 +6797,7 @@ tarteaucitron.services.produktly = {
 
         tarteaucitron.addScript('', 'produktly-script', function () {
             console.log("Produktly script loaded");
-            const initProduktly =function (w, d, f) {
+            const initProduktly = function (w, d, f) {
                 w.Produktly=w.Produktly||new Proxy(()=>{},{get:function(_,n){return(...a)=>{w.ProduktlyQ=(w.ProduktlyQ||[]).concat([[n,a]])}},apply:function(_,__,a){w.ProduktlyQ=(w.ProduktlyQ||[]).concat([["apply",a]])}})
                 var a = d.getElementsByTagName('head')[0];
                 var s = d.createElement('script');
