@@ -4,7 +4,7 @@ export const candidacyIdSchema = {
   $id: "http://vae.gouv.fr/components/schemas/CandidatureId",
   type: "string",
   format: "uuid",
-  example: "123e4567-e89b-12d3-a456-426614174000",
+  example: "00a9fc60-bd2d-434e-9e97-97e029cbcd74",
   description: "Identifiant de la candidature",
 } as const;
 
