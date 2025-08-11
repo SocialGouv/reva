@@ -1,9 +1,18 @@
-export const tarteaucitronScript = ({ matomoUrl }: { matomoUrl: string }) => `
+export const tarteaucitronScript = ({
+  matomoUrl,
+  produktlyClientToken,
+}: {
+  matomoUrl: string;
+  produktlyClientToken?: string;
+}) => `
     var script = document.createElement("script");
 
     var matomoServiceInit = function() {
       window.tarteaucitron.user.matomotmUrl = "${matomoUrl}";
-      (window.tarteaucitron.job = window.tarteaucitron.job || []).push("matomotm");
+      const tacJobs =  (window.tarteaucitron.job = window.tarteaucitron.job || []);
+      tacJobs.push("matomotm");
+      window.tarteaucitron.user.produktlyClientToken = "${produktlyClientToken}";
+      tacJobs.push("produktly");
     };
 
     script.src = "/vendor/tarteaucitronjs/tarteaucitron.js";

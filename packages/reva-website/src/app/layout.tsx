@@ -7,7 +7,6 @@ import "@/styles/ckeditor5-content-styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Script from "next/script";
 
-import { Produktly } from "@/components/script/Produktly";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import { PRODUKTLY_CLIENT_TOKEN } from "@/config/config";
 
@@ -36,7 +35,6 @@ export default function RootLayout({
       <head>
         <StartDsfrOnHydration />
         <DsfrHead />
-        {PRODUKTLY_CLIENT_TOKEN && <Produktly />}
       </head>
       <body>
         <DsfrProvider lang={lang}>
@@ -48,6 +46,7 @@ export default function RootLayout({
           <Script strategy="beforeInteractive" id="tarteaucitron-wrapper">
             {tarteaucitronScript({
               matomoUrl: `${matomoBaseUrl}/js/container_${matomoContainerName}.js`,
+              produktlyClientToken: PRODUKTLY_CLIENT_TOKEN,
             })}
           </Script>
         )}
