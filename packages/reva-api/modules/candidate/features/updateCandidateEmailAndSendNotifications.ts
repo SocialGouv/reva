@@ -11,9 +11,11 @@ export const updateCandidateEmailAndSendNotifications = async ({
   previousEmail: string;
   newEmail: string;
 }) => {
-  if (newEmail && newEmail !== previousEmail) {
-    await updateCandidateEmail({ previousEmail, newEmail });
-    await sendPreviousEmailCandidateEmail({ email: previousEmail });
-    await sendNewEmailCandidateEmail({ email: newEmail });
+  if (newEmail === previousEmail) {
+    throw new Error(`Le précédent et le nouvel email sont identiques`);
   }
+
+  await updateCandidateEmail({ previousEmail, newEmail });
+  await sendPreviousEmailCandidateEmail({ email: previousEmail });
+  await sendNewEmailCandidateEmail({ email: newEmail });
 };
