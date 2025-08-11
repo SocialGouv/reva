@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 
+import { REST_API_URL } from "@/config/config";
+
 import {
   Candidacy,
   Candidate,
@@ -12,6 +14,7 @@ import {
 } from "@/graphql/generated/graphql";
 
 import { ContactInfosSection } from "../../app/contact-infos-section/ContactInfosSection";
+import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
 import AttachmentsSection from "./_components/AttachmentsSection";
 import CandidateDecisionCommentSection from "./_components/CandidateDecisionCommentSection";
@@ -22,6 +25,7 @@ import EligibilitySection from "./_components/EligibilitySection";
 import ExperiencesSection from "./_components/ExperiencesSection";
 import GoalsSection from "./_components/GoalsSection";
 import ParcoursSection from "./_components/ParcoursSection";
+import { PdfLink } from "./_components/PdfLink";
 
 // The ButtonConvertHtmlToPdf component uses html2pdf, which relies on the window object and causes issues during server-side rendering (SSR) builds.
 // We use dynamic import to ensure the component is only loaded on the client side.
@@ -45,6 +49,8 @@ export function DffSummary({
   displayGiveYourDecisionSubtitle?: boolean;
   certificationAuthorityLabel?: string;
 }) {
+  const { isFeatureActive } = useFeatureflipping();
+
   if (!dematerializedFeasibilityFile || !candidacy) {
     return null;
   }
@@ -76,15 +82,34 @@ export function DffSummary({
   } = candidacy as Candidacy;
   const isEligibilityRequirementPartial =
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
+
+  const isGenerateDfDematFromServerActive = isFeatureActive(
+    "GENERATE_DF_DEMAT_FROM_SERVER",
+  );
+
+  const getPdfUrl = () => {
+    return `${REST_API_URL}/candidacy/${candidacy.id}/feasibility/file-demat/${dematerializedFeasibilityFile.id}`;
+  };
+
   return (
     <div className="flex flex-col" id="dff-to-print" data-test="dff-summary">
       <div className="flex justify-between mb-4">
         <h1 className="mb-0">Dossier de faisabilité</h1>
-        <ButtonConvertHtmlToPdf
-          label="Télécharger le dossier de faisabilité"
-          elementId="dff-to-print"
-          filename="dossier_de_faisabilite.pdf"
-        />
+
+        {isGenerateDfDematFromServerActive ? (
+          <PdfLink
+            text={"Télécharger le dossier de faisabilité"}
+            title={"Télécharger le dossier de faisabilité"}
+            url={getPdfUrl()}
+            className="fr-btn fr-btn--secondary fr-btn--sm"
+          />
+        ) : (
+          <ButtonConvertHtmlToPdf
+            label="Télécharger le dossier de faisabilité"
+            elementId="dff-to-print"
+            filename="dossier_de_faisabilite.pdf"
+          />
+        )}
       </div>
       {displayGiveYourDecisionSubtitle && (
         <p>
