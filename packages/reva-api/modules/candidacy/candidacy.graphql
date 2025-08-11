@@ -79,7 +79,16 @@ type Candidacy {
   hasMoreThanOneCertificationAvailable: Boolean!
   certificationAuthorityLocalAccounts: [CandidacyCertificationAuthorityLocalAccount]
   archivingReason: CandidacyArchivingReason
+  activite: ActiviteStatut!
+  derniereDateActivite: Timestamp
 }
+
+enum ActiviteStatut {
+  ACTIF
+  INACTIF_EN_ATTENTE
+  INACTIF_CONFIRME
+}
+
 enum TypeAccompagnement {
   ACCOMPAGNE
   AUTONOME
