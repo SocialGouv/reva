@@ -105,6 +105,19 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       ],
       tags: [
         {
+          name: "Implémenté",
+          description: "Fonctionnalités implémentées par la plateforme",
+        },
+        {
+          name: "Non implémenté",
+          description:
+            "Fonctionnalités non implémentées par la plateforme à ce jour",
+        },
+        {
+          name: "Authentification",
+          description: "Gestion de l'authentification et des utilisateurs",
+        },
+        {
           name: "Candidature",
           description: "Gestion des candidatures",
         },
@@ -151,7 +164,9 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     indexPrefix: "/interop/v1",
     uiConfig: {
       docExpansion: "list",
+      maxDisplayedTags: 2,
       deepLinking: false,
+      defaultModelsExpandDepth: 0,
     },
   });
 
@@ -240,7 +255,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     </style>
   </head>
   <body>
-    <redoc spec-url='${process.env.BASE_URL}/interop/v1/documentation/json' schema-expansion-level="1" json-sample-expand-level="3" hide-schema-titles></redoc>
+    <redoc spec-url='${process.env.BASE_URL}/interop/v1/documentation/json' download-file-name="France-VAE-API-Interop-v1.json" schema-expansion-level="1" json-sample-expand-level="3" hide-schema-titles></redoc>
     <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
   </body>
 </html>`;

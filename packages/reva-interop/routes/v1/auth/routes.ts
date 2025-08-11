@@ -67,7 +67,7 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         process.env.ENVIRONMENT !== "staging",
       summary:
         "Crée un compte d'utilisateur rattaché au gestionnaire de candidature passé en paramètre",
-      tags: ["Authentification"],
+      tags: ["Implémenté", "Authentification"],
       body: {
         type: "object",
         properties: {
@@ -127,7 +127,7 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         process.env.ENVIRONMENT !== "local" &&
         process.env.ENVIRONMENT !== "staging",
       summary: "Génère un jeton d'accès pour l'utilisateur demandé",
-      tags: ["Authentification"],
+      tags: ["Implémenté", "Authentification"],
       headers: {
         type: "object",
         properties: {
@@ -183,7 +183,7 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         process.env.ENVIRONMENT !== "local" &&
         process.env.ENVIRONMENT !== "staging",
       summary: "Invalide le jeton d'accès",
-      tags: ["Authentification"],
+      tags: ["Implémenté", "Authentification"],
       headers: {
         type: "object",
         properties: {

@@ -28,7 +28,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary: "Récupérer la liste des informations jury",
         // security: [{ bearerAuth: [] }],
-        tags: ["Informations jury"],
+        tags: ["Non implémenté", "Informations jury"],
         querystring: {
           type: "object",
           properties: {
@@ -80,7 +80,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary: "Récupérer les informations du jury d'un candidat",
         // security: [{ bearerAuth: [] }],
-        tags: ["Informations jury"],
+        tags: ["Non implémenté", "Informations jury"],
         params: {
           type: "object",
           properties: {
@@ -117,7 +117,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         summary:
           "Récupérer les informations de la session du jury pour un candidat",
         // security: [{ bearerAuth: [] }],
-        tags: ["Informations jury"],
+        tags: ["Non implémenté", "Informations jury"],
         params: {
           type: "object",
           properties: {
@@ -155,7 +155,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           "Mettre à jour les informations de la session du jury pour un candidat",
         consumes: ["multipart/form-data"],
         // security: [{ bearerAuth: [] }],
-        tags: ["Informations jury"],
+        tags: ["Non implémenté", "Informations jury"],
         body: {
           $ref: "http://vae.gouv.fr/components/schemas/SessionJuryInput",
         },
@@ -194,7 +194,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary: "Récupérer le résultat du jury pour un candidat",
         // security: [{ bearerAuth: [] }],
-        tags: ["Informations jury"],
+        tags: ["Non implémenté", "Informations jury"],
         params: {
           type: "object",
           properties: {
@@ -234,7 +234,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary: "Mettre à jour le résultat du jury pour un candidat",
         // security: [{ bearerAuth: [] }],
-        tags: ["Informations jury"],
+        tags: ["Non implémenté", "Informations jury"],
         body: {
           $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryInput",
         },

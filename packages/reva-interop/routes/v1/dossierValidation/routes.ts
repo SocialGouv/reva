@@ -28,7 +28,7 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Récupérer la liste des dossiers de validation",
         // security: [{ bearerAuth: [] }],
-        tags: ["Dossier de validation"],
+        tags: ["Non implémenté", "Dossier de validation"],
         querystring: {
           type: "object",
           properties: {
@@ -83,7 +83,7 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Récupérer le dernier dossier de validation d'une candidature",
         // security: [{ bearerAuth: [] }],
-        tags: ["Dossier de validation"],
+        tags: ["Non implémenté", "Dossier de validation"],
         params: {
           type: "object",
           properties: {
@@ -120,7 +120,7 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         summary:
           "Récupérer la liste des décisions sur le dossier de validation",
         // security: [{ bearerAuth: [] }],
-        tags: ["Dossier de validation"],
+        tags: ["Non implémenté", "Dossier de validation"],
         params: {
           type: "object",
           properties: {
@@ -160,7 +160,7 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Créer une nouvelle décision sur le dossier de validation",
         // security: [{ bearerAuth: [] }],
-        tags: ["Dossier de validation"],
+        tags: ["Non implémenté", "Dossier de validation"],
         body: {
           $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionInput",
         },

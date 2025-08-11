@@ -24,7 +24,7 @@ const candidacyRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Récupérer les détails d'une candidature",
         // security: [{ bearerAuth: [] }, { oauth: [] }],
-        tags: ["Candidature"],
+        tags: ["Candidature", "Implémenté"],
         params: {
           type: "object",
           properties: {
