@@ -31,19 +31,17 @@ export const updateCandidateEmail = async ({
     throw new Error(`L'email ${newEmail} est déjà utilisé`);
   }
 
-  if (!process.env.KEYCLOAK_APP_REALM) {
-    throw new Error('"KEYCLOAK_APP_REALM" env var is missing');
+  if (process.env.KEYCLOAK_APP_REALM) {
+    await keycloakAdmin.users.update(
+      {
+        id: candidateToUpdate.keycloakId,
+        realm: process.env.KEYCLOAK_APP_REALM,
+      },
+      {
+        email: newEmail,
+      },
+    );
   }
-
-  await keycloakAdmin.users.update(
-    {
-      id: candidateToUpdate.keycloakId,
-      realm: process.env.KEYCLOAK_APP_REALM,
-    },
-    {
-      email: newEmail,
-    },
-  );
 
   return prismaClient.candidate.update({
     where: { email: previousEmail },
