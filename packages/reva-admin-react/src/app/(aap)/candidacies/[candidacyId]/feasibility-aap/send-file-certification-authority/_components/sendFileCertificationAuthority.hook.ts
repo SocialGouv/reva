@@ -80,6 +80,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
           eligibilityValidUntil
         }
         candidacy {
+          id
           certificationAuthorities {
             id
             label

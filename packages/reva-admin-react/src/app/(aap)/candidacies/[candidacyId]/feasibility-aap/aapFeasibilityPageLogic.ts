@@ -8,6 +8,7 @@ import { graphql } from "@/graphql/generated";
 const getCandidacyById = graphql(`
   query getCandidacyByIdForAAPFeasibilityPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
+      id
       individualHourCount
       collectiveHourCount
       additionalHourCount
@@ -76,6 +77,7 @@ const getCandidacyById = graphql(`
           decisionSentAt
         }
         dematerializedFeasibilityFile {
+          id
           swornStatementFile {
             name
             previewUrl

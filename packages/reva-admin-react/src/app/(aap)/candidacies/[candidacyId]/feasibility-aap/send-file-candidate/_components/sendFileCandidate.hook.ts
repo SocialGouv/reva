@@ -74,6 +74,7 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           }
         }
         candidacy {
+          id
           individualHourCount
           collectiveHourCount
           additionalHourCount
