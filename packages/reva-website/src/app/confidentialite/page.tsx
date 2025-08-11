@@ -457,6 +457,13 @@ const IndexConfidentialitePage = () => {
                   <TextCell>Support</TextCell>
                   <LinkCell url="https://crisp.chat/fr/privacy/" />
                 </tr>
+                <tr>
+                  <TextBoldCell>Produktly</TextBoldCell>
+                  <TextCell>Finlande</TextCell>
+                  <TextCell>Consentement</TextCell>
+                  <TextCell>Aides contextuelles et tutoriels intégrés</TextCell>
+                  <LinkCell url="https://produktly.com/privacy/" />
+                </tr>
               </tbody>
             </table>
           </div>
