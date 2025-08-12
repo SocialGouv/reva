@@ -21,7 +21,7 @@ export const useLayout = () => {
   const { graphqlClient } = useGraphQlClient();
   const { authenticated } = useKeycloakContext();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading: isLayoutLoading } = useQuery({
     queryKey: ["candidate", "layout"],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDATE_WITH_CANDIDACY_FOR_LAYOUT),
@@ -32,6 +32,6 @@ export const useLayout = () => {
 
   return {
     candidate,
-    isLoading,
+    isLayoutLoading,
   };
 };
