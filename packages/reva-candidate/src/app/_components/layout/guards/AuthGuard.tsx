@@ -53,9 +53,6 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    console.log("authenticated", authenticated);
-    console.log("isUnauthenticatedPath", isUnauthenticatedPath);
-    console.log("token", token);
     if (token) {
       return;
     }
