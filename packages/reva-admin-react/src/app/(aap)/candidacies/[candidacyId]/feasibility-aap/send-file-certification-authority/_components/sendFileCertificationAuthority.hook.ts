@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
@@ -176,6 +176,7 @@ export const useSendFileCertificationAuthority = () => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+  const queryClient = useQueryClient();
 
   const { data: getCandidacyByIdResponse } = useQuery({
     queryKey: [
@@ -204,6 +205,11 @@ export const useSendFileCertificationAuthority = () => {
         certificationAuthorityId,
         candidacyId,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [candidacyId],
+      });
+    },
   });
 
   const feasibility =
