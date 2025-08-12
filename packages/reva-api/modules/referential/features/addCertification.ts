@@ -1,3 +1,5 @@
+import { v4 as uuidV4 } from "uuid";
+
 import { prismaClient } from "@/prisma/client";
 
 import { RNCPReferential } from "../rncp";
@@ -49,8 +51,13 @@ export const addCertification = async (params: { codeRncp: string }) => {
   }
   const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
 
+  //generate the certification id beforehand since we need it for the firstVersionCertificationId column
+  const newCertificationId = uuidV4();
+
   const certification = await prismaClient.certification.create({
     data: {
+      id: newCertificationId,
+      firstVersionCertificationId: newCertificationId,
       status: "BROUILLON",
       feasibilityFormat: "DEMATERIALIZED",
       rncpId: codeRncp,

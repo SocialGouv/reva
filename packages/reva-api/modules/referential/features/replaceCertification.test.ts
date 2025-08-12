@@ -196,6 +196,54 @@ it("should add a new certification linked to the previous one", async () => {
   expect(savedCertification?.previousVersionCertificationId).toBe(
     existingCertification.id,
   );
+
+  expect(savedCertification?.firstVersionCertificationId).toBe(
+    existingCertification.id,
+  );
+});
+
+it("should carry over the first version certification id of the previous certification", async () => {
+  await createFormaCodeAndMockReferential();
+
+  const firstVersionCertification = await createCertificationHelper({
+    status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
+    rncpId: CURRENT_RNCP,
+  });
+
+  const existingCertification = await createExistingCertification();
+
+  await prismaClient.certification.update({
+    where: { id: existingCertification.id },
+    data: {
+      firstVersionCertificationId: firstVersionCertification.id,
+    },
+  });
+
+  const { certificationRegistryManager } =
+    await createStructureWithCertification(existingCertification.id);
+
+  const graphqlClient = getRegistryManagerGraphQLClient(
+    certificationRegistryManager,
+  );
+
+  const response = await graphqlClient.request(replaceCertificationMutation, {
+    input: {
+      codeRncp: NEW_RNCP,
+      certificationId: existingCertification.id,
+    },
+  });
+
+  const savedCertification = await prismaClient.certification.findUnique({
+    where: { id: response.referential_replaceCertification.id },
+  });
+
+  expect(savedCertification?.previousVersionCertificationId).toBe(
+    existingCertification.id,
+  );
+
+  expect(savedCertification?.firstVersionCertificationId).toBe(
+    firstVersionCertification.id,
+  );
 });
 
 it("should copy all relationships and data from the previous certification", async () => {

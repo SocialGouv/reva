@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Prisma, CertificationStatus, FeasibilityFormat } from "@prisma/client";
+import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "@/prisma/client";
 
@@ -10,8 +11,12 @@ export const createCertificationHelper = async (
 ) => {
   const certificationAuthority = await createCertificationAuthorityHelper();
 
+  const newCertificationId = uuidV4();
+
   return prismaClient.certification.create({
     data: {
+      id: newCertificationId,
+      firstVersionCertificationId: newCertificationId,
       label: faker.company.name(),
       level: 1,
       activities: faker.lorem.sentence(),

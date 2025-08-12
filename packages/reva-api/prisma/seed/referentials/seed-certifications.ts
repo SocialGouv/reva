@@ -17,18 +17,18 @@ export async function seedCertifications(prisma: PrismaClient) {
       },
     });
 
-    // Certifications : referentials/certifications.csv
     console.log(`Recreating certifications`);
-    await injectCsvRows<
-      Prisma.CertificationCreateInput & {
-        level: string;
-        isActive?: string;
-        certificationAuthorityTag: string;
-      },
-      Prisma.CertificationCreateArgs
-    >({
+
+    const certsFromCsv = await readCsvRows<{
+      id: string;
+      label: string;
+      rncpId: string;
+      summary: string;
+      level: string;
+      isActive: string;
+      certificationAuthorityTag: string;
+    }>({
       filePath: "./referentials/certifications.csv",
-      injectCommand: tx.certification.create,
       headersDefinition: [
         "rncpId",
         "isActive",
@@ -44,37 +44,36 @@ export async function seedCertifications(prisma: PrismaClient) {
         undefined,
         "certificationAuthorityTag",
       ],
-      transform: ({
-        id,
-        label,
-        rncpId,
-        summary,
-        level,
-        isActive,
-        certificationAuthorityTag,
-      }) => {
-        const unquotedCertificationAuthorityTag =
-          certificationAuthorityTag?.replace(/^"(.+)"$/, "$1") as string;
-
-        return {
-          data: {
-            id,
-            rncpId,
-            label,
-            level: parseInt(level),
-            summary,
-            status:
-              isActive === "checked" ? "VALIDE_PAR_CERTIFICATEUR" : "INACTIVE",
-            visible: isActive === "checked",
-            availableAt: new Date(),
-            expiresAt: new Date(),
-            certificationAuthorityStructure: {
-              connect: { label: unquotedCertificationAuthorityTag },
-            },
-          },
-        };
-      },
     });
+
+    for (const cert of certsFromCsv) {
+      const certificationAuthorityStructure =
+        await tx.certificationAuthorityStructure.findFirst({
+          where: {
+            label: cert.certificationAuthorityTag.replace(/^"(.+)"$/, "$1"),
+          },
+        });
+
+      await tx.certification.create({
+        data: {
+          id: cert.id,
+          firstVersionCertificationId: cert.id,
+          rncpId: cert.rncpId,
+          label: cert.label,
+          summary: cert.summary,
+          level: parseInt(cert.level),
+          status:
+            cert.isActive === "checked"
+              ? "VALIDE_PAR_CERTIFICATEUR"
+              : "INACTIVE",
+          visible: cert.isActive === "checked",
+          availableAt: new Date(),
+          expiresAt: new Date(),
+          certificationAuthorityStructureId:
+            certificationAuthorityStructure?.id,
+        },
+      });
+    }
 
     // Relations certifications
     console.log(`Recreating certifications links (domains, ccn etc..)`);

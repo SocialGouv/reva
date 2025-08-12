@@ -118,6 +118,8 @@ export const replaceCertification = async (params: {
       // Inherit data from existing certification:
       feasibilityFormat: existingCertification.feasibilityFormat,
       previousVersionCertificationId: certificationId,
+      firstVersionCertificationId:
+        existingCertification.firstVersionCertificationId,
       certificationAuthorityStructureId:
         existingCertification.certificationAuthorityStructureId,
       juryModalities: existingCertification.juryModalities,
