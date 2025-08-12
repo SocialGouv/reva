@@ -10,7 +10,7 @@ export const RoleDependentBreadcrumb = (props: BreadcrumbProps) => {
   const segments: BreadcrumbProps["segments"] = isAdmin
     ? [
         {
-          label: "Commanditaires",
+          label: "Porteurs de projet VAE collective",
           linkProps: {
             href: "/commanditaires",
           },
