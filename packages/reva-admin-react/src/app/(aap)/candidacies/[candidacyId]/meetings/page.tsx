@@ -11,7 +11,7 @@ import {
   parseISO,
   startOfToday,
 } from "date-fns";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -103,6 +103,8 @@ const MeetingsPage = () => {
 
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const backUrl = `/candidacies/${candidacyId}/summary`;
 
   const { data: getCandidacyResponse, status: getCandidacyStatus } = useQuery({
     queryKey: ["getCandidacy", candidacyId],
@@ -144,6 +146,7 @@ const MeetingsPage = () => {
       });
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
       successToast("Les modifications ont bien été enregistrées");
+      router.push(backUrl);
     } catch (e) {
       graphqlErrorToast(e);
     }
