@@ -65,15 +65,15 @@ context("main page", () => {
       );
 
       cy.get(
-        '[data-test="tree-select-item-CQP Animateur d\'équipe autonome de production industrielle"] input',
+        '[data-test="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
       ).should("not.be.checked");
 
       cy.get(
-        '[data-test="tree-select-item-Diplôme d\'Etat Conseiller en économie sociale et familiale - DEESF"] input',
+        '[data-test="tree-select-item-49872 - Diplôme d\'Etat Conseiller en économie sociale et familiale - DEESF"] input',
       ).should("be.checked");
 
       cy.get(
-        '[data-test="tree-select-item-CQP Animateur d\'équipe autonome de production industrielle"] input',
+        '[data-test="tree-select-item-13247 - CQP Animateur d\'équipe autonome de production industrielle"] input',
       ).should("not.be.checked");
     });
 
@@ -109,7 +109,7 @@ context("main page", () => {
       );
 
       cy.get(
-        '[data-test="tree-select-item-CQP Animateur d\'équipe autonome de production industrielle"] input',
+        '[data-test="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
       ).check({
         force: true,
       });
