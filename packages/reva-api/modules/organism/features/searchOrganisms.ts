@@ -64,7 +64,7 @@ export const searchOrganisms = async ({
                  o.conforme_norme_accessibilite as "conformeNormesAccessibilite" 
             ${fromClause}
             ${whereClause}
-          order by o.label limit ${limit} offset ${offset}`;
+          order by o.nom_public, o.label limit ${limit} offset ${offset}`;
 
   const count = Number(
     (
