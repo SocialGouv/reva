@@ -73,7 +73,7 @@ context("main page", () => {
       ).should("be.checked");
 
       cy.get(
-        '[data-test="tree-select-item-13247 - CQP Animateur d\'équipe autonome de production industrielle"] input',
+        '[data-test="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
       ).should("not.be.checked");
     });
 
