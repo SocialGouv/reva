@@ -22,6 +22,7 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
         certifications {
           id
           label
+          codeRncp
         }
       }
     }
@@ -41,6 +42,7 @@ const updateCertificationAuthorityLocalAccountCertificationsMutation = graphql(`
       certifications {
         id
         label
+        codeRncp
       }
     }
   }

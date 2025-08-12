@@ -40,7 +40,8 @@ export default function InterventionAreaPage() {
   const certifications = useMemo(
     () =>
       certificationsFromCertificationAuthority.map((certification) => ({
-        ...certification,
+        id: certification.id,
+        label: `${certification.codeRncp} - ${certification.label}`,
         selected: certificationsFromLocalAccount.some(
           (localCertification) => localCertification.id === certification.id,
         ),

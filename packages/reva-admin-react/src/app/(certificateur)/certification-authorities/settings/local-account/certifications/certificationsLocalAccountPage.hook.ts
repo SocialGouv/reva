@@ -11,6 +11,7 @@ const getCertificationAuthorityLocalAccount = graphql(`
         certifications {
           id
           label
+          codeRncp
         }
       }
     }

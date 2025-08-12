@@ -41,7 +41,8 @@ export default function CertificationsPage() {
           fullHeight
           items={
             certifications?.map((certification) => ({
-              ...certification,
+              id: certification.id,
+              label: `${certification.codeRncp} - ${certification.label}`,
               selected: true,
             })) || []
           }
