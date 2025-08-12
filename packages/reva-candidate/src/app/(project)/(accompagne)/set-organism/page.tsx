@@ -5,7 +5,6 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { redirect, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { EmptyState } from "@/components/empty-state/EmptyState";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/OrganismCard";
@@ -30,8 +29,6 @@ interface State {
 export default function SetOrganism() {
   const router = useRouter();
 
-  const { canEditCandidacy, candidate, candidacy, refetch } = useCandidacy();
-
   const [organismSearchText, setOrganismSearchText] = useState<string>("");
   const [organismSearchOnsite, setOrganismSearchOnsite] =
     useState<boolean>(false);
@@ -49,8 +46,12 @@ export default function SetOrganism() {
     setOrganismSearchMcf(false);
   };
 
-  const { getRandomOrganismsForCandidacy, selectOrganism } = useSetOrganism({
-    candidacyId: candidacy.id || "",
+  const {
+    getRandomOrganismsForCandidacy,
+    selectOrganism,
+    canEditCandidacy,
+    candidate,
+  } = useSetOrganism({
     searchText: organismSearchText,
     searchFilter: {
       distanceStatus: organismSearchOnsite
@@ -65,10 +66,10 @@ export default function SetOrganism() {
   });
 
   const organisms =
-    getRandomOrganismsForCandidacy.data?.getRandomOrganismsForCandidacy;
+    getRandomOrganismsForCandidacy?.data?.getRandomOrganismsForCandidacy;
   const isLoading =
-    getRandomOrganismsForCandidacy.isFetching ||
-    getRandomOrganismsForCandidacy.isPending;
+    getRandomOrganismsForCandidacy?.isFetching ||
+    getRandomOrganismsForCandidacy?.isPending;
 
   useEffect(() => {
     if (getRandomOrganismsForCandidacy.isError) {
@@ -84,10 +85,6 @@ export default function SetOrganism() {
     offset: 0,
     hasMore: false,
   });
-
-  if (!canEditCandidacy) {
-    redirect("/");
-  }
 
   const { offset: stateOffset } = state;
 
@@ -109,13 +106,16 @@ export default function SetOrganism() {
   }, [loadOrganisms]);
 
   const submitOrganism = async (organismId: string) => {
+    if (!candidate) {
+      return;
+    }
+
     try {
       const response = await selectOrganism.mutateAsync({
         candidacyId: candidate.candidacy.id,
         organismId,
       });
       if (response) {
-        refetch();
         router.push("/");
       }
     } catch (error) {
@@ -123,6 +123,13 @@ export default function SetOrganism() {
     }
   };
 
+  if (!candidate) {
+    return null;
+  }
+
+  if (!canEditCandidacy) {
+    redirect("/");
+  }
   return (
     <PageLayout title="Choix du diplôme" data-test={`certificates`}>
       <Breadcrumb
@@ -198,7 +205,7 @@ export default function SetOrganism() {
           )}
 
           <Organisms
-            selectedOrganismId={candidacy.organism?.id}
+            selectedOrganismId={candidate.candidacy.organism?.id}
             submitOrganism={({ organismId }) => {
               submitOrganism(organismId);
             }}

@@ -3,7 +3,16 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Empty candidacy", () => {
   it("prevent organism selection", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1.json",
+      );
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(
         req,
@@ -13,7 +22,11 @@ context("Empty candidacy", () => {
     });
     cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
 
     cy.get('[data-test="organism-tile"] button').should("be.disabled");
   });
@@ -22,7 +35,11 @@ context("Empty candidacy", () => {
 context("Candidacy with certification selected", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate3.json",
+      );
       stubQuery(req, "getRandomOrganismsForCandidacy", "organism.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(
@@ -30,11 +47,25 @@ context("Candidacy with certification selected", () => {
         "candidate_getCandidateWithCandidacyForDashboard",
         "candidate3.json",
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate3.json",
+      );
+      stubQuery(
+        req,
+        "getCandidateWithCandidacyForSetOrganism",
+        "candidate3.json",
+      );
     });
 
     cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
 
     cy.get('[data-test="organism-tile"] button').click();
     cy.wait("@getRandomOrganismsForCandidacy");
@@ -113,19 +144,31 @@ context("Candidacy with certification selected", () => {
   it("submit first organism", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate3.json",
+      );
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
         "candidate3-organism-selected.json",
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate3.json",
+      );
     });
 
     cy.get('[data-test="project-organisms-submit-organism-o1').click();
 
-    cy.wait("@candidacy_selectOrganism");
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+    cy.wait([
+      "@candidacy_selectOrganism",
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+      "@candidate_getCandidateWithCandidacyForHome",
+    ]);
 
     //TODO ajouter un check sur les AapContactTile
   });
@@ -134,7 +177,11 @@ context("Candidacy with certification selected", () => {
 context("Candidacy with no organism results", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate3.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate3.json",
+      );
       stubQuery(req, "getRandomOrganismsForCandidacy", {
         data: {
           getRandomOrganismsForCandidacy: {
@@ -149,14 +196,29 @@ context("Candidacy with no organism results", () => {
         "candidate_getCandidateWithCandidacyForDashboard",
         "candidate3.json",
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate3.json",
+      );
+      stubQuery(
+        req,
+        "getCandidateWithCandidacyForSetOrganism",
+        "candidate3.json",
+      );
     });
 
     cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
 
     cy.get('[data-test="organism-tile"] button').click();
     cy.wait("@getRandomOrganismsForCandidacy");
+    cy.wait("@getCandidateWithCandidacyForSetOrganism");
   });
 
   it(`search by name with no result should return a empty state but with no filter reset button`, function () {

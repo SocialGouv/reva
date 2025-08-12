@@ -77,7 +77,7 @@ export const useCandidacyForCertificationSearch = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const candidateWithCandidacy = useSuspenseQuery({
-    queryKey: ["candidacyForCertificationsPage"],
+    queryKey: ["candidate", "search-certification"],
     queryFn: () => graphqlClient.request(GET_CANDIDACY_CERTIFICATION),
   });
 
@@ -128,7 +128,7 @@ export const useSetCertification = ({
   const updateCertification = useMutation({
     mutationKey: ["candidacy_certification_updateCertification"],
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["candidate"] });
     },
     mutationFn: ({
       candidacyId,

@@ -25,7 +25,16 @@ interface CandidateFixture {
 context("Dashboard Sidebar - Appointment Tiles", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1.json",
+      );
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
@@ -35,8 +44,11 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
     cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
 
     cy.visit("/");
   });
@@ -48,6 +60,8 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
         "candidate_getCandidateWithCandidacyForDashboard",
         candidate,
       );
+      stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
+      stubQuery(req, "candidate_getCandidateWithCandidacyForLayout", candidate);
     });
   };
 

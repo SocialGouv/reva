@@ -3,16 +3,19 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
 
+import { useLayout } from "@/app/_components/layout/layout.hook";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 
 const getNavigation = ({
   authenticated,
   currentPathname,
+  isInactifEnAttente,
 }: {
   authenticated: boolean;
   currentPathname: string;
+  isInactifEnAttente: boolean;
 }) => {
-  if (!authenticated) return [];
+  if (!authenticated || isInactifEnAttente) return [];
 
   return [
     {
@@ -36,10 +39,14 @@ const getNavigation = ({
 export const Header = () => {
   const { authenticated, logout } = useKeycloakContext();
   const currentPathname = usePathname();
+  const { candidate } = useLayout();
+  const isInactifEnAttente =
+    candidate?.candidacy.activite === "INACTIF_EN_ATTENTE";
 
   const navigation = getNavigation({
     authenticated,
     currentPathname,
+    isInactifEnAttente,
   });
 
   return (

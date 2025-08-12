@@ -3,8 +3,8 @@
 import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
 import { PageLayout } from "@/layouts/page.layout";
 
-import Dashboard from "./_components/dashboard/Dashboard";
-import { useHome } from "./home.hook";
+import Dashboard from "./_components/home/dashboard/Dashboard";
+import { useHome } from "./_components/home/home.hook";
 
 export default function Home() {
   const { candidate } = useHome();

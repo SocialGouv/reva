@@ -42,10 +42,19 @@ context("Candidate Profile Page", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate1.json",
+      );
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
         "candidate1.json",
       );
       stubQuery(req, "getCandidateForProfilePage", candidateData);
@@ -55,7 +64,8 @@ context("Candidate Profile Page", () => {
 
     cy.login();
     cy.wait([
-      "@candidate_getCandidateWithCandidacy",
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
       "@candidate_getCandidateWithCandidacyForDashboard",
     ]);
     cy.visit("/profile");
@@ -291,7 +301,17 @@ context("Candidate Profile Page", () => {
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
         stubQuery(
           req,
-          "candidate_getCandidateWithCandidacy",
+          "candidate_getCandidateWithCandidacyForLayout",
+          "candidate1.json",
+        );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForDashboard",
+          "candidate1.json",
+        );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForHome",
           "candidate1.json",
         );
 
@@ -308,7 +328,11 @@ context("Candidate Profile Page", () => {
       });
 
       cy.login();
-      cy.wait(["@candidate_getCandidateWithCandidacy"]);
+      cy.wait([
+        "@candidate_getCandidateWithCandidacyForLayout",
+        "@candidate_getCandidateWithCandidacyForHome",
+        "@candidate_getCandidateWithCandidacyForDashboard",
+      ]);
       cy.visit("/profile");
       cy.wait([
         "@getCandidateForProfilePage",

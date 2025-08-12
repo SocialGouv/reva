@@ -28,7 +28,9 @@
         "additionalHourCount": null,
         "basicSkills": [],
         "mandatoryTrainings": [],
-        "feasibilityFormat": "UPLOADED_PDF"
+        "feasibilityFormat": "UPLOADED_PDF",
+        "activite": "ACTIF",
+        "derniereDateActivite": "2025-01-01"
       }
     }
   }

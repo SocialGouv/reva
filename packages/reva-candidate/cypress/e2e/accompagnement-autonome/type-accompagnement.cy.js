@@ -13,7 +13,7 @@ const interceptCandidacy = (candidate) => {
     );
     stubQuery(
       req,
-      "candidate_getCandidateWithCandidacy",
+      "candidate_getCandidateWithCandidacyForLayout",
       candidate || "candidate1.json",
     );
 
@@ -34,9 +34,11 @@ const interceptCandidacy = (candidate) => {
     );
   });
   cy.login();
-  cy.wait("@candidate_getCandidateWithCandidacy");
-  cy.wait("@candidate_getCandidateWithCandidacyForHome");
-  cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+  cy.wait([
+    "@candidate_getCandidateWithCandidacyForLayout",
+    "@candidate_getCandidateWithCandidacyForHome",
+    "@candidate_getCandidateWithCandidacyForDashboard",
+  ]);
 };
 
 context("Type accompagnement", () => {

@@ -11,7 +11,6 @@ import {
 } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { Card, CardSkeleton } from "@/components/legacy/organisms/Card";
@@ -40,17 +39,25 @@ export default function SetCertification() {
     return params;
   }, [searchParams]);
 
-  const { canEditCandidacy, candidate, refetch } = useCandidacy();
-
-  const { searchCertificationsForCandidate, updateCertification } =
-    useSetCertification({
-      searchText: searchFilter,
-      currentPage,
-    });
+  const {
+    searchCertificationsForCandidate,
+    updateCertification,
+    candidate,
+    canEditCandidacy,
+    isLoading,
+    isFetching,
+  } = useSetCertification({
+    searchText: searchFilter,
+    currentPage,
+  });
 
   const [selectedCertificationId, setSelectedCertificationId] = useState<
     string | undefined
   >();
+
+  if (!candidate) {
+    return null;
+  }
 
   if (!canEditCandidacy) {
     redirect("/");
@@ -66,8 +73,6 @@ export default function SetCertification() {
         certificationId: selectedCertificationId!,
       });
       if (response) {
-        refetch();
-
         router.push("/");
       }
     } catch (error) {
@@ -76,12 +81,10 @@ export default function SetCertification() {
   };
 
   const info =
-    searchCertificationsForCandidate.data?.searchCertificationsForCandidate
-      .info;
+    searchCertificationsForCandidate?.searchCertificationsForCandidate.info;
 
   const rows =
-    searchCertificationsForCandidate.data?.searchCertificationsForCandidate
-      .rows;
+    searchCertificationsForCandidate?.searchCertificationsForCandidate.rows;
 
   const selectedCertification = rows?.find(
     (certification) => certification.id == selectedCertificationId,
@@ -130,8 +133,7 @@ export default function SetCertification() {
               title=""
               listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4"
             >
-              {searchCertificationsForCandidate.isLoading ||
-              searchCertificationsForCandidate.isFetching
+              {isLoading || isFetching
                 ? [1, 2, 3, 4, 5].map((i) => (
                     <li key={`skeleton-${i}`}>
                       <CardSkeleton />

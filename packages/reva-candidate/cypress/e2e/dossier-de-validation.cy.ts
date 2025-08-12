@@ -30,7 +30,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
               typeAccompagnement;
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
@@ -41,13 +45,21 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
             });
           },
         );
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
         cy.get('[data-test="dossier-validation-tile"] button')
           .should("exist")
           .should("be.disabled");
@@ -68,7 +80,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               "ADMISSIBLE";
 
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
@@ -79,14 +95,22 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
             });
           },
         );
 
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
 
         cy.get('[data-test="dossier-validation-tile"] button').should(
           "not.be.disabled",
@@ -108,7 +132,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               "DOSSIER_FAISABILITE_RECEVABLE";
 
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "candidate_getCandidateWithCandidacyForDashboard",
@@ -117,6 +145,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
                 candidate,
               );
             });
@@ -131,8 +164,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         });
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
 
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -155,10 +191,19 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               "DOSSIER_FAISABILITE_RECEVABLE";
 
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
                 candidate,
               );
               stubQuery(
@@ -178,8 +223,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
 
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -225,7 +273,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               };
 
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationPage",
@@ -236,14 +288,22 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
             });
           },
         );
 
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
 
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -275,7 +335,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               };
 
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationPage",
@@ -286,14 +350,22 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
             });
           },
         );
 
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
 
         cy.visit("/dossier-de-validation/");
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -321,7 +393,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               };
 
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
@@ -332,14 +408,22 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
             });
           },
         );
 
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
 
         cy.get('[data-test="dossier-validation-tile"] button').should(
           "not.be.disabled",
@@ -362,7 +446,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               };
 
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
@@ -373,14 +461,22 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
             });
           },
         );
 
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
 
         cy.get('[data-test="dossier-validation-tile"] button').should("exist");
         cy.get('[data-test="incomplete-dv-banner"]').should("exist");
@@ -403,7 +499,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               };
 
             cy.intercept("POST", "/api/graphql", (req) => {
-              stubQuery(req, "candidate_getCandidateWithCandidacy", candidate);
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
               stubQuery(
                 req,
                 "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
@@ -419,14 +519,22 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
             });
           },
         );
 
         cy.login();
 
-        cy.wait("@candidate_getCandidateWithCandidacy");
-        cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
 
         cy.get('[data-test="dossier-validation-tile"] button').click();
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
@@ -461,7 +569,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               cy.intercept("POST", "/api/graphql", (req) => {
                 stubQuery(
                   req,
-                  "candidate_getCandidateWithCandidacy",
+                  "candidate_getCandidateWithCandidacyForLayout",
                   candidate,
                 );
                 stubQuery(
@@ -474,14 +582,22 @@ typesAccompagnement.forEach((typeAccompagnement) => {
                   "candidate_getCandidateWithCandidacyForDashboard",
                   candidate,
                 );
+                stubQuery(
+                  req,
+                  "candidate_getCandidateWithCandidacyForHome",
+                  candidate,
+                );
               });
             },
           );
 
           cy.login();
 
-          cy.wait("@candidate_getCandidateWithCandidacy");
-          cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+          cy.wait([
+            "@candidate_getCandidateWithCandidacyForLayout",
+            "@candidate_getCandidateWithCandidacyForHome",
+            "@candidate_getCandidateWithCandidacyForDashboard",
+          ]);
 
           cy.get('[data-test="dossier-validation-tile"] button').should(
             "not.be.disabled",

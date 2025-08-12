@@ -1,9 +1,28 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
 
 import { graphql } from "@/graphql/generated";
 import { SearchOrganismFilter } from "@/graphql/generated/graphql";
+
+const GET_CANDIDATE_WITH_CANDIDACY_FOR_SET_ORGANISM = graphql(`
+  query getCandidateWithCandidacyForSetOrganism {
+    candidate_getCandidateWithCandidacy {
+      candidacy {
+        id
+        status
+        typeAccompagnement
+        candidacyDropOut {
+          createdAt
+        }
+        organism {
+          id
+        }
+      }
+    }
+  }
+`);
 
 const GET_ORGANISMS_FOR_CANDIDACY = graphql(`
   query getRandomOrganismsForCandidacy(
@@ -52,30 +71,44 @@ const SELECT_ORGANISM_FOR_CANDIDACY = graphql(`
 `);
 
 export const useSetOrganism = ({
-  candidacyId,
   searchText,
   searchFilter,
 }: {
-  candidacyId: string;
   searchText: string;
   searchFilter: SearchOrganismFilter;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
+
+  const { data: getCandidateWithCandidacy } = useQuery({
+    queryKey: ["candidate", "set-organism"],
+    queryFn: () =>
+      graphqlClient.request(GET_CANDIDATE_WITH_CANDIDACY_FOR_SET_ORGANISM),
+  });
+  const candidate =
+    getCandidateWithCandidacy?.candidate_getCandidateWithCandidacy;
+
+  const canEditCandidacy = candidateCanEditCandidacy({
+    candidacyStatus: candidate?.candidacy?.status,
+    typeAccompagnement: candidate?.candidacy?.typeAccompagnement,
+    candidacyDropOut: !!candidate?.candidacy?.candidacyDropOut,
+  });
 
   const getRandomOrganismsForCandidacy = useQuery({
     queryKey: [
       "getRandomOrganismsForCandidacy",
-      candidacyId,
+      candidate?.candidacy?.id,
       searchText,
       searchFilter,
     ],
     queryFn: () =>
       graphqlClient.request(GET_ORGANISMS_FOR_CANDIDACY, {
-        candidacyId,
+        candidacyId: candidate?.candidacy?.id,
         searchText,
         searchFilter,
       }),
     gcTime: 0,
+    enabled: !!candidate?.candidacy?.id,
   });
 
   const selectOrganism = useMutation({
@@ -91,10 +124,13 @@ export const useSetOrganism = ({
         candidacyId,
         organismId,
       }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["candidate"] }),
   });
 
   return {
     getRandomOrganismsForCandidacy,
     selectOrganism,
+    canEditCandidacy,
+    candidate,
   };
 };

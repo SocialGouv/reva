@@ -1,12 +1,9 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
-import { PageLayout } from "@/layouts/page.layout";
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
 
-import { Loader } from "../legacy/atoms/Icons";
-
-import { useAuth } from "./auth.hooks";
-import { useKeycloakContext } from "./keycloak.context";
+import { useAuth } from "../../../../components/auth/auth.hooks";
 
 const UNAUTHENTICATED_PATHS = [
   "/login-confirmation",
@@ -16,25 +13,19 @@ const UNAUTHENTICATED_PATHS = [
   "/reset-password",
 ];
 
-interface Props {
-  children: (props: { authenticated: boolean }) => React.ReactNode;
-}
-
-export const AuthGuard = (props: Props) => {
+export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   const params = useSearchParams();
-
-  const isAuthenticatedPath =
-    UNAUTHENTICATED_PATHS.findIndex((path) => pathname.startsWith(path)) == -1;
-
+  const { loginWithToken } = useAuth();
   const { authenticated } = useKeycloakContext();
 
-  const { loginWithToken } = useAuth();
-
   const token = params.get("token");
+  const isUnauthenticatedPath = UNAUTHENTICATED_PATHS.some((path) =>
+    pathname.startsWith(path),
+  );
 
-  const login = useCallback(
+  const handleTokenLogin = useCallback(
     async (token: string) => {
       try {
         const response = await loginWithToken.mutateAsync({ token });
@@ -45,7 +36,6 @@ export const AuthGuard = (props: Props) => {
       } catch (error) {
         console.error(error);
       }
-
       router.push("/login");
     },
     [loginWithToken, router],
@@ -53,7 +43,7 @@ export const AuthGuard = (props: Props) => {
 
   useEffect(() => {
     if (token) {
-      login(token);
+      handleTokenLogin(token);
     }
 
     // This page is loaded from link with token value
@@ -63,36 +53,27 @@ export const AuthGuard = (props: Props) => {
   }, []);
 
   useEffect(() => {
+    console.log("authenticated", authenticated);
+    console.log("isUnauthenticatedPath", isUnauthenticatedPath);
+    console.log("token", token);
     if (token) {
       return;
     }
 
-    if (authenticated && !isAuthenticatedPath) {
+    if (authenticated && isUnauthenticatedPath) {
       router.push("/");
-    } else if (!authenticated && isAuthenticatedPath) {
+    } else if (!authenticated && !isUnauthenticatedPath) {
       router.push("/login");
     }
-  }, [authenticated, isAuthenticatedPath, router, token]);
+  }, [authenticated, isUnauthenticatedPath, router, token]);
 
-  if (
-    token ||
-    (authenticated && !isAuthenticatedPath) ||
-    (!authenticated && isAuthenticatedPath)
-  ) {
-    return (
-      <PageLayout
-        data-test="auth-loading"
-        className="flex-1 flex flex-col items-center justify-center"
-      >
-        {token && <h2>Connexion en cours</h2>}
-        <div className="w-8">
-          <Loader />
-        </div>
-      </PageLayout>
-    );
+  const canRender =
+    (isUnauthenticatedPath && !authenticated) ||
+    (!isUnauthenticatedPath && authenticated);
+
+  if (canRender) {
+    return children;
   }
 
-  const { children } = props;
-
-  return children({ authenticated });
+  return null;
 };

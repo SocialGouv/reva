@@ -5,7 +5,7 @@ context("Submission", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         "candidate2-submitted.json",
       );
 
@@ -14,13 +14,21 @@ context("Submission", () => {
         "candidate_getCandidateWithCandidacyForDashboard",
         "candidate2-submitted.json",
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate2-submitted.json",
+      );
 
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
 
     cy.get('[data-test="submit-candidacy-tile"] button').should(
       "not.be.disabled",
@@ -31,7 +39,7 @@ context("Submission", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         "candidate2-taken-over.json",
       );
 
@@ -41,12 +49,21 @@ context("Submission", () => {
         "candidate2-submitted.json",
       );
 
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate2-submitted.json",
+      );
+
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
 
     cy.get('[data-test="submit-candidacy-tile"] button').should(
       "not.be.disabled",

@@ -5,7 +5,6 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
@@ -15,14 +14,16 @@ import { useUpdateContact } from "./update-contact.hooks";
 export default function UpdateContact() {
   const router = useRouter();
 
-  const { candidate, refetch } = useCandidacy();
+  const { updateContact, candidate } = useUpdateContact();
 
-  const { updateContact } = useUpdateContact();
+  const [firstname, setFirstname] = useState(candidate?.firstname);
+  const [lastname, setLastname] = useState(candidate?.lastname);
+  const [phone, setPhone] = useState(candidate?.phone);
+  const [email, setEmail] = useState(candidate?.email);
 
-  const [firstname, setFirstname] = useState(candidate.firstname);
-  const [lastname, setLastname] = useState(candidate.lastname);
-  const [phone, setPhone] = useState(candidate.phone);
-  const [email, setEmail] = useState(candidate.email);
+  if (!candidate) {
+    return null;
+  }
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,7 +40,6 @@ export default function UpdateContact() {
         },
       });
       if (response) {
-        refetch();
         successToast("Vos informations ont été mises à jour avec succès");
         router.push("/");
       }

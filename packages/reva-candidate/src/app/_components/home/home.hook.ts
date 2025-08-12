@@ -9,9 +9,6 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
     candidate_getCandidateWithCandidacy {
       firstname
       lastname
-      candidacy {
-        typeAccompagnement
-      }
     }
   }
 `);
@@ -24,10 +21,8 @@ export const useHome = () => {
   });
 
   const candidate = candidateWithCandidacy?.candidate_getCandidateWithCandidacy;
-  const candidacy = candidate?.candidacy;
 
   return {
     candidate,
-    candidacy,
   };
 };

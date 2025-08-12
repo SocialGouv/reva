@@ -16,7 +16,7 @@ function interceptCandidacy({
   dropOutDate?: Date;
 }) {
   cy.intercept("POST", "/api/graphql", (req) => {
-    stubQuery(req, "candidate_getCandidateWithCandidacy", {
+    const candidate = {
       data: {
         candidate_getCandidateWithCandidacy: {
           ...candidateDropOut.data.candidate_getCandidateWithCandidacy,
@@ -35,34 +35,23 @@ function interceptCandidacy({
           },
         },
       },
-    });
-
-    stubQuery(req, "candidate_getCandidateWithCandidacyForDashboard", {
-      data: {
-        candidate_getCandidateWithCandidacy: {
-          ...candidateDropOut.data.candidate_getCandidateWithCandidacy,
-          candidacy: {
-            ...candidateDropOut.data.candidate_getCandidateWithCandidacy
-              .candidacy,
-            candidacyDropOut: droppedOut
-              ? {
-                  createdAt: dropOutDate
-                    ? dropOutDate.toJSON()
-                    : new Date().toJSON(),
-                  proofReceivedByAdmin,
-                  dropOutConfirmedByCandidate,
-                }
-              : null,
-          },
-        },
-      },
-    });
+    };
+    stubQuery(req, "candidate_getCandidateWithCandidacyForLayout", candidate);
+    stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
+    stubQuery(
+      req,
+      "candidate_getCandidateWithCandidacyForDashboard",
+      candidate,
+    );
     stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
   });
   cy.login();
 
-  cy.wait("@candidate_getCandidateWithCandidacy");
-  cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+  cy.wait([
+    "@candidate_getCandidateWithCandidacyForLayout",
+    "@candidate_getCandidateWithCandidacyForHome",
+    "@candidate_getCandidateWithCandidacyForDashboard",
+  ]);
 }
 
 context("Candidacy dropout warning", () => {
@@ -76,9 +65,6 @@ context("Candidacy dropout warning", () => {
 
       it("should let me click the decision button and lead me to the decision page", function () {
         interceptCandidacy({ droppedOut: true });
-        cy.login();
-
-        cy.wait("@candidate_getCandidateWithCandidacy");
 
         cy.get('[data-test="drop-out-warning-decision-button"]').click();
         cy.url().should(

@@ -98,3 +98,7 @@ export const useFeasibilityPage = () => {
 
   return { candidacy, queryStatus, updateFeasibilityFileTemplateFirstReadAt };
 };
+
+export type UseFeasibilityPageFeasibility = ReturnType<
+  typeof useFeasibilityPage
+>["candidacy"]["feasibility"];

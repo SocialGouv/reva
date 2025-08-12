@@ -5,17 +5,29 @@ import { stubQuery } from "../../utils/graphql";
 context("Dashboard Tiles", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate1.json",
+      );
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
         "candidate1.json",
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1.json",
+      );
     });
 
     cy.login();
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
 
     cy.visit("/");
   });
@@ -41,6 +53,16 @@ context("Dashboard Tiles", () => {
           stubQuery(
             req,
             "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
             candidate,
           );
         });
@@ -112,6 +134,16 @@ context("Dashboard Tiles", () => {
               "candidate_getCandidateWithCandidacyForDashboard",
               candidate,
             );
+            stubQuery(
+              req,
+              "candidate_getCandidateWithCandidacyForHome",
+              candidate,
+            );
+            stubQuery(
+              req,
+              "candidate_getCandidateWithCandidacyForLayout",
+              candidate,
+            );
           });
 
           cy.get(
@@ -150,6 +182,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get(
@@ -181,6 +223,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get('[data-test="feasibility-badge-admissible"]').should(
@@ -206,6 +258,16 @@ context("Dashboard Tiles", () => {
           stubQuery(
             req,
             "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
             candidate,
           );
         });
@@ -349,6 +411,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get('[data-test="feasibility-badge-pending"]').should("be.visible");
@@ -396,6 +468,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get('[data-test="feasibility-tile"] button').should("be.disabled");
@@ -418,6 +500,16 @@ context("Dashboard Tiles", () => {
           stubQuery(
             req,
             "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
             candidate,
           );
         });
@@ -477,6 +569,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get('[data-test="dossier-validation-badge-pending"]').should(
@@ -496,6 +598,16 @@ context("Dashboard Tiles", () => {
           stubQuery(
             req,
             "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
             candidate,
           );
         });
@@ -519,6 +631,16 @@ context("Dashboard Tiles", () => {
           stubQuery(
             req,
             "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
             candidate,
           );
         });
@@ -546,6 +668,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get('[data-test="dossier-validation-badge-to-send"]').should(
@@ -565,6 +697,16 @@ context("Dashboard Tiles", () => {
             stubQuery(
               req,
               "candidate_getCandidateWithCandidacyForDashboard",
+              candidate,
+            );
+            stubQuery(
+              req,
+              "candidate_getCandidateWithCandidacyForHome",
+              candidate,
+            );
+            stubQuery(
+              req,
+              "candidate_getCandidateWithCandidacyForLayout",
               candidate,
             );
           });
@@ -589,6 +731,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get('[data-test="training-tile"] button').should("be.disabled");
@@ -604,6 +756,16 @@ context("Dashboard Tiles", () => {
           stubQuery(
             req,
             "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
             candidate,
           );
         });
@@ -623,6 +785,16 @@ context("Dashboard Tiles", () => {
           stubQuery(
             req,
             "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
             candidate,
           );
         });
@@ -665,6 +837,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get('[data-test="training-status-badge-in-progress"]').should(
@@ -686,6 +868,16 @@ context("Dashboard Tiles", () => {
             "candidate_getCandidateWithCandidacyForDashboard",
             candidate,
           );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
         });
 
         cy.get('[data-test="training-status-badge-to-validate"]').should(
@@ -703,6 +895,16 @@ context("Dashboard Tiles", () => {
           stubQuery(
             req,
             "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
             candidate,
           );
         });

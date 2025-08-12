@@ -3,15 +3,38 @@ import { stubQuery } from "../utils/graphql";
 context("Certificate list", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
+        "getCandidateWithCandidacyForCertification",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate1.json",
+      );
       stubQuery(req, "searchCertificationsForCandidate", "certifications.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
 
     cy.login();
-
-    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
     cy.visit("/set-certification");
+    cy.wait("@getCandidateWithCandidacyForCertification");
     cy.wait("@searchCertificationsForCandidate");
   });
 

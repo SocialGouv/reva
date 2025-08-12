@@ -4,28 +4,20 @@ import "@/styles/globals.css";
 import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
 
-// import { getHtmlAttributes } from "@/components/dsfr/server-only-index";
-
-import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
-import { usePathname } from "next/navigation";
 import Script from "next/script";
-import { HTMLAttributes } from "react";
 import { Toaster } from "react-hot-toast";
 
-import { AuthGuard } from "@/components/auth/auth.guard";
 import { KeycloakProvider } from "@/components/auth/keycloak.context";
-import { CandidacyGuard } from "@/components/candidacy/candidacy.context";
 import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
 import { DsfrHead } from "@/components/dsfr/DsfrHead";
-import { Footer } from "@/components/footer/Footer";
-import { Header } from "@/components/header/Header";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 
-import { LayoutNotice } from "./_components/layout-notice/LayoutNotice";
-import { WhiteBoxContainer } from "./_components/WhiteBoxContainer";
+import { AppLayout } from "./_components/layout/AppLayout";
+import { GuardsLayout } from "./_components/layout/guards/GuardsLayout";
+import { MainContent } from "./_components/layout/MainContent";
 
 const queryClient = new QueryClient();
 
@@ -58,17 +50,11 @@ export default function RootLayout({
           <KeycloakProvider>
             <QueryClientProvider client={queryClient}>
               <Toaster position="top-right" />
-              <LayoutContent>
-                <AuthGuard>
-                  {({ authenticated }) =>
-                    authenticated ? (
-                      <CandidacyGuard>{children}</CandidacyGuard>
-                    ) : (
-                      children
-                    )
-                  }
-                </AuthGuard>
-              </LayoutContent>
+              <AppLayout>
+                <GuardsLayout>
+                  <MainContent>{children}</MainContent>
+                </GuardsLayout>
+              </AppLayout>
             </QueryClientProvider>
           </KeycloakProvider>
         </DsfrProvider>
@@ -91,66 +77,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-const UNAUTHENTICATED_PATHS = [
-  "/login-confirmation",
-  "/login",
-  "/logout-confirmation",
-  "/forgot-password",
-  "/reset-password",
-];
-
-const LayoutContent = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();
-  const isRootPath = pathname === "/";
-  const isUnAuthenticatedPath =
-    UNAUTHENTICATED_PATHS.findIndex((path) => pathname.startsWith(path)) != -1;
-
-  let className: HTMLAttributes<HTMLDivElement>["className"] =
-    "fr-container flex flex-col flex-1";
-
-  if (isUnAuthenticatedPath) {
-    className = `${className} max-w-2xl`;
-  }
-
-  return (
-    <div className="w-full min-h-screen flex flex-col">
-      <SkipLinks
-        links={[
-          {
-            anchor: "#content",
-            label: "Contenu",
-          },
-          {
-            anchor: "#footer",
-            label: "Pied de page",
-          },
-        ]}
-      />
-
-      <Header />
-
-      <main
-        role="main"
-        id="content"
-        className="flex flex-col flex-1 lg:bg-candidate"
-      >
-        <div className={className}>
-          <LayoutNotice />
-
-          {isRootPath ? (
-            <div
-              className={`flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12`}
-            >
-              {children}
-            </div>
-          ) : (
-            <WhiteBoxContainer>{children}</WhiteBoxContainer>
-          )}
-        </div>
-      </main>
-
-      <Footer />
-    </div>
-  );
-};

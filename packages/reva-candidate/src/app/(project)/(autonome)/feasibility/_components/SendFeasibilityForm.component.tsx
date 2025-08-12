@@ -193,7 +193,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
 
   return (
     <div className="mt-12">
-      <FeasibilityBanner />
+      <FeasibilityBanner feasibility={feasibility} />
       <form
         onSubmit={handleFormSubmit}
         onReset={(e) => {

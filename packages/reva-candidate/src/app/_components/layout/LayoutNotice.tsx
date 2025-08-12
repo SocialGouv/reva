@@ -2,7 +2,7 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useHome } from "@/app/home.hook";
+import { useLayout } from "./layout.hook";
 
 const TUTORIAL_URL_DASHBOARD_AUTONOME =
   "https://scribehow.com/shared/Tutoriel__Candidat_sans_accompagnement_autonome__0NQyq175SDaI0Epy7bdyLA?referrer=documents";
@@ -11,10 +11,10 @@ const TUTORIAL_URL_DASHBOARD_ACCOMPAGNE =
 
 export const LayoutNotice = () => {
   const pathname = usePathname();
-  const isLoginPath = pathname === "/login/";
+  const isLoginPath = pathname.startsWith("/login");
 
-  const { candidacy } = useHome();
-
+  const { candidate } = useLayout();
+  const candidacy = candidate?.candidacy;
   const candidacyIsAutonome = candidacy?.typeAccompagnement === "AUTONOME";
 
   if (isLoginPath) {

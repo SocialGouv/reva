@@ -19,7 +19,12 @@ function interceptCandidacy() {
       "updateCandidateCandidacyDropoutDecision",
       candidateDropOut,
     );
-    stubQuery(req, "candidate_getCandidateWithCandidacy", {
+    stubQuery(req, "candidate_getCandidateWithCandidacyForLayout", {
+      data: {
+        candidate_getCandidateWithCandidacy: candidate,
+      },
+    });
+    stubQuery(req, "candidate_getCandidateWithCandidacyForHome", {
       data: {
         candidate_getCandidateWithCandidacy: candidate,
       },
@@ -46,7 +51,11 @@ context("Candidacy dropout decision page", () => {
   beforeEach(() => {
     interceptCandidacy();
     cy.login();
-    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
     cy.visit("/candidacy-dropout-decision/");
     cy.wait("@getCandidacyForDropOutDecisionPage");
   });

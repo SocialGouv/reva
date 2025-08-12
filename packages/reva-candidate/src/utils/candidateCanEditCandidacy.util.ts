@@ -11,9 +11,9 @@ export const candidateCanEditCandidacy = ({
   typeAccompagnement,
   candidacyDropOut,
 }: {
-  candidacyStatus: CandidacyStatusStep;
-  typeAccompagnement: TypeAccompagnement;
-  candidacyDropOut: boolean;
+  candidacyStatus?: CandidacyStatusStep;
+  typeAccompagnement?: TypeAccompagnement;
+  candidacyDropOut?: boolean;
 }): boolean => {
   return (
     (candidacyStatus === "PROJET" ||

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
+import { UseValidateFeasibilityCandidate } from "@/app/(project)/(accompagne)/validate-feasibility/validate-feasibility.hooks";
 
 import {
   Candidate,
@@ -20,14 +20,21 @@ import ExperiencesSection from "./components/ExperiencesSection";
 import GoalsSection from "./components/GoalsSection";
 import ParcoursSection from "./components/ParcoursSection";
 
+type DffSummaryProps = {
+  candidateDecisionComment: string;
+  setCandidateDecisionComment: (comment: string) => void;
+  candidate: UseValidateFeasibilityCandidate;
+};
+
 export function DffSummary({
   candidateDecisionComment,
   setCandidateDecisionComment,
-}: {
-  candidateDecisionComment: string;
-  setCandidateDecisionComment: (comment: string) => void;
-}) {
-  const { candidate, candidacy } = useCandidacy();
+  candidate,
+}: DffSummaryProps) {
+  if (!candidate) {
+    return null;
+  }
+  const candidacy = candidate.candidacy;
 
   const { feasibility } = candidacy;
   const dematerializedFeasibilityFile =
@@ -67,7 +74,11 @@ export function DffSummary({
 
   return (
     <div className="flex flex-col" id="dff-to-print">
-      <BannerSummary />
+      <BannerSummary
+        feasibilitySentToCertificationAuthorityAt={
+          feasibility.feasibilityFileSentAt
+        }
+      />
 
       <EligibilitySection
         eligibilityRequirement={

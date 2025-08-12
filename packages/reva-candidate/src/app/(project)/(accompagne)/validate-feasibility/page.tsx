@@ -4,13 +4,11 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Download from "@codegouvfr/react-dsfr/Download";
-import { useQueryClient } from "@tanstack/react-query";
 import { GraphQLError } from "graphql";
 import dynamic from "next/dynamic";
 import { redirect, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 import { graphqlErrorToast } from "@/components/toast/toast";
@@ -31,10 +29,13 @@ const ButtonConvertHtmlToPdf = dynamic(
 export default function ValidateFeasibility() {
   const router = useRouter();
 
-  const { candidacy, dematerializedFeasibilityFile } = useCandidacy();
-  const queryClient = useQueryClient();
-  const { createOrUpdateSwornStatement, dffCandidateConfirmation } =
-    useValidateFeasibility();
+  const {
+    createOrUpdateSwornStatement,
+    dffCandidateConfirmation,
+    candidacy,
+    dematerializedFeasibilityFile,
+    candidate,
+  } = useValidateFeasibility();
 
   const { mutateAsync: dffCandidateConfirmationMutation } =
     dffCandidateConfirmation;
@@ -48,8 +49,6 @@ export default function ValidateFeasibility() {
   );
   const candidateHasConfirmedFeasibility =
     dematerializedFeasibilityFile?.candidateConfirmationAt;
-
-  const { organism } = candidacy;
 
   const formIsDisabled =
     !candidateConfirmation || !!candidateHasConfirmedFeasibility;
@@ -65,6 +64,12 @@ export default function ValidateFeasibility() {
         : undefined,
     [dematerializedFeasibilityFile],
   );
+
+  if (!candidacy) {
+    return null;
+  }
+
+  const organism = candidacy?.organism;
 
   if (!dematerializedFeasibilityFile) {
     redirect("/");
@@ -88,9 +93,6 @@ export default function ValidateFeasibility() {
           candidateDecisionComment,
         },
       });
-      queryClient.invalidateQueries({
-        queryKey: ["candidate"],
-      });
       router.push("/");
     } catch (error) {
       graphqlErrorToast(error);
@@ -109,6 +111,7 @@ export default function ValidateFeasibility() {
       </div>
 
       <DffSummary
+        candidate={candidate}
         candidateDecisionComment={candidateDecisionComment}
         setCandidateDecisionComment={setCandidateDecisionComment}
       />

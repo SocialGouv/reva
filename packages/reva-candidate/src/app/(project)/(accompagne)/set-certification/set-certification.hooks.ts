@@ -1,8 +1,24 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
 
 import { graphql } from "@/graphql/generated";
+
+const GET_CANDIDATE_WITH_CANDIDACY_FOR_CERTIFICATION = graphql(`
+  query getCandidateWithCandidacyForCertification {
+    candidate_getCandidateWithCandidacy {
+      candidacy {
+        id
+        status
+        typeAccompagnement
+        candidacyDropOut {
+          createdAt
+        }
+      }
+    }
+  }
+`);
 
 const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
   query searchCertificationsForCandidate(
@@ -52,11 +68,15 @@ export const useSetCertification = ({
   currentPage: number;
 }) => {
   const { graphqlClient } = useGraphQlClient();
-
+  const queryClient = useQueryClient();
   const RECORDS_PER_PAGE = 10;
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
 
-  const searchCertificationsForCandidate = useQuery({
+  const {
+    data: searchCertificationsForCandidate,
+    isLoading,
+    isFetching,
+  } = useQuery({
     queryKey: ["searchCertificationsForCandidate", searchText, currentPage],
     queryFn: () =>
       graphqlClient.request(SEARCH_CERTIFICATIONS_FOR_CANDIDATE, {
@@ -65,6 +85,21 @@ export const useSetCertification = ({
         searchText,
       }),
     gcTime: 0,
+  });
+
+  const { data: candidateWithCandidacyForCertification } = useQuery({
+    queryKey: ["candidate", "candidateWithCandidacyForCertification"],
+    queryFn: () =>
+      graphqlClient.request(GET_CANDIDATE_WITH_CANDIDACY_FOR_CERTIFICATION),
+  });
+
+  const candidate =
+    candidateWithCandidacyForCertification?.candidate_getCandidateWithCandidacy;
+
+  const canEditCandidacy = candidateCanEditCandidacy({
+    candidacyStatus: candidate?.candidacy?.status,
+    typeAccompagnement: candidate?.candidacy?.typeAccompagnement,
+    candidacyDropOut: !!candidate?.candidacy?.candidacyDropOut,
   });
 
   const updateCertification = useMutation({
@@ -80,7 +115,19 @@ export const useSetCertification = ({
         candidacyId,
         certificationId,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["candidate"],
+      });
+    },
   });
 
-  return { searchCertificationsForCandidate, updateCertification };
+  return {
+    searchCertificationsForCandidate,
+    updateCertification,
+    candidate,
+    canEditCandidacy,
+    isLoading,
+    isFetching,
+  };
 };

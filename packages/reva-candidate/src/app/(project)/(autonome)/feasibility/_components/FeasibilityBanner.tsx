@@ -1,23 +1,28 @@
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
 import { FeasibilityHistory } from "@/graphql/generated/graphql";
+
+import { UseFeasibilityPageFeasibility } from "../feasibility.hook";
 
 import FeasibilityDecisionDisplay from "./FeasibilityDecisionDisplay";
 
-export function FeasibilityBanner() {
-  const { candidacy } = useCandidacy();
-  const feasibilityHistory: FeasibilityHistory[] =
-    candidacy.feasibility?.history || [];
+export function FeasibilityBanner({
+  feasibility,
+}: {
+  feasibility: UseFeasibilityPageFeasibility;
+}) {
+  if (!feasibility) {
+    return null;
+  }
+  const feasibilityHistory: FeasibilityHistory[] = feasibility?.history || [];
 
-  if (candidacy.feasibility?.decision) {
+  if (feasibility.decision) {
     return (
       <FeasibilityDecisionDisplay
-        decision={candidacy.feasibility.decision}
+        decision={feasibility.decision}
         feasibilityHistory={feasibilityHistory}
-        decisionComment={candidacy.feasibility.decisionComment}
-        decisionSentAt={candidacy.feasibility.decisionSentAt}
-        decisionFile={candidacy.feasibility.decisionFile}
-        feasibilityFileSentAt={candidacy.feasibility.feasibilityFileSentAt}
+        decisionComment={feasibility.decisionComment}
+        decisionSentAt={feasibility.decisionSentAt}
+        decisionFile={feasibility.decisionFile}
+        feasibilityFileSentAt={feasibility.feasibilityFileSentAt}
       />
     );
   }

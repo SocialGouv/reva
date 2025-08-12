@@ -6,7 +6,12 @@ context("Training Program", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(
           req,
-          "candidate_getCandidateWithCandidacy",
+          "candidate_getCandidateWithCandidacyForLayout",
+          "candidate2-training-confirmed.json",
+        );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForHome",
           "candidate2-training-confirmed.json",
         );
         stubQuery(
@@ -23,8 +28,11 @@ context("Training Program", () => {
       });
       cy.login();
 
-      cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+      cy.wait([
+        "@candidate_getCandidateWithCandidacyForLayout",
+        "@candidate_getCandidateWithCandidacyForHome",
+        "@candidate_getCandidateWithCandidacyForDashboard",
+      ]);
 
       cy.get('[data-test="training-tile"] button').click();
       cy.wait("@getCandidateWithCandidacyForTrainingValidation");
@@ -60,7 +68,7 @@ context("Training Program", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(
           req,
-          "candidate_getCandidateWithCandidacy",
+          "candidate_getCandidateWithCandidacyForLayout",
           "candidate2-missing-training-fields.json",
         );
         stubQuery(
@@ -73,12 +81,20 @@ context("Training Program", () => {
           "candidate_getCandidateWithCandidacyForDashboard",
           "candidate2-missing-training-fields.json",
         );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForHome",
+          "candidate2-missing-training-fields.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
 
-      cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+      cy.wait([
+        "@candidate_getCandidateWithCandidacyForLayout",
+        "@candidate_getCandidateWithCandidacyForHome",
+        "@candidate_getCandidateWithCandidacyForDashboard",
+      ]);
 
       cy.get('[data-test="training-tile"] button').click();
       cy.wait("@getCandidateWithCandidacyForTrainingValidation");
@@ -108,7 +124,7 @@ context("Training Program", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(
           req,
-          "candidate_getCandidateWithCandidacy",
+          "candidate_getCandidateWithCandidacyForLayout",
           "candidate2-training-sent.json",
         );
         stubQuery(
@@ -126,12 +142,20 @@ context("Training Program", () => {
           "candidate_getCandidateWithCandidacyForDashboard",
           "candidate2-training-sent.json",
         );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForHome",
+          "candidate2-training-sent.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
 
-      cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+      cy.wait([
+        "@candidate_getCandidateWithCandidacyForLayout",
+        "@candidate_getCandidateWithCandidacyForHome",
+        "@candidate_getCandidateWithCandidacyForDashboard",
+      ]);
       cy.get('[data-test="training-tile"] button').click();
       cy.wait("@getCandidateWithCandidacyForTrainingValidation");
 
@@ -160,7 +184,7 @@ context("Training Program", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(
           req,
-          "candidate_getCandidateWithCandidacy",
+          "candidate_getCandidateWithCandidacyForLayout",
           "candidate2-training-confirmed-sent-again.json",
         );
         stubQuery(
@@ -178,12 +202,20 @@ context("Training Program", () => {
           "candidate_getCandidateWithCandidacyForDashboard",
           "candidate2-training-confirmed-sent-again.json",
         );
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidacyForHome",
+          "candidate2-training-confirmed-sent-again.json",
+        );
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
 
-      cy.wait("@candidate_getCandidateWithCandidacy");
-      cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+      cy.wait([
+        "@candidate_getCandidateWithCandidacyForLayout",
+        "@candidate_getCandidateWithCandidacyForHome",
+        "@candidate_getCandidateWithCandidacyForDashboard",
+      ]);
 
       cy.get('[data-test="training-tile"] button').click();
       cy.wait("@getCandidateWithCandidacyForTrainingValidation");

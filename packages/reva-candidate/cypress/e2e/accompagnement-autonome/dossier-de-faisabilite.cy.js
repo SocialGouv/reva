@@ -14,7 +14,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         candidateAutonomeFeasibilityStep,
       );
       stubQuery(
@@ -27,11 +27,19 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         "getCandidateWithCandidacyForFeasibilityPage",
         candidateAutonomeFeasibilityStep,
       );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        candidateAutonomeFeasibilityStep,
+      );
     });
     cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
-    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
   });
 
   it("should show an active and editable feasibility element in the dashboard when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
@@ -50,7 +58,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         candidateAutonomeIncompleteFeasibilityStep,
       );
       stubQuery(
@@ -61,6 +69,11 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
+        candidateAutonomeIncompleteFeasibilityStep,
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
         candidateAutonomeIncompleteFeasibilityStep,
       );
     });
@@ -75,7 +88,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         candidateAutonomePendingFeasibilityStep,
       );
       stubQuery(
@@ -86,6 +99,11 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
+        candidateAutonomePendingFeasibilityStep,
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
         candidateAutonomePendingFeasibilityStep,
       );
     });
@@ -104,7 +122,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         candidateAutonomePendingFeasibilityStep,
       );
       stubQuery(
@@ -135,7 +153,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         candidateAutonomeIncompleteFeasibilityStep,
       );
       stubQuery(
@@ -146,6 +164,11 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
+        candidateAutonomeIncompleteFeasibilityStep,
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
         candidateAutonomeIncompleteFeasibilityStep,
       );
     });
@@ -168,7 +191,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         candidateAutonomeAdmissibleFeasibilityStep,
       );
       stubQuery(
@@ -180,6 +203,11 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
         candidateAutonomeAdmissibleFeasibilityStep,
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
+        candidateAutonomeRejectedFeasibilityStep,
       );
     });
 
@@ -198,7 +226,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "candidate_getCandidateWithCandidacyForLayout",
         candidateAutonomeRejectedFeasibilityStep,
       );
       stubQuery(
@@ -209,6 +237,11 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       stubQuery(
         req,
         "candidate_getCandidateWithCandidacyForDashboard",
+        candidateAutonomeRejectedFeasibilityStep,
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForHome",
         candidateAutonomeRejectedFeasibilityStep,
       );
     });

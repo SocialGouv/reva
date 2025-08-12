@@ -3,7 +3,6 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Certificates", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "candidate_getCandidateWithCandidacy", "candidate1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "Certifications", "certifications.json");
       stubQuery(req, "searchCertificationsForCandidate", "certifications.json");
@@ -14,16 +13,35 @@ context("Certificates", () => {
       );
       stubQuery(
         req,
+        "candidate_getCandidateWithCandidacyForHome",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
         "candidate_getCandidateWithCandidacyForDashboard",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate1.json",
+      );
+      stubQuery(
+        req,
+        "getCandidateWithCandidacyForCertification",
         "candidate1.json",
       );
     });
 
     cy.login();
 
-    cy.wait("@candidate_getCandidateWithCandidacy");
-
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
     cy.visit("/set-certification");
+    cy.wait("@getCandidateWithCandidacyForCertification");
     cy.wait("@searchCertificationsForCandidate");
   });
 
@@ -43,13 +61,13 @@ context("Certificates", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacy",
+        "getCandidateWithCandidacyForCertification",
         "candidate1-certification-titre-2-selected.json",
       );
     });
     cy.get('[data-test="submit-certification-button"]').click();
 
     cy.wait("@candidacy_certification_updateCertification");
-    cy.wait("@candidate_getCandidateWithCandidacy");
+    cy.wait("@candidate_getCandidateWithCandidacyForDashboard");
   });
 });

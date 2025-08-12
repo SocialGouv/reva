@@ -1,17 +1,16 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
 
-import { useCandidacy } from "@/components/candidacy/candidacy.context";
-
-export function BannerSummary() {
-  const { feasibility } = useCandidacy();
-  const sentToCertificationAuthorityAt = feasibility?.feasibilityFileSentAt;
-
-  if (sentToCertificationAuthorityAt) {
+export function BannerSummary({
+  feasibilitySentToCertificationAuthorityAt,
+}: {
+  feasibilitySentToCertificationAuthorityAt?: number | null;
+}) {
+  if (feasibilitySentToCertificationAuthorityAt) {
     return (
       <Alert
         description={`Dossier envoyé au certificateur le ${format(
-          sentToCertificationAuthorityAt,
+          feasibilitySentToCertificationAuthorityAt,
           "dd/MM/yyyy",
         )}`}
         severity="success"
