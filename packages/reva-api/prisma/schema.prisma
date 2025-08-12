@@ -79,11 +79,15 @@ model Certification {
   previousVersionCertificationId                    String?                                             @unique @map("previous_version_certification_id") @db.Uuid
   previousVersion                                   Certification?                                      @relation("replacement", fields: [previousVersionCertificationId], references: [id])
   nextVersion                                       Certification?                                      @relation("replacement")
-  competenceBlocs                                   CertificationCompetenceBloc[]
-  feasibilityFormat                                 FeasibilityFormat                                   @default(UPLOADED_PDF) @map("feasibility_format")
-  certificationAuthorityStructure                   CertificationAuthorityStructure?                    @relation(fields: [certificationAuthorityStructureId], references: [id])
-  certificationAuthorityStructureId                 String?                                             @map("certification_authority_structure_id") @db.Uuid
-  Candidacy                                         Candidacy[]
+  firstVersionCertificationId                       String                                              @map("first_version_certification_id") @db.Uuid
+  firstVersionCertification                         Certification?                                      @relation("first_version", fields: [firstVersionCertificationId], references: [id])
+  subsequentVersionsOfCertification                 Certification[]                                     @relation("first_version")
+
+  competenceBlocs                   CertificationCompetenceBloc[]
+  feasibilityFormat                 FeasibilityFormat                @default(UPLOADED_PDF) @map("feasibility_format")
+  certificationAuthorityStructure   CertificationAuthorityStructure? @relation(fields: [certificationAuthorityStructureId], references: [id])
+  certificationAuthorityStructureId String?                          @map("certification_authority_structure_id") @db.Uuid
+  Candidacy                         Candidacy[]
 
   rncpLabel             String?   @map("rncp_label") @db.VarChar(255)
   rncpLevel             Int?      @map("rncp_level")
