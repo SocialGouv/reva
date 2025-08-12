@@ -14,7 +14,6 @@ import { createOrganism } from "../database/organisms";
 import { CreateLieuAccueilInfoInput } from "../organism.types";
 
 import { assignMaisonMereAAPToOrganism } from "./assignMaisonMereAAPToOrganism";
-import { createOrUpdateInformationsCommerciales } from "./createOrUpdateInformationsCommerciales";
 import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereOnCCNByMaisonMereId } from "./getMaisonMereOnCCNByMaisonMereId";
@@ -85,6 +84,16 @@ export const createLieuAccueilInfo = async ({
       qualiopiCertificateExpiresAt: dateExpirationCertificationQualiopi,
       llToEarth,
       modaliteAccompagnement: "LIEU_ACCUEIL",
+      siteInternet: siteInternet ?? "",
+      nomPublic,
+      adresseCodePostal,
+      adresseVille,
+      adresseNumeroEtNomDeRue,
+      adresseInformationsComplementaires:
+        adresseInformationsComplementaires ?? "",
+      emailContact,
+      telephone,
+      conformeNormesAccessibilite,
       modaliteAccompagnementRenseigneeEtValide: true,
     });
 
@@ -95,22 +104,6 @@ export const createLieuAccueilInfo = async ({
     await assignMaisonMereAAPToOrganism({
       organismId: newOrganism.id,
       maisonMereAAPId: maisonMereAAP.id,
-    });
-
-    await createOrUpdateInformationsCommerciales({
-      organismId: newOrganism.id,
-      informationsCommerciales: {
-        siteInternet: siteInternet ?? "",
-        nomPublic,
-        adresseCodePostal,
-        adresseVille,
-        adresseNumeroEtNomDeRue,
-        adresseInformationsComplementaires:
-          adresseInformationsComplementaires ?? "",
-        emailContact,
-        telephone,
-        conformeNormesAccessibilite,
-      },
     });
 
     if (
