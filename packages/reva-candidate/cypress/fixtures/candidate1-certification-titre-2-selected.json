@@ -16,7 +16,8 @@
           "label": "Titre 2",
           "summary": "résumé 2",
           "codeRncp": "34692",
-          "status": "AVAILABLE"
+          "status": "AVAILABLE",
+          "isAapAvailable": true
         },
         "experiences": [],
         "goals": [],
