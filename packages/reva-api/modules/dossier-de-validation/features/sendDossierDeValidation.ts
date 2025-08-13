@@ -65,20 +65,13 @@ export const sendDossierDeValidation = async ({
     throw new Error("Le dossier de faisabilité n'est pas recevable");
   }
 
-  const validStatuses: CandidacyStatusStep[] =
-    candidacy.financeModule === "hors_plateforme"
-      ? [
-          "DOSSIER_FAISABILITE_RECEVABLE",
-          "DOSSIER_FAISABILITE_NON_RECEVABLE",
-          "DOSSIER_DE_VALIDATION_SIGNALE",
-          "DOSSIER_DE_VALIDATION_ENVOYE",
-        ]
-      : [
-          "DEMANDE_FINANCEMENT_ENVOYE",
-          "DEMANDE_PAIEMENT_ENVOYEE",
-          "DOSSIER_DE_VALIDATION_SIGNALE",
-          "DOSSIER_DE_VALIDATION_ENVOYE",
-        ];
+  const validStatuses: CandidacyStatusStep[] = [
+    "DOSSIER_FAISABILITE_RECEVABLE",
+    "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    "DOSSIER_DE_VALIDATION_SIGNALE",
+    "DOSSIER_DE_VALIDATION_ENVOYE",
+  ];
+
   if (!validStatuses.includes(candidacy.status)) {
     throw new Error(
       `Le statut de la candidature doit être ${validStatuses.join(" ou ")}`,

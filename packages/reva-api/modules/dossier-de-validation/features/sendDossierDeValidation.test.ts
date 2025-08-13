@@ -66,9 +66,9 @@ test("should validate upload of dossier de validation", async () => {
   const candidacy = await createCandidacyHelper({
     candidacyArgs: {
       certificationId: certification.id,
-      status: "DEMANDE_FINANCEMENT_ENVOYE",
+      status: "DOSSIER_FAISABILITE_RECEVABLE",
     },
-    candidacyActiveStatus: "DEMANDE_FINANCEMENT_ENVOYE",
+    candidacyActiveStatus: "DOSSIER_FAISABILITE_RECEVABLE",
   });
 
   const feasibility = await createFeasibilityUploadedPdfHelper({
@@ -109,7 +109,7 @@ test(`it should prevent sending again a DV when a DV is already PENDING`, async 
     candidacyArgs: {
       certificationId: certification.id,
     },
-    candidacyActiveStatus: "DEMANDE_FINANCEMENT_ENVOYE",
+    candidacyActiveStatus: "DOSSIER_FAISABILITE_RECEVABLE",
   });
 
   const feasibility = await createFeasibilityUploadedPdfHelper({
@@ -145,7 +145,7 @@ test(`it should prevent sending again a DV when a DV is already PENDING and jury
     candidacyArgs: {
       certificationId: certification.id,
     },
-    candidacyActiveStatus: "DEMANDE_FINANCEMENT_ENVOYE",
+    candidacyActiveStatus: "DOSSIER_FAISABILITE_RECEVABLE",
   });
 
   const feasibility = await createFeasibilityUploadedPdfHelper({
@@ -185,7 +185,7 @@ test(`it should prevent sending again a DV when a DV is already PENDING and when
     candidacyArgs: {
       certificationId: certification.id,
     },
-    candidacyActiveStatus: "DEMANDE_FINANCEMENT_ENVOYE",
+    candidacyActiveStatus: "DOSSIER_FAISABILITE_RECEVABLE",
   });
 
   const feasibility = await createFeasibilityUploadedPdfHelper({
@@ -234,7 +234,7 @@ test(`it should prevent sending again a DV when a DV is already PENDING and when
       candidacyArgs: {
         certificationId: certification.id,
       },
-      candidacyActiveStatus: "DEMANDE_FINANCEMENT_ENVOYE",
+      candidacyActiveStatus: "DOSSIER_FAISABILITE_RECEVABLE",
     });
 
     const feasibility = await createFeasibilityUploadedPdfHelper({
