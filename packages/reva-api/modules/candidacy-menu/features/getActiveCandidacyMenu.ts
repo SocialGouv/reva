@@ -268,10 +268,7 @@ export const getActiveCandidacyMenu = async ({
       candidacy.financeModule == "unifvae" ||
       candidacy.financeModule === "hors_plateforme";
 
-    const minumumStatusToShowJuryMenu =
-      candidacy.financeModule === "hors_plateforme"
-        ? "DOSSIER_FAISABILITE_RECEVABLE"
-        : "DEMANDE_FINANCEMENT_ENVOYE";
+    const minumumStatusToShowJuryMenu = "DOSSIER_FAISABILITE_RECEVABLE";
 
     const menuEntryStatus: CandidacyMenuEntryStatus = isStatusEqualOrAbove(
       minumumStatusToShowJuryMenu,
