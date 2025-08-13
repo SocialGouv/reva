@@ -1,4 +1,3 @@
-import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "@/prisma/client";
 
@@ -79,17 +78,6 @@ export const signalDossierDeValidationProblem = async ({
         decisionSentAt: new Date(),
       },
     });
-
-  const isDemandeDePaiementSent =
-    candidacy.status == "DEMANDE_PAIEMENT_ENVOYEE";
-
-  // If demandeDePaiementSent we can't update current candidacy status. We need to remove "DEMANDE_PAIEMENT_ENVOYEE" from candidacy.status to remove this check
-  if (!isDemandeDePaiementSent) {
-    await updateCandidacyStatus({
-      candidacyId: dossierDeValidation.candidacyId,
-      status: "DOSSIER_DE_VALIDATION_SIGNALE",
-    });
-  }
 
   const isAutonome = candidacy?.typeAccompagnement === "AUTONOME";
 

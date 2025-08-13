@@ -2,7 +2,6 @@ import { CandidacyStatusStep, FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
 import { getAccountById } from "@/modules/account/features/getAccount";
-import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { UploadedFile, uploadFileToS3 } from "@/modules/shared/file";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
@@ -196,17 +195,6 @@ export const sendDossierDeValidation = async ({
       certificationAuthority: true,
     },
   });
-
-  const isDemandeDePaiementSent =
-    candidacy.status == "DEMANDE_PAIEMENT_ENVOYEE";
-
-  // If demandeDePaiementSent we can't update current candidacy status. We need to remove "DEMANDE_PAIEMENT_ENVOYEE" from candidacy.status to remove this check
-  if (!isDemandeDePaiementSent) {
-    await updateCandidacyStatus({
-      candidacyId,
-      status: "DOSSIER_DE_VALIDATION_ENVOYE",
-    });
-  }
 
   // The candidate send a new DV and will be able to pass the jury again
   if (hasFailedJuryResult) {
