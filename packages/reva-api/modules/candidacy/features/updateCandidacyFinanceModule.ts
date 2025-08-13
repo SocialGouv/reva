@@ -1,5 +1,4 @@
 import { FinanceModule } from "@prisma/client";
-import { findLastIndex } from "lodash";
 
 import {
   CandidacyAuditLogUserInfo,
@@ -8,7 +7,6 @@ import {
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "./getCandidacy";
-import { updateCandidacyStatus } from "./updateCandidacyStatus";
 
 export const updateCandidacyFinanceModule = async ({
   candidacyId,
@@ -28,12 +26,6 @@ export const updateCandidacyFinanceModule = async ({
     if (!candidacy) {
       throw new Error(`Candidature non trouvée`);
     }
-    if (
-      candidacy.status === "DEMANDE_PAIEMENT_ENVOYEE" ||
-      candidacy.status === "DEMANDE_FINANCEMENT_ENVOYE"
-    ) {
-      await rollbackToPreviousStatus({ candidacyId });
-    }
   }
 
   const result = await prismaClient.candidacy.update({
@@ -49,39 +41,4 @@ export const updateCandidacyFinanceModule = async ({
   });
 
   return result;
-};
-
-const rollbackToPreviousStatus = async ({
-  candidacyId,
-}: {
-  candidacyId: string;
-}) => {
-  const candidacyWithSortedStatus = await prismaClient.candidacy.findUnique({
-    where: { id: candidacyId },
-    include: { candidacyStatuses: { orderBy: { createdAt: "asc" } } },
-  });
-
-  if (!candidacyWithSortedStatus) {
-    throw new Error(`Candidature non trouvée`);
-  }
-
-  const currentStatus = candidacyWithSortedStatus.status;
-
-  const currentStatusIndex = findLastIndex(
-    candidacyWithSortedStatus.candidacyStatuses,
-    (s) => s.status === currentStatus,
-  );
-
-  if (currentStatusIndex < 1) {
-    throw new Error(
-      `Impossible de revenir en arrière dans les statuts de la candidature`,
-    );
-  }
-  const previousStatus =
-    candidacyWithSortedStatus.candidacyStatuses[currentStatusIndex - 1];
-
-  await updateCandidacyStatus({
-    candidacyId,
-    status: previousStatus.status,
-  });
 };
