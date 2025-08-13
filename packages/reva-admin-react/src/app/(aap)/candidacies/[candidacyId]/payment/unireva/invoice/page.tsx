@@ -9,7 +9,6 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -33,8 +32,6 @@ const PaymentRequestUniRevaInvoicePage = () => {
   }>();
 
   const router = useRouter();
-
-  const { isFeatureActive } = useFeatureflipping();
 
   const { candidacy, getCandidacyStatus, createOrUpdatePaymentRequestUniReva } =
     usePaymentRequestUniRevaInvoicePage();

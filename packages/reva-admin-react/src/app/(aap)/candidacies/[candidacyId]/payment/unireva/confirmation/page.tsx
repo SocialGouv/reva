@@ -10,7 +10,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -41,8 +40,6 @@ const PaymentRequestUniRevaConfirmationPage = () => {
   const router = useRouter();
 
   const queryClient = useQueryClient();
-
-  const { isFeatureActive } = useFeatureflipping();
 
   const { candidacy, confirmPaymentRequestUniReva, getCandidacyStatus } =
     usePaymentRequestUniRevaConfirmationPage();

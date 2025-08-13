@@ -32,12 +32,6 @@ export const getStatusFromStatusFilter = (statusFilter: string) => {
     case "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON":
       status = "DOSSIER_DE_VALIDATION_SIGNALE";
       break;
-    case "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON":
-      status = "DEMANDE_FINANCEMENT_ENVOYE";
-      break;
-    case "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON":
-      status = "DEMANDE_PAIEMENT_ENVOYEE";
-      break;
     case "VALIDATION_HORS_ABANDON":
       status = "VALIDATION";
       break;
@@ -61,8 +55,6 @@ export const getWhereClauseFromStatusFilter = (
     case "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON":
     case "DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON":
     case "DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON":
-    case "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON":
-    case "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON":
     case "VALIDATION_HORS_ABANDON":
     case "PROJET_HORS_ABANDON": {
       const status = getStatusFromStatusFilter(statusFilter);
