@@ -234,7 +234,7 @@ export default function AttachmentsPage() {
       if (result.error) {
         throw new Error(result.error.graphQLErrors[0].message);
       }
-      successToast("Pièces jointes mises à jour avec succès");
+      successToast("Les pièces jointes ont été enregistrées");
       router.push(feasibilitySummaryUrl);
     } catch (e) {
       graphqlErrorToast(e);

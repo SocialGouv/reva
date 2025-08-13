@@ -88,7 +88,7 @@ export default function SwornStatementPage() {
       if (result.error) {
         throw new Error(result.error.graphQLErrors[0].message);
       }
-      successToast("Attestation sur l'honneur mise à jour avec succès");
+      successToast("L’attestation sur l’honneur a été enregistrée");
       router.push(`/candidacies/${candidacyId}/feasibility-aap`);
     } catch (e) {
       graphqlErrorToast(e);
