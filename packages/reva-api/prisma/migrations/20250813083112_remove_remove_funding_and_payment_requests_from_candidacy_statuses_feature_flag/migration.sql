@@ -1,0 +1,3 @@
+delete from features
+where
+    key = 'REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES';

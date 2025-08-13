@@ -1,6 +1,3 @@
-import { CandidacyStatusStep } from "@prisma/client";
-
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -10,24 +7,12 @@ import {
 
 import { CandidacyForMenu } from "./getCandidacyForMenu";
 import { menuUrlBuilder } from "./getMenuUrlBuilder";
-import { isCandidacyStatusEqualOrAboveGivenStatus } from "./isCandidacyStatusEqualOrAboveGivenStatus";
 
 export const getDroppedOutCandidacyMenu = async ({
   candidacy,
 }: {
   candidacy: CandidacyForMenu;
 }): Promise<CandidacyMenuEntry[]> => {
-  const activeCandidacyStatus = candidacy.status;
-
-  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
-    await isFeatureActiveForUser({
-      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
-    });
-
-  const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
-    activeCandidacyStatus as CandidacyStatusStep,
-  );
-
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
   const getDropOutMenuEntry = (): CandidacyMenuEntry => ({
@@ -87,24 +72,16 @@ export const getDroppedOutCandidacyMenu = async ({
 
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
-    if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-      // il faut qu'une demande de financement ait été faite pour débloquer la demande de paiement
-      if (
-        (candidacy.financeModule === "unireva" &&
-          candidacy.FundingRequest !== null) ||
-        (candidacy.financeModule === "unifvae" &&
-          candidacy.fundingRequestUnifvae !== null)
-      ) {
-        menuEntryStatus = "ACTIVE_WITHOUT_HINT";
-      }
-    } else {
-      if (isStatusEqualOrAbove("DEMANDE_FINANCEMENT_ENVOYE")) {
-        menuEntryStatus =
-          activeCandidacyStatus === "DEMANDE_FINANCEMENT_ENVOYE"
-            ? "ACTIVE_WITH_EDIT_HINT"
-            : "ACTIVE_WITHOUT_HINT";
-      }
+    // il faut qu'une demande de financement ait été faite pour débloquer la demande de paiement
+    if (
+      (candidacy.financeModule === "unireva" &&
+        candidacy.FundingRequest !== null) ||
+      (candidacy.financeModule === "unifvae" &&
+        candidacy.fundingRequestUnifvae !== null)
+    ) {
+      menuEntryStatus = "ACTIVE_WITHOUT_HINT";
     }
+
     const isCandidacyUniReva = candidacy.financeModule === "unireva";
 
     const paymentPageUrl = isCandidacyUniReva

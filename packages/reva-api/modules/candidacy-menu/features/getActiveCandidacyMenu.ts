@@ -1,6 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -28,11 +27,6 @@ export const getActiveCandidacyMenu = async ({
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
   const hasAlreadyAppointment = !!candidacy.firstAppointmentOccuredAt;
-
-  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
-    await isFeatureActiveForUser({
-      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
-    });
 
   const getMeetingsMenuEntry = (): CandidacyMenuEntry => ({
     label: "Rendez-vous pédagogique",
@@ -183,18 +177,11 @@ export const getActiveCandidacyMenu = async ({
           "DOSSIER_DE_VALIDATION_SIGNALE",
         );
       } else {
-        if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-          editableStatus.push(
-            "DOSSIER_FAISABILITE_RECEVABLE",
-            "DOSSIER_FAISABILITE_NON_RECEVABLE",
-            "DOSSIER_DE_VALIDATION_SIGNALE",
-          );
-        } else {
-          editableStatus.push(
-            "DOSSIER_DE_VALIDATION_SIGNALE",
-            "DEMANDE_FINANCEMENT_ENVOYE",
-          );
-        }
+        editableStatus.push(
+          "DOSSIER_FAISABILITE_RECEVABLE",
+          "DOSSIER_FAISABILITE_NON_RECEVABLE",
+          "DOSSIER_DE_VALIDATION_SIGNALE",
+        );
       }
 
       const isCandidacyStatusAdvancedEnoughToEditDossierDeValidation =
@@ -233,44 +220,29 @@ export const getActiveCandidacyMenu = async ({
     const activeFeasibility = candidacy.Feasibility.find((f) => f.isActive);
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
 
-    if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-      // cas d'une candidature unifvae avec feasibility non rejetée (cas "standard")
-      if (
-        candidacy.financeModule === "unifvae" &&
-        activeFeasibility?.decision !== "REJECTED"
-      ) {
-        // Pour débloquer la demande de paiement, il faut soit être au-dessus du statut "DOSSIER_DE_VALIDATION_ENVOYE" ou au dessus
-        if (isStatusEqualOrAbove("DOSSIER_DE_VALIDATION_ENVOYE")) {
-          menuEntryStatus =
-            activeCandidacyStatus === "DOSSIER_DE_VALIDATION_ENVOYE"
-              ? "ACTIVE_WITH_EDIT_HINT"
-              : "ACTIVE_WITHOUT_HINT";
-        }
-      }
-      // cas d'une candidature unireva ou d'une candidature unifvae avec feasibility rejetée
-      else {
-        // il faut qu'une demande de financement ait été faite pour débloquer la demande de paiement
-        if (
-          (candidacy.financeModule === "unireva" &&
-            candidacy.FundingRequest !== null) ||
-          (candidacy.financeModule === "unifvae" &&
-            candidacy.fundingRequestUnifvae !== null)
-        ) {
-          menuEntryStatus = "ACTIVE_WITHOUT_HINT";
-        }
-      }
-    } else {
-      const minimumStatusForPaymentRequest: CandidacyStatusStep =
-        candidacy.financeModule !== "unireva" &&
-        activeFeasibility?.decision !== "REJECTED"
-          ? "DOSSIER_DE_VALIDATION_ENVOYE"
-          : "DEMANDE_FINANCEMENT_ENVOYE";
-
-      if (isStatusEqualOrAbove(minimumStatusForPaymentRequest)) {
+    // cas d'une candidature unifvae avec feasibility non rejetée (cas "standard")
+    if (
+      candidacy.financeModule === "unifvae" &&
+      activeFeasibility?.decision !== "REJECTED"
+    ) {
+      // Pour débloquer la demande de paiement, il faut soit être au-dessus du statut "DOSSIER_DE_VALIDATION_ENVOYE" ou au dessus
+      if (isStatusEqualOrAbove("DOSSIER_DE_VALIDATION_ENVOYE")) {
         menuEntryStatus =
-          activeCandidacyStatus === minimumStatusForPaymentRequest
+          activeCandidacyStatus === "DOSSIER_DE_VALIDATION_ENVOYE"
             ? "ACTIVE_WITH_EDIT_HINT"
             : "ACTIVE_WITHOUT_HINT";
+      }
+    }
+    // cas d'une candidature unireva ou d'une candidature unifvae avec feasibility rejetée
+    else {
+      // il faut qu'une demande de financement ait été faite pour débloquer la demande de paiement
+      if (
+        (candidacy.financeModule === "unireva" &&
+          candidacy.FundingRequest !== null) ||
+        (candidacy.financeModule === "unifvae" &&
+          candidacy.fundingRequestUnifvae !== null)
+      ) {
+        menuEntryStatus = "ACTIVE_WITHOUT_HINT";
       }
     }
 

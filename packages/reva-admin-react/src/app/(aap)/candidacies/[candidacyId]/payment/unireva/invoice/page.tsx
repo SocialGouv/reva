@@ -36,11 +36,6 @@ const PaymentRequestUniRevaInvoicePage = () => {
 
   const { isFeatureActive } = useFeatureflipping();
 
-  const isFundingAndPaymentRequestsFromCandidacyStatusesRemoved =
-    isFeatureActive(
-      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
-    );
-
   const { candidacy, getCandidacyStatus, createOrUpdatePaymentRequestUniReva } =
     usePaymentRequestUniRevaInvoicePage();
 
@@ -87,7 +82,6 @@ const PaymentRequestUniRevaInvoicePage = () => {
   );
 
   const paymentRequestAlreadySent = isCandidacyPaymentRequestAlreadySent({
-    isFundingAndPaymentRequestsFromCandidacyStatusesRemoved,
     candidacy,
   });
 

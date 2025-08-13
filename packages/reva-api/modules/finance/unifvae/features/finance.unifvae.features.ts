@@ -3,7 +3,6 @@ import { isAfter, isBefore, sub } from "date-fns";
 
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { UploadedFile } from "@/modules/shared/file";
 import { prismaClient } from "@/prisma/client";
 
@@ -50,11 +49,6 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     },
   });
 
-  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
-    await isFeatureActiveForUser({
-      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
-    });
-
   if (!candidacy) {
     throw new Error(
       "Impossible de créer la demande de paiement. La candidature n'a pas été trouvée",
@@ -90,18 +84,10 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       candidacy?.Feasibility?.find((f) => f.isActive)?.decision === "REJECTED";
     // Either the feasibility has been rejected and thus the funding request has been sent ...
     if (feasibilityRejected) {
-      if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-        if (!isFundingRequestSent) {
-          throw new Error(
-            "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
-          );
-        }
-      } else {
-        if (activeCandidacyStatus !== "DEMANDE_FINANCEMENT_ENVOYE") {
-          throw new Error(
-            "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée ",
-          );
-        }
+      if (!isFundingRequestSent) {
+        throw new Error(
+          "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
+        );
       }
     }
     // ... Or the feasibility file is not rejected and the active candidacy status must be "DOSSIER_DE_VALIDATION_ENVOYE"
@@ -114,23 +100,12 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   // If the candidate has dropped out ...
   else {
     // If the candidate has dropped out we ensure that the funding request has been sent
-    if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-      if (!isFundingRequestSent) {
-        throw new Error(
-          "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
-        );
-      }
-    } else {
-      if (
-        !candidacy.candidacyStatuses?.some(
-          (s) => s.status === "DEMANDE_FINANCEMENT_ENVOYE",
-        )
-      ) {
-        throw new Error(
-          "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
-        );
-      }
+    if (!isFundingRequestSent) {
+      throw new Error(
+        "Impossible de créer la demande de paiement. La demande de financement n'a pas été envoyée",
+      );
     }
+
     // If the candidate has dropped out for less than 4 months and no proof of dropout has been received by the france vae admin
     // and the candidate has not confirmed his dropout, we prevent the payment request creation
     if (
@@ -161,27 +136,14 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   let fundingRequestSentBefore20231219,
     fundingRequestSentBefore20240602 = false;
 
-  if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-    if (fundingRequestSentAt) {
-      fundingRequestSentBefore20231219 = isBefore(
-        fundingRequestSentAt,
-        new Date(2023, 11, 19),
-      );
-      fundingRequestSentBefore20240602 = isBefore(
-        fundingRequestSentAt,
-        new Date(2024, 5, 2),
-      );
-    }
-  } else {
-    fundingRequestSentBefore20231219 = candidacy.candidacyStatuses.some(
-      (cs) =>
-        cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
-        isBefore(cs.createdAt, new Date(2023, 11, 19)),
+  if (fundingRequestSentAt) {
+    fundingRequestSentBefore20231219 = isBefore(
+      fundingRequestSentAt,
+      new Date(2023, 11, 19),
     );
-    fundingRequestSentBefore20240602 = candidacy.candidacyStatuses.some(
-      (cs) =>
-        cs.status === "DEMANDE_FINANCEMENT_ENVOYE" &&
-        isBefore(cs.createdAt, new Date(2024, 5, 2)),
+    fundingRequestSentBefore20240602 = isBefore(
+      fundingRequestSentAt,
+      new Date(2024, 5, 2),
     );
   }
 

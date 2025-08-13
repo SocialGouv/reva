@@ -2,7 +2,6 @@ import { FundingRequest } from "@prisma/client";
 
 import { getCandidacy } from "@/modules/candidacy/features/getCandidacy";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { getOrganismById } from "@/modules/organism/features/getOrganism";
 import { prismaClient } from "@/prisma/client";
 
@@ -18,21 +17,9 @@ export const confirmPaymentRequest = async ({
   candidacyId: string;
 }) => {
   const candidacy = await getCandidacy({ candidacyId });
-  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
-    await isFeatureActiveForUser({
-      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
-    });
 
   if (!candidacy) {
     throw new Error("Candidature non trouvée");
-  }
-
-  if (!removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-    if (candidacy.status !== "DEMANDE_FINANCEMENT_ENVOYE") {
-      throw new Error(
-        `La demande de paiement de la candidature ${candidacyId} ne peut être confirmée: statut invalide.`,
-      );
-    }
   }
 
   if (!candidacy.organismId) {

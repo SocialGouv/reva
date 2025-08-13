@@ -45,11 +45,6 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     getGender,
   } = usePaymentRequestUniFvaeInvoicePage();
 
-  const isFundingAndPaymentRequestsFromCandidacyStatusesRemoved =
-    isFeatureActive(
-      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
-    );
-
   const defaultValues = useMemo(
     () => ({
       invoiceNumber: candidacy?.paymentRequestUnifvae?.invoiceNumber,
@@ -84,7 +79,6 @@ const PaymentRequestUniFvaeInvoicePage = () => {
   );
 
   const paymentRequestAlreadySent = isCandidacyPaymentRequestAlreadySent({
-    isFundingAndPaymentRequestsFromCandidacyStatusesRemoved,
     candidacy,
   });
 

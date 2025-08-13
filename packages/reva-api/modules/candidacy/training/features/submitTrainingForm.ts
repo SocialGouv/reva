@@ -5,7 +5,6 @@ import {
   logCandidacyAuditEvent,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidateById } from "@/modules/candidate/features/getCandidateById";
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { getFundingRequestUnifvaeFromCandidacyId } from "@/modules/finance/unifvae/features/finance.unifvae.features";
 import { getFundingRequestByCandidacyId } from "@/modules/finance/unireva/features/getFundingRequestByCandidacyId";
 import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "@/modules/referential/referential.types";
@@ -51,44 +50,26 @@ export const submitTraining = async ({
     throw new Error("La candidature n'a pas été trouvée");
   }
 
-  const removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive =
-    await isFeatureActiveForUser({
-      feature: "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
+  let existingFundingRequest = false;
+  if (candidacy.financeModule === "unifvae") {
+    const fundingRequestUnifvae =
+      await getFundingRequestUnifvaeFromCandidacyId(candidacyId);
+    if (fundingRequestUnifvae) {
+      existingFundingRequest = true;
+    }
+  }
+  if (candidacy.financeModule === "unireva") {
+    const fundingRequest = await getFundingRequestByCandidacyId({
+      candidacyId,
     });
-
-  if (removeFundingAndPaymentRequestsFromCandidacyStatusesFeatureActive) {
-    let existingFundingRequest = false;
-    if (candidacy.financeModule === "unifvae") {
-      const fundingRequestUnifvae =
-        await getFundingRequestUnifvaeFromCandidacyId(candidacyId);
-      if (fundingRequestUnifvae) {
-        existingFundingRequest = true;
-      }
+    if (fundingRequest) {
+      existingFundingRequest = true;
     }
-    if (candidacy.financeModule === "unireva") {
-      const fundingRequest = await getFundingRequestByCandidacyId({
-        candidacyId,
-      });
-      if (fundingRequest) {
-        existingFundingRequest = true;
-      }
-    }
-    if (existingFundingRequest) {
-      throw new Error(
-        `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`,
-      );
-    }
-  } else {
-    if (
-      await existsCandidacyHavingHadStatus({
-        candidacyId,
-        status: "DEMANDE_FINANCEMENT_ENVOYE",
-      })
-    ) {
-      throw new Error(
-        `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`,
-      );
-    }
+  }
+  if (existingFundingRequest) {
+    throw new Error(
+      `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`,
+    );
   }
 
   if (

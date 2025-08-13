@@ -44,11 +44,6 @@ const PaymentRequestUniRevaConfirmationPage = () => {
 
   const { isFeatureActive } = useFeatureflipping();
 
-  const isFundingAndPaymentRequestsFromCandidacyStatusesRemoved =
-    isFeatureActive(
-      "REMOVE_FUNDING_AND_PAYMENT_REQUESTS_FROM_CANDIDACY_STATUSES",
-    );
-
   const { candidacy, confirmPaymentRequestUniReva, getCandidacyStatus } =
     usePaymentRequestUniRevaConfirmationPage();
 
@@ -84,7 +79,6 @@ const PaymentRequestUniRevaConfirmationPage = () => {
   }, [handleReset]);
 
   const paymentRequestAlreadySent = isCandidacyPaymentRequestAlreadySent({
-    isFundingAndPaymentRequestsFromCandidacyStatusesRemoved,
     candidacy,
   });
 
