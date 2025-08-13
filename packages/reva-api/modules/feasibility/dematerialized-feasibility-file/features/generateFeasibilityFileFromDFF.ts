@@ -131,7 +131,11 @@ export const generateFeasibilityFileFromDFF = async (params: Params) => {
   const { certification } = candidacy;
 
   if (certification) {
-    addCertification(doc, { certification, dematerializedFeasibilityFile });
+    addCertification(doc, {
+      certification,
+      dematerializedFeasibilityFile,
+      isCertificationPartial: candidacy.isCertificationPartial,
+    });
   }
 
   const { experiences } = candidacy;
@@ -527,9 +531,14 @@ const addCertification = (
       dffCertificationCompetenceDetails: DFFCertificationCompetenceDetails[];
       prerequisites: DFFPrerequisite[];
     };
+    isCertificationPartial: boolean | null;
   },
 ) => {
-  const { certification, dematerializedFeasibilityFile } = params;
+  const {
+    certification,
+    dematerializedFeasibilityFile,
+    isCertificationPartial,
+  } = params;
 
   doc
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
@@ -614,6 +623,10 @@ const addCertification = (
       });
   }
 
+  const isCertificationPartialLabel = isCertificationPartial
+    ? "Un ou plusieurs bloc(s) de compétences de la certification"
+    : "La certification dans sa totalité";
+
   doc
     .font("assets/fonts/Marianne/Marianne-Regular.otf")
     .fontSize(12)
@@ -633,7 +646,7 @@ const addCertification = (
             borderColor: "#6a6af4",
             backgroundColor: "#eeeeee",
             padding: "16px 24px",
-            text: "Un ou plusieurs bloc(s) de compétences de la certification",
+            text: isCertificationPartialLabel,
           },
         ],
       ],
