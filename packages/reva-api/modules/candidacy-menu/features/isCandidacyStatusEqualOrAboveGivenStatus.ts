@@ -32,14 +32,10 @@ const statusToProgressPosition = (status: CandidacyStatusStep) => {
       return 8;
     case "DOSSIER_FAISABILITE_NON_RECEVABLE":
       return 8;
-    case "DEMANDE_FINANCEMENT_ENVOYE":
-      return 9;
     case "DOSSIER_DE_VALIDATION_SIGNALE":
-      return 10;
+      return 9;
     case "DOSSIER_DE_VALIDATION_ENVOYE":
-      return 11;
-    case "DEMANDE_PAIEMENT_ENVOYEE":
-      return 12;
+      return 10;
     default:
       return -1;
   }
