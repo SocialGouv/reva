@@ -5,10 +5,12 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
 
@@ -22,8 +24,12 @@ const typeAccompagnementWarningModal = createModal({
 });
 
 export default function ChooseTypeAccompagnementPage() {
-  const { typeAccompagnement, queryStatus, updateTypeAccompagnement } =
-    useTypeAccompagnementPage();
+  const {
+    typeAccompagnement,
+    queryStatus,
+    updateTypeAccompagnement,
+    isAapAvailable,
+  } = useTypeAccompagnementPage();
 
   const openTypeAccompagnementWarningModal = () =>
     typeAccompagnementWarningModal.open();
@@ -55,7 +61,7 @@ export default function ChooseTypeAccompagnementPage() {
           },
         ]}
       />
-      <h1 className="mt-8">Modalités de parcours</h1>
+      <h1 className="mt-4 mb-0">Modalités de parcours</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
         Aujourd’hui, il existe 2 manières de réaliser un parcours VAE : en
@@ -69,6 +75,7 @@ export default function ChooseTypeAccompagnementPage() {
           openTypeAccompagnementWarningModal={
             openTypeAccompagnementWarningModal
           }
+          isAapAvailable={isAapAvailable}
         />
       )}
     </PageLayout>
@@ -79,16 +86,18 @@ const Form = ({
   defaultValues,
   onSubmit,
   openTypeAccompagnementWarningModal,
+  isAapAvailable,
 }: {
   defaultValues: { typeAccompagnement: TypeAccompagnement };
   onSubmit: (data: { typeAccompagnement: TypeAccompagnement }) => Promise<void>;
   openTypeAccompagnementWarningModal: () => void;
+  isAapAvailable?: boolean;
 }) => {
   const [typeAccompagnement, setTypeAccompagnement] = useState(
     defaultValues.typeAccompagnement,
   );
 
-  const disabled = typeAccompagnement == defaultValues.typeAccompagnement;
+  const router = useRouter();
 
   return (
     <>
@@ -99,22 +108,36 @@ const Form = ({
           onSubmit({ typeAccompagnement });
         }}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
           <fieldset>
             <RadioButtons
               legend="Que souhaitez-vous faire pour ce parcours ? "
               options={[
                 {
                   label: "Je souhaite réaliser ma VAE avec un accompagnateur",
+                  illustration: PICTOGRAMS.humanCooperation,
+                  hintText:
+                    typeAccompagnement === "ACCOMPAGNE" ? "Choix actuel" : "",
                   nativeInputProps: {
                     value: "ACCOMPAGNE",
                     className: "type-accompagnement-accompagne-radio-button",
                     checked: typeAccompagnement === "ACCOMPAGNE",
                     onChange: () => setTypeAccompagnement("ACCOMPAGNE"),
+                    disabled: !isAapAvailable,
                   },
                 },
                 {
                   label: "Je souhaite réaliser ma VAE en toute autonomie",
+                  illustration: (
+                    <Image
+                      src="/candidat/images/pictograms/self-learning.svg"
+                      width={60}
+                      height={60}
+                      alt="pictogramme représentant l'apprentissage autonome"
+                    />
+                  ),
+                  hintText:
+                    typeAccompagnement === "AUTONOME" ? "Choix actuel" : "",
                   nativeInputProps: {
                     value: "AUTONOME",
                     className: "type-accompagnement-autonome-radio-button",
@@ -125,27 +148,42 @@ const Form = ({
               ]}
             />
           </fieldset>
-          <CallOut title="À quoi sert un accompagnateur ?">
-            <p className="mt-2">
-              C’est un expert de la VAE qui vous aide à chaque grande étape de
-              votre parcours : rédaction du dossier de faisabilité,
-              communication avec le certificateur, préparation au passage devant
-              le jury, etc.
-            </p>
-            <p className="mt-4">
-              <b>Bon à savoir : </b>Ces acompagnements peuvent être financés par
-              votre{" "}
-              <a
-                href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
-                target="_blank"
-              >
-                Compte Personnel de Formation
-              </a>
-              . À noter : si vous faites votre parcours en autonomie, les frais
-              de passage devant le jury et les formations complémentaires seront
-              entièrement à votre charge.
-            </p>
-          </CallOut>
+          {isAapAvailable ? (
+            <CallOut title="À quoi sert un accompagnateur ?">
+              <p className="mt-2">
+                C’est un expert de la VAE qui vous aide à chaque grande étape de
+                votre parcours : rédaction du dossier de faisabilité,
+                communication avec le certificateur, préparation au passage
+                devant le jury, etc.
+              </p>
+              <p className="mt-4">
+                <b>Bon à savoir : </b>Ces acompagnements peuvent être financés
+                par votre{" "}
+                <a
+                  href="https://www.moncompteformation.gouv.fr/espace-public/consulter-mes-droits-formation"
+                  target="_blank"
+                >
+                  Compte Personnel de Formation
+                </a>
+                . À noter : si vous faites votre parcours en autonomie, les
+                frais de passage devant le jury et les formations
+                complémentaires seront entièrement à votre charge.
+              </p>
+            </CallOut>
+          ) : (
+            <CallOut title="Ce diplôme se réalise en autonomie">
+              <p className="mt-2">
+                Si vous préférez être accompagné, vous pouvez contacter le
+                support pour qu’un accompagnateur prenne en charge ce diplôme.
+                Sinon, il reste également la possibilité de choisir un autre
+                diplôme !
+              </p>
+              <p className="mt-4">
+                <b>Bon à savoir : </b>Les frais de passage devant le jury et les
+                formations complémentaires seront entièrement à votre charge.
+              </p>
+            </CallOut>
+          )}
         </div>
         <div className="mt-8 flex flex-col md:flex-row gap-4">
           <Button priority="tertiary" linkProps={{ href: "/" }}>
@@ -155,9 +193,12 @@ const Form = ({
           <Button
             className="md:ml-auto"
             data-test="submit-type-accompagnement-form-button"
-            disabled={disabled}
             onClick={() => {
-              openTypeAccompagnementWarningModal();
+              if (typeAccompagnement == defaultValues.typeAccompagnement) {
+                return router.push("/");
+              } else {
+                openTypeAccompagnementWarningModal();
+              }
             }}
             type="button"
           >

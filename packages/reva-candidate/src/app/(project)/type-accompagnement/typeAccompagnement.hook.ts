@@ -10,6 +10,9 @@ const getCandidateQuery = graphql(`
     candidate_getCandidateWithCandidacy {
       id
       candidacy {
+        certification {
+          isAapAvailable
+        }
         id
         typeAccompagnement
       }
@@ -56,6 +59,12 @@ export const useTypeAccompagnementPage = () => {
   const candidacy =
     getCandidateResponse?.candidate_getCandidateWithCandidacy?.candidacy;
   const typeAccompagnement = candidacy?.typeAccompagnement;
+  const isAapAvailable = candidacy?.certification?.isAapAvailable;
 
-  return { typeAccompagnement, queryStatus, updateTypeAccompagnement };
+  return {
+    typeAccompagnement,
+    queryStatus,
+    updateTypeAccompagnement,
+    isAapAvailable,
+  };
 };
