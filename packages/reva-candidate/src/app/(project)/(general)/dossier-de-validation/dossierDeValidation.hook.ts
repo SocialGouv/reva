@@ -15,13 +15,6 @@ const getCandidateQuery = graphql(`
       candidacy {
         id
         readyForJuryEstimatedAt
-        feasibility {
-          certificationAuthority {
-            label
-            contactFullName
-            contactEmail
-          }
-        }
         activeDossierDeValidation {
           id
           decision
@@ -91,8 +84,6 @@ export const useDossierDeValidationPage = () => {
     getCandidateResponse?.candidate_getCandidateWithCandidacy?.candidacy;
   const readyForJuryEstimatedAt = candidacy?.readyForJuryEstimatedAt;
 
-  const certificationAuthority = candidacy?.feasibility?.certificationAuthority;
-
   const dossierDeValidation = candidacy?.activeDossierDeValidation;
 
   const dossierDeValidationProblems =
@@ -161,7 +152,6 @@ export const useDossierDeValidationPage = () => {
 
   return {
     readyForJuryEstimatedAt,
-    certificationAuthority,
     dossierDeValidation,
     dossierDeValidationProblems,
     queryStatus,

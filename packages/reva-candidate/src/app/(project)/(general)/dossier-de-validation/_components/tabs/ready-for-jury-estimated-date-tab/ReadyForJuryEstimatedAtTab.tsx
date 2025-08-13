@@ -5,15 +5,11 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { isValid, toDate } from "date-fns";
 import { useState } from "react";
 
-import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
-
 export const ReadyForJuryEstimatedDateTab = ({
   defaultValues,
-  certificationAuthorityInfo,
   onSubmit,
 }: {
   defaultValues?: { readyForJuryEstimatedAt?: Date };
-  certificationAuthorityInfo: { name: string; email: string; label: string };
   onSubmit?: (data: { readyForJuryEstimatedAt: Date }) => void;
 }) => {
   const [readyForJuryEstimatedAt, setReadyForJuryEstimatedAt] = useState(
@@ -63,7 +59,6 @@ export const ReadyForJuryEstimatedDateTab = ({
           Valider
         </Button>
       </form>
-      <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 "use client";
 
 import Button from "@codegouvfr/react-dsfr/Button";
-import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Download from "@codegouvfr/react-dsfr/Download";
 import { GraphQLError } from "graphql";
@@ -68,8 +67,6 @@ export default function ValidateFeasibility() {
   if (!candidacy) {
     return null;
   }
-
-  const organism = candidacy?.organism;
 
   if (!dematerializedFeasibilityFile) {
     redirect("/");
@@ -154,19 +151,6 @@ export default function ValidateFeasibility() {
                 Demandez à votre accompagnateur de le faire pour vous.
               </p>
             </div>
-
-            <CallOut
-              className="min-h-[200px] flex justify-end flex-col gap-2 flex-[1]"
-              title="Comment contacter mon accompagnateur ?"
-            >
-              <>
-                <span>{organism?.label}</span>
-                <br />
-                <span>{organism?.contactAdministrativeEmail}</span>
-                <br />
-                <span>{organism?.contactAdministrativePhone}</span>
-              </>
-            </CallOut>
           </div>
         </div>
 

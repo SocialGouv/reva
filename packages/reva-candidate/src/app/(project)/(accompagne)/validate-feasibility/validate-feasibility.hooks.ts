@@ -76,11 +76,6 @@ const GET_CANDIDATE_WITH_CANDIDACY_FOR_VALIDATE_FEASIBILITY = graphql(`
         individualHourCount
         collectiveHourCount
         isCertificationPartial
-        organism {
-          label
-          contactAdministrativeEmail
-          contactAdministrativePhone
-        }
         feasibility {
           feasibilityFileSentAt
           dematerializedFeasibilityFile {

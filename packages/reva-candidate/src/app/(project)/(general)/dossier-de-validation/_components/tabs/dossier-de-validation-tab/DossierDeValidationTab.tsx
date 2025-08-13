@@ -10,8 +10,6 @@ import { z } from "zod";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 
-import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
-
 const dossierDeValidationSchema = z.object({
   dossierDeValidationCheck1: z.literal(true, {
     errorMap: () => ({
@@ -39,12 +37,10 @@ export type DossierDeValidationFormData = z.infer<
 >;
 
 export const DossierDeValidationTab = ({
-  certificationAuthorityInfo,
   dossierDeValidationIncomplete,
   dossierDeValidationProblems,
   onSubmit,
 }: {
-  certificationAuthorityInfo: { name: string; email: string; label: string };
   dossierDeValidationIncomplete?: boolean;
   dossierDeValidationProblems: {
     decisionSentAt: Date;
@@ -104,7 +100,6 @@ export const DossierDeValidationTab = ({
           }
         />
       )}
-      <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />
       {dossierDeValidationIncomplete && (
         <>
           <ul className="flex flex-col gap-8 pl-0">

@@ -2,14 +2,10 @@
 
 import { format } from "date-fns";
 
-import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
-
 export const ReadOnlyReadyForJuryEstimatedDateTab = ({
   readyForJuryEstimatedAt,
-  certificationAuthorityInfo,
 }: {
   readyForJuryEstimatedAt?: Date;
-  certificationAuthorityInfo: { name: string; email: string; label: string };
 }) => (
   <div className="flex flex-col">
     <p>
@@ -27,7 +23,5 @@ export const ReadOnlyReadyForJuryEstimatedDateTab = ({
           : ""}
       </dd>
     </dl>
-
-    <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />
   </div>
 );

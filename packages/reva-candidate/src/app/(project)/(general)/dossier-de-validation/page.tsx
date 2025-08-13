@@ -30,7 +30,6 @@ const failedJuryResults: JuryResult[] = [
 export default function DossierDeValidationPag() {
   const {
     readyForJuryEstimatedAt,
-    certificationAuthority,
     dossierDeValidation,
     dossierDeValidationProblems,
     updateReadyForJuryEstimatedAt,
@@ -104,11 +103,6 @@ export default function DossierDeValidationPag() {
                           ? toDate(readyForJuryEstimatedAt)
                           : undefined
                       }
-                      certificationAuthorityInfo={{
-                        label: certificationAuthority?.label || "",
-                        email: certificationAuthority?.contactEmail || "",
-                        name: certificationAuthority?.contactFullName || "",
-                      }}
                     />
                   ),
                 },
@@ -130,11 +124,6 @@ export default function DossierDeValidationPag() {
                       dossierDeValidationOtherFiles={
                         dossierDeValidation.dossierDeValidationOtherFiles
                       }
-                      certificationAuthorityInfo={{
-                        label: certificationAuthority?.label || "",
-                        email: certificationAuthority?.contactEmail || "",
-                        name: certificationAuthority?.contactFullName || "",
-                      }}
                     />
                   ),
                 },
@@ -153,11 +142,6 @@ export default function DossierDeValidationPag() {
                           ? toDate(readyForJuryEstimatedAt)
                           : undefined,
                       }}
-                      certificationAuthorityInfo={{
-                        label: certificationAuthority?.label || "",
-                        email: certificationAuthority?.contactEmail || "",
-                        name: certificationAuthority?.contactFullName || "",
-                      }}
                       onSubmit={handleReadyForJuryEstimatedDateFormSubmit}
                     />
                   ),
@@ -167,11 +151,6 @@ export default function DossierDeValidationPag() {
                   isDefault: !!readyForJuryEstimatedAt,
                   content: (
                     <DossierDeValidationTab
-                      certificationAuthorityInfo={{
-                        label: certificationAuthority?.label || "",
-                        email: certificationAuthority?.contactEmail || "",
-                        name: certificationAuthority?.contactFullName || "",
-                      }}
                       dossierDeValidationIncomplete={
                         dossierDeValidation?.decision === "INCOMPLETE"
                       }

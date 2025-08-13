@@ -3,20 +3,16 @@ import { format } from "date-fns";
 
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
 
-import { CertificationAuthorityInfoCallout } from "../../certification-authority-info-callout/CertificationAuthorityInfoCallout";
-
 interface FilePreview {
   name: string;
   previewUrl?: string | null;
 }
 
 export const ReadOnlyDossierDeValidationTab = ({
-  certificationAuthorityInfo,
   dossierDeValidationSentAt,
   dossierDeValidationFile,
   dossierDeValidationOtherFiles,
 }: {
-  certificationAuthorityInfo: { name: string; email: string; label: string };
   dossierDeValidationSentAt?: Date;
   dossierDeValidationFile?: FilePreview;
   dossierDeValidationOtherFiles: FilePreview[];
@@ -30,8 +26,6 @@ export const ReadOnlyDossierDeValidationTab = ({
         className="mt-8"
         description="Le contenu reste consultable. Si vous souhaitez le modifier, contactez votre certificateur : lui seul peut rouvrir l’envoi du dossier de validation avant le passage en jury"
       />
-
-      <CertificationAuthorityInfoCallout {...certificationAuthorityInfo} />
 
       <h2>Contenu du dossier</h2>
       {dossierDeValidationFile && (
