@@ -1,7 +1,6 @@
 import { FundingRequest } from "@prisma/client";
 
 import { getCandidacy } from "@/modules/candidacy/features/getCandidacy";
-import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { getOrganismById } from "@/modules/organism/features/getOrganism";
 import { prismaClient } from "@/prisma/client";
 
@@ -54,11 +53,6 @@ export const confirmPaymentRequest = async ({
   await prismaClient.paymentRequest.update({
     where: { id: paymentRequest.id },
     data: { confirmedAt: new Date() },
-  });
-
-  await updateCandidacyStatus({
-    candidacyId: candidacyId,
-    status: "DEMANDE_PAIEMENT_ENVOYEE",
   });
 
   return candidacy;

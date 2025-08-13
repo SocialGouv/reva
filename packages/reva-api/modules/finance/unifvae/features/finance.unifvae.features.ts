@@ -1,13 +1,11 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { isAfter, isBefore, sub } from "date-fns";
 
-import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { UploadedFile } from "@/modules/shared/file";
 import { prismaClient } from "@/prisma/client";
 
 import { applyBusinessValidationRules } from "../validation";
-
 export const getFundingRequestUnifvaeFromCandidacyId = async (
   candidacyId: string,
 ) =>
@@ -349,11 +347,6 @@ const confirmPaymentRequestUnifvae = async ({
   await prismaClient.paymentRequestUnifvae.update({
     where: { id: paymentRequest.id },
     data: { confirmedAt: new Date() },
-  });
-
-  await updateCandidacyStatus({
-    candidacyId,
-    status: "DEMANDE_PAIEMENT_ENVOYEE",
   });
 
   await logCandidacyAuditEvent({
