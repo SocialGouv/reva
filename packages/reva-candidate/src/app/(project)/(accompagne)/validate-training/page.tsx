@@ -312,7 +312,9 @@ export default function ValidateTraining() {
                     ? ` (${fm.additionalInformation})`
                     : ""}
                 </div>
-                <div className="font-medium ml-auto">{fm.amount} €</div>
+                <div className="font-medium ml-auto">
+                  {fm.amount.toFixed(2)} €
+                </div>
                 <hr className="col-span-full mt-2 pb-2" />
               </>
             ))}
