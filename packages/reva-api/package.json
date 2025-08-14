@@ -27,7 +27,8 @@
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "cron": "npx tsx@4.7.0 infra/cron.ts",
     "cron-dev": "npx tsx@4.7.0 infra/cron.ts | npx pino-pretty",
-    "lint": "npm run graphql:generate && npm run graphql:generate-ts && eslint --color modules infra test scripts prisma/seed"
+    "lint": "npm run graphql:generate && npm run graphql:generate-ts && eslint --color modules infra test scripts prisma/seed",
+    "resetSandboxDb": "bash ./scripts/resetSandboxDb.sh && prisma migrate deploy"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed/seed.ts"
