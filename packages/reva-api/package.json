@@ -32,12 +32,6 @@
   "prisma": {
     "seed": "npx tsx prisma/seed/seed.ts"
   },
-  "importSort": {
-    ".js, .ts, .jsx, .tsx": {
-      "style": "module",
-      "parser": "typescript"
-    }
-  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.824.0",
     "@aws-sdk/s3-request-presigner": "^3.824.0",

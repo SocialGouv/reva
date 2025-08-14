@@ -1,4 +1,5 @@
 import { prismaClient } from "@/prisma/client";
+
 import { deleteCandidacy } from "./deleteCandidacy";
 import { dropOutCandidacy } from "./dropOutCandidacy";
 

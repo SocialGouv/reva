@@ -7,7 +7,6 @@ import js from "@eslint/js";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import { defineConfig, globalIgnores } from "eslint/config";
-import importPlugin from "eslint-plugin-import";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,7 +32,6 @@ export default defineConfig([
 
     plugins: {
       "@typescript-eslint": fixupPluginRules(typescriptEslint),
-      import: fixupPluginRules(importPlugin),
     },
 
     languageOptions: {
