@@ -1,6 +1,7 @@
 import {
   CandidacyStatusStep,
   CandidacyTypeAccompagnement,
+  Prisma,
 } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
@@ -9,12 +10,15 @@ export const createCandidacy = async ({
   candidateId,
   typeAccompagnement,
   cohorteVaeCollectiveId,
+  tx,
 }: {
   candidateId: string;
   typeAccompagnement: CandidacyTypeAccompagnement;
   cohorteVaeCollectiveId?: string;
+  tx?: Prisma.TransactionClient;
 }) => {
-  return prismaClient.candidacy.create({
+  const prisma = tx ?? prismaClient;
+  return prisma.candidacy.create({
     data: {
       typeAccompagnement,
       candidateId,

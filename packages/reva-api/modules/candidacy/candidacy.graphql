@@ -358,4 +358,8 @@ type Mutation {
     financeModule: FinanceModule!
     reason: String
   ): Candidacy!
+  candidacy_updateCandidacyInactifDecision(
+    candidacyId: UUID!
+    continueCandidacy: Boolean!
+  ): Candidacy!
 }

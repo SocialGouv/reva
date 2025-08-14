@@ -63,4 +63,5 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateCandidateCandidacyDropoutDecision":
     isOwnerOfCandidacy,
   "Mutation.candidacy_updateFinanceModule": isAdmin,
+  "Mutation.candidacy_updateCandidacyInactifDecision": isOwnerOfCandidacy,
 };

@@ -60,6 +60,7 @@ import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
 import { updateCandidacyFinanceModule } from "./features/updateCandidacyFinanceModule";
+import { updateCandidacyInactifDecision } from "./features/updateCandidacyInactifDecision";
 import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
 import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypologyAndCcn";
 import { updateCandidateCandidacyDropoutDecision } from "./features/updateCandidateCandidacyDropoutDecision";
@@ -676,6 +677,19 @@ const unsafeResolvers = {
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
           userEmail: context.auth.userInfo?.email,
         },
+      }),
+    candidacy_updateCandidacyInactifDecision: async (
+      _parent: unknown,
+      input: {
+        candidacyId: string;
+        continueCandidacy: boolean;
+      },
+      context: GraphqlContext,
+    ) =>
+      updateCandidacyInactifDecision({
+        candidacyId: input.candidacyId,
+        continueCandidacy: input.continueCandidacy,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
   },
 };
