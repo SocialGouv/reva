@@ -21,6 +21,14 @@ const getCertificationAuthorityMetabaseUrlQuery = graphql(`
   }
 `);
 
+const getCohortesVaeCollectivesForConnectedAapQuery = graphql(`
+  query getCohortesVaeCollectivesForConnectedAapForHeaderComponent {
+    cohortesVaeCollectivesForConnectedAap {
+      id
+    }
+  }
+`);
+
 const PATHS = {
   CANDIDACIES: "/candidacies",
   CERTIFICATIONS: "/certifications",
@@ -97,7 +105,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager,
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
-  isVaeCollectiveFeatureActive,
+  showAAPVaeCollectivesTab,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -107,7 +115,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager: boolean;
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
-  isVaeCollectiveFeatureActive: boolean;
+  showAAPVaeCollectivesTab: boolean;
 }) => {
   const adminTabs = [
     createTab({
@@ -160,7 +168,7 @@ const getNavigationTabs = ({
       href: PATHS.CANDIDACIES,
       isActive: isAAPCandidaciesPath(currentPathname),
     }),
-    ...(isVaeCollectiveFeatureActive
+    ...(showAAPVaeCollectivesTab
       ? [
           createTab({
             text: LABELS.VAE_COLLECTIVES,
@@ -269,6 +277,20 @@ export const Header = () => {
 
   const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
 
+  const { data: getCohortesVaeCollectivesForConnectedAap } = useQuery({
+    queryKey: ["aap", "getCohortesVaeCollectivesForConnectedAap"],
+    queryFn: () =>
+      graphqlClient.request(getCohortesVaeCollectivesForConnectedAapQuery),
+    enabled: isVaeCollectiveFeatureActive && isOrganism && !isAdmin,
+  });
+
+  const showAAPVaeCollectivesTab =
+    isVaeCollectiveFeatureActive &&
+    isOrganism &&
+    !isAdmin &&
+    !!getCohortesVaeCollectivesForConnectedAap
+      ?.cohortesVaeCollectivesForConnectedAap?.length;
+
   const navigation = getNavigationTabs({
     currentPathname,
     isAdmin,
@@ -278,7 +300,7 @@ export const Header = () => {
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
-    isVaeCollectiveFeatureActive,
+    showAAPVaeCollectivesTab,
   });
 
   return (
