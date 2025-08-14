@@ -254,7 +254,7 @@ model Candidacy {
   typeAccompagnement                            CandidacyTypeAccompagnement                     @default(ACCOMPAGNE) @map("type_accompagnement")
   candidacyOnCandidacyFinancingMethod           CandidacyOnCandidacyFinancingMethod[]
   activite                                      ActiviteStatut                                  @default(ACTIF)
-  derniereDateActivite                          DateTime?                                       @map("derniere_date_activite") @db.Timestamptz(6)
+  derniereDateActivite                          DateTime                                        @default(now()) @map("derniere_date_activite") @db.Timestamptz(6)
   lastActivityDate                              DateTime?                                       @map("last_activity_date") @db.Timestamptz(6)
   candidacyContestationCaducite                 CandidacyContestationCaducite[]
   CandidacyEmail                                CandidacyEmail[]
