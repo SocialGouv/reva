@@ -12,13 +12,13 @@ import { useVAECollectivesPage } from "./vaeCollectives.hook";
 
 export default function VAECollectivePage() {
   const searchParams = useSearchParams();
-  const cohorte_id = searchParams.get("cohorte_id");
+  const cohorteId = searchParams.get("cohorte_id");
   const status = searchParams.get("status") as CandidacyStatusFilter;
   const page = searchParams.get("page") || "1";
   const searchFilter = searchParams.get("search") || "";
 
   const { cohortes, candidacies } = useVAECollectivesPage({
-    cohorteId: cohorte_id,
+    cohorteId: cohorteId,
     status: status,
     page: parseInt(page),
     searchFilter: searchFilter,
@@ -33,6 +33,7 @@ export default function VAECollectivePage() {
       <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
         <VaeCollectivesSideMenu
           cohortes={cohortes}
+          cohorteIdFilter={cohorteId}
           searchFilter={searchFilter}
           statusFilter={status}
         />
