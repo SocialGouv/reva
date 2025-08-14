@@ -371,11 +371,11 @@ const addCandidate = (
   nameLabel = `${nameLabel}${givenName ? givenName : lastname} ${firstname}`;
 
   if (firstname2) {
-    nameLabel = `, ${firstname2}`;
+    nameLabel = `${nameLabel}, ${firstname2}`;
   }
 
   if (firstname3) {
-    nameLabel = `, ${firstname3}`;
+    nameLabel = `${nameLabel}, ${firstname3}`;
   }
 
   doc
@@ -398,7 +398,12 @@ const addCandidate = (
   }
 
   if (birthdate) {
-    birthLabel = `${birthLabel}le : ${format(birthdate, "dd/MM/yyyy")} `;
+    const formattedDate = new Date(
+      birthdate.getFullYear(),
+      birthdate.getMonth(),
+      birthdate.getDate(),
+    );
+    birthLabel = `${birthLabel}le : ${format(formattedDate, "dd/MM/yyyy")} `;
   }
 
   birthLabel = `${birthLabel}à ${birthCity}`;
