@@ -1,10 +1,9 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
+import { fixupConfigRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import { defineConfig } from "eslint/config";
-import importPlugin from "eslint-plugin-import";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,10 +29,6 @@ export default defineConfig([
         "plugin:prettier/recommended",
       ),
     ),
-
-    plugins: {
-      import: fixupPluginRules(importPlugin),
-    },
 
     rules: {
       "react/no-unescaped-entities": "off",

@@ -94,7 +94,6 @@
     "eslint": "^9",
     "eslint-config-prettier": "^10.1.5",
     "eslint-import-resolver-typescript": "^4.4.2",
-    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.4.1",
     "graphql-request": "^6.1.0",
     "import-sort-style-module": "^6.0.0",
