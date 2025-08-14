@@ -52,14 +52,20 @@ export const PdfLink = ({
     e.preventDefault();
     const url = await getFileUrlFromBlob();
     const a = document.createElement("a");
+
     document.body.appendChild(a);
+
     a.href = url!;
     a.target = "_blank";
+    a.download = "dossier_de_faisabilite.pdf";
+
     a.click();
+
+    document.body.removeChild(a);
+
     setTimeout(function () {
-      document.body.removeChild(a);
       window.URL.revokeObjectURL(url!);
-    }, 250);
+    }, 1000);
   };
   return (
     <div className="max-w-screen-md truncate">
