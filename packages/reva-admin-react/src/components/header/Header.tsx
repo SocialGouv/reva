@@ -9,6 +9,8 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 
 import { graphql } from "@/graphql/generated";
 
+import { useFeatureflipping } from "../feature-flipping/featureFlipping";
+
 const getCertificationAuthorityMetabaseUrlQuery = graphql(`
   query getCertificationAuthorityMetabaseUrl {
     account_getAccountForConnectedUser {
@@ -32,6 +34,7 @@ const PATHS = {
     "/certification-authorities/settings/local-account",
   FEASIBILITIES: "/candidacies/feasibilities",
   STATISTIQUES: "/dashboard",
+  VAE_COLLECTIVES: "/vae-collectives",
 } as const;
 
 const LABELS = {
@@ -45,6 +48,7 @@ const LABELS = {
   STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
   STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
   STATISTIQUES: "Statistiques",
+  VAE_COLLECTIVES: "VAE collectives",
 } as const;
 
 const createTab = ({
@@ -72,6 +76,9 @@ const isAAPCandidaciesPath = (pathname: string) => {
   return !!pathname.match(exclusionPattern) && !pathname.match(subPathPattern);
 };
 
+const isAAPVaeCollectivesPath = (pathname: string) =>
+  !!pathname.match(/^\/vae-collectives/);
+
 const isCertificationAuthorityCandidaciesPath = (pathname: string) => {
   const mainPattern =
     /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)/;
@@ -90,6 +97,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager,
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
+  isVaeCollectiveFeatureActive,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -99,6 +107,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager: boolean;
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
+  isVaeCollectiveFeatureActive: boolean;
 }) => {
   const adminTabs = [
     createTab({
@@ -151,6 +160,15 @@ const getNavigationTabs = ({
       href: PATHS.CANDIDACIES,
       isActive: isAAPCandidaciesPath(currentPathname),
     }),
+    ...(isVaeCollectiveFeatureActive
+      ? [
+          createTab({
+            text: LABELS.VAE_COLLECTIVES,
+            href: PATHS.VAE_COLLECTIVES,
+            isActive: isAAPVaeCollectivesPath(currentPathname),
+          }),
+        ]
+      : []),
     createTab({
       text: LABELS.PARAMETRES,
       href: PATHS.AGENCIES_SETTINGS,
@@ -237,6 +255,8 @@ export const Header = () => {
 
   const { graphqlClient } = useGraphQlClient();
 
+  const { isFeatureActive } = useFeatureflipping();
+
   const { data: getCertificationAuthorityMetabaseUrl } = useQuery({
     queryKey: ["certificateur", "getCertificationAuthorityMetabaseUrl"],
     queryFn: () =>
@@ -247,6 +267,8 @@ export const Header = () => {
     getCertificationAuthorityMetabaseUrl?.account_getAccountForConnectedUser
       ?.certificationAuthority?.metabaseDashboardIframeUrl;
 
+  const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
+
   const navigation = getNavigationTabs({
     currentPathname,
     isAdmin,
@@ -256,6 +278,7 @@ export const Header = () => {
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
+    isVaeCollectiveFeatureActive,
   });
 
   return (
