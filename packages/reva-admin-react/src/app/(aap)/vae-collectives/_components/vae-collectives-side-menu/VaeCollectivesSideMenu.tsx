@@ -15,7 +15,7 @@ export const VaeCollectivesSideMenu = ({
 }) => {
   const getCohorteItems = (cohorteId: string): SideMenuProps.Item[] => {
     const hrefSideMenu = (cohorteId: string, status: CandidacyStatusFilter) =>
-      `/vae-collectives?cohorte_id=${cohorteId}&status=${status}&search=${searchFilter}`;
+      `/vae-collectives?cohorteId=${cohorteId}&status=${status}&search=${searchFilter}`;
 
     const isActive = (status: CandidacyStatusFilter) =>
       cohorteId === cohorteIdFilter && status === statusFilter;

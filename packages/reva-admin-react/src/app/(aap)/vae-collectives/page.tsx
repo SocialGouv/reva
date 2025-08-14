@@ -12,7 +12,7 @@ import { useVAECollectivesPage } from "./vaeCollectives.hook";
 
 export default function VAECollectivePage() {
   const searchParams = useSearchParams();
-  const cohorteId = searchParams.get("cohorte_id");
+  const cohorteId = searchParams.get("cohorteId");
   const status = searchParams.get("status") as CandidacyStatusFilter;
   const page = searchParams.get("page") || "1";
   const searchFilter = searchParams.get("search") || "";
