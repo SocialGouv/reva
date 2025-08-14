@@ -171,7 +171,11 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     indexPrefix: "/interop/v1",
     uiConfig: {
       docExpansion: "list",
-      maxDisplayedTags: 2,
+      maxDisplayedTags:
+        process.env.ENVIRONMENT === "production" ||
+        process.env.ENVIRONMENT === "sandbox"
+          ? 2
+          : 3,
       deepLinking: false,
       defaultModelsExpandDepth: 0,
     },
