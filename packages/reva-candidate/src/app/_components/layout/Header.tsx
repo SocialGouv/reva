@@ -10,12 +10,14 @@ const getNavigation = ({
   authenticated,
   currentPathname,
   isInactifEnAttente,
+  isCandidacyDeletedPath,
 }: {
   authenticated: boolean;
   currentPathname: string;
   isInactifEnAttente: boolean;
+  isCandidacyDeletedPath: boolean;
 }) => {
-  if (!authenticated || isInactifEnAttente) return [];
+  if (!authenticated || isInactifEnAttente || isCandidacyDeletedPath) return [];
 
   return [
     {
@@ -42,11 +44,14 @@ export const Header = () => {
   const { candidate } = useLayout();
   const isInactifEnAttente =
     candidate?.candidacy.activite === "INACTIF_EN_ATTENTE";
+  const isCandidacyDeletedPath =
+    currentPathname.startsWith("/candidacy-deleted");
 
   const navigation = getNavigation({
     authenticated,
     currentPathname,
     isInactifEnAttente,
+    isCandidacyDeletedPath,
   });
 
   return (
