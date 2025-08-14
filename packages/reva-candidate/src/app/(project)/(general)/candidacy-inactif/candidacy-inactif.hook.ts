@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
@@ -17,6 +17,7 @@ const GET_CANDIDATE_WITH_CANDIDACY_FOR_CANDIDACY_INACTIF = graphql(`
         code
       }
       candidacy {
+        id
         activite
         derniereDateActivite
         createdAt
@@ -36,8 +37,23 @@ const GET_CANDIDATE_WITH_CANDIDACY_FOR_CANDIDACY_INACTIF = graphql(`
   }
 `);
 
+const UPDATE_CANDIDACY_INACTIF_DECISION = graphql(`
+  mutation candidacy_updateCandidacyInactifDecision(
+    $candidacyId: UUID!
+    $continueCandidacy: Boolean!
+  ) {
+    candidacy_updateCandidacyInactifDecision(
+      candidacyId: $candidacyId
+      continueCandidacy: $continueCandidacy
+    ) {
+      id
+    }
+  }
+`);
+
 export const useCandidacyInactif = () => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data, isLoading: isCandidacyInactifLoading } = useQuery({
     queryKey: ["candidate", "candidacy-inactif"],
@@ -47,8 +63,28 @@ export const useCandidacyInactif = () => {
 
   const candidate = data?.candidate_getCandidateWithCandidacy;
 
+  const { mutateAsync: updateCandidacyInactifDecision } = useMutation({
+    mutationFn: ({
+      candidacyId,
+      continueCandidacy,
+    }: {
+      candidacyId: string;
+      continueCandidacy: boolean;
+    }) =>
+      graphqlClient.request(UPDATE_CANDIDACY_INACTIF_DECISION, {
+        candidacyId,
+        continueCandidacy,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["candidate"],
+      });
+    },
+  });
+
   return {
     candidate,
     isCandidacyInactifLoading,
+    updateCandidacyInactifDecision,
   };
 };

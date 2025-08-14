@@ -5,7 +5,7 @@ import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays, format } from "date-fns";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -107,7 +107,12 @@ const getBadge = ({
 };
 
 export default function CandidacyInactifPage() {
-  const { candidate, isCandidacyInactifLoading } = useCandidacyInactif();
+  const router = useRouter();
+  const {
+    candidate,
+    isCandidacyInactifLoading,
+    updateCandidacyInactifDecision,
+  } = useCandidacyInactif();
   const candidacy = candidate?.candidacy;
 
   const {
@@ -149,18 +154,20 @@ export default function CandidacyInactifPage() {
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
-      // TODO: Implement the actual API call to update candidacy status
-      console.log("Form submitted with data:", data);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      if (data.continueCandidacy === "CONTINUE") {
-        successToast("Votre candidature a été réactivée avec succès");
-        // Redirect to home or appropriate page
+      const continueCandidacy = data.continueCandidacy === "CONTINUE";
+      await updateCandidacyInactifDecision({
+        candidacyId: candidacy.id,
+        continueCandidacy,
+      });
+      successToast("Votre décision a été enregistrée");
+      if (hasFeasibilityAdmissible) {
+        router.push("/");
       } else {
-        successToast("Votre candidature sera supprimée automatiquement");
-        // Redirect to home or appropriate page
+        if (continueCandidacy) {
+          router.push("/");
+        } else {
+          router.push("/candidacy-deleted");
+        }
       }
     } catch (error) {
       graphqlErrorToast(error);
@@ -169,7 +176,9 @@ export default function CandidacyInactifPage() {
 
   const candidateFullName = `${candidate?.lastname} ${candidate?.givenName ? candidate?.givenName : ""} ${candidate?.firstname} ${candidate?.firstname2 || ""} ${candidate?.firstname3 || ""}`;
   const candidateDepartment = `${candidate?.department?.label} (${candidate?.department?.code})`;
-  const candidateCertification = `RNCP ${candidate?.candidacy?.certification?.codeRncp} : ${candidate?.candidacy?.certification?.label}`;
+  const candidateCertification =
+    candidate?.candidacy?.certification &&
+    `RNCP ${candidate?.candidacy?.certification?.codeRncp} : ${candidate?.candidacy?.certification?.label}`;
   const modaliteAccompagnement = candidacy.organism?.modaliteAccompagnement;
 
   return (
