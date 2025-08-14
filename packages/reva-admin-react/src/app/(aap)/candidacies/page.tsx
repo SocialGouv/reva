@@ -5,6 +5,7 @@ import { toDate } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 
+import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
 import { SearchList } from "@/components/search/search-list/SearchList";
 
 import {
@@ -13,11 +14,7 @@ import {
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
 
-import {
-  CandidaciesLayout,
-  CandidacyCard,
-  useCandidacies,
-} from "./_components";
+import { CandidaciesLayout, useCandidacies } from "./_components";
 import { FilterBar } from "./_components/FilterBar";
 
 export default function CandidaciesPage() {
