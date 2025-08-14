@@ -1,9 +1,8 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
+import { useAuth } from "@/components/auth/auth.hooks";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
-
-import { useAuth } from "../../../../components/auth/auth.hooks";
 
 const UNAUTHENTICATED_PATHS = [
   "/login-confirmation",

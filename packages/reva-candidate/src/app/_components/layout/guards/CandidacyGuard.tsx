@@ -1,15 +1,17 @@
+import { redirect, usePathname } from "next/navigation";
 import React from "react";
 
 import { useLayout } from "../layout.hook";
 
 export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   const { candidate } = useLayout();
+  const pathname = usePathname();
 
   const isInactifEnAttente =
-    candidate?.candidacy.activite === "INACTIF_EN_ATTENTE";
+    candidate?.candidacy?.activite === "INACTIF_EN_ATTENTE";
 
-  if (isInactifEnAttente) {
-    return <div>Inactif en attente</div>;
+  if (isInactifEnAttente && !pathname.startsWith("/candidacy-inactif")) {
+    redirect("/candidacy-inactif");
   }
 
   return children;
