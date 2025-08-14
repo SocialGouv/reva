@@ -40,16 +40,30 @@ export const updateCandidacyTypeAccompagnement = async ({
         candidacyId,
       });
 
-      if (!activeFeasibility || activeFeasibility.decision !== "ADMISSIBLE") {
+      if (activeFeasibility && activeFeasibility.decision !== "ADMISSIBLE") {
         throw new Error(
           "Impossible de modifier le type d'accompagnement d'un DF dématérialisé si la recevabilité n'est pas valide",
         );
+      } else if (
+        activeFeasibility &&
+        activeFeasibility.decision === "ADMISSIBLE"
+      ) {
+        // On ne modifie pas le format d'un DF déjà admis
+        return prismaClient.candidacy.update({
+          where: { id: candidacyId },
+          data: {
+            typeAccompagnement: "AUTONOME",
+            organism: { disconnect: true },
+          },
+        });
       }
     }
+    // Si pas de DF envoyé, on passe au DF papier
     return prismaClient.candidacy.update({
       where: { id: candidacyId },
       data: {
         typeAccompagnement: "AUTONOME",
+        feasibilityFormat: "UPLOADED_PDF",
         organism: { disconnect: true },
       },
     });
