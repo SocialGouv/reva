@@ -398,12 +398,11 @@ const addCandidate = (
   }
 
   if (birthdate) {
-    const formattedDate = new Date(
-      birthdate.getFullYear(),
-      birthdate.getMonth(),
-      birthdate.getDate(),
-    );
-    birthLabel = `${birthLabel}le : ${format(formattedDate, "dd/MM/yyyy")} `;
+    const formattedBirthdate = birthdate.toLocaleDateString("fr-FR", {
+      timeZone: "Europe/Paris",
+    });
+
+    birthLabel = `${birthLabel}le : ${formattedBirthdate} `;
   }
 
   birthLabel = `${birthLabel}à ${birthCity}`;
