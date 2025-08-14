@@ -24,15 +24,11 @@ export default function VAECollectivePage() {
     searchFilter: searchFilter,
   });
 
-  if (!cohortes) {
-    return null;
-  }
-
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
         <VaeCollectivesSideMenu
-          cohortes={cohortes}
+          cohortes={cohortes || []}
           cohorteIdFilter={cohorteId}
           searchFilter={searchFilter}
           statusFilter={status}
