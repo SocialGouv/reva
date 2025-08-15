@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('batch.update-candidacies-inactif-en-attente', 'Mettre à jour les candidatures en inactif en attente', 'Met à jour les candidatures en inactif en attente');
