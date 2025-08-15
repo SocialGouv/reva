@@ -5,6 +5,8 @@ import path from "path";
 import { CronJob } from "cron";
 import dotenv from "dotenv";
 
+import { checkAndUpdateCandidaciesInactifEnAttente } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifEnAttente";
+
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
 import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
 import { sendEmailsForCertificationExpiration } from "../modules/certification-authority/features/sendEmailsForCertificationExpiration";
@@ -21,6 +23,7 @@ import { prismaClient } from "../prisma/client";
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
+const EVERY_DAY_AT_1_30_AM = "30 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
 const EVERY_DAY_AT_3_AM = "0 3 * * *";
 
@@ -192,6 +195,27 @@ CronJob.from({
       batchCallback: async () => {
         logger.info("Running batch.send-emails-for-certification-expiration");
         await sendEmailsForCertificationExpiration();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Vérification de l'activité des candidatures actives
+// - Si le candidat est inactif avant d'avoir un dossier de faisabilité admissible
+// - Si le candidat est inactif après avoir un dossier de faisabilité admissible
+// Mise à jour de l'activité des candidatures du statut ACTIF vers INACTIF_EN_ATTENTE
+// Envoi d'emails aux candidats
+CronJob.from({
+  cronTime:
+    process.env.BATCH_UPDATE_CANDIDACIES_INACTIF_EN_ATTENTE_CRONTIME ||
+    EVERY_DAY_AT_1_30_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.update-candidacies-inactif-en-attente",
+      batchCallback: async () => {
+        logger.info("Running batch.update-candidacies-inactif-en-attente");
+        await checkAndUpdateCandidaciesInactifEnAttente();
       },
     }),
   start: true,
