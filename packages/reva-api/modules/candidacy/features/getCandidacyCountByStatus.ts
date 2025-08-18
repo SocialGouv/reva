@@ -13,11 +13,13 @@ export const getCandidacyCountByStatus = async ({
   IAMId,
   searchFilter,
   maisonMereAAPId,
+  cohorteVaeCollectiveId,
 }: {
   hasRole(role: string): boolean;
   IAMId: string;
   searchFilter?: string;
   maisonMereAAPId?: string;
+  cohorteVaeCollectiveId?: string;
 }) => {
   if (!hasRole("admin") && !hasRole("manage_candidacy")) {
     throw new Error("Utilisateur non autorisé");
@@ -36,7 +38,7 @@ export const getCandidacyCountByStatus = async ({
   let whereClause = Prisma.sql`where 1=1`;
   let fromClause = Prisma.sql`from candidacy`;
 
-  //candidacy canidateId is not null
+  //candidacy candidateId is not null
   whereClause = Prisma.sql`${whereClause} and candidacy.candidate_id IS NOT NULL`;
 
   //candidacy organism as candidacyOrganism
@@ -59,6 +61,11 @@ export const getCandidacyCountByStatus = async ({
 
   //left join on payment request as paymentRequestUnifvae
   fromClause = Prisma.sql`${fromClause} left join payment_request_unifvae paymentRequestUnifvae on candidacy.id = paymentRequestUnifvae.candidacy_id`;
+
+  //filter on cohorteVaeCollectiveId if provided
+  if (cohorteVaeCollectiveId) {
+    whereClause = Prisma.sql`${whereClause} and candidacy.cohorte_vae_collective_id = ${cohorteVaeCollectiveId}::uuid`;
+  }
 
   //access rights
   if (!hasRole("admin")) {
