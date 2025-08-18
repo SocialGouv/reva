@@ -13,10 +13,10 @@ export const VaeCollectivesSideMenu = ({
   searchFilter: string;
   statusFilter: CandidacyStatusFilter;
 }) => {
-  const getCohorteItems = (cohorteId: string): SideMenuProps.Item[] => {
-    const hrefSideMenu = (cohorteId: string, status: CandidacyStatusFilter) =>
-      `/vae-collectives?cohorteId=${cohorteId}&status=${status}&search=${searchFilter}`;
+  const hrefSideMenu = (cohorteId: string, status: CandidacyStatusFilter) =>
+    `/vae-collectives?cohorteId=${cohorteId}&status=${status}&search=${searchFilter}`;
 
+  const getCohorteItems = (cohorteId: string): SideMenuProps.Item[] => {
     const isActive = (status: CandidacyStatusFilter) =>
       cohorteId === cohorteIdFilter && status === statusFilter;
 
@@ -203,11 +203,19 @@ export const VaeCollectivesSideMenu = ({
         className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
         align="left"
         burgerMenuButtonText="Candidatures"
-        items={cohortes.map((cohorte) => ({
+        items={cohortes.map((cohorte) => {
+          const isActive = cohorte.id === cohorteIdFilter;
+          return {
           text: cohorte.nom,
-          linkProps: { href: `/vae-collectives` },
+          linkProps: {
+              href: isActive
+              ? "/vae-collectives"
+              : hrefSideMenu(cohorte.id, "ACTIVE_HORS_ABANDON"),
+          },
           items: getCohorteItems(cohorte.id),
-        }))}
+            expandedByDefault: isActive,
+          };
+        })}
       />
     </nav>
   );
