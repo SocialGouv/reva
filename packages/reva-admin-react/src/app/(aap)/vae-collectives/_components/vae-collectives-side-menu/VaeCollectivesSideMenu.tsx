@@ -1,17 +1,22 @@
 import { SideMenu, SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 
-import { CandidacyStatusFilter } from "@/graphql/generated/graphql";
+import {
+  CandidacyCountByStatus,
+  CandidacyStatusFilter,
+} from "@/graphql/generated/graphql";
 
 export const VaeCollectivesSideMenu = ({
   cohortes,
   cohorteIdFilter,
   searchFilter,
   statusFilter,
+  candidacyCountByStatus,
 }: {
   cohortes: { id: string; nom: string }[];
   cohorteIdFilter?: string | null;
   searchFilter: string;
   statusFilter: CandidacyStatusFilter;
+  candidacyCountByStatus?: CandidacyCountByStatus;
 }) => {
   const hrefSideMenu = (cohorteId: string, status: CandidacyStatusFilter) =>
     `/vae-collectives?cohorteId=${cohorteId}&status=${status}&search=${searchFilter}`;
@@ -20,7 +25,8 @@ export const VaeCollectivesSideMenu = ({
     const isActive = (status: CandidacyStatusFilter) =>
       cohorteId === cohorteIdFilter && status === statusFilter;
 
-    const getCounterText = (_status: CandidacyStatusFilter) => "";
+    const getCounterText = (status: CandidacyStatusFilter) =>
+      `(${candidacyCountByStatus?.[status] ?? 0})`;
 
     return [
       {
@@ -206,13 +212,13 @@ export const VaeCollectivesSideMenu = ({
         items={cohortes.map((cohorte) => {
           const isActive = cohorte.id === cohorteIdFilter;
           return {
-          text: cohorte.nom,
-          linkProps: {
+            text: cohorte.nom,
+            linkProps: {
               href: isActive
-              ? "/vae-collectives"
-              : hrefSideMenu(cohorte.id, "ACTIVE_HORS_ABANDON"),
-          },
-          items: getCohorteItems(cohorte.id),
+                ? "/vae-collectives"
+                : hrefSideMenu(cohorte.id, "ACTIVE_HORS_ABANDON"),
+            },
+            items: getCohorteItems(cohorte.id),
             expandedByDefault: isActive,
           };
         })}

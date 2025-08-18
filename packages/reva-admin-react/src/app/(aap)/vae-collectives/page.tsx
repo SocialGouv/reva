@@ -17,12 +17,13 @@ export default function VAECollectivePage() {
   const page = searchParams.get("page") || "1";
   const searchFilter = searchParams.get("search") || "";
 
-  const { cohortes, candidacies } = useVAECollectivesPage({
-    cohorteId: cohorteId,
-    status: status,
-    page: parseInt(page),
-    searchFilter: searchFilter,
-  });
+  const { cohortes, candidacies, candidacyCountByStatus } =
+    useVAECollectivesPage({
+      cohorteId: cohorteId,
+      status: status,
+      page: parseInt(page),
+      searchFilter: searchFilter,
+    });
 
   return (
     <div className="flex flex-col w-full">
@@ -32,6 +33,7 @@ export default function VAECollectivePage() {
           cohorteIdFilter={cohorteId}
           searchFilter={searchFilter}
           statusFilter={status}
+          candidacyCountByStatus={candidacyCountByStatus}
         />
         <div className="mt-3 flex-1">
           <h1>Candidatures VAE collective</h1>

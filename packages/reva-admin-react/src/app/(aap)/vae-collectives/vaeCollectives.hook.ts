@@ -90,6 +90,35 @@ const getCandidaciesQuery = graphql(`
   }
 `);
 
+const getCandidacyCountByStatusQuery = graphql(`
+  query getCandidacyCountByStatusForVaeCollectivesPage($cohorteId: ID!) {
+    candidacy_candidacyCountByStatus(cohorteVaeCollectiveId: $cohorteId) {
+      ACTIVE_HORS_ABANDON
+      DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON
+      DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON
+      DOSSIER_DE_VALIDATION_SIGNALE_HORS_ABANDON
+      JURY_HORS_ABANDON
+      JURY_PROGRAMME_HORS_ABANDON
+      JURY_PASSE_HORS_ABANDON
+      VALIDATION_HORS_ABANDON
+      PROJET_HORS_ABANDON
+      ABANDON
+      REORIENTEE
+      ARCHIVE_HORS_ABANDON_HORS_REORIENTATION
+      PARCOURS_CONFIRME_HORS_ABANDON
+      PRISE_EN_CHARGE_HORS_ABANDON
+      PARCOURS_ENVOYE_HORS_ABANDON
+      DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON
+      DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON
+      DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON
+      VAE_COLLECTIVE
+      DEMANDE_FINANCEMENT_ENVOYEE
+      DEMANDE_PAIEMENT_ENVOYEE
+      DEMANDE_PAIEMENT_A_ENVOYER
+    }
+  }
+`);
+
 export const useVAECollectivesPage = ({
   cohorteId,
   status,
@@ -130,11 +159,23 @@ export const useVAECollectivesPage = ({
     enabled: !!cohorteId && !!status,
   });
 
+  const { data: getCandidacyCountByStatusResponse } = useQuery({
+    queryKey: [cohorteId, "getCandidacyCountByStatusForVaeCollectivesPage"],
+    queryFn: () =>
+      graphqlClient.request(getCandidacyCountByStatusQuery, {
+        cohorteId: cohorteId ?? "",
+      }),
+    enabled: !!cohorteId,
+  });
+
   const cohortes = getCohortesResponse?.cohortesVaeCollectivesForConnectedAap;
   const candidacies = getCandidaciesResponse?.getCandidacies;
+  const candidacyCountByStatus =
+    getCandidacyCountByStatusResponse?.candidacy_candidacyCountByStatus;
 
   return {
     cohortes,
     candidacies,
+    candidacyCountByStatus,
   };
 };
