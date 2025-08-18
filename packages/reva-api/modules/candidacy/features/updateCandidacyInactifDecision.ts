@@ -1,6 +1,5 @@
 import { prismaClient } from "@/prisma/client";
 
-import { deleteCandidacy } from "./deleteCandidacy";
 import { dropOutCandidacy } from "./dropOutCandidacy";
 
 export const updateCandidacyInactifDecision = async ({
@@ -47,7 +46,9 @@ export const updateCandidacyInactifDecision = async ({
         data: { activite: "INACTIF_CONFIRME" },
       });
     } else {
-      await deleteCandidacy({ candidacyId: candidacy.id });
+      await prismaClient.candidacy.delete({
+        where: { id: candidacy.id },
+      });
     }
   }
 
