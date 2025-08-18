@@ -43,7 +43,7 @@ beforeEach(async () => {
 
 test("should count 1 dossier de validation by email for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -68,7 +68,7 @@ test("should count 1 dossier de validation by email for admin user", async () =>
   });
 
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -94,7 +94,7 @@ test("should count 1 dossier de validation by email for admin user", async () =>
 
 test("should count 1 PENDING dossier de validation by name for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -121,7 +121,7 @@ test("should count 1 PENDING dossier de validation by name for admin user", asyn
     INCOMPLETE: 0,
   });
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -150,7 +150,7 @@ test("should count 1 PENDING dossier de validation by name for admin user", asyn
 
 test("should count active dossiers de validation by status for admin user searched by rncp type diplome", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -176,7 +176,7 @@ test("should count active dossiers de validation by status for admin user search
   });
 
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -200,7 +200,7 @@ test("should count active dossiers de validation by status for admin user search
 
 test("should count all dossiers de validation by status for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -222,7 +222,7 @@ test("should count all dossiers de validation by status for admin user", async (
   });
 
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -246,7 +246,7 @@ test("should count all dossiers de validation by status for admin user", async (
 
 test("should get 1 PENDING dossier de validation by email for admin user", async () => {
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -274,7 +274,7 @@ test("should get 1 PENDING dossier de validation by email for admin user", async
 
 test("should get 1 PENDING dossier de validation by name for admin user", async () => {
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -305,7 +305,7 @@ test("should get 1 PENDING dossier de validation by name for admin user", async 
 
 test("should get PENDING dossiers de validation by status for admin user searched by rncp type diplome", async () => {
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -331,7 +331,7 @@ test("should get PENDING dossiers de validation by status for admin user searche
 
 test("should get all (3) PENDING dossiers de validation by status for admin user", async () => {
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -359,7 +359,7 @@ test("should get all (3) PENDING dossiers de validation by status for admin user
 
 test("should get 1 INCOMPLETE dossier de validation by email for admin user", async () => {
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -387,7 +387,7 @@ test("should get 1 INCOMPLETE dossier de validation by email for admin user", as
 
 test("should get 1 INCOMPLETE dossier de validation by name for admin user", async () => {
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -418,7 +418,7 @@ test("should get 1 INCOMPLETE dossier de validation by name for admin user", asy
 
 test("should get INCOMPLETE dossiers de validation by status for admin user searched by rncp type diplome", async () => {
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -444,7 +444,7 @@ test("should get INCOMPLETE dossiers de validation by status for admin user sear
 
 test("should get all (3) INCOMPLETE dossiers de validation by status for admin user", async () => {
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -493,7 +493,7 @@ test("should count 1 dossier de validation when searching by department for admi
     decision: "PENDING",
   });
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -542,7 +542,7 @@ test("should return 1 dossier de validation when searching by department for adm
   });
 
   const ddvResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",

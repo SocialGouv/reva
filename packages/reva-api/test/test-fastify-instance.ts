@@ -11,14 +11,14 @@ export const getFastifyInstance = async () => {
     app = await buildApp({ keycloakPluginMock });
 
     await app.listen({
-      port: (process.env.PORT || 8081) as number,
-      host: "0.0.0.0",
+      port: 0, // Let system assign available port
+      host: "127.0.0.1",
     });
 
-    (global as any).fastify = app;
+    global.testApp = app;
   } catch (err) {
     console.log(err);
-    process.exit(1);
+    throw err;
   }
 
   return app;

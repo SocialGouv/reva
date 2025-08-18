@@ -41,13 +41,11 @@ const cgu = {
 } as Prisma.ProfessionalCguCreateInput;
 
 test("It should validate a correct subscription request", async () => {
-  jest.spyOn(IAM, "getAccount").mockImplementation(() => Promise.resolve(null));
+  vi.spyOn(IAM, "getAccount").mockImplementation(() => Promise.resolve(null));
 
-  jest
-    .spyOn(IAM, "createAccount")
-    .mockImplementation(() =>
-      Promise.resolve("ab3c88f8-87d0-4757-a5bd-f26ace8d2baf"),
-    );
+  vi.spyOn(IAM, "createAccount").mockImplementation(() =>
+    Promise.resolve("ab3c88f8-87d0-4757-a5bd-f26ace8d2baf"),
+  );
 
   await prismaClient.professionalCgu.create({ data: cgu });
   await prismaClient.subscriptionRequest.create({
@@ -55,7 +53,7 @@ test("It should validate a correct subscription request", async () => {
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -110,11 +108,9 @@ test("It should validate a correct subscription request", async () => {
 
 test("It should fail to validate the subscription request if a keycloak account with the same email already exists", async () => {
   const existingKeycloakAccountId = "d11ca98b-7ff3-4d73-aea0-d8e329980d32";
-  jest
-    .spyOn(IAM, "getAccount")
-    .mockImplementation(() =>
-      Promise.resolve({ id: existingKeycloakAccountId }),
-    );
+  vi.spyOn(IAM, "getAccount").mockImplementation(() =>
+    Promise.resolve({ id: existingKeycloakAccountId }),
+  );
 
   await prismaClient.professionalCgu.create({ data: cgu });
   await prismaClient.subscriptionRequest.create({
@@ -122,7 +118,7 @@ test("It should fail to validate the subscription request if a keycloak account 
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",

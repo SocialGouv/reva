@@ -11,8 +11,8 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
-import { shouldNotGoHere } from "@/test/jestHelpers";
+import { shouldNotGoHere } from "@/test/helpers/should-not-go-here.helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 const actionSocialeFormacode = {
   formacode: {

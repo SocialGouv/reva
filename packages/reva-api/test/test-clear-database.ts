@@ -21,7 +21,7 @@ const DO_NOT_CLEAR_THESE_TABLES = [
   "country",
 ];
 
-export const clearDatabase = async () => {
+export const testClearDatabase = async () => {
   const tablenames = await prismaClient.$queryRaw<
     Array<{ tablename: string }>
   >`SELECT tablename FROM pg_tables WHERE schemaname='public'`;

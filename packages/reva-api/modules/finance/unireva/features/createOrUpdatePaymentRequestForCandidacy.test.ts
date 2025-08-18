@@ -49,40 +49,36 @@ const defaultValidFundingRequest: FundingRequest = {
 describe("create or update payment request", () => {
   describe("create or update payment request", () => {
     test("should create a new valid payment request", async () => {
-      jest
-        .spyOn(paymentRequestsDb, "createPaymentRequest")
-        .mockImplementation(
-          (params: { candidacyId: string; paymentRequest: PaymentRequest }) =>
-            Promise.resolve(params.paymentRequest as any),
-        );
+      vi.spyOn(paymentRequestsDb, "createPaymentRequest").mockImplementation(
+        (params: { candidacyId: string; paymentRequest: PaymentRequest }) =>
+          Promise.resolve(params.paymentRequest as any),
+      );
 
-      jest
-        .spyOn(paymentRequestsDb, "getPaymentRequestByCandidacyId")
-        .mockImplementation(() => Promise.resolve(null));
+      vi.spyOn(
+        paymentRequestsDb,
+        "getPaymentRequestByCandidacyId",
+      ).mockImplementation(() => Promise.resolve(null));
 
-      jest
-        .spyOn(fundingRequestsDb, "getFundingRequest")
-        .mockImplementation(() =>
-          Promise.resolve(defaultValidFundingRequest as any),
-        );
+      vi.spyOn(fundingRequestsDb, "getFundingRequest").mockImplementation(() =>
+        Promise.resolve(defaultValidFundingRequest as any),
+      );
 
-      jest
-        .spyOn(paymentRequestsDb, "updatePaymentRequest")
-        .mockImplementation(() =>
-          Promise.reject("Test should not run update method"),
-        );
+      vi.spyOn(paymentRequestsDb, "updatePaymentRequest").mockImplementation(
+        () => Promise.reject("Test should not run update method"),
+      );
 
-      jest
-        .spyOn(getAfgsuTrainingIdModule, "getAfgsuTrainingId")
-        .mockImplementation(() => Promise.resolve(null));
+      vi.spyOn(
+        getAfgsuTrainingIdModule,
+        "getAfgsuTrainingId",
+      ).mockImplementation(() => Promise.resolve(null));
 
-      jest
-        .spyOn(getCandidacyByIdModule, "getCandidacyById")
-        .mockImplementation(() => ({}) as any);
+      vi.spyOn(getCandidacyByIdModule, "getCandidacyById").mockImplementation(
+        () => ({}) as any,
+      );
 
-      jest
-        .spyOn(getCandidateByIdModule, "getCandidateById")
-        .mockImplementation(() => ({}) as any);
+      vi.spyOn(getCandidateByIdModule, "getCandidateById").mockImplementation(
+        () => ({}) as any,
+      );
 
       const result = await createOrUpdatePaymentRequestForCandidacy({
         candidacyId: "1234",
@@ -93,41 +89,37 @@ describe("create or update payment request", () => {
   });
 
   test("should update an existing valid payment request", async () => {
-    jest
-      .spyOn(paymentRequestsDb, "createPaymentRequest")
-      .mockImplementation(() =>
-        Promise.reject("Test should not run create method"),
-      );
+    vi.spyOn(paymentRequestsDb, "createPaymentRequest").mockImplementation(() =>
+      Promise.reject("Test should not run create method"),
+    );
 
-    jest
-      .spyOn(paymentRequestsDb, "getPaymentRequestByCandidacyId")
-      .mockImplementation(() =>
-        Promise.resolve(defaultValidPaymentRequest as any),
-      );
+    vi.spyOn(
+      paymentRequestsDb,
+      "getPaymentRequestByCandidacyId",
+    ).mockImplementation(() =>
+      Promise.resolve(defaultValidPaymentRequest as any),
+    );
 
-    jest
-      .spyOn(fundingRequestsDb, "getFundingRequest")
-      .mockImplementation(() =>
-        Promise.resolve(defaultValidFundingRequest as any),
-      );
+    vi.spyOn(fundingRequestsDb, "getFundingRequest").mockImplementation(() =>
+      Promise.resolve(defaultValidFundingRequest as any),
+    );
 
-    jest
-      .spyOn(paymentRequestsDb, "updatePaymentRequest")
-      .mockImplementation((params: { paymentRequest: PaymentRequest }) =>
+    vi.spyOn(paymentRequestsDb, "updatePaymentRequest").mockImplementation(
+      (params: { paymentRequest: PaymentRequest }) =>
         Promise.resolve(params.paymentRequest as any),
-      );
+    );
 
-    jest
-      .spyOn(getAfgsuTrainingIdModule, "getAfgsuTrainingId")
-      .mockImplementation(() => Promise.resolve(null));
+    vi.spyOn(getAfgsuTrainingIdModule, "getAfgsuTrainingId").mockImplementation(
+      () => Promise.resolve(null),
+    );
 
-    jest
-      .spyOn(getCandidacyByIdModule, "getCandidacyById")
-      .mockImplementation(() => ({}) as any);
+    vi.spyOn(getCandidacyByIdModule, "getCandidacyById").mockImplementation(
+      () => ({}) as any,
+    );
 
-    jest
-      .spyOn(getCandidateByIdModule, "getCandidateById")
-      .mockImplementation(() => ({}) as any);
+    vi.spyOn(getCandidateByIdModule, "getCandidateById").mockImplementation(
+      () => ({}) as any,
+    );
     const result = await createOrUpdatePaymentRequestForCandidacy({
       candidacyId: "1234",
       paymentRequest: defaultValidPaymentRequest,

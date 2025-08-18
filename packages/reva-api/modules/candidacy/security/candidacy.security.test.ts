@@ -19,7 +19,7 @@ const getCandidacy = ({
   keycloakId?: string;
 }) =>
   injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role,
       keycloakId: keycloakId || "whatever",

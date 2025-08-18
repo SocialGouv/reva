@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
@@ -17,7 +17,7 @@ const getActiveFeasibilityByCandidacyId = async ({
   keycloakId: string;
 }) =>
   injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
       keycloakId,

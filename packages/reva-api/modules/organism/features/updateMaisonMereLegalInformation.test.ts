@@ -41,7 +41,7 @@ const updateMaisonMereLegalInformationPayload: (
 test("should not allow a gestionnaire to update maison mere legal information", async () => {
   const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "gestion_maison_mere_aap",
       keycloakId: mmAap.gestionnaire.keycloakId,
@@ -54,14 +54,14 @@ test("should not allow a gestionnaire to update maison mere legal information", 
 });
 
 test("should allow admin to update maison mere legal information", async () => {
-  jest
-    .spyOn(updateAccount, "updateAccountById")
-    .mockImplementation(() => Promise.resolve({} as Account));
+  vi.spyOn(updateAccount, "updateAccountById").mockImplementation(() =>
+    Promise.resolve({} as Account),
+  );
 
   const mmAap = await createMaisonMereAapHelper();
 
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -93,7 +93,7 @@ test("should error when SIRET is already used by another structure", async () =>
   const mmAap2 = await createMaisonMereAapHelper();
 
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: mmAap.gestionnaire.keycloakId,

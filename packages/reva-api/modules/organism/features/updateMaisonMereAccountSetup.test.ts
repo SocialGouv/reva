@@ -5,7 +5,7 @@ import { injectGraphql } from "@/test/helpers/graphql-helper";
 test("API should respond with error unauthorized user", async () => {
   const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "candidate",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -31,7 +31,7 @@ test("API should respond with error unauthorized user", async () => {
 test("API should let admin update MaisonMereAccountSetup and return data", async () => {
   const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -65,7 +65,7 @@ test("API should let gestionnaire maison mere aap update MaisonMereAccountSetup 
   const mmAap = await createMaisonMereAapHelper();
 
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "gestion_maison_mere_aap",
       keycloakId: mmAap.gestionnaire.keycloakId,
@@ -98,7 +98,7 @@ test("API should let gestionnaire maison mere aap update MaisonMereAccountSetup 
 test("API should error when user is not the manager of the MaisonMereAAP", async () => {
   const mmAap = await createMaisonMereAapHelper();
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "gestion_maison_mere_aap",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",

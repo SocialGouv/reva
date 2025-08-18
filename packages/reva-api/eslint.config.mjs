@@ -52,7 +52,14 @@ export default defineConfig([
         2,
         {
           unusedExports: true,
-          ignoreExports: ["eslint.config.mjs", "codegen.ts"],
+          ignoreExports: [
+            "eslint.config.mjs",
+            "codegen.ts",
+            "test/*.ts",
+            "vitest.global-setup.ts",
+            "vitest.setup.ts",
+            "vitest.config.mts",
+          ],
         },
       ],
 

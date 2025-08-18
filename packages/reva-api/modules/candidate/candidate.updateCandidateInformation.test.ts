@@ -58,7 +58,7 @@ describe("candidate information update", () => {
     };
 
     const resp = await injectGraphql({
-      fastify: (global as any).fastify,
+      fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "admin",
         keycloakId: mockAdminKeycloakUuid,
@@ -87,11 +87,11 @@ describe("candidate information update", () => {
   });
 
   test("should send notification emails when updating the candidate email", async () => {
-    const sendNewEmailCandidateEmailSpy = jest
+    const sendNewEmailCandidateEmailSpy = vi
       .spyOn(SendNewEmailCandidateEmailModule, "sendNewEmailCandidateEmail")
       .mockImplementation(() => Promise.resolve());
 
-    const sendPreviousEmailCandidateEmailSpy = jest
+    const sendPreviousEmailCandidateEmailSpy = vi
       .spyOn(
         SendPreviousEmailCandidateEmailModule,
         "sendPreviousEmailCandidateEmail",
@@ -106,7 +106,7 @@ describe("candidate information update", () => {
     const updatedCandidateFields = await getDefaultUpdatedCandidateFields();
 
     const resp = await injectGraphql({
-      fastify: (global as any).fastify,
+      fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "admin",
         keycloakId: mockAdminKeycloakUuid,
@@ -136,11 +136,11 @@ describe("candidate information update", () => {
   });
 
   test("should not send notification emails when the candidate email has not been changed", async () => {
-    const sendNewEmailCandidateEmailSpy = jest
+    const sendNewEmailCandidateEmailSpy = vi
       .spyOn(SendNewEmailCandidateEmailModule, "sendNewEmailCandidateEmail")
       .mockImplementation(() => Promise.resolve());
 
-    const sendPreviousEmailCandidateEmailSpy = jest
+    const sendPreviousEmailCandidateEmailSpy = vi
       .spyOn(
         SendPreviousEmailCandidateEmailModule,
         "sendPreviousEmailCandidateEmail",
@@ -159,7 +159,7 @@ describe("candidate information update", () => {
     };
 
     const resp = await injectGraphql({
-      fastify: (global as any).fastify,
+      fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "admin",
         keycloakId: mockAdminKeycloakUuid,
@@ -198,7 +198,7 @@ describe("candidate information update", () => {
     const updatedCandidateFields = await getDefaultUpdatedCandidateFields();
 
     const resp = await injectGraphql({
-      fastify: (global as any).fastify,
+      fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "admin",
         keycloakId: mockAdminKeycloakUuid,
@@ -238,7 +238,7 @@ describe("candidate information update", () => {
     };
 
     const resp = await injectGraphql({
-      fastify: (global as any).fastify,
+      fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "admin",
         keycloakId: mockAdminKeycloakUuid,

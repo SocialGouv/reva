@@ -2,7 +2,7 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 

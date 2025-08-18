@@ -17,7 +17,7 @@ const selectNewOrganism = async ({
   candidacyId: string;
 }) =>
   await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "candidate",
       keycloakId,
@@ -41,7 +41,7 @@ const submitTraining = async ({
   candidacyId: string;
 }) =>
   await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
       keycloakId,
@@ -65,7 +65,7 @@ const confirmTraining = async ({
   candidacyId: string;
 }) =>
   await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "candidate",
       keycloakId,

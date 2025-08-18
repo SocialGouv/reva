@@ -3,7 +3,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { prismaClient } from "@/prisma/client";
 import {
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
-  CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_ONE_MINUTE,
+  CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_FIVE_MINUTES,
   PAYMENT_REQUEST,
 } from "@/test/fixtures";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
@@ -23,7 +23,7 @@ const injectGraphqlPaymentRequestCreation = async ({
   paymentRequestOverride?: Partial<typeof PAYMENT_REQUEST>;
 }) =>
   injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
       keycloakId,
@@ -56,7 +56,7 @@ const dropOutCandidacyFourMonthsAgoMinusOneMinute = async ({
     data: {
       candidacyDropOut: {
         create: {
-          ...CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_ONE_MINUTE,
+          ...CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_FIVE_MINUTES,
           dropOutReason: { connect: { label: "Autre" } },
           proofReceivedByAdmin,
           dropOutConfirmedByCandidate,

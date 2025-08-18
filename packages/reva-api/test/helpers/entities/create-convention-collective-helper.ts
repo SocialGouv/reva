@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 import { ConventionCollective } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
