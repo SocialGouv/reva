@@ -35,7 +35,7 @@ export const VaeCollectivesSideMenu = ({
         },
         expandedByDefault: true,
         isActive: isActive("ACTIVE_HORS_ABANDON"),
-        text: `Toutes les candidatures actives ${getCounterText("ACTIVE_HORS_ABANDON")}`,
+        text: `Candidatures actives ${getCounterText("ACTIVE_HORS_ABANDON")}`,
         items: [
           {
             linkProps: {
@@ -118,7 +118,7 @@ export const VaeCollectivesSideMenu = ({
         ],
       },
       {
-        text: `Toutes les candidatures en jury ${getCounterText("JURY_HORS_ABANDON")}`,
+        text: `Candidatures en jury ${getCounterText("JURY_HORS_ABANDON")}`,
         linkProps: {
           href: hrefSideMenu(cohorteId, "JURY_HORS_ABANDON"),
         },
@@ -142,7 +142,7 @@ export const VaeCollectivesSideMenu = ({
       },
 
       {
-        text: `Toutes les candidatures non recevables ${getCounterText("DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON")}`,
+        text: `Candidatures non recevables ${getCounterText("DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON")}`,
         linkProps: {
           href: hrefSideMenu(
             cohorteId,
@@ -152,21 +152,21 @@ export const VaeCollectivesSideMenu = ({
         isActive: isActive("DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON"),
       },
       {
-        text: `Toutes les candidatures abandonnées ${getCounterText("ABANDON")}`,
+        text: `Candidatures abandonnées ${getCounterText("ABANDON")}`,
         linkProps: {
           href: hrefSideMenu(cohorteId, "ABANDON"),
         },
         isActive: isActive("ABANDON"),
       },
       {
-        text: `Toutes les candidatures réorientées ${getCounterText("REORIENTEE")}`,
+        text: `Candidatures réorientées ${getCounterText("REORIENTEE")}`,
         linkProps: {
           href: hrefSideMenu(cohorteId, "REORIENTEE"),
         },
         isActive: isActive("REORIENTEE"),
       },
       {
-        text: `Toutes les candidatures supprimées ${getCounterText("ARCHIVE_HORS_ABANDON_HORS_REORIENTATION")}`,
+        text: `Candidatures supprimées ${getCounterText("ARCHIVE_HORS_ABANDON_HORS_REORIENTATION")}`,
         linkProps: {
           href: hrefSideMenu(
             cohorteId,
@@ -203,7 +203,7 @@ export const VaeCollectivesSideMenu = ({
     <nav
       role="navigation"
       aria-label="Menu latéral"
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-4 md:w-[320px]"
     >
       <SideMenu
         className="flex-shrink-0 flex-grow-0 md:basis-[400px]"
