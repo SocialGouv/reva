@@ -1,3 +1,4 @@
+import { ActiviteStatut, CandidacyEmailType } from "@prisma/client";
 import { addDays, format, subDays } from "date-fns";
 
 import { logger } from "@/modules/shared/logger";
@@ -6,9 +7,9 @@ import { prismaClient } from "@/prisma/client";
 import {
   INACTIF_CONFIRME_TRIGGER_DAYS,
   INACTIF_EN_ATTENTE_TRIGGER_AFTER_FEASIBILITY_ADMISSIBLE_DAYS,
-  INACTIF_EN_ATTENTE_TRIGGER_AFTER_FEASIBILITY_CANDIDACY_STATUSES,
   INACTIF_EN_ATTENTE_TRIGGER_BEFORE_FEASIBILITY_ADMISSIBLE_DAYS,
-  INACTIF_EN_ATTENTE_TRIGGER_BEFORE_FEASIBILITY_CANDIDACY_STATUSES,
+  INACTIF_TRIGGER_AFTER_FEASIBILITY_CANDIDACY_STATUSES,
+  INACTIF_TRIGGER_BEFORE_FEASIBILITY_CANDIDACY_STATUSES,
 } from "../constants/candidacy-inactif.constant";
 import { sendInactifEnAttenteAfterFeasibilityAdmissibleToCandidate } from "../emails/sendInactifEnAttenteAfterFeasibilityAdmissibleToCandidate";
 import { sendInactifEnAttenteBeforeFeasibilityAdmissibleToCandidate } from "../emails/sendInactifEnAttenteBeforeFeasibilityAdmissibleToCandidate";
@@ -31,9 +32,9 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
     const candidaciesBeforeFeasibilityAdmissible =
       await prismaClient.candidacy.findMany({
         where: {
-          activite: "ACTIF",
+          activite: ActiviteStatut.ACTIF,
           status: {
-            in: INACTIF_EN_ATTENTE_TRIGGER_BEFORE_FEASIBILITY_CANDIDACY_STATUSES,
+            in: INACTIF_TRIGGER_BEFORE_FEASIBILITY_CANDIDACY_STATUSES,
           },
           derniereDateActivite: {
             lte: thresholdDateBeforeFeasibilityAdmissible,
@@ -64,7 +65,7 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
             id: candidacy.id,
           },
           data: {
-            activite: "INACTIF_EN_ATTENTE",
+            activite: ActiviteStatut.INACTIF_EN_ATTENTE,
             dateInactifEnAttente: new Date(),
           },
         });
@@ -75,13 +76,11 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
             candidateFullName,
           });
 
-          await prismaClient.candidacyLog.create({
+          await prismaClient.candidacyEmail.create({
             data: {
               candidacyId: candidacy.id,
-              eventType: "INACTIF_EN_ATTENTE",
-              userEmail: candidateEmail,
-              userKeycloakId: candidateKeycloakId,
-              userProfile: "CANDIDAT",
+              emailType:
+                CandidacyEmailType.INACTIF_EN_ATTENTE_BEFORE_FEASIBILITY_ADMISSIBLE_TO_CANDIDATE,
             },
           });
         }
@@ -99,9 +98,9 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
     const candidaciesAfterFeasibilityAdmissible =
       await prismaClient.candidacy.findMany({
         where: {
-          activite: "ACTIF",
+          activite: ActiviteStatut.ACTIF,
           status: {
-            in: INACTIF_EN_ATTENTE_TRIGGER_AFTER_FEASIBILITY_CANDIDACY_STATUSES,
+            in: INACTIF_TRIGGER_AFTER_FEASIBILITY_CANDIDACY_STATUSES,
           },
           derniereDateActivite: {
             lte: thresholdDateAfterFeasibilityAdmissible,
@@ -132,7 +131,7 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
             id: candidacy.id,
           },
           data: {
-            activite: "INACTIF_EN_ATTENTE",
+            activite: ActiviteStatut.INACTIF_EN_ATTENTE,
             dateInactifEnAttente: new Date(),
           },
         });
@@ -143,13 +142,11 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
             candidateFullName,
           });
 
-          await prismaClient.candidacyLog.create({
+          await prismaClient.candidacyEmail.create({
             data: {
               candidacyId: candidacy.id,
-              eventType: "INACTIF_EN_ATTENTE",
-              userEmail: candidateEmail,
-              userKeycloakId: candidateKeycloakId,
-              userProfile: "CANDIDAT",
+              emailType:
+                CandidacyEmailType.INACTIF_EN_ATTENTE_AFTER_FEASIBILITY_ADMISSIBLE_TO_CANDIDATE,
             },
           });
         }
