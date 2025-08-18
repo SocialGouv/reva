@@ -48,7 +48,7 @@ test.describe("VAE Collective Code Page", () => {
     await codeInput.pressSequentially("ABCD1234");
 
     const submitButton = page.getByRole("button", {
-      name: "Valider et m'inscrire",
+      name: "Accéder à cette VAE collective",
     });
     await expect(submitButton).toBeEnabled();
 
@@ -81,7 +81,7 @@ test.describe("VAE Collective Code Page", () => {
     await codeInput.pressSequentially("INVALID1");
 
     const submitButton = page.getByRole("button", {
-      name: "Valider et m'inscrire",
+      name: "Accéder à cette VAE collective",
     });
 
     await expect(submitButton).toBeEnabled();
@@ -108,7 +108,7 @@ test.describe("VAE Collective Code Page", () => {
 
     const codeInput = page.getByRole("textbox");
     const submitButton = page.getByRole("button", {
-      name: "Valider et m'inscrire",
+      name: "Accéder à cette VAE collective",
     });
 
     await expect(submitButton).toBeDisabled();
@@ -132,14 +132,5 @@ test.describe("VAE Collective Code Page", () => {
         "Le code ne doit contenir que des lettres et des chiffres",
       ),
     ).toBeVisible();
-  });
-
-  test("should handle back button navigation", async ({ page }) => {
-    await page.goto("/inscription-candidat/vae-collective");
-
-    const backButton = page.getByRole("button", { name: "Retour" });
-    await backButton.click();
-
-    await expect(page).toHaveURL("/commencer/");
   });
 });

@@ -76,41 +76,34 @@ export function VaeCollectiveCodeForm() {
   });
 
   return (
-    <form onSubmit={handleFormSubmit} className="flex flex-col gap-8">
-      <Input
-        label=""
-        classes={{
-          nativeInputOrTextArea:
-            "w-[270px] uppercase text-center text-xl tracking-[18px] font-normal py-8 pr-0",
-        }}
-        hintText="8 caractères alphanumériques"
-        state={errors.code ? "error" : "default"}
-        stateRelatedMessage={errors.code?.message}
-        nativeInputProps={{
-          ...register("code", {
-            onChange: () => clearErrors("code"),
-          }),
-          maxLength: 8,
-          autoComplete: "off",
-          spellCheck: false,
-        }}
-      />
-      <div className="flex justify-between gap-4 flex-wrap">
+    <div className="w-full mx-auto p-6 max-w-xl shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
+      <form onSubmit={handleFormSubmit} className="flex flex-col">
+        <Input
+          label="Code VAE collective"
+          classes={{
+            nativeInputOrTextArea: "uppercase",
+          }}
+          hintText="8 caractères alphanumériques"
+          state={errors.code ? "error" : "default"}
+          stateRelatedMessage={errors.code?.message}
+          nativeInputProps={{
+            ...register("code", {
+              onChange: () => clearErrors("code"),
+            }),
+            maxLength: 8,
+            autoComplete: "off",
+            spellCheck: false,
+          }}
+        />
         <Button
-          priority="secondary"
-          onClick={() => router.push("/commencer")}
-          type="button"
-        >
-          Retour
-        </Button>
-        <Button
+          className="w-full justify-center"
           priority="primary"
           type="submit"
           disabled={!isDirty || !isFormComplete || isLoading}
         >
-          Valider et m'inscrire
+          Accéder à cette VAE collective
         </Button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

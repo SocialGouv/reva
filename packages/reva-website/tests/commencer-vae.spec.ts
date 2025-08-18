@@ -45,7 +45,7 @@ test.describe("Commencer une VAE", () => {
 
     await expect(page).toHaveURL("/inscription-candidat/vae-collective/");
     await expect(
-      page.getByRole("heading", { name: "Code VAE collective" }),
+      page.getByRole("heading", { name: "S’inscrire à une VAE collective" }),
     ).toBeVisible();
   });
 });
