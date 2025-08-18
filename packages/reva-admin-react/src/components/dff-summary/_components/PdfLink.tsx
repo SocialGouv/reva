@@ -7,11 +7,13 @@ export const PdfLink = ({
   text,
   title,
   className,
+  fileName,
 }: {
   url: string;
   text: string;
   title: string;
   className?: string;
+  fileName?: string;
 }) => {
   const { accessToken } = useKeycloakContext();
 
@@ -57,7 +59,7 @@ export const PdfLink = ({
 
     a.href = url!;
     a.target = "_blank";
-    a.download = "dossier_de_faisabilite.pdf";
+    a.download = fileName || "document_sans_nom";
 
     a.click();
 

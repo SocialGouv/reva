@@ -1,5 +1,6 @@
 "use client";
 
+import { deburr } from "lodash";
 import dynamic from "next/dynamic";
 
 import { REST_API_URL } from "@/config/config";
@@ -91,6 +92,12 @@ export function DffSummary({
     return `${REST_API_URL}/candidacy/${candidacy.id}/feasibility/file-demat/${dematerializedFeasibilityFile.id}`;
   };
 
+  const { candidate } = candidacy;
+
+  const candidateName = deburr(
+    `${candidate?.givenName ? candidate?.givenName : candidate?.lastname}_${candidate?.firstname}`,
+  ).toLowerCase();
+
   return (
     <div className="flex flex-col" id="dff-to-print" data-test="dff-summary">
       <div className="flex justify-between mb-4">
@@ -101,6 +108,7 @@ export function DffSummary({
             text={"Télécharger le dossier de faisabilité"}
             title={"Télécharger le dossier de faisabilité"}
             url={getPdfUrl()}
+            fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
             className="fr-btn fr-btn--secondary fr-btn--sm"
           />
         ) : (
