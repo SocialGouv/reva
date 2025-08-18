@@ -1,5 +1,4 @@
 "use client";
-import Alert from "@codegouvfr/react-dsfr/Alert";
 import { toDate } from "date-fns";
 import { useSearchParams } from "next/navigation";
 
@@ -8,6 +7,7 @@ import { SearchList } from "@/components/search/search-list/SearchList";
 
 import { CandidacyStatusFilter } from "@/graphql/generated/graphql";
 
+import { VaeCollectiveSelectCohortNotice } from "./_components/vae-collective-select-cohorte-notice/VaeCollectiveSelectCohortNotice";
 import { VaeCollectivesSideMenu } from "./_components/vae-collectives-side-menu/VaeCollectivesSideMenu";
 import { useVAECollectivesPage } from "./vaeCollectives.hook";
 
@@ -38,22 +38,12 @@ export default function VAECollectivePage() {
         />
         <div className="mt-3 flex-1">
           <h1>Candidatures VAE collective</h1>
-          <p>
+          <p className="text-xl">
             Retrouvez toutes les candidatures en VAE collective en fonction de
             leur état d’avancement.
           </p>
 
-          {!cohorteId && (
-            <div className="flex flex-col gap-4">
-              <Alert
-                small
-                title="Aucune cohorte sélectionnée"
-                description="Veuillez sélectionner une cohorte pour afficher les candidatures."
-                severity="info"
-                className="mt-4"
-              />
-            </div>
-          )}
+          {!cohorteId && <VaeCollectiveSelectCohortNotice />}
 
           {cohorteId && (
             <SearchList
