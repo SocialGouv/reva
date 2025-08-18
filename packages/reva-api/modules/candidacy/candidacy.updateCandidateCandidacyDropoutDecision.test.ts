@@ -1,6 +1,6 @@
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "@/test/helpers/entities/create-candidacy-drop-out-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -9,14 +9,14 @@ import * as SendCandidacyDropOutConfirmedEmailToCandidateModule from "./emails/s
 
 describe("candidate drop out decision", () => {
   test("should mark the drop out as confirmed when the candidate confirms it and sent an email to the aap", async () => {
-    const sendCandidacyDropOutConfirmedEmailToAapSpy = jest
+    const sendCandidacyDropOutConfirmedEmailToAapSpy = vi
       .spyOn(
         SendCandidacyDropOutConfirmedEmailToAapModule,
         "sendCandidacyDropOutConfirmedEmailToAap",
       )
       .mockImplementation(() => Promise.resolve());
 
-    const sendCandidacyDropOutConfirmedEmailToCandidateSpy = jest
+    const sendCandidacyDropOutConfirmedEmailToCandidateSpy = vi
       .spyOn(
         SendCandidacyDropOutConfirmedEmailToCandidateModule,
         "sendCandidacyDropOutConfirmedEmailToCandidate",

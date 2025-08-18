@@ -10,8 +10,8 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
-import { shouldNotGoHere } from "@/test/jestHelpers";
+import { shouldNotGoHere } from "@/test/helpers/should-not-go-here.helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 const revokeCertificationAuthorityDecisionMutation = graphql(`
   mutation feasibility_revokeCertificationAuthorityDecision(

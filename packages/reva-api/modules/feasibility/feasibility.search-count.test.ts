@@ -60,7 +60,7 @@ beforeEach(async () => {
 
 test("should count 1 feasibility by email for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -89,7 +89,7 @@ test("should count 1 feasibility by email for admin user", async () => {
   });
 
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -113,7 +113,7 @@ test("should count 1 feasibility by email for admin user", async () => {
 
 test("should count 1 PENDING feasibility by name for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -144,7 +144,7 @@ test("should count 1 PENDING feasibility by name for admin user", async () => {
     DROPPED_OUT: 0,
   });
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -171,7 +171,7 @@ test("should count 1 PENDING feasibility by name for admin user", async () => {
 
 test("should count active feasibilities by status for admin user searched by rncp type diplome", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -200,7 +200,7 @@ test("should count active feasibilities by status for admin user searched by rnc
   });
 
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -221,7 +221,7 @@ test("should count active feasibilities by status for admin user searched by rnc
 
 test("should count all feasibilities by status for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -247,7 +247,7 @@ test("should count all feasibilities by status for admin user", async () => {
   });
 
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -269,7 +269,7 @@ test("should count all feasibilities by status for admin user", async () => {
 
 test("should get 1 PENDING feasibility by email for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -295,7 +295,7 @@ test("should get 1 PENDING feasibility by email for admin user", async () => {
 
 test("should get 1 PENDING feasibility by name for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -324,7 +324,7 @@ test("should get 1 PENDING feasibility by name for admin user", async () => {
 
 test("should get 2 PENDING feasibilities for admin user searched by rncp type diplome", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -347,7 +347,7 @@ test("should get 2 PENDING feasibilities for admin user searched by rncp type di
 
 test("should get all (2) PENDING feasibilities for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -373,7 +373,7 @@ test("should get all (2) PENDING feasibilities for admin user", async () => {
 
 test("should get 1 ADMISSIBLE feasibility by email for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -399,7 +399,7 @@ test("should get 1 ADMISSIBLE feasibility by email for admin user", async () => 
 
 test("should get 1 ADMISSIBLE feasibility by name for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -428,7 +428,7 @@ test("should get 1 ADMISSIBLE feasibility by name for admin user", async () => {
 
 test("should get ADMISSIBLE feasibilities for admin user searched by rncp type diplome", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -451,7 +451,7 @@ test("should get ADMISSIBLE feasibilities for admin user searched by rncp type d
 
 test("should get all ADMISSIBLE feasibilities for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -477,7 +477,7 @@ test("should get all ADMISSIBLE feasibilities for admin user", async () => {
 
 test("should get 1 REJECTED feasibility by email for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -503,7 +503,7 @@ test("should get 1 REJECTED feasibility by email for admin user", async () => {
 
 test("should get 1 REJECTED feasibility by name for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -532,7 +532,7 @@ test("should get 1 REJECTED feasibility by name for admin user", async () => {
 
 test("should get REJECTED feasibilities for admin user searched by rncp type diplome", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -555,7 +555,7 @@ test("should get REJECTED feasibilities for admin user searched by rncp type dip
 
 test("should get all REJECTED feasibilities for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -581,7 +581,7 @@ test("should get all REJECTED feasibilities for admin user", async () => {
 
 test("should get 1 INCOMPLETE feasibility by email for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -607,7 +607,7 @@ test("should get 1 INCOMPLETE feasibility by email for admin user", async () => 
 
 test("should get 1 INCOMPLETE feasibility by name for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -636,7 +636,7 @@ test("should get 1 INCOMPLETE feasibility by name for admin user", async () => {
 
 test("should get INCOMPLETE feasibilities for admin user searched by rncp type diplome", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -659,7 +659,7 @@ test("should get INCOMPLETE feasibilities for admin user searched by rncp type d
 
 test("should get all INCOMPLETE feasibilities for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -685,7 +685,7 @@ test("should get all INCOMPLETE feasibilities for admin user", async () => {
 
 test("should get 1 COMPLETE feasibility by email for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -711,7 +711,7 @@ test("should get 1 COMPLETE feasibility by email for admin user", async () => {
 
 test("should get 1 COMPLETE feasibility by name for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -740,7 +740,7 @@ test("should get 1 COMPLETE feasibility by name for admin user", async () => {
 
 test("should get COMPLETE feasibilities for admin user searched by rncp type diplome", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -763,7 +763,7 @@ test("should get COMPLETE feasibilities for admin user searched by rncp type dip
 
 test("should get all COMPLETE feasibilities for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -789,7 +789,7 @@ test("should get all COMPLETE feasibilities for admin user", async () => {
 
 test("should get 1 ARCHIVED feasibility by email for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -815,7 +815,7 @@ test("should get 1 ARCHIVED feasibility by email for admin user", async () => {
 
 test("should get 1 ARCHIVED feasibility by name for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -844,7 +844,7 @@ test("should get 1 ARCHIVED feasibility by name for admin user", async () => {
 
 test("should get ARCHIVED feasibilities for admin user searched by rncp type diplome", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -868,7 +868,7 @@ test("should get ARCHIVED feasibilities for admin user searched by rncp type dip
 
 test("should get all ARCHIVED feasibilities for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -894,7 +894,7 @@ test("should get all ARCHIVED feasibilities for admin user", async () => {
 
 test("should get 1 DROPPED_OUT feasibility by email for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -920,7 +920,7 @@ test("should get 1 DROPPED_OUT feasibility by email for admin user", async () =>
 
 test("should get 1 DROPPED_OUT feasibility by name for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -949,7 +949,7 @@ test("should get 1 DROPPED_OUT feasibility by name for admin user", async () => 
 
 test("should get DROPPED_OUT feasibilities for admin user searched by rncp type diplome", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -973,7 +973,7 @@ test("should get DROPPED_OUT feasibilities for admin user searched by rncp type 
 
 test("should get all DROPPED_OUT feasibilities for admin user", async () => {
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -1018,7 +1018,7 @@ test("should count 1 feasibility when searching by department for admin user", a
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -1071,7 +1071,7 @@ test("should return 1 feasibility when searching by department for admin user", 
   });
 
   const feasibilitiesResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",

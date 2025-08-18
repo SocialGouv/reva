@@ -12,7 +12,7 @@ const injectGraphqlGetMaisonMereAAPs = async ({
   legalValidationStatus?: StatutValidationInformationsJuridiquesMaisonMereAAP;
 }) => {
   return injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",

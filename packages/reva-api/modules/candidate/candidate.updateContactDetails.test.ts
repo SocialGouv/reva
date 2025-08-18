@@ -16,7 +16,7 @@ describe("candidate information update", () => {
     const newEmail = "newEmail@example.com";
 
     const resp = await injectGraphql({
-      fastify: (global as any).fastify,
+      fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "admin",
         keycloakId: mockAdminKeycloakUuid,
@@ -57,7 +57,7 @@ describe("candidate information update", () => {
     const newEmail = "newEmail@example.com";
 
     const resp = await injectGraphql({
-      fastify: (global as any).fastify,
+      fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "gestion_maison_mere_aap",
         keycloakId: aap?.accounts[0].keycloakId,

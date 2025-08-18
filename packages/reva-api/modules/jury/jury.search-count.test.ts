@@ -46,7 +46,7 @@ beforeEach(async () => {
 
 test("should count 1 jury by email for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -68,7 +68,7 @@ test("should count 1 jury by email for admin user", async () => {
   });
 
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -90,7 +90,7 @@ test("should count 1 jury by email for admin user", async () => {
 
 test("should count 1 PENDING jury by name for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -114,7 +114,7 @@ test("should count 1 PENDING jury by name for admin user", async () => {
     PASSED: 0,
   });
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -139,7 +139,7 @@ test("should count 1 PENDING jury by name for admin user", async () => {
 
 test("should count active juries by status for admin user searched by rncp type diplome", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -161,7 +161,7 @@ test("should count active juries by status for admin user searched by rncp type 
   });
 
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -182,7 +182,7 @@ test("should count active juries by status for admin user searched by rncp type 
 
 test("should count all juries by status for admin user", async () => {
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -201,7 +201,7 @@ test("should count all juries by status for admin user", async () => {
   });
 
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -223,7 +223,7 @@ test("should count all juries by status for admin user", async () => {
 
 test("should get 1 SCHEDULED jury by email for admin user", async () => {
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -247,7 +247,7 @@ test("should get 1 SCHEDULED jury by email for admin user", async () => {
 
 test("should get 1 SCHEDULED jury by name for admin user", async () => {
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -274,7 +274,7 @@ test("should get 1 SCHEDULED jury by name for admin user", async () => {
 
 test("should get SCHEDULED juries by status for admin user searched by rncp type diplome", async () => {
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -297,7 +297,7 @@ test("should get SCHEDULED juries by status for admin user searched by rncp type
 
 test("should get all (3) SCHEDULED juries by status for admin user", async () => {
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -323,7 +323,7 @@ test("should get all (3) SCHEDULED juries by status for admin user", async () =>
 
 test("should get 1 PASSED jury by email for admin user", async () => {
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -347,7 +347,7 @@ test("should get 1 PASSED jury by email for admin user", async () => {
 
 test("should get 1 PASSED jury by name for admin user", async () => {
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -374,7 +374,7 @@ test("should get 1 PASSED jury by name for admin user", async () => {
 
 test("should get PASSED juries by status for admin user searched by rncp type diplome", async () => {
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -397,7 +397,7 @@ test("should get PASSED juries by status for admin user searched by rncp type di
 
 test("should get all (2) PASSED juries by status for admin user", async () => {
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -446,7 +446,7 @@ test("should count 1 candidacy with a scheduled jury when searching by departmen
   });
 
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -492,7 +492,7 @@ test("should return 1 candidacy when searching by department for admin user", as
   });
 
   const juryResp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",

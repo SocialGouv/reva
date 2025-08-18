@@ -2,7 +2,7 @@ import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 import * as getKeycloakAdminModule from "../shared/auth/getKeycloakAdmin";
@@ -131,15 +131,13 @@ test("a candidate can modify all his account information", async () => {
     email: "updated@email.com",
   };
 
-  jest
-    .spyOn(getKeycloakAdminModule, "getKeycloakAdmin")
-    .mockImplementation(() =>
-      Promise.resolve({
-        users: {
-          update: jest.fn().mockResolvedValue({}),
-        },
-      } as any),
-    );
+  vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockImplementation(() =>
+    Promise.resolve({
+      users: {
+        update: vi.fn().mockResolvedValue({}),
+      },
+    } as any),
+  );
 
   const graphqlClient = getGraphQLClient({
     headers: {

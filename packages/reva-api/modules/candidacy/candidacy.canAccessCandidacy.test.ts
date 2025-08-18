@@ -9,7 +9,7 @@ import { createCertificationAuthorityHelper } from "@/test/helpers/entities/crea
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
-import { getGraphQLClient } from "@/test/jestGraphqlClient";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 

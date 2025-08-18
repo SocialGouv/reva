@@ -15,7 +15,7 @@ import { createCertificationAuthorityStructureHelper } from "@/test/helpers/enti
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createCCNHelper } from "@/test/helpers/entities/create-convention-collective-helper";
 import { createFormaCodeHelper } from "@/test/helpers/entities/create-formacode-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 import { RNCPReferential } from "../rncp/referential";
 
@@ -44,9 +44,10 @@ const replaceCertificationMutation = graphql(`
   }
 `);
 
-const CURRENT_RNCP = "8000";
-const NEW_RNCP = "9000";
-const OTHER_RNCP = "9001";
+// Generate unique RNCP codes for each test run to avoid conflicts
+const CURRENT_RNCP = `8${Date.now()}`;
+const NEW_RNCP = `9${Date.now()}`;
+const OTHER_RNCP = `9${Date.now() + 1}`;
 const NEW_INTITULE = "Intitulé de certification";
 
 async function createExistingCertification(rncpId = CURRENT_RNCP) {
@@ -58,7 +59,7 @@ async function createExistingCertification(rncpId = CURRENT_RNCP) {
 
 async function createFormaCodeAndMockReferential() {
   const myFormaCode = await createFormaCodeHelper();
-  jest.spyOn(RNCPReferential, "getInstance").mockImplementation(
+  vi.spyOn(RNCPReferential, "getInstance").mockImplementation(
     () =>
       ({
         findOneByRncp: () => ({
@@ -396,7 +397,9 @@ it("should throw an error if a certification with the same RNCP code already exi
   });
 
   await expect(promise).rejects.toThrow(
-    getGraphQLError("Une certification avec le code RNCP 9000 existe déjà"),
+    getGraphQLError(
+      `Une certification avec le code RNCP ${NEW_RNCP} existe déjà`,
+    ),
   );
 });
 
@@ -430,7 +433,7 @@ it("should throw an error if RNCP certification does not exist", async () => {
   const { certificationRegistryManager } =
     await createStructureWithCertification(existingCertification.id);
 
-  jest.spyOn(RNCPReferential, "getInstance").mockImplementation(
+  vi.spyOn(RNCPReferential, "getInstance").mockImplementation(
     () =>
       ({
         findOneByRncp: () => null,

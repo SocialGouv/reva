@@ -7,7 +7,7 @@ import { createCertificationAuthorityHelper } from "@/test/helpers/entities/crea
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 import * as createAccount from "../account/features/createAccount";
 
@@ -191,7 +191,7 @@ test("should return an exisiting certification local account list of 1 item for 
     await createCertificationAuthorityLocalAccountHelper();
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId:
@@ -214,15 +214,15 @@ test("should return an exisiting certification local account list of 1 item for 
 });
 
 test("should create a certification authority", async () => {
-  jest
-    .spyOn(createAccount, "createAccount")
-    .mockImplementation(() => Promise.resolve({} as Account));
+  vi.spyOn(createAccount, "createAccount").mockImplementation(() =>
+    Promise.resolve({} as Account),
+  );
 
   const certificationAuthorityStructure =
     await createCertificationAuthorityStructureHelper();
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",

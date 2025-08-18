@@ -3,9 +3,9 @@ import { sub } from "date-fns";
 
 const DATE_NOW = new Date();
 const FOUR_MONTHS_AGO = sub(DATE_NOW, { months: 4 });
-const FOUR_MONTHS_AGO_MINUS_ONE_MINUTE = sub(DATE_NOW, {
+const FOUR_MONTHS_AGO_MINUS_FIVE_MINUTES = sub(DATE_NOW, {
   months: 4,
-  minutes: -1,
+  minutes: -5,
 });
 
 const CANDIDACY_DROP_OUT_BASE = {
@@ -24,7 +24,7 @@ export const CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO = {
   createdAt: FOUR_MONTHS_AGO,
 };
 
-export const CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_ONE_MINUTE = {
+export const CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_FIVE_MINUTES = {
   ...CANDIDACY_DROP_OUT_BASE,
-  createdAt: FOUR_MONTHS_AGO_MINUS_ONE_MINUTE,
+  createdAt: FOUR_MONTHS_AGO_MINUS_FIVE_MINUTES,
 };

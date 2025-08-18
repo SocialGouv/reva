@@ -13,7 +13,7 @@ test("AAP should not be able to submit a training form if its status is in 'PROJ
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
       keycloakId: organismKeycloakId,
@@ -41,7 +41,7 @@ test("AAP should be able to submit a basic training form when candidacy status i
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
       keycloakId: organismKeycloakId,
@@ -72,7 +72,7 @@ test("AAP should not be able to submit a basic training form without at least on
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
       keycloakId: organismKeycloakId,
@@ -103,7 +103,7 @@ test("AAP should not be able to submit a basic training form  with an 'other sou
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
       keycloakId: organismKeycloakId,
@@ -143,7 +143,7 @@ test("AAP should be able to submit a basic training form  with an 'other source'
   const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
       keycloakId: organismKeycloakId,

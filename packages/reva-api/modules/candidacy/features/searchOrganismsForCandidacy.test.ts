@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 
 import * as geocodingModule from "@/modules/shared/geocoding";
 import { prismaClient } from "@/prisma/client";
@@ -29,7 +29,7 @@ const searchOrganisms = async ({
   searchText?: string;
 }) =>
   injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "candidate",
       keycloakId,
@@ -657,7 +657,7 @@ describe("searchOrganismsForCandidacy", () => {
 
     describe("zip code search", () => {
       test("should search organisms and return all organisms when there is no VAE collective organism restriction", async () => {
-        const fetchCoordinatesMock = jest
+        const fetchCoordinatesMock = vi
           .spyOn(geocodingModule, "fetchCoordinatesFromZipCode")
           .mockImplementation(() =>
             Promise.resolve({ success: true, coordinates: [2.345578, 48.864] }),
@@ -721,7 +721,7 @@ describe("searchOrganismsForCandidacy", () => {
       });
 
       test("should search organisms and only return the restricted organisms there is a VAE collective organism restriction", async () => {
-        const fetchCoordinatesMock = jest
+        const fetchCoordinatesMock = vi
           .spyOn(geocodingModule, "fetchCoordinatesFromZipCode")
           .mockImplementation(() =>
             Promise.resolve({ success: true, coordinates: [2.345578, 48.864] }),

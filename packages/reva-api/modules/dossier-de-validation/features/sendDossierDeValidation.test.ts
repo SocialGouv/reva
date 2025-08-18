@@ -25,7 +25,7 @@ const postDossierDeValidation = ({
     new File([], "test.pdf", { type: "application/pdf" }),
   );
 
-  const fastify = (global as any).fastify as FastifyInstance;
+  const fastify = global.testApp as FastifyInstance;
 
   return fastify.inject({
     method: "POST",
@@ -48,14 +48,14 @@ const createCertificationWithcertificationAuthority = async () => {
 };
 
 test("should validate upload of dossier de validation", async () => {
-  jest.spyOn(FILE, "uploadFileToS3").mockImplementation();
+  vi.spyOn(FILE, "uploadFileToS3").mockImplementation(() => Promise.resolve());
 
-  const sendNewDVToCertificationAuthoritiesEmailMock = jest.spyOn(
+  const sendNewDVToCertificationAuthoritiesEmailMock = vi.spyOn(
     SEND_NEW_DV_TO_CA_EMAIL,
     "sendNewDVToCertificationAuthoritiesEmail",
   );
 
-  const sendDVSentToCandidateEmailMock = jest.spyOn(
+  const sendDVSentToCandidateEmailMock = vi.spyOn(
     SEND_NEW_DV_TO_CANDIDATE_EMAIL,
     "sendDVSentToCandidateEmail",
   );
@@ -227,6 +227,21 @@ test(`it should prevent sending again a DV when a DV is already PENDING and when
   "CANDIDATE_ABSENT",
 ].forEach((result) =>
   test(`it should allow sending again a DV when ${result} jury result`, async () => {
+    // Mock file upload to prevent actual S3 calls
+    vi.spyOn(FILE, "uploadFileToS3").mockImplementation(() =>
+      Promise.resolve(),
+    );
+
+    // Mock email services to prevent actual email sending
+    vi.spyOn(
+      SEND_NEW_DV_TO_CA_EMAIL,
+      "sendNewDVToCertificationAuthoritiesEmail",
+    ).mockImplementation(() => Promise.resolve());
+    vi.spyOn(
+      SEND_NEW_DV_TO_CANDIDATE_EMAIL,
+      "sendDVSentToCandidateEmail",
+    ).mockImplementation(() => Promise.resolve());
+
     const { certification, certificationAuthority } =
       await createCertificationWithcertificationAuthority();
 

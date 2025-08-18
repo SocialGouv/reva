@@ -7,7 +7,7 @@ import { createCertificationAuthorityHelper } from "@/test/helpers/entities/crea
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
-import { getGraphQLClient } from "@/test/jestGraphqlClient";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -23,7 +23,7 @@ test("should count all (2) feasibilities for admin user", async () => {
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -63,7 +63,7 @@ test("should count all (1) available feasibility for certificator user even if o
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: certificationAuthority?.Account[0].keycloakId,
@@ -89,7 +89,7 @@ test("should count no available feasibility for certificator user since he doesn
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: certificationAuthority.Account[0].keycloakId,
@@ -126,7 +126,7 @@ test("should return a feasibilty for certificator since he is allowed to handle 
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: certificationAuthority?.Account[0].keycloakId,
@@ -155,7 +155,7 @@ test("should return a feasibility error when accessing it since the certificator
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: certificationAuthority.Account[0].keycloakId,
@@ -190,7 +190,7 @@ test("should return all (1) available feasibility for certificateur user", async
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: certificationAuthority?.Account[0].keycloakId,
@@ -217,7 +217,7 @@ test("should count 1 pending feasibility for admin user", async () => {
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
@@ -248,7 +248,7 @@ const postFeasibilityDecision = ({
   decision: string;
   authorization: ReturnType<typeof authorizationHeaderForUser>;
 }) => {
-  const fastify = (global as any).fastify as FastifyInstance;
+  const fastify = global.testApp as FastifyInstance;
 
   return fastify.inject({
     method: "POST",
@@ -379,7 +379,7 @@ test("should not reject a feasibility since the certificator doesn't handle it",
   });
 
   const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "manage_certification_authority_local_account",
       keycloakId: certificationAuthority.Account[0].keycloakId,
@@ -417,7 +417,7 @@ const postFeasibility = ({
     new File([], "test.pdf", { type: "application/pdf" }),
   );
 
-  const fastify = (global as any).fastify as FastifyInstance;
+  const fastify = global.testApp as FastifyInstance;
 
   return fastify.inject({
     method: "POST",
@@ -431,9 +431,9 @@ const postFeasibility = ({
 };
 
 test("should validate upload of feasibility file", async () => {
-  jest.spyOn(FILE, "uploadFilesToS3").mockImplementation();
+  vi.spyOn(FILE, "uploadFilesToS3").mockImplementation(() => Promise.resolve());
 
-  const sendNewFeasibilitySubmittedEmaillMock = jest.spyOn(
+  const sendNewFeasibilitySubmittedEmaillMock = vi.spyOn(
     SEND_NEW_FEASIBILITY_EMAIL,
     "sendNewFeasibilitySubmittedEmail",
   );

@@ -10,13 +10,15 @@ import { RNCPReferential } from "./rncp/referential";
 
 it("should create a new certification in the 'BROUILLON' status", async () => {
   const myFormaCode = await createFormaCodeHelper();
-  jest.spyOn(RNCPReferential, "getInstance").mockImplementation(
+  const uniqueRncp = `RNCP${Date.now()}`; // Generate unique RNCP code
+
+  vi.spyOn(RNCPReferential, "getInstance").mockImplementation(
     () =>
       ({
         findOneByRncp: () => ({
-          ID_FICHE: "1234",
-          NUMERO_FICHE: "1234",
-          INTITULE: "1234",
+          ID_FICHE: uniqueRncp,
+          NUMERO_FICHE: uniqueRncp,
+          INTITULE: uniqueRncp,
           BLOCS_COMPETENCES: [],
           FORMACODES: [{ CODE: myFormaCode.code }],
           PREREQUIS: { PARSED_PREREQUIS: [], LISTE_PREREQUIS: "" },
@@ -27,7 +29,7 @@ it("should create a new certification in the 'BROUILLON' status", async () => {
   );
 
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
@@ -35,7 +37,7 @@ it("should create a new certification in the 'BROUILLON' status", async () => {
     payload: {
       requestType: "mutation",
       endpoint: "referential_addCertification",
-      arguments: { input: { codeRncp: "1234" } },
+      arguments: { input: { codeRncp: uniqueRncp } },
       returnFields: "{status}",
     },
   });
@@ -50,7 +52,7 @@ it("should send a certification to the certification registry manager if the cer
     status: "BROUILLON",
   });
 
-  const certificationRegistryManagerMailSpy = jest
+  const certificationRegistryManagerMailSpy = vi
     .spyOn(
       SendNewCertificationAvailableToCertificationRegistryManagerEmailModule,
       "sendNewCertificationAvailableToCertificationRegistryManagerEmail",
@@ -58,7 +60,7 @@ it("should send a certification to the certification registry manager if the cer
     .mockImplementation(() => Promise.resolve());
 
   const response = await injectGraphql({
-    fastify: (global as any).fastify,
+    fastify: global.testApp,
     authorization: authorizationHeaderForUser({
       role: "admin",
       keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
@@ -88,7 +90,7 @@ test.each([
       status,
     });
     const response = await injectGraphql({
-      fastify: (global as any).fastify,
+      fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "admin",
         keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",

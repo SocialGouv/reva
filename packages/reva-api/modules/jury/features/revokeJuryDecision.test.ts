@@ -9,8 +9,8 @@ import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/crea
 import { createFileHelper } from "@/test/helpers/entities/create-file-helper";
 import { createJuryHelper } from "@/test/helpers/entities/create-jury-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/jestGraphqlClient";
-import { shouldNotGoHere } from "@/test/jestHelpers";
+import { shouldNotGoHere } from "@/test/helpers/should-not-go-here.helper";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 async function setupTestCandidacyWithFeasibility() {
   const organism = await createOrganismHelper();

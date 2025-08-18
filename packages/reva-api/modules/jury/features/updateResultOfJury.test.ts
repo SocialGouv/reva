@@ -9,7 +9,7 @@ import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/e
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createJuryHelper } from "@/test/helpers/entities/create-jury-helper";
-import { getGraphQLClient } from "@/test/jestGraphqlClient";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
 import * as SendJuryResultCandidateEmailModule from "../emails/sendJuryResultCandidateEmail";
@@ -195,7 +195,7 @@ test("should save jury result without errors", async () => {
 });
 
 test("should send jury result to candidate", async () => {
-  const sendJuryResultCandidateEmailSpy = jest.spyOn(
+  const sendJuryResultCandidateEmailSpy = vi.spyOn(
     SendJuryResultCandidateEmailModule,
     "sendJuryResultCandidateEmail",
   );
@@ -217,7 +217,7 @@ test("should send jury result to candidate", async () => {
 });
 
 test("should send jury result to organism", async () => {
-  const sendJuryResultAAPEmailSpy = jest.spyOn(
+  const sendJuryResultAAPEmailSpy = vi.spyOn(
     SendJuryResultAAPEmailModule,
     "sendJuryResultAAPEmail",
   );
