@@ -1,4 +1,5 @@
 "use client";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { toDate } from "date-fns";
 import { useSearchParams } from "next/navigation";
 
@@ -42,60 +43,76 @@ export default function VAECollectivePage() {
             leur état d’avancement.
           </p>
 
-          <SearchList
-            searchResultsPage={
-              candidacies || {
-                rows: [],
-                info: { totalRows: 0, totalPages: 0, currentPage: 0 },
-              }
-            }
-            searchFilter={searchFilter}
-          >
-            {(candidacy) => (
-              <CandidacyCard
-                key={candidacy.id}
-                candidacyId={candidacy.id}
-                candidateFirstname={candidacy.candidate?.firstname || ""}
-                candidateLastname={candidacy.candidate?.lastname || ""}
-                candidateGivenName={candidacy.candidate?.givenName || undefined}
-                certificationLabel={
-                  candidacy.certification
-                    ? `RNCP ${candidacy?.certification.codeRncp} : ${candidacy?.certification?.label}`
-                    : undefined
-                }
-                departmentCode={candidacy.candidate?.department?.code}
-                departmentLabel={candidacy.candidate?.department?.label}
-                organismLabel={
-                  candidacy.organism?.nomPublic || candidacy.organism?.label
-                }
-                organismModalitateAccompagnement={
-                  candidacy.organism?.modaliteAccompagnement
-                }
-                candidacySentAt={
-                  candidacy.candidacyStatuses.some(
-                    (s) => s.status === "VALIDATION",
-                  )
-                    ? toDate(
-                        candidacy.candidacyStatuses.find(
-                          (s) => s.status === "VALIDATION",
-                        )?.createdAt || 0,
-                      )
-                    : undefined
-                }
-                fundable={candidacy.financeModule !== "hors_plateforme"}
-                vaeCollective={!!candidacy.cohorteVaeCollective}
-                vaeCollectiveCommanditaireLabel={
-                  candidacy.cohorteVaeCollective?.commanditaireVaeCollective
-                    .raisonSociale
-                }
-                vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
-                status={candidacy.status}
-                feasibility={candidacy.feasibility}
-                jury={candidacy.jury}
-                dropout={candidacy.candidacyDropOut}
+          {!cohorteId && (
+            <div className="flex flex-col gap-4">
+              <Alert
+                small
+                title="Aucune cohorte sélectionnée"
+                description="Veuillez sélectionner une cohorte pour afficher les candidatures."
+                severity="info"
+                className="mt-4"
               />
-            )}
-          </SearchList>
+            </div>
+          )}
+
+          {cohorteId && (
+            <SearchList
+              searchResultsPage={
+                candidacies || {
+                  rows: [],
+                  info: { totalRows: 0, totalPages: 0, currentPage: 0 },
+                }
+              }
+              searchFilter={searchFilter}
+            >
+              {(candidacy) => (
+                <CandidacyCard
+                  key={candidacy.id}
+                  candidacyId={candidacy.id}
+                  candidateFirstname={candidacy.candidate?.firstname || ""}
+                  candidateLastname={candidacy.candidate?.lastname || ""}
+                  candidateGivenName={
+                    candidacy.candidate?.givenName || undefined
+                  }
+                  certificationLabel={
+                    candidacy.certification
+                      ? `RNCP ${candidacy?.certification.codeRncp} : ${candidacy?.certification?.label}`
+                      : undefined
+                  }
+                  departmentCode={candidacy.candidate?.department?.code}
+                  departmentLabel={candidacy.candidate?.department?.label}
+                  organismLabel={
+                    candidacy.organism?.nomPublic || candidacy.organism?.label
+                  }
+                  organismModalitateAccompagnement={
+                    candidacy.organism?.modaliteAccompagnement
+                  }
+                  candidacySentAt={
+                    candidacy.candidacyStatuses.some(
+                      (s) => s.status === "VALIDATION",
+                    )
+                      ? toDate(
+                          candidacy.candidacyStatuses.find(
+                            (s) => s.status === "VALIDATION",
+                          )?.createdAt || 0,
+                        )
+                      : undefined
+                  }
+                  fundable={candidacy.financeModule !== "hors_plateforme"}
+                  vaeCollective={!!candidacy.cohorteVaeCollective}
+                  vaeCollectiveCommanditaireLabel={
+                    candidacy.cohorteVaeCollective?.commanditaireVaeCollective
+                      .raisonSociale
+                  }
+                  vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
+                  status={candidacy.status}
+                  feasibility={candidacy.feasibility}
+                  jury={candidacy.jury}
+                  dropout={candidacy.candidacyDropOut}
+                />
+              )}
+            </SearchList>
+          )}
         </div>
       </div>
     </div>
