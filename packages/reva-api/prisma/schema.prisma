@@ -612,7 +612,7 @@ model Training {
 model TrainingOnCandidacies {
   training    Training  @relation(fields: [trainingId], references: [id])
   trainingId  String    @map("training_id") @db.Uuid
-  candidacy   Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacy   Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId String    @map("candidacy_id") @db.Uuid
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
@@ -636,7 +636,7 @@ model BasicSkill {
 model BasicSkillOnCandidacies {
   basicSkill   BasicSkill @relation(fields: [basicSkillId], references: [id])
   basicSkillId String     @map("basic_skill_id") @db.Uuid
-  candidacy    Candidacy  @relation(fields: [candidacyId], references: [id])
+  candidacy    Candidacy  @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId  String     @map("candidacy_id") @db.Uuid
   createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt    DateTime?  @map("updated_at") @db.Timestamptz(6)
@@ -776,7 +776,7 @@ model DropOutReason {
 }
 
 model CandidacyDropOut {
-  candidacy                         Candidacy           @relation(fields: [candidacyId], references: [id])
+  candidacy                         Candidacy           @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId                       String              @unique @map("candidacy_id") @db.Uuid
   dropOutReason                     DropOutReason       @relation(fields: [dropOutReasonId], references: [id])
   dropOutReasonId                   String              @map("drop_out_reason_id") @db.Uuid
@@ -820,7 +820,7 @@ enum AdmissibilityStatus {
 
 model Admissibility {
   id                             String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                      Candidacy            @relation(fields: [candidacyId], references: [id])
+  candidacy                      Candidacy            @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId                    String               @unique @map("candidacy_id") @db.Uuid
   isCandidateAlreadyAdmissible   Boolean              @default(false) @map("is_candidate_already_admissible")
   reportSentAt                   DateTime?            @map("report_sent_at")
@@ -1016,7 +1016,7 @@ enum ExamResult {
 
 model ExamInfo {
   id                String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy         Candidacy   @relation(fields: [candidacyId], references: [id])
+  candidacy         Candidacy   @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId       String      @unique @map("candidacy_id") @db.Uuid
   examResult        ExamResult? @map("exam_result")
   estimatedExamDate DateTime?   @map("estimated_exam_date")
@@ -1168,7 +1168,7 @@ model CertificationAuthorityLocalAccountOnCandidacy {
   certificationAuthorityLocalAccount   CertificationAuthorityLocalAccount @relation(fields: [certificationAuthorityLocalAccountId], references: [id], onDelete: Cascade)
   certificationAuthorityLocalAccountId String                             @map("certification_authority_local_account_id") @db.Uuid
   candidacyId                          String                             @map("candidacy_id") @db.Uuid
-  candidacy                            Candidacy                          @relation(map: "calaoc_candidacy", fields: [candidacyId], references: [id], onDelete: NoAction)
+  candidacy                            Candidacy                          @relation(map: "calaoc_candidacy", fields: [candidacyId], references: [id], onDelete: Cascade)
   hasBeenTransfered                    Boolean?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -1189,7 +1189,7 @@ enum FeasibilityStatus {
 
 model Feasibility {
   id                            String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                     Candidacy                      @relation(fields: [candidacyId], references: [id])
+  candidacy                     Candidacy                      @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId                   String                         @map("candidacy_id") @db.Uuid
   certificationAuthority        CertificationAuthority?        @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId      String?                        @map("certification_authority_id") @db.Uuid
@@ -1214,7 +1214,7 @@ model Feasibility {
 
 model FeasibilityDecision {
   id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  feasibility     Feasibility       @relation(fields: [feasibilityId], references: [id])
+  feasibility     Feasibility       @relation(fields: [feasibilityId], references: [id], onDelete: Cascade)
   feasibilityId   String            @map("feasibility_id") @db.Uuid
   decision        FeasibilityStatus
   decisionComment String?           @map("decision_comment")
@@ -1246,7 +1246,7 @@ enum DossierDeValidationStatus {
 
 model DossierDeValidation {
   id                            String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                     Candidacy                             @relation(fields: [candidacyId], references: [id])
+  candidacy                     Candidacy                             @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId                   String                                @map("candidacy_id") @db.Uuid
   certificationAuthority        CertificationAuthority                @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId      String                                @map("certification_authority_id") @db.Uuid
@@ -1278,7 +1278,7 @@ model DossierDeValidationOtherFilesOnFile {
 
 model Jury {
   id                                                    String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                                             Candidacy              @relation(fields: [candidacyId], references: [id])
+  candidacy                                             Candidacy              @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId                                           String                 @map("candidacy_id") @db.Uuid
   certificationAuthority                                CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId                              String                 @map("certification_authority_id") @db.Uuid
@@ -1530,7 +1530,7 @@ model CandidacyLog {
   userProfile CandidacyLogUserProfile @map("user_profile")
   candidacyId String                  @map("candidacy_id") @db.Uuid
   eventType   String                  @map("event_type")
-  candidacy   Candidacy               @relation(fields: [candidacyId], references: [id])
+  candidacy   Candidacy               @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   details     Json?
   createdAt   DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?               @map("updated_at") @db.Timestamptz(6)
@@ -1610,7 +1610,7 @@ model DFFAttachment {
   file                            File                          @relation("dff_attachment", fields: [fileId], references: [id])
   type                            DFFAttachmentType
   createdAt                       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
-  dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id], onDelete: Cascade)
   dematerializedFeasibilityFileId String                        @map("dematerialized_feasibility_file_id") @db.Uuid
 
   @@map("dff_attachment")
@@ -1625,7 +1625,7 @@ enum DFFAttachmentType {
 
 model DFFCertificationCompetenceBloc {
   id                              String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  dematerializedFeasibilityFile   DematerializedFeasibilityFile @relation(fields: [dematerializedFeasibilityFileId], references: [id], onDelete: Cascade)
   dematerializedFeasibilityFileId String                        @map("dematerialized_feasibility_file_id") @db.Uuid
   certificationCompetenceBlocId   String                        @map("certification_competence_bloc_id") @db.Uuid
   certificationCompetenceBloc     CertificationCompetenceBloc   @relation(fields: [certificationCompetenceBlocId], references: [id])
@@ -1645,7 +1645,7 @@ enum DFFCertificationCompetenceDetailsState {
 
 model DFFCertificationCompetenceDetails {
   id                              String                                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  dematerializedFeasibilityFile   DematerializedFeasibilityFile          @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  dematerializedFeasibilityFile   DematerializedFeasibilityFile          @relation(fields: [dematerializedFeasibilityFileId], references: [id], onDelete: Cascade)
   dematerializedFeasibilityFileId String                                 @map("dematerialized_feasibility_file_id") @db.Uuid
   certificationCompetenceId       String                                 @map("certification_competence_id") @db.Uuid
   certificationCompetence         CertificationCompetence                @relation(fields: [certificationCompetenceId], references: [id])
@@ -1675,7 +1675,7 @@ model DFFPrerequisite {
   id                              String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                           String                         @db.Text
   state                           PrerequisiteState
-  DematerializedFeasibilityFile   DematerializedFeasibilityFile? @relation(fields: [dematerializedFeasibilityFileId], references: [id])
+  DematerializedFeasibilityFile   DematerializedFeasibilityFile? @relation(fields: [dematerializedFeasibilityFileId], references: [id], onDelete: Cascade)
   dematerializedFeasibilityFileId String?                        @db.Uuid
 
   @@map("dff_prerequisite")
