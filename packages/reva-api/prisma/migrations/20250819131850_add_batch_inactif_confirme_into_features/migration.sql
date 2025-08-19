@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('batch.update-candidacies-inactif-confirme', 'Batch de mise à jour des candidatures inactives vers le statut "inactivité confirmée"', 'Permet de traiter automatiquement les candidatures inactives et de les passer au statut "inactivité confirmée" via un traitement par lot');
