@@ -190,7 +190,7 @@ export default async function CohortePage({
               registrationCode={cohorte.codeInscription || ""}
             />
             <RegistrationUrlDisplay
-              registrationUrl={`${websiteBaseUrl}/inscription-candidat/vae-collective/${cohorte.codeInscription}`}
+              registrationUrl={`${websiteBaseUrl}/inscription-candidat/vae-collective?codeInscription=${cohorte.codeInscription}`}
             />
           </div>
         </div>

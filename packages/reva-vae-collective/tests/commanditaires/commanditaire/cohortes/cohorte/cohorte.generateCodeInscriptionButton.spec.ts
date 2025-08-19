@@ -338,7 +338,7 @@ test.describe("registration code and url display", () => {
         "CODE1234",
       );
       await expect(page.getByTestId("registration-url-display")).toContainText(
-        "http://localhost:3002/inscription-candidat/vae-collective/CODE1234",
+        "http://localhost:3002/inscription-candidat/vae-collective?codeInscription=CODE1234",
       );
     });
   });
