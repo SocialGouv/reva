@@ -40,7 +40,7 @@ export function VaeCollectiveCodeForm() {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isDirty },
+    formState: { errors },
     setError,
     clearErrors,
   } = useForm<FormData>({
@@ -52,7 +52,6 @@ export function VaeCollectiveCodeForm() {
   });
 
   const codeValue = watch("code");
-  const isFormComplete = codeValue.length === 8;
 
   const { refetch: validateCode, isLoading } = useQuery({
     queryKey: ["validateVaeCollectiveCode", codeValue],
@@ -99,7 +98,7 @@ export function VaeCollectiveCodeForm() {
           className="w-full justify-center"
           priority="primary"
           type="submit"
-          disabled={!isDirty || !isFormComplete || isLoading}
+          disabled={isLoading}
         >
           Accéder à cette VAE collective
         </Button>

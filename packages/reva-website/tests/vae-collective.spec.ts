@@ -95,36 +95,35 @@ test.describe("VAE Collective Code Page", () => {
     ).toBeVisible();
   });
 
-  test("should validate form input constraints", async ({ page, msw }) => {
-    msw.use(
-      fvae.query("getVaeCollectiveCohort", () => {
-        return HttpResponse.json({
-          data: {
-            cohorteVaeCollective: null,
-          },
-        });
-      }),
-    );
-
+  test("should show an error when the code is less than 8 characters", async ({
+    page,
+  }) => {
     const codeInput = page.getByRole("textbox");
+
+    await codeInput.fill("ABC");
+
     const submitButton = page.getByRole("button", {
       name: "Accéder à cette VAE collective",
     });
 
-    await expect(submitButton).toBeDisabled();
+    await submitButton.click();
 
-    await codeInput.fill("ABC");
-    await expect(submitButton).toBeDisabled();
+    await expect(
+      page.getByText("Le code doit contenir exactement 8 caractères"),
+    ).toBeVisible();
+  });
 
-    await codeInput.click();
-    await codeInput.pressSequentially("ABCD1234");
-    await expect(submitButton).toBeEnabled();
+  test("should show an error when the code contains invalid characters", async ({
+    page,
+  }) => {
+    const codeInput = page.getByRole("textbox");
 
-    await codeInput.clear();
-    await codeInput.click();
-    await codeInput.pressSequentially("ABCD####");
+    await codeInput.fill("ABCD####");
 
-    await expect(submitButton).toBeEnabled();
+    const submitButton = page.getByRole("button", {
+      name: "Accéder à cette VAE collective",
+    });
+
     await submitButton.click();
 
     await expect(
