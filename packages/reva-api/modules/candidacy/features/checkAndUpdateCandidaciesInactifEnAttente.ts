@@ -39,6 +39,9 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
           derniereDateActivite: {
             lte: thresholdDateBeforeFeasibilityAdmissible,
           },
+          candidacyDropOut: {
+            is: null,
+          },
         },
         select: {
           id: true,
@@ -104,6 +107,9 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
           },
           derniereDateActivite: {
             lte: thresholdDateAfterFeasibilityAdmissible,
+          },
+          candidacyDropOut: {
+            is: null,
           },
         },
         select: {
