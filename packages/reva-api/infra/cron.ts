@@ -5,6 +5,7 @@ import path from "path";
 import { CronJob } from "cron";
 import dotenv from "dotenv";
 
+import { checkAndUpdateCandidaciesInactifConfirme } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifConfirme";
 import { checkAndUpdateCandidaciesInactifEnAttente } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifEnAttente";
 
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
@@ -24,6 +25,7 @@ dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
 const EVERY_DAY_AT_1_30_AM = "30 1 * * *";
+const EVERY_DAY_AT_1_45_AM = "45 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
 const EVERY_DAY_AT_3_AM = "0 3 * * *";
 
@@ -216,6 +218,25 @@ CronJob.from({
       batchCallback: async () => {
         logger.info("Running batch.update-candidacies-inactif-en-attente");
         await checkAndUpdateCandidaciesInactifEnAttente();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Vérification de l'activité des candidatures inactives en attente
+// Si la candidature est inactive depuis 15 jours, on la met à jour en INACTIF_CONFIRME
+// Mise à jour de l'activité des candidatures du statut INACTIF_EN_ATTENTE vers INACTIF_CONFIRME
+CronJob.from({
+  cronTime:
+    process.env.BATCH_UPDATE_CANDIDACIES_INACTIF_CONFIRME_CRONTIME ||
+    EVERY_DAY_AT_1_45_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.update-candidacies-inactif-confirme",
+      batchCallback: async () => {
+        logger.info("Running batch.update-candidacies-inactif-confirme");
+        await checkAndUpdateCandidaciesInactifConfirme();
       },
     }),
   start: true,

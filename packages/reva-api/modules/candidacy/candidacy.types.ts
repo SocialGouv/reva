@@ -109,3 +109,9 @@ export interface ArchiveCandidacyParams {
   archivingReason: CandidacyArchivingReason;
   archivingReasonAdditionalInformation?: string | null;
 }
+
+export interface ArchiveCandidaciesParams {
+  candidacyIds: string[];
+  archivingReason: CandidacyArchivingReason;
+  archivingReasonAdditionalInformation?: string | null;
+}
