@@ -32,7 +32,11 @@ const zodSchema = z.object({
 
 type FormData = z.infer<typeof zodSchema>;
 
-export function VaeCollectiveCodeForm() {
+export function VaeCollectiveCodeForm({
+  defaultValues,
+}: {
+  defaultValues?: FormData;
+}) {
   const router = useRouter();
   const { graphqlClient } = useGraphQlClient();
 
@@ -45,9 +49,7 @@ export function VaeCollectiveCodeForm() {
     clearErrors,
   } = useForm<FormData>({
     resolver: zodResolver(zodSchema),
-    defaultValues: {
-      code: "",
-    },
+    defaultValues,
     reValidateMode: "onSubmit",
   });
 

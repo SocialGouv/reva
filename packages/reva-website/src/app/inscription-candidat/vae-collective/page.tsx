@@ -5,7 +5,13 @@ import { CandidateBackground } from "@/components/layout/full-height-blue-layout
 
 import { VaeCollectiveCodeForm } from "./_components/VaeCollectiveCodeForm";
 
-export default function VaeCollectiveCodePage() {
+export default async function VaeCollectiveCodePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ codeInscription?: string }>;
+}) {
+  const { codeInscription } = await searchParams;
+
   return (
     <MainLayout>
       <CandidateBackground>
@@ -19,7 +25,11 @@ export default function VaeCollectiveCodePage() {
             </p>
             <div className="flex flex-col lg:flex-row lg:justify-between gap-20 lg:gap-28">
               <div className="w-full flex-basis-1/2 my-10">
-                <VaeCollectiveCodeForm />
+                <VaeCollectiveCodeForm
+                  defaultValues={{
+                    code: codeInscription ?? "",
+                  }}
+                />
               </div>
               <div className="flex flex-col flex-basis-1/2 my-auto">
                 <p className="text-xl leading-relaxed">

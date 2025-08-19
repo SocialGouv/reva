@@ -132,4 +132,16 @@ test.describe("VAE Collective Code Page", () => {
       ),
     ).toBeVisible();
   });
+
+  test("should prefill the code input when a code is provided in the url", async ({
+    page,
+  }) => {
+    await page.goto(
+      "/inscription-candidat/vae-collective?codeInscription=ABCD1234",
+    );
+
+    const codeInput = page.getByRole("textbox");
+
+    await expect(codeInput).toHaveValue("ABCD1234");
+  });
 });
