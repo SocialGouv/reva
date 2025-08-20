@@ -122,8 +122,12 @@ const unsafeResolvers = {
     ) => getCohorteVAECollectiveById({ cohorteVaeCollectiveId }),
     vaeCollective_commanditaireVaeCollectives: async (
       _parent: unknown,
-      { offset, limit }: { offset: number; limit: number; searchText: string },
-    ) => getCommanditaireVaeCollectives({ offset, limit }),
+      {
+        offset,
+        limit,
+        searchFilter,
+      }: { offset: number; limit: number; searchFilter: string },
+    ) => getCommanditaireVaeCollectives({ offset, limit, searchFilter }),
   },
   Mutation: {
     vaeCollective_createCohorteVaeCollective: async (

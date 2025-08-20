@@ -52,6 +52,7 @@ type Query {
   vaeCollective_commanditaireVaeCollectives(
     offset: Int
     limit: Int
+    searchFilter: String
   ): CommanditaireVaeCollectivePage!
   cohorteVaeCollective(codeInscription: String!): CohorteVaeCollective
   cohortesVaeCollectivesForConnectedAap: [CohorteVaeCollective!]!
