@@ -10,7 +10,7 @@ import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 
 const getVaeCollectives = graphql(`
-  query getVaeCollectivesForStructuresVaeCollectivesPage(
+  query getVaeCollectivesForStructuresVaeCollectivePage(
     $offset: Int
     $searchFilter: String
   ) {
@@ -66,10 +66,10 @@ const MaisonMereAapListPage = () => {
 
   return (
     <div className="flex flex-col">
-      <h1>Structures de VAE collectives</h1>
+      <h1>Structures de VAE collective</h1>
       <p className="text-xl leading-8 mb-12">
         En tant qu'administrateur, vous avez la possibilité de visualiser
-        l’intégralité des structures de VAE collectives.
+        l’intégralité des structures de VAE collective.
       </p>
       {status === "success" && (
         <SearchList

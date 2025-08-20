@@ -43,7 +43,7 @@ const PATHS = {
   FEASIBILITIES: "/candidacies/feasibilities",
   STATISTIQUES: "/dashboard",
   VAE_COLLECTIVES: "/vae-collectives",
-  STRUCTURES_VAE_COLLECTIVES: "/structures-vae-collectives",
+  STRUCTURES_VAE_COLLECTIVE: "/structures-vae-collective",
 } as const;
 
 const LABELS = {
@@ -56,7 +56,7 @@ const LABELS = {
   GESTION_CERTIFICATIONS: "Gestion des certifications",
   STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
   STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
-  STRUCTURES_VAE_COLLECTIVES: "Structures VAE collectives",
+  STRUCTURES_VAE_COLLECTIVE: "Structures VAE collective",
   STATISTIQUES: "Statistiques",
   VAE_COLLECTIVES: "VAE collectives",
 } as const;
@@ -158,10 +158,10 @@ const getNavigationTabs = ({
         ...(showAAPVaeCollectivesTabsAndMenus
           ? [
               createTab({
-                text: LABELS.STRUCTURES_VAE_COLLECTIVES,
-                href: PATHS.STRUCTURES_VAE_COLLECTIVES,
+                text: LABELS.STRUCTURES_VAE_COLLECTIVE,
+                href: PATHS.STRUCTURES_VAE_COLLECTIVE,
                 isActive: currentPathname.startsWith(
-                  PATHS.STRUCTURES_VAE_COLLECTIVES,
+                  PATHS.STRUCTURES_VAE_COLLECTIVE,
                 ),
               }),
             ]
