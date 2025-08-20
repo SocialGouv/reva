@@ -4,13 +4,17 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Download from "@codegouvfr/react-dsfr/Download";
 import { GraphQLError } from "graphql";
+import { deburr } from "lodash";
 import dynamic from "next/dynamic";
 import { redirect, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
+import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
+import { PdfLink } from "@/components/legacy/organisms/DffSummary/components/PdfLink";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { REST_API_URL } from "@/config/config";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
@@ -27,6 +31,12 @@ const ButtonConvertHtmlToPdf = dynamic(
 
 export default function ValidateFeasibility() {
   const router = useRouter();
+
+  const { isFeatureActive } = useAnonymousFeatureFlipping();
+
+  const isGenerateDfDematFromServerActive = isFeatureActive(
+    "GENERATE_DF_DEMAT_FROM_SERVER",
+  );
 
   const {
     createOrUpdateSwornStatement,
@@ -64,6 +74,14 @@ export default function ValidateFeasibility() {
     [dematerializedFeasibilityFile],
   );
 
+  const getPdfUrl = () => {
+    return `${REST_API_URL}/candidacy/${candidacy?.id}/feasibility/file-demat/${dematerializedFeasibilityFile?.id}`;
+  };
+
+  const candidateName = deburr(
+    `${candidate?.givenName ? candidate?.givenName : candidate?.lastname}_${candidate?.firstname}`,
+  ).toLowerCase();
+
   if (!candidacy) {
     return null;
   }
@@ -100,11 +118,21 @@ export default function ValidateFeasibility() {
     <PageLayout title="Dossier de faisabilité" displayBackToHome>
       <div className="flex justify-between mb-4 mt-6">
         <h1 className="mb-0">Dossier de faisabilité </h1>
-        <ButtonConvertHtmlToPdf
-          label="Télécharger le dossier de faisabilité"
-          elementId="dff-to-print"
-          filename="dossier_de_faisabilite.pdf"
-        />
+        {isGenerateDfDematFromServerActive ? (
+          <PdfLink
+            text={"Télécharger le dossier de faisabilité"}
+            title={"Télécharger le dossier de faisabilité"}
+            url={getPdfUrl()}
+            fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
+            className="fr-btn fr-btn--secondary fr-btn--sm"
+          />
+        ) : (
+          <ButtonConvertHtmlToPdf
+            label="Télécharger le dossier de faisabilité"
+            elementId="dff-to-print"
+            filename="dossier_de_faisabilite.pdf"
+          />
+        )}
       </div>
 
       <DffSummary
