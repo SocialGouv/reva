@@ -97,4 +97,11 @@ type Mutation {
     commanditaireVaeCollectiveId: ID!
     cohorteVaeCollectiveId: ID!
   ): Void!
+
+  vaeCollective_createCommanditaireVaeCollective(
+    raisonSociale: String!
+    gestionnaireFirstname: String!
+    gestionnaireLastname: String!
+    gestionnaireEmail: String!
+  ): CommanditaireVaeCollective!
 }

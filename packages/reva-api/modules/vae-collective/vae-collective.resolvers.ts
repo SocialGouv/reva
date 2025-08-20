@@ -4,6 +4,7 @@ import { getOrganismById } from "../organism/features/getOrganism";
 import { getCertificationById } from "../referential/features/getCertificationById";
 
 import { createCohorteVaeCollective } from "./features/createCohorteVaeCollective";
+import { createCommanditaireVaeCollective } from "./features/createCommanditaireVaeCollective";
 import { deleteCohorteVAECollective } from "./features/deleteCohorteVAECollective";
 import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "./features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
 import { getCertificationCohortesByCohorteId } from "./features/getCertificationCohortesByCohorteId";
@@ -188,6 +189,26 @@ const unsafeResolvers = {
       _parent: unknown,
       { cohorteVaeCollectiveId }: { cohorteVaeCollectiveId: string },
     ) => publishCohorteVAECollective({ cohorteVaeCollectiveId }),
+    vaeCollective_createCommanditaireVaeCollective: async (
+      _parent: unknown,
+      {
+        raisonSociale,
+        gestionnaireEmail,
+        gestionnaireFirstname,
+        gestionnaireLastname,
+      }: {
+        raisonSociale: string;
+        gestionnaireEmail: string;
+        gestionnaireFirstname: string;
+        gestionnaireLastname: string;
+      },
+    ) =>
+      createCommanditaireVaeCollective({
+        raisonSociale,
+        gestionnaireEmail,
+        gestionnaireFirstname,
+        gestionnaireLastname,
+      }),
   },
 };
 
