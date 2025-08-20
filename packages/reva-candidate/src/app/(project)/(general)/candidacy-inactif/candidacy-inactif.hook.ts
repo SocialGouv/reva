@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
@@ -53,7 +53,6 @@ const UPDATE_CANDIDACY_INACTIF_DECISION = graphql(`
 
 export const useCandidacyInactif = () => {
   const { graphqlClient } = useGraphQlClient();
-  const queryClient = useQueryClient();
 
   const { data, isLoading: isCandidacyInactifLoading } = useQuery({
     queryKey: ["candidate", "candidacy-inactif"],
@@ -75,11 +74,6 @@ export const useCandidacyInactif = () => {
         candidacyId,
         continueCandidacy,
       }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["candidate"],
-      });
-    },
   });
 
   return {

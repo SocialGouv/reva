@@ -4,6 +4,7 @@ import Card from "@codegouvfr/react-dsfr/Card";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { addDays, format } from "date-fns";
 import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -108,6 +109,8 @@ const getBadge = ({
 
 export default function CandidacyInactifPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const {
     candidate,
     isCandidacyInactifLoading,
@@ -132,7 +135,7 @@ export default function CandidacyInactifPage() {
   }
 
   if (candidacy.activite !== "INACTIF_EN_ATTENTE") {
-    redirect("/");
+    return redirect("/");
   }
 
   const hasFeasibilityAdmissible =
@@ -160,14 +163,14 @@ export default function CandidacyInactifPage() {
         continueCandidacy,
       });
       successToast("Votre décision a été enregistrée");
-      if (hasFeasibilityAdmissible) {
-        router.push("/");
+      if (!hasFeasibilityAdmissible && !continueCandidacy) {
+        // On redirige vers la page de suppression de candidature sans rafraichir les données candidate pour ne pas avoir un conflit entre la redirection et le hook layout
+        router.push("/candidacy-deleted");
       } else {
-        if (continueCandidacy) {
-          router.push("/");
-        } else {
-          router.push("/candidacy-deleted");
-        }
+        // On veut laisser la redirection se faire en forçant un rafraichissement des données candidate
+        queryClient.invalidateQueries({
+          queryKey: ["candidate"],
+        });
       }
     } catch (error) {
       graphqlErrorToast(error);
