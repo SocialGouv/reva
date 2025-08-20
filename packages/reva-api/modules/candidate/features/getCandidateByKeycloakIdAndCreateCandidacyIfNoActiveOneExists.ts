@@ -12,6 +12,9 @@ export const getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists =
       if (!candidate) {
         throw new Error("Candidat non trouvé");
       }
+
+      // Row-level lock per candidate to avoid duplicate candidacies under concurrency
+      await tx.$queryRaw`SELECT id FROM candidate WHERE id = ${candidate.id}::uuid FOR UPDATE`;
       const activeCandidacy = await getFirstActiveCandidacyByCandidateId({
         candidateId: candidate.id,
         tx,
