@@ -107,7 +107,8 @@ const getNavigationTabs = ({
   isCertificationRegistryManager,
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
-  showAAPVaeCollectivesTabsAndMenus,
+  showAAPVaeCollectivesTab,
+  showStructuresVaeCollectiveMenu,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -117,7 +118,8 @@ const getNavigationTabs = ({
   isCertificationRegistryManager: boolean;
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
-  showAAPVaeCollectivesTabsAndMenus: boolean;
+  showAAPVaeCollectivesTab: boolean;
+  showStructuresVaeCollectiveMenu: boolean;
 }) => {
   const adminTabs = [
     createTab({
@@ -155,7 +157,7 @@ const getNavigationTabs = ({
             PATHS.CERTIFICATION_AUTHORITY_STRUCTURES,
           ),
         }),
-        ...(showAAPVaeCollectivesTabsAndMenus
+        ...(showStructuresVaeCollectiveMenu
           ? [
               createTab({
                 text: LABELS.STRUCTURES_VAE_COLLECTIVE,
@@ -181,7 +183,7 @@ const getNavigationTabs = ({
       href: PATHS.CANDIDACIES,
       isActive: isAAPCandidaciesPath(currentPathname),
     }),
-    ...(showAAPVaeCollectivesTabsAndMenus
+    ...(showAAPVaeCollectivesTab
       ? [
           createTab({
             text: LABELS.VAE_COLLECTIVES,
@@ -297,12 +299,14 @@ export const Header = () => {
     enabled: isVaeCollectiveFeatureActive && isOrganism && !isAdmin,
   });
 
-  const showAAPVaeCollectivesTabsAndMenus =
+  const showAAPVaeCollectivesTab =
     isVaeCollectiveFeatureActive &&
     isOrganism &&
     !isAdmin &&
     !!getCohortesVaeCollectivesForConnectedAap
       ?.cohortesVaeCollectivesForConnectedAap?.length;
+
+  const showStructuresVaeCollectiveMenu = isVaeCollectiveFeatureActive;
 
   const navigation = getNavigationTabs({
     currentPathname,
@@ -313,7 +317,8 @@ export const Header = () => {
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
-    showAAPVaeCollectivesTabsAndMenus,
+    showAAPVaeCollectivesTab,
+    showStructuresVaeCollectiveMenu,
   });
 
   return (
