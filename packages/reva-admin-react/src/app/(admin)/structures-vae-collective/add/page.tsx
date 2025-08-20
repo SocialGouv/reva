@@ -1,12 +1,34 @@
 "use client";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+
+import { graphql } from "@/graphql/generated";
+
+const createCommanditaireVaeCollectiveMutation = graphql(`
+  mutation vaeCollective_createCommanditaireVaeCollective(
+    $raisonSociale: String!
+    $gestionnaireEmail: String!
+    $gestionnaireFirstname: String!
+    $gestionnaireLastname: String!
+  ) {
+    vaeCollective_createCommanditaireVaeCollective(
+      raisonSociale: $raisonSociale
+      gestionnaireEmail: $gestionnaireEmail
+      gestionnaireFirstname: $gestionnaireFirstname
+      gestionnaireLastname: $gestionnaireLastname
+    ) {
+      id
+    }
+  }
+`);
 
 const structureVaeCollectiveSchema = z.object({
   raisonSociale: z.string().min(1, "Merci de remplir ce champ"),
@@ -21,6 +43,17 @@ type StructureVaeCollectiveFormValues = z.infer<
 
 export default function AddStructureVaeCollectivePage() {
   const router = useRouter();
+  const { graphqlClient } = useGraphQlClient();
+  const { mutateAsync: createCommanditaireVaeCollective } = useMutation({
+    mutationFn: (params: {
+      raisonSociale: string;
+      gestionnaireEmail: string;
+      gestionnaireFirstname: string;
+      gestionnaireLastname: string;
+    }) =>
+      graphqlClient.request(createCommanditaireVaeCollectiveMutation, params),
+  });
+
   const { register, handleSubmit, formState, reset } =
     useForm<StructureVaeCollectiveFormValues>({
       resolver: zodResolver(structureVaeCollectiveSchema),
@@ -34,7 +67,7 @@ export default function AddStructureVaeCollectivePage() {
 
   const onSubmit = async (data: StructureVaeCollectiveFormValues) => {
     try {
-      console.log({ data });
+      await createCommanditaireVaeCollective(data);
       successToast("Structure de VAE collective créée avec succès");
       router.push(`/structures-vae-collective`);
     } catch (error) {
