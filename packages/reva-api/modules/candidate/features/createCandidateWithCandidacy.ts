@@ -17,33 +17,37 @@ interface CreateCandidateWithCandidacyInput {
 export const createCandidateWithCandidacy = async (
   candidateInput: CreateCandidateWithCandidacyInput,
 ) => {
-  // Create account
-  const createdCandidate = await prismaClient.candidate.create({
-    data: {
-      email: candidateInput.email,
-      firstname: candidateInput.firstname,
-      lastname: candidateInput.lastname,
-      phone: candidateInput.phone,
-      departmentId: candidateInput.departmentId,
-      keycloakId: candidateInput.keycloakId,
-    },
-  });
-
-  // Check if an existing candidacy is active
-  const candidacy = await prismaClient.candidacy.findFirst({
-    where: {
-      candidateId: createdCandidate.id,
-      status: { not: "ARCHIVE" },
-    },
-  });
-
-  if (!candidacy) {
-    await createCandidacy({
-      candidateId: createdCandidate.id,
-      typeAccompagnement: candidateInput.typeAccompagnement,
-      cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
+  const prisma = prismaClient;
+  return prisma.$transaction(async (tx) => {
+    // Create account
+    const createdCandidate = await tx.candidate.create({
+      data: {
+        email: candidateInput.email,
+        firstname: candidateInput.firstname,
+        lastname: candidateInput.lastname,
+        phone: candidateInput.phone,
+        departmentId: candidateInput.departmentId,
+        keycloakId: candidateInput.keycloakId,
+      },
     });
-  }
 
-  return createdCandidate;
+    // Check if an existing candidacy is active
+    const candidacy = await tx.candidacy.findFirst({
+      where: {
+        candidateId: createdCandidate.id,
+        status: { not: "ARCHIVE" },
+      },
+    });
+
+    if (!candidacy) {
+      await createCandidacy({
+        candidateId: createdCandidate.id,
+        typeAccompagnement: candidateInput.typeAccompagnement,
+        cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
+        tx,
+      });
+    }
+
+    return createdCandidate;
+  });
 };

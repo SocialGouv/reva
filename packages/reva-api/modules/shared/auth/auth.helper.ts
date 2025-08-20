@@ -71,7 +71,6 @@ export const createAccountInIAM = async (
     const { id } = await keycloakAdmin.users.create({
       email: account.email,
       username: "" + CryptoJS.SHA256(account.email).toString(),
-      // groups: ['candidate'],
       emailVerified: true,
       enabled: true,
       realm,
