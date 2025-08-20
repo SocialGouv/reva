@@ -1,9 +1,10 @@
 "use client";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Card } from "@codegouvfr/react-dsfr/Card";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { useSearchParams } from "next/navigation";
 
-import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 
@@ -63,14 +64,10 @@ export default function PorteursDeProjetVaeCollectiveListPage() {
   return (
     <div className="flex flex-col w-full">
       <h1>Porteurs de projet VAE collective</h1>
-      <p className="text-xl leading-8 mb-12">
-        En tant qu'administrateur, vous avez la possibilité de visualiser
-        l’intégralité des porteurs de projet VAE collective.
-      </p>
       {status === "success" && (
         <SearchList
           searchBarProps={{
-            title: "Recherchez par raison sociale",
+            placeholder: "Recherchez par raison sociale",
           }}
           searchFilter={searchFilter}
           searchResultsPage={data.vaeCollective_commanditaireVaeCollectives}
@@ -89,17 +86,18 @@ export default function PorteursDeProjetVaeCollectiveListPage() {
         >
           {(commanditaire) =>
             commanditaire ? (
-              <WhiteCard key={commanditaire.id}>
-                <h6 className="mb-3">{commanditaire.raisonSociale}</h6>
-                <Button
-                  className="place-self-end"
+              <li className="list-none">
+                <Card
+                  key={commanditaire.id}
+                  title={commanditaire.raisonSociale}
+                  enlargeLink
+                  size="small"
                   linkProps={{
                     href: `/vae-collective/commanditaires/${commanditaire.id}/cohortes`,
                   }}
-                >
-                  Voir plus
-                </Button>
-              </WhiteCard>
+                  endDetail={`Créé le ${format(commanditaire.createdAt, "dd/MM/yyyy")}`}
+                />
+              </li>
             ) : null
           }
         </SearchList>
