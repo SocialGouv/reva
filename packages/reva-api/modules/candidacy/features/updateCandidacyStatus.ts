@@ -11,23 +11,19 @@ export const updateCandidacyStatus = async ({
   status: CandidacyStatusStep;
   tx?: Prisma.TransactionClient; //optional transaction to use
 }): Promise<Candidacy> => {
-  const withTransaction = async (t: Prisma.TransactionClient) => {
-    return t.candidacy.update({
-      where: {
-        id: candidacyId,
-      },
-      data: {
-        ...(() => (status == "VALIDATION" ? { sentAt: new Date() } : {}))(),
-        status,
-        candidacyStatuses: {
-          create: {
-            status,
-          },
+  const prisma = tx ?? prismaClient;
+  return prisma.candidacy.update({
+    where: {
+      id: candidacyId,
+    },
+    data: {
+      ...(() => (status == "VALIDATION" ? { sentAt: new Date() } : {}))(),
+      status,
+      candidacyStatuses: {
+        create: {
+          status,
         },
       },
-    });
-  };
-
-  //execute the code in the transaction provided or create a new one
-  return tx ? withTransaction(tx) : prismaClient.$transaction(withTransaction);
+    },
+  });
 };
