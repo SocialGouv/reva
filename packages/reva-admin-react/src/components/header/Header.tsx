@@ -43,7 +43,7 @@ const PATHS = {
   FEASIBILITIES: "/candidacies/feasibilities",
   STATISTIQUES: "/dashboard",
   VAE_COLLECTIVES: "/vae-collectives",
-  STRUCTURES_VAE_COLLECTIVE: "/structures-vae-collective",
+  PORTEURS_DE_PROJET_VAE_COLLECTIVE: "/porteurs-de-projet-vae-collective",
 } as const;
 
 const LABELS = {
@@ -56,7 +56,7 @@ const LABELS = {
   GESTION_CERTIFICATIONS: "Gestion des certifications",
   STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
   STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
-  STRUCTURES_VAE_COLLECTIVE: "Structures VAE collective",
+  PORTEURS_DE_PROJET_VAE_COLLECTIVE: "Porteurs de projet VAE collective",
   STATISTIQUES: "Statistiques",
   VAE_COLLECTIVES: "VAE collectives",
 } as const;
@@ -108,7 +108,7 @@ const getNavigationTabs = ({
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
   showAAPVaeCollectivesTab,
-  showStructuresVaeCollectiveMenu,
+  showPorteursDeProjetVaeCollectiveMenu,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -119,7 +119,7 @@ const getNavigationTabs = ({
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
   showAAPVaeCollectivesTab: boolean;
-  showStructuresVaeCollectiveMenu: boolean;
+  showPorteursDeProjetVaeCollectiveMenu: boolean;
 }) => {
   const adminTabs = [
     createTab({
@@ -157,13 +157,13 @@ const getNavigationTabs = ({
             PATHS.CERTIFICATION_AUTHORITY_STRUCTURES,
           ),
         }),
-        ...(showStructuresVaeCollectiveMenu
+        ...(showPorteursDeProjetVaeCollectiveMenu
           ? [
               createTab({
-                text: LABELS.STRUCTURES_VAE_COLLECTIVE,
-                href: PATHS.STRUCTURES_VAE_COLLECTIVE,
+                text: LABELS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
+                href: PATHS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
                 isActive: currentPathname.startsWith(
-                  PATHS.STRUCTURES_VAE_COLLECTIVE,
+                  PATHS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
                 ),
               }),
             ]
@@ -306,7 +306,7 @@ export const Header = () => {
     !!getCohortesVaeCollectivesForConnectedAap
       ?.cohortesVaeCollectivesForConnectedAap?.length;
 
-  const showStructuresVaeCollectiveMenu = isVaeCollectiveFeatureActive;
+  const showPorteursDeProjetVaeCollectiveMenu = isVaeCollectiveFeatureActive;
 
   const navigation = getNavigationTabs({
     currentPathname,
@@ -318,7 +318,7 @@ export const Header = () => {
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
     showAAPVaeCollectivesTab,
-    showStructuresVaeCollectiveMenu,
+    showPorteursDeProjetVaeCollectiveMenu,
   });
 
   return (

@@ -30,18 +30,18 @@ const createCommanditaireVaeCollectiveMutation = graphql(`
   }
 `);
 
-const structureVaeCollectiveSchema = z.object({
+const porteurDeProjetVaeCollectiveSchema = z.object({
   raisonSociale: z.string().min(1, "Merci de remplir ce champ"),
   gestionnaireEmail: z.string().min(1, "Merci de remplir ce champ"),
   gestionnaireFirstname: z.string().min(1, "Merci de remplir ce champ"),
   gestionnaireLastname: z.string().min(1, "Merci de remplir ce champ"),
 });
 
-type StructureVaeCollectiveFormValues = z.infer<
-  typeof structureVaeCollectiveSchema
+type PorteurDeProjetVaeCollectiveFormValues = z.infer<
+  typeof porteurDeProjetVaeCollectiveSchema
 >;
 
-export default function AddStructureVaeCollectivePage() {
+export default function AddPorteurDeProjetVaeCollectivePage() {
   const router = useRouter();
   const { graphqlClient } = useGraphQlClient();
   const { mutateAsync: createCommanditaireVaeCollective } = useMutation({
@@ -55,8 +55,8 @@ export default function AddStructureVaeCollectivePage() {
   });
 
   const { register, handleSubmit, formState, reset } =
-    useForm<StructureVaeCollectiveFormValues>({
-      resolver: zodResolver(structureVaeCollectiveSchema),
+    useForm<PorteurDeProjetVaeCollectiveFormValues>({
+      resolver: zodResolver(porteurDeProjetVaeCollectiveSchema),
       defaultValues: {
         raisonSociale: "",
         gestionnaireEmail: "",
@@ -65,11 +65,11 @@ export default function AddStructureVaeCollectivePage() {
       },
     });
 
-  const onSubmit = async (data: StructureVaeCollectiveFormValues) => {
+  const onSubmit = async (data: PorteurDeProjetVaeCollectiveFormValues) => {
     try {
       await createCommanditaireVaeCollective(data);
-      successToast("Structure de VAE collective créée avec succès");
-      router.push(`/structures-vae-collective`);
+      successToast("Porteur de projet VAE collective créée avec succès");
+      router.push(`/porteurs-de-projet-vae-collective`);
     } catch (error) {
       graphqlErrorToast(error);
     }
@@ -77,7 +77,7 @@ export default function AddStructureVaeCollectivePage() {
 
   return (
     <div className="flex flex-col w-full">
-      <h1>Nouvelle structure de VAE collective</h1>
+      <h1>Nouveau porteur de projet VAE collective</h1>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -116,7 +116,7 @@ export default function AddStructureVaeCollectivePage() {
           stateRelatedMessage={formState.errors.gestionnaireEmail?.message}
         />
         <FormButtons
-          backUrl="/structures-vae-collective"
+          backUrl="/porteurs-de-projet-vae-collective"
           formState={{
             isDirty: formState.isDirty,
             isSubmitting: formState.isSubmitting,

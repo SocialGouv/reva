@@ -10,7 +10,7 @@ import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphql } from "@/graphql/generated";
 
 const getVaeCollectives = graphql(`
-  query getVaeCollectivesForStructuresVaeCollectivePage(
+  query getVaeCollectivesForPorteursDeProjetVaeCollectivePage(
     $offset: Int
     $searchFilter: String
   ) {
@@ -34,7 +34,8 @@ const getVaeCollectives = graphql(`
 `);
 
 const RECORDS_PER_PAGE = 10;
-const MaisonMereAapListPage = () => {
+
+export default function PorteursDeProjetVaeCollectiveListPage() {
   const { graphqlClient } = useGraphQlClient();
 
   const searchParams = useSearchParams();
@@ -52,12 +53,7 @@ const MaisonMereAapListPage = () => {
   });
 
   if (status === "error") {
-    return (
-      <div>
-        Une erreur est survenue lors du chargement des structures de vae
-        collectives.
-      </div>
-    );
+    return <div>Une erreur est survenue lors du chargement de la page</div>;
   }
 
   if (status === "pending") {
@@ -66,10 +62,10 @@ const MaisonMereAapListPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <h1>Structures de VAE collective</h1>
+      <h1>Porteurs de projet VAE collective</h1>
       <p className="text-xl leading-8 mb-12">
         En tant qu'administrateur, vous avez la possibilité de visualiser
-        l’intégralité des structures de VAE collective.
+        l’intégralité des porteurs de projet VAE collective.
       </p>
       {status === "success" && (
         <SearchList
@@ -84,10 +80,10 @@ const MaisonMereAapListPage = () => {
               size="small"
               iconId="fr-icon-add-line"
               linkProps={{
-                href: "/structures-vae-collective/add",
+                href: "/porteurs-de-projet-vae-collective/add",
               }}
             >
-              Ajouter une structure
+              Ajouter un porteur de projet VAE collective
             </Button>
           }
         >
@@ -110,6 +106,4 @@ const MaisonMereAapListPage = () => {
       )}
     </div>
   );
-};
-
-export default MaisonMereAapListPage;
+}
