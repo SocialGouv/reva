@@ -43,6 +43,7 @@ const PATHS = {
   FEASIBILITIES: "/candidacies/feasibilities",
   STATISTIQUES: "/dashboard",
   VAE_COLLECTIVES: "/vae-collectives",
+  STRUCTURES_VAE_COLLECTIVES: "/structures-vae-collectives",
 } as const;
 
 const LABELS = {
@@ -55,6 +56,7 @@ const LABELS = {
   GESTION_CERTIFICATIONS: "Gestion des certifications",
   STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
   STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
+  STRUCTURES_VAE_COLLECTIVES: "Structures VAE collectives",
   STATISTIQUES: "Statistiques",
   VAE_COLLECTIVES: "VAE collectives",
 } as const;
@@ -105,7 +107,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager,
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
-  showAAPVaeCollectivesTab,
+  showAAPVaeCollectivesTabsAndMenus,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -115,7 +117,7 @@ const getNavigationTabs = ({
   isCertificationRegistryManager: boolean;
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
-  showAAPVaeCollectivesTab: boolean;
+  showAAPVaeCollectivesTabsAndMenus: boolean;
 }) => {
   const adminTabs = [
     createTab({
@@ -153,6 +155,17 @@ const getNavigationTabs = ({
             PATHS.CERTIFICATION_AUTHORITY_STRUCTURES,
           ),
         }),
+        ...(showAAPVaeCollectivesTabsAndMenus
+          ? [
+              createTab({
+                text: LABELS.STRUCTURES_VAE_COLLECTIVES,
+                href: PATHS.STRUCTURES_VAE_COLLECTIVES,
+                isActive: currentPathname.startsWith(
+                  PATHS.STRUCTURES_VAE_COLLECTIVES,
+                ),
+              }),
+            ]
+          : []),
       ],
     },
     createTab({
@@ -168,7 +181,7 @@ const getNavigationTabs = ({
       href: PATHS.CANDIDACIES,
       isActive: isAAPCandidaciesPath(currentPathname),
     }),
-    ...(showAAPVaeCollectivesTab
+    ...(showAAPVaeCollectivesTabsAndMenus
       ? [
           createTab({
             text: LABELS.VAE_COLLECTIVES,
@@ -284,7 +297,7 @@ export const Header = () => {
     enabled: isVaeCollectiveFeatureActive && isOrganism && !isAdmin,
   });
 
-  const showAAPVaeCollectivesTab =
+  const showAAPVaeCollectivesTabsAndMenus =
     isVaeCollectiveFeatureActive &&
     isOrganism &&
     !isAdmin &&
@@ -300,7 +313,7 @@ export const Header = () => {
     isCertificationRegistryManager,
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
-    showAAPVaeCollectivesTab,
+    showAAPVaeCollectivesTabsAndMenus,
   });
 
   return (

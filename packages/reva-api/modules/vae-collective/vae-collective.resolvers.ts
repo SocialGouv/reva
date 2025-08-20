@@ -126,7 +126,7 @@ const unsafeResolvers = {
         offset,
         limit,
         searchFilter,
-      }: { offset: number; limit: number; searchFilter: string },
+      }: { offset?: number; limit?: number; searchFilter?: string },
     ) => getCommanditaireVaeCollectives({ offset, limit, searchFilter }),
   },
   Mutation: {
