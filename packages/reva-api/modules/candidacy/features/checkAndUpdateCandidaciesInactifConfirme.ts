@@ -95,6 +95,7 @@ export const checkAndUpdateCandidaciesInactifConfirme = async () => {
       await dropOutCandidacies({
         candidacyIds: candidacyToDropOutIds,
         dropOutReasonId: dropOutReasonId?.id || "",
+        proofReceivedByAdmin: true,
       });
 
       await prismaClient.candidacy.updateMany({

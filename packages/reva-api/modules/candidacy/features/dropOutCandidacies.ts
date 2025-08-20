@@ -5,6 +5,7 @@ interface DropOutCandidaciesParams {
   candidacyIds: string[];
   dropOutReasonId: string;
   otherReasonContent?: string;
+  proofReceivedByAdmin?: boolean;
 }
 
 export const dropOutCandidacies = async (
@@ -38,6 +39,7 @@ export const dropOutCandidacies = async (
         status: candidacy.status,
         dropOutReasonId: params.dropOutReasonId,
         otherReasonContent: params.otherReasonContent || null,
+        proofReceivedByAdmin: params.proofReceivedByAdmin || false,
       })),
     });
 
