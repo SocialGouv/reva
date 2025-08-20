@@ -90,11 +90,7 @@ export default function PorteursDeProjetVaeCollectiveListPage() {
                 <Card
                   key={commanditaire.id}
                   title={commanditaire.raisonSociale}
-                  enlargeLink
                   size="small"
-                  linkProps={{
-                    href: `/vae-collective/commanditaires/${commanditaire.id}/cohortes`,
-                  }}
                   endDetail={`Créé le ${format(commanditaire.createdAt, "dd/MM/yyyy")}`}
                 />
               </li>
