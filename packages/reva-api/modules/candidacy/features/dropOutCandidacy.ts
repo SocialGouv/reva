@@ -11,6 +11,7 @@ interface DropOutCandidacyParams {
   candidacyId: string;
   dropOutReasonId: string;
   otherReasonContent?: string;
+  dropOutConfirmedByCandidate?: boolean;
 }
 
 export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
@@ -90,6 +91,8 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
         status: candidacyStatus,
         dropOutReasonId: params.dropOutReasonId,
         otherReasonContent: params.otherReasonContent || null,
+        dropOutConfirmedByCandidate:
+          params.dropOutConfirmedByCandidate || false,
       },
     });
     return candidacy;
