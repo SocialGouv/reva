@@ -65,7 +65,7 @@ const MaisonMereAapListPage = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <h1>Structures de VAE collective</h1>
       <p className="text-xl leading-8 mb-12">
         En tant qu'administrateur, vous avez la possibilité de visualiser
