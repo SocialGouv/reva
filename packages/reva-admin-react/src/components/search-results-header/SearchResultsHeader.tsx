@@ -18,7 +18,7 @@ export const SearchResultsHeader = ({
     resultCount > 1 ? "s" : ""
   }`;
   return (
-    <div className={`flex justify-between ${className ?? ""}`}>
+    <div className={`flex justify-between items-center ${className ?? ""}`}>
       {defaultSearchFilter ? (
         <div>
           <div className="text-xs text-neutral-500">
