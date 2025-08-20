@@ -1,5 +1,6 @@
 import { prismaClient } from "@/prisma/client";
 
+import { archiveCandidacy } from "./archiveCandidacy";
 import { dropOutCandidacy } from "./dropOutCandidacy";
 
 export const updateCandidacyInactifDecision = async ({
@@ -35,19 +36,28 @@ export const updateCandidacyInactifDecision = async ({
     const hasFeasibilityAdmissible =
       activeFeasibility?.decision === "ADMISSIBLE";
 
+    await prismaClient.candidacy.update({
+      where: { id: candidacy.id },
+      data: { activite: "INACTIF_CONFIRME" },
+    });
     if (hasFeasibilityAdmissible) {
+      const dropOutReason = await prismaClient.dropOutReason.findFirst({
+        where: { label: "Inactivité depuis 6 mois" },
+        select: { id: true },
+      });
+      if (!dropOutReason) {
+        throw new Error("Drop out reason not found");
+      }
       await dropOutCandidacy({
         candidacyId: candidacy.id,
         userRoles,
-        dropOutReasonId: "INACTIVITE_CANDIDAT",
-      });
-      await prismaClient.candidacy.update({
-        where: { id: candidacy.id },
-        data: { activite: "INACTIF_CONFIRME" },
+        dropOutReasonId: dropOutReason.id,
+        dropOutConfirmedByCandidate: true,
       });
     } else {
-      await prismaClient.candidacy.delete({
-        where: { id: candidacy.id },
+      await archiveCandidacy({
+        candidacyId: candidacy.id,
+        archivingReason: "INACTIVITE_CANDIDAT",
       });
     }
   }
