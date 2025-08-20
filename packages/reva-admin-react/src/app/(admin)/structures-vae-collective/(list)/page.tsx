@@ -74,11 +74,22 @@ const MaisonMereAapListPage = () => {
       {status === "success" && (
         <SearchList
           searchBarProps={{
-            lifted: true,
             title: "Recherchez par raison sociale",
           }}
           searchFilter={searchFilter}
           searchResultsPage={data.vaeCollective_commanditaireVaeCollectives}
+          addButton={
+            <Button
+              priority="tertiary no outline"
+              size="small"
+              iconId="fr-icon-add-line"
+              linkProps={{
+                href: "/structures-vae-collective/add",
+              }}
+            >
+              Ajouter une structure
+            </Button>
+          }
         >
           {(commanditaire) =>
             commanditaire ? (
