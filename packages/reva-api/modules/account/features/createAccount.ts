@@ -20,7 +20,14 @@ export const createAccount = async (params: {
   organismId?: string;
   certificationAuthorityId?: string;
   maisonMereAAPRaisonSociale?: string;
+  dontSendKeycloakEmail?: boolean;
 }): Promise<Account> => {
+  // On n'envoie pas d'email de définition de mot de passe si le flag dontSendKeycloakEmail est positionné ou si l'envitonnement est sandbox
+  // Les comptes créés dans l'environnement de sandbox sont destinés à une utilisation via API
+  // et ne doivent pas recevoir de mail de création de mot de passe
+  const dontSendKeycloakEmail =
+    params.dontSendKeycloakEmail || process.env.APP_ENV !== "sandbox";
+
   //assertions on parameters
   if (!params.email) {
     throw new FunctionalError(
@@ -84,7 +91,10 @@ export const createAccount = async (params: {
   }
 
   // create the account in keycloak
-  const keycloakId = await IAM.createAccount(params);
+  const keycloakId = await IAM.createAccount({
+    ...params,
+    dontSendKeycloakEmail,
+  });
 
   //create and return the account in database
   return await createAccountProfile({

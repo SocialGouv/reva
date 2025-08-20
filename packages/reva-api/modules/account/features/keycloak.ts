@@ -35,7 +35,7 @@ type UserProfileType =
   | "certification_registry_manager"
   | "commanditaire_vae_collective";
 
-export const createAccount = async (account: {
+export const createAccount = async (params: {
   email: string;
   username: string;
   firstname?: string;
@@ -49,7 +49,12 @@ export const createAccount = async (account: {
     | "certification_authority_local_account"
     | "certification_registry_manager"
     | "commanditaire_vae_collective";
+  dontSendKeycloakEmail?: boolean;
 }): Promise<string> => {
+  const { dontSendKeycloakEmail, ...account } = params;
+
+  const sendKeycloakEmail = !dontSendKeycloakEmail;
+
   const keycloakAdmin = await getKeycloakAdmin();
 
   const payload: UserRepresentation & { realm?: string | undefined } = {
@@ -58,7 +63,11 @@ export const createAccount = async (account: {
     groups: [account.group],
     firstName: account.firstname,
     lastName: account.lastname,
-    requiredActions: ["UPDATE_PASSWORD", "VERIFY_EMAIL"],
+    //When setting the password for the first time if we are not sending an email via keycloak we need to remove the "VERIFY_EMAIL" action
+    //Otherwise the user will not be able to login
+    requiredActions: dontSendKeycloakEmail
+      ? ["UPDATE_PASSWORD"]
+      : ["UPDATE_PASSWORD", "VERIFY_EMAIL"],
     enabled: true,
     realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
   };
@@ -89,9 +98,7 @@ export const createAccount = async (account: {
   }
 
   try {
-    // Les comptes créés dans l'environnement de sandbox sont destinés à une utilisation via API
-    // et ne doivent pas recevoir de mail de création de mot de passe
-    if (process.env.APP_ENV !== "sandbox") {
+    if (sendKeycloakEmail) {
       await keycloakAdmin.users.executeActionsEmail({
         id,
         clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA,
