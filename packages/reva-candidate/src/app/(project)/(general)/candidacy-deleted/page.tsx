@@ -1,9 +1,13 @@
+"use client";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { PageLayout } from "@/layouts/page.layout";
 
 export default function CandidacyDeletedPage() {
+  const { logout } = useKeycloakContext();
+
   return (
     <PageLayout
       title="Candidature supprimée"
@@ -14,12 +18,7 @@ export default function CandidacyDeletedPage() {
         <p className="text-xl mb-10">
           Vous pourrez de nouveau en entamer une quand vous le souhaiterez.{" "}
         </p>
-        <Button
-          linkProps={{
-            href: "/candidat",
-          }}
-          priority="secondary"
-        >
+        <Button onClick={logout} priority="secondary">
           Revenir à l'accueil
         </Button>
       </div>
