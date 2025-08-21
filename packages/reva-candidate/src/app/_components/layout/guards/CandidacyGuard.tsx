@@ -10,7 +10,11 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   const isInactifEnAttente =
     candidate?.candidacy?.activite === "INACTIF_EN_ATTENTE";
 
-  if (isInactifEnAttente && !pathname.startsWith("/candidacy-inactif")) {
+  if (
+    isInactifEnAttente &&
+    !pathname.startsWith("/candidacy-inactif") &&
+    !pathname.startsWith("/candidacy-deleted")
+  ) {
     redirect("/candidacy-inactif");
   }
 

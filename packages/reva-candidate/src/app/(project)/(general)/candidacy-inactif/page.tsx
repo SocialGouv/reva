@@ -38,17 +38,15 @@ const getText = ({
   candidacyCreatedAt: number | null | undefined;
   feasibilityDecisionAdmissibleAt: number | null | undefined;
 }) => {
-  const inactifEnAttenteThreshold = addDays(
-    new Date(derniereDateActivite || ""),
-    15,
-  );
+  const inactifEnAttenteThreshold = derniereDateActivite
+    ? format(addDays(new Date(derniereDateActivite), 15), "dd/MM/yyyy")
+    : "";
   if (hasFeasibilityAdmissible) {
     return {
       subtitle: `Vous êtes recevable et semblez inactif depuis bientôt 6 mois, vous
         n'avez pas encore déposé votre dossier de validation. Continuez-vous
         toujours votre parcours de VAE ? Sans réponse de votre part avant le
-        ${format(inactifEnAttenteThreshold, "dd/MM/yyyy")}, votre parcours sera
-        considéré en abandon.`,
+        ${inactifEnAttenteThreshold}, votre parcours sera considéré en abandon.`,
       continueButtonText: "Oui, je continue mon parcours VAE",
       continueHintText:
         "Prochaine étape : [déposer votre dossier de validation].",
@@ -66,10 +64,7 @@ const getText = ({
     subtitle: `Vous vous êtes inscrit sur France VAE depuis bientôt 2 mois,
     mais vous n'avez pas encore déposé votre dossier de faisabilité.
     Souhaitez-vous toujours réaliser votre projet de VAE ? Sans réponse de votre part avant le
-    ${format(
-      inactifEnAttenteThreshold,
-      "dd/MM/yyyy",
-    )}, votre candidature sera supprimée.`,
+    ${inactifEnAttenteThreshold}, votre candidature sera supprimée.`,
     continueButtonText: "Oui, je continue ma candidature",
     continueHintText:
       "Continuez de compléter toutes les sections de votre candidature afin qu'elle soit la plus complète possible.",
