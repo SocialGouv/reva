@@ -107,7 +107,7 @@ export const AutocompleteAddress = ({
         }}
         state={state}
         stateRelatedMessage={stateRelatedMessage}
-        label="Adresse complète"
+        label="Adresse"
         data-testid="autocomplete-input"
         iconId="fr-icon-map-pin-2-fill"
       />
