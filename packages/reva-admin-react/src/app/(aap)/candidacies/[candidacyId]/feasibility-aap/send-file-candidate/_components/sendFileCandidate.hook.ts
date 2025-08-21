@@ -72,6 +72,12 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             previewUrl
             mimeType
           }
+          dffFile {
+            url
+            name
+            previewUrl
+            mimeType
+          }
         }
         candidacy {
           id

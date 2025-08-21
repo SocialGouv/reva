@@ -3,6 +3,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationInfoInput } from "../dematerialized-feasibility-file.types";
 
+import { generateAndUploadFeasibilityFileByCandidacyId } from "./generateAndUploadFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 import { updateCompetenceBlocsPartCompletion } from "./updateCompetenceBlocsPartCompletion";
@@ -31,6 +32,12 @@ export const createOrUpdateCertificationInfo = async ({
 
   if (currentFile?.sentToCandidateAt) {
     await resetDFFSentToCandidateState(currentFile);
+  }
+
+  try {
+    await generateAndUploadFeasibilityFileByCandidacyId(candidacyId);
+  } catch (error) {
+    console.error(error);
   }
 
   const updatedFile = await getDematerializedFeasibilityFileByCandidacyId({

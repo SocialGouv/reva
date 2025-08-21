@@ -14,7 +14,6 @@ import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
 import { PdfLink } from "@/components/legacy/organisms/DffSummary/components/PdfLink";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { REST_API_URL } from "@/config/config";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
@@ -74,10 +73,6 @@ export default function ValidateFeasibility() {
     [dematerializedFeasibilityFile],
   );
 
-  const getPdfUrl = () => {
-    return `${REST_API_URL}/candidacy/${candidacy?.id}/feasibility/file-demat/${dematerializedFeasibilityFile?.id}`;
-  };
-
   const candidateName = deburr(
     `${candidate?.givenName ? candidate?.givenName : candidate?.lastname}_${candidate?.firstname}`,
   ).toLowerCase();
@@ -118,11 +113,12 @@ export default function ValidateFeasibility() {
     <PageLayout title="Dossier de faisabilité" displayBackToHome>
       <div className="flex justify-between mb-4 mt-6">
         <h1 className="mb-0">Dossier de faisabilité </h1>
-        {isGenerateDfDematFromServerActive ? (
+        {isGenerateDfDematFromServerActive &&
+        dematerializedFeasibilityFile.dffFile ? (
           <PdfLink
             text={"Télécharger le dossier de faisabilité"}
             title={"Télécharger le dossier de faisabilité"}
-            url={getPdfUrl()}
+            url={dematerializedFeasibilityFile.dffFile.url}
             fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
             className="fr-btn fr-btn--secondary fr-btn--sm"
           />

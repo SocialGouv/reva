@@ -1,4 +1,3 @@
-// import fs from "fs";
 import {
   Candidate,
   Certification,
@@ -18,19 +17,16 @@ import {
   Training,
   Goal,
   DFFDecision,
+  CompetenceBlocsPartCompletionEnum,
 } from "@prisma/client";
 import { format } from "date-fns";
 import PDFDocument from "pdfkit";
 
 import { prismaClient } from "@/prisma/client";
 
-interface Params {
-  candidacyId: string;
-}
-
-export const generateFeasibilityFileFromDFF = async (params: Params) => {
-  const { candidacyId } = params;
-
+export const generateFeasibilityFileByCandidacyId = async (
+  candidacyId: string,
+): Promise<{ doc: PDFKit.PDFDocument; data: Buffer } | undefined> => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     include: {
@@ -100,83 +96,111 @@ export const generateFeasibilityFileFromDFF = async (params: Params) => {
     throw new Error("Dossier de faisabilité dématérialisé non trouvé");
   }
 
-  const doc = new PDFDocument({
-    size: "A4",
-    layout: "portrait",
-    autoFirstPage: true,
-    bufferPages: false,
-    compress: true,
-    margins: { top: 40, bottom: 40, left: 40, right: 40 },
-  });
-
-  // const stream = params?.stream || fs.createWriteStream("output.pdf");
-  // doc.pipe(stream);
-
-  addDocumentHeader(doc);
-
-  if (dematerializedFeasibilityFile.eligibilityRequirement) {
-    addCandidacyAdmissibility(
-      doc,
+  const isDFFReady = checkIsDFFReady({
+    attachmentsPartComplete:
+      dematerializedFeasibilityFile.attachmentsPartComplete,
+    certificationPartComplete:
+      dematerializedFeasibilityFile.certificationPartComplete,
+    competenceBlocsPartCompletion:
+      dematerializedFeasibilityFile.competenceBlocsPartCompletion,
+    prerequisitesPartComplete:
+      dematerializedFeasibilityFile.prerequisitesPartComplete,
+    aapDecision: dematerializedFeasibilityFile.aapDecision,
+    eligibilityRequirement:
       dematerializedFeasibilityFile.eligibilityRequirement,
-      dematerializedFeasibilityFile.eligibilityValidUntil,
+  });
+  if (!isDFFReady) {
+    throw new Error(
+      "Dossier de faisabilité incomplet pour la génération du pdf",
     );
   }
 
-  const { candidate } = candidacy;
-
-  if (candidate) {
-    addCandidate(doc, { candidate });
-  }
-
-  const { certification } = candidacy;
-
-  if (certification) {
-    addCertification(doc, {
-      certification,
-      dematerializedFeasibilityFile,
-      isCertificationPartial: candidacy.isCertificationPartial,
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({
+      size: "A4",
+      layout: "portrait",
+      autoFirstPage: true,
+      bufferPages: false,
+      compress: true,
+      margins: { top: 40, bottom: 40, left: 40, right: 40 },
     });
-  }
 
-  const { experiences } = candidacy;
+    const buffers: Buffer[] = [];
+    doc.on("data", buffers.push.bind(buffers));
+    doc.on("end", () => {
+      const data = Buffer.concat(buffers);
 
-  if (experiences.length > 0) {
-    addExperiences(doc, { experiences });
-  }
+      if (data) {
+        resolve({ doc, data });
+      } else {
+        reject(undefined);
+      }
+    });
 
-  const {
-    basicSkills,
-    trainings,
-    additionalHourCount,
-    individualHourCount,
-    collectiveHourCount,
-  } = candidacy;
+    addDocumentHeader(doc);
 
-  addTraining(doc, {
-    basicSkills: basicSkills.map(({ basicSkill }) => basicSkill),
-    trainings: trainings.map(({ training }) => training),
-    additionalHourCount,
-    individualHourCount,
-    collectiveHourCount,
+    if (dematerializedFeasibilityFile.eligibilityRequirement) {
+      addCandidacyAdmissibility(
+        doc,
+        dematerializedFeasibilityFile.eligibilityRequirement,
+        dematerializedFeasibilityFile.eligibilityValidUntil,
+      );
+    }
+
+    const { candidate } = candidacy;
+
+    if (candidate) {
+      addCandidate(doc, { candidate });
+    }
+
+    const { certification } = candidacy;
+
+    if (certification) {
+      addCertification(doc, {
+        certification,
+        dematerializedFeasibilityFile,
+        isCertificationPartial: candidacy.isCertificationPartial,
+      });
+    }
+
+    const { experiences } = candidacy;
+
+    if (experiences.length > 0) {
+      addExperiences(doc, { experiences });
+    }
+
+    const {
+      basicSkills,
+      trainings,
+      additionalHourCount,
+      individualHourCount,
+      collectiveHourCount,
+    } = candidacy;
+
+    addTraining(doc, {
+      basicSkills: basicSkills.map(({ basicSkill }) => basicSkill),
+      trainings: trainings.map(({ training }) => training),
+      additionalHourCount,
+      individualHourCount,
+      collectiveHourCount,
+    });
+
+    const { goals } = candidacy;
+
+    if (goals.length > 0) {
+      addGoals(doc, { goals: goals.map(({ goal }) => goal) });
+    }
+
+    if (dematerializedFeasibilityFile.aapDecision) {
+      addDecision(doc, {
+        aapDecision: dematerializedFeasibilityFile.aapDecision,
+        aapDecisionComment: dematerializedFeasibilityFile.aapDecisionComment,
+      });
+    }
+
+    // Finalize PDF file
+    doc.end();
   });
-
-  const { goals } = candidacy;
-
-  if (goals.length > 0) {
-    addGoals(doc, { goals: goals.map(({ goal }) => goal) });
-  }
-
-  if (dematerializedFeasibilityFile.aapDecision) {
-    addDecision(doc, {
-      aapDecision: dematerializedFeasibilityFile.aapDecision,
-      aapDecisionComment: dematerializedFeasibilityFile.aapDecisionComment,
-    });
-  }
-
-  // Finalize PDF file
-  doc.end();
-
-  return doc;
 };
 
 const addDocumentHeader = (doc: PDFKit.PDFDocument) => {
@@ -1196,4 +1220,36 @@ const addDecision = (
         align: "left",
       });
   }
+};
+
+type CheckIsDFFReadyArgs = {
+  attachmentsPartComplete: boolean;
+  certificationPartComplete: boolean;
+  competenceBlocsPartCompletion: CompetenceBlocsPartCompletionEnum;
+  prerequisitesPartComplete: boolean;
+  aapDecision: DFFDecision | null;
+  eligibilityRequirement: DFFEligibilityRequirement | null;
+};
+
+const checkIsDFFReady = ({
+  attachmentsPartComplete,
+  certificationPartComplete,
+  competenceBlocsPartCompletion,
+  prerequisitesPartComplete,
+  eligibilityRequirement,
+}: CheckIsDFFReadyArgs) => {
+  let isDFFReady =
+    attachmentsPartComplete &&
+    certificationPartComplete &&
+    prerequisitesPartComplete &&
+    !!eligibilityRequirement;
+
+  const isEligibilityTotal =
+    eligibilityRequirement === "FULL_ELIGIBILITY_REQUIREMENT";
+
+  if (isEligibilityTotal) {
+    isDFFReady = isDFFReady && competenceBlocsPartCompletion === "COMPLETED";
+  }
+
+  return isDFFReady;
 };

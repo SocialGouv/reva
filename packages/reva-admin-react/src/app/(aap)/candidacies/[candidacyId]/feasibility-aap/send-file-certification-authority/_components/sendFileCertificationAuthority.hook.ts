@@ -78,6 +78,12 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
           isReadyToBeSentToCertificationAuthority
           eligibilityRequirement
           eligibilityValidUntil
+          dffFile {
+            url
+            name
+            previewUrl
+            mimeType
+          }
         }
         candidacy {
           id

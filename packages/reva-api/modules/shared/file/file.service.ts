@@ -83,7 +83,6 @@ export const uploadFile = async ({
   allowedFileTypes,
 }: S3File): Promise<void> => {
   console.log(process.env.OUTSCALE_BUCKET_NAME);
-  console.log(filePath);
 
   const infoFromMagicBytes = filetypeinfo(data);
 

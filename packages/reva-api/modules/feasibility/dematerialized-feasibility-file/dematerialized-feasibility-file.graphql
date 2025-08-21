@@ -24,6 +24,7 @@ type DematerializedFeasibilityFile {
   candidateConfirmationAt: Timestamp
   eligibilityRequirement: DFFEligibilityRequirement
   eligibilityValidUntil: Timestamp
+  dffFile: File
 }
 
 enum DFFEligibilityRequirement {

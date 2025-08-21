@@ -130,6 +130,12 @@ const getCandidacyById = graphql(`
           }
           eligibilityRequirement
           eligibilityValidUntil
+          dffFile {
+            url
+            name
+            previewUrl
+            mimeType
+          }
         }
       }
     }

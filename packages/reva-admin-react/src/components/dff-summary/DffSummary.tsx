@@ -3,8 +3,6 @@
 import { deburr } from "lodash";
 import dynamic from "next/dynamic";
 
-import { REST_API_URL } from "@/config/config";
-
 import {
   Candidacy,
   Candidate,
@@ -88,10 +86,6 @@ export function DffSummary({
     "GENERATE_DF_DEMAT_FROM_SERVER",
   );
 
-  const getPdfUrl = () => {
-    return `${REST_API_URL}/candidacy/${candidacy.id}/feasibility/file-demat/${dematerializedFeasibilityFile.id}`;
-  };
-
   const { candidate } = candidacy;
 
   const candidateName = deburr(
@@ -103,11 +97,12 @@ export function DffSummary({
       <div className="flex justify-between mb-4">
         <h1 className="mb-0">Dossier de faisabilité</h1>
 
-        {isGenerateDfDematFromServerActive ? (
+        {isGenerateDfDematFromServerActive &&
+        dematerializedFeasibilityFile.dffFile ? (
           <PdfLink
             text={"Télécharger le dossier de faisabilité"}
             title={"Télécharger le dossier de faisabilité"}
-            url={getPdfUrl()}
+            url={dematerializedFeasibilityFile.dffFile.url}
             fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
             className="fr-btn fr-btn--secondary fr-btn--sm"
           />

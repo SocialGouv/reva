@@ -31,6 +31,7 @@ import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertific
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
 import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
+import { getDffFileNameAndUrl } from "./features/getDffFileNameAndUrl";
 import { getPrerequisitesByDFFId } from "./features/getPrerequisitesByDFFId";
 import { getSwornStatementFileWithFileNameAndUrlById } from "./features/getSwornStatementFileWithFileNameAndUrlById";
 import { sendDFFToCandidate } from "./features/sendDFFToCandidate";
@@ -118,6 +119,8 @@ const unsafeResolvers = {
             swornStatementFileId,
           })
         : null,
+    dffFile: ({ id }: { id: string }) =>
+      getDffFileNameAndUrl({ dematerializedFeasibilityFileId: id }),
   },
   DFFCertificationCompetenceBloc: {
     certificationCompetenceBloc: ({

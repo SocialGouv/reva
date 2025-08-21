@@ -2,6 +2,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput } from "../dematerialized-feasibility-file.types";
 
+import { generateAndUploadFeasibilityFileByCandidacyId } from "./generateAndUploadFeasibilityFileByCandidacyId";
 import { updateCompetenceBlocsPartCompletion } from "./updateCompetenceBlocsPartCompletion";
 
 export const createOrUpdateCertificationCompetenceDetails = async ({
@@ -10,6 +11,22 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
   competenceDetails,
 }: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput) => {
   if (!dematerializedFeasibilityFileId) {
+    throw new Error("Dossier de faisabilité non trouvé");
+  }
+
+  const dematerializedFeasibilityFile =
+    await prismaClient.dematerializedFeasibilityFile.findUnique({
+      where: { id: dematerializedFeasibilityFileId },
+      select: {
+        feasibility: {
+          select: {
+            candidacyId: true,
+          },
+        },
+      },
+    });
+
+  if (!dematerializedFeasibilityFile) {
     throw new Error("Dossier de faisabilité non trouvé");
   }
 
@@ -41,6 +58,14 @@ export const createOrUpdateCertificationCompetenceDetails = async ({
   await updateCompetenceBlocsPartCompletion({
     dematerializedFeasibilityFileId,
   });
+
+  try {
+    await generateAndUploadFeasibilityFileByCandidacyId(
+      dematerializedFeasibilityFile.feasibility.candidacyId,
+    );
+  } catch (error) {
+    console.error(error);
+  }
 
   return prismaClient.dematerializedFeasibilityFile.findUnique({
     where: { id: dematerializedFeasibilityFileId },

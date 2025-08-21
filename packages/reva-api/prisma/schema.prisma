@@ -1330,6 +1330,7 @@ model File {
   linkedAsSwornStatementFile                                                  DematerializedFeasibilityFile?                  @relation("sworn_statement_file")
   linkedAsCertificationAdditionalInfo                                         CertificationAdditionalInfo[]
   linkedAsCertificationAdditionalInfoAdditionalDocuments                      CertificationAdditionalInfoAdditionalDocument[]
+  dematerializedFeasibilityFile                                               DematerializedFeasibilityFile[]                 @relation("dff_file")
 
   @@map("file")
 }
@@ -1600,6 +1601,8 @@ model DematerializedFeasibilityFile {
   candidateConfirmationAt           DateTime?                           @map("candidate_confirmation_at") @db.Timestamptz(6)
   eligibilityRequirement            DFFEligibilityRequirement?          @map("eligibility_requirement")
   eligibilityValidUntil             DateTime?                           @map("eligibility_valid_until") @db.Timestamptz(6)
+  feasibilityFileId                 String?                             @map("dff_file_id") @db.Uuid
+  feasibilityFile                   File?                               @relation("dff_file", fields: [feasibilityFileId], references: [id])
 
   @@map("dematerialized_feasibility_file")
 }

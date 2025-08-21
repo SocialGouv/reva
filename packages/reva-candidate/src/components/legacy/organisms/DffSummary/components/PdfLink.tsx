@@ -17,20 +17,17 @@ export const PdfLink = ({
 }) => {
   const { accessToken } = useKeycloakContext();
 
-  const getFileUrlFromBlob = async (): Promise<string | undefined> => {
+  const getFileUrl = async (): Promise<string | undefined> => {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open("GET", url);
-      xhr.responseType = "blob";
       xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
 
       xhr.onload = async function (_error) {
         if (this.status == 200) {
           try {
-            const blob = new Blob([this.response], {
-              type: xhr.getResponseHeader("content-type") || "",
-            });
-            const url = window.URL.createObjectURL(blob);
+            const json = JSON.parse(this.responseText);
+            const url = json.url;
 
             resolve(url);
 
@@ -40,7 +37,6 @@ export const PdfLink = ({
           }
 
           resolve(undefined);
-
           return;
         }
         reject();
@@ -52,7 +48,7 @@ export const PdfLink = ({
 
   const handleClick = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const url = await getFileUrlFromBlob();
+    const url = await getFileUrl();
     const a = document.createElement("a");
 
     document.body.appendChild(a);

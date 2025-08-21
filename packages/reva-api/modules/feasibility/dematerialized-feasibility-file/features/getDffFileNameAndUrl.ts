@@ -1,0 +1,46 @@
+import {
+  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+  getDownloadLink,
+  OOS_DOMAIN,
+} from "@/modules/shared/file";
+import { prismaClient } from "@/prisma/client";
+
+export const getDffFileNameAndUrl = async ({
+  dematerializedFeasibilityFileId,
+}: {
+  dematerializedFeasibilityFileId: string;
+}) => {
+  const dematerializedFeasibilityFile =
+    await prismaClient.dematerializedFeasibilityFile.findUnique({
+      where: { id: dematerializedFeasibilityFileId },
+      select: {
+        feasibilityFile: true,
+        feasibility: {
+          select: {
+            candidacyId: true,
+          },
+        },
+      },
+    });
+
+  const feasibilityFile = dematerializedFeasibilityFile?.feasibilityFile;
+
+  const candidacyId = dematerializedFeasibilityFile?.feasibility.candidacyId;
+  if (!feasibilityFile || !candidacyId) {
+    return null;
+  }
+
+  const downloadUrl = await getDownloadLink(feasibilityFile.path);
+
+  return {
+    id: feasibilityFile.id,
+    createdAt: feasibilityFile.createdAt,
+    name: feasibilityFile.name,
+    mimeType: feasibilityFile.mimeType,
+    url: `${process.env.BASE_URL}/api/candidacy/${candidacyId}/feasibility/file/${feasibilityFile.id}`,
+    previewUrl: downloadUrl?.replace(
+      OOS_DOMAIN,
+      FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+    ),
+  };
+};

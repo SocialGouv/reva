@@ -120,6 +120,12 @@ const GET_CANDIDATE_WITH_CANDIDACY_FOR_VALIDATE_FEASIBILITY = graphql(`
               previewUrl
               mimeType
             }
+            dffFile {
+              url
+              name
+              previewUrl
+              mimeType
+            }
           }
         }
       }

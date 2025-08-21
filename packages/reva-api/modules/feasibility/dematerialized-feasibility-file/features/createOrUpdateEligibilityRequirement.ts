@@ -2,6 +2,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput } from "../dematerialized-feasibility-file.types";
 
+import { generateAndUploadFeasibilityFileByCandidacyId } from "./generateAndUploadFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId } from "./getDematerializedFeasibilityFileWithPrerequisitesByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
@@ -72,6 +73,12 @@ export const createOrUpdateEligibilityRequirement = async ({
     (hasChangedEligibilityRequirement || hasChangedEligibilityValidUntil)
   ) {
     await resetDFFSentToCandidateState(dFF);
+  }
+
+  try {
+    await generateAndUploadFeasibilityFileByCandidacyId(candidacyId);
+  } catch (error) {
+    console.error(error);
   }
 
   return getDematerializedFeasibilityFileByCandidacyId({

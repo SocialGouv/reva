@@ -15,6 +15,7 @@ import {
   DematerializedFeasibilityFileType,
 } from "../dematerialized-feasibility-file.types";
 
+import { generateAndUploadFeasibilityFileByCandidacyId } from "./generateAndUploadFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithAttachmentsByCandidacyId } from "./getDematerializedFeasibilityFileWithAttachmentsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 
@@ -186,6 +187,12 @@ export const createOrUpdateAttachments = async ({
 
     if (dffWithAttachments.sentToCandidateAt) {
       await resetDFFSentToCandidateState(dffWithAttachments);
+    }
+
+    try {
+      await generateAndUploadFeasibilityFileByCandidacyId(candidacyId);
+    } catch (error) {
+      console.error(error);
     }
 
     return "Ok";
