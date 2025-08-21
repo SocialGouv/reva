@@ -46,12 +46,14 @@ const BackConfirmationModal = ({ onConfirm }: { onConfirm(): void }) => {
 export const FormButtons = ({
   backUrl,
   submitButtonLabel = "Enregistrer",
+  backButtonLabel = "Retour",
   formState: { isDirty, isSubmitting, canSubmit = true },
   className,
   disabled,
   hideResetButton,
 }: {
   backUrl?: string;
+  backButtonLabel?: string;
   formState: {
     isDirty: boolean;
     isSubmitting: boolean;
@@ -90,7 +92,7 @@ export const FormButtons = ({
             aria-label="Retour à la page précédente"
             data-test="back-button"
           >
-            Retour
+            {backButtonLabel}
           </Button>
         )}
         <div className="flex gap-x-2 ml-auto">
