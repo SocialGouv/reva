@@ -72,7 +72,7 @@ const CertificationAuthorityStructuresListPage = () => {
   return (
     certificationAuthorityStructuresPage && (
       <div className="flex flex-col flex-1">
-        <h1>Structures certificatrices</h1>
+        <h1 className="mb-12">Structures certificatrices</h1>
         {getCertificationAuthorityStructuresStatus === "success" && (
           <SearchList
             searchResultsPage={certificationAuthorityStructuresPage}

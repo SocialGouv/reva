@@ -66,7 +66,7 @@ export default function PorteursDeProjetVaeCollectiveListPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <h1>Porteurs de projet VAE collective</h1>
+      <h1 className="mb-12">Porteurs de projet VAE collective</h1>
       {status === "success" && (
         <SearchList
           searchBarProps={{

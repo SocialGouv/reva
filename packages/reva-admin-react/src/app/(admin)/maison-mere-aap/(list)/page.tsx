@@ -73,8 +73,7 @@ const MaisonMereAapListPage = () => {
       {status === "success" && (
         <SearchList
           searchBarProps={{
-            lifted: true,
-            title: "Recherchez par nom, numéro SIRET, adresse email etc.",
+            placeholder: "Recherchez par nom, numéro SIRET, adresse email etc.",
           }}
           searchFilter={searchFilter}
           searchResultsPage={data.organism_getMaisonMereAAPs}
