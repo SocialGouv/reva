@@ -84,11 +84,7 @@ export default async function CommanditairesPage({
                 linkProps={{
                   href: `/commanditaires/${commanditaire.id}/cohortes`,
                 }}
-                end={
-                  <p className="text-xs text-dsfrGray-mentionGrey mb-0">
-                    Créé le {format(commanditaire.createdAt, "dd/MM/yyyy")}
-                  </p>
-                }
+                endDetail={`Créé le ${format(commanditaire.createdAt, "dd/MM/yyyy")}`}
               />
             </li>
           );

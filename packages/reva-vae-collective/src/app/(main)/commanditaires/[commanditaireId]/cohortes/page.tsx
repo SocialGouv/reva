@@ -178,11 +178,7 @@ export default async function CohortesPage({
                     )}
                   </>
                 }
-                end={
-                  <p className="text-xs text-dsfrGray-mentionGrey mb-0">
-                    Créée le {format(cohorte.createdAt, "dd/MM/yyyy")}
-                  </p>
-                }
+                endDetail={`Créée le ${format(cohorte.createdAt, "dd/MM/yyyy")}`}
                 linkProps={{
                   href: `/commanditaires/${commanditaireId}/cohortes/${cohorte.id}`,
                 }}

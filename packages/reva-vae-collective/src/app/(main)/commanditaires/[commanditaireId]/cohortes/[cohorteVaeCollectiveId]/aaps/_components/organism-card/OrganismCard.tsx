@@ -72,7 +72,7 @@ export const OrganismCard = ({
         )}
       </>
     }
-    end="choisir"
+    endDetail="choisir"
     size="small"
     enlargeLink
     linkProps={{
