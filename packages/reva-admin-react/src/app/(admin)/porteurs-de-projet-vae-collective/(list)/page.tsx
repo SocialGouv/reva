@@ -61,6 +61,9 @@ export default function PorteursDeProjetVaeCollectiveListPage() {
     return <div className="min-h-[720px]"></div>;
   }
 
+  const vaeCollectiveBaseUrl =
+    process.env.NODE_ENV === "production" ? "/../" : "http://localhost:3005";
+
   return (
     <div className="flex flex-col w-full">
       <h1>Porteurs de projet VAE collective</h1>
@@ -91,7 +94,12 @@ export default function PorteursDeProjetVaeCollectiveListPage() {
                   key={commanditaire.id}
                   title={commanditaire.raisonSociale}
                   size="small"
+                  enlargeLink
                   endDetail={`Créé le ${format(commanditaire.createdAt, "dd/MM/yyyy")}`}
+                  linkProps={{
+                    target: "_self",
+                    href: `${vaeCollectiveBaseUrl}/vae-collective/client-auth-redirect?redirectAfterAuthUrl=/commanditaires/${commanditaire.id}/cohortes`,
+                  }}
                 />
               </li>
             ) : null
