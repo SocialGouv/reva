@@ -90,7 +90,7 @@ export const SearchList = <T,>({
       {FilterBar && FilterBar}
 
       <SearchResultsHeader
-        className="mb-2"
+        className="mb-2 mt-8"
         defaultSearchFilter={searchFilter}
         onSearchFilterChange={onSearchFilterChange}
         resultCount={searchResultsPage.info.totalRows}
