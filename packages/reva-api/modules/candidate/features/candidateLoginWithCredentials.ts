@@ -53,6 +53,7 @@ export const candidateLoginWithCredentials = async ({
         not: CandidacyStatusStep.ARCHIVE,
       },
       activite: ActiviteStatut.ACTIF,
+      candidacyDropOut: { is: null },
     },
     data: { derniereDateActivite: new Date() },
   });
