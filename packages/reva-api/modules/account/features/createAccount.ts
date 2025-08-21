@@ -98,10 +98,12 @@ export const createAccount = async (params: {
   //create and return the account in database
   return prismaClient.account.create({
     data: {
-      ...params,
-      firstname: params.firstname || "",
-      lastname: params.lastname || "",
-      keycloakId,
+      keycloakId: keycloakId,
+      email: params.email,
+      firstname: params.firstname,
+      lastname: params.lastname,
+      organismId: params.organismId,
+      certificationAuthorityId: params.certificationAuthorityId,
     },
   });
 };
