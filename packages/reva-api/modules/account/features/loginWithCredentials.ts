@@ -1,6 +1,7 @@
 import { ClientApp } from "../account.type";
-import { getAccountByEmail } from "./getAccountByEmail";
 import { generateIAMTokenWithPassword } from "../utils/keycloak.utils";
+
+import { getAccountByEmail } from "./getAccountByEmail";
 
 export const loginWithCredentials = async ({
   email,

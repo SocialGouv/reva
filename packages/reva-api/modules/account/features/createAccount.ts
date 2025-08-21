@@ -6,9 +6,9 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
+import { prismaClient } from "@/prisma/client";
 
 import * as IAM from "./keycloak";
-import { prismaClient } from "@/prisma/client";
 
 export const createAccount = async (params: {
   email: string;

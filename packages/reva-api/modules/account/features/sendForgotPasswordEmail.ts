@@ -1,6 +1,7 @@
 import { generateJwt } from "@/modules/shared/auth/auth.helper";
 import { sendEmailUsingTemplate } from "@/modules/shared/email";
 import { prismaClient } from "@/prisma/client";
+
 import { ClientApp } from "../account.type";
 
 export const sendForgotPasswordEmail = async ({
