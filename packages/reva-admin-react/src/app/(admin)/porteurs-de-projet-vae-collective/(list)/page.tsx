@@ -83,7 +83,7 @@ export default function PorteursDeProjetVaeCollectiveListPage() {
                 href: "/porteurs-de-projet-vae-collective/add",
               }}
             >
-              Ajouter un porteur de projet VAE collective
+              Ajouter un compte
             </Button>
           }
         >
