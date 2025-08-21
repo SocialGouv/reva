@@ -206,6 +206,7 @@ export default function CandidacyInactifPage() {
           stateRelatedMessage={errors.continueCandidacy?.message}
           state={errors.continueCandidacy ? "error" : "default"}
           data-test="candidacy-inactif-radio-buttons"
+          className="hide-radio-img"
           options={[
             {
               label: continueButtonText,

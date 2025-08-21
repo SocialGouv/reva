@@ -9,31 +9,38 @@
 
 @layer tw_base, dsfr_icons, dsfr, tw_components_utils;
 
-@import "../../node_modules/@codegouvfr/react-dsfr/dsfr/utility/icons/icons.min.css" layer(dsfr_icons);
-@import "../../node_modules/@codegouvfr/react-dsfr/dsfr/dsfr.min.css" layer(dsfr);
+@import "../../node_modules/@codegouvfr/react-dsfr/dsfr/utility/icons/icons.min.css"
+  layer(dsfr_icons);
+@import "../../node_modules/@codegouvfr/react-dsfr/dsfr/dsfr.min.css"
+  layer(dsfr);
 
 @layer tw_base {
-    @tailwind base;
+  @tailwind base;
 }
 
 @layer tw_components_utils {
-    @tailwind components;
-    @tailwind utilities;
+  @tailwind components;
+  @tailwind utilities;
 }
 
 @layer components {
-    .bg-candidate {
-        background-image: url("../../public/bg-candidate.svg");
-        background-repeat: no-repeat;
-        background-position-x: center;
-        background-color: white;
-    }
+  .bg-candidate {
+    background-image: url("../../public/bg-candidate.svg");
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-color: white;
+  }
 }
 
 dl,
 dt,
 dd {
-    --xl-block: 0;
-    --ul-start: 0;
-    --li-bottom: 0;
+  --xl-block: 0;
+  --ul-start: 0;
+  --li-bottom: 0;
+}
+
+/* Hide radio rich img on specific page */
+.hide-radio-img .fr-radio-rich__img {
+  display: none !important;
 }
