@@ -59,7 +59,7 @@ type Mutation {
     password: String!
     clientApp: ClientApp!
   ): AccountLogged!
-  account_sendForgotPasswordEmail(email: String!): Void
+  account_sendForgotPasswordEmail(email: String!, clientApp: ClientApp!): Void
   account_resetPassword(token: String!, password: String!): Void
 }
 

@@ -15,7 +15,10 @@ type FormState = {
 
 const sendForgotPasswordEmailMutation = graphql(`
   mutation account_sendForgotPasswordEmail($email: String!) {
-    account_sendForgotPasswordEmail(email: $email)
+    account_sendForgotPasswordEmail(
+      email: $email
+      clientApp: REVA_VAE_COLLECTIVE
+    )
   }
 `);
 

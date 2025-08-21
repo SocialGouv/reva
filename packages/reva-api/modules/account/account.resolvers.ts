@@ -114,7 +114,7 @@ export const resolvers = {
     ) => loginWithCredentials(params),
     account_sendForgotPasswordEmail: async (
       _parent: unknown,
-      params: { email: string },
+      params: { email: string; clientApp: ClientApp },
     ) => sendForgotPasswordEmail(params),
     account_resetPassword: async (
       _parent: unknown,
