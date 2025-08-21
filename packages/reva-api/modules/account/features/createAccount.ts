@@ -7,9 +7,8 @@ import {
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
 
-import { createAccountProfile } from "../database/accounts";
-
 import * as IAM from "./keycloak";
+import { prismaClient } from "@/prisma/client";
 
 export const createAccount = async (params: {
   email: string;
@@ -97,10 +96,12 @@ export const createAccount = async (params: {
   });
 
   //create and return the account in database
-  return await createAccountProfile({
-    ...params,
-    firstname: params.firstname || "",
-    lastname: params.lastname || "",
-    keycloakId,
+  return prismaClient.account.create({
+    data: {
+      ...params,
+      firstname: params.firstname || "",
+      lastname: params.lastname || "",
+      keycloakId,
+    },
   });
 };

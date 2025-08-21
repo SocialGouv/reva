@@ -1,5 +1,5 @@
 import { ClientApp } from "../account.type";
-import { getAccountFromEmail } from "../database/accounts";
+import { getAccountByEmail } from "./getAccountByEmail";
 import { generateIAMTokenWithPassword } from "../utils/keycloak.utils";
 
 export const loginWithCredentials = async ({
@@ -11,7 +11,7 @@ export const loginWithCredentials = async ({
   password: string;
   clientApp: ClientApp;
 }) => {
-  const account = await getAccountFromEmail(email);
+  const account = await getAccountByEmail(email);
 
   if (!account) {
     throw new Error("Compte non trouvé");

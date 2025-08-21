@@ -4,8 +4,8 @@ import {
   logAAPAuditEvent,
   AAPAuditLogUserInfo,
 } from "@/modules/aap-log/features/logAAPAuditEvent";
-import { getAccountFromEmail } from "@/modules/account/database/accounts";
 import { createAccount } from "@/modules/account/features/createAccount";
+import { getAccountByEmail } from "@/modules/account/features/getAccountByEmail";
 import * as IAM from "@/modules/account/features/keycloak";
 import { createOrganism } from "@/modules/organism/database/organisms";
 import { assignMaisonMereAAPToOrganism } from "@/modules/organism/features/assignMaisonMereAAPToOrganism";
@@ -56,9 +56,7 @@ export const validateSubscriptionRequest = async ({
   }
 
   //account check
-  const oldAccount = await getAccountFromEmail(
-    subscriptionRequest.accountEmail,
-  );
+  const oldAccount = await getAccountByEmail(subscriptionRequest.accountEmail);
 
   if (oldAccount) {
     throw new Error(
