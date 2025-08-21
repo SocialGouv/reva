@@ -19,22 +19,16 @@ export const dropOutCandidacies = async (
     const candidacies = await prismaClient.candidacy.findMany({
       where: {
         id: { in: params.candidacyIds },
-      },
-      include: {
-        candidacyDropOut: true,
+        candidacyDropOut: { is: null },
       },
     });
 
-    const candidaciesToDropOut = candidacies.filter(
-      (candidacy) => !candidacy.candidacyDropOut,
-    );
-
-    if (candidaciesToDropOut.length === 0) {
+    if (candidacies.length === 0) {
       return [];
     }
 
     await prismaClient.candidacyDropOut.createMany({
-      data: candidaciesToDropOut.map((candidacy) => ({
+      data: candidacies.map((candidacy) => ({
         candidacyId: candidacy.id,
         status: candidacy.status,
         dropOutReasonId: params.dropOutReasonId,
@@ -43,7 +37,7 @@ export const dropOutCandidacies = async (
       })),
     });
 
-    return candidaciesToDropOut.map((candidacy) => candidacy.id);
+    return candidacies.map((candidacy) => candidacy.id);
   } catch (e) {
     logger.error(e);
     throw new Error(`error on drop out candidacies: ${(e as Error).message}`);
