@@ -77,9 +77,9 @@ export default function AddPorteurDeProjetVaeCollectivePage() {
 
   return (
     <div className="flex flex-col w-full">
-      <h1>Nouveau porteur de projet VAE collective</h1>
-
+      <h1 className="mb-12">Nouveau porteur de projet VAE collective</h1>
       <form
+        className="flex flex-col flex-1"
         onSubmit={handleSubmit(onSubmit)}
         onReset={(e) => {
           e.preventDefault();
@@ -92,31 +92,41 @@ export default function AddPorteurDeProjetVaeCollectivePage() {
           state={formState.errors.raisonSociale ? "error" : "default"}
           stateRelatedMessage={formState.errors.raisonSociale?.message}
         />
+        <div className="flex flex-row flex-wrap gap-6 ">
+          <Input
+            className="min-w-[282px] flex-1"
+            label="Nom (administrateur du compte)"
+            nativeInputProps={register("gestionnaireLastname")}
+            state={formState.errors.gestionnaireLastname ? "error" : "default"}
+            stateRelatedMessage={formState.errors.gestionnaireLastname?.message}
+          />
+          <Input
+            className="min-w-[282px] flex-1"
+            label="Prénom (administrateur du compte)"
+            nativeInputProps={register("gestionnaireFirstname")}
+            state={formState.errors.gestionnaireFirstname ? "error" : "default"}
+            stateRelatedMessage={
+              formState.errors.gestionnaireFirstname?.message
+            }
+          />
+          <Input
+            className="basis-[500px] min-w-[282px] flex-1"
+            label="Email de connexion"
+            nativeInputProps={{
+              ...register("gestionnaireEmail"),
+              type: "email",
+              spellCheck: "false",
+            }}
+            state={formState.errors.gestionnaireEmail ? "error" : "default"}
+            stateRelatedMessage={formState.errors.gestionnaireEmail?.message}
+          />
+        </div>
 
-        <Input
-          label="Prénom du gestionnaire"
-          nativeInputProps={register("gestionnaireFirstname")}
-          state={formState.errors.gestionnaireFirstname ? "error" : "default"}
-          stateRelatedMessage={formState.errors.gestionnaireFirstname?.message}
-        />
-        <Input
-          label="Nom du gestionnaire"
-          nativeInputProps={register("gestionnaireLastname")}
-          state={formState.errors.gestionnaireLastname ? "error" : "default"}
-          stateRelatedMessage={formState.errors.gestionnaireLastname?.message}
-        />
-        <Input
-          label="Email du gestionnaire"
-          nativeInputProps={{
-            ...register("gestionnaireEmail"),
-            type: "email",
-            spellCheck: "false",
-          }}
-          state={formState.errors.gestionnaireEmail ? "error" : "default"}
-          stateRelatedMessage={formState.errors.gestionnaireEmail?.message}
-        />
         <FormButtons
           backUrl="/porteurs-de-projet-vae-collective"
+          hideResetButton
+          submitButtonLabel="Créer"
+          backButtonLabel="Annuler"
           formState={{
             isDirty: formState.isDirty,
             isSubmitting: formState.isSubmitting,
