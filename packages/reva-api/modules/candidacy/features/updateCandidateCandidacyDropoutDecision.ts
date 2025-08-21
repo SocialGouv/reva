@@ -1,6 +1,8 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getBackofficeUrl } from "@/modules/shared/email";
 import { prismaClient } from "@/prisma/client";
 
+import { sendCandidacyDropOutCanceledEmailToAap } from "../emails/sendCandidacyDropOutCanceledEmailToAap";
 import { sendCandidacyDropOutConfirmedEmailToAap } from "../emails/sendCandidacyDropOutConfirmedEmailToAap";
 import { sendCandidacyDropOutConfirmedEmailToCandidate } from "../emails/sendCandidacyDropOutConfirmedEmailToCandidate";
 
@@ -44,6 +46,17 @@ export const updateCandidateCandidacyDropoutDecision = async ({
       "La décision d'abandon a déjà été confirmée automatiquement",
     );
   }
+  const aapEmail =
+    dropOut.candidacy?.organism?.emailContact ||
+    dropOut.candidacy?.organism?.contactAdministrativeEmail;
+
+  const aapLabel =
+    dropOut.candidacy.organism?.nomPublic || dropOut.candidacy.organism?.label;
+
+  const candidateFullName =
+    dropOut.candidacy.candidate?.firstname +
+    " " +
+    dropOut.candidacy.candidate?.lastname;
 
   if (dropOutConfirmed) {
     const candidacy = await prismaClient.candidacy.update({
@@ -57,19 +70,6 @@ export const updateCandidateCandidacyDropoutDecision = async ({
       eventType: "CANDIDACY_DROPOUT_CONFIRMED_BY_CANDIDATE",
       ...userInfo,
     });
-
-    const aapEmail =
-      dropOut.candidacy?.organism?.emailContact ||
-      dropOut.candidacy?.organism?.contactAdministrativeEmail;
-
-    const aapLabel =
-      dropOut.candidacy.organism?.nomPublic ||
-      dropOut.candidacy.organism?.label;
-
-    const candidateFullName =
-      dropOut.candidacy.candidate?.firstname +
-      " " +
-      dropOut.candidacy.candidate?.lastname;
 
     if (aapEmail && aapLabel) {
       await sendCandidacyDropOutConfirmedEmailToAap({
@@ -100,6 +100,19 @@ export const updateCandidateCandidacyDropoutDecision = async ({
       eventType: "CANDIDACY_DROPOUT_CANCELED_BY_CANDIDATE",
       ...userInfo,
     });
+
+    const candidacyUrl = getBackofficeUrl({
+      path: `/candidacies/${candidacyId}/summary`,
+    });
+    if (aapEmail) {
+      await sendCandidacyDropOutCanceledEmailToAap({
+        aapEmail,
+        aapLabel: aapLabel || "",
+        candidateFullName,
+        candidacyUrl,
+      });
+    }
+
     return candidacy;
   }
 };
