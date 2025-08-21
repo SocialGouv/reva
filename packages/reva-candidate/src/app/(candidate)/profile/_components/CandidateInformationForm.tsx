@@ -355,7 +355,7 @@ const CandidateInformationForm = ({
         <div className="flex gap-8">
           {manualAddressSelected ? (
             <Input
-              label="Numéro et nom de rue"
+              label="Adresse"
               className="w-full flex-1 mb-0"
               nativeInputProps={register("street")}
               state={errors.street ? "error" : "default"}
