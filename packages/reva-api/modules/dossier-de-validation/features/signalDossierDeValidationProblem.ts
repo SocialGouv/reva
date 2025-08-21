@@ -1,3 +1,4 @@
+import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "@/prisma/client";
 
@@ -78,6 +79,11 @@ export const signalDossierDeValidationProblem = async ({
         decisionSentAt: new Date(),
       },
     });
+
+  await updateCandidacyStatus({
+    candidacyId: dossierDeValidation.candidacyId,
+    status: "DOSSIER_DE_VALIDATION_SIGNALE",
+  });
 
   const isAutonome = candidacy?.typeAccompagnement === "AUTONOME";
 
