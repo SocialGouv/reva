@@ -20,10 +20,7 @@ export default function ExperiencesSectionSubmitCandidacy({
   return (
     <div className="mt-10">
       <div className="flex">
-        <span
-          className="fr-icon-briefcase-fill fr-icon--lg mr-2"
-          data-html2canvas-ignore="true"
-        />
+        <span className="fr-icon-briefcase-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">Expériences professionnelles</h2>
       </div>
       {experiences.length > 0 && (

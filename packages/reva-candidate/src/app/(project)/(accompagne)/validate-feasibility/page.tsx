@@ -141,7 +141,6 @@ export default function ValidateFeasibility() {
 
           onSubmit();
         }}
-        data-html2canvas-ignore="true"
       >
         <div className="flex flex-col gap-3">
           <h2 className="mb-0">Validation du dossier de faisabilité</h2>

@@ -50,10 +50,7 @@ export default function CertificationSection({
   return (
     <div>
       <div className="flex">
-        <span
-          className="fr-icon-award-fill fr-icon--lg mr-2"
-          data-html2canvas-ignore="true"
-        />
+        <span className="fr-icon-award-fill fr-icon--lg mr-2" />
         <h2>Certification visée</h2>
       </div>
       <h4 className="mb-2">{certification?.label}</h4>
@@ -110,7 +107,7 @@ export default function CertificationSection({
           </p>
         )}
         {!!prequisitesByStatus?.acquired?.length && (
-          <Accordion label="Acquis" defaultExpanded className="hide-bg-for-pdf">
+          <Accordion label="Acquis" defaultExpanded>
             <ul>
               {prequisitesByStatus?.acquired?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -119,11 +116,7 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.inProgress?.length && (
-          <Accordion
-            label="En cours"
-            defaultExpanded
-            className="hide-bg-for-pdf"
-          >
+          <Accordion label="En cours" defaultExpanded>
             <ul>
               {prequisitesByStatus?.inProgress?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -132,11 +125,7 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.recommended?.length && (
-          <Accordion
-            label="Préconisés"
-            defaultExpanded
-            className="hide-bg-for-pdf"
-          >
+          <Accordion label="Préconisés" defaultExpanded>
             <ul>
               {prequisitesByStatus?.recommended?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>

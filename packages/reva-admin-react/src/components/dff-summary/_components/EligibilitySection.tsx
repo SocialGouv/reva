@@ -11,17 +11,11 @@ const EligibiltyBadge = ({
 }) => {
   if (eligibilityRequirement === "FULL_ELIGIBILITY_REQUIREMENT") {
     return (
-      <Badge severity="info" className="hide-bg-for-pdf">
-        Accès au dossier de faisabilité intégral
-      </Badge>
+      <Badge severity="info">Accès au dossier de faisabilité intégral</Badge>
     );
   }
   if (eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT") {
-    return (
-      <Badge severity="new" className="hide-bg-for-pdf">
-        Accès au dossier de faisabilité adapté
-      </Badge>
-    );
+    return <Badge severity="new">Accès au dossier de faisabilité adapté</Badge>;
   }
   return null;
 };
@@ -36,10 +30,7 @@ export default function EligibilitySection({
   return (
     <div className="mb-8">
       <div className="flex">
-        <span
-          className="ri-folder-check-fill fr-icon--lg mr-2"
-          data-html2canvas-ignore="true"
-        />
+        <span className="ri-folder-check-fill fr-icon--lg mr-2" />
         <h2>Recevabilité du candidat</h2>
       </div>
       <EligibiltyBadge eligibilityRequirement={eligibilityRequirement} />

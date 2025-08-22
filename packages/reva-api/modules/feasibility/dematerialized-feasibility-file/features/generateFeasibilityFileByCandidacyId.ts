@@ -389,7 +389,7 @@ const addCandidate = (
   let nameLabel = "";
 
   if (genderLabel) {
-    nameLabel = `${genderLabel}, `;
+    nameLabel = `${genderLabel} `;
   }
 
   nameLabel = `${nameLabel}${givenName ? givenName : lastname} ${firstname}`;

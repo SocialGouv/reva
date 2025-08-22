@@ -23,7 +23,7 @@ export default function AttachmentsSection({
   swornStatementFile?: File | null;
 }) {
   return (
-    <div className="mb-4" data-html2canvas-ignore="true">
+    <div className="mb-4">
       <div className="flex">
         <span className="fr-icon-attachment-fill fr-icon--lg mr-2" />
         <h2>Pièces jointes</h2>

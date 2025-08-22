@@ -29,21 +29,21 @@ const BadgeState = ({
 }) => {
   if (state === "YES") {
     return (
-      <Badge noIcon severity="success" small className="hide-bg-for-pdf">
+      <Badge noIcon severity="success" small>
         Oui
       </Badge>
     );
   }
   if (state === "NO") {
     return (
-      <Badge severity="error" noIcon small className="hide-bg-for-pdf">
+      <Badge severity="error" noIcon small>
         Non
       </Badge>
     );
   }
   if (state === "PARTIALLY") {
     return (
-      <Badge severity="new" noIcon small className="hide-bg-for-pdf">
+      <Badge severity="new" noIcon small>
         Partiellement
       </Badge>
     );
@@ -90,11 +90,7 @@ export const CertificationCompetenceAccordion = ({
   }
 
   return (
-    <Accordion
-      label={label}
-      defaultExpanded={defaultExpanded}
-      className="hide-bg-for-pdf"
-    >
+    <Accordion label={label} defaultExpanded={defaultExpanded}>
       {competenceBloc.competences.map((competence) => (
         <div key={competence.id}>
           <BadgeState

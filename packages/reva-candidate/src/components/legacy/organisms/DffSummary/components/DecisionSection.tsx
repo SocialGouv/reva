@@ -21,7 +21,7 @@ export default function DecisionSection({
   const DecisionBadge = () => {
     if (decision === "FAVORABLE") {
       return (
-        <Badge severity="success" noIcon className="hide-bg-for-pdf">
+        <Badge severity="success" noIcon>
           Favorable
         </Badge>
       );
@@ -38,10 +38,7 @@ export default function DecisionSection({
   return (
     <div>
       <div className="flex">
-        <span
-          className="fr-icon-thumb-up-fill fr-icon--lg mr-2"
-          data-html2canvas-ignore="true"
-        />
+        <span className="fr-icon-thumb-up-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">L&apos;avis de mon accompagnateur </h2>
       </div>
       <div className="my-4">

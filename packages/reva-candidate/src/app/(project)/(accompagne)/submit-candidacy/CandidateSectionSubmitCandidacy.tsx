@@ -40,10 +40,7 @@ export default function CandidateSectionSubmitCandidacy({
   return (
     <div>
       <div className="flex">
-        <span
-          className="fr-icon-user-fill fr-icon--lg mr-2"
-          data-html2canvas-ignore="true"
-        />
+        <span className="fr-icon-user-fill fr-icon--lg mr-2" />
         <h2>Mes informations</h2>
       </div>
       <div className="pl-10">

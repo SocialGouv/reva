@@ -16,10 +16,7 @@ export default function ParcoursSection({
   return (
     <div>
       <div className="flex">
-        <span
-          className="fr-icon-time-fill fr-icon--lg mr-2"
-          data-html2canvas-ignore="true"
-        />
+        <span className="fr-icon-time-fill fr-icon--lg mr-2" />
         <h2>Parcours envisagé</h2>
       </div>
       <p className="mb-2">

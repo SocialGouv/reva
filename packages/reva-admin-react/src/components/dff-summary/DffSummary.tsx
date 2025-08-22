@@ -88,7 +88,7 @@ export function DffSummary({
   };
 
   return (
-    <div className="flex flex-col" id="dff-to-print" data-test="dff-summary">
+    <div className="flex flex-col" data-test="dff-summary">
       <div className="flex justify-between mb-4">
         <h1 className="mb-0">Dossier de faisabilité</h1>
 

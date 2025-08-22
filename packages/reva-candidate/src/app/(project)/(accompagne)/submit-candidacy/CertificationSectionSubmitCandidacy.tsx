@@ -15,10 +15,7 @@ export default function CertificationSectionSubmitCandidacy({
   return (
     <div className="mt-10">
       <div className="flex">
-        <span
-          className="fr-icon-award-fill fr-icon--lg mr-2"
-          data-html2canvas-ignore="true"
-        />
+        <span className="fr-icon-award-fill fr-icon--lg mr-2" />
         <h2>Certification visée</h2>
       </div>
       <div className="pl-10">

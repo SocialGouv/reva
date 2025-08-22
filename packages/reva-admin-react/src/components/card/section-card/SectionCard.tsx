@@ -49,10 +49,7 @@ export const SectionCard = ({
             className={`mb-0 sm:whitespace-nowrap ${disabled ? "text-neutral-400" : ""}`}
           >
             {titleIconClass && (
-              <span
-                className={`fr-icon fr-icon--lg ${titleIconClass} mr-2`}
-                data-html2canvas-ignore="true"
-              />
+              <span className={`fr-icon fr-icon--lg ${titleIconClass} mr-2`} />
             )}
             {title}
           </h2>
