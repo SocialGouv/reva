@@ -1,15 +1,8 @@
-import KeycloakAdminClientClass from "@keycloak/keycloak-admin-client";
+import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
 import { logger } from "@/modules/shared/logger";
 
-const dynamicImport = async (packageName: string) =>
-  new Function(`return import('${packageName}')`)();
-
 export const getKeycloakAdmin = async () => {
-  const KeycloakAdminClient = (
-    await dynamicImport("@keycloak/keycloak-admin-client")
-  ).default as typeof KeycloakAdminClientClass;
-
   const kcAdminClient = new KeycloakAdminClient({
     baseUrl: process.env.KEYCLOAK_ADMIN_URL,
     realmName: process.env.KEYCLOAK_ADMIN_REALM,
