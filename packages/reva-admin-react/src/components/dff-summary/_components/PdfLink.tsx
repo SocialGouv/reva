@@ -4,18 +4,53 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 export const PdfLink = ({
   url,
+  isBlobUrl,
   text,
   title,
   className,
   fileName,
 }: {
   url: string;
+  isBlobUrl?: boolean;
   text: string;
   title: string;
   className?: string;
   fileName?: string;
 }) => {
   const { accessToken } = useKeycloakContext();
+
+  const getFileUrlFromBlob = async (): Promise<string | undefined> => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", url);
+      xhr.responseType = "blob";
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+
+      xhr.onload = async function (_error) {
+        if (this.status == 200) {
+          try {
+            const blob = new Blob([this.response], {
+              type: xhr.getResponseHeader("content-type") || "",
+            });
+            const url = window.URL.createObjectURL(blob);
+
+            resolve(url);
+
+            return;
+          } catch (error) {
+            console.error(error);
+          }
+
+          resolve(undefined);
+
+          return;
+        }
+        reject();
+      };
+
+      xhr.send();
+    });
+  };
 
   const getFileUrl = async (): Promise<string | undefined> => {
     return new Promise((resolve, reject) => {
@@ -48,7 +83,9 @@ export const PdfLink = ({
 
   const handleClick = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const url = await getFileUrl();
+
+    const url = isBlobUrl ? await getFileUrlFromBlob() : await getFileUrl();
+
     const a = document.createElement("a");
 
     document.body.appendChild(a);
@@ -65,6 +102,7 @@ export const PdfLink = ({
       window.URL.revokeObjectURL(url!);
     }, 1000);
   };
+
   return (
     <div className="max-w-screen-md truncate">
       <a

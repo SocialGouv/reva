@@ -1,7 +1,8 @@
 "use client";
 
 import { deburr } from "lodash";
-import dynamic from "next/dynamic";
+
+import { REST_API_URL } from "@/config/config";
 
 import {
   Candidacy,
@@ -25,16 +26,6 @@ import ExperiencesSection from "./_components/ExperiencesSection";
 import GoalsSection from "./_components/GoalsSection";
 import ParcoursSection from "./_components/ParcoursSection";
 import { PdfLink } from "./_components/PdfLink";
-
-// The ButtonConvertHtmlToPdf component uses html2pdf, which relies on the window object and causes issues during server-side rendering (SSR) builds.
-// We use dynamic import to ensure the component is only loaded on the client side.
-const ButtonConvertHtmlToPdf = dynamic(
-  () =>
-    import(
-      "@/components/button-convert-html-to-pdf/ButtonConvertHtmlToPdf"
-    ).then((mod) => mod.ButtonConvertHtmlToPdf),
-  { ssr: false },
-);
 
 export function DffSummary({
   dematerializedFeasibilityFile,
@@ -82,8 +73,8 @@ export function DffSummary({
   const isEligibilityRequirementPartial =
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
-  const isGenerateDfDematFromServerActive = isFeatureActive(
-    "GENERATE_DF_DEMAT_FROM_SERVER",
+  const isUseGeneratedDffFileFromFileServerActive = isFeatureActive(
+    "USE_GENERATED_DFF_FILE_FROM_FILE_SERVER",
   );
 
   const { candidate } = candidacy;
@@ -92,12 +83,16 @@ export function DffSummary({
     `${candidate?.givenName ? candidate?.givenName : candidate?.lastname}_${candidate?.firstname}`,
   ).toLowerCase();
 
+  const getPdfUrl = () => {
+    return `${REST_API_URL}/candidacy/${candidacy.id}/feasibility/file-demat/${dematerializedFeasibilityFile.id}`;
+  };
+
   return (
     <div className="flex flex-col" id="dff-to-print" data-test="dff-summary">
       <div className="flex justify-between mb-4">
         <h1 className="mb-0">Dossier de faisabilité</h1>
 
-        {isGenerateDfDematFromServerActive &&
+        {isUseGeneratedDffFileFromFileServerActive &&
         dematerializedFeasibilityFile.dffFile ? (
           <PdfLink
             text={"Télécharger le dossier de faisabilité"}
@@ -107,10 +102,13 @@ export function DffSummary({
             className="fr-btn fr-btn--secondary fr-btn--sm"
           />
         ) : (
-          <ButtonConvertHtmlToPdf
-            label="Télécharger le dossier de faisabilité"
-            elementId="dff-to-print"
-            filename="dossier_de_faisabilite.pdf"
+          <PdfLink
+            text={"Télécharger le dossier de faisabilité"}
+            title={"Télécharger le dossier de faisabilité"}
+            url={getPdfUrl()}
+            isBlobUrl
+            fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
+            className="fr-btn fr-btn--secondary fr-btn--sm"
           />
         )}
       </div>

@@ -26,7 +26,7 @@ import { prismaClient } from "@/prisma/client";
 
 export const generateFeasibilityFileByCandidacyId = async (
   candidacyId: string,
-): Promise<{ doc: PDFKit.PDFDocument; data: Buffer } | undefined> => {
+): Promise<Buffer | undefined> => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     include: {
@@ -131,7 +131,7 @@ export const generateFeasibilityFileByCandidacyId = async (
       const data = Buffer.concat(buffers);
 
       if (data) {
-        resolve({ doc, data });
+        resolve(data);
       } else {
         reject(undefined);
       }

@@ -14,6 +14,8 @@ const uploadAllDffFileForDematerializedFeasibility = async () => {
 
   let currentIndex = 0;
 
+  const errorOnCandidacyIds: { candidacyId: string; errorStr: any }[] = [];
+
   for (const dematerializedFeasibilityFile of dematerializedFeasibilityFiles) {
     const candidacyId = dematerializedFeasibilityFile.feasibility.candidacyId;
 
@@ -23,14 +25,31 @@ const uploadAllDffFileForDematerializedFeasibility = async () => {
 
     try {
       await generateAndUploadFeasibilityFileByCandidacyId(candidacyId);
-      // eslint-disable-next-line no-empty
-    } catch (_error) {}
+    } catch (error) {
+      const errorStr = error?.toString();
+      if (
+        errorStr?.indexOf(
+          "Dossier de faisabilité incomplet pour la génération du pdf",
+        ) == -1
+      ) {
+        errorOnCandidacyIds.push({ candidacyId, errorStr });
+      }
+    }
 
     console.log(
       `End processing dff generation at index ${currentIndex} with candidacyId : ${candidacyId}`,
     );
 
     currentIndex++;
+  }
+
+  console.log(`Logging errors`);
+  console.log(`errors.length ${errorOnCandidacyIds.length}`);
+
+  for (const error of errorOnCandidacyIds) {
+    console.log(error.candidacyId);
+    console.log(error.errorStr);
+    console.log("");
   }
 };
 

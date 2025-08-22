@@ -6,6 +6,7 @@ import { logger } from "@/modules/shared/logger";
 import { isCandidateOwnerOfCandidacyFeature } from "@/modules/shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
 import { prismaClient } from "@/prisma/client";
 
+import { generateFeasibilityFileByCandidacyId } from "./dematerialized-feasibility-file/features/generateFeasibilityFileByCandidacyId";
 import {
   canDownloadFeasibilityFiles,
   canUserManageCandidacy,
@@ -110,6 +111,74 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
             .send({ url: fileLink });
 
           return;
+        }
+
+        reply.status(400).send("Fichier non trouvé.");
+      },
+    },
+  );
+
+  server.get<{
+    Params: { candidacyId: string; dematerializedFeasibilityFileId: string };
+  }>(
+    "/candidacy/:candidacyId/feasibility/file-demat/:dematerializedFeasibilityFileId",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: {
+            feasibilityId: { type: "string" },
+            dematerializedFeasibilityFileId: { type: "string" },
+          },
+          required: ["candidacyId", "dematerializedFeasibilityFileId"],
+        },
+      },
+      handler: async (request, reply) => {
+        const { candidacyId, dematerializedFeasibilityFileId } = request.params;
+
+        const feasibility = await getActiveFeasibilityByCandidacyid({
+          candidacyId,
+        });
+
+        if (!feasibility) {
+          return reply.status(500).send({
+            err: "Dossier de faisabilité non trouvé.",
+          });
+        }
+
+        const authorized = await canDownloadFeasibilityFiles({
+          hasRole: request.auth.hasRole,
+          feasibility: feasibility,
+          candidacyId,
+          keycloakId: request.auth?.userInfo?.sub,
+        });
+
+        if (!authorized) {
+          return reply.status(403).send({
+            err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
+          });
+        }
+
+        const feasibilityDemat = feasibility?.dematerializedFeasibilityFile;
+
+        if (
+          feasibilityDemat &&
+          feasibilityDemat.id == dematerializedFeasibilityFileId
+        ) {
+          const data = await generateFeasibilityFileByCandidacyId(candidacyId);
+          if (data) {
+            reply.header("Content-Type", "application/pdf");
+            reply.header(
+              "Access-Control-Expose-Headers",
+              "Content-Disposition",
+            );
+            reply.header(
+              "Content-Disposition",
+              `attachment; filename="'${dematerializedFeasibilityFileId}.pdf'"`,
+            );
+
+            return reply.send(data);
+          }
         }
 
         reply.status(400).send("Fichier non trouvé.");

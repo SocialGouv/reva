@@ -48,13 +48,11 @@ export const generateAndUploadFeasibilityFileByCandidacyId = async (
     );
   }
 
-  const { data: buffer } = data;
-
   const files: S3File[] = [];
 
   const feasibilityFileInstance: S3File = {
     filePath: `candidacies/${candidacyId}/feasibility/${v4()}`,
-    data: buffer,
+    data: data,
     mimeType: "application/pdf",
     allowedFileTypes: ["application/pdf"],
   };

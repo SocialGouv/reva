@@ -5,7 +5,6 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Download from "@codegouvfr/react-dsfr/Download";
 import { GraphQLError } from "graphql";
 import { deburr } from "lodash";
-import dynamic from "next/dynamic";
 import { redirect, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
@@ -14,27 +13,18 @@ import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
 import { PdfLink } from "@/components/legacy/organisms/DffSummary/components/PdfLink";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import { REST_API_URL } from "@/config/config";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
-
-// The ButtonConvertHtmlToPdf component uses html2pdf, which relies on the window object and causes issues during server-side rendering (SSR) builds.
-// We use dynamic import to ensure the component is only loaded on the client side.
-const ButtonConvertHtmlToPdf = dynamic(
-  () =>
-    import(
-      "@/components/button-convert-html-to-pdf/ButtonConvertHtmlToPdf"
-    ).then((mod) => mod.ButtonConvertHtmlToPdf),
-  { ssr: false },
-);
 
 export default function ValidateFeasibility() {
   const router = useRouter();
 
   const { isFeatureActive } = useAnonymousFeatureFlipping();
 
-  const isGenerateDfDematFromServerActive = isFeatureActive(
-    "GENERATE_DF_DEMAT_FROM_SERVER",
+  const isUseGeneratedDffFileFromFileServerActive = isFeatureActive(
+    "USE_GENERATED_DFF_FILE_FROM_FILE_SERVER",
   );
 
   const {
@@ -85,6 +75,10 @@ export default function ValidateFeasibility() {
     redirect("/");
   }
 
+  const getPdfUrl = () => {
+    return `${REST_API_URL}/candidacy/${candidacy.id}/feasibility/file-demat/${dematerializedFeasibilityFile.id}`;
+  };
+
   const onSubmit = async () => {
     try {
       if (swornStatementFile) {
@@ -113,7 +107,7 @@ export default function ValidateFeasibility() {
     <PageLayout title="Dossier de faisabilité" displayBackToHome>
       <div className="flex justify-between mb-4 mt-6">
         <h1 className="mb-0">Dossier de faisabilité </h1>
-        {isGenerateDfDematFromServerActive &&
+        {isUseGeneratedDffFileFromFileServerActive &&
         dematerializedFeasibilityFile.dffFile ? (
           <PdfLink
             text={"Télécharger le dossier de faisabilité"}
@@ -123,10 +117,13 @@ export default function ValidateFeasibility() {
             className="fr-btn fr-btn--secondary fr-btn--sm"
           />
         ) : (
-          <ButtonConvertHtmlToPdf
-            label="Télécharger le dossier de faisabilité"
-            elementId="dff-to-print"
-            filename="dossier_de_faisabilite.pdf"
+          <PdfLink
+            text={"Télécharger le dossier de faisabilité"}
+            title={"Télécharger le dossier de faisabilité"}
+            url={getPdfUrl()}
+            isBlobUrl
+            fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
+            className="fr-btn fr-btn--secondary fr-btn--sm"
           />
         )}
       </div>
