@@ -5,7 +5,6 @@ import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-
 import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
-import * as getKeycloakAdminModule from "../shared/auth/getKeycloakAdmin";
 
 test("get existing Candidacy with admin user", async () => {
   const candidacy = await createCandidacyHelper();
@@ -130,14 +129,6 @@ test("a candidate can modify all his account information", async () => {
     phone: "0612345678",
     email: "updated@email.com",
   };
-
-  vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockImplementation(() =>
-    Promise.resolve({
-      users: {
-        update: vi.fn().mockResolvedValue({}),
-      },
-    } as any),
-  );
 
   const graphqlClient = getGraphQLClient({
     headers: {

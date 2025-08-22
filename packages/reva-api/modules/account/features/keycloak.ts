@@ -1,6 +1,6 @@
 import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 
-import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
+import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 
 export const getAccount = async (params: {
   email: string;

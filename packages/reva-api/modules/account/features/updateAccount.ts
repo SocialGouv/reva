@@ -1,6 +1,6 @@
+import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { prismaClient } from "@/prisma/client";
 
-import { getKeycloakAdmin } from "../../shared/auth/getKeycloakAdmin";
 import { Account } from "../account.types";
 import { notifyNewEmailAddress, notifyPreviousEmailAddress } from "../mail";
 
