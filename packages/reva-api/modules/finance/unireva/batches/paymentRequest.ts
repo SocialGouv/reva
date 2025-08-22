@@ -82,8 +82,8 @@ export const batchPaymentRequest = async (batchKey: string) => {
     });
   } catch (e) {
     logger.error(
-      `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
       e,
+      `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
     );
 
     if (e instanceof Error) {

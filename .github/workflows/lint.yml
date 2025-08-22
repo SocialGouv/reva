@@ -4,6 +4,9 @@ on: [push]
 jobs:
   eslint-reva-api:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-api
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
@@ -14,7 +17,7 @@ jobs:
       - name: Installing dependencies
         run: npm ci
       - name: Running ESLint
-        run: npm run lint -w reva-api
+        run: npm run lint
 
   eslint-reva-admin:
     runs-on: ubuntu-latest

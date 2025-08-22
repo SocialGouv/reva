@@ -13,6 +13,9 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
+    defaults:
+      run:
+        working-directory: ./packages/reva-api
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -30,6 +33,9 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
+    defaults:
+      run:
+        working-directory: ./packages/reva-api
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -49,4 +55,4 @@ jobs:
           exposed_postgres_port: 5444
           postgres_extensions: uuid-ossp unaccent pg_trgm plpgsql cube earthdistance
       - name: Launch tests
-        run: npm run test-api
+        run: npm run test

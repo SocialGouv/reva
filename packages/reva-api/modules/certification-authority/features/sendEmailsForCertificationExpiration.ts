@@ -229,8 +229,8 @@ export const sendEmailsForCertificationExpiration = async () => {
     }
   } catch (e) {
     logger.error(
-      `Erreur pendant l'envoi des emails de notification d'expiration de certification`,
       e,
+      `Erreur pendant l'envoi des emails de notification d'expiration de certification`,
     );
   }
 };

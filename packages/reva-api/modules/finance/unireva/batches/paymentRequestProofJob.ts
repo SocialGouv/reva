@@ -19,7 +19,7 @@ export default async (batchKey: string) => {
         },
       });
     } catch (err) {
-      logger.error("Failed to fetch spooled files - ", err);
+      logger.error(err, "Failed to fetch spooled files - ");
       throw err;
     }
     logger.info(`Found ${spoolerFilesId.length} file(s) to upload.`);
@@ -39,7 +39,7 @@ export default async (batchKey: string) => {
         },
       });
     } catch (err) {
-      logger.error("Connection to FTP failed", err);
+      logger.error(err, "Connection to FTP failed");
       throw err;
     }
     logger.info("Connected to FTP server.");

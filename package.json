@@ -8,21 +8,18 @@
   },
   "scripts": {
     "build": "./build.sh",
-    "dev": "npm-run-all --print-label --parallel \"dev -w reva-api\" \"dev --prefix packages/reva-candidate\" \"dev --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",
+    "dev": "npm-run-all --print-label --parallel \"dev --prefix packages/reva-api\" \"dev --prefix packages/reva-candidate\" \"dev --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",
     "front-apps": "npm-run-all --print-label --parallel \"dev --prefix packages/reva-candidate\" \"dev --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",
-    "start": "npm run start --workspace=reva-api",
-    "cron": "npm run cron --workspace=reva-api",
-    "lint": "npm-run-all --print-label --parallel \"lint -w reva-api\" \"lint --prefix packages/reva-candidate\" \"lint --prefix packages/reva-admin-react\" \"lint --prefix packages/reva-website\" \"lint --prefix packages/reva-vae-collective\" \"lint --prefix packages/reva-interop\"",
-    "test-api": "npm run test --workspace=reva-api",
+    "start": "npm run start --prefix packages/reva-api",
+    "cron": "npm run cron --prefix packages/reva-api",
+    "lint": "npm-run-all --print-label --parallel \"lint --prefix packages/reva-api\" \"lint --prefix packages/reva-candidate\" \"lint --prefix packages/reva-admin-react\" \"lint --prefix packages/reva-website\" \"lint --prefix packages/reva-vae-collective\" \"lint --prefix packages/reva-interop\"",
+    "test-api": "npm run test --prefix packages/reva-api",
     "deploy": "./infra/scripts/deploy.sh",
-    "graphql:generate": "npm run graphql:generate --workspace=reva-api && npm run graphql:generate --prefix packages/reva-admin-react && npm run graphql:generate --prefix packages/reva-candidate && npm run graphql:generate --prefix packages/reva-website && npm run graphql:generate --prefix packages/reva-vae-collective && npm run graphql:generate --prefix packages/reva-interop",
-    "prisma:generate": "npm run prisma:generate --workspace=reva-api",
-    "prisma:migrate:deploy": "npm run prisma:migrate:deploy --workspace=reva-api",
+    "graphql:generate": "npm run graphql:generate --prefix packages/reva-api && npm run graphql:generate --prefix packages/reva-admin-react && npm run graphql:generate --prefix packages/reva-candidate && npm run graphql:generate --prefix packages/reva-website && npm run graphql:generate --prefix packages/reva-vae-collective && npm run graphql:generate --prefix packages/reva-interop",
+    "prisma:generate": "npm run prisma:generate --prefix packages/reva-api",
+    "prisma:migrate:deploy": "npm run prisma:migrate:deploy --prefix packages/reva-api",
     "prepare": "husky"
   },
-  "workspaces": [
-    "packages/reva-api"
-  ],
   "devDependencies": {
     "dotenv": "^16.5.0",
     "husky": "^9.1.7",

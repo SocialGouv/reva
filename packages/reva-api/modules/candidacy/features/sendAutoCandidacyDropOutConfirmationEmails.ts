@@ -57,8 +57,8 @@ export const sendAutoCandidacyDropOutConfirmationEmails = async () => {
       }
     } catch (e) {
       logger.error(
-        `Erreur pendant l'envoi des emails de confirmation d'abandon automatique pour la candidature ${dropOut.candidacyId}`,
         e,
+        `Erreur pendant l'envoi des emails de confirmation d'abandon automatique pour la candidature ${dropOut.candidacyId}`,
       );
     }
   }

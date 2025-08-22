@@ -4,6 +4,3 @@
 ./modules/graphql/generated
 ./prisma/seed/referentials/private
 ./prisma/*.tar
-
-# File handled in the root directory (as a workspace)
-package-lock.json
