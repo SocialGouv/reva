@@ -54,7 +54,7 @@ type CandidacyCertificationAuthorityLocalAccount {
 
 type Candidacy {
   id: ID!
-  candidate: Candidate
+  candidate: Candidate!
   organismId: UUID
   organism: Organism
   experiences: [Experience!]!
