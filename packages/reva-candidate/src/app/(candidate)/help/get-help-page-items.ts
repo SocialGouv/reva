@@ -22,7 +22,7 @@ const helpPageItemsQuery = graphql(`
 
 export const getHelpPageItems = async () => {
   const helpPageItems = await strapi.request(helpPageItemsQuery);
-  const tutorielSection = helpPageItems.aideCandidatSectionTutoriels[0];
+  const tutorielSection = helpPageItems?.aideCandidatSectionTutoriels?.[0];
 
   return { tutorielSection };
 };
