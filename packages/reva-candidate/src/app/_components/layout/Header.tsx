@@ -5,17 +5,20 @@ import { usePathname } from "next/navigation";
 
 import { useLayout } from "@/app/_components/layout/layout.hook";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 const getNavigation = ({
   authenticated,
   currentPathname,
   isInactifEnAttente,
   isCandidacyDeletedPath,
+  candidateHelpIsActive,
 }: {
   authenticated: boolean;
   currentPathname: string;
   isInactifEnAttente: boolean;
   isCandidacyDeletedPath: boolean;
+  candidateHelpIsActive: boolean;
 }) => {
   if (!authenticated || isInactifEnAttente || isCandidacyDeletedPath) return [];
 
@@ -36,6 +39,18 @@ const getNavigation = ({
       },
       isActive: currentPathname.startsWith("/profile"),
     },
+    ...(candidateHelpIsActive
+      ? [
+          {
+            text: "Aide",
+            linkProps: {
+              href: "/help",
+              target: "_self",
+            },
+            isActive: currentPathname.startsWith("/help"),
+          },
+        ]
+      : []),
   ];
 };
 export const Header = () => {
@@ -46,12 +61,15 @@ export const Header = () => {
     candidate?.candidacy.activite === "INACTIF_EN_ATTENTE";
   const isCandidacyDeletedPath =
     currentPathname.startsWith("/candidacy-deleted");
+  const { isFeatureActive } = useFeatureFlipping();
+  const candidateHelpIsActive = isFeatureActive("candidate-help");
 
   const navigation = getNavigation({
     authenticated,
     currentPathname,
     isInactifEnAttente,
     isCandidacyDeletedPath,
+    candidateHelpIsActive,
   });
 
   return (

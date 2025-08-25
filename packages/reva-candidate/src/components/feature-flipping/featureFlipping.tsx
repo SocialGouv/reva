@@ -35,8 +35,7 @@ const useFeatureFlippingStore = create<{
     get().activeFeatures.includes(featureName),
 }));
 
-//eslint-disable-next-line @typescript-eslint/no-unused-vars
-const useFeatureFlipping = () => {
+export const useFeatureFlipping = () => {
   const { activeFeatures, isFeatureActive, init, status } =
     useFeatureFlippingStore();
   const { graphqlClient } = useGraphQlClient();
