@@ -1,9 +1,12 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
-import { CertificationRegistryManagerInput } from "@/graphql/generated/graphql";
+import {
+  CertificationRegistryManagerInput,
+  UpdateCertificationRegistryManagerInput,
+} from "@/graphql/generated/graphql";
 
 const getCertificationAuthorityStructureWithRegistryManagerQuery = graphql(`
   query getCertificationAuthorityStructureWithRegistryManager($id: ID!) {
@@ -32,12 +35,23 @@ const createCertificationRegistryManagerMutation = graphql(`
   }
 `);
 
+const updateCertificationRegistryManagerMutation = graphql(`
+  mutation updateCertificationRegistryManager(
+    $data: UpdateCertificationRegistryManagerInput!
+  ) {
+    certification_authority_updateCertificationRegistryManager(input: $data) {
+      id
+    }
+  }
+`);
+
 export const useCertificationRegistryPage = ({
   certificationAuthorityStructureId,
 }: {
   certificationAuthorityStructureId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const {
     data: getCertificationAuthorityStructureWithRegistryManagerResponse,
@@ -63,11 +77,24 @@ export const useCertificationRegistryPage = ({
       }),
   });
 
+  const updateCertificationRegistryManager = useMutation({
+    mutationFn: (data: UpdateCertificationRegistryManagerInput) =>
+      graphqlClient.request(updateCertificationRegistryManagerMutation, {
+        data,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [certificationAuthorityStructureId],
+      });
+    },
+  });
+
   const certificationAuthorityStructure =
     getCertificationAuthorityStructureWithRegistryManagerResponse?.certification_authority_getCertificationAuthorityStructure;
   return {
     certificationAuthorityStructure,
     getCertificationRegistryManagerStatus,
     createCertificationRegistryManager,
+    updateCertificationRegistryManager,
   };
 };

@@ -55,7 +55,7 @@ export default function ResponsableReferentielCard({
             priority="tertiary no outline"
             size="small"
           >
-            Consulter
+            Modifier
           </Button>
         </div>
       </p>

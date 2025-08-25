@@ -40,6 +40,7 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
     certificationAuthorityStructure,
     getCertificationRegistryManagerStatus,
     createCertificationRegistryManager,
+    updateCertificationRegistryManager,
   } = useCertificationRegistryPage({ certificationAuthorityStructureId });
 
   const certificationRegistryManager =
@@ -63,21 +64,46 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
 
   const handleFormSubmit = handleSubmit(
     async (data) => {
-      try {
-        await createCertificationRegistryManager.mutateAsync({
-          ...data,
-          certificationAuthorityStructureId,
-        });
-        successToast("Le responsable de certifications a été créé avec succès");
-        router.push(
-          `/certification-authority-structures/${certificationAuthorityStructureId}`,
-        );
-      } catch (e) {
-        graphqlErrorToast(e);
+      if (certificationRegistryManager) {
+        return handleCertificationRegistryManagerUpdate(data);
+      } else {
+        return handleCertificationRegistryManagerCreation(data);
       }
     },
     (e) => console.log({ e }),
   );
+
+  const handleCertificationRegistryManagerCreation = async (data: FormData) => {
+    try {
+      await createCertificationRegistryManager.mutateAsync({
+        ...data,
+        certificationAuthorityStructureId,
+      });
+      successToast("Le responsable de certifications a été créé avec succès");
+      router.push(
+        `/certification-authority-structures/${certificationAuthorityStructureId}`,
+      );
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
+
+  const handleCertificationRegistryManagerUpdate = async (data: FormData) => {
+    try {
+      await updateCertificationRegistryManager.mutateAsync({
+        certificationRegistryManagerId: certificationRegistryManager?.id || "",
+        ...data,
+      });
+      successToast(
+        "Le responsable de certifications a été mis à jour avec succès",
+      );
+      router.push(
+        `/certification-authority-structures/${certificationAuthorityStructureId}`,
+      );
+    } catch (e) {
+      graphqlErrorToast(e);
+    }
+  };
 
   const handleReset = useCallback(() => {
     reset({
@@ -128,7 +154,6 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
           </legend>
           <Input
             label="Nom"
-            disabled={!!certificationRegistryManager}
             nativeInputProps={{
               ...register("accountLastname"),
             }}
@@ -137,7 +162,6 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
           />
           <Input
             label="Prénom"
-            disabled={!!certificationRegistryManager}
             nativeInputProps={{
               ...register("accountFirstname"),
             }}
@@ -146,7 +170,6 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
           />
           <Input
             label="Email de connexion"
-            disabled={!!certificationRegistryManager}
             nativeInputProps={{
               ...register("accountEmail"),
             }}
