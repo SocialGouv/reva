@@ -4,8 +4,8 @@ export const AapSelectionAdvice = ({
   className?: string;
 }) => (
   <p className={className}>
-    Vous ne savez pas encore quel Architecte Accompagnateur de parcours choisir,
-    prenez le temps de consulter{" "}
+    Vous n’avez pas encore identifié d’Architecte Accompagnateur de Parcours ?
+    Nous vous invitons à consulter{" "}
     <a
       className="fr-link"
       style={{ fontSize: "inherit" }}
@@ -13,7 +13,6 @@ export const AapSelectionAdvice = ({
       target="_blank"
     >
       la liste des AAP référencés sur France VAE
-    </a>{" "}
-    afin d'entamer votre appel d'offre.
+    </a>
   </p>
 );
