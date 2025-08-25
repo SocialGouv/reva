@@ -124,7 +124,10 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1">
+    <div
+      className="flex flex-col flex-1"
+      data-test="certification-registry-manager-page"
+    >
       <CertificationAuthorityStructureBreadcrumb
         certificationAuthorityStructureId={certificationAuthorityStructureId}
         certificationAuthorityStructureLabel={
@@ -133,7 +136,9 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
         pageLabel="Responsable de certifications"
       />
       <div className="flex flex-row justify-between">
-        <h1>Responsable de certifications</h1>
+        <h1 data-test="certification-registry-manager-page-title">
+          Responsable de certifications
+        </h1>
 
         {certificationRegistryManager?.account.id && (
           <Impersonate

@@ -1,0 +1,16 @@
+{
+  "data": {
+    "certification_authority_getCertificationAuthorityStructure": {
+      "label": "myStructure",
+      "certificationRegistryManager": {
+        "id": "bf510370-f4a5-4494-8bce-d3b0e7f65e85",
+        "account": {
+          "id": "7a929692-352c-440a-be1b-c7d96ac9b6bb",
+          "firstname": "John",
+          "lastname": "Doe",
+          "email": "john.doe@example.com"
+        }
+      }
+    }
+  }
+}

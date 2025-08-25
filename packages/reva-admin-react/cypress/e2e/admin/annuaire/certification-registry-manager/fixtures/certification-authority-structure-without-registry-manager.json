@@ -1,0 +1,8 @@
+{
+  "data": {
+    "certification_authority_getCertificationAuthorityStructure": {
+      "label": "myStructure",
+      "certificationRegistryManager": null
+    }
+  }
+}
