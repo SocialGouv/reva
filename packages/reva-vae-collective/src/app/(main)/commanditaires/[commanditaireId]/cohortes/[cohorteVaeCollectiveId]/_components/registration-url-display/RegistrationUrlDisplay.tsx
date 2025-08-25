@@ -33,7 +33,7 @@ export const RegistrationUrlDisplay = ({
           setIsCopied(true);
         }}
         priority="tertiary"
-        title={isCopied ? "Copié" : "Copier l’URL"}
+        title={isCopied ? "Copié" : "Copier le lien"}
       >
         {isCopied ? (
           <>
@@ -41,7 +41,7 @@ export const RegistrationUrlDisplay = ({
             <span className="ml-auto fr-icon-check-line fr-icon--sm" />
           </>
         ) : (
-          <>Copier l’URL</>
+          <>Copier le lien</>
         )}
       </Button>
     </div>
