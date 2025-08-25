@@ -16,7 +16,9 @@ export default function CandidacyDeletedPage() {
       <div>
         <h2 className="mb-6">Votre candidature a été supprimée</h2>
         <p className="text-xl mb-10">
-          Vous pourrez de nouveau en entamer une quand vous le souhaiterez.{" "}
+          Suite à votre demande, nous avons supprimé votre candidature. Si vous
+          souhaitez en déposer une nouvelle, vous pouvez le faire depuis votre
+          espace.
         </p>
         <Button onClick={logout} priority="secondary">
           Revenir à l'accueil
