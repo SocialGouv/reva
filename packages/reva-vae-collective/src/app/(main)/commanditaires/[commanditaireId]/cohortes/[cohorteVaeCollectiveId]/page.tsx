@@ -180,19 +180,25 @@ export default async function CohortePage({
 
       {cohorte.status === "PUBLIE" && (
         <div className="flex flex-col gap-4">
-          <p className="text-lg">
-            Retrouvez, ici, votre code VAE collective permettant l’accès à la
-            cohorte ainsi que le lien direct vers la page d’inscription à
-            transmettre à vos candidats.
+          <p className="text-lg mb-2">
+            Afin de permettre à vos candidats de s’inscrire sur la plateforme,
+            et d’être automatiquement orientés vers la certification visée et
+            l’AAP sélectionné, 2 possibilités.
           </p>
-          <div className="flex flex-col xl:flex-row xl:justify-between gap-6">
-            <RegistrationCodeDisplay
-              registrationCode={cohorte.codeInscription || ""}
-            />
-            <RegistrationUrlDisplay
-              registrationUrl={`${websiteBaseUrl}/inscription-candidat/vae-collective?codeInscription=${cohorte.codeInscription}`}
-            />
-          </div>
+          <p className="text-lg mb-0">
+            Nous vous invitons à leur transmettre ce code. Ils pourront le
+            renseigner sur la page d’inscription du site institutionnel :
+          </p>
+          <RegistrationCodeDisplay
+            registrationCode={cohorte.codeInscription || ""}
+          />
+          <p className="text-lg mb-0 mt-6">
+            Vous pouvez également leur transmettre ce lien qui les orientera
+            directement vers la page d’inscription à cette cohorte :{" "}
+          </p>
+          <RegistrationUrlDisplay
+            registrationUrl={`${websiteBaseUrl}/inscription-candidat/vae-collective?codeInscription=${cohorte.codeInscription}`}
+          />
         </div>
       )}
 

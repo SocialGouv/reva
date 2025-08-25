@@ -22,7 +22,7 @@ export const RegistrationUrlDisplay = ({
       className="flex items-center min-h-[40px]"
       data-testid="registration-url-display"
     >
-      <div className="flex px-4 items-center font-bold w-[600px] h-full border">
+      <div className="flex px-4 items-center font-bold h-full border">
         {registrationUrl}
       </div>
       <Button
