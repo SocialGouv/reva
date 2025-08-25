@@ -127,8 +127,8 @@ export default async function CohortePage({
         </Link>
       </div>
       <p className="text-xl mb-12">
-        Paramétrez votre cohorte, afin de générer un lien unique à transmettre
-        aux candidats devant intégrer cette cohorte.
+        Paramétrez votre cohorte, afin de générer un code unique ainsi qu’un
+        lien d’accès à transmettre aux candidats devant intégrer cette cohorte.
       </p>
 
       <CertificationCard
