@@ -37,6 +37,7 @@ export const createCommanditaireVaeCollective = async ({
 
   //Send email to setup password
   await sendSetupPasswordEmail({
+    raisonSociale,
     email: gestionnaireEmail,
     firstname: gestionnaireFirstname,
     lastname: gestionnaireLastname,
@@ -47,8 +48,10 @@ export const createCommanditaireVaeCollective = async ({
 
 const sendSetupPasswordEmail = async ({
   email,
+  raisonSociale,
 }: {
   email: string;
+  raisonSociale: string;
   firstname: string;
   lastname: string;
 }) => {
@@ -73,6 +76,7 @@ const sendSetupPasswordEmail = async ({
     to: { email },
     templateId: 635,
     params: {
+      raisonSociale,
       setupPasswordUrl: url.toString(),
       tokenDuration: humanReadableTokenDuration,
     },
