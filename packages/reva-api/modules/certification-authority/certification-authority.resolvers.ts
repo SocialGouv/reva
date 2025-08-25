@@ -62,6 +62,7 @@ import { updateCertificationAuthorityLocalAccountGeneralInformation } from "./fe
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 import { updateCertificationAuthorityV2ById } from "./features/updateCertificationAuthorityV2";
+import { updateCertificationRegistryManager } from "./features/updateCertificationRegistryManager";
 
 const unsafeResolvers = {
   Account: {
@@ -447,6 +448,19 @@ const unsafeResolvers = {
       },
     ) => {
       return createCertificationRegistryManager(params.input);
+    },
+    certification_authority_updateCertificationRegistryManager: async (
+      _parent: unknown,
+      params: {
+        input: {
+          certificationRegistryManagerId: string;
+          accountFirstname: string;
+          accountLastname: string;
+          accountEmail: string;
+        };
+      },
+    ) => {
+      return updateCertificationRegistryManager(params.input);
     },
     certification_authority_acceptCgu: async (
       _parent: unknown,
