@@ -32,18 +32,26 @@ export const ResourcesSection = ({ certification }: ResourcesSectionProps) => {
         de suivre les attendus du certificateur.
       </p>
 
-      <div className="flex flex-col space-y-6">
-        {infoTemplate?.previewUrl && (
-          <div>
-            <Link
-              href={infoTemplate.previewUrl}
-              className="fr-link fr-link--sm"
-              target="_blank"
-            >
-              Trame du dossier de validation
-            </Link>
+      {infoTemplate?.previewUrl && (
+        <a
+          target="_blank"
+          href={infoTemplate.previewUrl}
+          className="block bg-white border border-gray-300 hover:bg-gray-100 p-6 pb-5 mb-6 [&::after]:content-none bg-none"
+        >
+          <h6 className="text-dsfrBlue-500 mb-4">
+            Trame du dossier de validation
+          </h6>
+          <div className="flex justify-between items-center">
+            <div className="text-xs text-gray-500">PDF</div>
+            <i
+              className="fr-icon-download-line fr-icon--sm text-dsfrBlue-500"
+              aria-hidden="true"
+            ></i>
           </div>
-        )}
+        </a>
+      )}
+
+      <div className="flex flex-col space-y-6">
         {infoLink && (
           <div>
             <Link
