@@ -19,10 +19,10 @@ export const RegistrationCodeDisplay = ({
 
   return (
     <div
-      className="flex items-center min-h-[40px]"
+      className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-0"
       data-testid="registration-code-display"
     >
-      <div className="flex px-4 items-center font-bold w-[218px] h-full border">
+      <div className="flex px-4 items-center font-bold w-[218px] h-full border min-h-[40px]">
         {registrationCode}
       </div>
       <Button

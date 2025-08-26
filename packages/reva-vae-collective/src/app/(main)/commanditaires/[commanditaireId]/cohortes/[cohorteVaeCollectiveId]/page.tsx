@@ -192,7 +192,7 @@ export default async function CohortePage({
           <RegistrationCodeDisplay
             registrationCode={cohorte.codeInscription || ""}
           />
-          <p className="text-lg mb-0 mt-6">
+          <p className="text-lg sm:mb-0 mt-6">
             Vous pouvez également leur transmettre ce lien qui les orientera
             directement vers la page d’inscription à cette cohorte :{" "}
           </p>

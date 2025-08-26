@@ -19,7 +19,7 @@ export const RegistrationUrlDisplay = ({
 
   return (
     <div
-      className="flex items-center min-h-[40px]"
+      className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-0 min-h-[40px]"
       data-testid="registration-url-display"
     >
       <div className="flex px-4 items-center font-bold h-full border">
