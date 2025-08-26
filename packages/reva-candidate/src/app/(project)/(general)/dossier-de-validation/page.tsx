@@ -30,6 +30,7 @@ const failedJuryResults: JuryResult[] = [
 export default function DossierDeValidationPag() {
   const {
     readyForJuryEstimatedAt,
+    certification,
     dossierDeValidation,
     dossierDeValidationProblems,
     updateReadyForJuryEstimatedAt,
@@ -155,6 +156,7 @@ export default function DossierDeValidationPag() {
                         dossierDeValidation?.decision === "INCOMPLETE"
                       }
                       dossierDeValidationProblems={dossierDeValidationProblems}
+                      certification={certification}
                       onSubmit={handleDossierDeValidationFormSubmit}
                     />
                   ),

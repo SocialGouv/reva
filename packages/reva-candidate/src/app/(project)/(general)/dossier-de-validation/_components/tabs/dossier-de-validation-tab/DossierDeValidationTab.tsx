@@ -10,6 +10,8 @@ import { z } from "zod";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 
+import { ResourcesSection } from "../../ResourcesSection";
+
 const dossierDeValidationSchema = z.object({
   dossierDeValidationCheck1: z.literal(true, {
     errorMap: () => ({
@@ -39,6 +41,7 @@ export type DossierDeValidationFormData = z.infer<
 export const DossierDeValidationTab = ({
   dossierDeValidationIncomplete,
   dossierDeValidationProblems,
+  certification,
   onSubmit,
 }: {
   dossierDeValidationIncomplete?: boolean;
@@ -46,7 +49,16 @@ export const DossierDeValidationTab = ({
     decisionSentAt: Date;
     decisionComment: string;
   }[];
-
+  certification: {
+    id: string;
+    label: string;
+    additionalInfo?: {
+      dossierDeValidationTemplate?: {
+        previewUrl?: string | null;
+      } | null;
+      dossierDeValidationLink?: string | null;
+    } | null;
+  } | null;
   onSubmit: (data: DossierDeValidationFormData) => Promise<void>;
 }) => {
   const {
@@ -77,134 +89,149 @@ export const DossierDeValidationTab = ({
   const handleFormSubmit = handleSubmit(onSubmit);
 
   return (
-    <div className="flex flex-col">
-      <p className="mb-8">
-        Une fois votre dossier de validation complété et relu, vous pouvez le
-        transmettre à votre certificateur depuis cette page. Si des pièces
-        supplémentaires sont requises (ex : attestation de premiers secours),
-        elles seront également à envoyer ici.
-      </p>
-      {dossierDeValidationIncomplete && (
-        <Alert
-          data-test="dossier-de-validation-signale-alert"
-          severity="warning"
-          title="Dossier de validation signalé par le certificateur"
-          description={
-            <p>
-              Ce dossier de validation a été signalé comme comportant des
-              erreurs par le certificateur. Les détails du signalement sont
-              disponibles ci-dessous.
-              <br />
-              Merci de retourner rapidement un dossier corrigé.
-            </p>
-          }
-        />
-      )}
-      {dossierDeValidationIncomplete && (
-        <>
-          <ul className="flex flex-col gap-8 pl-0">
-            {dossierDeValidationProblems.map((p, i) => (
-              <GrayCard key={i}>
-                <dl>
-                  <dt className="font-bold text-xl">Dossier signalé :</dt>
-                  <dd>
-                    Dossier signalé le {format(p.decisionSentAt, "dd/MM/yyyy")}
-                  </dd>
-                  <br />
-                  <dt className="font-bold text-xl">Motif du signalement :</dt>
-                  <dd>{p.decisionComment}</dd>
-                </dl>
-              </GrayCard>
-            ))}
-          </ul>
-          <hr className="mt-8 mb-5" />
-        </>
-      )}
-      <form
-        className="flex flex-col flex-1 mb-2 overflow-auto"
-        onSubmit={handleFormSubmit}
-        onReset={(e) => {
-          e.preventDefault();
-          handleReset();
-        }}
-      >
-        <div className="flex flex-col gap-6 mb-12">
-          <FancyUpload
-            className="dossier-de-validation-file-upload"
-            title="Joindre le dossier de validation"
-            hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
-            nativeInputProps={{
-              ...register("dossierDeValidationFile"),
-              accept: ".pdf",
-            }}
-            state={errors.dossierDeValidationFile ? "error" : "default"}
-            stateRelatedMessage={errors.dossierDeValidationFile?.[0]?.message}
+    <div className="flex gap-6">
+      <main className="flex-1">
+        <p className="mb-8">
+          Une fois votre dossier de validation complété et relu, vous pouvez le
+          transmettre à votre certificateur depuis cette page. Si des pièces
+          supplémentaires sont requises (ex : attestation de premiers secours),
+          elles seront également à envoyer ici.
+        </p>
+
+        {dossierDeValidationIncomplete && (
+          <Alert
+            data-test="dossier-de-validation-signale-alert"
+            severity="warning"
+            title="Dossier de validation signalé par le certificateur"
+            description={
+              <p>
+                Ce dossier de validation a été signalé comme comportant des
+                erreurs par le certificateur. Les détails du signalement sont
+                disponibles ci-dessous.
+                <br />
+                Merci de retourner rapidement un dossier corrigé.
+              </p>
+            }
           />
-          {dossierDeValidationOtherFilesFields.map((d, i) => (
+        )}
+        {dossierDeValidationIncomplete && (
+          <>
+            <ul className="flex flex-col gap-8 pl-0">
+              {dossierDeValidationProblems.map((p, i) => (
+                <GrayCard key={i}>
+                  <dl>
+                    <dt className="font-bold text-xl">Dossier signalé :</dt>
+                    <dd>
+                      Dossier signalé le{" "}
+                      {format(p.decisionSentAt, "dd/MM/yyyy")}
+                    </dd>
+                    <br />
+                    <dt className="font-bold text-xl">
+                      Motif du signalement :
+                    </dt>
+                    <dd>{p.decisionComment}</dd>
+                  </dl>
+                </GrayCard>
+              ))}
+            </ul>
+            <hr className="mt-8 mb-5" />
+          </>
+        )}
+        <form
+          className="flex flex-col flex-1 mb-2 overflow-auto"
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            handleReset();
+          }}
+        >
+          <div className="flex flex-col gap-6 mb-12">
             <FancyUpload
-              key={d.id}
-              title="Joindre des pièces supplémentaires (optionnel)"
+              className="dossier-de-validation-file-upload"
+              title="Joindre le dossier de validation"
               hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
               nativeInputProps={{
-                ...register(`dossierDeValidationOtherFiles.${i}`, {
-                  onChange: (e) => {
-                    if (e.target.value) {
-                      //if the file input has a value and it was the last empty one we add another empty file input
-                      if (i == dossierDeValidationOtherFilesFields.length - 1) {
-                        insertDossierDeValidationOtherFiles(
-                          dossierDeValidationOtherFilesFields.length,
-                          [{}],
-                        );
-                      }
-                    } else {
-                      removeDossierDeValidationOtherFiles(i);
-                    }
-                  },
-                }),
+                ...register("dossierDeValidationFile"),
                 accept: ".pdf",
               }}
-              state={
-                errors.dossierDeValidationOtherFiles?.[i] ? "error" : "default"
-              }
-              stateRelatedMessage={
-                errors.dossierDeValidationOtherFiles?.[i]?.message
-              }
+              state={errors.dossierDeValidationFile ? "error" : "default"}
+              stateRelatedMessage={errors.dossierDeValidationFile?.[0]?.message}
             />
-          ))}
-        </div>
-        <Checkbox
-          className="mr-0"
-          legend="Avez-vous bien vérifié ces éléments avant l’envoi ?"
-          data-test="dossier-de-validation-checkbox-group"
-          options={[
-            {
-              label: "Mon dossier de validation est correct, complet et signé.",
-              nativeInputProps: { ...register("dossierDeValidationCheck1") },
-            },
-            {
-              label: "Mes pièces supplémentaires sont valides et lisibles.",
-              nativeInputProps: { ...register("dossierDeValidationCheck2") },
-            },
-          ]}
-          state={
-            errors.dossierDeValidationCheck1 || errors.dossierDeValidationCheck2
-              ? "error"
-              : "default"
-          }
-          stateRelatedMessage={
-            errors.dossierDeValidationCheck1?.message ||
-            errors.dossierDeValidationCheck2?.message
-          }
-        />
-        <Button
-          type="submit"
-          className="ml-auto"
-          disabled={!isDirty || isSubmitting}
-          data-test="submit-dossier-de-validation-form-button"
-        >
-          Envoyer les documents
-        </Button>
-      </form>
+            {dossierDeValidationOtherFilesFields.map((d, i) => (
+              <FancyUpload
+                key={d.id}
+                title="Joindre des pièces supplémentaires (optionnel)"
+                hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
+                nativeInputProps={{
+                  ...register(`dossierDeValidationOtherFiles.${i}`, {
+                    onChange: (e) => {
+                      if (e.target.value) {
+                        //if the file input has a value and it was the last empty one we add another empty file input
+                        if (
+                          i ==
+                          dossierDeValidationOtherFilesFields.length - 1
+                        ) {
+                          insertDossierDeValidationOtherFiles(
+                            dossierDeValidationOtherFilesFields.length,
+                            [{}],
+                          );
+                        }
+                      } else {
+                        removeDossierDeValidationOtherFiles(i);
+                      }
+                    },
+                  }),
+                  accept: ".pdf",
+                }}
+                state={
+                  errors.dossierDeValidationOtherFiles?.[i]
+                    ? "error"
+                    : "default"
+                }
+                stateRelatedMessage={
+                  errors.dossierDeValidationOtherFiles?.[i]?.message
+                }
+              />
+            ))}
+          </div>
+          <Checkbox
+            className="mr-0"
+            legend="Avez-vous bien vérifié ces éléments avant l’envoi ?"
+            data-test="dossier-de-validation-checkbox-group"
+            options={[
+              {
+                label:
+                  "Mon dossier de validation est correct, complet et signé.",
+                nativeInputProps: { ...register("dossierDeValidationCheck1") },
+              },
+              {
+                label: "Mes pièces supplémentaires sont valides et lisibles.",
+                nativeInputProps: { ...register("dossierDeValidationCheck2") },
+              },
+            ]}
+            state={
+              errors.dossierDeValidationCheck1 ||
+              errors.dossierDeValidationCheck2
+                ? "error"
+                : "default"
+            }
+            stateRelatedMessage={
+              errors.dossierDeValidationCheck1?.message ||
+              errors.dossierDeValidationCheck2?.message
+            }
+          />
+          <Button
+            type="submit"
+            className="ml-auto"
+            disabled={!isDirty || isSubmitting}
+            data-test="submit-dossier-de-validation-form-button"
+          >
+            Envoyer les documents
+          </Button>
+        </form>
+      </main>
+
+      <ResourcesSection certification={certification} />
     </div>
   );
 };

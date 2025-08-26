@@ -608,5 +608,202 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         });
       });
     });
+
+    context("Resources Section", () => {
+      it("should display resources section with PDF template download", function () {
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              "DOSSIER_FAISABILITE_RECEVABLE";
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+              format(ESTIMATED_DATE, "yyyy-MM-dd");
+
+            // Add additionalInfo with PDF template
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.certification.additionalInfo =
+              {
+                dossierDeValidationTemplate: {
+                  name: "Trame_Dossier_Validation.pdf",
+                  previewUrl: "https://example.com/template.pdf",
+                },
+                dossierDeValidationLink: null,
+              };
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
+            });
+          },
+        );
+
+        cy.login();
+
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
+
+        cy.visit("/dossier-de-validation/");
+        cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+
+        cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+        cy.get("aside").should("contain", "Trame du dossier de validation");
+
+        cy.get("aside")
+          .find("a[href='https://example.com/template.pdf'][target='_blank']")
+          .should("exist");
+      });
+
+      it("should display resources section with URL template link", function () {
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              "DOSSIER_FAISABILITE_RECEVABLE";
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+              format(ESTIMATED_DATE, "yyyy-MM-dd");
+
+            // Add additionalInfo with URL link only
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.certification.additionalInfo =
+              {
+                dossierDeValidationTemplate: null,
+                dossierDeValidationLink: "https://example.com/template-link",
+              };
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
+            });
+          },
+        );
+
+        cy.login();
+
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
+
+        cy.visit("/dossier-de-validation/");
+        cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+
+        cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+        cy.get("aside").should("contain", "Ressources :");
+
+        cy.get("aside")
+          .find("a[href='https://example.com/template-link'][target='_blank']")
+          .should("exist");
+        cy.get("aside").should("contain", "Trame du dossier de validation");
+      });
+
+      it("should display resources section without template when no template is provided", function () {
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              "DOSSIER_FAISABILITE_RECEVABLE";
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+              format(ESTIMATED_DATE, "yyyy-MM-dd");
+
+            // Add additionalInfo with no template
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.certification.additionalInfo =
+              {
+                dossierDeValidationTemplate: null,
+                dossierDeValidationLink: null,
+              };
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
+            });
+          },
+        );
+
+        cy.login();
+
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
+
+        cy.visit("/dossier-de-validation/");
+        cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+
+        cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+        cy.get("aside").should("not.contain", "Trame du dossier de validation");
+
+        cy.get("aside").should(
+          "contain",
+          "Comment rédiger son dossier de validation ?",
+        );
+        cy.get("aside").should(
+          "contain",
+          "Consultez la fiche de la certification",
+        );
+      });
+    });
   });
 });
