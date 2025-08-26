@@ -32,12 +32,18 @@ const interceptCandidacy = (candidate) => {
       "updateTypeAccompagnementForTypeAccompagnementPage",
       candidate || "candidate1-certification-titre-2-selected.json",
     );
+    stubQuery(req, "activeFeaturesForConnectedUser", {
+      data: {
+        activeFeaturesForConnectedUser: [],
+      },
+    });
   });
   cy.login();
   cy.wait([
     "@candidate_getCandidateWithCandidacyForLayout",
     "@candidate_getCandidateWithCandidacyForHome",
     "@candidate_getCandidateWithCandidacyForDashboard",
+    "@activeFeaturesForConnectedUser",
   ]);
 };
 

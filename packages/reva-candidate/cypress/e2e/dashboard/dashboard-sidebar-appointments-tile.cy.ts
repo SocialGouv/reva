@@ -40,6 +40,11 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
         "candidate_getCandidateWithCandidacyForDashboard",
         "candidate1.json",
       );
+      stubQuery(req, "activeFeaturesForConnectedUser", {
+        data: {
+          activeFeaturesForConnectedUser: [],
+        },
+      });
     });
 
     cy.login();
@@ -48,6 +53,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
       "@candidate_getCandidateWithCandidacyForLayout",
       "@candidate_getCandidateWithCandidacyForHome",
       "@candidate_getCandidateWithCandidacyForDashboard",
+      "@activeFeaturesForConnectedUser",
     ]);
 
     cy.visit("/");

@@ -20,6 +20,11 @@ context("Dashboard Banner", () => {
         "candidate_getCandidateWithCandidacyForDashboard",
         "candidate1.json",
       );
+      stubQuery(req, "activeFeaturesForConnectedUser", {
+        data: {
+          activeFeaturesForConnectedUser: [],
+        },
+      });
     });
 
     cy.login();
@@ -28,6 +33,7 @@ context("Dashboard Banner", () => {
       "@candidate_getCandidateWithCandidacyForLayout",
       "@candidate_getCandidateWithCandidacyForHome",
       "@candidate_getCandidateWithCandidacyForDashboard",
+      "@activeFeaturesForConnectedUser",
     ]);
     cy.visit("/");
   });

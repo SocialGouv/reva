@@ -20,6 +20,11 @@ context("Dashboard Tiles", () => {
         "candidate_getCandidateWithCandidacyForHome",
         "candidate1.json",
       );
+      stubQuery(req, "activeFeaturesForConnectedUser", {
+        data: {
+          activeFeaturesForConnectedUser: [],
+        },
+      });
     });
 
     cy.login();
@@ -27,6 +32,7 @@ context("Dashboard Tiles", () => {
       "@candidate_getCandidateWithCandidacyForLayout",
       "@candidate_getCandidateWithCandidacyForHome",
       "@candidate_getCandidateWithCandidacyForDashboard",
+      "@activeFeaturesForConnectedUser",
     ]);
 
     cy.visit("/");
