@@ -19,7 +19,7 @@ const GET_CANDIDATE_WITH_CANDIDACY_FOR_CANDIDACY_INACTIF = graphql(`
       candidacy {
         id
         activite
-        derniereDateActivite
+        dateInactifEnAttente
         createdAt
         certification {
           codeRncp
