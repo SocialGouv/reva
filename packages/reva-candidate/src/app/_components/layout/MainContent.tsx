@@ -18,8 +18,8 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
   );
 
   const className = isUnAuthenticatedPath
-    ? "fr-container flex flex-col flex-1 max-w-2xl"
-    : "fr-container flex flex-col flex-1";
+    ? "flex flex-col flex-1 max-w-2xl"
+    : "flex flex-col flex-1";
 
   return (
     <main
@@ -30,7 +30,7 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
       <div className={className}>
         <LayoutNotice />
         {isRootPath ? (
-          <div className="flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12">
+          <div className="fr-container flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12">
             {children}
           </div>
         ) : (
