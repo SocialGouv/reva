@@ -52,6 +52,7 @@ import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { transferCandidacyToCertificationAuthorityLocalAccount } from "./features/transferCandidacyToCertificationAuthorityLocalAccount";
+import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
 import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
 import { updateCertificationAuthorityDepartments } from "./features/updateCertificationAuthorityDepartments";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
@@ -60,7 +61,6 @@ import { updateCertificationAuthorityLocalAccountDepartments } from "./features/
 import { updateCertificationAuthorityLocalAccountGeneralInformation } from "./features/updateCertificationAuthorityLocalAccountGeneralInformation";
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
-import { updateCertificationAuthorityV2ById } from "./features/updateCertificationAuthorityV2";
 import { updateCertificationRegistryManager } from "./features/updateCertificationRegistryManager";
 
 const unsafeResolvers = {
@@ -170,7 +170,7 @@ const unsafeResolvers = {
   },
 
   Mutation: {
-    certification_authority_updateCertificationAuthorityV2: async (
+    certification_authority_updateCertificationAuthority: async (
       _parent: unknown,
       params: {
         certificationAuthorityId: string;
@@ -192,7 +192,7 @@ const unsafeResolvers = {
           );
         }
 
-        return updateCertificationAuthorityV2ById(params);
+        return updateCertificationAuthorityById(params);
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

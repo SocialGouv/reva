@@ -5,11 +5,11 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 
 const updateCertificationAuthorityMutation = graphql(`
-  mutation updateCertificationAuthorityV2(
+  mutation updateCertificationAuthority(
     $certificationAuthorityId: ID!
     $certificationAuthorityData: UpdateCertificationAuthorityInput!
   ) {
-    certification_authority_updateCertificationAuthorityV2(
+    certification_authority_updateCertificationAuthority(
       certificationAuthorityId: $certificationAuthorityId
       certificationAuthorityData: $certificationAuthorityData
     ) {
@@ -35,10 +35,10 @@ export const useCertificationAuthorityForm = () => {
         isGlobalContact: boolean;
       };
     }) => graphqlClient.request(updateCertificationAuthorityMutation, params),
-    onSuccess: ({ certification_authority_updateCertificationAuthorityV2 }) => {
+    onSuccess: ({ certification_authority_updateCertificationAuthority }) => {
       queryClient.invalidateQueries({
         queryKey: [
-          certification_authority_updateCertificationAuthorityV2.id,
+          certification_authority_updateCertificationAuthority.id,
           "getCertificationAuthorityGeneralInfo",
         ],
       });

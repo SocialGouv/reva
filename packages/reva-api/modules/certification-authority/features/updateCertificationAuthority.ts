@@ -2,7 +2,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { CertificationAuthority } from "../certification-authority.types";
 
-export const updateCertificationAuthorityV2ById = async (params: {
+export const updateCertificationAuthorityById = async (params: {
   certificationAuthorityId: string;
   certificationAuthorityData: {
     label: string;

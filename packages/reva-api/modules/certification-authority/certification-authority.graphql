@@ -194,7 +194,7 @@ type Query {
 }
 
 type Mutation {
-  certification_authority_updateCertificationAuthorityV2(
+  certification_authority_updateCertificationAuthority(
     certificationAuthorityId: ID!
     certificationAuthorityData: UpdateCertificationAuthorityInput!
   ): CertificationAuthority!

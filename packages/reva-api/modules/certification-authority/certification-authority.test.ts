@@ -33,12 +33,12 @@ async function graphqlUpdateCertificationAuthority({
     },
   });
 
-  const updateCertificationAuthorityV2ById = graphql(`
-    mutation updateCertificationAuthorityV2(
+  const updateCertificationAuthorityById = graphql(`
+    mutation updateCertificationAuthority(
       $certificationAuthorityId: ID!
       $certificationAuthorityData: UpdateCertificationAuthorityInput!
     ) {
-      certification_authority_updateCertificationAuthorityV2(
+      certification_authority_updateCertificationAuthority(
         certificationAuthorityId: $certificationAuthorityId
         certificationAuthorityData: $certificationAuthorityData
       ) {
@@ -50,7 +50,7 @@ async function graphqlUpdateCertificationAuthority({
     }
   `);
 
-  return graphqlClient.request(updateCertificationAuthorityV2ById, {
+  return graphqlClient.request(updateCertificationAuthorityById, {
     certificationAuthorityId,
     certificationAuthorityData: data,
   });
@@ -69,7 +69,7 @@ test("should update a certification authority's contact info as a certificaton a
     },
   });
 
-  expect(resp.certification_authority_updateCertificationAuthorityV2).toEqual({
+  expect(resp.certification_authority_updateCertificationAuthority).toEqual({
     id: certificationAuthority.id,
     label: certificationAuthority.label,
     contactFullName: "new name",
@@ -92,7 +92,7 @@ test("should update a certification authority's contact info as an admin", async
     },
   });
 
-  expect(resp.certification_authority_updateCertificationAuthorityV2).toEqual({
+  expect(resp.certification_authority_updateCertificationAuthority).toEqual({
     id: certificationAuthority.id,
     label: certificationAuthority.label,
     contactFullName: "new name",
@@ -166,7 +166,7 @@ test("should update all of a certification authority's local accounts contact in
     },
   });
 
-  expect(resp.certification_authority_updateCertificationAuthorityV2).toEqual({
+  expect(resp.certification_authority_updateCertificationAuthority).toEqual({
     id: certificationAuthority.id,
     label: certificationAuthority.label,
     contactFullName: "new name",
