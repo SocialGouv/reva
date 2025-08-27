@@ -26,6 +26,10 @@
     "lien": {
       "type": "string",
       "required": true
+    },
+    "ordre": {
+      "type": "integer",
+      "required": true
     }
   }
 }

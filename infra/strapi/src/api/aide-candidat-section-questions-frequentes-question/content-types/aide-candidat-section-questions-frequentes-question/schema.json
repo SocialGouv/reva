@@ -1,28 +1,28 @@
 {
   "kind": "collectionType",
-  "collectionName": "article_actualites",
+  "collectionName": "aide_candidat_section_questions_frequentes_questions",
   "info": {
-    "singularName": "article-actualite",
-    "pluralName": "article-actualites",
-    "displayName": "[ACTUALITE] - Article Actualité",
-    "description": ""
+    "singularName": "aide-candidat-section-questions-frequentes-question",
+    "pluralName": "aide-candidat-section-questions-frequentes-questions",
+    "displayName": "[AIDE-CANDIDAT] - Section Questions fréquentes question"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "titre": {
+    "question": {
       "type": "string",
       "required": true
     },
-    "contenu": {
+    "reponse": {
       "type": "customField",
       "customField": "plugin::ckeditor.CKEditor",
       "options": {
         "output": "HTML",
         "preset": "rich"
-      }
+      },
+      "required": true
     },
     "ordre": {
       "type": "integer",

@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "aide_candidat_ressources_utiles",
+  "info": {
+    "singularName": "aide-candidat-ressources-utile",
+    "pluralName": "aide-candidat-ressources-utiles",
+    "displayName": "[AIDE-CANDIDAT] - Ressources utiles"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titre": {
+      "type": "string",
+      "required": true
+    },
+    "sous_titre": {
+      "type": "string"
+    },
+    "aide_candidat_section_ressources_utiles_cartes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::aide-candidat-section-ressources-utiles-carte.aide-candidat-section-ressources-utiles-carte"
+    }
+  }
+}

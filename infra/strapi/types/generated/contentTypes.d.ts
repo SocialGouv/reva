@@ -373,6 +373,149 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAideCandidatQuestionsFrequenteAideCandidatQuestionsFrequente
+  extends Struct.SingleTypeSchema {
+  collectionName: 'aide_candidat_questions_frequentes';
+  info: {
+    displayName: '[AIDE-CANDIDAT] - Questions fr\u00E9quentes';
+    pluralName: 'aide-candidat-questions-frequentes';
+    singularName: 'aide-candidat-questions-frequente';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    aide_candidat_section_questions_frequentes_questions: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-candidat-section-questions-frequentes-question.aide-candidat-section-questions-frequentes-question'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-candidat-questions-frequente.aide-candidat-questions-frequente'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    sous_titre: Schema.Attribute.String;
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiAideCandidatRessourcesUtileAideCandidatRessourcesUtile
+  extends Struct.SingleTypeSchema {
+  collectionName: 'aide_candidat_ressources_utiles';
+  info: {
+    displayName: '[AIDE-CANDIDAT] - Ressources utiles';
+    pluralName: 'aide-candidat-ressources-utiles';
+    singularName: 'aide-candidat-ressources-utile';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    aide_candidat_section_ressources_utiles_cartes: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-candidat-section-ressources-utiles-carte.aide-candidat-section-ressources-utiles-carte'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-candidat-ressources-utile.aide-candidat-ressources-utile'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    sous_titre: Schema.Attribute.String;
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiAideCandidatSectionQuestionsFrequentesQuestionAideCandidatSectionQuestionsFrequentesQuestion
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'aide_candidat_section_questions_frequentes_questions';
+  info: {
+    displayName: '[AIDE-CANDIDAT] - Section Questions fr\u00E9quentes question';
+    pluralName: 'aide-candidat-section-questions-frequentes-questions';
+    singularName: 'aide-candidat-section-questions-frequentes-question';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-candidat-section-questions-frequentes-question.aide-candidat-section-questions-frequentes-question'
+    > &
+      Schema.Attribute.Private;
+    ordre: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    question: Schema.Attribute.String & Schema.Attribute.Required;
+    reponse: Schema.Attribute.RichText &
+      Schema.Attribute.Required &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor.CKEditor',
+        {
+          output: 'HTML';
+          preset: 'rich';
+        }
+      >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiAideCandidatSectionRessourcesUtilesCarteAideCandidatSectionRessourcesUtilesCarte
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'aide_candidat_section_ressources_utiles_cartes';
+  info: {
+    displayName: '[AIDE-CANDIDAT] - Section ressources utiles carte';
+    pluralName: 'aide-candidat-section-ressources-utiles-cartes';
+    singularName: 'aide-candidat-section-ressources-utiles-carte';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    lien: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-candidat-section-ressources-utiles-carte.aide-candidat-section-ressources-utiles-carte'
+    > &
+      Schema.Attribute.Private;
+    ordre: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiAideCandidatSectionTutorielCarteAideCandidatSectionTutorielCarte
   extends Struct.CollectionTypeSchema {
   collectionName: 'aide_candidat_section_tutoriel_cartes';
@@ -396,6 +539,7 @@ export interface ApiAideCandidatSectionTutorielCarteAideCandidatSectionTutorielC
       'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte'
     > &
       Schema.Attribute.Private;
+    ordre: Schema.Attribute.Integer & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     titre: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
@@ -438,6 +582,40 @@ export interface ApiAideCandidatSectionTutorielAideCandidatSectionTutoriel
   };
 }
 
+export interface ApiAideCandidatTutorielAideCandidatTutoriel
+  extends Struct.SingleTypeSchema {
+  collectionName: 'aide_candidat_tutoriels';
+  info: {
+    displayName: '[AIDE-CANDIDAT] - Tutoriel';
+    pluralName: 'aide-candidat-tutoriels';
+    singularName: 'aide-candidat-tutoriel';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    aide_candidat_section_tutoriel_cartes: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-candidat-tutoriel.aide-candidat-tutoriel'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    sous_titre: Schema.Attribute.String & Schema.Attribute.Required;
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiArticleActualiteArticleActualite
   extends Struct.CollectionTypeSchema {
   collectionName: 'article_actualites';
@@ -468,7 +646,9 @@ export interface ApiArticleActualiteArticleActualite
       'api::article-actualite.article-actualite'
     > &
       Schema.Attribute.Private;
-    ordre: Schema.Attribute.Integer;
+    ordre: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
     titre: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
@@ -1469,8 +1649,13 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::aide-candidat-questions-frequente.aide-candidat-questions-frequente': ApiAideCandidatQuestionsFrequenteAideCandidatQuestionsFrequente;
+      'api::aide-candidat-ressources-utile.aide-candidat-ressources-utile': ApiAideCandidatRessourcesUtileAideCandidatRessourcesUtile;
+      'api::aide-candidat-section-questions-frequentes-question.aide-candidat-section-questions-frequentes-question': ApiAideCandidatSectionQuestionsFrequentesQuestionAideCandidatSectionQuestionsFrequentesQuestion;
+      'api::aide-candidat-section-ressources-utiles-carte.aide-candidat-section-ressources-utiles-carte': ApiAideCandidatSectionRessourcesUtilesCarteAideCandidatSectionRessourcesUtilesCarte;
       'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte': ApiAideCandidatSectionTutorielCarteAideCandidatSectionTutorielCarte;
       'api::aide-candidat-section-tutoriel.aide-candidat-section-tutoriel': ApiAideCandidatSectionTutorielAideCandidatSectionTutoriel;
+      'api::aide-candidat-tutoriel.aide-candidat-tutoriel': ApiAideCandidatTutorielAideCandidatTutoriel;
       'api::article-actualite.article-actualite': ApiArticleActualiteArticleActualite;
       'api::article-d-aide.article-d-aide': ApiArticleDAideArticleDAide;
       'api::article-faq.article-faq': ApiArticleFaqArticleFaq;

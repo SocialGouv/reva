@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "aide_candidat_tutoriels",
+  "info": {
+    "singularName": "aide-candidat-tutoriel",
+    "pluralName": "aide-candidat-tutoriels",
+    "displayName": "[AIDE-CANDIDAT] - Tutoriel"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titre": {
+      "type": "string",
+      "required": true
+    },
+    "sous_titre": {
+      "type": "string",
+      "required": true
+    },
+    "aide_candidat_section_tutoriel_cartes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte"
+    }
+  }
+}
