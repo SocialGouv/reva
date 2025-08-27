@@ -30,7 +30,6 @@ export const resolversSecurityMap = {
   "Query.certification_authority_getCertificationAuthorityLocalAccountsToTransferCandidacy":
     isAdminOrCertificationAuthority,
 
-  "Mutation.certification_authority_updateCertificationAuthority": isAnyone, //security handled in resolver
   "Mutation.certification_authority_updateCertificationAuthorityV2":
     isAdminOrCertificationAuthorityOwner,
   "Mutation.certification_authority_updateCertificationAuthorityDepartmentsAndCertifications":

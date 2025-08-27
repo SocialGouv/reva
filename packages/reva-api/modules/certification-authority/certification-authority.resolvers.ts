@@ -52,7 +52,6 @@ import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { transferCandidacyToCertificationAuthorityLocalAccount } from "./features/transferCandidacyToCertificationAuthorityLocalAccount";
-import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
 import { updateCertificationAuthorityCertifications } from "./features/updateCertificationAuthorityCertifications";
 import { updateCertificationAuthorityDepartments } from "./features/updateCertificationAuthorityDepartments";
 import { updateCertificationAuthorityDepartmentsAndCertifications } from "./features/updateCertificationAuthorityDepartmentsAndCertifications";
@@ -171,38 +170,6 @@ const unsafeResolvers = {
   },
 
   Mutation: {
-    certification_authority_updateCertificationAuthority: async (
-      _parent: unknown,
-      params: {
-        certificationAuthorityId: string;
-        certificationAuthorityData: {
-          label: string;
-          contactFullName: string | null;
-          contactEmail: string | null;
-        };
-      },
-      context: GraphqlContext,
-    ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        return updateCertificationAuthorityById(
-          {
-            hasRole: context.auth.hasRole,
-          },
-          params,
-        );
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-      }
-    },
-
     certification_authority_updateCertificationAuthorityV2: async (
       _parent: unknown,
       params: {
