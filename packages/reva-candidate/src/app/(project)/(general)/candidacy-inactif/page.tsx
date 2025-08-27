@@ -29,17 +29,17 @@ export type CandidacyInactifFormData = z.infer<typeof schema>;
 
 const getText = ({
   hasFeasibilityAdmissible,
-  derniereDateActivite,
+  dateInactifEnAttente,
   candidacyCreatedAt,
   feasibilityDecisionAdmissibleAt,
 }: {
   hasFeasibilityAdmissible: boolean;
-  derniereDateActivite: number | null | undefined;
+  dateInactifEnAttente: number | null | undefined;
   candidacyCreatedAt: number | null | undefined;
   feasibilityDecisionAdmissibleAt: number | null | undefined;
 }) => {
-  const inactifEnAttenteThreshold = derniereDateActivite
-    ? format(addDays(new Date(derniereDateActivite), 15), "dd/MM/yyyy")
+  const inactifEnAttenteThreshold = dateInactifEnAttente
+    ? format(addDays(new Date(dateInactifEnAttente), 15), "dd/MM/yyyy")
     : "";
   if (hasFeasibilityAdmissible) {
     return {
@@ -145,7 +145,7 @@ export default function CandidacyInactifPage() {
     bottomCardText,
   } = getText({
     hasFeasibilityAdmissible,
-    derniereDateActivite: candidacy.derniereDateActivite,
+    dateInactifEnAttente: candidacy.dateInactifEnAttente,
     candidacyCreatedAt: candidacy.createdAt,
     feasibilityDecisionAdmissibleAt: candidacy.feasibility?.decisionSentAt,
   });
