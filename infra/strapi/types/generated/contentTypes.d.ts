@@ -548,40 +548,6 @@ export interface ApiAideCandidatSectionTutorielCarteAideCandidatSectionTutorielC
   };
 }
 
-export interface ApiAideCandidatSectionTutorielAideCandidatSectionTutoriel
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'aide_candidat_section_tutoriels';
-  info: {
-    displayName: '[AIDE-CANDIDAT] - Section tutoriel';
-    pluralName: 'aide-candidat-section-tutoriels';
-    singularName: 'aide-candidat-section-tutoriel';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    aide_candidat_section_tutoriel_cartes: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte'
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::aide-candidat-section-tutoriel.aide-candidat-section-tutoriel'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    sous_titre: Schema.Attribute.String & Schema.Attribute.Required;
-    titre: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiAideCandidatTutorielAideCandidatTutoriel
   extends Struct.SingleTypeSchema {
   collectionName: 'aide_candidat_tutoriels';
@@ -1654,7 +1620,6 @@ declare module '@strapi/strapi' {
       'api::aide-candidat-section-questions-frequentes-question.aide-candidat-section-questions-frequentes-question': ApiAideCandidatSectionQuestionsFrequentesQuestionAideCandidatSectionQuestionsFrequentesQuestion;
       'api::aide-candidat-section-ressources-utiles-carte.aide-candidat-section-ressources-utiles-carte': ApiAideCandidatSectionRessourcesUtilesCarteAideCandidatSectionRessourcesUtilesCarte;
       'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte': ApiAideCandidatSectionTutorielCarteAideCandidatSectionTutorielCarte;
-      'api::aide-candidat-section-tutoriel.aide-candidat-section-tutoriel': ApiAideCandidatSectionTutorielAideCandidatSectionTutoriel;
       'api::aide-candidat-tutoriel.aide-candidat-tutoriel': ApiAideCandidatTutorielAideCandidatTutoriel;
       'api::article-actualite.article-actualite': ApiArticleActualiteArticleActualite;
       'api::article-d-aide.article-d-aide': ApiArticleDAideArticleDAide;
