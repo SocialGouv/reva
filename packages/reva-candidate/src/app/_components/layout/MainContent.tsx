@@ -18,7 +18,7 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
   );
 
   const className = isUnAuthenticatedPath
-    ? "flex flex-col flex-1 max-w-2xl"
+    ? "fr-container flex flex-col flex-1 max-w-2xl"
     : "flex flex-col flex-1";
 
   return (
