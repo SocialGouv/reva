@@ -23,7 +23,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+      - name: Api node_modules cache
+        id: api-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-api/node_modules
+          key: api-node_modules-${{ hashFiles('**/package-lock.json') }}
       - name: Installing dependencies
+        if: steps.api-node_modules-cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Building
         run: npm run build --if-present
@@ -43,7 +50,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+      - name: Api node_modules cache
+        id: api-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-api/node_modules
+          key: api-node_modules-${{ hashFiles('**/package-lock.json') }}
       - name: Installing dependencies
+        if: steps.api-node_modules-cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Setup Postgres database
         uses: Daniel-Marynicz/postgresql-action@master

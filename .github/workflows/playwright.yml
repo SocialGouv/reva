@@ -16,7 +16,14 @@ jobs:
         with:
           node-version: 20.x
           cache: "npm"
-      - name: Install dependencies
+      - name: Website node_modules cache
+        id: website-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-website/node_modules
+          key: website-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.website-node_modules-cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Get Playwright version
         run: echo "PLAYWRIGHT_VERSION=`npm list | grep '@playwright/test'|sed 's/.*playwright\/test@//'`" >> $GITHUB_ENV
@@ -53,7 +60,14 @@ jobs:
         with:
           node-version: 22.x
           cache: "npm"
-      - name: Install dependencies
+      - name: VAE Collective node_modules cache
+        id: vae-collective-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-vae-collective/node_modules
+          key: vae-collective-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.vae-collective-node_modules-cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Get Playwright version
         run: echo "PLAYWRIGHT_VERSION=`npm list | grep '@playwright/test'|sed 's/.*playwright\/test@//'`" >> $GITHUB_ENV

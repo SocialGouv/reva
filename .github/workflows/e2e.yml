@@ -31,7 +31,14 @@ jobs:
         with:
           node-version: 22.x
           cache: "npm"
+      - name: Admin node_modules cache
+        id: admin-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-admin-react/node_modules
+          key: admin-node_modules-${{ hashFiles('**/package-lock.json') }}
       - name: Installing dependencies
+        if: steps.admin-node_modules-cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build
         run: npm run build
@@ -50,7 +57,14 @@ jobs:
         with:
           node-version: 22.x
           cache: "npm"
+      - name: Candidate node_modules cache
+        id: candidate-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-candidate/node_modules
+          key: candidate-node_modules-${{ hashFiles('**/package-lock.json') }}
       - name: Installing dependencies
+        if: steps.candidate-node_modules-cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build
         run: npm run build
