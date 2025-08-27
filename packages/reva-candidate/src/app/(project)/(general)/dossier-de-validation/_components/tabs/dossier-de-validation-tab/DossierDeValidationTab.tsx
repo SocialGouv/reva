@@ -227,14 +227,22 @@ export const DossierDeValidationTab = ({
               errors.dossierDeValidationCheck2?.message
             }
           />
-          <Button
-            type="submit"
-            className="ml-auto"
-            disabled={!isDirty || isSubmitting}
-            data-test="submit-dossier-de-validation-form-button"
-          >
-            Envoyer les documents
-          </Button>
+          <div className="flex justify-end gap-2">
+            <Button
+              priority="tertiary no outline"
+              type="reset"
+              disabled={isSubmitting}
+            >
+              Réinitialiser
+            </Button>
+            <Button
+              type="submit"
+              disabled={!isDirty || isSubmitting}
+              data-test="submit-dossier-de-validation-form-button"
+            >
+              Envoyer les documents
+            </Button>
+          </div>
         </form>
       </main>
 
