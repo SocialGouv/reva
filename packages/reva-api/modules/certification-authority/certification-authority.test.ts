@@ -2,6 +2,7 @@ import { Account } from "@prisma/client";
 
 import { graphql } from "@/modules/graphql/generated";
 import { UpdateCertificationAuthorityInput } from "@/modules/graphql/generated/graphql";
+import * as getKeycloakAdminModule from "@/modules/shared/auth/getKeycloakAdmin";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
@@ -46,6 +47,11 @@ async function graphqlUpdateCertificationAuthority({
         label
         contactFullName
         contactEmail
+        account {
+          email
+          firstname
+          lastname
+        }
       }
     }
   `);
@@ -56,7 +62,7 @@ async function graphqlUpdateCertificationAuthority({
   });
 }
 
-test("should update a certification authority's contact info as a certificaton authority manager", async () => {
+test("should update a certification authority's contact info and leave the account info as is as a certificaton authority manager", async () => {
   const certificationAuthority = await createCertificationAuthorityHelper();
 
   const resp = await graphqlUpdateCertificationAuthority({
@@ -64,6 +70,9 @@ test("should update a certification authority's contact info as a certificaton a
     account: certificationAuthority.Account[0],
     certificationAuthorityId: certificationAuthority.id,
     data: {
+      accountEmail: "new email",
+      accountFirstname: "new firstname",
+      accountLastname: "new lastname",
       contactFullName: "new name",
       contactEmail: "new email",
     },
@@ -74,10 +83,25 @@ test("should update a certification authority's contact info as a certificaton a
     label: certificationAuthority.label,
     contactFullName: "new name",
     contactEmail: "new email",
+    account: {
+      email: certificationAuthority.Account[0].email,
+      firstname: certificationAuthority.Account[0].firstname,
+      lastname: certificationAuthority.Account[0].lastname,
+    },
   });
 });
 
-test("should update a certification authority's contact info as an admin", async () => {
+test("should update a certification authority's contact and account info as an admin", async () => {
+  vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockImplementation(() =>
+    Promise.resolve({
+      users: {
+        findOne: () => Promise.resolve({}),
+        listGroups: () => Promise.resolve([]),
+        update: () => Promise.resolve({}),
+      },
+    }),
+  );
+
   const certificationAuthority = await createCertificationAuthorityHelper();
 
   const resp = await graphqlUpdateCertificationAuthority({
@@ -87,6 +111,9 @@ test("should update a certification authority's contact info as an admin", async
     },
     certificationAuthorityId: certificationAuthority.id,
     data: {
+      accountEmail: "new account email",
+      accountFirstname: "new account firstname",
+      accountLastname: "new account lastname",
       contactFullName: "new name",
       contactEmail: "new email",
     },
@@ -97,6 +124,11 @@ test("should update a certification authority's contact info as an admin", async
     label: certificationAuthority.label,
     contactFullName: "new name",
     contactEmail: "new email",
+    account: {
+      email: "new account email",
+      firstname: "new account firstname",
+      lastname: "new account lastname",
+    },
   });
 });
 
@@ -111,6 +143,9 @@ test("should refuse to to update a certification authority's contact info as a c
       },
       certificationAuthorityId: certificationAuthority.id,
       data: {
+        accountEmail: "new email",
+        accountFirstname: "new firstname",
+        accountLastname: "new lastname",
         contactFullName: "new name",
         contactEmail: "new email",
       },
@@ -132,6 +167,9 @@ test("should refuse to to update a certification authority's contact info as a c
       },
       certificationAuthorityId: certificationAuthority.id,
       data: {
+        accountEmail: "new account email",
+        accountFirstname: "new account firstname",
+        accountLastname: "new account lastname",
         contactFullName: "new name",
         contactEmail: "new email",
       },
@@ -143,6 +181,16 @@ test("should refuse to to update a certification authority's contact info as a c
 });
 
 test("should update all of a certification authority's local accounts contact info when isGlobalContact is true", async () => {
+  vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockImplementation(() =>
+    Promise.resolve({
+      users: {
+        findOne: () => Promise.resolve({}),
+        listGroups: () => Promise.resolve([]),
+        update: () => Promise.resolve({}),
+      },
+    }),
+  );
+
   const certificationAuthority = await createCertificationAuthorityHelper();
 
   await createCertificationAuthorityLocalAccountHelper({
@@ -160,6 +208,9 @@ test("should update all of a certification authority's local accounts contact in
     },
     certificationAuthorityId: certificationAuthority.id,
     data: {
+      accountEmail: "new account email",
+      accountFirstname: "new account firstname",
+      accountLastname: "new account lastname",
       contactFullName: "new name",
       contactEmail: "new email",
       isGlobalContact: true,
@@ -171,6 +222,11 @@ test("should update all of a certification authority's local accounts contact in
     label: certificationAuthority.label,
     contactFullName: "new name",
     contactEmail: "new email",
+    account: {
+      email: "new account email",
+      firstname: "new account firstname",
+      lastname: "new account lastname",
+    },
   });
 
   const localAccounts =

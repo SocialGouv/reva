@@ -92,6 +92,9 @@ type CertificationAuhtorityOrLocalAccountPaginated {
 
 input UpdateCertificationAuthorityInput {
   label: String
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
   contactFullName: String
   contactEmail: String
   contactPhone: String

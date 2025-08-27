@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { useAuth } from "@/components/auth/auth";
 import { successToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
@@ -14,6 +15,11 @@ import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralIn
 type FormData = z.infer<typeof schema>;
 
 const schema = z.object({
+  accountFirstname: z.string(),
+  accountLastname: z.string().min(1, "Merci de remplir ce champ"),
+  accountEmail: z
+    .string()
+    .email("Le champ doit contenir une adresse email valide"),
   contactFullName: z.string().min(1, "Merci de remplir ce champ"),
   contactEmail: z
     .string()
@@ -49,6 +55,8 @@ export const CertificationAuthorityGeneralInfoForm = ({
   const { updateCertificationAuthority } = useCertificationAuthorityForm();
   const router = useRouter();
 
+  const { isAdmin } = useAuth();
+
   const {
     register,
     reset,
@@ -58,6 +66,9 @@ export const CertificationAuthorityGeneralInfoForm = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      accountFirstname: certificationAuthority.account?.firstname || "",
+      accountLastname: certificationAuthority.account?.lastname || "",
+      accountEmail: certificationAuthority.account?.email || "",
       contactFullName: certificationAuthority.contactFullName || undefined,
       contactEmail: certificationAuthority.contactEmail || undefined,
       contactPhone: certificationAuthority.contactPhone || undefined,
@@ -65,19 +76,22 @@ export const CertificationAuthorityGeneralInfoForm = ({
     },
   });
 
-  const handleFormSubmit = handleSubmit(async (data) => {
-    try {
-      await updateCertificationAuthority.mutateAsync({
-        certificationAuthorityId: certificationAuthority.id,
-        certificationAuthorityData: data,
-      });
+  const handleFormSubmit = handleSubmit(
+    async (data) => {
+      try {
+        await updateCertificationAuthority.mutateAsync({
+          certificationAuthorityId: certificationAuthority.id,
+          certificationAuthorityData: data,
+        });
 
-      successToast("L'autorité de certification a bien été mise à jour");
-      router.push(backUrl);
-    } catch (error) {
-      graphqlErrorToast(error);
-    }
-  });
+        successToast("L'autorité de certification a bien été mise à jour");
+        router.push(backUrl);
+      } catch (error) {
+        graphqlErrorToast(error);
+      }
+    },
+    (e) => console.error(e),
+  );
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -112,29 +126,35 @@ export const CertificationAuthorityGeneralInfoForm = ({
                 className="w-full"
                 label="Nom"
                 nativeInputProps={{
-                  value: certificationAuthority.account?.lastname || "",
+                  ...register("accountLastname"),
                 }}
-                disabled
+                disabled={!isAdmin}
                 data-test="certification-authority-account-lastname"
+                state={errors.accountLastname ? "error" : "default"}
+                stateRelatedMessage={errors.accountLastname?.message}
               />
               <Input
                 className="w-full"
                 label="Prénom (optionnel)"
                 nativeInputProps={{
-                  value: certificationAuthority.account?.firstname || "",
+                  ...register("accountFirstname"),
                 }}
-                disabled
+                disabled={!isAdmin}
                 data-test="certification-authority-account-firstname"
+                state={errors.accountFirstname ? "error" : "default"}
+                stateRelatedMessage={errors.accountFirstname?.message}
               />
             </div>
             <Input
               label="Email de connexion"
               nativeInputProps={{
-                value: certificationAuthority.account?.email,
+                ...register("accountEmail"),
               }}
-              disabled
+              disabled={!isAdmin}
               className="w-[calc(50%-0.5rem)]"
               data-test="certification-authority-account-email"
+              state={errors.accountEmail ? "error" : "default"}
+              stateRelatedMessage={errors.accountEmail?.message}
             />
           </div>
         </div>

@@ -176,6 +176,9 @@ const unsafeResolvers = {
         certificationAuthorityId: string;
         certificationAuthorityData: {
           label: string;
+          accountFirstname: string;
+          accountLastname: string;
+          accountEmail: string;
           contactFullName: string | null;
           contactEmail: string | null;
           contactPhone: string | null;
@@ -192,7 +195,10 @@ const unsafeResolvers = {
           );
         }
 
-        return updateCertificationAuthorityById(params);
+        return updateCertificationAuthorityById({
+          ...params,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        });
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

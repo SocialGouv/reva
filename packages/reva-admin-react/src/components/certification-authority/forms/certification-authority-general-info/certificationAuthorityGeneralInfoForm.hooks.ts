@@ -14,6 +14,12 @@ const updateCertificationAuthorityMutation = graphql(`
       certificationAuthorityData: $certificationAuthorityData
     ) {
       id
+      account {
+        id
+        firstname
+        lastname
+        email
+      }
       label
       contactFullName
       contactEmail
@@ -29,6 +35,9 @@ export const useCertificationAuthorityForm = () => {
     mutationFn: (params: {
       certificationAuthorityId: string;
       certificationAuthorityData: {
+        accountFirstname: string;
+        accountLastname: string;
+        accountEmail: string;
         contactFullName: string;
         contactEmail: string;
         contactPhone?: string;
