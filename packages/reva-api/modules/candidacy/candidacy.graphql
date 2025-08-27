@@ -79,6 +79,7 @@ type Candidacy {
   archivingReason: CandidacyArchivingReason
   activite: ActiviteStatut!
   derniereDateActivite: Timestamp
+  dateInactifEnAttente: Timestamp
 }
 
 enum ActiviteStatut {
