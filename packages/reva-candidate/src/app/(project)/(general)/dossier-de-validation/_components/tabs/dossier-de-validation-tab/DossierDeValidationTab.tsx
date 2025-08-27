@@ -197,19 +197,25 @@ export const DossierDeValidationTab = ({
           </div>
           <Checkbox
             className="mr-0"
-            legend="Avez-vous bien vérifié ces éléments avant l’envoi ?"
+            legend="Avant de finaliser votre envoi"
             data-test="dossier-de-validation-checkbox-group"
             options={[
               {
                 label:
-                  "Mon dossier de validation est correct, complet et signé.",
-                nativeInputProps: { ...register("dossierDeValidationCheck1") },
+                  "J'ai bien vérifié que le dossier de validation était complet et lisible.",
+                nativeInputProps: {
+                  ...register("dossierDeValidationCheck1"),
+                },
               },
               {
-                label: "Mes pièces supplémentaires sont valides et lisibles.",
-                nativeInputProps: { ...register("dossierDeValidationCheck2") },
+                label:
+                  "J'ai bien vérifié que toutes les pièces supplémentaires étaient lisibles",
+                nativeInputProps: {
+                  ...register("dossierDeValidationCheck2"),
+                },
               },
             ]}
+            small
             state={
               errors.dossierDeValidationCheck1 ||
               errors.dossierDeValidationCheck2
