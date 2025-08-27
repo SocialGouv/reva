@@ -1,3 +1,4 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import {
@@ -111,18 +112,18 @@ export const FancyUpload = ({
               <span className="text-2xl font-bold">{title}</span>
 
               {onClickDelete && (
-                <div
-                  className="flex flex-row items-center gap-2 text-sm font-medium text-dsfr-blue-france-sun-113 cursor-pointer"
+                <Button
+                  priority="tertiary no outline"
+                  size="small"
+                  iconId="fr-icon-delete-line"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-
                     onClickDelete();
                   }}
                 >
                   Supprimer
-                  <span className="fr-icon-delete-line" />
-                </div>
+                </Button>
               )}
             </div>
 
