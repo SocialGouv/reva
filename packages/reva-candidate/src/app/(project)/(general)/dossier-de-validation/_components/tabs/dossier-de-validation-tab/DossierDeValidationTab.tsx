@@ -70,7 +70,7 @@ export const DossierDeValidationTab = ({
   } = useForm<DossierDeValidationFormData>({
     resolver: zodResolver(dossierDeValidationSchema),
     shouldUnregister: true,
-    defaultValues: { dossierDeValidationOtherFiles: [{}] },
+    defaultValues: { dossierDeValidationOtherFiles: [] },
   });
 
   const {
@@ -83,8 +83,18 @@ export const DossierDeValidationTab = ({
   });
 
   const handleReset = useCallback(() => {
-    reset({ dossierDeValidationOtherFiles: [{}] });
+    reset({ dossierDeValidationOtherFiles: [] });
   }, [reset]);
+
+  const handleAddAdditionalFile = useCallback(() => {
+    insertDossierDeValidationOtherFiles(
+      dossierDeValidationOtherFilesFields.length,
+      [{}],
+    );
+  }, [
+    insertDossierDeValidationOtherFiles,
+    dossierDeValidationOtherFilesFields.length,
+  ]);
 
   const handleFormSubmit = handleSubmit(onSubmit);
 
@@ -167,24 +177,14 @@ export const DossierDeValidationTab = ({
                 nativeInputProps={{
                   ...register(`dossierDeValidationOtherFiles.${i}`, {
                     onChange: (e) => {
-                      if (e.target.value) {
-                        //if the file input has a value and it was the last empty one we add another empty file input
-                        if (
-                          i ==
-                          dossierDeValidationOtherFilesFields.length - 1
-                        ) {
-                          insertDossierDeValidationOtherFiles(
-                            dossierDeValidationOtherFilesFields.length,
-                            [{}],
-                          );
-                        }
-                      } else {
+                      if (!e.target.value) {
                         removeDossierDeValidationOtherFiles(i);
                       }
                     },
                   }),
                   accept: ".jpg,.jpeg,.png,.pdf",
                 }}
+                onClickDelete={() => removeDossierDeValidationOtherFiles(i)}
                 state={
                   errors.dossierDeValidationOtherFiles?.[i]
                     ? "error"
@@ -195,6 +195,17 @@ export const DossierDeValidationTab = ({
                 }
               />
             ))}
+            <div>
+              <hr className="pb-3" />
+              <Button
+                priority="tertiary no outline"
+                iconId="fr-icon-add-line"
+                onClick={handleAddAdditionalFile}
+                type="button"
+              >
+                Ajouter une pièce jointe supplémentaire
+              </Button>
+            </div>
           </div>
           <Checkbox
             className="mr-0"

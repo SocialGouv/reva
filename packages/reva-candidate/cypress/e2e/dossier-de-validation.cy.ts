@@ -253,6 +253,99 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
         cy.location("pathname").should("equal", "/candidat/");
       });
+
+      it("should let me add and remove additional attachments", function () {
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
+            });
+          },
+        );
+
+        cy.login();
+
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
+
+        cy.visit("/dossier-de-validation/");
+        cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+
+        cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+        cy.get('input[name^="dossierDeValidationOtherFiles"]').should(
+          "not.exist",
+        );
+
+        cy.get("button")
+          .contains("Ajouter une pièce jointe supplémentaire")
+          .click();
+
+        cy.get('input[name="dossierDeValidationOtherFiles.0"]').should("exist");
+
+        cy.get('input[name="dossierDeValidationOtherFiles.0"]').selectFile({
+          contents: Cypress.Buffer.from("additional file 1"),
+          fileName: "additional1.pdf",
+        });
+
+        cy.get("button")
+          .contains("Ajouter une pièce jointe supplémentaire")
+          .click();
+
+        cy.get('input[name="dossierDeValidationOtherFiles.1"]').should("exist");
+
+        cy.get('input[name="dossierDeValidationOtherFiles.1"]').selectFile({
+          contents: Cypress.Buffer.from("additional file 2"),
+          fileName: "additional2.jpg",
+        });
+
+        cy.get('input[name="dossierDeValidationOtherFiles.0"]').should("exist");
+        cy.get('input[name="dossierDeValidationOtherFiles.1"]').should("exist");
+
+        cy.get('input[name="dossierDeValidationOtherFiles.0"]')
+          .closest(".fr-upload-group")
+          .contains("button", "Supprimer")
+          .click();
+
+        cy.get('input[name="dossierDeValidationOtherFiles.0"]').should("exist");
+        cy.get('input[name="dossierDeValidationOtherFiles.1"]').should(
+          "not.exist",
+        );
+
+        cy.get('input[name="dossierDeValidationOtherFiles.0"]')
+          .closest(".fr-upload-group")
+          .contains("button", "Supprimer")
+          .click();
+
+        cy.get('input[name^="dossierDeValidationOtherFiles"]').should(
+          "not.exist",
+        );
+      });
     });
 
     context("Read only views", () => {
