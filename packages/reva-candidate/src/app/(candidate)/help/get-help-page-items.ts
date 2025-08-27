@@ -3,14 +3,18 @@ import { strapi } from "@/graphql/strapi";
 
 const helpPageItemsQuery = graphql(`
   query getHelpPageItems {
-    aideCandidatSectionTutoriels {
+    aideCandidatTutoriel {
       titre
       sous_titre
-      aide_candidat_section_tutoriel_cartes {
+      aide_candidat_section_tutoriel_cartes(
+        pagination: { limit: -1 }
+        sort: ["ordre:asc"]
+      ) {
         documentId
         titre
         lien
         icone_svg {
+          url
           alternativeText
           formats
         }
@@ -22,7 +26,7 @@ const helpPageItemsQuery = graphql(`
 
 export const getHelpPageItems = async () => {
   const helpPageItems = await strapi.request(helpPageItemsQuery);
-  const tutorielSection = helpPageItems?.aideCandidatSectionTutoriels?.[0];
+  const tutorielSection = helpPageItems?.aideCandidatTutoriel;
 
   return { tutorielSection };
 };

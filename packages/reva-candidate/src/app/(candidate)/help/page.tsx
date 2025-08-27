@@ -4,6 +4,7 @@ import Tile from "@codegouvfr/react-dsfr/Tile";
 import { format } from "date-fns";
 
 import { PageLayout } from "@/layouts/page.layout";
+import { getStrapiImageUrl } from "@/utils/getStrapiImageUrl.util";
 
 import {
   getHelpPageItems,
@@ -28,6 +29,9 @@ const TutorielSection = async ({
             new Date(c?.updatedAt ?? ""),
             "dd/MM/yyyy",
           )}`;
+          const imageUrl = getStrapiImageUrl(
+            c.icone_svg?.formats?.small?.url ?? c.icone_svg?.url,
+          );
           return (
             <Tile
               key={c.documentId}
@@ -40,7 +44,7 @@ const TutorielSection = async ({
               }}
               detail={cardDetail}
               imageAlt={c.icone_svg?.alternativeText ?? ""}
-              imageUrl={c.icone_svg?.formats?.small?.url ?? ""}
+              imageUrl={imageUrl}
               title={c.titre}
             />
           );
