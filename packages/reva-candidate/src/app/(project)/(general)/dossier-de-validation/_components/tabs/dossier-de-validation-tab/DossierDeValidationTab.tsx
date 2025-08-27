@@ -150,10 +150,11 @@ export const DossierDeValidationTab = ({
             <FancyUpload
               className="dossier-de-validation-file-upload"
               title="Joindre le dossier de validation"
-              hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
+              description="Si vous souhaitez déposer une attestation de transmission / finalisation du DV : vous pouvez déposer cette pièce ici."
+              hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
               nativeInputProps={{
                 ...register("dossierDeValidationFile"),
-                accept: ".pdf",
+                accept: ".jpg,.jpeg,.png,.pdf",
               }}
               state={errors.dossierDeValidationFile ? "error" : "default"}
               stateRelatedMessage={errors.dossierDeValidationFile?.[0]?.message}
@@ -162,7 +163,7 @@ export const DossierDeValidationTab = ({
               <FancyUpload
                 key={d.id}
                 title="Joindre des pièces supplémentaires (optionnel)"
-                hint="Format supporté : PDF uniquement avec un poids maximum de 10Mo"
+                hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
                 nativeInputProps={{
                   ...register(`dossierDeValidationOtherFiles.${i}`, {
                     onChange: (e) => {
@@ -182,7 +183,7 @@ export const DossierDeValidationTab = ({
                       }
                     },
                   }),
-                  accept: ".pdf",
+                  accept: ".jpg,.jpeg,.png,.pdf",
                 }}
                 state={
                   errors.dossierDeValidationOtherFiles?.[i]
