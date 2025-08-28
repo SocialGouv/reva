@@ -413,16 +413,18 @@ export const getFileNameAndUrl = async ({
   if (fileId) {
     const file = await prismaClient.file.findFirst({
       where: { id: fileId },
-      select: { name: true, path: true },
     });
 
     if (!file) {
       throw new Error("Fichier non trouvé");
     }
+
     const downloadUrl = await getDownloadLink(file?.path);
 
     return {
-      name: file?.name || "",
+      createdAt: file.createdAt,
+      name: file.name || "",
+      mimeType: file.mimeType,
       url: file
         ? `${process.env.BASE_URL}/api/candidacy/${candidacyId}/feasibility/file/${fileId}`
         : "",

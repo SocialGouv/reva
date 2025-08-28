@@ -88,6 +88,78 @@ const mapFeasibility = (
     return;
   }
 
+  const {
+    feasibilityFormat,
+    feasibilityUploadedPdf,
+    dematerializedFeasibilityFile,
+  } = feasibility;
+
+  const documents: { nom: string; url: string; typeMime: string }[] = [];
+
+  if (feasibilityFormat == "DEMATERIALIZED" && dematerializedFeasibilityFile) {
+    const { dffFile, attachments } = dematerializedFeasibilityFile;
+
+    if (dffFile && dffFile.previewUrl) {
+      documents.push({
+        nom: dffFile.name,
+        url: dffFile.previewUrl,
+        typeMime: dffFile.mimeType,
+      });
+    }
+
+    const filteredAttachment = attachments.filter((a) => a != null);
+    for (const attachment of filteredAttachment) {
+      const { file } = attachment;
+
+      if (file && file.previewUrl) {
+        documents.push({
+          nom: file.name,
+          url: file.previewUrl,
+          typeMime: file.mimeType,
+        });
+      }
+    }
+  } else if (feasibilityFormat == "UPLOADED_PDF" && feasibilityUploadedPdf) {
+    const {
+      feasibilityFile,
+      IDFile,
+      documentaryProofFile,
+      certificateOfAttendanceFile,
+    } = feasibilityUploadedPdf;
+
+    if (feasibilityFile && feasibilityFile.previewUrl) {
+      documents.push({
+        nom: feasibilityFile.name,
+        url: feasibilityFile.previewUrl,
+        typeMime: feasibilityFile.mimeType,
+      });
+    }
+
+    if (IDFile && IDFile.previewUrl) {
+      documents.push({
+        nom: IDFile.name,
+        url: IDFile.previewUrl,
+        typeMime: IDFile.mimeType,
+      });
+    }
+
+    if (documentaryProofFile && documentaryProofFile.previewUrl) {
+      documents.push({
+        nom: documentaryProofFile.name,
+        url: documentaryProofFile.previewUrl,
+        typeMime: documentaryProofFile.mimeType,
+      });
+    }
+
+    if (certificateOfAttendanceFile && certificateOfAttendanceFile.previewUrl) {
+      documents.push({
+        nom: certificateOfAttendanceFile.name,
+        url: certificateOfAttendanceFile.previewUrl,
+        typeMime: certificateOfAttendanceFile.mimeType,
+      });
+    }
+  }
+
   return {
     candidatureId: feasibility.candidacy.id,
     dateEnvoi: feasibility.feasibilityFileSentAt
@@ -100,7 +172,7 @@ const mapFeasibility = (
       description: experience.description,
       dateDemarrage: new Date(experience.startedAt).toISOString(),
     })),
-    documents: null,
+    documents,
   };
 };
 

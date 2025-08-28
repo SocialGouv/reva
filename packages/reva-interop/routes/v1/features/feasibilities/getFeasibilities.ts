@@ -36,6 +36,45 @@ const getFeasibilitiesQuery = graphql(`
         }
         feasibilityFileSentAt
         decision
+        feasibilityFormat
+        feasibilityUploadedPdf {
+          feasibilityFile {
+            name
+            mimeType
+            previewUrl
+          }
+          IDFile {
+            name
+            mimeType
+            previewUrl
+          }
+          documentaryProofFile {
+            name
+            mimeType
+            previewUrl
+          }
+          certificateOfAttendanceFile {
+            name
+            mimeType
+            previewUrl
+          }
+        }
+        dematerializedFeasibilityFile {
+          dffFile {
+            name
+            mimeType
+            previewUrl
+          }
+          attachments {
+            id
+            type
+            file {
+              name
+              mimeType
+              previewUrl
+            }
+          }
+        }
       }
       info {
         currentPage
