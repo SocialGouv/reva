@@ -22,6 +22,10 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::aide-candidat-section-ressources-utiles-carte.aide-candidat-section-ressources-utiles-carte"
+    },
+    "lien_voir_plus": {
+      "type": "string",
+      "required": true
     }
   }
 }

@@ -23,6 +23,10 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::aide-candidat-section-questions-frequentes-question.aide-candidat-section-questions-frequentes-question"
+    },
+    "lien_voir_plus": {
+      "type": "string",
+      "required": true
     }
   }
 }
