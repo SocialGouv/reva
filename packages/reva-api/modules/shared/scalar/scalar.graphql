@@ -7,3 +7,5 @@ scalar UUID
 scalar Decimal
 
 scalar Upload
+
+scalar Date

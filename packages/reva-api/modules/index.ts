@@ -11,6 +11,7 @@ import {
   UUIDResolver,
   VoidResolver,
   VoidTypeDefinition,
+  DateResolver,
 } from "graphql-scalars";
 import { GraphQLUpload } from "graphql-upload-minimal";
 import mercurius, { MercuriusOptions } from "mercurius";
@@ -78,6 +79,7 @@ resolvers.Timestamp = TimestampResolver;
 resolvers.UUID = UUIDResolver;
 resolvers.Decimal = DecimalGraphqlScalar;
 resolvers.Upload = GraphQLUpload;
+resolvers.Date = DateResolver;
 
 export const graphqlConfiguration: MercuriusOptions = {
   schema: makeExecutableSchema({
