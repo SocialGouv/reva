@@ -92,15 +92,18 @@ export function DffSummary({
       <div className="flex justify-between mb-4">
         <h1 className="mb-0">Dossier de faisabilité</h1>
 
-        {isUseGeneratedDffFileFromFileServerActive &&
-        dematerializedFeasibilityFile.dffFile ? (
-          <PdfLink
-            text={"Télécharger le dossier de faisabilité"}
-            title={"Télécharger le dossier de faisabilité"}
-            url={dematerializedFeasibilityFile.dffFile.url}
-            fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
-            className="fr-btn fr-btn--secondary fr-btn--sm"
-          />
+        {isUseGeneratedDffFileFromFileServerActive ? (
+          <>
+            {dematerializedFeasibilityFile.dffFile ? (
+              <PdfLink
+                text={"Télécharger le dossier de faisabilité"}
+                title={"Télécharger le dossier de faisabilité"}
+                url={dematerializedFeasibilityFile.dffFile.url}
+                fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
+                className="fr-btn fr-btn--secondary fr-btn--sm"
+              />
+            ) : null}
+          </>
         ) : (
           <PdfLink
             text={"Télécharger le dossier de faisabilité"}
