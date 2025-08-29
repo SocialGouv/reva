@@ -19,6 +19,8 @@ import { strapi } from "@/graphql/strapi";
 
 import type { Metadata } from "next";
 
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "France VAE | Bienvenue sur le portail de la VAE",
   description:

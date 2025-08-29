@@ -12,8 +12,7 @@ import { PRODUKTLY_CLIENT_TOKEN } from "@/config/config";
 
 import { DsfrProvider, StartDsfrOnHydration } from "./_components/dsfr";
 import { DsfrHead } from "./_components/dsfr/DsfrHead";
-
-export const revalidate = 600;
+// import { getHtmlAttributes } from "./_components/dsfr/server-only-index";
 
 export default function RootLayout({
   children,
