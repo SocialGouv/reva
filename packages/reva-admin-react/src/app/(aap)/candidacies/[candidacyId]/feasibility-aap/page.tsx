@@ -154,7 +154,7 @@ const AapFeasibilityPage = () => {
             disabledNoticeText={
               isEligibilityRequirementPartial
                 ? "Vous n'avez pas besoin de compléter cette catégorie puisque votre candidat a déjà une recevabilité favorable en cours."
-                : "Vous devez d'abord détailler la certification visée avant d'intégrer les prérequis."
+                : "Vous devez d'abord détailler la certification visée avant d'intégrer les blocs de compétences."
             }
             isEditable={isFeasibilityEditable}
             isEligibilityRequirementPartial={isEligibilityRequirementPartial}
