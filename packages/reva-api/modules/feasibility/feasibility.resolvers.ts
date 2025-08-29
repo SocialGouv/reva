@@ -2,7 +2,6 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { getCandidacy } from "../candidacy/features/getCandidacy";
 
-import { getDematerializedFeasibilityFileByFeasibilityId } from "./dematerialized-feasibility-file/features/getDematerializedFeasibilityFileByFeasibilityId";
 import {
   getActiveFeasibilities,
   getActiveFeasibilityByCandidacyid,
@@ -36,20 +35,6 @@ const unsafeResolvers = {
       getFeasibilityHistory({ candidacyId, feasibilityId: id }),
     candidacy: ({ candidacyId }: { candidacyId: string }) =>
       getCandidacy({ candidacyId }),
-
-    dematerializedFeasibilityFile: ({ id }: { id: string }) => {
-      console.warn("Here I am");
-
-      const dematerializedFeasibilityFile =
-        getDematerializedFeasibilityFileByFeasibilityId({ feasibilityId: id });
-
-      console.warn(
-        "dematerializedFeasibilityFile",
-        dematerializedFeasibilityFile,
-      );
-
-      return dematerializedFeasibilityFile || null;
-    },
   },
   Query: {
     feasibilityCountByCategory: (

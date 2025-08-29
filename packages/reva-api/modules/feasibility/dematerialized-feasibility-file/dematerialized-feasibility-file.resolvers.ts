@@ -28,6 +28,7 @@ import { createOrUpdateEligibilityRequirement } from "./features/createOrUpdateE
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
+import { getDematerializedFeasibilityFileByFeasibilityId } from "./features/getDematerializedFeasibilityFileByFeasibilityId";
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
 import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
 import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
@@ -138,6 +139,21 @@ const unsafeResolvers = {
     }: {
       certificationCompetenceId: string;
     }) => getCertificationCompetenceById({ certificationCompetenceId }),
+  },
+  Feasibility: {
+    dematerializedFeasibilityFile: ({ id }: { id: string }) => {
+      console.warn("Here I am");
+
+      const dematerializedFeasibilityFile =
+        getDematerializedFeasibilityFileByFeasibilityId({ feasibilityId: id });
+
+      console.warn(
+        "dematerializedFeasibilityFile",
+        dematerializedFeasibilityFile,
+      );
+
+      return dematerializedFeasibilityFile || null;
+    },
   },
   Mutation: {
     dematerialized_feasibility_file_createOrUpdateCertificationInfo: (

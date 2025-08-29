@@ -5,7 +5,7 @@ export const getDematerializedFeasibilityFileByFeasibilityId = ({
 }: {
   feasibilityId: string;
 }) =>
-  prismaClient.dematerializedFeasibilityFile.findFirst({
+  prismaClient.dematerializedFeasibilityFile.findUnique({
     where: { feasibilityId },
     include: {
       dffCertificationCompetenceBlocs: true,
