@@ -1,5 +1,5 @@
 import { GenderEnum } from "@/constants";
-import { formatDateWithoutTimestamp } from "@/utils/formatDateWithoutTimestamp";
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { Candidate, Gender } from "@/graphql/generated/graphql";
 
@@ -70,7 +70,7 @@ export default function CandidateSection({
       </div>
       <p className="mb-2 flex gap-2">
         {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
-        {birthdate && <span>le : {formatDateWithoutTimestamp(birthdate)}</span>}
+        {birthdate && <span>le : {formatIso8601Date(birthdate)}</span>}
         <span>
           à {birthCity}
           {country && isFrance && birthDepartment

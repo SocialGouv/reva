@@ -13,7 +13,7 @@ import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Impersonate } from "@/components/impersonate";
-import { formatDateWithoutTimestamp } from "@/utils/formatDateWithoutTimestamp";
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { CertificationCard } from "../_components/CertificationCard";
 
@@ -147,7 +147,7 @@ const CandidacySummaryPage = () => {
                 </dt>
                 <dd>
                   {candidate.birthdate &&
-                    `${formatDateWithoutTimestamp(candidate.birthdate)} `}
+                    `${formatIso8601Date(candidate.birthdate)} `}
                   {candidate.birthDepartment &&
                     `${candidate.birthDepartment.label} (${candidate.birthDepartment.code}) `}
                   {candidate.nationality}
