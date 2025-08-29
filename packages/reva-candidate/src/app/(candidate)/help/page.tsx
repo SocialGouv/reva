@@ -16,6 +16,8 @@ import {
   HelpPageItemsTutorielSection,
 } from "./get-help-page-items";
 
+export const revalidate = 600;
+
 const TutorielSection = ({
   tutorielSection,
 }: {
