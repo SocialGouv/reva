@@ -26,7 +26,11 @@ export const updateCandidateContactDetails = async ({
     throw new Error(`Ce candidat n'existe pas`);
   }
 
-  if (email && userInfo.userRoles.includes("admin")) {
+  if (
+    email &&
+    email != candidate.email &&
+    userInfo.userRoles.includes("admin")
+  ) {
     await updateCandidateEmailAndSendNotifications({
       previousEmail: candidate.email,
       newEmail: email,
