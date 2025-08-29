@@ -1,6 +1,6 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 import { draftMode } from "next/headers";
 
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
@@ -19,7 +19,11 @@ export const metadata: Metadata = {
       "Retrouvez les questions les plus fréquentes sur la VAE en France. Trouvez des réponses à vos questions sur la Validation des Acquis de l'Expérience",
   },
   keywords: ["Gouvernement", "France", "VAE", "France VAE"],
-  viewport: "width=device-width, initial-scale=1.0",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 const FaqPage = async () => {
