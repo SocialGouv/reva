@@ -7,7 +7,6 @@
     "node": "22"
   },
   "scripts": {
-    "build": "./build.sh",
     "dev": "npm-run-all --print-label --parallel \"dev --prefix packages/reva-api\" \"dev --prefix packages/reva-candidate\" \"dev --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",
     "front-apps": "npm-run-all --print-label --parallel \"dev --prefix packages/reva-candidate\" \"dev --prefix packages/reva-admin-react\" \"dev --prefix packages/reva-website\" \"dev --prefix packages/reva-vae-collective\"",
     "start": "npm run start --prefix packages/reva-api",
