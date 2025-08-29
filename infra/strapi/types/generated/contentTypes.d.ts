@@ -385,13 +385,13 @@ export interface ApiAideCandidatQuestionsFrequenteAideCandidatQuestionsFrequente
     draftAndPublish: true;
   };
   attributes: {
-    aide_candidat_section_questions_frequentes_questions: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::aide-candidat-section-questions-frequentes-question.aide-candidat-section-questions-frequentes-question'
-    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    faq_article_faqs: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::article-faq.article-faq'
+    >;
     lien_voir_plus: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -437,47 +437,6 @@ export interface ApiAideCandidatRessourcesUtileAideCandidatRessourcesUtile
     publishedAt: Schema.Attribute.DateTime;
     sous_titre: Schema.Attribute.String;
     titre: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiAideCandidatSectionQuestionsFrequentesQuestionAideCandidatSectionQuestionsFrequentesQuestion
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'aide_candidat_section_questions_frequentes_questions';
-  info: {
-    displayName: '[AIDE-CANDIDAT] - Section Questions fr\u00E9quentes question';
-    pluralName: 'aide-candidat-section-questions-frequentes-questions';
-    singularName: 'aide-candidat-section-questions-frequentes-question';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::aide-candidat-section-questions-frequentes-question.aide-candidat-section-questions-frequentes-question'
-    > &
-      Schema.Attribute.Private;
-    ordre: Schema.Attribute.Integer &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    publishedAt: Schema.Attribute.DateTime;
-    question: Schema.Attribute.String & Schema.Attribute.Required;
-    reponse: Schema.Attribute.RichText &
-      Schema.Attribute.Required &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor.CKEditor',
-        {
-          output: 'HTML';
-          preset: 'rich';
-        }
-      >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1585,7 +1544,6 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::aide-candidat-questions-frequente.aide-candidat-questions-frequente': ApiAideCandidatQuestionsFrequenteAideCandidatQuestionsFrequente;
       'api::aide-candidat-ressources-utile.aide-candidat-ressources-utile': ApiAideCandidatRessourcesUtileAideCandidatRessourcesUtile;
-      'api::aide-candidat-section-questions-frequentes-question.aide-candidat-section-questions-frequentes-question': ApiAideCandidatSectionQuestionsFrequentesQuestionAideCandidatSectionQuestionsFrequentesQuestion;
       'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte': ApiAideCandidatSectionTutorielCarteAideCandidatSectionTutorielCarte;
       'api::aide-candidat-tutoriel.aide-candidat-tutoriel': ApiAideCandidatTutorielAideCandidatTutoriel;
       'api::article-actualite.article-actualite': ApiArticleActualiteArticleActualite;
