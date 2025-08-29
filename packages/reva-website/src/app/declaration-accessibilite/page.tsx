@@ -2,6 +2,8 @@ import Head from "next/head";
 
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 
+export const revalidate = 3600;
+
 const DeclarationAccessibilitePage = () => {
   return (
     <MainLayout className="overflow-x-hidden font-light">

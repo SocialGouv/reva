@@ -6,6 +6,8 @@ import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { graphql } from "@/graphql/generated";
 import { strapi } from "@/graphql/strapi";
 
+export const revalidate = 3600;
+
 export const generateMetadata = async ({
   params,
 }: {

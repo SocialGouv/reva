@@ -7,6 +7,8 @@ import {
   SectionParagraph,
 } from "@/components/legals-content/LegalsContent";
 
+export const revalidate = 3600;
+
 const IndexMentionsLegalesPage = () => {
   return (
     <MainLayout>

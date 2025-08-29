@@ -8,6 +8,8 @@ import { NeutralBackground } from "@/components/layout/neutral-background/Neutra
 import { graphql } from "@/graphql/generated";
 import { strapi } from "@/graphql/strapi";
 
+export const revalidate = 3600;
+
 const getLegalArticle = graphql(`
   query getLegalArticle($nom: String!, $publicationState: PublicationStatus!) {
     legals(filters: { nom: { eq: $nom } }, status: $publicationState) {

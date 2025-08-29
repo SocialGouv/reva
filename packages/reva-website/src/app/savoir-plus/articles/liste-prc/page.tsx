@@ -7,6 +7,8 @@ import { strapi } from "@/graphql/strapi";
 
 import { PrcList } from "./_components/PrcList";
 
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const articleResponse = await getArticleDAide("liste-prc", false);
   const article = articleResponse?.articleDAides[0];

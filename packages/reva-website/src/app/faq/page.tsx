@@ -26,6 +26,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+export const revalidate = 600;
+
 const FaqPage = async () => {
   const { isEnabled: preview } = await draftMode();
   const sections = await strapi.request(sectionFaqs, {

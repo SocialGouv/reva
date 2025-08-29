@@ -16,6 +16,8 @@ export const metadata = {
     "Retrouvez des informations sur la VAE, des conseils et des réponses à vos questions sur la Validation des Acquis de l'Expérience.",
 };
 
+export const revalidate = 600;
+
 const SavoirPlusPage = async () => {
   const { isEnabled: preview } = await draftMode();
   const sections = await getSectionDAides(preview);

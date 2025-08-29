@@ -9,6 +9,8 @@ import {
   SectionParagraph,
 } from "@/components/legals-content/LegalsContent";
 
+export const revalidate = 3600;
+
 const IndexConfidentialitePage = () => {
   return (
     <MainLayout className="overflow-x-hidden font-light">
