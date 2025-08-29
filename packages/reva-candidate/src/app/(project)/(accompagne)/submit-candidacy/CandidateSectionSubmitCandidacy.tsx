@@ -1,5 +1,4 @@
-import { format } from "date-fns";
-
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 import { getGenderPrefix } from "@/utils/getGenderPrefix.util";
 
 import { CandidateUseSubmitCandidacyForDashboard } from "./submit-candidacy-dashboard.hook";
@@ -56,7 +55,7 @@ export default function CandidateSectionSubmitCandidacy({
           <div>
             <p className="mb-0">Date de naissance</p>
             <p className="font-medium">
-              {birthdate ? format(birthdate, "dd/MM/yyyy") : "-"}
+              {birthdate ? formatIso8601Date(birthdate) : "-"}
             </p>
           </div>
           <div>

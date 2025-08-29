@@ -1,5 +1,4 @@
-import { format } from "date-fns";
-
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 import { getGenderBornLabel } from "@/utils/getGenderBornLabel.util";
 import { getGenderPrefix } from "@/utils/getGenderPrefix.util";
 
@@ -51,7 +50,7 @@ export default function CandidateSection({
       </div>
       <p className="mb-2">
         {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
-        {birthdate && <span> le {format(birthdate, "dd/MM/yyyy")} </span>}
+        {birthdate && <span> le {formatIso8601Date(birthdate)} </span>}
         <span>
           à {birthCity}
           {country && isFrance && birthDepartment
