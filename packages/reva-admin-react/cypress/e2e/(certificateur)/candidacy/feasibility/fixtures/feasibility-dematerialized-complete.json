@@ -62,7 +62,7 @@
           "lastname": "Doe",
           "email": "john.doe@example.com",
           "givenName": "",
-          "birthdate": 631152000000,
+          "birthdate": "1990-01-01",
           "birthCity": "Paris",
           "birthDepartment": {
             "label": "Paris",

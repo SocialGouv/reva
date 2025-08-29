@@ -2,7 +2,7 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, parseISO, toDate } from "date-fns";
+import { format, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -156,7 +156,7 @@ const CandidateInformationForm = ({
       nationality: data.nationality,
       gender: data.gender as GenderEnum,
       countryId: data.country,
-      birthdate: parseISO(data.birthdate).getTime(),
+      birthdate: data.birthdate,
       birthDepartmentId: data.birthDepartment,
       street: data.street,
       zip: data.zip,

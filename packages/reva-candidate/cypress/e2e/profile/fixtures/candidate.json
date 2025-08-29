@@ -9,7 +9,7 @@
       "firstname3": "William",
       "gender": "man",
       "birthCity": "Paris",
-      "birthdate": 631152000000,
+      "birthdate": "1990-01-01",
       "birthDepartment": {
         "id": "71d7f6c9-238a-4891-abda-1748d0b80efa"
       },

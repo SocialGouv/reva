@@ -26,7 +26,7 @@ const getDefaultUpdatedCandidateFields = async () => {
     firstname: "newFirstName",
     firstname2: "newFirstName2",
     firstname3: "newFirstName3",
-    birthdate: new Date("1990-01-01").getTime(),
+    birthdate: "1990-01-01",
     birthCity: "newBirthCity",
     birthDepartmentId: pasDeCalais.id,
     countryId: france.id,

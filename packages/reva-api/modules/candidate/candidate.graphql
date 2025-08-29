@@ -36,7 +36,7 @@ type Candidate {
   phone: String!
   birthCity: String
   birthDepartment: Department
-  birthdate: Timestamp
+  birthdate: Date
   country: Country
   nationality: String
   candidacy: Candidacy!
@@ -73,7 +73,7 @@ input CandidateUpdateInformationInput {
   firstname: String!
   firstname2: String
   firstname3: String
-  birthdate: Timestamp!
+  birthdate: Date!
   birthCity: String!
   birthDepartmentId: String
   countryId: UUID!
@@ -96,7 +96,7 @@ input CandidateUpdateInformationBySelfInput {
   givenName: String
   firstname2: String
   firstname3: String
-  birthdate: Timestamp
+  birthdate: Date
   birthCity: String
   birthDepartmentId: String
   countryId: UUID

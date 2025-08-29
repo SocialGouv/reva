@@ -2,7 +2,6 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, parseISO, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -76,9 +75,7 @@ const CandidateInformationForm = ({
       firstname3: candidate?.firstname3 ?? "",
       gender: (candidate?.gender as GenderEnum) ?? GenderEnum.undisclosed,
       birthCity: candidate?.birthCity ?? "",
-      birthdate: candidate?.birthdate
-        ? format(toDate(candidate?.birthdate), "yyyy-MM-dd")
-        : undefined,
+      birthdate: candidate?.birthdate ?? "",
       birthDepartment: candidate?.birthDepartment?.id ?? "",
       country: candidate?.country?.id ?? franceId,
       nationality: candidate?.nationality ?? "",
@@ -107,9 +104,7 @@ const CandidateInformationForm = ({
         firstname2: candidate.firstname2 ?? "",
         firstname3: candidate.firstname3 ?? "",
         birthCity: candidate.birthCity ?? "",
-        birthdate: candidate.birthdate
-          ? format(toDate(candidate?.birthdate), "yyyy-MM-dd")
-          : undefined,
+        birthdate: candidate.birthdate ?? "",
         birthDepartment: candidate.birthDepartment?.id,
         country: candidate.country?.id ?? franceId,
         countryIsFrance: candidate.country?.id === franceId,
@@ -158,9 +153,7 @@ const CandidateInformationForm = ({
       nationality: data.nationality,
       gender: data.gender as GenderEnum,
       countryId: data.country,
-      birthdate: data.birthdate
-        ? parseISO(data.birthdate).getTime()
-        : undefined,
+      birthdate: data.birthdate,
       birthDepartmentId: data.birthDepartment,
       street: data.street,
       zip: data.zip,
