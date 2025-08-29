@@ -18,14 +18,14 @@
     "sous_titre": {
       "type": "string"
     },
-    "aide_candidat_section_ressources_utiles_cartes": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::aide-candidat-section-ressources-utiles-carte.aide-candidat-section-ressources-utiles-carte"
-    },
     "lien_voir_plus": {
       "type": "string",
       "required": true
+    },
+    "aide_article_d_aides": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::article-d-aide.article-d-aide"
     }
   }
 }
