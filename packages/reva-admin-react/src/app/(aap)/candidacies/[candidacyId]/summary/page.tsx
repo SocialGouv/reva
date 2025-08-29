@@ -2,7 +2,7 @@
 
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { format, toDate } from "date-fns";
+import { toDate } from "date-fns";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -13,6 +13,7 @@ import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { Impersonate } from "@/components/impersonate";
+import { formatDateWithoutTimestamp } from "@/utils/formatDateWithoutTimestamp";
 
 import { CertificationCard } from "../_components/CertificationCard";
 
@@ -146,7 +147,7 @@ const CandidacySummaryPage = () => {
                 </dt>
                 <dd>
                   {candidate.birthdate &&
-                    `${format(candidate.birthdate, "dd/MM/yyyy")} `}
+                    `${formatDateWithoutTimestamp(candidate.birthdate)} `}
                   {candidate.birthDepartment &&
                     `${candidate.birthDepartment.label} (${candidate.birthDepartment.code}) `}
                   {candidate.nationality}
