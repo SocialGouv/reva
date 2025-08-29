@@ -94,10 +94,16 @@ const mapFeasibility = (
     dematerializedFeasibilityFile,
   } = feasibility;
 
+  console.warn("feasibilityFormat", feasibilityFormat);
+
+  console.warn("dematerializedFeasibilityFile", dematerializedFeasibilityFile);
+
   const documents: { nom: string; url: string; typeMime: string }[] = [];
 
   if (feasibilityFormat == "DEMATERIALIZED" && dematerializedFeasibilityFile) {
     const { dffFile, attachments } = dematerializedFeasibilityFile;
+
+    console.warn("dffFile", dffFile);
 
     if (dffFile && dffFile.previewUrl) {
       documents.push({
@@ -110,6 +116,8 @@ const mapFeasibility = (
     const filteredAttachment = attachments.filter((a) => a != null);
     for (const attachment of filteredAttachment) {
       const { file } = attachment;
+
+      console.warn("attachment", file);
 
       if (file && file.previewUrl) {
         documents.push({
@@ -126,6 +134,8 @@ const mapFeasibility = (
       documentaryProofFile,
       certificateOfAttendanceFile,
     } = feasibilityUploadedPdf;
+
+    console.warn("UPLOADED_PDF", "UPLOADED_PDF");
 
     if (feasibilityFile && feasibilityFile.previewUrl) {
       documents.push({
