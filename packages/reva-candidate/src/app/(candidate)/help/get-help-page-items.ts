@@ -25,13 +25,16 @@ const helpPageItemsQuery = graphql(`
       titre
       sous_titre
       lien_voir_plus
-      aide_candidat_section_questions_frequentes_questions(
+      faq_article_faqs(
         pagination: { page: 1, pageSize: 5 }
         sort: ["ordre:asc"]
       ) {
         question
         reponse
         ordre
+        sous_section_faq {
+          documentId
+        }
       }
     }
     aideCandidatRessourcesUtile {

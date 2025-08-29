@@ -72,16 +72,19 @@ const QuestionsFrequentesSection = ({
       <p>{questionsFrequentesSection.sous_titre}</p>
 
       <div className={fr.cx("fr-accordions-group")}>
-        {questionsFrequentesSection.aide_candidat_section_questions_frequentes_questions.map(
-          (q) => {
-            if (!q) return null;
-            return (
-              <Accordion key={q.question} label={q.question}>
-                <span dangerouslySetInnerHTML={{ __html: q.reponse }} />
-              </Accordion>
-            );
-          },
-        )}
+        {questionsFrequentesSection.faq_article_faqs?.map((q) => {
+          if (!q) return null;
+          return (
+            <Accordion key={q.question} label={q.question}>
+              <div
+                className="ck-content"
+                dangerouslySetInnerHTML={{
+                  __html: q?.reponse?.replaceAll("<a", "<a target='_'") || "",
+                }}
+              />
+            </Accordion>
+          );
+        })}
       </div>
       <div className="flex justify-end mt-6">
         <Button
