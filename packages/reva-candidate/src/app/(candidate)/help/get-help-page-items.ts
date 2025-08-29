@@ -38,15 +38,15 @@ const helpPageItemsQuery = graphql(`
       titre
       sous_titre
       lien_voir_plus
-      aide_candidat_section_ressources_utiles_cartes(
+      aide_article_d_aides(
         pagination: { page: 1, pageSize: 3 }
         sort: ["ordre:asc"]
       ) {
         description
         documentId
         titre
-        lien
         ordre
+        slug
       }
     }
   }

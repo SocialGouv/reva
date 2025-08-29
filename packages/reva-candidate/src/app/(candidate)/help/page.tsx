@@ -108,27 +108,22 @@ const RessourcesUtileSection = ({
       <h2>{ressourcesUtileSection.titre}</h2>
       <p>{ressourcesUtileSection.sous_titre}</p>
       <div className="flex gap-6 flex-wrap sm:flex-nowrap justify-center sm:justify-start">
-        {ressourcesUtileSection.aide_candidat_section_ressources_utiles_cartes.map(
-          (c) => {
-            if (!c) return null;
-            const cardDetail = c.description;
-            return (
-              <Card
-                key={c.documentId}
-                enlargeLink
-                linkProps={{
-                  href: c.lien,
-                  target: "_",
-                }}
-                desc={`${cardDetail.slice(0, 175).trim()}${
-                  cardDetail.length > 175 ? "..." : ""
-                }`}
-                title={c.titre}
-                className="max-w-[384px] max-h-[264px]"
-              />
-            );
-          },
-        )}
+        {ressourcesUtileSection.aide_article_d_aides.map((c) => {
+          if (!c) return null;
+          return (
+            <Card
+              key={c.documentId}
+              enlargeLink
+              linkProps={{
+                href: `/savoir-plus/articles/${c.slug}`,
+                target: "_",
+              }}
+              desc={c.description}
+              title={c.titre}
+              className="max-w-[384px] max-h-[264px]"
+            />
+          );
+        })}
       </div>
       <div className="flex justify-end mt-6">
         <Button
