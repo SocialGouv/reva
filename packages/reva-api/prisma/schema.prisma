@@ -341,7 +341,6 @@ model Candidate {
   department                           Department              @relation(fields: [departmentId], references: [id])
   birthDepartmentId                    String?                 @map("birth_department_id") @db.Uuid
   birthDepartment                      Department?             @relation("birthDepartmentCandidate", fields: [birthDepartmentId], references: [id])
-  birthdate                            DateTime?               @map("birthdate") @db.Timestamptz(6)
   birthCity                            String?                 @map("birth_city") @db.VarChar(255)
   countryId                            String?                 @map("country_id") @db.Uuid
   country                              Country?                @relation(fields: [countryId], references: [id])
@@ -359,7 +358,7 @@ model Candidate {
   passwordUpdatedAt                    DateTime?               @map("password_updated_at") @db.Timestamptz(6)
   lastLoginViaPasswordAt               DateTime?               @map("last_login_via_password_at") @db.Timestamptz(6)
   lastLoginViaMagicLinkAt              DateTime?               @map("last_login_via_magic_link_at") @db.Timestamptz(6)
-  birthdateV2                          DateTime?               @map("birthdate_v2") @db.Date
+  birthdate                            DateTime?               @map("birthdate") @db.Date
 
   @@map("candidate")
 }
