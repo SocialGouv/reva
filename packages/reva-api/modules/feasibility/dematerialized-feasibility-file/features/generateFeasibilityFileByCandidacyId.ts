@@ -22,6 +22,7 @@ import {
 import { format } from "date-fns";
 import PDFDocument from "pdfkit";
 
+import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { prismaClient } from "@/prisma/client";
 
 export const generateFeasibilityFileByCandidacyId = async (
@@ -422,9 +423,7 @@ const addCandidate = (
   }
 
   if (birthdate) {
-    const formattedBirthdate = birthdate.toLocaleDateString("fr-FR", {
-      timeZone: "Europe/Paris",
-    });
+    const formattedBirthdate = formatDateWithoutTimestamp(birthdate);
 
     birthLabel = `${birthLabel}le : ${formattedBirthdate} `;
   }
