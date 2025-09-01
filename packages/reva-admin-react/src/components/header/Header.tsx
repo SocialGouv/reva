@@ -44,6 +44,8 @@ const PATHS = {
   STATISTIQUES: "/dashboard",
   VAE_COLLECTIVES: "/vae-collectives",
   PORTEURS_DE_PROJET_VAE_COLLECTIVE: "/porteurs-de-projet-vae-collective",
+  CERTIFICATEUR_HELP: "/certification-authorities/help",
+  AAP_HELP: "/help",
 } as const;
 
 const LABELS = {
@@ -52,7 +54,10 @@ const LABELS = {
   VERIFICATIONS: "Vérifications",
   ANNUAIRES: "Annuaires",
   PARAMETRES: "Paramètres",
-  CERTIFICATEURS_CANDIDATURES: "Certificateurs/Candidatures",
+  HELP: "Aide",
+  ADMIN_CERTIFICATION_AUTHORITY_CANDIDACIES: "Certificateurs/Candidatures",
+  ADMIN_CERTIFICATION_AUTHORITY_HELP: "Certificateurs/Aide",
+  ADMIN_AAP_HELP: "AAP/Aide",
   GESTION_CERTIFICATIONS: "Gestion des certifications",
   STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
   STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
@@ -109,6 +114,8 @@ const getNavigationTabs = ({
   metabaseDashboardIframeUrl,
   showAAPVaeCollectivesTab,
   showPorteursDeProjetVaeCollectiveMenu,
+  showAAPAideTab,
+  showCertificateurAideTab,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -120,6 +127,8 @@ const getNavigationTabs = ({
   metabaseDashboardIframeUrl?: string | null;
   showAAPVaeCollectivesTab: boolean;
   showPorteursDeProjetVaeCollectiveMenu: boolean;
+  showAAPAideTab: boolean;
+  showCertificateurAideTab: boolean;
 }) => {
   const adminTabs = [
     createTab({
@@ -171,10 +180,28 @@ const getNavigationTabs = ({
       ],
     },
     createTab({
-      text: LABELS.CERTIFICATEURS_CANDIDATURES,
+      text: LABELS.ADMIN_CERTIFICATION_AUTHORITY_CANDIDACIES,
       href: PATHS.FEASIBILITIES,
       isActive: isCertificationAuthorityCandidaciesPath(currentPathname),
     }),
+    ...(showAAPAideTab
+      ? [
+          createTab({
+            text: LABELS.ADMIN_AAP_HELP,
+            href: PATHS.AAP_HELP,
+            isActive: currentPathname.startsWith(PATHS.AAP_HELP),
+          }),
+        ]
+      : []),
+    ...(showCertificateurAideTab
+      ? [
+          createTab({
+            text: LABELS.ADMIN_CERTIFICATION_AUTHORITY_HELP,
+            href: PATHS.CERTIFICATEUR_HELP,
+            isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+          }),
+        ]
+      : []),
   ];
 
   const aapTabs = [
@@ -197,6 +224,15 @@ const getNavigationTabs = ({
       href: PATHS.AGENCIES_SETTINGS,
       isActive: currentPathname.startsWith("/agencies-settings"),
     }),
+    ...(showAAPAideTab
+      ? [
+          createTab({
+            text: LABELS.HELP,
+            href: PATHS.AAP_HELP,
+            isActive: currentPathname.startsWith(PATHS.AAP_HELP),
+          }),
+        ]
+      : []),
   ];
 
   const registryManagerTabs = [
@@ -205,6 +241,15 @@ const getNavigationTabs = ({
       href: PATHS.RESPONSABLE_CERTIFICATIONS,
       isActive: currentPathname.startsWith(PATHS.RESPONSABLE_CERTIFICATIONS),
     }),
+    ...(showCertificateurAideTab
+      ? [
+          createTab({
+            text: LABELS.HELP,
+            href: PATHS.CERTIFICATEUR_HELP,
+            isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+          }),
+        ]
+      : []),
   ];
 
   const certificationAuthorityAdminTabs = [
@@ -220,17 +265,25 @@ const getNavigationTabs = ({
         PATHS.CERTIFICATION_AUTHORITIES_SETTINGS,
       ),
     }),
+    ...(showCertificateurAideTab
+      ? [
+          createTab({
+            text: LABELS.HELP,
+            href: PATHS.CERTIFICATEUR_HELP,
+            isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+          }),
+        ]
+      : []),
+    ...(metabaseDashboardIframeUrl
+      ? [
+          createTab({
+            text: LABELS.STATISTIQUES,
+            href: PATHS.STATISTIQUES,
+            isActive: currentPathname.startsWith(PATHS.STATISTIQUES),
+          }),
+        ]
+      : []),
   ];
-
-  if (metabaseDashboardIframeUrl) {
-    certificationAuthorityAdminTabs.push(
-      createTab({
-        text: LABELS.STATISTIQUES,
-        href: PATHS.STATISTIQUES,
-        isActive: currentPathname.startsWith(PATHS.STATISTIQUES),
-      }),
-    );
-  }
 
   const certificationAuthorityLocalAccountTabs = [
     createTab({
@@ -245,6 +298,15 @@ const getNavigationTabs = ({
         PATHS.CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL,
       ),
     }),
+    ...(showCertificateurAideTab
+      ? [
+          createTab({
+            text: LABELS.HELP,
+            href: PATHS.CERTIFICATEUR_HELP,
+            isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+          }),
+        ]
+      : []),
   ];
 
   switch (true) {
@@ -291,6 +353,9 @@ export const Header = () => {
       ?.certificationAuthority?.metabaseDashboardIframeUrl;
 
   const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
+  const isAAPAideFeatureActive = isFeatureActive("AAP_HELP");
+  const isCertificateurAideFeatureActive =
+    isFeatureActive("CERTIFICATEUR_HELP");
 
   const { data: getCohortesVaeCollectivesForConnectedAap } = useQuery({
     queryKey: ["aap", "getCohortesVaeCollectivesForConnectedAap"],
@@ -308,6 +373,9 @@ export const Header = () => {
 
   const showPorteursDeProjetVaeCollectiveMenu = isVaeCollectiveFeatureActive;
 
+  const showAAPAideTab = isAAPAideFeatureActive;
+  const showCertificateurAideTab = isCertificateurAideFeatureActive;
+
   const navigation = getNavigationTabs({
     currentPathname,
     isAdmin,
@@ -319,6 +387,8 @@ export const Header = () => {
     metabaseDashboardIframeUrl,
     showAAPVaeCollectivesTab,
     showPorteursDeProjetVaeCollectiveMenu,
+    showAAPAideTab,
+    showCertificateurAideTab,
   });
 
   return (
