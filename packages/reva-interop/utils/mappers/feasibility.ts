@@ -73,6 +73,13 @@ const expDurationMapFromGqlToInterop: Record<
   moreThanTenYears: "PLUS_DE_DIX_ANS",
 };
 
+const buildPreviewUrl = (path: string) => {
+  if (process.env.ENVIRONEMENT === "local") {
+    return "http://localhost:8080" + path;
+  }
+  return process.env.BASE_URL + path;
+};
+
 const mapFeasibility = (
   feasibility: GetGqlRowType<typeof getFeasibilities>,
 ): MappedFeasibility | undefined => {
@@ -102,7 +109,7 @@ const mapFeasibility = (
     if (dffFile && dffFile.previewUrl) {
       documents.push({
         nom: dffFile.name,
-        url: dffFile.previewUrl,
+        url: buildPreviewUrl(dffFile.previewUrl),
         typeMime: dffFile.mimeType,
       });
     }
@@ -114,7 +121,7 @@ const mapFeasibility = (
       if (file && file.previewUrl) {
         documents.push({
           nom: file.name,
-          url: file.previewUrl,
+          url: buildPreviewUrl(file.previewUrl),
           typeMime: file.mimeType,
         });
       }
@@ -130,7 +137,7 @@ const mapFeasibility = (
     if (feasibilityFile && feasibilityFile.previewUrl) {
       documents.push({
         nom: feasibilityFile.name,
-        url: feasibilityFile.previewUrl,
+        url: buildPreviewUrl(feasibilityFile.previewUrl),
         typeMime: feasibilityFile.mimeType,
       });
     }
@@ -138,7 +145,7 @@ const mapFeasibility = (
     if (IDFile && IDFile.previewUrl) {
       documents.push({
         nom: IDFile.name,
-        url: IDFile.previewUrl,
+        url: buildPreviewUrl(IDFile.previewUrl),
         typeMime: IDFile.mimeType,
       });
     }
@@ -146,7 +153,7 @@ const mapFeasibility = (
     if (documentaryProofFile && documentaryProofFile.previewUrl) {
       documents.push({
         nom: documentaryProofFile.name,
-        url: documentaryProofFile.previewUrl,
+        url: buildPreviewUrl(documentaryProofFile.previewUrl),
         typeMime: documentaryProofFile.mimeType,
       });
     }
@@ -154,7 +161,7 @@ const mapFeasibility = (
     if (certificateOfAttendanceFile && certificateOfAttendanceFile.previewUrl) {
       documents.push({
         nom: certificateOfAttendanceFile.name,
-        url: certificateOfAttendanceFile.previewUrl,
+        url: buildPreviewUrl(certificateOfAttendanceFile.previewUrl),
         typeMime: certificateOfAttendanceFile.mimeType,
       });
     }
