@@ -1,4 +1,4 @@
-import { addDays, subDays } from "date-fns";
+import { addDays, format, subDays } from "date-fns";
 
 import { stubQuery } from "../../utils/graphql";
 
@@ -6,7 +6,7 @@ interface CandidateFixture {
   data: {
     candidate_getCandidateWithCandidacy: {
       candidacy: {
-        firstAppointmentOccuredAt: number | null;
+        firstAppointmentOccuredAt: string | null;
         readyForJuryEstimatedAt: number | null;
         jury: {
           dateOfSession: number;
@@ -104,7 +104,10 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
           const candidate = resetAppointmentData(initialCandidate);
-          const futureAppointment = addDays(new Date(), 5).getTime();
+          const futureAppointment = format(
+            addDays(new Date(), 5),
+            "yyyy-MM-dd",
+          );
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
             futureAppointment;
 
@@ -122,7 +125,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
           const candidate = resetAppointmentData(initialCandidate);
-          const pastAppointment = subDays(new Date(), 5).getTime();
+          const pastAppointment = format(subDays(new Date(), 5), "yyyy-MM-dd");
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
             pastAppointment;
 
@@ -261,7 +264,10 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
           const candidate = resetAppointmentData(initialCandidate);
-          const futureAppointment = addDays(new Date(), 5).getTime();
+          const futureAppointment = format(
+            addDays(new Date(), 5),
+            "yyyy-MM-dd",
+          );
           const futureReadyDate = addDays(new Date(), 30).getTime();
           const futureJuryDate = addDays(new Date(), 60).getTime();
 

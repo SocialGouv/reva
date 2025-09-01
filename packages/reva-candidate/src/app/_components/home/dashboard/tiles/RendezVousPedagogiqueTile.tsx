@@ -1,11 +1,12 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
-import { format } from "date-fns";
+
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 export const RendezVousPedagogiqueTile = ({
   firstAppointmentOccuredAt,
 }: {
-  firstAppointmentOccuredAt: number;
+  firstAppointmentOccuredAt: string;
 }) => (
   <Tile
     data-test="rendez-vous-pedagogique-tile"
@@ -19,6 +20,6 @@ export const RendezVousPedagogiqueTile = ({
         Rendez-vous pédagogique
       </Badge>
     }
-    title={format(firstAppointmentOccuredAt, "dd/MM/yyyy")}
+    title={formatIso8601Date(firstAppointmentOccuredAt)}
   />
 );

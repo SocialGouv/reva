@@ -1,4 +1,4 @@
-import { addDays, subMonths } from "date-fns";
+import { addDays, subMonths, format } from "date-fns";
 
 import { stubQuery } from "../../utils/graphql";
 
@@ -608,7 +608,7 @@ context("Dashboard Banner", () => {
 
     it("should display first appointment scheduled banner", () => {
       cy.fixture("candidate1.json").then((candidate) => {
-        const futureAppointment = addDays(new Date(), 5).getTime();
+        const futureAppointment = format(addDays(new Date(), 5), "yyyy-MM-dd");
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
           "PARCOURS_CONFIRME";
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
@@ -646,7 +646,7 @@ context("Dashboard Banner", () => {
 
     it("should display creating feasibility banner", () => {
       cy.fixture("candidate1.json").then((candidate) => {
-        const pastAppointment = subMonths(new Date(), 1).getTime();
+        const pastAppointment = format(subMonths(new Date(), 1), "yyyy-MM-dd");
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
           "PARCOURS_CONFIRME";
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
@@ -685,7 +685,7 @@ context("Dashboard Banner", () => {
 
     it("should display waiting for training banner", () => {
       cy.fixture("candidate1.json").then((candidate) => {
-        const pastAppointment = subMonths(new Date(), 1).getTime();
+        const pastAppointment = format(subMonths(new Date(), 1), "yyyy-MM-dd");
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
           "ANOTHER_STATUS";
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =

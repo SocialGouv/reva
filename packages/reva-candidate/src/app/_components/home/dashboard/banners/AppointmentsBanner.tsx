@@ -1,4 +1,6 @@
-import { format, isAfter, isBefore } from "date-fns";
+import { isAfter, isBefore, parseISO } from "date-fns";
+
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { OrganismUseCandidateForDashboard } from "../dashboard.hooks";
 
@@ -6,7 +8,7 @@ import { BaseBanner } from "./BaseBanner";
 
 interface AppointmentsBannerProps {
   candidacyAlreadySubmitted: boolean;
-  firstAppointmentOccuredAt?: number | null;
+  firstAppointmentOccuredAt?: string | null;
   organism?: OrganismUseCandidateForDashboard;
   status: string;
 }
@@ -38,13 +40,13 @@ export const AppointmentsBanner = ({
   }
 
   // Future appointment
-  if (isAfter(firstAppointmentOccuredAt, new Date())) {
+  if (isAfter(parseISO(firstAppointmentOccuredAt), new Date())) {
     return (
       <BaseBanner
         content={
           <div data-test="first-appointment-scheduled-banner">
             <b>Information importante :</b> un rendez-vous est prévu le{" "}
-            {format(firstAppointmentOccuredAt, "dd/MM/yyyy")} avec{" "}
+            {formatIso8601Date(firstAppointmentOccuredAt)} avec{" "}
             <em>{organism?.nomPublic || organism?.label}</em>.
           </div>
         }
@@ -54,7 +56,7 @@ export const AppointmentsBanner = ({
 
   // Past appointment with training waiting for confirmation
   if (
-    isBefore(firstAppointmentOccuredAt, new Date()) &&
+    isBefore(parseISO(firstAppointmentOccuredAt), new Date()) &&
     status === "PARCOURS_ENVOYE"
   ) {
     return (
@@ -70,7 +72,7 @@ export const AppointmentsBanner = ({
   }
 
   // Past appointment, waiting for training plan
-  if (isBefore(firstAppointmentOccuredAt, new Date())) {
+  if (isBefore(parseISO(firstAppointmentOccuredAt), new Date())) {
     return (
       <BaseBanner
         content={

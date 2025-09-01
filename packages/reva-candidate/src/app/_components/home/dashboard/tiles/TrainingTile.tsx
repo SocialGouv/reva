@@ -1,6 +1,6 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
-import { isAfter, isBefore } from "date-fns";
+import { isAfter, isBefore, parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
 
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
@@ -10,12 +10,12 @@ const TrainingStatusBadge = ({
   firstAppointmentOccuredAt,
 }: {
   candidacyStatus: CandidacyStatusStep;
-  firstAppointmentOccuredAt?: number | null;
+  firstAppointmentOccuredAt?: string | null;
 }) => {
   if (
     (candidacyStatus == "VALIDATION" || candidacyStatus == "PRISE_EN_CHARGE") &&
     firstAppointmentOccuredAt &&
-    isBefore(firstAppointmentOccuredAt, new Date())
+    isBefore(parseISO(firstAppointmentOccuredAt), new Date())
   ) {
     return (
       <Badge severity="info" data-test="training-status-badge-in-progress">
@@ -47,7 +47,7 @@ export const TrainingTile = ({
   firstAppointmentOccuredAt,
 }: {
   candidacyStatus: CandidacyStatusStep;
-  firstAppointmentOccuredAt?: number | null;
+  firstAppointmentOccuredAt?: string | null;
 }) => {
   const router = useRouter();
 
@@ -59,7 +59,7 @@ export const TrainingTile = ({
         candidacyStatus == "VALIDATION" ||
         (candidacyStatus == "PRISE_EN_CHARGE" &&
           !!firstAppointmentOccuredAt &&
-          isAfter(firstAppointmentOccuredAt, new Date()))
+          isAfter(parseISO(firstAppointmentOccuredAt), new Date()))
       }
       title="Parcours et financement"
       start={
@@ -74,7 +74,7 @@ export const TrainingTile = ({
           router.push(
             candidacyStatus == "PRISE_EN_CHARGE" &&
               !!firstAppointmentOccuredAt &&
-              isBefore(firstAppointmentOccuredAt, new Date())
+              isBefore(parseISO(firstAppointmentOccuredAt), new Date())
               ? "/waiting-for-training"
               : "/validate-training",
           );

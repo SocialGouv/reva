@@ -1,4 +1,4 @@
-import { addDays, subDays } from "date-fns";
+import { addDays, format, subDays } from "date-fns";
 
 import { stubQuery } from "../../utils/graphql";
 
@@ -785,7 +785,7 @@ context("Dashboard Tiles", () => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
           "PRISE_EN_CHARGE";
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          addDays(new Date(), 5).getTime();
+          format(addDays(new Date(), 5), "yyyy-MM-dd");
 
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
@@ -814,7 +814,7 @@ context("Dashboard Tiles", () => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
           "PRISE_EN_CHARGE";
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          subDays(new Date(), 5).getTime();
+          format(subDays(new Date(), 5), "yyyy-MM-dd");
 
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
@@ -835,7 +835,7 @@ context("Dashboard Tiles", () => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
           "VALIDATION";
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          subDays(new Date(), 5).getTime();
+          format(subDays(new Date(), 5), "yyyy-MM-dd");
 
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
@@ -866,7 +866,7 @@ context("Dashboard Tiles", () => {
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
           "PARCOURS_ENVOYE";
         candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          subDays(new Date(), 5).getTime();
+          format(subDays(new Date(), 5), "yyyy-MM-dd");
 
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
