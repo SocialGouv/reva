@@ -63,7 +63,7 @@ type Candidacy {
   typologyAdditional: String
   ccnId: String
   conventionCollective: CandidacyConventionCollective
-  firstAppointmentOccuredAt: Timestamp
+  firstAppointmentOccuredAt: Date
   readyForJuryEstimatedAt: Timestamp
   appointmentCount: Int
   candidacyStatuses: [CandidacyStatus!]!
@@ -293,7 +293,7 @@ input UpdateCandidateInput {
 }
 
 input AppointmentInformationsInput {
-  firstAppointmentOccuredAt: Timestamp
+  firstAppointmentOccuredAt: Date
 }
 
 input DropOutInput {
