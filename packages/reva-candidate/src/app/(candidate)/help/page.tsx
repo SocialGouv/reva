@@ -4,62 +4,51 @@ import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tile from "@codegouvfr/react-dsfr/Tile";
-import { format } from "date-fns";
 
 import { PageLayout } from "@/layouts/page.layout";
-import { getStrapiImageUrl } from "@/utils/getStrapiImageUrl.util";
 
 import {
   getHelpPageItems,
   HelpPageItemsQuestionsFrequentesSection,
   HelpPageItemsRessourcesUtileSection,
-  HelpPageItemsTutorielSection,
 } from "./get-help-page-items";
 
 export const revalidate = 600;
 
-const TutorielSection = ({
-  tutorielSection,
-}: {
-  tutorielSection: HelpPageItemsTutorielSection;
-}) => {
-  if (!tutorielSection) return null;
-
-  return (
-    <div className="mb-8">
-      <h2>{tutorielSection.titre}</h2>
-      <p>{tutorielSection.sous_titre}</p>
-      <div className="flex gap-6 flex-wrap justify-center sm:justify-start">
-        {tutorielSection.aide_candidat_section_tutoriel_cartes.map((c) => {
-          if (!c) return null;
-          const cardDetail = `Mise à jour : ${format(
-            new Date(c?.updatedAt ?? ""),
-            "dd/MM/yyyy",
-          )}`;
-          const imageUrl = getStrapiImageUrl(
-            c.icone_svg?.formats?.small?.url ?? c.icone_svg?.url,
-          );
-          return (
-            <Tile
-              key={c.documentId}
-              small
-              orientation="horizontal"
-              enlargeLinkOrButton
-              linkProps={{
-                href: c.lien,
-                target: "_",
-              }}
-              detail={cardDetail}
-              imageAlt={c.icone_svg?.alternativeText ?? ""}
-              imageUrl={imageUrl}
-              title={c.titre}
-            />
-          );
-        })}
-      </div>
+const TutorielSection = () => (
+  <div className="mb-8">
+    <h2>Tutoriel et dernières modifications</h2>
+    <p>Retrouvez le tutoriel complet de votre espace.</p>
+    <div className="flex gap-6 flex-wrap justify-center sm:justify-start">
+      <Tile
+        small
+        orientation="horizontal"
+        enlargeLinkOrButton
+        linkProps={{
+          href: "https://scribehow.com/shared/Parcours_candidat__vp9k4YzATvmheao9kAoKjw",
+          target: "_",
+        }}
+        detail="Mise à jour : 01/09/2025"
+        imageAlt="Tutoriel France VAE"
+        imageUrl="/candidat/images/pictograms/self-training.svg"
+        title="Tutoriel France VAE"
+      />
+      <Tile
+        small
+        orientation="horizontal"
+        enlargeLinkOrButton
+        linkProps={{
+          href: "https://www.notion.so/fabnummas/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
+          target: "_",
+        }}
+        detail="Mise à jour : 01/09/2025"
+        imageAlt="Nouveautés France VAE"
+        imageUrl="/candidat/images/pictograms/innovation.svg"
+        title="Nouveautés France VAE"
+      />
     </div>
-  );
-};
+  </div>
+);
 
 const QuestionsFrequentesSection = ({
   questionsFrequentesSection,
@@ -70,8 +59,11 @@ const QuestionsFrequentesSection = ({
 
   return (
     <div className="mb-8">
-      <h2>{questionsFrequentesSection.titre}</h2>
-      <p>{questionsFrequentesSection.sous_titre}</p>
+      <h2>Questions fréquentes</h2>
+      <p>
+        Avant de contacter le support, vérifiez que vous n’avez pas la réponse
+        ici.
+      </p>
 
       <div className={fr.cx("fr-accordions-group")}>
         {questionsFrequentesSection.faq_article_faqs?.map((q) => {
@@ -110,8 +102,11 @@ const RessourcesUtileSection = ({
 
   return (
     <div className="mb-8">
-      <h2>{ressourcesUtileSection.titre}</h2>
-      <p>{ressourcesUtileSection.sous_titre}</p>
+      <h2>Ressources utiles</h2>
+      <p>
+        À la recherche de plus d’informations ? Découvrez nos articles de blog
+        pour mieux comprendre, préparer et réussir sa VAE.
+      </p>
       <div className="flex gap-6 flex-wrap sm:flex-nowrap justify-center sm:justify-start">
         {ressourcesUtileSection.aide_article_d_aides.map((c) => {
           if (!c) return null;
@@ -144,11 +139,8 @@ const RessourcesUtileSection = ({
 };
 
 export default async function HelpPage() {
-  const {
-    tutorielSection,
-    ressourcesUtileSection,
-    questionsFrequentesSection,
-  } = await getHelpPageItems();
+  const { ressourcesUtileSection, questionsFrequentesSection } =
+    await getHelpPageItems();
   return (
     <PageLayout title="Aide">
       <Breadcrumb
@@ -168,7 +160,7 @@ export default async function HelpPage() {
         Retrouvez toute la documentation nécessaire à l'autonomie sur mon
         espace.
       </p>
-      <TutorielSection tutorielSection={tutorielSection} />
+      <TutorielSection />
       <QuestionsFrequentesSection
         questionsFrequentesSection={questionsFrequentesSection}
       />
