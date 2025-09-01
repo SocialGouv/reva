@@ -108,7 +108,7 @@ export default function DossierDeValidationPag() {
                   ),
                 },
                 {
-                  label: "Dêpot du dossier",
+                  label: "Dépôt du dossier",
                   isDefault: true,
                   content: (
                     <ReadOnlyDossierDeValidationTab
@@ -148,7 +148,7 @@ export default function DossierDeValidationPag() {
                   ),
                 },
                 {
-                  label: "Dêpot du dossier",
+                  label: "Dépôt du dossier",
                   isDefault: !!readyForJuryEstimatedAt,
                   content: (
                     <DossierDeValidationTab
