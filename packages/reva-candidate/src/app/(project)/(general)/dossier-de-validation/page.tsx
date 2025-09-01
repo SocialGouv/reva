@@ -125,6 +125,7 @@ export default function DossierDeValidationPag() {
                       dossierDeValidationOtherFiles={
                         dossierDeValidation.dossierDeValidationOtherFiles
                       }
+                      certification={certification}
                     />
                   ),
                 },
