@@ -167,7 +167,7 @@ export default function DossierDeValidationPag() {
           )}
         </>
       )}
-      <Button priority="tertiary" linkProps={{ href: "/" }} className="mt-12">
+      <Button priority="secondary" linkProps={{ href: "/" }} className="mt-12">
         Retour
       </Button>
     </div>

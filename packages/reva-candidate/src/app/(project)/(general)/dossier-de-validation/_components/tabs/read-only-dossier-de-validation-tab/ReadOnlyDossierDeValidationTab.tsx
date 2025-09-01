@@ -39,11 +39,21 @@ export const ReadOnlyDossierDeValidationTab = ({
           data-test="dossier-de-validation-sent-alert"
           title={`Dossier de validation envoyé au certificateur le ${dossierDeValidationSentAt ? format(dossierDeValidationSentAt, "dd/MM/yyyy") : ""}`}
           severity="success"
-          className="mt-8"
-          description="Le contenu reste consultable. Si vous souhaitez le modifier, contactez votre certificateur : lui seul peut rouvrir l'envoi du dossier de validation avant le passage en jury"
+          description={
+            <>
+              <p>Le contenu reste consultable.</p>
+              <p>
+                Si vous souhaitez le modifier, contacter votre certificateur :
+                lui seul peut rouvrir l’envoi du dossier de validation avant le
+                passage en jury.
+              </p>
+            </>
+          }
         />
 
-        <h2>Contenu du dossier</h2>
+        <p className="font-normal py-2 px-4 border-b mt-6 mb-0">
+          Contenu du dossier :
+        </p>
         {dossierDeValidationFile && (
           <FancyPreview
             defaultDisplay={false}
