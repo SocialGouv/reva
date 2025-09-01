@@ -443,72 +443,6 @@ export interface ApiAideCandidatRessourcesUtileAideCandidatRessourcesUtile
   };
 }
 
-export interface ApiAideCandidatSectionTutorielCarteAideCandidatSectionTutorielCarte
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'aide_candidat_section_tutoriel_cartes';
-  info: {
-    displayName: '[AIDE-CANDIDAT] - Section tutoriel carte';
-    pluralName: 'aide-candidat-section-tutoriel-cartes';
-    singularName: 'aide-candidat-section-tutoriel-carte';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    icone_svg: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
-    lien: Schema.Attribute.String & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte'
-    > &
-      Schema.Attribute.Private;
-    ordre: Schema.Attribute.Integer & Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    titre: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiAideCandidatTutorielAideCandidatTutoriel
-  extends Struct.SingleTypeSchema {
-  collectionName: 'aide_candidat_tutoriels';
-  info: {
-    displayName: '[AIDE-CANDIDAT] - Tutoriel';
-    pluralName: 'aide-candidat-tutoriels';
-    singularName: 'aide-candidat-tutoriel';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    aide_candidat_section_tutoriel_cartes: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte'
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::aide-candidat-tutoriel.aide-candidat-tutoriel'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    sous_titre: Schema.Attribute.String & Schema.Attribute.Required;
-    titre: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiArticleActualiteArticleActualite
   extends Struct.CollectionTypeSchema {
   collectionName: 'article_actualites';
@@ -1544,8 +1478,6 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::aide-candidat-questions-frequente.aide-candidat-questions-frequente': ApiAideCandidatQuestionsFrequenteAideCandidatQuestionsFrequente;
       'api::aide-candidat-ressources-utile.aide-candidat-ressources-utile': ApiAideCandidatRessourcesUtileAideCandidatRessourcesUtile;
-      'api::aide-candidat-section-tutoriel-carte.aide-candidat-section-tutoriel-carte': ApiAideCandidatSectionTutorielCarteAideCandidatSectionTutorielCarte;
-      'api::aide-candidat-tutoriel.aide-candidat-tutoriel': ApiAideCandidatTutorielAideCandidatTutoriel;
       'api::article-actualite.article-actualite': ApiArticleActualiteArticleActualite;
       'api::article-d-aide.article-d-aide': ApiArticleDAideArticleDAide;
       'api::article-faq.article-faq': ApiArticleFaqArticleFaq;
