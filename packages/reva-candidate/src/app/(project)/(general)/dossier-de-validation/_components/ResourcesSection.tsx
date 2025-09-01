@@ -23,7 +23,7 @@ export const ResourcesSection = ({ certification }: ResourcesSectionProps) => {
   const infoLink = additionalInfo?.dossierDeValidationLink;
 
   return (
-    <aside className="w-[352px] bg-dsfrBlue-200 pl-4 pt-4 pb-8 pr-2 self-start">
+    <aside className="hidden lg:block w-[352px] bg-dsfrBlue-200 pl-4 pt-4 pb-8 pr-2 self-start">
       <div className="fr-text--lead font-bold">Ressources :</div>
 
       <p>
