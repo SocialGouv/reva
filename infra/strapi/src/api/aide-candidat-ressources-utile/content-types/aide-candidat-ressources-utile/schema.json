@@ -11,13 +11,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "titre": {
-      "type": "string",
-      "required": true
-    },
-    "sous_titre": {
-      "type": "string"
-    },
     "lien_voir_plus": {
       "type": "string",
       "required": true
