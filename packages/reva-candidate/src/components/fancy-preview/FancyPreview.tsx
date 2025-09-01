@@ -44,7 +44,7 @@ export const FancyPreview = (props: Props) => {
               : "Voir la piece jointe"}
         </label>
         <span
-          className={`text-blue-800 ${display ? "fr-icon-eye-off-fill" : "fr-icon-eye-fill"}`}
+          className={`text-blue-800 fr-icon--sm ${display ? "fr-icon-eye-off-fill" : "fr-icon-eye-fill"}`}
           aria-hidden="true"
         />
       </div>
