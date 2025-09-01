@@ -120,14 +120,14 @@ const MeetingsPage = () => {
       firstAppointmentOccuredAt,
     }: {
       candidacyId: string;
-      firstAppointmentOccuredAt: Date;
+      firstAppointmentOccuredAt: string;
     }) =>
       graphqlClient.request(
         updateCandidacyFirstAppointmentInformationsMutation,
         {
           candidacyId,
           appointmentInformations: {
-            firstAppointmentOccuredAt: firstAppointmentOccuredAt.getTime(),
+            firstAppointmentOccuredAt,
           },
         },
       ),
@@ -142,7 +142,7 @@ const MeetingsPage = () => {
     try {
       await updateCandidacyFirstAppointmentInformations.mutateAsync({
         candidacyId,
-        firstAppointmentOccuredAt: parseISO(data.firstAppointmentOccuredAt),
+        firstAppointmentOccuredAt: data.firstAppointmentOccuredAt,
       });
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
       successToast("Les modifications ont bien été enregistrées");
@@ -154,9 +154,7 @@ const MeetingsPage = () => {
 
   const resetForm = useCallback(() => {
     reset({
-      firstAppointmentOccuredAt: firstAppointmentOccuredAt
-        ? format(firstAppointmentOccuredAt, "yyyy-MM-dd")
-        : undefined,
+      firstAppointmentOccuredAt: firstAppointmentOccuredAt || undefined,
       candidacyCreatedAt: candidacyCreatedAt
         ? format(candidacyCreatedAt, "yyyy-MM-dd")
         : undefined,
