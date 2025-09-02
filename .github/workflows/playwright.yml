@@ -91,3 +91,47 @@ jobs:
           name: playwright-report-vae-collective
           path: playwright-report/
           retention-days: 30
+
+  playwright-reva-candidate:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-candidate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - name: Candidate node_modules cache
+        id: candidate-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-candidate/node_modules
+          key: candidate-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.candidate-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=`npm list | grep '@playwright/test'|sed 's/.*playwright\/test@//'`" >> $GITHUB_ENV
+      - name: Cache Playwright Binaries
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Build to retrieve graphql schema from API folder
+        run: npm run build
+      - name: Run Playwright tests
+        run: npm run test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-candidate
+          path: playwright-report/
+          retention-days: 30
