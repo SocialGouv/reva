@@ -38,7 +38,7 @@ const TutorielSection = () => (
         orientation="horizontal"
         enlargeLinkOrButton
         linkProps={{
-          href: "https://www.notion.so/fabnummas/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
+          href: "https://fabnummas.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
           target: "_",
         }}
         detail="Mise à jour : 01/09/2025"
@@ -161,9 +161,11 @@ export default async function HelpPage() {
         espace.
       </p>
       <TutorielSection />
+      <hr className="pb-8" />
       <QuestionsFrequentesSection
         questionsFrequentesSection={questionsFrequentesSection}
       />
+      <hr className="pb-8" />
       <RessourcesUtileSection ressourcesUtileSection={ressourcesUtileSection} />
       <Button priority="secondary" linkProps={{ href: "/candidat" }}>
         Retour
