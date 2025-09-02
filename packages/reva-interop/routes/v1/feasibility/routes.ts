@@ -3,8 +3,10 @@ import {
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
 
-import { mapFeasibilities } from "../../../utils/mappers/feasibility.js";
 import { getFeasibilities } from "../features/feasibilities/getFeasibilities.js";
+import { mapGetFeasibilities } from "../features/feasibilities/getFeasibilities.mapper.js";
+import { getFeasibilityByCandidacyId } from "../features/feasibilities/getFeasibilityByCandidacyId.js";
+import { mapGetFeasibilityByCandidacyId } from "../features/feasibilities/getFeasibilityByCandidacyId.mapper.js";
 import {
   dossiersDeFaisabiliteResponseSchema,
   pageInfoSchema,
@@ -36,7 +38,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         summary:
           "Récupérer le dernier dossier de faisabilité d'une candidature",
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Dossier de faisabilité"],
+        tags: ["Implémenté", "Dossier de faisabilité"],
         params: {
           type: "object",
           properties: {
@@ -53,8 +55,17 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const dossiersDeFaisabilite = await getFeasibilityByCandidacyId(
+          request.graphqlClient,
+          candidatureId,
+        );
+        if (dossiersDeFaisabilite) {
+          reply.send(mapGetFeasibilityByCandidacyId(dossiersDeFaisabilite));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 
@@ -223,7 +234,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           recherche,
         );
         if (dossiersDeFaisabilite) {
-          reply.send(mapFeasibilities(dossiersDeFaisabilite));
+          reply.send(mapGetFeasibilities(dossiersDeFaisabilite));
         } else {
           reply.status(204).send();
         }

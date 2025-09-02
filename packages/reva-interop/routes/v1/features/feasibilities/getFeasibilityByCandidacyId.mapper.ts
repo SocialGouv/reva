@@ -1,11 +1,8 @@
 import { FromSchema } from "json-schema-to-ts";
 
-import { Duration } from "../../graphql/generated/graphql.js";
-import { getFeasibilities } from "../../routes/v1/features/feasibilities/getFeasibilities.js";
-import {
-  dossiersDeFaisabiliteResponseSchema,
-  pageInfoSchema,
-} from "../../routes/v1/responseSchemas.js";
+import { Duration } from "../../../../graphql/generated/graphql.js";
+import { GetGqlResponseType } from "../../../../utils/types.js";
+import { dossierDeFaisabiliteResponseSchema } from "../../responseSchemas.js";
 import {
   candidacyIdSchema,
   dossierDeFaisabiliteSchema,
@@ -13,16 +10,14 @@ import {
   experienceSchema,
   fichierSchema,
   statutDossierDeFaisabiliteSchema,
-} from "../../routes/v1/schemas.js";
-import { GetGqlResponseType, GetGqlRowType } from "../types.js";
+} from "../../schemas.js";
 
-import { mapPageInfo } from "./pageInfo.js";
+import { getFeasibilityByCandidacyId } from "./getFeasibilityByCandidacyId.js";
 
-type MappedFeasibilitiesResponse = FromSchema<
-  typeof dossiersDeFaisabiliteResponseSchema,
+type MappedFeasibilitieResponse = FromSchema<
+  typeof dossierDeFaisabiliteResponseSchema,
   {
     references: [
-      typeof pageInfoSchema,
       typeof candidacyIdSchema,
       typeof fichierSchema,
       typeof dureeExperienceSchema,
@@ -37,7 +32,6 @@ type MappedFeasibility = FromSchema<
   typeof dossierDeFaisabiliteSchema,
   {
     references: [
-      typeof pageInfoSchema,
       typeof candidacyIdSchema,
       typeof fichierSchema,
       typeof dureeExperienceSchema,
@@ -81,13 +75,19 @@ const buildPreviewUrl = (path: string) => {
 };
 
 const mapFeasibility = (
-  feasibility: GetGqlRowType<typeof getFeasibilities>,
+  candidacy: GetGqlResponseType<typeof getFeasibilityByCandidacyId>,
 ): MappedFeasibility | undefined => {
+  const { feasibility } = candidacy;
+
+  if (!feasibility) {
+    return undefined;
+  }
+
   let status: (typeof statutDossierDeFaisabiliteSchema)["enum"][number];
 
-  if (feasibility.candidacy.status === "ARCHIVE") {
+  if (candidacy.status === "ARCHIVE") {
     status = "ARCHIVE";
-  } else if (feasibility.candidacy.candidacyDropOut) {
+  } else if (candidacy.candidacyDropOut) {
     status = "ABANDONNE";
   } else if (feasibility.decision in statusMapFromGqlToInterop) {
     status = statusMapFromGqlToInterop[feasibility.decision];
@@ -168,12 +168,12 @@ const mapFeasibility = (
   }
 
   return {
-    candidatureId: feasibility.candidacy.id,
+    candidatureId: candidacy.id,
     dateEnvoi: feasibility.feasibilityFileSentAt
       ? new Date(feasibility.feasibilityFileSentAt).toISOString()
       : null,
     statut: status,
-    experiences: feasibility.candidacy.experiences.map((experience) => ({
+    experiences: candidacy.experiences.map((experience) => ({
       titre: experience.title,
       duree: expDurationMapFromGqlToInterop[experience.duration],
       description: experience.description,
@@ -183,13 +183,8 @@ const mapFeasibility = (
   };
 };
 
-export const mapFeasibilities = (
-  feasibilitiesPage: GetGqlResponseType<typeof getFeasibilities>,
-): MappedFeasibilitiesResponse => {
-  return {
-    data: feasibilitiesPage.rows
-      .map(mapFeasibility)
-      .filter((f) => typeof f !== "undefined"),
-    info: mapPageInfo(feasibilitiesPage.info),
-  };
+export const mapGetFeasibilityByCandidacyId = (
+  candidacy: GetGqlResponseType<typeof getFeasibilityByCandidacyId>,
+): MappedFeasibilitieResponse => {
+  return { data: mapFeasibility(candidacy) };
 };
