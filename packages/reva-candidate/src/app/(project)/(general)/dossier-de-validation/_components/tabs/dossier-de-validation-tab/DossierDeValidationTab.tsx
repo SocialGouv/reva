@@ -1,3 +1,4 @@
+import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
@@ -100,9 +101,66 @@ export const DossierDeValidationTab = ({
 
   const handleFormSubmit = handleSubmit(onSubmit);
 
+  const [currentProblem, ...previousProblems] = dossierDeValidationProblems;
+
   return (
     <div className="flex gap-6">
       <main className="flex-1">
+        {dossierDeValidationIncomplete && currentProblem && (
+          <>
+            <Alert
+              data-test="dossier-de-validation-signale-alert"
+              className="mb-6"
+              severity="warning"
+              title={`Dossier de validation signalé par le certificateur le ${format(currentProblem.decisionSentAt, "dd/MM/yyyy")}`}
+              description={
+                <div className="flex flex-col gap-6">
+                  <p>
+                    Ce dossier de validation a été signalé comme comportant des
+                    erreurs par le certificateur.
+                  </p>
+                  <p>
+                    <span className="font-semibold">
+                      Motif du signalement :{" "}
+                    </span>
+                    {currentProblem.decisionComment}
+                  </p>
+                  <p className="font-semibold">
+                    Nous vous invitons à retourner dès que possible un dossier
+                    corrigé.
+                  </p>
+                </div>
+              }
+            />
+            {previousProblems.length > 0 && (
+              <div className="fr-accordions-group mb-8">
+                <Accordion label="Voir les anciens dossiers de validation">
+                  <ul className="flex flex-col gap-8 pl-0">
+                    {previousProblems.map((p, i) => (
+                      <GrayCard key={i}>
+                        <dl>
+                          <dt className="font-bold text-xl">
+                            Dossier signalé :
+                          </dt>
+                          <dd>
+                            Dossier signalé le{" "}
+                            {format(p.decisionSentAt, "dd/MM/yyyy")}
+                          </dd>
+                          <br />
+                          <dt className="font-bold text-xl">
+                            Motif du signalement :
+                          </dt>
+                          <dd>{p.decisionComment}</dd>
+                        </dl>
+                      </GrayCard>
+                    ))}
+                  </ul>
+                </Accordion>
+              </div>
+            )}
+          </>
+        )}
+
         <h2>Déposer votre dossier de validation complété</h2>
         <p className="text-lg">
           Une fois votre dossier complété, déposez-le ici. Si des pièces
@@ -110,46 +168,6 @@ export const DossierDeValidationTab = ({
           elles seront également à envoyer ici en pièces jointes
           supplémentaires.
         </p>
-
-        {dossierDeValidationIncomplete && (
-          <Alert
-            data-test="dossier-de-validation-signale-alert"
-            severity="warning"
-            title="Dossier de validation signalé par le certificateur"
-            description={
-              <p>
-                Ce dossier de validation a été signalé comme comportant des
-                erreurs par le certificateur. Les détails du signalement sont
-                disponibles ci-dessous.
-                <br />
-                Merci de retourner rapidement un dossier corrigé.
-              </p>
-            }
-          />
-        )}
-        {dossierDeValidationIncomplete && (
-          <>
-            <ul className="flex flex-col gap-8 pl-0">
-              {dossierDeValidationProblems.map((p, i) => (
-                <GrayCard key={i}>
-                  <dl>
-                    <dt className="font-bold text-xl">Dossier signalé :</dt>
-                    <dd>
-                      Dossier signalé le{" "}
-                      {format(p.decisionSentAt, "dd/MM/yyyy")}
-                    </dd>
-                    <br />
-                    <dt className="font-bold text-xl">
-                      Motif du signalement :
-                    </dt>
-                    <dd>{p.decisionComment}</dd>
-                  </dl>
-                </GrayCard>
-              ))}
-            </ul>
-            <hr className="mt-8 mb-5" />
-          </>
-        )}
         <form
           className="flex flex-col flex-1 mb-2 overflow-auto"
           onSubmit={handleFormSubmit}

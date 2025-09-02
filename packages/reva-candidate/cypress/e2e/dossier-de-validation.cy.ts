@@ -575,7 +575,10 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.get('[data-test="incomplete-dv-banner"]').should("exist");
       });
 
-      it("should show a 'dossier de validation signalé' alert if i open a signaled dossier de validation", function () {
+      it("should show a 'dossier de validation signalé' alert with date and reason if i open a signaled dossier de validation", function () {
+        const signalDate = new Date("2025-09-01");
+        const signalReason = "Le dossier de validation est illisible.";
+
         cy.fixture("candidate1-certification-titre-2-selected.json").then(
           (candidate) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
@@ -589,6 +592,8 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               {
                 dossierDeValidationOtherFiles: [],
                 decision: "INCOMPLETE",
+                decisionSentAt: signalDate.getTime(),
+                decisionComment: signalReason,
               };
 
             cy.intercept("POST", "/api/graphql", (req) => {
@@ -632,9 +637,120 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.get('[data-test="dossier-validation-tile"] button').click();
         cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
         cy.get(".fr-tabs__tab").contains("du dossier").click();
+
         cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
           "exist",
         );
+
+        cy.get(
+          '[data-test="dossier-de-validation-signale-alert"] .fr-alert__title',
+        ).should(
+          "contain",
+          "Dossier de validation signalé par le certificateur le 01/09/2025",
+        );
+
+        cy.get('[data-test="dossier-de-validation-signale-alert"]')
+          .should("contain", "Motif du signalement :")
+          .should("contain", signalReason);
+      });
+
+      it("should show accordion with previous dossiers when there are multiple signalements", function () {
+        const currentSignalDate = new Date("2024-03-20");
+        const currentSignalReason = "Dernier commentaire";
+
+        const previousSignalDate1 = new Date("2024-02-10");
+        const previousSignalReason1 = "Premier commentaire";
+
+        const previousSignalDate2 = new Date("2024-01-05");
+        const previousSignalReason2 = "Deuxième commentaire";
+
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              "DOSSIER_DE_VALIDATION_SIGNALE";
+
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility.decision =
+              "ADMISSIBLE";
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+              {
+                dossierDeValidationOtherFiles: [],
+                decision: "INCOMPLETE",
+                decisionSentAt: currentSignalDate.getTime(),
+                decisionComment: currentSignalReason,
+                history: [
+                  {
+                    id: "history-1",
+                    decisionSentAt: previousSignalDate1.getTime(),
+                    decisionComment: previousSignalReason1,
+                  },
+                  {
+                    id: "history-2",
+                    decisionSentAt: previousSignalDate2.getTime(),
+                    decisionComment: previousSignalReason2,
+                  },
+                ],
+              };
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
+            });
+          },
+        );
+
+        cy.login();
+
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
+
+        cy.get('[data-test="dossier-validation-tile"] button').click();
+        cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+        cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+        cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
+          "exist",
+        );
+
+        cy.get(".fr-accordion").should(
+          "contain",
+          "Voir les anciens dossiers de validation",
+        );
+
+        cy.get(".fr-accordion__btn").click();
+
+        cy.get(".fr-accordion .fr-collapse")
+          .should("contain", "Dossier signalé le 10/02/2024")
+          .should("contain", previousSignalReason1)
+          .should("contain", "Dossier signalé le 05/01/2024")
+          .should("contain", previousSignalReason2);
       });
     });
 
