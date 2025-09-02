@@ -1,3 +1,4 @@
+import { tz } from "@date-fns/tz";
 import { startOfYesterday } from "date-fns";
 
 import { graphql } from "@/modules/graphql/generated";
@@ -14,7 +15,7 @@ import { getGraphQLClient } from "@/test/test-graphql-client";
 import * as SendJuryResultAAPEmailModule from "../emails/sendJuryResultAAPEmail";
 import * as SendJuryResultCandidateEmailModule from "../emails/sendJuryResultCandidateEmail";
 
-const yesterday = startOfYesterday();
+const yesterday = startOfYesterday({ in: tz("UTC") });
 
 const readyForJuryEstimatedAt = yesterday;
 const adminAccount = { keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf" };
@@ -168,7 +169,7 @@ successfulJuryResults.forEach((successfulResult) => {
     });
 
     expect(juryUpdated?.result).toEqual(successfulResult);
-    expect(candidacyUpdated?.readyForJuryEstimatedAt).toStrictEqual(
+    expect(candidacyUpdated?.readyForJuryEstimatedAt).toEqual(
       readyForJuryEstimatedAt,
     );
   });
