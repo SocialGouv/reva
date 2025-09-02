@@ -15,16 +15,18 @@ import { ResourcesSection } from "../../ResourcesSection";
 const dossierDeValidationSchema = z.object({
   dossierDeValidationCheck1: z.literal(true, {
     errorMap: () => ({
-      message: "Veuillez cocher la case",
+      message: "Veuillez cocher toutes les cases.",
     }),
   }),
   dossierDeValidationCheck2: z.literal(true, {
     errorMap: () => ({
-      message: "Veuillez cocher la case",
+      message: "Veuillez cocher toutes les cases.",
     }),
   }),
   dossierDeValidationFile: z.object({
-    0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
+    0: z.instanceof(File, {
+      message: "Vous devez sélectionner un fichier à transmettre.",
+    }),
   }),
 
   dossierDeValidationOtherFiles: z
