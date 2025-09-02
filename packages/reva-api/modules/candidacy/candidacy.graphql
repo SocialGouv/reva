@@ -64,7 +64,7 @@ type Candidacy {
   ccnId: String
   conventionCollective: CandidacyConventionCollective
   firstAppointmentOccuredAt: Date
-  readyForJuryEstimatedAt: Timestamp
+  readyForJuryEstimatedAt: Date
   appointmentCount: Int
   candidacyStatuses: [CandidacyStatus!]!
   candidacyDropOut: CandidacyDropOut
@@ -344,7 +344,7 @@ type Mutation {
   candidacy_cancelDropOutById(candidacyId: UUID!): Candidacy!
   candidacy_setReadyForJuryEstimatedAt(
     candidacyId: UUID!
-    readyForJuryEstimatedAt: Timestamp!
+    readyForJuryEstimatedAt: Date!
   ): Candidacy!
   candidacy_updateTypeAccompagnement(
     candidacyId: UUID!
