@@ -1,0 +1,24 @@
+{
+  "kind": "singleType",
+  "collectionName": "aide_certificateur_questions_frequentes",
+  "info": {
+    "singularName": "aide-certificateur-questions-frequente",
+    "pluralName": "aide-certificateur-questions-frequentes",
+    "displayName": "[AIDE-CERTIFICATEUR] - Questions fréquentes"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "lien_voir_plus": {
+      "type": "string",
+      "required": true
+    },
+    "faq_article_faqs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::article-faq.article-faq"
+    }
+  }
+}
