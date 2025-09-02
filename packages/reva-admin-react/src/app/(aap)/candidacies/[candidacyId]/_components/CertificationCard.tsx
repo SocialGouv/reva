@@ -39,7 +39,7 @@ export const CertificationCard = ({
       detail={
         <div className="flex items-center gap-2 mb-3">
           <Image
-            src="/admin2/icons/verified-badge.svg"
+            src="/admin2/components/verified-badge.svg"
             alt="Verified badge icon"
             width={16}
             height={16}
