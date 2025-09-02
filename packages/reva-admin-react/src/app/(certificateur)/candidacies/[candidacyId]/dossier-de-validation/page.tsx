@@ -3,9 +3,9 @@
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { format } from "date-fns";
 
 import { BackButton } from "@/components/back-button/BackButton";
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { DossierDeValidationCard } from "./_components/DossierDeValidationCard";
 import { HistoryDossierDeValidationView } from "./_components/HistoryDossierDeValidationView";
@@ -57,7 +57,7 @@ const ReadyForJuryEstimatedDateTab = () => {
                 date prévisionnelle
               </span>
               <span className="text-base">
-                {format(readyForJuryEstimatedAt, "dd/MM/yyyy")}
+                {formatIso8601Date(readyForJuryEstimatedAt)}
               </span>
             </div>
           </>

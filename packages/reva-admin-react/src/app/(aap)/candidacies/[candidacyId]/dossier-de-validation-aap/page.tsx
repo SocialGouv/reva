@@ -1,7 +1,6 @@
 "use client";
 
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { parseISO } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 
 import { Skeleton } from "@/components/aap-candidacy-layout/Skeleton";
@@ -44,7 +43,7 @@ const AapDossierDeValidationPage = () => {
   }: ReadyForJuryEstimatedAtSchemaFormData) => {
     try {
       await setReadyForJuryEstimatedAt.mutateAsync({
-        readyForJuryEstimatedAt: parseISO(readyForJuryEstimatedAt).getTime(),
+        readyForJuryEstimatedAt,
       });
       successToast("modifications enregistrées");
     } catch (e) {

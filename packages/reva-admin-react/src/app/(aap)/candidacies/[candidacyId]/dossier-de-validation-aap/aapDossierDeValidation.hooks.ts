@@ -58,7 +58,7 @@ const getCandidacyQuery = graphql(`
 const setReadyForJuryEstimatedAtMutation = graphql(`
   mutation setReadyForJuryEstimatedAtForDossierDeValidationAapPage(
     $candidacyId: UUID!
-    $readyForJuryEstimatedAt: Timestamp!
+    $readyForJuryEstimatedAt: Date!
   ) {
     candidacy_setReadyForJuryEstimatedAt(
       candidacyId: $candidacyId
@@ -85,7 +85,7 @@ export const useAapDossierDeValidationPage = () => {
     mutationFn: ({
       readyForJuryEstimatedAt,
     }: {
-      readyForJuryEstimatedAt: number;
+      readyForJuryEstimatedAt: string;
     }) =>
       graphqlClient.request(setReadyForJuryEstimatedAtMutation, {
         candidacyId,
