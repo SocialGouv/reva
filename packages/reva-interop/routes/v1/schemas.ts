@@ -455,6 +455,7 @@ export const experienceSchema = {
 export const dossierDeFaisabiliteDecisionSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecision",
   type: "object",
+  required: ["decision"],
   properties: {
     decision: {
       $ref: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabilite",
@@ -463,15 +464,18 @@ export const dossierDeFaisabiliteDecisionSchema = {
       type: "string",
       description: "Motifs éventuels de la décision",
       example: "La pièce d'identité n'est pas lisible.",
+      nullable: true,
     },
     dateEnvoi: {
       type: "string",
       format: "date-time",
       description: "Date d'envoi de la décision",
       example: "2023-10-05T15:00:00Z",
+      nullable: true,
     },
     document: {
       $ref: "http://vae.gouv.fr/components/schemas/Fichier",
+      nullable: true,
     },
   },
 } as const;

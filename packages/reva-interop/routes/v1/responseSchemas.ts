@@ -60,23 +60,25 @@ export const dossierDeFaisabiliteResponseSchema = {
   },
 } as const;
 
+export const dossierDeFaisabiliteDecisionsResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionsResponse",
+  type: "object",
+  properties: {
+    data: {
+      type: "array",
+      items: {
+        $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecision",
+      },
+    },
+  },
+} as const;
+
 export const addResponseSchemas = (fastify: FastifyInstance) => {
   fastify.addSchema(dossiersDeFaisabiliteResponseSchema);
 
   fastify.addSchema(dossierDeFaisabiliteResponseSchema);
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionsResponse",
-    type: "object",
-    properties: {
-      data: {
-        type: "array",
-        items: {
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecision",
-        },
-      },
-    },
-  });
+  fastify.addSchema(dossierDeFaisabiliteDecisionsResponseSchema);
 
   fastify.addSchema({
     $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionResponse",

@@ -7,6 +7,8 @@ import { getFeasibilities } from "../features/feasibilities/getFeasibilities.js"
 import { mapGetFeasibilities } from "../features/feasibilities/getFeasibilities.mapper.js";
 import { getFeasibilityByCandidacyId } from "../features/feasibilities/getFeasibilityByCandidacyId.js";
 import { mapGetFeasibilityByCandidacyId } from "../features/feasibilities/getFeasibilityByCandidacyId.mapper.js";
+import { getFeasibilityHistoryByCandidacyId } from "../features/feasibilities/getFeasibilityHistoryByCandidacyId.js";
+import { mapGetFeasibilityHistoryByCandidacyId } from "../features/feasibilities/getFeasibilityHistoryByCandidacyId.mapper.js";
 import {
   dossiersDeFaisabiliteResponseSchema,
   pageInfoSchema,
@@ -57,12 +59,12 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       },
       handler: async (request, reply) => {
         const { candidatureId } = request.params;
-        const dossiersDeFaisabilite = await getFeasibilityByCandidacyId(
+        const dossierDeFaisabilite = await getFeasibilityByCandidacyId(
           request.graphqlClient,
           candidatureId,
         );
-        if (dossiersDeFaisabilite) {
-          reply.send(mapGetFeasibilityByCandidacyId(dossiersDeFaisabilite));
+        if (dossierDeFaisabilite) {
+          reply.send(mapGetFeasibilityByCandidacyId(dossierDeFaisabilite));
         } else {
           reply.status(204).send();
         }
@@ -81,7 +83,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Récupérer la liste des décisions du dossier de faisabilité",
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Dossier de faisabilité"],
+        tags: ["Implémenté", "Dossier de faisabilité"],
         params: {
           type: "object",
           properties: {
@@ -98,8 +100,19 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const dossierDeFaisabilite = await getFeasibilityHistoryByCandidacyId(
+          request.graphqlClient,
+          candidatureId,
+        );
+        if (dossierDeFaisabilite) {
+          reply.send(
+            mapGetFeasibilityHistoryByCandidacyId(dossierDeFaisabilite),
+          );
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 
