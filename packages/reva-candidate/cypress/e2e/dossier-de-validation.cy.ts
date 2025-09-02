@@ -357,7 +357,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
               "DOSSIER_VALIDATION_ENVOYE";
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
-              ESTIMATED_DATE.getTime();
+              ESTIMATED_DATE;
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
               { dossierDeValidationOtherFiles: [] };
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury =
@@ -416,7 +416,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
               "DOSSIER_VALIDATION_ENVOYE";
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
-              ESTIMATED_DATE.getTime();
+              ESTIMATED_DATE;
             candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
               {
                 dossierDeValidationOtherFiles: [],

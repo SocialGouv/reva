@@ -2,15 +2,14 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { isValid, toDate } from "date-fns";
 import { useState } from "react";
 
 export const ReadyForJuryEstimatedDateTab = ({
   defaultValues,
   onSubmit,
 }: {
-  defaultValues?: { readyForJuryEstimatedAt?: Date };
-  onSubmit?: (data: { readyForJuryEstimatedAt: Date }) => void;
+  defaultValues?: { readyForJuryEstimatedAt?: string };
+  onSubmit?: (data: { readyForJuryEstimatedAt: string }) => void;
 }) => {
   const [readyForJuryEstimatedAt, setReadyForJuryEstimatedAt] = useState(
     defaultValues?.readyForJuryEstimatedAt,
@@ -29,9 +28,11 @@ export const ReadyForJuryEstimatedDateTab = ({
         className="flex gap-6 items-end"
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit?.({
-            readyForJuryEstimatedAt: readyForJuryEstimatedAt as Date,
-          });
+          if (readyForJuryEstimatedAt) {
+            onSubmit?.({
+              readyForJuryEstimatedAt,
+            });
+          }
         }}
       >
         <Input
@@ -42,17 +43,15 @@ export const ReadyForJuryEstimatedDateTab = ({
             type: "date",
             min: new Date().toISOString().split("T")[0],
             max: "2100-01-01",
-            defaultValue: defaultValues?.readyForJuryEstimatedAt
-              ?.toISOString()
-              .split("T")[0],
+            defaultValue: defaultValues?.readyForJuryEstimatedAt,
             onChange: (e) => {
-              setReadyForJuryEstimatedAt(toDate(e.target.value));
+              setReadyForJuryEstimatedAt(e.target.value);
             },
           }}
         />
         <Button
           nativeButtonProps={{
-            disabled: !isValid(readyForJuryEstimatedAt),
+            disabled: !readyForJuryEstimatedAt?.match(/^\d{4}-\d{2}-\d{2}$/),
           }}
           data-test="submit-ready-for-jury-estimated-date-form-button"
         >

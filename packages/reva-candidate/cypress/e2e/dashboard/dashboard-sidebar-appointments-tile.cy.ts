@@ -7,7 +7,7 @@ interface CandidateFixture {
     candidate_getCandidateWithCandidacy: {
       candidacy: {
         firstAppointmentOccuredAt: string | null;
-        readyForJuryEstimatedAt: number | null;
+        readyForJuryEstimatedAt: string | null;
         jury: {
           dateOfSession: number;
           timeSpecified: boolean;
@@ -145,7 +145,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
           const candidate = resetAppointmentData(initialCandidate);
-          const futureReadyDate = addDays(new Date(), 30).getTime();
+          const futureReadyDate = format(addDays(new Date(), 30), "yyyy-MM-dd");
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
             futureReadyDate;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
@@ -165,7 +165,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
           const candidate = resetAppointmentData(initialCandidate);
-          const futureReadyDate = addDays(new Date(), 30).getTime();
+          const futureReadyDate = format(addDays(new Date(), 30), "yyyy-MM-dd");
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
             futureReadyDate;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
@@ -196,7 +196,10 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
           cy.fixture("candidate1.json").then(
             (initialCandidate: CandidateFixture) => {
               const candidate = resetAppointmentData(initialCandidate);
-              const futureReadyDate = addDays(new Date(), 30).getTime();
+              const futureReadyDate = format(
+                addDays(new Date(), 30),
+                "yyyy-MM-dd",
+              );
               candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
                 futureReadyDate;
               candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
@@ -268,7 +271,10 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
             addDays(new Date(), 5),
             "yyyy-MM-dd",
           );
-          const futureReadyDate = addDays(new Date(), 30).getTime();
+          const futureReadyDate = format(
+            addDays(new Date(), 30).getTime(),
+            "yyyy-MM-dd",
+          );
           const futureJuryDate = addDays(new Date(), 60).getTime();
 
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =

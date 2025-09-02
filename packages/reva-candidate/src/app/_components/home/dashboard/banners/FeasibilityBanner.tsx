@@ -5,7 +5,7 @@ import { BaseBanner } from "./BaseBanner";
 interface FeasibilityBannerProps {
   feasibility: NonNullable<FeasibilityUseCandidateForDashboard>;
   typeAccompagnement: string;
-  readyForJuryEstimatedAt?: number | null;
+  readyForJuryEstimatedAt?: string | null;
 }
 
 const WARNING_IMAGE = "/candidat/images/image-warning-hand.png";

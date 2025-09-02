@@ -56,7 +56,7 @@ const getCandidateQuery = graphql(`
 const updateReadyForJuryEstimatedAtMutation = graphql(`
   mutation updateReadyForJuryEstimatedAtForDossierDeValidationPage(
     $candidacyId: UUID!
-    $readyForJuryEstimatedAt: Timestamp!
+    $readyForJuryEstimatedAt: Date!
   ) {
     candidacy_setReadyForJuryEstimatedAt(
       candidacyId: $candidacyId
@@ -82,9 +82,9 @@ export const useDossierDeValidationPage = () => {
   });
 
   const updateReadyForJuryEstimatedAt = useMutation({
-    mutationFn: (data: { readyForJuryEstimatedAt: Date }) =>
+    mutationFn: (data: { readyForJuryEstimatedAt: string }) =>
       graphqlClient.request(updateReadyForJuryEstimatedAtMutation, {
-        readyForJuryEstimatedAt: data.readyForJuryEstimatedAt.getTime(),
+        readyForJuryEstimatedAt: data.readyForJuryEstimatedAt,
         candidacyId: candidacy?.id,
       }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["candidate"] }),

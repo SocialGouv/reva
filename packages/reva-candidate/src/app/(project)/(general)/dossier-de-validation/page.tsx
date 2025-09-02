@@ -44,7 +44,7 @@ export default function DossierDeValidationPag() {
   const handleReadyForJuryEstimatedDateFormSubmit = async ({
     readyForJuryEstimatedAt,
   }: {
-    readyForJuryEstimatedAt: Date;
+    readyForJuryEstimatedAt: string;
   }) => {
     try {
       await updateReadyForJuryEstimatedAt.mutateAsync({
@@ -140,9 +140,8 @@ export default function DossierDeValidationPag() {
                   content: (
                     <ReadyForJuryEstimatedDateTab
                       defaultValues={{
-                        readyForJuryEstimatedAt: readyForJuryEstimatedAt
-                          ? toDate(readyForJuryEstimatedAt)
-                          : undefined,
+                        readyForJuryEstimatedAt:
+                          readyForJuryEstimatedAt || undefined,
                       }}
                       onSubmit={handleReadyForJuryEstimatedDateFormSubmit}
                     />

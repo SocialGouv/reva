@@ -1,11 +1,12 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
-import { format } from "date-fns";
+
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 export const ReadyForJuryTile = ({
   readyForJuryEstimatedAt,
 }: {
-  readyForJuryEstimatedAt: number;
+  readyForJuryEstimatedAt: string;
 }) => (
   <Tile
     data-test="ready-for-jury-tile"
@@ -16,7 +17,7 @@ export const ReadyForJuryTile = ({
         Date prévisionnelle du dépot de dossier
       </Badge>
     }
-    title={format(readyForJuryEstimatedAt, "dd/MM/yyyy")}
+    title={formatIso8601Date(readyForJuryEstimatedAt)}
     detail="Cette date n’est pas engageante. Vous pouvez la modifier quand vous le souhaitez."
     linkProps={{
       href: "/dossier-de-validation",
