@@ -68,7 +68,7 @@ const getCandidacyWithFeasibilityQuery = graphql(`
   }
 `);
 
-export const getCandidacyDetails = async (
+export const getCandidacyById = async (
   graphqlClient: Client,
   candidacyId: string,
 ) => {

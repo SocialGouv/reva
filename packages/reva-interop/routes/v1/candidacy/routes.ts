@@ -3,8 +3,8 @@ import {
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
 
-import { mapCandidacyObject } from "../../../utils/mappers/candidacy.js";
-import { getCandidacyDetails } from "../features/candidacies/getCandidacyDetails.js";
+import { getCandidacyById } from "../features/candidacies/getCandidacyById.js";
+import { mapGetCandidacyById } from "../features/candidacies/getCandidacyById.mapper.js";
 import { candidacyIdSchema } from "../schemas.js";
 
 const candidacyRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
@@ -42,13 +42,13 @@ const candidacyRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         },
       },
       handler: async (request, reply) => {
-        const r = await getCandidacyDetails(
+        const r = await getCandidacyById(
           request.graphqlClient,
           request.params.candidatureId,
         );
         if (r) {
           reply.send({
-            data: mapCandidacyObject(r),
+            data: mapGetCandidacyById(r),
           });
         } else {
           reply.status(204).send();

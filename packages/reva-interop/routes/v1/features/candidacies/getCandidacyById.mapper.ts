@@ -1,7 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
-import { getCandidacyDetails } from "../../routes/v1/features/candidacies/getCandidacyDetails.js";
-import { candidatureResponseSchema } from "../../routes/v1/responseSchemas.js";
+import { candidatureResponseSchema } from "../../responseSchemas.js";
 import {
   adresseSchema,
   candidacyIdSchema,
@@ -15,7 +14,9 @@ import {
   organismeSchema,
   situationSchema,
   typologieCandidatSchema,
-} from "../../routes/v1/schemas.js";
+} from "../../schemas.js";
+
+import { getCandidacyById } from "./getCandidacyById.js";
 
 const mapCandidateGender = (
   gender?: string | null,
@@ -52,8 +53,8 @@ type MappedCandidacy = FromSchema<
   }
 >;
 
-export const mapCandidacyObject = (
-  candidacy: Awaited<ReturnType<typeof getCandidacyDetails>>,
+export const mapGetCandidacyById = (
+  candidacy: Awaited<ReturnType<typeof getCandidacyById>>,
 ): MappedCandidacy => {
   if (!candidacy) throw new Error("Candidature non trouvée");
   if (!candidacy.candidate)
