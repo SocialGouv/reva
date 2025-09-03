@@ -239,24 +239,11 @@ const unsafeResolvers = {
           input: UpdateCertificationAuthorityLocalAccountGeneralInformationInput;
         },
         context: GraphqlContext,
-      ) => {
-        const canManage = await canUserManageCertificationAuthorityLocalAccount(
-          {
-            certificationAuthorityLocalAccountId:
-              params.input.certificationAuthorityLocalAccountId,
-            userKeycloakId: context.auth.userInfo?.sub || "",
-            userRoles: context.auth.userInfo?.realm_access?.roles || [],
-          },
-        );
-        if (!canManage) {
-          throw new Error(
-            "L'utilisateur n'est pas autorisé à modifier ce compte local d'autorité de certification",
-          );
-        }
-        return updateCertificationAuthorityLocalAccountGeneralInformation(
-          params.input,
-        );
-      },
+      ) =>
+        updateCertificationAuthorityLocalAccountGeneralInformation({
+          input: params.input,
+          userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        }),
     certification_authority_updateCertificationAuthorityDepartmentsAndCertifications:
       async (
         _parent: unknown,

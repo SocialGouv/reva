@@ -5,14 +5,20 @@ import { UpdateCertificationAuthorityLocalAccountGeneralInformationInput } from 
 
 export const updateCertificationAuthorityLocalAccountGeneralInformation =
   async ({
-    certificationAuthorityLocalAccountId,
-    accountFirstname,
-    accountLastname,
-    accountEmail,
-    contactFullName,
-    contactEmail,
-    contactPhone,
-  }: UpdateCertificationAuthorityLocalAccountGeneralInformationInput) => {
+    input: {
+      certificationAuthorityLocalAccountId,
+      accountFirstname,
+      accountLastname,
+      accountEmail,
+      contactFullName,
+      contactEmail,
+      contactPhone,
+    },
+    userRoles,
+  }: {
+    input: UpdateCertificationAuthorityLocalAccountGeneralInformationInput;
+    userRoles: KeyCloakUserRole[];
+  }) => {
     const oldAccounts = await prismaClient.account.findMany({
       where: {
         certificationAuthorityLocalAccount: {
@@ -37,14 +43,21 @@ export const updateCertificationAuthorityLocalAccountGeneralInformation =
       );
     }
 
-    await updateAccountById({
-      accountId: oldAccount.id,
-      accountData: {
-        email: accountEmail,
-        firstname: accountFirstname || "",
-        lastname: accountLastname || "",
-      },
-    });
+    //only update the account info if the user is an admin or a certification authority local account manager
+    //certification authority local account owner can only update the contact info
+    if (
+      userRoles.includes("admin") ||
+      userRoles.includes("manage_certification_authority_local_account")
+    ) {
+      await updateAccountById({
+        accountId: oldAccount.id,
+        accountData: {
+          email: accountEmail,
+          firstname: accountFirstname || "",
+          lastname: accountLastname || "",
+        },
+      });
+    }
 
     return prismaClient.certificationAuthorityLocalAccount.update({
       where: {
