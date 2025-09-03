@@ -50,7 +50,6 @@ export default function LocalAccountSettingsPage() {
           titleIconClass="fr-icon-information-fill"
           isEditable
           buttonOnClickHref="/certification-authorities/settings/local-account/general-information"
-          customButtonTitle="Consulter"
         >
           <div className="pl-10">
             {certificationAuthorityLocalAccount?.contactFullName ? (
