@@ -47,6 +47,8 @@ const getCandidateQuery = graphql(`
         }
         jury {
           result
+          informationOfResult
+          dateOfResult
         }
       }
     }

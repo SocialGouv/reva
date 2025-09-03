@@ -3,13 +3,15 @@ import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, toDate } from "date-fns";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+
+import { JuryResult } from "@/graphql/generated/graphql";
 
 import { ResourcesSection } from "../../ResourcesSection";
 
@@ -45,6 +47,8 @@ export const DossierDeValidationTab = ({
   dossierDeValidationIncomplete,
   dossierDeValidationProblems,
   certification,
+  jury,
+  hasFailedJuryResult,
   onSubmit,
 }: {
   dossierDeValidationIncomplete?: boolean;
@@ -62,6 +66,12 @@ export const DossierDeValidationTab = ({
       dossierDeValidationLink?: string | null;
     } | null;
   } | null;
+  jury?: {
+    result?: JuryResult | null;
+    informationOfResult?: string | null;
+    dateOfResult?: string | number | null;
+  } | null;
+  hasFailedJuryResult?: boolean;
   onSubmit: (data: DossierDeValidationFormData) => Promise<void>;
 }) => {
   const {
@@ -105,6 +115,37 @@ export const DossierDeValidationTab = ({
 
   return (
     <div className="flex flex-col">
+      {hasFailedJuryResult && (
+        <Alert
+          severity="info"
+          className="mb-6"
+          title={`Vous n’avez pas validé la totalité de votre VAE à la suite de votre passage devant le jury${jury?.dateOfResult ? ` le ${format(toDate(jury.dateOfResult), "dd/MM/yyyy")}` : ""}`}
+          description={
+            <div className="flex flex-col gap-4">
+              {jury?.informationOfResult && (
+                <p>
+                  <strong>Motif énoncé par le certificateur :</strong>{" "}
+                  {jury.informationOfResult}
+                </p>
+              )}
+              <p>
+                Suite à ce résultat, vous pouvez repasser devant le jury. Vous
+                devrez, en amont, retravailler sur le dossier de validation et
+                le renvoyer afin de le faire parvenir au certificateur. Une fois
+                reçu, le certificateur pourra vous transmettre une nouvelle date
+                de passage devant le jury. Vous pouvez dès à présent fournir une
+                date prévisionnelle de dépot de dossier.
+              </p>
+              <p>
+                Ce passage n’est pas une obligation, si vous ne souhaitez pas
+                compléter les derniers blocs de votre diplôme vous pouvez
+                laisser votre candidature en suspend.
+              </p>
+            </div>
+          }
+        />
+      )}
+
       {dossierDeValidationIncomplete && currentProblem && (
         <>
           <Alert

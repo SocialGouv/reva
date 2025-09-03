@@ -157,6 +157,8 @@ export default function DossierDeValidationPag() {
                       }
                       dossierDeValidationProblems={dossierDeValidationProblems}
                       certification={certification}
+                      jury={jury}
+                      hasFailedJuryResult={!!hasFailedJuryResult}
                       onSubmit={handleDossierDeValidationFormSubmit}
                     />
                   ),

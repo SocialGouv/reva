@@ -764,6 +764,137 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         "CANDIDATE_ABSENT",
       ];
 
+      failedJuryResults.forEach((result) =>
+        it(`should display certificateur comment and date when jury has a ${result}`, function () {
+          const informationOfResult = "Lorem ipsum failorum";
+          const dateOfResult = addDays(DATE_NOW, -30);
+
+          cy.fixture("candidate1-certification-titre-2-selected.json").then(
+            (candidate) => {
+              candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+                typeAccompagnement;
+              candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+                "DOSSIER_VALIDATION_ENVOYE";
+              candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury =
+                {
+                  result,
+                  informationOfResult,
+                  dateOfResult: dateOfResult.getTime(),
+                };
+              candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+                {
+                  dossierDeValidationOtherFiles: [],
+                };
+
+              cy.intercept("POST", "/api/graphql", (req) => {
+                stubQuery(
+                  req,
+                  "candidate_getCandidateWithCandidacyForLayout",
+                  candidate,
+                );
+                stubQuery(
+                  req,
+                  "getCandidateWithCandidacyForDossierDeValidationPage",
+                  candidate,
+                );
+                stubQuery(
+                  req,
+                  "candidate_getCandidateWithCandidacyForHome",
+                  candidate,
+                );
+                stubQuery(
+                  req,
+                  "candidate_getCandidateWithCandidacyForDashboard",
+                  candidate,
+                );
+              });
+            },
+          );
+
+          cy.login();
+
+          cy.wait([
+            "@candidate_getCandidateWithCandidacyForLayout",
+            "@candidate_getCandidateWithCandidacyForHome",
+            "@candidate_getCandidateWithCandidacyForDashboard",
+          ]);
+
+          cy.visit("/dossier-de-validation/");
+          cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+
+          cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+          cy.get(".fr-alert--info .fr-alert__title").should(
+            "contain",
+            format(dateOfResult, "dd/MM/yyyy"),
+          );
+
+          cy.get(".fr-alert--info").should("contain", informationOfResult);
+        }),
+      );
+
+      it(`should not display certificateur info when jury is FULL_SUCCESS_OF_FULL_CERTIFICATION`, function () {
+        const informationOfResult = "Lorem ipsum";
+        const dateOfResult = addDays(DATE_NOW, -30);
+
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              "DOSSIER_VALIDATION_ENVOYE";
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury =
+              {
+                result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+                informationOfResult,
+                dateOfResult: dateOfResult.getTime(),
+              };
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
+              {
+                dossierDeValidationOtherFiles: [],
+              };
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
+            });
+          },
+        );
+
+        cy.login();
+
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
+
+        cy.visit("/dossier-de-validation/");
+        cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+
+        cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+        cy.get(".fr-alert--info").should("not.exist");
+      });
+
       failedJuryResults.forEach((juryResult) => {
         it(`should show active dossier de validation when jury result is ${juryResult}`, function () {
           cy.fixture("candidate1-certification-titre-2-selected.json").then(
