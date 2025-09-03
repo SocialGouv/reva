@@ -12,6 +12,13 @@ const getFeasibilityHistoryByCandidacyIdQuery = graphql(`
           decision
           decisionComment
           decisionSentAt
+          decisionFile {
+            createdAt
+            name
+            mimeType
+            url
+            previewUrl
+          }
         }
       }
     }

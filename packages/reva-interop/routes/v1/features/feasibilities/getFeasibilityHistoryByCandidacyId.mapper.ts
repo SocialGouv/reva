@@ -42,6 +42,13 @@ const statusMapFromGqlToInterop: Record<
   COMPLETE: "COMPLET",
 };
 
+const buildPreviewUrl = (path: string) => {
+  if (process.env.ENVIRONEMENT === "local") {
+    return "http://localhost:8080" + path;
+  }
+  return process.env.BASE_URL + path;
+};
+
 const mapFeasibilityDecision = (
   history: FeasibilityHistory,
 ): MappedFeasibilityDecision => {
@@ -51,7 +58,13 @@ const mapFeasibilityDecision = (
     dateEnvoi: history.decisionSentAt
       ? new Date(history.decisionSentAt).toISOString()
       : null,
-    document: undefined,
+    document: history.decisionFile?.previewUrl
+      ? {
+          nom: history.decisionFile.name,
+          url: buildPreviewUrl(history.decisionFile.previewUrl),
+          typeMime: history.decisionFile.mimeType,
+        }
+      : undefined,
   };
 };
 
