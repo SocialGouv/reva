@@ -1,6 +1,5 @@
 import { usePathname } from "next/navigation";
 
-import { LayoutNotice } from "./LayoutNotice";
 import { WhiteBoxContainer } from "./WhiteBoxContainer";
 
 const UNAUTHENTICATED_PATHS = [
@@ -28,7 +27,6 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
       className="flex flex-col flex-1 lg:bg-candidate"
     >
       <div className={className}>
-        <LayoutNotice />
         {isRootPath ? (
           <div className="fr-container flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12">
             {children}
