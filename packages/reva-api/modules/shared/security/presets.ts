@@ -5,12 +5,14 @@ import {
   hasRole,
   isCandidacyOwner,
   whenHasRole,
+  whenHasRoleButNotOthers,
 } from "./middlewares";
 import { getIsCertificationAuthorityAccountOrLocalAccountStructureMember } from "./middlewares/getIsCertificationAuthorityAccountOrLocalAccountStructureMember.security";
 import { getIsCertificationAuthorityStructureMember } from "./middlewares/getIsCertificationAuthorityStructureMember.security";
 import { getIsCertificationAuthorityStructureRegistryManagerMember } from "./middlewares/getIsCertificationAuthorityStructureRegistryManagerMember.security";
 import { isCandidateOwnerOfCandidacy } from "./middlewares/isCandidateOwnerOfCandidacy.security";
 import { isCertificationAuthorityLocalAccountManager } from "./middlewares/isCertificationAuthorityLocalAccountManager";
+import { isCertificationAuthorityLocalAccountOwner } from "./middlewares/isCertificationAuthorityLocalAccountOwner";
 import { isCertificationAuthorityOwner } from "./middlewares/isCertificationAuthorityOwner";
 import { isCertificationRegistryManagerOfCertification } from "./middlewares/isCertificationRegistryManagerOfCertification.security";
 import { isFeasibilityManager } from "./middlewares/isFeasibilityManager";
@@ -124,3 +126,21 @@ export const isAdminOrGestionnaireOfCommanditaireVaeCollective = [
     isGestionnaireOfCommanditaireVaeCollective,
   ),
 ];
+
+export const isAdminOrCertificationAuthorityLocalAccountManagerOrCertificationAuthorityLocalAccountOwner =
+  [
+    hasRole([
+      "admin",
+      "manage_certification_authority_local_account",
+      "manage_feasibility",
+    ]),
+    whenHasRole(
+      "manage_certification_authority_local_account",
+      isCertificationAuthorityLocalAccountManager,
+    ),
+    whenHasRoleButNotOthers(
+      "manage_feasibility",
+      ["manage_certification_authority_local_account"],
+      isCertificationAuthorityLocalAccountOwner,
+    ),
+  ];
