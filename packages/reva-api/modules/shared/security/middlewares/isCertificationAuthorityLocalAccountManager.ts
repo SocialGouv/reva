@@ -5,7 +5,7 @@ import { prismaClient } from "@/prisma/client";
 
 const log = debug("gql:security");
 
-export const isCertificationAuthorityLocalAccountOwner =
+export const isCertificationAuthorityLocalAccountManager =
   (next: IFieldResolver<unknown>) =>
   async (
     root: any,
@@ -13,7 +13,7 @@ export const isCertificationAuthorityLocalAccountOwner =
     context: MercuriusContext,
     info: any,
   ) => {
-    log("isCertificationAuthorityLocalAccountOwner");
+    log("isCertificationAuthorityLocalAccountManager");
 
     const localAccountId = args.id;
 

@@ -10,7 +10,7 @@ import { getIsCertificationAuthorityAccountOrLocalAccountStructureMember } from 
 import { getIsCertificationAuthorityStructureMember } from "./middlewares/getIsCertificationAuthorityStructureMember.security";
 import { getIsCertificationAuthorityStructureRegistryManagerMember } from "./middlewares/getIsCertificationAuthorityStructureRegistryManagerMember.security";
 import { isCandidateOwnerOfCandidacy } from "./middlewares/isCandidateOwnerOfCandidacy.security";
-import { isCertificationAuthorityLocalAccountOwner } from "./middlewares/isCertificationAuthorityLocalAccountOwner";
+import { isCertificationAuthorityLocalAccountManager } from "./middlewares/isCertificationAuthorityLocalAccountManager";
 import { isCertificationAuthorityOwner } from "./middlewares/isCertificationAuthorityOwner";
 import { isCertificationRegistryManagerOfCertification } from "./middlewares/isCertificationRegistryManagerOfCertification.security";
 import { isFeasibilityManager } from "./middlewares/isFeasibilityManager";
@@ -39,7 +39,7 @@ export const isAdminOrCertificationAuthorityLocalAccountOwner = [
   hasRole(["admin", "manage_certification_authority_local_account"]),
   whenHasRole(
     "manage_certification_authority_local_account",
-    isCertificationAuthorityLocalAccountOwner,
+    isCertificationAuthorityLocalAccountManager,
   ),
 ];
 
