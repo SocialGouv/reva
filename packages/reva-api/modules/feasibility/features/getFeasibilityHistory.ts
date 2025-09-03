@@ -1,5 +1,7 @@
 import { prismaClient } from "@/prisma/client";
 
+import { getFileNameAndUrl } from "../feasibility.features";
+
 export const getFeasibilityHistory = async ({
   feasibilityId,
   candidacyId,
@@ -33,10 +35,16 @@ export const getFeasibilityHistory = async ({
       decision: f.decision,
       decisionComment: f.decisionComment,
       decisionSentAt: f.decisionSentAt,
+      decisionFile: f.decisionFileId
+        ? getFileNameAndUrl({
+            candidacyId,
+            fileId: f.decisionFileId,
+          })
+        : null,
     }));
     return history;
   } else if (feasibilityFormat?.feasibilityFormat === "DEMATERIALIZED") {
-    return prismaClient.feasibilityDecision.findMany({
+    const history = await prismaClient.feasibilityDecision.findMany({
       where: {
         feasibilityId,
       },
@@ -44,5 +52,20 @@ export const getFeasibilityHistory = async ({
         decisionSentAt: "desc",
       },
     });
+
+    const historyWithDecisonFile = history.map((f) => ({
+      id: f.id,
+      decision: f.decision,
+      decisionComment: f.decisionComment,
+      decisionSentAt: f.decisionSentAt,
+      decisionFile: f.decisionFileId
+        ? getFileNameAndUrl({
+            candidacyId,
+            fileId: f.decisionFileId,
+          })
+        : null,
+    }));
+
+    return historyWithDecisonFile;
   }
 };

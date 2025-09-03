@@ -1219,6 +1219,8 @@ model FeasibilityDecision {
   decision        FeasibilityStatus
   decisionComment String?           @map("decision_comment")
   decisionSentAt  DateTime          @default(now()) @map("decision_sent_at") @db.Timestamptz(6)
+  decisionFileId  String?           @map("decision_file_id") @db.Uuid
+  decisionFile    File?             @relation("decision_file", fields: [decisionFileId], references: [id])
 
   @@map("feasibility_decision")
 }
@@ -1331,6 +1333,7 @@ model File {
   linkedAsCertificationAdditionalInfo                                         CertificationAdditionalInfo[]
   linkedAsCertificationAdditionalInfoAdditionalDocuments                      CertificationAdditionalInfoAdditionalDocument[]
   dematerializedFeasibilityFile                                               DematerializedFeasibilityFile[]                 @relation("dff_file")
+  linkedAsDecisionFile                                                        FeasibilityDecision[]                           @relation("decision_file")
 
   @@map("file")
 }

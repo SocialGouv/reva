@@ -32,6 +32,7 @@ type FeasibilityHistory {
   decision: FeasibilityDecision!
   decisionComment: String
   decisionSentAt: Timestamp
+  decisionFile: File
 }
 
 type File {

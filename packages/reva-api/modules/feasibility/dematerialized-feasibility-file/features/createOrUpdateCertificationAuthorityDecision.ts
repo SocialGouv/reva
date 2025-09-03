@@ -4,7 +4,6 @@ import { v4 as uuidV4 } from "uuid";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import {
-  deleteFile,
   emptyUploadedFileStream,
   getUploadedFile,
   UploadedFile,
@@ -152,20 +151,6 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
 
     const feasibility = dff.feasibility;
 
-    const existingDecisionFileId = feasibility.decisionFileId;
-    if (existingDecisionFileId) {
-      const existingDecisionFile = await prismaClient.file.findUnique({
-        where: { id: existingDecisionFileId },
-      });
-
-      if (existingDecisionFile) {
-        await deleteFile(existingDecisionFile.path);
-        await prismaClient.file.delete({
-          where: { id: existingDecisionFileId },
-        });
-      }
-    }
-
     let decisionFileForDb = null;
     let decisionUploadedFile;
     if (decisionFile) {
@@ -219,6 +204,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
           decision,
           decisionComment,
           feasibilityId: feasibility.id,
+          decisionFileId: decisionFileForDb?.create.id,
         },
       });
 

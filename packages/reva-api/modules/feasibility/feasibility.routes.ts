@@ -14,6 +14,7 @@ import {
   getActiveFeasibilityByCandidacyid,
   handleFeasibilityDecision,
 } from "./feasibility.features";
+import { getDecisionFileIdsFromFeasibiltyHistory } from "./features/getDecisionFileIdsFromFeasibiltyHistory";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: { value: string };
@@ -77,7 +78,12 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
         const feasibilityUploadedPdf = feasibility?.feasibilityUploadedPdf;
         const dematerializedFeasibilityFile =
-          feasibility?.dematerializedFeasibilityFile;
+          feasibility.dematerializedFeasibilityFile;
+
+        const decisionFileIdsFromFeasibiltyHistory =
+          (await getDecisionFileIdsFromFeasibiltyHistory({
+            feasibilityId: feasibility.id,
+          })) || [];
 
         if (
           ![
@@ -87,6 +93,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
             feasibilityUploadedPdf?.certificateOfAttendanceFileId,
             feasibility?.decisionFileId,
             dematerializedFeasibilityFile?.feasibilityFileId,
+            ...decisionFileIdsFromFeasibiltyHistory,
           ].includes(fileId)
         ) {
           return reply.status(403).send({
