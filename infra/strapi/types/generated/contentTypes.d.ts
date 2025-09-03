@@ -373,6 +373,39 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAideAapQuestionsFrequenteAideAapQuestionsFrequente
+  extends Struct.SingleTypeSchema {
+  collectionName: 'aide_aap_questions_frequentes';
+  info: {
+    displayName: '[AIDE-AAP] - Questions fr\u00E9quentes';
+    pluralName: 'aide-aap-questions-frequentes';
+    singularName: 'aide-aap-questions-frequente';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    faq_article_faqs: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::article-faq.article-faq'
+    >;
+    lien_voir_plus: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::aide-aap-questions-frequente.aide-aap-questions-frequente'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiAideCandidatQuestionsFrequenteAideCandidatQuestionsFrequente
   extends Struct.SingleTypeSchema {
   collectionName: 'aide_candidat_questions_frequentes';
@@ -1505,6 +1538,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::aide-aap-questions-frequente.aide-aap-questions-frequente': ApiAideAapQuestionsFrequenteAideAapQuestionsFrequente;
       'api::aide-candidat-questions-frequente.aide-candidat-questions-frequente': ApiAideCandidatQuestionsFrequenteAideCandidatQuestionsFrequente;
       'api::aide-candidat-ressources-utile.aide-candidat-ressources-utile': ApiAideCandidatRessourcesUtileAideCandidatRessourcesUtile;
       'api::aide-certificateur-questions-frequente.aide-certificateur-questions-frequente': ApiAideCertificateurQuestionsFrequenteAideCertificateurQuestionsFrequente;
