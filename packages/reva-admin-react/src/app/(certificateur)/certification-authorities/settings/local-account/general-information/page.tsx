@@ -22,7 +22,7 @@ export default function CertificationAuthorityLocalAccountGeneralInformationPage
 
   const handleFormSubmit = async (data: LocalAccountFormData) => {
     try {
-      updateCertificationAuthorityLocalAccount.mutateAsync({
+      await updateCertificationAuthorityLocalAccount.mutateAsync({
         ...data,
         certificationAuthorityLocalAccountId:
           certificationAuthorityLocalAccount?.id || "",
