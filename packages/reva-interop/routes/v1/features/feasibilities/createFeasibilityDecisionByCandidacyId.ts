@@ -63,6 +63,9 @@ export const createFeasibilityDecisionByCandidacyId = async (
     {
       candidacyId: candidacyId,
     },
+    {
+      requestPolicy: "network-only",
+    },
   );
   if (response.error) {
     throw response.error;
@@ -88,6 +91,9 @@ export const createFeasibilityDecisionByCandidacyId = async (
     getFeasibilityDecisionByCandidacyIdQuery,
     {
       candidacyId: candidacyId,
+    },
+    {
+      requestPolicy: "network-only",
     },
   );
   if (r.error) {
