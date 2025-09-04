@@ -26,10 +26,10 @@ export const updateCertificationWithRncpFields = async (params: {
   }
 
   const level = getLevelFromRNCPCertification(rncpCertification);
-  const rncpTypeDiplomeLabel = rncpCertification.ABREGE?.LIBELLE;
+  const rncpTypeDiplomeCode = rncpCertification.ABREGE?.CODE;
 
-  const label = rncpTypeDiplomeLabel
-    ? `${rncpTypeDiplomeLabel} - ${rncpCertification.INTITULE}`
+  const label = rncpTypeDiplomeCode
+    ? `${rncpTypeDiplomeCode} - ${rncpCertification.INTITULE}`
     : rncpCertification.INTITULE;
 
   const availableAt = new Date();
