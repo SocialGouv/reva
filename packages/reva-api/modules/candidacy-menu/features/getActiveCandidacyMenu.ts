@@ -110,7 +110,9 @@ export const getActiveCandidacyMenu = async ({
     if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
       if (isDfDematerialized) {
         url = isFeasibilityPending
-          ? buildUrl({ suffix: "feasibility-aap/send-file-certification-authority" })
+          ? buildUrl({
+              suffix: "feasibility-aap/send-file-certification-authority",
+            })
           : buildUrl({ suffix: "feasibility-aap" });
       } else {
         url = buildUrl({ suffix: "feasibility-aap/pdf" });
