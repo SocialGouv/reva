@@ -1,7 +1,6 @@
 "use client";
 
 import { toDate } from "date-fns";
-import { redirect, usePathname } from "next/navigation";
 
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
@@ -59,7 +58,6 @@ const AapFeasibilityPage = () => {
     isCertificationPartial,
     candidacy,
   } = useAapFeasibilityPageLogic();
-  const currentPath = usePathname();
 
   const feasibilityFileSentAt = feasibility?.feasibilityFileSentAt;
   const decision = feasibility?.decision;
@@ -78,15 +76,8 @@ const AapFeasibilityPage = () => {
     dematerializedFeasibilityFile?.eligibilityRequirement ===
     "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
-  const aapIsWaitingForDecision =
-    decision === "PENDING" || decision === "COMPLETE";
-
   if (!feasibility) {
     return null;
-  }
-
-  if (aapIsWaitingForDecision) {
-    return redirect(`${currentPath}/send-file-certification-authority`);
   }
 
   if (isFeasibilityReceivedOrRejected) {
