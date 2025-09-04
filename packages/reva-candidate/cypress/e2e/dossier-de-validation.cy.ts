@@ -1214,3 +1214,102 @@ typesAccompagnement.forEach((typeAccompagnement) => {
     });
   });
 });
+
+context("File upload validation", () => {
+  beforeEach(() => {
+    cy.fixture("candidate1-certification-titre-2-selected.json").then(
+      (candidate) => {
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+          "AUTONOME";
+        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+          "DOSSIER_FAISABILITE_RECEVABLE";
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForLayout",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "getCandidateWithCandidacyForDossierDeValidationPage",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForHome",
+            candidate,
+          );
+          stubQuery(
+            req,
+            "candidate_getCandidateWithCandidacyForDashboard",
+            candidate,
+          );
+        });
+      },
+    );
+
+    cy.login();
+    cy.wait([
+      "@candidate_getCandidateWithCandidacyForLayout",
+      "@candidate_getCandidateWithCandidacyForHome",
+      "@candidate_getCandidateWithCandidacyForDashboard",
+    ]);
+
+    cy.visit("/dossier-de-validation/");
+    cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+    cy.get(".fr-tabs__tab").contains("du dossier").click();
+  });
+
+  it("should display an error when uploading a file with wrong format", function () {
+    cy.get(
+      ".dossier-de-validation-file-upload > .fr-upload-group > input",
+    ).selectFile({
+      contents: Cypress.Buffer.from("file contents"),
+      fileName: "wrong-format.txt",
+      mimeType: "text/plain",
+    });
+
+    cy.get('[data-test="submit-dossier-de-validation-form-button"]').click();
+    cy.get(".dossier-de-validation-file-upload .fr-error-text").should(
+      "contain",
+      "Le format de fichier n'est pas supporté. Essayez avec un .jpg, .png ou .pdf.",
+    );
+  });
+
+  it("should display an error when uploading a file that is too large", function () {
+    const largeContent = new Array(11 * 1024 * 1024).join("a");
+
+    cy.get(
+      ".dossier-de-validation-file-upload > .fr-upload-group > input",
+    ).selectFile({
+      contents: Cypress.Buffer.from(largeContent),
+      fileName: "large-file.pdf",
+      mimeType: "application/pdf",
+    });
+
+    cy.get('[data-test="submit-dossier-de-validation-form-button"]').click();
+
+    cy.get(".dossier-de-validation-file-upload .fr-error-text").should(
+      "contain",
+      "Le fichier que vous tentez d’envoyer est trop volumineux. Veuillez soumettre un fichier d’une taille inférieur à 10Mo.",
+    );
+  });
+
+  it("should accept valid PDF files", function () {
+    cy.get(
+      ".dossier-de-validation-file-upload > .fr-upload-group > input",
+    ).selectFile({
+      contents: Cypress.Buffer.from("valid pdf content"),
+      fileName: "valid-document.pdf",
+      mimeType: "application/pdf",
+    });
+
+    cy.get('[data-test="submit-dossier-de-validation-form-button"]').click();
+
+    cy.get(".dossier-de-validation-file-upload .fr-error-text").should(
+      "not.exist",
+    );
+  });
+});

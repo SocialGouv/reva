@@ -15,6 +15,46 @@ import { JuryResult } from "@/graphql/generated/graphql";
 
 import { ResourcesSection } from "../../ResourcesSection";
 
+const maxFileSizeMb = 10;
+const maxFileSizeBytes = maxFileSizeMb * 1024 * 1024;
+const acceptedFileTypes = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "application/pdf",
+];
+const acceptedFileExtensions = ".jpg,.jpeg,.png,.pdf";
+const fileUploadHintText =
+  "Le format de fichier n’est pas supporté. Essayez avec un .jpg, .png ou .pdf.";
+
+const fileValidationErrors = {
+  required: "Vous devez sélectionner un fichier à transmettre.",
+  tooLarge: `Le fichier que vous tentez d’envoyer est trop volumineux. Veuillez soumettre un fichier d’une taille inférieur à ${maxFileSizeMb}Mo.`,
+  wrongType:
+    "Le format de fichier n'est pas supporté. Essayez avec un .jpg, .png ou .pdf.",
+};
+
+function createFileValidation(options: { isRequired: true }): z.ZodType<File>;
+function createFileValidation(options: {
+  isRequired: false;
+}): z.ZodType<File | undefined>;
+function createFileValidation(
+  options: { isRequired: boolean } = { isRequired: true },
+): z.ZodType<File> | z.ZodType<File | undefined> {
+  const validation = z
+    .instanceof(File, {
+      message: fileValidationErrors.required,
+    })
+    .refine((file) => file.size <= maxFileSizeBytes, {
+      message: fileValidationErrors.tooLarge,
+    })
+    .refine((file) => acceptedFileTypes.includes(file.type), {
+      message: fileValidationErrors.wrongType,
+    });
+
+  return options.isRequired ? validation : validation.optional();
+}
+
 const dossierDeValidationSchema = z.object({
   dossierDeValidationCheck1: z.literal(true, {
     errorMap: () => ({
@@ -27,14 +67,12 @@ const dossierDeValidationSchema = z.object({
     }),
   }),
   dossierDeValidationFile: z.object({
-    0: z.instanceof(File, {
-      message: "Vous devez sélectionner un fichier à transmettre.",
-    }),
+    0: createFileValidation({ isRequired: true }),
   }),
 
   dossierDeValidationOtherFiles: z
     .object({
-      0: z.undefined().or(z.instanceof(File)),
+      0: createFileValidation({ isRequired: false }),
     })
     .array(),
 });
@@ -219,10 +257,10 @@ export const DossierDeValidationTab = ({
                 className="dossier-de-validation-file-upload"
                 title="Joindre le dossier de validation"
                 description="Si vous souhaitez déposer une attestation de transmission / finalisation du DV : vous pouvez déposer cette pièce ici."
-                hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
+                hint={fileUploadHintText}
                 nativeInputProps={{
                   ...register("dossierDeValidationFile"),
-                  accept: ".jpg,.jpeg,.png,.pdf",
+                  accept: acceptedFileExtensions,
                 }}
                 state={
                   errors.dossierDeValidationFile?.[0] ? "error" : "default"
@@ -235,7 +273,7 @@ export const DossierDeValidationTab = ({
                 <FancyUpload
                   key={d.id}
                   title="Joindre des pièces supplémentaires (optionnel)"
-                  hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
+                  hint={fileUploadHintText}
                   nativeInputProps={{
                     ...register(`dossierDeValidationOtherFiles.${i}`, {
                       onChange: (e) => {
@@ -244,7 +282,7 @@ export const DossierDeValidationTab = ({
                         }
                       },
                     }),
-                    accept: ".jpg,.jpeg,.png,.pdf",
+                    accept: acceptedFileExtensions,
                   }}
                   onClickDelete={() => removeDossierDeValidationOtherFiles(i)}
                   state={
@@ -253,7 +291,7 @@ export const DossierDeValidationTab = ({
                       : "default"
                   }
                   stateRelatedMessage={
-                    errors.dossierDeValidationOtherFiles?.[i]?.message
+                    errors.dossierDeValidationOtherFiles?.[i]?.[0]?.message
                   }
                 />
               ))}
