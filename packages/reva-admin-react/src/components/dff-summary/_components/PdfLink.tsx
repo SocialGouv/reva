@@ -1,3 +1,4 @@
+import Button from "@codegouvfr/react-dsfr/Button";
 import { SyntheticEvent } from "react";
 
 import { useKeycloakContext } from "@/components/auth/keycloakContext";
@@ -5,16 +6,10 @@ import { useKeycloakContext } from "@/components/auth/keycloakContext";
 export const PdfLink = ({
   url,
   isBlobUrl,
-  text,
-  title,
-  className,
   fileName,
 }: {
   url: string;
   isBlobUrl?: boolean;
-  text: string;
-  title: string;
-  className?: string;
   fileName?: string;
 }) => {
   const { accessToken } = useKeycloakContext();
@@ -104,15 +99,13 @@ export const PdfLink = ({
   };
 
   return (
-    <div className="max-w-screen-md truncate">
-      <a
-        href="#"
-        title={title}
-        onClick={handleClick}
-        className={className || ""}
-      >
-        {text}
-      </a>
-    </div>
+    <Button
+      onClick={handleClick}
+      priority="tertiary no outline"
+      size="small"
+      iconId="fr-icon-file-download-line"
+    >
+      Télécharger en PDF
+    </Button>
   );
 };

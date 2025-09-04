@@ -96,22 +96,16 @@ export function DffSummary({
           <>
             {dematerializedFeasibilityFile.dffFile ? (
               <PdfLink
-                text={"Télécharger le dossier de faisabilité"}
-                title={"Télécharger le dossier de faisabilité"}
                 url={dematerializedFeasibilityFile.dffFile.url}
                 fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
-                className="fr-btn fr-btn--secondary fr-btn--sm"
               />
             ) : null}
           </>
         ) : (
           <PdfLink
-            text={"Télécharger le dossier de faisabilité"}
-            title={"Télécharger le dossier de faisabilité"}
             url={getPdfUrl()}
             isBlobUrl
             fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
-            className="fr-btn fr-btn--secondary fr-btn--sm"
           />
         )}
       </div>
