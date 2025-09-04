@@ -3,8 +3,8 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Download from "@codegouvfr/react-dsfr/Download";
-import { deburr } from "cypress/types/lodash";
 import { GraphQLError } from "graphql";
+import { deburr } from "lodash";
 import { redirect, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
