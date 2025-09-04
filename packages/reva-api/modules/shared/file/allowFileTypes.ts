@@ -15,7 +15,10 @@ export const allowFileTypeByDocumentType = {
   swornStatementFile: [...allowedFileTypesMap.pdf],
   certificationAuthorityDecisionFile: [...allowedFileTypesMap.pdf],
   feasibilityDecisionFile: [...allowedFileTypesMap.pdf],
-  dossierDeValidationFile: [...allowedFileTypesMap.pdf],
+  dossierDeValidationFile: [
+    ...allowedFileTypesMap.image,
+    ...allowedFileTypesMap.pdf,
+  ],
   dossierDeValidationOtherFiles: [
     ...allowedFileTypesMap.image,
     ...allowedFileTypesMap.pdf,

@@ -173,11 +173,18 @@ export const dossierDeValidationRoute: FastifyPluginAsync = async (server) => {
         dossierDeValidationFile,
         ...dossierDeValidationOtherFiles,
       ]) {
-        if (!hasValidMimeType(otherFile, ["application/pdf"])) {
+        if (
+          !hasValidMimeType(otherFile, [
+            "application/pdf",
+            "image/png",
+            "image/jpg",
+            "image/jpeg",
+          ])
+        ) {
           return reply
             .status(400)
             .send(
-              `Le type de fichier du fichier "${otherFile.filename}" n'est pas pris en charge. Veuillez soumettre un document PDF.`,
+              `Le format de fichier n'est pas supporté. Essayez avec un .jpg, .png ou .pdf.`,
             );
         }
 
