@@ -37,11 +37,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               );
               stubQuery(
                 req,
-                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
-                candidate,
-              );
-              stubQuery(
-                req,
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
@@ -83,11 +78,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               stubQuery(
                 req,
                 "candidate_getCandidateWithCandidacyForLayout",
-                candidate,
-              );
-              stubQuery(
-                req,
-                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
                 candidate,
               );
               stubQuery(
@@ -560,11 +550,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               );
               stubQuery(
                 req,
-                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
-                candidate,
-              );
-              stubQuery(
-                req,
                 "candidate_getCandidateWithCandidacyForDashboard",
                 candidate,
               );
@@ -609,11 +594,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               stubQuery(
                 req,
                 "candidate_getCandidateWithCandidacyForLayout",
-                candidate,
-              );
-              stubQuery(
-                req,
-                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
                 candidate,
               );
               stubQuery(
@@ -667,11 +647,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               stubQuery(
                 req,
                 "candidate_getCandidateWithCandidacyForLayout",
-                candidate,
-              );
-              stubQuery(
-                req,
-                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
                 candidate,
               );
               stubQuery(
@@ -764,11 +739,6 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               stubQuery(
                 req,
                 "candidate_getCandidateWithCandidacyForLayout",
-                candidate,
-              );
-              stubQuery(
-                req,
-                "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
                 candidate,
               );
               stubQuery(
