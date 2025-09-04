@@ -182,6 +182,73 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         cy.wait("@updateReadyForJuryEstimatedAtForDossierDeValidationPage");
       });
 
+      it("should display error message on first click when trying to submit without file", function () {
+        cy.fixture("candidate1-certification-titre-2-selected.json").then(
+          (candidate) => {
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
+              typeAccompagnement;
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
+              "DOSSIER_FAISABILITE_RECEVABLE";
+            candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+              format(ESTIMATED_DATE, "yyyy-MM-dd");
+
+            cy.intercept("POST", "/api/graphql", (req) => {
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForLayout",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "getCandidateWithCandidacyForDossierDeValidationPage",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForHome",
+                candidate,
+              );
+              stubQuery(
+                req,
+                "candidate_getCandidateWithCandidacyForDashboard",
+                candidate,
+              );
+            });
+          },
+        );
+
+        cy.login();
+
+        cy.wait([
+          "@candidate_getCandidateWithCandidacyForLayout",
+          "@candidate_getCandidateWithCandidacyForHome",
+          "@candidate_getCandidateWithCandidacyForDashboard",
+        ]);
+
+        cy.visit("/dossier-de-validation/");
+        cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+
+        cy.get(".fr-tabs__tab").contains("du dossier").click();
+
+        cy.get('[data-test="dossier-de-validation-checkbox-group"]').click();
+
+        cy.get(
+          '[data-test="submit-dossier-de-validation-form-button"]',
+        ).click();
+
+        cy.get(".dossier-de-validation-file-upload")
+          .find(".fr-error-text")
+          .should("be.visible")
+          .should(
+            "contain",
+            "Vous devez sélectionner un fichier à transmettre.",
+          );
+
+        cy.get(".dossier-de-validation-file-upload")
+          .find(".fr-input-group--error")
+          .should("exist");
+      });
+
       it("should let me send a dossier de validation", function () {
         cy.fixture("candidate1-certification-titre-2-selected.json").then(
           (candidate) => {

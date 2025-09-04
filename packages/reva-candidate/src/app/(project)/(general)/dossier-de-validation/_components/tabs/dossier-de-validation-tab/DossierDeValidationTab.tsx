@@ -224,7 +224,9 @@ export const DossierDeValidationTab = ({
                   ...register("dossierDeValidationFile"),
                   accept: ".jpg,.jpeg,.png,.pdf",
                 }}
-                state={errors.dossierDeValidationFile ? "error" : "default"}
+                state={
+                  errors.dossierDeValidationFile?.[0] ? "error" : "default"
+                }
                 stateRelatedMessage={
                   errors.dossierDeValidationFile?.[0]?.message
                 }
