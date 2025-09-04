@@ -3,8 +3,8 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Download from "@codegouvfr/react-dsfr/Download";
+import { deburr } from "cypress/types/lodash";
 import { GraphQLError } from "graphql";
-import { deburr } from "lodash";
 import { redirect, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
@@ -110,20 +110,14 @@ export default function ValidateFeasibility() {
         {isUseGeneratedDffFileFromFileServerActive &&
         dematerializedFeasibilityFile.dffFile ? (
           <PdfLink
-            text={"Télécharger le dossier de faisabilité"}
-            title={"Télécharger le dossier de faisabilité"}
             url={dematerializedFeasibilityFile.dffFile.url}
             fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
-            className="fr-btn fr-btn--secondary fr-btn--sm"
           />
         ) : (
           <PdfLink
-            text={"Télécharger le dossier de faisabilité"}
-            title={"Télécharger le dossier de faisabilité"}
             url={getPdfUrl()}
             isBlobUrl
             fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
-            className="fr-btn fr-btn--secondary fr-btn--sm"
           />
         )}
       </div>
