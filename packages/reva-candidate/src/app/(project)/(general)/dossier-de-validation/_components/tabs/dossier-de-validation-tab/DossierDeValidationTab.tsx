@@ -117,7 +117,7 @@ export const DossierDeValidationTab = ({
     reset,
     control,
     handleSubmit,
-    formState: { errors, isDirty, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<DossierDeValidationFormData>({
     resolver: zodResolver(dossierDeValidationSchema),
     shouldUnregister: true,
@@ -349,7 +349,7 @@ export const DossierDeValidationTab = ({
               </Button>
               <Button
                 type="submit"
-                disabled={!isDirty || isSubmitting}
+                disabled={isSubmitting}
                 data-test="submit-dossier-de-validation-form-button"
               >
                 Envoyer les documents
