@@ -88,6 +88,8 @@ export const getActiveCandidacyMenu = async ({
     const editableFeasibilityDecisions = ["DRAFT", "INCOMPLETE"];
     const feasibilityDecision = activeFeasibility?.decision ?? "";
     const isDfDematerialized = feasibilityFormat === "DEMATERIALIZED";
+    const isFeasibilityPending =
+      feasibilityDecision === "PENDING" || feasibilityDecision === "COMPLETE";
     const isActiveWithEditHint =
       editableStatus.includes(activeCandidacyStatus) &&
       (!activeFeasibility ||
@@ -106,9 +108,13 @@ export const getActiveCandidacyMenu = async ({
     let url = "#";
 
     if (isStatusEqualOrAbove("PARCOURS_CONFIRME")) {
-      url = isDfDematerialized
-        ? buildUrl({ suffix: "feasibility-aap" })
-        : buildUrl({ suffix: "feasibility-aap/pdf" });
+      if (isDfDematerialized) {
+        url = isFeasibilityPending
+          ? buildUrl({ suffix: "feasibility-aap/send-file-certification-authority" })
+          : buildUrl({ suffix: "feasibility-aap" });
+      } else {
+        url = buildUrl({ suffix: "feasibility-aap/pdf" });
+      }
     }
 
     return showFeasibilityEntry
