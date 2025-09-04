@@ -69,6 +69,9 @@ export const useGeneralInformationLocalAccountPage = () => {
             .id,
         ],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["account_getAccountForConnectedUser"],
+      });
     },
   });
 
