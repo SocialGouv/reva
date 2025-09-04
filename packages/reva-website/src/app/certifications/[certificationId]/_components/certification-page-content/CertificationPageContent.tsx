@@ -8,6 +8,7 @@ import { isFeatureActive } from "@/utils/featureFlipping";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
+import { SelectCertificationButton } from "./_components/select-certification-button/SelectCertificationButton";
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
@@ -87,14 +88,7 @@ export const CertificationPageContent = async ({
           </div>
         </div>
         <div className="flex gap-4 mt-12">
-          <Button
-            priority="primary"
-            linkProps={{
-              href: `/inscription-candidat/?certificationId=${certification?.id}`,
-            }}
-          >
-            Choisir ce diplôme
-          </Button>
+          <SelectCertificationButton certificationId={certification.id} />
           {showVaeCollective && (
             <Button
               priority="secondary"
@@ -144,15 +138,17 @@ export const CertificationPageContent = async ({
         />
         <hr className="mt-12 mb-8 pb-1" />
         <UsefulResources />
-        <Button
-          className="mt-12"
-          priority="secondary"
-          linkProps={{
-            href: "/espace-candidat/",
-          }}
-        >
-          Retour
-        </Button>
+        <div className="flex mt-12 justify-between">
+          <Button
+            priority="secondary"
+            linkProps={{
+              href: "/espace-candidat/",
+            }}
+          >
+            Retour
+          </Button>
+          <SelectCertificationButton certificationId={certification.id} />
+        </div>
       </div>
     </div>
   );
