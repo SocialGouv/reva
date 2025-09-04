@@ -1,17 +1,17 @@
-import Badge from "@codegouvfr/react-dsfr/Badge";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 
 import { OrganismModaliteAccompagnement } from "@/graphql/generated/graphql";
 
 const accompagnementConfigMap = {
   A_DISTANCE: {
-    dataTest: "badge-remote",
-    className: "fr-badge--green-tilleul-verveine",
+    dataTest: "tag-remote",
     value: "À distance",
+    iconId: "fr-icon-headphone-fill" as const,
   },
   LIEU_ACCUEIL: {
-    dataTest: "badge-on-site",
-    className: "fr-badge--beige-gris-galet",
+    dataTest: "tag-on-site",
     value: "Sur site",
+    iconId: "fr-icon-home-4-fill" as const,
   },
 };
 
@@ -23,14 +23,9 @@ export const CandidacyModalities = ({
   modaliteAccompagnement: OrganismModaliteAccompagnement | undefined;
 }) => {
   const FundableBadge = () => (
-    <Badge
-      className={fundable ? "fr-badge--info" : "fr-badge--yellow-tournesol"}
-      small
-      noIcon
-      data-test={fundable ? "badge-fundable" : "badge-not-fundable"}
-    >
-      {fundable ? "finançable France VAE" : "financement droit commun"}
-    </Badge>
+    <Tag small data-test={fundable ? "tag-fundable" : "tag-not-fundable"}>
+      {fundable ? "Finançable France VAE" : "Financement droit commun"}
+    </Tag>
   );
 
   if (!modaliteAccompagnement) {
@@ -40,16 +35,15 @@ export const CandidacyModalities = ({
   const accompagnementConfig = accompagnementConfigMap[modaliteAccompagnement];
 
   return (
-    <div className="flex flex-wrap gap-3">
-      <FundableBadge />
-      <Badge
+    <div className="flex flex-wrap gap-1">
+      <Tag
         small
-        noIcon
-        className={accompagnementConfig.className}
+        iconId={accompagnementConfig.iconId}
         data-test={accompagnementConfig.dataTest}
       >
         {accompagnementConfig.value}
-      </Badge>
+      </Tag>
+      <FundableBadge />
     </div>
   );
 };

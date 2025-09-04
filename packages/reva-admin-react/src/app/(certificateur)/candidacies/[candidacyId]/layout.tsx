@@ -1,6 +1,6 @@
 "use client";
-import Badge from "@codegouvfr/react-dsfr/Badge";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
@@ -119,9 +119,9 @@ const CandidacyPageLayout = ({ children }: { children: ReactNode }) => {
                     </p>
                   </div>
                   {typeAccompagnement === "AUTONOME" && (
-                    <Badge severity="new" className="mt-4">
+                    <Tag small className="mt-4 font-normal">
                       Candidat en autonomie
-                    </Badge>
+                    </Tag>
                   )}
                 </>
               }

@@ -71,34 +71,34 @@ feasibilityFormats.forEach((feasibilityFormat) => {
       );
     });
 
-    it("display a specific badge when funding not available", function () {
+    it("display a specific tag when funding not available", function () {
       visitSummary({
         feasibilityFormat,
         financeModule: "hors_plateforme",
         modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacyMenuAndCandidateInfos");
-      cy.get('[data-test="badge-not-fundable"]').should("exist");
+      cy.get('[data-test="tag-not-fundable"]').should("exist");
     });
 
-    it("display a specific badge when accompagnement is on site", function () {
+    it("display a specific tag when accompagnement is on site", function () {
       visitSummary({
         feasibilityFormat,
         financeModule: "hors_plateforme",
         modaliteAccompagnement: "LIEU_ACCUEIL",
       });
       cy.wait("@getCandidacyMenuAndCandidateInfos");
-      cy.get('[data-test="badge-on-site"]').should("exist");
+      cy.get('[data-test="tag-on-site"]').should("exist");
     });
 
-    it("display a specific badge when accompagnement is remote", function () {
+    it("display a specific tag when accompagnement is remote", function () {
       visitSummary({
         feasibilityFormat,
         financeModule: "hors_plateforme",
         modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacyMenuAndCandidateInfos");
-      cy.get('[data-test="badge-remote"]').should("exist");
+      cy.get('[data-test="tag-remote"]').should("exist");
     });
   });
 });
