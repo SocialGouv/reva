@@ -36,10 +36,10 @@ export const addCertification = async (params: { codeRncp: string }) => {
   }
 
   const level = getLevelFromRNCPCertification(rncpCertification);
-  const rncpTypeDiplomeLabel = rncpCertification.ABREGE?.LIBELLE;
+  const rncpTypeDiplomeCode = rncpCertification.ABREGE?.CODE;
 
-  const label = rncpTypeDiplomeLabel
-    ? `${rncpTypeDiplomeLabel} - ${rncpCertification.INTITULE}`
+  const label = rncpTypeDiplomeCode
+    ? `${rncpTypeDiplomeCode} - ${rncpCertification.INTITULE}`
     : rncpCertification.INTITULE;
 
   const availableAt = new Date();
@@ -68,7 +68,7 @@ export const addCertification = async (params: { codeRncp: string }) => {
       // RNCP Fields
       rncpLabel: label,
       rncpLevel: level,
-      rncpTypeDiplome: rncpTypeDiplomeLabel,
+      rncpTypeDiplome: rncpCertification.ABREGE?.LIBELLE,
       rncpExpiresAt: expiresAt,
       rncpDeliveryDeadline: rncpCertification.DATE_LIMITE_DELIVRANCE
         ? new Date(rncpCertification.DATE_LIMITE_DELIVRANCE)
