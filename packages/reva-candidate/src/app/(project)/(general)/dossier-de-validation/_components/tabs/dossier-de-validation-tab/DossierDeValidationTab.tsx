@@ -137,9 +137,9 @@ export const DossierDeValidationTab = ({
                 date prévisionnelle de dépot de dossier.
               </p>
               <p>
-                Ce passage n’est pas une obligation, si vous ne souhaitez pas
-                compléter les derniers blocs de votre diplôme vous pouvez
-                laisser votre candidature en suspend.
+                Ce passage n'est pas une obligation et reste à votre libre
+                choix. N'hésitez pas à vous rapprocher de votre certificateur
+                pour avoir plus de détails et connaître les délais.
               </p>
             </div>
           }
