@@ -3,6 +3,9 @@ import {
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
 
+import { UploadedFile } from "../../../utils/types.js";
+import { createFeasibilityDecisionByCandidacyId } from "../features/feasibilities/createFeasibilityDecisionByCandidacyId.js";
+import { mapCreateFeasibilityDecisionByCandidacyId } from "../features/feasibilities/createFeasibilityDecisionByCandidacyId.mapper.js";
 import { getFeasibilities } from "../features/feasibilities/getFeasibilities.js";
 import { mapGetFeasibilities } from "../features/feasibilities/getFeasibilities.mapper.js";
 import { getFeasibilityByCandidacyId } from "../features/feasibilities/getFeasibilityByCandidacyId.js";
@@ -59,12 +62,12 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       },
       handler: async (request, reply) => {
         const { candidatureId } = request.params;
-        const dossierDeFaisabilite = await getFeasibilityByCandidacyId(
+        const candidacy = await getFeasibilityByCandidacyId(
           request.graphqlClient,
           candidatureId,
         );
-        if (dossierDeFaisabilite) {
-          reply.send(mapGetFeasibilityByCandidacyId(dossierDeFaisabilite));
+        if (candidacy) {
+          reply.send(mapGetFeasibilityByCandidacyId(candidacy));
         } else {
           reply.status(204).send();
         }
@@ -102,14 +105,12 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       },
       handler: async (request, reply) => {
         const { candidatureId } = request.params;
-        const dossierDeFaisabilite = await getFeasibilityHistoryByCandidacyId(
+        const candidacy = await getFeasibilityHistoryByCandidacyId(
           request.graphqlClient,
           candidatureId,
         );
-        if (dossierDeFaisabilite) {
-          reply.send(
-            mapGetFeasibilityHistoryByCandidacyId(dossierDeFaisabilite),
-          );
+        if (candidacy) {
+          reply.send(mapGetFeasibilityHistoryByCandidacyId(candidacy));
         } else {
           reply.status(204).send();
         }
@@ -135,21 +136,30 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         summary: "Créer une nouvelle décision sur le dossier de faisabilité",
         consumes: ["multipart/form-data"],
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Dossier de faisabilité"],
+        tags: ["Implémenté", "Dossier de faisabilité"],
         body: {
           type: "object",
           properties: {
             decision: {
-              $ref: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabilite",
+              type: "object",
+              properties: {
+                value: {
+                  $ref: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabilite",
+                },
+              },
             },
             commentaire: {
-              type: "string",
-              description: "Motifs de la décision",
-              example: "La pièce d'identité n'est pas lisible.",
+              type: "object",
+              properties: {
+                value: {
+                  type: "string",
+                  description: "Motifs de la décision",
+                  example: "La pièce d'identité n'est pas lisible.",
+                },
+              },
             },
             document: {
-              type: "string",
-              format: "binary",
+              type: "object",
               description: "Le courrier de recevabilité éventuel",
             },
           },
@@ -171,8 +181,26 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const { decision, commentaire, document } = request.body;
+
+        const candidacy = await createFeasibilityDecisionByCandidacyId(
+          request.graphqlClient,
+          request.keycloakJwt,
+          candidatureId,
+          {
+            decision: decision.value!,
+            commentaire: commentaire?.value,
+            document: document as UploadedFile,
+          },
+        );
+
+        if (candidacy) {
+          reply.send(mapCreateFeasibilityDecisionByCandidacyId(candidacy));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 

@@ -13,6 +13,7 @@ declare module "fastify" {
   interface FastifyRequest {
     graphqlClient: Client;
     keycloakId: string;
+    keycloakJwt: string;
   }
 }
 
@@ -64,6 +65,7 @@ export const validateJwt = async (
 
   request.graphqlClient = graphqlClient;
   request.keycloakId = session.keycloakId;
+  request.keycloakJwt = keycloakJwt;
 };
 
 const getTokenFromRequest = (request: FastifyRequest) => {

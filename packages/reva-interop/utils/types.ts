@@ -14,3 +14,9 @@ export type GetGqlRowType<T extends (...args: any) => any> = NonNullable<
 export type GetGqlResponseType<T extends (...args: any) => any> = NonNullable<
   Awaited<ReturnType<T>>
 >;
+
+export type UploadedFile = {
+  _buf: Buffer;
+  filename: string;
+  mimetype: string;
+};
