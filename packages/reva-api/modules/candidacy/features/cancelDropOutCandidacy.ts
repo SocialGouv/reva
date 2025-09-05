@@ -16,7 +16,7 @@ export const cancelDropOutCandidacy = async (
     candidacy = await getCandidacyById({
       candidacyId: params.candidacyId,
       includes: {
-        candidacyDropOut: true,
+        candidacyDropOut: { include: { dropOutReason: true } },
       },
     });
   } catch (e) {
@@ -47,11 +47,13 @@ export const cancelDropOutCandidacy = async (
         activite: "ACTIF",
         dateInactifEnAttente: null,
       },
-      include: {
-        candidacyDropOut: { include: { dropOutReason: true } },
-      },
     });
-    return candidacyUpdated;
+    // On veut retourner le dropout précédent (maintenant supprimé) pour l'utiliser dans les logs
+    const previousCandidacyDropOut = candidacy.candidacyDropOut;
+    return {
+      ...candidacyUpdated,
+      candidacyDropOut: previousCandidacyDropOut,
+    };
   } catch (e) {
     logger.error(e);
     throw new Error(`${FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED} ${e}`);
