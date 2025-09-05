@@ -1,14 +1,16 @@
 "use client";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/auth";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useCandidacyStatus } from "../../_components/candidacy.hook";
 
+import { CancelDropOutForm } from "./_components/CancelDropOutForm";
+import { ConfirmDropOutForm } from "./_components/ConfirmDropOutForm";
 import { DropoutForm } from "./_components/DropoutForm";
 import {
   ActiveDropoutReasons,
@@ -24,76 +26,83 @@ const CandidacyDropoutComponent = ({
   activeDropoutReasons: NonNullable<ActiveDropoutReasons>;
 }) => {
   const { canDropout } = useCandidacyStatus(candidacy);
-  const { validateDropoutCandidacyById } = useDropout();
+  const {
+    validateDropoutCandidacyById,
+    cancelDropoutCandidacyById,
+    candidacyId,
+  } = useDropout();
 
   const { isAdmin } = useAuth();
+  const router = useRouter();
+
+  const handleCancelDropoutCandidacy = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      await cancelDropoutCandidacyById.mutateAsync();
+
+      successToast("L'abandon a été annulé");
+      router.push(`/candidacies/${candidacyId}/summary`);
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
+
+  const handleConfirmDropoutCandidacy = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      await validateDropoutCandidacyById.mutateAsync();
+
+      successToast("L'abandon a été validé avec succès");
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
 
   if (candidacy.candidacyDropOut?.dropOutReason) {
     return (
       <>
-        <div>
-          {isAdmin && !candidacy.candidacyDropOut.proofReceivedByAdmin && (
-            <p>
-              Si un candidat a exprimé son souhait d’abandonner sa candidature,
-              vous pouvez confirmer cet abandon ici. Attention, cette action est
-              irréversible.
-            </p>
-          )}
-          <p className="flex flex-col gap-6 p-8 bg-dsfr-light-neutral-grey-1000 m-0">
+        <p className="flex flex-col gap-6 p-8 bg-dsfr-light-neutral-grey-1000 m-0">
+          <span>
+            Candidature mise en abandon le :{" "}
+            <strong>
+              {format(candidacy.candidacyDropOut.createdAt, "d/MM/yyyy")}
+            </strong>
+          </span>
+
+          <span>
+            Raison :{" "}
+            <strong>{candidacy.candidacyDropOut.dropOutReason.label}</strong>
+          </span>
+
+          {isAdmin && candidacy.candidacyDropOut.validatedAt && (
             <span>
-              Candidature mise en abandon le :{" "}
+              Confirmation par France VAE :{" "}
               <strong>
-                {format(candidacy.candidacyDropOut.createdAt, "d/MM/yyyy")}
+                {format(candidacy.candidacyDropOut.validatedAt, "d/MM/yyyy")}
               </strong>
             </span>
-
-            <span>
-              Raison :{" "}
-              <strong>{candidacy.candidacyDropOut.dropOutReason.label}</strong>
-            </span>
-
-            {isAdmin && candidacy.candidacyDropOut.validatedAt && (
-              <span>
-                Confirmation par France VAE :{" "}
-                <strong>
-                  {format(candidacy.candidacyDropOut.validatedAt, "d/MM/yyyy")}
-                </strong>
-              </span>
-            )}
-          </p>
-        </div>
+          )}
+        </p>
+        {isAdmin &&
+          candidacy.candidacyDropOut.proofReceivedByAdmin &&
+          !candidacy.candidacyDropOut.dropOutConfirmedByCandidate && (
+            <CancelDropOutForm
+              handleCancelDropoutCandidacy={handleCancelDropoutCandidacy}
+            />
+          )}
 
         {isAdmin && !candidacy.candidacyDropOut.proofReceivedByAdmin && (
-          <>
-            <div className="h-[1px] bg-dsfrGray-contrast" />
-
-            <form
-              className="flex flex-col"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
-                try {
-                  await validateDropoutCandidacyById.mutateAsync();
-
-                  successToast("L'abandon a été validé avec succès");
-                } catch (error) {
-                  graphqlErrorToast(error);
-                }
-              }}
-            >
-              <h2>Confirmer l’abandon du candidat</h2>
-              <p>
-                En confirmant que le candidat souhaite abandonner sa
-                candidature, vous permettez à l’AAP d’accéder plus rapidement à
-                la demande de paiement.
-              </p>
-
-              <Button className=" ml-auto" priority="primary">
-                Confirmer l’abandon
-              </Button>
-            </form>
-          </>
+          <ConfirmDropOutForm
+            handleConfirmDropoutCandidacy={handleConfirmDropoutCandidacy}
+          />
         )}
       </>
     );

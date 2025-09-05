@@ -22,6 +22,7 @@ const getCandidacyById = graphql(`
         status
         proofReceivedByAdmin
         validatedAt
+        dropOutConfirmedByCandidate
       }
     }
   }
@@ -58,6 +59,14 @@ const dropoutCandidacyByIdMutation = graphql(`
 const validateDropoutCandidacyByIdMutation = graphql(`
   mutation validateDropoutCandidacyById($candidacyId: UUID!) {
     candidacy_validateDropOut(candidacyId: $candidacyId) {
+      id
+    }
+  }
+`);
+
+const cancelDropOutCandidacyById = graphql(`
+  mutation cancelDropOutCandidacyById($candidacyId: UUID!) {
+    candidacy_cancelDropOutById(candidacyId: $candidacyId) {
       id
     }
   }
@@ -118,6 +127,19 @@ export const useDropout = () => {
     },
   });
 
+  const cancelDropoutCandidacyById = useMutation({
+    mutationFn: () =>
+      graphqlClient.request(cancelDropOutCandidacyById, {
+        candidacyId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [candidacyId] });
+    },
+    onError: (e) => {
+      graphqlErrorToast(e);
+    },
+  });
+
   const candidacy = getCandidacyByIdData?.getCandidacyById;
   const activeDropoutReasons = getDropoutReasonsData?.getDropOutReasons.filter(
     (reason) => reason.isActive,
@@ -129,6 +151,7 @@ export const useDropout = () => {
     activeDropoutReasons,
     dropoutCandidacyById,
     validateDropoutCandidacyById,
+    cancelDropoutCandidacyById,
   };
 };
 
