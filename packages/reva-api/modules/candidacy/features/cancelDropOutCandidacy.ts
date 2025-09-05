@@ -35,29 +35,23 @@ export const cancelDropOutCandidacy = async (
     );
   }
 
-  if (candidacy.candidacyDropOut.proofReceivedByAdmin) {
-    throw new Error(
-      `Un administrateur a déjà validé l'abandon de la candidature`,
-    );
-  }
-
   if (candidacy.candidacyDropOut.dropOutConfirmedByCandidate) {
     throw new Error(`Le candidat a déjà confirmé l'abandon de la candidature`);
   }
 
   try {
-    const candidacyDropOut = await prismaClient.candidacyDropOut.delete({
-      where: {
-        candidacyId: params.candidacyId,
+    const candidacyUpdated = await prismaClient.candidacy.update({
+      where: { id: params.candidacyId },
+      data: {
+        candidacyDropOut: { delete: true },
+        activite: "ACTIF",
+        dateInactifEnAttente: null,
       },
       include: {
-        dropOutReason: true,
+        candidacyDropOut: { include: { dropOutReason: true } },
       },
     });
-    return {
-      ...candidacy,
-      candidacyDropOut,
-    };
+    return candidacyUpdated;
   } catch (e) {
     logger.error(e);
     throw new Error(`${FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED} ${e}`);
