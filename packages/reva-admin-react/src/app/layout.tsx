@@ -1,8 +1,8 @@
 "use client";
 
-import "@/styles/globals.css";
-import "@/styles/dsfr-theme-tac.min.css";
 import "@/styles/dsfr-theme-tac-extra.css";
+import "@/styles/dsfr-theme-tac.min.css";
+import "@/styles/globals.css";
 
 // import { getHtmlAttributes } from "@/components/dsfr/server-only-index";
 
@@ -26,7 +26,6 @@ import { DsfrHead } from "@/components/dsfr/DsfrHead";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
-import { HelpBubble } from "@/components/help-bubble/HelpBubble";
 import { LayoutNotice } from "@/components/layout-notice/LayoutNotice";
 import { Produktly } from "@/components/script/Produktly";
 import { tarteaucitronScript } from "@/components/script/Tarteaucitron";
@@ -77,7 +76,6 @@ export default function RootLayout({
             <QueryClientProvider client={queryClient}>
               <Toaster position="top-right" />
               <LayoutContent>{children}</LayoutContent>
-              <HelpBubble className="fixed bottom-[82px] md:bottom-[100px] right-3.5 md:right-6 z-[1000]" />
             </QueryClientProvider>
           </KeycloakProvider>
         </DsfrProvider>
