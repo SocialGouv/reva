@@ -1,8 +1,12 @@
 "use client";
 
+// 1 - globals.css - Order of imports is important
 import "@/styles/globals.css";
+// 2 - dsfr-theme-tac.min.css - Order of imports is important
 import "@/styles/dsfr-theme-tac.min.css";
+// 3 - dsfr-theme-tac-extra.css - Order of imports is important
 import "@/styles/dsfr-theme-tac-extra.css";
+// 4 - ckeditor5-content-styles.css - Order of imports is important
 import "@/styles/ckeditor5-content-styles.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

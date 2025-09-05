@@ -1,10 +1,11 @@
 "use client";
 
-import "@/styles/dsfr-theme-tac-extra.css";
-import "@/styles/dsfr-theme-tac.min.css";
+// 1 - globals.css - Order of imports is important
 import "@/styles/globals.css";
-
-// import { getHtmlAttributes } from "@/components/dsfr/server-only-index";
+// 2 - dsfr-theme-tac.min.css - Order of imports is important
+import "@/styles/dsfr-theme-tac.min.css";
+// 3- dsfr-theme-tac-extra.css - Order of imports is important
+import "@/styles/dsfr-theme-tac-extra.css";
 
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
