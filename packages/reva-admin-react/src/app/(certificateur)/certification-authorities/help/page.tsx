@@ -61,7 +61,7 @@ const TutorielSection = () => {
   return (
     <>
       <h2>Tutoriels</h2>
-      <div className="flex gap-6 flex-wrap justify-center sm:justify-start mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         <Tile
           small
           orientation="horizontal"
@@ -70,10 +70,15 @@ const TutorielSection = () => {
             href: "https://scribehow.com/viewer/Tutoriel_certificateurs__gestion_des_candidatures__iAOKgJsISUOp5K7_zfYhzw",
             target: "_",
           }}
-          detail="Mise à jour : 01/09/2025"
-          imageAlt="Gestion d'une candidature"
-          imageUrl="/admin2/components/self-training.svg"
           title="Gestion d'une candidature"
+          pictogram={
+            <Image
+              src="/admin2/components/self-training.svg"
+              alt="Gestion d'une candidature"
+              width={40}
+              height={40}
+            />
+          }
         />
         <Tile
           small
@@ -83,11 +88,17 @@ const TutorielSection = () => {
             href: "https://scribehow.com/viewer/Tutoriel_du_Responsable_des_Certifications__7T3db0CzTtSaRV4tXSubfw",
             target: "_",
           }}
-          detail="Mise à jour : 01/09/2025"
-          imageAlt="Responsable des certifications"
-          imageUrl="/admin2/components/self-training.svg"
           title="Responsable des certifications"
+          pictogram={
+            <Image
+              src="/admin2/components/self-training.svg"
+              alt="Responsable des certifications"
+              width={40}
+              height={40}
+            />
+          }
         />
+        <div className="hidden sm:block" />
       </div>
     </>
   );
@@ -97,7 +108,7 @@ const EspaceDocumentaireSection = () => {
   return (
     <>
       <h2>Espace documentaire et dernières modifications</h2>
-      <div className="flex gap-6 justify-center flex-col sm:flex-row sm:justify-start mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         <Card
           horizontal
           size="small"
@@ -111,13 +122,13 @@ const EspaceDocumentaireSection = () => {
           ratio="33/66"
           imageComponent={
             <Image
-              src="/admin2/components/espace-documentaire.jpg"
+              src="/admin2/components/espace-documentaire.png"
               alt="Espace documentaire"
               width={264}
               height={256}
             />
           }
-          className="h-auto"
+          className="h-auto sm:col-span-2"
         />
         <Tile
           small
@@ -126,11 +137,11 @@ const EspaceDocumentaireSection = () => {
             href: "https://fabnummas.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
             target: "_",
           }}
-          detail="Mise à jour : 01/09/2025"
-          imageAlt="Nouvelles fonctionnalités"
-          imageUrl="/admin2/components/innovation.svg"
           title="Nouvelles fonctionnalités"
           desc="Vous trouverez ici les dernières évolutions de votre espace professionnel France VAE"
+          imageUrl="/admin2/components/innovation.svg"
+          imageAlt="Nouvelles fonctionnalités"
+          classes={{ img: "w-14 h-14 p-0 my-0" }}
         />
       </div>
     </>
@@ -156,7 +167,9 @@ export default async function CertificateurHelp() {
         questionsFrequentesSection={questionsFrequentesSection}
       />
 
-      <BackButton href="/admin2">Retour</BackButton>
+      <BackButton href="/admin2" hasIcon={false}>
+        Retour
+      </BackButton>
     </div>
   );
 }
