@@ -1,6 +1,6 @@
 import Tile from "@codegouvfr/react-dsfr/Tile";
 
-import { OrganismUseCandidateForDashboard } from "../dashboard.hooks";
+import { OrganismUseCandidateForDashboard } from "../../dashboard.hooks";
 
 export const AapContactTile = ({
   organism,

@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 
 import { DashboardBanner } from "./banners/DashboardBanner";
+import { DashboardSidebar } from "./dashboard-sidebar/DashboardSidebar";
 import { useCandidacyForDashboard } from "./dashboard.hooks";
-import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardAccompagneTilesGroup } from "./persona-tiles-group/DashboardAccompagneTilesGroup";
 import { DashboardAutonomeTilesGroup } from "./persona-tiles-group/DashboardAutonomeTilesGroup";
 import { DashboardVaeCollectiveTilesGroup } from "./persona-tiles-group/DashboardVaeCollectiveTilesGroup";

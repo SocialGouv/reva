@@ -1,6 +1,7 @@
 import { isAfter } from "date-fns";
 
-import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
+import { CandidacyUseCandidateForDashboard } from "../../dashboard.hooks";
+import TileGroup from "../../tiles/TileGroup";
 
 import { JurySessionTile } from "./JurySessionTile";
 import { NoRendezVousTile } from "./NoRendezVousTile";
@@ -43,7 +44,7 @@ export const AppointmentTiles = ({
     !hasFirstAppointment && !isReadyForJury && !hasDateOfJurySession;
 
   return (
-    <>
+    <TileGroup icon="fr-icon-calendar-2-line" title="Mes prochains rendez-vous">
       {hasFirstAppointment && (
         <RendezVousPedagogiqueTile
           firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt!}
@@ -59,6 +60,6 @@ export const AppointmentTiles = ({
       {hasDateOfJurySession && <JurySessionTile jury={candidacy.jury} />}
 
       {hasNoAppointment && <NoRendezVousTile />}
-    </>
+    </TileGroup>
   );
 };
