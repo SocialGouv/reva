@@ -1,3 +1,4 @@
+import { FeasibilityStatus } from "@prisma/client";
 import { v4 } from "uuid";
 
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
@@ -50,6 +51,13 @@ export const validateFeasibility = async ({
   });
 
   if (hasRole("admin") || authorized) {
+    if (
+      feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
+      feasibility.decision == FeasibilityStatus.REJECTED
+    ) {
+      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+    }
+
     let infoFileInstance: S3File | undefined;
     if (infoFile) {
       infoFileInstance = {

@@ -926,6 +926,13 @@ const rejectFeasibility = async ({
   });
 
   if (hasRole("admin") || authorized) {
+    if (
+      feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
+      feasibility.decision == FeasibilityStatus.REJECTED
+    ) {
+      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+    }
+
     let infoFileInstance: S3File | undefined;
     if (infoFile) {
       infoFileInstance = {
@@ -1043,6 +1050,10 @@ const markFeasibilityAsIncomplete = async ({
     where: { id: feasibilityId },
   });
 
+  if (!feasibility) {
+    throw new Error("Dossier de faisabilité introuvable");
+  }
+
   const authorized = await canManageFeasibility({
     hasRole,
     feasibility,
@@ -1050,6 +1061,20 @@ const markFeasibilityAsIncomplete = async ({
   });
 
   if (feasibility && (hasRole("admin") || authorized)) {
+    if (
+      feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
+      feasibility.decision == FeasibilityStatus.REJECTED
+    ) {
+      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+    }
+
+    if (
+      feasibility.decision == FeasibilityStatus.COMPLETE ||
+      feasibility.decision == FeasibilityStatus.INCOMPLETE
+    ) {
+      throw new Error("Le faisabilité a déjà été marquée sur ce dossier");
+    }
+
     const updatedFeasibility = await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
@@ -1138,6 +1163,10 @@ const markFeasibilityAsComplete = async ({
     where: { id: feasibilityId },
   });
 
+  if (!feasibility) {
+    throw new Error("Dossier de faisabilité introuvable");
+  }
+
   const authorized = await canManageFeasibility({
     hasRole,
     feasibility,
@@ -1145,6 +1174,20 @@ const markFeasibilityAsComplete = async ({
   });
 
   if (feasibility && (hasRole("admin") || authorized)) {
+    if (
+      feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
+      feasibility.decision == FeasibilityStatus.REJECTED
+    ) {
+      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+    }
+
+    if (
+      feasibility.decision == FeasibilityStatus.COMPLETE ||
+      feasibility.decision == FeasibilityStatus.INCOMPLETE
+    ) {
+      throw new Error("Le faisabilité a déjà été marquée sur ce dossier");
+    }
+
     return prismaClient.$transaction(async (tx) => {
       const updatedFeasibility = await tx.feasibility.update({
         where: { id: feasibilityId },
