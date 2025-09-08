@@ -4,19 +4,26 @@ import { ReactNode } from "react";
 export const BackButton = ({
   href,
   children,
+  hasIcon = true,
 }: {
   href: string;
   children: ReactNode;
-}) => (
-  <Button
-    priority="tertiary"
-    className="mb-6"
-    iconId="fr-icon-arrow-go-back-line"
-    linkProps={{
+  hasIcon?: boolean;
+}) => {
+  const buttonProps = {
+    priority: "tertiary" as const,
+    className: "mb-6",
+    linkProps: {
       href,
-      target: "_self",
-    }}
-  >
-    {children}
-  </Button>
-);
+      target: "_self" as const,
+    },
+  };
+
+  return hasIcon ? (
+    <Button {...buttonProps} iconId="fr-icon-arrow-go-back-line">
+      {children}
+    </Button>
+  ) : (
+    <Button {...buttonProps}>{children}</Button>
+  );
+};
