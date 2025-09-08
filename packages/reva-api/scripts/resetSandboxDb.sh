@@ -3,7 +3,7 @@
 # Check if DATABASE_URL starts with "reva_sandbo" AND ENVIRONEMENT equals "sandbox"
 if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$ENVIRONEMENT" == "sandbox" ]]; then
 
-    if [[ -z "${RESET_DB_API_TOKEN:-}" || -z "${SANDBOX_SOURCE_APP:-}" || -z "${SANDBOX_DATABASE_ADDON_ID:-}" ]]; then
+    if [[ -z "${RESET_DB_API_TOKEN:-}" || -z "${SANDBOX_SOURCE_APP:-}" || -z "${SANDBOX_DATABASE_ADDON_ID:-}" || -z "${SANDBOX_BACKUP_ID:-}" ]]; then
         echo "Error: One or more required environment variables are not defined." >&2
         exit 1
     fi
@@ -26,7 +26,7 @@ if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$ENVIRONEMENT" == "sandbox"
 
     # Download the latest backup available for the specified addon:
     scalingo --app "${SANDBOX_SOURCE_APP}" --region osc-secnum-fr1 --addon "${addon_id}" \
-        backups-download --output "${archive_name}"
+        backups-download --backup $SANDBOX_BACKUP_ID --output "${archive_name}"
 
     # Get the name of the backup file:
     backup_file_name="$( tar --list --file="${archive_name}" \
@@ -46,3 +46,16 @@ else
     echo "Not running in SANDBOX environment, exiting."
     exit 1
 fi
+
+# #!/usr/bin/env bash
+
+# echo $DATABASE_URL
+# echo $ENVIRONEMENT
+# token=tk-us-S1dsRXESgchCPJWkDhW-le2N5xG2O930MxMtUTdgYvP6LgD5
+# # Check if DATABASE_URL starts with "reva_sandbo" AND ENVIRONEMENT equals "sandbox"
+# if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$ENVIRONEMENT" == "sandbox" ]]; then
+#     psql $DATABASE_URL < ./dump-reva_sandbox.sql
+# else
+#     echo "Not running in SANDBOX environment, exiting."
+#     exit 1
+# fi
