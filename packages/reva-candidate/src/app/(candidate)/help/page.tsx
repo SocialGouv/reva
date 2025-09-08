@@ -19,7 +19,7 @@ const TutorielSection = () => (
   <div className="mb-8">
     <h2>Tutoriel et dernières modifications</h2>
     <p>Retrouvez le tutoriel complet de votre espace.</p>
-    <div className="flex gap-6 flex-wrap justify-center sm:justify-start">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
       <Tile
         small
         orientation="horizontal"
@@ -28,9 +28,9 @@ const TutorielSection = () => (
           href: "https://scribehow.com/shared/Parcours_candidat__vp9k4YzATvmheao9kAoKjw",
           target: "_",
         }}
-        detail="Mise à jour : 01/09/2025"
-        imageAlt="Tutoriel France VAE"
         imageUrl="/candidat/images/pictograms/self-training.svg"
+        imageAlt="Tutoriel France VAE"
+        classes={{ img: "w-10 h-10 -mr-2" }}
         title="Tutoriel France VAE"
       />
       <Tile
@@ -41,11 +41,12 @@ const TutorielSection = () => (
           href: "https://fabnummas.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
           target: "_",
         }}
-        detail="Mise à jour : 01/09/2025"
-        imageAlt="Nouveautés France VAE"
         imageUrl="/candidat/images/pictograms/innovation.svg"
+        imageAlt="Nouveautés France VAE"
+        classes={{ img: "w-10 h-10 -mr-2" }}
         title="Nouveautés France VAE"
       />
+      <div className="hidden sm:block" />
     </div>
   </div>
 );
