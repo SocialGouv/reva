@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { spawn } from "child_process";
 import path from "path";
 
 import { CronJob } from "cron";
@@ -237,6 +238,32 @@ CronJob.from({
       batchCallback: async () => {
         logger.info("Running batch.update-candidacies-inactif-confirme");
         await checkAndUpdateCandidaciesInactifConfirme();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+CronJob.from({
+  cronTime: "* * * * *",
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "RESET_SANDBOX_BD",
+      batchCallback: async () => {
+        logger.info("Running RESET_SANDBOX_BD");
+        if (process.env.APP_ENV !== "sandbox") {
+          console.log(
+            'Not running resetSandboxDb.sh because APP_ENV is not "sandbox"',
+          );
+          return;
+        }
+        const resetProcess = spawn("bash", ["./scripts/resetSandboxDb.sh"]);
+        resetProcess.stdout.on("data", (data) => {
+          logger.info(data.toString());
+        });
+        resetProcess.stderr.on("data", (data) => {
+          logger.error(data.toString());
+        });
       },
     }),
   start: true,
