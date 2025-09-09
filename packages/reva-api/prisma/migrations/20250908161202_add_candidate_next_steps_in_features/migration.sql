@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('CANDIDATE_NEXT_ACTIONS', 'Dashboard candidat : Mes prochaines actions', 'Afficher les tuiles mes prochaines actions dans le dashboard candidat');
