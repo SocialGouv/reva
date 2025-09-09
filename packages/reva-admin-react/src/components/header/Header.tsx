@@ -30,40 +30,41 @@ const getCohortesVaeCollectivesForConnectedAapQuery = graphql(`
 `);
 
 const PATHS = {
-  CANDIDACIES: "/candidacies",
-  CERTIFICATIONS: "/certifications",
-  SUBSCRIPTIONS: "/subscriptions/pending",
-  MAISON_MERE_AAP: "/maison-mere-aap",
-  CERTIFICATION_AUTHORITY_STRUCTURES: "/certification-authority-structures",
+  AAP_HELP: "/help",
   AGENCIES_SETTINGS: "/agencies-settings-v3",
-  RESPONSABLE_CERTIFICATIONS: "/responsable-certifications/certifications",
+  CANDIDACIES: "/candidacies",
+  CERTIFICATEUR_HELP: "/certification-authorities/help",
   CERTIFICATION_AUTHORITIES_SETTINGS: "/certification-authorities/settings",
   CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL:
     "/certification-authorities/settings/local-account",
+  CERTIFICATION_AUTHORITY_STRUCTURES: "/certification-authority-structures",
+  CERTIFICATIONS: "/certifications",
   FEASIBILITIES: "/candidacies/feasibilities",
-  STATISTIQUES: "/dashboard",
-  VAE_COLLECTIVES: "/vae-collectives",
+  MAISON_MERE_AAP: "/maison-mere-aap",
   PORTEURS_DE_PROJET_VAE_COLLECTIVE: "/porteurs-de-projet-vae-collective",
-  CERTIFICATEUR_HELP: "/certification-authorities/help",
-  AAP_HELP: "/help",
+  RESPONSABLE_CERTIFICATIONS: "/responsable-certifications/certifications",
+  STATISTIQUES: "/dashboard",
+  SUBSCRIPTIONS: "/subscriptions/pending",
+  VAE_COLLECTIVES: "/vae-collectives",
 } as const;
 
 const LABELS = {
-  CANDIDACIES: "Candidatures",
-  CERTIFICATIONS: "Certifications",
-  VERIFICATIONS: "Vérifications",
-  ANNUAIRES: "Annuaires",
-  PARAMETRES: "Paramètres",
-  HELP: "Aide",
+  AAP: "AAP",
   ADMIN_CERTIFICATION_AUTHORITY_CANDIDACIES: "Certificateurs/Candidatures",
-  ADMIN_CERTIFICATION_AUTHORITY_HELP: "Certificateurs/Aide",
-  ADMIN_AAP_HELP: "AAP/Aide",
+  ANNUAIRES: "Annuaires",
+  CANDIDACIES: "Candidatures",
+  CERTIFICATION_AUTHORITY: "Certificateur",
+  CERTIFICATIONS: "Certifications",
   GESTION_CERTIFICATIONS: "Gestion des certifications",
-  STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
-  STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
+  HELP: "Aide",
+  HELP_PAGES: "Pages d'aide",
+  PARAMETRES: "Paramètres",
   PORTEURS_DE_PROJET_VAE_COLLECTIVE: "Porteurs de projet VAE collective",
   STATISTIQUES: "Statistiques",
+  STRUCTURES_ACCOMPAGNATRICES: "Structures accompagnatrices",
+  STRUCTURES_CERTIFICATRICES: "Structures certificatrices",
   VAE_COLLECTIVES: "VAE collectives",
+  VERIFICATIONS: "Vérifications",
 } as const;
 
 const createTab = ({
@@ -184,24 +185,29 @@ const getNavigationTabs = ({
       href: PATHS.FEASIBILITIES,
       isActive: isCertificationAuthorityCandidaciesPath(currentPathname),
     }),
-    ...(showAAPAideTab
-      ? [
-          createTab({
-            text: LABELS.ADMIN_AAP_HELP,
-            href: PATHS.AAP_HELP,
-            isActive: currentPathname.startsWith(PATHS.AAP_HELP),
-          }),
-        ]
-      : []),
-    ...(showCertificateurAideTab
-      ? [
-          createTab({
-            text: LABELS.ADMIN_CERTIFICATION_AUTHORITY_HELP,
-            href: PATHS.CERTIFICATEUR_HELP,
-            isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
-          }),
-        ]
-      : []),
+    {
+      text: LABELS.HELP_PAGES,
+      menuLinks: [
+        ...(showAAPAideTab
+          ? [
+              createTab({
+                text: LABELS.AAP,
+                href: PATHS.AAP_HELP,
+                isActive: currentPathname.startsWith(PATHS.AAP_HELP),
+              }),
+            ]
+          : []),
+        ...(showCertificateurAideTab
+          ? [
+              createTab({
+                text: LABELS.CERTIFICATION_AUTHORITY,
+                href: PATHS.CERTIFICATEUR_HELP,
+                isActive: currentPathname.startsWith(PATHS.CERTIFICATEUR_HELP),
+              }),
+            ]
+          : []),
+      ],
+    },
   ];
 
   const aapTabs = [
