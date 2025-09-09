@@ -245,7 +245,7 @@ CronJob.from({
 });
 
 CronJob.from({
-  cronTime: "EVERY_DAY_AT_1_AM",
+  cronTime: EVERY_DAY_AT_1_AM,
   onTick: () =>
     runBatchIfActive({
       batchKey: "RESET_SANDBOX_BD",
