@@ -1,6 +1,7 @@
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import { useMemo } from "react";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
 
 import { DashboardBanner } from "./banners/DashboardBanner";
@@ -12,6 +13,8 @@ import { DashboardVaeCollectiveTilesGroup } from "./persona-tiles-group/Dashboar
 
 const Dashboard = () => {
   const { candidacy, candidacyAlreadySubmitted } = useCandidacyForDashboard();
+  const { isFeatureActive } = useFeatureFlipping();
+  const isNextActionsFeatureActive = isFeatureActive("CANDIDATE_NEXT_ACTIONS");
 
   const hasSelectedCertification = useMemo(
     () => candidacy?.certification?.id !== undefined,
@@ -73,7 +76,11 @@ const Dashboard = () => {
           hasCompletedGoals={hasCompletedGoals}
         />
       )}
-      <DashboardSidebar candidacy={candidacy} className="basis-1/3" />
+      <DashboardSidebar
+        candidacy={candidacy}
+        className="basis-1/3"
+        isNextActionsFeatureActive={isNextActionsFeatureActive}
+      />
     </div>
   );
 
@@ -106,7 +113,11 @@ const Dashboard = () => {
           hasSelectedOrganism={hasSelectedOrganism}
           hasCompletedGoals={hasCompletedGoals}
         />
-        <DashboardSidebar candidacy={candidacy} className="basis-1/3" />
+        <DashboardSidebar
+          candidacy={candidacy}
+          className="basis-1/3"
+          isNextActionsFeatureActive={isNextActionsFeatureActive}
+        />
       </div>
     </div>
   );
