@@ -19,9 +19,6 @@ if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$APP_ENV" == "sandbox" ]]; 
     # Install the Scalingo CLI tool in the container:
     install-scalingo-cli
 
-    # Install additional tools to interact with the database:
-    dbclient-fetcher "postgresql"
-
     # Login to Scalingo, using the token stored in `RESET_DB_API_TOKEN`:
     scalingo login --api-token "${RESET_DB_API_TOKEN}"
 
