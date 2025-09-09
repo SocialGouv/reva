@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-# Check if DATABASE_URL starts with "reva_sandbo" AND ENVIRONEMENT equals "sandbox"
-if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$ENVIRONEMENT" == "sandbox" ]]; then
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+echo $DATABASE_URL
+# Check if DATABASE_URL starts with "reva_sandbo" AND APP_ENV equals "sandbox"
+if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$APP_ENV" == "sandbox" ]]; then
 
     if [[ -z "${RESET_DB_API_TOKEN:-}" || -z "${SANDBOX_SOURCE_APP:-}" || -z "${SANDBOX_DATABASE_ADDON_ID:-}" || -z "${SANDBOX_BACKUP_ID:-}" ]]; then
         echo "Error: One or more required environment variables are not defined." >&2
@@ -25,7 +29,7 @@ if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$ENVIRONEMENT" == "sandbox"
     addon_id="${SANDBOX_DATABASE_ADDON_ID}"
 
     # Download the latest backup available for the specified addon:
-    scalingo --app "${SANDBOX_SOURCE_APP}" --region osc-secnum-fr1 --addon "${addon_id}" \
+    scalingo --app "${SANDBOX_SOURCE_APP}" --region osc-fr1 --addon "${addon_id}" \
         backups-download --backup $SANDBOX_BACKUP_ID --output "${archive_name}"
 
     # Get the name of the backup file:
@@ -34,12 +38,22 @@ if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$ENVIRONEMENT" == "sandbox"
                         | cut -d "/" -f 2 )"
 
     # Extract the archive containing the downloaded backup:
-    tar --extract --verbose --file="${archive_name}" --directory="/app/"
+    tar --extract --verbose --file="/app/${archive_name}" --directory="/app/"
+
+    echo "Dropping public schema"
+    psql --dbname "${DATABASE_URL}" -c "DROP SCHEMA public CASCADE"
+
+    echo "Creating public schema"
+    psql --dbname "${DATABASE_URL}" -c "CREATE SCHEMA public"
 
     # Restore the data:
     echo "Importing dump"
     pg_restore --clean --if-exists --no-owner --no-privileges --no-comments \
     --dbname "${DATABASE_URL}" "/app/${backup_file_name}"
+
+    echo "Cleaning up files"
+    rm -rf "/app/${backup_file_name}"
+    rm -rf "/app/${archive_name}"
 
     echo 'Interop DB reset script finished'
 else
