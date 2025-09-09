@@ -19,6 +19,9 @@ if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$APP_ENV" == "sandbox" ]]; 
     # Install the Scalingo CLI tool in the container:
     install-scalingo-cli
 
+    # Install additional tools to interact with the database:
+    dbclient-fetcher "postgresql"
+
     # Login to Scalingo, using the token stored in `RESET_DB_API_TOKEN`:
     scalingo login --api-token "${RESET_DB_API_TOKEN}"
 
@@ -38,14 +41,14 @@ if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$APP_ENV" == "sandbox" ]]; 
     tar --extract --verbose --file="/app/${archive_name}" --directory="/app/"
 
     echo "Dropping public schema"
-    psql --dbname "${DATABASE_URL}" -c "DROP SCHEMA public CASCADE"
+    /app/bin/psql --dbname "${DATABASE_URL}" -c "DROP SCHEMA public CASCADE"
 
     echo "Creating public schema"
-    psql --dbname "${DATABASE_URL}" -c "CREATE SCHEMA public"
+    /app/bin/psql --dbname "${DATABASE_URL}" -c "CREATE SCHEMA public"
 
     # Restore the data:
     echo "Importing dump"
-    pg_restore --clean --if-exists --no-owner --no-privileges --no-comments \
+    /app/bin/pg_restore --clean --if-exists --no-owner --no-privileges --no-comments \
     --dbname "${DATABASE_URL}" "/app/${backup_file_name}"
 
     echo "Cleaning up files"
