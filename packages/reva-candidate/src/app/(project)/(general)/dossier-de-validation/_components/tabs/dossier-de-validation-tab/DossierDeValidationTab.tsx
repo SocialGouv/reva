@@ -15,6 +15,8 @@ import { JuryResult } from "@/graphql/generated/graphql";
 
 import { ResourcesSection } from "../../ResourcesSection";
 
+import { PreviousDossierAccordion } from "./PreviousDossierAccordion";
+
 const maxFileSizeMb = 10;
 const maxFileSizeBytes = maxFileSizeMb * 1024 * 1024;
 const acceptedFileTypes = [
@@ -82,14 +84,26 @@ export type DossierDeValidationFormData = z.infer<
 >;
 
 export const DossierDeValidationTab = ({
-  dossierDeValidationIncomplete,
+  dossierDeValidation,
   dossierDeValidationProblems,
   certification,
   jury,
   hasFailedJuryResult,
   onSubmit,
 }: {
-  dossierDeValidationIncomplete?: boolean;
+  dossierDeValidation?: {
+    id: string;
+    decision?: string | null;
+    dossierDeValidationSentAt?: number | null;
+    dossierDeValidationFile?: {
+      name: string;
+      previewUrl?: string | null;
+    } | null;
+    dossierDeValidationOtherFiles: {
+      name: string;
+      previewUrl?: string | null;
+    }[];
+  } | null;
   dossierDeValidationProblems: {
     decisionSentAt: Date;
     decisionComment: string;
@@ -107,7 +121,7 @@ export const DossierDeValidationTab = ({
   jury?: {
     result?: JuryResult | null;
     informationOfResult?: string | null;
-    dateOfResult?: string | number | null;
+    dateOfResult?: number | null;
   } | null;
   hasFailedJuryResult?: boolean;
   onSubmit: (data: DossierDeValidationFormData) => Promise<void>;
@@ -154,37 +168,45 @@ export const DossierDeValidationTab = ({
   return (
     <div className="flex flex-col">
       {hasFailedJuryResult && (
-        <Alert
-          severity="info"
-          className="mb-6"
-          title={`Vous n’avez pas validé la totalité de votre VAE à la suite de votre passage devant le jury${jury?.dateOfResult ? ` le ${format(toDate(jury.dateOfResult), "dd/MM/yyyy")}` : ""}`}
-          description={
-            <div className="flex flex-col gap-4">
-              {jury?.informationOfResult && (
+        <>
+          <Alert
+            severity="info"
+            className="mb-6"
+            title={`Vous n’avez pas validé la totalité de votre VAE à la suite de votre passage devant le jury${jury?.dateOfResult ? ` le ${format(toDate(jury.dateOfResult), "dd/MM/yyyy")}` : ""}`}
+            description={
+              <div className="flex flex-col gap-4">
+                {jury?.informationOfResult && (
+                  <p>
+                    <strong>Motif énoncé par le certificateur :</strong>{" "}
+                    {jury.informationOfResult}
+                  </p>
+                )}
                 <p>
-                  <strong>Motif énoncé par le certificateur :</strong>{" "}
-                  {jury.informationOfResult}
+                  Suite à ce résultat, vous pouvez repasser devant le jury. Vous
+                  devrez, en amont, retravailler sur le dossier de validation et
+                  le renvoyer afin de le faire parvenir au certificateur. Une
+                  fois reçu, le certificateur pourra vous transmettre une
+                  nouvelle date de passage devant le jury. Vous pouvez dès à
+                  présent fournir une date prévisionnelle de dépot de dossier.
                 </p>
-              )}
-              <p>
-                Suite à ce résultat, vous pouvez repasser devant le jury. Vous
-                devrez, en amont, retravailler sur le dossier de validation et
-                le renvoyer afin de le faire parvenir au certificateur. Une fois
-                reçu, le certificateur pourra vous transmettre une nouvelle date
-                de passage devant le jury. Vous pouvez dès à présent fournir une
-                date prévisionnelle de dépot de dossier.
-              </p>
-              <p>
-                Ce passage n'est pas une obligation et reste à votre libre
-                choix. N'hésitez pas à vous rapprocher de votre certificateur
-                pour avoir plus de détails et connaître les délais.
-              </p>
-            </div>
-          }
-        />
+                <p>
+                  Ce passage n'est pas une obligation et reste à votre libre
+                  choix. N'hésitez pas à vous rapprocher de votre certificateur
+                  pour avoir plus de détails et connaître les délais.
+                </p>
+              </div>
+            }
+          />
+          {dossierDeValidation?.dossierDeValidationSentAt && (
+            <PreviousDossierAccordion
+              dossierDeValidation={dossierDeValidation}
+              juryDateOfResult={jury?.dateOfResult}
+            />
+          )}
+        </>
       )}
 
-      {dossierDeValidationIncomplete && currentProblem && (
+      {dossierDeValidation?.decision === "INCOMPLETE" && currentProblem && (
         <>
           <Alert
             data-test="dossier-de-validation-signale-alert"

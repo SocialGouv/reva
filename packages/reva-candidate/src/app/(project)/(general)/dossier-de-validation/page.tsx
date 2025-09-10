@@ -152,9 +152,7 @@ export default function DossierDeValidationPag() {
                   isDefault: !!readyForJuryEstimatedAt,
                   content: (
                     <DossierDeValidationTab
-                      dossierDeValidationIncomplete={
-                        dossierDeValidation?.decision === "INCOMPLETE"
-                      }
+                      dossierDeValidation={dossierDeValidation}
                       dossierDeValidationProblems={dossierDeValidationProblems}
                       certification={certification}
                       jury={jury}

@@ -19,6 +19,10 @@ interface DossierDeValidationFixture {
   decisionSentAt?: number;
   decisionComment?: string;
   dossierDeValidationSentAt?: number;
+  dossierDeValidationFile?: {
+    name: string;
+    previewUrl?: string | null;
+  };
   dossierDeValidationOtherFiles?: Array<{
     name: string;
     previewUrl?: string | null;
@@ -639,6 +643,111 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               "exist",
             );
           });
+        });
+      });
+
+      it("should display accordion with the last submitted dossier when jury has failed and only the last one", function () {
+        const dateOfResult = addDays(DATE_NOW, -30);
+        const dossierSentDate = addDays(DATE_NOW, -45);
+        const informationOfResult = "Lorem ipsum failorum";
+
+        const incompleteDV1Date = addDays(DATE_NOW, -120);
+        const incompleteDV2Date = addDays(DATE_NOW, -90);
+
+        setupCandidateFixture({
+          typeAccompagnement,
+          status: "DOSSIER_DE_VALIDATION_ENVOYE",
+          juryResult: "FAILURE",
+          juryInfo: {
+            informationOfResult,
+            dateOfResult: dateOfResult.getTime(),
+          },
+          activeDossierDeValidation: {
+            dossierDeValidationSentAt: dossierSentDate.getTime(),
+            dossierDeValidationFile: {
+              name: "dossier-validation-final.pdf",
+              previewUrl: "https://example.com/dossier-final.pdf",
+            },
+            dossierDeValidationOtherFiles: [
+              {
+                name: "annexe1.pdf",
+                previewUrl: "https://example.com/annexe1.pdf",
+              },
+              {
+                name: "annexe2.jpg",
+                previewUrl: "https://example.com/annexe2.jpg",
+              },
+            ],
+            history: [
+              {
+                id: "dossier-incomplete-1",
+                decisionSentAt: incompleteDV1Date.getTime(),
+                decisionComment: "comment 1",
+              },
+              {
+                id: "dossier-incomplete-2",
+                decisionSentAt: incompleteDV2Date.getTime(),
+                decisionComment: "comment 2",
+              },
+            ],
+          },
+        }).then((candidate) => {
+          setupGraphQLStubs(candidate, [
+            "getCandidateWithCandidacyForDossierDeValidationPage",
+          ]);
+          loginAndWaitForQueries();
+          navigateToDossierValidation();
+          clickDossierTab();
+
+          cy.get(".fr-accordion").should(
+            "contain",
+            "Voir le dernier dossier soutenu devant le jury",
+          );
+
+          cy.get(".fr-accordion__btn").click();
+
+          cy.get(".fr-accordion .fr-collapse")
+            .should(
+              "contain",
+              `Dossier déposé le ${format(dossierSentDate, "dd/MM/yyyy")}`,
+            )
+            .should("contain", "Soutenu devant le jury le :")
+            .should("contain", format(dateOfResult, "dd/MM/yyyy"))
+            .should("contain", "Contenu du dossier :")
+            .should("contain", "dossier-validation-final.pdf")
+            .should("contain", "annexe1.pdf")
+            .should("contain", "annexe2.jpg");
+
+          cy.get(".fr-accordion .fr-collapse").should("have.length", 1);
+        });
+      });
+
+      it("should not display accordion when jury has failed result but no dossier was sent", function () {
+        const dateOfResult = addDays(DATE_NOW, -30);
+
+        setupCandidateFixture({
+          typeAccompagnement,
+          status: "DOSSIER_DE_VALIDATION_ENVOYE",
+          juryResult: "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+          juryInfo: {
+            informationOfResult: "Partial success",
+            dateOfResult: dateOfResult.getTime(),
+          },
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+          },
+        }).then((candidate) => {
+          setupGraphQLStubs(candidate, [
+            "getCandidateWithCandidacyForDossierDeValidationPage",
+          ]);
+          loginAndWaitForQueries();
+          navigateToDossierValidation();
+          clickDossierTab();
+
+          cy.get(".fr-alert--info").should("exist");
+
+          cy.get(".fr-accordions-group").should("not.exist");
+          cy.get(".fr-accordion").should("not.exist");
         });
       });
     });
