@@ -14,7 +14,7 @@ export const DossierDeValidationBanner = ({
 }: DossierDeValidationBannerProps) => {
   const { decision } = activeDossierDeValidation;
 
-  if (decision === "PENDING") {
+  if (decision === "PENDING" || decision === "COMPLETE") {
     return (
       <BaseBanner
         content={

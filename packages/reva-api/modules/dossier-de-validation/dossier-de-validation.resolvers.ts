@@ -11,7 +11,8 @@ import { getDossierDeValidationHistory } from "./features/getDossierDeValidation
 import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDossierDeValidationOtherFilesNamesAndUrls";
 import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
 import { getHistoryDossierDeValidationByCandidacyId } from "./features/getHistoryDossierDeValidationByCandidacyId";
-import { signalDossierDeValidationProblem } from "./features/signalDossierDeValidationProblem";
+import { markDossierDeValidationAsComplete } from "./features/markDossierDeValidationAsComplete";
+import { markDossierDeValidationAsIncomplete } from "./features/markDossierDeValidationAsIncomplete";
 import { DossierDeValidationStatusFilter } from "./types/dossierDeValidationStatusFilter.type";
 
 const unsafeResolvers = {
@@ -95,7 +96,7 @@ const unsafeResolvers = {
       }),
   },
   Mutation: {
-    dossierDeValidation_signalProblem: (
+    dossierDeValidation_markAsIncomplete: (
       _: unknown,
       {
         dossierDeValidationId,
@@ -106,7 +107,25 @@ const unsafeResolvers = {
       },
       context: GraphqlContext,
     ) =>
-      signalDossierDeValidationProblem({
+      markDossierDeValidationAsIncomplete({
+        dossierDeValidationId,
+        decisionComment,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth?.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
+    dossierDeValidation_markAsComplete: (
+      _: unknown,
+      {
+        dossierDeValidationId,
+        decisionComment,
+      }: {
+        dossierDeValidationId: string;
+        decisionComment: string;
+      },
+      context: GraphqlContext,
+    ) =>
+      markDossierDeValidationAsComplete({
         dossierDeValidationId,
         decisionComment,
         userKeycloakId: context.auth.userInfo?.sub,

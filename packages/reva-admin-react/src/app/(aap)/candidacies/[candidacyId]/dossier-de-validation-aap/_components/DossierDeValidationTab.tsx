@@ -88,7 +88,9 @@ export const DossierDeValidationTab = (props: Props) => {
 
         <HistoryDossierDeValidationView
           historyDossierDeValidation={
-            dossierDeValidation && dossierDeValidation.decision == "PENDING"
+            dossierDeValidation &&
+            (dossierDeValidation.decision == "PENDING" ||
+              dossierDeValidation.decision == "COMPLETE")
               ? [...historyDossierDeValidation, dossierDeValidation]
               : historyDossierDeValidation
           }

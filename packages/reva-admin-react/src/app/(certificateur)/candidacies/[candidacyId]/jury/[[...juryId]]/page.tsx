@@ -20,7 +20,8 @@ const JuryPage = () => {
       <h1>Jury</h1>
 
       {!getCandidacy.isLoading &&
-        dossierDeValidation?.decision == "PENDING" && (
+        (dossierDeValidation?.decision == "PENDING" ||
+          dossierDeValidation?.decision == "COMPLETE") && (
           <Tabs
             tabs={[
               {

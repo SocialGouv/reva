@@ -20,11 +20,11 @@ const getCandidacyWithDossierDeValidationQuery = graphql(`
 `);
 
 const signalDossierDeValidationProblemMutation = graphql(`
-  mutation dossierDeValidation_signalProblem(
+  mutation dossierDeValidation_markAsIncomplete(
     $dossierDeValidationId: ID!
     $decisionComment: String!
   ) {
-    dossierDeValidation_signalProblem(
+    dossierDeValidation_markAsIncomplete(
       dossierDeValidationId: $dossierDeValidationId
       decisionComment: $decisionComment
     ) {

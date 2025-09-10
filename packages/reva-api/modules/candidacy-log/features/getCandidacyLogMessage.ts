@@ -40,6 +40,9 @@ export const getCandidacyLogMessage = ({
     case "DOSSIER_DE_VALIDATION_PROBLEM_SIGNALED":
       return log("Dossier de validation signalé");
 
+    case "DOSSIER_DE_VALIDATION_VERIFIED":
+      return log("Dossier de validation vérifié");
+
     case "CANDIDACY_SUBMITTED":
       return log("Candidature envoyée");
 

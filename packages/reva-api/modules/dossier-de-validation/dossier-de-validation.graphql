@@ -16,12 +16,14 @@ type DossierDeValidation {
 enum DossierDeValidationDecision {
   PENDING
   INCOMPLETE
+  COMPLETE
 }
 
 enum DossierDeValidationCategoryFilter {
   ALL
   PENDING
   INCOMPLETE
+  COMPLETE
 }
 
 type Candidacy {
@@ -38,6 +40,7 @@ type DossierDeValidationCountByCategory {
   ALL: Int!
   PENDING: Int!
   INCOMPLETE: Int!
+  COMPLETE: Int!
 }
 
 type Query {
@@ -60,8 +63,12 @@ type Query {
 }
 
 type Mutation {
-  dossierDeValidation_signalProblem(
+  dossierDeValidation_markAsIncomplete(
     dossierDeValidationId: ID!
     decisionComment: String!
+  ): DossierDeValidation!
+  dossierDeValidation_markAsComplete(
+    dossierDeValidationId: ID!
+    decisionComment: String
   ): DossierDeValidation!
 }

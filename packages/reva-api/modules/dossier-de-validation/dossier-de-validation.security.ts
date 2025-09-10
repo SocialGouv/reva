@@ -21,7 +21,8 @@ export const dossierDeValidationResolversSecurityMap = {
     hasRole(["admin", "manage_feasibility"]),
   ],
 
-  "Mutation.dossierDeValidation_signalProblem": canManageDossierDeValidation,
+  "Mutation.dossierDeValidation_markAsComplete": canManageDossierDeValidation,
+  "Mutation.dossierDeValidation_markAsIncomplete": canManageDossierDeValidation,
 
   "Candidacy.activeDossierDeValidation:":
     isAdminCandidacyCompanionOrFeasibilityManagerOrCandidate,

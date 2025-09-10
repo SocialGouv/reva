@@ -36,6 +36,14 @@ export const DossierDeValidationCard = (props: Props) => {
             <strong>{format(sentAt, "dd/MM/yyyy")}</strong>
           </p>
         )}
+
+        {decision == "COMPLETE" && decisionSentAt && (
+          <p className="m-0">
+            Dossier vérifié le :
+            <br />
+            <strong>{format(sentAt, "dd/MM/yyyy")}</strong>
+          </p>
+        )}
       </div>
 
       {decision == "INCOMPLETE" && decisionSentAt && (

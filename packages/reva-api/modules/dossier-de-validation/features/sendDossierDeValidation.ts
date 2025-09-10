@@ -100,14 +100,19 @@ export const sendDossierDeValidation = async ({
   const hasFailedJuryResult =
     activeJury?.result && failedJuryResults.includes(activeJury.result);
 
-  if (activeDossierDeValidation?.decision == "PENDING" && !activeJury) {
+  if (
+    (activeDossierDeValidation?.decision == "PENDING" ||
+      activeDossierDeValidation?.decision == "COMPLETE") &&
+    !activeJury
+  ) {
     throw new Error(
       "Un dossier de validation est en cours de validation par le certificateur.",
     );
   }
 
   if (
-    activeDossierDeValidation?.decision == "PENDING" &&
+    (activeDossierDeValidation?.decision == "PENDING" ||
+      activeDossierDeValidation?.decision == "COMPLETE") &&
     activeJury &&
     !hasFailedJuryResult
   ) {

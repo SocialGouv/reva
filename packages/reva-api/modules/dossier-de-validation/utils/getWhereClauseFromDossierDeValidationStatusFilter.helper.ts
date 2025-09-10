@@ -24,6 +24,7 @@ export const getWhereClauseFromDossierDeValidationStatusFilter = (
       break;
     case "PENDING":
     case "INCOMPLETE":
+    case "COMPLETE":
       whereClause = {
         ...whereClause,
         decision: statusFilter,

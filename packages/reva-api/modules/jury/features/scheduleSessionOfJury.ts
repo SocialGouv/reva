@@ -53,8 +53,12 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   }
 
   const dossierDeValidation = candidacy.dossierDeValidation[0];
-  if (dossierDeValidation?.decision != "PENDING") {
+  if (!dossierDeValidation) {
     throw new Error("Le dossier de validation n'a pas été envoyé");
+  }
+
+  if (dossierDeValidation.decision == "INCOMPLETE") {
+    throw new Error("Le dossier de validation a été signalé");
   }
 
   const activeJury = candidacy.Jury[0];

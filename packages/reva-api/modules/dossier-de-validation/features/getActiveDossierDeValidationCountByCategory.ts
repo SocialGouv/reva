@@ -31,6 +31,7 @@ export const getActiveDossierDeValidationCountByCategory = async ({
     ALL: 0,
     PENDING: 0,
     INCOMPLETE: 0,
+    COMPLETE: 0,
   };
 
   const account = await getAccountByKeycloakId({ keycloakId });

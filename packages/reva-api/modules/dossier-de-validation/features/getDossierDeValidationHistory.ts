@@ -11,7 +11,7 @@ export const getDossierDeValidationHistory = ({
     where: {
       candidacyId,
       id: { not: dossierDeValidationId },
-      decision: "INCOMPLETE",
+      OR: [{ decision: "INCOMPLETE" }, { decision: "COMPLETE" }],
     },
     orderBy: { createdAt: "desc" },
   });

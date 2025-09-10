@@ -34,6 +34,7 @@ export const DashboardBanner = (props: BannerProps) => {
 
   const displayDossierDeValidationBanner = !!(
     activeDossierDeValidation?.decision === "PENDING" ||
+    activeDossierDeValidation?.decision === "COMPLETE" ||
     activeDossierDeValidation?.decision === "INCOMPLETE"
   );
 

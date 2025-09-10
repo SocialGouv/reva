@@ -9,7 +9,7 @@ import {
 
 import { getDossierDeValidationById } from "./getDossierDeValidationById";
 
-export const signalDossierDeValidationProblem = async ({
+export const markDossierDeValidationAsIncomplete = async ({
   dossierDeValidationId,
   decisionComment,
   userKeycloakId,

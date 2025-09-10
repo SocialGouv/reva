@@ -34,7 +34,7 @@ const DossierValidationBadge = ({
           à transmettre
         </Badge>
       );
-    case decision === "PENDING":
+    case decision === "PENDING" || decision === "COMPLETE":
       return (
         <Badge severity="success" data-test="dossier-validation-badge-pending">
           envoyé au certificateur
