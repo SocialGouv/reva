@@ -5,6 +5,8 @@ import {
 
 import { getDossierDeValidationByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationByCandidacyId.js";
 import { mapGetDossierDeValidationByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationByCandidacyId.mapper.js";
+import { getDossierDeValidationHistoryByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationHistoryByCandidacyId.js";
+import { mapGetDossierDeValidationHistoryByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationHistoryByCandidacyId.mapper.js";
 import { getDossiersDeValidation } from "../features/dossiersDeValidation/getDossiersDeValidation.js";
 import { mapGetDossiersDeValidation } from "../features/dossiersDeValidation/getDossiersDeValidation.mapper.js";
 import { dossierDeValidationDecisionInputSchema } from "../inputSchemas.js";
@@ -157,7 +159,7 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         summary:
           "Récupérer la liste des décisions sur le dossier de validation",
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Dossier de validation"],
+        tags: ["Implémenté", "Dossier de validation"],
         params: {
           type: "object",
           properties: {
@@ -174,8 +176,17 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const candidacy = await getDossierDeValidationHistoryByCandidacyId(
+          request.graphqlClient,
+          candidatureId,
+        );
+        if (candidacy) {
+          reply.send(mapGetDossierDeValidationHistoryByCandidacyId(candidacy));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 
