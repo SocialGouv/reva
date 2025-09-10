@@ -3,6 +3,8 @@ import {
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
 
+import { createDossierDeValidationDecisionByCandidacyId } from "../features/dossiersDeValidation/createDossierDeValidationDecisionByCandidacyId.js";
+import { mapCreateDossierDeValidationDecisionByCandidacyId } from "../features/dossiersDeValidation/createDossierDeValidationDecisionByCandidacyId.mapper.js";
 import { getDossierDeValidationByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationByCandidacyId.js";
 import { mapGetDossierDeValidationByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationByCandidacyId.mapper.js";
 import { getDossierDeValidationHistoryByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationHistoryByCandidacyId.js";
@@ -208,7 +210,7 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Créer une nouvelle décision sur le dossier de validation",
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Dossier de validation"],
+        tags: ["Implémenté", "Dossier de validation"],
         body: {
           $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionInput",
         },
@@ -228,8 +230,26 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const { decision, commentaire } = request.body;
+
+        const candidacy = await createDossierDeValidationDecisionByCandidacyId(
+          request.graphqlClient,
+          candidatureId,
+          {
+            decision: decision,
+            commentaire: commentaire,
+          },
+        );
+
+        if (candidacy) {
+          reply.send(
+            mapCreateDossierDeValidationDecisionByCandidacyId(candidacy),
+          );
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 };

@@ -109,6 +109,29 @@ export const dossierDeValidationResponseSchema = {
   },
 } as const;
 
+export const dossierDeValidationDecisionsResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionsResponse",
+  type: "object",
+  properties: {
+    data: {
+      type: "array",
+      items: {
+        $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecision",
+      },
+    },
+  },
+} as const;
+
+export const dossierDeValidationDecisionResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionResponse",
+  type: "object",
+  properties: {
+    data: {
+      $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecision",
+    },
+  },
+} as const;
+
 export const addResponseSchemas = (fastify: FastifyInstance) => {
   fastify.addSchema(dossiersDeFaisabiliteResponseSchema);
 
@@ -122,28 +145,9 @@ export const addResponseSchemas = (fastify: FastifyInstance) => {
 
   fastify.addSchema(dossierDeValidationResponseSchema);
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionsResponse",
-    type: "object",
-    properties: {
-      data: {
-        type: "array",
-        items: {
-          $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecision",
-        },
-      },
-    },
-  });
+  fastify.addSchema(dossierDeValidationDecisionsResponseSchema);
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionResponse",
-    type: "object",
-    properties: {
-      data: {
-        $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecision",
-      },
-    },
-  });
+  fastify.addSchema(dossierDeValidationDecisionResponseSchema);
 
   fastify.addSchema({
     $id: "http://vae.gouv.fr/components/schemas/InformationsJuryResponse",

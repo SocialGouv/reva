@@ -1,39 +1,38 @@
 import { FromSchema } from "json-schema-to-ts";
 
 import { GetGqlResponseType } from "../../../../utils/types.js";
-import { dossierDeFaisabiliteDecisionsResponseSchema } from "../../responseSchemas.js";
+import { dossierDeValidationDecisionInputSchema } from "../../inputSchemas.js";
+import { dossierDeValidationDecisionsResponseSchema } from "../../responseSchemas.js";
 import {
-  dossierDeFaisabiliteDecisionSchema,
-  decisionDossierDeFaisabiliteSchema,
+  decisionDossierDeValidationSchema,
+  dossierDeValidationDecisionSchema,
 } from "../../schemas.js";
 
 import { getDossierDeValidationHistoryByCandidacyId } from "./getDossierDeValidationHistoryByCandidacyId.js";
 
 type MappedDossierDeValidationDecisionsResponse = FromSchema<
-  typeof dossierDeFaisabiliteDecisionsResponseSchema,
+  typeof dossierDeValidationDecisionsResponseSchema,
   {
     references: [
-      typeof dossierDeFaisabiliteDecisionSchema,
-      typeof decisionDossierDeFaisabiliteSchema,
+      typeof dossierDeValidationDecisionSchema,
+      typeof decisionDossierDeValidationSchema,
     ];
   }
 >;
 
 type MappedDossierDeValidationDecision = FromSchema<
-  typeof dossierDeFaisabiliteDecisionSchema,
+  typeof dossierDeValidationDecisionInputSchema,
   {
-    references: [typeof decisionDossierDeFaisabiliteSchema];
+    references: [typeof decisionDossierDeValidationSchema];
   }
 >;
 
 const statusMapFromGqlToInterop: Record<
   string,
-  (typeof decisionDossierDeFaisabiliteSchema)["enum"][number]
+  (typeof decisionDossierDeValidationSchema)["enum"][number]
 > = {
-  REJECTED: "IRRECEVABLE",
-  ADMISSIBLE: "RECEVABLE",
-  INCOMPLETE: "INCOMPLET",
-  COMPLETE: "COMPLET",
+  INCOMPLETE: "SIGNALE",
+  COMPLETE: "VERIFIE",
 };
 
 const mapDossierDeValidationDecision = (

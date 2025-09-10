@@ -513,7 +513,7 @@ export const decisionDossierDeValidationSchema = {
   example: "SIGNALE",
 } as const;
 
-const dossierDeValidationDecisionSchema = {
+export const dossierDeValidationDecisionSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecision",
   type: "object",
   properties: {
