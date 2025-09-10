@@ -30,7 +30,7 @@ const LegalDocumentationPage = async ({
   const { isEnabled: preview } = await draftMode();
   const { slug } = await params;
   const getLegalArticleResponse = await strapi.request(getLegalArticle, {
-    nom: slug,
+    nom: decodeURIComponent(slug),
     publicationState: preview ? "DRAFT" : "PUBLISHED",
   });
   const legalArticle = getLegalArticleResponse?.legals[0] ?? null;
