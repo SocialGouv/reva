@@ -245,7 +245,7 @@ export const DossierDeValidationTab = ({
             supplémentaires.
           </p>
           <form
-            className="flex flex-col flex-1 mb-2 overflow-auto"
+            className="flex flex-col flex-1 mb-2"
             onSubmit={handleFormSubmit}
             onReset={(e) => {
               e.preventDefault();
