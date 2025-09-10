@@ -53,7 +53,7 @@ export const createFeasibilityDecisionByCandidacyId = async (
   keycloakJwt: string,
   candidacyId: string,
   params: {
-    decision: "IRRECEVABLE" | "RECEVABLE" | "INCOMPLET" | "COMPLET";
+    decision: (typeof decisionDossierDeFaisabiliteSchema)["enum"][number];
     commentaire?: string;
     document?: UploadedFile;
   },
@@ -107,7 +107,7 @@ const createFeasibilityDecisionForPdf = async (
   keycloakJwt: string,
   feasibilityId: string,
   params: {
-    decision: "IRRECEVABLE" | "RECEVABLE" | "INCOMPLET" | "COMPLET";
+    decision: (typeof decisionDossierDeFaisabiliteSchema)["enum"][number];
     commentaire?: string;
     document?: UploadedFile;
   },
@@ -141,7 +141,7 @@ const createFeasibilityDecisionForDemat = async (
   graphqlClient: Client,
   candidacyId: string,
   params: {
-    decision: "IRRECEVABLE" | "RECEVABLE" | "INCOMPLET" | "COMPLET";
+    decision: (typeof decisionDossierDeFaisabiliteSchema)["enum"][number];
     commentaire?: string;
     document?: UploadedFile;
   },
