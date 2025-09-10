@@ -3,6 +3,8 @@ import {
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
 
+import { getDossierDeValidationByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationByCandidacyId.js";
+import { mapGetDossierDeValidationByCandidacyId } from "../features/dossiersDeValidation/getDossierDeValidationByCandidacyId.mapper.js";
 import { getDossiersDeValidation } from "../features/dossiersDeValidation/getDossiersDeValidation.js";
 import { mapGetDossiersDeValidation } from "../features/dossiersDeValidation/getDossiersDeValidation.mapper.js";
 import { dossierDeValidationDecisionInputSchema } from "../inputSchemas.js";
@@ -100,12 +102,7 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
     .withTypeProvider<
       JsonSchemaToTsProvider<{
-        ValidatorSchemaOptions: {
-          references: [
-            typeof candidacyIdSchema,
-            typeof dossierDeValidationSchema,
-          ];
-        };
+        ValidatorSchemaOptions: { references: [typeof candidacyIdSchema] };
       }>
     >()
     .route({
@@ -114,7 +111,7 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Récupérer le dernier dossier de validation d'une candidature",
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Dossier de validation"],
+        tags: ["Implémenté", "Dossier de validation"],
         params: {
           type: "object",
           properties: {
@@ -126,13 +123,22 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         },
         response: {
           200: {
-            description: "Détails du dossier de validation",
-            $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidation",
+            description: "Dossier de validation",
+            $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationResponse",
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const candidacy = await getDossierDeValidationByCandidacyId(
+          request.graphqlClient,
+          candidatureId,
+        );
+        if (candidacy) {
+          reply.send(mapGetDossierDeValidationByCandidacyId(candidacy));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 

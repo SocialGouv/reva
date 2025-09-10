@@ -99,6 +99,16 @@ export const dossiersDeValidationResponseSchema = {
   },
 } as const;
 
+export const dossierDeValidationResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationResponse",
+  type: "object",
+  properties: {
+    data: {
+      $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidation",
+    },
+  },
+} as const;
+
 export const addResponseSchemas = (fastify: FastifyInstance) => {
   fastify.addSchema(dossiersDeFaisabiliteResponseSchema);
 
@@ -110,15 +120,7 @@ export const addResponseSchemas = (fastify: FastifyInstance) => {
 
   fastify.addSchema(dossiersDeValidationResponseSchema);
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationResponse",
-    type: "object",
-    properties: {
-      data: {
-        $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidation",
-      },
-    },
-  });
+  fastify.addSchema(dossierDeValidationResponseSchema);
 
   fastify.addSchema({
     $id: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionsResponse",

@@ -14,7 +14,7 @@ import {
 
 import { getFeasibilityByCandidacyId } from "./getFeasibilityByCandidacyId.js";
 
-type MappedFeasibilitieResponse = FromSchema<
+type MappedFeasibilityResponse = FromSchema<
   typeof dossierDeFaisabiliteResponseSchema,
   {
     references: [
@@ -185,6 +185,6 @@ const mapFeasibility = (
 
 export const mapGetFeasibilityByCandidacyId = (
   candidacy: GetGqlResponseType<typeof getFeasibilityByCandidacyId>,
-): MappedFeasibilitieResponse => {
+): MappedFeasibilityResponse => {
   return { data: mapFeasibility(candidacy) };
 };
