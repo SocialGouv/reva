@@ -55,6 +55,9 @@ if [[ "$DATABASE_URL" == postgres://reva_sandbo* && "$APP_ENV" == "sandbox" ]]; 
     rm -rf "/app/${backup_file_name}"
     rm -rf "/app/${archive_name}"
 
+    echo "Running migrations"
+    npm run prisma:migrate:deploy
+
     echo 'Interop DB reset script finished'
 else
     echo "Not running in SANDBOX environment, exiting."
