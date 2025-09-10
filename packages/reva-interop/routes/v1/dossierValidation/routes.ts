@@ -3,12 +3,19 @@ import {
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
 
+import { getDossiersDeValidation } from "../features/dossiersDeValidation/getDossiersDeValidation.js";
+import { mapGetDossiersDeValidation } from "../features/dossiersDeValidation/getDossiersDeValidation.mapper.js";
 import { dossierDeValidationDecisionInputSchema } from "../inputSchemas.js";
+import {
+  dossiersDeValidationResponseSchema,
+  pageInfoSchema,
+} from "../responseSchemas.js";
 import {
   statutDossierDeValidationSchema,
   candidacyIdSchema,
   dossierDeValidationSchema,
   decisionDossierDeValidationSchema,
+  fichierSchema,
 } from "../schemas.js";
 
 const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
@@ -20,6 +27,16 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         ValidatorSchemaOptions: {
           references: [typeof statutDossierDeValidationSchema];
         };
+        SerializerSchemaOptions: {
+          references: [
+            typeof dossiersDeValidationResponseSchema,
+            typeof pageInfoSchema,
+            typeof candidacyIdSchema,
+            typeof fichierSchema,
+            typeof dossierDeValidationSchema,
+            typeof statutDossierDeValidationSchema,
+          ];
+        };
       }>
     >()
     .route({
@@ -28,18 +45,20 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Récupérer la liste des dossiers de validation",
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Dossier de validation"],
+        tags: ["Implémenté", "Dossier de validation"],
         querystring: {
           type: "object",
           properties: {
             decalage: {
               type: "integer",
               example: 0,
+              default: 0,
               description: "Décalage pour la pagination",
             },
             limite: {
               type: "integer",
               example: 10,
+              default: 10,
               description: "Limite du nombre de résultats",
             },
             recherche: {
@@ -61,8 +80,20 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { decalage, limite, recherche, statut } = request.query;
+        const dossiersDeValidation = await getDossiersDeValidation(
+          request.graphqlClient,
+          decalage,
+          limite,
+          statut,
+          recherche,
+        );
+        if (dossiersDeValidation) {
+          reply.send(mapGetDossiersDeValidation(dossiersDeValidation));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 

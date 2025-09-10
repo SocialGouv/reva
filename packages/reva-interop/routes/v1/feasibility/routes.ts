@@ -237,8 +237,8 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             decalage: {
               type: "integer",
               example: 0,
-              description: "Décalage pour la pagination",
               default: 0,
+              description: "Décalage pour la pagination",
             },
             limite: {
               type: "integer",
