@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { draftMode } from "next/headers";
 
 import { StrapiBlocksRenderer } from "@/app/_components/blocks-renderer/StrapiBlocksRenderer";
@@ -22,6 +21,23 @@ const getLegalArticle = graphql(`
   }
 `);
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const { isEnabled: preview } = await draftMode();
+  const getLegalArticleResponse = await strapi.request(getLegalArticle, {
+    nom: decodeURIComponent(slug),
+    publicationState: preview ? "DRAFT" : "PUBLISHED",
+  });
+  const legalArticle = getLegalArticleResponse?.legals[0] ?? null;
+  return {
+    title: `${legalArticle?.titre} - France VAE | Prenez votre avenir professionnel en main`,
+  };
+}
+
 const LegalDocumentationPage = async ({
   params,
 }: {
@@ -41,12 +57,6 @@ const LegalDocumentationPage = async ({
 
   return (
     <MainLayout>
-      <Head>
-        <title>
-          {legalArticle?.titre} - France VAE | Prenez votre avenir professionnel
-          en main
-        </title>
-      </Head>
       <NeutralBackground>
         <h1>{legalArticle?.titre}</h1>
         {legalArticle.chapo &&
