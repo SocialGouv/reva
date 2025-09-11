@@ -33,7 +33,7 @@ const mapJurySession = (
   };
 };
 
-export const mapGetJurySessionByCandidacyId = (
+export const mapScheduleJurySessionByCandidacyId = (
   candidacy: GetGqlResponseType<typeof getJurySessionByCandidacyId>,
 ): MappedSessionJuryResponse => {
   return { data: mapJurySession(candidacy) };

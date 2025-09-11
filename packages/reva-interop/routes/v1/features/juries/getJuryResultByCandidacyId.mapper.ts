@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { JuryResult } from "../../../../graphql/generated/graphql.js";
 import { GetGqlResponseType } from "../../../../utils/types.js";
 import { resultatSessionJuryResponseSchema } from "../../responseSchemas.js";
 import {
@@ -24,7 +25,7 @@ type MappedResultatSessionJury = FromSchema<
 >;
 
 const resultatMapFromGqlToInterop: Record<
-  string,
+  JuryResult,
   (typeof resultatJurySchema)["enum"][number]
 > = {
   FULL_SUCCESS_OF_FULL_CERTIFICATION: "SUCCES_TOTAL_CERTIFICATION_COMPLETE",

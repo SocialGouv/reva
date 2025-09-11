@@ -42,33 +42,53 @@ export const sessionJuryInputSchema = {
   type: "object",
   properties: {
     date: {
-      type: "string",
-      format: "date",
-      description: "Date de la session du jury",
-      example: "2023-12-15",
+      type: "object",
+      properties: {
+        value: {
+          type: "string",
+          format: "date",
+          description: "Date de la session du jury",
+          example: "2023-12-15",
+        },
+      },
     },
     heure: {
-      type: "string",
-      format: "time",
-      description: "Heure de la session du jury",
-      example: "14:30",
+      type: "object",
+      properties: {
+        value: {
+          type: "string",
+          format: "time",
+          description: "Heure de la session du jury",
+          example: "14:30",
+        },
+      },
     },
     adresseSession: {
-      type: "string",
-      description: "Adresse où se tient la session",
-      example: "876 rue de l'Université, 75007 Paris",
+      type: "object",
+      properties: {
+        value: {
+          type: "string",
+          description: "Adresse où se tient la session",
+          example: "876 rue de l'Université, 75007 Paris",
+        },
+      },
     },
     informationsSession: {
-      type: "string",
-      description: "Informations supplémentaires sur la session",
-      example: "Se présenter 15 minutes avant le début de la session.",
+      type: "object",
+      properties: {
+        value: {
+          type: "string",
+          description: "Informations supplémentaires sur la session",
+          example: "Se présenter 15 minutes avant le début de la session.",
+        },
+      },
     },
     document: {
-      type: "string",
-      format: "binary",
+      type: "object",
       description: "La convocation officielle éventuelle",
     },
   },
+  required: ["date"],
 } as const;
 
 export const resultatJuryInputSchema = {

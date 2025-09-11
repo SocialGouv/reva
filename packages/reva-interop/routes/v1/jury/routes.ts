@@ -3,6 +3,7 @@ import {
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
 
+import { UploadedFile } from "../../../utils/types.js";
 import { getJuries } from "../features/juries/getJuries.js";
 import { mapGetJuries } from "../features/juries/getJuries.mapper.js";
 import { getJuryByCandidacyId } from "../features/juries/getJuryByCandidacyId.js";
@@ -11,6 +12,8 @@ import { getJuryResultByCandidacyId } from "../features/juries/getJuryResultByCa
 import { mapGetJuryResultByCandidacyId } from "../features/juries/getJuryResultByCandidacyId.mapper.js";
 import { getJurySessionByCandidacyId } from "../features/juries/getJurySessionByCandidacyId.js";
 import { mapGetJurySessionByCandidacyId } from "../features/juries/getJurySessionByCandidacyId.mapper.js";
+import { scheduleJurySessionByCandidacyId } from "../features/juries/scheduleJurySessionByCandidacyId.js";
+import { mapScheduleJurySessionByCandidacyId } from "../features/juries/scheduleJurySessionByCandidacyId.mapper.js";
 import {
   sessionJuryInputSchema,
   resultatJuryInputSchema,
@@ -148,7 +151,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         summary:
           "Récupérer les informations de la session du jury pour un candidat",
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Informations jury"],
+        tags: ["Implémenté", "Informations jury"],
         params: {
           type: "object",
           properties: {
@@ -195,7 +198,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           "Mettre à jour les informations de la session du jury pour un candidat",
         consumes: ["multipart/form-data"],
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Informations jury"],
+        tags: ["Implémenté", "Informations jury"],
         body: {
           $ref: "http://vae.gouv.fr/components/schemas/SessionJuryInput",
         },
@@ -215,8 +218,29 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const { date, heure, adresseSession, informationsSession, document } =
+          request.body;
+
+        const candidacy = await scheduleJurySessionByCandidacyId(
+          request.graphqlClient,
+          request.keycloakJwt,
+          candidatureId,
+          {
+            date: date.value!,
+            heure: heure?.value,
+            adresseSession: adresseSession?.value,
+            informationsSession: informationsSession?.value,
+            document: document as UploadedFile,
+          },
+        );
+
+        if (candidacy) {
+          reply.send(mapScheduleJurySessionByCandidacyId(candidacy));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 
@@ -234,7 +258,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       schema: {
         summary: "Récupérer le résultat du jury pour un candidat",
         // security: [{ bearerAuth: [] }],
-        tags: ["Non implémenté", "Informations jury"],
+        tags: ["Implémenté", "Informations jury"],
         params: {
           type: "object",
           properties: {
