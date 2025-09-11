@@ -80,6 +80,7 @@ type Candidacy {
   activite: ActiviteStatut!
   derniereDateActivite: Timestamp
   dateInactifEnAttente: Timestamp
+  sentAt: Timestamp
 }
 
 enum ActiviteStatut {
