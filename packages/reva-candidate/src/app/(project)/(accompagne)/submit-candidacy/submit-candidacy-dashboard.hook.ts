@@ -85,13 +85,13 @@ export const useSubmitCandidacyForDashboard = () => {
 
   const candidacyAlreadySubmitted = candidacy?.status !== "PROJET";
 
-  const canSubmitCandidacy = candidateCanSubmitCandidacyToAap(
+  const canSubmitCandidacy = candidateCanSubmitCandidacyToAap({
     hasSelectedCertification,
     hasCompletedGoals,
     hasSelectedOrganism,
     hasCompletedExperience,
     candidacyAlreadySubmitted,
-  );
+  });
 
   return {
     candidate,
