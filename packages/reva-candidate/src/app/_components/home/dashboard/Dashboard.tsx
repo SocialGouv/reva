@@ -38,13 +38,13 @@ const Dashboard = () => {
 
   const canSubmitCandidacy = useMemo(
     () =>
-      candidateCanSubmitCandidacyToAap(
+      candidateCanSubmitCandidacyToAap({
         hasSelectedCertification,
         hasCompletedGoals,
         hasSelectedOrganism,
         hasCompletedExperience,
         candidacyAlreadySubmitted,
-      ),
+      }),
     [
       hasSelectedCertification,
       hasCompletedGoals,
