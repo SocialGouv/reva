@@ -15,8 +15,8 @@ export const getRemoteZoneLabel = (remoteZone: RemoteZone) => {
     case "MAYOTTE":
       return "Mayotte (UTC+3)";
     case "SAINTE_LUCIE_SAINT_MARTIN":
-      return "Saint-Pierre-et-Miquelon (UTC-2)";
-    case "SAINT_PIERRE_ET_MIQUELON":
       return "Sainte-Lucie / Saint-Martin (UTC-4)";
+    case "SAINT_PIERRE_ET_MIQUELON":
+      return "Saint-Pierre-et-Miquelon (UTC-2)";
   }
 };
