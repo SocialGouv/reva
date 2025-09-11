@@ -381,6 +381,33 @@ export const informationJurySchema = {
   },
 } as const;
 
+export const sessionJurySchema = {
+  $id: "http://vae.gouv.fr/components/schemas/SessionJury",
+  type: "object",
+  properties: {
+    date: {
+      type: "string",
+      description: "Date de la session du jury",
+      example: "2023-12-15",
+    },
+    heure: {
+      type: "string",
+      description: "Heure de la session du jury",
+      example: "14:30",
+    },
+    adresseSession: {
+      type: "string",
+      description: "Adresse où se tient la session",
+      example: "876 rue de l'Université, 75007 Paris",
+    },
+    informationsSession: {
+      type: "string",
+      description: "Informations supplémentaires sur la session",
+      example: "Se présenter 15 minutes avant le début de la session.",
+    },
+  },
+} as const;
+
 export const dossierDeFaisabiliteSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabilite",
   type: "object",
@@ -632,6 +659,7 @@ const schemas = [
   resultatJurySchema,
   statutJurySchema,
   informationJurySchema,
+  sessionJurySchema,
   dossierDeFaisabiliteSchema,
   statutDossierDeFaisabiliteSchema,
   decisionDossierDeFaisabiliteSchema,

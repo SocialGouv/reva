@@ -7,6 +7,8 @@ import { getJuries } from "../features/juries/getJuries.js";
 import { mapGetJuries } from "../features/juries/getJuries.mapper.js";
 import { getJuryByCandidacyId } from "../features/juries/getJuryByCandidacyId.js";
 import { mapGetJuryByCandidacyId } from "../features/juries/getJuryByCandidacyId.mapper.js";
+import { getJurySessionByCandidacyId } from "../features/juries/getJurySessionByCandidacyId.js";
+import { mapGetSessionJuryByCandidacyId } from "../features/juries/getJurySessionByCandidacyId.mapper.js";
 import {
   sessionJuryInputSchema,
   resultatJuryInputSchema,
@@ -161,8 +163,17 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const candidacy = await getJurySessionByCandidacyId(
+          request.graphqlClient,
+          candidatureId,
+        );
+        if (candidacy) {
+          reply.send(mapGetSessionJuryByCandidacyId(candidacy));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 

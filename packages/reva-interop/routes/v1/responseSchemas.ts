@@ -158,6 +158,16 @@ export const informationJuryResponseSchema = {
   },
 } as const;
 
+export const sessionJuryResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
+  type: "object",
+  properties: {
+    data: {
+      $ref: "http://vae.gouv.fr/components/schemas/SessionJury",
+    },
+  },
+} as const;
+
 export const addResponseSchemas = (fastify: FastifyInstance) => {
   fastify.addSchema(dossiersDeFaisabiliteResponseSchema);
 
@@ -179,34 +189,7 @@ export const addResponseSchemas = (fastify: FastifyInstance) => {
 
   fastify.addSchema(informationJuryResponseSchema);
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
-    type: "object",
-    properties: {
-      date: {
-        type: "string",
-        format: "date",
-        description: "Date de la session du jury",
-        example: "2023-12-15",
-      },
-      heure: {
-        type: "string",
-        format: "time",
-        description: "Heure de la session du jury",
-        example: "14:30",
-      },
-      adresseSession: {
-        type: "string",
-        description: "Adresse où se tient la session",
-        example: "876 rue de l'Université, 75007 Paris",
-      },
-      informationsSession: {
-        type: "string",
-        description: "Informations supplémentaires sur la session",
-        example: "Veuillez apporter une pièce d'identité.",
-      },
-    },
-  });
+  fastify.addSchema(sessionJuryResponseSchema);
 
   fastify.addSchema({
     $id: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
