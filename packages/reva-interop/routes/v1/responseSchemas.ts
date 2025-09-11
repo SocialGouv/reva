@@ -148,6 +148,16 @@ export const informationsJuryResponseSchema = {
   },
 } as const;
 
+export const informationJuryResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/InformationJuryResponse",
+  type: "object",
+  properties: {
+    data: {
+      $ref: "http://vae.gouv.fr/components/schemas/InformationJury",
+    },
+  },
+} as const;
+
 export const addResponseSchemas = (fastify: FastifyInstance) => {
   fastify.addSchema(dossiersDeFaisabiliteResponseSchema);
 
@@ -167,15 +177,7 @@ export const addResponseSchemas = (fastify: FastifyInstance) => {
 
   fastify.addSchema(informationsJuryResponseSchema);
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/InformationJuryResponse",
-    type: "object",
-    properties: {
-      data: {
-        $ref: "http://vae.gouv.fr/components/schemas/InformationJury",
-      },
-    },
-  });
+  fastify.addSchema(informationJuryResponseSchema);
 
   fastify.addSchema({
     $id: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
