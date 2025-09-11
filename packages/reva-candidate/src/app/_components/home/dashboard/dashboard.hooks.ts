@@ -9,6 +9,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
     candidate_getCandidateWithCandidacy {
       candidacy {
         readyForJuryEstimatedAt
+        sentAt
         activeDossierDeValidation {
           decision
         }
