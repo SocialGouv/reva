@@ -74,7 +74,7 @@ const regions = [
     code: "06",
   },
   {
-    label: "Sainte-Lucie / Saint-Martin",
+    label: "Saint-Martin",
     code: "07",
   },
 ];

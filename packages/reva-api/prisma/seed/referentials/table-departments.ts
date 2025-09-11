@@ -98,7 +98,7 @@ const departments = [
   { label: "Val-de-Marne", code: "94", codeRegion: "11" },
   { label: "Val-d'Oise", code: "95", codeRegion: "11" },
   { label: "Guadeloupe", code: "971", codeRegion: "01" },
-  { label: "Sainte-Lucie / Saint-Martin", code: "97150", codeRegion: "07" },
+  { label: "Saint-Martin", code: "97150", codeRegion: "07" },
   { label: "Martinique", code: "972", codeRegion: "02" },
   { label: "Guyane", code: "973", codeRegion: "03" },
   { label: "La Réunion", code: "974", codeRegion: "04" },

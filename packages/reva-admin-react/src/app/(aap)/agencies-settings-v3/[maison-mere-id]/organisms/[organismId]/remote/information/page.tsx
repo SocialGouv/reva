@@ -242,7 +242,7 @@ const InformationsRemotePage = () => {
                     },
                   },
                   {
-                    label: "Sainte-Lucie / Saint-Martin (UTC-4)",
+                    label: "Saint-Martin (UTC-4)",
                     nativeInputProps: {
                       ...register("isRemoteSainteLucieSaintMartin"),
                     },
