@@ -50,6 +50,7 @@
     "@fastify/type-provider-json-schema-to-ts": "^5.0.0",
     "@prisma/client": "^6.13.0",
     "@urql/core": "^5.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
     "eslint": "^9",
     "eslint-config-prettier": "^10.1.5",

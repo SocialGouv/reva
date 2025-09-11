@@ -368,7 +368,7 @@ export const fichierSchema = {
   },
 } as const;
 
-const informationJurySchema = {
+export const informationJurySchema = {
   $id: "http://vae.gouv.fr/components/schemas/InformationJury",
   type: "object",
   properties: {

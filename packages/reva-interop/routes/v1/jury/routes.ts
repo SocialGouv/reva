@@ -3,6 +3,8 @@ import {
   JsonSchemaToTsProvider,
 } from "@fastify/type-provider-json-schema-to-ts";
 
+import { getJuries } from "../features/juries/getJuries.js";
+import { mapGetJuries } from "../features/juries/getJuries.mapper.js";
 import {
   sessionJuryInputSchema,
   resultatJuryInputSchema,
@@ -35,11 +37,13 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
             decalage: {
               type: "integer",
               example: 0,
+              default: 0,
               description: "Décalage pour la pagination",
             },
             limite: {
               type: "integer",
               example: 10,
+              default: 10,
               description: "Limite du nombre de résultats",
             },
             recherche: {
@@ -61,8 +65,20 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { decalage, limite, recherche, statut } = request.query;
+        const dossiersDeValidation = await getJuries(
+          request.graphqlClient,
+          decalage,
+          limite,
+          statut,
+          recherche,
+        );
+        if (dossiersDeValidation) {
+          reply.send(mapGetJuries(dossiersDeValidation));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 
