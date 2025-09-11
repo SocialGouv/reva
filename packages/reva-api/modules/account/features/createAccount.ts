@@ -25,7 +25,7 @@ export const createAccount = async (params: {
   // Les comptes créés dans l'environnement de sandbox sont destinés à une utilisation via API
   // et ne doivent pas recevoir de mail de création de mot de passe
   const dontSendKeycloakEmail =
-    params.dontSendKeycloakEmail || process.env.APP_ENV !== "sandbox";
+    params.dontSendKeycloakEmail || process.env.APP_ENV === "sandbox";
 
   //assertions on parameters
   if (!params.email) {
