@@ -1,6 +1,6 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tile from "@codegouvfr/react-dsfr/Tile";
-import { isAfter, isBefore, parseISO } from "date-fns";
+import { isBefore, parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
 
 import { CandidacyStatusStep } from "@/graphql/generated/graphql";
@@ -51,16 +51,15 @@ export const TrainingTile = ({
 }) => {
   const router = useRouter();
 
+  const shouldDisableTile =
+    candidacyStatus == "PROJET" ||
+    candidacyStatus == "VALIDATION" ||
+    candidacyStatus == "PRISE_EN_CHARGE";
+
   return (
     <Tile
       data-test="training-tile"
-      disabled={
-        candidacyStatus == "PROJET" ||
-        candidacyStatus == "VALIDATION" ||
-        (candidacyStatus == "PRISE_EN_CHARGE" &&
-          !!firstAppointmentOccuredAt &&
-          isAfter(parseISO(firstAppointmentOccuredAt), new Date()))
-      }
+      disabled={shouldDisableTile}
       title="Parcours et financement"
       start={
         <TrainingStatusBadge
