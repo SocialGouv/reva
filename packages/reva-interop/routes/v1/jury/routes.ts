@@ -7,8 +7,10 @@ import { getJuries } from "../features/juries/getJuries.js";
 import { mapGetJuries } from "../features/juries/getJuries.mapper.js";
 import { getJuryByCandidacyId } from "../features/juries/getJuryByCandidacyId.js";
 import { mapGetJuryByCandidacyId } from "../features/juries/getJuryByCandidacyId.mapper.js";
+import { getJuryResultByCandidacyId } from "../features/juries/getJuryResultByCandidacyId.js";
+import { mapGetJuryResultByCandidacyId } from "../features/juries/getJuryResultByCandidacyId.mapper.js";
 import { getJurySessionByCandidacyId } from "../features/juries/getJurySessionByCandidacyId.js";
-import { mapGetSessionJuryByCandidacyId } from "../features/juries/getJurySessionByCandidacyId.mapper.js";
+import { mapGetJurySessionByCandidacyId } from "../features/juries/getJurySessionByCandidacyId.mapper.js";
 import {
   sessionJuryInputSchema,
   resultatJuryInputSchema,
@@ -170,7 +172,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           candidatureId,
         );
         if (candidacy) {
-          reply.send(mapGetSessionJuryByCandidacyId(candidacy));
+          reply.send(mapGetJurySessionByCandidacyId(candidacy));
         } else {
           reply.status(204).send();
         }
@@ -245,12 +247,21 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         response: {
           200: {
             description: "Résultat du jury du candidat",
-            $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
+            $ref: "http://vae.gouv.fr/components/schemas/ResultatSessionJuryResponse",
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const candidacy = await getJuryResultByCandidacyId(
+          request.graphqlClient,
+          candidatureId,
+        );
+        if (candidacy) {
+          reply.send(mapGetJuryResultByCandidacyId(candidacy));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 
@@ -288,7 +299,7 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         response: {
           200: {
             description: "Résultat du jury mis à jour avec succès",
-            $ref: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
+            $ref: "http://vae.gouv.fr/components/schemas/ResultatSessionJuryResponse",
           },
         },
       },

@@ -14,11 +14,11 @@ type MappedSessionJuryResponse = FromSchema<
   }
 >;
 
-type MappedJury = FromSchema<typeof sessionJurySchema>;
+type MappedSessionJury = FromSchema<typeof sessionJurySchema>;
 
-const mapJury = (
+const mapJurySession = (
   candidacy: GetGqlResponseType<typeof getJurySessionByCandidacyId>,
-): MappedJury | undefined => {
+): MappedSessionJury | undefined => {
   const { jury } = candidacy;
 
   if (!jury) {
@@ -35,8 +35,8 @@ const mapJury = (
   };
 };
 
-export const mapGetSessionJuryByCandidacyId = (
+export const mapGetJurySessionByCandidacyId = (
   candidacy: GetGqlResponseType<typeof getJurySessionByCandidacyId>,
 ): MappedSessionJuryResponse => {
-  return { data: mapJury(candidacy) };
+  return { data: mapJurySession(candidacy) };
 };

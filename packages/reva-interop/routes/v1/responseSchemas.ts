@@ -168,6 +168,16 @@ export const sessionJuryResponseSchema = {
   },
 } as const;
 
+export const resultatSessionJuryResponseSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/ResultatSessionJuryResponse",
+  type: "object",
+  properties: {
+    data: {
+      $ref: "http://vae.gouv.fr/components/schemas/ResultatSessionJury",
+    },
+  },
+} as const;
+
 export const addResponseSchemas = (fastify: FastifyInstance) => {
   fastify.addSchema(dossiersDeFaisabiliteResponseSchema);
 
@@ -191,26 +201,7 @@ export const addResponseSchemas = (fastify: FastifyInstance) => {
 
   fastify.addSchema(sessionJuryResponseSchema);
 
-  fastify.addSchema({
-    $id: "http://vae.gouv.fr/components/schemas/ResultatJuryResponse",
-    type: "object",
-    properties: {
-      resultat: {
-        $ref: "http://vae.gouv.fr/components/schemas/ResultatJury",
-      },
-      dateEnvoi: {
-        type: "string",
-        format: "date-time",
-        description: "Date d'envoi du résultat du jury",
-        example: "2023-10-01T10:00:00Z",
-      },
-      commentaire: {
-        type: "string",
-        description: "Informations supplémentaires sur le résultat",
-        example: "Validation totale sous réserve de présentation de l’AFGSU.",
-      },
-    },
-  });
+  fastify.addSchema(resultatSessionJuryResponseSchema);
 
   fastify.addSchema(candidatureResponseSchema);
 

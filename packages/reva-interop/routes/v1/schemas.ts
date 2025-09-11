@@ -368,46 +368,6 @@ export const fichierSchema = {
   },
 } as const;
 
-export const informationJurySchema = {
-  $id: "http://vae.gouv.fr/components/schemas/InformationJury",
-  type: "object",
-  properties: {
-    candidatureId: {
-      $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
-    },
-    statut: {
-      $ref: "http://vae.gouv.fr/components/schemas/StatutJury",
-    },
-  },
-} as const;
-
-export const sessionJurySchema = {
-  $id: "http://vae.gouv.fr/components/schemas/SessionJury",
-  type: "object",
-  properties: {
-    date: {
-      type: "string",
-      description: "Date de la session du jury",
-      example: "2023-12-15",
-    },
-    heure: {
-      type: "string",
-      description: "Heure de la session du jury",
-      example: "14:30",
-    },
-    adresseSession: {
-      type: "string",
-      description: "Adresse où se tient la session",
-      example: "876 rue de l'Université, 75007 Paris",
-    },
-    informationsSession: {
-      type: "string",
-      description: "Informations supplémentaires sur la session",
-      example: "Se présenter 15 minutes avant le début de la session.",
-    },
-  },
-} as const;
-
 export const dossierDeFaisabiliteSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabilite",
   type: "object",
@@ -594,6 +554,69 @@ export const statutJurySchema = {
   example: "PROGRAMME",
 } as const;
 
+export const informationJurySchema = {
+  $id: "http://vae.gouv.fr/components/schemas/InformationJury",
+  type: "object",
+  properties: {
+    candidatureId: {
+      $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
+    },
+    statut: {
+      $ref: "http://vae.gouv.fr/components/schemas/StatutJury",
+    },
+  },
+} as const;
+
+export const sessionJurySchema = {
+  $id: "http://vae.gouv.fr/components/schemas/SessionJury",
+  type: "object",
+  properties: {
+    date: {
+      type: "string",
+      format: "date",
+      description: "Date de la session du jury",
+      example: "2023-12-15",
+    },
+    heure: {
+      type: "string",
+      format: "time",
+      description: "Heure de la session du jury",
+      example: "14:30",
+    },
+    adresseSession: {
+      type: "string",
+      description: "Adresse où se tient la session",
+      example: "876 rue de l'Université, 75007 Paris",
+    },
+    informationsSession: {
+      type: "string",
+      description: "Informations supplémentaires sur la session",
+      example: "Se présenter 15 minutes avant le début de la session.",
+    },
+  },
+} as const;
+
+export const resultatSessionJurySchema = {
+  $id: "http://vae.gouv.fr/components/schemas/ResultatSessionJury",
+  type: "object",
+  properties: {
+    resultat: {
+      $ref: "http://vae.gouv.fr/components/schemas/ResultatJury",
+    },
+    dateEnvoi: {
+      type: "string",
+      format: "date-time",
+      description: "Date d'envoi du résultat du jury",
+      example: "2023-10-01T10:00:00Z",
+    },
+    commentaire: {
+      type: "string",
+      description: "Informations supplémentaires sur le résultat",
+      example: "Validation totale sous réserve de présentation de l’AFGSU.",
+    },
+  },
+} as const;
+
 export const resultatJurySchema = {
   $id: "http://vae.gouv.fr/components/schemas/ResultatJury",
   type: "string",
@@ -660,6 +683,7 @@ const schemas = [
   statutJurySchema,
   informationJurySchema,
   sessionJurySchema,
+  resultatSessionJurySchema,
   dossierDeFaisabiliteSchema,
   statutDossierDeFaisabiliteSchema,
   decisionDossierDeFaisabiliteSchema,
