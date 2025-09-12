@@ -10,6 +10,7 @@ import { z } from "zod";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
+import { errorToast } from "@/components/toast/toast";
 
 import { JuryResult } from "@/graphql/generated/graphql";
 
@@ -151,14 +152,25 @@ export const DossierDeValidationTab = ({
     reset({ dossierDeValidationOtherFiles: [] });
   }, [reset]);
 
+  const maxAdditionalFiles = 8;
+  const isMaxAdditionalFiles =
+    dossierDeValidationOtherFilesFields.length >= maxAdditionalFiles;
+
   const handleAddAdditionalFile = useCallback(() => {
-    insertDossierDeValidationOtherFiles(
-      dossierDeValidationOtherFilesFields.length,
-      [{}],
-    );
+    if (!isMaxAdditionalFiles) {
+      insertDossierDeValidationOtherFiles(
+        dossierDeValidationOtherFilesFields.length,
+        [{}],
+      );
+    } else {
+      errorToast(
+        `Vous ne pouvez pas ajouter plus de ${maxAdditionalFiles} pièces jointes supplémentaires.`,
+      );
+    }
   }, [
     insertDossierDeValidationOtherFiles,
     dossierDeValidationOtherFilesFields.length,
+    isMaxAdditionalFiles,
   ]);
 
   const handleFormSubmit = handleSubmit(onSubmit);
@@ -324,6 +336,7 @@ export const DossierDeValidationTab = ({
                   iconId="fr-icon-add-line"
                   onClick={handleAddAdditionalFile}
                   type="button"
+                  disabled={isMaxAdditionalFiles}
                 >
                   Ajouter une pièce jointe supplémentaire
                 </Button>
