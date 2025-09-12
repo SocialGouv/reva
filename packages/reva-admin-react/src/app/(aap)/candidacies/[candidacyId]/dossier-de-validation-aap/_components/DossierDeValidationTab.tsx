@@ -65,6 +65,10 @@ export const DossierDeValidationTab = (props: Props) => {
     control,
   });
 
+  const maxAdditionalFiles = 8;
+  const isMaxAdditionalFiles =
+    dossierDeValidationOtherFilesFields.length >= maxAdditionalFiles;
+
   const handleReset = useCallback(() => {
     reset({ dossierDeValidationOtherFiles: [{}] });
   }, [reset]);
@@ -141,7 +145,10 @@ export const DossierDeValidationTab = (props: Props) => {
                   onChange: (e) => {
                     if (e.target.value) {
                       //if the file input has a value and it was the last empty one we add another empty file input
-                      if (i == dossierDeValidationOtherFilesFields.length - 1) {
+                      if (
+                        i == dossierDeValidationOtherFilesFields.length - 1 &&
+                        !isMaxAdditionalFiles
+                      ) {
                         insertDossierDeValidationOtherFiles(
                           dossierDeValidationOtherFilesFields.length,
                           [{}],
