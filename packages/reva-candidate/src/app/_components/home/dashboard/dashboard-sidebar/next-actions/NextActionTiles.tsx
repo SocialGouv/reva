@@ -72,8 +72,8 @@ const getNextActionTiles = ({
   const candidacyAlreadySubmitted = !!candidacy.sentAt;
 
   const feasibilityDecision = candidacy.feasibility?.decision;
-  const dossierValidationDecision =
-    candidacy.activeDossierDeValidation?.decision;
+  const dossierValidation = candidacy.activeDossierDeValidation;
+  const dossierValidationDecision = dossierValidation?.decision;
 
   const feasibility = candidacy.feasibility;
   const dematerializedFeasibilityFile =
@@ -94,6 +94,19 @@ const getNextActionTiles = ({
     isAccompagne &&
     !dematerializedFeasibilityFile?.swornStatementFileId &&
     !!dematerializedFeasibilityFile?.candidateConfirmationAt;
+
+  const failedJuryResults = [
+    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+    "FAILURE",
+    "CANDIDATE_EXCUSED",
+    "CANDIDATE_ABSENT",
+  ];
+
+  const canSubmitAgainAfterJury = failedJuryResults.includes(
+    candidacy.jury?.result || "",
+  );
 
   const rules: { condition: boolean; tile: NextActionTile }[] = [
     // Première connexion (ACCOMPAGNE + PROJET)
@@ -147,53 +160,31 @@ const getNextActionTiles = ({
       },
     },
 
+    // Attente date prévisionnelle :
+    {
+      condition:
+        feasibilityDecision === "ADMISSIBLE" &&
+        !candidacy.readyForJuryEstimatedAt &&
+        (canSubmitAgainAfterJury || !dossierValidationDecision),
+      tile: {
+        title:
+          "Renseigner une date prévisionnelle de dépot de dossier de validation",
+        link: ROUTES.DOSSIER_DE_VALIDATION,
+      },
+    },
+
     // DF admissible → DV à envoyer
     {
       condition:
         feasibilityDecision === "ADMISSIBLE" &&
         (!dossierValidationDecision ||
-          dossierValidationDecision === "INCOMPLETE"),
+          dossierValidationDecision === "INCOMPLETE" ||
+          canSubmitAgainAfterJury),
       tile: {
         title: "Envoyer mon dossier de validation",
         link: ROUTES.DOSSIER_DE_VALIDATION,
       },
     },
-
-    // Recevable / attente date prévisionnelle :
-
-    // - Renseigner une date prévisionnelle de dépot de dossier de validation
-
-    // - Envoyer mon dossier de validation
-
-    // Date prévisionnelle renseignée / Attente DV :
-
-    // - Envoyer mon dossier de validation
-
-    // Date prévisionnelle dépassée / Attente DV :
-
-    // - Envoyer mon dossier de validation
-
-    // DV signalé :
-
-    // - Envoyer mon dossier de validation
-
-    // Réussite partielle / Attente DV :
-
-    // - Renseigner une date prévisionnelle de dépot de dossier de validation
-
-    // - Envoyer mon dossier de validation
-
-    // Non validation / Attente DV :
-
-    // - Renseigner une date prévisionnelle de dépot de dossier de validation
-
-    // - Envoyer mon dossier de validation
-
-    // Non présentation / Attente DV :
-
-    // - Renseigner une date prévisionnelle de dépot de dossier de validation
-
-    // - Envoyer mon dossier de validation
   ];
 
   return rules.filter((r) => r.condition).map((r) => r.tile);
