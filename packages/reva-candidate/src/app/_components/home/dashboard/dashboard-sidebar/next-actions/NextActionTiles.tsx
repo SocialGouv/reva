@@ -16,13 +16,14 @@ interface NextActionTile {
 }
 
 const ROUTES = {
-  SET_GOALS: "/set-goals",
+  DOSSIER_DE_VALIDATION: "/dossier-de-validation",
   EXPERIENCES: "/experiences",
+  FEASIBILITY: "/feasibility",
+  SET_GOALS: "/set-goals",
   SET_ORGANISM: "/set-organism",
   SUBMIT_CANDIDACY: "/submit-candidacy",
-  VALIDATE_TRAINING: "/validate-training",
   VALIDATE_FEASIBILITY: "/validate-feasibility",
-  DOSSIER_DE_VALIDATION: "/dossier-de-validation",
+  VALIDATE_TRAINING: "/validate-training",
 } as const;
 
 const sendSwornStatementModal = createModal({
@@ -109,15 +110,18 @@ const getNextActionTiles = ({
   );
 
   const rules: { condition: boolean; tile: NextActionTile }[] = [
-    // Première connexion (ACCOMPAGNE + PROJET)
+    //! ACCOMPAGNE
+    // ACCOMPAGNE : Remplir mes objectifs
     {
-      condition: isProjectStatus && goalsCount === 0,
+      condition: isProjectStatus && goalsCount === 0 && isAccompagne,
       tile: { title: "Remplir mes objectifs", link: ROUTES.SET_GOALS },
     },
+    // ACCOMPAGNE : Remplir mes expériences
     {
-      condition: isProjectStatus && experiencesCount === 0,
+      condition: isProjectStatus && experiencesCount === 0 && isAccompagne,
       tile: { title: "Remplir mes expériences", link: ROUTES.EXPERIENCES },
     },
+    // ACCOMPAGNE : Choisir mon accompagnateur
     {
       condition:
         isProjectStatus &&
@@ -127,13 +131,13 @@ const getNextActionTiles = ({
       tile: { title: "Choisir mon accompagnateur", link: ROUTES.SET_ORGANISM },
     },
 
-    // Candidature complétée (ACCOMPAGNE + PROJET + prérequis OK)
+    // ACCOMPAGNE : Envoyer ma candidature
     {
       condition: canSubmitCandidacy,
       tile: { title: "Envoyer ma candidature", link: ROUTES.SUBMIT_CANDIDACY },
     },
 
-    // Parcours envoyé → validation
+    // ACCOMPAGNE : Valider mon parcours et financement
     {
       condition: isParcoursEnvoyeStatus,
       tile: {
@@ -142,7 +146,7 @@ const getNextActionTiles = ({
       },
     },
 
-    // DF reçu à valider → validation
+    // ACCOMPAGNE : Valider mon dossier de faisabilité
     {
       condition: canValidateFeasibility,
       tile: {
@@ -151,7 +155,7 @@ const getNextActionTiles = ({
       },
     },
 
-    // DF validé sans attestation
+    // ACCOMPAGNE : Envoyer votre attestation
     {
       condition: needsSwornAttestationStatement,
       tile: {
@@ -160,7 +164,21 @@ const getNextActionTiles = ({
       },
     },
 
-    // Attente date prévisionnelle :
+    //! AUTONOME
+    // AUTONOME Envoyer mon dossier de faisabilité
+    {
+      condition:
+        !isAccompagne &&
+        (!feasibility?.feasibilityFileSentAt ||
+          feasibility?.decision === "INCOMPLETE"),
+      tile: {
+        title: "Envoyer mon dossier de faisabilité",
+        link: ROUTES.FEASIBILITY,
+      },
+    },
+
+    //! AUTONOME ET ACCOMPAGNE
+    // ACCOMPAGNE et AUTONOME : Renseigner une date prévisionnelle de dépot de dossier de validation
     {
       condition:
         feasibilityDecision === "ADMISSIBLE" &&
@@ -173,7 +191,7 @@ const getNextActionTiles = ({
       },
     },
 
-    // DF admissible → DV à envoyer
+    // ACCOMPAGNE et AUTONOME : Envoyer mon dossier de validation
     {
       condition:
         feasibilityDecision === "ADMISSIBLE" &&
