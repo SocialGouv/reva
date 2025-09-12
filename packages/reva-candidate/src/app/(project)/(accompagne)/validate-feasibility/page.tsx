@@ -107,12 +107,16 @@ export default function ValidateFeasibility() {
     <PageLayout title="Dossier de faisabilité" displayBackToHome>
       <div className="flex justify-between mb-4 mt-6">
         <h1 className="mb-0">Dossier de faisabilité </h1>
-        {isUseGeneratedDffFileFromFileServerActive &&
-        dematerializedFeasibilityFile.dffFile ? (
-          <PdfLink
-            url={dematerializedFeasibilityFile.dffFile.url}
-            fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
-          />
+
+        {isUseGeneratedDffFileFromFileServerActive ? (
+          <>
+            {dematerializedFeasibilityFile.dffFile ? (
+              <PdfLink
+                url={dematerializedFeasibilityFile.dffFile.url}
+                fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
+              />
+            ) : null}
+          </>
         ) : (
           <PdfLink
             url={getPdfUrl()}
