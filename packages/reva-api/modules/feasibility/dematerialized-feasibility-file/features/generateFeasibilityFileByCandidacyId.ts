@@ -331,9 +331,9 @@ const addCandidacyAdmissibility = (
 function getGenderPrefix(gender: Gender) {
   switch (gender) {
     case Gender.man:
-      return "M. ";
+      return "M.";
     case Gender.woman:
-      return "Mme ";
+      return "Mme";
     case Gender.undisclosed:
       return "";
   }
