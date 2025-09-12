@@ -203,6 +203,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   // /informationsJury
   fastify.setErrorHandler((error, request, reply) => {
     console.log("ERROR HANDLER");
+
     const isSecurePath = securePathes.some((path) =>
       request.url.startsWith(`/interop/v1/${path}`),
     );
@@ -210,16 +211,35 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     request.log.error(error);
 
     if (!isSecurePath) {
-      return reply.send(error);
+      reply.send(error);
+      return;
     }
 
     if (error.message == ERROR_UNAUTHORIZED) {
-      return reply.status(401).send();
+      reply.status(401).send();
+      return;
     }
 
     // It means it's FastifyError
     if (Object.hasOwn(error, "code")) {
-      return reply.status(500).send(error);
+      reply.status(500).send(error);
+      return;
+    }
+
+    // Try parse reva gql api errors
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const message = (error as any).graphQLErrors[0].message;
+      reply.status(409).send({ statusCode: 409, error: message });
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+
+    // Manual throw new Error("something went wrong")
+    if (error?.message) {
+      reply.status(409).send({ statusCode: 409, error: error.message });
+      return;
     }
 
     reply.status(500).send({ statusCode: 500, error: "Internal Server Error" });

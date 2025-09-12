@@ -127,13 +127,18 @@ const scheduleJurySession = async (
 
   const REST_API_URL = process.env.REST_API_URL || "http://localhost:8080/api";
 
-  await fetch(`${REST_API_URL}/jury/schedule-session`, {
+  const response = await fetch(`${REST_API_URL}/jury/schedule-session`, {
     method: "post",
     headers: {
       authorization: `Bearer ${keycloakJwt}`,
     },
     body: formData,
   });
+
+  const text = await response.text();
+  if (text) {
+    throw new Error(text);
+  }
 };
 
 const getFileFromBuffer = (document: UploadedFile) => {

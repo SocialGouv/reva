@@ -128,13 +128,21 @@ const createFeasibilityDecisionForPdf = async (
 
   const REST_API_URL = process.env.REST_API_URL || "http://localhost:8080/api";
 
-  await fetch(`${REST_API_URL}/feasibility/${feasibilityId}/decision`, {
-    method: "post",
-    headers: {
-      authorization: `Bearer ${keycloakJwt}`,
+  const response = await fetch(
+    `${REST_API_URL}/feasibility/${feasibilityId}/decision`,
+    {
+      method: "post",
+      headers: {
+        authorization: `Bearer ${keycloakJwt}`,
+      },
+      body: formData,
     },
-    body: formData,
-  });
+  );
+
+  const text = await response.text();
+  if (text) {
+    throw new Error(text);
+  }
 };
 
 const createFeasibilityDecisionForDemat = async (
