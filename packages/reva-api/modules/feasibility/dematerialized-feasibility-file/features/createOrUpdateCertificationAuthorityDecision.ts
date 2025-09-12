@@ -1,4 +1,4 @@
-import { FeasibilityDecision } from "@prisma/client";
+import { FeasibilityDecision, FeasibilityStatus } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
@@ -150,6 +150,21 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
     const { decision, decisionFile, decisionComment } = input;
 
     const feasibility = dff.feasibility;
+
+    if (
+      feasibility.decision == FeasibilityStatus.ADMISSIBLE ||
+      feasibility.decision == FeasibilityStatus.REJECTED
+    ) {
+      throw new Error("Le faisabilité a déjà été prononcée sur ce dossier");
+    }
+
+    if (
+      (feasibility.decision == FeasibilityStatus.COMPLETE ||
+        feasibility.decision == FeasibilityStatus.INCOMPLETE) &&
+      ["COMPLETE", "INCOMPLETE"].includes(decision)
+    ) {
+      throw new Error("Le faisabilité a déjà été marquée sur ce dossier");
+    }
 
     let decisionFileForDb = null;
     let decisionUploadedFile;
