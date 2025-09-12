@@ -43,7 +43,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         summary:
           "Récupérer le dernier dossier de faisabilité d'une candidature",
         // security: [{ bearerAuth: [] }],
-        tags: ["Implémenté", "Dossier de faisabilité"],
+        tags: ["Dossier de faisabilité"],
         params: {
           type: "object",
           properties: {
@@ -86,7 +86,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Récupérer la liste des décisions du dossier de faisabilité",
         // security: [{ bearerAuth: [] }],
-        tags: ["Implémenté", "Dossier de faisabilité"],
+        tags: ["Dossier de faisabilité"],
         params: {
           type: "object",
           properties: {
@@ -136,7 +136,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
         summary: "Créer une nouvelle décision sur le dossier de faisabilité",
         consumes: ["multipart/form-data"],
         // security: [{ bearerAuth: [] }],
-        tags: ["Implémenté", "Dossier de faisabilité"],
+        tags: ["Dossier de faisabilité"],
         body: {
           type: "object",
           properties: {
@@ -230,7 +230,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         summary: "Récupérer la liste des dossiers de faisabilité",
         // security: [{ bearerAuth: [] }],
-        tags: ["Implémenté", "Dossier de faisabilité"],
+        tags: ["Dossier de faisabilité"],
         querystring: {
           type: "object",
           properties: {

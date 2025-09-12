@@ -104,15 +104,6 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         },
       ],
       tags: [
-        {
-          name: "Implémenté",
-          description: "Fonctionnalités implémentées par la plateforme",
-        },
-        {
-          name: "Non implémenté",
-          description:
-            "Fonctionnalités non implémentées par la plateforme à ce jour",
-        },
         process.env.ENVIRONMENT !== "sandbox" &&
         process.env.ENVIRONMENT !== "production"
           ? {
@@ -171,11 +162,6 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     indexPrefix: "/interop/v1",
     uiConfig: {
       docExpansion: "list",
-      maxDisplayedTags:
-        process.env.ENVIRONMENT === "production" ||
-        process.env.ENVIRONMENT === "sandbox"
-          ? 2
-          : 3,
       deepLinking: false,
       defaultModelsExpandDepth: 0,
     },
