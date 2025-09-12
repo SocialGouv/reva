@@ -7,6 +7,7 @@ const getJuryResultByCandidacyIdQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       jury {
+        id
         result
         dateOfResult
         informationOfResult

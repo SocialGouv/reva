@@ -5,7 +5,7 @@ import { GetGqlResponseType } from "../../../../utils/types.js";
 import { sessionJuryResponseSchema } from "../../responseSchemas.js";
 import { sessionJurySchema } from "../../schemas.js";
 
-import { getJurySessionByCandidacyId } from "./getJurySessionByCandidacyId.js";
+import { scheduleJurySessionByCandidacyId } from "./scheduleJurySessionByCandidacyId.js";
 
 type MappedSessionJuryResponse = FromSchema<
   typeof sessionJuryResponseSchema,
@@ -17,7 +17,7 @@ type MappedSessionJuryResponse = FromSchema<
 type MappedSessionJury = FromSchema<typeof sessionJurySchema>;
 
 const mapJurySession = (
-  candidacy: GetGqlResponseType<typeof getJurySessionByCandidacyId>,
+  candidacy: GetGqlResponseType<typeof scheduleJurySessionByCandidacyId>,
 ): MappedSessionJury | undefined => {
   const { jury } = candidacy;
 
@@ -34,7 +34,7 @@ const mapJurySession = (
 };
 
 export const mapScheduleJurySessionByCandidacyId = (
-  candidacy: GetGqlResponseType<typeof getJurySessionByCandidacyId>,
+  candidacy: GetGqlResponseType<typeof scheduleJurySessionByCandidacyId>,
 ): MappedSessionJuryResponse => {
   return { data: mapJurySession(candidacy) };
 };

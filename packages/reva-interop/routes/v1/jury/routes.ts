@@ -14,6 +14,8 @@ import { getJurySessionByCandidacyId } from "../features/juries/getJurySessionBy
 import { mapGetJurySessionByCandidacyId } from "../features/juries/getJurySessionByCandidacyId.mapper.js";
 import { scheduleJurySessionByCandidacyId } from "../features/juries/scheduleJurySessionByCandidacyId.js";
 import { mapScheduleJurySessionByCandidacyId } from "../features/juries/scheduleJurySessionByCandidacyId.mapper.js";
+import { updateJuryResultByCandidacyId } from "../features/juries/updateJuryResultByCandidacyId.js";
+import { mapUpdateJuryResultByCandidacyId } from "../features/juries/updateJuryResultByCandidacyId.mapper.js";
 import {
   sessionJuryInputSchema,
   resultatJuryInputSchema,
@@ -327,8 +329,24 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
       },
-      handler: (_request, response) => {
-        return response.status(501).send("Not implemented");
+      handler: async (request, reply) => {
+        const { candidatureId } = request.params;
+        const { resultat, commentaire } = request.body;
+
+        const candidacy = await updateJuryResultByCandidacyId(
+          request.graphqlClient,
+          candidatureId,
+          {
+            resultat: resultat,
+            commentaire: commentaire,
+          },
+        );
+
+        if (candidacy) {
+          reply.send(mapUpdateJuryResultByCandidacyId(candidacy));
+        } else {
+          reply.status(204).send();
+        }
       },
     });
 };
