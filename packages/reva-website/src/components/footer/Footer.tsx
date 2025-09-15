@@ -103,16 +103,11 @@ export const Footer = ({ className }: { className?: string }) => {
               </Link>
             </li>
             <li className="fr-footer__bottom-item">
-              <Link className="fr-footer__bottom-link" href="/confidentialite/">
-                Données personnelles
-              </Link>
-            </li>
-            <li className="fr-footer__bottom-item">
               <Link
                 className="fr-footer__bottom-link"
-                href="/confidentialite/#definition-cookie"
+                href="/legal/donnees-personnelles-et-cookies/"
               >
-                Gestion des cookies
+                Données personnelles et gestion des cookies
               </Link>
             </li>
             <li className="fr-footer__bottom-item">
