@@ -211,7 +211,7 @@ http:
     add-interop-proxy-secret-header:
       headers:
         customRequestHeaders:
-          X-Interop-Secret: '{{ env "INTEROP_PROXY_SECRET" }}'
+          X-Interop-Secret: "{{ env "INTEROP_PROXY_SECRET" }}"
 
     removePath:
       replacePath:
