@@ -1,13 +1,17 @@
 <#import "email-template.ftl" as layout>
 <@layout.emailLayout ; section>
 
-    <#assign subject = "Bienvenue sur votre compte professionnel France VAE">
+    <#assign subject = "Bienvenue sur votre compte professionnel France VAE!!!!">
 
-<#--  user_profile_type = organism  -->
-    <#if (user.attributes.user_profile_type)?has_content && (user.attributes.user_profile_type == "organism" || user.attributes.user_profile_type == "gestionnaire_maison_mere_aap")>
+    <#--  user_profile_type = gestionnaire_maison_mere_aap  -->
+    <#if (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "gestionnaire_maison_mere_aap">
         <#assign subject = "Bienvenue sur votre compte professionnel France VAE">
 
-    <#--  user_profile_type = certification_authority  -->
+    <#--  user_profile_type = organism  -->
+    <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "organism">
+        <#assign subject = "Vous avez été invité à rejoindre France VAE">
+
+     <#--  user_profile_type = certification_registry_manager  -->
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "certification_authority">
         <#assign subject = "Accédez à votre espace certificateur France VAE">
 
@@ -73,49 +77,59 @@
     <#--  user_profile_type = organism  -->
     <#elseif (user.attributes.user_profile_type)?has_content && user.attributes.user_profile_type == "organism">
         <#if section="intro">
-            <p>L'agence administratrice
+            <p>
+            La structure
             <#if (user.attributes.nom_maison_mere_aap)?has_content>
                 ${user.attributes.nom_maison_mere_aap}
             </#if>
-             vous invite à rejoindre l'espace professionnel France VAE en tant que responsable d'agence. </p>
+            vient de vous créer un compte collaborateur. Vous êtes désormais rattaché à
+            <#if (user.attributes.nom_maison_mere_aap)?has_content>
+                ( ${user.attributes.nom_maison_mere_aap} )
+            </#if>
+            pour des accompagnements.
+            </p>
 
             <br />
 
-            <h2>Finalisez votre inscription</h2>
-            <p>Il ne vous reste qu'une seule étape : choisir un mot de passe pour vos futures connexions. Nous vous
-                invitons à cliquer sur le bouton ci-dessous.</p>
+            <h2>Prochaine étape : activez votre compte</h2>
+            <p>Pour pouvoir utiliser votre compte collaborateur, cliquez sur le bouton ci-dessous, il vous sera demandé de choisir un mot de passe pour vos prochaines connexions :</p>
         <#elseif section="actionButton">
             <a href="${link}"
                style="display:inline-block;background:#000099;color:white;font-family:Arial, sans-serif;font-size:14px;font-weight:500;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 16px;mso-padding-alt:0px;"
                target="_blank">Finaliser mon inscription</a>
         <#elseif section="outro">
-            <p>Ce lien est valable 4 jours.</p>
-            <p>Si vous avez dépassé ce délai, <a
-                        href="https://${properties.keycloakHostname}/realms/reva/login-actions/reset-credentials"
-                        target="_blank">nous vous invitons à redemander un mot de passe</a>.</p>
+            <p><strong style="text-decoration: underline;">Rappel</strong> : Ce lien est valable 4 jours. Si vous avez dépassé ce délai, nous vous invitons à <a
+                href="https://${properties.keycloakHostname}/realms/reva/login-actions/reset-credentials"
+                target="_blank">redemander un mot de passe
+            </a>
+            .
+            </p>
 
             <br />
 
-            <h2>Gérez vos candidats</h2>
-            <p>Une fois inscrit, vous pourrez commencer l’accompagnement des candidats qui vous auront sélectionné.</p>
-
+            <h2>Besoin d’aide ?</h2>
+            <p>N’hésitez pas à explorer les ressources dédiées aux professionnels de la VAE. Vous y trouverez des informations essentielles pour suivre vos premiers candidats !</p>
+            <ul>
+                <li>
+                    <a href="https://fabnummas.notion.site/f697c4fa5fcf42d49d85428b5e0b40c5?v=9f55d3b4b2e54bd19d390ebe6febe3ea" target="_blank">Espace documentaire</a>
+                </li>
+                <li>
+                    <a href="https://vae.gouv.fr/faq/" target="_blank">Notre foire aux questions</a>
+                </li>
+                <li>
+                    <a href="https://fabnummas.notion.site/Tutoriels-et-autres-pas-pas-5113b725db8c4a598e6d29aa105a1968" target="_blank">Tutoriels</a>
+                </li>
+            </ul>
 
             <br />
 
-            <h2>Aide et support</h2>
-            <p><a href="https://france-vae.info" target="_blank">Explorez l'espace documentaire</a> dédié aux
-                professionnels de la VAE. Cet espace regroupe les documents essentiels pour suivre vos premiers
-                candidats. Nous vous conseillons de vous familiariser dès maintenant avec <a
-                        href="https://france-vae.info/Cahier-des-charges-ea8790303ab447cfb25b5c11c26b0d67"
-                        target="_blank">le cahier des charges des AAP</a>.</p>
-            <p>Un <a href="https://reva.crisp.help/fr" target="_blank">centre d'aide</a> et une <a
-                        href="https://reva.crisp.help/fr/category/architectes-accompagnateurs-de-parcours-1oikyam"
-                        target="_blank">F.A.Q</a> vous permettront également de trouver les réponses à vos principales
-                questions.</p>
-
-            <p>Si jamais vous rencontrez encore des difficultés, n'hésitez pas à nous contacter via la messagerie
-                instantanée (en bas à droite de l'écran sur le site France VAE) ou par email à support@vae.gouv.fr</p>
-            <p>L'équipe France VAE.</p>
+            <p>Pour toute question, vous pouvez nous contacter via <a href="https://vae.gouv.fr/nous-contacter/" target="_blank">notre formulaire de contact</a>.</p>
+            
+            <p>
+            Cordialement,
+            <br />
+            L'équipe France VAE.
+            </p>
         </#if>
 
     <#--  user_profile_type = certification_authority  -->

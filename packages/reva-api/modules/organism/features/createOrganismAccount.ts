@@ -16,6 +16,15 @@ export const createOrganismAccount = async ({
 }: CreateOrganismAccountInput & { userInfo: AAPAuditLogUserInfo }) => {
   const organism = await prismaClient.organism.findUnique({
     where: { id: organismId },
+    select: {
+      label: true,
+      maisonMereAAPId: true,
+      maisonMereAAP: {
+        select: {
+          raisonSociale: true,
+        },
+      },
+    },
   });
 
   if (!organism) {
@@ -29,6 +38,7 @@ export const createOrganismAccount = async ({
     lastname: accountLastname,
     group: "organism",
     organismId,
+    maisonMereAAPRaisonSociale: organism.maisonMereAAP?.raisonSociale,
   });
 
   if (organism.maisonMereAAPId) {
