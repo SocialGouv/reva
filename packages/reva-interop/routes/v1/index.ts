@@ -202,8 +202,6 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
   // /dossiersDeValidation
   // /informationsJury
   fastify.setErrorHandler((error, request, reply) => {
-    console.log("ERROR HANDLER");
-
     const isSecurePath = securePathes.some((path) =>
       request.url.startsWith(`/interop/v1/${path}`),
     );
