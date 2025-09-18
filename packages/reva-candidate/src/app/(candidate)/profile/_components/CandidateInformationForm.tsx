@@ -153,7 +153,7 @@ const CandidateInformationForm = ({
       nationality: data.nationality,
       gender: data.gender as GenderEnum,
       countryId: data.country,
-      birthdate: data.birthdate,
+      birthdate: data.birthdate || undefined,
       birthDepartmentId: data.birthDepartment,
       street: data.street,
       zip: data.zip,
