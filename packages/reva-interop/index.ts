@@ -52,6 +52,15 @@ await fastify.register(routesApiV1, {
   prefix: "/interop/v1",
 });
 
+fastify.addHook("onRequest", (request, reply) => {
+  if (
+    process.env.INTEROP_PROXY_SECRET &&
+    request.headers["X-Interop-Secret"] !== process.env.INTEROP_PROXY_SECRET
+  ) {
+    reply.status(403).send();
+  }
+});
+
 try {
   await fastify.ready();
   await fastify.listen({
