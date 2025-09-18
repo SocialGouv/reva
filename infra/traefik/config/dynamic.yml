@@ -164,6 +164,7 @@ http:
       service: interop-sandbox
       middlewares:
         - removeHeader
+        - add-interop-proxy-secret-header
 
     interop-sandbox:
       rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/interop`)"
