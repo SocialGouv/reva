@@ -22,6 +22,12 @@ const getMandatoryInfo = (organism: Organism) => {
   };
 };
 
+const FermePourAbsenceOuCongesButton = () => (
+  <Button priority="tertiary no outline" size="small" disabled>
+    Indisponible actuellement
+  </Button>
+);
+
 export const OrganismCard = ({
   organism,
   onClick,
@@ -32,6 +38,7 @@ export const OrganismCard = ({
   isSelected?: boolean;
 }) => {
   const mandatoryInfo = getMandatoryInfo(organism);
+  const fermePourAbsenceOuConges = organism.fermePourAbsenceOuConges;
 
   return (
     <div
@@ -58,17 +65,20 @@ export const OrganismCard = ({
         <div>
           <OrganismCardDistance distanceKm={organism.distanceKm} />
         </div>
-
-        <Button
-          data-test={`project-organisms-submit-organism-${organism.id}`}
-          priority="secondary"
-          size="small"
-          nativeButtonProps={{ onClick }}
-          disabled={isSelected}
-          className={isSelected ? "shadow-none" : ""}
-        >
-          {isSelected ? "Sélectionné actuellement" : "Choisir"}
-        </Button>
+        {fermePourAbsenceOuConges ? (
+          <FermePourAbsenceOuCongesButton />
+        ) : (
+          <Button
+            data-test={`project-organisms-submit-organism-${organism.id}`}
+            priority="secondary"
+            size="small"
+            nativeButtonProps={{ onClick }}
+            disabled={isSelected}
+            className={isSelected ? "shadow-none" : ""}
+          >
+            {isSelected ? "Sélectionné actuellement" : "Choisir"}
+          </Button>
+        )}
       </div>
     </div>
   );

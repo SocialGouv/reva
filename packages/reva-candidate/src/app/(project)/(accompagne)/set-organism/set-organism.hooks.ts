@@ -53,6 +53,7 @@ const GET_ORGANISMS_FOR_CANDIDACY = graphql(`
         adresseCodePostal
         adresseVille
         conformeNormesAccessibilite
+        fermePourAbsenceOuConges
       }
       totalRows
     }
