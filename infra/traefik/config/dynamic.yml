@@ -172,6 +172,7 @@ http:
         - removeHeader
         - sandboxInteropIpWhitelist
         - sandboxInteropRateLimit
+        - add-interop-proxy-secret-header
 
     # --- END SANDBOX ---
 
@@ -206,6 +207,11 @@ http:
           Content-Security-Policy: "default-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'; object-src 'none'; img-src https://client.crisp.chat 'self' data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr https://client.crisp.chat 'unsafe-inline'; style-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr https://client.crisp.chat 'unsafe-inline'; connect-src 'self' https://client.crisp.chat https://api.produktly.com https://sessions.bugsnag.com https://strapi.vae.gouv.fr https://matomo.fabrique.social.gouv.fr https://auth.reva.incubateur.net https://api-adresse.data.gouv.fr wss://client.relay.crisp.chat; font-src https://client.crisp.chat 'self' data:; frame-src 'self' blob: https://auth.reva.incubateur.net https://plugins.crisp.chat https://metabase.vae.gouv.fr; media-src 'self' https://healing-nature-bb0384846f.media.strapiapp.com https://youtube.com https://dailymotion.com"
           X-Frame-Options: SAMEORIGIN
           X-Content-Type-Options: nosniff
+
+    add-interop-proxy-secret-header:
+      headers:
+        customRequestHeaders:
+          X-Interop-Secret: '{{ env "INTEROP_PROXY_SECRET" }}'
 
     removePath:
       replacePath:
