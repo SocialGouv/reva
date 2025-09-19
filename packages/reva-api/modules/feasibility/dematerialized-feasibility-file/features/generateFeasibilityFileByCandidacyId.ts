@@ -19,7 +19,6 @@ import {
   DFFDecision,
   CompetenceBlocsPartCompletionEnum,
 } from "@prisma/client";
-import { isBefore } from "date-fns";
 import PDFDocument from "pdfkit";
 
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
@@ -50,6 +49,11 @@ export const generateFeasibilityFileByCandidacyId = async (
           dematerializedFeasibilityFile: {
             include: {
               dffCertificationCompetenceBlocs: {
+                orderBy: {
+                  certificationCompetenceBloc: {
+                    code: "asc",
+                  },
+                },
                 include: {
                   certificationCompetenceBloc: {
                     include: {
@@ -64,7 +68,11 @@ export const generateFeasibilityFileByCandidacyId = async (
           },
         },
       },
-      experiences: true,
+      experiences: {
+        orderBy: {
+          startedAt: "desc",
+        },
+      },
       basicSkills: {
         include: {
           basicSkill: true,
@@ -685,21 +693,11 @@ const addCertification = (
     .fillColor("#161616")
     .text("Blocs de compétences", doc.x, doc.y + 20, { align: "left" });
 
-  const sortedCompetenceBlocs =
-    dematerializedFeasibilityFile.dffCertificationCompetenceBlocs.sort(
-      (a, b) =>
-        a.certificationCompetenceBlocId.localeCompare(
-          b.certificationCompetenceBlocId,
-        )
-          ? 1
-          : -1,
-    );
-  for (
-    let indexBloc = 0;
-    indexBloc < sortedCompetenceBlocs.length;
-    indexBloc++
-  ) {
-    const competenceBloc = sortedCompetenceBlocs[indexBloc];
+  const competenceBlocs =
+    dematerializedFeasibilityFile.dffCertificationCompetenceBlocs;
+
+  for (let indexBloc = 0; indexBloc < competenceBlocs.length; indexBloc++) {
+    const competenceBloc = competenceBlocs[indexBloc];
 
     doc
       .font("assets/fonts/Marianne/Marianne-Medium.otf")
@@ -719,14 +717,14 @@ const addCertification = (
         ],
       });
 
+    const competences = competenceBloc.certificationCompetenceBloc.competences;
+
     for (
       let indexCompetence = 0;
-      indexCompetence <
-      competenceBloc.certificationCompetenceBloc.competences.length;
+      indexCompetence < competences.length;
       indexCompetence++
     ) {
-      const competence =
-        competenceBloc.certificationCompetenceBloc.competences[indexCompetence];
+      const competence = competences[indexCompetence];
 
       const state =
         dematerializedFeasibilityFile.dffCertificationCompetenceDetails.find(
@@ -996,12 +994,8 @@ const addExperiences = (
     fit: [20, 20],
   });
 
-  const sortedExperiences = experiences.sort((a, b) =>
-    isBefore(a.startedAt, b.startedAt) ? 1 : -1,
-  );
-
-  for (let index = 0; index < sortedExperiences.length; index++) {
-    const experience = sortedExperiences[index];
+  for (let index = 0; index < experiences.length; index++) {
+    const experience = experiences[index];
 
     const docX = index == 0 ? -28 : 0;
 
