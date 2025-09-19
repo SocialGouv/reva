@@ -19,7 +19,7 @@ import {
   DFFDecision,
   CompetenceBlocsPartCompletionEnum,
 } from "@prisma/client";
-import { format } from "date-fns";
+import { isBefore } from "date-fns";
 import PDFDocument from "pdfkit";
 
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
@@ -304,7 +304,7 @@ const addCandidacyAdmissibility = (
       .font("assets/fonts/Marianne/Marianne-Bold.otf")
       .fontSize(10)
       .fillColor("#3a3a3a")
-      .text(format(eligibilityValidUntil, "dd/MM/yyyy"), {
+      .text(formatDateWithoutTimestamp(eligibilityValidUntil), {
         align: "left",
       });
 
@@ -685,7 +685,22 @@ const addCertification = (
     .fillColor("#161616")
     .text("Blocs de compétences", doc.x, doc.y + 20, { align: "left" });
 
-  for (const competenceBloc of dematerializedFeasibilityFile.dffCertificationCompetenceBlocs) {
+  const sortedCompetenceBlocs =
+    dematerializedFeasibilityFile.dffCertificationCompetenceBlocs.sort(
+      (a, b) =>
+        a.certificationCompetenceBlocId.localeCompare(
+          b.certificationCompetenceBlocId,
+        )
+          ? 1
+          : -1,
+    );
+  for (
+    let indexBloc = 0;
+    indexBloc < sortedCompetenceBlocs.length;
+    indexBloc++
+  ) {
+    const competenceBloc = sortedCompetenceBlocs[indexBloc];
+
     doc
       .font("assets/fonts/Marianne/Marianne-Medium.otf")
       .fontSize(10)
@@ -704,8 +719,15 @@ const addCertification = (
         ],
       });
 
-    for (const competence of competenceBloc.certificationCompetenceBloc
-      .competences) {
+    for (
+      let indexCompetence = 0;
+      indexCompetence <
+      competenceBloc.certificationCompetenceBloc.competences.length;
+      indexCompetence++
+    ) {
+      const competence =
+        competenceBloc.certificationCompetenceBloc.competences[indexCompetence];
+
       const state =
         dematerializedFeasibilityFile.dffCertificationCompetenceDetails.find(
           (detail) => detail.certificationCompetenceId == competence.id,
@@ -853,7 +875,9 @@ const addCertification = (
           ],
         });
 
-      for (const prerequisite of acquired) {
+      for (let index = 0; index < acquired.length; index++) {
+        const prerequisite = acquired[index];
+
         doc
           .font("assets/fonts/Marianne/Marianne-Regular.otf")
           .fontSize(10)
@@ -888,7 +912,9 @@ const addCertification = (
           ],
         });
 
-      for (const prerequisite of inProgress) {
+      for (let index = 0; index < inProgress.length; index++) {
+        const prerequisite = inProgress[index];
+
         doc
           .font("assets/fonts/Marianne/Marianne-Regular.otf")
           .fontSize(10)
@@ -923,7 +949,9 @@ const addCertification = (
           ],
         });
 
-      for (const prerequisite of recommended) {
+      for (let index = 0; index < recommended.length; index++) {
+        const prerequisite = recommended[index];
+
         doc
           .font("assets/fonts/Marianne/Marianne-Regular.otf")
           .fontSize(10)
@@ -968,8 +996,12 @@ const addExperiences = (
     fit: [20, 20],
   });
 
-  for (let index = 0; index < experiences.length; index++) {
-    const experience = experiences[index];
+  const sortedExperiences = experiences.sort((a, b) =>
+    isBefore(a.startedAt, b.startedAt) ? 1 : -1,
+  );
+
+  for (let index = 0; index < sortedExperiences.length; index++) {
+    const experience = sortedExperiences[index];
 
     const docX = index == 0 ? -28 : 0;
 
@@ -996,7 +1028,7 @@ const addExperiences = (
       .fontSize(10)
       .fillColor("#3a3a3a")
       .text(
-        `Démarrée le ${format(experience.startedAt, "dd MMMM yyyy")}`,
+        `Démarrée le ${formatDateWithoutTimestamp(experience.startedAt, "dd MMMM yyyy")}`,
         doc.x,
         doc.y + 10,
         {
@@ -1086,7 +1118,9 @@ const addTraining = (
       .fillColor("#161616")
       .text("Formations obligatoires", doc.x, doc.y + 20, { align: "left" });
 
-    for (const training of trainings) {
+    for (let index = 0; index < trainings.length; index++) {
+      const training = trainings[index];
+
       doc
         .font("assets/fonts/Marianne/Marianne-Regular.otf")
         .fontSize(10)
@@ -1104,7 +1138,9 @@ const addTraining = (
       .fillColor("#161616")
       .text("Savoir de base", doc.x, doc.y + 20, { align: "left" });
 
-    for (const basicSkill of basicSkills) {
+    for (let index = 0; index < basicSkills.length; index++) {
+      const basicSkill = basicSkills[index];
+
       doc
         .font("assets/fonts/Marianne/Marianne-Regular.otf")
         .fontSize(10)
