@@ -45,7 +45,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-website
-          path: playwright-report/
+          path: packages/reva-website/playwright-report/
           retention-days: 30
 
   playwright-reva-vae-collective:
@@ -89,7 +89,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-vae-collective
-          path: playwright-report/
+          path: packages/reva-vae-collective/playwright-report/
           retention-days: 30
 
   playwright-reva-candidate:
@@ -133,5 +133,5 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-candidate
-          path: playwright-report/
+          path: packages/reva-candidate/playwright-report/
           retention-days: 30
