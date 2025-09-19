@@ -2,6 +2,7 @@ name: Playwright
 on: [push]
 env:
   NEXT_PUBLIC_WEBSITE_API_GRAPHQL: "https://reva.incubateur.net/api/graphql"
+  NEXT_PUBLIC_APP_CANDIDAT_GRAPHQL_API_URL: "https://reva.incubateur.net/api/graphql"
   NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL: "https://strapi.vae.gouv.fr"
 jobs:
   playwright-reva-website:
