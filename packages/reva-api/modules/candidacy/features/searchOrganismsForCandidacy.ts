@@ -146,6 +146,10 @@ const getRandomActiveOrganismForCertification = async ({
     whereClause = Prisma.sql`${whereClause} and o.conforme_norme_accessibilite = 'CONFORME' `;
   }
 
+  if (searchFilter.isAvailable === true) {
+    whereClause = Prisma.sql`${whereClause} and o.ferme_pour_absence_ou_conges = false`;
+  }
+
   const CGU_AAP_VERSION = (await getLastProfessionalCgu())?.version;
   if (CGU_AAP_VERSION != undefined) {
     whereClause = Prisma.sql`${whereClause} and mm."cgu_version" = '${Prisma.raw(`${CGU_AAP_VERSION}`)}' `;

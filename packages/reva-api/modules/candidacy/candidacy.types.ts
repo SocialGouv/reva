@@ -94,6 +94,7 @@ export interface SearchOrganismFilter {
   pmr?: boolean;
   zip?: string;
   isMcfCompatible?: boolean;
+  isAvailable?: boolean;
 }
 
 type CandidacyArchivingReason =

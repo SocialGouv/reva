@@ -222,6 +222,7 @@ input SearchOrganismFilter {
   pmr: Boolean
   zip: String
   isMcfCompatible: Boolean
+  isAvailable: Boolean
 }
 
 type RamdomOrganisms {
