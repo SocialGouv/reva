@@ -84,7 +84,7 @@ export default defineConfig({
     reuseExistingServer: false,
     env: {
       APP_ENV: "test",
-      NEXT_PUBLIC_WEBSITE_API_GRAPHQL: "https://reva-api/api/graphql",
+      NEXT_PUBLIC_APP_CANDIDAT_GRAPHQL_API_URL: "https://reva-api/api/graphql",
     },
   },
 });
