@@ -3,6 +3,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 
 import { OrganismDistanceFilter } from "./OrganismDistanceFilter";
 
@@ -28,6 +29,7 @@ interface filters {
   organismSearchZip: string;
   organismSearchPmr: boolean;
   organismSearchMcf: boolean;
+  organismSearchIsAvailable: boolean;
 }
 
 export const OrganismFilters = ({
@@ -37,11 +39,28 @@ export const OrganismFilters = ({
   onSearch: (filters: filters) => void;
   filters: filters;
 }) => {
-  const { organismSearchRemote, organismSearchOnsite } = filters;
+  const {
+    organismSearchRemote,
+    organismSearchOnsite,
+    organismSearchIsAvailable,
+  } = filters;
 
   return (
     <div className="mt-8 lg:mt-0 w-full flex flex-col">
       <h2>Filtres :</h2>
+      <ToggleSwitch
+        labelPosition="left"
+        label="Accompagnateurs disponibles uniquement"
+        checked={organismSearchIsAvailable}
+        onChange={(checked) =>
+          onSearch({
+            ...filters,
+            organismSearchIsAvailable: checked,
+          })
+        }
+        className="mb-2"
+      />
+      <hr className="py-1 mt-2 mb-1" />
       <div className="mb-4">
         <Accordion
           label="Modalités d’accompagnement"
@@ -197,6 +216,7 @@ export const OrganismFilters = ({
               organismSearchZip: "",
               organismSearchText: "",
               organismSearchMcf: false,
+              organismSearchIsAvailable: false,
             });
           }}
         >

@@ -37,6 +37,8 @@ export default function SetOrganism() {
   const [organismSearchZip, setOrganismSearchZip] = useState<string>("");
   const [organismSearchPmr, setOrganismSearchPmr] = useState<boolean>(false);
   const [organismSearchMcf, setOrganismSearchMcf] = useState<boolean>(false);
+  const [organismSearchIsAvailable, setOrganismSearchIsAvailable] =
+    useState<boolean>(false);
 
   const resetFilters = () => {
     setOrganismSearchOnsite(false);
@@ -62,6 +64,7 @@ export default function SetOrganism() {
       pmr: organismSearchPmr,
       zip: organismSearchZip,
       isMcfCompatible: organismSearchMcf,
+      isAvailable: organismSearchIsAvailable,
     },
   });
 
@@ -173,6 +176,7 @@ export default function SetOrganism() {
               setOrganismSearchZip(filters.organismSearchZip);
               setOrganismSearchPmr(filters.organismSearchPmr);
               setOrganismSearchMcf(filters.organismSearchMcf);
+              setOrganismSearchIsAvailable(filters.organismSearchIsAvailable);
             }}
             filters={{
               organismSearchText,
@@ -181,6 +185,7 @@ export default function SetOrganism() {
               organismSearchZip,
               organismSearchPmr,
               organismSearchMcf,
+              organismSearchIsAvailable,
             }}
           />
         </div>
