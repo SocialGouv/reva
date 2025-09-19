@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      document.cookie = "KEYCLOAK_3P_COOKIE_SAMESITE=; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure"
+      document.cookie = "KEYCLOAK_3P_COOKIE=abc; expires=Thu, 01 Jan 1970 00:00:00 GMT"
+      window.parent.postMessage("supported", "*")
+    </script>
+  </body>
+</html>
