@@ -11,6 +11,9 @@ La création d'accès à l'API pour un nouvel utilisateur se déroule en deux é
 
 Afin de faciliter ce travail, l'API interopérabilité expose deux routes, accessibles uniquement aux administrateurs.
 
+> [!WARNING]
+> La base de donnée de l'environnement de bac à sable est restaurée chaque nuit à partir d'un backup. Lors de l'ajout d'un utilisateur dans le bac à sable, il est primordial de lancer un backup manuel, récupérer son ID, et le mettre dans la variable d'environnement `SANDBOX_BACKUP_ID` de l'app sandbox-api. Sans cela, l'utilisateur nouvellement ajouté serait supprimé automatiquement le lendemain.
+
 ### Récupérer votre JWT Administrateur
 
 La première étape est d'obtenir un JWT associé à son compte administrateur France VAE. Nécessaire une seule fois.
@@ -68,3 +71,6 @@ curl -X 'POST' \
 
 Ne pas oublier de rempalcer l'adresse de l'API, la clé `AUTH_API_KEY`, et l'ID utilisateur par les valeurs appropriées.
 Si tout s'est bien passé, la requête retourne un JWT pour l'utilisateur choisi.
+
+> [!WARNING]
+> Si l'utilisateur a été ajouté dans le bac à sable, ne pas oublier lancer un backup manuel de la DB sandbox api, récupérer son ID, et le mettre dans la variable d'environnement `SANDBOX_BACKUP_ID` de l'app sandbox-api. Sans cela, l'utilisateur nouvellement ajouté serait supprimé automatiquement le lendemain.
