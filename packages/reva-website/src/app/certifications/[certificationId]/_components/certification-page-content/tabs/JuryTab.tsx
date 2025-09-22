@@ -23,10 +23,10 @@ export const JuryTab = ({
       label="Mise en situation professionnelle"
       typeOfModality={juryTypeMiseEnSituationProfessionnelle}
     />
-    <h2 className="text-xl  mb-0">Frais de certification</h2>
+    <h2 className="text-xl  mb-0">Estimation des frais de certification</h2>
     {juryEstimatedCost && (
       <div className="flex flex-col items-start md:flex-row md:items-center gap-2">
-        <div className="w-[400px]">À prévoir pour passer l’épreuve</div>
+        <div className="w-[400px]">Montant à régler au certificateur</div>
         <Tag>
           <span className="fr-icon-money-euro-circle-fill fr-icon--sm mr-1" />
           {juryEstimatedCost}
@@ -35,10 +35,10 @@ export const JuryTab = ({
     )}
 
     {juryPlace ? (
-      <>
-        <h2 className="text-xl">Lieu de passage</h2>
+      <div>
+        <h2 className="text-xl">Lieu de passage du jury</h2>
         <p>{juryPlace}</p>
-      </>
+      </div>
     ) : (
       <div className="flex gap-2">
         <span className="fr-icon-info-fill text-dsfrGray-mentionGrey" />
