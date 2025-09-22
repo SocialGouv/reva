@@ -1,5 +1,4 @@
 import request from "graphql-request";
-import Head from "next/head";
 import Image from "next/image";
 
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
@@ -8,6 +7,19 @@ import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 
 import { CertificationPageContent } from "./_components/certification-page-content/CertificationPageContent";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ certificationId: string }>;
+}) {
+  const { certificationId } = await params;
+  const certification = await getCertifications(certificationId);
+  return {
+    title: `France VAE | ${certification.label}`,
+    description: `Code RNCP ${certification.codeRncp} - ${certification.label}`,
+  };
+}
 
 export default async function CertificationPage({
   params,
@@ -27,17 +39,8 @@ export default async function CertificationPage({
     return null;
   }
 
-  const content = certification
-    ? `Code RNCP ${certification.codeRncp} - ${certification.label}`
-    : "";
-
   return (
     <MainLayout className="relative">
-      <Head>
-        <title>France VAE | Bienvenue sur le portail de la VAE</title>
-        <meta name="description" content={content} />
-      </Head>
-
       <div className="absolute -top-8 -z-10 w-full">
         <div className="hidden lg:block">
           <Image
