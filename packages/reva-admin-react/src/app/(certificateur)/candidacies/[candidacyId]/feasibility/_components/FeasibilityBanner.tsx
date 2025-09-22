@@ -2,7 +2,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
 
-import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
+import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history/FeasibilityDecisionHistory.component";
 
 import {
   FeasibilityDecision,

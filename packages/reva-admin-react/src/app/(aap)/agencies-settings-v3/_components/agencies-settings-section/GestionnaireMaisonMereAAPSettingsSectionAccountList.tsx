@@ -1,6 +1,6 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
-import { Impersonate } from "@/components/impersonate";
+import { Impersonate } from "@/components/impersonate/Impersonate.component";
 
 import { Account } from "@/graphql/generated/graphql";
 

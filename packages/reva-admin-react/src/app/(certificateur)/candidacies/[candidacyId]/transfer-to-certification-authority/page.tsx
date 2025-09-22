@@ -10,12 +10,10 @@ import {
   CertificationAuthorityPaginated,
 } from "@/graphql/generated/graphql";
 
-import {
-  CertificationAuthoritySearchList,
-  CertificationAuthorityValidation,
-  EmptyStateCertificationSearch,
-  useTransferCandidacy,
-} from "./_components";
+import { CertificationAuthoritySearchList } from "./_components/CertificationAuthoritySearchList";
+import { CertificationAuthorityValidation } from "./_components/CertificationAuthorityValidation";
+import { EmptyStateCertificationSearch } from "./_components/EmptyStateCertificationSearch";
+import { useTransferCandidacy } from "./_components/transferCandidacy.hook";
 
 export default function TransferCandidacyPage() {
   const router = useRouter();

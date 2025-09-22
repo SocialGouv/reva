@@ -10,7 +10,7 @@ import { z } from "zod";
 import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSection";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
-import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history";
+import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history/FeasibilityDecisionHistory.component";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import { FeasibilityHistory } from "@/graphql/generated/graphql";

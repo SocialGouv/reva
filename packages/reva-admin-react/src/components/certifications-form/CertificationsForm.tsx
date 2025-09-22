@@ -1,7 +1,7 @@
 "use client";
 
 import { FormButtons } from "../form/form-footer/FormButtons";
-import { TreeSelect } from "../tree-select";
+import { TreeSelect } from "../tree-select/TreeSelect.component";
 
 import {
   CertificationsFormData,

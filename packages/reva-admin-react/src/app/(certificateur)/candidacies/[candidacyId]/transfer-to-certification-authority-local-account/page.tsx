@@ -10,12 +10,10 @@ import {
   CertificationAuthorityLocalAccountPaginated,
 } from "@/graphql/generated/graphql";
 
-import {
-  CertificationAuthorityLocalAccountSearchList,
-  CertificationAuthorityLocalAccountValidation,
-  EmptyStateCertificationAuthorityLocalAccountSearch,
-  useTransferCandidacy,
-} from "./_components";
+import { CertificationAuthorityLocalAccountSearchList } from "./_components/CertificationAuthorityLocalAccountSearchList";
+import { CertificationAuthorityLocalAccountValidation } from "./_components/CertificationAuthorityLocalAccountValidation";
+import { EmptyStateCertificationAuthorityLocalAccountSearch } from "./_components/EmptyStateCertificationAuthorityLocalAccountSearch";
+import { useTransferCandidacy } from "./_components/transferCandidacy.hook";
 
 export default function TransferCandidacyPage() {
   const router = useRouter();

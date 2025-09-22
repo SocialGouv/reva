@@ -4,7 +4,7 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import {
   FeasibilityDecisionHistory,
   FeasibilityDecisionInfo,
-} from "@/components/feasibility-decison-history";
+} from "@/components/feasibility-decison-history/FeasibilityDecisionHistory.component";
 
 import { useHooks } from "./FeasibiltyStatus.hooks";
 

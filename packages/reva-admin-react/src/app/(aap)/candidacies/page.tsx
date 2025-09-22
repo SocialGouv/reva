@@ -14,7 +14,8 @@ import {
   CandidacyStatusFilter,
 } from "@/graphql/generated/graphql";
 
-import { CandidaciesLayout, useCandidacies } from "./_components";
+import { useCandidacies } from "./_components/candidacies.hook";
+import { CandidaciesLayout } from "./_components/CandidaciesLayout";
 import { FilterBar } from "./_components/FilterBar";
 
 export default function CandidaciesPage() {

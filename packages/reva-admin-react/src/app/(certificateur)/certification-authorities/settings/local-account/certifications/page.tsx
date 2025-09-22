@@ -2,7 +2,7 @@
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 import { BackButton } from "@/components/back-button/BackButton";
-import { TreeSelect } from "@/components/tree-select";
+import { TreeSelect } from "@/components/tree-select/TreeSelect.component";
 
 import { useCertificationsLocalAccountPage } from "./certificationsLocalAccountPage.hook";
 

@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
-import { DisableAccount } from "@/components/disable-account";
+import { DisableAccount } from "@/components/disable-account/DisableAccount.component";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 

@@ -8,9 +8,8 @@ import { useParams, useRouter } from "next/navigation";
 import LocalAccountGeneraInformationCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
-import { Impersonate } from "@/components/impersonate";
-import { successToast } from "@/components/toast/toast";
-import { graphqlErrorToast } from "@/components/toast/toast";
+import { Impersonate } from "@/components/impersonate/Impersonate.component";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 

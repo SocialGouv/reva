@@ -15,7 +15,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { graphql } from "@/graphql/generated";
 
-import { CertificationCard } from "./_components/certification-card";
+import { CertificationCard } from "./_components/certification-card/CertificationCard.component";
 
 const modal = createModal({
   id: "confirm-reorientation",

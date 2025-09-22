@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { GenderEnum } from "@/constants";
+import { GenderEnum } from "@/constants/genders.constant";
 
 import {
   Candidate,

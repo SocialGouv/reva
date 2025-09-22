@@ -4,8 +4,8 @@ import { useParams } from "next/navigation";
 
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
 
-import { FeasibiltyStatus } from "./_components/FeasibiltyStatus";
-import { SendFeasibilityForm } from "./_components/SendFeasibilityForm";
+import { FeasibiltyStatus } from "./_components/FeasibiltyStatus/FeasibiltyStatus.component";
+import { SendFeasibilityForm } from "./_components/SendFeasibilityForm/SendFeasibilityForm.component";
 import { useAapFeasibility } from "./AapFeasibilityPage.hooks";
 
 const AapFeasibilityPage = () => {

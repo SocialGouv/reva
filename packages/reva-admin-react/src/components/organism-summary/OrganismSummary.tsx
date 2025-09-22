@@ -5,7 +5,7 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 
 import { StatutValidationInformationsJuridiquesMaisonMereAap } from "@/graphql/generated/graphql";
 
-import { CompanyPreview } from "../company-preview";
+import { CompanyPreview } from "../company-preview/CompanyPreview.component";
 
 import { Info } from "./Info";
 import {

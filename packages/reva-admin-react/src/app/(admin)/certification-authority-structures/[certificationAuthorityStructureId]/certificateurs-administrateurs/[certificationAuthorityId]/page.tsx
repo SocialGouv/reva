@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 
 import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
-import { Impersonate } from "@/components/impersonate";
+import { Impersonate } from "@/components/impersonate/Impersonate.component";
 
 import { CertificationsSummaryCard } from "../../../../../../components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "../../../../../../components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";

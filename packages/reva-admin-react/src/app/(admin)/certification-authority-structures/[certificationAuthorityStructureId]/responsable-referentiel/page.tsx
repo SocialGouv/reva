@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { Impersonate } from "@/components/impersonate";
+import { Impersonate } from "@/components/impersonate/Impersonate.component";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";

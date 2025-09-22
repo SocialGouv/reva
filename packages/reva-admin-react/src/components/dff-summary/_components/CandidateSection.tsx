@@ -1,4 +1,4 @@
-import { GenderEnum } from "@/constants";
+import { GenderEnum } from "@/constants/genders.constant";
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { Candidate, Gender } from "@/graphql/generated/graphql";

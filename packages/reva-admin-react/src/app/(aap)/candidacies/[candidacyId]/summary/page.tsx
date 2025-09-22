@@ -12,7 +12,7 @@ import { useTakeOverCandidacy } from "@/app/(aap)/candidacies/[candidacyId]/summ
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { Impersonate } from "@/components/impersonate";
+import { Impersonate } from "@/components/impersonate/Impersonate.component";
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { CertificationCard } from "../_components/CertificationCard";

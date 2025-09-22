@@ -9,7 +9,7 @@ import { ReactNode } from "react";
 import { UseFormRegister } from "react-hook-form";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { CompanyBadges } from "@/components/company-preview";
+import { CompanyBadges } from "@/components/company-preview/CompanyPreview.component";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 

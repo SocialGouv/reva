@@ -11,7 +11,7 @@ import { z } from "zod";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { GenderEnum } from "@/constants";
+import { GenderEnum } from "@/constants/genders.constant";
 
 import { Candidacy } from "@/graphql/generated/graphql";
 
