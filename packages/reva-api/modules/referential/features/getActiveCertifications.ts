@@ -51,9 +51,10 @@ export const getActiveCertifications = async (filters?: {
   }
 
   if (branches && branches?.length > 0) {
-    const domaineCertifications =
+    const brancheCertifications =
       await prismaClient.certificationOnConventionCollective.findMany({
         where: {
+          ccnId: { in: branches },
           certification: {
             visible: true,
             level: { in: levels },
@@ -64,7 +65,7 @@ export const getActiveCertifications = async (filters?: {
         },
       });
 
-    const mappedCertifications: Certification[] = domaineCertifications.map(
+    const mappedCertifications: Certification[] = brancheCertifications.map(
       ({ certification }) => ({
         ...certification,
         codeRncp: certification.rncpId,
