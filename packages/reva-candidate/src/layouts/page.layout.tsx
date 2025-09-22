@@ -1,5 +1,6 @@
 "use client";
 
+import Head from "next/head";
 import { ReactNode } from "react";
 
 import { BackToHomeButton } from "@/components/legacy/molecules/BackToHomeButton/BackToHomeButton";
@@ -21,7 +22,7 @@ export const PageLayout = ({
 }: Props) => {
   return (
     <div className={`flex-1 ${className || ""}`} data-test={props["data-test"]}>
-      {title && <title>{title} - France VAE</title>}
+      <Head>{title && <title>{title} - France VAE</title>}</Head>
 
       {displayBackToHome && <BackToHomeButton />}
 
