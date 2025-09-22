@@ -4,6 +4,7 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
+import DocumentationTab from "./tabs/DocumentationTab";
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
@@ -25,6 +26,28 @@ export const CertificationPage = async ({
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
     juryEstimatedCost?: number | null;
     juryPlace?: string | null;
+    additionalInfo?: {
+      dossierDeValidationLink?: string | null;
+      dossierDeValidationTemplate?: {
+        url: string;
+        name: string;
+        mimeType: string;
+      } | null;
+      linkToReferential?: string | null;
+      linkToJuryGuide?: string | null;
+      linkToCorrespondenceTable?: string | null;
+      additionalDocuments?:
+        | {
+            url: string;
+            name: string;
+            mimeType: string;
+          }[]
+        | null;
+      certificationExpertContactDetails?: string | null;
+      certificationExpertContactPhone?: string | null;
+      certificationExpertContactEmail?: string | null;
+      usefulResources?: string | null;
+    } | null;
   };
 }) => (
   <>
@@ -94,6 +117,12 @@ export const CertificationPage = async ({
               juryEstimatedCost={certification.juryEstimatedCost}
               juryPlace={certification.juryPlace}
             />
+          ),
+        },
+        {
+          label: "Documentation",
+          content: (
+            <DocumentationTab additionalInfo={certification.additionalInfo} />
           ),
         },
       ]}

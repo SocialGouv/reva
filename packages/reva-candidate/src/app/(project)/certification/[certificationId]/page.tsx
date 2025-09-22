@@ -26,6 +26,26 @@ const GET_CERTIFICATION = graphql(`
       label
       codeRncp
       isAapAvailable
+      additionalInfo {
+        dossierDeValidationLink
+        dossierDeValidationTemplate {
+          url
+          name
+          mimeType
+        }
+        linkToReferential
+        linkToJuryGuide
+        linkToCorrespondenceTable
+        additionalDocuments {
+          url
+          name
+          mimeType
+        }
+        certificationExpertContactDetails
+        certificationExpertContactPhone
+        certificationExpertContactEmail
+        usefulResources
+      }
     }
   }
 `);

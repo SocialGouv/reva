@@ -22,7 +22,10 @@ export const DownloadTile = ({
               {name}
             </a>
           </h3>
-          <p className="fr-card__desc text-base">{description}</p>
+          {description && (
+            <p className="fr-card__desc text-base">{description}</p>
+          )}
+
           <div className="fr-card__end">
             <p className="fr-tile__detail">
               {mimeType.split("/").pop()?.toUpperCase()}
