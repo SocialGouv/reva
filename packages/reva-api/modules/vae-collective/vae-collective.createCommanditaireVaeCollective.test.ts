@@ -4,7 +4,7 @@ import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 import * as getKeycloakAdminModule from "../shared/auth/getKeycloakAdmin";
-import { sendEmailUsingTemplate } from "../shared/email/sendEmailUsingTemplate";
+import * as sendEmailUsingTemplate from "../shared/email/sendEmailUsingTemplate";
 
 const createCommanditaireVaeCollective = async ({
   raisonSociale,
