@@ -1,4 +1,5 @@
 import Tag from "@codegouvfr/react-dsfr/Tag";
+import Link from "next/link";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
@@ -34,19 +35,41 @@ export const JuryTab = ({
       </div>
     )}
 
+    <div>
+      <h3 className="text-base my-0">
+        Pour comprendre le rôle du certificateur :
+      </h3>
+      <Link
+        href="https://vae.gouv.fr/savoir-plus/articles/missions-organisme-certificateur/"
+        className="fr-link"
+        target="_blank"
+      >
+        Quelles sont les missions d’un organisme certificateur ?
+      </Link>
+    </div>
+
     {juryPlace ? (
       <div>
-        <h2 className="text-xl">Lieu de passage du jury</h2>
-        <p>{juryPlace}</p>
+        <h2 className="text-xl mb-4">Lieu de passage du jury</h2>
+        <p className="my-0">{juryPlace}</p>
       </div>
     ) : (
       <div className="flex gap-2">
         <span className="fr-icon-info-fill text-dsfrGray-mentionGrey" />
-        <p className="text-dsfrGray-titleGrey italic">
+        <p className="text-dsfrGray-titleGrey italic mb-0">
           Il n’y a pas de lieu de passage renseigné pour le jury sur ce diplôme.
         </p>
       </div>
     )}
+    <div>
+      <Link
+        href="https://vae.gouv.fr/savoir-plus/articles/comment-se-deroule-un-jury-vae/"
+        className="fr-link"
+        target="_blank"
+      >
+        Comment se déroule un jury VAE ?
+      </Link>
+    </div>
   </div>
 );
 
