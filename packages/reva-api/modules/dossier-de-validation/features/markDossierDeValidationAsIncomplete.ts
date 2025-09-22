@@ -2,10 +2,8 @@ import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandid
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  sendDVReportedToCandidateAutonomeEmail,
-  sendDVReportedToOrganismEmail,
-} from "../emails";
+import { sendDVReportedToCandidateAutonomeEmail } from "../emails/sendDVReportedToCandidateAutonomeEmail";
+import { sendDVReportedToOrganismEmail } from "../emails/sendDVReportedToOrganismEmail";
 
 import { getDossierDeValidationById } from "./getDossierDeValidationById";
 

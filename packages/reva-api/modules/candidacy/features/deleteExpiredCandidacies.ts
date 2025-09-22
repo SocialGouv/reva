@@ -1,6 +1,6 @@
 import { add, startOfDay } from "date-fns";
 
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 export const deleteExpiredCandidacies = async () => {

@@ -10,7 +10,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
@@ -26,12 +26,10 @@ import {
   CandidacyStatusFilter,
   SearchOrganismFilter,
 } from "./candidacy.types";
-import {
-  sendCandidacyArchivedEmailToCertificateur,
-  sendCandidacyDropOutEmailToCandidate,
-  sendCandidacyDropOutEmailToCertificateur,
-} from "./emails";
-import { cancelDropOutCandidacyEvent } from "./events";
+import { sendCandidacyArchivedEmailToCertificateur } from "./emails/sendCandidacyArchivedEmailToCertificateur";
+import { sendCandidacyDropOutEmailToCandidate } from "./emails/sendCandidacyDropOutEmailToCandidate";
+import { sendCandidacyDropOutEmailToCertificateur } from "./emails/sendCandidacyDropOutEmailToCertificateur";
+import { cancelDropOutCandidacyEvent } from "./events/cancel-drop-out.audit-event";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { canAccessCandidacy } from "./features/canAccessCandidacy";

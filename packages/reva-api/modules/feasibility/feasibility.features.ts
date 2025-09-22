@@ -7,15 +7,6 @@ import {
 } from "@prisma/client";
 import { v4 } from "uuid";
 
-import {
-  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
-  OOS_DOMAIN,
-  S3File,
-  UploadedFile,
-  getDownloadLink,
-  uploadFileToS3,
-  uploadFilesToS3,
-} from "@/modules/shared/file";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
@@ -31,15 +22,24 @@ import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
-
+import { UploadedFile } from "../shared/file/file.interface";
 import {
-  sendFeasibilityDecisionTakenToAAPEmail,
-  sendFeasibilityIncompleteMailToAAP,
-  sendFeasibilityIncompleteToCandidateAutonomeEmail,
-  sendFeasibilityRejectedToCandidateAccompagneEmail,
-  sendFeasibilityRejectedToCandidateAutonomeEmail,
-  sendNewFeasibilitySubmittedEmail,
-} from "./emails";
+  S3File,
+  getDownloadLink,
+  uploadFileToS3,
+  uploadFilesToS3,
+} from "../shared/file/file.service";
+import {
+  FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+  OOS_DOMAIN,
+} from "../shared/file/preview";
+
+import { sendFeasibilityDecisionTakenToAAPEmail } from "./emails/sendFeasibilityDecisionTakenToAAPEmail";
+import { sendFeasibilityIncompleteMailToAAP } from "./emails/sendFeasibilityIncompleteMailToAAP";
+import { sendFeasibilityIncompleteToCandidateAutonomeEmail } from "./emails/sendFeasibilityIncompleteToCandidateAutonomeEmail";
+import { sendFeasibilityRejectedToCandidateAccompagneEmail } from "./emails/sendFeasibilityRejectedToCandidateAccompagneEmail";
+import { sendFeasibilityRejectedToCandidateAutonomeEmail } from "./emails/sendFeasibilityRejectedToCandidateAutonomeEmail";
+import { sendNewFeasibilitySubmittedEmail } from "./emails/sendNewFeasibilitySubmittedEmail";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { canManageFeasibility } from "./features/canManageFeasibility";
 import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";

@@ -2,7 +2,7 @@ import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
 import { canManageCandidacy } from "@/modules/candidacy/features/canManageCandidacy";
-import { UploadedFile } from "@/modules/shared/file";
+import { UploadedFile } from "@/modules/shared/file/file.interface";
 
 import { addPaymentProof } from "./features/addPaymentProof";
 

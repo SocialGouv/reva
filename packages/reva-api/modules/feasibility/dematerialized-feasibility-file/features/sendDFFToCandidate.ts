@@ -1,7 +1,7 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "@/prisma/client";
 
-import { sendDFFNotificationToCandidateEmail } from "../emails";
+import { sendDFFNotificationToCandidateEmail } from "../emails/sendDFFNotificationToCandidateEmail";
 
 export const sendDFFToCandidate = async ({
   dematerializedFeasibilityFileId,

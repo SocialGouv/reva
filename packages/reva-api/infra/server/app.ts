@@ -9,16 +9,19 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 
-import { accountRoute } from "../../modules/account/account.routes";
-import { dossierDeValidationRoute } from "../../modules/dossier-de-validation/dossier-de-validation.routes";
-import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
-import paymentRequestFvaeFileUploadAndConfirmationRoute from "../../modules/finance/unifvae/finance.routes";
-import proofUploadRoute from "../../modules/finance/unireva/finance.routes";
-import { juryRoute } from "../../modules/jury/jury.routes";
-import { organismRoutes } from "../../modules/organism/organism.routes";
-import { FILE_PREVIEW_ROUTE_PATH, OOS_DOMAIN } from "../../modules/shared/file";
-import { logger } from "../../modules/shared/logger";
-import { strapiWebhookRoute } from "../../modules/strapi/strapi.routes";
+import { accountRoute } from "@/modules/account/account.routes";
+import { dossierDeValidationRoute } from "@/modules/dossier-de-validation/dossier-de-validation.routes";
+import { feasibilityFileUploadRoute } from "@/modules/feasibility/feasibility.routes";
+import paymentRequestFvaeFileUploadAndConfirmationRoute from "@/modules/finance/unifvae/finance.routes";
+import proofUploadRoute from "@/modules/finance/unireva/finance.routes";
+import { juryRoute } from "@/modules/jury/jury.routes";
+import { organismRoutes } from "@/modules/organism/organism.routes";
+import {
+  FILE_PREVIEW_ROUTE_PATH,
+  OOS_DOMAIN,
+} from "@/modules/shared/file/preview";
+import { logger } from "@/modules/shared/logger/logger";
+import { strapiWebhookRoute } from "@/modules/strapi/strapi.routes";
 
 import { mercuriusGraphQL } from "./mercurius";
 import MercuriusGQLUpload from "./mercurius-upload";

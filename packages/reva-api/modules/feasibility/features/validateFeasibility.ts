@@ -3,15 +3,14 @@ import { v4 } from "uuid";
 
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
-import { S3File, UploadedFile, uploadFileToS3 } from "@/modules/shared/file";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+import { UploadedFile } from "@/modules/shared/file/file.interface";
+import { S3File, uploadFileToS3 } from "@/modules/shared/file/file.service";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  sendFeasibilityDecisionTakenToAAPEmail,
-  sendFeasibilityValidatedToCandidateAccompagneEmail,
-  sendFeasibilityValidatedToCandidateAutonomeEmail,
-} from "../emails";
+import { sendFeasibilityDecisionTakenToAAPEmail } from "../emails/sendFeasibilityDecisionTakenToAAPEmail";
+import { sendFeasibilityValidatedToCandidateAccompagneEmail } from "../emails/sendFeasibilityValidatedToCandidateAccompagneEmail";
+import { sendFeasibilityValidatedToCandidateAutonomeEmail } from "../emails/sendFeasibilityValidatedToCandidateAutonomeEmail";
 import { deleteFeasibilityIDFile } from "../features/deleteFeasibilityIDFile";
 
 import { canManageFeasibility } from "./canManageFeasibility";

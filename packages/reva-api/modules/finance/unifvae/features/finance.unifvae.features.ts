@@ -2,7 +2,7 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { isAfter, isBefore, sub } from "date-fns";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
-import { UploadedFile } from "@/modules/shared/file";
+import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { prismaClient } from "@/prisma/client";
 
 import { applyBusinessValidationRules } from "../validation";

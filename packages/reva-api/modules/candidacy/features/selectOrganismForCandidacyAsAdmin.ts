@@ -4,7 +4,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import { updateCandidacyOrganism } from "./updateCandidacyOrganism";

@@ -1,5 +1,5 @@
 import { generateJwt } from "@/modules/shared/auth/auth.helper";
-import { sendEmailUsingTemplate } from "@/modules/shared/email";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 
 export const sendForgotPasswordEmail = async (email: string) => {
   const baseUrl = process.env.BASE_URL || "http://localhost";

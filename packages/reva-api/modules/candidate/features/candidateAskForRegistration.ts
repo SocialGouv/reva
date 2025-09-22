@@ -1,8 +1,6 @@
 import { TypeAccompagnement } from "../candidate.types";
-import {
-  sendRegistrationEmailToCandidateAccompagne,
-  sendRegistrationEmailToCandidateAutonome,
-} from "../emails";
+import { sendRegistrationEmailToCandidateAccompagne } from "../emails/sendRegistrationEmailToCandidateAccompagne";
+import { sendRegistrationEmailToCandidateAutonome } from "../emails/sendRegistrationEmailToCandidateAutonome";
 
 interface CandidateInput {
   email: string;

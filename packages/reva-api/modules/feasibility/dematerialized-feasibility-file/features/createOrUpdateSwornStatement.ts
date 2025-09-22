@@ -1,12 +1,12 @@
 import { v4 as uuidV4 } from "uuid";
 
+import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import {
   deleteFile,
   emptyUploadedFileStream,
   getUploadedFile,
   uploadFilesToS3,
-} from "@/modules/shared/file";
-import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+} from "@/modules/shared/file/file.service";
 import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput } from "../dematerialized-feasibility-file.types";

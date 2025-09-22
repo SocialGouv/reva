@@ -1,10 +1,10 @@
-import * as emailModule from "@/modules/shared/email";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 import * as getKeycloakAdminModule from "../shared/auth/getKeycloakAdmin";
+import { sendEmailUsingTemplate } from "../shared/email/sendEmailUsingTemplate";
 
 const createCommanditaireVaeCollective = async ({
   raisonSociale,
@@ -67,7 +67,7 @@ describe("create commanditaire vae collective", () => {
         }),
     );
 
-    const emailSpy = vi.spyOn(emailModule, "sendEmailUsingTemplate");
+    const emailSpy = vi.spyOn(sendEmailUsingTemplate, "sendEmailUsingTemplate");
 
     await createCommanditaireVaeCollective({
       raisonSociale: "Test Commanditaire",

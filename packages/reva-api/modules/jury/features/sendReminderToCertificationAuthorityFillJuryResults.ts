@@ -1,10 +1,10 @@
 import { endOfDay, startOfDay, sub } from "date-fns";
 
 import { getAccountById } from "@/modules/account/features/getAccount";
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
-import { sendFillJuryResultsCertificationAuthorityEmail } from "../emails";
+import { sendFillJuryResultsCertificationAuthorityEmail } from "../emails/sendFillJuryResultsCertificationAuthorityEmail";
 
 export const sendReminderToCertificationAuthorityFillJuryResults = async () => {
   const today = startOfDay(new Date());

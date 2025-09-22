@@ -19,7 +19,7 @@ import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentReques
 import { sendReminderToCandidateWithScheduledJury } from "../modules/jury/features/sendReminderToCandidateWithScheduledJury";
 import { sendReminderToCertificationAuthorityFillJuryResults } from "../modules/jury/features/sendReminderToCertificationAuthorityFillJuryResults";
 import { setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate } from "../modules/referential/features/setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate";
-import { logger } from "../modules/shared/logger";
+import { logger } from "../modules/shared/logger/logger";
 import { prismaClient } from "../prisma/client";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });

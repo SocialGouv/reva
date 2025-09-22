@@ -5,13 +5,13 @@ import { mergeResolvers, mergeTypeDefs } from "@graphql-tools/merge";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { NoSchemaIntrospectionCustomRule } from "graphql";
 import {
+  DateResolver,
   TimestampResolver,
   TimestampTypeDefinition,
   UUIDDefinition,
   UUIDResolver,
   VoidResolver,
   VoidTypeDefinition,
-  DateResolver,
 } from "graphql-scalars";
 import { GraphQLUpload } from "graphql-upload-minimal";
 import mercurius, { MercuriusOptions } from "mercurius";
@@ -40,7 +40,7 @@ import { juryResolvers } from "./jury/jury.resolvers";
 import { organismResolvers } from "./organism/organism.resolvers";
 import { referentialLoaders } from "./referential/referential.loaders";
 import { referentialResolvers } from "./referential/referential.resolvers";
-import { logger } from "./shared/logger";
+import { logger } from "./shared/logger/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 import { vaeCollectiveResolvers } from "./vae-collective/vae-collective.resolvers";

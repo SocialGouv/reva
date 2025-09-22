@@ -1,6 +1,6 @@
 import { prismaClient } from "@/prisma/client";
 
-import { RNCPReferential } from "../rncp";
+import { RNCPReferential } from "../rncp/referential";
 
 export const updateCertificationWithPrerequisitesFromFC = async (params: {
   codeRncp: string;

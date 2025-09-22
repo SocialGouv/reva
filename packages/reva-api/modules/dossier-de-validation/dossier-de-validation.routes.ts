@@ -1,12 +1,13 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { UploadedFile, getDownloadLink } from "@/modules/shared/file";
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { isCandidateOwnerOfCandidacyFeature } from "@/modules/shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
 import { prismaClient } from "@/prisma/client";
 
 import { canUserManageCandidacy } from "../feasibility/feasibility.features";
+import { UploadedFile } from "../shared/file/file.interface";
+import { getDownloadLink } from "../shared/file/file.service";
 
 import { canManageDossierDeValidation } from "./features/canManageDossierDeValidation";
 import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveDossierDeValidationByCandidacyId";

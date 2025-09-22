@@ -1,10 +1,10 @@
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
-import { RNCPReferential } from "../rncp";
+import { RNCPReferential } from "../rncp/referential";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 
-import { getFormacodes, Formacode } from "./getFormacodes";
+import { Formacode, getFormacodes } from "./getFormacodes";
 
 type CertificationFormacode = Formacode & {
   isMain: boolean;

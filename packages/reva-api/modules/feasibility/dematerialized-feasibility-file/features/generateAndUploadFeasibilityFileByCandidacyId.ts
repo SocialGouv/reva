@@ -1,6 +1,10 @@
 import { v4 } from "uuid";
 
-import { deleteFile, S3File, uploadFilesToS3 } from "@/modules/shared/file";
+import {
+  deleteFile,
+  S3File,
+  uploadFilesToS3,
+} from "@/modules/shared/file/file.service";
 import { prismaClient } from "@/prisma/client";
 
 import { generateFeasibilityFileByCandidacyId } from "./generateFeasibilityFileByCandidacyId";

@@ -2,7 +2,7 @@
 // @ts-ignore
 import SibApiV3Sdk from "sib-api-v3-sdk";
 
-import { logger } from "../logger";
+import { logger } from "../logger/logger";
 
 // https://developers.brevo.com/docs/how-it-works#requests
 const defaultClient = SibApiV3Sdk.ApiClient.instance;

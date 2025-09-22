@@ -1,5 +1,5 @@
 import { getCandidateLoginUrl } from "@/modules/candidate/utils/candidate.url.helpers";
-import { sendEmailUsingTemplate } from "@/modules/shared/email";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 
 export const sendInactifEnAttenteAfterFeasibilityAdmissibleToCandidate =
   async ({

@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 
 import { impersonate } from "./features/impersonate";
 import { unsafeHandleFranceConnectCallback } from "./features/unsafeHandleFranceConnectCallback";

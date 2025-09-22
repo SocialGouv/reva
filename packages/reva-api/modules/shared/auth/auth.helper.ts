@@ -2,7 +2,7 @@ import CryptoJS from "crypto-js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Keycloak from "keycloak-connect";
 
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 
 import { getKeycloakAdmin } from "./getKeycloakAdmin";
 

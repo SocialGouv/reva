@@ -1,10 +1,8 @@
 import { Candidate } from "@/modules/candidate/candidate.types";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  sendNewEmailCandidateEmail,
-  sendPreviousEmailCandidateEmail,
-} from "../emails";
+import { sendNewEmailCandidateEmail } from "../emails/sendNewEmailCandidateEmail";
+import { sendPreviousEmailCandidateEmail } from "../emails/sendPreviousEmailCandidateEmail";
 
 import { updateCandidateEmail } from "./updateCandidateEmail";
 export const updateContactOfCandidacy = async (params: {

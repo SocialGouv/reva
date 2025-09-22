@@ -5,7 +5,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 
 import { ClientApp } from "./account.type";
 import { createAccount } from "./features/createAccount";

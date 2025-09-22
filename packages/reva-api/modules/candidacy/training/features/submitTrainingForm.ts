@@ -12,7 +12,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { getCandidacy } from "../../features/getCandidacy";
 import { updateCandidacyStatus } from "../../features/updateCandidacyStatus";
-import { sendTrainingEmail } from "../emails";
+import { sendTrainingEmail } from "../emails/sendTrainingEmail";
 
 import { existsCandidacyHavingHadStatus } from "./existsCandidacyHavingHadStatus";
 

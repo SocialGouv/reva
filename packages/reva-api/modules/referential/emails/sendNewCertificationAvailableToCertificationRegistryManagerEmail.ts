@@ -1,7 +1,5 @@
-import {
-  getBackofficeUrl,
-  sendEmailUsingTemplate,
-} from "@/modules/shared/email";
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 
 export const sendNewCertificationAvailableToCertificationRegistryManagerEmail =
   async ({ email }: { email: string }) => {

@@ -6,7 +6,7 @@ import {
 
 import { graphql } from "@/modules/graphql/generated";
 import { prismaClient } from "@/prisma/client";
-import { TRAINING_INPUT } from "@/test/fixtures";
+import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";

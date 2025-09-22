@@ -1,8 +1,8 @@
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 
-import { RNCPCertification } from "../rncp";
+import { RNCPCertification } from "../rncp/referential";
 
-import { getFormacodes, Formacode } from "./getFormacodes";
+import { Formacode, getFormacodes } from "./getFormacodes";
 
 type SubDomain = {
   id: string;

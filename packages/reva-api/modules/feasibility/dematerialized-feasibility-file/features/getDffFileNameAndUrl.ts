@@ -1,8 +1,8 @@
+import { getDownloadLink } from "@/modules/shared/file/file.service";
 import {
   FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
-  getDownloadLink,
   OOS_DOMAIN,
-} from "@/modules/shared/file";
+} from "@/modules/shared/file/preview";
 import { prismaClient } from "@/prisma/client";
 
 export const getDffFileNameAndUrl = async ({

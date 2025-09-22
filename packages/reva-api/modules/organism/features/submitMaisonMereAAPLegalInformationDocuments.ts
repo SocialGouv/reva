@@ -1,7 +1,8 @@
 import { v4 as uuidV4 } from "uuid";
 
-import { UploadedFile, uploadFileToS3 } from "@/modules/shared/file";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+import { UploadedFile } from "@/modules/shared/file/file.interface";
+import { uploadFileToS3 } from "@/modules/shared/file/file.service";
 import { prismaClient } from "@/prisma/client";
 
 import { deleteOldMaisonMereAAPLegalInformationDocuments } from "./deleteOldMaisonMereAAPLegalInformationDocuments";

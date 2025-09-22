@@ -2,7 +2,7 @@ import { Readable } from "stream";
 
 import * as csv from "fast-csv";
 
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import { sendStreamToFtp } from "../../shared/ftp";

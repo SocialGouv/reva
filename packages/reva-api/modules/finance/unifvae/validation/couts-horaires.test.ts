@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { FUNDING_REQUEST_NO_HOURS } from "@/test/fixtures";
+import { FUNDING_REQUEST_NO_HOURS } from "@/test/fixtures/funding-requests.fixture";
 
 import { validateCoutsHoraires } from "./couts-horaires";
 

@@ -2,10 +2,8 @@ import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCand
 import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput } from "../dematerialized-feasibility-file.types";
-import {
-  sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP,
-  sendFeasibilityConfirmedByCandidateWithoutSwornAttestmentToAAP,
-} from "../emails";
+import { sendFeasibilityConfirmedByCandidateWithoutSwornAttestmentToAAP } from "../emails/sendFeasibilityConfirmedByCandidateWithoutSwornAttestmentToAAP.email";
+import { sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP } from "../emails/sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP.email";
 
 export const confirmDematerializedFeasibilityFileByCandidate = async ({
   dematerializedFeasibilityFileId,

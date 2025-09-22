@@ -10,7 +10,7 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { filetypeinfo } from "magic-bytes.js";
 
-import { logger } from "../logger";
+import { logger } from "../logger/logger";
 
 import { UploadedFile } from "./file.interface";
 

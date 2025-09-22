@@ -1,4 +1,4 @@
-import { sendEmailUsingTemplate } from "@/modules/shared/email";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 
 const adminBaseUrl =
   process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";

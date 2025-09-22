@@ -1,8 +1,9 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { UploadedFile, getDownloadLink } from "@/modules/shared/file";
-import { logger } from "@/modules/shared/logger";
+import { UploadedFile } from "@/modules/shared/file/file.interface";
+import { getDownloadLink } from "@/modules/shared/file/file.service";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import { canManageJury } from "./features/canManageJury";

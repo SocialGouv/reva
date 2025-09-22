@@ -1,4 +1,4 @@
-import { RNCPCertification } from "../rncp";
+import { RNCPCertification } from "../rncp/referential";
 
 export const getLevelFromRNCPCertification = (
   certification: RNCPCertification,

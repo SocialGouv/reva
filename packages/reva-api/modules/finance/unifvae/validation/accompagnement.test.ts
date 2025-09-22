@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { FUNDING_REQUEST_FULL_CERT_OK_HOURS_DECIMAL } from "@/test/fixtures";
+import { FUNDING_REQUEST_FULL_CERT_OK_HOURS_DECIMAL } from "@/test/fixtures/funding-requests.fixture";
 
 import { validateAccompagnement } from "./accompagnement";
 

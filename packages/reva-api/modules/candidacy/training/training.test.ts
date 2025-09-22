@@ -1,7 +1,7 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
 import { CANDIDACY_FINANCING_METHOD_OTHER_SOURCE_ID } from "@/modules/referential/referential.types";
-import { TRAINING_INPUT } from "@/test/fixtures";
+import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";

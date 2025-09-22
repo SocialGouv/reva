@@ -4,12 +4,10 @@ import {
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  sendCandidacyTransferToNewCertificationAuthorityEmail,
-  sendCandidacyTransferToPreviousCertificationAuthorityEmail,
-  sendCandidacyTransferedToOrganismEmail,
-  sendCandidacyTransferToCandidate,
-} from "../emails";
+import { sendCandidacyTransferedToOrganismEmail } from "../emails/sendCandidacyTransferedToOrganism";
+import { sendCandidacyTransferToCandidate } from "../emails/sendCandidacyTransferToCandidate";
+import { sendCandidacyTransferToNewCertificationAuthorityEmail } from "../emails/sendCandidacyTransferToNewCertificationAuthority";
+import { sendCandidacyTransferToPreviousCertificationAuthorityEmail } from "../emails/sendCandidacyTransferToPreviousCertificationAuthority";
 
 export const transferCandidacyToCertificationAuthorityLocalAccount =
   async (params: {

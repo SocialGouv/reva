@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 
 import { AuditEventDataInterface } from "./audit-event.type";
 
-export interface AuditEventInterface<T extends AuditEventDataInterface> {
+interface AuditEventInterface<T extends AuditEventDataInterface> {
   accountId: string;
   type: string;
   content: T;

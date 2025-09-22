@@ -51,18 +51,18 @@ import { validateCertification } from "./features/validateCertification";
 import { referentialResolversSecurityMap } from "./referential.security";
 import {
   CreateCompetenceBlocInput,
+  ReplaceCertificationInput,
+  ResetCompetenceBlocsByCertificationIdInput,
+  SendCertificationToRegistryManagerInput,
+  UpdateCertificationAdditionalInfoInput,
+  UpdateCertificationDescriptionInput,
+  UpdateCertificationPrerequisitesInput,
+  UpdateCertificationStructureAndCertificationAuthoritiesInput,
   UpdateCompetenceBlocInput,
   UpdateCompetenceBlocsInput,
-  UpdateCertificationStructureAndCertificationAuthoritiesInput,
-  SendCertificationToRegistryManagerInput,
-  ResetCompetenceBlocsByCertificationIdInput,
-  UpdateCertificationPrerequisitesInput,
-  UpdateCertificationDescriptionInput,
   ValidateCertificationInput,
-  UpdateCertificationAdditionalInfoInput,
-  ReplaceCertificationInput,
 } from "./referential.types";
-import { RNCPCertification, RNCPReferential } from "./rncp";
+import { RNCPCertification, RNCPReferential } from "./rncp/referential";
 
 const unsafeReferentialResolvers = {
   Candidacy: {

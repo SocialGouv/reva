@@ -3,10 +3,8 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { getCandidateById } from "@/modules/candidate/features/getCandidateById";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 
-import {
-  sendConfirmationCandidacySubmissionEmail,
-  sendNewCandidacyEmail,
-} from "../emails";
+import { sendConfirmationCandidacySubmissionEmail } from "../emails/sendConfirmationCandidacySubmissionEmail";
+import { sendNewCandidacyEmail } from "../emails/sendNewCandidacyEmail";
 
 import { getCandidacyById } from "./getCandidacyById";
 import { getReferentOrganismFromCandidacyId } from "./getReferentOrganismFromCandidacyId";

@@ -1,9 +1,9 @@
 import { add, endOfDay, startOfDay } from "date-fns";
 
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
-import { sendJuryScheduledReminderCandidateEmail } from "../emails";
+import { sendJuryScheduledReminderCandidateEmail } from "../emails/sendJuryScheduledReminderCandidateEmail";
 
 export const sendReminderToCandidateWithScheduledJury = async () => {
   const today = startOfDay(new Date());

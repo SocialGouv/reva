@@ -3,24 +3,22 @@ import { v4 as uuidV4 } from "uuid";
 
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+import { UploadedFile } from "@/modules/shared/file/file.interface";
 import {
   emptyUploadedFileStream,
   getUploadedFile,
-  UploadedFile,
   uploadFilesToS3,
-} from "@/modules/shared/file";
-import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
+} from "@/modules/shared/file/file.service";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  sendFeasibilityDecisionTakenToAAPEmail,
-  sendFeasibilityIncompleteMailToAAP,
-  sendFeasibilityIncompleteToCandidateAutonomeEmail,
-  sendFeasibilityRejectedToCandidateAccompagneEmail,
-  sendFeasibilityRejectedToCandidateAutonomeEmail,
-  sendFeasibilityValidatedToCandidateAccompagneEmail,
-  sendFeasibilityValidatedToCandidateAutonomeEmail,
-} from "../../emails";
+import { sendFeasibilityDecisionTakenToAAPEmail } from "../../emails/sendFeasibilityDecisionTakenToAAPEmail";
+import { sendFeasibilityIncompleteMailToAAP } from "../../emails/sendFeasibilityIncompleteMailToAAP";
+import { sendFeasibilityIncompleteToCandidateAutonomeEmail } from "../../emails/sendFeasibilityIncompleteToCandidateAutonomeEmail";
+import { sendFeasibilityRejectedToCandidateAccompagneEmail } from "../../emails/sendFeasibilityRejectedToCandidateAccompagneEmail";
+import { sendFeasibilityRejectedToCandidateAutonomeEmail } from "../../emails/sendFeasibilityRejectedToCandidateAutonomeEmail";
+import { sendFeasibilityValidatedToCandidateAccompagneEmail } from "../../emails/sendFeasibilityValidatedToCandidateAccompagneEmail";
+import { sendFeasibilityValidatedToCandidateAutonomeEmail } from "../../emails/sendFeasibilityValidatedToCandidateAutonomeEmail";
 import { deleteFeasibilityIDFile } from "../../features/deleteFeasibilityIDFile";
 import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput } from "../dematerialized-feasibility-file.types";
 

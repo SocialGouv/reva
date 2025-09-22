@@ -1,10 +1,10 @@
 import { parse } from "date-fns";
 
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 
 const URL = "https://api.francecompetences.fr/referentiels/v2.0/fiches";
 
-export type FindParams = {
+type FindParams = {
   STATUT?: "ACTIF" | "INACTIF";
   INTITULE?: string;
   NUMERO_FICHE?: string;

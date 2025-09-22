@@ -1,8 +1,8 @@
-import { logger } from "./shared/logger";
 import {
   BusinessEventType,
   BusinessTargetType,
 } from "./shared/logger/businessLogger";
+import { logger } from "./shared/logger/logger";
 
 export const logGraphqlEvent = ({
   context,

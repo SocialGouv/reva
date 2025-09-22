@@ -1,5 +1,5 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
-import { getBackofficeUrl } from "@/modules/shared/email";
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { prismaClient } from "@/prisma/client";
 
 import { sendCandidacyDropOutCanceledEmailToAap } from "../emails/sendCandidacyDropOutCanceledEmailToAap";

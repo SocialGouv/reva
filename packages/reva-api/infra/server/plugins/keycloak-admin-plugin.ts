@@ -2,7 +2,7 @@ import KeycloakAdminClientClass from "@keycloak/keycloak-admin-client";
 import { FastifyPluginCallback } from "fastify";
 import fp from "fastify-plugin";
 
-import { logger } from "../../../modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 
 const dynamicImport = async (packageName: string) =>
   new Function(`return import('${packageName}')`)();

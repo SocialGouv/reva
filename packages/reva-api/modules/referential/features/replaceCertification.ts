@@ -1,6 +1,6 @@
 import { prismaClient } from "@/prisma/client";
 
-import { RNCPReferential } from "../rncp";
+import { RNCPReferential } from "../rncp/referential";
 import { getLevelFromRNCPCertification } from "../utils/rncp.helpers";
 
 import { createCompetenceBlocsFromRncp } from "./createCompetenceBlocsFromRncp";

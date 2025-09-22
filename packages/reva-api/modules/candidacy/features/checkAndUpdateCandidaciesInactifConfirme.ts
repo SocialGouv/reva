@@ -1,7 +1,7 @@
 import { ActiviteStatut } from "@prisma/client";
 import { subDays } from "date-fns";
 
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import {

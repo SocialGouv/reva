@@ -1,4 +1,4 @@
-import { sendEmailUsingTemplate } from "@/modules/shared/email";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 
 import { getCandidateLoginUrl } from "../utils/candidate.url.helpers";
 

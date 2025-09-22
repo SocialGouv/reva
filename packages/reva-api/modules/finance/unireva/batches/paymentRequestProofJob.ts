@@ -3,7 +3,7 @@ import { Readable } from "stream";
 import { FileUploadSpooler } from "@prisma/client";
 import * as ftp from "basic-ftp";
 
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 export default async (batchKey: string) => {

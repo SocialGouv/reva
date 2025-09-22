@@ -6,13 +6,11 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { logger } from "@/modules/shared/logger";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  sendNewCandidacyEmail,
-  sendPreviousOrganismCandidateChangeOrganismEmail,
-} from "../emails";
+import { sendNewCandidacyEmail } from "../emails/sendNewCandidacyEmail";
+import { sendPreviousOrganismCandidateChangeOrganismEmail } from "../emails/sendPreviousOrganismCandidateChangeOrganismEmail";
 import { resetTrainingInformation } from "../training/features/resetTrainingInformation";
 
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";

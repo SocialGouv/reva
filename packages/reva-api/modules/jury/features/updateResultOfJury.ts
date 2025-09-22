@@ -3,10 +3,8 @@ import { isBefore, startOfDay } from "date-fns";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { prismaClient } from "@/prisma/client";
 
-import {
-  sendJuryResultAAPEmail,
-  sendJuryResultCandidateEmail,
-} from "../emails";
+import { sendJuryResultAAPEmail } from "../emails/sendJuryResultAAPEmail";
+import { sendJuryResultCandidateEmail } from "../emails/sendJuryResultCandidateEmail";
 import { JuryInfo } from "../jury.types";
 
 import { canManageJury } from "./canManageJury";

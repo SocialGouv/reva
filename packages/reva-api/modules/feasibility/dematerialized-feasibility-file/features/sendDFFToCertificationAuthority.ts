@@ -2,10 +2,10 @@ import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
-import { getBackofficeUrl } from "@/modules/shared/email";
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { prismaClient } from "@/prisma/client";
 
-import { sendNewFeasibilitySubmittedEmail } from "../../emails";
+import { sendNewFeasibilitySubmittedEmail } from "../../emails/sendNewFeasibilitySubmittedEmail";
 
 export const sendDFFToCertificationAuthority = async ({
   dematerializedFeasibilityFileId,

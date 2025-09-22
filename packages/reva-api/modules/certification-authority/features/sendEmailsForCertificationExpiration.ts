@@ -1,11 +1,9 @@
 import { CertificationEmailType } from "@prisma/client";
 import { addDays, format, startOfToday, subDays, subHours } from "date-fns";
 
-import {
-  getBackofficeUrl,
-  sendEmailUsingTemplate,
-} from "@/modules/shared/email";
-import { logger } from "@/modules/shared/logger";
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 const EMAIL_TEMPLATE_IDS = {

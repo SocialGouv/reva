@@ -1,8 +1,8 @@
 import { File } from "@prisma/client";
 
 import {
-  logAAPAuditEvent,
   AAPAuditLogUserInfo,
+  logAAPAuditEvent,
 } from "@/modules/aap-log/features/logAAPAuditEvent";
 import { createAccount } from "@/modules/account/features/createAccount";
 import { getAccountByEmail } from "@/modules/account/features/getAccountByEmail";
@@ -13,8 +13,8 @@ import { createMaisonMereAAP } from "@/modules/organism/features/createMaisonMer
 import { getLastProfessionalCgu } from "@/modules/organism/features/getLastProfessionalCgu";
 import { getMaisonMereAapBySiretAndTypology } from "@/modules/organism/features/getMaisonMereAapBySiretAndTypology";
 import { getDegrees } from "@/modules/referential/features/getDegrees";
-import { deleteFile } from "@/modules/shared/file";
-import { logger } from "@/modules/shared/logger";
+import { deleteFile } from "@/modules/shared/file/file.service";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 export const validateSubscriptionRequest = async ({

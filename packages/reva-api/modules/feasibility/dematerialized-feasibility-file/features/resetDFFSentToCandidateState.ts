@@ -1,6 +1,6 @@
 import { DematerializedFeasibilityFile } from "@prisma/client";
 
-import { deleteFile } from "@/modules/shared/file";
+import { deleteFile } from "@/modules/shared/file/file.service";
 import { prismaClient } from "@/prisma/client";
 
 export const resetDFFSentToCandidateState = async (

@@ -4,8 +4,8 @@ import { prismaClient } from "@/prisma/client";
 import {
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
   CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO_MINUS_FIVE_MINUTES,
-  PAYMENT_REQUEST,
-} from "@/test/fixtures";
+} from "@/test/fixtures/candidacies.fixture";
+import { PAYMENT_REQUEST } from "@/test/fixtures/payment-requests.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";

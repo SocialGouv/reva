@@ -1,6 +1,7 @@
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 
-import { sendLoginEmail, sendUnknownUserEmail } from "../emails";
+import { sendLoginEmail } from "../emails/sendLoginEmail";
+import { sendUnknownUserEmail } from "../emails/sendUnknownUserEmail";
 
 export const askForLogin = async (email: string) => {
   const keycloakAdmin = await getKeycloakAdmin();

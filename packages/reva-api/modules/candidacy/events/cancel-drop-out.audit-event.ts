@@ -1,9 +1,5 @@
-import {
-  AuditEvent,
-  findAuditEventContent,
-  findFirstAuditEventContent,
-  saveAuditEvent,
-} from "@/modules/shared/audit";
+import { AuditEvent } from "@/modules/shared/audit/audit-event.entity";
+import { saveAuditEvent } from "@/modules/shared/audit/audit-event.repository";
 
 import { CandidacyDropOut } from "../candidacy.types";
 
@@ -20,38 +16,4 @@ export async function cancelDropOutCandidacyEvent(
   });
 
   await saveAuditEvent(event);
-}
-
-// This is a sample on how to search AuditEvent in db
-export async function findFirstCandidacyDropout(
-  candidacyId: string,
-): Promise<CandidacyDropOut | null> {
-  const candidacyDropOut = await findFirstAuditEventContent<CandidacyDropOut>({
-    where: {
-      type: AuditEventType.CANCEL_CANDIDACY_DROP_OUT,
-      content: {
-        path: ["candidacyId"],
-        equals: candidacyId,
-      },
-    },
-  });
-
-  return candidacyDropOut;
-}
-
-// This is a sample on how to search AuditEvent in db
-export async function findCandidacyDropout(
-  candidacyId: string,
-): Promise<CandidacyDropOut[] | null> {
-  const candidacyDropOut = await findAuditEventContent<CandidacyDropOut[]>({
-    where: {
-      type: AuditEventType.CANCEL_CANDIDACY_DROP_OUT,
-      content: {
-        path: ["candidacyId"],
-        equals: candidacyId,
-      },
-    },
-  });
-
-  return candidacyDropOut;
 }
