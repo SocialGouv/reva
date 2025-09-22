@@ -21,21 +21,6 @@ async function setupAuth(page: Page) {
     },
   );
 
-  await page.route("**/candidate/silent-check-sso.html", async (route) => {
-    await route.fulfill({
-      path: "tests/fixtures/auth/pages/silent-check-sso.html",
-    });
-  });
-
-  await page.route(
-    "**/realms/reva-app/protocol/openid-connect/auth**",
-    async (route) => {
-      await route.fulfill({
-        path: "tests/fixtures/auth/pages/mock-redirect-to-silent-check-sso.html",
-      });
-    },
-  );
-
   await page.route(
     "**/realms/reva-app/protocol/openid-connect/token",
     async (route) => {
