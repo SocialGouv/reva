@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import { KeycloakProvider } from "@/components/auth/keycloakContext";
 import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
-import { DsfrHead } from "@/components/dsfr/DsfrHead";
 
 const lang = "fr";
 
@@ -27,7 +26,6 @@ export default function RootLayout({
     >
       <head>
         <StartDsfrOnHydration />
-        <DsfrHead />
       </head>
       <body>
         <DsfrProvider lang={lang}>

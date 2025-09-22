@@ -23,7 +23,6 @@ import {
 } from "@/components/auth/keycloakContext";
 import { useCrisp } from "@/components/crisp/useCrisp";
 import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
-import { DsfrHead } from "@/components/dsfr/DsfrHead";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/Header";
@@ -67,7 +66,6 @@ export default function RootLayout({
     >
       <head>
         <StartDsfrOnHydration />
-        <DsfrHead />
         {PRODUKTLY_CLIENT_TOKEN && <Produktly />}
         <title>France VAE</title>
       </head>

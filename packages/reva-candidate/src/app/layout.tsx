@@ -17,7 +17,6 @@ import { Toaster } from "react-hot-toast";
 
 import { KeycloakProvider } from "@/components/auth/keycloak.context";
 import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
-import { DsfrHead } from "@/components/dsfr/DsfrHead";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 
 import { AppLayout } from "./_components/layout/AppLayout";
@@ -46,7 +45,6 @@ export default function RootLayout({
     >
       <head>
         <StartDsfrOnHydration />
-        <DsfrHead />
 
         <title>France VAE</title>
       </head>
