@@ -3,7 +3,7 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 import { toDate } from "date-fns";
 
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
-import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history";
+import { FeasibilityDecisionHistory } from "@/components/feasibility-decision-history/FeasibilityDecisionHistory.component";
 
 import {
   FeasibilityDecision,

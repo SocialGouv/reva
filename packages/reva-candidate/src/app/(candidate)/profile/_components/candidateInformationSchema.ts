@@ -1,7 +1,7 @@
 import { isBefore, sub, toDate } from "date-fns";
 import { z } from "zod";
 
-import { GenderEnum } from "@/constants";
+import { GenderEnum } from "@/constants/genders.constant";
 import { deserializeStringToPhoneNumberStructure } from "@/utils/deserializeStringToPhoneNumberStructure.util";
 
 const defaultErrorMessage = "Merci de remplir ce champ";

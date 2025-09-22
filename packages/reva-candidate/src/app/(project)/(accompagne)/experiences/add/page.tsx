@@ -12,7 +12,7 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { ExperienceDuration } from "@/constants";
+import { ExperienceDuration } from "@/constants/experience-duration.constant";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { useAddExperience } from "./add-experience.hooks";
