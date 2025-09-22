@@ -87,6 +87,9 @@ const FormacodesCcnsDegreesForm = ({
   });
 
   const watchedOrganismFormacodes = watch("organismFormacodes");
+  const watchedOrganismConventionCollectives = watch(
+    "organismConventionCollectives",
+  );
   const watchedOrganismDegrees = watch("organismDegrees");
 
   const domains = useMemo(
@@ -173,7 +176,9 @@ const FormacodesCcnsDegreesForm = ({
     .filter((degree) => degree.checked)
     .map((degree) => degree.level);
 
-  const selectedBranches = organismConventionCollectives.map((ccn) => ccn.id);
+  const selectedBranches = (watchedOrganismConventionCollectives || [])
+    .filter((ccn) => ccn.checked)
+    .map((ccn) => ccn.id);
 
   const canManageDomaines =
     organismTypology === "expertFiliere" ||
