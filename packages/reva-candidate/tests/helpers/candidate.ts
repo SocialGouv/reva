@@ -8,7 +8,15 @@ import { data } from "./msw";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
-export const createCandidateHandlers = () => {
+interface CreateCandidateHandlersOptions {
+  activeFeaturesForConnectedUser?: string[];
+}
+
+export const createCandidateHandlers = (
+  options: CreateCandidateHandlersOptions = {},
+) => {
+  const { activeFeaturesForConnectedUser = [] } = options;
+
   return [
     fvae.query(
       "candidate_getCandidateWithCandidacyForLayout",
@@ -25,6 +33,15 @@ export const createCandidateHandlers = () => {
     fvae.mutation(
       "candidate_loginWithToken",
       data({ candidate_loginWithToken: null }),
+    ),
+
+    fvae.query(
+      "activeFeaturesForConnectedUser",
+      data({
+        data: {
+          activeFeaturesForConnectedUser,
+        },
+      }),
     ),
   ];
 };

@@ -15,12 +15,6 @@ test.describe("Authentication", () => {
     mswHandlers: [
       [
         ...createCandidateHandlers(),
-        fvae.query(
-          "activeFeaturesForConnectedUser",
-          data({
-            activeFeaturesForConnectedUser: [],
-          }),
-        ),
       ],
       { scope: "test" },
     ],
