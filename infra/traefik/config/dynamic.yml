@@ -168,7 +168,7 @@ http:
 
     sandbox-api:
       rule: "Host(`sandbox.vae.gouv.fr`) && PathPrefix(`/api`)"
-      service: interop-sandbox
+      service: interop-sandbox-api
       middlewares:
         - removeHeader
 
