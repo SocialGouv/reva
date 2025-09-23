@@ -1,10 +1,12 @@
 import { useMemo } from "react";
 
 import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove";
 
 import {
   CandidacyStatusStep,
+  FeasibilityDecision,
   FinanceModule,
   TypeAccompagnement,
 } from "@/graphql/generated/graphql";
@@ -32,6 +34,9 @@ export type CandidacyForStatus = {
     | undefined;
   financeModule: FinanceModule;
   typeAccompagnement: TypeAccompagnement;
+  feasibility?: {
+    decision: FeasibilityDecision;
+  } | null;
 };
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
@@ -39,6 +44,7 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
   const isCandidacyArchived = candidacy.status === "ARCHIVE";
 
   const { isAdmin } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
 
   const candidacyCurrentActiveStatus = useMemo(() => {
     return candidacy.status;
@@ -90,6 +96,12 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     candidacy.financeModule === "hors_plateforme" &&
     candidacy.typeAccompagnement === "ACCOMPAGNE";
 
+  const isFeatureEndAccompagnementActive =
+    isFeatureActive("END_ACCOMPAGNEMENT");
+  const hasDfAdmissible = candidacy.feasibility?.decision === "ADMISSIBLE";
+  const canEndAccompagnement =
+    hasDfAdmissible && isFeatureEndAccompagnementActive;
+
   return {
     candidacyCurrentActiveStatus,
     isCandidacyDroppedOut,
@@ -99,5 +111,6 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     canCancelDropout,
     canSwitchFinanceModuleToHorsPlateforme,
     canSwitchTypeAccompagnementToAutonome,
+    canEndAccompagnement,
   };
 };
