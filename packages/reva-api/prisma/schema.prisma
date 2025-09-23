@@ -265,11 +265,19 @@ model Candidacy {
   feasibilityFileTemplateFirstReadAt            DateTime?                                       @map("feasibility_file_template_first_read_at") @db.Timestamptz(6)
   archivingReason                               CandidacyArchivingReason?
   archivingReasonAdditionalInformation          String?                                         @map("archiving_reason_additional_information")
+  endAccompagnementDate                         DateTime?                                       @map("end_accompagnement_date") @db.Timestamptz(6)
+  endAccompagnementStatus                       EndAccompagnementStatus                         @default(NOT_REQUESTED) @map("end_accompagnement_status")
 
   @@index([organismId])
   @@index([candidateId])
   @@index([certificationId])
   @@map("candidacy")
+}
+
+enum EndAccompagnementStatus {
+  NOT_REQUESTED
+  PENDING
+  CONFIRMED
 }
 
 enum ActiviteStatut {
