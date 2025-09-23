@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
 
-import candidateToken from "../fixtures/auth/candidate-token.json";
+import candidateToken from "@tests/fixtures/auth/candidate-token.json";
 
 async function setupAuth(page: Page) {
   await page.route(

@@ -10,12 +10,12 @@ import {
   Candidate_GetCandidateWithCandidacyForLayoutQuery,
 } from "@/graphql/generated/graphql";
 
-import dashboardQuery from "../fixtures/candidate/dashboard-query.json";
-import homeQuery from "../fixtures/candidate/home-query.json";
-import layoutQuery from "../fixtures/candidate/layout-query.json";
+import dashboardQuery from "@tests/fixtures/candidate/dashboard-query.json";
+import homeQuery from "@tests/fixtures/candidate/home-query.json";
+import layoutQuery from "@tests/fixtures/candidate/layout-query.json";
 
-import { DossierDeValidationFixture } from "./dossier-de-validation";
-import { data } from "./msw";
+import { DossierDeValidationFixture } from "./dossier-de-validation/dossier-de-validation";
+import { data } from "../shared/msw";
 
 type DashboardQuery = Candidate_GetCandidateWithCandidacyForDashboardQuery;
 type LayoutQuery = Candidate_GetCandidateWithCandidacyForLayoutQuery;
