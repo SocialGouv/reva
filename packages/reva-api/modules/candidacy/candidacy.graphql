@@ -44,6 +44,13 @@ enum CandidacyStatusStep {
   DOSSIER_DE_VALIDATION_SIGNALE
 }
 
+enum EndAccompagnementStatus {
+  NOT_REQUESTED
+  PENDING
+  CONFIRMED_BY_CANDIDATE
+  CONFIRMED_BY_ADMIN
+}
+
 type CandidacyCertificationAuthorityLocalAccount {
   contactFullName: String!
   contactEmail: String!
@@ -81,6 +88,8 @@ type Candidacy {
   derniereDateActivite: Timestamp
   dateInactifEnAttente: Timestamp
   sentAt: Timestamp
+  endAccompagnementDate: Timestamp
+  endAccompagnementStatus: EndAccompagnementStatus
 }
 
 enum ActiviteStatut {
