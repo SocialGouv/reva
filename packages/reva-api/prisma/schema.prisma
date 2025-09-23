@@ -277,7 +277,8 @@ model Candidacy {
 enum EndAccompagnementStatus {
   NOT_REQUESTED
   PENDING
-  CONFIRMED
+  CONFIRMED_BY_CANDIDATE
+  CONFIRMED_BY_ADMIN
 }
 
 enum ActiviteStatut {
