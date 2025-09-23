@@ -75,6 +75,26 @@ const getCertificationQuery = graphql(`
       juryTypeSoutenanceOrale
       juryEstimatedCost
       juryPlace
+      additionalInfo {
+        dossierDeValidationLink
+        dossierDeValidationTemplate {
+          url
+          name
+          mimeType
+        }
+        linkToReferential
+        linkToJuryGuide
+        linkToCorrespondenceTable
+        additionalDocuments {
+          url
+          name
+          mimeType
+        }
+        certificationExpertContactDetails
+        certificationExpertContactPhone
+        certificationExpertContactEmail
+        usefulResources
+      }
     }
   }
 `);
