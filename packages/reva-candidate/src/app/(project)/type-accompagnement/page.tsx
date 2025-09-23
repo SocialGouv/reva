@@ -117,7 +117,9 @@ const Form = ({
                   label: "Je souhaite réaliser ma VAE avec un accompagnateur",
                   illustration: PICTOGRAMS.humanCooperation,
                   hintText:
-                    typeAccompagnement === "ACCOMPAGNE" ? "Choix actuel" : "",
+                    defaultValues.typeAccompagnement === "ACCOMPAGNE"
+                      ? "Choix actuel"
+                      : "",
                   nativeInputProps: {
                     value: "ACCOMPAGNE",
                     className: "type-accompagnement-accompagne-radio-button",
@@ -137,7 +139,9 @@ const Form = ({
                     />
                   ),
                   hintText:
-                    typeAccompagnement === "AUTONOME" ? "Choix actuel" : "",
+                    defaultValues.typeAccompagnement === "AUTONOME"
+                      ? "Choix actuel"
+                      : "",
                   nativeInputProps: {
                     value: "AUTONOME",
                     className: "type-accompagnement-autonome-radio-button",
