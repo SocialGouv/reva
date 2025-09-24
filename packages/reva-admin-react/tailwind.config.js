@@ -24,6 +24,8 @@ module.exports = {
           "light-decisions-text-default-warning": "#B34000",
           "light-decisions-background-contrast-warning": "#FFE9E6",
           "light-decisions-border-border-default-grey": "#DDDDDD",
+          "light-decisions-border-border-disabled-grey": "#E5E5E5",
+          "light-decisions-text-disabled-grey": "#929292",
         },
         neutral: {
           100: "#F6F6F6",

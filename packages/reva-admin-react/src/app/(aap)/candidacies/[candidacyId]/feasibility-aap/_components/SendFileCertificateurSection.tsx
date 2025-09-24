@@ -67,8 +67,15 @@ export const SendFileCertificationAuthoritySection = ({
   return (
     <Tile
       {...TILE_COMMON_PROPS}
-      start={<CustomErrorBadge label="En attente de validation du candidat" />}
-      desc="Le candidat doit valider ce dossier avant que vous puissiez l'envoyer au certificateur. Vous serez notifié lorsque le candidat aura effectué cette action."
+      disabled
+      classes={{
+        title:
+          "text-dsfr-light-decisions-text-disabled-grey before:bg-gradient-to-t before:from-dsfr-light-decisions-border-border-disabled-grey before:to-dsfr-light-decisions-border-border-disabled-grey",
+      }}
+      start={
+        <CustomErrorBadge label="En attente d’envoi pour validation au candidat" />
+      }
+      desc="Le candidat doit valider et transmettre une attestation sur l’honneur pour ce dossier avant que vous puissiez l'envoyer au certificateur. Vous serez notifié lorsque le candidat aura effectué cette action."
       data-test="send-file-certification-authority-tile-pending-validation"
       style={{
         paddingBottom: "0",
