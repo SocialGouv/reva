@@ -9,6 +9,7 @@ import { isFeatureActive } from "@/utils/featureFlipping";
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
 import { SelectCertificationButton } from "./_components/select-certification-button/SelectCertificationButton";
+import { BlocsDeCompetenceTab } from "./tabs/BlocsDeCompetenceTab";
 import DocumentationTab from "./tabs/DocumentationTab";
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
@@ -53,6 +54,15 @@ export const CertificationPageContent = async ({
       certificationExpertContactEmail?: string | null;
       usefulResources?: string | null;
     } | null;
+    competenceBlocs: {
+      id: string;
+      code?: string | null;
+      label: string;
+      competences: {
+        id: string;
+        label: string;
+      }[];
+    }[];
   };
 }) => {
   const showVaeCollective = await isFeatureActive("VAE_COLLECTIVE");
@@ -133,6 +143,14 @@ export const CertificationPageContent = async ({
                 <MetierTab
                   codeRncp={certification.codeRncp}
                   rncpObjectifsContexte={certification.rncpObjectifsContexte}
+                />
+              ),
+            },
+            {
+              label: "Blocs de compétences",
+              content: (
+                <BlocsDeCompetenceTab
+                  competenceBlocs={certification.competenceBlocs}
                 />
               ),
             },

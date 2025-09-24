@@ -4,6 +4,7 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
+import { BlocsDeCompetenceTab } from "./tabs/BlocsDeCompetenceTab";
 import DocumentationTab from "./tabs/DocumentationTab";
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
@@ -48,6 +49,15 @@ export const CertificationPage = async ({
       certificationExpertContactEmail?: string | null;
       usefulResources?: string | null;
     } | null;
+    competenceBlocs: {
+      id: string;
+      code?: string | null;
+      label: string;
+      competences: {
+        id: string;
+        label: string;
+      }[];
+    }[];
   };
 }) => (
   <>
@@ -97,6 +107,14 @@ export const CertificationPage = async ({
             <MetierTab
               codeRncp={certification.codeRncp}
               rncpObjectifsContexte={certification.rncpObjectifsContexte}
+            />
+          ),
+        },
+        {
+          label: "Blocs de compétences",
+          content: (
+            <BlocsDeCompetenceTab
+              competenceBlocs={certification.competenceBlocs}
             />
           ),
         },

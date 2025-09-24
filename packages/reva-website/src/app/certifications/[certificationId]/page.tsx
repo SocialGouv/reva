@@ -14,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ certificationId: string }>;
 }) {
   const { certificationId } = await params;
-  const certification = await getCertifications(certificationId);
+  const certification = await getCertificationById(certificationId);
   return {
     title: `France VAE | ${certification.label}`,
     description: `Code RNCP ${certification.codeRncp} - ${certification.label}`,
@@ -33,7 +33,7 @@ export default async function CertificationPage({
     return null;
   }
 
-  const certification = await getCertifications(certificationId);
+  const certification = await getCertificationById(certificationId);
 
   if (!certification) {
     return null;
@@ -95,11 +95,20 @@ const getCertificationQuery = graphql(`
         certificationExpertContactEmail
         usefulResources
       }
+      competenceBlocs {
+        id
+        code
+        label
+        competences {
+          id
+          label
+        }
+      }
     }
   }
 `);
 
-const getCertifications = async (certificationId: string) => {
+const getCertificationById = async (certificationId: string) => {
   return (
     await request(GRAPHQL_API_URL, getCertificationQuery, {
       certificationId,

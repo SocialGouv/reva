@@ -15,7 +15,39 @@
       "juryPlace": null,
       "certificationAuthorityStructure": {
         "label": "Ministère de l'Éducation nationale, de la Jeunesse et des Sports"
-      }
+      },
+      "competenceBlocs": [
+        {
+          "id": "1",
+          "code": "1",
+          "label": "Bloc 1",
+          "competences": [
+            {
+              "id": "1",
+              "label": "Compétence 1"
+            },
+            {
+              "id": "2",
+              "label": "Compétence 2"
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "code": "2",
+          "label": "Bloc 2",
+          "competences": [
+            {
+              "id": "3",
+              "label": "Compétence 3"
+            },
+            {
+              "id": "4",
+              "label": "Compétence 4"
+            }
+          ]
+        }
+      ]
     }
   }
 }

@@ -46,6 +46,15 @@ const GET_CERTIFICATION = graphql(`
         certificationExpertContactEmail
         usefulResources
       }
+      competenceBlocs {
+        id
+        code
+        label
+        competences {
+          id
+          label
+        }
+      }
     }
   }
 `);
