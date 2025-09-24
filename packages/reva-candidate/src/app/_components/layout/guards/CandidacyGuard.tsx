@@ -4,7 +4,7 @@ import React from "react";
 import { useLayout } from "../layout.hook";
 
 export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
-  const { candidate } = useLayout();
+  const { candidate, isEndAccompagnementPending } = useLayout();
   const pathname = usePathname();
 
   const isInactifEnAttente =
@@ -16,6 +16,13 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
     !pathname.startsWith("/candidacy-deleted")
   ) {
     redirect("/candidacy-inactif");
+  }
+
+  if (
+    isEndAccompagnementPending &&
+    !pathname.startsWith("/end-accompagnement")
+  ) {
+    redirect("/end-accompagnement");
   }
 
   return children;

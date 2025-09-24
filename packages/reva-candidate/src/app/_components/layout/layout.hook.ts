@@ -12,6 +12,7 @@ const GET_CANDIDATE_WITH_CANDIDACY_FOR_LAYOUT = graphql(`
         activite
         derniereDateActivite
         typeAccompagnement
+        endAccompagnementStatus
       }
     }
   }
@@ -29,9 +30,12 @@ export const useLayout = () => {
   });
 
   const candidate = data?.candidate_getCandidateWithCandidacy;
+  const isEndAccompagnementPending =
+    candidate?.candidacy?.endAccompagnementStatus === "PENDING";
 
   return {
     candidate,
     isLayoutLoading,
+    isEndAccompagnementPending,
   };
 };

@@ -13,14 +13,22 @@ const getNavigation = ({
   isInactifEnAttente,
   isCandidacyDeletedPath,
   candidateHelpIsActive,
+  isEndAccompagnementPending,
 }: {
   authenticated: boolean;
   currentPathname: string;
   isInactifEnAttente: boolean;
   isCandidacyDeletedPath: boolean;
   candidateHelpIsActive: boolean;
+  isEndAccompagnementPending: boolean;
 }) => {
-  if (!authenticated || isInactifEnAttente || isCandidacyDeletedPath) return [];
+  if (
+    !authenticated ||
+    isInactifEnAttente ||
+    isCandidacyDeletedPath ||
+    isEndAccompagnementPending
+  )
+    return [];
 
   return [
     {
@@ -56,7 +64,7 @@ const getNavigation = ({
 export const Header = () => {
   const { authenticated, logout } = useKeycloakContext();
   const currentPathname = usePathname();
-  const { candidate } = useLayout();
+  const { candidate, isEndAccompagnementPending } = useLayout();
   const isInactifEnAttente =
     candidate?.candidacy.activite === "INACTIF_EN_ATTENTE";
   const isCandidacyDeletedPath =
@@ -70,6 +78,7 @@ export const Header = () => {
     isInactifEnAttente,
     isCandidacyDeletedPath,
     candidateHelpIsActive,
+    isEndAccompagnementPending,
   });
 
   return (
