@@ -54,6 +54,7 @@ import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidac
 import { selectOrganismForCandidacyAsAdmin } from "./features/selectOrganismForCandidacyAsAdmin";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
 import { submitCandidacy } from "./features/submitCandidacy";
+import { submitEndAccompagnement } from "./features/submitEndAccompagnement";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
@@ -689,6 +690,13 @@ const unsafeResolvers = {
         continueCandidacy: input.continueCandidacy,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
+    candidacy_submitEndAccompagnement: async (
+      _parent: unknown,
+      input: {
+        candidacyId: string;
+        endAccompagnementDate: Date;
+      },
+    ) => submitEndAccompagnement(input),
   },
 };
 
