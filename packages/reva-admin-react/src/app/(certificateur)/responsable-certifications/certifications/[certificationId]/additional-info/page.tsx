@@ -30,7 +30,7 @@ export default function CertificationAdditionalInfoPage() {
   return (
     <div data-test="update-certification-additional-info-page">
       <Breadcrumb
-        currentPageLabel="Ressources complémetaires"
+        currentPageLabel="Documentation"
         segments={[
           {
             label: `RNCP${certification.codeRncp} - ${certification.label}`,
@@ -40,7 +40,7 @@ export default function CertificationAdditionalInfoPage() {
           },
         ]}
       />
-      <h1>Ressources complémentaires</h1>
+      <h1>Documentation</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl">
         La transmission de ces ressources aux AAP et aux candidats vous
@@ -228,147 +228,164 @@ const AdditionalInfoForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} onReset={handleReset}>
-      <h2>Documentation sur la certification</h2>
-      <Input
-        data-test="referential-link-input"
-        label="Lien vers les référentiels d’activités et de compétences :"
-        state={errors.linkToReferential ? "error" : "default"}
-        stateRelatedMessage={errors.linkToReferential?.message}
-        nativeInputProps={{
-          placeholder: "https://",
-          ...register("linkToReferential"),
-        }}
-      />
-      <Input
-        label="Lien vers le référentiel d'évaluation (optionnel) :"
-        nativeInputProps={{
-          placeholder: "https://",
-          ...register("linkToJuryGuide"),
-        }}
-      />
-      <Input
-        label="Lien vers le tableau des correspondances et dispenses de blocs (optionnel) :"
-        state={errors.linkToCorrespondenceTable ? "error" : "default"}
-        stateRelatedMessage={errors.linkToCorrespondenceTable?.message}
-        nativeInputProps={{
-          placeholder: "https://",
-          ...register("linkToCorrespondenceTable"),
-        }}
-      />
-
-      <h2>Documentation sur le dossier de validation</h2>
-      <p className="text-xl">
-        Veuillez importer un fichier ou renseigner un lien vers la trame du
-        dossier de validation.
-      </p>
-      <FancyUpload
-        dataTest="dossier-de-validation-template-upload"
-        title="Importer un fichier de trame de dossier"
-        hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
-        state={errors.dossierDeValidationTemplate?.[0] ? "error" : "default"}
-        stateRelatedMessage={errors.dossierDeValidationTemplate?.[0]?.message}
-        nativeInputProps={{
-          disabled: !!watchedDossierDeValidationLink,
-          accept: "image/jpeg,image/png,application/pdf",
-          ...register("dossierDeValidationTemplate"),
-        }}
-        defaultFile={defaultDossierDeValidationTemplate}
-        className="mb-4"
-      />
-      <div className="flex flex-col gap-4 px-8 mb-10">
-        <label className="font-bold text-lg">
-          Ou renseigner le lien vers la trame du dossier
-        </label>
+    <form
+      onSubmit={handleSubmit(onFormSubmit)}
+      onReset={handleReset}
+      className="flex flex-col gap-10"
+    >
+      <div>
+        <h2>Documents essentiels</h2>
+        <FancyUpload
+          dataTest="dossier-de-validation-template-upload"
+          title={"Importer un fichier de trame de dossier"}
+          hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
+          state={errors.dossierDeValidationTemplate?.[0] ? "error" : "default"}
+          stateRelatedMessage={errors.dossierDeValidationTemplate?.[0]?.message}
+          nativeInputProps={{
+            disabled: !!watchedDossierDeValidationLink,
+            accept: "image/jpeg,image/png,application/pdf",
+            ...register("dossierDeValidationTemplate"),
+          }}
+          defaultFile={defaultDossierDeValidationTemplate}
+          className="mb-4"
+        />
+        <div className="flex flex-col gap-4 px-8 mb-10">
+          <label className="font-bold text-lg">
+            Ou renseigner le lien vers la trame du dossier
+          </label>
+          <Input
+            data-test="dossier-de-validation-link"
+            label="Lien vers la trame :"
+            className="flex-1"
+            disabled={!!watchedDossierDeValidationTemplate?.[0]}
+            state={errors.dossierDeValidationLink ? "error" : "default"}
+            stateRelatedMessage={errors.dossierDeValidationLink?.message}
+            nativeInputProps={{
+              placeholder: "https://",
+              ...register("dossierDeValidationLink"),
+            }}
+          />
+        </div>
         <Input
-          data-test="dossier-de-validation-link"
-          label="Lien de la trame :"
-          className="flex-1"
-          disabled={!!watchedDossierDeValidationTemplate?.[0]}
-          state={errors.dossierDeValidationLink ? "error" : "default"}
-          stateRelatedMessage={errors.dossierDeValidationLink?.message}
+          data-test="referential-link-input"
+          label="Lien vers les référentiels d’activités et de compétences :"
+          state={errors.linkToReferential ? "error" : "default"}
+          stateRelatedMessage={errors.linkToReferential?.message}
           nativeInputProps={{
             placeholder: "https://",
-            ...register("dossierDeValidationLink"),
+            ...register("linkToReferential"),
+          }}
+        />
+        <Input
+          label="Lien vers le référentiel d'évaluation (optionnel) :"
+          nativeInputProps={{
+            placeholder: "https://",
+            ...register("linkToJuryGuide"),
+          }}
+        />
+        <Input
+          label="Lien vers le tableau des correspondances et dispenses de blocs (optionnel) :"
+          state={errors.linkToCorrespondenceTable ? "error" : "default"}
+          stateRelatedMessage={errors.linkToCorrespondenceTable?.message}
+          nativeInputProps={{
+            placeholder: "https://",
+            ...register("linkToCorrespondenceTable"),
           }}
         />
       </div>
 
-      <h2>Contact d’un expert de la certification (le cas échéant)</h2>
-      <Input
-        label="Personne ou Service concerné (optionnel) :"
-        className="flex-1"
-        nativeInputProps={{
-          ...register("certificationExpertContactDetails"),
-        }}
-      />
-      <div className="flex flex-col gap-0 lg:flex-row lg:gap-6">
-        <Input
-          label="Téléphone (optionnel) :"
-          className="flex-1 lg:max-w-sm"
-          nativeInputProps={{
-            ...register("certificationExpertContactPhone"),
-          }}
-        />
-        <Input
-          label="E-mail (optionnel) :"
-          className="flex-1 mb-6"
-          nativeInputProps={{
-            ...register("certificationExpertContactEmail"),
-          }}
-        />
+      <div>
+        <h2>Documents complémentaires</h2>
+        <p>
+          Vous pouvez ajouter ici tous les documents complémentaires que vous
+          jugez utiles pour accompagner les candidats et les AAP dans leur
+          parcours VAE.
+        </p>
+        <div className="flex flex-col gap-4">
+          {additionalDocumentsFields.map((field, index) => (
+            <FancyUpload
+              key={field.id}
+              dataTest="additional-document-upload"
+              title={
+                defaultAdditionalDocuments?.[index]?.name ??
+                "Ajouter une pièce jointe (optionnel)"
+              }
+              description="Exemples de documents utiles : référentiels d'activités et de compétences, guides pratiques, grilles d'évaluation, exemples de dossiers, fiches méthodologiques, etc."
+              hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
+              state={errors.additionalDocuments?.[index] ? "error" : "default"}
+              stateRelatedMessage={
+                errors.additionalDocuments?.[index]?.[0]?.message
+              }
+              nativeInputProps={{
+                accept: "image/jpeg,image/png,application/pdf",
+                ...register(`additionalDocuments.${index}`),
+              }}
+              onClickDelete={() => removeAdditionalDocument(index)}
+              defaultFile={defaultAdditionalDocuments?.[index]}
+            />
+          ))}
+          <hr className="py-0.5" />
+          <Button
+            priority="tertiary no outline"
+            className="text-sm"
+            type="button"
+            iconId="fr-icon-add-line"
+            onClick={() => appendAdditionalDocument({ 0: {} as File })}
+          >
+            Ajouter une pièce jointe
+          </Button>
+        </div>
       </div>
-      <h2>Documentation libre</h2>
-      <p>
-        Vous pouvez ajouter ici tous les documents complémentaires que vous
-        jugez utiles pour accompagner les candidats et les AAP dans leur
-        parcours VAE.
-      </p>
-      <div className="flex flex-col gap-4">
-        {additionalDocumentsFields.map((field, index) => (
-          <FancyUpload
-            key={field.id}
-            dataTest="additional-document-upload"
-            title="Importer un fichier"
-            description="Exemples de documents utiles : référentiels d'activités et de compétences, guides pratiques, grilles d'évaluation, exemples de dossiers, fiches méthodologiques, etc."
-            hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
-            state={errors.additionalDocuments?.[index] ? "error" : "default"}
-            stateRelatedMessage={
-              errors.additionalDocuments?.[index]?.[0]?.message
-            }
+
+      <div>
+        <h2>Informations complémentaires</h2>
+        <div className="mb-8">
+          <h3 className="text-2xl mb-6">
+            Contact d’un expert de la certification (le cas échéant)
+          </h3>
+          <Input
+            label="Personne ou Service concerné (optionnel) :"
+            className="flex-1"
             nativeInputProps={{
-              accept: "image/jpeg,image/png,application/pdf",
-              ...register(`additionalDocuments.${index}`),
+              ...register("certificationExpertContactDetails"),
             }}
-            onClickDelete={() => removeAdditionalDocument(index)}
-            defaultFile={defaultAdditionalDocuments?.[index]}
           />
-        ))}
+          <div className="flex flex-col gap-0 lg:flex-row lg:gap-6">
+            <Input
+              label="Téléphone (optionnel) :"
+              className="flex-1 lg:max-w-sm mb-0"
+              nativeInputProps={{
+                ...register("certificationExpertContactPhone"),
+              }}
+            />
+            <Input
+              label="E-mail (optionnel) :"
+              className="flex-1"
+              nativeInputProps={{
+                ...register("certificationExpertContactEmail"),
+              }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-2xl mb-6">Autres informations</h3>
+          <Input
+            label="Aide au parcours de VAE (optionnel) :"
+            textArea
+            nativeTextAreaProps={{ ...register("usefulResources") }}
+          />
+          <Input
+            label="Remarques à destination des AAP et candidats (optionnel) :"
+            textArea
+            nativeTextAreaProps={{ ...register("commentsForAAP") }}
+          />
+        </div>
       </div>
-      <hr />
-      <Button
-        className="mb-4"
-        priority="tertiary no outline"
-        type="button"
-        iconId="fr-icon-add-line"
-        onClick={() => appendAdditionalDocument({ 0: {} as File })}
-      >
-        Ajouter une pièce jointe
-      </Button>
-      <h2>Informations facultatives</h2>
-      <Input
-        label="Ressources pour aider au parcours VAE (optionnel) :"
-        textArea
-        nativeTextAreaProps={{ ...register("usefulResources") }}
-      />
-      <Input
-        label="Remarques à transmettre à l’AAP (optionnel) :"
-        textArea
-        nativeTextAreaProps={{ ...register("commentsForAAP") }}
-      />
       <FormButtons
         backUrl={`/responsable-certifications/certifications/${certification.id}`}
         formState={{ isDirty, isSubmitting }}
+        className="mt-2"
       />
     </form>
   );
