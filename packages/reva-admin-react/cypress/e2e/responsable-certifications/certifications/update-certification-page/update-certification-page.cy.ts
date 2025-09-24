@@ -236,7 +236,7 @@ context("when i access the update certification page ", () => {
       ).should("not.exist");
     });
 
-    it("display the addtional info if the certification has them", function () {
+    it("display the additional info if the certification has them", function () {
       interceptCertification({ withadditionalInfo: true });
 
       cy.admin(
@@ -302,7 +302,7 @@ context("when i access the update certification page ", () => {
         .should("be.disabled");
     });
 
-    it("validate button should be enable if description and additional information sections are complete", function () {
+    it("validate button should be enabled if description and additional information sections are complete", function () {
       interceptCertification({
         withDescription: true,
         withadditionalInfo: true,
