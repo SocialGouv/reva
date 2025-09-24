@@ -293,7 +293,7 @@ const PageContent = ({
           expiresAt: tzEndOfVisibility.getTime(),
         });
 
-        successToast("La certification a bien été modifiée.");
+        successToast("Les informations ont été enregistrées");
 
         router.push(
           `/responsable-certifications/certifications/${certification.id}`,

@@ -211,7 +211,7 @@ const AdditionalInfoForm = ({
           additionalDocuments,
         },
       });
-      successToast("Modification enregistrée");
+      successToast("Les informations ont été enregistrées");
       router.push(
         `/responsable-certifications/certifications/${certification.id}`,
       );

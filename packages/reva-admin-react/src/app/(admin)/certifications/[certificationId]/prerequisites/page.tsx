@@ -43,7 +43,7 @@ export default function UpdatePrerequisitesPage() {
         })), //remove id added by react-hook-form useFieldArray
       };
       await updateCertificationPrerequisites.mutateAsync(input);
-      successToast("La certification a bien été modifiée.");
+      successToast("Les informations ont été enregistrées");
       router.push(`/certifications/${certificationId}`);
     } catch (e) {
       graphqlErrorToast(e);

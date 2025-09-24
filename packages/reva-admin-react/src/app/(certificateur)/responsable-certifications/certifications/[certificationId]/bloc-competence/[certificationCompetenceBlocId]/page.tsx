@@ -35,7 +35,7 @@ export default function UpdateCompetenceBlocPage() {
   const handleFormSubmit = async (data: CompetenceBlocFormData) => {
     try {
       await updateCertificationCompetenceBloc.mutateAsync(data);
-      successToast("La certification a bien été modifiée.");
+      successToast("Les informations ont été enregistrées");
       router.push(
         `/responsable-certifications/certifications/${certificationId}`,
       );
