@@ -135,40 +135,4 @@ context("when i access the update certification info page ", () => {
       "http://localhost:3003/admin2/responsable-certifications/certifications/1504d576-82e5-449d-9597-1350fbdbfa50/",
     );
   });
-
-  // it("let me add a new competence to the competence bloc", function () {
-  //   interceptCertificationWithInfo();
-  //   cy.admin(
-  //     "http://localhost:3003/admin2/responsable-certifications/certifications/1504d576-82e5-449d-9597-1350fbdbfa50/additional-info",
-  //   );
-  //   cy.wait("@activeFeaturesForConnectedUser");
-  //   cy.wait("@getMaisonMereCGUQuery");
-  //   cy.wait(
-  //     "@getCertificationForCertificationRegistryManagerUpdateAdditionalInfoPage",
-  //   );
-
-  //   cy.get('[data-test="competence-list"] input').should("have.length", 4);
-
-  //   cy.get('[data-test="add-competence-button"]').click();
-
-  //   cy.get('[data-test="competence-list"] input').should("have.length", 5);
-  // });
-
-  // it("let me delete a competence from the competence bloc", function () {
-  //   interceptCertificationWithInfo();
-  //   cy.admin(
-  //     "http://localhost:3003/admin2/responsable-certifications/certifications/1504d576-82e5-449d-9597-1350fbdbfa50/additional-info",
-  //   );
-  //   cy.wait("@activeFeaturesForConnectedUser");
-  //   cy.wait("@getMaisonMereCGUQuery");
-  //   cy.wait(
-  //     "@getCertificationForCertificationRegistryManagerUpdateAdditionalInfoPage",
-  //   );
-
-  //   cy.get('[data-test="competence-list"] input').should("have.length", 4);
-
-  //   cy.get('[data-test="delete-competence-button"]').eq(1).click();
-
-  //   cy.get('[data-test="competence-list"] input').should("have.length", 3);
-  // });
 });
