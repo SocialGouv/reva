@@ -260,6 +260,12 @@ export const getCandidacyLogMessage = ({
         ? log("Décision de recevabilité révoquée", details.reason)
         : log("Décision de recevabilité révoquée");
 
+    case "END_ACCOMPAGNEMENT_SUBMITTED":
+      return log(
+        "Date de fin d'accompagnement déclarée",
+        format(details.endAccompagnementDate, "dd/MM/yyyy"),
+      );
+
     default:
       return log("Événement inconnu");
   }

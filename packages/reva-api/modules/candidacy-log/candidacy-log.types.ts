@@ -161,6 +161,10 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "FEASIBILITY_DECISION_REVOKED";
       details?: { reason?: string };
+    }
+  | {
+      eventType: "END_ACCOMPAGNEMENT_SUBMITTED";
+      details: { endAccompagnementDate: Date };
     };
 
 export type CandidacyLog = {
