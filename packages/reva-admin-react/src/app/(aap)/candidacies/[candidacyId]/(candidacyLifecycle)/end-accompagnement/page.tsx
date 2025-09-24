@@ -1,20 +1,38 @@
 "use client";
+
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, isAfter, toDate } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { successToast } from "@/components/toast/toast";
 
 import { useEndAccompagnement } from "./end-accompagnement.hook";
 
-const schema = z.object({
-  endAccompagnementDate: z.string(),
-});
+const schema = z
+  .object({
+    endAccompagnementDate: z.string().min(1, {
+      message: "Veuillez sélectionner une date",
+    }),
+  })
+  .superRefine(({ endAccompagnementDate }, ctx) => {
+    const dateIsInFuture = isAfter(endAccompagnementDate, new Date());
+    if (dateIsInFuture) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "La date de fin d'accompagnement ne peut pas être dans le futur",
+        path: ["endAccompagnementDate"],
+      });
+    }
+  });
 
 const confirmationModal = createModal({
   id: "confirmation-modal",
@@ -22,11 +40,22 @@ const confirmationModal = createModal({
 });
 
 export default function EndAccompagnementPage() {
-  const { candidacy, candidacyId, certification, candidate } =
-    useEndAccompagnement();
-  const { handleSubmit, formState, register, watch } = useForm<
-    z.infer<typeof schema>
-  >({
+  const router = useRouter();
+  const {
+    candidacy,
+    candidacyId,
+    certification,
+    candidate,
+    submitEndAccompagnement,
+  } = useEndAccompagnement();
+  const {
+    handleSubmit,
+    formState,
+    register,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       endAccompagnementDate: candidacy?.endAccompagnementDate
@@ -34,15 +63,36 @@ export default function EndAccompagnementPage() {
         : undefined,
     },
   });
-  const handleFormSubmit = handleSubmit((data: z.infer<typeof schema>) => {
-    console.log(data);
+
+  const backUrl = `/candidacies/${candidacyId}/summary`;
+
+  const handleFormSubmit = handleSubmit(() => {
     confirmationModal.open();
   });
-  const handleConfirmButtonClick = () => {
-    console.log("confirm");
+
+  const handleConfirmButtonClick = async () => {
+    const endAccompagnementTimestamp = toDate(endAccompagnementDate).getTime();
+    await submitEndAccompagnement(endAccompagnementTimestamp);
+    successToast("La demande de fin d'accompagnement a bien été enregistrée");
+    router.push(backUrl);
   };
 
   const candidacyFullName = `${candidate?.lastname} ${candidate?.firstname}`;
+  const endAccompagnementDate = watch("endAccompagnementDate");
+  const submitButtonDisabled = !endAccompagnementDate;
+
+  const handleReset = useCallback(() => {
+    reset({
+      endAccompagnementDate: candidacy?.endAccompagnementDate
+        ? format(candidacy?.endAccompagnementDate, "yyyy-MM-dd")
+        : undefined,
+    });
+  }, [reset, candidacy?.endAccompagnementDate]);
+
+  useEffect(() => {
+    handleReset();
+  }, [handleReset]);
+
   return (
     <div>
       <h1>Fin d'accompagnement</h1>
@@ -51,7 +101,13 @@ export default function EndAccompagnementPage() {
         Le candidat aura toujours accès à son espace pour finaliser sa
         candidature de façon autonome.
       </p>
-      <form onSubmit={handleFormSubmit}>
+      <form
+        onSubmit={handleFormSubmit}
+        onReset={(e) => {
+          e.preventDefault();
+          handleReset();
+        }}
+      >
         <Input
           label="Date de fin d'accompagnement :"
           nativeInputProps={{
@@ -59,6 +115,8 @@ export default function EndAccompagnementPage() {
             ...register("endAccompagnementDate"),
           }}
           className="max-w-64"
+          state={errors.endAccompagnementDate ? "error" : "default"}
+          stateRelatedMessage={errors.endAccompagnementDate?.message}
         />
         <Alert
           severity="info"
@@ -70,9 +128,9 @@ export default function EndAccompagnementPage() {
         <FormButtons
           formState={formState}
           backButtonLabel="Annuler"
-          backUrl={`/candidacies/${candidacyId}/summary`}
-          hideResetButton
+          backUrl={backUrl}
           submitButtonLabel="Valider"
+          disabled={submitButtonDisabled}
         />
       </form>
       <confirmationModal.Component
@@ -95,7 +153,9 @@ export default function EndAccompagnementPage() {
           Vous êtes sur le point de mettre fin à l'accompagnement de
           <strong>{` ${candidacyFullName} `}</strong>à compter du{" "}
           <strong>
-            {format(watch("endAccompagnementDate"), "dd/MM/yyyy")}
+            {endAccompagnementDate
+              ? format(endAccompagnementDate, "dd/MM/yyyy")
+              : "---"}
           </strong>{" "}
           sur la certification{" "}
           <strong>
