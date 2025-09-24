@@ -270,6 +270,7 @@ const AdditionalInfoForm = ({
         stateRelatedMessage={errors.dossierDeValidationTemplate?.[0]?.message}
         nativeInputProps={{
           disabled: !!watchedDossierDeValidationLink,
+          accept: "image/jpeg,image/png,application/pdf",
           ...register("dossierDeValidationTemplate"),
         }}
         defaultFile={defaultDossierDeValidationTemplate}
@@ -336,6 +337,7 @@ const AdditionalInfoForm = ({
               errors.additionalDocuments?.[index]?.[0]?.message
             }
             nativeInputProps={{
+              accept: "image/jpeg,image/png,application/pdf",
               ...register(`additionalDocuments.${index}`),
             }}
             onClickDelete={() => removeAdditionalDocument(index)}
