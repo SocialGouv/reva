@@ -49,7 +49,7 @@ context("when i access the update certification info page ", () => {
 
     cy.get('[data-test="update-certification-additional-info-page"]')
       .children("h1")
-      .should("have.text", "Ressources complémentaires");
+      .should("have.text", "Documentation");
   });
 
   it("not let me sumbmit the form and focus required input when empty", function () {
