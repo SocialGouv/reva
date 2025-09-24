@@ -11,6 +11,8 @@ const getCandidacyById = graphql(`
       id
       financeModule
       typeAccompagnement
+      endAccompagnementStatus
+      endAccompagnementDate
       certificationAuthorityLocalAccounts {
         contactFullName
         contactEmail

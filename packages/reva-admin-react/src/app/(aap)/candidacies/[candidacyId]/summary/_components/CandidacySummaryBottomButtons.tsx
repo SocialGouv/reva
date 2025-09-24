@@ -11,6 +11,7 @@ import {
   AdminAction,
   AdminActionZone,
 } from "./admin-action-zone/AdminActionZone";
+import { EndAccompagnementTile } from "./admin-action-zone/EndAccompagnementTile";
 
 export const CandidacySummaryBottomButtons = ({
   candidacyId,
@@ -55,14 +56,11 @@ export const CandidacySummaryBottomButtons = ({
               }}
             />
           )}
-          {canEndAccompagnement && (
-            <AdminAction
-              title="Déclarer la fin de l'accompagnement du candidat"
-              description="Le candidat aura toujours accès à son espace pour finaliser sa candidature de façon autonome."
-              linkProps={{
-                href: `/candidacies/${candidacyId}/end-accompagnement`,
-                target: "_self",
-              }}
+          {canEndAccompagnement && candidacy.endAccompagnementStatus && (
+            <EndAccompagnementTile
+              candidacyId={candidacyId}
+              endAccompagnementStatus={candidacy.endAccompagnementStatus}
+              endAccompagnementDate={candidacy.endAccompagnementDate}
             />
           )}
           {canBeArchived && (

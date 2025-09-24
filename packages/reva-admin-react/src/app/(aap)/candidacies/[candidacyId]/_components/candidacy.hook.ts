@@ -6,6 +6,7 @@ import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrA
 
 import {
   CandidacyStatusStep,
+  EndAccompagnementStatus,
   FeasibilityDecision,
   FinanceModule,
   TypeAccompagnement,
@@ -37,6 +38,8 @@ export type CandidacyForStatus = {
   feasibility?: {
     decision: FeasibilityDecision;
   } | null;
+  endAccompagnementStatus?: EndAccompagnementStatus | null;
+  endAccompagnementDate?: number | null;
 };
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {

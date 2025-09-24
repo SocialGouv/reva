@@ -173,6 +173,7 @@ export const AdminAction = ({
   description,
   detail,
   "data-test": dataTest,
+  start,
 }: {
   title: string;
   linkProps?: ComponentProps<typeof Tile>["linkProps"];
@@ -182,6 +183,7 @@ export const AdminAction = ({
   description?: string;
   detail?: string;
   "data-test"?: string;
+  start?: ComponentProps<typeof Tile>["start"];
 }) => (
   <Tile
     data-test={dataTest}
@@ -195,6 +197,7 @@ export const AdminAction = ({
     disabled={disabled}
     desc={disabled ? disabledDescription : description}
     detail={detail}
+    start={start}
   />
 );
 
