@@ -77,13 +77,18 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
   const isFeasibilityIncomplete =
     candidacy.status === "DOSSIER_FAISABILITE_INCOMPLET";
 
+  const endAccompagnementConfirmed =
+    candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+    candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
+
   //an admin can dropout a candidacy if it's not dropped out nor archived
   const canDropout = isAdmin
     ? !isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented
-    : //an aap can dropout a candidacy if it's not dropped out nor archived and only if its feasibility file has been sent or is incomplete
+    : //an aap can dropout a candidacy if it's not dropped out nor archived and only if its feasibility file has been sent or is incomplete and the end accompagnement has not been confirmed
       !isCandidacyDroppedOut &&
       !isCandidacyArchivedAndNotReoriented &&
-      (isFeasibilitySent || isFeasibilityIncomplete);
+      (isFeasibilitySent || isFeasibilityIncomplete) &&
+      !endAccompagnementConfirmed;
 
   const canCancelDropout =
     isCandidacyDroppedOut &&

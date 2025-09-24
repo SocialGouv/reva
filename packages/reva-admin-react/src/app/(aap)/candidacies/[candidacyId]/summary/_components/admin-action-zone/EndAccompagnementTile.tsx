@@ -17,21 +17,30 @@ export const EndAccompagnementTile = ({
 }) => {
   const endAccompagnementPending = endAccompagnementStatus === "PENDING";
 
+  const endAccompagnementConfirmed =
+    endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+    endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
+
+  const endAccompagnementPendingOrConfirmedByCandidate =
+    endAccompagnementPending || endAccompagnementConfirmed;
+
   const linkProps = {
     href: `/candidacies/${candidacyId}/end-accompagnement`,
     target: "_self",
   };
 
-  if (endAccompagnementPending && endAccompagnementDate) {
+  if (endAccompagnementPendingOrConfirmedByCandidate && endAccompagnementDate) {
     return (
       <AdminAction
-        title={`Fin d’accompagnement déclarée le ${format(
+        title={`Fin d'accompagnement déclarée le ${format(
           endAccompagnementDate,
           "dd/MM/yyyy",
         )}`}
         description="Le candidat aura toujours accès à son espace pour finaliser sa candidature de façon autonome."
         start={
-          <CustomErrorBadge label="En attente de la validation du candidat" />
+          endAccompagnementPending ? (
+            <CustomErrorBadge label="En attente de la validation du candidat" />
+          ) : null
         }
         linkProps={linkProps}
       />
