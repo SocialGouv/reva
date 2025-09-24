@@ -701,7 +701,7 @@ const unsafeResolvers = {
       submitEndAccompagnement({
         ...input,
         userKeycloakId: context.auth.userInfo?.sub || "",
-        userEmail: context.auth?.userInfo?.email || "",
+        userEmail: context.auth.userInfo?.email || "",
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       }),
   },

@@ -6,6 +6,11 @@ import { sendEndAccompagnementSubmittedToCandidate } from "../emails/sendEndAcco
 
 import { getCandidacyById } from "./getCandidacyById";
 
+const JURY_FULL_SUCCESS_RESULT = [
+  "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+  "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+];
+
 export const submitEndAccompagnement = async ({
   candidacyId,
   endAccompagnementDate,
@@ -27,10 +32,9 @@ export const submitEndAccompagnement = async ({
     throw new Error("Candidature non trouvée");
   }
 
-  const juryHasFullSuccess = candidacy.Jury.some(
+  const juryHasFullSuccess = candidacy.Jury.find(
     (jury) =>
-      jury.result === "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION" ||
-      jury.result === "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+      jury.isActive && JURY_FULL_SUCCESS_RESULT.includes(jury.result || ""),
   );
 
   const updatedCandidacy = await prismaClient.candidacy.update({
