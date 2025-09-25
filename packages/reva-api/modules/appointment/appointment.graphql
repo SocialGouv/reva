@@ -1,0 +1,16 @@
+type Appointment {
+  id: ID!
+  type: AppointmentType!
+  title: String!
+  description: String
+  date: Date!
+  location: String
+}
+
+enum AppointmentType {
+  RENDEZ_VOUS_PEDAGOGIQUE
+}
+
+type Candidacy {
+  appointments: [Appointment!]!
+}
