@@ -123,6 +123,7 @@ export const DossierDeValidationTab = ({
     result?: JuryResult | null;
     informationOfResult?: string | null;
     dateOfResult?: number | null;
+    dateOfSession?: number | null;
   } | null;
   hasFailedJuryResult?: boolean;
   onSubmit: (data: DossierDeValidationFormData) => Promise<void>;
@@ -184,7 +185,7 @@ export const DossierDeValidationTab = ({
           <Alert
             severity="info"
             className="mb-6"
-            title={`Vous n’avez pas validé la totalité de votre VAE à la suite de votre passage devant le jury${jury?.dateOfResult ? ` le ${format(toDate(jury.dateOfResult), "dd/MM/yyyy")}` : ""}`}
+            title={`Vous n’avez pas validé la totalité de votre VAE à la suite de votre passage devant le jury${jury?.dateOfSession ? ` le ${format(toDate(jury.dateOfSession), "dd/MM/yyyy")}` : ""}`}
             description={
               <div className="flex flex-col gap-4">
                 {jury?.informationOfResult && (

@@ -49,6 +49,7 @@ const getCandidateQuery = graphql(`
           result
           informationOfResult
           dateOfResult
+          dateOfSession
         }
       }
     }
