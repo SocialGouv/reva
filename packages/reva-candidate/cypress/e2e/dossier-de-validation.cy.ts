@@ -43,6 +43,7 @@ interface CandidateFixtureOptions {
   juryInfo?: {
     informationOfResult?: string;
     dateOfResult?: number;
+    dateOfSession?: number;
   };
   activeDossierDeValidation?: DossierDeValidationFixture;
   additionalInfo?: {
@@ -366,6 +367,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       failedJuryResults.forEach((result) =>
         it(`should display certificateur comment and date when jury has a ${result}`, function () {
           const informationOfResult = "Lorem ipsum failorum";
+          const dateOfSession = addDays(DATE_NOW, -30);
           const dateOfResult = addDays(DATE_NOW, -30);
 
           setupCandidateFixture({
@@ -375,6 +377,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             juryInfo: {
               informationOfResult,
               dateOfResult: dateOfResult.getTime(),
+              dateOfSession: dateOfSession.getTime(),
             },
             activeDossierDeValidation: { dossierDeValidationOtherFiles: [] },
           }).then((candidate) => {
@@ -396,6 +399,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
       it(`should not display certificateur info when jury is FULL_SUCCESS_OF_FULL_CERTIFICATION`, function () {
         const informationOfResult = "Lorem ipsum";
+        const dateOfSession = addDays(DATE_NOW, -30);
         const dateOfResult = addDays(DATE_NOW, -30);
 
         setupCandidateFixture({
@@ -405,6 +409,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           juryInfo: {
             informationOfResult,
             dateOfResult: dateOfResult.getTime(),
+            dateOfSession: dateOfSession.getTime(),
           },
           activeDossierDeValidation: { dossierDeValidationOtherFiles: [] },
         }).then((candidate) => {
@@ -441,6 +446,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       });
 
       it("should display accordion with the last submitted dossier when jury has failed and only the last one", function () {
+        const dateOfSession = addDays(DATE_NOW, -30);
         const dateOfResult = addDays(DATE_NOW, -30);
         const dossierSentDate = addDays(DATE_NOW, -45);
         const informationOfResult = "Lorem ipsum failorum";
@@ -455,6 +461,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           juryInfo: {
             informationOfResult,
             dateOfResult: dateOfResult.getTime(),
+            dateOfSession: dateOfSession.getTime(),
           },
           activeDossierDeValidation: {
             dossierDeValidationSentAt: dossierSentDate.getTime(),
@@ -517,6 +524,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       });
 
       it("should not display accordion when jury has failed result but no dossier was sent", function () {
+        const dateOfSession = addDays(DATE_NOW, -30);
         const dateOfResult = addDays(DATE_NOW, -30);
 
         setupCandidateFixture({
@@ -526,6 +534,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           juryInfo: {
             informationOfResult: "Partial success",
             dateOfResult: dateOfResult.getTime(),
+            dateOfSession: dateOfSession.getTime(),
           },
           activeDossierDeValidation: {
             dossierDeValidationOtherFiles: [],
