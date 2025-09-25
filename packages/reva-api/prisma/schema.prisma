@@ -267,6 +267,7 @@ model Candidacy {
   archivingReasonAdditionalInformation          String?                                         @map("archiving_reason_additional_information")
   endAccompagnementDate                         DateTime?                                       @map("end_accompagnement_date") @db.Timestamptz(6)
   endAccompagnementStatus                       EndAccompagnementStatus                         @default(NOT_REQUESTED) @map("end_accompagnement_status")
+  appointments                                  Appointment[]
 
   @@index([organismId])
   @@index([candidateId])
@@ -1934,4 +1935,23 @@ model CertificationCohorteVaeCollectiveOnOrganism {
   organism                            Organism                          @relation(fields: [organismId], references: [id], map: "ccvco_organism")
 
   @@map("certification_vae_collective_on_organism")
+}
+
+enum AppointmentType {
+  RENDEZ_VOUS_PEDAGOGIQUE
+}
+
+model Appointment {
+  id          String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  type        AppointmentType @map("type")
+  title       String          @map("title")
+  description String?         @map("description")
+  date        DateTime        @map("date") @db.Date
+  location    String?         @map("location")
+  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?       @map("updated_at") @db.Timestamptz(6)
+  candidacyId String          @map("candidacy_id") @db.Uuid
+  candidacy   Candidacy       @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+
+  @@map("appointment")
 }
