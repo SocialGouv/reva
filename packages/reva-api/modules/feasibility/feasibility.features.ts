@@ -7,6 +7,7 @@ import {
 } from "@prisma/client";
 import { v4 } from "uuid";
 
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { getWhereClauseFromSearchFilter } from "@/modules/shared/search/search";
@@ -51,9 +52,6 @@ import {
   excludeRejectedArchivedDraftAndDroppedOutCandidacyAndIrrelevantStatuses,
   getWhereClauseFromStatusFilter,
 } from "./utils/feasibility.helper";
-
-const adminBaseUrl =
-  process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
 export const getCertificationAuthorities = async ({
   candidacyId,
@@ -358,7 +356,9 @@ export const createFeasibility = async ({
   if (emails.length) {
     sendNewFeasibilitySubmittedEmail({
       emails,
-      feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacy.id}/feasibility`,
+      feasibilityUrl: getBackofficeUrl({
+        path: `/candidacies/${candidacy.id}/feasibility`,
+      }),
     });
   }
 
@@ -1010,7 +1010,9 @@ const rejectFeasibility = async ({
         sendFeasibilityDecisionTakenToAAPEmail({
           email:
             updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-          feasibilityUrl: `${adminBaseUrl}/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+          feasibilityUrl: getBackofficeUrl({
+            path: `/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+          }),
         });
       }
     }
@@ -1123,7 +1125,9 @@ const markFeasibilityAsIncomplete = async ({
         sendFeasibilityIncompleteMailToAAP({
           email:
             updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-          feasibilityUrl: `${adminBaseUrl}/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+          feasibilityUrl: getBackofficeUrl({
+            path: `/candidacies/${updatedFeasibility.candidacy.id}/feasibility-aap/pdf`,
+          }),
           comment,
         });
       }

@@ -1,7 +1,5 @@
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
-
-const adminBaseUrl =
-  process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
 export const sendFillJuryResultsCertificationAuthorityEmail = async ({
   emails,
@@ -12,6 +10,8 @@ export const sendFillJuryResultsCertificationAuthorityEmail = async ({
     to: emails.map((email) => ({ email })),
     templateId: 588,
     params: {
-      candidaciesUrl: `${adminBaseUrl}/candidacies/juries/?page=1&CATEGORY=PASSED`,
+      candidaciesUrl: getBackofficeUrl({
+        path: `/candidacies/juries/?page=1&CATEGORY=PASSED`,
+      }),
     },
   });

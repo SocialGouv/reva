@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { S3File, uploadFileToS3 } from "@/modules/shared/file/file.service";
@@ -14,9 +15,6 @@ import { sendFeasibilityValidatedToCandidateAutonomeEmail } from "../emails/send
 import { deleteFeasibilityIDFile } from "../features/deleteFeasibilityIDFile";
 
 import { canManageFeasibility } from "./canManageFeasibility";
-
-const adminBaseUrl =
-  process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
 export const validateFeasibility = async ({
   feasibilityId,
@@ -138,7 +136,9 @@ export const validateFeasibility = async ({
         sendFeasibilityDecisionTakenToAAPEmail({
           email:
             updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
-          feasibilityUrl: `${adminBaseUrl}/candidacies/${updatedFeasibility.candidacyId}/feasibility-aap/pdf`,
+          feasibilityUrl: getBackofficeUrl({
+            path: `/candidacies/${updatedFeasibility.candidacyId}/feasibility-aap/pdf`,
+          }),
         });
       }
     }

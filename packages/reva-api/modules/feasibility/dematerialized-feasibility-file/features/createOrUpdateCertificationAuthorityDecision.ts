@@ -3,6 +3,7 @@ import { v4 as uuidV4 } from "uuid";
 
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import {
@@ -25,9 +26,6 @@ import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisi
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithDetailsByCandidacyId } from "./getDematerializedFeasibilityFileWithDetailsByCandidacyId";
 import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
-
-const adminBaseUrl =
-  process.env.ADMIN_REACT_BASE_URL || "https://vae.gouv.fr/admin2";
 
 const decisionMapper = {
   ADMISSIBLE: {
@@ -80,7 +78,9 @@ const sendFeasibilityDecisionTakenEmail = async ({
     } else {
       sendFeasibilityIncompleteMailToAAP({
         email: aapEmail,
-        feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacyId}/feasibility`,
+        feasibilityUrl: getBackofficeUrl({
+          path: `/candidacies/${candidacyId}/feasibility`,
+        }),
         comment: decisionComment,
       });
     }
@@ -119,7 +119,9 @@ const sendFeasibilityDecisionTakenEmail = async ({
       });
       sendFeasibilityDecisionTakenToAAPEmail({
         email: aapEmail,
-        feasibilityUrl: `${adminBaseUrl}/candidacies/${candidacyId}/feasibility-aap`,
+        feasibilityUrl: getBackofficeUrl({
+          path: `/candidacies/${candidacyId}/feasibility-aap`,
+        }),
       });
     }
   }

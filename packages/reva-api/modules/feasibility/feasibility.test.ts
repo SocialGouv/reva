@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import * as FILE from "@/modules/shared/file/file.service";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -465,14 +466,13 @@ test("should validate upload of feasibility file", async () => {
     emails.push(certificationAuthority?.contactEmail);
   }
 
-  const feasibilityUrl = new URL(
-    `/admin2/candidacies/${candidacy.id}/feasibility`,
-    process.env.BASE_URL,
-  );
+  const feasibilityUrl = getBackofficeUrl({
+    path: `/candidacies/${candidacy.id}/feasibility`,
+  });
 
   expect(sendNewFeasibilitySubmittedEmaillMock).toHaveBeenCalledWith({
     emails,
-    feasibilityUrl: feasibilityUrl.toString(),
+    feasibilityUrl,
   });
   expect(sendNewFeasibilitySubmittedEmaillMock).toHaveBeenCalledTimes(1);
 
