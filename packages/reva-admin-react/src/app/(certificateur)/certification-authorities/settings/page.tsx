@@ -2,6 +2,7 @@
 
 import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
+import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 
 import { useCertificationAuthoritySettings } from "./certificationAuthoritySettingsPage.hook";
 
@@ -42,6 +43,9 @@ export default function CertificationAuthoritySettingsPage() {
           addLocalAccountPageUrl={
             "/certification-authorities/settings/local-accounts/add-local-account"
           }
+        />
+        <InterventionAreaSummaryCard
+          regions={certificationAuthority?.regions || []}
         />
       </div>
     </div>

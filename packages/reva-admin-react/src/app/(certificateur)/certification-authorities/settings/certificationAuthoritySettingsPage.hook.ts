@@ -23,6 +23,15 @@ const getCertificationAuthority = graphql(`
             email
           }
         }
+        regions {
+          id
+          label
+          departments {
+            id
+            label
+            code
+          }
+        }
       }
     }
   }
