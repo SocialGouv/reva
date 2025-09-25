@@ -31,9 +31,6 @@ export const createCandidateWithCandidacy = async (
       },
     });
 
-    // Row-level lock per candidate to avoid duplicate candidacies under concurrency
-    await tx.$queryRaw`SELECT id FROM candidate WHERE id = ${createdCandidate.id}::uuid FOR UPDATE`;
-
     // Check if an existing candidacy is active
     const candidacy = await tx.candidacy.findFirst({
       where: {

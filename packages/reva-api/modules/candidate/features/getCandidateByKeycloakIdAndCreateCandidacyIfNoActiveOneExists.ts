@@ -14,7 +14,8 @@ export const getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists =
       }
 
       // Row-level lock per candidate to avoid duplicate candidacies under concurrency
-      await tx.$queryRaw`SELECT id FROM candidate WHERE id = ${candidate.id}::uuid FOR UPDATE`;
+      // If a diffrent transaction tries to aquire the lock while the first one still holds it, it will fail and rollback
+      await tx.$queryRaw`SELECT id FROM candidate WHERE id = ${candidate.id}::uuid FOR UPDATE NOWAIT`;
       const activeCandidacy = await getFirstActiveCandidacyByCandidateId({
         candidateId: candidate.id,
         tx,

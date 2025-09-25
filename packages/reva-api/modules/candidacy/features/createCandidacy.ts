@@ -18,6 +18,9 @@ export const createCandidacy = async ({
   tx?: Prisma.TransactionClient;
 }) => {
   const prisma = tx ?? prismaClient;
+  // Row-level lock per candidate to avoid duplicate candidacies under concurrency
+  // If a diffrent transaction tries to aquire the lock while the first one still holds it, it will fail and rollback
+  await prisma.$queryRaw`SELECT id FROM candidate WHERE id = ${candidateId}::uuid FOR UPDATE NOWAIT`;
   return prisma.candidacy.create({
     data: {
       typeAccompagnement,
