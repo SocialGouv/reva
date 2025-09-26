@@ -10,5 +10,7 @@ export const resolversSecurityMap = {
   "Query.*": defaultSecurity,
   "Mutation.*": defaultSecurity,
 
+  "Mutation.appointment_createAppointment": isAdminOrCandidacyCompanion,
+  "Mutation.appointment_updateAppointment": isAdminOrCandidacyCompanion,
   "Candidacy.appointments": isAdminOrCandidacyCompanion,
 };

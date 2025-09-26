@@ -14,3 +14,27 @@ enum AppointmentType {
 type Candidacy {
   appointments: [Appointment!]!
 }
+
+input CreateAppointmentInput {
+  candidacyId: ID!
+  type: AppointmentType!
+  title: String!
+  description: String
+  date: Date!
+  location: String
+}
+
+input UpdateAppointmentInput {
+  id: ID!
+  candidacyId: ID!
+  type: AppointmentType!
+  title: String!
+  description: String
+  date: Date!
+  location: String
+}
+
+type Mutation {
+  appointment_createAppointment(input: CreateAppointmentInput!): Appointment!
+  appointment_updateAppointment(input: UpdateAppointmentInput!): Appointment!
+}
