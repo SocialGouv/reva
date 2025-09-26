@@ -27,5 +27,14 @@ export const getCandidacyCertificationAuthorityLocalAccounts = async ({
         },
       },
     });
-  return localAccounts;
+
+  return Array.from(
+    new Map(
+      // Keep a single entry per email/phone combination
+      localAccounts.map((account) => [
+        `${account.contactEmail ?? ""}#${account.contactPhone ?? ""}`,
+        account,
+      ]),
+    ).values(),
+  );
 };
