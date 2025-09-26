@@ -22,6 +22,11 @@ export const CertificationCard = ({
   const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();
   const certification = candidacy.certification;
   const candidacyActiveStatus = candidacy.status;
+
+  if (!certification) {
+    return null;
+  }
+
   const canUpdateCertification =
     (isAdmin || isGestionnaireMaisonMereAAP || isOrganism) &&
     candidacyActiveStatus &&
@@ -37,7 +42,7 @@ export const CertificationCard = ({
 
   return (
     <Card
-      title={certification?.label}
+      title={certification.label}
       detail={
         <div className="flex items-center gap-2 mb-3">
           <Image
@@ -46,7 +51,7 @@ export const CertificationCard = ({
             width={16}
             height={16}
           />
-          RNCP {certification?.codeRncp}
+          RNCP {certification.codeRncp}
         </div>
       }
       endDetail={
@@ -58,7 +63,7 @@ export const CertificationCard = ({
         )
       }
       linkProps={{
-        href: `/certification-details/${certification?.id}?candidacyId=${candidacy.id}`,
+        href: `/certification-details/${certification.id}?candidacyId=${candidacy.id}`,
       }}
       enlargeLink
     />
