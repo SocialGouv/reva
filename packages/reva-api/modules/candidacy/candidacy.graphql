@@ -70,7 +70,6 @@ type Candidacy {
   typologyAdditional: String
   ccnId: String
   conventionCollective: CandidacyConventionCollective
-  firstAppointmentOccuredAt: Date
   readyForJuryEstimatedAt: Date
   candidacyStatuses: [CandidacyStatus!]!
   candidacyDropOut: CandidacyDropOut

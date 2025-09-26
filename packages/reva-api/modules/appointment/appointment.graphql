@@ -18,6 +18,7 @@ type AppointmentPage {
 
 type Candidacy {
   appointments(type: AppointmentType, offset: Int, limit: Int): AppointmentPage!
+  firstAppointmentOccuredAt: Date
 }
 
 input CreateAppointmentInput {

@@ -8,6 +8,7 @@ import {
 } from "./appointment.types";
 import { createAppointment } from "./features/createAppointment";
 import { getAppointmentsByCandidacyId } from "./features/getAppointmentsByCandidacyId";
+import { getFirstAppointmentOccuredAt } from "./features/getFirstAppointmentOccuredAt";
 import { updateAppointment } from "./features/updateAppointment";
 
 const unsafeResolvers = {
@@ -20,6 +21,8 @@ const unsafeResolvers = {
         limit,
       }: { type: AppointmentType; offset: number; limit: number },
     ) => getAppointmentsByCandidacyId({ candidacyId, type, offset, limit }),
+    firstAppointmentOccuredAt: ({ id: candidacyId }: { id: string }) =>
+      getFirstAppointmentOccuredAt({ candidacyId }),
   },
   Mutation: {
     appointment_createAppointment: async (
