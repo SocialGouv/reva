@@ -6,8 +6,10 @@ export const updateAppointment = async ({
   input,
 }: {
   input: UpdateAppointmentInput;
-}) =>
-  prismaClient.appointment.update({
-    where: { id: input.id },
-    data: input,
+}) => {
+  const { appointmentId, ...rest } = input;
+  return prismaClient.appointment.update({
+    where: { id: input.appointmentId },
+    data: rest,
   });
+};

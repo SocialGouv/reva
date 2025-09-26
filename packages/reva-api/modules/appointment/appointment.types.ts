@@ -10,5 +10,5 @@ export interface CreateAppointmentInput {
 }
 
 export interface UpdateAppointmentInput extends CreateAppointmentInput {
-  id: string;
+  appointmentId: string;
 }

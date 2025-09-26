@@ -30,7 +30,7 @@ input CreateAppointmentInput {
 }
 
 input UpdateAppointmentInput {
-  id: ID!
+  appointmentId: ID!
   candidacyId: ID!
   type: AppointmentType!
   title: String!

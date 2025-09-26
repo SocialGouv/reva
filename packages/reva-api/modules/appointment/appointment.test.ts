@@ -112,7 +112,7 @@ test("update an appointment", async () => {
 
   const res = await graphqlClient.request(updateAppointment, {
     input: {
-      id: appointment.id,
+      appointmentId: appointment.id,
       candidacyId: candidacy.id,
       type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
       title: "Updated test Appointment",
