@@ -76,15 +76,21 @@ const getCandidacyQuery = graphql(`
   }
 `);
 
-const updateCandidacyFirstAppointmentInformationsMutation = graphql(`
-  mutation updateCandidacyFirstAppointmentInformationsMutation(
-    $candidacyId: ID!
-    $appointmentInformations: AppointmentInformationsInput!
+const createAppointmentMutation = graphql(`
+  mutation createAppointmentMutationForMeetingsPage(
+    $input: CreateAppointmentInput!
   ) {
-    candidacy_updateAppointmentInformations(
-      candidacyId: $candidacyId
-      appointmentInformations: $appointmentInformations
-    ) {
+    appointment_createAppointment(input: $input) {
+      id
+    }
+  }
+`);
+
+const updateAppointmentMutation = graphql(`
+  mutation updateAppointmentMutationForMeetingsPage(
+    $input: UpdateAppointmentInput!
+  ) {
+    appointment_updateAppointment(input: $input) {
       id
     }
   }
@@ -119,6 +125,13 @@ const MeetingsPage = () => {
       }),
   });
 
+  const firstAppointment =
+    getCandidacyResponse?.getCandidacyById?.appointments?.rows?.[0];
+
+  const firstAppointmentOccuredAt = firstAppointment?.date;
+
+  const candidacyCreatedAt = getCandidacyResponse?.getCandidacyById?.createdAt;
+
   const updateCandidacyFirstAppointmentInformations = useMutation({
     mutationFn: ({
       candidacyId,
@@ -127,28 +140,48 @@ const MeetingsPage = () => {
       candidacyId: string;
       firstAppointmentOccuredAt: string;
     }) =>
-      graphqlClient.request(
-        updateCandidacyFirstAppointmentInformationsMutation,
-        {
+      graphqlClient.request(updateAppointmentMutation, {
+        input: {
           candidacyId,
-          appointmentInformations: {
-            firstAppointmentOccuredAt,
-          },
+          appointmentId: firstAppointment?.id || "",
+          date: firstAppointmentOccuredAt,
+          type: "RENDEZ_VOUS_PEDAGOGIQUE",
+          title: "Rendez-vous pédagogique",
         },
-      ),
+      }),
   });
 
-  const firstAppointmentOccuredAt =
-    getCandidacyResponse?.getCandidacyById?.appointments?.rows?.[0]?.date;
-
-  const candidacyCreatedAt = getCandidacyResponse?.getCandidacyById?.createdAt;
+  const createCandidacyFirstAppointmentInformations = useMutation({
+    mutationFn: ({
+      candidacyId,
+      firstAppointmentOccuredAt,
+    }: {
+      candidacyId: string;
+      firstAppointmentOccuredAt: string;
+    }) =>
+      graphqlClient.request(createAppointmentMutation, {
+        input: {
+          candidacyId,
+          date: firstAppointmentOccuredAt,
+          type: "RENDEZ_VOUS_PEDAGOGIQUE",
+          title: "Rendez-vous pédagogique",
+        },
+      }),
+  });
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
-      await updateCandidacyFirstAppointmentInformations.mutateAsync({
-        candidacyId,
-        firstAppointmentOccuredAt: data.firstAppointmentOccuredAt,
-      });
+      if (firstAppointment) {
+        await updateCandidacyFirstAppointmentInformations.mutateAsync({
+          candidacyId,
+          firstAppointmentOccuredAt: data.firstAppointmentOccuredAt,
+        });
+      } else {
+        await createCandidacyFirstAppointmentInformations.mutateAsync({
+          candidacyId,
+          firstAppointmentOccuredAt: data.firstAppointmentOccuredAt,
+        });
+      }
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
       successToast("Les modifications ont bien été enregistrées");
       router.push(backUrl);
