@@ -72,7 +72,6 @@ type Candidacy {
   conventionCollective: CandidacyConventionCollective
   firstAppointmentOccuredAt: Date
   readyForJuryEstimatedAt: Date
-  appointmentCount: Int
   candidacyStatuses: [CandidacyStatus!]!
   candidacyDropOut: CandidacyDropOut
   createdAt: Timestamp!
