@@ -1,6 +1,8 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { AppointmentType } from "@prisma/client";
 
+import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
+
 import { resolversSecurityMap } from "./appointment.security";
 import {
   CreateAppointmentInput,
@@ -28,11 +30,21 @@ const unsafeResolvers = {
     appointment_createAppointment: async (
       _: unknown,
       { input }: { input: CreateAppointmentInput },
-    ) => createAppointment({ input }),
+      context: GraphqlContext,
+    ) =>
+      createAppointment({
+        input,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
     appointment_updateAppointment: async (
       _: unknown,
       { input }: { input: UpdateAppointmentInput },
-    ) => updateAppointment({ input }),
+      context: GraphqlContext,
+    ) =>
+      updateAppointment({
+        input,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
   },
 };
 
