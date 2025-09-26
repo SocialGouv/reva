@@ -62,10 +62,15 @@ type FormData = z.infer<typeof schema>;
 const getCandidacyQuery = graphql(`
   query getCandidacyForMeetingsPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
-      firstAppointmentOccuredAt
       createdAt
       candidate {
         id
+      }
+      appointments(limit: 1, type: RENDEZ_VOUS_PEDAGOGIQUE) {
+        rows {
+          id
+          date
+        }
       }
     }
   }
@@ -134,7 +139,7 @@ const MeetingsPage = () => {
   });
 
   const firstAppointmentOccuredAt =
-    getCandidacyResponse?.getCandidacyById?.firstAppointmentOccuredAt;
+    getCandidacyResponse?.getCandidacyById?.appointments?.rows?.[0]?.date;
 
   const candidacyCreatedAt = getCandidacyResponse?.getCandidacyById?.createdAt;
 
