@@ -29,6 +29,9 @@ export const DashboardAccompagneTilesGroup = ({
   className?: string;
 }) => {
   const feasibility = candidacy?.feasibility;
+  const endAccompagnementConfirmed =
+    candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+    candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
 
   return (
     <div
@@ -52,6 +55,7 @@ export const DashboardAccompagneTilesGroup = ({
             hasSelectedCertification={!!candidacy.certification?.id}
             hasSelectedOrganism={hasSelectedOrganism}
             candidacyStatus={candidacy.status}
+            endAccompagnementConfirmed={endAccompagnementConfirmed}
           />
           <SubmitCandidacyTile
             candidacyAlreadySubmitted={candidacyAlreadySubmitted}

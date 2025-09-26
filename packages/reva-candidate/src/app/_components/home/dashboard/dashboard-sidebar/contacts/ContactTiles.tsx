@@ -10,11 +10,21 @@ export const ContactTiles = ({
 }: {
   candidacy: CandidacyUseCandidateForDashboard;
 }) => {
+  const endAccompagnementConfirmed =
+    candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+    candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
+  const endAccompagnementDate = candidacy.endAccompagnementDate;
   return (
     <TileGroup icon="fr-icon-team-line" title="Mes contacts">
       {!candidacy.organism &&
         !candidacy.feasibility?.certificationAuthority && <NoContactTile />}
-      {candidacy.organism && <AapContactTile organism={candidacy.organism} />}
+      {candidacy.organism && (
+        <AapContactTile
+          organism={candidacy.organism}
+          endAccompagnementConfirmed={endAccompagnementConfirmed}
+          endAccompagnementDate={endAccompagnementDate}
+        />
+      )}
       {candidacy.feasibility?.certificationAuthority && (
         <CertificationAuthorityContactTile
           certificationAuthority={candidacy.feasibility.certificationAuthority}

@@ -29,6 +29,9 @@ export const DashboardVaeCollectiveTilesGroup = ({
   className?: string;
 }) => {
   const feasibility = candidacy?.feasibility;
+  const endAccompagnementConfirmed =
+    candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+    candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
 
   return (
     <div className={`flex flex-col gap-y-8 ${className || ""}`}>
@@ -50,6 +53,7 @@ export const DashboardVaeCollectiveTilesGroup = ({
             hasSelectedCertification={!!candidacy.certification?.id}
             hasSelectedOrganism={hasSelectedOrganism}
             candidacyStatus={candidacy.status}
+            endAccompagnementConfirmed={endAccompagnementConfirmed}
           />
           <SubmitCandidacyTile
             candidacyAlreadySubmitted={candidacyAlreadySubmitted}
