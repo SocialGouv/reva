@@ -31,6 +31,8 @@ export default function CertificationDetailsPage() {
     (isAdmin || isGestionnaireMaisonMereAAP || isOrganism) &&
     candidacy?.status &&
     [
+      "PROJET",
+      "VALIDATION",
       "PRISE_EN_CHARGE",
       "PARCOURS_ENVOYE",
       "PARCOURS_CONFIRME",

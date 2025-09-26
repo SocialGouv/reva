@@ -182,6 +182,8 @@ const createCandidacyWithSocialCertificationAndOrganism = async ({
 };
 
 const allowedStatuses: CandidacyStatusStep[] = [
+  "PROJET",
+  "VALIDATION",
   "PRISE_EN_CHARGE",
   "PARCOURS_ENVOYE",
   "PARCOURS_CONFIRME",
@@ -189,8 +191,6 @@ const allowedStatuses: CandidacyStatusStep[] = [
 ];
 
 const notAllowedStatuses: CandidacyStatusStep[] = [
-  "PROJET",
-  "VALIDATION",
   "DOSSIER_FAISABILITE_ENVOYE",
   "DOSSIER_FAISABILITE_RECEVABLE",
   "DOSSIER_FAISABILITE_NON_RECEVABLE",

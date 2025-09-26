@@ -26,6 +26,8 @@ export const CertificationCard = ({
     (isAdmin || isGestionnaireMaisonMereAAP || isOrganism) &&
     candidacyActiveStatus &&
     [
+      "PROJET",
+      "VALIDATION",
       "PRISE_EN_CHARGE",
       "PARCOURS_ENVOYE",
       "PARCOURS_CONFIRME",

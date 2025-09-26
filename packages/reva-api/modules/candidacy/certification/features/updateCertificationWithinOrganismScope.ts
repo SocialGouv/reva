@@ -84,6 +84,8 @@ export const updateCertificationWithinOrganismScope = async ({
 
   // Allow certification update only at the beginning of the candidacy
   const allowedStatues: CandidacyStatusStep[] = [
+    "PROJET",
+    "VALIDATION",
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
     "PARCOURS_CONFIRME",
