@@ -115,6 +115,7 @@ const getCandidacyCountByStatusQuery = graphql(`
       DEMANDE_FINANCEMENT_ENVOYEE
       DEMANDE_PAIEMENT_ENVOYEE
       DEMANDE_PAIEMENT_A_ENVOYER
+      END_ACCOMPAGNEMENT
     }
   }
 `);

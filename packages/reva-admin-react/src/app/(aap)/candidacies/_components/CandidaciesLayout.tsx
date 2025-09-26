@@ -253,6 +253,16 @@ const CandidacyLayoutSideMenu = ({
       : {}),
   });
 
+  if (isFeatureActive("END_ACCOMPAGNEMENT")) {
+    sideMenuItems.push({
+      text: `Accompagnements terminés ${getCounterText("END_ACCOMPAGNEMENT")}`,
+      linkProps: {
+        href: hrefSideMenu("END_ACCOMPAGNEMENT"),
+      },
+      isActive: isActive("END_ACCOMPAGNEMENT"),
+    });
+  }
+
   return (
     <nav
       role="navigation"
