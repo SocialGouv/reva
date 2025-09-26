@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import {
+  CandidacyStatusStep,
   CertificationJuryFrequency,
   CertificationJuryModality,
   CertificationJuryTypeOfModality,
@@ -9,6 +10,7 @@ import {
 import { graphql } from "@/modules/graphql/generated";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
@@ -487,3 +489,81 @@ it("should throw an error if a more recent version already exists", async () => 
     ),
   );
 });
+
+it("should remove certification from candidacies in PROJET status", async () => {
+  await createFormaCodeAndMockReferential();
+  const existingCertification = await createExistingCertification();
+
+  const { certificationRegistryManager } =
+    await createStructureWithCertification(existingCertification.id);
+
+  const [candidacyProjet, candidacyProjet2] = await Promise.all([
+    createCandidacyHelper({
+      certificationId: existingCertification.id,
+      candidacyActiveStatus: CandidacyStatusStep.PROJET,
+    }),
+    createCandidacyHelper({
+      certificationId: existingCertification.id,
+      candidacyActiveStatus: CandidacyStatusStep.PROJET,
+    }),
+  ]);
+
+  const graphqlClient = getRegistryManagerGraphQLClient(
+    certificationRegistryManager,
+  );
+
+  await graphqlClient.request(replaceCertificationMutation, {
+    input: {
+      codeRncp: NEW_RNCP,
+      certificationId: existingCertification.id,
+    },
+  });
+
+  const [updatedCandidacyProjet, updatedCandidacyProjet2] = await Promise.all([
+    prismaClient.candidacy.findUnique({ where: { id: candidacyProjet.id } }),
+    prismaClient.candidacy.findUnique({ where: { id: candidacyProjet2.id } }),
+  ]);
+
+  expect(updatedCandidacyProjet?.certificationId).toBeNull();
+  expect(updatedCandidacyProjet?.organismId).toBeNull();
+  expect(updatedCandidacyProjet2?.certificationId).toBeNull();
+  expect(updatedCandidacyProjet2?.organismId).toBeNull();
+});
+
+const nonProjetStatuses = Object.values(CandidacyStatusStep).filter(
+  (status) => status !== CandidacyStatusStep.PROJET,
+) as CandidacyStatusStep[];
+
+it.each(nonProjetStatuses)(
+  "should keep certification for candidacies in %s status",
+  async (status: CandidacyStatusStep) => {
+    await createFormaCodeAndMockReferential();
+    const existingCertification = await createExistingCertification();
+
+    const { certificationRegistryManager } =
+      await createStructureWithCertification(existingCertification.id);
+
+    const candidacy = await createCandidacyHelper({
+      certificationId: existingCertification.id,
+      candidacyActiveStatus: status,
+    });
+
+    const graphqlClient = getRegistryManagerGraphQLClient(
+      certificationRegistryManager,
+    );
+
+    await graphqlClient.request(replaceCertificationMutation, {
+      input: {
+        codeRncp: NEW_RNCP,
+        certificationId: existingCertification.id,
+      },
+    });
+
+    const notUpdatedCandidacy = await prismaClient.candidacy.findUnique({
+      where: { id: candidacy.id },
+    });
+
+    expect(notUpdatedCandidacy?.certificationId).toBe(existingCertification.id);
+    expect(notUpdatedCandidacy?.organismId).toBe(candidacy.organismId);
+  },
+);

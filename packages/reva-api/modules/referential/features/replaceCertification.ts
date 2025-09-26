@@ -226,5 +226,16 @@ export const replaceCertification = async (params: {
     });
   }
 
+  await prismaClient.candidacy.updateMany({
+    where: {
+      certificationId,
+      status: "PROJET",
+    },
+    data: {
+      certificationId: null,
+      organismId: null,
+    },
+  });
+
   return newCertification;
 };
