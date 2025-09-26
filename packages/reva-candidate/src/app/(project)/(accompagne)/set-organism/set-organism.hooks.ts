@@ -16,6 +16,9 @@ const GET_CANDIDATE_WITH_CANDIDACY_FOR_SET_ORGANISM = graphql(`
         candidacyDropOut {
           createdAt
         }
+        certification {
+          id
+        }
         organism {
           id
         }
@@ -89,6 +92,8 @@ export const useSetOrganism = ({
   const candidate =
     getCandidateWithCandidacy?.candidate_getCandidateWithCandidacy;
 
+  const hasSelectedCertification = !!candidate?.candidacy?.certification?.id;
+
   const canEditCandidacy = candidateCanEditCandidacy({
     candidacyStatus: candidate?.candidacy?.status,
     typeAccompagnement: candidate?.candidacy?.typeAccompagnement,
@@ -99,6 +104,7 @@ export const useSetOrganism = ({
     queryKey: [
       "getRandomOrganismsForCandidacy",
       candidate?.candidacy?.id,
+      candidate?.candidacy?.certification?.id,
       searchText,
       searchFilter,
     ],
@@ -109,7 +115,7 @@ export const useSetOrganism = ({
         searchFilter,
       }),
     gcTime: 0,
-    enabled: !!candidate?.candidacy?.id,
+    enabled: !!candidate?.candidacy?.id && hasSelectedCertification,
   });
 
   const selectOrganism = useMutation({
@@ -133,5 +139,6 @@ export const useSetOrganism = ({
     selectOrganism,
     canEditCandidacy,
     candidate,
+    hasSelectedCertification,
   };
 };

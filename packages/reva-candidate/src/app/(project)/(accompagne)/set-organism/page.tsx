@@ -53,6 +53,7 @@ export default function SetOrganism() {
     selectOrganism,
     canEditCandidacy,
     candidate,
+    hasSelectedCertification,
   } = useSetOrganism({
     searchText: organismSearchText,
     searchFilter: {
@@ -128,6 +129,10 @@ export default function SetOrganism() {
 
   if (!candidate) {
     return null;
+  }
+
+  if (!hasSelectedCertification) {
+    redirect("/");
   }
 
   if (!canEditCandidacy) {
