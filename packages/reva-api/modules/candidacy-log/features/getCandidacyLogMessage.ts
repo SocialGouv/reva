@@ -266,6 +266,12 @@ export const getCandidacyLogMessage = ({
         format(details.endAccompagnementDate, "dd/MM/yyyy"),
       );
 
+    case "CANDIDATE_REFUSED_END_ACCOMPAGNEMENT":
+      return log("Fin d'accompagnement refusée");
+
+    case "CANDIDATE_CONFIRMED_END_ACCOMPAGNEMENT":
+      return log("Fin d'accompagnement confirmée");
+
     default:
       return log("Événement inconnu");
   }
