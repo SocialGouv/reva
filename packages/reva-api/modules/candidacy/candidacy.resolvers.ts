@@ -57,7 +57,6 @@ import { submitCandidacy } from "./features/submitCandidacy";
 import { submitEndAccompagnement } from "./features/submitEndAccompagnement";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
-import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
 import { updateCandidacyEndAccompagnementDecision } from "./features/updateCandidacyEndAccompagnementDecision";
 import { updateCandidacyFinanceModule } from "./features/updateCandidacyFinanceModule";
 import { updateCandidacyInactifDecision } from "./features/updateCandidacyInactifDecision";
@@ -373,42 +372,6 @@ const unsafeResolvers = {
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
       });
       return result;
-    },
-    candidacy_updateAppointmentInformations: async (
-      _: unknown,
-      payload: any,
-      context: GraphqlContext,
-    ) => {
-      try {
-        const result = await updateAppointmentInformations({
-          candidacyId: payload.candidacyId,
-          appointmentInformations: payload.appointmentInformations,
-        });
-        logCandidacyEvent({
-          candidacyId: payload.candidacyId,
-          eventType: CandidacyBusinessEvent.UPDATED_APPOINTMENT_INFO,
-          extraInfo: { ...payload.appointmentInformations },
-          context,
-          result,
-        });
-        await logCandidacyAuditEvent({
-          candidacyId: payload.candidacyId,
-          eventType: "APPOINTMENT_INFO_UPDATED",
-          userKeycloakId: context.auth.userInfo?.sub,
-          userEmail: context.auth.userInfo?.email,
-          userRoles: context.auth.userInfo?.realm_access?.roles || [],
-          details: {
-            firstAppointmentOccuredAt:
-              payload.appointmentInformations.firstAppointmentOccuredAt,
-          },
-        });
-        return result;
-      } catch (error) {
-        logger.error(error);
-        return new Error(
-          `Impossible de mettre à jour la date du rendez-vous pédagogique: ${error}`,
-        );
-      }
     },
 
     candidacy_takeOver: async (

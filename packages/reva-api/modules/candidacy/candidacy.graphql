@@ -304,10 +304,6 @@ input UpdateCandidateInput {
   email: String
 }
 
-input AppointmentInformationsInput {
-  firstAppointmentOccuredAt: Date
-}
-
 input DropOutInput {
   dropOutReasonId: UUID!
   otherReasonContent: String
@@ -335,10 +331,6 @@ type Mutation {
     archivingReasonAdditionalInformation: String
   ): Candidacy!
   candidacy_unarchiveById(candidacyId: ID!): Candidacy!
-  candidacy_updateAppointmentInformations(
-    candidacyId: ID!
-    appointmentInformations: AppointmentInformationsInput!
-  ): Candidacy!
   candidacy_takeOver(candidacyId: ID!): Candidacy!
   candidacy_selectOrganism(candidacyId: UUID!, organismId: UUID!): Candidacy!
   candidacy_selectOrganismAsAdmin(
