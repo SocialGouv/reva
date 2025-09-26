@@ -1,0 +1,141 @@
+{
+  "data": {
+    "getCertification": {
+      "id": "56c692b7-13f8-4466-9679-76ebbdefe228",
+      "label": "Vendeur en boulangerie-pâtisserie (CTM)",
+      "codeRncp": "39257",
+      "status": "VALIDE_PAR_CERTIFICATEUR",
+      "rncpExpiresAt": 1814054400000,
+      "rncpPublishedAt": null,
+      "rncpEffectiveAt": null,
+      "rncpDeliveryDeadline": 1940284800000,
+      "availableAt": 1758060000000,
+      "expiresAt": 1814047200000,
+      "typeDiplome": null,
+      "juryTypeMiseEnSituationProfessionnelle": null,
+      "juryTypeSoutenanceOrale": "LES_DEUX",
+      "juryFrequency": "MONTHLY",
+      "juryFrequencyOther": null,
+      "juryPlace": "",
+      "juryEstimatedCost": 150,
+      "additionalInfo": {
+        "linkToReferential": "https://example.com",
+        "linkToCorrespondenceTable": "https://example.com",
+        "dossierDeValidationTemplate": {
+          "name": "template.pdf",
+          "previewUrl": "https://example.com"
+        },
+        "dossierDeValidationLink": "",
+        "linkToJuryGuide": "https://example.com",
+        "certificationExpertContactDetails": "",
+        "certificationExpertContactPhone": "",
+        "certificationExpertContactEmail": "",
+        "usefulResources": "",
+        "commentsForAAP": "",
+        "additionalDocuments": []
+      },
+      "degree": {
+        "id": "439763bf-fbb1-4367-9bc7-17a28909c953",
+        "level": 3
+      },
+      "domains": [
+        {
+          "id": "0ae52a39-44fe-4aba-b107-485a60e13b82",
+          "code": "00107",
+          "label": "Transformation matiere produit",
+          "children": [
+            {
+              "id": "41b67cf0-26a4-4708-8d34-736527bf9a90",
+              "code": "215",
+              "label": "Agroalimentaire"
+            }
+          ]
+        },
+        {
+          "id": "584c82c2-4f90-482a-947a-2ba24b5e131d",
+          "code": "00111",
+          "label": "Commerce, marketing, finance",
+          "children": [
+            {
+              "id": "8833d50d-41c8-4532-8873-44555940378b",
+              "code": "345",
+              "label": "Commerce"
+            }
+          ]
+        }
+      ],
+      "competenceBlocs": [
+        {
+          "id": "59d053bc-cdf8-479f-b7db-e27315f9e9f6",
+          "code": "RNCP39257BC01",
+          "label": "Assurer la vente et la prise de commande au sein d’une boulangerie-pâtisserie",
+          "competences": [
+            {
+              "id": "18b68cd1-aa5d-4d9c-9e1b-01f662de053c",
+              "label": "Conduire une vente de produit(s) ou prestation(s) de boulangerie/pâtisserie en français ou dans une langue étrangère en accueillant, en renseignant, en prenant en compte les éventuelles contraintes en présentant les produits et leurs compositions, en faisant des recommandations sur les modalités de conservation et associations possibles afin de répondre aux besoins du client et le fidéliser."
+            },
+            {
+              "id": "1713b46e-bc93-4210-9b2c-c9f158410b89",
+              "label": "Rédiger une commande exploitable par le laboratoire ou le fournil, en face à face ou au téléphone en renseignant les coordonnées du client et la nature de la commande, en estimant le coût de la commande afin de faciliter la transmission des messages et le faire valider par sa hiérarchie."
+            },
+            {
+              "id": "1c6f191c-4f40-445e-a98e-32bff4a98719",
+              "label": "Coordonner son activité de vente avec les contraintes de l’activité production du laboratoire et/ou du fournil en appréciant les urgences, en informant de façon claire le personnel de production et sa hiérarchie des quantités restantes, des besoins, des remarques et appréciations des clients dans l’optique d’une transversalité entre les équipes afin d’améliorer l’efficacité de la boulangerie-pâtisserie."
+            },
+            {
+              "id": "215891fe-5870-48f1-965b-41941a531411",
+              "label": "Réaliser les emballages des produits de boulangerie-pâtisserie en choisissant ceux qui sont adéquats, en utilisant le papier de manière rationnelle afin d’avoir des produits dans des contenus présentables tout en respectant l’écologie."
+            },
+            {
+              "id": "9239b4d3-9fc8-47a4-b762-005a8a5c698f",
+              "label": "Procéder à l’encaissement des produits et au rendu monnaie dans le respect des bonnes pratiques de l’entreprise, de la réglementation inhérente aux différents modes de paiement et en sécurisant les transactions afin d’optimiser et fluidifier l’encaissement au sein de la boulangerie-pâtisserie."
+            },
+            {
+              "id": "986de1dd-cc97-4010-9467-75da38a75dd1",
+              "label": "Gérer d’éventuels conflits avec la clientèle en anticipant des situations potentiellement conflictuelles, en apaisant les clients mécontents tout en gardant son calme afin de trouver une solution ou en appelant son responsable uniquement si cela est nécessaire."
+            }
+          ]
+        },
+        {
+          "id": "3764456d-0a0a-464c-9ed3-e0332973c511",
+          "code": "RNCP39257BC02",
+          "label": "Assurer la mise en place des produits au sein de la boulangerie-pâtisserie",
+          "competences": [
+            {
+              "id": "ed9f2fb5-88a7-4552-ab02-833fff981999",
+              "label": "Assurer la mise en oeuvre du stockage des produits de la boulangerie-pâtisserie en respectant les exigences de conservation, en hiérarchisant les produits en vitrine et dans le magasin, en modifiant l’offre de produits selon le moment de la journée, en contrôlant la présentation et le rendu visuel afin d’augmenter les ventes."
+            },
+            {
+              "id": "2214ac2a-6e69-47d6-90b6-dbd9c2118d77",
+              "label": "Etiqueter et afficher le prix conformément à la nature du produit, en associant les étiquettes aux bons prix, en veillant au respect de la réglementation en matière d’allergènes afin d’être en adéquation avec les directives du chef d’entreprise ou du responsable des ventes."
+            },
+            {
+              "id": "6eaa7a19-e459-4020-9d31-16d908f038bc",
+              "label": "Vérifier les dates de péremption des produits additionnels et l’état sanitaire et visuel des produits frais en se conformant au guide des bonnes pratiques de la profession afin de retirer les produits non conformes à la vente sans omettre d’en référer à son responsable ou au chef d’entreprise."
+            }
+          ]
+        },
+        {
+          "id": "94b59430-946d-4891-82c4-689c92952e7e",
+          "code": "RNCP39257BC03",
+          "label": "Participer à l’organisation de la boulangerie-pâtisserie",
+          "competences": [
+            {
+              "id": "787c2372-6469-4c10-b302-d005f1334890",
+              "label": "Contrôler et réceptionner les commandes en réceptionnant et en contrôlant les produits à la livraison, en validant le bon de réception, en assurant le placement des produits dans les zones de stockage adaptée sans omettre d’informer sa hiérarchie du stock restant des consommables pour le magasin."
+            },
+            {
+              "id": "31d28444-7d3b-4a99-bb42-85f0c5d0e52d",
+              "label": "Réaliser des produits de snacking en coupant et en taillant les fruits et légumes, en épluchant les oeufs, en élaborant des salades, tout en prenant en compte la réglementation sur la traçabilité afin d’avoir un produit fini (sandwich, soupes, salades et tartines) conforme avec les critères qualité de l’entreprise."
+            },
+            {
+              "id": "fc6e0472-d733-4641-bc05-b441f1a67ab2",
+              "label": "Entretenir et nettoyer les ustensiles, les locaux dans le respect des protocoles sanitaires, à chaque fois que cela est nécessaire en appliquant le plan de nettoyage et de désinfection, la réglementation concernant les produits dangereux et en prenant les dispositions nécessaires afin d’assurer la sécurité et le confort de sa clientèle."
+            }
+          ]
+        }
+      ],
+      "prerequisites": []
+    }
+  }
+}
