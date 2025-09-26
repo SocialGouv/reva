@@ -181,6 +181,46 @@ const createCandidacyWithSocialCertificationAndOrganism = async ({
   return { candidacy, certification, organism };
 };
 
+const allowedStatuses: CandidacyStatusStep[] = [
+  "PRISE_EN_CHARGE",
+  "PARCOURS_ENVOYE",
+  "PARCOURS_CONFIRME",
+  "DOSSIER_FAISABILITE_INCOMPLET",
+];
+
+const notAllowedStatuses: CandidacyStatusStep[] = [
+  "PROJET",
+  "VALIDATION",
+  "DOSSIER_FAISABILITE_ENVOYE",
+  "DOSSIER_FAISABILITE_RECEVABLE",
+  "DOSSIER_FAISABILITE_NON_RECEVABLE",
+  "DOSSIER_FAISABILITE_COMPLET",
+  "DOSSIER_DE_VALIDATION_ENVOYE",
+  "DOSSIER_DE_VALIDATION_SIGNALE",
+];
+
+allowedStatuses.forEach((statut) => {
+  test(`should allow certification update when candidacy status is ${statut}`, async () => {
+    const { candidacy, organism } =
+      await createCandidacyWithSocialCertificationAndOrganism({ statut });
+
+    const newCertification = await createCertificationSocial();
+
+    await updateCertificationWithinScope({
+      certification: newCertification,
+      candidacy,
+      organism,
+    });
+
+    const candidacyUpdated = await prismaClient.candidacy.findUnique({
+      where: { id: candidacy.id },
+    });
+
+    expect(candidacyUpdated?.certificationId).toEqual(newCertification.id);
+    expect(candidacyUpdated?.status).toEqual("PRISE_EN_CHARGE");
+  });
+});
+
 test("an organism should be able to update certification while a training is sent", async () => {
   const { candidacy, organism } =
     await createCandidacyWithSocialCertificationAndOrganism({
@@ -250,27 +290,27 @@ test("should not be able to update certification that is not in its scope", asyn
   }
 });
 
-test("should not be able to update certification after feasibility sent", async () => {
-  const { candidacy, organism } =
-    await createCandidacyWithSocialCertificationAndOrganism({
-      statut: CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
-    });
+notAllowedStatuses.forEach((statut) => {
+  test(`should not be able to update certification when candidacy status is ${statut}`, async () => {
+    const { candidacy, organism } =
+      await createCandidacyWithSocialCertificationAndOrganism({ statut });
 
-  const newSocialCertification = await createCertificationSocial();
+    const newSocialCertification = await createCertificationSocial();
 
-  try {
-    await updateCertificationWithinScope({
-      certification: newSocialCertification,
-      candidacy,
-      organism,
-    });
-    shouldNotGoHere();
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual(
-      "La certification ne peut être mise à jour qu'en début de candidature",
-    );
-  }
+    try {
+      await updateCertificationWithinScope({
+        certification: newSocialCertification,
+        candidacy,
+        organism,
+      });
+      shouldNotGoHere();
+    } catch (error) {
+      const gqlError = getGraphQLError(error);
+      expect(gqlError).toEqual(
+        "La certification ne peut être mise à jour qu'en début de candidature",
+      );
+    }
+  });
 });
 
 test("should reset the status, keeping the training, after certification update", async () => {
