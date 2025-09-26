@@ -15,7 +15,11 @@ export const isCandidacyOwner =
   ) => {
     log("isCandidacyOwner");
     const candidacyId =
-      args.candidacyId || args.data?.candidacyId || root.candidacyId || root.id;
+      args.candidacyId ||
+      args.data?.candidacyId ||
+      args.input?.candidacyId ||
+      root.candidacyId ||
+      root.id;
     if (!candidacyId) {
       throw new Error("Candidacy ID is required in isCandidacyOwner");
     }
