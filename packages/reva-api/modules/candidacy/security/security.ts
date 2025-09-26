@@ -65,4 +65,6 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateFinanceModule": isAdmin,
   "Mutation.candidacy_updateCandidacyInactifDecision": isOwnerOfCandidacy,
   "Mutation.candidacy_submitEndAccompagnement": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_updateCandidacyEndAccompagnementDecision":
+    isOwnerOfCandidacy,
 };

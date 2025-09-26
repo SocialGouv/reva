@@ -379,4 +379,8 @@ type Mutation {
     candidacyId: UUID!
     endAccompagnementDate: Timestamp!
   ): Candidacy!
+  candidacy_updateCandidacyEndAccompagnementDecision(
+    candidacyId: UUID!
+    endAccompagnement: Boolean!
+  ): Candidacy!
 }

@@ -58,6 +58,7 @@ import { submitEndAccompagnement } from "./features/submitEndAccompagnement";
 import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
+import { updateCandidacyEndAccompagnementDecision } from "./features/updateCandidacyEndAccompagnementDecision";
 import { updateCandidacyFinanceModule } from "./features/updateCandidacyFinanceModule";
 import { updateCandidacyInactifDecision } from "./features/updateCandidacyInactifDecision";
 import { updateCandidacyTypeAccompagnement } from "./features/updateCandidacyTypeAccompagnement";
@@ -699,6 +700,20 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) =>
       submitEndAccompagnement({
+        ...input,
+        userKeycloakId: context.auth.userInfo?.sub || "",
+        userEmail: context.auth.userInfo?.email || "",
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
+    candidacy_updateCandidacyEndAccompagnementDecision: async (
+      _parent: unknown,
+      input: {
+        candidacyId: string;
+        endAccompagnement: boolean;
+      },
+      context: GraphqlContext,
+    ) =>
+      updateCandidacyEndAccompagnementDecision({
         ...input,
         userKeycloakId: context.auth.userInfo?.sub || "",
         userEmail: context.auth.userInfo?.email || "",
