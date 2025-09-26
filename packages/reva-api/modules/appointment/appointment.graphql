@@ -11,8 +11,13 @@ enum AppointmentType {
   RENDEZ_VOUS_PEDAGOGIQUE
 }
 
+type AppointmentPage {
+  rows: [Appointment!]!
+  info: PaginationInfo!
+}
+
 type Candidacy {
-  appointments: [Appointment!]!
+  appointments(type: AppointmentType, offset: Int, limit: Int): AppointmentPage!
 }
 
 input CreateAppointmentInput {

@@ -22,12 +22,14 @@ test("get a candidacy appointments", async () => {
       getCandidacyById(id: $id) {
         id
         appointments {
-          id
-          type
-          title
-          description
-          date
-          location
+          rows {
+            id
+            type
+            title
+            description
+            date
+            location
+          }
         }
       }
     }
@@ -45,7 +47,9 @@ test("get a candidacy appointments", async () => {
 
   expect(res).toMatchObject({
     getCandidacyById: {
-      appointments: [{ id: appointment.id }],
+      appointments: {
+        rows: [{ id: appointment.id }],
+      },
     },
   });
 });

@@ -1,4 +1,5 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { AppointmentType } from "@prisma/client";
 
 import { resolversSecurityMap } from "./appointment.security";
 import {
@@ -11,8 +12,14 @@ import { updateAppointment } from "./features/updateAppointment";
 
 const unsafeResolvers = {
   Candidacy: {
-    appointments: ({ id: candidacyId }: { id: string }) =>
-      getAppointmentsByCandidacyId({ candidacyId }),
+    appointments: (
+      { id: candidacyId }: { id: string },
+      {
+        type,
+        offset,
+        limit,
+      }: { type: AppointmentType; offset: number; limit: number },
+    ) => getAppointmentsByCandidacyId({ candidacyId, type, offset, limit }),
   },
   Mutation: {
     appointment_createAppointment: async (
