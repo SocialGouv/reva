@@ -75,6 +75,7 @@ export const candidacyStatusFilters = [
   "DEMANDE_FINANCEMENT_ENVOYEE",
   "DEMANDE_PAIEMENT_ENVOYEE",
   "DEMANDE_PAIEMENT_A_ENVOYER",
+  "END_ACCOMPAGNEMENT",
 ] as const;
 
 export type CandidacyStatusFilter = (typeof candidacyStatusFilters)[number];

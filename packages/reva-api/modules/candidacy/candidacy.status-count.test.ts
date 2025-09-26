@@ -84,6 +84,7 @@ const executeQueryAndAssertResults = async ({
     JURY_PASSE_HORS_ABANDON: 0,
     VALIDATION_HORS_ABANDON: 0,
     PROJET_HORS_ABANDON: 0,
+    END_ACCOMPAGNEMENT: 0,
     ...defaultAssertionOverride,
   };
 
@@ -117,6 +118,7 @@ const executeQueryAndAssertResults = async ({
         JURY_PASSE_HORS_ABANDON
         VALIDATION_HORS_ABANDON
         PROJET_HORS_ABANDON
+        END_ACCOMPAGNEMENT
       }
     }
   `);
@@ -189,7 +191,7 @@ const simpleStatusesTestData: [
 
 describe.each(["ADMIN", "AAP"] as const)(
   "Candidacy status count tests for %s",
-  (userProfile) => {
+  (userProfile: "ADMIN" | "AAP") => {
     test.each(simpleStatusesTestData)(
       "should count the correct number of candidacies with status %s and status filter %s as %s",
       async (

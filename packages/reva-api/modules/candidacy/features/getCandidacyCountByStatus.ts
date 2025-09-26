@@ -183,14 +183,14 @@ const getSQLSelectSumClauseFromStatusFilter = (
 
       if (status !== null) {
         return getSumClause(
-          `candidacy.status = '${status}' and candidacyDropOut.candidacy_id is null`,
+          `candidacy.status = '${status}' and candidacyDropOut.candidacy_id is null and candidacy.end_accompagnement_status not in ('CONFIRMED_BY_CANDIDATE', 'CONFIRMED_BY_ADMIN')`,
         );
       }
       break;
     }
     case "ACTIVE_HORS_ABANDON":
       return getSumClause(
-        `candidacy.status not in ('ARCHIVE','PROJET','DOSSIER_FAISABILITE_NON_RECEVABLE')  and candidacyDropOut.candidacy_id is null`,
+        `candidacy.status not in ('ARCHIVE','PROJET','DOSSIER_FAISABILITE_NON_RECEVABLE')  and candidacyDropOut.candidacy_id is null and candidacy.end_accompagnement_status not in ('CONFIRMED_BY_CANDIDATE', 'CONFIRMED_BY_ADMIN')`,
       );
     case "ABANDON":
       return getSumClause(`candidacyDropOut.candidacy_id is not null`);
@@ -237,6 +237,10 @@ const getSQLSelectSumClauseFromStatusFilter = (
     case "DEMANDE_PAIEMENT_A_ENVOYER":
       return getSumClause(
         `(candidacy.finance_module = 'unireva' and fundingRequest.id is not null and paymentRequest.confirmed_at is null) or (candidacy.finance_module = 'unifvae' and fundingRequestUnifvae.id is not null and paymentRequestUnifvae.confirmed_at is null)`,
+      );
+    case "END_ACCOMPAGNEMENT":
+      return getSumClause(
+        `candidacy.end_accompagnement_status in ('CONFIRMED_BY_CANDIDATE', 'CONFIRMED_BY_ADMIN')`,
       );
   }
 };

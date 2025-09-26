@@ -62,6 +62,9 @@ export const getWhereClauseFromStatusFilter = (
         whereClause = {
           ...whereClause,
           candidacyDropOut: null,
+          endAccompagnementStatus: {
+            notIn: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
+          },
           status,
         };
       }
@@ -73,6 +76,9 @@ export const getWhereClauseFromStatusFilter = (
         candidacyDropOut: null,
         status: {
           notIn: ["ARCHIVE", "PROJET", "DOSSIER_FAISABILITE_NON_RECEVABLE"],
+        },
+        endAccompagnementStatus: {
+          notIn: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
         },
       };
       break;
@@ -201,6 +207,14 @@ export const getWhereClauseFromStatusFilter = (
             ],
           },
         ],
+      };
+      break;
+    case "END_ACCOMPAGNEMENT":
+      whereClause = {
+        ...whereClause,
+        endAccompagnementStatus: {
+          in: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
+        },
       };
       break;
   }
