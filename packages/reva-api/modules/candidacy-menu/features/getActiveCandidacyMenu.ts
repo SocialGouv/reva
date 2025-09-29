@@ -26,7 +26,7 @@ export const getActiveCandidacyMenu = async ({
 
   const buildUrl = menuUrlBuilder({ candidacyId: candidacy.id });
 
-  const hasAlreadyAppointment = !!candidacy.firstAppointmentOccuredAt;
+  const hasAlreadyAppointment = !!candidacy.appointments.length;
 
   const getMeetingsMenuEntry = (): CandidacyMenuEntry => ({
     label: "Rendez-vous pédagogique",

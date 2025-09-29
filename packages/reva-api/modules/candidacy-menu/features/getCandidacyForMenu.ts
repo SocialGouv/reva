@@ -14,6 +14,7 @@ export const getCandidacyForMenu = ({ candidacyId }: { candidacyId: string }) =>
         candidate: true,
         fundingRequestUnifvae: true,
         FundingRequest: true,
+        appointments: true,
       },
     })
     .catch(() => {
