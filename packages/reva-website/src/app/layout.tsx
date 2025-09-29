@@ -11,6 +11,7 @@ import "@/styles/ckeditor5-content-styles.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Script from "next/script";
+import { Toaster } from "react-hot-toast";
 
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 import { PRODUKTLY_CLIENT_TOKEN } from "@/config/config";
@@ -44,6 +45,7 @@ export default function RootLayout({
           <QueryClientProvider client={queryClient}>
             {children}
           </QueryClientProvider>
+          <Toaster position="top-right" />
         </DsfrProvider>
         {matomoBaseUrl && matomoContainerName && (
           <Script strategy="beforeInteractive" id="tarteaucitron-wrapper">
