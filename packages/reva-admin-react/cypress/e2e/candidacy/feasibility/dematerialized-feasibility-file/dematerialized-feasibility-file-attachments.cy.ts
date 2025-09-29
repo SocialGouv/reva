@@ -177,8 +177,32 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
       cy.get('[data-test="additional-file-0"]').should("not.exist");
     });
 
-    it("should enforce maximum limit of two additional files", () => {
+    it("should enforce maximum limit of 8 additional files", () => {
       visitFeasibilityAttachments();
+
+      cy.get('[data-test="add-additional-file-button"]')
+        .should("exist")
+        .click();
+
+      cy.get('[data-test="add-additional-file-button"]')
+        .should("exist")
+        .click();
+
+      cy.get('[data-test="add-additional-file-button"]')
+        .should("exist")
+        .click();
+
+      cy.get('[data-test="add-additional-file-button"]')
+        .should("exist")
+        .click();
+
+      cy.get('[data-test="add-additional-file-button"]')
+        .should("exist")
+        .click();
+
+      cy.get('[data-test="add-additional-file-button"]')
+        .should("exist")
+        .click();
 
       cy.get('[data-test="add-additional-file-button"]')
         .should("exist")
