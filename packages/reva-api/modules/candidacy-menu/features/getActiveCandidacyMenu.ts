@@ -76,7 +76,7 @@ export const getActiveCandidacyMenu = async ({
       trainingUrl = buildUrl({
         suffix: "training",
       });
-    } else if (candidacy.firstAppointmentOccuredAt) {
+    } else if (hasAlreadyAppointment) {
       trainingUrl = buildUrl({
         suffix: "typology",
       });
