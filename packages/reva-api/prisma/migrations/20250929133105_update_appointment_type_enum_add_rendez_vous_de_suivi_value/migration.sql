@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "AppointmentType" ADD VALUE 'RENDEZ_VOUS_DE_SUIVI';

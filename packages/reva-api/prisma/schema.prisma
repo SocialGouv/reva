@@ -1938,6 +1938,7 @@ model CertificationCohorteVaeCollectiveOnOrganism {
 
 enum AppointmentType {
   RENDEZ_VOUS_PEDAGOGIQUE
+  RENDEZ_VOUS_DE_SUIVI
 }
 
 model Appointment {

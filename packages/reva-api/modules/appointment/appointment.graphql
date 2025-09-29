@@ -9,6 +9,7 @@ type Appointment {
 
 enum AppointmentType {
   RENDEZ_VOUS_PEDAGOGIQUE
+  RENDEZ_VOUS_DE_SUIVI
 }
 
 type AppointmentPage {
