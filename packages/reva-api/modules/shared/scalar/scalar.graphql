@@ -9,3 +9,5 @@ scalar Decimal
 scalar Upload
 
 scalar Date
+
+scalar Time
