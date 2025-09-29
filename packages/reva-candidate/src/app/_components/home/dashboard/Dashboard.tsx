@@ -124,10 +124,12 @@ const Dashboard = () => {
 
   return (
     <div>
-      <p className="text-xl">
-        RNCP {candidacy.certification?.codeRncp} :{" "}
-        {candidacy.certification?.label}
-      </p>
+      {candidacy.certification && (
+        <p className="text-xl">
+          RNCP {candidacy.certification.codeRncp} :{" "}
+          {candidacy.certification.label}
+        </p>
+      )}
       <DashboardBanner
         candidacy={candidacy}
         canSubmitCandidacy={canSubmitCandidacy}
