@@ -52,10 +52,16 @@ export const getIsCertificationAuthorityStructureMember =
     if (!targetCertificationAuthority) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
     }
+
+    const certificationAuthorityStructureIds =
+      userAccount?.certificationAuthority?.certificationAuthorityOnCertificationAuthorityStructure?.map(
+        (caocas) => caocas.certificationAuthorityStructureId,
+      ) || [];
+
     const hasMatchingAuthorityStructure =
-      userAccount?.certificationAuthority
-        ?.certificationAuthorityOnCertificationAuthorityStructure[0]
-        ?.certificationAuthorityStructureId === targetCertificationAuthority.id;
+      certificationAuthorityStructureIds.includes(
+        targetCertificationAuthority.id,
+      );
 
     if (!hasMatchingAuthorityStructure) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);

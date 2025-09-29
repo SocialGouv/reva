@@ -93,6 +93,20 @@ export const isAdminOrCertificationRegistryManagerOfCertification = [
   ),
 ];
 
+export const isAdminOrCertificationRegistryManagerOfCertificationOrIsCertificationAuthorityStructureMember =
+  [
+    hasRole(["admin", "manage_feasibility", "manage_certification_registry"]),
+
+    whenHasRole(
+      "manage_feasibility",
+      getIsCertificationAuthorityStructureMember,
+    ),
+    whenHasRole(
+      "manage_certification_registry",
+      isCertificationRegistryManagerOfCertification,
+    ),
+  ];
+
 export const isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember =
   [
     hasRole(["admin", "manage_feasibility"]),

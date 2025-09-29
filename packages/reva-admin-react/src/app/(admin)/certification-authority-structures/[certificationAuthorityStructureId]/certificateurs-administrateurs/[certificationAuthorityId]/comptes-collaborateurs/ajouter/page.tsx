@@ -85,7 +85,7 @@ export default function AddLocalAccountPage() {
             },
           },
         ]}
-        currentPageLabel="Nouveau un compte local"
+        currentPageLabel="Nouveau compte local"
       />
       <h1>Nouveau compte local</h1>
       <p className="mb-12">

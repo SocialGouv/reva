@@ -13,9 +13,11 @@ type ConventionCollective = { id: string; label: string };
 export const CertificationsSummaryCard = ({
   certifications,
   updateButtonHref,
+  readonly = false,
 }: {
   certifications: Certification[];
   updateButtonHref?: string;
+  readonly?: boolean;
 }) => {
   const certificationCount = certifications.length;
 
@@ -33,7 +35,10 @@ export const CertificationsSummaryCard = ({
       title="Certifications gérées"
       titleIconClass="fr-icon-award-fill"
       isEditable={!!updateButtonHref}
-      status={certificationCount ? "COMPLETED" : "TO_COMPLETE"}
+      customButtonTitle={readonly ? "Consulter" : undefined}
+      status={
+        readonly ? undefined : certificationCount ? "COMPLETED" : "TO_COMPLETE"
+      }
       buttonOnClickHref={updateButtonHref || ""}
     >
       {certificationCount ? (

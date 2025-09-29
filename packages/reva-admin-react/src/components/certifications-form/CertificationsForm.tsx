@@ -15,6 +15,7 @@ type CertificationsFormProps = {
   fullWidth?: boolean;
   fullHeight?: boolean;
   backUrl?: string;
+  readonly?: boolean;
 };
 
 export const CertificationsForm = ({
@@ -24,6 +25,7 @@ export const CertificationsForm = ({
   fullWidth,
   fullHeight,
   backUrl,
+  readonly,
 }: CertificationsFormProps) => {
   const {
     handleSubmit,
@@ -49,6 +51,7 @@ export const CertificationsForm = ({
         <TreeSelect
           title={title ?? ""}
           label="Toutes les certifications"
+          readonly={readonly}
           fullWidth={fullWidth}
           fullHeight={fullHeight}
           items={certificationsController.field.value || []}
@@ -56,7 +59,12 @@ export const CertificationsForm = ({
           onClickItem={(i) => toggleCertification(i.id)}
         />
       </div>
-      <FormButtons backUrl={backUrl} formState={{ isDirty, isSubmitting }} />
+      <FormButtons
+        disabled={readonly}
+        readonly={readonly}
+        backUrl={backUrl}
+        formState={{ isDirty, isSubmitting }}
+      />
     </form>
   );
 };

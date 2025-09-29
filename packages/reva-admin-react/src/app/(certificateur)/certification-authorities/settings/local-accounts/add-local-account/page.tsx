@@ -17,7 +17,7 @@ export default function AddLocalAccountPage() {
             linkProps: { href: "/certification-authorities/settings/" },
           },
         ]}
-        currentPageLabel="Nouveau un compte local"
+        currentPageLabel="Nouveau compte local"
       />
       <h1>Nouveau compte local</h1>
       <p className="mb-12">

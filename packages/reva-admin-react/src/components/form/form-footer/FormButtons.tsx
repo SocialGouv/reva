@@ -51,6 +51,7 @@ export const FormButtons = ({
   className,
   disabled,
   hideResetButton,
+  readonly,
 }: {
   backUrl?: string;
   backButtonLabel?: string;
@@ -63,6 +64,7 @@ export const FormButtons = ({
   className?: string;
   disabled?: boolean;
   hideResetButton?: boolean;
+  readonly?: boolean;
 }) => {
   const router = useRouter();
 
@@ -95,25 +97,27 @@ export const FormButtons = ({
             {backButtonLabel}
           </Button>
         )}
-        <div className="flex gap-x-2 ml-auto">
-          {!hideResetButton && (
+        {!readonly && (
+          <div className="flex gap-x-2 ml-auto">
+            {!hideResetButton && (
+              <Button
+                type="reset"
+                priority="tertiary no outline"
+                disabled={!isDirty || disabled}
+                aria-label="Réinitialiser le formulaire"
+              >
+                Réinitialiser
+              </Button>
+            )}
             <Button
-              type="reset"
-              priority="tertiary no outline"
-              disabled={!isDirty || disabled}
-              aria-label="Réinitialiser le formulaire"
+              type="submit"
+              disabled={isSubmitting || !isDirty || !canSubmit || disabled}
+              aria-label={`${submitButtonLabel} le formulaire`}
             >
-              Réinitialiser
+              {submitButtonLabel}
             </Button>
-          )}
-          <Button
-            type="submit"
-            disabled={isSubmitting || !isDirty || !canSubmit || disabled}
-            aria-label={`${submitButtonLabel} le formulaire`}
-          >
-            {submitButtonLabel}
-          </Button>
-        </div>
+          </div>
+        )}
       </div>
       {backUrl && (
         <BackConfirmationModal onConfirm={() => router.push(backUrl)} />

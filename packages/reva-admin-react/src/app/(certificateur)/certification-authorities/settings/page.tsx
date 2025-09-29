@@ -1,6 +1,7 @@
 "use client";
 
 import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
+import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
 
@@ -46,6 +47,13 @@ export default function CertificationAuthoritySettingsPage() {
         />
         <InterventionAreaSummaryCard
           regions={certificationAuthority?.regions || []}
+        />
+        <CertificationsSummaryCard
+          readonly
+          certifications={certificationAuthority?.certifications || []}
+          updateButtonHref={
+            "/certification-authorities/settings/certifications"
+          }
         />
       </div>
     </div>

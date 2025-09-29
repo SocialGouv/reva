@@ -6,7 +6,7 @@ import {
   isAdminOrCertificationAuthorityLocalAccountManagerOrCertificationAuthorityLocalAccountOwner,
   isAdminOrCertificationAuthorityLocalAccountOwner,
   isAdminOrCertificationAuthorityOwner,
-  isAdminOrCertificationRegistryManagerOfCertification,
+  isAdminOrCertificationRegistryManagerOfCertificationOrIsCertificationAuthorityStructureMember,
   isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
   isAdminOrIsCertificationAuthorityStructureMember,
   isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
@@ -91,7 +91,7 @@ export const resolversSecurityMap = {
   "CertificationAuthorityStructure.certificationRegistryManager":
     isAdminOrIsCertificationAuthorityAccountOrLocalAccountStructureMember,
   "CertificationAuthorityStructure.certifications":
-    isAdminOrCertificationRegistryManagerOfCertification,
+    isAdminOrCertificationRegistryManagerOfCertificationOrIsCertificationAuthorityStructureMember,
 
   "CertificationRegistryManager.certificationAuthorityStructure":
     isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,

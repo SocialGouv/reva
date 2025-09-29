@@ -73,10 +73,15 @@ export const TreeSelect = (props: Props) => {
                 options={[
                   {
                     label: (
-                      <span className="text-xs sm:text-base">{item.label}</span>
+                      <span
+                        className={`text-xs sm:text-base ${readonly && item.selected ? "text-black" : ""}`}
+                      >
+                        {item.label}
+                      </span>
                     ),
                     nativeInputProps: {
                       checked: item.selected,
+                      disabled: readonly,
                       onChange: () => {
                         onClickItem(item);
                       },
@@ -96,7 +101,7 @@ export const TreeSelect = (props: Props) => {
 
   return (
     <div
-      className={`flex-1 flex flex-col gap-2 ${fullWidth ? "w-full" : "max-w-[450px]"}`}
+      className={`flex-1 flex flex-col gap-4 ${fullWidth ? "w-full" : "max-w-[450px]"}`}
     >
       {title && <div>{title}</div>}
       <SearchBar
@@ -111,10 +116,9 @@ export const TreeSelect = (props: Props) => {
           />
         )}
       />
-      {!hideToggleButton && (
+      {!hideToggleButton && !readonly && (
         <div>
           <ToggleSwitch
-            disabled={readonly}
             inputTitle={label}
             label={label}
             labelPosition="left"
