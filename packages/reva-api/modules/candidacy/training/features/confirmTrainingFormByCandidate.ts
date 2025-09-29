@@ -36,16 +36,17 @@ export const confirmTrainingFormByCandidate = async ({
   const feasibilityFormat =
     candidacyCertification?.feasibilityFormat as FeasibilityFormat;
 
-  const [_, __, feasibility] = await prismaClient.$transaction([
-    prismaClient.candidacy.update({
+  await prismaClient.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT id FROM candidacy WHERE id = ${candidacyId}::uuid FOR UPDATE NOWAIT`;
+    await tx.candidacy.update({
       where: {
         id: candidacyId,
       },
       data: {
         feasibilityFormat,
       },
-    }),
-    prismaClient.feasibility.updateMany({
+    });
+    await tx.feasibility.updateMany({
       where: {
         candidacyId,
         isActive: true,
@@ -53,28 +54,27 @@ export const confirmTrainingFormByCandidate = async ({
       data: {
         isActive: false,
       },
-    }),
-    prismaClient.feasibility.create({
+    });
+    const feasibility = await tx.feasibility.create({
       data: {
         feasibilityFormat,
         candidacyId,
         isActive: true,
       },
-    }),
-  ]);
-
-  if (feasibilityFormat === "DEMATERIALIZED") {
-    await prismaClient.feasibility.update({
-      where: {
-        id: feasibility.id,
-      },
-      data: {
-        dematerializedFeasibilityFile: {
-          create: {},
-        },
-      },
     });
-  }
+    if (feasibilityFormat === "DEMATERIALIZED") {
+      await prismaClient.feasibility.update({
+        where: {
+          id: feasibility.id,
+        },
+        data: {
+          dematerializedFeasibilityFile: {
+            create: {},
+          },
+        },
+      });
+    }
+  });
 
   const candidacy = await updateCandidacyStatus({
     candidacyId,
