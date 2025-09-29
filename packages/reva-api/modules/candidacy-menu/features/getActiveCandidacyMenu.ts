@@ -249,18 +249,27 @@ export const getActiveCandidacyMenu = async ({
 
     const activeFeasibility = candidacy.Feasibility.find((f) => f.isActive);
     let menuEntryStatus: CandidacyMenuEntryStatus = "INACTIVE";
+    const hasPaymentRequest = !!candidacy.paymentRequestUnifvae;
+    const hasConfirmedPaymentRequest =
+      !!candidacy.paymentRequestUnifvae?.confirmedAt;
 
     // cas d'une candidature unifvae avec feasibility non rejetée (cas "standard")
     if (
       candidacy.financeModule === "unifvae" &&
       activeFeasibility?.decision !== "REJECTED"
     ) {
-      // Pour débloquer la demande de paiement, il faut soit être au-dessus du statut "DOSSIER_DE_VALIDATION_ENVOYE" ou au dessus
-      if (isStatusEqualOrAbove("DOSSIER_DE_VALIDATION_ENVOYE")) {
-        menuEntryStatus =
-          activeCandidacyStatus === "DOSSIER_DE_VALIDATION_ENVOYE"
-            ? "ACTIVE_WITH_EDIT_HINT"
-            : "ACTIVE_WITHOUT_HINT";
+      const endAccompagnementConfirmed =
+        candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+        candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
+
+      // Pour débloquer la demande de paiement, il faut soit être au-dessus du statut "DOSSIER_DE_VALIDATION_ENVOYE" ou la confirmation de l'accompagnement
+      if (
+        isStatusEqualOrAbove("DOSSIER_DE_VALIDATION_ENVOYE") ||
+        endAccompagnementConfirmed
+      ) {
+        menuEntryStatus = hasConfirmedPaymentRequest
+          ? "ACTIVE_WITHOUT_HINT"
+          : "ACTIVE_WITH_EDIT_HINT";
       }
     }
     // cas d'une candidature unireva ou d'une candidature unifvae avec feasibility rejetée
@@ -277,13 +286,17 @@ export const getActiveCandidacyMenu = async ({
     }
 
     const isCandidacyUniReva = candidacy.financeModule === "unireva";
+    const hasIncompletePaymentRequest =
+      hasPaymentRequest && !hasConfirmedPaymentRequest;
 
     const paymentPageUrl = isCandidacyUniReva
       ? buildUrl({
           suffix: "payment/unireva/invoice",
         })
       : buildUrl({
-          suffix: "payment/unifvae/invoice",
+          suffix: hasIncompletePaymentRequest
+            ? "payment/unifvae/upload"
+            : "payment/unifvae/invoice",
         });
 
     return {

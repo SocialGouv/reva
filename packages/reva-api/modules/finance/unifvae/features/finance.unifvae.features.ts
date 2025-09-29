@@ -78,6 +78,9 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
 
   // If the candidate has not dropped out ...
   if (!isCandidacyDroppedOut) {
+    const endAccompagnementConfirmed =
+      candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+      candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
     const feasibilityRejected =
       candidacy?.Feasibility?.find((f) => f.isActive)?.decision === "REJECTED";
     // Either the feasibility has been rejected and thus the funding request has been sent ...
@@ -88,10 +91,13 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
         );
       }
     }
-    // ... Or the feasibility file is not rejected and the active candidacy status must be "DOSSIER_DE_VALIDATION_ENVOYE"
-    else if (activeCandidacyStatus !== "DOSSIER_DE_VALIDATION_ENVOYE") {
+    // ... Or the feasibility file is not rejected and the active candidacy status must be "DOSSIER_DE_VALIDATION_ENVOYE" or the end accompagnement has been confirmed
+    else if (
+      activeCandidacyStatus !== "DOSSIER_DE_VALIDATION_ENVOYE" &&
+      !endAccompagnementConfirmed
+    ) {
       throw new Error(
-        "Impossible de créer la demande de paiement. Le dossier de validation n'a pas été envoyé",
+        "Impossible de créer la demande de paiement. Le dossier de validation n'a pas été envoyé ou la fin de l'accompagnement n'a pas été confirmée",
       );
     }
   }

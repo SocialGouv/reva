@@ -15,6 +15,7 @@ export const getCandidacyForMenu = ({ candidacyId }: { candidacyId: string }) =>
         fundingRequestUnifvae: true,
         FundingRequest: true,
         appointments: true,
+        paymentRequestUnifvae: true,
       },
     })
     .catch(() => {
