@@ -1,5 +1,6 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -18,6 +19,10 @@ export const getActiveCandidacyMenu = async ({
   candidacy: CandidacyForMenu;
   isCandidateSummaryComplete: boolean;
 }) => {
+  const isAppointmentsFeatureActive = await isFeatureActiveForUser({
+    feature: "APPOINTMENTS",
+  });
+
   const activeCandidacyStatus = candidacy.status;
 
   const isStatusEqualOrAbove = isCandidacyStatusEqualOrAboveGivenStatus(
@@ -28,14 +33,31 @@ export const getActiveCandidacyMenu = async ({
 
   const hasAlreadyAppointment = !!candidacy.appointments.length;
 
-  const getMeetingsMenuEntry = (): CandidacyMenuEntry => ({
-    label: "Rendez-vous pédagogique",
-    url: buildUrl({ suffix: "meetings" }),
-    status:
-      activeCandidacyStatus === "PRISE_EN_CHARGE" && !hasAlreadyAppointment
-        ? "ACTIVE_WITH_EDIT_HINT"
-        : "ACTIVE_WITHOUT_HINT",
-  });
+  const getMeetingsMenuEntry = (): CandidacyMenuEntry | undefined =>
+    isAppointmentsFeatureActive
+      ? undefined
+      : {
+          label: "Rendez-vous pédagogique",
+          url: buildUrl({ suffix: "meetings" }),
+          status:
+            activeCandidacyStatus === "PRISE_EN_CHARGE" &&
+            !hasAlreadyAppointment
+              ? "ACTIVE_WITH_EDIT_HINT"
+              : "ACTIVE_WITHOUT_HINT",
+        };
+
+  const getAppointmentsMenuEntry = (): CandidacyMenuEntry | undefined =>
+    isAppointmentsFeatureActive
+      ? {
+          label: "Gestion des rendez-vous",
+          url: buildUrl({ suffix: "appointments" }),
+          status:
+            activeCandidacyStatus === "PRISE_EN_CHARGE" &&
+            !hasAlreadyAppointment
+              ? "ACTIVE_WITH_EDIT_HINT"
+              : "ACTIVE_WITHOUT_HINT",
+        }
+      : undefined;
 
   const getTrainingValidationMenuEntry = (): CandidacyMenuEntry => ({
     label: "Validation du parcours",
@@ -299,6 +321,7 @@ export const getActiveCandidacyMenu = async ({
 
   return [
     getMeetingsMenuEntry(),
+    getAppointmentsMenuEntry(),
     getTrainingMenuEntry(),
     getTrainingValidationMenuEntry(),
     await getFeasibilityMenuEntry({
