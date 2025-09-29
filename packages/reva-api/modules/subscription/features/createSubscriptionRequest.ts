@@ -15,6 +15,20 @@ export const createSubscriptionRequest = async ({
 }: {
   params: CreateSubscriptionRequestInput;
 }) => {
+  const existingSubscriptionRequest =
+    await prismaClient.subscriptionRequest.findFirst({
+      where: {
+        companySiret: params.companySiret,
+        status: "PENDING",
+      },
+    });
+
+  if (existingSubscriptionRequest) {
+    throw new Error(
+      "Une demande d'inscription est déjà en cours pour cet établissement",
+    );
+  }
+
   try {
     const attestationURSSAFFile = await getUploadedFile(
       params.attestationURSSAF,
