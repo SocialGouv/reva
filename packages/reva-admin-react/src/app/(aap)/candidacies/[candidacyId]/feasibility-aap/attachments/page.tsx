@@ -107,7 +107,7 @@ const schema = z
 
 type FormData = z.infer<typeof schema>;
 
-const MAX_ADDITIONAL_FILES = 2;
+const MAX_ADDITIONAL_FILES = 8;
 
 export default function AttachmentsPage() {
   const router = useRouter();
