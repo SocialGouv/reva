@@ -4,6 +4,7 @@ type Appointment {
   title: String!
   description: String
   date: Date!
+  time: Time
   location: String
 }
 
@@ -28,6 +29,7 @@ input CreateAppointmentInput {
   title: String!
   description: String
   date: Date!
+  time: Time
   location: String
 }
 
@@ -38,6 +40,7 @@ input UpdateAppointmentInput {
   title: String!
   description: String
   date: Date!
+  time: Time
   location: String
 }
 

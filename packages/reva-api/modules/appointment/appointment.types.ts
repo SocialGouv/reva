@@ -6,6 +6,7 @@ export interface CreateAppointmentInput {
   title: string;
   description: string;
   date: Date;
+  time: Date;
   location: string;
 }
 

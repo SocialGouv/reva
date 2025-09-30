@@ -61,6 +61,7 @@ test("create an appointment", async () => {
         title
         type
         date
+        time
         description
         location
       }
@@ -74,6 +75,7 @@ test("create an appointment", async () => {
       candidacyId: candidacy.id,
       type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
       title: "Test Appointment",
+      time: "10:00:00.000Z",
       description: "Test Description",
       location: "Test Location",
       date: "2025-09-26",
@@ -85,6 +87,7 @@ test("create an appointment", async () => {
       title: "Test Appointment",
       type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
       date: "2025-09-26",
+      time: "10:00:00.000Z",
       description: "Test Description",
       location: "Test Location",
     },

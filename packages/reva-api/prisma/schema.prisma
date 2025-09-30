@@ -1947,6 +1947,7 @@ model Appointment {
   title       String          @map("title")
   description String?         @map("description")
   date        DateTime        @map("date") @db.Date
+  time        DateTime?       @map("time") @db.Time
   location    String?         @map("location")
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?       @map("updated_at") @db.Timestamptz(6)
