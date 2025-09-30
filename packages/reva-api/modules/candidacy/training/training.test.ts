@@ -173,3 +173,28 @@ test("AAP should be able to submit a basic training form  with an 'other source'
     status: "PARCOURS_ENVOYE",
   });
 });
+
+test("Candidate should be able to validate the training when candidacy status is PARCOURS_ENVOYE", async () => {
+  const candidacy = await createCandidacyHelper({
+    candidacyActiveStatus: CandidacyStatusStep.PARCOURS_ENVOYE,
+  });
+  const resp = await injectGraphql({
+    fastify: global.testApp,
+    authorization: authorizationHeaderForUser({
+      role: "candidate",
+      keycloakId: candidacy.candidate?.keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "training_confirmTrainingForm",
+      arguments: {
+        candidacyId: candidacy.id,
+      },
+      returnFields: "{id}",
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().data.training_confirmTrainingForm).toMatchObject({
+    id: expect.any(String),
+  });
+});
