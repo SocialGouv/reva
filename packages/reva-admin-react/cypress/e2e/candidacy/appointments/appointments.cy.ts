@@ -1,6 +1,7 @@
 import { stubQuery } from "../../../utils/graphql";
 
-function interceptQueries() {
+function interceptQueries(args?: { withRendezVousPedagogique?: boolean }) {
+  const withRendezVousPedagogique = args?.withRendezVousPedagogique;
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
       req,
@@ -31,22 +32,31 @@ function interceptQueries() {
       data: {
         getCandidacyById: {
           id: "fb451fbc-3218-416d-9ac9-65b13432469f",
-          appointments: {
-            rows: [
-              {
-                id: "6c814f7c-09a0-4621-9a0e-5bf5212696c8",
-                type: "RENDEZ_VOUS_PEDAGOGIQUE",
-                title: "Rendez-vous pédagogique",
-                date: "2025-01-01",
-                time: "10:00:00.000Z",
+          appointments: withRendezVousPedagogique
+            ? {
+                rows: [
+                  {
+                    id: "6c814f7c-09a0-4621-9a0e-5bf5212696c8",
+                    type: "RENDEZ_VOUS_PEDAGOGIQUE",
+                    title: "Rendez-vous pédagogique",
+                    date: "2025-01-01",
+                    time: "10:00:00.000Z",
+                  },
+                ],
+                info: {
+                  totalRows: 1,
+                  currentPage: 1,
+                  totalPages: 1,
+                },
+              }
+            : {
+                rows: [],
+                info: {
+                  totalRows: 0,
+                  currentPage: 1,
+                  totalPages: 1,
+                },
               },
-            ],
-            info: {
-              totalRows: 1,
-              currentPage: 1,
-              totalPages: 1,
-            },
-          },
         },
       },
     });
@@ -76,7 +86,7 @@ context("when I access the candidacy appointments page", () => {
   });
   context("when there are appointments", () => {
     it("show the appointments", function () {
-      interceptQueries();
+      interceptQueries({ withRendezVousPedagogique: true });
       cy.admin(
         "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
       );
@@ -87,7 +97,7 @@ context("when I access the candidacy appointments page", () => {
         .should("have.length", 1);
     });
     it("leads me to the appointment details page when I click on the appointment", function () {
-      interceptQueries();
+      interceptQueries({ withRendezVousPedagogique: true });
       cy.admin(
         "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
       );
@@ -98,6 +108,29 @@ context("when I access the candidacy appointments page", () => {
         "eq",
         `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/6c814f7c-09a0-4621-9a0e-5bf5212696c8/`,
       );
+    });
+    it("let me click on the 'add appointment' button", function () {
+      interceptQueries({ withRendezVousPedagogique: true });
+      cy.admin(
+        "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
+      );
+      waitForQueries();
+
+      cy.get('[data-test="add-appointment-button"]').click();
+      cy.url().should(
+        "eq",
+        `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_DE_SUIVI`,
+      );
+    });
+  });
+  context("when there are no appointment", () => {
+    it("disable the 'add appointment' button", function () {
+      interceptQueries({ withRendezVousPedagogique: false });
+      cy.admin(
+        "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
+      );
+      waitForQueries();
+      cy.get('[data-test="add-appointment-button"]').should("be.disabled");
     });
   });
 });

@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 
+import { AddAppointmentButton } from "./_components/AddAppointmentButton";
 import { AppointmentCard } from "./_components/AppointmentCard";
 import { useAppointmentsPage } from "./appointmentsPage.hook";
 
@@ -11,6 +12,12 @@ export default function AppointmentsPage() {
 
   const { appointments } = useAppointmentsPage({ candidacyId });
 
+  const rendezVousPedagogique = appointments?.rows?.find(
+    (appointment) => appointment.type === "RENDEZ_VOUS_PEDAGOGIQUE",
+  );
+
+  const addAppointmentButtonDisabled = !rendezVousPedagogique;
+
   return (
     <div className="flex flex-col w-full" data-test="appointments-page">
       <h1>Gestion des rendez-vous</h1>
@@ -19,6 +26,11 @@ export default function AppointmentsPage() {
         renseigner le rendez-vous pédagogique obligatoire afin de pouvoir
         ajouter tous vos rendez-vous de suivi.
       </p>
+      <AddAppointmentButton
+        addAppointmentButtonDisabled={addAppointmentButtonDisabled}
+        candidacyId={candidacyId}
+        className="ml-auto mb-2"
+      />
       <ul className="pl-0 flex flex-col gap-4" data-test="appointments-list">
         {appointments?.rows?.map((appointment) => (
           <li key={appointment.id}>
