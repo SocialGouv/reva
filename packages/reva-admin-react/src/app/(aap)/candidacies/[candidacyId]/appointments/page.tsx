@@ -1,11 +1,7 @@
 "use client";
-import { Card } from "@codegouvfr/react-dsfr/Card";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { useParams } from "next/navigation";
 
-import { formatIso8601Date } from "@/utils/formatIso8601Date";
-import { formatIso8601Time } from "@/utils/formatIso8601Time";
-
+import { AppointmentCard } from "./_components/AppointmentCard";
 import { useAppointmentsPage } from "./appointmentsPage.hook";
 
 export default function AppointmentsPage() {
@@ -24,38 +20,14 @@ export default function AppointmentsPage() {
         ajouter tous vos rendez-vous de suivi.
       </p>
       <ul className="pl-0 flex flex-col gap-4" data-test="appointments-list">
-        {appointments?.rows?.map((appointment) => {
-          let tagLabel = "";
-          switch (appointment.type) {
-            case "RENDEZ_VOUS_PEDAGOGIQUE":
-              tagLabel = "Rendez-vous pédagogique";
-              break;
-            case "RENDEZ_VOUS_DE_SUIVI":
-              tagLabel = "Rendez-vous de suivi";
-              break;
-          }
-
-          let desc = formatIso8601Date(appointment.date);
-          if (appointment.time) {
-            desc += ` - ${formatIso8601Time(appointment.time)}`;
-          }
-
-          return (
-            <li key={appointment.id} className="list-none">
-              <Card
-                enlargeLink
-                size="small"
-                start={<Tag small>{tagLabel}</Tag>}
-                title={appointment.title}
-                desc={desc}
-                endDetail="Consulter et modifier les détails du rendez-vous."
-                linkProps={{
-                  href: `/candidacies/${candidacyId}/appointments/${appointment.id}`,
-                }}
-              />
-            </li>
-          );
-        })}
+        {appointments?.rows?.map((appointment) => (
+          <li key={appointment.id}>
+            <AppointmentCard
+              appointment={appointment}
+              candidacyId={candidacyId}
+            />
+          </li>
+        ))}
       </ul>
     </div>
   );
