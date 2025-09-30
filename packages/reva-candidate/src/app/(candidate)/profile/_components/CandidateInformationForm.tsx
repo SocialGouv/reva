@@ -209,7 +209,7 @@ const CandidateInformationForm = ({
         className="flex flex-col gap-6"
         data-testid="candidate-information-form"
       >
-        <h6 className="mb-0 text-xl font-bold">Informations civiles</h6>
+        <h2 className="mb-0 text-xl font-bold">Informations civiles</h2>
         <div className="flex gap-8">
           <Select
             label="Civilité"
@@ -342,9 +342,9 @@ const CandidateInformationForm = ({
             disabled={inputShouldBeDisabled}
           />
         </div>
-        <h6 className="mb-0 md:mt-4 text-xl font-bold">
+        <h2 className="mb-0 md:mt-4 text-xl font-bold">
           Informations de contact
-        </h6>
+        </h2>
         <div className="flex gap-8">
           {manualAddressSelected ? (
             <Input

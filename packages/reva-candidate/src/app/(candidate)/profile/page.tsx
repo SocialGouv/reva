@@ -13,10 +13,10 @@ export default function Profile() {
   }
 
   return (
-    <div className="flex flex-col w-full gap-8">
+    <div className="flex flex-col w-full gap-6">
       <div>
-        <h1>Mon profil</h1>
-        <FormOptionalFieldsDisclaimer />
+        <h1 className="mb-1">Mon profil</h1>
+        <FormOptionalFieldsDisclaimer className="mb-0" />
       </div>
       <CandidateInformationForm
         candidate={candidate}
