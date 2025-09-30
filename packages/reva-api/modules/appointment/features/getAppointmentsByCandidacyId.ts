@@ -24,6 +24,12 @@ export const getAppointmentsByCandidacyId = async ({
       where: whereClause,
       skip: offset,
       take: limit,
+      orderBy: [
+        {
+          date: "asc",
+        },
+        { time: "asc" },
+      ],
     });
 
   const count = await prismaClient.appointment.count({
