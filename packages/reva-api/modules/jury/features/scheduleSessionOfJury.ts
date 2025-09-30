@@ -148,10 +148,14 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       convocationFile,
     });
 
-    if (candidacy.organism?.contactAdministrativeEmail) {
+    const email =
+      candidacy.organism?.emailContact ||
+      candidacy.organism?.contactAdministrativeEmail;
+
+    if (email) {
       sendJuryScheduledAAPEmail({
         candidacyId,
-        email: candidacy.organism?.contactAdministrativeEmail,
+        email,
         candidateFullName: `${candidacy.candidate.firstname} ${candidacy.candidate.lastname}`,
       });
     }
