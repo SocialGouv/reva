@@ -1,0 +1,14 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "typeAccompagnement": "ACCOMPAGNE",
+      "organismId": "organism-123",
+      "certification": {
+        "id": "cert-123",
+        "label": "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
+        "codeRncp": "RNCP37780",
+        "typeDiplome": "Titre professionnel"
+      }
+    }
+  }
+}

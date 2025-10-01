@@ -1,0 +1,25 @@
+{
+  "data": {
+    "searchCertificationsForCandidate": {
+      "rows": [
+        {
+          "id": "cert-456",
+          "label": "Titre professionnel Agent de restauration",
+          "codeRncp": "RNCP35650",
+          "typeDiplome": "Titre professionnel"
+        },
+        {
+          "id": "cert-789",
+          "label": "Diplôme d'État d'aide-soignant",
+          "codeRncp": "RNCP35830",
+          "typeDiplome": "Diplôme d'État"
+        }
+      ],
+      "info": {
+        "totalRows": 2,
+        "totalPages": 1,
+        "currentPage": 1
+      }
+    }
+  }
+}
