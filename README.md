@@ -1,102 +1,47 @@
-# REVA
+# France VAE
 
-## Setup
+https://vae.gouv.fr
 
-```bash
-npm install
-```
+## Introduction
 
-It will install node modules in both `packages/reva-app` and `packages/reva-website`
+REVA est un monorepo qui regroupe :
+- les API et applications France VAE (dans `packages/*`).
+- ses composants comme Keycloak, Metabase et Strapi (dans `infra/*`).
 
-For the mobile app, create a `.env` file:
+## Stack technique
 
-```
-cp packages/reva-app/.env.example packages/reva-app/.env
-```
+- API : Fastify pour `reva-api` (GraphQL avec Mercurius + Prisma) et `reva-interop` (REST).
+- Applications web : Next.js pour toutes les apps, design system DSFR.
+- GraphQL : clients URQL et `graphql-request`, types générés via `graphql-codegen`.
+- Données : PostgreSQL, Outscale et FTPS.
+- Authentification : Keycloak (`keycloak-js` côté apps, `keycloak-connect` côté API).
+- Proxy et routage : Traefik.
+- Tests : Vitest (API), Cypress (admin et candidat) et Playwright (website, candidat et VAE collective).
+- Observabilité : Datadog et Metabase.
+- Emails : Brevo.
+- CMS : Strapi (contenus du site vitrine, de l'app candidat et du back-office).
 
-Then set your local ip in this `.env` file.
+## Packages
 
-### Api
+### Applications Next.js
 
-Dans le fichier `.env` à la racine du projet, ajouter la ligne
+- `packages/reva-admin-react`: Back-office métier pour l'équipe France VAE, les certificateurs et les organismes. 
+- `packages/reva-candidate`: Application pour les candidats (dépôt de candidature, dossier de faisabilité, jury, etc.).
+- `packages/reva-vae-collective`: Portail dédié aux porteurs de projets de VAE collective.
+- `packages/reva-website`: Site vitrine France VAE.
 
-```
-DATABASE_URL=postgresql://reva:password@localhost:5444/reva?schema=public
-```
+### Services
 
-Ajouter cette même ligne dans le fichier `./packages/reva-api/.env`
+- `packages/reva-api`: API GraphQL interne, traitements planifiés (cron) et transfert de fichiers.
+- `packages/reva-interop`: API REST d'interopérabilité exposée à des acteurs externes.
 
-Aller dans le dossier `./packages/reva-api/` et exécuter :
+## Mise en route
 
-```
-npx prisma migrate dev
-npx prisma generate
-```
+1. Installer Node.js 22 et npm.
+2. Cloner le dépôt puis installer les dépendances : `npm install`.
+3. Initialiser la configuration : copier les `.env.example` vers `.env` et compléter les secrets.
+4. Appliquer les migrations Prisma : `npm run prisma:migrate:deploy`.
+5. Démarrer l’ensemble API + fronts : `npm run dev`.
 
-## Run
+Voir les scripts dans les `package.json` pour plus de détails.
 
-### Run web api
-
-```bash
-npm run dev -w reva-api
-```
-
-### Run web app
-
-```bash
-npm run dev -w reva-app
-```
-
-### Run admin backoffice
-
-```bash
-npm run dev -w reva-admin
-```
-
-### Run mobile app
-
-```bash
-npm run dev:mobile -w reva-app
-```
-
-Run the web app (see above) then open your native IDE:
-
-```bash
-cd packages/reva-app
-npx cap open ios
-```
-
-or
-
-```bash
-cd packages/reva-app
-npx cap open android
-```
-
-Then click the Run button to launch the app in the mobile simulator.
-
-### Run Storybook
-
-```bash
-npm run storybook -w reva-app
-```
-
-### Générer les icones et splash screens mobile
-
-```bash
-npm run build:resources -w reva-app
-```
-
-### Tests
-
-Open Cypress UI :
-
-```
-npm run cypress:open -w reva-tests
-```
-
-Run all tests :
-
-```
-npm run cypress -w reva-tests
-```
