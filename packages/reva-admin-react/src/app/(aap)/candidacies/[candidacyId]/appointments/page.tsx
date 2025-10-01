@@ -1,5 +1,7 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
+
+import { Pagination } from "@/components/pagination/Pagination";
 
 import { AddAppointmentButton } from "./_components/AddAppointmentButton";
 import { AddFirstAppointmentCard } from "./_components/AddFirstAppointmentCard";
@@ -11,9 +13,18 @@ export default function AppointmentsPage() {
     candidacyId: string;
   }>();
 
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+
+  const currentPage = page ? Number.parseInt(page) : 1;
   const { appointments, rendezVousPedagogiqueMissing } = useAppointmentsPage({
     candidacyId,
+    currentPage,
   });
+
+  if (!appointments) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col w-full" data-test="appointments-page">
@@ -41,6 +52,12 @@ export default function AppointmentsPage() {
           </li>
         ))}
       </ul>
+      <Pagination
+        baseHref={`/candidacies/${candidacyId}/appointments`}
+        className="mx-auto my-12"
+        currentPage={currentPage}
+        totalPages={appointments.info.totalPages}
+      />
     </div>
   );
 }

@@ -4,11 +4,17 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 
 import { graphql } from "@/graphql/generated";
 
+const RECORDS_PER_PAGE = 10;
+
 const getCandidacyAppointments = graphql(`
-  query getCandidacyForAppointmentsPage($candidacyId: ID!) {
+  query getCandidacyForAppointmentsPage(
+    $candidacyId: ID!
+    $offset: Int
+    $limit: Int
+  ) {
     getCandidacyById(id: $candidacyId) {
       id
-      appointments(limit: 30, offset: 0) {
+      appointments(limit: $limit, offset: $offset) {
         rows {
           id
           date
@@ -41,16 +47,22 @@ const getRendezVousPedagogique = graphql(`
 
 export const useAppointmentsPage = ({
   candidacyId,
+  currentPage,
 }: {
   candidacyId: string;
+  currentPage: number;
 }) => {
   const { graphqlClient } = useGraphQlClient();
 
+  const offset = (currentPage - 1) * RECORDS_PER_PAGE;
+
   const { data: getCandidacyAppointmentsData } = useQuery({
-    queryKey: [candidacyId, "getCandidacyForAppointmentsPage"],
+    queryKey: [candidacyId, currentPage, "getCandidacyForAppointmentsPage"],
     queryFn: () =>
       graphqlClient.request(getCandidacyAppointments, {
         candidacyId,
+        offset,
+        limit: RECORDS_PER_PAGE,
       }),
   });
 
