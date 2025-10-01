@@ -11,13 +11,9 @@ export default function AppointmentsPage() {
     candidacyId: string;
   }>();
 
-  const { appointments } = useAppointmentsPage({ candidacyId });
-
-  const rendezVousPedagogique = appointments?.rows?.find(
-    (appointment) => appointment.type === "RENDEZ_VOUS_PEDAGOGIQUE",
-  );
-
-  const rendezVousPedagogiqueMissing = !rendezVousPedagogique;
+  const { appointments, rendezVousPedagogiqueMissing } = useAppointmentsPage({
+    candidacyId,
+  });
 
   return (
     <div className="flex flex-col w-full" data-test="appointments-page">

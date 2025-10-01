@@ -26,6 +26,19 @@ const getCandidacyAppointments = graphql(`
   }
 `);
 
+const getRendezVousPedagogique = graphql(`
+  query getRendezVousPedagogiqueForAppointmentsPage($candidacyId: ID!) {
+    getCandidacyById(id: $candidacyId) {
+      id
+      appointments(type: RENDEZ_VOUS_PEDAGOGIQUE) {
+        rows {
+          id
+        }
+      }
+    }
+  }
+`);
+
 export const useAppointmentsPage = ({
   candidacyId,
 }: {
@@ -41,8 +54,19 @@ export const useAppointmentsPage = ({
       }),
   });
 
+  const { data: getRendezVousPedagogiqueData } = useQuery({
+    queryKey: [candidacyId, "getRendezVousPedagogiqueForAppointmentsPage"],
+    queryFn: () =>
+      graphqlClient.request(getRendezVousPedagogique, {
+        candidacyId,
+      }),
+  });
+
   const appointments =
     getCandidacyAppointmentsData?.getCandidacyById?.appointments;
 
-  return { appointments };
+  const rendezVousPedagogiqueMissing =
+    !getRendezVousPedagogiqueData?.getCandidacyById?.appointments?.rows?.length;
+
+  return { appointments, rendezVousPedagogiqueMissing };
 };

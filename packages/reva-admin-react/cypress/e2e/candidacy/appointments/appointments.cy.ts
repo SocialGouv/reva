@@ -60,6 +60,34 @@ function interceptQueries(args?: { withRendezVousPedagogique?: boolean }) {
         },
       },
     });
+    stubQuery(req, "getRendezVousPedagogiqueForAppointmentsPage", {
+      data: {
+        getCandidacyById: {
+          id: "fb451fbc-3218-416d-9ac9-65b13432469f",
+          appointments: withRendezVousPedagogique
+            ? {
+                rows: [
+                  {
+                    id: "6c814f7c-09a0-4621-9a0e-5bf5212696c8",
+                  },
+                ],
+                info: {
+                  totalRows: 1,
+                  currentPage: 1,
+                  totalPages: 1,
+                },
+              }
+            : {
+                rows: [],
+                info: {
+                  totalRows: 0,
+                  currentPage: 1,
+                  totalPages: 1,
+                },
+              },
+        },
+      },
+    });
   });
 }
 
@@ -72,6 +100,7 @@ function waitForQueries() {
   cy.wait("@getCandidacyMenuAndCandidateInfos");
   cy.wait("@getCertificationAuthorityMetabaseUrl");
   cy.wait("@getCandidacyForAppointmentsPage");
+  cy.wait("@getRendezVousPedagogiqueForAppointmentsPage");
 }
 
 context("when I access the candidacy appointments page", () => {
