@@ -78,7 +78,7 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
   let dateOfSession = new Date(Number(date));
   const today = startOfDay(new Date());
   const nextTwoYears = endOfDay(add(today, { years: 2 }));
-  let timeOfSession;
+  let timeOfSession: string | undefined;
 
   if (time && timeSpecified) {
     const timeOfSessionHours = new Date(Number(time)).getHours();
@@ -107,39 +107,54 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
     });
   }
 
-  await prismaClient.jury.updateMany({
-    where: { candidacyId },
-    data: { isActive: false },
-  });
+  const jury = await prismaClient.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT id FROM candidacy WHERE id = ${candidacyId}::uuid FOR UPDATE NOWAIT`;
+    await tx.jury.updateMany({
+      where: { candidacyId },
+      data: { isActive: false },
+    });
 
-  const jury = await prismaClient.jury.create({
-    data: {
-      candidacy: { connect: { id: candidacyId } },
-      dateOfSession,
-      timeOfSession,
-      timeSpecified,
-      addressOfSession: address,
-      informationOfSession: information,
-      convocationFile:
-        convocationFile && convocationFilePath
-          ? {
-              create: {
-                name: convocationFile.filename,
-                mimeType: convocationFile.mimetype,
-                id: convocationFileId,
-                path: convocationFilePath,
-              },
-            }
-          : undefined,
-      certificationAuthority: {
-        connect: {
-          id: candidacy.Feasibility[0].certificationAuthorityId || "",
+    const jury = await tx.jury.create({
+      data: {
+        candidacy: { connect: { id: candidacyId } },
+        dateOfSession,
+        timeOfSession,
+        timeSpecified,
+        addressOfSession: address,
+        informationOfSession: information,
+        convocationFile:
+          convocationFile && convocationFilePath
+            ? {
+                create: {
+                  name: convocationFile.filename,
+                  mimeType: convocationFile.mimetype,
+                  id: convocationFileId,
+                  path: convocationFilePath,
+                },
+              }
+            : undefined,
+        certificationAuthority: {
+          connect: {
+            id: candidacy.Feasibility[0].certificationAuthorityId || "",
+          },
         },
       },
-    },
-    include: {
-      certificationAuthority: true,
-    },
+      include: {
+        certificationAuthority: true,
+      },
+    });
+
+    await logCandidacyAuditEvent({
+      candidacyId,
+      eventType: "JURY_SESSION_SCHEDULED",
+      userRoles,
+      userKeycloakId,
+      userEmail,
+      details: { dateOfSession, timeOfSession },
+      tx,
+    });
+
+    return jury;
   });
 
   if (isAfter(dateOfSession, today) && candidacy.candidate) {
@@ -160,15 +175,6 @@ export const scheduleSessionOfJury = async (params: ScheduleSessionOfJury) => {
       });
     }
   }
-
-  await logCandidacyAuditEvent({
-    candidacyId,
-    eventType: "JURY_SESSION_SCHEDULED",
-    userRoles,
-    userKeycloakId,
-    userEmail,
-    details: { dateOfSession, timeOfSession },
-  });
 
   return jury;
 };
