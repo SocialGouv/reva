@@ -37,6 +37,7 @@ export const AppointmentForm = ({
       onSubmit={handleSubmit(onSubmit, (e) => console.error(e))}
     >
       <Input
+        data-test="title-input"
         label="Intitulé :"
         className="col-span-full"
         nativeInputProps={{ ...register("title") }}
@@ -44,18 +45,21 @@ export const AppointmentForm = ({
         stateRelatedMessage={errors.title?.message}
       />
       <Input
+        data-test="date-input"
         label="Date :"
         nativeInputProps={{ type: "date", ...register("date") }}
         state={errors.date ? "error" : "default"}
         stateRelatedMessage={errors.date?.message}
       />
       <Input
+        data-test="time-input"
         label="Heure : (Optionnel)"
         nativeInputProps={{ type: "time", ...register("time") }}
         state={errors.time ? "error" : "default"}
         stateRelatedMessage={errors.time?.message}
       />
       <Input
+        data-test="location-input"
         label="Lieu : (Optionnel)"
         hintText="Ajouter une adresse, un lieu ou un lien de visioconférence en fonction de la modalité d’accompagnement envisagée."
         className="col-span-full"
@@ -64,6 +68,7 @@ export const AppointmentForm = ({
         stateRelatedMessage={errors.location?.message}
       />
       <Input
+        data-test="description-input"
         textArea
         nativeTextAreaProps={{ rows: 3, ...register("description") }}
         label="Description : (Optionnel)"
