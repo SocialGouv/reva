@@ -29,6 +29,7 @@ test("get a candidacy appointments", async () => {
             description
             date
             location
+            duration
           }
         }
       }
@@ -64,6 +65,7 @@ test("create an appointment", async () => {
         time
         description
         location
+        duration
       }
     }
   `);
@@ -79,6 +81,7 @@ test("create an appointment", async () => {
       description: "Test Description",
       location: "Test Location",
       date: "2025-09-26",
+      duration: "ONE_HOUR",
     },
   });
 
@@ -90,6 +93,7 @@ test("create an appointment", async () => {
       time: "10:00:00.000Z",
       description: "Test Description",
       location: "Test Location",
+      duration: "ONE_HOUR",
     },
   });
 });
@@ -103,6 +107,7 @@ test("update an appointment", async () => {
         date
         description
         location
+        duration
       }
     }
   `);
@@ -122,6 +127,7 @@ test("update an appointment", async () => {
       description: "Updated test Description",
       location: "Updated test Location",
       date: "2025-09-26",
+      duration: "TWO_HOURS",
     },
   });
 
@@ -132,6 +138,7 @@ test("update an appointment", async () => {
       date: "2025-09-26",
       description: "Updated test Description",
       location: "Updated test Location",
+      duration: "TWO_HOURS",
     },
   });
 });

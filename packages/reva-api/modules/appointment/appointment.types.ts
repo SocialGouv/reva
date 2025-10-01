@@ -1,4 +1,4 @@
-import { AppointmentType } from "@prisma/client";
+import { AppointmentDuration, AppointmentType } from "@prisma/client";
 
 export interface CreateAppointmentInput {
   candidacyId: string;
@@ -8,6 +8,7 @@ export interface CreateAppointmentInput {
   date: Date;
   time: Date;
   location: string;
+  duration: AppointmentDuration;
 }
 
 export interface UpdateAppointmentInput extends CreateAppointmentInput {

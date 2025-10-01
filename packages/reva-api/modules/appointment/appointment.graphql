@@ -5,12 +5,21 @@ type Appointment {
   description: String
   date: Date!
   time: Time
+  duration: AppointmentDuration
   location: String
 }
 
 enum AppointmentType {
   RENDEZ_VOUS_PEDAGOGIQUE
   RENDEZ_VOUS_DE_SUIVI
+}
+
+enum AppointmentDuration {
+  HALF_AN_HOUR
+  ONE_HOUR
+  TWO_HOURS
+  THREE_HOURS
+  FOUR_HOURS
 }
 
 type AppointmentPage {
@@ -30,6 +39,7 @@ input CreateAppointmentInput {
   description: String
   date: Date!
   time: Time
+  duration: AppointmentDuration
   location: String
 }
 
@@ -41,6 +51,7 @@ input UpdateAppointmentInput {
   description: String
   date: Date!
   time: Time
+  duration: AppointmentDuration
   location: String
 }
 
