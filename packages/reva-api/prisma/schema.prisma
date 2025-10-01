@@ -1941,18 +1941,27 @@ enum AppointmentType {
   RENDEZ_VOUS_DE_SUIVI
 }
 
+enum AppointmentDuration {
+  HALF_AN_HOUR
+  ONE_HOUR
+  TWO_HOURS
+  THREE_HOURS
+  FOUR_HOURS
+}
+
 model Appointment {
-  id          String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  type        AppointmentType @map("type")
-  title       String          @map("title")
-  description String?         @map("description")
-  date        DateTime        @map("date") @db.Date
-  time        DateTime?       @map("time") @db.Time
-  location    String?         @map("location")
-  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime?       @map("updated_at") @db.Timestamptz(6)
-  candidacyId String          @map("candidacy_id") @db.Uuid
-  candidacy   Candidacy       @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  id          String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  type        AppointmentType      @map("type")
+  title       String               @map("title")
+  description String?              @map("description")
+  date        DateTime             @map("date") @db.Date
+  time        DateTime?            @map("time") @db.Time
+  duration    AppointmentDuration? @map("duration")
+  location    String?              @map("location")
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?            @map("updated_at") @db.Timestamptz(6)
+  candidacyId String               @map("candidacy_id") @db.Uuid
+  candidacy   Candidacy            @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
 
   @@map("appointment")
 }
