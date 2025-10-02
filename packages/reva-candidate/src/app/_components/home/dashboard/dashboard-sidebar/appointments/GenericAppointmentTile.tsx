@@ -2,6 +2,7 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
+
 import { AppointmentType } from "@/graphql/generated/graphql";
 
 export const GenericAppointmentTile = ({
