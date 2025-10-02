@@ -38,7 +38,7 @@ export const AppointmentTiles = ({
     candidacy.jury && isAfter(candidacy.jury.dateOfSession, new Date());
 
   const hasNoAppointment =
-    candidacy.appointments.rows.length === 0 &&
+    candidacy.appointments?.rows?.length === 0 &&
     !isReadyForJury &&
     !hasDateOfJurySession;
 
@@ -48,7 +48,7 @@ export const AppointmentTiles = ({
         icon="fr-icon-calendar-2-line"
         title="Mes prochains rendez-vous"
       >
-        {candidacy.appointments.rows.map((appointment) => (
+        {candidacy.appointments?.rows?.map((appointment) => (
           <GenericAppointmentTile
             key={appointment.id}
             date={appointment.date}
