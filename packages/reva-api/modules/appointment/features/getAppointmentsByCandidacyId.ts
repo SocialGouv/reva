@@ -6,17 +6,34 @@ import { prismaClient } from "@/prisma/client";
 export const getAppointmentsByCandidacyId = async ({
   candidacyId,
   type,
+  onlyNext = false,
   offset = 0,
   limit = 10,
 }: {
   candidacyId: string;
   type: AppointmentType;
+  onlyNext?: boolean;
   offset: number;
   limit: number;
 }) => {
   const whereClause: Prisma.AppointmentWhereInput = {
     type,
   };
+  if (onlyNext) {
+    whereClause.date = {
+      gte: new Date(),
+    };
+    whereClause.OR = [
+      {
+        time: null,
+      },
+      {
+        time: {
+          gte: new Date(),
+        },
+      },
+    ];
+  }
 
   const results = await prismaClient.candidacy
     .findUnique({ where: { id: candidacyId } })

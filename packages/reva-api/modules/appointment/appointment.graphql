@@ -28,7 +28,12 @@ type AppointmentPage {
 }
 
 type Candidacy {
-  appointments(type: AppointmentType, offset: Int, limit: Int): AppointmentPage!
+  appointments(
+    type: AppointmentType
+    onlyNext: Boolean
+    offset: Int
+    limit: Int
+  ): AppointmentPage!
   firstAppointmentOccuredAt: Date
 }
 

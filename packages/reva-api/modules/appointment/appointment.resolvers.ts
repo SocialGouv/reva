@@ -20,10 +20,23 @@ const unsafeResolvers = {
       { id: candidacyId }: { id: string },
       {
         type,
+        onlyNext,
         offset,
         limit,
-      }: { type: AppointmentType; offset: number; limit: number },
-    ) => getAppointmentsByCandidacyId({ candidacyId, type, offset, limit }),
+      }: {
+        type: AppointmentType;
+        onlyNext: boolean;
+        offset: number;
+        limit: number;
+      },
+    ) =>
+      getAppointmentsByCandidacyId({
+        candidacyId,
+        type,
+        onlyNext,
+        offset,
+        limit,
+      }),
     firstAppointmentOccuredAt: ({ id: candidacyId }: { id: string }) =>
       getFirstAppointmentOccuredAt({ candidacyId }),
   },
