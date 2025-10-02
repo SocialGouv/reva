@@ -45,3 +45,6 @@ REVA est un monorepo qui regroupe :
 
 Voir les scripts dans les `package.json` pour plus de détails.
 
+## En savoir plus 
+
+- [docs/keycloak.md](docs/keycloak.md)
