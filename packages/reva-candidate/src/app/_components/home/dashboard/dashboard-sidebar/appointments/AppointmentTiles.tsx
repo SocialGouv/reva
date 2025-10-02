@@ -70,6 +70,7 @@ export const AppointmentTiles = ({
       {candidacy.firstAppointmentOccuredAt && (
         <div className="flex justify-end mt-4">
           <Button
+            data-test="all-appointments-button"
             priority="tertiary no outline"
             iconId="fr-icon-calendar-2-fill"
             className="mr-0"

@@ -14,7 +14,7 @@ export const GenericAppointmentTile = ({
   time?: string;
 }) => (
   <Tile
-    data-test="rendez-vous-pedagogique-tile"
+    data-test="rendez-vous-generique-tile"
     small
     orientation="horizontal"
     classes={{

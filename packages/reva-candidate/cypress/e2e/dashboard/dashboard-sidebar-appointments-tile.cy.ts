@@ -72,8 +72,10 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
   };
 
   const resetAppointmentData = (candidate: CandidateFixture) => {
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-      null;
+    candidate.data.candidate_getCandidateWithCandidacy.candidacy.appointments =
+      {
+        rows: [],
+      };
     candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
       null;
     candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury = null;
@@ -89,7 +91,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
           interceptGraphQL(candidate);
 
           cy.get('[data-test="no-rendez-vous-tile"]').should("be.visible");
-          cy.get('[data-test="rendez-vous-pedagogique-tile"]').should(
+          cy.get('[data-test="rendez-vous-generique-tile"]').should(
             "not.exist",
           );
           cy.get('[data-test="ready-for-jury-tile"]').should("not.exist");
@@ -99,8 +101,8 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
     });
   });
 
-  describe("RendezVousPedagogiqueTile", () => {
-    it("should display when first appointment is in the future", () => {
+  describe("RendezVousGeneriqueTile", () => {
+    it("should display when there is an appointment in the future", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
           const candidate = resetAppointmentData(initialCandidate);
@@ -108,12 +110,20 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
             addDays(new Date(), 5),
             "yyyy-MM-dd",
           );
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-            futureAppointment;
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.appointments =
+            {
+              rows: [
+                {
+                  id: 1,
+                  date: futureAppointment,
+                  type: "RENDEZ_VOUS_PEDAGOGIQUE",
+                },
+              ],
+            };
 
           interceptGraphQL(candidate);
 
-          cy.get('[data-test="rendez-vous-pedagogique-tile"]').should(
+          cy.get('[data-test="rendez-vous-generique-tile"]').should(
             "be.visible",
           );
           cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
@@ -121,7 +131,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
       );
     });
 
-    it("should not display when first appointment is in the past", () => {
+    it("should display 'tous mes rendez-vous' button when there is at least one appointment, whether past or future", () => {
       cy.fixture("candidate1.json").then(
         (initialCandidate: CandidateFixture) => {
           const candidate = resetAppointmentData(initialCandidate);
@@ -131,10 +141,40 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidate);
 
-          cy.get('[data-test="rendez-vous-pedagogique-tile"]').should(
-            "not.exist",
+          cy.get('[data-test="all-appointments-button"]').should("be.visible");
+        },
+      );
+    });
+
+    it("should display tag with correct appointment type", () => {
+      cy.fixture("candidate1.json").then(
+        (initialCandidate: CandidateFixture) => {
+          const candidate = resetAppointmentData(initialCandidate);
+          const futureAppointment = format(
+            addDays(new Date(), 5),
+            "yyyy-MM-dd",
           );
-          cy.get('[data-test="no-rendez-vous-tile"]').should("be.visible");
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.appointments =
+            {
+              rows: [
+                {
+                  id: 1,
+                  date: futureAppointment,
+                  type: "RENDEZ_VOUS_DE_SUIVI",
+                },
+              ],
+            };
+
+          interceptGraphQL(candidate);
+
+          cy.get('[data-test="rendez-vous-generique-tile"]').should(
+            "be.visible",
+          );
+          cy.get('[data-test="rendez-vous-generique-tile"] p.fr-tag').should(
+            "have.text",
+            "Rendez-vous de suivi",
+          );
+          cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
         },
       );
     });
@@ -277,8 +317,16 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
           );
           const futureJuryDate = addDays(new Date(), 60).getTime();
 
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-            futureAppointment;
+          candidate.data.candidate_getCandidateWithCandidacy.candidacy.appointments =
+            {
+              rows: [
+                {
+                  id: 1,
+                  date: futureAppointment,
+                  type: "RENDEZ_VOUS_PEDAGOGIQUE",
+                },
+              ],
+            };
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
             futureReadyDate;
           candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
@@ -292,7 +340,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidate);
 
-          cy.get('[data-test="rendez-vous-pedagogique-tile"]').should(
+          cy.get('[data-test="rendez-vous-generique-tile"]').should(
             "be.visible",
           );
           cy.get('[data-test="ready-for-jury-tile"]').should("be.visible");
