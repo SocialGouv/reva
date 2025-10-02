@@ -1,6 +1,7 @@
 import {
   defaultSecurity,
   isAdminOrCandidacyCompanion,
+  isOwnerOrCanManageCandidacy,
 } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
@@ -9,6 +10,8 @@ export const resolversSecurityMap = {
 
   "Query.*": defaultSecurity,
   "Mutation.*": defaultSecurity,
+
+  "Query.appointment_getAppointmentById": isOwnerOrCanManageCandidacy,
 
   "Mutation.appointment_createAppointment": isAdminOrCandidacyCompanion,
   "Mutation.appointment_updateAppointment": isAdminOrCandidacyCompanion,

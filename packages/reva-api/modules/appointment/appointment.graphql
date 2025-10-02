@@ -55,6 +55,13 @@ input UpdateAppointmentInput {
   location: String
 }
 
+type Query {
+  appointment_getAppointmentById(
+    candidacyId: ID!
+    appointmentId: ID!
+  ): Appointment!
+}
+
 type Mutation {
   appointment_createAppointment(input: CreateAppointmentInput!): Appointment!
   appointment_updateAppointment(input: UpdateAppointmentInput!): Appointment!

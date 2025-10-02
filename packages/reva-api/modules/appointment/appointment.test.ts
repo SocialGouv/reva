@@ -55,6 +55,39 @@ test("get a candidacy appointments", async () => {
   });
 });
 
+test("get an appointment by its id", async () => {
+  const getAppointmentById = graphql(`
+    query getAppointmentByIdForAppointmentTest(
+      $candidacyId: ID!
+      $appointmentId: ID!
+    ) {
+      appointment_getAppointmentById(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const candidacy = await createCandidacyHelper();
+
+  const appointment = await createAppointmentHelper({
+    candidacyId: candidacy.id,
+  });
+
+  const res = await graphqlClient.request(getAppointmentById, {
+    candidacyId: candidacy.id,
+    appointmentId: appointment.id,
+  });
+
+  expect(res).toMatchObject({
+    appointment_getAppointmentById: {
+      id: appointment.id,
+    },
+  });
+});
+
 test("create an appointment", async () => {
   const createAppointment = graphql(`
     mutation createAppointment($input: CreateAppointmentInput!) {
