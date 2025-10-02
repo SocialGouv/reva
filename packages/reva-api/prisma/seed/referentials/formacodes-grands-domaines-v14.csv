@@ -1,0 +1,15 @@
+﻿Code du Terme;Descripteur en majuscules;Descripteur en typo riche;TS (Termes Spécifiques);Note de version;Code arborescence
+00106;AGRICULTURE, PECHE, ENVIRONNEMENT;Agriculture, pêche, environnement;Agriculture production végétale - 21054###Environnement aménagement - 12554###Pêche aquaculture - 21354;null;F0
+00113;SPORT, HOTELLERIE, RESTAURATION, TOURISME;Sport, hôtellerie, restauration, tourisme;Activité physique et sportive - 15454###Hôtellerie restauration - 42754###Tourisme - 42654;null;N0
+00105;TRANSPORT, LOGISTIQUE;Transport, logistique;Manutention - 31754###Transport - 31854;null;E0
+00107;INDUSTRIE, MATIERES PREMIERES;Industrie, matières premières;Agroalimentaire - 21554###Cuir peau - 21854###Génie industriel - 31654###Habillement - 21754###Matériau produit chimique - 22854###Mécanique construction réparation - 23654###Qualité industrielle - 31354###Textile - 21654###Travail matériau - 23054;null;G0
+00110;VIE ET GESTION DES ORGANISATIONS;Vie et gestion des organisations;Encadrement management - 32154###Gestion des organisations - 32054###Gestion financière comptabilité - 32654###Gestion qualité - 31454###Gestion ressources humaines - 33054###Secrétariat assistanat - 35054;null;K0
+00102;ECONOMIE, DROIT, SCIENCE POLITIQUE;Economie, droit, science politique;Droit - 13254###Droit fiscal - 13354###Science politique - 13054###Économie - 13154;null;B0
+00109;ELECTRONIQUE, INFORMATIQUE, TELECOMMUNICATION;Electronique, informatique, télécommunication;Automatisme informatique industrielle - 24454###Informatique - Systèmes d’information et numérique - 31054###Langages informatiques - 30854###Télécommunication - 24254###Électronique - 24354;null;J0
+00103;SCIENCES;Sciences;Chimie - 11554###Mathématiques - 11054###Mécanique théorique - 23554###Physique - 11454###Sciences de la terre - 12254###Sciences naturelles - 12054;null;C0
+00111;COMMERCE, MARKETING, FINANCE;Commerce, marketing, finance;Banque assurance - 41054###Commerce - 34554###Commerce international - 34254###Gestion commerciale achats - 34054###Immobilier - 42154###Services commerces proximité - 42054;null;L0
+00108;BTP - BATIMENT TRAVAUX PUBLICS;BTP - bâtiment travaux publics ;BTP conception organisation - 22254###Bâtiment gros oeuvre - 22354###Bâtiment second oeuvre - 22454###Travaux publics - 22054;null;H0
+00114;ENERGIE, ELECTRICITE;Energie, électricité;Génie climatique - 22654###Électricité - 24054###Énergie - 24154;null;P0
+00101;SCIENCES HUMAINES, LANGUES, PEDAGOGIE, INFORMATION COMMUNICATION;Sciences humaines, langues, pédagogie, information communication;Développement professionnel et personnel - 15054###Information - Communication numérique - 46354###Ingénierie formation pédagogie - 44554###Langues - 15254###Psychologie - 14454###Sciences humaines - 14254;null;A0
+00104;ARTS, SPECTACLE, INDUSTRIES CREATIVES;Arts, spectacle, industries créatives;Art - 45054###Artisanat art - 45554###Audiovisuel - 46254###Industrie graphique imprimerie - 46054;null;D0
+00112;SANTE, SOCIAL, SECURITE;Santé, social, sécurité;Action sociale - 44054###Médecine - 43054###Prévention sécurité - 42854###Santé - 43454;null;M0

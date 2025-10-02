@@ -10,8 +10,14 @@ export type Formacode = {
   parentCode?: string;
 };
 
-export async function getFormacodes(): Promise<Formacode[]> {
-  const codes = await prismaClient.formacode.findMany();
+export async function getFormacodes(params?: {
+  version?: string;
+}): Promise<Formacode[]> {
+  const codes = await prismaClient.formacode.findMany({
+    where: {
+      version: params?.version || "v14",
+    },
+  });
 
   const formacodes: Formacode[] = codes.map((formacode) => ({
     id: formacode.id,

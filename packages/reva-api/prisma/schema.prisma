@@ -1776,17 +1776,19 @@ model Formacode {
   createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime?     @map("updated_at") @db.Timestamptz(6)
   type      FormacodeType
-  code      String        @unique
+  code      String        
   label     String        @db.VarChar(255)
+  version   String       
 
   //
   parentCode String?     @map("parent_code")
-  parent     Formacode?  @relation("children", fields: [parentCode], references: [code], onDelete: NoAction, onUpdate: NoAction)
+  parent     Formacode?  @relation("children", fields: [parentCode, version], references: [code, version], onDelete: NoAction, onUpdate: NoAction)
   children   Formacode[] @relation("children")
 
   certificationOnFormacode CertificationOnFormacode[]
   organismOnFormacode      OrganismOnFormacode[]
 
+  @@unique([code, version])
   @@map("formacode")
 }
 

@@ -32,7 +32,7 @@ async function readGrandsDomains(): Promise<GrandDomaine[]> {
     R: string;
     S: string;
   }>({
-    filePath: "./formacodes-grands-domaines.csv",
+    filePath: "./formacodes-grands-domaines-v13.csv",
     headersDefinition: [
       "A",
       "B",
@@ -87,7 +87,7 @@ async function readFormacodes(): Promise<Formacode[]> {
     G: string;
     H: string;
   }>({
-    filePath: "./formacodes.csv",
+    filePath: "./formacodes-v13.csv",
     headersDefinition: ["A", "B", "C", "D", "E", "F", "G", "H"],
     delimiter: ";",
   });
@@ -117,6 +117,7 @@ async function readFormacodes(): Promise<Formacode[]> {
         code: grandDomaine.code,
         label: grandDomaine.label,
         type: "DOMAIN",
+        version: "v13",
       };
       if (!checkIfExists(formattedCodeGrandDomain, formacodes)) {
         formacodes.push(formattedCodeGrandDomain);
@@ -127,6 +128,7 @@ async function readFormacodes(): Promise<Formacode[]> {
         label: B,
         type: "SUB_DOMAIN",
         parentCode: grandDomaine.code,
+        version: "v13",
       };
       codeA = formattedCode.code;
 
@@ -191,6 +193,7 @@ function getFormattedCode(label: string, parentCode: string): Formacode {
     label: data.label,
     parentCode: parentCode,
     type: "KEYWORD",
+    version: "v13",
   };
 
   return formattedCode;
@@ -228,8 +231,12 @@ function readCsvRows<T>({
   });
 }
 
-export async function seedFormacodes(prisma: PrismaClient) {
-  await prisma.formacode.deleteMany();
+export async function seedFormacodesV13(prisma: PrismaClient) {
+  await prisma.formacode.deleteMany({
+    where: {
+      version: "v13",
+    },
+  });
 
   await prisma.$transaction(
     async (tx) => {

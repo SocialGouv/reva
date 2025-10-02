@@ -17,9 +17,10 @@ import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 const actionSocialeFormacode = {
   formacode: {
     connectOrCreate: {
-      where: { code: "440" },
+      where: { code_version: { code: "440", version: "v14" } },
       create: {
         code: "440",
+        version: "v14",
         label: "Action sociale",
         type: FormacodeType.SUB_DOMAIN,
       },
