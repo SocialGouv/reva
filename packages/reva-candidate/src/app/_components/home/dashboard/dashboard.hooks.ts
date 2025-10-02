@@ -8,6 +8,14 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
   query candidate_getCandidateWithCandidacyForDashboard {
     candidate_getCandidateWithCandidacy {
       candidacy {
+        appointments(onlyNext: true, limit: 3) {
+          rows {
+            id
+            date
+            time
+            type
+          }
+        }
         readyForJuryEstimatedAt
         sentAt
         endAccompagnementStatus

@@ -1,12 +1,13 @@
+import Button from "@codegouvfr/react-dsfr/Button";
 import { isAfter } from "date-fns";
 
 import { CandidacyUseCandidateForDashboard } from "../../dashboard.hooks";
 import TileGroup from "../../tiles/TileGroup";
 
+import { GenericAppointmentTile } from "./GenericAppointmentTile";
 import { JurySessionTile } from "./JurySessionTile";
 import { NoRendezVousTile } from "./NoRendezVousTile";
 import { ReadyForJuryTile } from "./ReadyForJuryTile";
-import { RendezVousPedagogiqueTile } from "./RendezVousPedagogiqueTile";
 
 export const AppointmentTiles = ({
   candidacy,
@@ -44,22 +45,41 @@ export const AppointmentTiles = ({
     !hasFirstAppointment && !isReadyForJury && !hasDateOfJurySession;
 
   return (
-    <TileGroup icon="fr-icon-calendar-2-line" title="Mes prochains rendez-vous">
-      {hasFirstAppointment && (
-        <RendezVousPedagogiqueTile
-          firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt!}
-        />
+    <div>
+      <TileGroup
+        icon="fr-icon-calendar-2-line"
+        title="Mes prochains rendez-vous"
+      >
+        {candidacy.appointments.rows.map((appointment) => (
+          <GenericAppointmentTile
+            key={appointment.id}
+            date={appointment.date}
+            time={appointment.time}
+            type={appointment.type}
+          />
+        ))}
+
+        {isReadyForJury && (
+          <ReadyForJuryTile
+            readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt!}
+          />
+        )}
+
+        {hasDateOfJurySession && <JurySessionTile jury={candidacy.jury} />}
+
+        {hasNoAppointment && <NoRendezVousTile />}
+      </TileGroup>
+      {candidacy.firstAppointmentOccuredAt && (
+        <div className="flex justify-end mt-4">
+          <Button
+            priority="tertiary no outline"
+            iconId="fr-icon-calendar-2-fill"
+            className="mr-0"
+          >
+            Tous mes rendez-vous
+          </Button>
+        </div>
       )}
-
-      {isReadyForJury && (
-        <ReadyForJuryTile
-          readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt!}
-        />
-      )}
-
-      {hasDateOfJurySession && <JurySessionTile jury={candidacy.jury} />}
-
-      {hasNoAppointment && <NoRendezVousTile />}
-    </TileGroup>
+    </div>
   );
 };
