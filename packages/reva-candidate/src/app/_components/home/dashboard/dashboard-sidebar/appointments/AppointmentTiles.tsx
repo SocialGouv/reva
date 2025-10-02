@@ -29,10 +29,6 @@ export const AppointmentTiles = ({
     candidacy.jury?.result || "",
   );
 
-  const hasFirstAppointment =
-    candidacy.firstAppointmentOccuredAt &&
-    isAfter(candidacy.firstAppointmentOccuredAt, new Date());
-
   const isReadyForJury =
     candidacy.readyForJuryEstimatedAt &&
     (candidacy.activeDossierDeValidation?.decision !== "PENDING" ||
@@ -42,7 +38,9 @@ export const AppointmentTiles = ({
     candidacy.jury && isAfter(candidacy.jury.dateOfSession, new Date());
 
   const hasNoAppointment =
-    !hasFirstAppointment && !isReadyForJury && !hasDateOfJurySession;
+    candidacy.appointments.rows.length === 0 &&
+    !isReadyForJury &&
+    !hasDateOfJurySession;
 
   return (
     <div>
