@@ -9,6 +9,9 @@
         "status": "PRISE_EN_CHARGE",
         "typeAccompagnement": "ACCOMPAGNE",
         "firstAppointmentOccuredAt": null,
+        "appointments": {
+          "rows": []
+        },
         "candidacyStatuses": [
           {
             "status": "PROJET"
