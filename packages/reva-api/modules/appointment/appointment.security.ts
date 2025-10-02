@@ -15,5 +15,5 @@ export const resolversSecurityMap = {
 
   "Mutation.appointment_createAppointment": isAdminOrCandidacyCompanion,
   "Mutation.appointment_updateAppointment": isAdminOrCandidacyCompanion,
-  "Candidacy.appointments": isAdminOrCandidacyCompanion,
+  "Candidacy.appointments": isOwnerOrCanManageCandidacy,
 };
