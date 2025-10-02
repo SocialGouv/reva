@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 
 import { fixupConfigRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
+import noOnlyTestsPlugin from "eslint-plugin-no-only-tests";
 import { defineConfig } from "eslint/config";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -94,6 +95,24 @@ export default defineConfig([
     files: ["*.js"],
     rules: {
       "@typescript-eslint/no-require-imports": "off",
+    },
+  },
+  {
+    files: [
+      "cypress/**/*.ts",
+      "cypress.config.ts",
+    ],
+    plugins: {
+      "no-only-tests": noOnlyTestsPlugin,
+    },
+    languageOptions: {
+      globals: {
+        cy: "readonly",
+        Cypress: "readonly",
+      },
+    },
+    rules: {
+      "no-only-tests/no-only-tests": "error",
     },
   },
 ]);
