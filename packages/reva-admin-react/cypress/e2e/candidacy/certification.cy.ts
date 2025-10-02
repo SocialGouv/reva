@@ -84,7 +84,7 @@ describe("Certification change button visibility", () => {
       });
 
       notAllowedStatuses.forEach((status) => {
-        it.only(`should NOT show the change certification button when status is ${status}`, () => {
+        it(`should NOT show the change certification button when status is ${status}`, () => {
           visitCertificationDetails({
             candidacyStatus: status,
             userProfile,

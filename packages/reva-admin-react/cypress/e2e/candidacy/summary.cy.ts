@@ -209,7 +209,7 @@ context("Candidacy summary page", () => {
     );
   });
 
-  context.only("AAP actions", () => {
+  context("AAP actions", () => {
     it("display the archive candidacy button when candidacy can be archived", function () {
       visitSummary({
         feasibilityFormat: "DEMATERIALIZED",
