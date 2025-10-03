@@ -51,7 +51,6 @@ input CreateAppointmentInput {
 input UpdateAppointmentInput {
   appointmentId: ID!
   candidacyId: ID!
-  type: AppointmentType!
   title: String!
   description: String
   date: Date!

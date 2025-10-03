@@ -14,6 +14,7 @@ export const updateAppointment = async ({
   userInfo: CandidacyAuditLogUserInfo;
 }) => {
   const { appointmentId, ...rest } = input;
+
   const result = await prismaClient.appointment.update({
     where: { id: input.appointmentId },
     data: rest,

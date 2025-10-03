@@ -199,7 +199,6 @@ test("should update an appointment", async () => {
     input: {
       appointmentId: appointment.id,
       candidacyId: candidacy.id,
-      type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
       title: "Updated test Appointment",
       description: "Updated test Description",
       location: "Updated test Location",

@@ -5,8 +5,6 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { formatIso8601Time } from "@/utils/formatIso8601Time";
 
-import { AppointmentType } from "@/graphql/generated/graphql";
-
 import {
   AppointmentForm,
   AppointmentFormData,
@@ -51,7 +49,6 @@ export default function UpdateAppointmentPage() {
     try {
       await updateAppointment.mutateAsync({
         candidacyId,
-        type: appointment?.type as AppointmentType,
         appointmentId: appointment?.id,
         ...data,
         time: data.time ? data.time + ":00.000Z" : null,

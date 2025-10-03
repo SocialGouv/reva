@@ -13,4 +13,11 @@ export interface CreateAppointmentInput {
 
 export interface UpdateAppointmentInput extends CreateAppointmentInput {
   appointmentId: string;
+  candidacyId: string;
+  title: string;
+  description: string;
+  date: Date;
+  time: Date;
+  location: string;
+  duration: AppointmentDuration;
 }
