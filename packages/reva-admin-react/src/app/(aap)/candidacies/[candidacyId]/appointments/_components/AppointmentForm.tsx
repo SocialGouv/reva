@@ -8,9 +8,9 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 const appointmentFormSchema = z.object({
   title: z.string().min(1, "Merci de remplir ce champ"),
   date: z.string().min(1, "Merci de remplir ce champ"),
-  time: z.string().optional(),
-  location: z.string().optional(),
-  description: z.string().optional(),
+  time: z.string().optional().nullable(),
+  location: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
 });
 
 export type AppointmentFormData = z.infer<typeof appointmentFormSchema>;
@@ -18,9 +18,11 @@ export type AppointmentFormData = z.infer<typeof appointmentFormSchema>;
 export const AppointmentForm = ({
   onSubmit,
   backUrl,
+  defaultValues,
 }: {
   backUrl: string;
   onSubmit: (data: AppointmentFormData) => void;
+  defaultValues?: AppointmentFormData;
 }) => {
   const {
     register,
@@ -29,6 +31,7 @@ export const AppointmentForm = ({
     formState: { isDirty, isSubmitting },
   } = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentFormSchema),
+    defaultValues,
   });
 
   return (
