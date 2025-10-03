@@ -1,3 +1,5 @@
+import { AppointmentType } from "@prisma/client";
+
 import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
@@ -13,6 +15,20 @@ export const createAppointment = async ({
   input: CreateAppointmentInput;
   userInfo: CandidacyAuditLogUserInfo;
 }) => {
+  const existingRendezVousPédagogique =
+    await prismaClient.appointment.findFirst({
+      where: {
+        candidacyId: input.candidacyId,
+        type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
+      },
+    });
+
+  if (existingRendezVousPédagogique) {
+    throw new Error(
+      "Il y a déjà un rendez-vous pédagogique pour cette candidature",
+    );
+  }
+
   const result = await prismaClient.appointment.create({
     data: input,
   });

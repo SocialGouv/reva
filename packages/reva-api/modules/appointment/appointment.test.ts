@@ -3,7 +3,7 @@ import { AppointmentType } from "@prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAppointmentHelper } from "@/test/helpers/entities/create-appointment-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
-import { getGraphQLClient } from "@/test/test-graphql-client";
+import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -16,7 +16,7 @@ const graphqlClient = getGraphQLClient({
   },
 });
 
-test("get a candidacy appointments", async () => {
+test("should get a candidacy appointments", async () => {
   const getCandidacyById = graphql(`
     query getCandidacyByIdForAppointmentTest($id: ID!) {
       getCandidacyById(id: $id) {
@@ -55,7 +55,7 @@ test("get a candidacy appointments", async () => {
   });
 });
 
-test("get an appointment by its id", async () => {
+test("should get an appointment by its id", async () => {
   const getAppointmentById = graphql(`
     query getAppointmentByIdForAppointmentTest(
       $candidacyId: ID!
@@ -88,7 +88,7 @@ test("get an appointment by its id", async () => {
   });
 });
 
-test("create an appointment", async () => {
+test("should create an appointment", async () => {
   const createAppointment = graphql(`
     mutation createAppointment($input: CreateAppointmentInput!) {
       appointment_createAppointment(input: $input) {
@@ -131,7 +131,51 @@ test("create an appointment", async () => {
   });
 });
 
-test("update an appointment", async () => {
+test("should not create an appointment and throw an error if there is already a rendez-vous pédagogique", async () => {
+  const createAppointment = graphql(`
+    mutation createAppointment($input: CreateAppointmentInput!) {
+      appointment_createAppointment(input: $input) {
+        title
+        type
+        date
+        time
+        description
+        location
+        duration
+      }
+    }
+  `);
+
+  const candidacy = await createCandidacyHelper();
+
+  // Create a rendez-vous pédagogique
+  await createAppointmentHelper({
+    candidacyId: candidacy.id,
+    type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
+  });
+
+  try {
+    await graphqlClient.request(createAppointment, {
+      input: {
+        candidacyId: candidacy.id,
+        type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
+        title: "Test Appointment",
+        time: "10:00:00.000Z",
+        description: "Test Description",
+        location: "Test Location",
+        date: "2025-09-26",
+        duration: "ONE_HOUR",
+      },
+    });
+  } catch (e) {
+    const gqlError = getGraphQLError(e);
+    expect(gqlError).toEqual(
+      "Il y a déjà un rendez-vous pédagogique pour cette candidature",
+    );
+  }
+});
+
+test("should update an appointment", async () => {
   const updateAppointment = graphql(`
     mutation updateAppointment($input: UpdateAppointmentInput!) {
       appointment_updateAppointment(input: $input) {
