@@ -126,6 +126,7 @@ context("when I try to validate the form ", () => {
     cy.get('[data-test="title-input"] input').type("Test Appointment");
     cy.get('[data-test="date-input"] input').type("2025-01-01");
     cy.get('[data-test="time-input"] input').type("10:00");
+    cy.get('[data-test="duration-input"] select').select("ONE_HOUR");
     cy.get('[data-test="location-input"] input').type("Test Location");
     cy.get('[data-test="description-input"] textarea').type("Test Description");
 

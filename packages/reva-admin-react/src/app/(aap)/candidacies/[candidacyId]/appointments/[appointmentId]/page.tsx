@@ -55,6 +55,7 @@ export default function UpdateAppointmentPage() {
         appointmentId: appointment?.id,
         ...data,
         time: data.time ? data.time + ":00.000Z" : null,
+        duration: data.duration || null,
       });
       successToast("Rendez-vous enregistré");
       router.push(`/candidacies/${candidacyId}/appointments`);

@@ -1,4 +1,5 @@
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,6 +10,17 @@ const appointmentFormSchema = z.object({
   title: z.string().min(1, "Merci de remplir ce champ"),
   date: z.string().min(1, "Merci de remplir ce champ"),
   time: z.string().optional().nullable(),
+  duration: z
+    .enum([
+      "",
+      "HALF_AN_HOUR",
+      "ONE_HOUR",
+      "TWO_HOURS",
+      "THREE_HOURS",
+      "FOUR_HOURS",
+    ])
+    .optional()
+    .nullable(),
   location: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
 });
@@ -61,6 +73,20 @@ export const AppointmentForm = ({
         state={errors.time ? "error" : "default"}
         stateRelatedMessage={errors.time?.message}
       />
+      <Select
+        data-test="duration-input"
+        label="Durée : (Optionnel)"
+        nativeSelectProps={{ ...register("duration") }}
+        state={errors.time ? "error" : "default"}
+        stateRelatedMessage={errors.time?.message}
+      >
+        <option value=""></option>
+        <option value="HALF_AN_HOUR">30 minutes</option>
+        <option value="ONE_HOUR">1 heure</option>
+        <option value="TWO_HOURS">2 heures</option>
+        <option value="THREE_HOURS">3 heures</option>
+        <option value="FOUR_HOURS">4 heures</option>
+      </Select>
       <Input
         data-test="location-input"
         label="Lieu : (Optionnel)"

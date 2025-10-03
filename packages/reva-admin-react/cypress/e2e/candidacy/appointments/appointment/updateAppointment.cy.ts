@@ -43,6 +43,7 @@ function interceptQueries() {
           title: "Rendez-vous pédagogique",
           date: "2025-01-01",
           time: "10:00:00.000Z",
+          duration: "ONE_HOUR",
           location: "Test Location",
           description: "Test Description",
         },
@@ -96,6 +97,10 @@ context("when I access the candidacy add appointment page", () => {
     );
     cy.get('[data-test="date-input"] input').should("have.value", "2025-01-01");
     cy.get('[data-test="time-input"] input').should("have.value", "10:00");
+    cy.get('[data-test="duration-input"] select').should(
+      "have.value",
+      "ONE_HOUR",
+    );
     cy.get('[data-test="location-input"] input').should(
       "have.value",
       "Test Location",
@@ -126,6 +131,7 @@ context("when I access the candidacy add appointment page", () => {
     cy.get('[data-test="title-input"] input').type("Updated Appointment");
     cy.get('[data-test="date-input"] input').type("2027-01-01");
     cy.get('[data-test="time-input"] input').type("18:00");
+    cy.get('[data-test="duration-input"] select').select("TWO_HOURS");
     cy.get('[data-test="location-input"] input').type("Updated Location");
     cy.get('[data-test="description-input"] textarea').type(
       "Updated Description",
