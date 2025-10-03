@@ -34,7 +34,7 @@ export const AppointmentForm = ({
 }: {
   backUrl: string;
   onSubmit: (data: AppointmentFormData) => void;
-  defaultValues?: AppointmentFormData;
+  defaultValues?: Partial<AppointmentFormData>;
 }) => {
   const {
     register,

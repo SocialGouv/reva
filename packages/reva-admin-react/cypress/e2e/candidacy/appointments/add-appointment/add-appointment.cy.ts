@@ -62,7 +62,7 @@ function waitForQueries() {
 }
 
 context("when I access the candidacy add appointment page", () => {
-  it("show the correct title", function () {
+  it("show the correct page title", function () {
     interceptQueries();
     cy.admin(
       "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_PEDAGOGIQUE",
@@ -72,6 +72,19 @@ context("when I access the candidacy add appointment page", () => {
     cy.get('[data-test="add-appointments-page"]')
       .children("h1")
       .should("have.text", "Rendez-vous pédagogique de Doe John");
+  });
+
+  it("show the correct form title", function () {
+    interceptQueries();
+    cy.admin(
+      "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_PEDAGOGIQUE",
+    );
+    waitForQueries();
+
+    cy.get('[data-test="title-input"] input').should(
+      "have.value",
+      "Rendez-vous pédagogique",
+    );
   });
 });
 
@@ -83,7 +96,7 @@ context("when I try to validate the form ", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="description-input"] textarea').type("Test Appointment");
+    cy.get('[data-test="title-input"] input').clear();
 
     cy.get("button[type='submit']").click();
     cy.get('[data-test="title-input"]').should(
@@ -123,7 +136,7 @@ context("when I try to validate the form ", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="title-input"] input').type("Test Appointment");
+    cy.get('[data-test="title-input"] input').clear().type("Test Appointment");
     cy.get('[data-test="date-input"] input').type("2025-01-01");
     cy.get('[data-test="time-input"] input').type("10:00");
     cy.get('[data-test="duration-input"] select').select("ONE_HOUR");

@@ -25,19 +25,22 @@ export default function AddAppointmentPage() {
     candidacyId,
   });
 
-  let title = "";
-  let description = "";
+  let title,
+    description,
+    formTitle = "";
 
   switch (type) {
     case "RENDEZ_VOUS_PEDAGOGIQUE":
       title = `Rendez-vous pédagogique de ${candidate?.lastname} ${candidate?.firstname}`;
       description =
         "Le rendez-vous pédagogique est le début des interactions avec le candidat. Son enregistrement est obligatoire. Vous ne pouvez donc pas le supprimer mais vous pouvez le modifier tant que vous le souhaitez. Les modifications seront visibles du candidat.";
+      formTitle = "Rendez-vous pédagogique";
       break;
     case "RENDEZ_VOUS_DE_SUIVI":
       title = `Rendez-vous de suivi de ${candidate?.lastname} ${candidate?.firstname}`;
       description =
         "Les rendez-vous de suivi peuvent être modifiés et supprimés en tout temps. Les modifications seront visibles du candidat.";
+      formTitle = "Rendez-vous de suivi";
       break;
   }
 
@@ -64,6 +67,9 @@ export default function AddAppointmentPage() {
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">{description}</p>
       <AppointmentForm
+        defaultValues={{
+          title: formTitle,
+        }}
         backUrl={`/candidacies/${candidacyId}/appointments`}
         onSubmit={handleSubmit}
       />
