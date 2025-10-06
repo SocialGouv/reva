@@ -145,7 +145,6 @@ const MeetingsPage = () => {
           candidacyId,
           appointmentId: firstAppointment?.id || "",
           date: firstAppointmentOccuredAt,
-          type: "RENDEZ_VOUS_PEDAGOGIQUE",
           title: "Rendez-vous pédagogique",
         },
       }),
