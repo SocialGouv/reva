@@ -11,7 +11,7 @@
     "dev": "next dev -p 3002",
     "prebuild": "react-dsfr update-icons && node ./src/scripts/generateRobotsTxt.js && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate",
     "build": "next build && node copy-assets.js",
-    "start": "node .next/standalone/server.js",
+    "start": "next start",
     "lint": "next lint",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
