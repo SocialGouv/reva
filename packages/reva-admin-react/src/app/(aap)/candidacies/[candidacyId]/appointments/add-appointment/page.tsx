@@ -1,5 +1,8 @@
 "use client";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -13,6 +16,11 @@ import {
 
 import { useAddAppointmentPage } from "./addAppointmentPage.hook";
 
+const sendEmailToCandidateModal = createModal({
+  id: "send-email-to-candidate-modal",
+  isOpenedByDefault: true,
+});
+
 export default function AddAppointmentPage() {
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -20,6 +28,7 @@ export default function AddAppointmentPage() {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const router = useRouter();
+  const [formData, setFormData] = useState<AppointmentFormData | null>();
 
   const { candidate, createAppointment } = useAddAppointmentPage({
     candidacyId,
@@ -45,6 +54,19 @@ export default function AddAppointmentPage() {
   }
 
   const handleSubmit = async (data: AppointmentFormData) => {
+    setFormData(data);
+    sendEmailToCandidateModal.open();
+  };
+
+  const handleSendEmailToCandidateModalButtonClick = async (
+    sendEmailToCandidate: boolean,
+  ) => {
+    const data = formData;
+    if (!data) {
+      toast.error("no form data");
+      console.error("no form data");
+      return;
+    }
     try {
       await createAppointment.mutateAsync({
         candidacyId,
@@ -52,6 +74,7 @@ export default function AddAppointmentPage() {
         ...data,
         time: data.time ? data.time + ":00.000Z" : null,
         duration: data.duration || null,
+        sendEmailToCandidate,
       });
       successToast("Rendez-vous enregistré");
       router.push(`/candidacies/${candidacyId}/appointments`);
@@ -73,6 +96,27 @@ export default function AddAppointmentPage() {
         backUrl={`/candidacies/${candidacyId}/appointments`}
         onSubmit={handleSubmit}
       />
+      <sendEmailToCandidateModal.Component
+        size="large"
+        title="Souhaitez-vous envoyer un mail de notification au candidat ?"
+        buttons={[
+          {
+            priority: "secondary",
+            children: "Ne pas envoyer",
+            onClick: () => handleSendEmailToCandidateModalButtonClick(false),
+          },
+          {
+            children: "Envoyer",
+            onClick: () => handleSendEmailToCandidateModalButtonClick(true),
+            id: "send-email-to-candidate-modal-button",
+          },
+        ]}
+      >
+        <p>
+          Le candidat recevra un mail l’invitant à consulter les détails de ce
+          rendez vous depuis son espace.
+        </p>
+      </sendEmailToCandidateModal.Component>
     </div>
   );
 }

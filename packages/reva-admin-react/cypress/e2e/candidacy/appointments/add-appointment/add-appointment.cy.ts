@@ -121,6 +121,8 @@ context("when I try to validate the form ", () => {
 
     cy.get("button[type='submit']").click();
 
+    cy.get("#send-email-to-candidate-modal-button").click();
+
     cy.wait("@createAppointmentForAddAppointmentPage");
 
     cy.url().should(
@@ -144,6 +146,8 @@ context("when I try to validate the form ", () => {
     cy.get('[data-test="description-input"] textarea').type("Test Description");
 
     cy.get("button[type='submit']").click();
+
+    cy.get("#send-email-to-candidate-modal-button").click();
 
     cy.wait("@createAppointmentForAddAppointmentPage");
 
