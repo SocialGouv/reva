@@ -67,7 +67,9 @@ export const createAppointment = async ({
       params: {
         candidateFullName: candidate.firstname + " " + candidate.lastname,
         appointmentDate: formatDateWithoutTimestamp(data.date),
-        appointmentTime: formatUTCTimeWithoutTimezoneConversion(data.time),
+        appointmentTime: data.time
+          ? formatUTCTimeWithoutTimezoneConversion(data.time)
+          : undefined,
         appointmentUrl: getBackofficeUrl({
           path: `/candidacies/${data.candidacyId}/appointments/${result.id}`,
         }),
