@@ -23,7 +23,10 @@ export const createAppointment = async ({
       },
     });
 
-  if (existingRendezVousPédagogique) {
+  if (
+    input.type === AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE &&
+    existingRendezVousPédagogique
+  ) {
     throw new Error(
       "Il y a déjà un rendez-vous pédagogique pour cette candidature",
     );
