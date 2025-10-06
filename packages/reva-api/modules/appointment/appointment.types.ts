@@ -9,6 +9,7 @@ export interface CreateAppointmentInput {
   time: Date;
   location: string;
   duration: AppointmentDuration;
+  sendEmailToCandidate?: boolean;
 }
 
 export interface UpdateAppointmentInput extends CreateAppointmentInput {

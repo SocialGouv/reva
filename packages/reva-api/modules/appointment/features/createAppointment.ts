@@ -4,6 +4,10 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
+import { formatUTCTimeWithoutTimezoneConversion } from "@/modules/shared/date/formatUTCTimeWithoutTimezoneConversion";
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 import { prismaClient } from "@/prisma/client";
 
 import { CreateAppointmentInput } from "../appointment.types";
@@ -15,16 +19,17 @@ export const createAppointment = async ({
   input: CreateAppointmentInput;
   userInfo: CandidacyAuditLogUserInfo;
 }) => {
+  const { sendEmailToCandidate, ...data } = input;
   const existingRendezVousPédagogique =
     await prismaClient.appointment.findFirst({
       where: {
-        candidacyId: input.candidacyId,
+        candidacyId: data.candidacyId,
         type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
       },
     });
 
   if (
-    input.type === AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE &&
+    data.type === AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE &&
     existingRendezVousPédagogique
   ) {
     throw new Error(
@@ -32,19 +37,44 @@ export const createAppointment = async ({
     );
   }
 
+  const candidate = await prismaClient.candidacy
+    .findUnique({
+      where: { id: data.candidacyId },
+    })
+    .candidate();
+
+  if (!candidate) {
+    throw new Error("Candidat non trouvé");
+  }
+
   const result = await prismaClient.appointment.create({
-    data: input,
+    data,
   });
 
   //TODO: update logging event when we will have more than one appointment
   await logCandidacyAuditEvent({
-    candidacyId: input.candidacyId,
+    candidacyId: data.candidacyId,
     eventType: "APPOINTMENT_INFO_UPDATED",
     ...userInfo,
     details: {
-      firstAppointmentOccuredAt: input.date,
+      firstAppointmentOccuredAt: data.date,
     },
   });
+
+  if (sendEmailToCandidate) {
+    await sendEmailUsingTemplate({
+      to: { email: candidate.email },
+      params: {
+        candidateFullName: candidate.firstname + " " + candidate.lastname,
+        appointmentDate: formatDateWithoutTimestamp(data.date),
+        appointmentTime: formatUTCTimeWithoutTimezoneConversion(data.time),
+        appointmentUrl: getBackofficeUrl({
+          path: `/candidacies/${data.candidacyId}/appointments/${result.id}`,
+        }),
+      },
+      templateId: 632,
+    });
+  }
 
   return result;
 };

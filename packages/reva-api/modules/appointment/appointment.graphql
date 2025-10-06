@@ -46,6 +46,7 @@ input CreateAppointmentInput {
   time: Time
   duration: AppointmentDuration
   location: String
+  sendEmailToCandidate: Boolean
 }
 
 input UpdateAppointmentInput {
