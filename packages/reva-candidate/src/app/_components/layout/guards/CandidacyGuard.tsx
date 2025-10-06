@@ -3,6 +3,10 @@ import React from "react";
 
 import { useLayout } from "../layout.hook";
 
+const INACTIF_PATHS = ["/candidacy-inactif", "/candidacy-deleted"];
+
+const END_ACCOMPAGNEMENT_PATHS = ["/end-accompagnement"];
+
 export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   const { candidate, isEndAccompagnementPending } = useLayout();
   const pathname = usePathname();
@@ -12,15 +16,13 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
 
   if (
     isInactifEnAttente &&
-    !pathname.startsWith("/candidacy-inactif") &&
-    !pathname.startsWith("/candidacy-deleted")
+    !INACTIF_PATHS.some((path) => pathname.startsWith(path))
   ) {
     redirect("/candidacy-inactif");
-  }
-
-  if (
+  } else if (
     isEndAccompagnementPending &&
-    !pathname.startsWith("/end-accompagnement")
+    !END_ACCOMPAGNEMENT_PATHS.some((path) => pathname.startsWith(path)) &&
+    !INACTIF_PATHS.some((path) => pathname.startsWith(path))
   ) {
     redirect("/end-accompagnement");
   }
