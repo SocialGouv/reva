@@ -39,6 +39,7 @@ export const updateCandidateEmail = async ({
       },
       {
         email: newEmail,
+        username: newEmail,
       },
     );
   }
