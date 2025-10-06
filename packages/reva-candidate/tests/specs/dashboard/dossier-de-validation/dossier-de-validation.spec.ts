@@ -9,8 +9,8 @@ import {
   navigateToDossierValidation,
 } from "@tests/helpers/candidate/dossier-de-validation/dossier-de-validation";
 import {
-  uploadFile,
   mockDossierValidationUpload,
+  uploadFile,
 } from "@tests/helpers/candidate/dossier-de-validation/upload";
 import { waitGraphQL, waitRest } from "@tests/helpers/shared/requests";
 
@@ -149,7 +149,10 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           const labels = checkboxGroup.locator("label");
           const count = await labels.count();
           for (let i = 0; i < count; i++) {
-            await labels.nth(i).click();
+            const label = labels.nth(i);
+            await label.scrollIntoViewIfNeeded();
+            await expect(label).toBeVisible();
+            await label.click();
           }
           await page
             .locator('[data-test="submit-dossier-de-validation-form-button"]')
