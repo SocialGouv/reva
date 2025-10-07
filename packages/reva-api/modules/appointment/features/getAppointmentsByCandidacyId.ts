@@ -21,6 +21,7 @@ export const getAppointmentsByCandidacyId = async ({
   const whereClause: Prisma.AppointmentWhereInput = {
     type,
   };
+
   if (temporalStatusFilter === "UPCOMING") {
     whereClause.date = {
       gte: new Date(),
@@ -32,6 +33,22 @@ export const getAppointmentsByCandidacyId = async ({
       {
         time: {
           gte: new Date(),
+        },
+      },
+    ];
+  }
+
+  if (temporalStatusFilter === "PAST") {
+    whereClause.date = {
+      lt: new Date(),
+    };
+    whereClause.OR = [
+      {
+        time: null,
+      },
+      {
+        time: {
+          lt: new Date(),
         },
       },
     ];
