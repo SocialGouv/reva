@@ -10,7 +10,6 @@ import { createFeasibilityDematerializedHelper } from "../test/helpers/entities/
 import { createJuryHelper } from "../test/helpers/entities/create-jury-helper";
 
 dotenv.config({ path: path.join(process.cwd(), ".env") });
-console.log(path.join(process.cwd(), ".env"));
 
 const main = async () => {
   const certification = await prismaClient.certification.findFirst({
@@ -243,5 +242,3 @@ const main = async () => {
 };
 
 main();
-
-console.log("process.env.DATABASE_URL", process.env.DATABASE_URL);

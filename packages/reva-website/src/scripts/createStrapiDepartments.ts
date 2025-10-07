@@ -6,9 +6,6 @@ import departments from "./departements.json";
 
 const STRAPI_GRAPHQL_API_URL = "http://127.0.0.1:1337/graphql";
 
-console.log("STRAPI_GRAPHQL_API_URL", STRAPI_GRAPHQL_API_URL);
-console.log("process.env.STRAPI_API_TOKEN", process.env.STRAPI_API_TOKEN);
-
 const createDepartmentMutation = graphql(`
   mutation createStrapiDepartment($data: DepartementInput!) {
     createDepartement(data: $data) {

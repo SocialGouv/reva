@@ -49,7 +49,6 @@ const uploadAllDffFileForDematerializedFeasibility = async () => {
   for (const error of errorOnCandidacyIds) {
     console.log(error.candidacyId);
     console.log(error.errorStr);
-    console.log("");
   }
 };
 
