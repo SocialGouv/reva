@@ -52,60 +52,91 @@ function visitReorientation({
   }
 }
 
+const candidacyScenarios = [
+  {
+    description: "Candidacy with AAP",
+    userProfile: "aap" as const,
+    candidacyFixture: "candidacy/reorientation/candidacy-with-aap.json",
+  },
+  {
+    description: "Candidacy without AAP",
+    userProfile: "admin" as const,
+    candidacyFixture: "candidacy/reorientation/candidacy-without-aap.json",
+  },
+  {
+    description: "Candidacy with AUTONOME type",
+    userProfile: "admin" as const,
+    candidacyFixture: "candidacy/reorientation/candidacy-autonome.json",
+  },
+];
+
 describe("Certification reorientation page", () => {
-  context("Candidacy with AAP", () => {
-    it("should display the reorientation page with certifications list", () => {
-      visitReorientation({
-        userProfile: "aap",
-        candidacyFixture: "candidacy/reorientation/candidacy-with-aap.json",
+  candidacyScenarios.forEach((scenario) => {
+    context(scenario.description, () => {
+      it("should display selected certification and search result", () => {
+        visitReorientation({
+          userProfile: scenario.userProfile,
+          candidacyFixture: scenario.candidacyFixture,
+        });
+
+        cy.wait("@getCandidacyForReorientation");
+        cy.wait("@getCertificationsForCandidate");
+
+        cy.contains("label", "Certification choisie par le candidat")
+          .parent()
+          .within(() => {
+            cy.contains("Titre professionnel").should("exist");
+            cy.contains("RNCP37780").should("exist");
+            cy.contains(
+              "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
+            ).should("exist");
+          });
+
+        cy.get('[data-test="results"] > div').should("have.length", 2);
+
+        [
+          {
+            label: "Titre professionnel Agent de restauration",
+            codeRncp: "RNCP35650",
+            typeDiplome: "Titre professionnel",
+          },
+          {
+            label: "Diplôme d'État d'aide-soignant",
+            codeRncp: "RNCP35830",
+            typeDiplome: "Diplôme d'État",
+          },
+        ].forEach((certification) => {
+          cy.contains(
+            '[data-test="results"] > div',
+            certification.label,
+          ).within(() => {
+            cy.contains(certification.typeDiplome).should("exist");
+            cy.contains(certification.codeRncp).should("exist");
+          });
+        });
       });
 
-      cy.wait("@getCandidacyForReorientation");
-      cy.wait("@getCertificationsForCandidate");
+      it("should allow selecting a new certification", () => {
+        visitReorientation({
+          userProfile: scenario.userProfile,
+          candidacyFixture: scenario.candidacyFixture,
+        });
 
-      [
-        "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
-        "Titre professionnel Agent de restauration",
-        "Diplôme d'État d'aide-soignant",
-      ].forEach((titre) => {
-        cy.contains(titre).should("exist");
+        cy.wait("@getCandidacyForReorientation");
+        cy.wait("@getCertificationsForCandidate");
+
+        cy.contains(
+          '[data-test="results"] > div',
+          "Titre professionnel Agent de restauration",
+        )
+          .find("button")
+          .click();
+
+        cy.get("#confirm-reorientation").should("be.visible");
+        cy.contains("Titre professionnel Agent de restauration").should(
+          "exist",
+        );
       });
-    });
-
-    it("should allow selecting a new certification", () => {
-      visitReorientation({
-        userProfile: "aap",
-        candidacyFixture: "candidacy/reorientation/candidacy-with-aap.json",
-      });
-
-      cy.wait("@getCandidacyForReorientation");
-      cy.wait("@getCertificationsForCandidate");
-
-      cy.contains(
-        '[data-test="results"] > div',
-        "Titre professionnel Agent de restauration",
-      )
-        .find("button")
-        .click();
-
-      cy.get("#confirm-reorientation").should("be.visible");
-      cy.contains("Titre professionnel Agent de restauration").should("exist");
-    });
-  });
-
-  context("Candidacy with AUTONOME type", () => {
-    it("should display certifications for autonomous candidacy", () => {
-      visitReorientation({
-        userProfile: "admin",
-        candidacyFixture: "candidacy/reorientation/candidacy-autonome.json",
-      });
-
-      cy.wait("@getCandidacyForReorientation");
-      cy.wait("@getCertificationsForCandidate");
-
-      cy.contains("h1", "Changement de certification").should("exist");
-      cy.contains("Titre professionnel Agent de restauration").should("exist");
-      cy.contains("RNCP35650").should("exist");
     });
   });
 });
