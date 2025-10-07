@@ -9,6 +9,7 @@ import { AppointmentType } from "@/graphql/generated/graphql";
 export const AppointmentCard = ({
   appointment,
   candidacyId,
+  disabled,
 }: {
   appointment: {
     id: string;
@@ -18,6 +19,7 @@ export const AppointmentCard = ({
     title: string;
   };
   candidacyId: string;
+  disabled: boolean;
 }) => {
   let tagLabel = "";
   switch (appointment.type) {
@@ -34,17 +36,23 @@ export const AppointmentCard = ({
     desc += ` - ${formatIso8601Time(appointment.time)}`;
   }
 
+  const linkProps = disabled
+    ? ({ enlargeLink: false } as const)
+    : ({
+        linkProps: {
+          href: `/candidacies/${candidacyId}/appointments/${appointment.id}`,
+        },
+        enlargeLink: true,
+      } as const);
+
   return (
     <Card
-      enlargeLink
       size="small"
       start={<Tag small>{tagLabel}</Tag>}
       title={appointment.title}
       desc={desc}
       endDetail="Consulter et modifier les détails du rendez-vous."
-      linkProps={{
-        href: `/candidacies/${candidacyId}/appointments/${appointment.id}`,
-      }}
+      {...linkProps}
     />
   );
 };

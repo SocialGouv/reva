@@ -48,6 +48,7 @@ export default function AppointmentsPage() {
             <AppointmentCard
               appointment={appointment}
               candidacyId={candidacyId}
+              disabled={appointment.temporalStatus === "PAST"}
             />
           </li>
         ))}

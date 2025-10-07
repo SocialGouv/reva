@@ -21,6 +21,7 @@ const getCandidacyAppointments = graphql(`
           time
           type
           title
+          temporalStatus
         }
         info {
           totalRows
