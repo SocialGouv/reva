@@ -75,8 +75,8 @@ export const OrganismVisibilityToggle = ({
 
   return (
     <ToggleSwitch
-      label="Je souhaite que la structure soit visible dans les résultats de recherche"
-      inputTitle="Je souhaite que la structure soit visible dans les résultats de recherche"
+      label="Je souhaite que la structure soit disponible dans les résultats de recherche"
+      inputTitle="Je souhaite que la structure soit disponible dans les résultats de recherche"
       labelPosition="left"
       showCheckedHint={false}
       checked={!organism?.fermePourAbsenceOuConges}
