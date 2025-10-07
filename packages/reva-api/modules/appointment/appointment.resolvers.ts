@@ -12,10 +12,15 @@ import {
 import { createAppointment } from "./features/createAppointment";
 import { getAppointmentById } from "./features/getAppointmentById";
 import { getAppointmentsByCandidacyId } from "./features/getAppointmentsByCandidacyId";
+import { getAppointmentTemporalStatus } from "./features/getAppointmentTemporalStatus";
 import { getFirstAppointmentOccuredAt } from "./features/getFirstAppointmentOccuredAt";
 import { updateAppointment } from "./features/updateAppointment";
 
 const unsafeResolvers = {
+  Appointment: {
+    temporalStatus: ({ date }: { date: Date }) =>
+      getAppointmentTemporalStatus({ date }),
+  },
   Candidacy: {
     appointments: (
       { id: candidacyId }: { id: string },

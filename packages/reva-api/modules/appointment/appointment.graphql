@@ -7,6 +7,7 @@ type Appointment {
   time: Time
   duration: AppointmentDuration
   location: String
+  temporalStatus: AppointmentTemporalStatus!
 }
 
 enum AppointmentType {
