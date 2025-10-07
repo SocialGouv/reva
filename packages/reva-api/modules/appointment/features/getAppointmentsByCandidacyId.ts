@@ -1,4 +1,6 @@
+import { tz } from "@date-fns/tz";
 import { AppointmentType, Prisma } from "@prisma/client";
+import { startOfToday } from "date-fns";
 
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { prismaClient } from "@/prisma/client";
@@ -22,36 +24,19 @@ export const getAppointmentsByCandidacyId = async ({
     type,
   };
 
+  //As of now, we only consider the date, not the time when determining if an appointment is upcoming or past
+  const now = startOfToday({ in: tz("UTC") });
+
   if (temporalStatusFilter === "UPCOMING") {
     whereClause.date = {
-      gte: new Date(),
+      gte: now,
     };
-    whereClause.OR = [
-      {
-        time: null,
-      },
-      {
-        time: {
-          gte: new Date(),
-        },
-      },
-    ];
   }
 
   if (temporalStatusFilter === "PAST") {
     whereClause.date = {
-      lt: new Date(),
+      lt: now,
     };
-    whereClause.OR = [
-      {
-        time: null,
-      },
-      {
-        time: {
-          lt: new Date(),
-        },
-      },
-    ];
   }
 
   const results = await prismaClient.candidacy
