@@ -3,23 +3,25 @@ import { AppointmentType, Prisma } from "@prisma/client";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { prismaClient } from "@/prisma/client";
 
+import { AppointmentTemporalStatus } from "../appointment.types";
+
 export const getAppointmentsByCandidacyId = async ({
   candidacyId,
   type,
-  onlyNext = false,
+  temporalStatusFilter,
   offset = 0,
   limit = 10,
 }: {
   candidacyId: string;
   type: AppointmentType;
-  onlyNext?: boolean;
+  temporalStatusFilter?: AppointmentTemporalStatus;
   offset: number;
   limit: number;
 }) => {
   const whereClause: Prisma.AppointmentWhereInput = {
     type,
   };
-  if (onlyNext) {
+  if (temporalStatusFilter === "UPCOMING") {
     whereClause.date = {
       gte: new Date(),
     };

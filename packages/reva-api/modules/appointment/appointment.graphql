@@ -30,11 +30,16 @@ type AppointmentPage {
 type Candidacy {
   appointments(
     type: AppointmentType
-    onlyNext: Boolean
+    temporalStatusFilter: AppointmentTemporalStatus
     offset: Int
     limit: Int
   ): AppointmentPage!
   firstAppointmentOccuredAt: Date
+}
+
+enum AppointmentTemporalStatus {
+  PAST
+  UPCOMING
 }
 
 input CreateAppointmentInput {

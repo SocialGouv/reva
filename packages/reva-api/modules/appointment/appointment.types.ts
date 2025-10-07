@@ -22,3 +22,5 @@ export interface UpdateAppointmentInput extends CreateAppointmentInput {
   location: string;
   duration: AppointmentDuration;
 }
+
+export type AppointmentTemporalStatus = "PAST" | "UPCOMING";
