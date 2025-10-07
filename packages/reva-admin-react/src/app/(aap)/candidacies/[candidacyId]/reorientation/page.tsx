@@ -123,7 +123,7 @@ const ReorientationPage = () => {
         searchFilter,
         organismId,
       }),
-    enabled: !!organismId || candidacy?.typeAccompagnement === "AUTONOME",
+    enabled: !!candidacy,
   });
 
   const updateCertification = useMutation({
@@ -135,9 +135,9 @@ const ReorientationPage = () => {
       certificationId: string;
     }) =>
       graphqlClient.request(
-        candidacy?.typeAccompagnement === "AUTONOME"
-          ? updateCertificationMutation
-          : updateCertificationWithOrganismScopeMutation,
+        organismId
+          ? updateCertificationWithOrganismScopeMutation
+          : updateCertificationMutation,
         {
           candidacyId,
           certificationId,
