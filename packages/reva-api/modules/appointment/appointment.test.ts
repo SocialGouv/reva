@@ -4,7 +4,7 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createAppointmentHelper } from "@/test/helpers/entities/create-appointment-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -165,8 +165,8 @@ test("should not create an appointment and throw an error if there is already a 
     type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
   });
 
-  try {
-    await graphqlClient.request(createAppointment, {
+  expect(
+    graphqlClient.request(createAppointment, {
       input: {
         candidacyId: candidacy.id,
         type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
@@ -177,13 +177,10 @@ test("should not create an appointment and throw an error if there is already a 
         date: "2025-09-26",
         duration: "ONE_HOUR",
       },
-    });
-  } catch (e) {
-    const gqlError = getGraphQLError(e);
-    expect(gqlError).toEqual(
-      "Il y a déjà un rendez-vous pédagogique pour cette candidature",
-    );
-  }
+    }),
+  ).rejects.toThrowError(
+    "Il y a déjà un rendez-vous pédagogique pour cette candidature",
+  );
 });
 
 test("should update an appointment when it is not past", async () => {
