@@ -8,55 +8,139 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
+import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
+import type { Organism } from "@/graphql/generated/graphql";
+
 import { useOrganismInformationForm } from "./organismInformationForm.hook";
 import {
-  OrganismInformationFormData,
+  OrganismInformationInputData,
+  OrganismInformationOutputData,
   organismInformationFormSchema,
 } from "./organismInformationFormSchema";
+
+import type { AddressOption } from "@/components/use-autocomplete-address/useAutocompleteAddress.hook";
+
+type OrganismInformationInitialData = Partial<
+  Pick<
+    Organism,
+    | "nomPublic"
+    | "telephone"
+    | "emailContact"
+    | "siteInternet"
+    | "conformeNormesAccessibilite"
+    | "adresseNumeroEtNomDeRue"
+    | "adresseInformationsComplementaires"
+    | "adresseCodePostal"
+    | "adresseVille"
+  >
+>;
 
 const OrganismInformationForm = ({
   mutationOnSubmit,
   pathRedirection,
   defaultData,
 }: {
-  mutationOnSubmit: (data: OrganismInformationFormData) => Promise<void>;
+  mutationOnSubmit: (data: OrganismInformationOutputData) => Promise<void>;
   pathRedirection: string;
-  defaultData?: Partial<OrganismInformationFormData>;
+  defaultData?: OrganismInformationInitialData;
 }) => {
   const router = useRouter();
 
-  const defaultValues: OrganismInformationFormData = useMemo(
-    () => ({
+  const defaultValues: OrganismInformationInputData = useMemo(() => {
+    const {
+      adresseNumeroEtNomDeRue,
+      adresseCodePostal,
+      adresseVille,
+      conformeNormesAccessibilite,
+    } = defaultData ?? {};
+
+    const hasCompleteAddress =
+      adresseNumeroEtNomDeRue && adresseCodePostal && adresseVille;
+
+    return {
       nomPublic: defaultData?.nomPublic ?? "",
-      adresseNumeroEtNomDeRue: defaultData?.adresseNumeroEtNomDeRue ?? "",
-      adresseInformationsComplementaires: "",
-      adresseCodePostal: defaultData?.adresseCodePostal ?? "",
-      adresseVille: defaultData?.adresseVille ?? "",
+      adresseComplete: hasCompleteAddress
+        ? `${adresseNumeroEtNomDeRue} ${adresseCodePostal} ${adresseVille}`
+        : "",
+      adresseFragments: hasCompleteAddress
+        ? {
+            adresseNumeroEtNomDeRue,
+            adresseCodePostal,
+            adresseVille,
+          }
+        : undefined,
+      adresseInformationsComplementaires:
+        defaultData?.adresseInformationsComplementaires ?? "",
       telephone: defaultData?.telephone ?? "",
       emailContact: defaultData?.emailContact ?? "",
       siteInternet: defaultData?.siteInternet ?? "",
       conformeNormesAccessibilite:
-        defaultData?.conformeNormesAccessibilite ?? "",
-    }),
-    [defaultData],
-  );
+        conformeNormesAccessibilite === "CONFORME" ||
+        conformeNormesAccessibilite === "NON_CONFORME"
+          ? conformeNormesAccessibilite
+          : "",
+    };
+  }, [defaultData]);
 
   const {
     gestionnaireMaisonMerAAPOrganismPhone,
     gestionnaireMaisonMerAAPOrganismEmail,
   } = useOrganismInformationForm();
 
-  const methods = useForm<OrganismInformationFormData>({
+  const methods = useForm<
+    OrganismInformationInputData,
+    undefined,
+    OrganismInformationOutputData
+  >({
     defaultValues,
     resolver: zodResolver(organismInformationFormSchema),
   });
 
-  const { register, handleSubmit, reset, formState, setValue } = methods;
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState,
+    setValue,
+    resetField,
+    watch,
+    clearErrors,
+  } = methods;
   const { errors, isDirty, isSubmitting } = formState;
+  const adresseComplete = watch("adresseComplete");
+  const adresseCompleteRegister = register("adresseComplete");
+
+  const handleOnAddressSelection = ({
+    label,
+    street,
+    zip,
+    city,
+  }: AddressOption) => {
+    setValue(
+      "adresseFragments",
+      {
+        adresseNumeroEtNomDeRue: street,
+        adresseCodePostal: zip,
+        adresseVille: city,
+      },
+      { shouldDirty: true },
+    );
+    setValue("adresseComplete", label, { shouldDirty: true });
+    clearErrors(["adresseComplete"]);
+  };
+
+  const handleAddressInputChange = (value: string) => {
+    setValue("adresseComplete", value, { shouldDirty: true });
+    resetField("adresseFragments", {
+      defaultValue: undefined,
+      keepDirty: true,
+    });
+    clearErrors(["adresseComplete"]);
+  };
 
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
@@ -70,7 +154,8 @@ const OrganismInformationForm = ({
 
   const handleReset = useCallback(() => {
     reset(defaultValues);
-  }, [reset, defaultValues]);
+    clearErrors();
+  }, [reset, defaultValues, clearErrors]);
 
   useEffect(() => {
     handleReset();
@@ -109,7 +194,7 @@ const OrganismInformationForm = ({
       >
         <div className="flex flex-col gap-8">
           <fieldset className="flex flex-col mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6">
+            <div className="lg:grid grid-cols-1 md:grid-cols-3 gap-x-6">
               <Input
                 className="col-span-3"
                 label="Nom du lieu d’accueil (affiché aux candidats)"
@@ -118,44 +203,36 @@ const OrganismInformationForm = ({
                 stateRelatedMessage={errors.nomPublic?.message?.toString()}
               />
 
-              <Input
-                className="col-span-3"
-                label="Numéro et nom de rue"
-                nativeInputProps={{
-                  ...register("adresseNumeroEtNomDeRue"),
-                }}
-                state={errors.adresseNumeroEtNomDeRue ? "error" : "default"}
-                stateRelatedMessage={errors.adresseNumeroEtNomDeRue?.message?.toString()}
-              />
+              <div className="col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <AutocompleteAddress
+                  className="w-full"
+                  onOptionSelection={handleOnAddressSelection}
+                  onInputChange={handleAddressInputChange}
+                  value={adresseComplete}
+                  nativeInputProps={{
+                    name: adresseCompleteRegister.name,
+                    onBlur: adresseCompleteRegister.onBlur,
+                    ref: adresseCompleteRegister.ref,
+                  }}
+                  state={errors.adresseComplete ? "error" : "default"}
+                  stateRelatedMessage={errors.adresseComplete?.message?.toString()}
+                />
 
-              <Input
-                className="col-span-3"
-                label="Informations complémentaires (optionnel)"
-                nativeInputProps={{
-                  ...register("adresseInformationsComplementaires"),
-                  autoComplete: "off",
-                }}
-                state={
-                  errors.adresseInformationsComplementaires
-                    ? "error"
-                    : "default"
-                }
-                stateRelatedMessage={errors.adresseInformationsComplementaires?.message?.toString()}
-              />
-              <Input
-                label="Code postal"
-                nativeInputProps={{ ...register("adresseCodePostal") }}
-                state={errors.adresseCodePostal ? "error" : "default"}
-                stateRelatedMessage={errors.adresseCodePostal?.message?.toString()}
-              />
-
-              <Input
-                className="col-span-2"
-                label="Ville"
-                nativeInputProps={{ ...register("adresseVille") }}
-                state={errors.adresseVille ? "error" : "default"}
-                stateRelatedMessage={errors.adresseVille?.message?.toString()}
-              />
+                <Input
+                  className="w-full"
+                  label="Informations complémentaires (optionnel)"
+                  nativeInputProps={{
+                    ...register("adresseInformationsComplementaires"),
+                    autoComplete: "off",
+                  }}
+                  state={
+                    errors.adresseInformationsComplementaires
+                      ? "error"
+                      : "default"
+                  }
+                  stateRelatedMessage={errors.adresseInformationsComplementaires?.message?.toString()}
+                />
+              </div>
 
               <Input
                 label="Téléphone"

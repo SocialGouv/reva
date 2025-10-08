@@ -1,5 +1,10 @@
 import Input from "@codegouvfr/react-dsfr/Input";
-import { DetailedHTMLProps, InputHTMLAttributes, useState } from "react";
+import {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
 
 import {
   AddressOption,
@@ -12,6 +17,8 @@ export const AutocompleteAddress = ({
   nativeInputProps,
   state,
   stateRelatedMessage,
+  value,
+  onInputChange,
 }: {
   onOptionSelection: (selectedOption: AddressOption) => void;
   className?: string;
@@ -20,8 +27,10 @@ export const AutocompleteAddress = ({
     | undefined;
   state?: "error" | "success" | "info" | "default";
   stateRelatedMessage?: string;
+  value?: string;
+  onInputChange?: (value: string) => void;
 }) => {
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(value ?? "");
   const { data: options = [], status } = useAutocompleteAddress({
     search: searchText,
   });
@@ -30,7 +39,13 @@ export const AutocompleteAddress = ({
     null,
   );
 
-  const [displayOptions, setDisplayOptions] = useState(true);
+  const [displayOptions, setDisplayOptions] = useState(false);
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setSearchText(value);
+    }
+  }, [value]);
 
   const updateSearchText = async (newSearchText: string) => {
     setSearchText(newSearchText);
@@ -74,7 +89,10 @@ export const AutocompleteAddress = ({
   const handleOptionSelection = (newSelectedOption: AddressOption) => {
     setSelectedOption(newSelectedOption);
     onOptionSelection?.(newSelectedOption);
-    setSearchText(newSelectedOption.label);
+    if (value === undefined) {
+      setSearchText(newSelectedOption.label);
+    }
+    setDisplayOptions(false);
   };
 
   const handleSubmit = () => {
@@ -94,11 +112,13 @@ export const AutocompleteAddress = ({
           onKeyDown: handleKeyDownOnOptions,
           onChange: (event) => {
             updateSearchText(event.target.value);
-
+            onInputChange?.(event.target.value);
+            setSelectedOption(null);
             setDisplayOptions(true);
           },
           value: searchText,
-          onBlur: () => {
+          onBlur: (event) => {
+            nativeInputProps?.onBlur?.(event);
             setTimeout(() => setDisplayOptions(false), 200);
           },
           onFocus: () => setDisplayOptions(true),

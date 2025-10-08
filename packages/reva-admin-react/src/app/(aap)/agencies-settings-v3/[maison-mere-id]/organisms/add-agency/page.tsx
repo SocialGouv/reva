@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 
 import OrganismInformationForm from "../_components/OrganismInformationForm";
-import { OrganismInformationFormData } from "../_components/organismInformationFormSchema";
+import { OrganismInformationOutputData } from "../_components/organismInformationFormSchema";
 
 import { useAddLieuAccueilPage } from "./addLieuAccueil.hook";
 
@@ -13,7 +13,7 @@ const AddLieuAccueilPage = () => {
   const { createLieuAccueilInfo, isAdmin } = useAddLieuAccueilPage();
   const { "maison-mere-id": maisonMereAAPId } = useParams();
   const handleCreateLieuAccueilInfo = async (
-    data: OrganismInformationFormData,
+    data: OrganismInformationOutputData,
   ) => {
     await createLieuAccueilInfo({
       ...data,

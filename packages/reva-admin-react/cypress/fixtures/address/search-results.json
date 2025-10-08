@@ -1,0 +1,28 @@
+{
+  "features": [
+    {
+      "properties": {
+        "label": "10 Rue de la Paix 75002 Paris",
+        "name": "10 Rue de la Paix",
+        "postcode": "75002",
+        "city": "Paris"
+      }
+    },
+    {
+      "properties": {
+        "label": "10 Rue de la République 69001 Lyon",
+        "name": "10 Rue de la République",
+        "postcode": "69001",
+        "city": "Lyon"
+      }
+    },
+    {
+      "properties": {
+        "label": "20 Avenue des Champs-Élysées 75008 Paris",
+        "name": "20 Avenue des Champs-Élysées",
+        "postcode": "75008",
+        "city": "Paris"
+      }
+    }
+  ]
+}

@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 
 import OrganismInformationForm from "../../../_components/OrganismInformationForm";
-import { OrganismInformationFormData } from "../../../_components/organismInformationFormSchema";
+import { OrganismInformationOutputData } from "../../../_components/organismInformationFormSchema";
 
 import { useOrganismInformationOnSite } from "./organismInformationOnSite.hook";
 
@@ -18,22 +18,12 @@ const InformationsOnSitePage = () => {
     maisonMereAAPId,
     isAdmin,
   } = useOrganismInformationOnSite();
-  const handleSubmit = async (data: OrganismInformationFormData) => {
-    const input = {
-      nomPublic: data.nomPublic,
-      telephone: data.telephone,
-      siteInternet: data.siteInternet,
-      emailContact: data.emailContact,
-      adresseNumeroEtNomDeRue: data.adresseNumeroEtNomDeRue,
-      adresseInformationsComplementaires:
-        data.adresseInformationsComplementaires,
-      adresseCodePostal: data.adresseCodePostal,
-      adresseVille: data.adresseVille,
+  const handleSubmit = async (data: OrganismInformationOutputData) => {
+    await createOrUpdateInformationsCommerciales({
+      ...data,
       conformeNormesAccessibilite:
         data.conformeNormesAccessibilite as ConformiteNormeAccessibilite,
-    };
-
-    await createOrUpdateInformationsCommerciales(input);
+    });
   };
 
   const organismName = organism?.nomPublic || organism?.label;
@@ -49,8 +39,7 @@ const InformationsOnSitePage = () => {
       telephone: organism?.telephone ?? "",
       siteInternet: organism?.siteInternet ?? "",
       emailContact: organism?.emailContact ?? "",
-      conformeNormesAccessibilite:
-        organism?.conformeNormesAccessibilite as OrganismInformationFormData["conformeNormesAccessibilite"],
+      conformeNormesAccessibilite: organism?.conformeNormesAccessibilite,
     }),
     [organism],
   );
