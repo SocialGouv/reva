@@ -44,15 +44,17 @@ export const updateAppointment = async ({
     data: rest,
   });
 
-  //TODO: update logging event when we will have more than one appointment
-  await logCandidacyAuditEvent({
-    candidacyId: input.candidacyId,
-    eventType: "APPOINTMENT_INFO_UPDATED",
-    ...userInfo,
-    details: {
-      firstAppointmentOccuredAt: input.date,
-    },
-  });
+  if (!appointmentsFeatureActive) {
+    //TODO: update logging event when we will have more than one appointment
+    await logCandidacyAuditEvent({
+      candidacyId: input.candidacyId,
+      eventType: "APPOINTMENT_INFO_UPDATED",
+      ...userInfo,
+      details: {
+        firstAppointmentOccuredAt: input.date,
+      },
+    });
+  }
 
   return result;
 };
