@@ -1,6 +1,8 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { isAfter } from "date-fns";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+
 import { CandidacyUseCandidateForDashboard } from "../../dashboard.hooks";
 import TileGroup from "../../tiles/TileGroup";
 
@@ -42,6 +44,10 @@ export const AppointmentTiles = ({
     !isReadyForJury &&
     !hasDateOfJurySession;
 
+  const { isFeatureActive } = useFeatureFlipping();
+
+  const isAppointmentFeatureEnabled = isFeatureActive("APPOINTMENTS");
+
   return (
     <div>
       <TileGroup
@@ -67,7 +73,7 @@ export const AppointmentTiles = ({
 
         {hasNoAppointment && <NoRendezVousTile />}
       </TileGroup>
-      {candidacy.firstAppointmentOccuredAt && (
+      {candidacy.firstAppointmentOccuredAt && isAppointmentFeatureEnabled && (
         <div className="flex justify-end mt-4">
           <Button
             data-test="all-appointments-button"
