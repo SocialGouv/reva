@@ -42,7 +42,7 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
       );
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
-          activeFeaturesForConnectedUser: [],
+          activeFeaturesForConnectedUser: ["APPOINTMENTS"],
         },
       });
     });
