@@ -7,10 +7,10 @@ const updateAvailableCertificationsWithRncpFieldsAndSubDomains = async () => {
     select: { id: true, rncpId: true },
   });
 
-  for (const { rncpId } of certifications) {
+  for (const { id } of certifications) {
     try {
       await updateCertificationWithRncpFieldsAndSubDomains({
-        codeRncp: rncpId,
+        id,
       });
     } catch (error) {
       console.error(error);

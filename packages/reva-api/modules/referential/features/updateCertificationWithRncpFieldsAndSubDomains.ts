@@ -11,18 +11,18 @@ type CertificationFormacode = Formacode & {
 };
 
 export const updateCertificationWithRncpFieldsAndSubDomains = async (params: {
-  codeRncp: string;
+  id: string;
 }) => {
-  const { codeRncp } = params;
+  const { id } = params;
 
-  const certification = await prismaClient.certification.findFirst({
-    where: { rncpId: codeRncp },
+  const certification = await prismaClient.certification.findUnique({
+    where: { id },
   });
   if (!certification) {
-    throw new Error(
-      `La certification avec le code rncp ${codeRncp} n'existe pas`,
-    );
+    throw new Error(`La certification avec l'id ${id} n'existe pas`);
   }
+
+  const codeRncp = certification.rncpId;
 
   const rncpCertification =
     await RNCPReferential.getInstance().findOneByRncp(codeRncp);
