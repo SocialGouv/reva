@@ -66,6 +66,12 @@ const unsafeResolvers = {
       getHighestDegreeById({ highestDegreeId }),
     candidacy: async ({ id: candidateId }: { id: string }) =>
       getFirstActiveCandidacyByCandidateId({ candidateId }),
+    candidacies: async ({ id: candidateId }: { id: string }) => {
+      const activeCandidacy = getFirstActiveCandidacyByCandidateId({
+        candidateId,
+      });
+      return activeCandidacy ? [activeCandidacy] : [];
+    },
   },
   Query: {
     candidate_getCandidateWithCandidacy: (

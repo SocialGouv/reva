@@ -2,7 +2,7 @@ import { format } from "date-fns";
 
 import { stubQuery } from "../../utils/graphql";
 
-import candidateData from "./fixtures/candidate.json";
+import candidacy1Data from "./fixtures/candidacy1.json";
 import countries from "./fixtures/countries.json";
 import departments from "./fixtures/departments.json";
 
@@ -37,42 +37,42 @@ const TOAST_ERROR = '[data-testid="toast-error"]';
 const FRANCE_COUNTRY_ID = "208ef9d1-4d18-475b-9f5f-575da5f7218c";
 
 context("Candidate Profile Page", () => {
-  const candidate = candidateData.data.candidate_getCandidateWithCandidacy;
+  const candidate = candidacy1Data.data.getCandidacyById.candidate;
 
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(
+        req,
+        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidacies-with-candidacy-1.json",
+      );
+      stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+      stubQuery(req, "getCandidacyByIdWithCandidate", "candidacy1.json");
+      stubQuery(req, "getCandidacyByIdForDashboard", "candidacy1.json");
+
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForLayout",
-        "candidate1.json",
+        "getCandidacyByIdWithCandidateForProfilePage",
+        candidacy1Data,
       );
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        "candidate1.json",
-      );
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate1.json",
-      );
-      stubQuery(req, "getCandidateForProfilePage", candidateData);
       stubQuery(req, "getCountries", countries);
       stubQuery(req, "getDepartments", departments);
     });
 
     cy.login();
     cy.wait([
-      "@candidate_getCandidateWithCandidacyForLayout",
-      "@candidate_getCandidateWithCandidacyForHome",
-      "@candidate_getCandidateWithCandidacyForDashboard",
+      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@activeFeaturesForConnectedUser",
+      "@getCandidacyByIdForCandidacyGuard",
+      "@getCandidacyByIdWithCandidate",
+      "@getCandidacyByIdForDashboard",
     ]);
-    cy.visit("/profile");
+    cy.visit("/c1/profile");
     cy.wait([
       "@getDepartments",
       "@getCountries",
-      "@getCandidateForProfilePage",
+      "@getCandidacyByIdWithCandidateForProfilePage",
     ]);
   });
 
@@ -298,44 +298,42 @@ context("Candidate Profile Page", () => {
   describe("Form Field Disabling Based on Candidacy Status", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(
+          req,
+          "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+          "candidacies-with-candidacy-1.json",
+        );
+        stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy1.json");
         stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidacyForLayout",
-          "candidate1.json",
-        );
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidacyForDashboard",
-          "candidate1.json",
-        );
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidacyForHome",
-          "candidate1.json",
-        );
+        stubQuery(req, "getCandidacyByIdWithCandidate", "candidacy1.json");
+        stubQuery(req, "getCandidacyByIdForDashboard", "candidacy1.json");
 
         const submittedCandidacyData = {
-          ...candidateData,
+          ...candidacy1Data,
         };
 
-        submittedCandidacyData.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PRISE_EN_CHARGE";
+        submittedCandidacyData.data.getCandidacyById.status = "PRISE_EN_CHARGE";
 
-        stubQuery(req, "getCandidateForProfilePage", submittedCandidacyData);
+        stubQuery(
+          req,
+          "getCandidacyByIdWithCandidateForProfilePage",
+          submittedCandidacyData,
+        );
         stubQuery(req, "getCountries", countries);
         stubQuery(req, "getDepartments", departments);
       });
 
       cy.login();
       cy.wait([
-        "@candidate_getCandidateWithCandidacyForLayout",
-        "@candidate_getCandidateWithCandidacyForHome",
-        "@candidate_getCandidateWithCandidacyForDashboard",
+        "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "@activeFeaturesForConnectedUser",
+        "@getCandidacyByIdForCandidacyGuard",
+        "@getCandidacyByIdWithCandidate",
+        "@getCandidacyByIdForDashboard",
       ]);
-      cy.visit("/profile");
+      cy.visit("/c1/profile");
       cy.wait([
-        "@getCandidateForProfilePage",
+        "@getCandidacyByIdWithCandidateForProfilePage",
         "@getCountries",
         "@getDepartments",
       ]);

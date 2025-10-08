@@ -21,6 +21,7 @@ import { waitGraphQL, waitRest } from "@tests/helpers/network/requests";
 
 import {
   Candidacy,
+  Candidate,
   Feasibility,
   Organism,
   TypeAccompagnement,
@@ -38,15 +39,17 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         typeAccompagnement === "ACCOMPAGNE"
           ? (createOrganismEntity() as Organism)
           : undefined;
+      const candidate = createCandidateEntity() as Candidate;
       const candidacy = createCandidacyEntity({
+        candidate,
         status: "PROJET",
         certification,
         organism,
         typeAccompagnement,
       }) as Candidacy;
-      const candidate = createCandidateEntity({ candidacy });
+
       const { handlers, dashboardWait } = dashboardHandlers({
-        candidate,
+        candidacy,
       });
 
       test.use({
@@ -79,16 +82,17 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
+        const candidate = createCandidateEntity() as Candidate;
         const candidacy = createCandidacyEntity({
+          candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
           feasibility: feasibility as Feasibility,
         }) as Candidacy;
-        const candidate = createCandidateEntity({ candidacy });
         const { handlers, dashboardWait } = dashboardHandlers({
-          candidate,
+          candidacy,
         });
 
         test.use({
@@ -107,7 +111,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           await expect(dossierValidationButton).not.toBeDisabled();
 
           await dossierValidationButton.click();
-          await expect(page).toHaveURL("/candidat/dossier-de-validation/");
+          await expect(page).toHaveURL(
+            `/candidat/${candidacy.id}/dossier-de-validation/`,
+          );
         });
       });
 
@@ -122,17 +128,18 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           feasibilityFileSentAt: new Date().getTime(),
         });
 
+        const candidate = createCandidateEntity() as Candidate;
         const candidacy = createCandidacyEntity({
+          candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
           feasibility: feasibility as Feasibility,
         }) as Candidacy;
-        const candidate = createCandidateEntity({ candidacy });
         const { handlers, dossierDeValidationWait } =
           dossierDeValidationHandlers({
-            candidate,
+            candidacy,
           });
 
         test.use({
@@ -143,7 +150,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           page,
         }) => {
           await login(page);
-          await navigateToDossierValidation(page);
+          await navigateToDossierValidation(page, candidacy.id);
           await dossierDeValidationWait(page);
 
           const dateInput = page.locator(
@@ -176,17 +183,18 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
+        const candidate = createCandidateEntity() as Candidate;
         const candidacy = createCandidacyEntity({
+          candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
           feasibility: feasibility as Feasibility,
         }) as Candidacy;
-        const candidate = createCandidateEntity({ candidacy });
         const { handlers, dossierDeValidationWait } =
           dossierDeValidationHandlers({
-            candidate,
+            candidacy,
           });
 
         test.use({
@@ -197,7 +205,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           page,
         }) => {
           await login(page);
-          await navigateToDossierValidation(page);
+          await navigateToDossierValidation(page, candidacy.id);
           await dossierDeValidationWait(page);
           await clickDossierTab(page);
 
@@ -241,17 +249,18 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
+        const candidate = createCandidateEntity() as Candidate;
         const candidacy = createCandidacyEntity({
+          candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
           feasibility: feasibility as Feasibility,
         }) as Candidacy;
-        const candidate = createCandidateEntity({ candidacy });
         const { handlers, dossierDeValidationWait } =
           dossierDeValidationHandlers({
-            candidate,
+            candidacy,
           });
 
         test.use({
@@ -262,7 +271,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           await mockDossierValidationUpload(page);
 
           await login(page);
-          await navigateToDossierValidation(page);
+          await navigateToDossierValidation(page, candidacy.id);
           await dossierDeValidationWait(page);
           await clickDossierTab(page);
 
@@ -288,7 +297,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             .click();
           await uploadRequest;
 
-          await expect(page).toHaveURL("/candidat/");
+          await expect(page).toHaveURL(`/candidat/${candidacy.id}/`);
         });
       });
 
@@ -302,17 +311,18 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
+        const candidate = createCandidateEntity() as Candidate;
         const candidacy = createCandidacyEntity({
+          candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
           feasibility: feasibility as Feasibility,
         }) as Candidacy;
-        const candidate = createCandidateEntity({ candidacy });
         const { handlers, dossierDeValidationWait } =
           dossierDeValidationHandlers({
-            candidate,
+            candidacy,
           });
 
         test.use({
@@ -323,7 +333,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           page,
         }) => {
           await login(page);
-          await navigateToDossierValidation(page);
+          await navigateToDossierValidation(page, candidacy.id);
           await dossierDeValidationWait(page);
           await clickDossierTab(page);
 

@@ -1,100 +1,89 @@
 import { stubQuery } from "../../utils/graphql";
 
-interface CandidateFixture {
+interface CandidacyFixture {
   data: {
-    candidate_getCandidateWithCandidacy: {
-      candidacy: {
-        organism: {
-          id: string;
+    getCandidacyById: {
+      organism: {
+        id: string;
+        label: string;
+        nomPublic?: string;
+        emailContact?: string;
+        contactAdministrativeEmail?: string;
+        telephone?: string;
+        contactAdministrativePhone?: string;
+        adresseNumeroEtNomDeRue?: string;
+        adresseInformationsComplementaires?: string;
+        adresseCodePostal?: string;
+        adresseVille?: string;
+      } | null;
+      feasibility?: {
+        certificationAuthority?: {
           label: string;
-          nomPublic?: string;
-          emailContact?: string;
-          contactAdministrativeEmail?: string;
-          telephone?: string;
-          contactAdministrativePhone?: string;
-          adresseNumeroEtNomDeRue?: string;
-          adresseInformationsComplementaires?: string;
-          adresseCodePostal?: string;
-          adresseVille?: string;
+          contactFullName?: string;
+          contactEmail?: string;
         } | null;
-        feasibility?: {
-          certificationAuthority?: {
-            label: string;
-            contactFullName?: string;
-            contactEmail?: string;
-          } | null;
-        } | null;
-        [key: string]: unknown;
-      };
+      } | null;
+      [key: string]: unknown;
     };
   };
 }
 
 context("Dashboard Sidebar - Contact Tiles", () => {
-  beforeEach(() => {
+  const interceptGraphQL = (candidacy?: CandidacyFixture) => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForLayout",
-        "candidate1.json",
+        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidacies-with-candidacy-1.json",
       );
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate1.json",
-      );
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        "candidate1.json",
+        "getCandidacyByIdForCandidacyGuard",
+        candidacy || "candidacy1.json",
       );
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
-          activeFeaturesForConnectedUser: [],
+          activeFeaturesForConnectedUser: ["APPOINTMENTS"],
         },
       });
+      stubQuery(
+        req,
+        "getCandidacyByIdWithCandidate",
+        candidacy || "candidacy1.json",
+      );
+      stubQuery(
+        req,
+        "getCandidacyByIdForDashboard",
+        candidacy || "candidacy1.json",
+      );
     });
 
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidacyForLayout",
-      "@candidate_getCandidateWithCandidacyForHome",
-      "@candidate_getCandidateWithCandidacyForDashboard",
+      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
+      "@getCandidacyByIdForCandidacyGuard",
+      "@getCandidacyByIdWithCandidate",
+      "@getCandidacyByIdForDashboard",
     ]);
-
-    cy.visit("/");
-  });
-
-  const interceptGraphQL = (candidate: CandidateFixture) => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        candidate,
-      );
-      stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
-      stubQuery(req, "candidate_getCandidateWithCandidacyForLayout", candidate);
-    });
   };
 
-  const resetContactData = (candidate: CandidateFixture) => {
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-      null;
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility = {
+  const resetContactData = (candidacy: CandidacyFixture) => {
+    candidacy.data.getCandidacyById.organism = null;
+    candidacy.data.getCandidacyById.feasibility = {
       certificationAuthority: null,
     };
-    return candidate;
+    return candidacy;
   };
 
   describe("NoContactTile", () => {
     it("should display when no contacts exist", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="no-contact-tile"]').should("be.visible");
           cy.get('[data-test="aap-contact-tile"]').should("not.exist");
@@ -108,18 +97,17 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
   describe("AapContactTile", () => {
     it("should display when organism data is available", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-            {
-              id: "org-1",
-              label: "Test Organism",
-              emailContact: "contact@organism.test",
-              telephone: "0123456789",
-            };
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.organism = {
+            id: "org-1",
+            label: "Test Organism",
+            emailContact: "contact@organism.test",
+            telephone: "0123456789",
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="aap-contact-tile"]').should("be.visible");
           cy.get('[data-test="no-contact-tile"]').should("not.exist");
@@ -128,22 +116,21 @@ context("Dashboard Sidebar - Contact Tiles", () => {
     });
 
     it("should display with complete address information when available", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-            {
-              id: "org-1",
-              label: "Test Organism",
-              emailContact: "contact@organism.test",
-              telephone: "0123456789",
-              adresseNumeroEtNomDeRue: "123 Rue de Test",
-              adresseInformationsComplementaires: "Bâtiment A",
-              adresseCodePostal: "75001",
-              adresseVille: "Paris",
-            };
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.organism = {
+            id: "org-1",
+            label: "Test Organism",
+            emailContact: "contact@organism.test",
+            telephone: "0123456789",
+            adresseNumeroEtNomDeRue: "123 Rue de Test",
+            adresseInformationsComplementaires: "Bâtiment A",
+            adresseCodePostal: "75001",
+            adresseVille: "Paris",
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="aap-contact-tile"]').should("be.visible");
           cy.get('[data-test="aap-contact-tile"]')
@@ -160,19 +147,18 @@ context("Dashboard Sidebar - Contact Tiles", () => {
     });
 
     it("should use nomPublic instead of label when available", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-            {
-              id: "org-1",
-              label: "Test Organism",
-              nomPublic: "Public Organism Name",
-              emailContact: "contact@organism.test",
-              telephone: "0123456789",
-            };
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.organism = {
+            id: "org-1",
+            label: "Test Organism",
+            nomPublic: "Public Organism Name",
+            emailContact: "contact@organism.test",
+            telephone: "0123456789",
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="aap-contact-tile"]').should("be.visible");
           cy.get('[data-test="aap-contact-tile"]')
@@ -183,18 +169,17 @@ context("Dashboard Sidebar - Contact Tiles", () => {
     });
 
     it("should use administrative contact details as fallback", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-            {
-              id: "org-1",
-              label: "Test Organism",
-              contactAdministrativeEmail: "admin@organism.test",
-              contactAdministrativePhone: "9876543210",
-            };
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.organism = {
+            id: "org-1",
+            label: "Test Organism",
+            contactAdministrativeEmail: "admin@organism.test",
+            contactAdministrativePhone: "9876543210",
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="aap-contact-tile"]').should("be.visible");
           cy.get('[data-test="aap-contact-tile"]')
@@ -210,19 +195,18 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
   describe("CertificationAuthorityContactTile", () => {
     it("should display when certification authority data is available", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-            {
-              certificationAuthority: {
-                label: "Test Certification Authority",
-                contactFullName: "John Doe",
-                contactEmail: "john.doe@authority.test",
-              },
-            };
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.feasibility = {
+            certificationAuthority: {
+              label: "Test Certification Authority",
+              contactFullName: "John Doe",
+              contactEmail: "john.doe@authority.test",
+            },
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="certification-authority-contact-tile"]').should(
             "be.visible",
@@ -233,19 +217,18 @@ context("Dashboard Sidebar - Contact Tiles", () => {
     });
 
     it("should display contact information when available", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-            {
-              certificationAuthority: {
-                label: "Test Certification Authority",
-                contactFullName: "John Doe",
-                contactEmail: "john.doe@authority.test",
-              },
-            };
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.feasibility = {
+            certificationAuthority: {
+              label: "Test Certification Authority",
+              contactFullName: "John Doe",
+              contactEmail: "john.doe@authority.test",
+            },
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="certification-authority-contact-tile"]')
             .contains("Test Certification Authority")
@@ -261,18 +244,17 @@ context("Dashboard Sidebar - Contact Tiles", () => {
     });
 
     it("should display local accounts contact information when available", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-            {
-              certificationAuthority: {
-                label: "Test Certification Authority",
-                contactFullName: "John Doe",
-                contactEmail: "john.doe@authority.test",
-              },
-            };
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.certificationAuthorityLocalAccounts =
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.feasibility = {
+            certificationAuthority: {
+              label: "Test Certification Authority",
+              contactFullName: "John Doe",
+              contactEmail: "john.doe@authority.test",
+            },
+          };
+          candidacy.data.getCandidacyById.certificationAuthorityLocalAccounts =
             [
               {
                 contactFullName: "Jane Doe public contact",
@@ -285,7 +267,7 @@ context("Dashboard Sidebar - Contact Tiles", () => {
                 contactPhone: "023456789",
               },
             ];
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="certification-authority-contact-tile"]')
             .contains("Test Certification Authority")
@@ -304,17 +286,16 @@ context("Dashboard Sidebar - Contact Tiles", () => {
     });
 
     it("should handle missing contact information", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-            {
-              certificationAuthority: {
-                label: "Test Certification Authority",
-              },
-            };
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.feasibility = {
+            certificationAuthority: {
+              label: "Test Certification Authority",
+            },
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="certification-authority-contact-tile"]').should(
             "be.visible",
@@ -329,26 +310,24 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
   describe("Multiple Contact Tiles", () => {
     it("should display both AAP and certification authority tiles when both exist", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetContactData(initialCandidate);
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-            {
-              id: "org-1",
-              label: "Test Organism",
-              emailContact: "contact@organism.test",
-              telephone: "0123456789",
-            };
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-            {
-              certificationAuthority: {
-                label: "Test Certification Authority",
-                contactFullName: "John Doe",
-                contactEmail: "john.doe@authority.test",
-              },
-            };
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetContactData(initialCandidacy);
+          candidacy.data.getCandidacyById.organism = {
+            id: "org-1",
+            label: "Test Organism",
+            emailContact: "contact@organism.test",
+            telephone: "0123456789",
+          };
+          candidacy.data.getCandidacyById.feasibility = {
+            certificationAuthority: {
+              label: "Test Certification Authority",
+              contactFullName: "John Doe",
+              contactEmail: "john.doe@authority.test",
+            },
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="aap-contact-tile"]').should("be.visible");
           cy.get('[data-test="certification-authority-contact-tile"]').should(

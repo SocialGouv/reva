@@ -40,7 +40,7 @@ export const SubmitCandidacyTile = ({
       small
       buttonProps={{
         onClick: () => {
-          router.push("/submit-candidacy");
+          router.push("./submit-candidacy");
         },
       }}
       imageUrl="/candidat/images/pictograms/mail-send.svg"

@@ -2,7 +2,7 @@ import { subMonths } from "date-fns";
 
 import { stubQuery } from "../../utils/graphql";
 
-import candidateDropOut from "./fixtures/candidate-dropped-out.json";
+import candidacy1DropOut from "./fixtures/candidacy1-dropped-out.json";
 
 function interceptCandidacy({
   droppedOut = false,
@@ -16,41 +16,42 @@ function interceptCandidacy({
   dropOutDate?: Date;
 }) {
   cy.intercept("POST", "/api/graphql", (req) => {
-    const candidate = {
+    const candidacy = {
       data: {
-        candidate_getCandidateWithCandidacy: {
-          ...candidateDropOut.data.candidate_getCandidateWithCandidacy,
-          candidacy: {
-            ...candidateDropOut.data.candidate_getCandidateWithCandidacy
-              .candidacy,
-            candidacyDropOut: droppedOut
-              ? {
-                  createdAt: dropOutDate
-                    ? dropOutDate.toJSON()
-                    : new Date().toJSON(),
-                  proofReceivedByAdmin,
-                  dropOutConfirmedByCandidate,
-                }
-              : null,
-          },
+        getCandidacyById: {
+          ...candidacy1DropOut.data.getCandidacyById,
+
+          candidacyDropOut: droppedOut
+            ? {
+                createdAt: dropOutDate
+                  ? dropOutDate.toJSON()
+                  : new Date().toJSON(),
+                proofReceivedByAdmin,
+                dropOutConfirmedByCandidate,
+              }
+            : null,
         },
       },
     };
-    stubQuery(req, "candidate_getCandidateWithCandidacyForLayout", candidate);
-    stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
+
     stubQuery(
       req,
-      "candidate_getCandidateWithCandidacyForDashboard",
-      candidate,
+      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidacies-with-candidacy-1.json",
     );
+    stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
     stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+    stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
   });
   cy.login();
 
   cy.wait([
-    "@candidate_getCandidateWithCandidacyForLayout",
-    "@candidate_getCandidateWithCandidacyForHome",
-    "@candidate_getCandidateWithCandidacyForDashboard",
+    "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+    "@activeFeaturesForConnectedUser",
+    "@getCandidacyByIdForCandidacyGuard",
+    "@getCandidacyByIdWithCandidate",
+    "@getCandidacyByIdForDashboard",
   ]);
 }
 
@@ -69,7 +70,7 @@ context("Candidacy dropout warning", () => {
         cy.get('[data-test="drop-out-warning-decision-button"]').click();
         cy.url().should(
           "eq",
-          "http://localhost:3004/candidat/candidacy-dropout-decision/",
+          "http://localhost:3004/candidat/c1/candidacy-dropout-decision/",
         );
       });
 

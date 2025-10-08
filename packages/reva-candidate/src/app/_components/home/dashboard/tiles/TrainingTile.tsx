@@ -74,8 +74,8 @@ export const TrainingTile = ({
             candidacyStatus == "PRISE_EN_CHARGE" &&
               !!firstAppointmentOccuredAt &&
               isBefore(parseISO(firstAppointmentOccuredAt), new Date())
-              ? "/waiting-for-training"
-              : "/validate-training",
+              ? "./waiting-for-training"
+              : "./validate-training",
           );
         },
       }}

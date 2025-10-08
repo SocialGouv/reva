@@ -4,10 +4,13 @@ import readyForJuryMutation from "@tests/fixtures/candidate/dossier-de-validatio
 import { graphQLResolver } from "@tests/helpers/network/msw";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { Candidate } from "@/graphql/generated/graphql";
+import { Candidacy } from "@/graphql/generated/graphql";
 
-export async function navigateToDossierValidation(page: Page) {
-  await page.goto("dossier-de-validation/");
+export async function navigateToDossierValidation(
+  page: Page,
+  candidacyId: string,
+) {
+  await page.goto(`${candidacyId}/dossier-de-validation/`);
 }
 
 export async function clickDossierTab(page: Page) {
@@ -15,7 +18,7 @@ export async function clickDossierTab(page: Page) {
 }
 
 interface DashboardHandlersOptions {
-  candidate: Candidate;
+  candidacy: Partial<Candidacy>;
   activeFeaturesForConnectedUser?: string[];
 }
 
@@ -24,38 +27,46 @@ const dossierDeValidationWait = async (page: Page) => {
 
   const dossierDeValidationQuery = waitGraphQL(
     page,
-    "getCandidateWithCandidacyForDossierDeValidationPage",
+    "getCandidacyByIdForDossierDeValidationPage",
   );
 
   await Promise.all([featuresQuery, dossierDeValidationQuery]);
 };
 
 export const dossierDeValidationHandlers = ({
-  candidate,
+  candidacy,
   activeFeaturesForConnectedUser = [],
 }: DashboardHandlersOptions) => {
   const fvae = graphql.link("https://reva-api/api/graphql");
 
   const candidacyInput = {
-    candidate_getCandidateWithCandidacy: candidate,
+    getCandidacyById: candidacy,
   };
 
   return {
     handlers: [
       fvae.query(
-        "candidate_getCandidateWithCandidacyForLayout",
+        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        graphQLResolver({
+          candidate_getCandidateWithCandidacy: {
+            candidacies: [candidacy],
+          },
+        }),
+      ),
+      fvae.query(
+        "getCandidacyByIdForCandidacyGuard",
         graphQLResolver(candidacyInput),
       ),
       fvae.query(
-        "candidate_getCandidateWithCandidacyForDashboard",
+        "getCandidacyByIdWithCandidate",
         graphQLResolver(candidacyInput),
       ),
       fvae.query(
-        "candidate_getCandidateWithCandidacyForHome",
+        "getCandidacyByIdForDashboard",
         graphQLResolver(candidacyInput),
       ),
       fvae.query(
-        "getCandidateWithCandidacyForDossierDeValidationPage",
+        "getCandidacyByIdForDossierDeValidationPage",
         graphQLResolver(candidacyInput),
       ),
       fvae.mutation(

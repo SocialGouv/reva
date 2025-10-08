@@ -34,7 +34,7 @@ export const CandidacyDropOutBanner = ({
   let actionButton;
   if (!dropOutConfirmed) {
     actionButton = {
-      href: "/candidacy-dropout-decision",
+      href: "./candidacy-dropout-decision",
       label: "Enregistrer ma décision",
       testId: "drop-out-warning-decision-button",
     };

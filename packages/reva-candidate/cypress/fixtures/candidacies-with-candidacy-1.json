@@ -1,0 +1,11 @@
+{
+  "data": {
+    "candidate_getCandidateWithCandidacy": {
+      "candidacies": [
+        {
+          "id": "c1"
+        }
+      ]
+    }
+  }
+}

@@ -13,7 +13,7 @@ import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 import { graphQLResolver } from "@tests/helpers/network/msw";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { Candidacy, Organism } from "@/graphql/generated/graphql";
+import { Candidacy, Candidate, Organism } from "@/graphql/generated/graphql";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -58,15 +58,16 @@ function buildEndAccompagnementQueryPayload({
 
 test.describe.skip("End accompagnement page", () => {
   test.describe("rendering and content", () => {
-    const candidate = createCandidateEntity({
-      candidacy: createCandidacyEntity({
-        status: "PROJET",
-        certification: createCertificationEntity(),
-        organism: createOrganismEntity() as Organism,
-      }) as Candidacy,
-    });
-    const { handlers, dashboardWait } = dashboardHandlers({
+    const candidate = createCandidateEntity() as Candidate;
+    const candidacy = createCandidacyEntity({
       candidate,
+      status: "PROJET",
+      certification: createCertificationEntity(),
+      organism: createOrganismEntity() as Organism,
+    }) as Candidacy;
+
+    const { handlers, dashboardWait } = dashboardHandlers({
+      candidacy,
       activeFeaturesForConnectedUser: [],
     });
     test.use({
@@ -126,15 +127,16 @@ test.describe.skip("End accompagnement page", () => {
   });
 
   test.describe("badges and details variants", () => {
-    const candidate = createCandidateEntity({
-      candidacy: createCandidacyEntity({
-        status: "PROJET",
-        certification: createCertificationEntity(),
-        organism: createOrganismEntity() as Organism,
-      }) as Candidacy,
-    });
-    const { handlers, dashboardWait } = dashboardHandlers({
+    const candidate = createCandidateEntity() as Candidate;
+    const candidacy = createCandidacyEntity({
       candidate,
+      status: "PROJET",
+      certification: createCertificationEntity(),
+      organism: createOrganismEntity() as Organism,
+    }) as Candidacy;
+
+    const { handlers, dashboardWait } = dashboardHandlers({
+      candidacy,
       activeFeaturesForConnectedUser: [],
     });
     test.use({
@@ -191,15 +193,16 @@ test.describe.skip("End accompagnement page", () => {
   });
 
   test.describe("validation and submission", () => {
-    const candidate = createCandidateEntity({
-      candidacy: createCandidacyEntity({
-        status: "PROJET",
-        certification: createCertificationEntity(),
-        organism: createOrganismEntity() as Organism,
-      }) as Candidacy,
-    });
-    const { handlers, dashboardWait } = dashboardHandlers({
+    const candidate = createCandidateEntity() as Candidate;
+    const candidacy = createCandidacyEntity({
       candidate,
+      status: "PROJET",
+      certification: createCertificationEntity(),
+      organism: createOrganismEntity() as Organism,
+    }) as Candidacy;
+
+    const { handlers, dashboardWait } = dashboardHandlers({
+      candidacy,
       activeFeaturesForConnectedUser: [],
     });
     test.use({
@@ -255,7 +258,7 @@ test.describe.skip("End accompagnement page", () => {
       ]);
 
       await expect(page.getByText("Décision enregistrée")).toBeVisible();
-      await expect(page).toHaveURL("/candidat/");
+      await expect(page).toHaveURL(`/candidat/${candidacy.id}/`);
     });
 
     test("REFUSED: submits mutation and redirects to home with toast", async ({
@@ -277,20 +280,21 @@ test.describe.skip("End accompagnement page", () => {
       ]);
 
       await expect(page.getByText("Décision enregistrée")).toBeVisible();
-      await expect(page).toHaveURL("/candidat/");
+      await expect(page).toHaveURL(`/candidat/${candidacy.id}/`);
     });
   });
 
   test.describe("redirect and empty states", () => {
-    const candidate = createCandidateEntity({
-      candidacy: createCandidacyEntity({
-        status: "PROJET",
-        certification: createCertificationEntity(),
-        organism: createOrganismEntity() as Organism,
-      }) as Candidacy,
-    });
-    const { handlers, dashboardWait } = dashboardHandlers({
+    const candidate = createCandidateEntity() as Candidate;
+    const candidacy = createCandidacyEntity({
       candidate,
+      status: "PROJET",
+      certification: createCertificationEntity(),
+      organism: createOrganismEntity() as Organism,
+    }) as Candidacy;
+
+    const { handlers, dashboardWait } = dashboardHandlers({
+      candidacy,
       activeFeaturesForConnectedUser: [],
     });
     test.use({
@@ -316,7 +320,7 @@ test.describe.skip("End accompagnement page", () => {
       await login(page);
       await dashboardWait(page);
       await page.goto("end-accompagnement/");
-      await expect(page).toHaveURL("/candidat/");
+      await expect(page).toHaveURL(`/candidat/${candidacy.id}/`);
     });
 
     test.use({
@@ -341,20 +345,23 @@ test.describe.skip("End accompagnement page", () => {
       await expect(
         page.locator('[data-test="candidacy-inactif-radio-buttons"]'),
       ).toHaveCount(0);
-      await expect(page).toHaveURL("/candidat/end-accompagnement/");
+      await expect(page).toHaveURL(
+        `/candidat/${candidacy.id}/end-accompagnement/`,
+      );
     });
   });
 
   test.describe("dashboard OrganismTile integration (end accompagnement confirmed)", () => {
-    const candidate = createCandidateEntity({
-      candidacy: createCandidacyEntity({
-        status: "PROJET",
-        certification: createCertificationEntity(),
-        organism: createOrganismEntity() as Organism,
-      }) as Candidacy,
-    });
-    const { handlers, dashboardWait } = dashboardHandlers({
+    const candidate = createCandidateEntity() as Candidate;
+    const candidacy = createCandidacyEntity({
       candidate,
+      status: "PROJET",
+      certification: createCertificationEntity(),
+      organism: createOrganismEntity() as Organism,
+    }) as Candidacy;
+
+    const { handlers, dashboardWait } = dashboardHandlers({
+      candidacy,
       activeFeaturesForConnectedUser: [],
     });
     test.use({

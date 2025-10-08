@@ -1,6 +1,7 @@
 import { ExperienceDuration } from "@/constants/experience-duration.constant";
 
 import {
+  Candidate,
   Candidacy,
   CandidacyStatusStep,
   Certification,
@@ -19,6 +20,7 @@ type CreateCandidacyEntityOptions = {
   candidacyAlreadySubmitted?: boolean;
   organism?: Organism;
   certification?: Certification;
+  candidate?: Candidate;
 } & Partial<Candidacy>;
 
 export const createCandidacyEntity = (
@@ -36,6 +38,7 @@ export const createCandidacyEntity = (
     candidacyAlreadySubmitted,
     typeAccompagnement,
     feasibility,
+    candidate,
   } = options;
 
   const candidacy: CandidacyType = {
@@ -73,6 +76,7 @@ export const createCandidacyEntity = (
     organism: null,
     certification,
     sentAt: null,
+    candidate,
   };
 
   if (organism) {

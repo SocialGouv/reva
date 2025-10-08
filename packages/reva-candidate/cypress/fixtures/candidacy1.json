@@ -1,0 +1,39 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "c1",
+      "typeAccompagnement": "ACCOMPAGNE",
+      "certificationId": null,
+      "organism": null,
+      "createdAt": null,
+      "certification": null,
+      "experiences": [],
+      "goals": [],
+      "appointments": {
+        "rows": []
+      },
+      "status": "PROJET",
+      "candidacyStatuses": [
+        {
+          "status": "PROJET"
+        }
+      ],
+      "certificateSkills": null,
+      "otherTraining": null,
+      "individualHourCount": null,
+      "collectiveHourCount": null,
+      "additionalHourCount": null,
+      "basicSkills": [],
+      "mandatoryTrainings": [],
+      "feasibilityFormat": "UPLOADED_PDF",
+      "activite": "ACTIF",
+      "derniereDateActivite": "2025-01-01",
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "email@example.com",
+        "phone": "06 01 02 03 04"
+      }
+    }
+  }
+}

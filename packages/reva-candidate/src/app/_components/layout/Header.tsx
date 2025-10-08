@@ -3,59 +3,45 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
 
-import { useLayout } from "@/app/_components/layout/layout.hook";
+import { useHeader } from "@/app/_components/layout/Header.hook";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 const getNavigation = ({
-  authenticated,
+  candidacyId,
   currentPathname,
-  isInactifEnAttente,
-  isCandidacyDeletedPath,
   candidateHelpIsActive,
-  isEndAccompagnementPending,
 }: {
-  authenticated: boolean;
+  candidacyId: string;
   currentPathname: string;
-  isInactifEnAttente: boolean;
-  isCandidacyDeletedPath: boolean;
   candidateHelpIsActive: boolean;
-  isEndAccompagnementPending: boolean;
 }) => {
-  if (
-    !authenticated ||
-    isInactifEnAttente ||
-    isCandidacyDeletedPath ||
-    isEndAccompagnementPending
-  )
-    return [];
-
   return [
     {
       text: "Ma candidature",
       linkProps: {
-        href: "/",
+        href: `/${candidacyId}`,
         target: "_self",
       },
-      isActive: currentPathname === "/",
+      isActive: currentPathname === `/${candidacyId}/`,
     },
     {
       text: "Mon profil",
       linkProps: {
-        href: "/profile",
+        href: `/${candidacyId}/profile`,
         target: "_self",
       },
-      isActive: currentPathname.startsWith("/profile"),
+      isActive: currentPathname.startsWith(`/${candidacyId}/profile`),
     },
     ...(candidateHelpIsActive
       ? [
           {
             text: "Aide",
             linkProps: {
-              href: "/help",
+              href: `/${candidacyId}/help`,
               target: "_self",
             },
-            isActive: currentPathname.startsWith("/help"),
+            isActive: currentPathname.startsWith(`/${candidacyId}/help`),
           },
         ]
       : []),
@@ -63,23 +49,34 @@ const getNavigation = ({
 };
 export const Header = () => {
   const { authenticated, logout } = useKeycloakContext();
+
   const currentPathname = usePathname();
-  const { candidate, isEndAccompagnementPending } = useLayout();
-  const isInactifEnAttente =
-    candidate?.candidacy.activite === "INACTIF_EN_ATTENTE";
+
+  const { candidacyId, candidacy } = useHeader();
+
+  const isInactifEnAttente = candidacy?.activite === "INACTIF_EN_ATTENTE";
+  const isEndAccompagnementPending =
+    candidacy?.endAccompagnementStatus === "PENDING";
+
   const isCandidacyDeletedPath =
     currentPathname.startsWith("/candidacy-deleted");
-  const { isFeatureActive } = useFeatureFlipping();
+
+  const { isFeatureActive } = useAnonymousFeatureFlipping();
+
   const candidateHelpIsActive = isFeatureActive("candidate-help");
 
-  const navigation = getNavigation({
-    authenticated,
-    currentPathname,
-    isInactifEnAttente,
-    isCandidacyDeletedPath,
-    candidateHelpIsActive,
-    isEndAccompagnementPending,
-  });
+  const navigation =
+    !candidacyId ||
+    !authenticated ||
+    isInactifEnAttente ||
+    isCandidacyDeletedPath ||
+    isEndAccompagnementPending
+      ? []
+      : getNavigation({
+          candidacyId,
+          currentPathname,
+          candidateHelpIsActive,
+        });
 
   return (
     <DsfrHeader

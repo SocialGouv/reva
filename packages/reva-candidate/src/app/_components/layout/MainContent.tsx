@@ -9,6 +9,7 @@ const UNAUTHENTICATED_PATHS = [
   "/forgot-password",
   "/reset-password",
 ];
+
 export const MainContent = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const isRootPath = pathname === "/";

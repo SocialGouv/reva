@@ -13,7 +13,7 @@ export const GoalsTile = ({
     title="Objectifs"
     small
     linkProps={{
-      href: "/set-goals",
+      href: "./set-goals",
     }}
     imageUrl="/candidat/images/pictograms/conclusion.svg"
   />

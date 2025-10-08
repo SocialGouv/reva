@@ -1,97 +1,96 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
 
-const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
-  query candidate_getCandidateWithCandidacyForDashboard {
-    candidate_getCandidateWithCandidacy {
-      candidacy {
-        appointments(temporalStatusFilter: UPCOMING, limit: 3) {
-          rows {
-            id
-            date
-            time
-            type
-          }
+const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
+  query getCandidacyByIdForDashboard($candidacyId: ID!) {
+    getCandidacyById(id: $candidacyId) {
+      appointments(temporalStatusFilter: UPCOMING, limit: 3) {
+        rows {
+          id
+          date
+          time
+          type
         }
-        readyForJuryEstimatedAt
-        sentAt
-        endAccompagnementStatus
-        endAccompagnementDate
-        activeDossierDeValidation {
-          decision
-        }
-        certificationAuthorityLocalAccounts {
-          contactFullName
-          contactEmail
-          contactPhone
-        }
+      }
+      readyForJuryEstimatedAt
+      sentAt
+      endAccompagnementStatus
+      endAccompagnementDate
+      activeDossierDeValidation {
+        decision
+      }
+      certificationAuthorityLocalAccounts {
+        contactFullName
+        contactEmail
+        contactPhone
+      }
+      status
+      typeAccompagnement
+      firstAppointmentOccuredAt
+      candidacyStatuses {
         status
-        typeAccompagnement
-        firstAppointmentOccuredAt
-        candidacyStatuses {
-          status
+      }
+      candidacyDropOut {
+        proofReceivedByAdmin
+        createdAt
+        dropOutConfirmedByCandidate
+      }
+      certification {
+        id
+        label
+        codeRncp
+      }
+      goals {
+        id
+      }
+      experiences {
+        id
+      }
+      organism {
+        id
+        label
+        contactAdministrativeEmail
+        contactAdministrativePhone
+        nomPublic
+        emailContact
+        telephone
+        adresseNumeroEtNomDeRue
+        adresseInformationsComplementaires
+        adresseCodePostal
+        adresseVille
+      }
+      feasibility {
+        feasibilityFileSentAt
+        decision
+        feasibilityFormat
+        dematerializedFeasibilityFile {
+          swornStatementFileId
+          candidateConfirmationAt
+          sentToCandidateAt
         }
-        candidacyDropOut {
-          proofReceivedByAdmin
-          createdAt
-          dropOutConfirmedByCandidate
-        }
-        certification {
-          id
+        certificationAuthority {
+          contactEmail
+          contactFullName
+          contactPhone
           label
-          codeRncp
         }
-        goals {
-          id
-        }
-        experiences {
-          id
-        }
-        organism {
-          id
-          label
-          contactAdministrativeEmail
-          contactAdministrativePhone
-          nomPublic
-          emailContact
-          telephone
-          adresseNumeroEtNomDeRue
-          adresseInformationsComplementaires
-          adresseCodePostal
-          adresseVille
-        }
-        feasibility {
-          feasibilityFileSentAt
-          decision
-          feasibilityFormat
-          dematerializedFeasibilityFile {
-            swornStatementFileId
-            candidateConfirmationAt
-            sentToCandidateAt
-          }
-          certificationAuthority {
-            contactEmail
-            contactFullName
-            contactPhone
-            label
-          }
-        }
-        jury {
-          isResultTemporary
-          dateOfSession
-          timeOfSession
-          timeSpecified
-          result
-        }
-        cohorteVaeCollective {
-          id
-          nom
-          commanditaireVaeCollective {
-            raisonSociale
-          }
+      }
+      jury {
+        isResultTemporary
+        dateOfSession
+        timeOfSession
+        timeSpecified
+        result
+      }
+      cohorteVaeCollective {
+        id
+        nom
+        commanditaireVaeCollective {
+          raisonSociale
         }
       }
     }
@@ -100,42 +99,47 @@ const GET_CANDIDATE_WITH_CANDIDACY = graphql(`
 
 export const useCandidacyForDashboard = () => {
   const { graphqlClient } = useGraphQlClient();
+
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+  }>();
+
   const { data } = useSuspenseQuery({
-    queryKey: ["candidate", "dashboard"],
-    queryFn: () => graphqlClient.request(GET_CANDIDATE_WITH_CANDIDACY),
+    queryKey: ["candidacy", "dashboard"],
+    queryFn: () =>
+      graphqlClient.request(GET_CANDIDACY_BY_ID_FOR_DASHBOARD, {
+        candidacyId,
+      }),
   });
 
-  const candidate = data?.candidate_getCandidateWithCandidacy;
-
-  const candidacy = candidate?.candidacy;
+  const candidacy = data?.getCandidacyById;
 
   const candidacyStatus = candidacy?.status;
 
   const candidacyAlreadySubmitted = candidacyStatus !== "PROJET";
 
-  const feasibility = candidacy?.feasibility;
-
   return {
     candidacy,
     candidacyAlreadySubmitted,
-    feasibility,
   };
 };
 
 type CandidateForDashboardHookReturnType = ReturnType<
   typeof useCandidacyForDashboard
 >;
-export type CandidacyUseCandidateForDashboard =
-  CandidateForDashboardHookReturnType["candidacy"];
+
+export type CandidacyUseCandidateForDashboard = NonNullable<
+  CandidateForDashboardHookReturnType["candidacy"]
+>;
 export type JuryUseCandidateForDashboard =
-  CandidateForDashboardHookReturnType["candidacy"]["jury"];
+  CandidacyUseCandidateForDashboard["jury"];
 export type FeasibilityUseCandidateForDashboard =
-  CandidateForDashboardHookReturnType["feasibility"];
+  CandidacyUseCandidateForDashboard["feasibility"];
 export type ExperiencesUseCandidateForDashboard =
-  CandidateForDashboardHookReturnType["candidacy"]["experiences"];
+  CandidacyUseCandidateForDashboard["experiences"];
 export type OrganismUseCandidateForDashboard =
-  CandidateForDashboardHookReturnType["candidacy"]["organism"];
+  CandidacyUseCandidateForDashboard["organism"];
 export type DossierDeValidationUseCandidateForDashboard =
-  CandidateForDashboardHookReturnType["candidacy"]["activeDossierDeValidation"];
+  CandidacyUseCandidateForDashboard["activeDossierDeValidation"];
 export type CandidacyDropOutUseCandidateForDashboard =
-  CandidateForDashboardHookReturnType["candidacy"]["candidacyDropOut"];
+  CandidacyUseCandidateForDashboard["candidacyDropOut"];

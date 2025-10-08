@@ -1,33 +1,30 @@
 import { stubQuery } from "../../utils/graphql";
 
-import candidateDropOut from "./fixtures/candidate-dropped-out.json";
+import candidacy1DropOut from "./fixtures/candidacy1-dropped-out.json";
+
 function interceptCandidacy() {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
       req,
-      "candidate_getCandidateWithCandidacyForLayout",
-      candidateDropOut,
+      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidacies-with-candidacy-1.json",
     );
-    stubQuery(
-      req,
-      "candidate_getCandidateWithCandidacyForHome",
-      candidateDropOut,
-    );
+    stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy1DropOut);
     stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-    stubQuery(
-      req,
-      "candidate_getCandidateWithCandidacyForDashboard",
-      candidateDropOut,
-    );
+    stubQuery(req, "getCandidacyByIdWithCandidate", candidacy1DropOut);
+    stubQuery(req, "getCandidacyByIdForDashboard", candidacy1DropOut);
   });
   cy.login();
 
   cy.wait([
-    "@candidate_getCandidateWithCandidacyForLayout",
-    "@candidate_getCandidateWithCandidacyForHome",
-    "@candidate_getCandidateWithCandidacyForDashboard",
+    "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+    "@activeFeaturesForConnectedUser",
+    "@getCandidacyByIdForCandidacyGuard",
+    "@getCandidacyByIdWithCandidate",
+    "@getCandidacyByIdForDashboard",
   ]);
-  cy.visit("/candidacy-dropout-decision/dropout-confirmation");
+
+  cy.visit("/c1/candidacy-dropout-decision/dropout-confirmation");
 }
 
 context("Candidacy dropout confirmation page", () => {
@@ -41,6 +38,6 @@ context("Candidacy dropout confirmation page", () => {
     interceptCandidacy();
 
     cy.get('[data-test="candidacy-dropout-confirmation-back-button"]').click();
-    cy.url().should("eq", Cypress.config().baseUrl);
+    cy.url().should("eq", Cypress.config().baseUrl + "c1/");
   });
 });

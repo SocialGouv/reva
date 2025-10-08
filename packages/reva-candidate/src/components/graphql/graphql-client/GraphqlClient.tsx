@@ -7,11 +7,18 @@ export const useGraphQlClient = () => {
   const { accessToken } = useKeycloakContext();
 
   const headers: HeadersInit = {};
+
   if (accessToken) {
     headers.authorization = `Bearer ${accessToken}`;
   }
 
   const graphqlClient = new GraphQLClient(GRAPHQL_API_URL, { headers });
+
+  return { graphqlClient };
+};
+
+export const useAnonymousGraphQlClient = () => {
+  const graphqlClient = new GraphQLClient(GRAPHQL_API_URL);
 
   return { graphqlClient };
 };

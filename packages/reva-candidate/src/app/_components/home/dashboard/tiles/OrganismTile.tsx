@@ -41,7 +41,7 @@ export const OrganismTile = ({
       small
       buttonProps={{
         onClick: () => {
-          router.push("/set-organism");
+          router.push("./set-organism");
         },
       }}
       imageUrl="/candidat/images/pictograms/avatar.svg"

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { UseValidateFeasibilityCandidate } from "@/app/(project)/(accompagne)/validate-feasibility/validate-feasibility.hooks";
+import { UseValidateFeasibilityCandidacy } from "@/app/[candidacyId]/(project)/(accompagne)/validate-feasibility/validate-feasibility.hooks";
 
 import {
   Candidate,
@@ -21,20 +21,19 @@ import GoalsSection from "./components/GoalsSection";
 import ParcoursSection from "./components/ParcoursSection";
 
 type DffSummaryProps = {
+  candidacy: UseValidateFeasibilityCandidacy;
   candidateDecisionComment: string;
   setCandidateDecisionComment: (comment: string) => void;
-  candidate: UseValidateFeasibilityCandidate;
 };
 
 export function DffSummary({
+  candidacy,
   candidateDecisionComment,
   setCandidateDecisionComment,
-  candidate,
 }: DffSummaryProps) {
-  if (!candidate) {
+  if (!candidacy) {
     return null;
   }
-  const candidacy = candidate.candidacy;
 
   const { feasibility } = candidacy;
   const dematerializedFeasibilityFile =
@@ -86,7 +85,7 @@ export function DffSummary({
         }
         eligibilityValidUntil={eligibilityValidUntil as Date | null}
       />
-      <CandidateSection candidate={candidate as Candidate} />
+      <CandidateSection candidate={candidacy.candidate as Candidate} />
       <CertificationSection
         option={option}
         firstForeignLanguage={firstForeignLanguage}

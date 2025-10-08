@@ -5,29 +5,34 @@ context("Submission", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForLayout",
-        "candidate2-submitted.json",
-      );
-
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        "candidate2-submitted.json",
+        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidacies-with-candidacy-2.json",
       );
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate2-submitted.json",
+        "getCandidacyByIdForCandidacyGuard",
+        "candidacy2-submitted.json",
       );
-
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+      stubQuery(
+        req,
+        "getCandidacyByIdWithCandidate",
+        "candidacy2-submitted.json",
+      );
+      stubQuery(
+        req,
+        "getCandidacyByIdForDashboard",
+        "candidacy2-submitted.json",
+      );
     });
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidacyForLayout",
-      "@candidate_getCandidateWithCandidacyForHome",
-      "@candidate_getCandidateWithCandidacyForDashboard",
+      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@activeFeaturesForConnectedUser",
+      "@getCandidacyByIdForCandidacyGuard",
+      "@getCandidacyByIdWithCandidate",
+      "@getCandidacyByIdForDashboard",
     ]);
 
     cy.get('[data-test="submit-candidacy-tile"] button').should(
@@ -39,30 +44,34 @@ context("Submission", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForLayout",
-        "candidate2-taken-over.json",
+        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidacies-with-candidacy-2.json",
       );
-
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        "candidate2-submitted.json",
+        "getCandidacyByIdForCandidacyGuard",
+        "candidacy2-taken-over.json",
       );
-
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate2-submitted.json",
-      );
-
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+      stubQuery(
+        req,
+        "getCandidacyByIdWithCandidate",
+        "candidacy2-taken-over.json",
+      );
+      stubQuery(
+        req,
+        "getCandidacyByIdForDashboard",
+        "candidacy2-taken-over.json",
+      );
     });
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidacyForLayout",
-      "@candidate_getCandidateWithCandidacyForHome",
-      "@candidate_getCandidateWithCandidacyForDashboard",
+      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@activeFeaturesForConnectedUser",
+      "@getCandidacyByIdForCandidacyGuard",
+      "@getCandidacyByIdWithCandidate",
+      "@getCandidacyByIdForDashboard",
     ]);
 
     cy.get('[data-test="submit-candidacy-tile"] button').should(

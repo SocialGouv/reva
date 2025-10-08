@@ -8,7 +8,7 @@ import {
   DossierDeValidationDecision,
 } from "@/graphql/generated/graphql";
 
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubQuery } from "../utils/graphql";
 
 const DATE_NOW = new Date();
 const ESTIMATED_DATE = addMonths(DATE_NOW, 10);
@@ -59,11 +59,10 @@ interface CandidateFixtureOptions {
 
 function setupCandidateFixture(options: CandidateFixtureOptions = {}) {
   return cy
-    .fixture("candidate1-certification-titre-2-selected.json")
-    .then((candidate) => {
-      const modifiedCandidate = structuredClone(candidate);
-      const candidacy =
-        modifiedCandidate.data.candidate_getCandidateWithCandidacy.candidacy;
+    .fixture("candidacy1-certification-titre-2-selected.json")
+    .then((json) => {
+      const clonedJson = structuredClone(json);
+      const candidacy = clonedJson.data.getCandidacyById;
 
       if (options.typeAccompagnement) {
         candidacy.typeAccompagnement = options.typeAccompagnement;
@@ -99,7 +98,7 @@ function setupCandidateFixture(options: CandidateFixtureOptions = {}) {
         candidacy.certification.additionalInfo = options.additionalInfo;
       }
 
-      return modifiedCandidate;
+      return clonedJson;
     });
 }
 
@@ -108,15 +107,20 @@ function setupGraphQLStubs(
   additionalQueries: string[] = [],
 ) {
   const defaultQueries = [
-    "candidate_getCandidateWithCandidacyForLayout",
-    "candidate_getCandidateWithCandidacyForDashboard",
-    "candidate_getCandidateWithCandidacyForHome",
+    "getCandidacyByIdForCandidacyGuard",
+    "getCandidacyByIdWithCandidate",
+    "getCandidacyByIdForDashboard",
   ];
 
   const allQueries = [...defaultQueries, ...additionalQueries];
 
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+    stubQuery(
+      req,
+      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidacies-with-candidacy-1.json",
+    );
     allQueries.forEach((query) => {
       stubQuery(req, query, candidate);
     });
@@ -125,18 +129,19 @@ function setupGraphQLStubs(
 
 function loginAndWaitForQueries(queryAliases: string[] = []) {
   const defaultAliases = [
-    "@candidate_getCandidateWithCandidacyForLayout",
-    "@candidate_getCandidateWithCandidacyForHome",
-    "@candidate_getCandidateWithCandidacyForDashboard",
+    "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+    "@getCandidacyByIdForCandidacyGuard",
+    "@getCandidacyByIdWithCandidate",
+    "@getCandidacyByIdForDashboard",
   ];
 
   cy.login();
   cy.wait([...defaultAliases, ...queryAliases]);
 }
 
-function navigateToDossierValidation() {
-  cy.visit("/dossier-de-validation/");
-  cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+function navigateToDossierValidation(candidacyId: string) {
+  cy.visit(`/${candidacyId}/dossier-de-validation/`);
+  cy.wait("@getCandidacyByIdForDossierDeValidationPage");
 }
 
 function clickDossierTab() {
@@ -160,17 +165,6 @@ const typesAccompagnement: TypeAccompagnement[] = ["AUTONOME", "ACCOMPAGNE"];
 
 typesAccompagnement.forEach((typeAccompagnement) => {
   context(`${typeAccompagnement} - Dossier de validation`, () => {
-    beforeEach(() => {
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidacyForDashboard",
-          "candidate1.json",
-        );
-      });
-    });
-
     context("Read only views", () => {
       it("should let me view a read only version of the ready for jury date tab when dossier de validation is sent and no failed jury result", function () {
         setupCandidateFixture({
@@ -179,12 +173,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           readyForJuryEstimatedAt: ESTIMATED_DATE,
           activeDossierDeValidation: { dossierDeValidationOtherFiles: [] },
           juryResult: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
-          navigateToDossierValidation();
+          navigateToDossierValidation(candidacy.data.getCandidacyById.id);
 
           cy.get(".fr-tabs__tab").contains("Date").click();
           cy.get(".ready-for-jury-estimated-date-text").should(
@@ -204,12 +198,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dossierDeValidationSentAt: SENT_DATE.getTime(),
           },
           juryResult: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
-          navigateToDossierValidation();
+          navigateToDossierValidation(candidacy.data.getCandidacyById.id);
 
           cy.get('[data-test="dossier-de-validation-sent-alert"]').should(
             "exist",
@@ -226,8 +220,8 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dossierDeValidationSentAt: SENT_DATE.getTime(),
           },
           juryResult: "FAILURE",
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate);
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy);
           loginAndWaitForQueries();
 
           cy.get('[data-test="dossier-validation-tile"] button').should(
@@ -246,8 +240,8 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dossierDeValidationOtherFiles: [],
             decision: "INCOMPLETE",
           },
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate);
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy);
           loginAndWaitForQueries();
 
           cy.get('[data-test="dossier-validation-tile"] button').should(
@@ -273,12 +267,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           },
         }).then((candidate) => {
           setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
 
           cy.get('[data-test="dossier-validation-tile"] button').click();
-          cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+          cy.wait("@getCandidacyByIdForDossierDeValidationPage");
           clickDossierTab();
 
           cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
@@ -326,14 +320,14 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               },
             ],
           },
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
 
           cy.get('[data-test="dossier-validation-tile"] button').click();
-          cy.wait("@getCandidateWithCandidacyForDossierDeValidationPage");
+          cy.wait("@getCandidacyByIdForDossierDeValidationPage");
           clickDossierTab();
 
           cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
@@ -380,12 +374,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               dateOfSession: dateOfSession.getTime(),
             },
             activeDossierDeValidation: { dossierDeValidationOtherFiles: [] },
-          }).then((candidate) => {
-            setupGraphQLStubs(candidate, [
-              "getCandidateWithCandidacyForDossierDeValidationPage",
+          }).then((candidacy) => {
+            setupGraphQLStubs(candidacy, [
+              "getCandidacyByIdForDossierDeValidationPage",
             ]);
             loginAndWaitForQueries();
-            navigateToDossierValidation();
+            navigateToDossierValidation(candidacy.data.getCandidacyById.id);
             clickDossierTab();
 
             cy.get(".fr-alert--info .fr-alert__title").should(
@@ -412,12 +406,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dateOfSession: dateOfSession.getTime(),
           },
           activeDossierDeValidation: { dossierDeValidationOtherFiles: [] },
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
-          navigateToDossierValidation();
+          navigateToDossierValidation(candidacy.data.getCandidacyById.id);
           clickDossierTab();
 
           cy.get(".fr-alert--info").should("not.exist");
@@ -429,9 +423,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           setupCandidateFixture({
             typeAccompagnement,
             juryResult,
-          }).then((candidate) => {
-            setupGraphQLStubs(candidate, [
-              "getCandidateWithCandidacyForDossierDeValidationTimelineElement",
+          }).then((candidacy) => {
+            setupGraphQLStubs(candidacy, [
+              "getCandidacyByIdForDossierDeValidationPage",
             ]);
             loginAndWaitForQueries();
 
@@ -492,12 +486,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               },
             ],
           },
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
-          navigateToDossierValidation();
+          navigateToDossierValidation(candidacy.data.getCandidacyById.id);
           clickDossierTab();
 
           cy.get(".fr-accordion").should(
@@ -539,12 +533,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           activeDossierDeValidation: {
             dossierDeValidationOtherFiles: [],
           },
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
-          navigateToDossierValidation();
+          navigateToDossierValidation(candidacy.data.getCandidacyById.id);
           clickDossierTab();
 
           cy.get(".fr-alert--info").should("exist");
@@ -570,12 +564,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             },
             dossierDeValidationLink: null,
           },
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
-          navigateToDossierValidation();
+          navigateToDossierValidation(candidacy.data.getCandidacyById.id);
           clickDossierTab();
 
           cy.get("aside").should("contain", "Trame du dossier de validation");
@@ -594,12 +588,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dossierDeValidationTemplate: null,
             dossierDeValidationLink: "https://example.com/template-link",
           },
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
-          navigateToDossierValidation();
+          navigateToDossierValidation(candidacy.data.getCandidacyById.id);
           clickDossierTab();
 
           cy.get("aside").should("contain", "Ressources :");
@@ -621,12 +615,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dossierDeValidationTemplate: null,
             dossierDeValidationLink: null,
           },
-        }).then((candidate) => {
-          setupGraphQLStubs(candidate, [
-            "getCandidateWithCandidacyForDossierDeValidationPage",
+        }).then((candidacy) => {
+          setupGraphQLStubs(candidacy, [
+            "getCandidacyByIdForDossierDeValidationPage",
           ]);
           loginAndWaitForQueries();
-          navigateToDossierValidation();
+          navigateToDossierValidation(candidacy.data.getCandidacyById.id);
           clickDossierTab();
 
           cy.get("aside").should(
@@ -652,12 +646,12 @@ context("File upload validation", () => {
     setupCandidateFixture({
       typeAccompagnement: "AUTONOME",
       status: "DOSSIER_FAISABILITE_RECEVABLE",
-    }).then((candidate) => {
-      setupGraphQLStubs(candidate, [
-        "getCandidateWithCandidacyForDossierDeValidationPage",
+    }).then((candidacy) => {
+      setupGraphQLStubs(candidacy, [
+        "getCandidacyByIdForDossierDeValidationPage",
       ]);
       loginAndWaitForQueries();
-      navigateToDossierValidation();
+      navigateToDossierValidation(candidacy.data.getCandidacyById.id);
       clickDossierTab();
     });
   });

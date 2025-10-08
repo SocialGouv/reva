@@ -30,7 +30,7 @@ export const ExperiencesTile = ({
     title="Expériences"
     small
     linkProps={{
-      href: "/experiences",
+      href: "./experiences",
     }}
     imageUrl="/candidat/images/pictograms/culture.svg"
   />

@@ -1,5 +1,5 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type Color = "dark" | "light";
 
@@ -35,5 +35,14 @@ const BasicBackButton = ({
 export const BackButton = (props: Omit<BasicBackButtonProps, "onClick">) => {
   const router = useRouter();
 
-  return <BasicBackButton {...props} onClick={() => router.push("/")} />;
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+  }>();
+
+  return (
+    <BasicBackButton
+      {...props}
+      onClick={() => router.push(`/${candidacyId}`)}
+    />
+  );
 };

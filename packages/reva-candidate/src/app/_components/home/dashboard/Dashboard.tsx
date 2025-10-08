@@ -22,12 +22,12 @@ const Dashboard = () => {
   );
 
   const hasCompletedGoals = useMemo(
-    () => candidacy?.goals?.length > 0,
+    () => (candidacy?.goals && candidacy.goals.length > 0) || false,
     [candidacy],
   );
 
   const hasCompletedExperience = useMemo(
-    () => candidacy?.experiences?.length > 0,
+    () => (candidacy?.experiences && candidacy.experiences.length > 0) || false,
     [candidacy],
   );
 
@@ -54,9 +54,13 @@ const Dashboard = () => {
     ],
   );
 
-  const candidacyIsAutonome = candidacy?.typeAccompagnement === "AUTONOME";
-  const candidacyIsAccompagne = candidacy?.typeAccompagnement === "ACCOMPAGNE";
-  const candidacyIsVaeCollective = !!candidacy?.cohorteVaeCollective;
+  if (!candidacy) {
+    return null;
+  }
+
+  const candidacyIsAutonome = candidacy.typeAccompagnement === "AUTONOME";
+  const candidacyIsAccompagne = candidacy.typeAccompagnement === "ACCOMPAGNE";
+  const candidacyIsVaeCollective = !!candidacy.cohorteVaeCollective;
 
   const NonVaeCollectiveDashboard = () => (
     <div className="flex flex-col-reverse lg:flex-row gap-8 mt-20">
@@ -93,14 +97,14 @@ const Dashboard = () => {
           <span>
             <span className="fr-icon--sm fr-icon-building-fill mr-2" />
             {
-              candidacy?.cohorteVaeCollective?.commanditaireVaeCollective
+              candidacy.cohorteVaeCollective?.commanditaireVaeCollective
                 ?.raisonSociale
             }
           </span>
         }
         desc={
           <div className="text-dsfrGray-titleGrey text-xl font-bold">
-            {candidacy?.cohorteVaeCollective?.nom}
+            {candidacy.cohorteVaeCollective?.nom}
           </div>
         }
       />

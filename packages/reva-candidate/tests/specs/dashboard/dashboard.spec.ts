@@ -8,7 +8,7 @@ import { createOrganismEntity } from "@tests/helpers/entities/create-organism.en
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 
 import {
-  Candidacy,
+  Candidate,
   Certification,
   Organism,
 } from "@/graphql/generated/graphql";
@@ -16,15 +16,17 @@ import {
 test.describe("Authenticated on dashboard", () => {
   const organism = createOrganismEntity();
   const certification = createCertificationEntity();
+
+  const candidate = createCandidateEntity();
+
   const candidacy = createCandidacyEntity({
+    candidate: candidate as Candidate,
     organism: organism as Organism,
     certification: certification as Certification,
   });
-  const candidate = createCandidateEntity({
-    candidacy: candidacy as Candidacy,
-  });
+
   const { handlers, dashboardWait } = dashboardHandlers({
-    candidate,
+    candidacy,
     activeFeaturesForConnectedUser: [],
   });
   test.use({

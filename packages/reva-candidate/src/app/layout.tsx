@@ -19,8 +19,8 @@ import { KeycloakProvider } from "@/components/auth/keycloak.context";
 import { DsfrProvider, StartDsfrOnHydration } from "@/components/dsfr";
 import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 
+import { AuthGuard } from "./_components/guards/AuthGuard";
 import { AppLayout } from "./_components/layout/AppLayout";
-import { GuardsLayout } from "./_components/layout/guards/GuardsLayout";
 import { MainContent } from "./_components/layout/MainContent";
 
 const queryClient = new QueryClient();
@@ -54,9 +54,9 @@ export default function RootLayout({
             <QueryClientProvider client={queryClient}>
               <Toaster position="top-right" />
               <AppLayout>
-                <GuardsLayout>
-                  <MainContent>{children}</MainContent>
-                </GuardsLayout>
+                <MainContent>
+                  <AuthGuard>{children}</AuthGuard>
+                </MainContent>
               </AppLayout>
             </QueryClientProvider>
           </KeycloakProvider>

@@ -7,33 +7,27 @@ context("Dashboard Banner", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForLayout",
-        "candidate1.json",
+        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidacies-with-candidacy-1.json",
       );
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate1.json",
-      );
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        "candidate1.json",
-      );
+      stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
           activeFeaturesForConnectedUser: [],
         },
       });
+      stubQuery(req, "getCandidacyByIdWithCandidate", "candidacy1.json");
+      stubQuery(req, "getCandidacyByIdForDashboard", "candidacy1.json");
     });
 
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidacyForLayout",
-      "@candidate_getCandidateWithCandidacyForHome",
-      "@candidate_getCandidateWithCandidacyForDashboard",
+      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
+      "@getCandidacyByIdForCandidacyGuard",
+      "@getCandidacyByIdWithCandidate",
+      "@getCandidacyByIdForDashboard",
     ]);
     cy.visit("/");
   });
@@ -47,30 +41,16 @@ context("Dashboard Banner", () => {
     ];
 
     it("should display need to complete info banner when all parts are incomplete", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
         requiredFields.forEach(({ field, value }) => {
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy[field] =
-            value;
+          candidacy.data.getCandidacyById[field] = value;
         });
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PROJET";
+        candidacy.data.getCandidacyById.status = "PROJET";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="need-to-complete-info-banner"]').should(
@@ -82,42 +62,26 @@ context("Dashboard Banner", () => {
 
     requiredFields.forEach((fieldInfo) => {
       it(`should display need to complete info banner when only ${fieldInfo.field} is incomplete`, () => {
-        cy.fixture("candidate1.json").then((candidate) => {
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.certification =
-            { id: "cert-id", label: "Test Certification", codeRncp: "12345" };
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.goals = [
-            { id: "goal-id" },
-          ];
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.experiences =
-            [{ id: "exp-id" }];
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-            {
-              id: "org-id",
-              label: "Test Organism",
-            };
+        cy.fixture("candidacy1.json").then((candidacy) => {
+          candidacy.data.getCandidacyById.certification = {
+            id: "cert-id",
+            label: "Test Certification",
+            codeRncp: "12345",
+          };
+          candidacy.data.getCandidacyById.goals = [{ id: "goal-id" }];
+          candidacy.data.getCandidacyById.experiences = [{ id: "exp-id" }];
+          candidacy.data.getCandidacyById.organism = {
+            id: "org-id",
+            label: "Test Organism",
+          };
 
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy[
-            fieldInfo.field
-          ] = fieldInfo.value;
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-            "PROJET";
+          candidacy.data.getCandidacyById[fieldInfo.field] = fieldInfo.value;
+          candidacy.data.getCandidacyById.status = "PROJET";
 
           cy.intercept("POST", "/api/graphql", (req) => {
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForDashboard",
-              candidate,
-            );
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForHome",
-              candidate,
-            );
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForLayout",
-              candidate,
-            );
+            stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+            stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+            stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
           });
 
           cy.get('[data-test="need-to-complete-info-banner"]').should(
@@ -131,38 +95,24 @@ context("Dashboard Banner", () => {
     });
 
     it("should display can submit candidacy banner when all parts are completed", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.certification =
-          { id: "cert-id", label: "Test Certification", codeRncp: "12345" };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.goals = [
-          { id: "goal-id" },
-        ];
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.experiences =
-          [{ id: "exp-id" }];
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-          {
-            id: "org-id",
-            label: "Test Organism",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PROJET";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.certification = {
+          id: "cert-id",
+          label: "Test Certification",
+          codeRncp: "12345",
+        };
+        candidacy.data.getCandidacyById.goals = [{ id: "goal-id" }];
+        candidacy.data.getCandidacyById.experiences = [{ id: "exp-id" }];
+        candidacy.data.getCandidacyById.organism = {
+          id: "org-id",
+          label: "Test Organism",
+        };
+        candidacy.data.getCandidacyById.status = "PROJET";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="need-to-complete-info-banner"]').should(
@@ -177,31 +127,18 @@ context("Dashboard Banner", () => {
 
   describe("Drop Out Banner", () => {
     it("should display drop out warning when candidacy is in drop out state", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
         const dropOutDate = new Date();
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyDropOut =
-          {
-            proofReceivedByAdmin: false,
-            createdAt: dropOutDate.toISOString(),
-            dropOutConfirmedByCandidate: false,
-          };
+        candidacy.data.getCandidacyById.candidacyDropOut = {
+          proofReceivedByAdmin: false,
+          createdAt: dropOutDate.toISOString(),
+          dropOutConfirmedByCandidate: false,
+        };
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="drop-out-warning"]').should("be.visible");
@@ -212,31 +149,18 @@ context("Dashboard Banner", () => {
     });
 
     it("should not show decision button when drop out is confirmed", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
         const dropOutDate = new Date();
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.candidacyDropOut =
-          {
-            proofReceivedByAdmin: true,
-            createdAt: dropOutDate.toISOString(),
-            dropOutConfirmedByCandidate: true,
-          };
+        candidacy.data.getCandidacyById.candidacyDropOut = {
+          proofReceivedByAdmin: true,
+          createdAt: dropOutDate.toISOString(),
+          dropOutConfirmedByCandidate: true,
+        };
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="drop-out-warning"]').should("be.visible");
@@ -249,28 +173,15 @@ context("Dashboard Banner", () => {
 
   describe("Validation Dossier Banners", () => {
     it("should display pending dossier validation banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-          {
-            decision: "PENDING",
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.activeDossierDeValidation = {
+          decision: "PENDING",
+        };
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="pending-dv-banner"]').should("be.visible");
@@ -278,28 +189,15 @@ context("Dashboard Banner", () => {
     });
 
     it("should display incomplete dossier validation banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-          {
-            decision: "INCOMPLETE",
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.activeDossierDeValidation = {
+          decision: "INCOMPLETE",
+        };
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="incomplete-dv-banner"]').should("be.visible");
@@ -309,32 +207,17 @@ context("Dashboard Banner", () => {
 
   describe("Feasibility Banners", () => {
     it("should display autonome admissible feasibility banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "ADMISSIBLE",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "AUTONOME";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
-          null;
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "ADMISSIBLE",
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
+        candidacy.data.getCandidacyById.readyForJuryEstimatedAt = null;
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="admissible-feasibility-banner"]').should(
@@ -344,30 +227,16 @@ context("Dashboard Banner", () => {
     });
 
     it("should display accompagne admissible feasibility banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "ADMISSIBLE",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "ADMISSIBLE",
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="admissible-feasibility-banner"]').should(
@@ -377,33 +246,19 @@ context("Dashboard Banner", () => {
     });
 
     it("should display draft feasibility banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "DRAFT",
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: Date.now(),
-            },
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "DRAFT",
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: Date.now(),
+          },
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="draft-feasibility-banner"]').should("be.visible");
@@ -411,30 +266,16 @@ context("Dashboard Banner", () => {
     });
 
     it("should display pending feasibility banner for accompanied candidacy", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "PENDING",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "PENDING",
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="pending-feasibility-banner"]').should("be.visible");
@@ -442,30 +283,16 @@ context("Dashboard Banner", () => {
     });
 
     it("should display autonomous pending feasibility banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "PENDING",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "AUTONOME";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "PENDING",
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="autonome-pending-feasibility-banner"]').should(
@@ -475,30 +302,16 @@ context("Dashboard Banner", () => {
     });
 
     it("should display incomplete feasibility banner for accompanied candidacy", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "INCOMPLETE",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "INCOMPLETE",
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="incomplete-feasibility-banner"]').should(
@@ -508,30 +321,16 @@ context("Dashboard Banner", () => {
     });
 
     it("should display autonomous incomplete feasibility banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "INCOMPLETE",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "AUTONOME";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "INCOMPLETE",
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="autonome-incomplete-feasibility-banner"]').should(
@@ -541,28 +340,15 @@ context("Dashboard Banner", () => {
     });
 
     it("should display rejected feasibility banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "REJECTED",
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "REJECTED",
+        };
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="rejected-feasibility-banner"]').should(
@@ -574,30 +360,15 @@ context("Dashboard Banner", () => {
 
   describe("Appointment Banners", () => {
     it("should display waiting for appointment banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PARCOURS_CONFIRME";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          null;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PARCOURS_CONFIRME";
+        candidacy.data.getCandidacyById.firstAppointmentOccuredAt = null;
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="waiting-for-appointment-banner"]').should(
@@ -607,35 +378,21 @@ context("Dashboard Banner", () => {
     });
 
     it("should display first appointment scheduled banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
         const futureAppointment = format(addDays(new Date(), 5), "yyyy-MM-dd");
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PARCOURS_CONFIRME";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
+        candidacy.data.getCandidacyById.status = "PARCOURS_CONFIRME";
+        candidacy.data.getCandidacyById.firstAppointmentOccuredAt =
           futureAppointment;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-          {
-            id: "org-id",
-            label: "Test Organism",
-            nomPublic: "Public Name",
-          };
+        candidacy.data.getCandidacyById.organism = {
+          id: "org-id",
+          label: "Test Organism",
+          nomPublic: "Public Name",
+        };
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="first-appointment-scheduled-banner"]').should(
@@ -645,36 +402,22 @@ context("Dashboard Banner", () => {
     });
 
     it("should display creating feasibility banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
         const pastAppointment = format(subMonths(new Date(), 1), "yyyy-MM-dd");
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PARCOURS_CONFIRME";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
+        candidacy.data.getCandidacyById.status = "PARCOURS_CONFIRME";
+        candidacy.data.getCandidacyById.firstAppointmentOccuredAt =
           pastAppointment;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "DRAFT",
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: null,
-            },
-          };
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "DRAFT",
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: null,
+          },
+        };
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="creating-feasibility-banner"]').should(
@@ -684,29 +427,16 @@ context("Dashboard Banner", () => {
     });
 
     it("should display waiting for training banner", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
         const pastAppointment = format(subMonths(new Date(), 1), "yyyy-MM-dd");
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "ANOTHER_STATUS";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
+        candidacy.data.getCandidacyById.status = "ANOTHER_STATUS";
+        candidacy.data.getCandidacyById.firstAppointmentOccuredAt =
           pastAppointment;
 
         cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
         cy.get('[data-test="waiting-for-training-banner"]').should(

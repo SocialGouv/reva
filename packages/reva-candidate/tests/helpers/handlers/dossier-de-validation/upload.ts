@@ -23,11 +23,9 @@ export async function mockDossierValidationUpload(page: Page) {
         contentType: "application/json",
         body: JSON.stringify({
           data: {
-            candidate_getCandidateWithCandidacy: {
-              candidacy: {
-                id: "candidacy-id",
-                status: "DOSSIER_FAISABILITE_RECEVABLE",
-              },
+            getCandidacyById: {
+              id: "candidacy-id",
+              status: "DOSSIER_FAISABILITE_RECEVABLE",
             },
           },
         }),

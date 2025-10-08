@@ -97,7 +97,7 @@ export const DossierValidationTile = ({
       small
       buttonProps={{
         onClick: () => {
-          router.push("/dossier-de-validation");
+          router.push("./dossier-de-validation");
         },
       }}
       imageUrl="/candidat/images/pictograms/binders.svg"

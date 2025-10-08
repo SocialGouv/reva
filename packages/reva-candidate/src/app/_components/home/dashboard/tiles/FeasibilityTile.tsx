@@ -125,8 +125,8 @@ export const FeasibilityTile = ({
   ]);
 
   const feasibilityUrl = isFeasibilityDemat
-    ? "/validate-feasibility"
-    : "/feasibility";
+    ? "./validate-feasibility"
+    : "./feasibility";
 
   return (
     <Tile

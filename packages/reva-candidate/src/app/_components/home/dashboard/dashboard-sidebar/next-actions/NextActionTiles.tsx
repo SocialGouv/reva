@@ -16,14 +16,14 @@ interface NextActionTile {
 }
 
 const ROUTES = {
-  DOSSIER_DE_VALIDATION: "/dossier-de-validation",
-  EXPERIENCES: "/experiences",
-  FEASIBILITY: "/feasibility",
-  SET_GOALS: "/set-goals",
-  SET_ORGANISM: "/set-organism",
-  SUBMIT_CANDIDACY: "/submit-candidacy",
-  VALIDATE_FEASIBILITY: "/validate-feasibility",
-  VALIDATE_TRAINING: "/validate-training",
+  DOSSIER_DE_VALIDATION: "./dossier-de-validation",
+  EXPERIENCES: "./experiences",
+  FEASIBILITY: "./feasibility",
+  SET_GOALS: "./set-goals",
+  SET_ORGANISM: "./set-organism",
+  SUBMIT_CANDIDACY: "./submit-candidacy",
+  VALIDATE_FEASIBILITY: "./validate-feasibility",
+  VALIDATE_TRAINING: "./validate-training",
 } as const;
 
 const sendSwornStatementModal = createModal({

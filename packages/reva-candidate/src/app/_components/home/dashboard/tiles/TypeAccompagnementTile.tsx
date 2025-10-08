@@ -24,7 +24,7 @@ export const TypeAccompagnementTile = ({
       disabled
         ? undefined
         : ({
-            href: "/type-accompagnement",
+            href: "./type-accompagnement",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any)
     }

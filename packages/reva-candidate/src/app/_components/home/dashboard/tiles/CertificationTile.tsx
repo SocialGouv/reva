@@ -14,8 +14,8 @@ export const CertificationTile = ({
     small
     linkProps={{
       href: !!selectedCertificationId
-        ? `/certification/${selectedCertificationId}`
-        : "/search-certification",
+        ? `./certification/${selectedCertificationId}`
+        : "./search-certification",
     }}
     imageUrl="/candidat/images/pictograms/search.svg"
   />

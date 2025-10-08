@@ -1,0 +1,82 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "c1",
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "email@example.com",
+        "phone": "06-01-02-03-04"
+      },
+      "typeAccompagnement": "AUTONOME",
+      "certificationId": null,
+      "organism": null,
+      "createdAt": null,
+      "certification": {
+        "id": "c2",
+        "label": "Titre 2",
+        "summary": "résumé 2",
+        "codeRncp": "34692",
+        "status": "AVAILABLE"
+      },
+      "experiences": [],
+      "goals": [],
+      "status": "DOSSIER_FAISABILITE_ENVOYE",
+      "candidacyStatuses": [
+        {
+          "status": "DOSSIER_FAISABILITE_ENVOYE"
+        }
+      ],
+      "certificateSkills": null,
+      "otherTraining": null,
+      "individualHourCount": null,
+      "collectiveHourCount": null,
+      "additionalHourCount": null,
+      "basicSkills": [],
+      "mandatoryTrainings": [],
+      "certificationAuthorities": [
+        {
+          "id": "cert1",
+          "label": "UIMM - Île-de-France",
+          "contactFullName": "John Certificator",
+          "contactEmail": "revatrash@gmail.com"
+        },
+        {
+          "id": "cert2",
+          "label": "UIMM - Auvergne - Rhône-Alpes",
+          "contactFullName": "Jane Certificator",
+          "contactEmail": "revatrash@gmail.com"
+        }
+      ],
+      "feasibilityFormat": "UPLOADED_PDF",
+      "feasibility": {
+        "feasibilityFileSentAt": 1728482555946,
+        "decision": "PENDING",
+        "decisionComment": "test comment",
+        "decisionSentAt": null,
+        "decisionFile": null,
+        "dematerializedFeasibilityFile": null,
+        "certificationAuthority": {
+          "id": "cert1",
+          "label": "UIMM - Île-de-France",
+          "contactFullName": "John Certificator",
+          "contactEmail": "revatrash@gmail.com"
+        },
+        "feasibilityUploadedPdf": {
+          "feasibilityFile": {
+            "name": "dossier_de_faisabilite.pdf",
+            "url": "https://example.com",
+            "previewUrl": "https://example.com"
+          },
+          "IDFile": {
+            "name": "dossier_de_faisabilite.pdf",
+            "url": "https://example.com",
+            "previewUrl": "https://example.com"
+          },
+          "documentaryProofFile": null,
+          "certificateOfAttendanceFile": null
+        }
+      }
+    }
+  }
+}

@@ -2,93 +2,87 @@ import { addDays, format, subDays } from "date-fns";
 
 import { stubQuery } from "../../utils/graphql";
 
-interface CandidateFixture {
+interface CandidacyFixture {
   data: {
-    candidate_getCandidateWithCandidacy: {
-      candidacy: {
-        firstAppointmentOccuredAt: string | null;
-        readyForJuryEstimatedAt: string | null;
-        jury: {
-          dateOfSession: number;
-          timeSpecified: boolean;
-          result?: string;
-        } | null;
-        activeDossierDeValidation?: {
-          decision: string;
-        } | null;
-        [key: string]: unknown;
-      };
+    getCandidacyById: {
+      firstAppointmentOccuredAt: string | null;
+      readyForJuryEstimatedAt: string | null;
+      jury: {
+        dateOfSession: number;
+        timeSpecified: boolean;
+        result?: string;
+      } | null;
+      activeDossierDeValidation?: {
+        decision: string;
+      } | null;
+      [key: string]: unknown;
     };
   };
 }
 
 context("Dashboard Sidebar - Appointment Tiles", () => {
-  beforeEach(() => {
+  const interceptGraphQL = (candidacy?: CandidacyFixture) => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForLayout",
-        "candidate1.json",
+        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidacies-with-candidacy-1.json",
       );
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate1.json",
-      );
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        "candidate1.json",
+        "getCandidacyByIdForCandidacyGuard",
+        candidacy || "candidacy1.json",
       );
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
           activeFeaturesForConnectedUser: ["APPOINTMENTS"],
         },
       });
+      stubQuery(
+        req,
+        "getCandidacyByIdWithCandidate",
+        candidacy || "candidacy1.json",
+      );
+      stubQuery(
+        req,
+        "getCandidacyByIdForDashboard",
+        candidacy || "candidacy1.json",
+      );
     });
 
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidacyForLayout",
-      "@candidate_getCandidateWithCandidacyForHome",
-      "@candidate_getCandidateWithCandidacyForDashboard",
+      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
+      "@getCandidacyByIdForCandidacyGuard",
+      "@getCandidacyByIdWithCandidate",
+      "@getCandidacyByIdForDashboard",
     ]);
-
-    cy.visit("/");
-  });
-
-  const interceptGraphQL = (candidate: CandidateFixture) => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        candidate,
-      );
-      stubQuery(req, "candidate_getCandidateWithCandidacyForHome", candidate);
-      stubQuery(req, "candidate_getCandidateWithCandidacyForLayout", candidate);
-    });
   };
 
-  const resetAppointmentData = (candidate: CandidateFixture) => {
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.appointments =
-      {
-        rows: [],
-      };
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
-      null;
-    candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury = null;
-    return candidate;
+  const resetAppointmentData = (candidacy: CandidacyFixture) => {
+    return {
+      data: {
+        getCandidacyById: {
+          ...candidacy.data.getCandidacyById,
+          appointments: {
+            rows: [],
+          },
+          readyForJuryEstimatedAt: null,
+          jury: null,
+        },
+      },
+    } as CandidacyFixture;
   };
 
   describe("NoRendezVousTile", () => {
     it("should display when no appointments exist", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="no-rendez-vous-tile"]').should("be.visible");
           cy.get('[data-test="rendez-vous-generique-tile"]').should(
@@ -103,43 +97,40 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
   describe("RendezVousGeneriqueTile", () => {
     it("should display when there is an appointment in the future", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
           const futureAppointment = format(
             addDays(new Date(), 5),
             "yyyy-MM-dd",
           );
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.appointments =
-            {
-              rows: [
-                {
-                  id: 1,
-                  date: futureAppointment,
-                  type: "RENDEZ_VOUS_PEDAGOGIQUE",
-                },
-              ],
-            };
+          candidacy.data.getCandidacyById.appointments = {
+            rows: [
+              {
+                id: 1,
+                date: futureAppointment,
+                type: "RENDEZ_VOUS_PEDAGOGIQUE",
+              },
+            ],
+          };
 
-          interceptGraphQL(candidate);
-
-          cy.get('[data-test="rendez-vous-generique-tile"]').should(
-            "be.visible",
-          );
-          cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
+          interceptGraphQL(candidacy);
         },
       );
+
+      cy.get('[data-test="rendez-vous-generique-tile"]').should("be.visible");
+      cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
     });
 
     it("should display 'tous mes rendez-vous' button when there is at least one appointment, whether past or future", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
           const pastAppointment = format(subDays(new Date(), 5), "yyyy-MM-dd");
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
+          candidacy.data.getCandidacyById.firstAppointmentOccuredAt =
             pastAppointment;
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="all-appointments-button"]').should("be.visible");
         },
@@ -147,25 +138,24 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
     });
 
     it("should display tag with correct appointment type", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
           const futureAppointment = format(
             addDays(new Date(), 5),
             "yyyy-MM-dd",
           );
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.appointments =
-            {
-              rows: [
-                {
-                  id: 1,
-                  date: futureAppointment,
-                  type: "RENDEZ_VOUS_DE_SUIVI",
-                },
-              ],
-            };
+          candidacy.data.getCandidacyById.appointments = {
+            rows: [
+              {
+                id: 1,
+                date: futureAppointment,
+                type: "RENDEZ_VOUS_DE_SUIVI",
+              },
+            ],
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="rendez-vous-generique-tile"]').should(
             "be.visible",
@@ -182,18 +172,17 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
   describe("ReadyForJuryTile", () => {
     it("should display when ready for jury date is set and dossier decision is not pending", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
           const futureReadyDate = format(addDays(new Date(), 30), "yyyy-MM-dd");
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+          candidacy.data.getCandidacyById.readyForJuryEstimatedAt =
             futureReadyDate;
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-            {
-              decision: "INCOMPLETE",
-            };
+          candidacy.data.getCandidacyById.activeDossierDeValidation = {
+            decision: "INCOMPLETE",
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="ready-for-jury-tile"]').should("be.visible");
           cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
@@ -202,18 +191,17 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
     });
 
     it("should not display when dossier decision is PENDING", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
           const futureReadyDate = format(addDays(new Date(), 30), "yyyy-MM-dd");
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+          candidacy.data.getCandidacyById.readyForJuryEstimatedAt =
             futureReadyDate;
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-            {
-              decision: "PENDING",
-            };
+          candidacy.data.getCandidacyById.activeDossierDeValidation = {
+            decision: "PENDING",
+          };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="ready-for-jury-tile"]').should("not.exist");
           cy.get('[data-test="no-rendez-vous-tile"]').should("be.visible");
@@ -233,27 +221,25 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
       failedJuryResults.forEach((juryResult) => {
         it(`should display when candidate has a jury result of ${juryResult}`, () => {
-          cy.fixture("candidate1.json").then(
-            (initialCandidate: CandidateFixture) => {
-              const candidate = resetAppointmentData(initialCandidate);
+          cy.fixture("candidacy1.json").then(
+            (initialCandidacy: CandidacyFixture) => {
+              const candidacy = resetAppointmentData(initialCandidacy);
               const futureReadyDate = format(
                 addDays(new Date(), 30),
                 "yyyy-MM-dd",
               );
-              candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+              candidacy.data.getCandidacyById.readyForJuryEstimatedAt =
                 futureReadyDate;
-              candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-                {
-                  decision: "PENDING",
-                };
-              candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury =
-                {
-                  result: juryResult,
-                  dateOfSession: subDays(new Date(), 15).getTime(),
-                  timeSpecified: false,
-                };
+              candidacy.data.getCandidacyById.activeDossierDeValidation = {
+                decision: "PENDING",
+              };
+              candidacy.data.getCandidacyById.jury = {
+                result: juryResult,
+                dateOfSession: subDays(new Date(), 15).getTime(),
+                timeSpecified: false,
+              };
 
-              interceptGraphQL(candidate);
+              interceptGraphQL(candidacy);
 
               cy.get('[data-test="ready-for-jury-tile"]').should("be.visible");
               cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
@@ -266,16 +252,16 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
   describe("JurySessionTile", () => {
     it("should display when jury session is in the future", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
           const futureJuryDate = addDays(new Date(), 20).getTime();
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury = {
+          candidacy.data.getCandidacyById.jury = {
             dateOfSession: futureJuryDate,
             timeSpecified: false,
           };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="jury-session-tile"]').should("be.visible");
           cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
@@ -284,16 +270,16 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
     });
 
     it("should not display when jury session date is in the past", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
           const pastJuryDate = subDays(new Date(), 5).getTime();
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury = {
+          candidacy.data.getCandidacyById.jury = {
             dateOfSession: pastJuryDate,
             timeSpecified: true,
           };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="jury-session-tile"]').should("not.exist");
           cy.get('[data-test="no-rendez-vous-tile"]').should("be.visible");
@@ -304,9 +290,9 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
   describe("Multiple Appointment Tiles", () => {
     it("should display all relevant tiles when multiple appointments exist", () => {
-      cy.fixture("candidate1.json").then(
-        (initialCandidate: CandidateFixture) => {
-          const candidate = resetAppointmentData(initialCandidate);
+      cy.fixture("candidacy1.json").then(
+        (initialCandidacy: CandidacyFixture) => {
+          const candidacy = resetAppointmentData(initialCandidacy);
           const futureAppointment = format(
             addDays(new Date(), 5),
             "yyyy-MM-dd",
@@ -317,28 +303,26 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
           );
           const futureJuryDate = addDays(new Date(), 60).getTime();
 
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.appointments =
-            {
-              rows: [
-                {
-                  id: 1,
-                  date: futureAppointment,
-                  type: "RENDEZ_VOUS_PEDAGOGIQUE",
-                },
-              ],
-            };
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
+          candidacy.data.getCandidacyById.appointments = {
+            rows: [
+              {
+                id: 1,
+                date: futureAppointment,
+                type: "RENDEZ_VOUS_PEDAGOGIQUE",
+              },
+            ],
+          };
+          candidacy.data.getCandidacyById.readyForJuryEstimatedAt =
             futureReadyDate;
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-            {
-              decision: "INCOMPLETE",
-            };
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury = {
+          candidacy.data.getCandidacyById.activeDossierDeValidation = {
+            decision: "INCOMPLETE",
+          };
+          candidacy.data.getCandidacyById.jury = {
             dateOfSession: futureJuryDate,
             timeSpecified: true,
           };
 
-          interceptGraphQL(candidate);
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="rendez-vous-generique-tile"]').should(
             "be.visible",

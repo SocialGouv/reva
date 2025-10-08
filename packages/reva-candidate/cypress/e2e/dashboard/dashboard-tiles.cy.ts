@@ -3,40 +3,45 @@ import { addDays, format, subDays } from "date-fns";
 import { stubQuery } from "../../utils/graphql";
 
 context("Dashboard Tiles", () => {
-  beforeEach(() => {
+  const interceptGraphQL = (candidacy?: unknown) => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForLayout",
-        "candidate1.json",
+        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidacies-with-candidacy-1.json",
       );
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidacyForDashboard",
-        "candidate1.json",
-      );
-      stubQuery(
-        req,
-        "candidate_getCandidateWithCandidacyForHome",
-        "candidate1.json",
+        "getCandidacyByIdForCandidacyGuard",
+        candidacy || "candidacy1.json",
       );
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
-          activeFeaturesForConnectedUser: [],
+          activeFeaturesForConnectedUser: ["APPOINTMENTS"],
         },
       });
+      stubQuery(
+        req,
+        "getCandidacyByIdWithCandidate",
+        candidacy || "candidacy1.json",
+      );
+      stubQuery(
+        req,
+        "getCandidacyByIdForDashboard",
+        candidacy || "candidacy1.json",
+      );
     });
 
     cy.login();
-    cy.wait([
-      "@candidate_getCandidateWithCandidacyForLayout",
-      "@candidate_getCandidateWithCandidacyForHome",
-      "@candidate_getCandidateWithCandidacyForDashboard",
-      "@activeFeaturesForConnectedUser",
-    ]);
 
-    cy.visit("/");
-  });
+    cy.wait([
+      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@activeFeaturesForConnectedUser",
+      "@getCandidacyByIdForCandidacyGuard",
+      "@getCandidacyByIdWithCandidate",
+      "@getCandidacyByIdForDashboard",
+    ]);
+  };
 
   describe("Completion Tiles", () => {
     const requiredFields = [
@@ -47,31 +52,14 @@ context("Dashboard Tiles", () => {
     ];
 
     it("should display 'to complete' badges on tiles when all parts are incomplete", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
         requiredFields.forEach(({ field, value }) => {
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy[field] =
-            value;
+          candidacy.data.getCandidacyById[field] = value;
         });
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PROJET";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        candidacy.data.getCandidacyById.status = "PROJET";
+
+        interceptGraphQL(candidacy);
 
         cy.get(
           '[data-test="certification-tile"] [data-test="incomplete-badge"]',
@@ -100,57 +88,35 @@ context("Dashboard Tiles", () => {
 
     requiredFields.forEach((fieldInfo) => {
       it(`should display completed badge when ${fieldInfo.field} is complete`, () => {
-        cy.fixture("candidate1.json").then((candidate) => {
+        cy.fixture("candidacy1.json").then((candidacy) => {
           switch (fieldInfo.field) {
             case "certification":
-              candidate.data.candidate_getCandidateWithCandidacy.candidacy.certification =
-                {
-                  id: "cert-id",
-                  label: "Test Certification",
-                  codeRncp: "12345",
-                };
+              candidacy.data.getCandidacyById.certification = {
+                id: "cert-id",
+                label: "Test Certification",
+                codeRncp: "12345",
+              };
               break;
             case "goals":
-              candidate.data.candidate_getCandidateWithCandidacy.candidacy.goals =
-                [{ id: "goal-id" }];
+              candidacy.data.getCandidacyById.goals = [{ id: "goal-id" }];
               break;
             case "experiences":
-              candidate.data.candidate_getCandidateWithCandidacy.candidacy.experiences =
-                [{ id: "exp-id" }];
+              candidacy.data.getCandidacyById.experiences = [{ id: "exp-id" }];
               break;
             case "organism":
-              candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-                {
-                  id: "org-id",
-                  label: "Test Organism",
-                };
+              candidacy.data.getCandidacyById.organism = {
+                id: "org-id",
+                label: "Test Organism",
+              };
               break;
             default:
-              candidate.data.candidate_getCandidateWithCandidacy.candidacy[
-                fieldInfo.field
-              ] = fieldInfo.value;
+              candidacy.data.getCandidacyById[fieldInfo.field] =
+                fieldInfo.value;
               break;
           }
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-            "PROJET";
+          candidacy.data.getCandidacyById.status = "PROJET";
 
-          cy.intercept("POST", "/api/graphql", (req) => {
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForDashboard",
-              candidate,
-            );
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForHome",
-              candidate,
-            );
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForLayout",
-              candidate,
-            );
-          });
+          interceptGraphQL(candidacy);
 
           cy.get(
             `[data-test="${fieldInfo.field}-tile"] [data-test="complete-badge"]`,
@@ -166,39 +132,21 @@ context("Dashboard Tiles", () => {
     });
 
     it("should let candidate submit candidacy when all parts are completed", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.certification =
-          { id: "cert-id", label: "Test Certification", codeRncp: "12345" };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.goals = [
-          { id: "goal-id" },
-        ];
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.experiences =
-          [{ id: "exp-id" }];
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.organism =
-          {
-            id: "org-id",
-            label: "Test Organism",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PROJET";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.certification = {
+          id: "cert-id",
+          label: "Test Certification",
+          codeRncp: "12345",
+        };
+        candidacy.data.getCandidacyById.goals = [{ id: "goal-id" }];
+        candidacy.data.getCandidacyById.experiences = [{ id: "exp-id" }];
+        candidacy.data.getCandidacyById.organism = {
+          id: "org-id",
+          label: "Test Organism",
+        };
+        candidacy.data.getCandidacyById.status = "PROJET";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get(
           '[data-test="submit-candidacy-tile"] [data-test="to-send-badge"]',
@@ -212,34 +160,15 @@ context("Dashboard Tiles", () => {
 
   describe("Feasibility Tile", () => {
     it("should display feasibility-badge-admissible when feasibility is admisible", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "ADMISSIBLE",
-            feasibilityFormat: "DEMATERIALIZED",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "AUTONOME";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.readyForJuryEstimatedAt =
-          null;
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "ADMISSIBLE",
+          feasibilityFormat: "DEMATERIALIZED",
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
+        candidacy.data.getCandidacyById.readyForJuryEstimatedAt = null;
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-badge-admissible"]').should(
           "be.visible",
@@ -248,35 +177,17 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display 'to validate' feasibility badge when sent to candidate and not validated yet", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "DRAFT",
-            feasibilityFormat: "DEMATERIALIZED",
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: Date.now(),
-            },
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "DRAFT",
+          feasibilityFormat: "DEMATERIALIZED",
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: Date.now(),
+          },
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-badge-to-validate"]').should(
           "be.visible",
@@ -285,26 +196,18 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display feasibility-waiting-for-attestation when candidate did not submit sworn statement", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "DRAFT",
-            feasibilityFormat: "DEMATERIALIZED",
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: Date.now(),
-              candidateConfirmationAt: Date.now(),
-            },
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "DRAFT",
+          feasibilityFormat: "DEMATERIALIZED",
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: Date.now(),
+            candidateConfirmationAt: Date.now(),
+          },
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-waiting-for-attestation"]').should(
           "be.visible",
@@ -313,27 +216,19 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display feasibility-badge-to-send for accompanied candidacy when DF has not yet been sent to certification authority", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "DRAFT",
-            feasibilityFormat: "DEMATERIALIZED",
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: Date.now(),
-              candidateConfirmationAt: Date.now(),
-              swornStatementFileId: "1",
-            },
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "DRAFT",
+          feasibilityFormat: "DEMATERIALIZED",
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: Date.now(),
+            candidateConfirmationAt: Date.now(),
+            swornStatementFileId: "1",
+          },
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-badge-to-send"]').should("be.visible");
         cy.get('[data-test="feasibility-badge-to-send"]').should(
@@ -344,21 +239,13 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display feasibility-badge-to-send for autonomous candidacy when DF has not yet been sent to certification authority", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            feasibilityFormat: "DEMATERIALIZED",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "AUTONOME";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          feasibilityFormat: "DEMATERIALIZED",
+        };
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-badge-to-send"]').should("be.visible");
         cy.get('[data-test="feasibility-badge-to-send"]').should(
@@ -369,26 +256,19 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display feasibility-badge-pending for candidacy when DF decision is PENDING", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "PENDING",
-            feasibilityFileSentAt: Date.now(),
-            feasibilityFormat: "DEMATERIALIZED",
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: Date.now(),
-              candidateConfirmationAt: Date.now(),
-              swornStatementFileId: "1",
-            },
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "PENDING",
+          feasibilityFileSentAt: Date.now(),
+          feasibilityFormat: "DEMATERIALIZED",
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: Date.now(),
+            candidateConfirmationAt: Date.now(),
+            swornStatementFileId: "1",
+          },
+        };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-badge-pending"]').should("be.visible");
         cy.get('[data-test="feasibility-badge-pending"]').should(
@@ -399,35 +279,18 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display feasibility-badge-pending for candidacy when DF decision is COMPLETE", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "COMPLETE",
-            feasibilityFileSentAt: Date.now(),
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: Date.now(),
-              candidateConfirmationAt: Date.now(),
-              swornStatementFileId: "1",
-            },
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "COMPLETE",
+          feasibilityFileSentAt: Date.now(),
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: Date.now(),
+            candidateConfirmationAt: Date.now(),
+            swornStatementFileId: "1",
+          },
+        };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-badge-pending"]').should("be.visible");
         cy.get('[data-test="feasibility-badge-pending"]').should(
@@ -438,25 +301,18 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display feasibility-badge-rejected for candidacy when DF decision is REJECTED", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "REJECTED",
-            feasibilityFileSentAt: Date.now(),
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: Date.now(),
-              candidateConfirmationAt: Date.now(),
-              swornStatementFileId: "1",
-            },
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "REJECTED",
+          feasibilityFileSentAt: Date.now(),
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: Date.now(),
+            candidateConfirmationAt: Date.now(),
+            swornStatementFileId: "1",
+          },
+        };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-badge-rejected"]').should("be.visible");
         cy.get('[data-test="feasibility-badge-rejected"]').should(
@@ -467,85 +323,43 @@ context("Dashboard Tiles", () => {
     });
 
     it("should be disabled when there is no feasibility", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-tile"] button').should("be.disabled");
       });
     });
 
     it("should be disabled when PDF DF is incomplete and has not been yet resent to certification authority by AAP", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "INCOMPLETE",
-            feasibilityFileSentAt: null,
-            feasibilityFormat: "UPLOADED_PDF",
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "INCOMPLETE",
+          feasibilityFileSentAt: null,
+          feasibilityFormat: "UPLOADED_PDF",
+        };
 
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-tile"] button').should("be.disabled");
       });
     });
 
     it("should be disabled when DF is incomplete and has not been yet resent to candidate by AAP", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "INCOMPLETE",
-            feasibilityFormat: "DEMATERIALIZED",
-            dematerializedFeasibilityFile: {
-              sentToCandidateAt: null,
-              candidateConfirmationAt: null,
-            },
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "INCOMPLETE",
+          feasibilityFormat: "DEMATERIALIZED",
+          dematerializedFeasibilityFile: {
+            sentToCandidateAt: null,
+            candidateConfirmationAt: null,
+          },
+        };
 
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.typeAccompagnement =
-          "ACCOMPAGNE";
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="feasibility-tile"] button').should("be.disabled");
       });
@@ -563,29 +377,12 @@ context("Dashboard Tiles", () => {
     ];
 
     it("should display pending dossier validation badge", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-          {
-            decision: "PENDING",
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.activeDossierDeValidation = {
+          decision: "PENDING",
+        };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="dossier-validation-badge-pending"]').should(
           "be.visible",
@@ -594,29 +391,12 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display incomplete dossier validation badge", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-          {
-            decision: "INCOMPLETE",
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.activeDossierDeValidation = {
+          decision: "INCOMPLETE",
+        };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="dossier-validation-badge-incomplete"]').should(
           "be.visible",
@@ -625,31 +405,13 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display 'to send' dossier validation badge when not sent yet and DF is admissible", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-          null;
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "ADMISSIBLE",
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.activeDossierDeValidation = null;
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "ADMISSIBLE",
+        };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="dossier-validation-badge-to-send"]').should(
           "be.visible",
@@ -658,33 +420,15 @@ context("Dashboard Tiles", () => {
     });
 
     it("should display 'to send' dossier validation badge when decision is INCOMPLETE and DF is admissible", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.activeDossierDeValidation =
-          {
-            decision: "INCOMPLETE",
-          };
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.feasibility =
-          {
-            decision: "ADMISSIBLE",
-          };
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.activeDossierDeValidation = {
+          decision: "INCOMPLETE",
+        };
+        candidacy.data.getCandidacyById.feasibility = {
+          decision: "ADMISSIBLE",
+        };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="dossier-validation-badge-to-send"]').should(
           "be.visible",
@@ -694,28 +438,12 @@ context("Dashboard Tiles", () => {
 
     failedJuryResults.forEach((juryResult) => {
       it(`should display 'to send' dossier validation badge when jury result is ${juryResult}`, () => {
-        cy.fixture("candidate1.json").then((candidate) => {
-          candidate.data.candidate_getCandidateWithCandidacy.candidacy.jury = {
+        cy.fixture("candidacy1.json").then((candidacy) => {
+          candidacy.data.getCandidacyById.jury = {
             result: juryResult,
           };
 
-          cy.intercept("POST", "/api/graphql", (req) => {
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForDashboard",
-              candidate,
-            );
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForHome",
-              candidate,
-            );
-            stubQuery(
-              req,
-              "candidate_getCandidateWithCandidacyForLayout",
-              candidate,
-            );
-          });
+          interceptGraphQL(candidacy);
 
           cy.get('[data-test="dossier-validation-badge-to-send"]').should(
             "be.visible",
@@ -727,102 +455,48 @@ context("Dashboard Tiles", () => {
 
   describe("Training Tile", () => {
     it("should be disabled when candidacy status is PROJET", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PROJET";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PROJET";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="training-tile"] button').should("be.disabled");
       });
     });
 
     it("should be disabled when candidacy status is VALIDATION", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "VALIDATION";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "VALIDATION";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="training-tile"] button').should("be.disabled");
       });
     });
 
     it("should be disabled when candidacy status is PRISE_EN_CHARGE and first appointment is in the future", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PRISE_EN_CHARGE";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          format(addDays(new Date(), 5), "yyyy-MM-dd");
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PRISE_EN_CHARGE";
+        candidacy.data.getCandidacyById.firstAppointmentOccuredAt = format(
+          addDays(new Date(), 5),
+          "yyyy-MM-dd",
+        );
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="training-tile"] button').should("be.disabled");
       });
     });
 
     it("should show 'en cours' badge when candidacy status is PRISE_EN_CHARGE and first appointment is passed", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PRISE_EN_CHARGE";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          format(subDays(new Date(), 5), "yyyy-MM-dd");
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PRISE_EN_CHARGE";
+        candidacy.data.getCandidacyById.firstAppointmentOccuredAt = format(
+          subDays(new Date(), 5),
+          "yyyy-MM-dd",
+        );
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="training-status-badge-in-progress"]').should(
           "be.visible",
@@ -831,29 +505,14 @@ context("Dashboard Tiles", () => {
     });
 
     it("should show 'en cours' badge when candidacy status is VALIDATION and first appointment is passed", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "VALIDATION";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          format(subDays(new Date(), 5), "yyyy-MM-dd");
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "VALIDATION";
+        candidacy.data.getCandidacyById.firstAppointmentOccuredAt = format(
+          subDays(new Date(), 5),
+          "yyyy-MM-dd",
+        );
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="training-status-badge-in-progress"]').should(
           "be.visible",
@@ -862,29 +521,14 @@ context("Dashboard Tiles", () => {
     });
 
     it("should show 'to validate' badge when status is PARCOURS_ENVOYE", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PARCOURS_ENVOYE";
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.firstAppointmentOccuredAt =
-          format(subDays(new Date(), 5), "yyyy-MM-dd");
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PARCOURS_ENVOYE";
+        candidacy.data.getCandidacyById.firstAppointmentOccuredAt = format(
+          subDays(new Date(), 5),
+          "yyyy-MM-dd",
+        );
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="training-status-badge-to-validate"]').should(
           "be.visible",
@@ -893,27 +537,10 @@ context("Dashboard Tiles", () => {
     });
 
     it("should show 'validated' badge when status is PARCOURS_CONFIRME", () => {
-      cy.fixture("candidate1.json").then((candidate) => {
-        candidate.data.candidate_getCandidateWithCandidacy.candidacy.status =
-          "PARCOURS_CONFIRME";
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PARCOURS_CONFIRME";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForDashboard",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForHome",
-            candidate,
-          );
-          stubQuery(
-            req,
-            "candidate_getCandidateWithCandidacyForLayout",
-            candidate,
-          );
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-test="training-status-badge-validated"]').should(
           "be.visible",
