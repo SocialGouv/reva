@@ -352,6 +352,7 @@ export const Header = () => {
     queryKey: ["certificateur", "getCertificationAuthorityMetabaseUrl"],
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityMetabaseUrlQuery),
+    enabled: !isOrganism,
   });
 
   const metabaseDashboardIframeUrl =
