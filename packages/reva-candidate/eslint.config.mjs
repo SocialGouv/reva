@@ -32,6 +32,7 @@ export default defineConfig([
             "**/layout.tsx",
             "**/cypress.config.js",
             "**/codegen.ts",
+            "**/playwright.config.ts",
           ],
         },
       ],
