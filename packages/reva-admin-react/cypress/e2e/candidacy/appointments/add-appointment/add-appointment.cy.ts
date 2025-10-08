@@ -23,10 +23,6 @@ function interceptQueries() {
       data: { candidacy_canAccessCandidacy: true },
     });
 
-    stubQuery(req, "getCertificationAuthorityMetabaseUrl", {
-      data: { account_getAccountForConnectedUser: null },
-    });
-
     stubQuery(req, "getCandidacyForAddAppointmentPage", {
       data: {
         getCandidacyById: {
@@ -57,7 +53,6 @@ function waitForQueries() {
   cy.wait("@candidacy_canAccessCandidacy");
   cy.wait("@getAccountInfo");
   cy.wait("@getCandidacyMenuAndCandidateInfos");
-  cy.wait("@getCertificationAuthorityMetabaseUrl");
   cy.wait("@getCandidacyForAddAppointmentPage");
 }
 

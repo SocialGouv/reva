@@ -28,10 +28,6 @@ function interceptQueries(args?: {
       data: { candidacy_canAccessCandidacy: true },
     });
 
-    stubQuery(req, "getCertificationAuthorityMetabaseUrl", {
-      data: { account_getAccountForConnectedUser: null },
-    });
-
     stubQuery(req, "getCandidacyForAppointmentsPage", {
       data: {
         getCandidacyById: {
@@ -107,7 +103,6 @@ function waitForQueries() {
   cy.wait("@candidacy_canAccessCandidacy");
   cy.wait("@getAccountInfo");
   cy.wait("@getCandidacyMenuAndCandidateInfos");
-  cy.wait("@getCertificationAuthorityMetabaseUrl");
   cy.wait("@getCandidacyForAppointmentsPage");
   cy.wait("@getRendezVousPedagogiqueForAppointmentsPage");
 }
