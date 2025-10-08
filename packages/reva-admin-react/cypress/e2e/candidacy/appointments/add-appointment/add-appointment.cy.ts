@@ -104,7 +104,7 @@ context("when I try to validate the form ", () => {
     );
   });
 
-  it("does  submit the form with a correct title and date and redirect me to the appointment page", function () {
+  it("does  submit the form with a correct title and date and redirect me to the appointment update confirmation page", function () {
     interceptQueries();
     cy.admin(
       "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_DE_SUIVI",
@@ -122,11 +122,11 @@ context("when I try to validate the form ", () => {
 
     cy.url().should(
       "eq",
-      `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/`,
+      `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3/update-confirmation/`,
     );
   });
 
-  it("does  submit the form with a correct title, date, and all other infos and redirect me to the appointment page", function () {
+  it("does  submit the form with a correct title, date, and all other infos and redirect me to the appointment update confirmation page", function () {
     interceptQueries();
     cy.admin(
       "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_DE_SUIVI",
@@ -148,7 +148,7 @@ context("when I try to validate the form ", () => {
 
     cy.url().should(
       "eq",
-      `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/`,
+      `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3/update-confirmation/`,
     );
   });
 });

@@ -55,7 +55,9 @@ export default function UpdateAppointmentPage() {
         duration: data.duration || null,
       });
       successToast("Rendez-vous enregistré");
-      router.push(`/candidacies/${candidacyId}/appointments`);
+      router.push(
+        `/candidacies/${candidacyId}/appointments/${appointment.id}/update-confirmation`,
+      );
     } catch (error) {
       console.error(error);
       graphqlErrorToast(error);

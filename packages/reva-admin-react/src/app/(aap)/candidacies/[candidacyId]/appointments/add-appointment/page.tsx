@@ -68,7 +68,9 @@ export default function AddAppointmentPage() {
       return;
     }
     try {
-      await createAppointment.mutateAsync({
+      const {
+        appointment_createAppointment: { id: appointmentId },
+      } = await createAppointment.mutateAsync({
         candidacyId,
         type: type as AppointmentType,
         ...data,
@@ -77,7 +79,9 @@ export default function AddAppointmentPage() {
         sendEmailToCandidate,
       });
       successToast("Rendez-vous enregistré");
-      router.push(`/candidacies/${candidacyId}/appointments`);
+      router.push(
+        `/candidacies/${candidacyId}/appointments/${appointmentId}/update-confirmation`,
+      );
     } catch (error) {
       console.error(error);
       graphqlErrorToast(error);

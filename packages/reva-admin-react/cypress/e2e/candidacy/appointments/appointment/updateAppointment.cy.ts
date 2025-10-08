@@ -138,7 +138,7 @@ context("when I access the candidacy add appointment page", () => {
 
     cy.url().should(
       "eq",
-      `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/`,
+      `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3/update-confirmation/`,
     );
   });
 });
