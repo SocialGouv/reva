@@ -165,7 +165,7 @@ test("should not create an appointment and throw an error if there is already a 
     type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
   });
 
-  expect(
+  await expect(
     graphqlClient.request(createAppointment, {
       input: {
         candidacyId: candidacy.id,
@@ -249,7 +249,7 @@ test("should not update an appointment when it is past", async () => {
     date: new Date("1999-08-12"),
   });
 
-  expect(() =>
+  await expect(() =>
     graphqlClient.request(updateAppointment, {
       input: {
         appointmentId: appointment.id,
