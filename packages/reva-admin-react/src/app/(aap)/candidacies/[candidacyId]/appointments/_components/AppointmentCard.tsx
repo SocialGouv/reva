@@ -19,7 +19,7 @@ export const AppointmentCard = ({
     title: string;
   };
   candidacyId: string;
-  disabled: boolean;
+  disabled?: boolean;
 }) => {
   let tagLabel = "";
   switch (appointment.type) {

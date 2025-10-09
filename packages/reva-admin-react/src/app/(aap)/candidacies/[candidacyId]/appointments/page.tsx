@@ -1,7 +1,6 @@
 "use client";
-import { useParams, useSearchParams } from "next/navigation";
-
-import { Pagination } from "@/components/pagination/Pagination";
+import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
+import { useParams } from "next/navigation";
 
 import { AddAppointmentButton } from "./_components/AddAppointmentButton";
 import { AddFirstAppointmentCard } from "./_components/AddFirstAppointmentCard";
@@ -13,16 +12,15 @@ export default function AppointmentsPage() {
     candidacyId: string;
   }>();
 
-  const searchParams = useSearchParams();
-  const page = searchParams.get("page");
-
-  const currentPage = page ? Number.parseInt(page) : 1;
-  const { appointments, rendezVousPedagogiqueMissing } = useAppointmentsPage({
+  const {
+    upcomingAppointments,
+    pastAppointments,
+    rendezVousPedagogiqueMissing,
+  } = useAppointmentsPage({
     candidacyId,
-    currentPage,
   });
 
-  if (!appointments) {
+  if (!upcomingAppointments || !pastAppointments) {
     return null;
   }
 
@@ -42,23 +40,40 @@ export default function AppointmentsPage() {
       {rendezVousPedagogiqueMissing && (
         <AddFirstAppointmentCard candidacyId={candidacyId} />
       )}
-      <ul className="pl-0 flex flex-col gap-4" data-test="appointments-list">
-        {appointments?.rows?.map((appointment) => (
-          <li key={appointment.id}>
-            <AppointmentCard
-              appointment={appointment}
-              candidacyId={candidacyId}
-              disabled={appointment.temporalStatus === "PAST"}
-            />
-          </li>
-        ))}
-      </ul>
-      <Pagination
-        baseHref={`/candidacies/${candidacyId}/appointments`}
-        className="mx-auto my-12"
-        currentPage={currentPage}
-        totalPages={appointments.info.totalPages}
-      />
+      {!!upcomingAppointments.info.totalRows && (
+        <ul
+          className="pl-0 flex flex-col gap-4"
+          data-test="upcoming-appointments-list"
+        >
+          {upcomingAppointments?.rows?.map((appointment) => (
+            <li key={appointment.id}>
+              <AppointmentCard
+                appointment={appointment}
+                candidacyId={candidacyId}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+      {!upcomingAppointments.info.totalRows && <p>Aucun rendez-vous à venir</p>}
+      {!!pastAppointments.info.totalRows && (
+        <Accordion label="Rendez-vous passés">
+          <ul
+            className="pl-0 flex flex-col gap-4"
+            data-test="past-appointments-list"
+          >
+            {pastAppointments?.rows?.map((appointment) => (
+              <li key={appointment.id} className="list-none">
+                <AppointmentCard
+                  appointment={appointment}
+                  candidacyId={candidacyId}
+                  disabled
+                />
+              </li>
+            ))}
+          </ul>
+        </Accordion>
+      )}
     </div>
   );
 }

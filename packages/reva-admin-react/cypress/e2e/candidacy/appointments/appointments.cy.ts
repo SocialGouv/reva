@@ -28,39 +28,69 @@ function interceptQueries(args?: {
       data: { candidacy_canAccessCandidacy: true },
     });
 
-    stubQuery(req, "getCandidacyForAppointmentsPage", {
+    stubQuery(req, "getCandidacyAndUpcomingAppointmentsForAppointmentsPage", {
       data: {
         getCandidacyById: {
           id: "fb451fbc-3218-416d-9ac9-65b13432469f",
-          appointments:
-            withRendezVousPedagogique || withPastRendezVousPedagogique
-              ? {
-                  rows: [
-                    {
-                      id: "6c814f7c-09a0-4621-9a0e-5bf5212696c8",
-                      type: "RENDEZ_VOUS_PEDAGOGIQUE",
-                      title: "Rendez-vous pédagogique",
-                      date: "2025-01-01",
-                      time: "10:00:00.000Z",
-                      temporalStatus: withPastRendezVousPedagogique
-                        ? "PAST"
-                        : "UPCOMING",
-                    },
-                  ],
-                  info: {
-                    totalRows: 1,
-                    currentPage: 1,
-                    totalPages: 1,
+          appointments: withRendezVousPedagogique
+            ? {
+                rows: [
+                  {
+                    id: "6c814f7c-09a0-4621-9a0e-5bf5212696c8",
+                    type: "RENDEZ_VOUS_PEDAGOGIQUE",
+                    title: "Rendez-vous pédagogique",
+                    date: "2025-01-01",
+                    time: "10:00:00.000Z",
+                    temporalStatus: "UPCOMING",
                   },
-                }
-              : {
-                  rows: [],
-                  info: {
-                    totalRows: 0,
-                    currentPage: 1,
-                    totalPages: 1,
-                  },
+                ],
+                info: {
+                  totalRows: 1,
+                  currentPage: 1,
+                  totalPages: 1,
                 },
+              }
+            : {
+                rows: [],
+                info: {
+                  totalRows: 0,
+                  currentPage: 1,
+                  totalPages: 1,
+                },
+              },
+        },
+      },
+    });
+    stubQuery(req, "getCandidacyAndPastAppointmentsForAppointmentsPage", {
+      data: {
+        getCandidacyById: {
+          id: "fb451fbc-3218-416d-9ac9-65b13432469f",
+          appointments: withPastRendezVousPedagogique
+            ? {
+                rows: [
+                  {
+                    id: "6c814f7c-09a0-4621-9a0e-5bf5212696c8",
+                    type: "RENDEZ_VOUS_PEDAGOGIQUE",
+                    title: "Rendez-vous pédagogique",
+                    date: "2025-01-01",
+                    time: "10:00:00.000Z",
+                    temporalStatus: "PAST",
+                  },
+                ],
+                info: {
+                  totalRows: 1,
+                  currentPage: 1,
+                  totalPages: 1,
+                },
+              }
+            : {
+                rows: [],
+                info: {
+                  totalRows: 0,
+                  currentPage: 1,
+                  totalPages: 1,
+                },
+              },
         },
       },
     });
@@ -103,7 +133,8 @@ function waitForQueries() {
   cy.wait("@candidacy_canAccessCandidacy");
   cy.wait("@getAccountInfo");
   cy.wait("@getCandidacyMenuAndCandidateInfos");
-  cy.wait("@getCandidacyForAppointmentsPage");
+  cy.wait("@getCandidacyAndUpcomingAppointmentsForAppointmentsPage");
+  cy.wait("@getCandidacyAndPastAppointmentsForAppointmentsPage");
   cy.wait("@getRendezVousPedagogiqueForAppointmentsPage");
 }
 
@@ -126,7 +157,7 @@ context("when I access the candidacy appointments page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="appointments-list"]')
+      cy.get('[data-test="upcoming-appointments-list"]')
         .children("li")
         .should("have.length", 1);
     });
@@ -138,12 +169,15 @@ context("when I access the candidacy appointments page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="appointments-list"]')
+      cy.get('[data-test="upcoming-appointments-list"]')
         .children("li")
         .first()
         .should("not.have.attr", "href");
 
-      cy.get('[data-test="appointments-list"]').children("li").first().click();
+      cy.get('[data-test="upcoming-appointments-list"]')
+        .children("li")
+        .first()
+        .click();
       cy.url().should(
         "eq",
         `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/6c814f7c-09a0-4621-9a0e-5bf5212696c8/`,
@@ -171,7 +205,7 @@ context("when I access the candidacy appointments page", () => {
           "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
         );
         waitForQueries();
-        cy.get('[data-test="appointments-list"]')
+        cy.get('[data-test="past-appointments-list"]')
           .children("li")
           .first()
           .should("not.have.attr", "href");

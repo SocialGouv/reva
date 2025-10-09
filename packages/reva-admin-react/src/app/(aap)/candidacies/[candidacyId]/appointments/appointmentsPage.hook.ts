@@ -6,15 +6,44 @@ import { graphql } from "@/graphql/generated";
 
 const RECORDS_PER_PAGE = 10;
 
-const getCandidacyAppointments = graphql(`
-  query getCandidacyForAppointmentsPage(
+const getCandidacyAndUpcomingAppointments = graphql(`
+  query getCandidacyAndUpcomingAppointmentsForAppointmentsPage(
     $candidacyId: ID!
-    $offset: Int
     $limit: Int
   ) {
     getCandidacyById(id: $candidacyId) {
       id
-      appointments(limit: $limit, offset: $offset) {
+      appointments(limit: $limit, temporalStatusFilter: UPCOMING) {
+        rows {
+          id
+          date
+          time
+          type
+          title
+          temporalStatus
+        }
+        info {
+          totalRows
+          currentPage
+          totalPages
+        }
+      }
+    }
+  }
+`);
+
+const getCandidacyAndPastAppointments = graphql(`
+  query getCandidacyAndPastAppointmentsForAppointmentsPage(
+    $candidacyId: ID!
+    $limit: Int
+  ) {
+    getCandidacyById(id: $candidacyId) {
+      id
+      appointments(
+        limit: $limit
+        temporalStatusFilter: PAST
+        sortBy: DATE_ASC
+      ) {
         rows {
           id
           date
@@ -48,21 +77,31 @@ const getRendezVousPedagogique = graphql(`
 
 export const useAppointmentsPage = ({
   candidacyId,
-  currentPage,
 }: {
   candidacyId: string;
-  currentPage: number;
 }) => {
   const { graphqlClient } = useGraphQlClient();
 
-  const offset = (currentPage - 1) * RECORDS_PER_PAGE;
-
-  const { data: getCandidacyAppointmentsData } = useQuery({
-    queryKey: [candidacyId, currentPage, "getCandidacyForAppointmentsPage"],
+  const { data: getCandidacyAndUpcomingAppointmentsData } = useQuery({
+    queryKey: [
+      candidacyId,
+      "getCandidacyAndUpcomingAppointmentsForAppointmentsPage",
+    ],
     queryFn: () =>
-      graphqlClient.request(getCandidacyAppointments, {
+      graphqlClient.request(getCandidacyAndUpcomingAppointments, {
         candidacyId,
-        offset,
+        limit: RECORDS_PER_PAGE,
+      }),
+  });
+
+  const { data: getCandidacyAndPastAppointmentsData } = useQuery({
+    queryKey: [
+      candidacyId,
+      "getCandidacyAndPastAppointmentsForAppointmentsPage",
+    ],
+    queryFn: () =>
+      graphqlClient.request(getCandidacyAndPastAppointments, {
+        candidacyId,
         limit: RECORDS_PER_PAGE,
       }),
   });
@@ -75,11 +114,17 @@ export const useAppointmentsPage = ({
       }),
   });
 
-  const appointments =
-    getCandidacyAppointmentsData?.getCandidacyById?.appointments;
+  const upcomingAppointments =
+    getCandidacyAndUpcomingAppointmentsData?.getCandidacyById?.appointments;
+  const pastAppointments =
+    getCandidacyAndPastAppointmentsData?.getCandidacyById?.appointments;
 
   const rendezVousPedagogiqueMissing =
     !getRendezVousPedagogiqueData?.getCandidacyById?.appointments?.rows?.length;
 
-  return { appointments, rendezVousPedagogiqueMissing };
+  return {
+    upcomingAppointments,
+    pastAppointments,
+    rendezVousPedagogiqueMissing,
+  };
 };
