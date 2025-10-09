@@ -2,7 +2,7 @@ import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -69,16 +69,13 @@ test("get non existing candidacy should yield errors", async () => {
     }
   `);
 
-  try {
-    await graphqlClient.request(getCandidacyById, {
+  await expect(
+    graphqlClient.request(getCandidacyById, {
       id: "fb53327b-8ed9-4238-8e80-007fa1ddcfe6",
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual(
-      "Vous n'êtes pas autorisé à accéder à cette candidature",
-    );
-  }
+    }),
+  ).rejects.toThrowError(
+    "Vous n'êtes pas autorisé à accéder à cette candidature",
+  );
 });
 
 test("a user can't modify the account information of another candidate", async () => {
@@ -108,17 +105,14 @@ test("a user can't modify the account information of another candidate", async (
     }
   `);
 
-  try {
-    await graphqlClient.request(candidacy_updateContact, {
+  await expect(
+    graphqlClient.request(candidacy_updateContact, {
       candidateId: anotherCandidate.id,
       candidateData: { phone: "0612345678" },
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual(
-      "Vous n'êtes pas autorisé à accéder à cette candidature",
-    );
-  }
+    }),
+  ).rejects.toThrowError(
+    "Vous n'êtes pas autorisé à accéder à cette candidature",
+  );
 });
 
 test("a candidate can modify all his account information", async () => {

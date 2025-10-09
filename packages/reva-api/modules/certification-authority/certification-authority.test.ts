@@ -8,7 +8,7 @@ import { createCertificationAuthorityHelper } from "@/test/helpers/entities/crea
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import * as createAccount from "../account/features/createAccount";
 
@@ -135,8 +135,8 @@ test("should update a certification authority's contact and account info as an a
 test("should refuse to to update a certification authority's contact info as a candidacy manager", async () => {
   const certificationAuthority = await createCertificationAuthorityHelper();
 
-  try {
-    await graphqlUpdateCertificationAuthority({
+  await expect(
+    graphqlUpdateCertificationAuthority({
       role: "manage_candidacy",
       account: {
         keycloakId: "64ae851c-9519-4efb-a483-db4b71918e2d",
@@ -149,18 +149,15 @@ test("should refuse to to update a certification authority's contact info as a c
         contactFullName: "new name",
         contactEmail: "new email",
       },
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual("You are not authorized!");
-  }
+    }),
+  ).rejects.toThrowError("You are not authorized!");
 });
 
 test("should refuse to to update a certification authority's contact info as a candidate", async () => {
   const certificationAuthority = await createCertificationAuthorityHelper();
 
-  try {
-    await graphqlUpdateCertificationAuthority({
+  await expect(
+    graphqlUpdateCertificationAuthority({
       role: "candidate",
       account: {
         keycloakId: "64ae851c-9519-4efb-a483-db4b71918e2d",
@@ -173,11 +170,8 @@ test("should refuse to to update a certification authority's contact info as a c
         contactFullName: "new name",
         contactEmail: "new email",
       },
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual("You are not authorized!");
-  }
+    }),
+  ).rejects.toThrowError("You are not authorized!");
 });
 
 test("should update all of a certification authority's local accounts contact info when isGlobalContact is true", async () => {

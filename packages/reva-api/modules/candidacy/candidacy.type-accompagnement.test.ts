@@ -2,7 +2,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -130,18 +130,14 @@ test("candidate should NOT be able to change it's type_accompagnement to 'autono
     }
   `);
 
-  try {
-    await graphqlClient.request(candidacy_updateTypeAccompagnement, {
+  await expect(
+    graphqlClient.request(candidacy_updateTypeAccompagnement, {
       candidacyId: candidacy.id,
       typeAccompagnement: "AUTONOME",
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-
-    expect(gqlError).toEqual(
-      "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
-    );
-  }
+    }),
+  ).rejects.toThrowError(
+    "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
+  );
 });
 
 test("candidate should NOT be able to change it's type_accompagnement to 'accompagne' when the candidacy status is equal to 'DOSSIER_FAISABILITE_ENVOYE'", async () => {
@@ -175,16 +171,12 @@ test("candidate should NOT be able to change it's type_accompagnement to 'accomp
     }
   `);
 
-  try {
-    await graphqlClient.request(candidacy_updateTypeAccompagnement, {
+  await expect(
+    graphqlClient.request(candidacy_updateTypeAccompagnement, {
       candidacyId: candidacy.id,
       typeAccompagnement: "ACCOMPAGNE",
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-
-    expect(gqlError).toEqual(
-      "Impossible de modifier le type d'accompagnement une fois le dossier de faisabilité envoyé",
-    );
-  }
+    }),
+  ).rejects.toThrowError(
+    "Impossible de modifier le type d'accompagnement une fois le dossier de faisabilité envoyé",
+  );
 });

@@ -1,6 +1,6 @@
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyDropOutHelper } from "@/test/helpers/entities/create-candidacy-drop-out-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -149,19 +149,13 @@ describe("candidate drop out decision", () => {
       }
     `);
 
-    try {
-      await graphqlClient.request(
-        candidacy_updateCandidateCandidacyDropoutDecision,
-        {
-          candidacyId: candidacyDropOut.candidacyId,
-          dropOutConfirmed: false,
-        },
-      );
-    } catch (error) {
-      const gqlError = getGraphQLError(error);
-      expect(gqlError).toEqual(
-        "La décision d'abandon a déjà été confirmée par le candidat",
-      );
-    }
+    await expect(
+      graphqlClient.request(candidacy_updateCandidateCandidacyDropoutDecision, {
+        candidacyId: candidacyDropOut.candidacyId,
+        dropOutConfirmed: false,
+      }),
+    ).rejects.toThrowError(
+      "La décision d'abandon a déjà été confirmée par le candidat",
+    );
   });
 });

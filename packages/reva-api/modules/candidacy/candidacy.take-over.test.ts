@@ -2,7 +2,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -26,14 +26,11 @@ test("candidacy_takeOver should fail when not authenticated", async function () 
     }
   `);
 
-  try {
-    await graphqlClient.request(candidacy_takeOver, {
+  await expect(
+    graphqlClient.request(candidacy_takeOver, {
       candidacyId: candidacy.id,
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual("You are not authorized!");
-  }
+    }),
+  ).rejects.toThrowError("You are not authorized!");
 });
 
 test("candidacy_takeOver should fail when user is admin", async function () {
@@ -56,14 +53,11 @@ test("candidacy_takeOver should fail when user is admin", async function () {
     }
   `);
 
-  try {
-    await graphqlClient.request(candidacy_takeOver, {
+  await expect(
+    graphqlClient.request(candidacy_takeOver, {
       candidacyId: candidacy.id,
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual("You are not authorized!");
-  }
+    }),
+  ).rejects.toThrowError("You are not authorized!");
 });
 
 test("candidacy_takeOver should fail when candidacy manager has wrong organism", async function () {
@@ -86,14 +80,11 @@ test("candidacy_takeOver should fail when candidacy manager has wrong organism",
     }
   `);
 
-  try {
-    await graphqlClient.request(candidacy_takeOver, {
+  await expect(
+    graphqlClient.request(candidacy_takeOver, {
       candidacyId: candidacy.id,
-    });
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual("Votre compte utilisateur est introuvable.");
-  }
+    }),
+  ).rejects.toThrowError("Votre compte utilisateur est introuvable.");
 });
 
 test("candidacy_takeOver should do nothing when candidacy status is not validation", async function () {

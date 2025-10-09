@@ -2,7 +2,7 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
@@ -101,23 +101,17 @@ describe("publish a cohorte vae collective", () => {
       throw new Error("Compte gestionnaire non trouvé");
     }
 
-    try {
-      await publishCohorteVAECollective({
+    await expect(
+      publishCohorteVAECollective({
         userKeycloakId,
         userRole: "manage_vae_collective",
         commanditaireVaeCollectiveId:
           cohorteVaeCollective.commanditaireVaeCollectiveId,
         cohorteVaeCollectiveId: cohorteVaeCollective.id,
-      });
-
-      //should reach this line
-      expect(false).toBe(true);
-    } catch (e) {
-      const gqlError = getGraphQLError(e);
-      expect(gqlError).toEqual(
-        "Impossible de publier une cohorte si son statut n'est pas 'BROUILLON'",
-      );
-    }
+      }),
+    ).rejects.toThrowError(
+      "Impossible de publier une cohorte si son statut n'est pas 'BROUILLON'",
+    );
   });
 
   test("should not let me publish a cohorte vae collective if it is not associated to a certification", async () => {
@@ -130,23 +124,17 @@ describe("publish a cohorte vae collective", () => {
       throw new Error("Compte gestionnaire non trouvé");
     }
 
-    try {
-      await publishCohorteVAECollective({
+    await expect(
+      publishCohorteVAECollective({
         userKeycloakId,
         userRole: "manage_vae_collective",
         commanditaireVaeCollectiveId:
           cohorteVaeCollective.commanditaireVaeCollectiveId,
         cohorteVaeCollectiveId: cohorteVaeCollective.id,
-      });
-
-      //should reach this line
-      expect(false).toBe(true);
-    } catch (e) {
-      const gqlError = getGraphQLError(e);
-      expect(gqlError).toEqual(
-        "Impossible de publier une cohorte si elle n'a pas de certification associée",
-      );
-    }
+      }),
+    ).rejects.toThrowError(
+      "Impossible de publier une cohorte si elle n'a pas de certification associée",
+    );
   });
 
   test("should not let me publish a cohorte vae collective if it is not associated to an organism", async () => {
@@ -167,22 +155,16 @@ describe("publish a cohorte vae collective", () => {
       throw new Error("Compte gestionnaire non trouvé");
     }
 
-    try {
-      await publishCohorteVAECollective({
+    await expect(
+      publishCohorteVAECollective({
         userKeycloakId,
         userRole: "manage_vae_collective",
         commanditaireVaeCollectiveId:
           cohorteVaeCollective.commanditaireVaeCollectiveId,
         cohorteVaeCollectiveId: cohorteVaeCollective.id,
-      });
-
-      //should reach this line
-      expect(false).toBe(true);
-    } catch (e) {
-      const gqlError = getGraphQLError(e);
-      expect(gqlError).toEqual(
-        "Impossible de publier une cohorte si elle n'a pas d'aap associé",
-      );
-    }
+      }),
+    ).rejects.toThrowError(
+      "Impossible de publier une cohorte si elle n'a pas d'aap associé",
+    );
   });
 });
