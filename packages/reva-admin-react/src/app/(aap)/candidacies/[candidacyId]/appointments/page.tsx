@@ -3,8 +3,8 @@ import { useParams } from "next/navigation";
 
 import { AddAppointmentButton } from "./_components/AddAppointmentButton";
 import { AddFirstAppointmentCard } from "./_components/AddFirstAppointmentCard";
-import { AppointmentCard } from "./_components/AppointmentCard";
 import { PastAppointments } from "./_components/PastAppointments";
+import { UpcomingAppointments } from "./_components/UpcomingAppointments";
 import { useAppointmentsPage } from "./appointmentsPage.hook";
 
 export default function AppointmentsPage() {
@@ -12,14 +12,9 @@ export default function AppointmentsPage() {
     candidacyId: string;
   }>();
 
-  const { upcomingAppointments, rendezVousPedagogiqueMissing } =
-    useAppointmentsPage({
-      candidacyId,
-    });
-
-  if (!upcomingAppointments) {
-    return null;
-  }
+  const { rendezVousPedagogiqueMissing } = useAppointmentsPage({
+    candidacyId,
+  });
 
   return (
     <div className="flex flex-col w-full" data-test="appointments-page">
@@ -37,22 +32,7 @@ export default function AppointmentsPage() {
       {rendezVousPedagogiqueMissing && (
         <AddFirstAppointmentCard candidacyId={candidacyId} />
       )}
-      {!!upcomingAppointments.info.totalRows && (
-        <ul
-          className="pl-0 flex flex-col gap-4"
-          data-test="upcoming-appointments-list"
-        >
-          {upcomingAppointments?.rows?.map((appointment) => (
-            <li key={appointment.id}>
-              <AppointmentCard
-                appointment={appointment}
-                candidacyId={candidacyId}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-      {!upcomingAppointments.info.totalRows && <p>Aucun rendez-vous à venir</p>}
+      <UpcomingAppointments candidacyId={candidacyId} />
       <PastAppointments candidacyId={candidacyId} />
     </div>
   );
