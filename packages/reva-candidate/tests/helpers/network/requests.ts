@@ -6,9 +6,18 @@ export function waitGraphQL(page: Page, operationName: string) {
       return false;
     }
 
+    if (!response.ok()) {
+      return false;
+    }
+
     try {
       const body = response.request().postDataJSON();
-      return body.operationName === operationName;
+      if (body.operationName !== operationName) {
+        return false;
+      }
+
+      const responseBody = await response.json();
+      return responseBody.data && !responseBody.errors;
     } catch {
       return false;
     }
@@ -16,5 +25,7 @@ export function waitGraphQL(page: Page, operationName: string) {
 }
 
 export function waitRest(page: Page, urlPattern: string) {
-  return page.waitForResponse((response) => response.url().includes(urlPattern));
+  return page.waitForResponse((response) =>
+    response.url().includes(urlPattern),
+  );
 }

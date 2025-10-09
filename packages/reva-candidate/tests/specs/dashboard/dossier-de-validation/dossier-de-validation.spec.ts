@@ -2,19 +2,29 @@ import { addMonths, format } from "date-fns";
 import { expect, test } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
-import { createCandidateHandlers } from "@tests/helpers/candidate/candidate";
+import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
+import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
+import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
+import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
+import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 import {
   clickDossierTab,
-  createDossierValidationHandlers,
+  dossierDeValidationHandlers,
   navigateToDossierValidation,
-} from "@tests/helpers/candidate/dossier-de-validation/dossier-de-validation";
+} from "@tests/helpers/handlers/dossier-de-validation/dossier-de-validation.handler";
 import {
   mockDossierValidationUpload,
   uploadFile,
-} from "@tests/helpers/candidate/dossier-de-validation/upload";
-import { waitGraphQL, waitRest } from "@tests/helpers/shared/requests";
+} from "@tests/helpers/handlers/dossier-de-validation/upload";
+import { waitGraphQL, waitRest } from "@tests/helpers/network/requests";
 
-import { TypeAccompagnement } from "@/graphql/generated/graphql";
+import {
+  Candidacy,
+  Feasibility,
+  Organism,
+  TypeAccompagnement,
+} from "@/graphql/generated/graphql";
 
 const DATE_NOW = new Date();
 const ESTIMATED_DATE = addMonths(DATE_NOW, 10);
@@ -23,22 +33,31 @@ const typesAccompagnement: TypeAccompagnement[] = ["AUTONOME", "ACCOMPAGNE"];
 typesAccompagnement.forEach((typeAccompagnement) => {
   test.describe(`${typeAccompagnement} - Dossier de validation`, () => {
     test.describe("Inactive dossier de validation", () => {
-      test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              typeAccompagnement,
-              status: "PROJET",
-            }),
-          ],
-          { scope: "test" },
-        ],
+      const certification = createCertificationEntity();
+      const organism =
+        typeAccompagnement === "ACCOMPAGNE"
+          ? (createOrganismEntity() as Organism)
+          : undefined;
+      const candidacy = createCandidacyEntity({
+        status: "PROJET",
+        certification,
+        organism,
+        typeAccompagnement,
+      }) as Candidacy;
+      const candidate = createCandidateEntity({ candidacy });
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
       });
 
-      test("should show an inactive dossier de validation element in the dashboard when the type_accompagnement is autonome and the candidacy status is 'PROJET'", async ({
+      test.use({
+        mswHandlers: [handlers, { scope: "test" }],
+      });
+
+      test("should show an inactive dossier de validation element in the dashboard when the candidacy status is 'PROJET'", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
 
         const dossierValidationButton = page
           .locator('[data-test="dossier-validation-tile"]')
@@ -51,25 +70,36 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
     test.describe("Update views", () => {
       test.describe("Active dashboard navigation", () => {
-        test.use({
-          mswHandlers: [
-            [
-              ...createCandidateHandlers({
-                typeAccompagnement,
-                status: "DOSSIER_FAISABILITE_RECEVABLE",
-                readyForJuryEstimatedAt: ESTIMATED_DATE,
-                feasibilityDecision: "ADMISSIBLE",
-              }),
-              ...createDossierValidationHandlers(),
-            ],
-            { scope: "test" },
-          ],
+        const certification = createCertificationEntity();
+        const organism =
+          typeAccompagnement === "ACCOMPAGNE"
+            ? (createOrganismEntity() as Organism)
+            : undefined;
+        const feasibility = createFeasibilityEntity({
+          decision: "ADMISSIBLE",
+          feasibilityFileSentAt: new Date().getTime(),
+        });
+        const candidacy = createCandidacyEntity({
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          certification,
+          organism,
+          typeAccompagnement,
+          feasibility: feasibility as Feasibility,
+        }) as Candidacy;
+        const candidate = createCandidateEntity({ candidacy });
+        const { handlers, dashboardWait } = dashboardHandlers({
+          candidate,
         });
 
-        test("should show an active dossier de validation element in the dashboard when the type_accompagnement is autonome and the candidacy status is 'DOSSIER_FAISABILITE_RECEVABLE' and route to the dossier de validation autonome page when clicked on", async ({
+        test.use({
+          mswHandlers: [handlers, { scope: "test" }],
+        });
+
+        test("should show an active dossier de validation element in the dashboard when the candidacy status is 'DOSSIER_FAISABILITE_RECEVABLE' and route to the dossier de validation page when clicked on", async ({
           page,
         }) => {
           await login(page);
+          await dashboardWait(page);
 
           const dossierValidationButton = page
             .locator('[data-test="dossier-validation-tile"]')
@@ -82,17 +112,31 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       });
 
       test.describe("Date updates", () => {
+        const certification = createCertificationEntity();
+        const organism =
+          typeAccompagnement === "ACCOMPAGNE"
+            ? (createOrganismEntity() as Organism)
+            : undefined;
+        const feasibility = createFeasibilityEntity({
+          decision: "ADMISSIBLE",
+          feasibilityFileSentAt: new Date().getTime(),
+        });
+
+        const candidacy = createCandidacyEntity({
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          certification,
+          organism,
+          typeAccompagnement,
+          feasibility: feasibility as Feasibility,
+        }) as Candidacy;
+        const candidate = createCandidateEntity({ candidacy });
+        const { handlers, dossierDeValidationWait } =
+          dossierDeValidationHandlers({
+            candidate,
+          });
+
         test.use({
-          mswHandlers: [
-            [
-              ...createCandidateHandlers({
-                typeAccompagnement,
-                status: "DOSSIER_FAISABILITE_RECEVABLE",
-              }),
-              ...createDossierValidationHandlers(),
-            ],
-            { scope: "test" },
-          ],
+          mswHandlers: [handlers, { scope: "test" }],
         });
 
         test("should let me change the readyForJuryEstimatedAt date", async ({
@@ -100,6 +144,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         }) => {
           await login(page);
           await navigateToDossierValidation(page);
+          await dossierDeValidationWait(page);
 
           const dateInput = page.locator(
             '[data-test="ready-for-jury-estimated-date-input"]',
@@ -122,18 +167,30 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       });
 
       test.describe("Form validation", () => {
+        const certification = createCertificationEntity();
+        const organism =
+          typeAccompagnement === "ACCOMPAGNE"
+            ? (createOrganismEntity() as Organism)
+            : undefined;
+        const feasibility = createFeasibilityEntity({
+          decision: "ADMISSIBLE",
+          feasibilityFileSentAt: new Date().getTime(),
+        });
+        const candidacy = createCandidacyEntity({
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          certification,
+          organism,
+          typeAccompagnement,
+          feasibility: feasibility as Feasibility,
+        }) as Candidacy;
+        const candidate = createCandidateEntity({ candidacy });
+        const { handlers, dossierDeValidationWait } =
+          dossierDeValidationHandlers({
+            candidate,
+          });
+
         test.use({
-          mswHandlers: [
-            [
-              ...createCandidateHandlers({
-                typeAccompagnement,
-                status: "DOSSIER_FAISABILITE_RECEVABLE",
-                readyForJuryEstimatedAt: ESTIMATED_DATE,
-              }),
-              ...createDossierValidationHandlers(),
-            ],
-            { scope: "test" },
-          ],
+          mswHandlers: [handlers, { scope: "test" }],
         });
 
         test("should display error message on first click when trying to submit without file", async ({
@@ -141,6 +198,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         }) => {
           await login(page);
           await navigateToDossierValidation(page);
+          await dossierDeValidationWait(page);
           await clickDossierTab(page);
 
           const checkboxGroup = page.locator(
@@ -174,17 +232,30 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       });
 
       test.describe("File upload and submission", () => {
+        const certification = createCertificationEntity();
+        const organism =
+          typeAccompagnement === "ACCOMPAGNE"
+            ? (createOrganismEntity() as Organism)
+            : undefined;
+        const feasibility = createFeasibilityEntity({
+          decision: "ADMISSIBLE",
+          feasibilityFileSentAt: new Date().getTime(),
+        });
+        const candidacy = createCandidacyEntity({
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          certification,
+          organism,
+          typeAccompagnement,
+          feasibility: feasibility as Feasibility,
+        }) as Candidacy;
+        const candidate = createCandidateEntity({ candidacy });
+        const { handlers, dossierDeValidationWait } =
+          dossierDeValidationHandlers({
+            candidate,
+          });
+
         test.use({
-          mswHandlers: [
-            [
-              ...createCandidateHandlers({
-                typeAccompagnement,
-                status: "DOSSIER_FAISABILITE_RECEVABLE",
-              }),
-              ...createDossierValidationHandlers(),
-            ],
-            { scope: "test" },
-          ],
+          mswHandlers: [handlers, { scope: "test" }],
         });
 
         test("should let me send a dossier de validation", async ({ page }) => {
@@ -192,6 +263,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
           await login(page);
           await navigateToDossierValidation(page);
+          await dossierDeValidationWait(page);
           await clickDossierTab(page);
 
           await uploadFile(
@@ -221,17 +293,30 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       });
 
       test.describe("Additional attachments", () => {
+        const certification = createCertificationEntity();
+        const organism =
+          typeAccompagnement === "ACCOMPAGNE"
+            ? (createOrganismEntity() as Organism)
+            : undefined;
+        const feasibility = createFeasibilityEntity({
+          decision: "ADMISSIBLE",
+          feasibilityFileSentAt: new Date().getTime(),
+        });
+        const candidacy = createCandidacyEntity({
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          certification,
+          organism,
+          typeAccompagnement,
+          feasibility: feasibility as Feasibility,
+        }) as Candidacy;
+        const candidate = createCandidateEntity({ candidacy });
+        const { handlers, dossierDeValidationWait } =
+          dossierDeValidationHandlers({
+            candidate,
+          });
+
         test.use({
-          mswHandlers: [
-            [
-              ...createCandidateHandlers({
-                typeAccompagnement,
-                status: "DOSSIER_FAISABILITE_RECEVABLE",
-              }),
-              ...createDossierValidationHandlers(),
-            ],
-            { scope: "test" },
-          ],
+          mswHandlers: [handlers, { scope: "test" }],
         });
 
         test("should let me add and remove additional attachments", async ({
@@ -239,6 +324,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         }) => {
           await login(page);
           await navigateToDossierValidation(page);
+          await dossierDeValidationWait(page);
           await clickDossierTab(page);
 
           await expect(

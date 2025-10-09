@@ -1,15 +1,39 @@
 import { expect, test } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
-import { createCandidateHandlers } from "@tests/helpers/candidate/candidate";
+import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
+import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
+import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
+import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
+
+import {
+  Candidacy,
+  Certification,
+  Organism,
+} from "@/graphql/generated/graphql";
 
 test.describe("Authenticated on dashboard", () => {
+  const organism = createOrganismEntity();
+  const certification = createCertificationEntity();
+  const candidacy = createCandidacyEntity({
+    organism: organism as Organism,
+    certification: certification as Certification,
+  });
+  const candidate = createCandidateEntity({
+    candidacy: candidacy as Candidacy,
+  });
+  const { handlers, dashboardWait } = dashboardHandlers({
+    candidate,
+    activeFeaturesForConnectedUser: [],
+  });
   test.use({
-    mswHandlers: [[...createCandidateHandlers()], { scope: "test" }],
+    mswHandlers: [handlers, { scope: "test" }],
   });
 
   test("shows candidate name", async ({ page }) => {
     await login(page);
+    await dashboardWait(page);
 
     await expect(
       page.locator('[data-test="candidate-dashboard"]'),

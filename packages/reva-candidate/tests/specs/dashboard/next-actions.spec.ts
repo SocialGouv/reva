@@ -1,32 +1,71 @@
 import { expect, test } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
-import { createCandidateHandlers } from "@tests/helpers/candidate/candidate";
+import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
+import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
+import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createDematerializedFeasibilityFileEntity } from "@tests/helpers/entities/create-dematerialized-feasibility-file.entity";
+import { createDossierDeValidationEntity } from "@tests/helpers/entities/create-dossier-de-validation.entity";
+import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
+import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
+import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 
-import { JuryResult, TypeAccompagnement } from "@/graphql/generated/graphql";
+import {
+  Candidacy,
+  DematerializedFeasibilityFile,
+  DossierDeValidation,
+  Feasibility,
+  JuryResult,
+  Organism,
+  TypeAccompagnement,
+} from "@/graphql/generated/graphql";
 
 const FEATURE_FLAG = ["CANDIDATE_NEXT_ACTIONS"];
+
+const createCandidateWithGoals = (goalsCount: number) => {
+  const certification = createCertificationEntity();
+  const organism = createOrganismEntity() as Organism;
+  const candidacy = createCandidacyEntity({
+    status: "PROJET",
+    certification,
+    organism,
+    goalsCount,
+  }) as Candidacy;
+  return createCandidateEntity({ candidacy });
+};
+
+const createCandidateWithGoalsAndExperiences = (
+  goalsCount: number,
+  experiencesCount: number,
+) => {
+  const certification = createCertificationEntity();
+  const organism = createOrganismEntity() as Organism;
+  const candidacy = createCandidacyEntity({
+    status: "PROJET",
+    certification,
+    organism,
+    goalsCount,
+    experiencesCount,
+  }) as Candidacy;
+  return createCandidateEntity({ candidacy });
+};
 
 test.describe("Next actions tiles", () => {
   const typesAccompagnement: TypeAccompagnement[] = ["AUTONOME", "ACCOMPAGNE"];
   test.describe("ACCOMPAGNE", () => {
     test.describe("Remplir mes objectifs", () => {
+      const candidate = createCandidateWithGoals(0);
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "ACCOMPAGNE",
-              status: "PROJET",
-              goalsCount: 0,
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Remplir mes objectifs' when no goals", async ({ page }) => {
         await login(page);
+        await dashboardWait(page);
         await expect(
           page.locator('[data-test="dashboard-sidebar"]'),
         ).toBeVisible();
@@ -37,25 +76,20 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Remplir mes expériences", () => {
+      const candidate = createCandidateWithGoalsAndExperiences(1, 0);
+      const { handlers, dashboardWait } = dashboardHandlers({
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+        candidate,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "ACCOMPAGNE",
-              status: "PROJET",
-              goalsCount: 1,
-              experiencesCount: 0,
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Remplir mes expériences' when no experiences", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
         await expect(
           page.getByRole("button", { name: "Remplir mes expériences" }),
         ).toBeVisible();
@@ -63,25 +97,27 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Choisir mon accompagnateur", () => {
+      const candidacy = createCandidacyEntity({
+        status: "PROJET",
+        certification: createCertificationEntity(),
+        goalsCount: 1,
+        experiencesCount: 1,
+        typeAccompagnement: "ACCOMPAGNE",
+      }) as Candidacy;
+      const candidate = createCandidateEntity({ candidacy });
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "ACCOMPAGNE",
-              status: "PROJET",
-              hasSelectedCertification: true,
-              hasOrganism: false,
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Choisir mon accompagnateur' when certification selected but no organism", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
         await expect(
           page.getByRole("button", { name: "Choisir mon accompagnateur" }),
         ).toBeVisible();
@@ -89,28 +125,28 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Envoyer ma candidature", () => {
+      const organism = createOrganismEntity() as Organism;
+      const candidacy = createCandidacyEntity({
+        status: "PROJET",
+        certification: createCertificationEntity(),
+        goalsCount: 1,
+        experiencesCount: 1,
+        organism,
+      }) as Candidacy;
+      const candidate = createCandidateEntity({ candidacy });
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "ACCOMPAGNE",
-              status: "PROJET",
-              goalsCount: 1,
-              experiencesCount: 1,
-              hasOrganism: true,
-              hasSelectedCertification: true,
-              candidacyAlreadySubmitted: false,
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Envoyer ma candidature' and routes to submit candidacy", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
         const btn = page.getByRole("button", {
           name: "Envoyer ma candidature",
         });
@@ -125,23 +161,28 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Valider mon parcours et financement", () => {
+      const organism = createOrganismEntity() as Organism;
+      const candidacy = createCandidacyEntity({
+        status: "PARCOURS_ENVOYE",
+        certification: createCertificationEntity(),
+        goalsCount: 1,
+        experiencesCount: 1,
+        organism,
+      }) as Candidacy;
+      const candidate = createCandidateEntity({ candidacy });
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "ACCOMPAGNE",
-              status: "PARCOURS_ENVOYE",
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Valider mon parcours et financement' and routes", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
         const btn = page.getByRole("button", {
           name: "Valider mon parcours et financement",
         });
@@ -152,30 +193,39 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Valider mon dossier de faisabilité", () => {
+      const dematerializedFeasibilityFile =
+        createDematerializedFeasibilityFileEntity({
+          sentToCandidateAt: new Date().getTime(),
+        });
+      const feasibility = createFeasibilityEntity({
+        dematerializedFeasibilityFile:
+          dematerializedFeasibilityFile as DematerializedFeasibilityFile,
+        feasibilityFileSentAt: new Date().getTime(),
+      });
+      const organism = createOrganismEntity() as Organism;
+      const candidacy = createCandidacyEntity({
+        status: "PARCOURS_CONFIRME",
+        certification: createCertificationEntity(),
+        goalsCount: 1,
+        experiencesCount: 1,
+        organism,
+        candidacyAlreadySubmitted: true,
+        feasibility: feasibility as Feasibility,
+      }) as Candidacy;
+      const candidate = createCandidateEntity({ candidacy });
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "ACCOMPAGNE",
-              status: "PROJET",
-              feasibility: {
-                dematerializedFeasibilityFile: {
-                  sentToCandidateAt: Date.now(),
-                  candidateConfirmationAt: null,
-                  swornStatementFileId: null,
-                },
-              },
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Valider mon dossier de faisabilité' and routes", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
         const btn = page.getByRole("button", {
           name: "Valider mon dossier de faisabilité",
         });
@@ -186,31 +236,40 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Envoyer votre attestation", () => {
+      const dematerializedFeasibilityFile =
+        createDematerializedFeasibilityFileEntity({
+          sentToCandidateAt: new Date().getTime(),
+          candidateConfirmationAt: new Date().getTime(),
+        });
+      const feasibility = createFeasibilityEntity({
+        dematerializedFeasibilityFile:
+          dematerializedFeasibilityFile as DematerializedFeasibilityFile,
+        feasibilityFileSentAt: new Date().getTime(),
+      });
+      const organism = createOrganismEntity() as Organism;
+      const candidacy = createCandidacyEntity({
+        status: "PARCOURS_CONFIRME",
+        certification: createCertificationEntity(),
+        goalsCount: 1,
+        experiencesCount: 1,
+        organism,
+        candidacyAlreadySubmitted: true,
+        feasibility: feasibility as Feasibility,
+      }) as Candidacy;
+      const candidate = createCandidateEntity({ candidacy });
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "ACCOMPAGNE",
-              status: "PROJET",
-              feasibility: {
-                feasibilityFormat: "DEMATERIALIZED",
-                dematerializedFeasibilityFile: {
-                  sentToCandidateAt: null,
-                  candidateConfirmationAt: Date.now(),
-                  swornStatementFileId: null,
-                },
-              },
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Envoyer votre attestation' and opens modal on click", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
         const btn = page.getByRole("button", {
           name: "Envoyer votre attestation",
         });
@@ -227,24 +286,25 @@ test.describe("Next actions tiles", () => {
 
   test.describe("AUTONOME", () => {
     test.describe("Envoyer mon dossier de faisabilité", () => {
+      const candidacy = createCandidacyEntity({
+        status: "PROJET",
+        certification: createCertificationEntity(),
+        feasibility: null,
+      }) as Candidacy;
+      const candidate = createCandidateEntity({ candidacy });
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "AUTONOME",
-              status: "PROJET",
-              feasibility: { feasibilityFileSentAt: null },
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Envoyer mon dossier de faisabilité' and routes", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
         const btn = page.getByRole("button", {
           name: "Envoyer mon dossier de faisabilité",
         });
@@ -262,25 +322,34 @@ test.describe("Next actions tiles", () => {
     test.describe("Renseigner une date prévisionnelle de dépot de dossier de validation", () => {
       typesAccompagnement.forEach((typeAccompagnement) => {
         test.describe(`${typeAccompagnement}`, () => {
+          const feasibility = createFeasibilityEntity({
+            decision: "ADMISSIBLE",
+            feasibilityFileSentAt: new Date().getTime(),
+          });
+          const organism = createOrganismEntity() as Organism;
+          const candidacy = createCandidacyEntity({
+            status: "PROJET",
+            certification: createCertificationEntity(),
+            goalsCount: 1,
+            experiencesCount: 1,
+            typeAccompagnement,
+            organism: typeAccompagnement === "AUTONOME" ? undefined : organism,
+            feasibility: feasibility as Feasibility,
+          }) as Candidacy;
+          const candidate = createCandidateEntity({ candidacy });
+          const { handlers, dashboardWait } = dashboardHandlers({
+            candidate,
+            activeFeaturesForConnectedUser: FEATURE_FLAG,
+          });
           test.use({
-            mswHandlers: [
-              [
-                ...createCandidateHandlers({
-                  activeFeaturesForConnectedUser: FEATURE_FLAG,
-                  typeAccompagnement,
-                  status: "PROJET",
-                  feasibilityDecision: "ADMISSIBLE",
-                  activeDossierDeValidationDecision: null,
-                }),
-              ],
-              { scope: "test" },
-            ],
+            mswHandlers: [handlers, { scope: "test" }],
           });
 
           test("shows 'Renseigner une date prévisionnelle ...' and routes", async ({
             page,
           }) => {
             await login(page);
+            await dashboardWait(page);
             const btn = page.getByRole("button", {
               name: /Renseigner une date prévisionnelle/,
             });
@@ -312,30 +381,39 @@ test.describe("Next actions tiles", () => {
 
       scenarios.forEach((scenario) => {
         test.describe(scenario.label, () => {
+          let activeDossierDeValidation;
+          if (scenario.label === "incomplete") {
+            activeDossierDeValidation = createDossierDeValidationEntity({
+              decision: "INCOMPLETE",
+            });
+          }
+          const feasibility = createFeasibilityEntity({
+            decision: "ADMISSIBLE",
+            feasibilityFileSentAt: new Date().getTime(),
+          });
+          const candidacy = createCandidacyEntity({
+            feasibility: feasibility as Feasibility,
+            activeDossierDeValidation:
+              activeDossierDeValidation as DossierDeValidation,
+            juryResult:
+              scenario.label === "after failed jury"
+                ? scenario.juryResult
+                : undefined,
+          }) as Candidacy;
+          const candidate = createCandidateEntity({ candidacy });
+          const { handlers, dashboardWait } = dashboardHandlers({
+            candidate,
+            activeFeaturesForConnectedUser: FEATURE_FLAG,
+          });
           test.use({
-            mswHandlers: [
-              [
-                ...createCandidateHandlers({
-                  activeFeaturesForConnectedUser: FEATURE_FLAG,
-                  typeAccompagnement: "ACCOMPAGNE",
-                  status: "PROJET",
-                  feasibilityDecision: "ADMISSIBLE",
-                  activeDossierDeValidationDecision:
-                    "activeDossierDeValidationDecision" in scenario
-                      ? scenario.activeDossierDeValidationDecision
-                      : undefined,
-                  juryResult:
-                    "juryResult" in scenario ? scenario.juryResult : undefined,
-                }),
-              ],
-              { scope: "test" },
-            ],
+            mswHandlers: [handlers, { scope: "test" }],
           });
 
           test("shows 'Envoyer mon dossier de validation' and routes", async ({
             page,
           }) => {
             await login(page);
+            await dashboardWait(page);
             const btn = page.getByRole("button", {
               name: "Envoyer mon dossier de validation",
             });
@@ -348,36 +426,27 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Aucune action attendue de votre part.", () => {
+      const feasibility = createFeasibilityEntity({
+        decision: "PENDING",
+        feasibilityFileSentAt: new Date().getTime(),
+      });
+      const candidacy = createCandidacyEntity({
+        feasibility: feasibility as Feasibility,
+      }) as Candidacy;
+      const candidate = createCandidateEntity({ candidacy });
+      const { handlers, dashboardWait } = dashboardHandlers({
+        candidate,
+        activeFeaturesForConnectedUser: FEATURE_FLAG,
+      });
       test.use({
-        mswHandlers: [
-          [
-            ...createCandidateHandlers({
-              activeFeaturesForConnectedUser: FEATURE_FLAG,
-              typeAccompagnement: "ACCOMPAGNE",
-              status: "PROJET",
-              goalsCount: 1,
-              experiencesCount: 1,
-              hasOrganism: true,
-              hasSelectedCertification: true,
-              candidacyAlreadySubmitted: true,
-              feasibility: {
-                dematerializedFeasibilityFile: {
-                  sentToCandidateAt: null,
-                  candidateConfirmationAt: null,
-                  swornStatementFileId: "file-1",
-                },
-              },
-              activeDossierDeValidationDecision: "COMPLETE",
-            }),
-          ],
-          { scope: "test" },
-        ],
+        mswHandlers: [handlers, { scope: "test" }],
       });
 
       test("shows 'Aucune action attendue de votre part.' tile", async ({
         page,
       }) => {
         await login(page);
+        await dashboardWait(page);
         await expect(
           page.locator('[data-test="no-action-tile"]'),
         ).toBeVisible();
