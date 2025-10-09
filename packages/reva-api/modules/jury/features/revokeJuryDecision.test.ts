@@ -9,8 +9,7 @@ import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/crea
 import { createFileHelper } from "@/test/helpers/entities/create-file-helper";
 import { createJuryHelper } from "@/test/helpers/entities/create-jury-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
-import { shouldNotGoHere } from "@/test/helpers/should-not-go-here.helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 async function setupTestCandidacyWithFeasibility() {
   const organism = await createOrganismHelper();
@@ -130,15 +129,11 @@ test("should throw error when jury does not exist", async () => {
     }
   `);
 
-  try {
-    await graphqlClient.request(revokeJuryDecisionMutation, {
+  await expect(
+    graphqlClient.request(revokeJuryDecisionMutation, {
       juryId: "00000000-0000-0000-0000-000000000000",
-    });
-    shouldNotGoHere();
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toContain("Ces informations de jury n'existent pas");
-  }
+    }),
+  ).rejects.toThrowError("Ces informations de jury n'existent pas");
 });
 
 test("should throw error when jury has no result", async () => {
@@ -168,15 +163,11 @@ test("should throw error when jury has no result", async () => {
     }
   `);
 
-  try {
-    await graphqlClient.request(revokeJuryDecisionMutation, {
+  await expect(
+    graphqlClient.request(revokeJuryDecisionMutation, {
       juryId: jury.id,
-    });
-    shouldNotGoHere();
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toContain("Aucune décision n'a été prise pour ce jury");
-  }
+    }),
+  ).rejects.toThrowError("Aucune décision n'a été prise pour ce jury");
 });
 
 test("should throw error when user is not authorized", async () => {
@@ -206,15 +197,11 @@ test("should throw error when user is not authorized", async () => {
     }
   `);
 
-  try {
-    await graphqlClient.request(revokeJuryDecisionMutation, {
+  await expect(
+    graphqlClient.request(revokeJuryDecisionMutation, {
       juryId: jury.id,
-    });
-    shouldNotGoHere();
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual("You are not authorized!");
-  }
+    }),
+  ).rejects.toThrowError("You are not authorized!");
 });
 
 test("certificateur can submit a jury result but cannot revoke his decision himself", async () => {
@@ -285,16 +272,12 @@ test("certificateur can submit a jury result but cannot revoke his decision hims
     }
   `);
 
-  try {
-    await graphqlClient.request(revokeJuryDecisionMutation, {
+  await expect(
+    graphqlClient.request(revokeJuryDecisionMutation, {
       juryId: jury.id,
       reason: "Trying to revoke as certificateur",
-    });
-    shouldNotGoHere();
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual("You are not authorized!");
-  }
+    }),
+  ).rejects.toThrowError("You are not authorized!");
 });
 
 test("should preserve jury history when revoking decision", async () => {

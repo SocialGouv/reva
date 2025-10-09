@@ -10,8 +10,7 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
-import { shouldNotGoHere } from "@/test/helpers/should-not-go-here.helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 const revokeCertificationAuthorityDecisionMutation = graphql(`
   mutation feasibility_revokeCertificationAuthorityDecision(
@@ -227,18 +226,14 @@ describe("revokeCertificationAuthorityDecision", () => {
       const { feasibility } = await createFeasibilityWithDecision("ADMISSIBLE");
       const certificateurClient = getCertificateurClient();
 
-      try {
-        await certificateurClient.request(
+      await expect(
+        certificateurClient.request(
           revokeCertificationAuthorityDecisionMutation,
           {
             feasibilityId: feasibility.id,
           },
-        );
-        shouldNotGoHere();
-      } catch (error) {
-        const gqlError = getGraphQLError(error);
-        expect(gqlError).toContain("You are not authorized!");
-      }
+        ),
+      ).rejects.toThrowError("You are not authorized!");
     });
   });
 
@@ -254,38 +249,24 @@ describe("revokeCertificationAuthorityDecision", () => {
       const { feasibility } = await createFeasibilityWithDecision(decision);
       const adminClient = getAdminClient();
 
-      try {
-        await adminClient.request(
-          revokeCertificationAuthorityDecisionMutation,
-          {
-            feasibilityId: feasibility.id,
-          },
-        );
-        shouldNotGoHere();
-      } catch (error) {
-        const gqlError = getGraphQLError(error);
-        expect(gqlError).toContain(
-          "La décision ne peut être annulée que pour les dossiers recevables ou non recevables",
-        );
-      }
+      await expect(
+        adminClient.request(revokeCertificationAuthorityDecisionMutation, {
+          feasibilityId: feasibility.id,
+        }),
+      ).rejects.toThrowError(
+        "La décision ne peut être annulée que pour les dossiers recevables ou non recevables",
+      );
     });
 
     test("should fail when feasibility does not exist", async () => {
       const nonExistentFeasibilityId = "00000000-0000-0000-0000-000000000000";
       const adminClient = getAdminClient();
 
-      try {
-        await adminClient.request(
-          revokeCertificationAuthorityDecisionMutation,
-          {
-            feasibilityId: nonExistentFeasibilityId,
-          },
-        );
-        shouldNotGoHere();
-      } catch (error) {
-        const gqlError = getGraphQLError(error);
-        expect(gqlError).toContain("Aucun dossier de faisabilité trouvé");
-      }
+      await expect(
+        adminClient.request(revokeCertificationAuthorityDecisionMutation, {
+          feasibilityId: nonExistentFeasibilityId,
+        }),
+      ).rejects.toThrowError("Aucun dossier de faisabilité trouvé");
     });
 
     test.each<CandidacyStatusStep>([
@@ -304,20 +285,13 @@ describe("revokeCertificationAuthorityDecision", () => {
 
       const adminClient = getAdminClient();
 
-      try {
-        await adminClient.request(
-          revokeCertificationAuthorityDecisionMutation,
-          {
-            feasibilityId: feasibility.id,
-          },
-        );
-        shouldNotGoHere();
-      } catch (error) {
-        const gqlError = getGraphQLError(error);
-        expect(gqlError).toContain(
-          "La décision ne peut être annulée que lorsque la candidature est à l'étape DOSSIER_FAISABILITE_RECEVABLE ou DOSSIER_FAISABILITE_NON_RECEVABLE",
-        );
-      }
+      await expect(
+        adminClient.request(revokeCertificationAuthorityDecisionMutation, {
+          feasibilityId: feasibility.id,
+        }),
+      ).rejects.toThrowError(
+        "La décision ne peut être annulée que lorsque la candidature est à l'étape DOSSIER_FAISABILITE_RECEVABLE ou DOSSIER_FAISABILITE_NON_RECEVABLE",
+      );
     });
   });
 });

@@ -11,8 +11,7 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
-import { shouldNotGoHere } from "@/test/helpers/should-not-go-here.helper";
-import { getGraphQLClient, getGraphQLError } from "@/test/test-graphql-client";
+import { getGraphQLClient } from "@/test/test-graphql-client";
 
 const actionSocialeFormacode = {
   formacode: {
@@ -276,19 +275,15 @@ test("should not be able to update certification that is not in its scope", asyn
   const newRandomCertification = await createCertificationHelper();
 
   await submitTraining({ candidacy, organism });
-  try {
-    await updateCertificationWithinScope({
+  await expect(
+    updateCertificationWithinScope({
       certification: newRandomCertification,
       candidacy,
       organism,
-    });
-    shouldNotGoHere();
-  } catch (error) {
-    const gqlError = getGraphQLError(error);
-    expect(gqlError).toEqual(
-      "Cette certification n'est pas disponible pour cet organisme",
-    );
-  }
+    }),
+  ).rejects.toThrowError(
+    "Cette certification n'est pas disponible pour cet organisme",
+  );
 });
 
 notAllowedStatuses.forEach((statut) => {
@@ -298,19 +293,15 @@ notAllowedStatuses.forEach((statut) => {
 
     const newSocialCertification = await createCertificationSocial();
 
-    try {
-      await updateCertificationWithinScope({
+    await expect(
+      updateCertificationWithinScope({
         certification: newSocialCertification,
         candidacy,
         organism,
-      });
-      shouldNotGoHere();
-    } catch (error) {
-      const gqlError = getGraphQLError(error);
-      expect(gqlError).toEqual(
-        "La certification ne peut être mise à jour qu'en début de candidature",
-      );
-    }
+      }),
+    ).rejects.toThrowError(
+      "La certification ne peut être mise à jour qu'en début de candidature",
+    );
   });
 });
 
