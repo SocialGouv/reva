@@ -39,9 +39,9 @@ export const getMetabaseIframeUrl = async (
   }
 
   const payload = {
-    resource: { dashboard: 174 },
+    resource: { dashboard: 154 },
     params: {
-      certification_authority: [certificationAuthority.label],
+      dreets: [certificationAuthority.label],
     },
     exp: Math.round(Date.now() / 1000) + 30 * 60, // 30 minute expiration
   };
