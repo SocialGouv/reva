@@ -80,6 +80,9 @@ export const AppointmentTiles = ({
             priority="tertiary no outline"
             iconId="fr-icon-calendar-2-fill"
             className="mr-0"
+            linkProps={{
+              href: "/appointments",
+            }}
           >
             Tous mes rendez-vous
           </Button>
