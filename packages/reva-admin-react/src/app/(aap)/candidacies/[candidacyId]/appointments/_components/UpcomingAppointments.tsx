@@ -7,7 +7,7 @@ import { AppointmentType } from "@/graphql/generated/graphql";
 
 import { AppointmentCard } from "./AppointmentCard";
 
-const RECORDS_PER_PAGE = 10;
+const RECORDS_PER_PAGE = 5;
 
 const getCandidacyAndUpcomingAppointments = graphql(`
   query getCandidacyAndUpcomingAppointmentsForAppointmentsPage(
