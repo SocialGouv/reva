@@ -1,10 +1,10 @@
 "use client";
-import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { useParams } from "next/navigation";
 
 import { AddAppointmentButton } from "./_components/AddAppointmentButton";
 import { AddFirstAppointmentCard } from "./_components/AddFirstAppointmentCard";
 import { AppointmentCard } from "./_components/AppointmentCard";
+import { PastAppointments } from "./_components/PastAppointments";
 import { useAppointmentsPage } from "./appointmentsPage.hook";
 
 export default function AppointmentsPage() {
@@ -12,15 +12,12 @@ export default function AppointmentsPage() {
     candidacyId: string;
   }>();
 
-  const {
-    upcomingAppointments,
-    pastAppointments,
-    rendezVousPedagogiqueMissing,
-  } = useAppointmentsPage({
-    candidacyId,
-  });
+  const { upcomingAppointments, rendezVousPedagogiqueMissing } =
+    useAppointmentsPage({
+      candidacyId,
+    });
 
-  if (!upcomingAppointments || !pastAppointments) {
+  if (!upcomingAppointments) {
     return null;
   }
 
@@ -56,24 +53,7 @@ export default function AppointmentsPage() {
         </ul>
       )}
       {!upcomingAppointments.info.totalRows && <p>Aucun rendez-vous à venir</p>}
-      {!!pastAppointments.info.totalRows && (
-        <Accordion label="Rendez-vous passés">
-          <ul
-            className="pl-0 flex flex-col gap-4"
-            data-test="past-appointments-list"
-          >
-            {pastAppointments?.rows?.map((appointment) => (
-              <li key={appointment.id} className="list-none">
-                <AppointmentCard
-                  appointment={appointment}
-                  candidacyId={candidacyId}
-                  disabled
-                />
-              </li>
-            ))}
-          </ul>
-        </Accordion>
-      )}
+      <PastAppointments candidacyId={candidacyId} />
     </div>
   );
 }

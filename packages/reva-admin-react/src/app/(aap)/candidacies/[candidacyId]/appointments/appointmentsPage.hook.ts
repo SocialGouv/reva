@@ -32,36 +32,6 @@ const getCandidacyAndUpcomingAppointments = graphql(`
   }
 `);
 
-const getCandidacyAndPastAppointments = graphql(`
-  query getCandidacyAndPastAppointmentsForAppointmentsPage(
-    $candidacyId: ID!
-    $limit: Int
-  ) {
-    getCandidacyById(id: $candidacyId) {
-      id
-      appointments(
-        limit: $limit
-        temporalStatusFilter: PAST
-        sortBy: DATE_ASC
-      ) {
-        rows {
-          id
-          date
-          time
-          type
-          title
-          temporalStatus
-        }
-        info {
-          totalRows
-          currentPage
-          totalPages
-        }
-      }
-    }
-  }
-`);
-
 const getRendezVousPedagogique = graphql(`
   query getRendezVousPedagogiqueForAppointmentsPage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
@@ -94,18 +64,6 @@ export const useAppointmentsPage = ({
       }),
   });
 
-  const { data: getCandidacyAndPastAppointmentsData } = useQuery({
-    queryKey: [
-      candidacyId,
-      "getCandidacyAndPastAppointmentsForAppointmentsPage",
-    ],
-    queryFn: () =>
-      graphqlClient.request(getCandidacyAndPastAppointments, {
-        candidacyId,
-        limit: RECORDS_PER_PAGE,
-      }),
-  });
-
   const { data: getRendezVousPedagogiqueData } = useQuery({
     queryKey: [candidacyId, "getRendezVousPedagogiqueForAppointmentsPage"],
     queryFn: () =>
@@ -116,15 +74,12 @@ export const useAppointmentsPage = ({
 
   const upcomingAppointments =
     getCandidacyAndUpcomingAppointmentsData?.getCandidacyById?.appointments;
-  const pastAppointments =
-    getCandidacyAndPastAppointmentsData?.getCandidacyById?.appointments;
 
   const rendezVousPedagogiqueMissing =
     !getRendezVousPedagogiqueData?.getCandidacyById?.appointments?.rows?.length;
 
   return {
     upcomingAppointments,
-    pastAppointments,
     rendezVousPedagogiqueMissing,
   };
 };
