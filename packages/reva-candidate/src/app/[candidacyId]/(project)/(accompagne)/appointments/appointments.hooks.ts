@@ -1,28 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
 
 const getPastAppointmentsQuery = graphql(`
-  query getPastAppointments($limit: Int, $offset: Int) {
-    candidate_getCandidateWithCandidacy {
-      candidacy {
-        appointments(
-          limit: $limit
-          offset: $offset
-          temporalStatusFilter: PAST
-        ) {
-          rows {
-            id
-            title
-            date
-            time
-            type
-          }
-          info {
-            totalRows
-          }
+  query getPastAppointments($candidacyId: ID!, $limit: Int, $offset: Int) {
+    getCandidacyById(id: $candidacyId) {
+      appointments(limit: $limit, offset: $offset, temporalStatusFilter: PAST) {
+        rows {
+          id
+          title
+          date
+          time
+          type
+        }
+        info {
+          totalRows
         }
       }
     }
@@ -30,21 +25,19 @@ const getPastAppointmentsQuery = graphql(`
 `);
 
 const getFutureAppointmentsQuery = graphql(`
-  query getFutureAppointments($limit: Int, $offset: Int) {
-    candidate_getCandidateWithCandidacy {
-      candidacy {
-        appointments(
-          limit: $limit
-          offset: $offset
-          temporalStatusFilter: UPCOMING
-        ) {
-          rows {
-            id
-            title
-            date
-            time
-            type
-          }
+  query getFutureAppointments($candidacyId: ID!, $limit: Int, $offset: Int) {
+    getCandidacyById(id: $candidacyId) {
+      appointments(
+        limit: $limit
+        offset: $offset
+        temporalStatusFilter: UPCOMING
+      ) {
+        rows {
+          id
+          title
+          date
+          time
+          type
         }
       }
     }
@@ -64,10 +57,15 @@ export const useAppointments = ({
 }) => {
   const { graphqlClient } = useGraphQlClient();
 
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+  }>();
+
   const { data: getPastAppointmentsQueryData } = useQuery({
     queryKey: [pastLimit, pastOffset, "pastAppointments"],
     queryFn: () =>
       graphqlClient.request(getPastAppointmentsQuery, {
+        candidacyId,
         limit: pastLimit,
         offset: pastOffset,
       }),
@@ -77,6 +75,7 @@ export const useAppointments = ({
     queryKey: [futureLimit, futureOffset, "futureAppointments"],
     queryFn: () =>
       graphqlClient.request(getFutureAppointmentsQuery, {
+        candidacyId,
         limit: futureLimit,
         offset: futureOffset,
       }),
@@ -84,13 +83,12 @@ export const useAppointments = ({
 
   return {
     pastAppointments:
-      getPastAppointmentsQueryData?.candidate_getCandidateWithCandidacy
-        ?.candidacy?.appointments?.rows || [],
+      getPastAppointmentsQueryData?.getCandidacyById?.appointments?.rows || [],
     totalPastAppointments:
-      getPastAppointmentsQueryData?.candidate_getCandidateWithCandidacy
-        ?.candidacy?.appointments?.info?.totalRows || 0,
+      getPastAppointmentsQueryData?.getCandidacyById?.appointments?.info
+        ?.totalRows || 0,
     futureAppointments:
-      getFutureAppointmentsQueryData?.candidate_getCandidateWithCandidacy
-        ?.candidacy?.appointments?.rows || [],
+      getFutureAppointmentsQueryData?.getCandidacyById?.appointments?.rows ||
+      [],
   };
 };

@@ -22,7 +22,7 @@ export default function AppointmentsPage() {
           {
             label: "Ma candidature",
             linkProps: {
-              href: "/",
+              href: "../",
             },
           },
         ]}
@@ -49,7 +49,7 @@ export default function AppointmentsPage() {
               }
               endDetail="Voir les détails"
               key={appointment.id}
-              linkProps={{ href: `/appointments/${appointment.id}` }}
+              linkProps={{ href: `./${appointment.id}` }}
             />
           ))}
         </div>
@@ -91,7 +91,7 @@ const PastAppointments = () => {
               }
               endDetail="Voir les détails"
               key={appointment.id}
-              linkProps={{ href: `/appointments/${appointment.id}` }}
+              linkProps={{ href: `./${appointment.id}` }}
             />
           ))}
           {totalPastAppointments > pastLimit && (

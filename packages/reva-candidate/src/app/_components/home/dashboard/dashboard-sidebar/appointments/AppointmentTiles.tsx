@@ -81,7 +81,7 @@ export const AppointmentTiles = ({
             iconId="fr-icon-calendar-2-fill"
             className="mr-0"
             linkProps={{
-              href: "/appointments",
+              href: "./appointments",
             }}
           >
             Tous mes rendez-vous
