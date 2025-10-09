@@ -32,10 +32,16 @@ type Candidacy {
   appointments(
     type: AppointmentType
     temporalStatusFilter: AppointmentTemporalStatus
+    sortBy: AppointmentSortBy
     offset: Int
     limit: Int
   ): AppointmentPage!
   firstAppointmentOccuredAt: Date
+}
+
+enum AppointmentSortBy {
+  DATE_ASC
+  DATE_DESC
 }
 
 enum AppointmentTemporalStatus {

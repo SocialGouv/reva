@@ -5,6 +5,7 @@ import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPA
 
 import { resolversSecurityMap } from "./appointment.security";
 import {
+  AppointmentSortBy,
   AppointmentTemporalStatus,
   CreateAppointmentInput,
   UpdateAppointmentInput,
@@ -27,11 +28,13 @@ const unsafeResolvers = {
       {
         type,
         temporalStatusFilter,
+        sortBy,
         offset,
         limit,
       }: {
-        type: AppointmentType;
-        temporalStatusFilter: AppointmentTemporalStatus;
+        type?: AppointmentType;
+        temporalStatusFilter?: AppointmentTemporalStatus;
+        sortBy?: AppointmentSortBy;
         offset: number;
         limit: number;
       },
@@ -40,6 +43,7 @@ const unsafeResolvers = {
         candidacyId,
         type,
         temporalStatusFilter,
+        sortBy,
         offset,
         limit,
       }),

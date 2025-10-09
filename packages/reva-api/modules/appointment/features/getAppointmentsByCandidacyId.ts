@@ -5,18 +5,23 @@ import { startOfToday } from "date-fns";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { prismaClient } from "@/prisma/client";
 
-import { AppointmentTemporalStatus } from "../appointment.types";
+import {
+  AppointmentSortBy,
+  AppointmentTemporalStatus,
+} from "../appointment.types";
 
 export const getAppointmentsByCandidacyId = async ({
   candidacyId,
   type,
   temporalStatusFilter,
+  sortBy = "DATE_DESC",
   offset = 0,
   limit = 10,
 }: {
   candidacyId: string;
-  type: AppointmentType;
+  type?: AppointmentType;
   temporalStatusFilter?: AppointmentTemporalStatus;
+  sortBy?: AppointmentSortBy;
   offset: number;
   limit: number;
 }) => {
@@ -45,12 +50,20 @@ export const getAppointmentsByCandidacyId = async ({
       where: whereClause,
       skip: offset,
       take: limit,
-      orderBy: [
-        {
-          date: "asc",
-        },
-        { time: "asc" },
-      ],
+      orderBy:
+        sortBy === "DATE_ASC"
+          ? [
+              {
+                date: "asc",
+              },
+              { time: "asc" },
+            ]
+          : [
+              {
+                date: "desc",
+              },
+              { time: "desc" },
+            ],
     });
 
   const count = await prismaClient.appointment.count({

@@ -24,3 +24,5 @@ export interface UpdateAppointmentInput extends CreateAppointmentInput {
 }
 
 export type AppointmentTemporalStatus = "PAST" | "UPCOMING";
+
+export type AppointmentSortBy = "DATE_ASC" | "DATE_DESC";
