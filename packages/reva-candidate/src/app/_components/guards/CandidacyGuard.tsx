@@ -25,13 +25,13 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
 
   if (
     isInactifEnAttente &&
-    !INACTIF_PATHS.some((path) => pathname.startsWith(path))
+    !INACTIF_PATHS.some((path) => pathname.includes(path))
   ) {
     redirect("./candidacy-inactif");
   } else if (
     isEndAccompagnementPending &&
-    !END_ACCOMPAGNEMENT_PATHS.some((path) => pathname.startsWith(path)) &&
-    !INACTIF_PATHS.some((path) => pathname.startsWith(path))
+    !END_ACCOMPAGNEMENT_PATHS.some((path) => pathname.includes(path)) &&
+    !INACTIF_PATHS.some((path) => pathname.includes(path))
   ) {
     redirect("./end-accompagnement");
   }
