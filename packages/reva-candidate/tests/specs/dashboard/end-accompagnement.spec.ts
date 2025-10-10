@@ -1,425 +1,290 @@
-import {
-  expect,
-  graphql,
-  test,
-} from "next/experimental/testmode/playwright/msw";
+import { format } from "date-fns";
+import { expect, Page, test } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
-import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
-import { graphQLResolver } from "@tests/helpers/network/msw";
+import { endAccompagnementHandlers } from "@tests/helpers/handlers/end-accompagnement.handler";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { Candidacy, Candidate, Organism } from "@/graphql/generated/graphql";
+import {
+  Candidacy,
+  Candidate,
+  Feasibility,
+  Organism,
+} from "@/graphql/generated/graphql";
 
-const fvae = graphql.link("https://reva-api/api/graphql");
-
-function buildEndAccompagnementQueryPayload({
-  endAccompagnementStatus = "PENDING",
-  modaliteAccompagnement = "A_DISTANCE",
-  decisionSentAt = null as number | null,
+const loginAndWait = async ({
+  page,
+  candidacy,
+  endAccompagnementWait,
 }: {
-  endAccompagnementStatus?:
-    | "PENDING"
-    | "CONFIRMED_BY_CANDIDATE"
-    | "CONFIRMED_BY_ADMIN";
-  modaliteAccompagnement?: "A_DISTANCE" | "LIEU_ACCUEIL" | null;
-  decisionSentAt?: number | null;
-}) {
-  return {
-    candidate_getCandidateWithCandidacy: {
-      firstname: "Alice",
-      firstname2: null,
-      firstname3: null,
-      lastname: "Durand",
-      givenName: "Mme",
-      department: { label: "Gironde", code: "33" },
-      candidacy: {
-        id: "cand-1",
-        endAccompagnementStatus,
-        certification: {
-          codeRncp: "12345",
-          label: "Certification Test",
-        },
-        feasibility: {
-          decisionSentAt,
-        },
-        organism: {
-          modaliteAccompagnement,
-          label: "Organisme Test",
-        },
-      },
-    },
-  };
-}
+  page: Page;
+  candidacy: Candidacy;
+  endAccompagnementWait: (page: Page) => Promise<void>;
+}) => {
+  await login(page);
+  await endAccompagnementWait(page);
+  await page.waitForURL(`/candidat/${candidacy.id}/end-accompagnement/`);
+  await waitGraphQL(page, "getCandidacyByIdWithCandidateForEndAccompagnement");
+};
 
-test.describe.skip("End accompagnement page", () => {
-  test.describe("rendering and content", () => {
+test.describe("End Accompagnement Page", () => {
+  test.describe("Page Display", () => {
+    const decisionSentAt = new Date("2024-06-15").getTime();
+    const feasibility = createFeasibilityEntity({
+      decision: "ADMISSIBLE",
+      decisionSentAt,
+      feasibilityFileSentAt: new Date().getTime(),
+    });
+    const organism = createOrganismEntity({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+      label: "Mon Organisme Test",
+    }) as Organism;
     const candidate = createCandidateEntity() as Candidate;
+    const certification = createCertificationEntity({
+      codeRncp: "RNCP1234",
+      label: "Test Certification Label",
+    });
     const candidacy = createCandidacyEntity({
       candidate,
-      status: "PROJET",
-      certification: createCertificationEntity(),
-      organism: createOrganismEntity() as Organism,
+      status: "PARCOURS_CONFIRME",
+      certification,
+      organism,
+      typeAccompagnement: "ACCOMPAGNE",
+      feasibility: feasibility as Feasibility,
+      endAccompagnementStatus: "PENDING",
     }) as Candidacy;
 
-    const { handlers, dashboardWait } = dashboardHandlers({
+    const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
       candidacy,
-      activeFeaturesForConnectedUser: [],
-    });
-    test.use({
-      mswHandlers: [
-        [
-          ...handlers,
-          fvae.query(
-            "candidate_getCandidateWithCandidacyForEndAccompagnement",
-            graphQLResolver({ data: buildEndAccompagnementQueryPayload({}) }),
-          ),
-          fvae.mutation(
-            "candidacy_updateCandidacyEndAccompagnementDecision",
-            graphQLResolver({
-              data: {
-                candidacy_updateCandidacyEndAccompagnementDecision: {
-                  id: "cand-1",
-                },
-              },
-            }),
-          ),
-        ],
-        { scope: "test" },
-      ],
     });
 
-    test("displays candidate card, details and radio group when PENDING", async ({
-      page,
-    }) => {
-      await login(page);
-      await dashboardWait(page);
-      await page.goto("end-accompagnement/");
+    test.use({
+      mswHandlers: [handlers, { scope: "test" }],
+    });
+
+    test("should display candidate information correctly", async ({ page }) => {
+      await loginAndWait({ page, candidacy, endAccompagnementWait });
 
       await expect(
         page.getByRole("heading", { name: "Fin d'accompagnement" }),
       ).toBeVisible();
 
-      // Card content
-      await expect(page.getByText("Alice", { exact: false })).toBeVisible();
-      await expect(page.getByText("Durand", { exact: false })).toBeVisible();
-      await expect(page.getByText("Organisme Test")).toBeVisible();
-      await expect(page.getByText("Gironde (33)")).toBeVisible();
+      const candidateFullName = `${candidate.lastname} ${candidate.firstname}`;
+      await expect(page.getByText(candidateFullName)).toBeVisible();
+
       await expect(
-        page.getByText("RNCP 12345 : Certification Test"),
+        page.getByText(
+          `RNCP ${certification.codeRncp} : ${certification.label}`,
+        ),
       ).toBeVisible();
-      // A_DISTANCE badge by default
-      await expect(page.getByText("À distance")).toBeVisible();
 
-      // Radios + submit
-      const radios = page.locator(
-        '[data-test="candidacy-inactif-radio-buttons"]',
-      );
-      await expect(radios).toBeVisible();
+      await expect(page.getByText(organism.label)).toBeVisible();
+
       await expect(
-        page.getByRole("button", { name: "Confirmer la décision" }),
+        page.getByText(
+          `${candidate.department?.label} (${candidate.department?.code})`,
+        ),
       ).toBeVisible();
-    });
-  });
 
-  test.describe("badges and details variants", () => {
-    const candidate = createCandidateEntity() as Candidate;
-    const candidacy = createCandidacyEntity({
-      candidate,
-      status: "PROJET",
-      certification: createCertificationEntity(),
-      organism: createOrganismEntity() as Organism,
-    }) as Candidacy;
+      const formattedDate = format(new Date(decisionSentAt), "dd/MM/yyyy");
+      await expect(
+        page.getByText(`Recevable le ${formattedDate}`),
+      ).toBeVisible();
 
-    const { handlers, dashboardWait } = dashboardHandlers({
-      candidacy,
-      activeFeaturesForConnectedUser: [],
-    });
-    test.use({
-      mswHandlers: [
-        [
-          ...handlers,
-          fvae.query(
-            "candidate_getCandidateWithCandidacyForEndAccompagnement",
-            graphQLResolver({
-              data: buildEndAccompagnementQueryPayload({
-                modaliteAccompagnement: "LIEU_ACCUEIL",
-              }),
-            }),
-          ),
-        ],
-        { scope: "test" },
-      ],
-    });
-
-    test("shows 'Sur site' badge when modalite is LIEU_ACCUEIL", async ({
-      page,
-    }) => {
-      await login(page);
-      await dashboardWait(page);
-      await page.goto("end-accompagnement/");
       await expect(page.getByText("Sur site")).toBeVisible();
     });
 
-    test.use({
-      mswHandlers: [
-        [
-          ...handlers,
-          fvae.query(
-            "candidate_getCandidateWithCandidacyForEndAccompagnement",
-            graphQLResolver({
-              data: buildEndAccompagnementQueryPayload({
-                decisionSentAt: new Date("2024-01-15T00:00:00Z").getTime(),
-              }),
-            }),
-          ),
-        ],
-        { scope: "test" },
-      ],
-    });
-
-    test("shows receivable date when feasibility.decisionSentAt present", async ({
+    test("should display radio buttons with correct labels and hints", async ({
       page,
     }) => {
-      await login(page);
-      await dashboardWait(page);
-      await page.goto("end-accompagnement/");
-      await expect(page.getByText(/Recevable le 15\/01\/2024/)).toBeVisible();
-    });
-  });
+      await loginAndWait({ page, candidacy, endAccompagnementWait });
 
-  test.describe("validation and submission", () => {
-    const candidate = createCandidateEntity() as Candidate;
-    const candidacy = createCandidacyEntity({
-      candidate,
-      status: "PROJET",
-      certification: createCertificationEntity(),
-      organism: createOrganismEntity() as Organism,
-    }) as Candidacy;
-
-    const { handlers, dashboardWait } = dashboardHandlers({
-      candidacy,
-      activeFeaturesForConnectedUser: [],
-    });
-    test.use({
-      mswHandlers: [
-        [
-          ...handlers,
-          fvae.query(
-            "candidate_getCandidateWithCandidacyForEndAccompagnement",
-            graphQLResolver({ data: buildEndAccompagnementQueryPayload({}) }),
-          ),
-          fvae.mutation(
-            "candidacy_updateCandidacyEndAccompagnementDecision",
-            graphQLResolver({
-              data: {
-                candidacy_updateCandidacyEndAccompagnementDecision: {
-                  id: "cand-1",
-                },
-              },
-            }),
-          ),
-        ],
-        { scope: "test" },
-      ],
-    });
-
-    test("shows zod error when submitting without selecting an option", async ({
-      page,
-    }) => {
-      await login(page);
-      await dashboardWait(page);
-      await page.goto("end-accompagnement/");
-
-      await page.getByRole("button", { name: "Confirmer la décision" }).click();
       await expect(
-        page.getByText("Veuillez sélectionner une option"),
+        page.getByText(
+          "Voulez-vous accepter la fin de votre accompagnement pour ce parcours de VAE ?",
+        ),
+      ).toBeVisible();
+
+      await expect(
+        page.getByRole("radio", {
+          name: /Oui, mon accompagnement est terminé/,
+        }),
+      ).toBeVisible();
+
+      await expect(
+        page.getByRole("radio", {
+          name: /Non, je souhaite continuer mon accompagnement/,
+        }),
+      ).toBeVisible();
+
+      await expect(
+        page.locator(
+          '[data-test="candidacy-end-accompagnement-confirm-button"]',
+        ),
       ).toBeVisible();
     });
-
-    test("CONFIRMED: submits mutation and redirects to home with toast", async ({
-      page,
-    }) => {
-      await login(page);
-      await dashboardWait(page);
-      await page.goto("end-accompagnement/");
-
-      await page.getByLabel("Oui, mon accompagnement est terminé.").check();
-      const submit = page.getByRole("button", {
-        name: "Confirmer la décision",
-      });
-      await Promise.all([
-        waitGraphQL(page, "candidacy_updateCandidacyEndAccompagnementDecision"),
-        submit.click(),
-      ]);
-
-      await expect(page.getByText("Décision enregistrée")).toBeVisible();
-      await expect(page).toHaveURL(`/candidat/${candidacy.id}/`);
-    });
-
-    test("REFUSED: submits mutation and redirects to home with toast", async ({
-      page,
-    }) => {
-      await login(page);
-      await dashboardWait(page);
-      await page.goto("end-accompagnement/");
-
-      await page
-        .getByLabel("Non, je souhaite continuer mon accompagnement.")
-        .check();
-      const submit = page.getByRole("button", {
-        name: "Confirmer la décision",
-      });
-      await Promise.all([
-        waitGraphQL(page, "candidacy_updateCandidacyEndAccompagnementDecision"),
-        submit.click(),
-      ]);
-
-      await expect(page.getByText("Décision enregistrée")).toBeVisible();
-      await expect(page).toHaveURL(`/candidat/${candidacy.id}/`);
-    });
   });
 
-  test.describe("redirect and empty states", () => {
+  test.describe("Page Display with A_DISTANCE badge", () => {
+    const organism = createOrganismEntity({
+      modaliteAccompagnement: "A_DISTANCE",
+    }) as Organism;
     const candidate = createCandidateEntity() as Candidate;
     const candidacy = createCandidacyEntity({
       candidate,
-      status: "PROJET",
-      certification: createCertificationEntity(),
-      organism: createOrganismEntity() as Organism,
+      organism,
+      typeAccompagnement: "ACCOMPAGNE",
+      endAccompagnementStatus: "PENDING",
     }) as Candidacy;
 
-    const { handlers, dashboardWait } = dashboardHandlers({
+    const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
       candidacy,
-      activeFeaturesForConnectedUser: [],
-    });
-    test.use({
-      mswHandlers: [
-        [
-          ...handlers,
-          fvae.query(
-            "candidate_getCandidateWithCandidacyForEndAccompagnement",
-            graphQLResolver({
-              data: buildEndAccompagnementQueryPayload({
-                endAccompagnementStatus: "CONFIRMED_BY_CANDIDATE",
-              }),
-            }),
-          ),
-        ],
-        { scope: "test" },
-      ],
     });
 
-    test("redirects to home when end accompagnement is not PENDING", async ({
+    test.use({
+      mswHandlers: [handlers, { scope: "test" }],
+    });
+
+    test("should display 'À distance' badge for A_DISTANCE modalite", async ({
       page,
     }) => {
-      await login(page);
-      await dashboardWait(page);
-      await page.goto("end-accompagnement/");
-      await expect(page).toHaveURL(`/candidat/${candidacy.id}/`);
+      await loginAndWait({ page, candidacy, endAccompagnementWait });
+
+      await expect(page.getByText("À distance")).toBeVisible();
+    });
+  });
+
+  test.describe("Form Validation", () => {
+    const organism = createOrganismEntity() as Organism;
+    const candidate = createCandidateEntity() as Candidate;
+    const candidacy = createCandidacyEntity({
+      candidate,
+      organism,
+      typeAccompagnement: "ACCOMPAGNE",
+      endAccompagnementStatus: "PENDING",
+    }) as Candidacy;
+
+    const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
+      candidacy,
     });
 
     test.use({
-      mswHandlers: [
-        [
-          ...handlers,
-          fvae.query(
-            "candidate_getCandidateWithCandidacyForEndAccompagnement",
-            graphQLResolver({
-              data: { candidate_getCandidateWithCandidacy: null },
-            }),
-          ),
-        ],
-        { scope: "test" },
-      ],
+      mswHandlers: [handlers, { scope: "test" }],
     });
 
-    test("renders nothing when candidate is null", async ({ page }) => {
-      await login(page);
-      await dashboardWait(page);
-      await page.goto("end-accompagnement/");
-      await expect(
-        page.locator('[data-test="candidacy-inactif-radio-buttons"]'),
-      ).toHaveCount(0);
-      await expect(page).toHaveURL(
-        `/candidat/${candidacy.id}/end-accompagnement/`,
+    test("should show validation error when submitting without selection", async ({
+      page,
+    }) => {
+      await loginAndWait({ page, candidacy, endAccompagnementWait });
+
+      const submitButton = page.locator(
+        '[data-test="candidacy-end-accompagnement-confirm-button"]',
+      );
+      const radioGroup = page.locator(
+        '[data-test="candidacy-end-accompagnement-radio-buttons"]',
+      );
+      await expect(radioGroup).not.toHaveAttribute(
+        "class",
+        /fr-fieldset--error/,
+      );
+      await expect(radioGroup).not.toContainText(
+        "Veuillez sélectionner une option",
+      );
+      await submitButton.click();
+
+      await expect(radioGroup).toHaveAttribute("class", /fr-fieldset--error/);
+      await expect(radioGroup).toContainText(
+        "Veuillez sélectionner une option",
       );
     });
   });
 
-  test.describe("dashboard OrganismTile integration (end accompagnement confirmed)", () => {
+  test.describe("Form Submission - CONFIRMED", () => {
+    const organism = createOrganismEntity() as Organism;
     const candidate = createCandidateEntity() as Candidate;
     const candidacy = createCandidacyEntity({
       candidate,
-      status: "PROJET",
-      certification: createCertificationEntity(),
-      organism: createOrganismEntity() as Organism,
+      organism,
+      typeAccompagnement: "ACCOMPAGNE",
+      endAccompagnementStatus: "PENDING",
     }) as Candidacy;
 
-    const { handlers, dashboardWait } = dashboardHandlers({
+    const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
       candidacy,
-      activeFeaturesForConnectedUser: [],
-    });
-    test.use({
-      mswHandlers: [
-        [
-          ...handlers,
-          // Overwrite dashboard query to reflect confirmed end accompagnement, so tile shows tag
-          fvae.query(
-            "candidate_getCandidateWithCandidacyForDashboard",
-            graphQLResolver({
-              data: {
-                candidate_getCandidateWithCandidacy: {
-                  candidacy: {
-                    status: "PROJET",
-                    typeAccompagnement: "ACCOMPAGNE",
-                    goals: [{ id: "g1" }],
-                    experiences: [{ id: "e1" }],
-                    organism: { id: "o1", label: "Organisme Test" },
-                    feasibility: null,
-                    certification: {
-                      id: "c1",
-                      label: "Certif",
-                      codeRncp: "123",
-                    },
-                    activeDossierDeValidation: null,
-                    certificationAuthorityLocalAccounts: [],
-                    jury: null,
-                    sentAt: null,
-                    readyForJuryEstimatedAt: null,
-                    firstAppointmentOccuredAt: null,
-                    candidacyStatuses: [],
-                    candidacyDropOut: null,
-                    endAccompagnementStatus: "CONFIRMED_BY_CANDIDATE",
-                    endAccompagnementDate: null,
-                  },
-                },
-              },
-            }),
-          ),
-        ],
-        { scope: "test" },
-      ],
     });
 
-    test("shows 'Accompagnement terminé' tag on organism tile when confirmed", async ({
+    test.use({
+      mswHandlers: [handlers, { scope: "test" }],
+    });
+
+    test("should submit successfully with CONFIRMED option", async ({
       page,
     }) => {
-      await login(page);
-      await dashboardWait(page);
-      // After login, home/dashboard should be visible
-      await expect(
-        page.locator('[data-test="dashboard-sidebar"]'),
-      ).toBeVisible();
-      const organismTile = page.locator('[data-test="organism-tile"]');
-      await expect(organismTile).toBeVisible();
-      await expect(
-        organismTile.getByText("Accompagnement terminé"),
-      ).toBeVisible();
+      await loginAndWait({ page, candidacy, endAccompagnementWait });
+
+      const confirmedRadio = page.locator("input[value='CONFIRMED']");
+      await expect(confirmedRadio).toBeVisible();
+      await confirmedRadio.click({ force: true });
+
+      const submitButton = page.locator(
+        '[data-test="candidacy-end-accompagnement-confirm-button"]',
+      );
+
+      const mutationPromise = waitGraphQL(
+        page,
+        "candidacy_updateCandidacyEndAccompagnementDecision",
+      );
+
+      await submitButton.click();
+      await mutationPromise;
+      await expect(page.getByText("Décision enregistrée")).toBeVisible();
+    });
+  });
+
+  test.describe("Form Submission - REFUSED", () => {
+    const organism = createOrganismEntity() as Organism;
+    const candidate = createCandidateEntity() as Candidate;
+    const candidacy = createCandidacyEntity({
+      candidate,
+      organism,
+      typeAccompagnement: "ACCOMPAGNE",
+      endAccompagnementStatus: "PENDING",
+    }) as Candidacy;
+
+    const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
+      candidacy,
+    });
+
+    test.use({
+      mswHandlers: [handlers, { scope: "test" }],
+    });
+
+    test("should submit successfully with REFUSED option", async ({ page }) => {
+      await loginAndWait({ page, candidacy, endAccompagnementWait });
+
+      const refusedRadio = page.locator("input[value='REFUSED']");
+      await expect(refusedRadio).toBeVisible();
+      await refusedRadio.click({ force: true });
+      await expect(refusedRadio).toBeChecked();
+
+      const submitButton = page.locator(
+        '[data-test="candidacy-end-accompagnement-confirm-button"]',
+      );
+
+      const mutationPromise = waitGraphQL(
+        page,
+        "candidacy_updateCandidacyEndAccompagnementDecision",
+      );
+
+      await submitButton.click();
+      await mutationPromise;
+
+      await expect(page.getByText("Décision enregistrée")).toBeVisible();
     });
   });
 });
