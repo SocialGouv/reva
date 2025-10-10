@@ -22,7 +22,7 @@ export const createOrganismEntity = (options: Partial<Organism> = {}) => {
     formacodes: [],
     isVisibleInCandidateSearchResults: true,
     managedDegrees: [],
-    modaliteAccompagnement: "LIEU_ACCUEIL",
+    modaliteAccompagnement: options.modaliteAccompagnement || "LIEU_ACCUEIL",
     modaliteAccompagnementRenseigneeEtValide: true,
     remoteZones: [],
     maisonMereAAP: null,
