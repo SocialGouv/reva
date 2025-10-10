@@ -11,3 +11,5 @@ scalar Upload
 scalar Date
 
 scalar Time
+
+scalar DateTimeISO

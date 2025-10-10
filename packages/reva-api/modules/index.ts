@@ -6,6 +6,7 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { NoSchemaIntrospectionCustomRule } from "graphql";
 import {
   DateResolver,
+  DateTimeISOResolver,
   TimeResolver,
   TimestampResolver,
   TimestampTypeDefinition,
@@ -84,6 +85,7 @@ resolvers.Decimal = DecimalGraphqlScalar;
 resolvers.Upload = GraphQLUpload;
 resolvers.Date = DateResolver;
 resolvers.Time = TimeResolver;
+resolvers.DateTimeISO = DateTimeISOResolver;
 
 export const graphqlConfiguration: MercuriusOptions = {
   schema: makeExecutableSchema({
