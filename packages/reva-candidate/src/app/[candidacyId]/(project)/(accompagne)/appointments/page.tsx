@@ -7,6 +7,7 @@ import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useState } from "react";
 
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
+import { formatIso8601Time } from "@/utils/formatIso8601Time";
 
 import { useAppointments } from "./appointments.hooks";
 
@@ -36,10 +37,7 @@ export default function AppointmentsPage() {
               enlargeLink
               size="small"
               title={appointment.title}
-              desc={
-                formatIso8601Date(appointment.date) +
-                (appointment.time ? ` - ${appointment.time}` : "")
-              }
+              desc={`${formatIso8601Date(appointment.date)} - ${formatIso8601Time(appointment.date)}`}
               detail={
                 <Tag small>
                   {appointment.type === "RENDEZ_VOUS_PEDAGOGIQUE"
@@ -78,10 +76,7 @@ const PastAppointments = () => {
               enlargeLink
               size="small"
               title={appointment.title}
-              desc={
-                formatIso8601Date(appointment.date) +
-                (appointment.time ? ` - ${appointment.time}` : "")
-              }
+              desc={`${formatIso8601Date(appointment.date)} - ${formatIso8601Time(appointment.date)}`}
               detail={
                 <Tag small>
                   {appointment.type === "RENDEZ_VOUS_PEDAGOGIQUE"

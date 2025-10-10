@@ -58,7 +58,6 @@ export const AppointmentTiles = ({
           <GenericAppointmentTile
             key={appointment.id}
             date={appointment.date}
-            time={appointment.time}
             type={appointment.type}
           />
         ))}

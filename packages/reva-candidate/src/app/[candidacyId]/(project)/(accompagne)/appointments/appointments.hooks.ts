@@ -13,7 +13,6 @@ const getPastAppointmentsQuery = graphql(`
           id
           title
           date
-          time
           type
         }
         info {
@@ -36,7 +35,6 @@ const getFutureAppointmentsQuery = graphql(`
           id
           title
           date
-          time
           type
         }
       }

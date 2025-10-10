@@ -12,7 +12,6 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
         rows {
           id
           date
-          time
           type
         }
       }
