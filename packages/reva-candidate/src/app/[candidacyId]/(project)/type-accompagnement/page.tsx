@@ -190,7 +190,7 @@ const Form = ({
           )}
         </div>
         <div className="mt-8 flex flex-col md:flex-row gap-4">
-          <Button priority="tertiary" linkProps={{ href: "/" }}>
+          <Button priority="tertiary" linkProps={{ href: "../" }}>
             Retour
           </Button>
 

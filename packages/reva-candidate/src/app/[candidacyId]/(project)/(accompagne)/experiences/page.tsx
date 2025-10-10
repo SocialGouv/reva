@@ -35,7 +35,7 @@ export default function ExperiencesPage() {
           {
             label: "Ma candidature",
             linkProps: {
-              href: "/",
+              href: "../",
             },
           },
         ]}

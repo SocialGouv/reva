@@ -42,7 +42,7 @@ export default function CertificationChangeButtons({
         certificationId: selectedCertificationId!,
       });
       if (response) {
-        router.push("/");
+        router.push("../../");
       }
     } catch (error) {
       graphqlErrorToast(error);

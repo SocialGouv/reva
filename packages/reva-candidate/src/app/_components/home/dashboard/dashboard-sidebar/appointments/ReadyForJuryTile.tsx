@@ -20,7 +20,7 @@ export const ReadyForJuryTile = ({
     title={formatIso8601Date(readyForJuryEstimatedAt)}
     detail="Cette date n’est pas engageante. Vous pouvez la modifier quand vous le souhaitez."
     linkProps={{
-      href: "/dossier-de-validation",
+      href: "./dossier-de-validation",
     }}
   />
 );

@@ -188,7 +188,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
         }
       } else {
         successToast("Dossier de faisabilité envoyé");
-        router.push("/");
+        router.push("../");
       }
     } catch (error) {
       graphqlErrorToast(error);
