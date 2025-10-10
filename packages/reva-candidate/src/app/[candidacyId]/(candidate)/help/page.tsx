@@ -168,7 +168,7 @@ export default async function HelpPage() {
       />
       <hr className="pb-8" />
       <RessourcesUtileSection ressourcesUtileSection={ressourcesUtileSection} />
-      <Button priority="secondary" linkProps={{ href: "/candidat" }}>
+      <Button priority="secondary" linkProps={{ href: "../" }}>
         Retour
       </Button>
     </PageLayout>

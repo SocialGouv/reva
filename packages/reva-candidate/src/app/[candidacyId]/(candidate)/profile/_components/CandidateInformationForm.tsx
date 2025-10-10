@@ -168,7 +168,7 @@ const CandidateInformationForm = ({
         candidateInformation,
       });
       successToast("Les informations ont bien été mises à jour");
-      router.push("/");
+      router.push("../");
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -426,7 +426,7 @@ const CandidateInformationForm = ({
           />
         </div>
         <FormButtons
-          backUrl="/"
+          backUrl="../"
           formState={{ isDirty, isSubmitting }}
           data-testid="form-buttons"
         />
