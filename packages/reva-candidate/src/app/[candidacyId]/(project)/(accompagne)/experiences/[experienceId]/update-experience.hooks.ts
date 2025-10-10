@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { candidateCanEditCandidacy } from "@/utils/candidateCanEditCandidacy.util";
@@ -9,22 +10,20 @@ import {
   ExperienceInput,
 } from "@/graphql/generated/graphql";
 
-const getCandidateQuery = graphql(`
-  query getCandidateForUpdateExperience {
-    candidate_getCandidateWithCandidacy {
-      candidacy {
-        id
+const getCandidacyByIdForUpdateExperience = graphql(`
+  query getCandidacyByIdForUpdateExperience($candidacyId: ID!) {
+    getCandidacyById(id: $candidacyId) {
+      id
+      status
+      candidacyDropOut {
         status
-        candidacyDropOut {
-          status
-        }
-        experiences {
-          id
-          title
-          startedAt
-          duration
-          description
-        }
+      }
+      experiences {
+        id
+        title
+        startedAt
+        duration
+        description
       }
     }
   }
@@ -54,9 +53,16 @@ export const useUpdateExperience = () => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
 
-  const { data: getCandidateData } = useQuery({
-    queryKey: ["candidacy", "getCandidateForUpdateExperience"],
-    queryFn: () => graphqlClient.request(getCandidateQuery),
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+  }>();
+
+  const { data } = useQuery({
+    queryKey: ["candidacy", "getCandidacyByIdForUpdateExperience"],
+    queryFn: () =>
+      graphqlClient.request(getCandidacyByIdForUpdateExperience, {
+        candidacyId,
+      }),
   });
 
   const updateExperience = useMutation({
@@ -82,8 +88,7 @@ export const useUpdateExperience = () => {
     },
   });
 
-  const candidacy =
-    getCandidateData?.candidate_getCandidateWithCandidacy.candidacy;
+  const candidacy = data?.getCandidacyById;
 
   const canEditCandidacy = candidateCanEditCandidacy({
     candidacyStatus: candidacy?.status as CandidacyStatusStep,
