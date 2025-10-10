@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('MULTI_CANDIDACY', 'Permet de créer / gérer plusieurs candidatures pour un même candidat', 'Permet de créer / gérer plusieurs candidatures pour un même candidat');
