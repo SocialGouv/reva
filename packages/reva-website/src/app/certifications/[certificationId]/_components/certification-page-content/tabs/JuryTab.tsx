@@ -25,15 +25,17 @@ export const JuryTab = ({
       typeOfModality={juryTypeMiseEnSituationProfessionnelle}
     />
     <h2 className="text-xl  mb-0">Estimation des frais de certification</h2>
-    {juryEstimatedCost && (
+    {
       <div className="flex flex-col items-start md:flex-row md:items-center gap-2">
         <div className="w-[400px]">Montant à régler au certificateur</div>
         <Tag>
           <span className="fr-icon-money-euro-circle-fill fr-icon--sm mr-1" />
-          {juryEstimatedCost}
+          {juryEstimatedCost
+            ? `${juryEstimatedCost}€`
+            : "Les frais de jury n'ont pas été renseignés par le certificateur, rapprochez vous de celui-ci pour plus d'informations."}
         </Tag>
       </div>
-    )}
+    }
 
     <div>
       <h3 className="text-base my-0">

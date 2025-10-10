@@ -203,7 +203,7 @@ const PageContent = ({
               <Info title="Estimation des frais de certification">
                 {certification.juryEstimatedCost
                   ? `${certification.juryEstimatedCost}€`
-                  : "À compléter"}
+                  : "Les frais de jury n'ont pas été renseignés par le certificateur, rapprochez vous de celui-ci pour plus d'informations."}
               </Info>
             </div>
 
