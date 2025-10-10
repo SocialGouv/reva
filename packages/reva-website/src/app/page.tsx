@@ -125,7 +125,7 @@ const BienvenueSection = () => {
             iconPosition="right"
             className="mt-auto"
             linkProps={{
-              href: "/espace-candidat/",
+              href: "/commencer",
               target: "_self",
             }}
           >
@@ -143,7 +143,7 @@ const QuiEtesVousSection = () => (
       <h2 className="text-[22px] md:text-[32px] mb-8 text-dsfrBlue-franceSun md:text-black">
         Qui êtes-vous ?
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <QuiEtesVousCard
           title="Candidat"
           titleIcon={
@@ -163,7 +163,7 @@ const QuiEtesVousSection = () => (
             iconPosition="right"
             className="mt-auto"
             linkProps={{
-              href: "/espace-candidat/",
+              href: "/commencer",
               target: "_self",
             }}
           >
@@ -266,7 +266,7 @@ const QuiEtesVousCard = ({
   description: string;
   children?: ReactNode;
 }) => (
-  <div className="min-h-[367px] h-full p-6 md:p-8 pb-10 bg-white flex flex-col">
+  <div className="min-h-[250px] h-full p-6 md:p-8 pb-10 bg-white flex flex-col">
     <div className="flex items-center gap-3 mb-3">
       {titleIcon}
       <h3 className="mb-0 text-[20px] md:text-[22px] text-dsfrBlue-franceSun md:text-black">
