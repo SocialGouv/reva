@@ -84,7 +84,7 @@ context("when I access the candidacy add appointment page", () => {
 });
 
 context("when I try to validate the form ", () => {
-  it("does not submit the form without a title or date", function () {
+  it("does not submit the form without a title, date and time", function () {
     interceptQueries();
     cy.admin(
       "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_DE_SUIVI",
@@ -102,9 +102,13 @@ context("when I try to validate the form ", () => {
       "have.class",
       "fr-input-group--error",
     );
+    cy.get('[data-test="time-input"]').should(
+      "have.class",
+      "fr-input-group--error",
+    );
   });
 
-  it("does  submit the form with a correct title and date and redirect me to the appointment update confirmation page", function () {
+  it("does  submit the form with a correct title, date and time and redirect me to the appointment update confirmation page", function () {
     interceptQueries();
     cy.admin(
       "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_DE_SUIVI",
@@ -113,6 +117,7 @@ context("when I try to validate the form ", () => {
 
     cy.get('[data-test="title-input"] input').type("Test Appointment");
     cy.get('[data-test="date-input"] input').type("2025-01-01");
+    cy.get('[data-test="time-input"] input').type("10:00");
 
     cy.get("button[type='submit']").click();
 

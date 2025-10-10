@@ -9,7 +9,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 const appointmentFormSchema = z.object({
   title: z.string().min(1, "Merci de remplir ce champ"),
   date: z.string().min(1, "Merci de remplir ce champ"),
-  time: z.string().optional().nullable(),
+  time: z.string().min(1, "Merci de remplir ce champ"),
   duration: z
     .enum([
       "",
@@ -68,7 +68,7 @@ export const AppointmentForm = ({
       />
       <Input
         data-test="time-input"
-        label="Heure : (Optionnel)"
+        label="Heure"
         nativeInputProps={{ type: "time", ...register("time") }}
         state={errors.time ? "error" : "default"}
         stateRelatedMessage={errors.time?.message}
