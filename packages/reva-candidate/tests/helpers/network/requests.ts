@@ -7,6 +7,7 @@ export function waitGraphQL(page: Page, operationName: string) {
     }
 
     if (!response.ok()) {
+      console.error("error: response not ok", response.url());
       return false;
     }
 
@@ -17,7 +18,12 @@ export function waitGraphQL(page: Page, operationName: string) {
       }
 
       const responseBody = await response.json();
-      return responseBody.data && !responseBody.errors;
+      const isDataValid = responseBody.data && !responseBody.errors;
+      if (!isDataValid) {
+        console.error("error: response body is not valid", responseBody);
+        return false;
+      }
+      return true;
     } catch {
       return false;
     }
