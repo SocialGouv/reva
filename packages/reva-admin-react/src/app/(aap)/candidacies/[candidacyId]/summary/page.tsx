@@ -93,6 +93,22 @@ const CandidacySummaryPage = () => {
         <div className="flex justify-between mb-1">
           <h1>Résumé de la candidature</h1>
 
+          {isAdmin && (
+            <Button
+              priority="secondary"
+              type="button"
+              className="h-[38px]"
+              onClick={() => {
+                window.open(
+                  `${process.env.NEXT_PUBLIC_CANDIDATE_REACT_URL}/${candidacy.id}`,
+                  "_blank",
+                );
+              }}
+            >
+              Espace candidat
+            </Button>
+          )}
+
           <Impersonate candidateId={candidacy.candidate?.id} />
         </div>
 

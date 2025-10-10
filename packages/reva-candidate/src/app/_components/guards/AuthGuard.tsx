@@ -4,6 +4,7 @@ import { useCallback, useEffect } from "react";
 import { useAuth } from "@/components/auth/auth.hooks";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
+import { usePreviousPath } from "@/components/previous-path/previousPath";
 
 const UNAUTHENTICATED_PATHS = [
   "/login-confirmation",
@@ -19,6 +20,7 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const params = useSearchParams();
   const { loginWithToken } = useAuth();
   const { authenticated } = useKeycloakContext();
+  const { previousPath, setPreviousPath } = usePreviousPath();
 
   const token = params.get("token");
   const isUnauthenticatedPath = UNAUTHENTICATED_PATHS.some((path) =>
@@ -36,6 +38,7 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
       } catch (error) {
         console.error(error);
       }
+
       router.push("/login");
     },
     [loginWithToken, router],
@@ -58,11 +61,20 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     }
 
     if (authenticated && isUnauthenticatedPath) {
-      router.push("/");
+      router.push(previousPath || "/");
     } else if (!authenticated && !isUnauthenticatedPath) {
+      setPreviousPath(pathname);
       router.push("/login");
     }
-  }, [authenticated, isUnauthenticatedPath, router, token]);
+  }, [
+    authenticated,
+    isUnauthenticatedPath,
+    pathname,
+    router,
+    setPreviousPath,
+    token,
+    previousPath,
+  ]);
 
   const canRender =
     (isUnauthenticatedPath && !authenticated) ||

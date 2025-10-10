@@ -73,6 +73,7 @@ export const createAccountInIAM = async (
       username: account.email,
       emailVerified: true,
       enabled: true,
+      realmRoles: ["candidate"],
       realm,
     });
 
