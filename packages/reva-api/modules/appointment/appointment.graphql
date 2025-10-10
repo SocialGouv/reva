@@ -3,7 +3,7 @@ type Appointment {
   type: AppointmentType!
   title: String!
   description: String
-  date: Date!
+  date: DateTimeISO!
   time: Time
   duration: AppointmentDuration
   location: String

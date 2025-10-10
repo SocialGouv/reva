@@ -106,7 +106,6 @@ test("should create an appointment", async () => {
         title
         type
         date
-        time
         description
         location
         duration
@@ -132,7 +131,7 @@ test("should create an appointment", async () => {
     appointment_createAppointment: {
       title: "Test Appointment",
       type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
-      date: "2025-09-26",
+      date: "2025-09-26T10:00:00.000Z",
       description: "Test Description",
       location: "Test Location",
       duration: "ONE_HOUR",
@@ -147,7 +146,6 @@ test("should not create an appointment and throw an error if there is already a 
         title
         type
         date
-        time
         description
         location
         duration
@@ -217,7 +215,7 @@ test("should update an appointment when it is not past", async () => {
     appointment_updateAppointment: {
       title: "Updated test Appointment",
       type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
-      date: "2225-09-26",
+      date: "2225-09-26T10:00:00.000Z",
       description: "Updated test Description",
       location: "Updated test Location",
       duration: "TWO_HOURS",
