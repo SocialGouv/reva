@@ -4,7 +4,6 @@ type Appointment {
   title: String!
   description: String
   date: DateTimeISO!
-  time: Time
   duration: AppointmentDuration
   location: String
   temporalStatus: AppointmentTemporalStatus!
