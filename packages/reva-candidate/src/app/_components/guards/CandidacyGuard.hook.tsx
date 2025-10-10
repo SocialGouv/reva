@@ -30,7 +30,7 @@ export const useCandidacyGuard = () => {
     );
   }
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["candidacy", "candidacy-guard"],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_FOR_CANDIDACY_GUARD, {
@@ -42,6 +42,7 @@ export const useCandidacyGuard = () => {
 
   return {
     isLoading,
+    isError,
     candidacy,
   };
 };

@@ -10,12 +10,16 @@ const INACTIF_PATHS = ["/candidacy-inactif", "/candidacy-deleted"];
 const END_ACCOMPAGNEMENT_PATHS = ["/end-accompagnement"];
 
 export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
-  const { candidacy, isLoading } = useCandidacyGuard();
+  const { candidacy, isLoading, isError } = useCandidacyGuard();
 
   const pathname = usePathname();
 
   if (isLoading) {
     return <LoaderWithLayout />;
+  }
+
+  if (isError) {
+    return <div>Vous n'avez pas accès à cette candidature</div>;
   }
 
   const isEndAccompagnementPending =
