@@ -76,7 +76,7 @@ export default function AddAppointmentPage() {
         candidacyId,
         type: type as AppointmentType,
         title: data.title,
-        date: dateTime.getTime(),
+        date: dateTime,
         duration: data.duration || null,
         location: data.location || null,
         description: data.description || null,

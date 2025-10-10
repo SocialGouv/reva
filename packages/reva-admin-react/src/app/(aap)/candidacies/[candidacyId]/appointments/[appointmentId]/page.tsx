@@ -55,7 +55,7 @@ export default function UpdateAppointmentPage() {
         duration: data.duration || null,
         location: data.location || null,
         description: data.description || null,
-        date: dateTime.getTime(),
+        date: dateTime,
         title: data.title,
       });
       successToast("Rendez-vous enregistré");
