@@ -46,13 +46,17 @@ export default function UpdateAppointmentPage() {
   }
 
   const handleSubmit = async (data: AppointmentFormData) => {
+    const dateTime = new Date(data.date + "T" + data.time);
+
     try {
       await updateAppointment.mutateAsync({
         candidacyId,
         appointmentId: appointment?.id,
-        ...data,
-        time: data.time ? data.time + ":00.000Z" : null,
         duration: data.duration || null,
+        location: data.location || null,
+        description: data.description || null,
+        date: dateTime.getTime(),
+        title: data.title,
       });
       successToast("Rendez-vous enregistré");
       router.push(

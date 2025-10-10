@@ -67,15 +67,19 @@ export default function AddAppointmentPage() {
       console.error("no form data");
       return;
     }
+
+    const dateTime = new Date(data.date + "T" + data.time);
     try {
       const {
         appointment_createAppointment: { id: appointmentId },
       } = await createAppointment.mutateAsync({
         candidacyId,
         type: type as AppointmentType,
-        ...data,
-        time: data.time ? data.time + ":00.000Z" : null,
+        title: data.title,
+        date: dateTime.getTime(),
         duration: data.duration || null,
+        location: data.location || null,
+        description: data.description || null,
         sendEmailToCandidate,
       });
       successToast("Rendez-vous enregistré");
