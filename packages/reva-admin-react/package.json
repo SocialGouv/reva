@@ -15,8 +15,8 @@
     "lint": "eslint --color src cypress",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
-    "cypress:open": "TZ=Europe/Paris cypress open",
-    "cypress:ci": "TZ=Europe/Paris cypress run",
+    "cypress:open": "cross-env TZ=Europe/Paris cypress open",
+    "cypress:ci": "cross-env TZ=Europe/Paris cypress run",
     "test:ci": "start-server-and-test 'PORT=3003 node .next/standalone/server.js' http://localhost:3003/admin2/ cypress:ci"
   },
   "dependencies": {
@@ -62,6 +62,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
+    "cross-env": "^10.1.0",
     "cypress": "^14.4.1",
     "eslint": "^9",
     "eslint-config-next": "^15.3.3",
