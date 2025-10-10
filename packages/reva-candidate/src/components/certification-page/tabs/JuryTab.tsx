@@ -15,19 +15,19 @@ export const JuryTab = ({
   juryPlace?: string | null;
 }) => (
   <div className="flex flex-col gap-6">
-    <h2 className="text-xl mb-0">Types d’épreuves </h2>
+    <h2 className="text-xl mb-0">Types d'épreuves </h2>
     <ModalityLine
-      label="Soutenance orale du dossier de validation"
+      label="Soutenance orale du dossier de validation :"
       typeOfModality={juryTypeSoutenanceOrale}
     />
     <ModalityLine
-      label="Mise en situation professionnelle"
+      label="Mise en situation professionnelle :"
       typeOfModality={juryTypeMiseEnSituationProfessionnelle}
     />
     <h2 className="text-xl  mb-0">Estimation des frais de certification</h2>
     {
       <div className="flex flex-col items-start md:flex-row md:items-center gap-2">
-        <div className="w-[400px]">Montant à régler au certificateur</div>
+        <div className="w-[400px]">Montant à régler au certificateur :</div>
         {juryEstimatedCost ? (
           <Tag>
             <span className="fr-icon-money-euro-circle-fill fr-icon--sm mr-1" />
@@ -51,7 +51,7 @@ export const JuryTab = ({
         className="fr-link"
         target="_blank"
       >
-        Quelles sont les missions d’un organisme certificateur ?
+        Quelles sont les missions d'un organisme certificateur ?
       </Link>
     </div>
 
@@ -64,7 +64,7 @@ export const JuryTab = ({
       <div className="flex gap-2">
         <span className="fr-icon-info-fill text-dsfrGray-mentionGrey" />
         <p className="text-dsfrGray-titleGrey italic mb-0">
-          Il n’y a pas de lieu de passage renseigné pour le jury sur ce diplôme.
+          Il n'y a pas de lieu de passage renseigné pour le jury sur ce diplôme.
         </p>
       </div>
     )}
