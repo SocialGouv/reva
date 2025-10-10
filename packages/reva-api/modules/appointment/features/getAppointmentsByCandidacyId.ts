@@ -56,13 +56,11 @@ export const getAppointmentsByCandidacyId = async ({
               {
                 date: "asc",
               },
-              { time: "asc" },
             ]
           : [
               {
                 date: "desc",
               },
-              { time: "desc" },
             ],
     });
 
