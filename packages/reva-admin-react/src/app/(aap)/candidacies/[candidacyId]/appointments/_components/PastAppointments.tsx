@@ -25,7 +25,6 @@ const getCandidacyAndPastAppointments = graphql(`
         rows {
           id
           date
-          time
           type
           title
           temporalStatus

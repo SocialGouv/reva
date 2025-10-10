@@ -1,9 +1,9 @@
 "use client";
+import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { formatIso8601Time } from "@/utils/formatIso8601Time";
 
 import {
   AppointmentForm,
@@ -78,7 +78,8 @@ export default function UpdateAppointmentPage() {
         onSubmit={handleSubmit}
         defaultValues={{
           ...appointment,
-          time: appointment.time ? formatIso8601Time(appointment.time) : null,
+          date: format(new Date(appointment.date), "yyyy-MM-dd"),
+          time: format(new Date(appointment.date), "HH:mm"),
         }}
       />
     </div>

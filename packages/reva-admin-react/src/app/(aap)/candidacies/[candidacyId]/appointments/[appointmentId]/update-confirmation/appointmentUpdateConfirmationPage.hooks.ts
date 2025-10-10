@@ -23,7 +23,6 @@ const getCandidacyAndAppointmentQuery = graphql(`
     ) {
       id
       date
-      time
     }
   }
 `);

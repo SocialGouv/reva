@@ -1,2 +1,4 @@
+import { format, parseISO } from "date-fns";
+
 export const formatIso8601Time = (iso8601Time: string) =>
-  iso8601Time.replace(":00.000Z", "");
+  format(parseISO(iso8601Time), "HH:mm");

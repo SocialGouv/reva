@@ -15,7 +15,6 @@ export const AppointmentCard = ({
     id: string;
     type: AppointmentType;
     date: string;
-    time?: string;
     title: string;
   };
   candidacyId: string;
@@ -31,10 +30,7 @@ export const AppointmentCard = ({
       break;
   }
 
-  let desc = formatIso8601Date(appointment.date);
-  if (appointment.time) {
-    desc += ` - ${formatIso8601Time(appointment.time)}`;
-  }
+  const desc = `${formatIso8601Date(appointment.date)} - ${formatIso8601Time(appointment.date)}`;
 
   const linkProps = disabled
     ? ({ enlargeLink: false } as const)

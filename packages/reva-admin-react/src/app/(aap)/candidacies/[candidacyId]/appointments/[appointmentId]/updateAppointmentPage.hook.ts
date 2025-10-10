@@ -27,7 +27,6 @@ const getCandidacyAndAppointmentQuery = graphql(`
       title
       description
       date
-      time
       duration
       location
     }
