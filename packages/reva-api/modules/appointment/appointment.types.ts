@@ -6,7 +6,6 @@ export interface CreateAppointmentInput {
   title: string;
   description: string;
   date: Date;
-  time: Date;
   location: string;
   duration: AppointmentDuration;
   sendEmailToCandidate?: boolean;
@@ -18,7 +17,6 @@ export interface UpdateAppointmentInput extends CreateAppointmentInput {
   title: string;
   description: string;
   date: Date;
-  time: Date;
   location: string;
   duration: AppointmentDuration;
 }

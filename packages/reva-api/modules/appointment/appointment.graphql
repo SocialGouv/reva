@@ -54,8 +54,7 @@ input CreateAppointmentInput {
   type: AppointmentType!
   title: String!
   description: String
-  date: Date!
-  time: Time
+  date: Timestamp!
   duration: AppointmentDuration
   location: String
   sendEmailToCandidate: Boolean
@@ -66,8 +65,7 @@ input UpdateAppointmentInput {
   candidacyId: ID!
   title: String!
   description: String
-  date: Date!
-  time: Time
+  date: Timestamp!
   duration: AppointmentDuration
   location: String
 }
