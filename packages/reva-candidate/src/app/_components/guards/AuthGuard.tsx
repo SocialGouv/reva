@@ -1,4 +1,9 @@
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useCallback, useEffect } from "react";
 
 import { useAuth } from "@/components/auth/auth.hooks";
@@ -21,6 +26,10 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const { loginWithToken } = useAuth();
   const { authenticated } = useKeycloakContext();
   const { previousPath, setPreviousPath } = usePreviousPath();
+
+  const { candidacyId } = useParams<{
+    candidacyId: string;
+  }>();
 
   const token = params.get("token");
   const isUnauthenticatedPath = UNAUTHENTICATED_PATHS.some((path) =>
@@ -63,7 +72,8 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     if (authenticated && isUnauthenticatedPath) {
       router.push(previousPath || "/");
     } else if (!authenticated && !isUnauthenticatedPath) {
-      setPreviousPath(pathname);
+      // put the previous path only if the candidacyId is in the pathname
+      setPreviousPath(candidacyId ? pathname : undefined);
       router.push("/login");
     }
   }, [
@@ -74,6 +84,7 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     setPreviousPath,
     token,
     previousPath,
+    candidacyId,
   ]);
 
   const canRender =

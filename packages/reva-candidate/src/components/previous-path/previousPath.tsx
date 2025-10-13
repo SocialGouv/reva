@@ -2,9 +2,9 @@ import { create } from "zustand";
 
 const usePreviousPathStore = create<{
   previousPath?: string;
-  setPreviousPath: (previousPath: string) => void;
+  setPreviousPath: (previousPath?: string) => void;
 }>((set) => ({
-  setPreviousPath: (previousPath: string) => {
+  setPreviousPath: (previousPath?: string) => {
     set({ previousPath });
   },
 }));
