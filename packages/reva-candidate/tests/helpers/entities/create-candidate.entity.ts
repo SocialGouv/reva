@@ -19,6 +19,7 @@ export const createCandidateEntity = (
       id: "75",
       label: "Paris",
       code: "75",
+      timezone: "Europe/Paris",
       region: {
         id: "11",
         label: "Île-de-France",
