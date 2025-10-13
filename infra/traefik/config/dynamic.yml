@@ -61,6 +61,7 @@ http:
       service: vae-collective-staging
       middlewares:
         - removeHeader
+        - add-security-headers-staging
 
     # Should be removed after the creation of the /api path
     payment-request-staging:
@@ -147,6 +148,7 @@ http:
       service: vae-collective-production
       middlewares:
         - removeHeader
+        - add-security-headers-production
 
 
     # --- END PRODUCTION VAE.GOUV.FR ---
@@ -387,7 +389,7 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-sandbox-interop.osc-fr1.scalingo.io/interop"
-    
+
     interop-sandbox-api:
       loadBalancer:
         passHostHeader: false
