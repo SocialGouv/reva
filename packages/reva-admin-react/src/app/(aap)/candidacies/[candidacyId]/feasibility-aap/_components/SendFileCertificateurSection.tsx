@@ -57,7 +57,7 @@ export const SendFileCertificationAuthoritySection = ({
     return (
       <Tile
         {...TILE_COMMON_PROPS}
-        desc="Le candidat a validé sont dossier, vous pouvez maintenant vérifier et envoyer le dossier au certificateur."
+        desc="Le candidat a validé son dossier, vous pouvez maintenant vérifier et envoyer le dossier au certificateur."
         linkProps={{ href: navigationUrl }}
         data-test="send-file-certification-authority-tile-ready"
       />
