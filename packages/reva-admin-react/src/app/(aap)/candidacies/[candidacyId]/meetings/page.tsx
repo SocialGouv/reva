@@ -173,7 +173,8 @@ const MeetingsPage = () => {
       if (firstAppointment) {
         await updateCandidacyFirstAppointmentInformations.mutateAsync({
           candidacyId,
-          firstAppointmentOccuredAt: data.firstAppointmentOccuredAt,
+          firstAppointmentOccuredAt:
+            data.firstAppointmentOccuredAt + "T14:00:00Z",
         });
       } else {
         await createCandidacyFirstAppointmentInformations.mutateAsync({
@@ -191,7 +192,9 @@ const MeetingsPage = () => {
 
   const resetForm = useCallback(() => {
     reset({
-      firstAppointmentOccuredAt: firstAppointmentOccuredAt || undefined,
+      firstAppointmentOccuredAt: firstAppointmentOccuredAt
+        ? format(parseISO(firstAppointmentOccuredAt), "yyyy-MM-dd")
+        : undefined,
       candidacyCreatedAt: candidacyCreatedAt
         ? format(candidacyCreatedAt, "yyyy-MM-dd")
         : undefined,
