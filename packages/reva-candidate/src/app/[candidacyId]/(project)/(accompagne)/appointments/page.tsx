@@ -48,6 +48,7 @@ export default function AppointmentsPage() {
               endDetail="Voir les détails"
               key={appointment.id}
               linkProps={{ href: `./${appointment.id}` }}
+              data-test={`future-appointment-${appointment.id}`}
             />
           ))}
         </div>
@@ -87,6 +88,7 @@ const PastAppointments = () => {
               endDetail="Voir les détails"
               key={appointment.id}
               linkProps={{ href: `./${appointment.id}` }}
+              data-test={`past-appointment-${appointment.id}`}
             />
           ))}
           {totalPastAppointments > pastLimit && (

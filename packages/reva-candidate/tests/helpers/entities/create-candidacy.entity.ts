@@ -40,6 +40,7 @@ export const createCandidacyEntity = (
     feasibility,
     candidate,
     endAccompagnementStatus,
+    appointments,
   } = options;
 
   const candidacy: CandidacyType = {
@@ -120,6 +121,10 @@ export const createCandidacyEntity = (
 
   if (candidacyAlreadySubmitted) {
     candidacy.sentAt = Date.now();
+  }
+
+  if (appointments) {
+    candidacy.appointments = appointments;
   }
 
   return candidacy;
