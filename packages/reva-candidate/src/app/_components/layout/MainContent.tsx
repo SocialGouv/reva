@@ -1,4 +1,4 @@
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 import { WhiteBoxContainer } from "./WhiteBoxContainer";
 
@@ -12,7 +12,12 @@ const UNAUTHENTICATED_PATHS = [
 
 export const MainContent = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
-  const isRootPath = pathname === "/";
+
+  const { candidacyId } = useParams<{
+    candidacyId?: string;
+  }>();
+
+  const isRootPath = pathname === (candidacyId ? `/${candidacyId}/` : "/");
   const isUnAuthenticatedPath = UNAUTHENTICATED_PATHS.some((path) =>
     pathname.startsWith(path),
   );
