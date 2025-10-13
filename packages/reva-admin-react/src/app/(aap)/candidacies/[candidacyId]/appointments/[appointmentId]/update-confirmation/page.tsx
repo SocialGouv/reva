@@ -31,7 +31,7 @@ export default function AppointmentUpdateConfirmationPage() {
           Rendez-vous enregistré
         </h1>
         <p className="text-xl mb-2">
-          Le {formatIso8601Date(appointment.date)} à $
+          Le {formatIso8601Date(appointment.date)} à{" "}
           {formatIso8601Time(appointment.date)}
         </p>
         <p className="text-xl mb-6">
