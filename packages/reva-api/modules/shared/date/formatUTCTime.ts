@@ -4,8 +4,11 @@
 import { TZDate } from "@date-fns/tz";
 import { format } from "date-fns";
 
-export const formatUTCTimeWithoutTimezoneConversion = (utcDateTime: Date) => {
-  const utcTimeZoneDateTime = new TZDate(utcDateTime.getTime(), "UTC");
+export const formatUTCTime = (
+  utcDateTime: Date,
+  timeZone: string = "Europe/Paris",
+) => {
+  const utcTimeZoneDateTime = new TZDate(utcDateTime.getTime(), timeZone);
 
   return format(utcTimeZoneDateTime, "HH:mm");
 };
