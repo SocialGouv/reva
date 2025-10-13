@@ -68,6 +68,15 @@ export const login = async ({
       refreshToken: tokens.refresh_token,
     };
 
+    await page.context().addCookies([
+      {
+        name: "VAE_COLLECTIVE_AUTH_TOKENS",
+        value: encodeURIComponent(JSON.stringify(tokensForPostLoginUrl)),
+        domain: "localhost",
+        path: "/",
+      },
+    ]);
+
     await page.goto(
       `http://localhost:4005/vae-collective/post-login?tokens=${encodeURIComponent(
         JSON.stringify(tokensForPostLoginUrl),
