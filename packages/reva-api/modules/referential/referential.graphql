@@ -104,6 +104,7 @@ type Department {
   code: String!
   label: String!
   region: Region
+  timezone: String!
 }
 
 type Degree {
