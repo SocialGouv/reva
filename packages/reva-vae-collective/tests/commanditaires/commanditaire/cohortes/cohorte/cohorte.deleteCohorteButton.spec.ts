@@ -1,11 +1,12 @@
 import {
-  test,
   expect,
   graphql,
   HttpResponse,
+  test,
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../../shared/utils/auth/login";
+import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("delete cohorte button", () => {
@@ -25,6 +26,7 @@ test.describe("delete cohorte button", () => {
               },
             });
           }),
+          mockQueryActiveFeatures(),
         ],
         { scope: "test" },
       ],
@@ -70,6 +72,7 @@ test.describe("delete cohorte button", () => {
               },
             });
           }),
+          mockQueryActiveFeatures(),
         ],
         { scope: "test" },
       ],

@@ -1,11 +1,12 @@
 import {
-  test,
   expect,
   graphql,
   HttpResponse,
+  test,
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../../shared/utils/auth/login";
+import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("registration code and url display", () => {
@@ -25,6 +26,7 @@ test.describe("registration code and url display", () => {
               },
             });
           }),
+          mockQueryActiveFeatures(),
         ],
         { scope: "test" },
       ],
@@ -63,6 +65,7 @@ test.describe("registration code and url display", () => {
               },
             });
           }),
+          mockQueryActiveFeatures(),
         ],
         { scope: "test" },
       ],

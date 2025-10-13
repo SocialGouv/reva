@@ -1,11 +1,12 @@
 import {
-  test,
   expect,
   graphql,
   HttpResponse,
+  test,
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../../shared/utils/auth/login";
+import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("global page behavior", () => {
@@ -24,6 +25,7 @@ test.describe("global page behavior", () => {
             },
           });
         }),
+        mockQueryActiveFeatures(),
       ],
       { scope: "test" },
     ],

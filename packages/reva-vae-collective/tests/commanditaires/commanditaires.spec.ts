@@ -1,12 +1,12 @@
 import {
-  test,
   expect,
-  graphql,
   HttpResponse,
+  test,
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../shared/utils/auth/login";
-const fvae = graphql.link("https://reva-api/api/graphql");
+import { baseUrlTest } from "../shared/utils/getBaseUrlTest";
+import { mockQueryActiveFeatures } from "../shared/utils/mockActiveFeatures";
 
 test.describe("Commanditaires", () => {
   test.describe("Admin access", () => {
@@ -14,7 +14,7 @@ test.describe("Commanditaires", () => {
       test.use({
         mswHandlers: [
           [
-            fvae.query(
+            baseUrlTest.query(
               "commanditaireVaeCollectivesForCommanditairesPage",
               () => {
                 return HttpResponse.json({
@@ -31,6 +31,7 @@ test.describe("Commanditaires", () => {
                 });
               },
             ),
+            mockQueryActiveFeatures(),
           ],
           { scope: "test" },
         ],
@@ -52,7 +53,7 @@ test.describe("Commanditaires", () => {
       test.use({
         mswHandlers: [
           [
-            fvae.query(
+            baseUrlTest.query(
               "commanditaireVaeCollectivesForCommanditairesPage",
               () => {
                 return HttpResponse.json({
@@ -80,6 +81,7 @@ test.describe("Commanditaires", () => {
                 });
               },
             ),
+            mockQueryActiveFeatures(),
           ],
           { scope: "test" },
         ],

@@ -1,11 +1,12 @@
 import {
-  test,
   expect,
   graphql,
   HttpResponse,
+  test,
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../../shared/utils/auth/login";
+import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("organism card", () => {
@@ -26,6 +27,7 @@ test.describe("organism card", () => {
                 },
               });
             }),
+            mockQueryActiveFeatures(),
           ],
           { scope: "test" },
         ],
@@ -66,6 +68,7 @@ test.describe("organism card", () => {
                 },
               });
             }),
+            mockQueryActiveFeatures(),
           ],
           { scope: "test" },
         ],
@@ -126,6 +129,7 @@ test.describe("organism card", () => {
                   },
                 });
               }),
+              mockQueryActiveFeatures(),
             ],
             { scope: "test" },
           ],
@@ -186,6 +190,7 @@ test.describe("organism card", () => {
                   },
                 });
               }),
+              mockQueryActiveFeatures(),
             ],
             { scope: "test" },
           ],
@@ -255,6 +260,7 @@ test.describe("organism card", () => {
                   },
                 });
               }),
+              mockQueryActiveFeatures(),
             ],
             { scope: "test" },
           ],
@@ -333,6 +339,7 @@ test.describe("organism card", () => {
                   },
                 });
               }),
+              mockQueryActiveFeatures(),
             ],
             { scope: "test" },
           ],

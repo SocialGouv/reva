@@ -1,11 +1,12 @@
 import {
-  test,
   expect,
   graphql,
   HttpResponse,
+  test,
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../shared/utils/auth/login";
+import { mockQueryActiveFeatures } from "../../../shared/utils/mockActiveFeatures";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("Commanditaire with no cohorte", () => {
@@ -28,6 +29,7 @@ test.describe("Commanditaire with no cohorte", () => {
             },
           });
         }),
+        mockQueryActiveFeatures(),
       ],
       { scope: "test" },
     ],
@@ -99,6 +101,7 @@ test.describe("Commanditaire with multiple cohortes", () => {
             },
           });
         }),
+        mockQueryActiveFeatures(),
       ],
       { scope: "test" },
     ],

@@ -1,11 +1,12 @@
 import {
-  test,
   expect,
   graphql,
   HttpResponse,
+  test,
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../../shared/utils/auth/login";
+import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeatures";
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("certification card", () => {
@@ -26,6 +27,7 @@ test.describe("certification card", () => {
                 },
               });
             }),
+            mockQueryActiveFeatures(),
           ],
           { scope: "test" },
         ],
@@ -90,6 +92,7 @@ test.describe("certification card", () => {
                 },
               });
             }),
+            mockQueryActiveFeatures(),
           ],
           { scope: "test" },
         ],
@@ -152,6 +155,7 @@ test.describe("certification card", () => {
                 },
               });
             }),
+            mockQueryActiveFeatures(),
           ],
           { scope: "test" },
         ],
