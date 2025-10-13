@@ -4,7 +4,7 @@ import { fr } from "date-fns/locale";
 import { capitalize, toLower, toUpper, truncate } from "lodash";
 
 type LogUserProfile = "ADMIN" | "AAP" | "CERTIFICATEUR" | "CANDIDAT";
-type LogUser = { firstname: string; lastname: string };
+type LogUser = { firstname: string; lastname: string; email: string };
 
 const getUserProfileText = ({
   userProfile,
@@ -16,7 +16,7 @@ const getUserProfileText = ({
   switch (userProfile) {
     case "ADMIN":
       if (!user.firstname && !user.lastname) {
-        return "Administrateur";
+        return `Administrateur (${user.email})`;
       }
       return `Administrateur (${toUpper(
         truncate(user.firstname, { length: 2, omission: "." }),

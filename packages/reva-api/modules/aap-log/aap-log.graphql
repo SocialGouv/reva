@@ -6,6 +6,7 @@ enum AAPLogUserProfile {
 type AAPLogUser {
   firstname: String!
   lastname: String!
+  email: String!
 }
 
 type AAPLog {

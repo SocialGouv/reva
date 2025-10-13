@@ -32,6 +32,7 @@ const getCandidacyLogsQuery = graphql(`
         user {
           firstname
           lastname
+          email
         }
       }
     }

@@ -8,6 +8,7 @@ enum CandidacyLogUserProfile {
 type CandidacyLogUser {
   firstname: String!
   lastname: String!
+  email: String!
 }
 
 type CandidacyLog {

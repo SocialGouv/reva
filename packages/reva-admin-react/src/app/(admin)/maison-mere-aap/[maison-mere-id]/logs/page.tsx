@@ -22,6 +22,7 @@ const getAAPLogsQuery = graphql(`
         user {
           firstname
           lastname
+          email
         }
       }
     }

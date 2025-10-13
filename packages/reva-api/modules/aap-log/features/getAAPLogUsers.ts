@@ -22,5 +22,6 @@ export const getAAPLogUsers = async ({
     keycloakId: u.keycloakId,
     firstname: u.firstname || "",
     lastname: u.lastname || "",
+    email: u.email,
   }));
 };
