@@ -6,7 +6,7 @@ import {
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
-import { formatUTCTimeWithoutTimezoneConversion } from "@/modules/shared/date/formatUTCTimeWithoutTimezoneConversion";
+import { formatUTCTime } from "@/modules/shared/date/formatUTCTime";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 import { prismaClient } from "@/prisma/client";
@@ -47,7 +47,11 @@ export const createAppointment = async ({
     .findUnique({
       where: { id: data.candidacyId },
     })
-    .candidate();
+    .candidate({
+      include: {
+        department: true,
+      },
+    });
 
   if (!candidate) {
     throw new Error("Candidat non trouvé");
@@ -70,12 +74,18 @@ export const createAppointment = async ({
   }
 
   if (sendEmailToCandidate) {
+    const timeZone = candidate.department?.timezone || "Europe/Paris";
+
     await sendEmailUsingTemplate({
       to: { email: candidate.email },
       params: {
         candidateFullName: candidate.firstname + " " + candidate.lastname,
-        appointmentDate: formatDateWithoutTimestamp(data.date),
-        appointmentTime: formatUTCTimeWithoutTimezoneConversion(data.date),
+        appointmentDate: formatDateWithoutTimestamp(
+          data.date,
+          "dd/MM/yyyy",
+          timeZone,
+        ),
+        appointmentTime: formatUTCTime(data.date, timeZone),
         appointmentUrl: getBackofficeUrl({
           path: `/candidacies/${data.candidacyId}/appointments/${result.id}`,
         }),
