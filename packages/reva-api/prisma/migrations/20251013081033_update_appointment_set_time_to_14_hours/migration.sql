@@ -1,0 +1,1 @@
+update appointment set date = date::DATE::TIMESTAMP +  interval '14 hour';

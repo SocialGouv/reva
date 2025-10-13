@@ -24,6 +24,7 @@ export default function AppointmentsPage() {
         renseigner le rendez-vous pédagogique obligatoire afin de pouvoir
         ajouter tous vos rendez-vous de suivi.
       </p>
+
       <AddAppointmentButton
         addAppointmentButtonDisabled={rendezVousPedagogiqueMissing}
         candidacyId={candidacyId}
