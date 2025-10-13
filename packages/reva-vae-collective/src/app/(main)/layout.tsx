@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 import { AuthGuard } from "@/components/auth/authGuard";
 import { Footer } from "@/components/footer/Footer";
-import { Header } from "@/components/header/Header";
+import { HeaderWithFeatures } from "@/components/header/HeaderWithFeatures";
 
 export const metadata: Metadata = {
   title: "France VAE | L’outil qui facilite le suivi des candidats à la VAE",
@@ -30,7 +30,7 @@ export default function RootLayout({
         ]}
       />
 
-      <Header />
+      <HeaderWithFeatures />
 
       <main role="main" id="content" className="flex flex-col flex-1">
         <div>
