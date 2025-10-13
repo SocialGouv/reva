@@ -16,6 +16,7 @@ import { getCohorteVAECollectiveById } from "./features/getCohorteVAECollectiveB
 import { getCommanditaireVaeCollectiveByGestionnaireAccountId } from "./features/getCommanditaireVaeCollectiveByGestionnaireAccountId";
 import { getCommanditaireVaeCollectiveById } from "./features/getCommanditaireVaeCollectiveById";
 import { getCommanditaireVaeCollectives } from "./features/getCommanditaireVaeCollectives";
+import { getMetabaseDashboardIframeUrlVaeCollective } from "./features/getMetabaseDashboardIframeUrlVaeCollective";
 import { publishCohorteVAECollective } from "./features/publishCohorteVAECollective";
 import { updateCohorteVAECollectiveCertification } from "./features/updateCohorteVAECollectiveCertification";
 import { updateCohorteVAECollectiveOrganism } from "./features/updateCohorteVAECollectiveOrganism";
@@ -84,6 +85,14 @@ const unsafeResolvers = {
         commanditaireVaeCollectiveId,
         offset,
         limit,
+      }),
+    metabaseDashboardIframeUrl: async ({
+      id: commanditaireVaeCollectiveId,
+    }: {
+      id: string;
+    }) =>
+      getMetabaseDashboardIframeUrlVaeCollective({
+        commanditaireVaeCollectiveId,
       }),
   },
   Query: {

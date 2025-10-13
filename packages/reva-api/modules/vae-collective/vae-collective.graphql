@@ -28,6 +28,7 @@ type CommanditaireVaeCollective {
   raisonSociale: String!
   createdAt: Timestamp!
   cohorteVaeCollectives(offset: Int, limit: Int): CohorteVaeCollectivePage!
+  metabaseDashboardIframeUrl: String
 }
 
 type CommanditaireVaeCollectivePage {
