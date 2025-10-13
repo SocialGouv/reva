@@ -67,5 +67,6 @@ export const submitCandidacy = async ({
     organismName: organism.label,
     organismEmail: organism.emailContact || organism.contactAdministrativeEmail,
   });
+
   return updatedCandidacy;
 };

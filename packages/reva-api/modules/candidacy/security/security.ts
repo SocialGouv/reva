@@ -9,7 +9,7 @@ import {
   isAnyone,
   isCandidacyCompanion,
   isOwnerOfCandidacy,
-  isOwnerOfCandidate,
+  isAdminOrOwnerOfCandidate,
   isOwnerOrCanManageCandidacy,
 } from "@/modules/shared/security/presets";
 
@@ -34,14 +34,14 @@ export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
 
   // Mutations candidat
-  "Mutation.candidacy_updateContact": isOwnerOfCandidate,
+  "Mutation.candidacy_updateContact": isAdminOrOwnerOfCandidate,
 
-  "Mutation.candidacy_updateGoals": isOwnerOfCandidacy,
+  "Mutation.candidacy_updateGoals": isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_updateExperience": isOwnerOrCanManageCandidacy,
   "Mutation.candidacy_addExperience": isOwnerOrCanManageCandidacy,
-  "Mutation.candidacy_selectOrganism": isOwnerOfCandidacy,
+  "Mutation.candidacy_selectOrganism": isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_selectOrganismAsAdmin": isAdmin,
-  "Mutation.candidacy_submitCandidacy": isOwnerOfCandidacy,
+  "Mutation.candidacy_submitCandidacy": isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_updateTypeAccompagnement": isAdminOrOwnerOfCandidacy,
 
   // Mutation manager
@@ -61,10 +61,10 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_setReadyForJuryEstimatedAt": isOwnerOrCanManageCandidacy,
   "Mutation.candidacy_updateCandidateCandidacyDropoutDecision":
-    isOwnerOfCandidacy,
+    isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_updateFinanceModule": isAdmin,
   "Mutation.candidacy_updateCandidacyInactifDecision": isOwnerOfCandidacy,
   "Mutation.candidacy_submitEndAccompagnement": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_updateCandidacyEndAccompagnementDecision":
-    isOwnerOfCandidacy,
+    isAdminOrOwnerOfCandidacy,
 };

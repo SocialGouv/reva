@@ -167,6 +167,14 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "END_ACCOMPAGNEMENT_SUBMITTED";
       details: { endAccompagnementDate: Date };
+    }
+  | {
+      eventType: "SWORN_STATEMENT_UPDATED";
+      details?: undefined;
+    }
+  | {
+      eventType: "FEASIBILITY_FILE_TEMPLATE_FIRST_READ_AT_UPDATED";
+      details: { feasibilityFileTemplateFirstReadAt: Date };
     };
 
 export type CandidacyLog = {

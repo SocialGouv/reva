@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
 
+import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import {
   deleteFile,
@@ -16,9 +17,15 @@ import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializ
 export const createOrUpdateSwornStatement = async ({
   input: { swornStatement },
   candidacyId,
+  userKeycloakId,
+  userEmail,
+  userRoles,
 }: {
   input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput;
   candidacyId: string;
+  userKeycloakId?: string;
+  userEmail?: string;
+  userRoles: KeyCloakUserRole[];
 }) => {
   try {
     const dff = await getDematerializedFeasibilityFileByCandidacyId({
@@ -81,6 +88,14 @@ export const createOrUpdateSwornStatement = async ({
           },
         },
       },
+    });
+
+    logCandidacyAuditEvent({
+      candidacyId: candidacyId,
+      eventType: "SWORN_STATEMENT_UPDATED",
+      userKeycloakId,
+      userEmail,
+      userRoles,
     });
 
     return getDematerializedFeasibilityFileByCandidacyId({

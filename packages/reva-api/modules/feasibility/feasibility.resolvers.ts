@@ -84,7 +84,8 @@ const unsafeResolvers = {
     feasibility_updateFeasibilityFileTemplateFirstReadAt: (
       _parent: unknown,
       { candidacyId }: { candidacyId: string },
-    ) => updateFeasibilityFileTemplateFirstReadAt({ candidacyId }),
+      context: GraphqlContext,
+    ) => updateFeasibilityFileTemplateFirstReadAt({ candidacyId, context }),
     feasibility_revokeCertificationAuthorityDecision: (
       _parent: unknown,
       { feasibilityId, reason }: { feasibilityId: string; reason?: string },

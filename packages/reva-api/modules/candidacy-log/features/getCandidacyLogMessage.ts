@@ -272,6 +272,15 @@ export const getCandidacyLogMessage = ({
     case "CANDIDATE_CONFIRMED_END_ACCOMPAGNEMENT":
       return log("Fin d'accompagnement confirmée");
 
+    case "SWORN_STATEMENT_UPDATED":
+      return log("Attestation sur l'honneur envoyée");
+
+    case "FEASIBILITY_FILE_TEMPLATE_FIRST_READ_AT_UPDATED":
+      return log(
+        "Date de première lecture du modèle de dossier de recevabilité ",
+        format(details.feasibilityFileTemplateFirstReadAt, "dd/MM/yyyy"),
+      );
+
     default:
       return log("Événement inconnu");
   }

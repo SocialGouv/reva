@@ -203,7 +203,14 @@ const unsafeResolvers = {
         candidacyId: string;
         input: DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput;
       },
-    ) => createOrUpdateSwornStatement(params),
+      context: GraphqlContext,
+    ) =>
+      createOrUpdateSwornStatement({
+        ...params,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
 
     dematerialized_feasibility_file_sendToCertificationAuthority: (
       _parent: unknown,
