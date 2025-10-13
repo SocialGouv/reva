@@ -20,7 +20,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 4,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -36,7 +36,32 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        // Set cookies for all tests in this project
+        contextOptions: {
+          storageState: {
+            cookies: [
+              {
+                name: "VAE_COLLECTIVE_AUTH_TOKENS",
+                value: JSON.stringify({
+                  accessToken:
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ4MzQ3MzAsImlhdCI6MTY4NDgzNDY3MCwiYXV0aF90aW1lIjoxNjg0ODM0NjE4LCJqdGkiOiIxMjMiLCJpc3MiOiJodHRwczovL2V4YW1wbGUuY29tIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjEyMyIsInR5cCI6IkJlYXJlciIsImF6cCI6InJldmEtYWRtaW4iLCJub25jZSI6IjFkZDQ5ZDYyLWJjZjMtNDQyMC1iZTAzLTU3NjUxMTg0ZTQzMSIsInNlc3Npb25fc3RhdGUiOiJmOWVhZDJhMy1lMDk1LTQ2MDAtOWU4ZC02MTRiOWQ2ZTcwM2YiLCJhY3IiOiIwIiwiYWxsb3dlZC1vcmlnaW5zIjpbXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtcmV2YSIsIm1hbmFnZV9hY2NvdW50Iiwib2ZmbGluZV9hY2Nlc3MiLCJhZG1pbiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmV2YS12YWUtY29sbGVjdGl2ZSI6eyJyb2xlcyI6WyJtYW5hZ2VfYWNjb3VudCIsImFkbWluIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6IiIsInNpZCI6IiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiIiLCJlbWFpbCI6IiJ9.Y28LgwcBXp1A7IyDCLWcuMvbVzKziJUOzeEais5oWRE",
+                  refreshToken:
+                    "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODQ4MzY0NzAsImlhdCI6MTY4NDgzNDY3MCwiaXNzIjoiaHR0cHM6Ly9leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vZXhhbXBsZS5jb20iLCJzdWIiOiI5NzI5ZTQ1OC04NjYxLTQxNWYtYjk2MC0wOGExMjU0MTZhM2EiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoicmV2YS1hZG1pbiIsIm5vbmNlIjoiMWRkNDlkNjItYmNmMy00NDIwLWJlMDMtNTc2NTExODRlNDMxIiwic2Vzc2lvbl9zdGF0ZSI6ImY5ZWFkMmEzLWUwOTUtNDYwMC05ZThkLTYxNGI5ZDZlNzAzZiIsInNjb3BlIjoiIiwic2lkIjoiIn0.Uw_LXLsrn90Yau8sT_nN-_3WSrS2ZHEomgaU7jqieEg",
+                }),
+                domain: "localhost",
+                path: "/",
+                httpOnly: false,
+                secure: false,
+                sameSite: "Lax",
+                expires: -1,
+              },
+            ],
+            origins: [],
+          },
+        },
+      },
     },
     /*
     {
