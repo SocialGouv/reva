@@ -252,6 +252,7 @@ describe("isFeasibilityManager", () => {
         data: {
           code: faker.string.numeric(3),
           label: faker.lorem.sentence(),
+          timezone: faker.location.timeZone(),
           elligibleVAE: true,
           region: {
             create: {
@@ -315,6 +316,7 @@ describe("isFeasibilityManager", () => {
         data: {
           code: faker.string.numeric(3),
           label: faker.lorem.sentence(),
+          timezone: faker.location.timeZone(),
           elligibleVAE: true,
           region: {
             create: {

@@ -459,6 +459,7 @@ model Department {
   certificationAuthorityLocalAccountOnDepartment CertificationAuthorityLocalAccountOnDepartment[]
   CandidateBirthDerpartment                      Candidate[]                                      @relation("birthDepartmentCandidate")
   elligibleVAE                                   Boolean                                          @map("elligible_vae")
+  timezone                                       String                                           @map("timezone")
 
   @@index([regionId])
   @@map("department")
