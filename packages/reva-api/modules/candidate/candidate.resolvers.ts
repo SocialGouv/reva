@@ -80,7 +80,7 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) =>
       getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists({
-        keycloakId: context.auth.userInfo?.sub || "",
+        context,
       }),
   },
   Mutation: {

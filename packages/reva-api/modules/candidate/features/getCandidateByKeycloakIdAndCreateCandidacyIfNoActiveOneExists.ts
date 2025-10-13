@@ -5,7 +5,10 @@ import { prismaClient } from "@/prisma/client";
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 
 export const getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists =
-  async ({ keycloakId }: { keycloakId: string }) => {
+  async ({ context }: { context: GraphqlContext }) => {
+    const keycloakId = context.auth.userInfo?.sub || "";
+    const roles = context.auth.userInfo?.realm_access?.roles;
+
     const prisma = prismaClient;
     return prisma.$transaction(async (tx) => {
       const candidate = await getCandidateByKeycloakId({ keycloakId, tx });
@@ -19,11 +22,13 @@ export const getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists =
       });
 
       if (!activeCandidacy) {
-        await createCandidacy({
-          candidateId: candidate.id,
-          typeAccompagnement: "ACCOMPAGNE",
-          tx,
-        });
+        if (roles?.includes("candidate")) {
+          await createCandidacy({
+            candidateId: candidate.id,
+            typeAccompagnement: "ACCOMPAGNE",
+            tx,
+          });
+        }
       }
       return candidate;
     });
