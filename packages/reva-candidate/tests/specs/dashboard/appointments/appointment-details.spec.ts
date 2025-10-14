@@ -119,21 +119,23 @@ test.describe("Appointment details with missing optional info", () => {
     mswHandlers: [handlers, { scope: "test" }],
   });
 
-  test("should not display table rows for missing optional info", async ({
+  test("should display explanation for missing optional info", async ({
     page,
   }) => {
     await login(page);
     await navigateToAppointmentDetailsPage(page, candidacy.id, appointment.id);
 
     await appointmentDetailsWait(page);
-    await expect(
-      page.locator('[data-test="appointment-location"]'),
-    ).not.toBeVisible();
+    await expect(page.locator('[data-test="appointment-location"]')).toHaveText(
+      "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous.",
+    );
     await expect(
       page.locator('[data-test="appointment-description"]'),
-    ).not.toBeVisible();
-    await expect(
-      page.locator('[data-test="appointment-duration"]'),
-    ).not.toBeVisible();
+    ).toHaveText(
+      "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous.",
+    );
+    await expect(page.locator('[data-test="appointment-duration"]')).toHaveText(
+      "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous.",
+    );
   });
 });

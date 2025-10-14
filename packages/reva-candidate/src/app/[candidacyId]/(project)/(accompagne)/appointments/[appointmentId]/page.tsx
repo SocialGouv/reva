@@ -57,39 +57,37 @@ const AppointmentDetailPage = () => {
                   {organism?.nomPublic || organism?.label}
                 </td>
               </tr>
-              {appointment.duration && (
-                <tr className="border-b">
-                  <td className="w-1/3 py-4">Durée : </td>
-                  <td
-                    className="w-2/3 font-bold py-4"
-                    data-test="appointment-duration"
-                  >
-                    {durationMap[appointment.duration]}
-                  </td>
-                </tr>
-              )}
-              {appointment.location && (
-                <tr className="border-b ">
-                  <td className="w-1/3 py-4">Lieu : </td>
-                  <td
-                    className="w-2/3 font-bold py-4"
-                    data-test="appointment-location"
-                  >
-                    {appointment.location}
-                  </td>
-                </tr>
-              )}
-              {appointment.description && (
-                <tr className="border-b ">
-                  <td className="w-1/3 py-4">Description : </td>
-                  <td
-                    className="w-2/3 font-bold py-4"
-                    data-test="appointment-description"
-                  >
-                    {appointment.description}
-                  </td>
-                </tr>
-              )}
+              <tr className="border-b">
+                <td className="w-1/3 py-4">Durée : </td>
+                <td
+                  className="w-2/3 font-bold py-4"
+                  data-test="appointment-duration"
+                >
+                  {appointment.duration
+                    ? durationMap[appointment.duration]
+                    : "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous."}
+                </td>
+              </tr>
+              <tr className="border-b ">
+                <td className="w-1/3 py-4">Lieu : </td>
+                <td
+                  className="w-2/3 font-bold py-4"
+                  data-test="appointment-location"
+                >
+                  {appointment.location ||
+                    "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous."}
+                </td>
+              </tr>
+              <tr className="border-b ">
+                <td className="w-1/3 py-4">Description : </td>
+                <td
+                  className="w-2/3 font-bold py-4"
+                  data-test="appointment-description"
+                >
+                  {appointment.description ||
+                    "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous."}
+                </td>
+              </tr>
             </table>
           </div>
         </div>
