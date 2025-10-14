@@ -108,7 +108,6 @@ const PastAppointmentsContent = ({
             <AppointmentCard
               appointment={appointment}
               candidacyId={candidacyId}
-              disabled
             />
           </li>
         ))}

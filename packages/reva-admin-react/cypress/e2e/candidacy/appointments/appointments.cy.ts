@@ -195,20 +195,6 @@ context("when I access the candidacy appointments page", () => {
         `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_DE_SUIVI`,
       );
     });
-
-    context("when the appointment is past", () => {
-      it("does not let me click on the appointment", function () {
-        interceptQueries({ withPastRendezVousPedagogique: true });
-        cy.admin(
-          "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
-        );
-        waitForQueries();
-        cy.get('[data-test="past-appointments-list"]')
-          .children("li")
-          .first()
-          .should("not.have.attr", "href");
-      });
-    });
   });
 
   context("when there are no appointment", () => {
