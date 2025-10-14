@@ -1,5 +1,6 @@
-import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
+
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 import { graphql } from "@/graphql/generated";
 
@@ -19,6 +20,7 @@ export function useActiveFeatures() {
   const [activeFeatures, setActiveFeatures] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+  const { accessToken } = useKeycloakContext();
 
   useEffect(() => {
     const fetchActiveFeatures = async () => {
@@ -26,14 +28,6 @@ export function useActiveFeatures() {
         setLoading(true);
         setError(null);
 
-        const tokensData = getCookie("VAE_COLLECTIVE_AUTH_TOKENS");
-        if (!tokensData) {
-          setActiveFeatures([]);
-          setLoading(false);
-          return;
-        }
-
-        const { accessToken } = JSON.parse(tokensData as string);
         if (!accessToken) {
           setActiveFeatures([]);
           setLoading(false);
@@ -66,7 +60,7 @@ export function useActiveFeatures() {
     };
 
     fetchActiveFeatures();
-  }, []);
+  }, [accessToken]);
 
   return {
     activeFeatures,
