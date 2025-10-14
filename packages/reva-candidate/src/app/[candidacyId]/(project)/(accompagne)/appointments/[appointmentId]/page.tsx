@@ -44,6 +44,7 @@ const AppointmentDetailPage = () => {
             <GenericAppointmentTile
               date={appointment.date}
               type={appointment.type}
+              showTimezone
             />
           </div>
           <div className="px-4">

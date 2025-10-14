@@ -11,14 +11,19 @@ import { AppointmentType } from "@/graphql/generated/graphql";
 export const GenericAppointmentTile = ({
   date,
   type,
+  showTimezone = false,
 }: {
   date: string;
   type: AppointmentType;
+  showTimezone?: boolean;
 }) => {
   const now = useRef(new Date()).current;
   const timezoneOffset = useRef(-now.getTimezoneOffset()).current;
 
   const timezoneName = useMemo(() => {
+    if (!showTimezone) {
+      return null;
+    }
     const nowLocaleString = now.toLocaleDateString(undefined, {
       day: "2-digit",
       timeZoneName: "long",
@@ -27,13 +32,16 @@ export const GenericAppointmentTile = ({
       nowLocaleString.substring(3).charAt(0).toUpperCase() +
       nowLocaleString.substring(3).slice(1)
     );
-  }, [now]);
+  }, [now, showTimezone]);
 
   const formatedOffset = useMemo(() => {
+    if (!showTimezone) {
+      return null;
+    }
     const dateAtMidnight = now.setHours(0, 0, 0, 0);
     const dateWithAddedOffset = addMinutes(dateAtMidnight, timezoneOffset);
     return format(dateWithAddedOffset, "HH:mm");
-  }, [now, timezoneOffset]);
+  }, [now, timezoneOffset, showTimezone]);
 
   return (
     <Tile
@@ -51,7 +59,11 @@ export const GenericAppointmentTile = ({
         </Tag>
       }
       title={`${formatIso8601Date(date)} - ${formatIso8601Time(date)}`}
-      desc={`(GMT${timezoneOffset > 0 ? "+" : ""}${formatedOffset}) ${timezoneName}`}
+      desc={
+        showTimezone
+          ? `(GMT${timezoneOffset > 0 ? "+" : ""}${formatedOffset}) ${timezoneName}`
+          : ""
+      }
     />
   );
 };
