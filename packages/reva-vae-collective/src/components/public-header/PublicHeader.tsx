@@ -1,6 +1,6 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 
-export const DefaultHeader = () => (
+export const PublicHeader = () => (
   <DsfrHeader
     brandTop={
       <>

@@ -1,4 +1,4 @@
-import { ProjectHeader } from "./_components/ProjectHeader";
+import { PrivateHeader } from "./_components/PrivateHeader";
 
 export default function RootLayout({
   children,
@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <ProjectHeader />
+      <PrivateHeader />
       <main role="main" id="content" className="flex flex-col flex-1">
         <div>
           <div

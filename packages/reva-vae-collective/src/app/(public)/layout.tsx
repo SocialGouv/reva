@@ -1,4 +1,4 @@
-import { DefaultHeader } from "@/components/default-header/DefaultHeader";
+import { PublicHeader } from "@/components/public-header/PublicHeader";
 
 export default function RootLayout({
   children,
@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <DefaultHeader />
+      <PublicHeader />
       <main role="main" id="content" className="flex flex-col flex-1">
         <div>
           <div

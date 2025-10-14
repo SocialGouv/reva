@@ -31,7 +31,7 @@ const createTab = ({
   isActive,
 });
 
-export const ProjectHeaderClient = ({
+export const PrivateHeaderClient = ({
   isMetabaseDashboardActive,
 }: {
   isMetabaseDashboardActive: boolean;
