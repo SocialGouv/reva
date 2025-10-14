@@ -4,6 +4,8 @@ import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useParams, usePathname } from "next/navigation";
 import { ComponentProps } from "react";
 
+import { useActiveFeatures } from "@/hooks/useActiveFeatures";
+
 import { useKeycloakContext } from "../auth/keycloakContext";
 
 const PATHS = {
@@ -32,18 +34,21 @@ const createTab = ({
   isActive,
 });
 
-interface HeaderProps {
-  isMetabaseDashboardActive?: boolean;
-}
-
-export const Header = ({ isMetabaseDashboardActive }: HeaderProps) => {
+export const Header = () => {
+  const { isFeatureActive } = useActiveFeatures();
+  const isMetabaseDashboardActive = isFeatureActive(
+    "SHOW_METABASE_DASHBOARD_VAE_COLLECTIVE",
+  );
   const { logout, authenticated } = useKeycloakContext();
 
   const currentPathname = usePathname();
   const { commanditaireId } = useParams();
+  const isCommanditairePath = currentPathname.startsWith(
+    `/commanditaires/${commanditaireId}`,
+  );
 
   const navigation =
-    authenticated && isMetabaseDashboardActive
+    authenticated && isMetabaseDashboardActive && isCommanditairePath
       ? [
           createTab({
             text: LABELS.COHORTES,
