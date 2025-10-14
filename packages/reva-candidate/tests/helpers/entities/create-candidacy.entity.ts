@@ -1,16 +1,34 @@
-import { ExperienceDuration } from "@/constants/experience-duration.constant";
-
 import {
   Candidacy,
   CandidacyStatusStep,
-  Candidate,
   Certification,
+  DossierDeValidation,
+  Jury,
   JuryResult,
   Organism,
 } from "@/graphql/generated/graphql";
 
-type CandidacyType = Partial<Candidacy>;
+import type { CandidateEntity } from "./create-candidate.entity";
+import type { FeasibilityEntity } from "./create-feasibility.entity";
 
+// Allow partials for heavy nested fields
+// But make "id" and "appointments" fields required to avoid undefined checks in tests
+export type CandidacyEntity = Partial<
+  Omit<
+    Candidacy,
+    "candidate" | "jury" | "feasibility" | "activeDossierDeValidation"
+  >
+> & {
+  candidate?: CandidateEntity | null;
+  jury?: Partial<Jury> | null;
+  feasibility?: FeasibilityEntity | null;
+  activeDossierDeValidation?: Partial<DossierDeValidation> | null;
+  id: Candidacy["id"];
+  appointments: Candidacy["appointments"];
+};
+
+// Required fields (id, appointments) aren't required in options
+// Then make the "appointments" default value overridable
 type CreateCandidacyEntityOptions = {
   status?: CandidacyStatusStep;
   readyForJuryEstimatedAt?: Date;
@@ -20,8 +38,8 @@ type CreateCandidacyEntityOptions = {
   candidacyAlreadySubmitted?: boolean;
   organism?: Organism;
   certification?: Certification;
-  candidate?: Candidate;
-} & Partial<Candidacy>;
+  appointments?: Candidacy["appointments"];
+} & Omit<CandidacyEntity, "id" | "appointments">;
 
 export const createCandidacyEntity = (
   options: CreateCandidacyEntityOptions,
@@ -43,7 +61,7 @@ export const createCandidacyEntity = (
     appointments,
   } = options;
 
-  const candidacy: CandidacyType = {
+  const candidacy: CandidacyEntity = {
     id: "1",
     typeAccompagnement: typeAccompagnement || "AUTONOME",
     status: status || "PROJET",
@@ -83,7 +101,7 @@ export const createCandidacyEntity = (
   };
 
   if (organism) {
-    candidacy.organism = organism as NonNullable<CandidacyType["organism"]>;
+    candidacy.organism = organism;
     candidacy.typeAccompagnement = "ACCOMPAGNE";
   }
 
@@ -94,7 +112,7 @@ export const createCandidacyEntity = (
       dateOfSession: Date.now(),
       timeOfSession: null,
       timeSpecified: null,
-    } as NonNullable<CandidacyType["jury"]>;
+    };
   }
 
   if (typeof goalsCount === "number") {
@@ -104,7 +122,7 @@ export const createCandidacyEntity = (
       label: `Goal ${i + 1}`,
       needsAdditionalInformation: false,
       order: i + 1,
-    })) as NonNullable<CandidacyType["goals"]>;
+    }));
   }
 
   if (typeof experiencesCount === "number") {
@@ -112,11 +130,11 @@ export const createCandidacyEntity = (
       (_, i) => ({
         id: `exp-${i + 1}`,
         description: `Experience ${i + 1}`,
-        duration: "lessThanOneYear" as ExperienceDuration,
+        duration: "lessThanOneYear",
         startedAt: new Date().getTime(),
         title: `Experience ${i + 1}`,
       }),
-    ) as NonNullable<CandidacyType["experiences"]>;
+    );
   }
 
   if (candidacyAlreadySubmitted) {

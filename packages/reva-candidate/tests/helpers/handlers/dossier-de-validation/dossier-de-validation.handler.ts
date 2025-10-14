@@ -2,6 +2,7 @@ import { graphql, Page } from "next/experimental/testmode/playwright/msw";
 
 import readyForJuryMutation from "@tests/fixtures/candidate/dossier-de-validation/ready-for-jury-mutation.json";
 import { graphQLResolver } from "@tests/helpers/network/msw";
+import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
 import { Candidacy } from "@/graphql/generated/graphql";
@@ -18,7 +19,7 @@ export async function clickDossierTab(page: Page) {
 }
 
 interface DashboardHandlersOptions {
-  candidacy: Partial<Candidacy>;
+  candidacy: CandidacyEntity;
   activeFeaturesForConnectedUser?: string[];
 }
 

@@ -1,12 +1,13 @@
 import { graphql, Page } from "next/experimental/testmode/playwright/msw";
 
 import { graphQLResolver } from "@tests/helpers/network/msw";
+import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
 import { Candidacy } from "@/graphql/generated/graphql";
 
 interface EndAccompagnementHandlersOptions {
-  candidacy: Partial<Candidacy>;
+  candidacy: CandidacyEntity;
   activeFeaturesForConnectedUser?: string[];
 }
 

@@ -46,7 +46,7 @@ const createCandidacyWithAppointments = () => {
         totalPages: 1,
       },
     },
-  }) as Candidacy;
+  });
 
   return candidacy;
 };

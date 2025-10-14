@@ -10,12 +10,7 @@ import { createOrganismEntity } from "@tests/helpers/entities/create-organism.en
 import { endAccompagnementHandlers } from "@tests/helpers/handlers/end-accompagnement.handler";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import {
-  Candidacy,
-  Candidate,
-  Feasibility,
-  Organism,
-} from "@/graphql/generated/graphql";
+import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 
 const loginAndWait = async ({
   page,
@@ -23,7 +18,7 @@ const loginAndWait = async ({
   endAccompagnementWait,
 }: {
   page: Page;
-  candidacy: Candidacy;
+  candidacy: CandidacyEntity;
   endAccompagnementWait: (page: Page) => Promise<void>;
 }) => {
   await login(page);
@@ -43,8 +38,8 @@ test.describe("End Accompagnement Page", () => {
     const organism = createOrganismEntity({
       modaliteAccompagnement: "LIEU_ACCUEIL",
       label: "Mon Organisme Test",
-    }) as Organism;
-    const candidate = createCandidateEntity() as Candidate;
+    });
+    const candidate = createCandidateEntity();
     const certification = createCertificationEntity({
       codeRncp: "RNCP1234",
       label: "Test Certification Label",
@@ -55,9 +50,9 @@ test.describe("End Accompagnement Page", () => {
       certification,
       organism,
       typeAccompagnement: "ACCOMPAGNE",
-      feasibility: feasibility as Feasibility,
+      feasibility,
       endAccompagnementStatus: "PENDING",
-    }) as Candidacy;
+    });
 
     const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
       candidacy,
@@ -133,14 +128,14 @@ test.describe("End Accompagnement Page", () => {
   test.describe("Page Display with A_DISTANCE badge", () => {
     const organism = createOrganismEntity({
       modaliteAccompagnement: "A_DISTANCE",
-    }) as Organism;
-    const candidate = createCandidateEntity() as Candidate;
+    });
+    const candidate = createCandidateEntity();
     const candidacy = createCandidacyEntity({
       candidate,
       organism,
       typeAccompagnement: "ACCOMPAGNE",
       endAccompagnementStatus: "PENDING",
-    }) as Candidacy;
+    });
 
     const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
       candidacy,
@@ -160,14 +155,14 @@ test.describe("End Accompagnement Page", () => {
   });
 
   test.describe("Form Validation", () => {
-    const organism = createOrganismEntity() as Organism;
-    const candidate = createCandidateEntity() as Candidate;
+    const organism = createOrganismEntity();
+    const candidate = createCandidateEntity();
     const candidacy = createCandidacyEntity({
       candidate,
       organism,
       typeAccompagnement: "ACCOMPAGNE",
       endAccompagnementStatus: "PENDING",
-    }) as Candidacy;
+    });
 
     const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
       candidacy,
@@ -205,14 +200,14 @@ test.describe("End Accompagnement Page", () => {
   });
 
   test.describe("Form Submission - CONFIRMED", () => {
-    const organism = createOrganismEntity() as Organism;
-    const candidate = createCandidateEntity() as Candidate;
+    const organism = createOrganismEntity();
+    const candidate = createCandidateEntity();
     const candidacy = createCandidacyEntity({
       candidate,
       organism,
       typeAccompagnement: "ACCOMPAGNE",
       endAccompagnementStatus: "PENDING",
-    }) as Candidacy;
+    });
 
     const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
       candidacy,
@@ -247,14 +242,14 @@ test.describe("End Accompagnement Page", () => {
   });
 
   test.describe("Form Submission - REFUSED", () => {
-    const organism = createOrganismEntity() as Organism;
-    const candidate = createCandidateEntity() as Candidate;
+    const organism = createOrganismEntity();
+    const candidate = createCandidateEntity();
     const candidacy = createCandidacyEntity({
       candidate,
       organism,
       typeAccompagnement: "ACCOMPAGNE",
       endAccompagnementStatus: "PENDING",
-    }) as Candidacy;
+    });
 
     const { handlers, endAccompagnementWait } = endAccompagnementHandlers({
       candidacy,
