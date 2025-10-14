@@ -50,6 +50,11 @@ export const ViewAppointmentPage = ({
   };
   candidacyId: string;
 }) => {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const tzOffset = new Date().getTimezoneOffset() / 60;
+
+  const timeZoneInfo = `(GMT${tzOffset <= 0 ? "+" : "-"}${Math.abs(tzOffset)}) ${tz}`;
+
   return (
     <div className="flex flex-col w-full" data-test="view-appointments-page">
       <h1>{appointment.title}</h1>
@@ -72,6 +77,7 @@ export const ViewAppointmentPage = ({
             small
             orientation="horizontal"
             title={`${formatIso8601Date(appointment.date)} - ${formatIso8601Time(appointment.date)}`}
+            desc={timeZoneInfo}
           />
         </div>
         <GridRow
