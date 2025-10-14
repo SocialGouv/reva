@@ -2,7 +2,7 @@ import {
   defaultSecurity,
   isAdminOrCandidacyCompanion,
   isAdminOrCertificationAuthority,
-  isOwnerOfCandidacy,
+  isAdminOrOwnerOfCandidacy,
   isOwnerOrCanManageCandidacy,
 } from "@/modules/shared/security/presets";
 
@@ -41,7 +41,7 @@ export const resolversSecurityMap = {
     isAdminOrCertificationAuthority,
 
   "Mutation.dematerialized_feasibility_file_confirmCandidate":
-    isOwnerOfCandidacy,
+    isAdminOrOwnerOfCandidacy,
 
   "Mutation.dematerialized_feasibility_file_createOrUpdateEligibilityRequirement":
     isAdminOrCandidacyCompanion,
