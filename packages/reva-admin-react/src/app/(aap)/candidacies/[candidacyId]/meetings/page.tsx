@@ -179,7 +179,8 @@ const MeetingsPage = () => {
       } else {
         await createCandidacyFirstAppointmentInformations.mutateAsync({
           candidacyId,
-          firstAppointmentOccuredAt: data.firstAppointmentOccuredAt,
+          firstAppointmentOccuredAt:
+            data.firstAppointmentOccuredAt + "T14:00:00Z",
         });
       }
       queryClient.invalidateQueries({ queryKey: [candidacyId] });
