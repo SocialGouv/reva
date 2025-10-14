@@ -74,6 +74,7 @@ const confirmRegistration = async ({
       lastname: candidateInput.lastname,
     },
     process.env.KEYCLOAK_APP_REALM as string,
+    ["candidate"],
   );
 
   const candidate = await createCandidateWithCandidacy({
