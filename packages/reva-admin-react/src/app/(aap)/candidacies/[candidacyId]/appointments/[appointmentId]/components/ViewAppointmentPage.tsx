@@ -50,19 +50,9 @@ export const ViewAppointmentPage = ({
   };
   candidacyId: string;
 }) => {
-  let description = "";
-
-  switch (appointment?.type) {
-    case "RENDEZ_VOUS_PEDAGOGIQUE":
-      description =
-        "Le rendez-vous pédagogique est le début des interactions avec le candidat.";
-      break;
-  }
-
   return (
     <div className="flex flex-col w-full" data-test="view-appointments-page">
       <h1>{appointment.title}</h1>
-      <p className="text-xl mb-12">{description}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr]">
         <div className="mb-8 mr-4">
