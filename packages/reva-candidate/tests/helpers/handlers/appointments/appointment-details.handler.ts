@@ -3,27 +3,28 @@ import { graphql, Page } from "next/experimental/testmode/playwright/msw";
 import { graphQLResolver } from "@tests/helpers/network/msw";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { Candidacy } from "@/graphql/generated/graphql";
+import { Appointment, Candidacy } from "@/graphql/generated/graphql";
 
-export async function navigateToAppointmentListPage(
+export async function navigateToAppointmentDetailsPage(
   page: Page,
   candidacyId: string,
+  appointmentId: string,
 ) {
-  await page.goto(`${candidacyId}/appointments/`);
+  await page.goto(`${candidacyId}/appointments/${appointmentId}/`);
 }
 
-interface DashboardHandlersOptions {
+interface AppointmentDetailsHandlersOptions {
   candidacy: Partial<Candidacy>;
+  appointment: Partial<Appointment>;
   activeFeaturesForConnectedUser?: string[];
-  hasPastAppointments?: boolean;
 }
 
-const appointmentListWait = async (page: Page) => {
+const appointmentDetailsWait = async (page: Page) => {
   const featuresQuery = waitGraphQL(page, "activeFeaturesForConnectedUser");
 
-  const pastAppointmentsQuery = waitGraphQL(page, "getPastAppointments");
+  const pastAppointmentsQuery = waitGraphQL(page, "getOrganism");
 
-  const futureAppointmentsQuery = waitGraphQL(page, "getFutureAppointments");
+  const futureAppointmentsQuery = waitGraphQL(page, "getAppointmentDetails");
 
   await Promise.all([
     featuresQuery,
@@ -32,24 +33,19 @@ const appointmentListWait = async (page: Page) => {
   ]);
 };
 
-export const appointmentListHandlers = ({
+export const appointmentDetailsHandlers = ({
   candidacy,
+  appointment,
   activeFeaturesForConnectedUser = [],
-  hasPastAppointments = true,
-}: DashboardHandlersOptions) => {
+}: AppointmentDetailsHandlersOptions) => {
   const fvae = graphql.link("https://reva-api/api/graphql");
-
-  const candidacyWithoutPastAppointments = structuredClone(candidacy);
-  if (candidacyWithoutPastAppointments.appointments) {
-    candidacyWithoutPastAppointments.appointments.rows = [];
-  }
 
   const candidacyInput = {
     getCandidacyById: candidacy,
   };
 
-  const candidacyInputWithoutPastAppointments = {
-    getCandidacyById: candidacyWithoutPastAppointments,
+  const appointmentInput = {
+    appointment_getAppointmentById: appointment,
   };
 
   return {
@@ -74,15 +70,8 @@ export const appointmentListHandlers = ({
         "getCandidacyByIdWithCandidateForHeader",
         graphQLResolver(candidacyInput),
       ),
-      fvae.query("getFutureAppointments", graphQLResolver(candidacyInput)),
-      fvae.query(
-        "getPastAppointments",
-        graphQLResolver(
-          hasPastAppointments
-            ? candidacyInput
-            : candidacyInputWithoutPastAppointments,
-        ),
-      ),
+      fvae.query("getOrganism", graphQLResolver(candidacyInput)),
+      fvae.query("getAppointmentDetails", graphQLResolver(appointmentInput)),
       fvae.query(
         "activeFeaturesForConnectedUser",
         graphQLResolver({
@@ -90,6 +79,6 @@ export const appointmentListHandlers = ({
         }),
       ),
     ],
-    appointmentListWait,
+    appointmentDetailsWait,
   };
 };

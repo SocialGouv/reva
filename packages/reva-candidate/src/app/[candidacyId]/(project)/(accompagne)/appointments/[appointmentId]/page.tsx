@@ -38,7 +38,7 @@ const AppointmentDetailPage = () => {
         ]}
       />
       <div className="flex flex-col w-full gap-12">
-        <h1 className="mb-0">Mes prochains rendez-vous</h1>
+        <h1 className="mb-0">{appointment.title}</h1>
         <div className="flex flex-col gap-6">
           <div className="flex max-w-96">
             <GenericAppointmentTile
@@ -50,14 +50,20 @@ const AppointmentDetailPage = () => {
             <table className="w-full">
               <tr className="border-b">
                 <td className="w-1/3 py-4">Programmé par :</td>
-                <td className="w-2/3 font-bold py-4">
+                <td
+                  className="w-2/3 font-bold py-4"
+                  data-test="appointment-organized-by"
+                >
                   {organism?.nomPublic || organism?.label}
                 </td>
               </tr>
               {appointment.duration && (
                 <tr className="border-b">
                   <td className="w-1/3 py-4">Durée : </td>
-                  <td className="w-2/3 font-bold py-4">
+                  <td
+                    className="w-2/3 font-bold py-4"
+                    data-test="appointment-duration"
+                  >
                     {durationMap[appointment.duration]}
                   </td>
                 </tr>
@@ -65,7 +71,10 @@ const AppointmentDetailPage = () => {
               {appointment.location && (
                 <tr className="border-b ">
                   <td className="w-1/3 py-4">Lieu : </td>
-                  <td className="w-2/3 font-bold py-4">
+                  <td
+                    className="w-2/3 font-bold py-4"
+                    data-test="appointment-location"
+                  >
                     {appointment.location}
                   </td>
                 </tr>
@@ -73,7 +82,10 @@ const AppointmentDetailPage = () => {
               {appointment.description && (
                 <tr className="border-b ">
                   <td className="w-1/3 py-4">Description : </td>
-                  <td className="w-2/3 font-bold py-4">
+                  <td
+                    className="w-2/3 font-bold py-4"
+                    data-test="appointment-description"
+                  >
                     {appointment.description}
                   </td>
                 </tr>
