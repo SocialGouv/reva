@@ -29,6 +29,12 @@ export default function UpdateOrViewAppointmentPage() {
       />
     );
   } else {
-    return <ViewAppointmentPage />;
+    return (
+      <ViewAppointmentPage
+        appointment={appointment}
+        candidate={candidate}
+        candidacyId={candidacyId}
+      />
+    );
   }
 }
