@@ -4,7 +4,7 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
-import { BackButton } from "../../_components/back-button/BackButton";
+import { BackButton } from "../back-button/BackButton";
 
 import { SelectCertificationButton } from "./select-certification-button/SelectCertificationButton";
 import { JuryTab } from "./tabs/JuryTab";

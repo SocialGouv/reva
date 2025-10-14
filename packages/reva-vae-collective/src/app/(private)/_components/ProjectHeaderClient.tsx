@@ -1,12 +1,9 @@
 "use client";
-
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useParams, usePathname } from "next/navigation";
 import { ComponentProps } from "react";
 
-import { useActiveFeatures } from "@/hooks/useActiveFeatures";
-
-import { useKeycloakContext } from "../auth/keycloakContext";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 const PATHS = {
   COHORTES: "/cohortes",
@@ -34,11 +31,11 @@ const createTab = ({
   isActive,
 });
 
-export const Header = () => {
-  const { isFeatureActive } = useActiveFeatures();
-  const isMetabaseDashboardActive = isFeatureActive(
-    "SHOW_METABASE_DASHBOARD_VAE_COLLECTIVE",
-  );
+export const ProjectHeaderClient = ({
+  isMetabaseDashboardActive,
+}: {
+  isMetabaseDashboardActive: boolean;
+}) => {
   const { logout, authenticated } = useKeycloakContext();
 
   const currentPathname = usePathname();
