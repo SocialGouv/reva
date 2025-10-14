@@ -6,7 +6,7 @@ import { graphql } from "@/graphql/generated";
 import { UpdateAppointmentInput } from "@/graphql/generated/graphql";
 
 const getCandidacyAndAppointmentQuery = graphql(`
-  query getCandidacyAndAppointmentForUpdateAppointmentPage(
+  query getCandidacyAndAppointmentForUpdateOrViewAppointmentPage(
     $candidacyId: ID!
     $appointmentId: ID!
   ) {
@@ -29,12 +29,13 @@ const getCandidacyAndAppointmentQuery = graphql(`
       date
       duration
       location
+      temporalStatus
     }
   }
 `);
 
 const updateAppointmentMutation = graphql(`
-  mutation updateAppointmentForUpdateAppointmentPage(
+  mutation updateAppointmentForUpdateOrViewAppointmentPage(
     $input: UpdateAppointmentInput!
   ) {
     appointment_updateAppointment(input: $input) {
@@ -43,7 +44,7 @@ const updateAppointmentMutation = graphql(`
   }
 `);
 
-export const useUpdateAppointmentPage = ({
+export const useUpdateOrViewAppointmentPage = ({
   candidacyId,
   appointmentId,
 }: {
@@ -57,7 +58,7 @@ export const useUpdateAppointmentPage = ({
     queryKey: [
       candidacyId,
       appointmentId,
-      "getCandidacyAndAppointmentForUpdateAppointmentPage",
+      "getCandidacyAndAppointmentForUpdateOrViewAppointmentPage",
     ],
     queryFn: () =>
       graphqlClient.request(getCandidacyAndAppointmentQuery, {
@@ -76,7 +77,7 @@ export const useUpdateAppointmentPage = ({
         queryKey: [
           candidacyId,
           appointmentId,
-          "getCandidacyAndAppointmentForUpdateAppointmentPage",
+          "getCandidacyAndAppointmentForUpdateOrViewAppointmentPage",
         ],
       });
     },

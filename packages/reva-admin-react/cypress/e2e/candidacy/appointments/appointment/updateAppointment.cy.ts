@@ -23,7 +23,7 @@ function interceptQueries() {
       data: { candidacy_canAccessCandidacy: true },
     });
 
-    stubQuery(req, "getCandidacyAndAppointmentForUpdateAppointmentPage", {
+    stubQuery(req, "getCandidacyAndAppointmentForUpdateOrViewAppointmentPage", {
       data: {
         getCandidacyById: {
           id: "fb451fbc-3218-416d-9ac9-65b13432469f",
@@ -41,6 +41,7 @@ function interceptQueries() {
           duration: "ONE_HOUR",
           location: "Test Location",
           description: "Test Description",
+          temporalStatus: "UPCOMING",
         },
       },
     });
@@ -62,7 +63,7 @@ function waitForQueries() {
   cy.wait("@candidacy_canAccessCandidacy");
   cy.wait("@getAccountInfo");
   cy.wait("@getCandidacyMenuAndCandidateInfos");
-  cy.wait("@getCandidacyAndAppointmentForUpdateAppointmentPage");
+  cy.wait("@getCandidacyAndAppointmentForUpdateOrViewAppointmentPage");
 }
 
 context("when I access the candidacy add appointment page", () => {
