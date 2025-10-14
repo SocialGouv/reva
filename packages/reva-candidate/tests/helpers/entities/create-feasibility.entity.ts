@@ -1,8 +1,14 @@
-import { Feasibility } from "@/graphql/generated/graphql";
+import { DematerializedFeasibilityFile, Feasibility } from "@/graphql/generated/graphql";
+
+export type FeasibilityEntity = Partial<
+  Omit<Feasibility, "dematerializedFeasibilityFile">
+> & {
+  dematerializedFeasibilityFile?: Partial<DematerializedFeasibilityFile> | null;
+};
 
 export const createFeasibilityEntity = (
-  options?: Partial<Feasibility>,
-): Partial<Feasibility> => {
+  options?: FeasibilityEntity,
+): FeasibilityEntity => {
   const {
     decision,
     feasibilityFormat,
@@ -19,6 +25,6 @@ export const createFeasibilityEntity = (
     decisionSentAt: decisionSentAt || null,
     feasibilityFileSentAt: feasibilityFileSentAt || null,
     history: history || [],
-    dematerializedFeasibilityFile: dematerializedFeasibilityFile || null,
+    dematerializedFeasibilityFile: dematerializedFeasibilityFile ?? null,
   };
 };

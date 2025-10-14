@@ -1,7 +1,7 @@
 import { Organism } from "@/graphql/generated/graphql";
 
-export const createOrganismEntity = (options: Partial<Organism> = {}) => {
-  const organism: Partial<Organism> = {
+export const createOrganismEntity = (options: Partial<Organism> = {}): Organism => {
+  const organism: Organism = {
     id: options.id || "org-1",
     label: options.label || "Org Label",
     contactAdministrativeEmail:

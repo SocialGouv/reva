@@ -3,7 +3,7 @@ import { Certification } from "@/graphql/generated/graphql";
 export const createCertificationEntity = (
   options: Partial<Certification> = {},
 ) => {
-  const certification: NonNullable<Certification> = {
+  const certification: Certification = {
     id: options.id || "cert-1",
     label: options.label || "Certification Label",
     codeRncp: options.codeRncp || "RNCP0000",

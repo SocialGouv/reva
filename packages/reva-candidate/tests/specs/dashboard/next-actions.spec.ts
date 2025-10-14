@@ -10,31 +10,22 @@ import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibil
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 
-import {
-  Candidate,
-  Candidacy,
-  DematerializedFeasibilityFile,
-  DossierDeValidation,
-  Feasibility,
-  JuryResult,
-  Organism,
-  TypeAccompagnement,
-} from "@/graphql/generated/graphql";
+import { JuryResult, TypeAccompagnement } from "@/graphql/generated/graphql";
 
 const FEATURE_FLAG = ["CANDIDATE_NEXT_ACTIONS"];
 
 // Candidacy
 const createCandidacyWithGoals = (goalsCount: number) => {
   const certification = createCertificationEntity();
-  const organism = createOrganismEntity() as Organism;
-  const candidate = createCandidateEntity() as Candidate;
+  const organism = createOrganismEntity();
+  const candidate = createCandidateEntity();
   const candidacy = createCandidacyEntity({
     candidate,
     status: "PROJET",
     certification,
     organism,
     goalsCount,
-  }) as Candidacy;
+  });
   return candidacy;
 };
 
@@ -43,8 +34,8 @@ const createCandidacyWithGoalsAndExperiences = (
   experiencesCount: number,
 ) => {
   const certification = createCertificationEntity();
-  const organism = createOrganismEntity() as Organism;
-  const candidate = createCandidateEntity() as Candidate;
+  const organism = createOrganismEntity();
+  const candidate = createCandidateEntity();
   const candidacy = createCandidacyEntity({
     candidate,
     status: "PROJET",
@@ -52,7 +43,7 @@ const createCandidacyWithGoalsAndExperiences = (
     organism,
     goalsCount,
     experiencesCount,
-  }) as Candidacy;
+  });
   return candidacy;
 };
 
@@ -103,7 +94,7 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Choisir mon accompagnateur", () => {
-      const candidate = createCandidateEntity() as Candidate;
+      const candidate = createCandidateEntity();
       const candidacy = createCandidacyEntity({
         candidate,
         status: "PROJET",
@@ -111,7 +102,7 @@ test.describe("Next actions tiles", () => {
         goalsCount: 1,
         experiencesCount: 1,
         typeAccompagnement: "ACCOMPAGNE",
-      }) as Candidacy;
+      });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
         activeFeaturesForConnectedUser: FEATURE_FLAG,
@@ -132,8 +123,8 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Envoyer ma candidature", () => {
-      const organism = createOrganismEntity() as Organism;
-      const candidate = createCandidateEntity() as Candidate;
+      const organism = createOrganismEntity();
+      const candidate = createCandidateEntity();
 
       const candidacy = createCandidacyEntity({
         candidate,
@@ -142,7 +133,7 @@ test.describe("Next actions tiles", () => {
         goalsCount: 1,
         experiencesCount: 1,
         organism,
-      }) as Candidacy;
+      });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
         activeFeaturesForConnectedUser: FEATURE_FLAG,
@@ -172,8 +163,8 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Valider mon parcours et financement", () => {
-      const organism = createOrganismEntity() as Organism;
-      const candidate = createCandidateEntity() as Candidate;
+      const organism = createOrganismEntity();
+      const candidate = createCandidateEntity();
 
       const candidacy = createCandidacyEntity({
         candidate,
@@ -182,7 +173,7 @@ test.describe("Next actions tiles", () => {
         goalsCount: 1,
         experiencesCount: 1,
         organism,
-      }) as Candidacy;
+      });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
         activeFeaturesForConnectedUser: FEATURE_FLAG,
@@ -208,17 +199,15 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Valider mon dossier de faisabilité", () => {
-      const dematerializedFeasibilityFile =
-        createDematerializedFeasibilityFileEntity({
+      const dematerializedFeasibilityFile = createDematerializedFeasibilityFileEntity({
           sentToCandidateAt: new Date().getTime(),
         });
       const feasibility = createFeasibilityEntity({
-        dematerializedFeasibilityFile:
-          dematerializedFeasibilityFile as DematerializedFeasibilityFile,
+        dematerializedFeasibilityFile,
         feasibilityFileSentAt: new Date().getTime(),
       });
-      const organism = createOrganismEntity() as Organism;
-      const candidate = createCandidateEntity() as Candidate;
+      const organism = createOrganismEntity();
+      const candidate = createCandidateEntity();
 
       const candidacy = createCandidacyEntity({
         candidate,
@@ -228,8 +217,8 @@ test.describe("Next actions tiles", () => {
         experiencesCount: 1,
         organism,
         candidacyAlreadySubmitted: true,
-        feasibility: feasibility as Feasibility,
-      }) as Candidacy;
+        feasibility,
+      });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
         activeFeaturesForConnectedUser: FEATURE_FLAG,
@@ -255,18 +244,16 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Envoyer votre attestation", () => {
-      const dematerializedFeasibilityFile =
-        createDematerializedFeasibilityFileEntity({
+      const dematerializedFeasibilityFile = createDematerializedFeasibilityFileEntity({
           sentToCandidateAt: new Date().getTime(),
           candidateConfirmationAt: new Date().getTime(),
         });
       const feasibility = createFeasibilityEntity({
-        dematerializedFeasibilityFile:
-          dematerializedFeasibilityFile as DematerializedFeasibilityFile,
+        dematerializedFeasibilityFile,
         feasibilityFileSentAt: new Date().getTime(),
       });
-      const organism = createOrganismEntity() as Organism;
-      const candidate = createCandidateEntity() as Candidate;
+      const organism = createOrganismEntity();
+      const candidate = createCandidateEntity();
       const candidacy = createCandidacyEntity({
         candidate,
         status: "PARCOURS_CONFIRME",
@@ -275,8 +262,8 @@ test.describe("Next actions tiles", () => {
         experiencesCount: 1,
         organism,
         candidacyAlreadySubmitted: true,
-        feasibility: feasibility as Feasibility,
-      }) as Candidacy;
+        feasibility,
+      });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
         activeFeaturesForConnectedUser: FEATURE_FLAG,
@@ -306,13 +293,13 @@ test.describe("Next actions tiles", () => {
 
   test.describe("AUTONOME", () => {
     test.describe("Envoyer mon dossier de faisabilité", () => {
-      const candidate = createCandidateEntity() as Candidate;
+      const candidate = createCandidateEntity();
       const candidacy = createCandidacyEntity({
         candidate,
         status: "PROJET",
         certification: createCertificationEntity(),
         feasibility: null,
-      }) as Candidacy;
+      });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
         activeFeaturesForConnectedUser: FEATURE_FLAG,
@@ -347,8 +334,8 @@ test.describe("Next actions tiles", () => {
             decision: "ADMISSIBLE",
             feasibilityFileSentAt: new Date().getTime(),
           });
-          const organism = createOrganismEntity() as Organism;
-          const candidate = createCandidateEntity() as Candidate;
+          const organism = createOrganismEntity();
+          const candidate = createCandidateEntity();
 
           const candidacy = createCandidacyEntity({
             candidate,
@@ -358,8 +345,8 @@ test.describe("Next actions tiles", () => {
             experiencesCount: 1,
             typeAccompagnement,
             organism: typeAccompagnement === "AUTONOME" ? undefined : organism,
-            feasibility: feasibility as Feasibility,
-          }) as Candidacy;
+            feasibility,
+          });
           const { handlers, dashboardWait } = dashboardHandlers({
             candidacy,
             activeFeaturesForConnectedUser: FEATURE_FLAG,
@@ -416,18 +403,17 @@ test.describe("Next actions tiles", () => {
             decision: "ADMISSIBLE",
             feasibilityFileSentAt: new Date().getTime(),
           });
-          const candidate = createCandidateEntity() as Candidate;
+          const candidate = createCandidateEntity();
 
           const candidacy = createCandidacyEntity({
             candidate,
-            feasibility: feasibility as Feasibility,
-            activeDossierDeValidation:
-              activeDossierDeValidation as DossierDeValidation,
+            feasibility,
+            activeDossierDeValidation,
             juryResult:
               scenario.label === "after failed jury"
                 ? scenario.juryResult
                 : undefined,
-          }) as Candidacy;
+          });
           const { handlers, dashboardWait } = dashboardHandlers({
             candidacy,
             activeFeaturesForConnectedUser: FEATURE_FLAG,
@@ -459,11 +445,11 @@ test.describe("Next actions tiles", () => {
         decision: "PENDING",
         feasibilityFileSentAt: new Date().getTime(),
       });
-      const candidate = createCandidateEntity() as Candidate;
+      const candidate = createCandidateEntity();
       const candidacy = createCandidacyEntity({
         candidate,
-        feasibility: feasibility as Feasibility,
-      }) as Candidacy;
+        feasibility,
+      });
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
         activeFeaturesForConnectedUser: FEATURE_FLAG,

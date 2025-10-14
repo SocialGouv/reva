@@ -19,13 +19,7 @@ import {
 } from "@tests/helpers/handlers/dossier-de-validation/upload";
 import { waitGraphQL, waitRest } from "@tests/helpers/network/requests";
 
-import {
-  Candidacy,
-  Candidate,
-  Feasibility,
-  Organism,
-  TypeAccompagnement,
-} from "@/graphql/generated/graphql";
+import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 const DATE_NOW = new Date();
 const ESTIMATED_DATE = addMonths(DATE_NOW, 10);
@@ -36,17 +30,15 @@ typesAccompagnement.forEach((typeAccompagnement) => {
     test.describe("Inactive dossier de validation", () => {
       const certification = createCertificationEntity();
       const organism =
-        typeAccompagnement === "ACCOMPAGNE"
-          ? (createOrganismEntity() as Organism)
-          : undefined;
-      const candidate = createCandidateEntity() as Candidate;
+        typeAccompagnement === "ACCOMPAGNE" ? createOrganismEntity() : undefined;
+      const candidate = createCandidateEntity();
       const candidacy = createCandidacyEntity({
         candidate,
         status: "PROJET",
         certification,
         organism,
         typeAccompagnement,
-      }) as Candidacy;
+      });
 
       const { handlers, dashboardWait } = dashboardHandlers({
         candidacy,
@@ -76,21 +68,21 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const certification = createCertificationEntity();
         const organism =
           typeAccompagnement === "ACCOMPAGNE"
-            ? (createOrganismEntity() as Organism)
+            ? createOrganismEntity()
             : undefined;
         const feasibility = createFeasibilityEntity({
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
-        const candidate = createCandidateEntity() as Candidate;
+        const candidate = createCandidateEntity();
         const candidacy = createCandidacyEntity({
           candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
-          feasibility: feasibility as Feasibility,
-        }) as Candidacy;
+          feasibility,
+        });
         const { handlers, dashboardWait } = dashboardHandlers({
           candidacy,
         });
@@ -121,22 +113,22 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const certification = createCertificationEntity();
         const organism =
           typeAccompagnement === "ACCOMPAGNE"
-            ? (createOrganismEntity() as Organism)
+            ? createOrganismEntity()
             : undefined;
         const feasibility = createFeasibilityEntity({
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
 
-        const candidate = createCandidateEntity() as Candidate;
+        const candidate = createCandidateEntity();
         const candidacy = createCandidacyEntity({
           candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
-          feasibility: feasibility as Feasibility,
-        }) as Candidacy;
+          feasibility,
+        });
         const { handlers, dossierDeValidationWait } =
           dossierDeValidationHandlers({
             candidacy,
@@ -177,21 +169,21 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const certification = createCertificationEntity();
         const organism =
           typeAccompagnement === "ACCOMPAGNE"
-            ? (createOrganismEntity() as Organism)
+            ? createOrganismEntity()
             : undefined;
         const feasibility = createFeasibilityEntity({
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
-        const candidate = createCandidateEntity() as Candidate;
+        const candidate = createCandidateEntity();
         const candidacy = createCandidacyEntity({
           candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
-          feasibility: feasibility as Feasibility,
-        }) as Candidacy;
+          feasibility,
+        });
         const { handlers, dossierDeValidationWait } =
           dossierDeValidationHandlers({
             candidacy,
@@ -243,21 +235,21 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const certification = createCertificationEntity();
         const organism =
           typeAccompagnement === "ACCOMPAGNE"
-            ? (createOrganismEntity() as Organism)
+            ? createOrganismEntity()
             : undefined;
         const feasibility = createFeasibilityEntity({
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
-        const candidate = createCandidateEntity() as Candidate;
+        const candidate = createCandidateEntity();
         const candidacy = createCandidacyEntity({
           candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
-          feasibility: feasibility as Feasibility,
-        }) as Candidacy;
+          feasibility,
+        });
         const { handlers, dossierDeValidationWait } =
           dossierDeValidationHandlers({
             candidacy,
@@ -305,21 +297,21 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const certification = createCertificationEntity();
         const organism =
           typeAccompagnement === "ACCOMPAGNE"
-            ? (createOrganismEntity() as Organism)
+            ? createOrganismEntity()
             : undefined;
         const feasibility = createFeasibilityEntity({
           decision: "ADMISSIBLE",
           feasibilityFileSentAt: new Date().getTime(),
         });
-        const candidate = createCandidateEntity() as Candidate;
+        const candidate = createCandidateEntity();
         const candidacy = createCandidacyEntity({
           candidate,
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certification,
           organism,
           typeAccompagnement,
-          feasibility: feasibility as Feasibility,
-        }) as Candidacy;
+          feasibility,
+        });
         const { handlers, dossierDeValidationWait } =
           dossierDeValidationHandlers({
             candidacy,
