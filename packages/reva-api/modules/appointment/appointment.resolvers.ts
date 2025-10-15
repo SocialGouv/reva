@@ -11,6 +11,7 @@ import {
   UpdateAppointmentInput,
 } from "./appointment.types";
 import { createAppointment } from "./features/createAppointment";
+import { deleteAppointmentById } from "./features/deleteAppointmentById";
 import { getAppointmentById } from "./features/getAppointmentById";
 import { getAppointmentsByCandidacyId } from "./features/getAppointmentsByCandidacyId";
 import { getAppointmentTemporalStatus } from "./features/getAppointmentTemporalStatus";
@@ -73,6 +74,19 @@ const unsafeResolvers = {
     ) =>
       updateAppointment({
         input,
+        userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
+    appointment_deleteAppointment: async (
+      _: unknown,
+      {
+        candidacyId,
+        appointmentId,
+      }: { candidacyId: string; appointmentId: string },
+      context: GraphqlContext,
+    ) =>
+      deleteAppointmentById({
+        candidacyId,
+        appointmentId,
         userInfo: buildAAPAuditLogUserInfoFromContext(context),
       }),
   },

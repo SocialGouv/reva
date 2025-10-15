@@ -1,5 +1,6 @@
 import { AppointmentType } from "@prisma/client";
 
+import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAppointmentHelper } from "@/test/helpers/entities/create-appointment-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -257,4 +258,64 @@ test("should not update an appointment when it is past", async () => {
       },
     }),
   ).rejects.toThrowError("Impossible de modifier un rendez-vous passé");
+});
+
+test("should delete an upcoming appointment", async () => {
+  const deleteAppointment = graphql(`
+    mutation deleteAppointment($candidacyId: ID!, $appointmentId: ID!) {
+      appointment_deleteAppointment(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const appointment = await createAppointmentHelper({
+    date: new Date("2225-08-12"),
+  });
+
+  const res = await graphqlClient.request(deleteAppointment, {
+    candidacyId: appointment.candidacyId,
+    appointmentId: appointment.id,
+  });
+
+  expect(res).toMatchObject({
+    appointment_deleteAppointment: {
+      id: appointment.id,
+    },
+  });
+
+  const deleteAppointmentInDatabase = await prismaClient.appointment.findUnique(
+    {
+      where: { id: appointment.id },
+    },
+  );
+
+  expect(deleteAppointmentInDatabase).toBeNull();
+});
+
+test("should not delete an appointment when it is past", async () => {
+  const deleteAppointment = graphql(`
+    mutation deleteAppointment($candidacyId: ID!, $appointmentId: ID!) {
+      appointment_deleteAppointment(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const appointment = await createAppointmentHelper({
+    date: new Date("1999-08-12"),
+  });
+
+  await expect(() =>
+    graphqlClient.request(deleteAppointment, {
+      candidacyId: appointment.candidacyId,
+      appointmentId: appointment.id,
+    }),
+  ).rejects.toThrowError("Impossible de supprimer un rendez-vous passé");
 });

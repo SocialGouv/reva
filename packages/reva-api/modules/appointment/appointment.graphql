@@ -79,4 +79,8 @@ type Query {
 type Mutation {
   appointment_createAppointment(input: CreateAppointmentInput!): Appointment!
   appointment_updateAppointment(input: UpdateAppointmentInput!): Appointment!
+  appointment_deleteAppointment(
+    candidacyId: ID!
+    appointmentId: ID!
+  ): Appointment!
 }
