@@ -1,9 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
-import { UpdateAppointmentInput } from "@/graphql/generated/graphql";
 
 const getCandidacyAndAppointmentQuery = graphql(`
   query getCandidacyAndAppointmentForUpdateOrViewAppointmentPage(
@@ -34,16 +33,6 @@ const getCandidacyAndAppointmentQuery = graphql(`
   }
 `);
 
-const updateAppointmentMutation = graphql(`
-  mutation updateAppointmentForUpdateOrViewAppointmentPage(
-    $input: UpdateAppointmentInput!
-  ) {
-    appointment_updateAppointment(input: $input) {
-      id
-    }
-  }
-`);
-
 export const useUpdateOrViewAppointmentPage = ({
   candidacyId,
   appointmentId,
@@ -52,7 +41,6 @@ export const useUpdateOrViewAppointmentPage = ({
   candidacyId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
-  const queryClient = useQueryClient();
 
   const { data: getCandidacyAndAppointmentData } = useQuery({
     queryKey: [
@@ -67,25 +55,9 @@ export const useUpdateOrViewAppointmentPage = ({
       }),
   });
 
-  const updateAppointment = useMutation({
-    mutationFn: (input: UpdateAppointmentInput) =>
-      graphqlClient.request(updateAppointmentMutation, {
-        input,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          candidacyId,
-          appointmentId,
-          "getCandidacyAndAppointmentForUpdateOrViewAppointmentPage",
-        ],
-      });
-    },
-  });
-
   const candidate = getCandidacyAndAppointmentData?.getCandidacyById?.candidate;
   const appointment =
     getCandidacyAndAppointmentData?.appointment_getAppointmentById;
 
-  return { candidate, appointment, updateAppointment };
+  return { candidate, appointment };
 };
