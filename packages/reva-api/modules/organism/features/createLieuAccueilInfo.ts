@@ -13,6 +13,7 @@ import { prismaClient } from "@/prisma/client";
 import { createOrganism } from "../database/organisms";
 import { CreateLieuAccueilInfoInput } from "../organism.types";
 
+import { assertNoDuplicateLieuAccueilAddress } from "./assertNoDuplicateLieuAccueilAddress";
 import { assignMaisonMereAAPToOrganism } from "./assignMaisonMereAAPToOrganism";
 import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
@@ -70,6 +71,12 @@ export const createLieuAccueilInfo = async ({
 
     const llToEarth = await getLLToEarthFromZip({
       zip: adresseCodePostal,
+    });
+
+    await assertNoDuplicateLieuAccueilAddress({
+      maisonMereAAPId: maisonMereAAP.id,
+      street: adresseNumeroEtNomDeRue,
+      city: adresseVille,
     });
 
     //organism creation

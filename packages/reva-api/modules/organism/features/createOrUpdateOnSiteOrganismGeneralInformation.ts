@@ -6,6 +6,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { OrganismInformationsCommerciales } from "../organism.types";
 
+import { assertNoDuplicateLieuAccueilAddress } from "./assertNoDuplicateLieuAccueilAddress";
 import { getLLToEarthFromZip } from "./getLLToEarthFromZip";
 import { updateOrganismLLToEarth } from "./updateOrganismLLToEarth";
 
@@ -18,6 +19,35 @@ export const createOrUpdateOnSiteOrganismGeneralInformation = async ({
   informationsCommerciales: OrganismInformationsCommerciales;
   userInfo: AAPAuditLogUserInfo;
 }) => {
+  const current = await prismaClient.organism.findUnique({
+    where: { id: organismId },
+    select: {
+      id: true,
+      maisonMereAAPId: true,
+      adresseNumeroEtNomDeRue: true,
+      adresseVille: true,
+    },
+  });
+
+  if (!current) {
+    throw new Error("L'organisme n'a pas été trouvé");
+  }
+
+  const targetStreet =
+    informationsCommerciales.adresseNumeroEtNomDeRue ??
+    current.adresseNumeroEtNomDeRue;
+  const targetCity =
+    informationsCommerciales.adresseVille ?? current.adresseVille;
+
+  if (current.maisonMereAAPId) {
+    await assertNoDuplicateLieuAccueilAddress({
+      maisonMereAAPId: current.maisonMereAAPId,
+      street: targetStreet,
+      city: targetCity,
+      excludeOrganismId: organismId,
+    });
+  }
+
   const organismUpdated = await prismaClient.$transaction(async (tx) => {
     const organismUpdated = await tx.organism.update({
       where: { id: organismId },
