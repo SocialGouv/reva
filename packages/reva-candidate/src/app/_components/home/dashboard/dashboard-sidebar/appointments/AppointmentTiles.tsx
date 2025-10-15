@@ -77,7 +77,7 @@ export const AppointmentTiles = ({
           <Button
             data-test="all-appointments-button"
             priority="tertiary no outline"
-            iconId="fr-icon-calendar-2-fill"
+            iconId="ri-calendar-todo-fill"
             className="mr-0"
             linkProps={{
               href: "./appointments",
