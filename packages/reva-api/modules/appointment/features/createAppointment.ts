@@ -61,8 +61,17 @@ export const createAppointment = async ({
     data,
   });
 
-  if (!appointmentsFeatureActive) {
-    //TODO: update logging event when we will have more than one appointment
+  if (appointmentsFeatureActive) {
+    await logCandidacyAuditEvent({
+      candidacyId: data.candidacyId,
+      eventType: "APPOINTMENT_CREATED",
+      ...userInfo,
+      details: {
+        date: data.date,
+        type: data.type,
+      },
+    });
+  } else {
     await logCandidacyAuditEvent({
       candidacyId: data.candidacyId,
       eventType: "APPOINTMENT_INFO_UPDATED",

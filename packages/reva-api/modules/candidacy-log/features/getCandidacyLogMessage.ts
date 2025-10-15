@@ -83,6 +83,12 @@ export const getCandidacyLogMessage = ({
         format(details.firstAppointmentOccuredAt, "dd/MM/yyyy"),
       );
 
+    case "APPOINTMENT_CREATED":
+      return log(
+        "Rendez-vous créé",
+        `${format(details.date, "dd/MM/yyyy HH:mm")} - ${details.type}`,
+      );
+
     case "CANDIDACY_TAKEN_OVER":
       return log("Candidature prise en charge");
 

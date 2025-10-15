@@ -70,8 +70,15 @@ export type CandidacyLogEventTypeAndDetails =
       details: { organism: { id: string; label: string } };
     }
   | {
-      eventType: "APPOINTMENT_INFO_UPDATED";
+      eventType: "APPOINTMENT_INFO_UPDATED"; //Legacy old firstAppointmentOccuredAt candidacy column update event
       details: { firstAppointmentOccuredAt: Date };
+    }
+  | {
+      eventType: "APPOINTMENT_CREATED";
+      details: {
+        date: Date;
+        type: "RENDEZ_VOUS_PEDAGOGIQUE" | "RENDEZ_VOUS_DE_SUIVI";
+      };
     }
   | {
       eventType: "TYPOLOGY_AND_CCN_INFO_UPDATED";
