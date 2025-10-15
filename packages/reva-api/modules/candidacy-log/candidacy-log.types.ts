@@ -76,6 +76,15 @@ export type CandidacyLogEventTypeAndDetails =
   | {
       eventType: "APPOINTMENT_CREATED";
       details: {
+        id: string;
+        date: Date;
+        type: "RENDEZ_VOUS_PEDAGOGIQUE" | "RENDEZ_VOUS_DE_SUIVI";
+      };
+    }
+  | {
+      eventType: "APPOINTMENT_DELETED";
+      details: {
+        id: string;
         date: Date;
         type: "RENDEZ_VOUS_PEDAGOGIQUE" | "RENDEZ_VOUS_DE_SUIVI";
       };

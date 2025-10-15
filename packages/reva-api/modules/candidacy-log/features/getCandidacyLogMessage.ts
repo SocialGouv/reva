@@ -89,6 +89,12 @@ export const getCandidacyLogMessage = ({
         `${format(details.date, "dd/MM/yyyy HH:mm")} - ${details.type}`,
       );
 
+    case "APPOINTMENT_DELETED":
+      return log(
+        "Rendez-vous supprimé",
+        `${format(details.date, "dd/MM/yyyy HH:mm")} - ${details.type}`,
+      );
+
     case "CANDIDACY_TAKEN_OVER":
       return log("Candidature prise en charge");
 
