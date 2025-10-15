@@ -67,6 +67,7 @@ export const createAppointment = async ({
       eventType: "APPOINTMENT_CREATED",
       ...userInfo,
       details: {
+        id: result.id,
         date: data.date,
         type: data.type,
       },
