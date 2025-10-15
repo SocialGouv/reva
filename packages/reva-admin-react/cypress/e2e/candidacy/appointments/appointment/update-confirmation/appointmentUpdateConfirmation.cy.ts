@@ -58,7 +58,7 @@ function waitForQueries() {
   cy.wait("@getCandidacyAndAppointmentForAppointmentUpdateConfirmationPage");
 }
 
-context("when I access the candidacy add appointment page", () => {
+context("when I access the update appointment confirmation page", () => {
   it("show the correct title", function () {
     interceptQueries();
     cy.admin(
