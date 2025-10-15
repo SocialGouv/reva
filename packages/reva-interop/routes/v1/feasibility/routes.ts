@@ -244,6 +244,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
               type: "integer",
               example: 10,
               default: 10,
+              maximum: 100,
               description: "Limite du nombre de résultats",
             },
             recherche: {
