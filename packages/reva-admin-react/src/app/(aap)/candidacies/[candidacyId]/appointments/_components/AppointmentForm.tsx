@@ -1,3 +1,4 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,10 +32,12 @@ export const AppointmentForm = ({
   onSubmit,
   backUrl,
   defaultValues,
+  onDeleteButtonClick,
 }: {
   backUrl: string;
   onSubmit: (data: AppointmentFormData) => void;
   defaultValues?: Partial<AppointmentFormData>;
+  onDeleteButtonClick?: () => void;
 }) => {
   const {
     register,
@@ -105,6 +108,18 @@ export const AppointmentForm = ({
         state={errors.description ? "error" : "default"}
         stateRelatedMessage={errors.description?.message}
       />
+      {onDeleteButtonClick && (
+        <Button
+          data-test="delete-appointment-button"
+          type="button"
+          onClick={onDeleteButtonClick}
+          priority="tertiary no outline"
+          iconId="fr-icon-delete-line"
+          className="col-span-full"
+        >
+          Supprimer ce rendez-vous
+        </Button>
+      )}
       <FormButtons
         className="col-span-full"
         backUrl={backUrl}

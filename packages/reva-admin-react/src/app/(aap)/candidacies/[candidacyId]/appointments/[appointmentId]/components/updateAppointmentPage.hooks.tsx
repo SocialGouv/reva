@@ -15,6 +15,20 @@ const updateAppointmentMutation = graphql(`
   }
 `);
 
+const deleteAppointmentMutation = graphql(`
+  mutation deleteAppointmentForUpdateAppointmentPage(
+    $candidacyId: ID!
+    $appointmentId: ID!
+  ) {
+    appointment_deleteAppointment(
+      candidacyId: $candidacyId
+      appointmentId: $appointmentId
+    ) {
+      id
+    }
+  }
+`);
+
 export const useUpdateAppointmentPage = ({
   candidacyId,
   appointmentId,
@@ -41,5 +55,23 @@ export const useUpdateAppointmentPage = ({
     },
   });
 
-  return { updateAppointment };
+  const deleteAppointment = useMutation({
+    mutationFn: ({
+      candidacyId,
+      appointmentId,
+    }: {
+      candidacyId: string;
+      appointmentId: string;
+    }) =>
+      graphqlClient.request(deleteAppointmentMutation, {
+        candidacyId,
+        appointmentId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [candidacyId, appointmentId],
+      });
+    },
+  });
+  return { updateAppointment, deleteAppointment };
 };

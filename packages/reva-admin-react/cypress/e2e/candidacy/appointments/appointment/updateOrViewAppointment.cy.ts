@@ -55,6 +55,14 @@ function interceptQueries({
         },
       },
     });
+
+    stubMutation(req, "deleteAppointmentForUpdateAppointmentPage", {
+      data: {
+        appointment_deleteAppointment: {
+          id: "5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3",
+        },
+      },
+    });
   });
 }
 
@@ -145,6 +153,24 @@ context("when I access the candidacy add appointment page", () => {
       cy.url().should(
         "eq",
         `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3/update-confirmation/`,
+      );
+    });
+
+    it("let me click on the delete button and redirect me to the delete confirmation page", function () {
+      interceptQueries();
+      cy.admin(
+        "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3",
+      );
+      waitForQueries();
+
+      cy.get('[data-test="delete-appointment-button"]').click();
+      cy.get(".confirm-appointment-deletion-modal-button").click();
+
+      cy.wait("@deleteAppointmentForUpdateAppointmentPage");
+
+      cy.url().should(
+        "eq",
+        `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3/delete-confirmation/?date=2025-01-01T09:00:00.000Z&candidateFirstName=John&candidateLastName=Doe`,
       );
     });
   });

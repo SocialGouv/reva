@@ -1,3 +1,4 @@
+import { createModal } from "@codegouvfr/react-dsfr/Modal/Modal";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 
@@ -37,12 +38,17 @@ export const UpdateAppointmentPage = ({
   };
   candidacyId: string;
 }) => {
-  const { updateAppointment } = useUpdateAppointmentPage({
+  const { updateAppointment, deleteAppointment } = useUpdateAppointmentPage({
     candidacyId,
     appointmentId: appointment?.id,
   });
 
   const router = useRouter();
+
+  const modal = createModal({
+    id: "confirm-appointment-deletion",
+    isOpenedByDefault: false,
+  });
 
   let title = "";
   let description = "";
@@ -83,21 +89,68 @@ export const UpdateAppointmentPage = ({
     }
   };
 
-  return (
-    <div className="flex flex-col w-full" data-test="update-appointments-page">
-      <h1>{title}</h1>
-      <FormOptionalFieldsDisclaimer />
-      <p className="text-xl mb-12">{description}</p>
+  const handleAppointmentDeletionConfirmation = async () => {
+    try {
+      await deleteAppointment.mutate({
+        candidacyId,
+        appointmentId: appointment.id,
+      });
+      router.push(
+        `/candidacies/${candidacyId}/appointments/${appointment.id}/delete-confirmation?date=${appointment.date}&candidateFirstName=${candidate.firstname}&candidateLastName=${candidate.lastname}`,
+      );
+    } catch (error) {
+      console.error(error);
+      graphqlErrorToast(error);
+    }
+  };
 
-      <AppointmentForm
-        backUrl={`/candidacies/${candidacyId}/appointments`}
-        onSubmit={handleSubmit}
-        defaultValues={{
-          ...appointment,
-          date: format(new Date(appointment.date), "yyyy-MM-dd"),
-          time: format(new Date(appointment.date), "HH:mm"),
-        }}
-      />
-    </div>
+  return (
+    <>
+      <modal.Component
+        title={<span>Suppression d’un rendez vous</span>}
+        className="confirm-appointment-deletion-modal"
+        size="large"
+        buttons={[
+          {
+            priority: "secondary",
+            children: "Annuler",
+          },
+          {
+            priority: "primary",
+            onClick: handleAppointmentDeletionConfirmation,
+            children: "Confirmer",
+            className: "confirm-appointment-deletion-modal-button",
+          },
+        ]}
+      >
+        <div className="flex flex-col gap-4">
+          <p className="mb-2">
+            Supprimer un rendez-vous est irréversible, la description et les
+            détails seront supprimés.
+          </p>
+          <p className="mb-2">Le candidat en sera notifié par mail.</p>
+          <p>Confirmez-vous la suppression de ce rendez vous ?</p>
+        </div>
+      </modal.Component>
+      <div
+        className="flex flex-col w-full"
+        data-test="update-appointments-page"
+      >
+        <h1>{title}</h1>
+        <FormOptionalFieldsDisclaimer />
+        <p className="text-xl mb-12">{description}</p>
+
+        <AppointmentForm
+          backUrl={`/candidacies/${candidacyId}/appointments`}
+          onSubmit={handleSubmit}
+          defaultValues={{
+            ...appointment,
+            date: format(new Date(appointment.date), "yyyy-MM-dd"),
+            time: format(new Date(appointment.date), "HH:mm"),
+          }}
+          onDeleteButtonClick={modal.open}
+        />
+      </div>
+    </>
   );
 };
