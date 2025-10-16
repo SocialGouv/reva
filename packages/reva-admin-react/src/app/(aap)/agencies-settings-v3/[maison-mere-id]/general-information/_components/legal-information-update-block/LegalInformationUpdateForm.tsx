@@ -178,11 +178,8 @@ export const LegalInformationUpdateForm = ({
               passeport en cours de validité.
               <br />
               <strong>
-                Veillez à ce que la photocopie soit lisible, non tronquée, bien
-                cadrée et qu’y soient apposés, par le dirigeant lui-même, la
-                mention manuscrite “J’atteste que je suis à l’origine de la
-                fourniture du présent justificatif d’identité”, ses nom et
-                prénom(s), la date du jour ainsi qu’une signature.
+                Veillez à ce que la photocopie soit lisible, non tronquée, et
+                bien cadrée.
               </strong>
             </>
           }

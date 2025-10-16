@@ -151,14 +151,6 @@ export const CompanyDocumentsStepForm = () => {
                   </li>
                   <li>Passeport en cours de validité ;</li>
                 </ul>
-                Sur le document, le dirigeant doit faire apparaître la{" "}
-                <b>mention manuscrite</b> suivante :{" "}
-                <b>
-                  «J’atteste être le représentant légal de la structure
-                  référencée et le propriétaire du justificatif d’identité
-                  fourni.»
-                </b>{" "}
-                Il devra également <b>dater et signer</b> le justificatif.
               </>
             }
             hint="Format supporté : PDF uniquement avec un poids maximum de 2Mo"
