@@ -22,5 +22,8 @@ export const createAppointmentHelper = async (
       date: new Date(),
       ...args,
     },
+    include: {
+      candidacy: { include: { candidate: { include: { department: true } } } },
+    },
   });
 };
