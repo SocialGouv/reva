@@ -2,6 +2,10 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getCandidateAppUrl } from "@/modules/candidate/utils/candidate.url.helpers";
+import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
+import { formatUTCTime } from "@/modules/shared/date/formatUTCTime";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 import { prismaClient } from "@/prisma/client";
 
 import { getAppointmentTemporalStatus } from "./getAppointmentTemporalStatus";
@@ -32,7 +36,18 @@ export const deleteAppointmentById = async ({
 
   const result = await prismaClient.appointment.delete({
     where: { id: appointmentId },
+    include: {
+      candidacy: { include: { candidate: { include: { department: true } } } },
+    },
   });
+
+  const candidate = result.candidacy.candidate;
+
+  if (!candidate) {
+    throw new Error("Candidat non trouvé");
+  }
+
+  const timeZone = candidate.department?.timezone || "Europe/Paris";
 
   await logCandidacyAuditEvent({
     candidacyId: appointment.candidacyId,
@@ -43,6 +58,21 @@ export const deleteAppointmentById = async ({
       date: appointment.date,
       type: appointment.type,
     },
+  });
+
+  await sendEmailUsingTemplate({
+    to: { email: candidate.email },
+    params: {
+      candidateFullName: candidate.firstname + " " + candidate.lastname,
+      appointmentDate: formatDateWithoutTimestamp(
+        appointment.date,
+        "dd/MM/yyyy",
+        timeZone,
+      ),
+      appointmentTime: formatUTCTime(appointment.date, timeZone),
+      appointmentUrl: `${getCandidateAppUrl()}/${appointment.candidacyId}/appointments/${appointment.id}`,
+    },
+    templateId: 634,
   });
 
   return result;

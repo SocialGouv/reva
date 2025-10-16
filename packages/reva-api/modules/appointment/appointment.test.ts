@@ -309,7 +309,12 @@ test("should not update an appointment when it is past", async () => {
   ).rejects.toThrowError("Impossible de modifier un rendez-vous passé");
 });
 
-test("should delete an upcoming appointment", async () => {
+test("should delete an upcoming appointment and send an email to the candidate", async () => {
+  const sendEmailUsingTemplateSpy = vi.spyOn(
+    EmailModule,
+    "sendEmailUsingTemplate",
+  );
+
   const deleteAppointment = graphql(`
     mutation deleteAppointment($candidacyId: ID!, $appointmentId: ID!) {
       appointment_deleteAppointment(
@@ -322,7 +327,19 @@ test("should delete an upcoming appointment", async () => {
   `);
 
   const appointment = await createAppointmentHelper({
-    date: new Date("2225-08-12"),
+    date: new Date("2225-08-12:10:00:00"),
+  });
+
+  const ileDeFranceDepartment = await prismaClient.department.findFirst({
+    where: { code: "75" },
+  });
+
+  //ensure the candidate is in ile de france to avoid timezone issues
+  await prismaClient.candidate.update({
+    where: { id: appointment.candidacy.candidate?.id },
+    data: {
+      departmentId: ileDeFranceDepartment?.id,
+    },
   });
 
   const res = await graphqlClient.request(deleteAppointment, {
@@ -343,6 +360,20 @@ test("should delete an upcoming appointment", async () => {
   );
 
   expect(deleteAppointmentInDatabase).toBeNull();
+
+  expect(sendEmailUsingTemplateSpy).toHaveBeenCalledWith({
+    to: { email: appointment.candidacy.candidate?.email },
+    params: {
+      candidateFullName:
+        appointment.candidacy.candidate?.firstname +
+        " " +
+        appointment.candidacy.candidate?.lastname,
+      appointmentDate: "12/08/2225",
+      appointmentTime: "10:00",
+      appointmentUrl: `${getCandidateAppUrl()}/${appointment.candidacyId}/appointments/${appointment.id}`,
+    },
+    templateId: 634,
+  });
 });
 
 test("should not delete an appointment when it is past", async () => {
