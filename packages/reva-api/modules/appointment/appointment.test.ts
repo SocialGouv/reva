@@ -102,10 +102,16 @@ test("should get an appointment by its id", async () => {
   });
 });
 
-test("should create an appointment", async () => {
+test("should create an appointment and send an email to the candidate", async () => {
+  const sendEmailUsingTemplateSpy = vi.spyOn(
+    EmailModule,
+    "sendEmailUsingTemplate",
+  );
+
   const createAppointment = graphql(`
     mutation createAppointment($input: CreateAppointmentInput!) {
       appointment_createAppointment(input: $input) {
+        id
         title
         type
         date
@@ -118,6 +124,18 @@ test("should create an appointment", async () => {
 
   const candidacy = await createCandidacyHelper();
 
+  //ensure the candidate is in ile de france to avoid timezone issues
+  const ileDeFranceDepartment = await prismaClient.department.findFirst({
+    where: { code: "75" },
+  });
+
+  await prismaClient.candidate.update({
+    where: { id: candidacy.candidate?.id },
+    data: {
+      departmentId: ileDeFranceDepartment?.id,
+    },
+  });
+
   const res = await graphqlClient.request(createAppointment, {
     input: {
       candidacyId: candidacy.id,
@@ -127,6 +145,7 @@ test("should create an appointment", async () => {
       location: "Test Location",
       date: "2025-09-26T10:00:00.000Z",
       duration: "ONE_HOUR",
+      sendEmailToCandidate: true,
     },
   });
 
@@ -140,12 +159,25 @@ test("should create an appointment", async () => {
       duration: "ONE_HOUR",
     },
   });
+
+  expect(sendEmailUsingTemplateSpy).toHaveBeenCalledWith({
+    to: { email: candidacy.candidate?.email },
+    params: {
+      candidateFullName:
+        candidacy.candidate?.firstname + " " + candidacy.candidate?.lastname,
+      appointmentDate: "26/09/2025",
+      appointmentTime: "12:00",
+      appointmentUrl: `${getCandidateAppUrl()}/${candidacy.id}/appointments/${res.appointment_createAppointment.id}`,
+    },
+    templateId: 632,
+  });
 });
 
 test("should not create an appointment and throw an error if there is already a rendez-vous pédagogique", async () => {
   const createAppointment = graphql(`
     mutation createAppointment($input: CreateAppointmentInput!) {
       appointment_createAppointment(input: $input) {
+        id
         title
         type
         date
