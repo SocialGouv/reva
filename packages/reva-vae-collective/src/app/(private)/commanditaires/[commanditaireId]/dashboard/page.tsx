@@ -49,6 +49,13 @@ export default async function DashboardPage({
   }
 
   return (
-    <iframe src={metabaseDashboardIframeUrl} className="w-full h-screen" />
+    <div>
+      <h1 className="mb-6">Pilotage</h1>
+      <p className="mb-12">
+        Retrouvez ici le pilotage de vos cohortes. Un délai de 24h peut être
+        observé pour visualiser les dernières modifications
+      </p>
+      <iframe src={metabaseDashboardIframeUrl} className="w-full h-screen" />
+    </div>
   );
 }
