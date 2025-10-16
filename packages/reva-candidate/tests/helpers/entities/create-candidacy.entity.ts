@@ -27,19 +27,22 @@ export type CandidacyEntity = Partial<
   appointments: Candidacy["appointments"];
 };
 
-// Required fields (id, appointments) aren't required in options
-// Then make the "appointments" default value overridable
 type CreateCandidacyEntityOptions = {
   status?: CandidacyStatusStep;
-  readyForJuryEstimatedAt?: Date;
+  readyForJuryEstimatedAt?: Candidacy["readyForJuryEstimatedAt"];
+  typeAccompagnement?: Candidacy["typeAccompagnement"];
+  organism?: Organism | null;
+  certification?: Certification | null;
+  feasibility?: FeasibilityEntity | null;
+  candidate?: CandidateEntity | null;
+  activeDossierDeValidation?: Partial<DossierDeValidation> | null;
+  endAccompagnementStatus?: CandidacyEntity["endAccompagnementStatus"];
+  appointments?: Candidacy["appointments"];
   juryResult?: JuryResult;
   goalsCount?: number;
   experiencesCount?: number;
   candidacyAlreadySubmitted?: boolean;
-  organism?: Organism;
-  certification?: Certification;
-  appointments?: Candidacy["appointments"];
-} & Omit<CandidacyEntity, "id" | "appointments">;
+};
 
 export const createCandidacyEntity = (
   options: CreateCandidacyEntityOptions,

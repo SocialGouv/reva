@@ -21,7 +21,6 @@ export const createCandidateEntity = (
   const {
     candidacy: candidacyOption = null,
     candidacies,
-    department,
     ...candidateOverrides
   } = options;
 
@@ -31,7 +30,7 @@ export const createCandidateEntity = (
     lastname: "Doe",
     email: "john.doe@example.com",
     phone: "0601020304",
-    department: department ?? defaultDepartment,
+    department: defaultDepartment,
     candidacy: candidacyOption,
     candidacies: candidacies ?? (candidacyOption ? [candidacyOption] : []),
     ...candidateOverrides,
