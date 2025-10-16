@@ -37,6 +37,7 @@ type Organism {
   accounts: [Account!]!
   formacodes: [Formacode!]!
   conventionCollectives: [ConventionCollective!]!
+  certifications: [Certification!]
   llToEarth: String
   distanceKm: Float
   remoteZones: [RemoteZone!]!

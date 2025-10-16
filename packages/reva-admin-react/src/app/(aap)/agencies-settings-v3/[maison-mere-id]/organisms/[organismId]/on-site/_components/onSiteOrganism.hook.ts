@@ -39,6 +39,11 @@ const getOrganismQuery = graphql(`
         id
         label
       }
+      certifications {
+        id
+        codeRncp
+        label
+      }
     }
   }
 `);

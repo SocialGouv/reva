@@ -42,6 +42,7 @@ import { getMaisonMereAAPOnConventionCollectives } from "./features/getMaisonMer
 import { getMaisonMereAAPs } from "./features/getMaisonMereAAPs";
 import { getOrganismById } from "./features/getOrganism";
 import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganismId";
+import { getOrganismCertificationsByOrganismId } from "./features/getOrganismCertificationsByOrganismId";
 import { getOrganismFormacodesByOrganismId } from "./features/getOrganismFormacodesByOrganismId";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
@@ -98,6 +99,10 @@ const unsafeResolvers = {
       }),
     conventionCollectives: ({ id: organismId }: Organism) =>
       getOrganismCcnsByOrganismId({
+        organismId,
+      }),
+    certifications: async ({ id: organismId }: Organism) =>
+      getOrganismCertificationsByOrganismId({
         organismId,
       }),
     remoteZones: async ({ id: organismId }: Organism) =>

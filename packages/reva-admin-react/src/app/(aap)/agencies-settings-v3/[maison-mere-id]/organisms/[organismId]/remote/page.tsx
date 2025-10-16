@@ -44,6 +44,11 @@ const getOrganismQuery = graphql(`
         id
         label
       }
+      certifications {
+        id
+        codeRncp
+        label
+      }
     }
   }
 `);
@@ -138,7 +143,7 @@ export default function RemotePage() {
           </div>
         </EnhancedSectionCard>
         <EnhancedSectionCard
-          title="Domaines, branches et niveaux"
+          title="Domaines, branches, niveaux et certifications"
           titleIconClass="fr-icon-award-fill"
           isEditable
           buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organismId}/remote/formacodes-ccns-degrees`}
@@ -169,6 +174,20 @@ export default function RemotePage() {
               <div className="flex flex-wrap gap-2">
                 {organism?.managedDegrees?.map((d) => (
                   <Tag key={d.id}>Niveau {d.degree.level}</Tag>
+                ))}
+              </div>
+            </Accordion>
+          )}
+          {organism?.certifications?.[0] && (
+            <Accordion label="Certifications" defaultExpanded>
+              <div className="flex flex-col">
+                {organism.certifications?.map((certification) => (
+                  <Link
+                    key={certification.id}
+                    href={`/certification-details/${certification.id}`}
+                    target="_blank"
+                    className="py-2 text-sm bg-none text-dsfr-blue-france-sun-113 border-dsfr-light-decisions-border-border-default-grey border-b last:border-none"
+                  >{`${certification.codeRncp} - ${certification.label}`}</Link>
                 ))}
               </div>
             </Accordion>
