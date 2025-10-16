@@ -2,7 +2,9 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getCandidateAppUrl } from "@/modules/candidate/utils/candidate.url.helpers";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 import { prismaClient } from "@/prisma/client";
 
 import { UpdateAppointmentInput } from "../appointment.types";
@@ -39,13 +41,30 @@ export const updateAppointment = async ({
     }
   }
 
-  const result = await prismaClient.appointment.update({
+  const updatedAppointment = await prismaClient.appointment.update({
     where: { id: input.appointmentId },
     data: rest,
+    include: {
+      candidacy: { include: { candidate: true } },
+    },
   });
 
-  if (!appointmentsFeatureActive) {
-    //TODO: update logging event when we will have more than one appointment
+  const candidate = updatedAppointment.candidacy.candidate;
+
+  if (!candidate) {
+    throw new Error("Candidat non trouvé");
+  }
+
+  if (appointmentsFeatureActive) {
+    await sendEmailUsingTemplate({
+      to: { email: candidate.email },
+      params: {
+        candidateFullName: candidate.firstname + " " + candidate.lastname,
+        appointmentUrl: `${getCandidateAppUrl()}/${input.candidacyId}/appointments/${input.appointmentId}`,
+      },
+      templateId: 633,
+    });
+  } else {
     await logCandidacyAuditEvent({
       candidacyId: input.candidacyId,
       eventType: "APPOINTMENT_INFO_UPDATED",
@@ -56,5 +75,5 @@ export const updateAppointment = async ({
     });
   }
 
-  return result;
+  return updatedAppointment;
 };

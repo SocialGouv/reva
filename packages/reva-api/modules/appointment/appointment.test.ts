@@ -1,5 +1,6 @@
 import { AppointmentType } from "@prisma/client";
 
+import * as EmailModule from "@/modules/shared/email/sendEmailUsingTemplate";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAppointmentHelper } from "@/test/helpers/entities/create-appointment-helper";
@@ -7,6 +8,7 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
+import { getCandidateAppUrl } from "../candidate/utils/candidate.url.helpers";
 import { graphql } from "../graphql/generated";
 
 const graphqlClient = getGraphQLClient({
@@ -179,7 +181,12 @@ test("should not create an appointment and throw an error if there is already a 
   );
 });
 
-test("should update an appointment when it is not past", async () => {
+test("should update an appointment when it is not past and send an email to the candidate", async () => {
+  const sendEmailUsingTemplateSpy = vi.spyOn(
+    EmailModule,
+    "sendEmailUsingTemplate",
+  );
+
   const updateAppointment = graphql(`
     mutation updateAppointment($input: UpdateAppointmentInput!) {
       appointment_updateAppointment(input: $input) {
@@ -221,6 +228,16 @@ test("should update an appointment when it is not past", async () => {
       location: "Updated test Location",
       duration: "TWO_HOURS",
     },
+  });
+
+  expect(sendEmailUsingTemplateSpy).toHaveBeenCalledWith({
+    to: { email: candidacy.candidate?.email },
+    params: {
+      candidateFullName:
+        candidacy.candidate?.firstname + " " + candidacy.candidate?.lastname,
+      appointmentUrl: `${getCandidateAppUrl()}/${appointment.candidacyId}/appointments/${appointment.id}`,
+    },
+    templateId: 633,
   });
 });
 
