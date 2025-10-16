@@ -21,12 +21,14 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
       }
       departments {
         id
+        code
         label
       }
       certificationAuthority {
         label
         departments {
           id
+          code
           label
           region {
             id
@@ -56,6 +58,7 @@ const updateCertificationAuthorityLocalAccountDepartmentsMutation = graphql(`
       id
       departments {
         id
+        code
         label
       }
     }
@@ -112,7 +115,7 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
   type Region = {
     id: string;
     label: string;
-    departments: { id: string; label: string }[];
+    departments: { id: string; code: string; label: string }[];
   };
 
   const regions = useMemo(
@@ -128,6 +131,7 @@ export const useUpdateLocalAccountInterventionAreaPage = ({
               }
               region.departments.push({
                 id: department.id,
+                code: department.code,
                 label: department.label,
               });
             }

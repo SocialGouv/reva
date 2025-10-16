@@ -15,6 +15,7 @@
         "departments": [
           {
             "id": "0fd699b6-40c2-4ded-a29c-3417cded8b58",
+            "code": "01",
             "label": "Ain",
             "region": {
               "id": "2946d835-f0fa-4c37-9a50-0735112395bd",
@@ -23,6 +24,7 @@
           },
           {
             "id": "296bce2a-9bc3-4915-ad61-e666868c4d82",
+            "code": "26",
             "label": "Drôme",
             "region": {
               "id": "2946d835-f0fa-4c37-9a50-0735112395bd",
@@ -31,6 +33,7 @@
           },
           {
             "id": "ec234db7-2a3b-46f4-9514-fedee4f4f1ca",
+            "code": "69",
             "label": "Rhône",
             "region": {
               "id": "2946d835-f0fa-4c37-9a50-0735112395bd",
@@ -39,6 +42,7 @@
           },
           {
             "id": "9d89aab8-c0d3-4965-ac32-3e035ba7370b",
+            "code": "73",
             "label": "Savoie",
             "region": {
               "id": "2946d835-f0fa-4c37-9a50-0735112395bd",
@@ -47,6 +51,7 @@
           },
           {
             "id": "ceb64010-79ff-44c1-b45f-277ef726314c",
+            "code": "44",
             "label": "Loire-Atlantique",
             "region": {
               "id": "466c5805-c297-4c6a-9ba7-62a0889a6b71",
@@ -55,6 +60,7 @@
           },
           {
             "id": "01bae087-8ca0-4fab-9ffe-fd8aec53129f",
+            "code": "85",
             "label": "Vendée",
             "region": {
               "id": "466c5805-c297-4c6a-9ba7-62a0889a6b71",
@@ -66,10 +72,12 @@
       "departments": [
         {
           "id": "ec234db7-2a3b-46f4-9514-fedee4f4f1ca",
+          "code": "69",
           "label": "Rhône"
         },
         {
           "id": "0fd699b6-40c2-4ded-a29c-3417cded8b58",
+          "code": "01",
           "label": "Ain"
         }
       ]

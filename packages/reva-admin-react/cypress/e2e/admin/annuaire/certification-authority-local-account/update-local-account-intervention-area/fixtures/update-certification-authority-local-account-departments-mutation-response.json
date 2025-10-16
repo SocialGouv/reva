@@ -5,14 +5,17 @@
       "departments": [
         {
           "id": "ec234db7-2a3b-46f4-9514-fedee4f4f1ca",
+          "code": "69",
           "label": "Rhône"
         },
         {
           "id": "0fd699b6-40c2-4ded-a29c-3417cded8b58",
+          "code": "01",
           "label": "Ain"
         },
         {
           "id": "ceb64010-79ff-44c1-b45f-277ef726314c",
+          "code": "44",
           "label": "Loire-Atlantique"
         }
       ]

@@ -27,6 +27,7 @@ const schema = z.object({
 export type InterventionAreaFormData = z.infer<typeof schema>;
 export type Deparment = {
   id: string;
+  code: string;
   label: string;
 };
 export type Region = {
@@ -47,7 +48,7 @@ export const useInterventionAreaFormLogic = ({
       regions?.map((r) => {
         const departmentItems = r.departments.map((d) => ({
           id: d.id,
-          label: d.label,
+          label: `${d.label} (${d.code})`,
           selected: !!entityDepartments.find((cad) => cad.id === d.id),
         }));
         return {

@@ -71,11 +71,11 @@ context("main page", () => {
         ).should("be.checked");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-intervention-area-page"] [data-test="tree-select-item-Ain"] input',
+          '[data-test="update-certification-authority-local-account-intervention-area-page"] [data-test="tree-select-item-Ain (01)"] input',
         ).should("be.checked");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-intervention-area-page"] [data-test="tree-select-item-Rhône"] input',
+          '[data-test="update-certification-authority-local-account-intervention-area-page"] [data-test="tree-select-item-Rhône (69)"] input',
         ).should("be.checked");
       });
 
@@ -114,7 +114,9 @@ context("main page", () => {
           '[data-test="tree-select-item-Pays de la Loire"] .fr-accordion__btn',
         ).click({ force: true });
 
-        cy.get('[data-test="tree-select-item-Loire-Atlantique"] input').check({
+        cy.get(
+          '[data-test="tree-select-item-Loire-Atlantique (44)"] input',
+        ).check({
           force: true,
         });
 

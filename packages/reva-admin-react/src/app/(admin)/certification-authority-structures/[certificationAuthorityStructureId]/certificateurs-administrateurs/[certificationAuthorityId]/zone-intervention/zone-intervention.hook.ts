@@ -36,6 +36,7 @@ const getReferentialQuery = graphql(`
       label
       departments {
         id
+        code
         label
       }
     }
