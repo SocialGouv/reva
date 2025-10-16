@@ -48,6 +48,8 @@ export const TreeSelect = (props: Props) => {
       <>
         {items.map((item) => {
           const availableChildren = item.children && item.children.length > 0;
+          const isTotallySelected =
+            item.children && item.children.every((child) => child.selected);
           const isPartiallySelected = item?.children?.some(
             (child) => child.selected,
           );
@@ -64,10 +66,14 @@ export const TreeSelect = (props: Props) => {
                 disabled={readonly}
                 className={
                   availableChildren
-                    ? `absolute z-10 top-0.5 pt-2.5 bg-white w-[calc(100%-36px)] mb-0 ${
-                        isPartiallySelected ? "checkbox-partial" : ""
+                    ? `absolute z-10 top-[1px] pl-2 pt-3 h-[48px] select-none ${
+                        isTotallySelected
+                          ? "checkbox-totally"
+                          : isPartiallySelected
+                            ? "checkbox-partial"
+                            : ""
                       }`
-                    : "top-0.5 pt-2.5 bg-white w-full mb-0"
+                    : "top-0.5 pl-2 pt-2.5 w-full mb-0"
                 }
                 key={item.id}
                 options={[
