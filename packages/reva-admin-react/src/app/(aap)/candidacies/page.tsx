@@ -5,6 +5,7 @@ import { toDate } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 
+import { useAuth } from "@/components/auth/auth";
 import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
 import { SearchList } from "@/components/search/search-list/SearchList";
 
@@ -54,6 +55,8 @@ export default function CandidaciesPage() {
     cohorteVaeCollectiveId,
   });
 
+  const { isAdmin } = useAuth();
+
   useEffect(() => {
     if (!status) {
       params.set("status", "ACTIVE_HORS_ABANDON");
@@ -81,7 +84,7 @@ export default function CandidaciesPage() {
       }
       cohortesVaeCollectives={cohortesVaeCollectives}
     >
-      {maisonMereAAPId ? (
+      {maisonMereAAPId && isAdmin && (
         <div>
           <h1>Candidatures de la structure</h1>
           <Button
@@ -98,13 +101,19 @@ export default function CandidaciesPage() {
             plateforme, cliquez sur “Accéder à toutes les candidatures”.
           </p>
         </div>
-      ) : (
+      )}
+      {isAdmin && !maisonMereAAPId && (
         <div>
           <h1>Espace pro administrateur</h1>
           <p>
             En tant qu'administrateur, vous pouvez gérer toutes les candidatures
             et faire une recherche par Architecte Accompagnateur de Parcours.
           </p>
+        </div>
+      )}
+      {!isAdmin && !maisonMereAAPId && (
+        <div>
+          <h1>Candidatures</h1>
         </div>
       )}
 
