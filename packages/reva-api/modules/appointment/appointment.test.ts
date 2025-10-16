@@ -327,7 +327,7 @@ test("should delete an upcoming appointment and send an email to the candidate",
   `);
 
   const appointment = await createAppointmentHelper({
-    date: new Date("2225-08-12:10:00:00"),
+    date: new Date("2225-08-12:10:00:00Z"),
   });
 
   const ileDeFranceDepartment = await prismaClient.department.findFirst({
@@ -369,7 +369,7 @@ test("should delete an upcoming appointment and send an email to the candidate",
         " " +
         appointment.candidacy.candidate?.lastname,
       appointmentDate: "12/08/2225",
-      appointmentTime: "10:00",
+      appointmentTime: "12:00",
       appointmentUrl: `${getCandidateAppUrl()}/${appointment.candidacyId}/appointments/${appointment.id}`,
     },
     templateId: 634,
