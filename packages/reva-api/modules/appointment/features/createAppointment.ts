@@ -4,10 +4,10 @@ import {
   CandidacyAuditLogUserInfo,
   logCandidacyAuditEvent,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getCandidateAppUrl } from "@/modules/candidate/utils/candidate.url.helpers";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { formatUTCTime } from "@/modules/shared/date/formatUTCTime";
-import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 import { prismaClient } from "@/prisma/client";
 
@@ -96,9 +96,7 @@ export const createAppointment = async ({
           timeZone,
         ),
         appointmentTime: formatUTCTime(data.date, timeZone),
-        appointmentUrl: getBackofficeUrl({
-          path: `/candidacies/${data.candidacyId}/appointments/${result.id}`,
-        }),
+        appointmentUrl: `${getCandidateAppUrl()}/${result.candidacyId}/appointments/${result.id}`,
       },
       templateId: 632,
     });
