@@ -116,6 +116,7 @@
     "tsx": "^4.19.4",
     "typescript": "5.8.3",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^1.4.0"
+    "vitest": "^1.4.0",
+    "pdf.js-extract": "^0.1.4"
   }
 }
