@@ -2,7 +2,6 @@ import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCand
 import { prismaClient } from "@/prisma/client";
 
 import { DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput } from "../dematerialized-feasibility-file.types";
-import { sendFeasibilityConfirmedByCandidateWithoutSwornAttestmentToAAP } from "../emails/sendFeasibilityConfirmedByCandidateWithoutSwornAttestmentToAAP.email";
 import { sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP } from "../emails/sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP.email";
 
 export const confirmDematerializedFeasibilityFileByCandidate = async ({
@@ -52,21 +51,20 @@ export const confirmDematerializedFeasibilityFileByCandidate = async ({
     dff.feasibility.candidacy?.organism?.emailContact ??
     dff.feasibility.candidacy?.organism?.contactAdministrativeEmail;
 
-  if (aapName && candidateName && aapEmail) {
-    if (dff.swornStatementFileId) {
-      await sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP({
-        aapEmail,
-        aapName,
-        candidateName,
-      });
-    } else {
-      await sendFeasibilityConfirmedByCandidateWithoutSwornAttestmentToAAP({
-        aapEmail,
-        aapName,
-        candidateName,
-      });
-    }
+  if (aapName && candidateName && aapEmail && dff.swornStatementFileId) {
+    await sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP({
+      aapEmail,
+      aapName,
+      candidateName,
+    });
   }
+
+  await prismaClient.candidacyEmail.deleteMany({
+    where: {
+      candidacyId: dff.feasibility.candidacy.id,
+      emailType: "REMINDER_TO_AAP_FOR_MISSING_SWORN_STATEMENT",
+    },
+  });
 
   await logCandidacyAuditEvent({
     candidacyId: dff.feasibility.candidacy.id,

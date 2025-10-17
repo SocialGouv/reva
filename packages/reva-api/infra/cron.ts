@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 
 import { checkAndUpdateCandidaciesInactifConfirme } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifConfirme";
 import { checkAndUpdateCandidaciesInactifEnAttente } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifEnAttente";
+import { sendReminderToAAPForMissingSwornStatement } from "@/modules/feasibility/dematerialized-feasibility-file/features/sendReminderToAAPForMissingSwornStatement";
 
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
 import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
@@ -25,6 +26,7 @@ import { prismaClient } from "../prisma/client";
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const EVERY_DAY_AT_1_AM = "0 1 * * *";
+const EVERY_DAY_AT_1_15_AM = "15 1 * * *";
 const EVERY_DAY_AT_1_30_AM = "30 1 * * *";
 const EVERY_DAY_AT_1_45_AM = "45 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
@@ -264,6 +266,28 @@ CronJob.from({
         resetProcess.stderr.on("data", (data) => {
           logger.error(data.toString());
         });
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Envoi d'emails de rappel aux AAP pour les candidats ayant validé leur dossier de faisabilité dématérialisé
+// depuis 24h sans avoir joint l'attestation sur l'honneur
+// Les AAP ont 24h pour joindre l'attestation avant l'envoi de l'email de rappel
+CronJob.from({
+  cronTime:
+    process.env
+      .BATCH_SEND_REMINDER_TO_AAP_FOR_MISSING_SWORN_STATEMENT_CRONTIME ||
+    EVERY_DAY_AT_1_15_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.send-reminder-to-aap-for-missing-sworn-statement",
+      batchCallback: async () => {
+        logger.info(
+          "Running batch.send-reminder-to-aap-for-missing-sworn-statement",
+        );
+        await sendReminderToAAPForMissingSwornStatement();
       },
     }),
   start: true,
