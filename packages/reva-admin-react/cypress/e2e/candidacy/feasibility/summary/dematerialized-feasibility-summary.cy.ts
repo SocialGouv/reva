@@ -180,7 +180,7 @@ describe("Dematerialized feasibility summary", () => {
         });
       });
 
-      it("renders certification information, languages and competence blocks", () => {
+      it("renders certification information and languages", () => {
         cy.get("[data-test='dff-summary']").within(() => {
           cy.contains("Titre professionnel Responsable logistique").should(
             "be.visible",
@@ -198,43 +198,11 @@ describe("Dematerialized feasibility summary", () => {
             .find("p")
             .eq(1)
             .should("contain.text", "Espagnol");
-
-          cy.contains(
-            "48379857 - Organiser et piloter les activités logistiques",
-          ).should("be.visible");
-          cy.contains(
-            "Expérience significative en gestion d'équipe sur site logistique.",
-          ).should("be.visible");
-          cy.contains("Définir les indicateurs de performance").should(
-            "be.visible",
-          );
-          cy.contains("Manager les équipes logistiques").should("be.visible");
-
-          cy.contains("2849037 - Digitaliser les processus logistiques").should(
-            "be.visible",
-          );
-          cy.contains(
-            "Compétences à confirmer sur la digitalisation des flux.",
-          ).should("be.visible");
-          cy.contains(
-            "Mettre en place des outils de suivi en temps réel",
-          ).should("be.visible");
-          cy.contains("Superviser l'intégration des données").should(
-            "be.visible",
-          );
         });
       });
 
-      it("lists prerequisites and experience details", () => {
+      it("shows experience details", () => {
         cy.get("[data-test='dff-summary']").within(() => {
-          cy.contains("Justifier de 2 ans d'expérience en logistique").should(
-            "be.visible",
-          );
-          cy.contains("Avoir suivi une formation sécurité").should(
-            "be.visible",
-          );
-          cy.contains("Détenir un permis cariste à jour").should("be.visible");
-
           cy.get("[data-test='experience-accordion-0']").within(() => {
             cy.contains("Expérience 1 - Chef d'équipe logistique").should(
               "be.visible",
@@ -248,6 +216,66 @@ describe("Dematerialized feasibility summary", () => {
             ).should("be.visible");
             cy.contains("Expérience entre 1 et 3 ans").should("be.visible");
           });
+        });
+      });
+
+      it("displays competence blocks with their states", () => {
+        cy.get("[data-test='dff-summary']").within(() => {
+          cy.contains(
+            "button",
+            "48379857 - Organiser et piloter les activités logistiques",
+          )
+            .parents("section.fr-accordion")
+            .within(() => {
+              cy.contains(".fr-badge", "Oui")
+                .parent()
+                .should("contain", "Définir les indicateurs de performance");
+              cy.contains(".fr-badge", "Partiellement")
+                .parent()
+                .should("contain", "Manager les équipes logistiques");
+              cy.contains(
+                "Expérience significative en gestion d'équipe sur site logistique.",
+              ).should("be.visible");
+            });
+
+          cy.contains(
+            "button",
+            "2849037 - Digitaliser les processus logistiques",
+          )
+            .parents("section.fr-accordion")
+            .within(() => {
+              cy.contains(".fr-badge", "Non")
+                .parent()
+                .should(
+                  "contain",
+                  "Mettre en place des outils de suivi en temps réel",
+                );
+              cy.contains(".fr-badge", "À compléter")
+                .parent()
+                .should("contain", "Superviser l'intégration des données");
+              cy.contains(
+                "Compétences à confirmer sur la digitalisation des flux.",
+              ).should("be.visible");
+            });
+        });
+      });
+
+      it("groups prerequisites by status", () => {
+        cy.get("[data-test='dff-summary']").within(() => {
+          cy.contains("button", "Acquis")
+            .parents("section.fr-accordion")
+            .find("li")
+            .should("contain", "Justifier de 2 ans d'expérience en logistique");
+
+          cy.contains("button", "En cours")
+            .parents("section.fr-accordion")
+            .find("li")
+            .should("contain", "Avoir suivi une formation sécurité");
+
+          cy.contains("button", "Préconisés")
+            .parents("section.fr-accordion")
+            .find("li")
+            .should("contain", "Détenir un permis cariste à jour");
         });
       });
 
