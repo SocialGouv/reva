@@ -237,7 +237,7 @@ const AdditionalInfoForm = ({
         <h2>Documents essentiels</h2>
         <FancyUpload
           dataTest="dossier-de-validation-template-upload"
-          title={"Importer un fichier de trame de dossier"}
+          title={"Importer un fichier de trame de dossier de validation"}
           hint="Formats supportés : jpg, png, pdf avec un poids maximum de 15Mo"
           state={errors.dossierDeValidationTemplate?.[0] ? "error" : "default"}
           stateRelatedMessage={errors.dossierDeValidationTemplate?.[0]?.message}
