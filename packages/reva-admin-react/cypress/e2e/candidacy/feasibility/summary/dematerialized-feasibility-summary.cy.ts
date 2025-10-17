@@ -176,7 +176,15 @@ describe("Dematerialized feasibility summary", () => {
           );
           cy.contains("Téléphone : 0607080910").should("be.visible");
           cy.contains("Nationalité Française").should("be.visible");
-          cy.contains("Master logistique et transport").should("be.visible");
+          cy.contains("Niveau de formation le plus élevé")
+            .next("p")
+            .should("have.text", "6");
+          cy.contains("Niveau de la certification obtenue la plus élevée")
+            .next("p")
+            .should("have.text", "6");
+          cy.contains("Intitulé de la certification la plus élevée obtenue")
+            .next("p")
+            .should("contain", "Master logistique et transport");
         });
       });
 
@@ -198,6 +206,7 @@ describe("Dematerialized feasibility summary", () => {
             .find("p")
             .eq(1)
             .should("contain.text", "Espagnol");
+          cy.contains("La certification dans sa totalité").should("be.visible");
         });
       });
 
@@ -207,14 +216,22 @@ describe("Dematerialized feasibility summary", () => {
             cy.contains("Expérience 1 - Chef d'équipe logistique").should(
               "be.visible",
             );
+            cy.contains("Démarrée le 01 janvier 2021").should("be.visible");
             cy.contains("Expérience plus de 3 ans").should("be.visible");
+            cy.contains(
+              "Pilotage d'une équipe de 8 personnes sur plateforme multi-sites.",
+            ).should("be.visible");
           });
 
           cy.get("[data-test='experience-accordion-1']").within(() => {
             cy.contains(
               "Expérience 2 - Responsable adjoint d'exploitation",
             ).should("be.visible");
+            cy.contains("Démarrée le 31 décembre 2022").should("be.visible");
             cy.contains("Expérience entre 1 et 3 ans").should("be.visible");
+            cy.contains(
+              "Coordination des flux internationaux et digitalisation des processus.",
+            ).should("be.visible");
           });
         });
       });
