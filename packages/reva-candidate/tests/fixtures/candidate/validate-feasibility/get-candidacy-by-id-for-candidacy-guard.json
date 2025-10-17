@@ -1,0 +1,11 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "42288593-2a6b-4606-aedd-0d76348b39f4",
+      "activite": "ACTIF",
+      "derniereDateActivite": 1711929600000,
+      "typeAccompagnement": "ACCOMPAGNE",
+      "endAccompagnementStatus": "NOT_REQUESTED"
+    }
+  }
+}

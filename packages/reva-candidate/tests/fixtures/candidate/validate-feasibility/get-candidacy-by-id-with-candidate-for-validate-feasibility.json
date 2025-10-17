@@ -1,0 +1,205 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "42288593-2a6b-4606-aedd-0d76348b39f4",
+      "candidate": {
+        "id": "b6c027bf-4e24-4402-b7fa-01a4f46cb0e2",
+        "firstname": "Claire",
+        "firstname2": "Marie",
+        "firstname3": null,
+        "lastname": "Dupont",
+        "email": "claire.dupont@example.com",
+        "givenName": "Claire",
+        "birthdate": "1988-04-12",
+        "birthCity": "Lyon",
+        "birthDepartment": {
+          "label": "Rhone",
+          "code": "69"
+        },
+        "country": {
+          "id": "FR",
+          "label": "France"
+        },
+        "nationality": "Francaise",
+        "gender": "woman",
+        "phone": "0601020304",
+        "city": "Marseille",
+        "street": "12 rue du Port",
+        "zip": "13002",
+        "niveauDeFormationLePlusEleve": {
+          "level": 5
+        },
+        "highestDegree": {
+          "level": 4
+        },
+        "highestDegreeLabel": "BTS logistique"
+      },
+      "experiences": [
+        {
+          "id": "4184d861-2e5d-420c-a4fc-b8320bb5d602",
+          "title": "Cheffe d'equipe logistique",
+          "startedAt": 1609459200000,
+          "duration": "moreThanThreeYears",
+          "description": "Pilotage d'une equipe de 8 personnes sur une plateforme multi-sites."
+        },
+        {
+          "id": "b94d8b40-b60e-44b0-8ec6-3beca6e5c5bb",
+          "title": "Coordinatrice supply chain",
+          "startedAt": 1546300800000,
+          "duration": "moreThanFiveYears",
+          "description": "Supervision des flux entrants et sortants avec optimisation des stocks."
+        }
+      ],
+      "certification": {
+        "id": "9e62d5fd-9c58-4a3b-aeb0-98d92f5f3310",
+        "label": "Titre professionnel Responsable logistique",
+        "level": 6,
+        "codeRncp": "9083904",
+        "degree": {
+          "level": 6
+        }
+      },
+      "goals": [
+        {
+          "id": "5b5bc4ad-032b-4cc0-a721-01740ad3884a",
+          "label": "Evoluer vers un poste de responsable d'exploitation",
+          "order": 1,
+          "needsAdditionalInformation": false,
+          "isActive": true
+        },
+        {
+          "id": "31f5c2ce-880b-4ab7-9387-92a2ec095a17",
+          "label": "Encadrer une equipe multi-sites",
+          "order": 2,
+          "needsAdditionalInformation": false,
+          "isActive": true
+        }
+      ],
+      "basicSkills": [
+        {
+          "id": "06a3a2b8-c94f-4828-9ad6-a1bd4efd5d54",
+          "label": "Analyse de donnees"
+        },
+        {
+          "id": "ae879c76-2c41-4d88-a9da-0b4143b71125",
+          "label": "Gestion de projet"
+        }
+      ],
+      "mandatoryTrainings": [
+        {
+          "id": "88e62b48-3224-45cb-b6f3-2439278f8cb7",
+          "label": "Prevention des risques professionnels"
+        }
+      ],
+      "additionalHourCount": 9,
+      "individualHourCount": 42,
+      "collectiveHourCount": 18,
+      "isCertificationPartial": true,
+      "feasibility": {
+        "feasibilityFileSentAt": 1716984000000,
+        "dematerializedFeasibilityFile": {
+          "id": "3f9b5518-16f8-4b8d-b585-0b046c938ee9",
+          "sentToCandidateAt": 1716984000000,
+          "isReadyToBeSentToCandidate": true,
+          "candidateConfirmationAt": null,
+          "aapDecision": "FAVORABLE",
+          "aapDecisionComment": "Candidat tres motive et dossier solide.",
+          "candidateDecisionComment": "Je confirme mon engagement dans ce parcours.",
+          "prerequisites": [
+            {
+              "label": "Justifier de 2 ans d'experience en logistique",
+              "state": "ACQUIRED"
+            },
+            {
+              "label": "Avoir suivi une formation securite",
+              "state": "IN_PROGRESS"
+            },
+            {
+              "label": "Detenir un permis cariste a jour",
+              "state": "RECOMMENDED"
+            }
+          ],
+          "firstForeignLanguage": "Anglais",
+          "secondForeignLanguage": "Espagnol",
+          "option": "Option pilotage d'activite",
+          "blocsDeCompetences": [
+            {
+              "text": "Experience significative en gestion d'equipe sur site logistique.",
+              "certificationCompetenceBloc": {
+                "id": "20849dc9-57d5-4f62-a4ee-acf37d6fb1c4",
+                "code": "48379857",
+                "label": "Organiser et piloter les activites logistiques",
+                "FCCompetences": "FC1",
+                "competences": [
+                  {
+                    "id": "51c0e3dd-99ad-4f1a-9d9d-84d412df0c58",
+                    "label": "Definir les indicateurs de performance"
+                  },
+                  {
+                    "id": "f1c04640-90ee-4eba-a3c9-066ad0d67b62",
+                    "label": "Manager les equipes logistiques"
+                  }
+                ]
+              }
+            },
+            {
+              "text": "Competences a confirmer sur la digitalisation des flux.",
+              "certificationCompetenceBloc": {
+                "id": "f8258b9e-3d8e-4c1f-9162-28da7267e202",
+                "code": "2849037",
+                "label": "Digitaliser les processus logistiques",
+                "FCCompetences": "FC2",
+                "competences": [
+                  {
+                    "id": "2a49720b-5135-4b18-8cba-77f92f8faabd",
+                    "label": "Mettre en place des outils de suivi en temps reel"
+                  },
+                  {
+                    "id": "526ef5b3-3fde-4ad2-8a4f-4c95bdc30744",
+                    "label": "Superviser l'integration des donnees"
+                  }
+                ]
+              }
+            }
+          ],
+          "certificationCompetenceDetails": [
+            {
+              "state": "YES",
+              "certificationCompetence": {
+                "id": "51c0e3dd-99ad-4f1a-9d9d-84d412df0c58",
+                "label": "Definir les indicateurs de performance"
+              }
+            },
+            {
+              "state": "PARTIALLY",
+              "certificationCompetence": {
+                "id": "f1c04640-90ee-4eba-a3c9-066ad0d67b62",
+                "label": "Manager les equipes logistiques"
+              }
+            },
+            {
+              "state": "NO",
+              "certificationCompetence": {
+                "id": "2a49720b-5135-4b18-8cba-77f92f8faabd",
+                "label": "Mettre en place des outils de suivi en temps reel"
+              }
+            }
+          ],
+          "eligibilityRequirement": "FULL_ELIGIBILITY_REQUIREMENT",
+          "eligibilityValidUntil": 1735646400000,
+          "swornStatementFile": {
+            "name": "attestation-honneur.pdf",
+            "previewUrl": "https://files.example.com/attestation-honneur.pdf",
+            "mimeType": "application/pdf"
+          },
+          "dffFile": {
+            "url": "https://files.example.com/dff-resume.pdf",
+            "name": "dossier-faisabilite.pdf",
+            "previewUrl": "https://files.example.com/dff-resume-preview.pdf",
+            "mimeType": "application/pdf"
+          }
+        }
+      }
+    }
+  }
+}
