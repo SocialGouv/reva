@@ -31,28 +31,28 @@
                                                     </label>
 
                                                     <#if auth?has_content && auth.showUsername()>
-                                                        <input class="fr-input" 
+                                                        <input class="fr-input"
                                                         autofocus
                                                         autocomplete="email"
-                                                        name="username" id="username" 
-                                                        aria-required="true" 
+                                                        name="username" id="username"
+                                                        aria-required="true"
                                                         aria-describedby="username-messages"
                                                         aria-invalid="<#if messagesPerField.existsError('username')>true</#if>"
                                                         value="${auth.attemptedUsername}" type="text" >
 
                                                     <#else>
-                                                        <input class="fr-input" 
+                                                        <input class="fr-input"
                                                         autofocus
                                                         autocomplete="email"
-                                                        name="username" id="username" 
-                                                        aria-required="true" 
+                                                        name="username" id="username"
+                                                        aria-required="true"
                                                         aria-describedby="username-messages"
                                                         aria-invalid="<#if messagesPerField.existsError('username')>true</#if>"
                                                         type="text" >
                                                     </#if>
-                                                    
+
                                                     <div class="fr-messages-group sr-only" id="username-messages" aria-live="assertive">
-                                                        Saisissez l'email associé à votre compte.
+                                                        Saisissez l'adresse électronique associée à votre compte.
                                                     </div>
                                                 </div>
                                             </div>
@@ -75,7 +75,7 @@
                                     </div>
                                 </form>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>

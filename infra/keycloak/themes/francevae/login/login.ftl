@@ -38,22 +38,22 @@
                                                 <div class="fr-fieldset__element">
                                                     <div class="fr-input-group">
                                                         <label class="fr-label" for="username">
-                                                            Saisissez votre e-mail pour vous connecter
+                                                            Saisissez votre adresse électronique pour vous connecter
                                                         </label>
                                                         <#if usernameEditDisabled??>
                                                             <input class="fr-input" aria-describedby="username-messages" name="username" id="username" value="${(login.username!'')}" type="text" disabled >
                                                         <#else>
-                                                            <input class="fr-input" 
+                                                            <input class="fr-input"
                                                             autofocus
                                                             autocomplete="email"
-                                                            name="username" id="username" 
-                                                            aria-required="true" 
+                                                            name="username" id="username"
+                                                            aria-required="true"
                                                             aria-describedby="username-messages"
                                                             aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>"
                                                             value="${(login.username!'')}" type="text" >
                                                         </#if>
                                                         <div class="fr-messages-group sr-only" id="username-messages" aria-live="assertive">
-                                                            Saisissez l'email associé à votre compte.
+                                                            Saisissez l'adresse électronique associée à votre compte.
                                                         </div>
                                                     </div>
                                                 </div>
@@ -63,11 +63,11 @@
                                                             Saisissez votre mot de passe
                                                         </label>
                                                         <div class="fr-input-wrap">
-                                                            <input class="fr-password__input fr-input" 
-                                                            aria-describedby="password-input-messages" 
-                                                            aria-required="true" 
-                                                            name="password" 
-                                                            autocomplete="current-password" 
+                                                            <input class="fr-password__input fr-input"
+                                                            aria-describedby="password-input-messages"
+                                                            aria-required="true"
+                                                            name="password"
+                                                            autocomplete="current-password"
                                                             id="password-input" type="password">
                                                         </div>
                                                         <div class="fr-messages-group" id="password-input-messages" aria-live="assertive">
@@ -114,14 +114,14 @@
                                     </fieldset>
                                 </form>
                             </div>
-                            
+
                             <hr>
                             <h3>Vous n’avez pas de compte Architecte Accompagnateur de Parcours ?</h3>
                             <div class="fr-btns-group">
                                 <a class="fr-btn fr-btn--secondary" href="${properties.revaUrlCreateAAPAccount}">
                                     Créez votre compte
                                 </a>
-                            </div>                 
+                            </div>
                         </div>
                     </div>
                 </div>
