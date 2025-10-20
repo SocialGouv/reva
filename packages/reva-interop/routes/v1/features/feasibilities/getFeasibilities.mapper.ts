@@ -14,6 +14,7 @@ import {
   experienceSchema,
   fichierSchema,
   statutDossierDeFaisabiliteSchema,
+  typeDeDocumentSchemaDossierDeFaisabilite,
 } from "../../schemas.js";
 
 import { getFeasibilities } from "./getFeasibilities.js";
@@ -24,6 +25,7 @@ type MappedFeasibilitiesResponse = FromSchema<
     references: [
       typeof pageInfoSchema,
       typeof candidacyIdSchema,
+      typeof typeDeDocumentSchemaDossierDeFaisabilite,
       typeof fichierSchema,
       typeof dureeExperienceSchema,
       typeof experienceSchema,
@@ -39,6 +41,7 @@ type MappedFeasibility = FromSchema<
     references: [
       typeof pageInfoSchema,
       typeof candidacyIdSchema,
+      typeof typeDeDocumentSchemaDossierDeFaisabilite,
       typeof fichierSchema,
       typeof dureeExperienceSchema,
       typeof experienceSchema,
@@ -73,6 +76,16 @@ const expDurationMapFromGqlToInterop: Record<
   moreThanTenYears: "PLUS_DE_DIX_ANS",
 };
 
+const typeDeDocumentMapFromGqlToInterop: Record<
+  string,
+  (typeof typeDeDocumentSchemaDossierDeFaisabilite)["enum"][number]
+> = {
+  ID_CARD: "PIECE_D_IDENTITE",
+  EQUIVALENCE_OR_EXEMPTION_PROOF: "JUSTIFICATIF_D_EQUIVALENCE_OU_DE_DISPENSE",
+  TRAINING_CERTIFICATE: "ATTESTATION_OU_CERTIFICAT_DE_FORMATION",
+  ADDITIONAL: "PIECE_SUPPLEMENTAIRE",
+};
+
 const buildPreviewUrl = (path: string) => {
   if (process.env.ENVIRONEMENT === "local") {
     return "http://localhost:8080" + path;
@@ -101,28 +114,41 @@ const mapFeasibility = (
     dematerializedFeasibilityFile,
   } = feasibility;
 
-  const documents: { nom: string; url: string; typeMime: string }[] = [];
+  const documents: {
+    type: (typeof typeDeDocumentSchemaDossierDeFaisabilite)["enum"][number];
+    fichier: {
+      nom: string;
+      url: string;
+      typeMime: string;
+    };
+  }[] = [];
 
   if (feasibilityFormat == "DEMATERIALIZED" && dematerializedFeasibilityFile) {
     const { dffFile, attachments } = dematerializedFeasibilityFile;
 
     if (dffFile && dffFile.previewUrl) {
       documents.push({
-        nom: dffFile.name,
-        url: buildPreviewUrl(dffFile.previewUrl),
-        typeMime: dffFile.mimeType,
+        type: "DOSSIER_DE_FAISABILITE",
+        fichier: {
+          nom: dffFile.name,
+          url: buildPreviewUrl(dffFile.previewUrl),
+          typeMime: dffFile.mimeType,
+        },
       });
     }
 
     const filteredAttachment = attachments.filter((a) => a != null);
     for (const attachment of filteredAttachment) {
-      const { file } = attachment;
+      const { file, type } = attachment;
 
       if (file && file.previewUrl) {
         documents.push({
-          nom: file.name,
-          url: buildPreviewUrl(file.previewUrl),
-          typeMime: file.mimeType,
+          type: typeDeDocumentMapFromGqlToInterop[type],
+          fichier: {
+            nom: file.name,
+            url: buildPreviewUrl(file.previewUrl),
+            typeMime: file.mimeType,
+          },
         });
       }
     }
@@ -136,33 +162,45 @@ const mapFeasibility = (
 
     if (feasibilityFile && feasibilityFile.previewUrl) {
       documents.push({
-        nom: feasibilityFile.name,
-        url: buildPreviewUrl(feasibilityFile.previewUrl),
-        typeMime: feasibilityFile.mimeType,
+        type: "DOSSIER_DE_FAISABILITE",
+        fichier: {
+          nom: feasibilityFile.name,
+          url: buildPreviewUrl(feasibilityFile.previewUrl),
+          typeMime: feasibilityFile.mimeType,
+        },
       });
     }
 
     if (IDFile && IDFile.previewUrl) {
       documents.push({
-        nom: IDFile.name,
-        url: buildPreviewUrl(IDFile.previewUrl),
-        typeMime: IDFile.mimeType,
+        type: "PIECE_D_IDENTITE",
+        fichier: {
+          nom: IDFile.name,
+          url: buildPreviewUrl(IDFile.previewUrl),
+          typeMime: IDFile.mimeType,
+        },
       });
     }
 
     if (documentaryProofFile && documentaryProofFile.previewUrl) {
       documents.push({
-        nom: documentaryProofFile.name,
-        url: buildPreviewUrl(documentaryProofFile.previewUrl),
-        typeMime: documentaryProofFile.mimeType,
+        type: "JUSTIFICATIF_D_EQUIVALENCE_OU_DE_DISPENSE",
+        fichier: {
+          nom: documentaryProofFile.name,
+          url: buildPreviewUrl(documentaryProofFile.previewUrl),
+          typeMime: documentaryProofFile.mimeType,
+        },
       });
     }
 
     if (certificateOfAttendanceFile && certificateOfAttendanceFile.previewUrl) {
       documents.push({
-        nom: certificateOfAttendanceFile.name,
-        url: buildPreviewUrl(certificateOfAttendanceFile.previewUrl),
-        typeMime: certificateOfAttendanceFile.mimeType,
+        type: "ATTESTATION_OU_CERTIFICAT_DE_FORMATION",
+        fichier: {
+          nom: certificateOfAttendanceFile.name,
+          url: buildPreviewUrl(certificateOfAttendanceFile.previewUrl),
+          typeMime: certificateOfAttendanceFile.mimeType,
+        },
       });
     }
   }

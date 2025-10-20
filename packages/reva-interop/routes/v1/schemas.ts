@@ -346,6 +346,28 @@ export const candidatureSchema = {
   },
 } as const;
 
+export const typeDeDocumentSchemaDossierDeFaisabilite = {
+  $id: "http://vae.gouv.fr/components/schemas/TypeDeDocumentDossierDeFaisabilite",
+  type: "string",
+  enum: [
+    "DOSSIER_DE_FAISABILITE",
+    "PIECE_D_IDENTITE",
+    "JUSTIFICATIF_D_EQUIVALENCE_OU_DE_DISPENSE",
+    "ATTESTATION_OU_CERTIFICAT_DE_FORMATION",
+    "PIECE_SUPPLEMENTAIRE",
+  ],
+  description: "Type du document",
+  example: "DOSSIER_DE_FAISABILITE",
+} as const;
+
+export const typeDeDocumentDossierDeValidationSchema = {
+  $id: "http://vae.gouv.fr/components/schemas/TypeDeDocumentDossierDeValidation",
+  type: "string",
+  enum: ["DOSSIER_DE_VALIDATION", "PIECE_SUPPLEMENTAIRE"],
+  description: "Type du document",
+  example: "DOSSIER_DE_VALIDATION",
+} as const;
+
 export const fichierSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Fichier",
   type: "object",
@@ -393,7 +415,15 @@ export const dossierDeFaisabiliteSchema = {
       description:
         "Le dossier de faisabilité, la pièce d'identité et autres documents éventuels",
       items: {
-        $ref: "http://vae.gouv.fr/components/schemas/Fichier",
+        type: "object",
+        properties: {
+          type: {
+            $ref: "http://vae.gouv.fr/components/schemas/TypeDeDocumentDossierDeFaisabilite",
+          },
+          fichier: {
+            $ref: "http://vae.gouv.fr/components/schemas/Fichier",
+          },
+        },
       },
       nullable: true,
     },
@@ -470,6 +500,11 @@ export const dossierDeFaisabiliteDecisionSchema = {
 export const dossierDeValidationSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeValidation",
   type: "object",
+  required: [
+    "candidatureId",
+    "dateEnvoi",
+    // "documents",
+  ],
   properties: {
     candidatureId: {
       $ref: "http://vae.gouv.fr/components/schemas/CandidatureId",
@@ -483,7 +518,15 @@ export const dossierDeValidationSchema = {
       type: "array",
       description: "La dossier de validation et autres documents éventuels",
       items: {
-        $ref: "http://vae.gouv.fr/components/schemas/Fichier",
+        type: "object",
+        properties: {
+          type: {
+            $ref: "http://vae.gouv.fr/components/schemas/TypeDeDocumentDossierDeValidation",
+          },
+          fichier: {
+            $ref: "http://vae.gouv.fr/components/schemas/Fichier",
+          },
+        },
       },
     },
     statut: {
@@ -678,6 +721,8 @@ const schemas = [
   candidatSchema,
   certificationSchema,
   candidatureSchema,
+  typeDeDocumentSchemaDossierDeFaisabilite,
+  typeDeDocumentDossierDeValidationSchema,
   fichierSchema,
   resultatJurySchema,
   statutJurySchema,

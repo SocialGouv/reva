@@ -11,6 +11,7 @@ import {
   dossierDeValidationSchema,
   fichierSchema,
   statutDossierDeValidationSchema,
+  typeDeDocumentDossierDeValidationSchema,
 } from "../../schemas.js";
 
 import { getDossiersDeValidation } from "./getDossiersDeValidation.js";
@@ -21,6 +22,7 @@ type MappedDossiersDeValidationResponse = FromSchema<
     references: [
       typeof pageInfoSchema,
       typeof candidacyIdSchema,
+      typeof typeDeDocumentDossierDeValidationSchema,
       typeof fichierSchema,
       typeof dossierDeValidationSchema,
       typeof statutDossierDeValidationSchema,
@@ -34,6 +36,7 @@ type MappedDossierDeValidation = FromSchema<
     references: [
       typeof pageInfoSchema,
       typeof candidacyIdSchema,
+      typeof typeDeDocumentDossierDeValidationSchema,
       typeof fichierSchema,
       typeof statutDossierDeValidationSchema,
     ];
@@ -61,16 +64,26 @@ const mapDossierDeValidation = (
 ): MappedDossierDeValidation | undefined => {
   const status = statusMapFromGqlToInterop[dossierDeValidation.decision];
 
-  const documents: { nom: string; url: string; typeMime: string }[] = [];
+  const documents: {
+    type: (typeof typeDeDocumentDossierDeValidationSchema)["enum"][number];
+    fichier: {
+      nom: string;
+      url: string;
+      typeMime: string;
+    };
+  }[] = [];
 
   const { dossierDeValidationFile, dossierDeValidationOtherFiles } =
     dossierDeValidation;
 
   if (dossierDeValidationFile && dossierDeValidationFile.previewUrl) {
     documents.push({
-      nom: dossierDeValidationFile.name,
-      url: buildPreviewUrl(dossierDeValidationFile.previewUrl),
-      typeMime: dossierDeValidationFile.mimeType,
+      type: "DOSSIER_DE_VALIDATION",
+      fichier: {
+        nom: dossierDeValidationFile.name,
+        url: buildPreviewUrl(dossierDeValidationFile.previewUrl),
+        typeMime: dossierDeValidationFile.mimeType,
+      },
     });
   }
 
@@ -79,9 +92,12 @@ const mapDossierDeValidation = (
 
     if (file && file.previewUrl) {
       documents.push({
-        nom: file.name,
-        url: buildPreviewUrl(file.previewUrl),
-        typeMime: file.mimeType,
+        type: "PIECE_SUPPLEMENTAIRE",
+        fichier: {
+          nom: file.name,
+          url: buildPreviewUrl(file.previewUrl),
+          typeMime: file.mimeType,
+        },
       });
     }
   }
