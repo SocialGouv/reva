@@ -171,9 +171,9 @@ describe("Dematerialized feasibility summary", () => {
           cy.contains(
             "Adresse postale : 10 quai du Port 13002 Marseille",
           ).should("be.visible");
-          cy.contains("E-mail : camille.durand@example.com").should(
-            "be.visible",
-          );
+          cy.contains(
+            "Adresse électronique : camille.durand@example.com",
+          ).should("be.visible");
           cy.contains("Téléphone : 0607080910").should("be.visible");
           cy.contains("Nationalité Française").should("be.visible");
           cy.contains("Niveau de formation le plus élevé")
