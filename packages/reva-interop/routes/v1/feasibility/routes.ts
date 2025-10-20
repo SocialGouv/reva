@@ -160,6 +160,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             },
             document: {
               type: "object",
+              format: "binary",
               description: "Le courrier de recevabilité éventuel",
             },
           },

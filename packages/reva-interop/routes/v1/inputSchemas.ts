@@ -85,6 +85,7 @@ export const sessionJuryInputSchema = {
     },
     document: {
       type: "object",
+      format: "binary",
       description: "La convocation officielle éventuelle",
     },
   },
