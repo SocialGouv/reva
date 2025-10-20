@@ -46,11 +46,7 @@ export const useUpdateAppointmentPage = ({
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          candidacyId,
-          appointmentId,
-          "getCandidacyAndAppointmentForUpdateOrViewAppointmentPage",
-        ],
+        queryKey: [candidacyId, appointmentId],
       });
     },
   });
