@@ -8,6 +8,8 @@ import { prismaClient } from "@/prisma/client";
 
 import { UpdateOrganimsAccountAndOrganismInput } from "../organism.types";
 
+import { updateOrganismOnAccountAssociation } from "./updateOrganismOnAccountAssociation";
+
 export const updateOrganismAccountAndOrganism = async ({
   accountId,
   accountEmail,
@@ -47,6 +49,8 @@ export const updateOrganismAccountAndOrganism = async ({
     where: { id: account.id },
     data: { organismId },
   });
+
+  await updateOrganismOnAccountAssociation({ accountId, organismId });
 
   if (organism.maisonMereAAPId) {
     await logAAPAuditEvent({

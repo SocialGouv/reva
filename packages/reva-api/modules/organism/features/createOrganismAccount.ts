@@ -7,6 +7,8 @@ import { prismaClient } from "@/prisma/client";
 
 import { CreateOrganismAccountInput } from "../organism.types";
 
+import { updateOrganismOnAccountAssociation } from "./updateOrganismOnAccountAssociation";
+
 export const createOrganismAccount = async ({
   organismId,
   accountEmail,
@@ -31,7 +33,7 @@ export const createOrganismAccount = async ({
     throw new Error("L'organisme n'a pas été trouvé");
   }
 
-  const result = await createAccount({
+  const account = await createAccount({
     email: accountEmail,
     username: accountEmail,
     firstname: accountFirstname,
@@ -39,6 +41,11 @@ export const createOrganismAccount = async ({
     group: "organism",
     organismId,
     maisonMereAAPRaisonSociale: organism.maisonMereAAP?.raisonSociale,
+  });
+
+  await updateOrganismOnAccountAssociation({
+    accountId: account.id,
+    organismId,
   });
 
   if (organism.maisonMereAAPId) {
@@ -50,5 +57,5 @@ export const createOrganismAccount = async ({
     });
   }
 
-  return result;
+  return account;
 };

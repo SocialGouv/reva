@@ -12,6 +12,7 @@ import { assignMaisonMereAAPToOrganism } from "@/modules/organism/features/assig
 import { createMaisonMereAAP } from "@/modules/organism/features/createMaisonMereAAP";
 import { getLastProfessionalCgu } from "@/modules/organism/features/getLastProfessionalCgu";
 import { getMaisonMereAapBySiretAndTypology } from "@/modules/organism/features/getMaisonMereAapBySiretAndTypology";
+import { updateOrganismOnAccountAssociation } from "@/modules/organism/features/updateOrganismOnAccountAssociation";
 import { getDegrees } from "@/modules/referential/features/getDegrees";
 import { deleteFile } from "@/modules/shared/file/file.service";
 import { logger } from "@/modules/shared/logger/logger";
@@ -118,6 +119,11 @@ export const validateSubscriptionRequest = async ({
   logger.info(
     `[subscription] Successfuly created Account with organismId ${newOrganism.id}`,
   );
+
+  await updateOrganismOnAccountAssociation({
+    accountId: account.id,
+    organismId: newOrganism.id,
+  });
 
   const newMaisonMereAAP = await createMaisonMereAAP({
     maisonMereAAP: {
