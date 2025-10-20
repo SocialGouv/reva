@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
@@ -112,11 +112,11 @@ const CreateCertificationAuthorityPage = () => {
             stateRelatedMessage={errors.firstname?.message}
           />
           <Input
-            label="Email de connexion"
+            label="Adresse électronique de connexion"
             nativeInputProps={{
               ...register("email"),
               placeholder:
-                "[Email de la personne qui va se connecter(Administrateur)]",
+                "[Adresse électronique de la personne qui va se connecter(Administrateur)]",
             }}
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message}

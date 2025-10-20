@@ -242,7 +242,7 @@ export const getCandidacyLogMessage = ({
     case "CANDIDATE_CONTACT_DETAILS_UPDATED":
       return log(
         "Coordonnées du candidat modifiées",
-        `téléphone: ${details.phone}, ${details.email ? `, email: ${details.email || ""}` : ""}`,
+        `téléphone: ${details.phone}, ${details.email ? `, Adresse électronique: ${details.email || ""}` : ""}`,
       );
 
     case "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY":
@@ -254,7 +254,7 @@ export const getCandidacyLogMessage = ({
     case "CANDIDACY_TRANSFERRED_TO_CERTIFICATION_AUTHORITY_LOCAL_ACCOUNT":
       return log(
         "Candidature transférée à un autre compte certificateur local",
-        `email du compte local: ${details.certificationAuthorityLocalAccountAccountEmail}${details.certificationAuthorityTransferReason ? `, raison: ${details.certificationAuthorityTransferReason}` : ""}`,
+        `Adresse électronique du compte local: ${details.certificationAuthorityLocalAccountAccountEmail}${details.certificationAuthorityTransferReason ? `, raison: ${details.certificationAuthorityTransferReason}` : ""}`,
       );
 
     case "ADMIN_CUSTOM_ACTION":

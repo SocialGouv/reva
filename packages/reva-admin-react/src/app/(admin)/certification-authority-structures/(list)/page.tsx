@@ -79,7 +79,7 @@ const CertificationAuthorityStructuresListPage = () => {
             searchFilter={searchFilter}
             searchBarProps={{
               placeholder:
-                "Rechercher par nom de certificateur, nom ou email de collaborateur, région, département...",
+                "Rechercher par nom de certificateur, nom ou adresse électronique de collaborateur, région, département...",
             }}
             addButton={
               <Button

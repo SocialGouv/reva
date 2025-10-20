@@ -29,7 +29,7 @@ export const updateContactOfCandidacy = async (params: {
 
   if (candidateWithEmail && candidateWithEmail.id != candidateToUpdate.id) {
     throw new Error(
-      `Vous ne pouvez pas utiliser ${candidateData.email} comme nouvelle adresse email`,
+      `Vous ne pouvez pas utiliser ${candidateData.email} comme nouvelle adresse électronique`,
     );
   }
 

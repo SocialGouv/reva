@@ -37,7 +37,9 @@ export const logAAPAuditEvent = ({
   }
 
   if (!userInfo.userEmail) {
-    throw new Error(`Email absent lors du log de l'évenement AAP ${eventType}`);
+    throw new Error(
+      `Adresse électronique absent lors du log de l'évenement AAP ${eventType}`,
+    );
   }
 
   return (tx || prismaClient).aAPLog.create({

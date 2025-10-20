@@ -292,7 +292,7 @@ const AccountInfo = ({ maisonMereAAP }: { maisonMereAAP: MaisonMereAap }) => (
       {maisonMereAAP.gestionnaire.firstname}{" "}
       {maisonMereAAP.gestionnaire.lastname}
     </Info>
-    <Info title="Email">{maisonMereAAP.gestionnaire.email}</Info>
+    <Info title="Adresse électronique">{maisonMereAAP.gestionnaire.email}</Info>
     <Info title="Téléphone">{maisonMereAAP.phone}</Info>
   </div>
 );
@@ -329,7 +329,7 @@ const AccountInfoForm = ({
       nativeInputProps={register("gestionnaireLastname")}
     />
     <Input
-      label="Email du gestionnaire"
+      label="Adresse électronique du gestionnaire"
       nativeInputProps={register("gestionnaireEmail")}
     />
     <Input label="Téléphone" nativeInputProps={register("phone")} />

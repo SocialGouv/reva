@@ -23,7 +23,7 @@ const schema = z.object({
     .default(""),
   accountEmail: z
     .string()
-    .email("Le champ doit contenir une adresse email")
+    .email("Le champ doit contenir une adresse électronique")
     .default(""),
 });
 
@@ -174,7 +174,7 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
             stateRelatedMessage={errors.accountFirstname?.message}
           />
           <Input
-            label="Email de connexion"
+            label="Adresse électronique de connexion"
             nativeInputProps={{
               ...register("accountEmail"),
             }}

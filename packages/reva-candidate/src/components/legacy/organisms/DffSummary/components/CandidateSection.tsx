@@ -65,7 +65,7 @@ export default function CandidateSection({
         Adresse postale : {street} {zip} {city}
       </p>
       <p className="flex gap-4">
-        <span>E-mail : {email}</span>
+        <span>Adresse électronique : {email}</span>
         <span>Téléphone : {phone}</span>
       </p>
       <h3>Niveau de formation</h3>

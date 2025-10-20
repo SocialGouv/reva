@@ -1,23 +1,23 @@
 import {
+  BasicSkill,
   Candidate,
   Certification,
+  CertificationCompetence,
+  CertificationCompetenceBloc,
+  CompetenceBlocsPartCompletionEnum,
   Country,
   Degree,
   DematerializedFeasibilityFile,
   Department,
-  DFFEligibilityRequirement,
-  Gender,
   DFFCertificationCompetenceBloc,
-  CertificationCompetenceBloc,
   DFFCertificationCompetenceDetails,
-  CertificationCompetence,
+  DFFDecision,
+  DFFEligibilityRequirement,
   DFFPrerequisite,
   Experience,
-  BasicSkill,
-  Training,
+  Gender,
   Goal,
-  DFFDecision,
-  CompetenceBlocsPartCompletionEnum,
+  Training,
 } from "@prisma/client";
 import PDFDocument from "pdfkit";
 
@@ -486,7 +486,7 @@ const addCandidate = (
     .font("assets/fonts/Marianne/Marianne-Regular.otf")
     .fontSize(10)
     .fillColor("#3a3a3a")
-    .text(`E-mail : ${email}`, {
+    .text(`Adresse électronique : ${email}`, {
       align: "left",
     });
 

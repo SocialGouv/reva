@@ -17,15 +17,15 @@ export default function CandidateRegistrationConfirmationPage() {
               <p className="fr-text--lead">
                 Votre demande de création de compte a bien été enregistrée.{" "}
                 <strong>
-                  Pour l'activer, cliquez sur le lien contenu dans l'email
+                  Pour l'activer, cliquez sur le lien contenu dans le courriel
                 </strong>{" "}
                 que nous venons de vous envoyer. Attention, ce lien est valable
                 3 heures.
               </p>
               <p className="fr-text--sm">
-                Attention, nos mails peuvent se perdre dans votre dossier de
+                Attention, nos courriels peuvent se perdre dans votre dossier de
                 courrier indésirable (spams). Si vous avez la moindre question,
-                vous pouvez nous contacter à l'adresse :{" "}
+                vous pouvez nous contacter à l'adresse électronique :{" "}
                 <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>
               </p>
             </div>

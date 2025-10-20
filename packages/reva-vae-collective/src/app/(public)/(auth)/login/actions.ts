@@ -43,7 +43,9 @@ export const login = async (_state: FormState, formData: FormData) => {
 
   if (result.error) {
     return {
-      errors: { password: { message: "Email ou mot de passe incorrect" } },
+      errors: {
+        password: { message: "Adresse électronique ou mot de passe incorrect" },
+      },
     } as FormState;
   } else {
     redirect(

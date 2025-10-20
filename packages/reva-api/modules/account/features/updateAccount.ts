@@ -31,7 +31,9 @@ export const updateAccountById = async (params: {
 
   // If accountWithEmail exists and accountWithEmail.id != accountToUpdate.id throw error email already used
   if (accountWithEmail && accountWithEmail.id != accountToUpdate.id) {
-    throw new Error(`L'email ${accountData.email} est déjà utilisé`);
+    throw new Error(
+      `L'adresse électronique ${accountData.email} est déjà utilisée`,
+    );
   }
 
   const keycloakAdmin = await getKeycloakAdmin();

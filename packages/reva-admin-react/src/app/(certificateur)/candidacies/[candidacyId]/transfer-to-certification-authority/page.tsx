@@ -49,7 +49,7 @@ export default function TransferCandidacyPage() {
       successToast({
         title: "La candidature a été transférée avec succès",
         description:
-          "Le nouveau service recevra un mail pour prendre connaissance de ce transfert.",
+          "Le nouveau service recevra un courriel pour prendre connaissance de ce transfert.",
         closable: true,
       });
       router.push("/candidacies/feasibilities");

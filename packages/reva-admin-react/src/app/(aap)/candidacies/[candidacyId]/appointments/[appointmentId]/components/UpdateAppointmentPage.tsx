@@ -128,7 +128,7 @@ export const UpdateAppointmentPage = ({
             Supprimer un rendez-vous est irréversible, la description et les
             détails seront supprimés.
           </p>
-          <p className="mb-2">Le candidat en sera notifié par mail.</p>
+          <p className="mb-2">Le candidat en sera notifié par courriel.</p>
           <p>Confirmez-vous la suppression de ce rendez vous ?</p>
         </div>
       </modal.Component>

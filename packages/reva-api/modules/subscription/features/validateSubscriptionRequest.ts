@@ -60,7 +60,7 @@ export const validateSubscriptionRequest = async ({
 
   if (oldAccount) {
     throw new Error(
-      `Cette adresse mail est déjà associée à un compte. L'AAP doit utiliser une adresse mail différente pour créer un compte.`,
+      `Cette adresse électronique est déjà associée à un compte. L'AAP doit utiliser une adresse électronique différente pour créer un compte.`,
     );
   }
 
@@ -71,7 +71,7 @@ export const validateSubscriptionRequest = async ({
 
   if (oldIamAccount)
     throw new Error(
-      `Cette adresse mail est déjà associée à un compte. L'AAP doit utiliser une adresse mail différente pour créer un compte.`,
+      `Cette adresse électronique est déjà associée à un compte. L'AAP doit utiliser une adresse électronique différente pour créer un compte.`,
     );
 
   const degrees = await getDegrees();

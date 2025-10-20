@@ -156,7 +156,7 @@ export const CompanyPreview = (props: Props) => {
             <Info title="Nom">
               {account.accountFirstname} {account.accountLastname}
             </Info>
-            <Info title="Adresse email" className="break-words">
+            <Info title="Adresse électronique" className="break-words">
               {account.accountEmail}
             </Info>
             <Info title="Téléphone">{account.accountPhoneNumber}</Info>

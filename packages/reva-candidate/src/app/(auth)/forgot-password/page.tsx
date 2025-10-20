@@ -55,7 +55,7 @@ export default function ForgotPassword() {
               spellCheck: "false",
               onChange: (e) => setEmail(e.target.value),
             }}
-            label="Email"
+            label="Adresse électronique"
           />
         </div>
 

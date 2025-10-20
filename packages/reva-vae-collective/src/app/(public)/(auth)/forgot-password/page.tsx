@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
               autoComplete: "email",
               spellCheck: "false",
             }}
-            label="Email"
+            label="Adresse électronique"
             state={state.errors?.email ? "error" : "default"}
             stateRelatedMessage={state.errors?.email?.message}
           />

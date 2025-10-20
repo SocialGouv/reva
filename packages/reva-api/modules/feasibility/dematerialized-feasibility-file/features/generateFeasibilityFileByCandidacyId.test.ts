@@ -364,7 +364,7 @@ describe("demat feasibility pdf generation", () => {
         Nationalité Française
         Contact
         Adresse postale : 10 rue de Paris 75001 Paris
-        E-mail : jean.dupont@example.com
+        Adresse électronique : jean.dupont@example.com
         Téléphone : 0601020304
       `,
     );

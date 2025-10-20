@@ -43,9 +43,9 @@ const SendSwornStatementModal = () => {
       </p>
       <p>
         Afin de permettre à votre accompagnateur d'envoyer votre dossier au
-        certificateur, vous devez lui faire parvenir votre attestation par mail,
-        par courrier ou en main propre afin qu'il puisse l'envoyer à votre
-        place.
+        certificateur, vous devez lui faire parvenir votre attestation par
+        courriel, par courrier ou en main propre afin qu'il puisse l'envoyer à
+        votre place.
       </p>
       <p>Si vous rencontrez des problèmes, n'hésitez pas à le contacter.</p>
     </sendSwornStatementModal.Component>

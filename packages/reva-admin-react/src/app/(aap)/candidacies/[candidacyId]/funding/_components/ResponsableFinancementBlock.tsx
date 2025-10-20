@@ -41,7 +41,7 @@ export const ResponsableFinancementBlock = ({
           disabled={isReadOnly}
         />
         <Input
-          label="Adresse mail (optionnel)"
+          label="Adresse électronique (optionnel)"
           nativeInputProps={register("fundingContactEmail")}
           stateRelatedMessage={errors.fundingContactEmail?.message as string}
           state={errors.fundingContactEmail ? "error" : "default"}

@@ -92,7 +92,7 @@ export default function ValidationDecisionForm({
               }}
             />
             <SmallNotice>
-              L'AAP recevra ce commentaire dans le mail de décision
+              L'AAP recevra ce commentaire dans le courriel de décision
             </SmallNotice>
           </fieldset>
           <fieldset className="grid border p-4">

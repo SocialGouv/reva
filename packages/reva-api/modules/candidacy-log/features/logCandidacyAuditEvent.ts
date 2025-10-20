@@ -39,7 +39,7 @@ export const logCandidacyAuditEvent = ({
 
   if (!userEmail) {
     throw new Error(
-      `Email absent lors du log de l'évenement de candidature ${eventType}`,
+      `Adresse électronique absente lors du log de l'évenement de candidature ${eventType}`,
     );
   }
 

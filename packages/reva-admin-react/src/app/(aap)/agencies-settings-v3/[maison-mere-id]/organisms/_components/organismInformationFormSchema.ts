@@ -22,7 +22,7 @@ export const organismInformationFormSchema = z
     siteInternet: z.string().optional().default(""),
     emailContact: z
       .string()
-      .email("Le champ doit contenir une adresse email")
+      .email("Le champ doit contenir une adresse électronique")
       .default(""),
     conformeNormesAccessibilite: z
       .enum(["CONFORME", "NON_CONFORME", ""])

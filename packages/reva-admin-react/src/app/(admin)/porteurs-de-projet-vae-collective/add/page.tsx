@@ -111,7 +111,7 @@ export default function AddPorteurDeProjetVaeCollectivePage() {
           />
           <Input
             className="basis-[500px] min-w-[282px] flex-1"
-            label="Email de connexion"
+            label="Adresse électronique de connexion"
             nativeInputProps={{
               ...register("gestionnaireEmail"),
               type: "email",

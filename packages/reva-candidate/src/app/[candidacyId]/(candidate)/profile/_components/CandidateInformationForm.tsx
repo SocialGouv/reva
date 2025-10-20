@@ -417,7 +417,7 @@ const CandidateInformationForm = ({
             data-testid="phone-input"
           />
           <Input
-            label="Email"
+            label="Adresse électronique"
             className="w-full"
             nativeInputProps={register("email")}
             state={errors.email ? "error" : "default"}

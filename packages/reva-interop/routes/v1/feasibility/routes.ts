@@ -20,11 +20,11 @@ import {
   candidacyIdSchema,
   decisionDossierDeFaisabiliteSchema,
   dossierDeFaisabiliteDecisionSchema,
-  statutDossierDeFaisabiliteSchema,
-  fichierSchema,
+  dossierDeFaisabiliteSchema,
   dureeExperienceSchema,
   experienceSchema,
-  dossierDeFaisabiliteSchema,
+  fichierSchema,
+  statutDossierDeFaisabiliteSchema,
 } from "../schemas.js";
 
 const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
@@ -251,7 +251,8 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
               type: "string",
               maxLength: 100,
               example: "Alice Doe",
-              description: "Recherche par mots-clés (nom, prénom, email...)",
+              description:
+                "Recherche par mots-clés (nom, prénom, adresse électronique...)",
             },
             statut: {
               $ref: "http://vae.gouv.fr/components/schemas/StatutDossierDeFaisabilite",

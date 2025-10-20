@@ -171,8 +171,8 @@ export const Resultat = () => {
       <div className="flex flex-col gap-10">
         {!result && (
           <p className="m-0 text-gray-600">
-            Sélectionnez le résultat à communiquer par e-mail au candidat et à
-            l’AAP. Vous devrez également envoyer un document officiel au
+            Sélectionnez le résultat à communiquer par courriel au candidat et à
+            l'AAP. Vous devrez également envoyer un document officiel au
             candidat.
           </p>
         )}

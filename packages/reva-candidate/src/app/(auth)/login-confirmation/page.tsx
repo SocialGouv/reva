@@ -10,7 +10,7 @@ export default function LoginConfirmation() {
       data-test="login-confirmation"
     >
       <h1 className="text-3xl font-bold text-dsfrGray-800">
-        Un e-mail vous a été envoyé.
+        Un courriel vous a été envoyé.
       </h1>
 
       <p className="text-lg font-bold">
@@ -18,12 +18,12 @@ export default function LoginConfirmation() {
       </p>
       <p className="max-w-2xl">
         Si vous avez déjà un compte chez France VAE, vous allez recevoir un
-        e-mail avec un lien pour vous connecter et accéder à votre profil et à
+        courriel avec un lien pour vous connecter et accéder à votre profil et à
         votre candidature.
       </p>
       <p className="max-w-2xl">
-        Si vous ne trouvez pas notre e-mail, pensez à vérifier votre dossier de
-        courriers indésirables (spams).
+        Si vous ne trouvez pas notre courriel, pensez à vérifier votre dossier
+        de courriers indésirables (spams).
       </p>
     </PageLayout>
   );

@@ -9,10 +9,15 @@ export const informationRemoteFormSchema = z
       .union([
         z
           .string()
-          .length(0, "Le champ doit être vide ou contenir une adresse email"),
+          .length(
+            0,
+            "Le champ doit être vide ou contenir une adresse électronique",
+          ),
         z
           .string()
-          .email("Le champ doit être vide ou contenir une adresse email"),
+          .email(
+            "Le champ doit être vide ou contenir une adresse électronique",
+          ),
       ])
       .optional()
       .default(""),

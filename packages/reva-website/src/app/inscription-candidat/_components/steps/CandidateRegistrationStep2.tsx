@@ -149,7 +149,7 @@ export const CandidateRegistrationStep2 = ({
           }}
         />
         <Input
-          label="Email (utilisé pour la connexion)"
+          label="Adresse électronique de connexion"
           state={errors.email ? "error" : "default"}
           stateRelatedMessage={errors.email?.message}
           nativeInputProps={{

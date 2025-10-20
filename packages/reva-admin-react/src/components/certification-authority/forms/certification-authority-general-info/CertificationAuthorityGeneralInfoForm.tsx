@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useAuth } from "@/components/auth/auth";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
 
@@ -19,11 +19,11 @@ const schema = z.object({
   accountLastname: z.string().min(1, "Merci de remplir ce champ"),
   accountEmail: z
     .string()
-    .email("Le champ doit contenir une adresse email valide"),
+    .email("Le champ doit contenir une adresse électronique valide"),
   contactFullName: z.string().min(1, "Merci de remplir ce champ"),
   contactEmail: z
     .string()
-    .email("Le champ doit contenir une adresse email valide"),
+    .email("Le champ doit contenir une adresse électronique valide"),
   contactPhone: z.string().optional(),
   isGlobalContact: z.boolean(),
 });
@@ -146,7 +146,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
               />
             </div>
             <Input
-              label="Email de connexion"
+              label="Adresse électronique de connexion"
               nativeInputProps={{
                 ...register("accountEmail"),
               }}
@@ -181,8 +181,8 @@ export const CertificationAuthorityGeneralInfoForm = ({
               <div className="flex flex-col md:flex-row gap-4 grow items-end">
                 <Input
                   className="mb-0 w-full"
-                  label="Email"
-                  hintText="Privilégiez une adresse e-mail pérenne pour faciliter les échanges avec les candidats et les AAP"
+                  label="Adresse électronique"
+                  hintText="Privilégiez une adresse électronique pérenne pour faciliter les échanges avec les candidats et les AAP"
                   state={errors.contactEmail ? "error" : "default"}
                   stateRelatedMessage={errors.contactEmail?.message}
                   nativeInputProps={{

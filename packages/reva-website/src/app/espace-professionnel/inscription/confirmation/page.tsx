@@ -28,11 +28,11 @@ const ProfessionalSpaceInscriptionConfirmationPage = () => {
               Accompagnateur de Parcours.
             </p>
             <p className="text-xl">
-              Ce questionnaire vous sera également envoyé par email.
+              Ce questionnaire vous sera également envoyé par courriel.
             </p>
             <p className="text-sm text-neutral-500">
-              Si votre dossier est valide et complet, vous recevrez un mail de
-              validation !
+              Si votre dossier est valide et complet, vous recevrez un courriel
+              de validation !
             </p>
             <div>
               <Link href="https://tally.so/r/n0M4Ry" target="_blank">

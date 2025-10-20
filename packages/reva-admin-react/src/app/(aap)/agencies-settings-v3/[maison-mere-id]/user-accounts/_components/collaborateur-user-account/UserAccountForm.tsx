@@ -18,7 +18,7 @@ const userAccountFormSchema = z.object({
     .default(""),
   email: z
     .string()
-    .email("Le champ doit contenir une adresse email")
+    .email("Le champ doit contenir une adresse électronique")
     .default(""),
 
   modalitesAccompagnement: z.enum(["ONSITE", "REMOTE"], {
@@ -84,7 +84,7 @@ export const UserAccountForm = ({
           />
           <div className="col-span-1">
             <Input
-              label="Email de connexion"
+              label="Adresse électronique de connexion"
               state={errors.email ? "error" : "default"}
               stateRelatedMessage={errors.email?.message?.toString()}
               disabled

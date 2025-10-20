@@ -59,7 +59,7 @@ export default function Login() {
           resetKeycloakInstance(tokens);
         }
       } catch (_) {
-        errorToast("Email ou mot de passe incorrect.");
+        errorToast("Adresse électronique ou mot de passe incorrect.");
       }
     }
   };
@@ -82,8 +82,8 @@ export default function Login() {
           <h2 className="mb-0">Se connecter avec un lien</h2>
 
           <p className="mb-0">
-            Vous recevrez un email avec un lien qui vous redirigera vers votre
-            espace candidat.
+            Vous recevrez un courriel avec un lien qui vous redirigera vers
+            votre espace candidat.
           </p>
 
           <Input
@@ -98,7 +98,7 @@ export default function Login() {
               spellCheck: "false",
               onChange: (e) => setEmailForMagicLink(e.target.value),
             }}
-            label="Email"
+            label="Adresse électronique"
           />
         </div>
 
@@ -124,7 +124,7 @@ export default function Login() {
               spellCheck: "false",
               onChange: (e) => setEmail(e.target.value),
             }}
-            label="Email"
+            label="Adresse électronique"
           />
 
           <Input

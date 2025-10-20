@@ -160,7 +160,7 @@ test.describe("AAP available on certification", () => {
       await page.getByLabel("Nom", { exact: true }).fill("Doe");
       await page.getByLabel("Téléphone").fill("+33 1 01 01 01 01");
       await page
-        .getByLabel("Email (utilisé pour la connexion)")
+        .getByLabel("Adresse électronique de connexion")
         .fill("alice.doe@example.com");
       await page.getByLabel("Département").selectOption("department1");
 
@@ -182,7 +182,7 @@ test.describe("AAP available on certification", () => {
       await page.getByLabel("Nom", { exact: true }).fill("Doe");
       await page.getByLabel("Téléphone").fill("+33 1 01 01 01 01");
       await page
-        .getByLabel("Email (utilisé pour la connexion)")
+        .getByLabel("Adresse électronique de connexion")
         .fill("alice.doe@example.com");
       await page.getByLabel("Département").selectOption("department1");
 

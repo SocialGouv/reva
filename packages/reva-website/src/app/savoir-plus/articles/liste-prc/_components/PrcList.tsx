@@ -75,8 +75,8 @@ const ListComponent = ({ prcs }: { prcs: PrcList }) => {
               <span
                 className="fr-icon-mail-line fr-icon--sm mr-2"
                 aria-hidden="true"
-                aria-label="Email"
-                title="Email"
+                aria-label="Adresse électronique"
+                title="Adresse électronique"
               ></span>
               {prc?.email}
             </div>

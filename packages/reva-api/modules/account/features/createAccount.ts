@@ -31,7 +31,7 @@ export const createAccount = async (params: {
   if (!params.email) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_EMAIL_EMPTY,
-      `Email invalide`,
+      `Adresse électronique invalide`,
     );
   }
 
@@ -85,7 +85,7 @@ export const createAccount = async (params: {
   if (maybeExistingAccount) {
     throw new FunctionalError(
       FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
-      `Un compte existe déjà pour cet email`,
+      `Un compte existe déjà pour cet adresse électronique`,
     );
   }
 

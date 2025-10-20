@@ -38,8 +38,8 @@ export default function AccountSetup({
         </ul>
         <p className="text-sm">
           💡 Quand vous ajoutez un compte collaborateur, pensez à utiliser une
-          nouvelle adresse mail. Sinon, vous rencontrerez des difficultés pour
-          vous connecter.
+          nouvelle adresse électronique. Sinon, vous rencontrerez des
+          difficultés pour vous connecter.
         </p>
         <Button
           disabled={updateAccount.isPending}

@@ -74,7 +74,7 @@ const RegionAdvisorsPage = async ({
       {prcs && prcs?.length > 0 ? (
         <>
           <p className="max-w-4xl">
-            Si vous n’êtes pas sûr de votre projet, si vous hésitez entre
+            Si vous n'êtes pas sûr de votre projet, si vous hésitez entre
             plusieurs diplômes, ou entre VAE et formation, contactez un de nos
             conseillers.
           </p>
@@ -86,7 +86,7 @@ const RegionAdvisorsPage = async ({
               "Nom du point relais",
               "Adresse",
               "Téléphone",
-              "E-mail",
+              "Adresse électronique",
             ]}
           />
         </>

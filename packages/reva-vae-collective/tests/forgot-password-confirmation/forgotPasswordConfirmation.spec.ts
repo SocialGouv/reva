@@ -1,4 +1,4 @@
-import { test, expect } from "next/experimental/testmode/playwright/msw";
+import { expect, test } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../shared/utils/auth/login";
 
@@ -9,7 +9,7 @@ test.describe("Forgot password confirmation", () => {
     await login({ page, role: "notConnected" });
     await page.goto("/vae-collective/forgot-password-confirmation");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Un e-mail vous a été envoyé.",
+      "Un courriel vous a été envoyé.",
     );
   });
 });

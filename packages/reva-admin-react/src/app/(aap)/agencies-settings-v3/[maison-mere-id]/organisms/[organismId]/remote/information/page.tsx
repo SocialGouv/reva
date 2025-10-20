@@ -180,7 +180,7 @@ const InformationsRemotePage = () => {
                 stateRelatedMessage={errors.telephone?.message}
               />
               <Input
-                label="E-mail de contact (affiché aux candidats)"
+                label="Adresse électronique de contact (affiché aux candidats)"
                 state={errors.emailContact ? "error" : "default"}
                 stateRelatedMessage={errors.emailContact?.message}
                 nativeInputProps={{

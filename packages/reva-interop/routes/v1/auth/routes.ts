@@ -77,7 +77,7 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
           email: {
             type: "string",
-            description: "Email de l'utilisateur",
+            description: "Adresse électronique de l'utilisateur",
           },
           firstname: {
             type: "string",

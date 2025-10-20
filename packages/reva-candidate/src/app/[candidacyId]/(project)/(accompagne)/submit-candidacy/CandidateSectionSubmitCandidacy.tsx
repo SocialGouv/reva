@@ -80,7 +80,7 @@ export default function CandidateSectionSubmitCandidacy({
             )}
           </div>
           <div>
-            <p className="mb-0">E-mail</p>
+            <p className="mb-0">Adresse électronique </p>
             <p className="font-medium mb-0">{email}</p>
           </div>
           <div>

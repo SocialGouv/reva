@@ -19,7 +19,7 @@ export const AccountInfoStepForm = () => {
   const zodSchema = z.object({
     accountFirstname: z.string().min(1, "Merci de remplir ce champ"),
     accountLastname: z.string().min(1, "Merci de remplir ce champ"),
-    accountEmail: z.string().email("L'adresse email est incomplète"),
+    accountEmail: z.string().email("L'adresse électronique est incomplète"),
     accountPhoneNumber: z.string().min(1, "Merci de remplir ce champ"),
     delegataire: z.boolean(),
   });
@@ -126,7 +126,7 @@ export const AccountInfoStepForm = () => {
                 />
                 <div className="flex flex-col">
                   <Input
-                    label="Adresse e-mail"
+                    label="Adresse électronique"
                     state={errors.accountEmail ? "error" : "default"}
                     stateRelatedMessage={errors.accountEmail?.message}
                     nativeInputProps={{
@@ -138,7 +138,7 @@ export const AccountInfoStepForm = () => {
                   />
                   <Notice
                     className="mb-4"
-                    title="Ce mail vous permettra de vous connecter à la plateforme. C’est sur celui-ci que vous recevrez la confirmation de la validation de votre compte administrateur."
+                    title="Cette adresse électronique vous permettra de vous connecter à la plateforme. C'est sur celle-ci que vous recevrez la confirmation de la validation de votre compte administrateur."
                   />
                 </div>
                 <Input

@@ -52,8 +52,9 @@ const ValidationPendingStatusBlock = () => (
     <Badge severity="info">En attente de vérification</Badge>
     <br />
     <p>
-      Vos documents et informations ont bien été envoyés. Vous recevrez un mail
-      de la part de France VAE, dès que ces informations auront été traitées.
+      Vos documents et informations ont bien été envoyés. Vous recevrez un
+      courriel de la part de France VAE, dès que ces informations auront été
+      traitées.
     </p>
   </>
 );

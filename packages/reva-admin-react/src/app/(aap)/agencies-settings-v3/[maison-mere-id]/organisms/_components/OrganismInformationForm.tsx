@@ -242,7 +242,7 @@ const OrganismInformationForm = ({
               />
 
               <Input
-                label="E-mail de contact (affiché aux candidats)"
+                label="Adresse électronique de contact (affiché aux candidats)"
                 nativeInputProps={{ ...register("emailContact") }}
                 state={errors.emailContact ? "error" : "default"}
                 stateRelatedMessage={errors.emailContact?.message?.toString()}
@@ -260,7 +260,7 @@ const OrganismInformationForm = ({
                 options={[
                   {
                     label:
-                      "Utiliser le téléphone et l'e-mail renseignés dans les informations générales.",
+                      "Utiliser le téléphone et l'adresse électronique renseignés dans les informations générales.",
                     nativeInputProps: {
                       onChange:
                         handleCheckUseGestionnaireMaisonMerAAPOrganismEmailInfo,

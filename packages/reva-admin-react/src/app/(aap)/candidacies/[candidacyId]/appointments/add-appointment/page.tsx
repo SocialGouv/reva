@@ -106,7 +106,7 @@ export default function AddAppointmentPage() {
       />
       <sendEmailToCandidateModal.Component
         size="large"
-        title="Souhaitez-vous envoyer un mail de notification au candidat ?"
+        title="Souhaitez-vous envoyer un courriel de notification au candidat ?"
         buttons={[
           {
             priority: "secondary",
@@ -121,8 +121,8 @@ export default function AddAppointmentPage() {
         ]}
       >
         <p>
-          Le candidat recevra un mail l’invitant à consulter les détails de ce
-          rendez vous depuis son espace.
+          Le candidat recevra un courriel l'invitant à consulter les détails de
+          ce rendez vous depuis son espace.
         </p>
       </sendEmailToCandidateModal.Component>
     </div>

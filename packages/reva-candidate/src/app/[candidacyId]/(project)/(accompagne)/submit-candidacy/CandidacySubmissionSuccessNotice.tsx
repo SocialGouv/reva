@@ -16,7 +16,7 @@ export default function CandidacySubmissionSuccessNotice() {
             Votre accompagnateur vous enverra prochainement un date de
             rendez-vous pour parler de votre projet. <br />
             Si vous n'avez toujours pas eu de retour 2 semaines après l'envoi de
-            votre candidatures, contactez-le directement par mail.
+            votre candidatures, contactez-le directement par courriel.
           </p>
           <Button
             className="mt-10"

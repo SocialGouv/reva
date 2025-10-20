@@ -19,7 +19,7 @@ const userAccountFormSchema = z.object({
     .default(""),
   email: z
     .string()
-    .email("Le champ doit contenir une adresse email")
+    .email("Le champ doit contenir une adresse électronique")
     .default(""),
 
   modalitesAccompagnement: z.enum(["ONSITE", "REMOTE"], {
@@ -95,9 +95,9 @@ export const UserAccountForm = ({
   return (
     <>
       <p className="mb-10 text-xl">
-        Le collaborateur ajouté recevra un mail pour finaliser son compte. Il
-        pourra compléter et modifier les informations qui seront affichées aux
-        candidats depuis son compte.
+        Le collaborateur ajouté recevra un courriel pour finaliser son compte.
+        Il pourra compléter et modifier les informations qui seront affichées
+        aux candidats depuis son compte.
       </p>
       <form
         className="flex flex-col gap-8"
@@ -133,7 +133,7 @@ export const UserAccountForm = ({
           />
           <div className="col-span-1">
             <Input
-              label="Email de connexion"
+              label="Adresse électronique de connexion"
               state={errors.email ? "error" : "default"}
               stateRelatedMessage={errors.email?.message?.toString()}
               nativeInputProps={{

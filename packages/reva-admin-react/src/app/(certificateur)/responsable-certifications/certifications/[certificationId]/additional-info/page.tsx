@@ -359,7 +359,7 @@ const AdditionalInfoForm = ({
               }}
             />
             <Input
-              label="E-mail (optionnel) :"
+              label="Adresse électronique (optionnel) :"
               className="flex-1"
               nativeInputProps={{
                 ...register("certificationExpertContactEmail"),

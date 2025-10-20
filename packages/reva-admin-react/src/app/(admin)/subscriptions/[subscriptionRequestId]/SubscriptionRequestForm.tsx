@@ -131,7 +131,7 @@ export const SubscriptionRequestForm = ({
               nativeTextAreaProps={register("rejectionReason")}
             />
             <SmallNotice>
-              L'AAP recevra ce commentaire dans le mail de décision.
+              L'AAP recevra ce commentaire dans le courriel de décision.
             </SmallNotice>
           </div>
           <div className="flex-1">
@@ -143,7 +143,7 @@ export const SubscriptionRequestForm = ({
               nativeTextAreaProps={register("internalComment")}
             />
             <SmallNotice>
-              Non visible par l’AAP / Signer ce commentaire pour le suivi des
+              Non visible par l'AAP / Signer ce commentaire pour le suivi des
               décisions.
             </SmallNotice>
           </div>

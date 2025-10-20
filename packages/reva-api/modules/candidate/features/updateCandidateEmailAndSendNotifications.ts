@@ -10,7 +10,9 @@ export const updateCandidateEmailAndSendNotifications = async ({
   newEmail: string;
 }) => {
   if (newEmail === previousEmail) {
-    throw new Error(`Le précédent et le nouvel email sont identiques`);
+    throw new Error(
+      `La précédente et la nouvelle adresse électroniques sont identiques`,
+    );
   }
 
   await updateCandidateEmail({ previousEmail, newEmail });

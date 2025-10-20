@@ -15,13 +15,13 @@ const schema = z.object({
     .default(""),
   accountEmail: z
     .string()
-    .email("Le champ doit contenir une adresse email")
+    .email("Le champ doit contenir une adresse électronique valide")
     .default(""),
 
   contactFullName: z.string().min(1, "Merci de remplir ce champ"),
   contactEmail: z
     .string()
-    .email("Le champ doit contenir une adresse email valide"),
+    .email("Le champ doit contenir une adresse électronique valide"),
   contactPhone: z.string().optional(),
 });
 
@@ -78,7 +78,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
         />
         <Input
           data-test="account-email-input"
-          label="Email de connexion"
+          label="Adresse électronique de connexion"
           nativeInputProps={{
             autoComplete: "email",
             ...register("accountEmail"),
@@ -106,12 +106,12 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
         />
         <Input
           data-test="contact-email-input"
-          label="Email"
+          label="Adresse électronique"
           nativeInputProps={{
             autoComplete: "email",
             ...register("contactEmail"),
           }}
-          hintText="Privilégiez une adresse e-mail pérenne pour faciliter les échanges avec les candidats et les AAP"
+          hintText="Privilégiez une adresse électronique pérenne pour faciliter les échanges avec les candidats et les AAP"
           state={errors.contactEmail ? "error" : "default"}
           stateRelatedMessage={errors.contactEmail?.message}
         />
