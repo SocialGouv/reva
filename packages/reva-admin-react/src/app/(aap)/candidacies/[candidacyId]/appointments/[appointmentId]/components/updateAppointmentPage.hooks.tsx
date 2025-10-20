@@ -49,7 +49,7 @@ export const useUpdateAppointmentPage = ({
         queryKey: [
           candidacyId,
           appointmentId,
-          "getCandidacyAndAppointmentForUpdateAppointmentPage",
+          "getCandidacyAndAppointmentForUpdateOrViewAppointmentPage",
         ],
       });
     },
