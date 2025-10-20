@@ -122,7 +122,7 @@ export const validateSubscriptionRequest = async ({
 
   await updateOrganismOnAccountAssociation({
     accountId: account.id,
-    organismId: newOrganism.id,
+    organismIds: [newOrganism.id],
   });
 
   const newMaisonMereAAP = await createMaisonMereAAP({

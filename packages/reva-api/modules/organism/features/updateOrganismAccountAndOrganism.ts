@@ -50,7 +50,10 @@ export const updateOrganismAccountAndOrganism = async ({
     data: { organismId },
   });
 
-  await updateOrganismOnAccountAssociation({ accountId, organismId });
+  await updateOrganismOnAccountAssociation({
+    accountId,
+    organismIds: [organismId], //TODO update this when we allow on account to be linked to multiple organisms
+  });
 
   if (organism.maisonMereAAPId) {
     await logAAPAuditEvent({

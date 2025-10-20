@@ -45,7 +45,7 @@ export const createOrganismAccount = async ({
 
   await updateOrganismOnAccountAssociation({
     accountId: account.id,
-    organismId,
+    organismIds: [organismId],
   });
 
   if (organism.maisonMereAAPId) {
