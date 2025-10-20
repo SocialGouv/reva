@@ -492,6 +492,7 @@ model Account {
   certificationRegistryManager       CertificationRegistryManager[]
   disabledAt                         DateTime?                            @map("disabled_at") @db.Timestamptz(6)
   commanditaireVaeCollective         CommanditaireVaeCollective[]
+  organismOnAccounts                 OrganismOnAccount[]
 
   @@index([email])
   @@index([organismId])
@@ -541,9 +542,23 @@ model Organism {
   modaliteAccompagnement                       OrganismModaliteAccompagnement                @map("modalite_accompagnement")
   modaliteAccompagnementRenseigneeEtValide     Boolean                                       @map("modalite_accompagnement_renseignee_et_valide")
   certificationCohorteVaeCollectiveOnOrganisms CertificationCohorteVaeCollectiveOnOrganism[]
+  organismOnAccounts                           OrganismOnAccount[]
 
   @@index([maisonMereAAPId])
   @@map("organism")
+}
+
+model OrganismOnAccount {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  account    Account   @relation(fields: [accountId], references: [id])
+  accountId  String    @map("account_id") @db.Uuid
+  organism   Organism  @relation(fields: [organismId], references: [id])
+  organismId String    @map("organism_id") @db.Uuid
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([accountId, organismId])
+  @@map("organism_on_account")
 }
 
 enum OrganismModaliteAccompagnement {
