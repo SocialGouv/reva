@@ -203,7 +203,7 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     data: { trainingId: training.id, candidacyId: candidacy.id },
   });
 
-  const goalLabel = "Évoluer vers un poste de manager";
+  const goalLabel = "Trouver plus facilement un emploi";
   const goal = await prismaClient.goal.upsert({
     where: { label: goalLabel },
     update: {},
@@ -470,7 +470,7 @@ describe("demat feasibility pdf generation", () => {
       "goals",
       `
         Objectifs poursuivis par le candidat
-        Évoluer vers un poste de manager
+        Trouver plus facilement un emploi
       `,
     );
   });

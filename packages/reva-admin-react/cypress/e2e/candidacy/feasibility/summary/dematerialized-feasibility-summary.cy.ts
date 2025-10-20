@@ -307,9 +307,7 @@ describe("Dematerialized feasibility summary", () => {
           );
           cy.contains("Management d'équipe avancé").should("be.visible");
           cy.contains("Analyse de données").should("be.visible");
-          cy.contains(
-            "Évoluer vers un poste de responsable d'exploitation",
-          ).should("be.visible");
+          cy.contains("Trouver plus facilement un emploi").should("be.visible");
           cy.contains("Structurer une équipe logistique multi-sites").should(
             "be.visible",
           );
