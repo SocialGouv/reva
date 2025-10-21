@@ -341,7 +341,7 @@ test("should not update an appointment when it is past", async () => {
   ).rejects.toThrowError("Impossible de modifier un rendez-vous passé");
 });
 
-test("should delete an upcoming appointment and send an email to the candidate", async () => {
+test("should delete an upcoming appointment of type RENDEZ_VOUS_DE_SUIVI and send an email to the candidate", async () => {
   const sendEmailUsingTemplateSpy = vi.spyOn(
     EmailModule,
     "sendEmailUsingTemplate",
@@ -360,6 +360,7 @@ test("should delete an upcoming appointment and send an email to the candidate",
 
   const appointment = await createAppointmentHelper({
     date: new Date("2225-08-12:10:00:00Z"),
+    type: AppointmentType.RENDEZ_VOUS_DE_SUIVI,
   });
 
   const ileDeFranceDepartment = await prismaClient.department.findFirst({
@@ -408,7 +409,7 @@ test("should delete an upcoming appointment and send an email to the candidate",
   });
 });
 
-test("should not delete an appointment when it is past", async () => {
+test("should not delete an appointment of type RENDEZ_VOUS_DE_SUIVI when it is past", async () => {
   const deleteAppointment = graphql(`
     mutation deleteAppointment($candidacyId: ID!, $appointmentId: ID!) {
       appointment_deleteAppointment(
@@ -422,6 +423,7 @@ test("should not delete an appointment when it is past", async () => {
 
   const appointment = await createAppointmentHelper({
     date: new Date("1999-08-12"),
+    type: AppointmentType.RENDEZ_VOUS_DE_SUIVI,
   });
 
   await expect(() =>
@@ -430,4 +432,29 @@ test("should not delete an appointment when it is past", async () => {
       appointmentId: appointment.id,
     }),
   ).rejects.toThrowError("Impossible de supprimer un rendez-vous passé");
+});
+
+test("should not delete an appointment of type RENDEZ_VOUS_PEDAGOGIQUE", async () => {
+  const deleteAppointment = graphql(`
+    mutation deleteAppointment($candidacyId: ID!, $appointmentId: ID!) {
+      appointment_deleteAppointment(
+        candidacyId: $candidacyId
+        appointmentId: $appointmentId
+      ) {
+        id
+      }
+    }
+  `);
+
+  const appointment = await createAppointmentHelper({
+    type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
+    date: new Date("2225-08-12"),
+  });
+
+  await expect(() =>
+    graphqlClient.request(deleteAppointment, {
+      candidacyId: appointment.candidacyId,
+      appointmentId: appointment.id,
+    }),
+  ).rejects.toThrowError("Impossible de supprimer un rendez-vous pedagogique");
 });

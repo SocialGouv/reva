@@ -34,6 +34,10 @@ export const deleteAppointmentById = async ({
     throw new Error("Impossible de supprimer un rendez-vous passé");
   }
 
+  if (appointment.type === "RENDEZ_VOUS_PEDAGOGIQUE") {
+    throw new Error("Impossible de supprimer un rendez-vous pedagogique");
+  }
+
   const result = await prismaClient.appointment.delete({
     where: { id: appointmentId },
     include: {
