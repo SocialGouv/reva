@@ -8,7 +8,12 @@ import { graphql } from "@/graphql/generated";
 const getPastAppointmentsQuery = graphql(`
   query getPastAppointments($candidacyId: ID!, $limit: Int, $offset: Int) {
     getCandidacyById(id: $candidacyId) {
-      appointments(limit: $limit, offset: $offset, temporalStatusFilter: PAST) {
+      appointments(
+        limit: $limit
+        offset: $offset
+        temporalStatusFilter: PAST
+        sortBy: DATE_DESC
+      ) {
         rows {
           id
           title
@@ -30,6 +35,7 @@ const getFutureAppointmentsQuery = graphql(`
         limit: $limit
         offset: $offset
         temporalStatusFilter: UPCOMING
+        sortBy: DATE_ASC
       ) {
         rows {
           id
