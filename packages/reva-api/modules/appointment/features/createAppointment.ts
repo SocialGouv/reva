@@ -13,8 +13,6 @@ import { prismaClient } from "@/prisma/client";
 
 import { CreateAppointmentInput } from "../appointment.types";
 
-import { getAppointmentTemporalStatus } from "./getAppointmentTemporalStatus";
-
 export const createAppointment = async ({
   input,
   userInfo,
@@ -45,8 +43,8 @@ export const createAppointment = async ({
     );
   }
 
-  if (getAppointmentTemporalStatus({ date: data.date }) === "PAST") {
-    throw new Error("Impossible de modifier un rendez-vous passé");
+  if (data.date < new Date()) {
+    throw new Error("Impossible de créer un rendez-vous passé");
   }
 
   const candidate = await prismaClient.candidacy

@@ -242,7 +242,7 @@ test("should not create an appointment if it's date is in the past", async () =>
         duration: "ONE_HOUR",
       },
     }),
-  ).rejects.toThrowError("Impossible de modifier un rendez-vous passé");
+  ).rejects.toThrowError("Impossible de créer un rendez-vous passé");
 });
 
 test("should update an appointment when it is not past and send an email to the candidate", async () => {
