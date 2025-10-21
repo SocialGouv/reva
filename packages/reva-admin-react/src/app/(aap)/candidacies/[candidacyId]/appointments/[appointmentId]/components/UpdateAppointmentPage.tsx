@@ -7,6 +7,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import {
   AppointmentDuration,
+  AppointmentTemporalStatus,
   AppointmentType,
 } from "@/graphql/generated/graphql";
 
@@ -30,6 +31,7 @@ export const UpdateAppointmentPage = ({
     description?: string | null;
     duration?: AppointmentDuration | null;
     location?: string | null;
+    temporalStatus: AppointmentTemporalStatus;
   };
   candidate: {
     id: string;
@@ -104,6 +106,10 @@ export const UpdateAppointmentPage = ({
     }
   };
 
+  const showDeleteAppointmentButton =
+    appointment.temporalStatus === "UPCOMING" &&
+    appointment.type !== "RENDEZ_VOUS_PEDAGOGIQUE";
+
   return (
     <>
       <modal.Component
@@ -148,7 +154,9 @@ export const UpdateAppointmentPage = ({
             date: format(new Date(appointment.date), "yyyy-MM-dd"),
             time: format(new Date(appointment.date), "HH:mm"),
           }}
-          onDeleteButtonClick={modal.open}
+          onDeleteButtonClick={
+            showDeleteAppointmentButton ? modal.open : undefined
+          }
         />
       </div>
     </>

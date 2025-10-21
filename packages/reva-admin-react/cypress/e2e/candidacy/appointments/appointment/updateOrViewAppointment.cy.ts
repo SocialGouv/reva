@@ -2,7 +2,11 @@ import { stubMutation, stubQuery } from "../../../../utils/graphql";
 
 function interceptQueries({
   rendezVousPedagogiqueTemporalStatus = "UPCOMING",
-}: { rendezVousPedagogiqueTemporalStatus?: "UPCOMING" | "PAST" } = {}) {
+  type = "RENDEZ_VOUS_DE_SUIVI",
+}: {
+  rendezVousPedagogiqueTemporalStatus?: "UPCOMING" | "PAST";
+  type?: "RENDEZ_VOUS_PEDAGOGIQUE" | "RENDEZ_VOUS_DE_SUIVI";
+} = {}) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
       req,
@@ -37,8 +41,8 @@ function interceptQueries({
         },
         appointment_getAppointmentById: {
           id: "5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3",
-          type: "RENDEZ_VOUS_PEDAGOGIQUE",
-          title: "Rendez-vous pédagogique",
+          type,
+          title: "Rendez-vous de suivi",
           date: "2025-01-01T09:00:00.000Z",
           duration: "ONE_HOUR",
           location: "Test Location",
@@ -87,7 +91,7 @@ context("when I access the candidacy add appointment page", () => {
 
       cy.get('[data-test="update-appointments-page"]')
         .children("h1")
-        .should("have.text", "Rendez-vous pédagogique de Doe John");
+        .should("have.text", "Rendez-vous de suivi de Doe John");
     });
 
     it("fill the field with the existing appointment values", function () {
@@ -99,7 +103,7 @@ context("when I access the candidacy add appointment page", () => {
 
       cy.get('[data-test="title-input"] input').should(
         "have.value",
-        "Rendez-vous pédagogique",
+        "Rendez-vous de suivi",
       );
       cy.get('[data-test="date-input"] input').should(
         "have.value",
@@ -155,23 +159,35 @@ context("when I access the candidacy add appointment page", () => {
         `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3/update-confirmation/`,
       );
     });
+    context("when the appointment is a rendez-vous de suivi", () => {
+      it("let me click on the delete button and redirect me to the delete confirmation page", function () {
+        interceptQueries();
+        cy.admin(
+          "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3",
+        );
+        waitForQueries();
 
-    it("let me click on the delete button and redirect me to the delete confirmation page", function () {
-      interceptQueries();
-      cy.admin(
-        "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3",
-      );
-      waitForQueries();
+        cy.get('[data-test="delete-appointment-button"]').click();
+        cy.get(".confirm-appointment-deletion-modal-button").click();
 
-      cy.get('[data-test="delete-appointment-button"]').click();
-      cy.get(".confirm-appointment-deletion-modal-button").click();
+        cy.wait("@deleteAppointmentForUpdateAppointmentPage");
 
-      cy.wait("@deleteAppointmentForUpdateAppointmentPage");
+        cy.url().should(
+          "eq",
+          `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3/delete-confirmation/?date=2025-01-01T09:00:00.000Z&candidateFirstName=John&candidateLastName=Doe`,
+        );
+      });
+    });
+    context("when the appointment is a rendez-vous pedagogique", () => {
+      it("does not show the delete button", function () {
+        interceptQueries({ type: "RENDEZ_VOUS_PEDAGOGIQUE" });
+        cy.admin(
+          "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3",
+        );
+        waitForQueries();
 
-      cy.url().should(
-        "eq",
-        `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/5e3acd4a-128f-4d1d-b9d7-4a1bd126bdd3/delete-confirmation/?date=2025-01-01T09:00:00.000Z&candidateFirstName=John&candidateLastName=Doe`,
-      );
+        cy.get('[data-test="delete-appointment-button"]').should("not.exist");
+      });
     });
   });
   context("when the appointment is past", () => {
@@ -184,7 +200,7 @@ context("when I access the candidacy add appointment page", () => {
 
       cy.get('[data-test="view-appointments-page"]')
         .children("h1")
-        .should("have.text", "Rendez-vous pédagogique");
+        .should("have.text", "Rendez-vous de suivi");
     });
 
     it("show the correct field values", function () {
@@ -197,7 +213,7 @@ context("when I access the candidacy add appointment page", () => {
 
       cy.get('[data-test="rendez-vous-pedagogique-tile"] .fr-tag').should(
         "have.text",
-        "Rendez-vous pédagogique",
+        "Rendez-vous de suivi",
       );
       cy.get(
         '[data-test="rendez-vous-pedagogique-tile"] .fr-tile__title',
