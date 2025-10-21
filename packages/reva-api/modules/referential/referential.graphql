@@ -213,6 +213,7 @@ type FCCertification {
 type Country {
   id: UUID!
   label: String!
+  isoCode: String!
 }
 
 enum LegalStatus {
