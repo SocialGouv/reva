@@ -37,6 +37,11 @@ export const createOrganismHelper = async (
           id: account.id,
         },
       },
+      organismOnAccounts: {
+        create: {
+          accountId: account.id,
+        },
+      },
       ...organismArgs,
     },
     include: {
