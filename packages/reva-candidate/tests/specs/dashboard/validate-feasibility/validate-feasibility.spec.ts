@@ -218,6 +218,20 @@ test.describe("Dematerialized feasibility résumé", () => {
     ).toBeVisible();
   });
 
+  test("displays eligibility information", async ({ page }) => {
+    const eligibilitySection = page.locator("section", {
+      has: page.getByRole("heading", { name: "Recevabilité du candidat" }),
+    });
+
+    await expect(eligibilitySection).toContainText(
+      "Accès au dossier de faisabilité intégral",
+    );
+
+    await expect(
+      eligibilitySection.getByLabel("Date de fin de validité"),
+    ).toHaveText("31/12/2024");
+  });
+
   test("displays validation form and enables submit button", async ({
     page,
   }) => {

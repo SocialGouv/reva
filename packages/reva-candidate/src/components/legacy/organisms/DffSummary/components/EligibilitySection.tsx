@@ -28,7 +28,7 @@ export default function EligibilitySection({
   eligibilityValidUntil: Date | null;
 }) {
   return (
-    <div className="mb-8">
+    <section className="mb-8">
       <div className="flex">
         <span className="ri-folder-check-fill fr-icon--lg mr-2" />
         <h2>Recevabilité du candidat</h2>
@@ -36,16 +36,18 @@ export default function EligibilitySection({
       <EligibiltyBadge eligibilityRequirement={eligibilityRequirement} />
       {eligibilityValidUntil && (
         <>
-          <p className="mb-0 mt-4">Date de fin de validité</p>
-          <p className="font-medium mb-4">
-            {format(eligibilityValidUntil, "dd/MM/yyyy")}
-          </p>
+          <dl>
+            <dt id="valid-until">Date de fin de validité</dt>
+            <dd aria-labelledby="valid-until">
+              {format(eligibilityValidUntil, "dd/MM/yyyy")}
+            </dd>
+          </dl>
           <CallOut className="mb-0">
             Le candidat s&apos;engage à respecter le délai de fin de validité de
             la recevabilité
           </CallOut>
         </>
       )}
-    </div>
+    </section>
   );
 }
