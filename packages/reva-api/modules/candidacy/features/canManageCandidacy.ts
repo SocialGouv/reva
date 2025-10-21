@@ -44,38 +44,48 @@ export const canManageCandidacy = async ({
 
   const account = await prismaClient.account.findUnique({
     where: { keycloakId },
-    include: { organism: true },
+    include: { organismOnAccounts: { include: { organism: true } } },
   });
 
   if (!account) {
     throw new Error("Votre compte utilisateur est introuvable.");
   }
 
-  if (!account.organism) {
+  if (!account.organismOnAccounts.length) {
     return false;
   }
 
   const candidacyOrganismId = candidacy.organismId;
+  if (!candidacyOrganismId) {
+    return false;
+  }
 
-  const accountOrganismId = account.organismId;
-
-  const isCandidacyorganismSameAsAccountOrganism =
-    candidacyOrganismId === accountOrganismId;
-  log(
-    "Manager and candidacy have same organismId:",
-    isCandidacyorganismSameAsAccountOrganism,
+  const accountOrganismIds = account.organismOnAccounts.map(
+    (organismOnAccount) => organismOnAccount.organismId,
   );
 
-  if (isCandidacyorganismSameAsAccountOrganism) {
+  const isCandidacyorganismIncludedInAccountOrganism =
+    accountOrganismIds.includes(candidacyOrganismId);
+  log(
+    "Manager and candidacy have same organismId:",
+    isCandidacyorganismIncludedInAccountOrganism,
+  );
+
+  if (isCandidacyorganismIncludedInAccountOrganism) {
     return true;
   }
 
-  if (!account.organism.maisonMereAAPId) {
+  //An aap can be linked to multiple organisms but they all share the same maison mere aap
+  //So to get the maison mere aap id we can just get the one from the first organism
+  const maisonMereAAPId =
+    account.organismOnAccounts[0].organism.maisonMereAAPId;
+
+  if (!maisonMereAAPId) {
     return false;
   }
 
   const maisonMere = await getMaisonMereAAPById({
-    maisonMereAAPId: account.organism.maisonMereAAPId,
+    maisonMereAAPId,
   });
 
   if (!maisonMere) {

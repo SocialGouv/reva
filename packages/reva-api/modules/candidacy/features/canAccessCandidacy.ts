@@ -35,6 +35,7 @@ export const canAccessCandidacy = async ({
 
   const account = await prismaClient.account.findFirst({
     where: { keycloakId },
+    include: { organismOnAccounts: true },
   });
   if (!account) {
     return false;
@@ -75,7 +76,10 @@ export const canAccessCandidacy = async ({
       where: { id: candidacy.organismId },
     });
 
-    return candidacyOrganism?.id === account.organismId;
+    return account.organismOnAccounts.some(
+      (organismOnAccount) =>
+        organismOnAccount.organismId === candidacyOrganism?.id,
+    );
   }
 
   //user is certification authority admin
