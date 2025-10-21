@@ -258,7 +258,7 @@ export const departementSchema = {
 export const adresseSchema = {
   $id: "http://vae.gouv.fr/components/schemas/Adresse",
   type: "object",
-  required: ["codePostal", "rue", "ville", "departement", "pays"],
+  required: ["codePostal", "rue", "ville", "departement", "pays", "codePays"],
   properties: {
     departement: {
       $ref: "http://vae.gouv.fr/components/schemas/Departement",
@@ -295,6 +295,13 @@ export const adresseSchema = {
       maxLength: 255,
       description: "Pays",
       example: "France",
+      nullable: true,
+    },
+    codePays: {
+      type: "string",
+      maxLength: 3,
+      description: "Code du pays (ISO 3166-1 alpha-3)",
+      example: "FRA",
       nullable: true,
     },
   },

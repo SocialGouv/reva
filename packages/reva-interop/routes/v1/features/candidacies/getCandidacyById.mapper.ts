@@ -112,6 +112,7 @@ export const mapGetCandidacyById = (
         rue: candidacy.candidate.street || null,
         ville: candidacy.candidate.city || null,
         pays: candidacy.candidate.country?.label || null,
+        codePays: candidacy.candidate.country?.isoCode?.toUpperCase() || null,
         departement: {
           code: candidacy.candidate.department.code,
           nom: candidacy.candidate.department.label,

@@ -58,6 +58,7 @@ const getCandidacyWithFeasibilityQuery = graphql(`
         addressComplement
         country {
           label
+          isoCode
         }
         department {
           code
