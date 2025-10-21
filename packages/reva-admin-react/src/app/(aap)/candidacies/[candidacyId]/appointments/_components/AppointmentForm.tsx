@@ -80,8 +80,8 @@ export const AppointmentForm = ({
         data-test="duration-input"
         label="Durée : (Optionnel)"
         nativeSelectProps={{ ...register("duration") }}
-        state={errors.time ? "error" : "default"}
-        stateRelatedMessage={errors.time?.message}
+        state={errors.duration ? "error" : "default"}
+        stateRelatedMessage={errors.duration?.message}
       >
         <option value=""></option>
         <option value="HALF_AN_HOUR">30 minutes</option>
