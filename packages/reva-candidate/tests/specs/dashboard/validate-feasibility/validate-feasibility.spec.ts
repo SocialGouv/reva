@@ -86,35 +86,47 @@ test.describe("Dematerialized feasibility résumé", () => {
       .filter({ hasText: /Blocs de compétences/ })
       .first();
 
+    const blocA = blocsSection
+      .locator("section")
+      .filter({
+        hasText: "48379857 - Organiser et piloter les activites logistiques",
+      });
     await expect(
-      blocsSection.getByText("Organiser et piloter les activites logistiques"),
-    ).toBeVisible();
-    await expect(
-      blocsSection.getByText(
+      blocA.getByText(
         "Experience significative en gestion d'equipe sur site logistique.",
       ),
     ).toBeVisible();
 
+    const competenceA1 = blocA.locator("> div > div").nth(0);
+    await expect(competenceA1).toContainText("Oui");
+    await expect(competenceA1).toContainText(
+      "Definir les indicateurs de performance",
+    );
+
+    const competenceA2 = blocA.locator("> div > div").nth(1);
+    await expect(competenceA2).toContainText("Partiellement");
+    await expect(competenceA2).toContainText("Manager les equipes logistiques");
+
+    const blocB = blocsSection
+      .locator("section")
+      .filter({ hasText: "2849037 - Digitaliser les processus logistiques" });
     await expect(
-      blocsSection.getByText("Digitaliser les processus logistiques"),
-    ).toBeVisible();
-    await expect(
-      blocsSection.getByText(
+      blocB.getByText(
         "Competences a confirmer sur la digitalisation des flux.",
       ),
     ).toBeVisible();
 
-    await expect(
-      blocsSection.getByText("Definir les indicateurs de performance"),
-    ).toBeVisible();
-    await expect(
-      blocsSection.getByText("Manager les equipes logistiques"),
-    ).toBeVisible();
-    await expect(
-      blocsSection.getByText(
-        "Mettre en place des outils de suivi en temps reel",
-      ),
-    ).toBeVisible();
+    const competenceB1 = blocB.locator("> div > div").nth(0);
+    await expect(competenceB1).toContainText("Non");
+    await expect(competenceB1).toContainText(
+      "Mettre en place des outils de suivi en temps reel",
+    );
+
+    const competenceB2 = blocB.locator("> div > div").nth(1);
+    await expect(competenceB2).toContainText("Oui");
+    await expect(competenceB2).toContainText(
+      "Superviser l'integration des donnees",
+    );
   });
 
   test("displays prerequisites", async ({ page }) => {
