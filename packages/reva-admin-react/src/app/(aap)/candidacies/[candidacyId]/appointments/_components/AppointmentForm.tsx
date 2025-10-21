@@ -51,7 +51,7 @@ export const AppointmentForm = ({
 
   return (
     <form
-      className="w-full grid grid-cols-1 md:grid-cols-4 gap-x-4"
+      className="w-full grid grid-cols-1 md:grid-cols-3 gap-x-6"
       onSubmit={handleSubmit(onSubmit, (e) => console.error(e))}
     >
       <Input
@@ -71,14 +71,14 @@ export const AppointmentForm = ({
       />
       <Input
         data-test="time-input"
-        label="Heure"
+        label="Heure de convocation :"
         nativeInputProps={{ type: "time", ...register("time") }}
         state={errors.time ? "error" : "default"}
         stateRelatedMessage={errors.time?.message}
       />
       <Select
         data-test="duration-input"
-        label="Durée : (Optionnel)"
+        label="Durée estimée: (Optionnel)"
         nativeSelectProps={{ ...register("duration") }}
         state={errors.duration ? "error" : "default"}
         stateRelatedMessage={errors.duration?.message}
@@ -123,7 +123,7 @@ export const AppointmentForm = ({
       <FormButtons
         className="col-span-full"
         backUrl={backUrl}
-        backButtonLabel="annuler"
+        backButtonLabel="Annuler"
         formState={{ isDirty, isSubmitting }}
         disabled={!isDirty}
       />
