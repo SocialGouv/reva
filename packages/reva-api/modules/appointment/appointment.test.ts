@@ -143,7 +143,7 @@ test("should create an appointment and send an email to the candidate", async ()
       title: "Test Appointment",
       description: "Test Description",
       location: "Test Location",
-      date: "2025-09-26T10:00:00.000Z",
+      date: "2225-09-26T10:00:00.000Z",
       duration: "ONE_HOUR",
       sendEmailToCandidate: true,
     },
@@ -153,7 +153,7 @@ test("should create an appointment and send an email to the candidate", async ()
     appointment_createAppointment: {
       title: "Test Appointment",
       type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
-      date: "2025-09-26T10:00:00.000Z",
+      date: "2225-09-26T10:00:00.000Z",
       description: "Test Description",
       location: "Test Location",
       duration: "ONE_HOUR",
@@ -165,7 +165,7 @@ test("should create an appointment and send an email to the candidate", async ()
     params: {
       candidateFullName:
         candidacy.candidate?.firstname + " " + candidacy.candidate?.lastname,
-      appointmentDate: "26/09/2025",
+      appointmentDate: "26/09/2225",
       appointmentTime: "12:00",
       appointmentUrl: `${getCandidateAppUrl()}/${candidacy.id}/appointments/${res.appointment_createAppointment.id}`,
     },
@@ -211,6 +211,38 @@ test("should not create an appointment and throw an error if there is already a 
   ).rejects.toThrowError(
     "Il y a déjà un rendez-vous pédagogique pour cette candidature",
   );
+});
+
+test("should not create an appointment if it's date is in the past", async () => {
+  const createAppointment = graphql(`
+    mutation createAppointment($input: CreateAppointmentInput!) {
+      appointment_createAppointment(input: $input) {
+        id
+        title
+        type
+        date
+        description
+        location
+        duration
+      }
+    }
+  `);
+
+  const candidacy = await createCandidacyHelper();
+
+  await expect(
+    graphqlClient.request(createAppointment, {
+      input: {
+        candidacyId: candidacy.id,
+        type: AppointmentType.RENDEZ_VOUS_PEDAGOGIQUE,
+        title: "Test Appointment",
+        description: "Test Description",
+        location: "Test Location",
+        date: "2005-09-26T10:00:00.000Z",
+        duration: "ONE_HOUR",
+      },
+    }),
+  ).rejects.toThrowError("Impossible de modifier un rendez-vous passé");
 });
 
 test("should update an appointment when it is not past and send an email to the candidate", async () => {

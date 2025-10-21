@@ -2,29 +2,40 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isBefore, parseISO, startOfToday } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 
-const appointmentFormSchema = z.object({
-  title: z.string().min(1, "Merci de remplir ce champ"),
-  date: z.string().min(1, "Merci de remplir ce champ"),
-  time: z.string().min(1, "Merci de remplir ce champ"),
-  duration: z
-    .enum([
-      "",
-      "HALF_AN_HOUR",
-      "ONE_HOUR",
-      "TWO_HOURS",
-      "THREE_HOURS",
-      "FOUR_HOURS",
-    ])
-    .optional()
-    .nullable(),
-  location: z.string().optional().nullable(),
-  description: z.string().optional().nullable(),
-});
+const appointmentFormSchema = z
+  .object({
+    title: z.string().min(1, "Merci de remplir ce champ"),
+    date: z.string().min(1, "Merci de remplir ce champ"),
+    time: z.string().min(1, "Merci de remplir ce champ"),
+    duration: z
+      .enum([
+        "",
+        "HALF_AN_HOUR",
+        "ONE_HOUR",
+        "TWO_HOURS",
+        "THREE_HOURS",
+        "FOUR_HOURS",
+      ])
+      .optional()
+      .nullable(),
+    location: z.string().optional().nullable(),
+    description: z.string().optional().nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (isBefore(parseISO(data.date), startOfToday())) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["date"],
+        message: "La date ne doit pas être dans le passé",
+      });
+    }
+  });
 
 export type AppointmentFormData = z.infer<typeof appointmentFormSchema>;
 

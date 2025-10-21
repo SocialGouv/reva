@@ -13,6 +13,8 @@ import { prismaClient } from "@/prisma/client";
 
 import { CreateAppointmentInput } from "../appointment.types";
 
+import { getAppointmentTemporalStatus } from "./getAppointmentTemporalStatus";
+
 export const createAppointment = async ({
   input,
   userInfo,
@@ -41,6 +43,10 @@ export const createAppointment = async ({
     throw new Error(
       "Il y a déjà un rendez-vous pédagogique pour cette candidature",
     );
+  }
+
+  if (getAppointmentTemporalStatus({ date: data.date }) === "PAST") {
+    throw new Error("Impossible de modifier un rendez-vous passé");
   }
 
   const candidate = await prismaClient.candidacy
