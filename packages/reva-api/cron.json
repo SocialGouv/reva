@@ -1,7 +1,0 @@
-{
-  "jobs": [
-    {
-      "command": "*/10 * * * * /app/scripts/syncOutcsaleBucketToBackup.sh"
-    }
-  ]
-}
