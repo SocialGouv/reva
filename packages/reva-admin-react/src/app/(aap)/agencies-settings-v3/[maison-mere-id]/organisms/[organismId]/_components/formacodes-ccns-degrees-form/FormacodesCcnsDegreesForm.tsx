@@ -362,7 +362,7 @@ const FormacodesCcnsDegreesForm = ({
 
                             <Accordion label="" defaultExpanded>
                               <Checkbox
-                                className="[&_label]:block [&_label]:first-letter:uppercase mb-0"
+                                className="[&_label]:first-letter:uppercase mb-0"
                                 options={subDomainsForDomain.map((od) => ({
                                   label: (
                                     <ToolTip
@@ -440,9 +440,10 @@ const ToolTip = (props: {
         left: rect.left,
         top: rect.top + window.scrollY,
         bottom: rect.bottom + window.scrollY,
+        width: rect.width,
       };
     }
-    return { left: 0, top: 0, bottom: 0 };
+    return { left: 0, top: 0, bottom: 0, width: 0 };
   };
 
   const tooltipPosition = getTooltipPosition();
@@ -462,8 +463,9 @@ const ToolTip = (props: {
             style={{
               position: "absolute",
               zIndex: 11,
-              left: tooltipPosition.left,
-              bottom: window.innerHeight - tooltipPosition.bottom,
+              left: tooltipPosition.left + tooltipPosition.width,
+              top: tooltipPosition.top,
+              // bottom: window.innerHeight - tooltipPosition.bottom,
             }}
           >
             {props.WrappedChildren}
@@ -486,31 +488,36 @@ const CertificationsList = (props: {
   });
 
   return (
-    <div className="ml-[-48px] mb-10 bg-white shadow-md rounded-md flex flex-col gap-2 p-4">
-      <div className="text-sm">
-        Certifications proposées aux candidats :
-        <div className="text-xs italic mb-2">
-          <strong>Important</strong>, les certifications sont filtrées en
-          fonction des niveaux et branches sélectionnés.
+    <div className="relative mt-[-30px] ml-6 shadow-md rounded-md border-[0.5px] border-dsfr-light-decisions-border-border-default-grey">
+      <div className="absolute z-1 top-8 left-[-10px] w-[20px] h-[20px] rotate-[-45deg] bg-white shadow-md border-[0.5px] border-dsfr-light-decisions-border-border-default-grey" />
+      <div className="relative z-2 flex flex-col gap-2 p-4 bg-white rounded-md">
+        <div>
+          <div className="text-sm font-medium mb-1">
+            Certifications proposées aux candidats :
+          </div>
+          <div className="text-xs italic mb-2">
+            <strong>Important</strong>, les certifications sont filtrées en
+            fonction des niveaux et branches sélectionnés.
+          </div>
         </div>
+
+        {certifications?.map((certification) => (
+          <Link
+            key={certification.id}
+            href={`/certification-details/${certification.id}`}
+            target="_blank"
+            className="text-xs bg-none text-dsfr-blue-france-sun-113"
+          >
+            {certification.codeRncp} - {certification.label}
+          </Link>
+        ))}
+
+        {certifications && certifications.length === 0 && (
+          <div className="text-xs text-dsfr-light-text-mention-grey">
+            Aucune certification référencée chez France VAE pour ce formacode.
+          </div>
+        )}
       </div>
-
-      {certifications?.map((certification) => (
-        <Link
-          key={certification.id}
-          href={`/certification-details/${certification.id}`}
-          target="_blank"
-          className="text-xs bg-none text-dsfr-blue-france-sun-113"
-        >
-          {certification.codeRncp} - {certification.label}
-        </Link>
-      ))}
-
-      {certifications && certifications.length === 0 && (
-        <div className="text-xs text-dsfr-light-text-mention-grey">
-          Aucune certification référencée chez France VAE pour ce formacode.
-        </div>
-      )}
     </div>
   );
 };
