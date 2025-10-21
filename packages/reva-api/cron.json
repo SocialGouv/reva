@@ -1,0 +1,7 @@
+{
+  "jobs": [
+    {
+      "command": "${CRON_SYNC_OUTSCALE_BUCKET_TO_BACKUP} /app/scripts/syncOutcsaleBucketToBackup.sh"
+    }
+  ]
+}
