@@ -190,9 +190,25 @@ export const generateFeasibilityFileByCandidacyId = async (
       collectiveHourCount,
     } = candidacy;
 
+    const sortedBasicSkills = [...basicSkills]
+      .map(({ basicSkill }) => basicSkill)
+      .sort((first, second) =>
+        first.label.localeCompare(second.label, "fr", {
+          sensitivity: "base",
+        }),
+      );
+
+    const sortedTrainings = [...trainings]
+      .map(({ training }) => training)
+      .sort((first, second) =>
+        first.label.localeCompare(second.label, "fr", {
+          sensitivity: "base",
+        }),
+      );
+
     addTraining(doc, {
-      basicSkills: basicSkills.map(({ basicSkill }) => basicSkill),
-      trainings: trainings.map(({ training }) => training),
+      basicSkills: sortedBasicSkills,
+      trainings: sortedTrainings,
       additionalHourCount,
       individualHourCount,
       collectiveHourCount,
@@ -201,7 +217,11 @@ export const generateFeasibilityFileByCandidacyId = async (
     const { goals } = candidacy;
 
     if (goals.length > 0) {
-      addGoals(doc, { goals: goals.map(({ goal }) => goal) });
+      const sortedGoals = [...goals]
+        .map(({ goal }) => goal)
+        .sort((first, second) => first.order - second.order);
+
+      addGoals(doc, { goals: sortedGoals });
     }
 
     if (dematerializedFeasibilityFile.aapDecision) {

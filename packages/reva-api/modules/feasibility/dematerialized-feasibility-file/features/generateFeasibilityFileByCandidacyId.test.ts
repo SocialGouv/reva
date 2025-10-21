@@ -52,6 +52,11 @@ const normalizeText = (value: string) =>
 const canonicalizeText = (value: string) =>
   normalizeText(value).replace(/BLOC-[A-Z0-9]+/g, "BLOC-CODE");
 
+const getCanonicalLines = (value: string) =>
+  canonicalizeText(value)
+    .split("\n")
+    .filter((line) => line.length > 0);
+
 const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
   { name: "admissibility", title: "Dossier de faisabilité" },
   { name: "candidate", title: "M. Dupont Jean" },
@@ -192,32 +197,49 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     },
   });
 
-  const trainingLabel = "Formation sécurité incendie obligatoire";
-  const training = await prismaClient.training.upsert({
-    where: { label: trainingLabel },
-    update: {},
-    create: { label: trainingLabel },
-  });
+  const attachTraining = async (label: string) => {
+    const training = await prismaClient.training.findFirstOrThrow({
+      where: { label },
+    });
 
-  await prismaClient.trainingOnCandidacies.create({
-    data: { trainingId: training.id, candidacyId: candidacy.id },
-  });
+    await prismaClient.trainingOnCandidacies.upsert({
+      where: {
+        trainingId_candidacyId: {
+          trainingId: training.id,
+          candidacyId: candidacy.id,
+        },
+      },
+      update: {},
+      create: { trainingId: training.id, candidacyId: candidacy.id },
+    });
+  };
 
-  const goalLabel = "Trouver plus facilement un emploi";
-  const goal = await prismaClient.goal.upsert({
-    where: { label: goalLabel },
-    update: {},
-    create: {
-      label: goalLabel,
-      order: 999,
-      isActive: true,
-      needsAdditionalInformation: false,
-    },
-  });
+  await Promise.all([
+    attachTraining(
+      "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)",
+    ),
+    attachTraining("Equipier de Première Intervention"),
+  ]);
 
-  await prismaClient.candicadiesOnGoals.create({
-    data: { candidacyId: candidacy.id, goalId: goal.id },
-  });
+  const attachGoal = async (label: string) => {
+    const goal = await prismaClient.goal.findFirstOrThrow({ where: { label } });
+
+    await prismaClient.candicadiesOnGoals.upsert({
+      where: {
+        candidacyId_goalId: {
+          candidacyId: candidacy.id,
+          goalId: goal.id,
+        },
+      },
+      update: {},
+      create: { candidacyId: candidacy.id, goalId: goal.id },
+    });
+  };
+
+  await Promise.all([
+    attachGoal("Trouver plus facilement un emploi"),
+    attachGoal("Être reconnu dans ma profession"),
+  ]);
 
   await prismaClient.experience.create({
     data: {
@@ -236,6 +258,27 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
       state: PrerequisiteState.ACQUIRED,
     },
   });
+
+  const attachBasicSkill = async (label: string) => {
+    const basicSkill = await prismaClient.basicSkill.findFirstOrThrow({
+      where: { label },
+    });
+
+    await prismaClient.basicSkillOnCandidacies.upsert({
+      where: {
+        basicSkillId_candidacyId: {
+          basicSkillId: basicSkill.id,
+          candidacyId: candidacy.id,
+        },
+      },
+      update: {},
+      create: { basicSkillId: basicSkill.id, candidacyId: candidacy.id },
+    });
+  };
+
+  await attachBasicSkill(
+    "Utilisation des règles de base de calcul et du raisonnement mathématique",
+  );
 
   return { candidacyId: candidacy.id };
 };
@@ -259,12 +302,23 @@ describe("demat feasibility pdf generation", () => {
   const expectSectionText = (sectionName: string, expected: string) => {
     const section = getSection(sectionName);
 
-    const actualText = canonicalizeText(section.lines.join("\n"));
-    const expectedText = canonicalizeText(expected);
+    const actualLines = getCanonicalLines(section.lines.join("\n"));
+    const expectedLines = getCanonicalLines(expected);
 
-    expect({ section: section.title, text: actualText }).toEqual({
+    if (actualLines.length === 0 || expectedLines.length === 0) {
+      throw new Error(`La section "${sectionName}" ne contient aucune ligne.`);
+    }
+
+    const [actualTitle, ...actualBody] = actualLines;
+    const [expectedTitle, ...expectedBody] = expectedLines;
+
+    expect(actualTitle).toEqual(expectedTitle);
+    expect({
       section: section.title,
-      text: expectedText,
+      lines: [actualTitle, ...actualBody],
+    }).toEqual({
+      section: section.title,
+      lines: [expectedTitle, ...expectedBody],
     });
   };
 
@@ -449,7 +503,8 @@ describe("demat feasibility pdf generation", () => {
         Accompagnement collectif : 6h
         Formation : 8h
         Formations obligatoires
-        Formation sécurité incendie obligatoire
+        Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)
+        Equipier de Première Intervention
       `,
     );
   });
@@ -461,6 +516,7 @@ describe("demat feasibility pdf generation", () => {
         Savoir de base
         Communication en français
         Usage et communication numérique
+        Utilisation des règles de base de calcul et du raisonnement mathématique
       `,
     );
   });
@@ -471,6 +527,7 @@ describe("demat feasibility pdf generation", () => {
       `
         Objectifs poursuivis par le candidat
         Trouver plus facilement un emploi
+        Être reconnu dans ma profession
       `,
     );
   });
