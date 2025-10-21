@@ -22,6 +22,7 @@ export const updateOrganismDegreesAndFormacodes = async ({
       code: {
         in: formacodeIds,
       },
+      version: "v14",
     },
   });
 

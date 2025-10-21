@@ -6,7 +6,8 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -72,6 +73,7 @@ const FormacodesCcnsDegreesForm = ({
     control,
     formState: { isSubmitting, isDirty },
     watch,
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -91,6 +93,11 @@ const FormacodesCcnsDegreesForm = ({
     "organismConventionCollectives",
   );
   const watchedOrganismDegrees = watch("organismDegrees");
+
+  const mainDomains = useMemo(
+    () => formacodes.filter((formacode) => formacode.type == "MAIN_DOMAIN"),
+    [formacodes],
+  );
 
   const domains = useMemo(
     () => formacodes.filter((formacode) => formacode.type == "DOMAIN"),
@@ -224,51 +231,22 @@ const FormacodesCcnsDegreesForm = ({
 
       {organismAndReferentialStatus === "success" && (
         <form
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 mt-6"
+          className="flex flex-col gap-8 mt-6"
           onSubmit={handleFormSubmit}
           onReset={(e) => {
             e.preventDefault();
             resetForm();
           }}
         >
-          {canManageDomaines && (
-            <fieldset className="flex flex-col gap-4">
-              <legend className="text-3xl font-bold mb-4">Domaines</legend>
-
-              <div className="flex flex-col">
-                {domains.map((domain) => (
-                  <Accordion
-                    key={domain.code}
-                    label={domain.label}
-                    defaultExpanded
-                  >
-                    <Checkbox
-                      className="[&_label]:block [&_label]:first-letter:uppercase mb-0"
-                      options={subDomains
-                        .filter(
-                          (subDomain) => subDomain.parentCode == domain.code,
-                        )
-                        .map((od) => ({
-                          label: `${od.code} ${od.label}`,
-                          nativeInputProps: {
-                            ...register(`organismFormacodes.${od.id}.checked`),
-                          },
-                        }))}
-                    />
-                  </Accordion>
-                ))}
-              </div>
-            </fieldset>
-          )}
-
           <div
-            className={`flex flex-col gap-8 ${canManageDomaines ? "" : "md:grid md:grid-cols-2 md:col-span-2"}`}
+            className={`grid grid-cols-1 gap-8 md:grid-cols-${canManageBranches ? 2 : 1} md:col-span-2`}
           >
             <fieldset className="flex flex-col gap-4">
               <legend className="text-3xl font-bold mb-4">
                 Niveaux de certification
               </legend>
               <Checkbox
+                orientation={canManageBranches ? "vertical" : "horizontal"}
                 legend={
                   <p className="text-sm">
                     Quels sont les niveaux de certification que vous couvrez ?
@@ -314,9 +292,115 @@ const FormacodesCcnsDegreesForm = ({
             )}
           </div>
 
+          {canManageDomaines && (
+            <fieldset className="flex flex-col gap-4">
+              <legend className="text-3xl font-bold mb-4">Domaines</legend>
+
+              <div className="flex flex-col">
+                {mainDomains.map((mainDomain) => (
+                  <div key={mainDomain.code} className="flex flex-col mb-8">
+                    <div className="text-2xl font-bold mb-4">
+                      {mainDomain.label}
+                    </div>
+                    {domains
+                      .filter((domain) => domain.parentCode == mainDomain.code)
+                      .map((domain) => {
+                        const subDomainsForDomain = subDomains.filter(
+                          (subDomain) => subDomain.parentCode == domain.code,
+                        );
+                        const isTotallySelected = subDomainsForDomain.every(
+                          (d) =>
+                            watchedOrganismFormacodes?.[d.id]?.checked == true,
+                        );
+                        const isPartiallySelected = subDomainsForDomain.some(
+                          (d) =>
+                            watchedOrganismFormacodes?.[d.id]?.checked == true,
+                        );
+
+                        return (
+                          <div key={domain.code} className="relative">
+                            <Checkbox
+                              className={`absolute z-10 top-[1px] pl-2 pt-3 h-[48px] select-none ${isTotallySelected ? "checkbox-totally" : isPartiallySelected ? "checkbox-partial" : ""}`}
+                              options={[
+                                {
+                                  label: (
+                                    <ToolTip
+                                      WrappedComponent={`${domain.code} ${domain.label}`}
+                                      WrappedChildren={
+                                        <CertificationsList
+                                          domaineIds={subDomainsForDomain.map(
+                                            (d) => d.id,
+                                          )}
+                                          brancheIds={selectedBranches}
+                                          levels={selectedLevels}
+                                        />
+                                      }
+                                    />
+                                  ),
+                                  nativeInputProps: {
+                                    checked: isTotallySelected,
+                                    onChange: (e) => {
+                                      setValue("organismFormacodes", {
+                                        ...watchedOrganismFormacodes,
+                                        ...subDomainsForDomain.reduce(
+                                          (acc, d) => ({
+                                            ...acc,
+                                            [d.id]: {
+                                              id: d.id,
+                                              code: d.code,
+                                              checked: e.target.checked,
+                                            },
+                                          }),
+                                          {},
+                                        ),
+                                      });
+                                    },
+                                  },
+                                },
+                              ]}
+                            />
+
+                            <Accordion label="" defaultExpanded>
+                              <Checkbox
+                                className="[&_label]:block [&_label]:first-letter:uppercase mb-0"
+                                options={subDomainsForDomain.map((od) => ({
+                                  label: (
+                                    <ToolTip
+                                      WrappedComponent={`${od.code} ${od.label}`}
+                                      WrappedChildren={
+                                        <CertificationsList
+                                          domaineIds={[od.id]}
+                                          brancheIds={selectedBranches}
+                                          levels={selectedLevels}
+                                        />
+                                      }
+                                    />
+                                  ),
+                                  nativeInputProps: {
+                                    ...register(
+                                      `organismFormacodes.${od.id}.checked`,
+                                    ),
+                                  },
+                                }))}
+                              />
+                            </Accordion>
+                          </div>
+                        );
+                      })}
+                  </div>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
           {certifications.length > 0 && (
             <fieldset className="col-span-2 flex flex-col bg-neutral-100 p-6">
-              <h3>Certifications proposées aux candidats :</h3>
+              <h3 className="mb-2">Certifications proposées aux candidats :</h3>
+              <div className="text-sm italic mb-8">
+                <strong>Important</strong>, les certifications sont filtrées en
+                fonction des niveaux et branches sélectionnés.
+              </div>
+
               {certifications.map((certification) => (
                 <Link
                   key={certification.id}
@@ -340,3 +424,93 @@ const FormacodesCcnsDegreesForm = ({
 };
 
 export default FormacodesCcnsDegreesForm;
+
+const ToolTip = (props: {
+  WrappedComponent: React.ReactNode;
+  WrappedChildren: React.ReactNode;
+}) => {
+  const [hover, setHover] = useState(false);
+
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  const getTooltipPosition = () => {
+    if (tooltipRef.current) {
+      const rect = tooltipRef.current.getBoundingClientRect();
+      return {
+        left: rect.left,
+        top: rect.top + window.scrollY,
+        bottom: rect.bottom + window.scrollY,
+      };
+    }
+    return { left: 0, top: 0, bottom: 0 };
+  };
+
+  const tooltipPosition = getTooltipPosition();
+
+  return (
+    <div
+      ref={tooltipRef}
+      onMouseEnter={() => setHover(true)}
+      onMouseOver={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      {props.WrappedComponent}
+
+      {hover &&
+        createPortal(
+          <div
+            style={{
+              position: "absolute",
+              zIndex: 11,
+              left: tooltipPosition.left,
+              bottom: window.innerHeight - tooltipPosition.bottom,
+            }}
+          >
+            {props.WrappedChildren}
+          </div>,
+          document.body,
+        )}
+    </div>
+  );
+};
+
+const CertificationsList = (props: {
+  domaineIds: string[];
+  brancheIds: string[];
+  levels: number[];
+}) => {
+  const { certifications } = useActiveCertifications({
+    domaines: props.domaineIds,
+    branches: props.brancheIds,
+    levels: props.levels,
+  });
+
+  return (
+    <div className="ml-[-48px] mb-10 bg-white shadow-md rounded-md flex flex-col gap-2 p-4">
+      <div className="text-sm">
+        Certifications proposées aux candidats :
+        <div className="text-xs italic mb-2">
+          <strong>Important</strong>, les certifications sont filtrées en
+          fonction des niveaux et branches sélectionnés.
+        </div>
+      </div>
+
+      {certifications?.map((certification) => (
+        <Link
+          key={certification.id}
+          href={`/certification-details/${certification.id}`}
+          target="_blank"
+          className="text-xs bg-none text-dsfr-blue-france-sun-113"
+        >
+          {certification.codeRncp} - {certification.label}
+        </Link>
+      ))}
+
+      {certifications && certifications.length === 0 && (
+        <div className="text-xs text-dsfr-light-text-mention-grey">
+          Aucune certification référencée chez France VAE pour ce formacode.
+        </div>
+      )}
+    </div>
+  );
+};

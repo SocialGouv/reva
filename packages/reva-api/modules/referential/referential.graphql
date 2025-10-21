@@ -272,8 +272,10 @@ type Etablissement {
 }
 
 enum FormacodeType {
+  MAIN_DOMAIN
   DOMAIN
   SUB_DOMAIN
+  SEMANTIC_FIELD
   KEYWORD
 }
 

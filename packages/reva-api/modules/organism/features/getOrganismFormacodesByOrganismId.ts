@@ -9,6 +9,6 @@ export const getOrganismFormacodesByOrganismId = ({
     throw new Error("Identifiant d'organisme vide");
   }
   return prismaClient.formacode.findMany({
-    where: { organismOnFormacode: { some: { organismId } } },
+    where: { organismOnFormacode: { some: { organismId } }, version: "v14" },
   });
 };

@@ -29,7 +29,11 @@ export async function getFormacodes(params?: {
     parentCode: formacode.parentCode || undefined,
   }));
 
-  return formacodes;
+  const sortedFormacodes = formacodes.sort((a, b) =>
+    a.label.toLowerCase().localeCompare(b.label.toLowerCase()),
+  );
+
+  return sortedFormacodes;
 }
 
 export async function getAvailableFormacodes(): Promise<Formacode[]> {
@@ -48,17 +52,25 @@ export async function getAvailableFormacodes(): Promise<Formacode[]> {
     const { certificationOnFormacode } = certification;
 
     for (const relation of certificationOnFormacode) {
-      const formacode = formacodes.find((f) => f.id == relation.formacodeId);
+      const subDomain = formacodes.find((f) => f.id == relation.formacodeId);
 
-      if (formacode) {
-        availableFormacodes[formacode.id] = formacode;
+      if (subDomain) {
+        availableFormacodes[subDomain.id] = subDomain;
 
-        const parent =
-          formacode.parentCode &&
-          formacodes.find((f) => f.code == formacode.parentCode);
+        const domain =
+          subDomain.parentCode &&
+          formacodes.find((f) => f.code == subDomain.parentCode);
 
-        if (parent) {
-          availableFormacodes[parent.id] = parent;
+        if (domain) {
+          availableFormacodes[domain.id] = domain;
+
+          const mainDomain =
+            domain.parentCode &&
+            formacodes.find((f) => f.code == domain.parentCode);
+
+          if (mainDomain) {
+            availableFormacodes[mainDomain.id] = mainDomain;
+          }
         }
       }
     }
@@ -68,5 +80,9 @@ export async function getAvailableFormacodes(): Promise<Formacode[]> {
     (key) => availableFormacodes[key],
   );
 
-  return mappedFormacodes;
+  const sortedFormacodes = mappedFormacodes.sort((a, b) =>
+    a.label.toLowerCase().localeCompare(b.label.toLowerCase()),
+  );
+
+  return sortedFormacodes;
 }
