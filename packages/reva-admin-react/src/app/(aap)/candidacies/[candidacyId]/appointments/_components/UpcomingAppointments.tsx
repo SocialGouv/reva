@@ -16,7 +16,11 @@ const getCandidacyAndUpcomingAppointments = graphql(`
   ) {
     getCandidacyById(id: $candidacyId) {
       id
-      appointments(limit: $limit, temporalStatusFilter: UPCOMING) {
+      appointments(
+        limit: $limit
+        temporalStatusFilter: UPCOMING
+        sortBy: DATE_ASC
+      ) {
         rows {
           id
           date
