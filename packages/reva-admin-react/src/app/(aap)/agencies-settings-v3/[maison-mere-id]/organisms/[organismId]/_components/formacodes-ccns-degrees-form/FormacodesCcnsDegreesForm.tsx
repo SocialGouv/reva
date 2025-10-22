@@ -325,7 +325,7 @@ const FormacodesCcnsDegreesForm = ({
                                 {
                                   label: (
                                     <ToolTip
-                                      WrappedComponent={`${domain.code} ${domain.label}`}
+                                      WrappedComponent={`${domain.label}`}
                                       WrappedChildren={
                                         <CertificationsList
                                           domaineIds={subDomainsForDomain.map(
@@ -362,7 +362,7 @@ const FormacodesCcnsDegreesForm = ({
 
                             <Accordion label="" defaultExpanded>
                               <Checkbox
-                                className="[&_label]:first-letter:uppercase mb-0"
+                                className={`[&_label]:first-letter:uppercase mb-0 ${subDomainsForDomain.length > 1 ? "ml-4" : "ml-7"}`}
                                 options={subDomainsForDomain.map((od) => ({
                                   label: (
                                     <ToolTip
