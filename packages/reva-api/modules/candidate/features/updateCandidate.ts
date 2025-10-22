@@ -3,6 +3,8 @@ import { isBefore, sub } from "date-fns";
 
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { CandidateUpdateInput } from "@/modules/candidate/candidate.types";
+import { generateAndUploadFeasibilityFileByCandidacyId } from "@/modules/feasibility/dematerialized-feasibility-file/features/generateAndUploadFeasibilityFileByCandidacyId";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import { updateCandidateEmailAndSendNotifications } from "./updateCandidateEmailAndSendNotifications";
@@ -100,6 +102,20 @@ export const updateCandidate = async ({
 
   const candidacies = await prismaClient.candidacy.findMany({
     where: { candidateId: id },
+    include: {
+      Feasibility: {
+        where: {
+          isActive: true,
+        },
+        include: {
+          dematerializedFeasibilityFile: {
+            select: {
+              feasibilityFileId: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   await Promise.all(
@@ -114,7 +130,7 @@ export const updateCandidate = async ({
     ),
   );
 
-  return prismaClient.candidate.update({
+  const updatedCandidate = await prismaClient.candidate.update({
     where: { id },
     data: {
       ...candidateInput,
@@ -122,6 +138,24 @@ export const updateCandidate = async ({
         countrySelected.label == "France" ? birthDepartmentId : undefined,
     },
   });
+
+  await Promise.all(
+    candidacies.map(async (c) => {
+      if (c.Feasibility[0].dematerializedFeasibilityFile?.feasibilityFileId) {
+        logger.info(`Updating feasibility PDF file for candidacy ${c.id}...`);
+        try {
+          await generateAndUploadFeasibilityFileByCandidacyId(c.id);
+          logger.info(`Feasibility PDF file updated for candidacy ${c.id}`);
+        } catch (e) {
+          logger.error(
+            `Error updating feasibility PDF file for candidacy ${c.id}: ${e?.toString()}`,
+          );
+        }
+      }
+    }),
+  );
+
+  return updatedCandidate;
 };
 
 const getDepartmentFromZipCode = async (
