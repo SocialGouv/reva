@@ -1,4 +1,5 @@
 import { getAccountByKeycloakId } from "@/modules/account/features/getAccountByKeycloakId";
+import { prismaClient } from "@/prisma/client";
 
 export const isUserOwnerOfOrganism = async ({
   userRoles,
@@ -13,7 +14,18 @@ export const isUserOwnerOfOrganism = async ({
     const account = await getAccountByKeycloakId({
       keycloakId: userKeycloakId,
     });
-    if (account && account.organismId === organismId) {
+
+    if (!account) {
+      return false;
+    }
+
+    const organismOnAccounts = await prismaClient.organismOnAccount.findMany({
+      where: {
+        accountId: account.id,
+      },
+    });
+
+    if (organismOnAccounts.some((oa) => oa.organismId === organismId)) {
       return true;
     }
   }
