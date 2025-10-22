@@ -38,7 +38,7 @@ export default function CandidateSection({
   const isFrance = country ? country?.label == "France" : false;
 
   return (
-    <div>
+    <section>
       <div className="flex">
         <span className="fr-icon-user-fill fr-icon--lg mr-2" />
         <h2>
@@ -69,18 +69,43 @@ export default function CandidateSection({
         <span>Téléphone : {phone}</span>
       </p>
       <h3>Niveau de formation</h3>
-      <p className="mb-0">Niveau de formation le plus élevé</p>
-      <p className="mb-2 font-medium">{niveauDeFormationLePlusEleve?.level}</p>
-      <p className="mb-0">Niveau de la certification obtenue la plus élevée</p>
-      <p className="mb-2 font-medium">{highestDegree?.level}</p>
-      {highestDegreeLabel && (
-        <>
-          <p className="mb-0">
-            Intitulé de la certification la plus élevée obtenue
-          </p>
-          <p className="mb-2 font-medium">{highestDegreeLabel}</p>
-        </>
-      )}
-    </div>
+      <dl>
+        <div>
+          <dt id="candidate-education-highest-level">
+            Niveau de formation le plus élevé
+          </dt>
+          <dd
+            aria-labelledby="candidate-education-highest-level"
+            className="mb-2 font-medium ml-0"
+          >
+            {niveauDeFormationLePlusEleve?.level}
+          </dd>
+        </div>
+        <div>
+          <dt id="candidate-education-degree-level">
+            Niveau de la certification obtenue la plus élevée
+          </dt>
+          <dd
+            aria-labelledby="candidate-education-degree-level"
+            className="mb-2 font-medium ml-0"
+          >
+            {highestDegree?.level}
+          </dd>
+        </div>
+        {highestDegreeLabel && (
+          <div>
+            <dt id="candidate-education-degree-title">
+              Intitulé de la certification la plus élevée obtenue
+            </dt>
+            <dd
+              aria-labelledby="candidate-education-degree-title"
+              className="mb-2 font-medium ml-0"
+            >
+              {highestDegreeLabel}
+            </dd>
+          </div>
+        )}
+      </dl>
+    </section>
   );
 }

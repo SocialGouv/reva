@@ -36,9 +36,9 @@ export default function EligibilitySection({
       <EligibiltyBadge eligibilityRequirement={eligibilityRequirement} />
       {eligibilityValidUntil && (
         <>
-          <dl>
+          <dl className="my-4">
             <dt id="valid-until">Date de fin de validité</dt>
-            <dd aria-labelledby="valid-until">
+            <dd className="font-medium" aria-labelledby="valid-until">
               {format(eligibilityValidUntil, "dd/MM/yyyy")}
             </dd>
           </dl>

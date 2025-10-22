@@ -31,16 +31,18 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays candidate information", async ({ page }) => {
-    const candidateSection = page
-      .locator("div")
-      .filter({ hasText: /Durand Claire/ })
-      .first();
+    const candidateSection = page.locator("section", {
+      has: page.getByRole("heading", {
+        name: /Durand Claire/,
+      }),
+    });
 
     await expect(
       candidateSection.getByRole("heading", {
         name: "Mme Durand Claire, Marie",
       }),
     ).toBeVisible();
+
     await expect(
       candidateSection.getByText(
         "Née Dupont, le 12/04/1988 à Lyon, Rhone (69)",
@@ -54,6 +56,30 @@ test.describe("Dematerialized feasibility résumé", () => {
     await expect(
       candidateSection.getByText("12 rue du Port 13002 Marseille"),
     ).toBeVisible();
+  });
+
+  test("displays candidate education levels", async ({ page }) => {
+    const candidateSection = page.locator("section", {
+      has: page.getByRole("heading", {
+        name: /Durand Claire/,
+      }),
+    });
+
+    await expect(
+      candidateSection.getByLabel("Niveau de formation le plus élevé"),
+    ).toHaveText("5");
+
+    await expect(
+      candidateSection.getByLabel(
+        "Niveau de la certification obtenue la plus élevée",
+      ),
+    ).toHaveText("4");
+
+    await expect(
+      candidateSection.getByLabel(
+        "Intitulé de la certification la plus élevée obtenue",
+      ),
+    ).toHaveText("BTS logistique");
   });
 
   test("displays certification information", async ({ page }) => {
@@ -86,11 +112,9 @@ test.describe("Dematerialized feasibility résumé", () => {
       .filter({ hasText: /Blocs de compétences/ })
       .first();
 
-    const blocA = blocsSection
-      .locator("section")
-      .filter({
-        hasText: "48379857 - Organiser et piloter les activites logistiques",
-      });
+    const blocA = blocsSection.locator("section").filter({
+      hasText: "48379857 - Organiser et piloter les activites logistiques",
+    });
     await expect(
       blocA.getByText(
         "Experience significative en gestion d'equipe sur site logistique.",
