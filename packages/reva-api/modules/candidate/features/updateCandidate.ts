@@ -141,7 +141,9 @@ export const updateCandidate = async ({
 
   await Promise.all(
     candidacies.map(async (c) => {
-      if (c.Feasibility[0].dematerializedFeasibilityFile?.feasibilityFileId) {
+      if (
+        c.Feasibility?.[0]?.dematerializedFeasibilityFile?.feasibilityFileId
+      ) {
         logger.info(`Updating feasibility PDF file for candidacy ${c.id}...`);
         try {
           await generateAndUploadFeasibilityFileByCandidacyId(c.id);
