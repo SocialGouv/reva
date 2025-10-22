@@ -135,6 +135,7 @@ type MaisonMereAAPOnConventionCollective {
 type Account {
   agences: [Organism!]!
   maisonMereAAP: MaisonMereAAP
+  organisms: [Organism!]!
 }
 
 type MaisonMereAAPLegalInformationDocuments {

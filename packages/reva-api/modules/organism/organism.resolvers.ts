@@ -16,6 +16,7 @@ import { prismaClient } from "@/prisma/client";
 import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 import { getAccountById } from "../account/features/getAccount";
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
+import { getOrganismsByAccountId } from "../certification-authority/features/getOrganismsByAccountId";
 import { getConventionCollectiveById } from "../referential/features/getConventionCollectiveById";
 import { getDegreeById } from "../referential/features/getDegreeByid";
 
@@ -78,6 +79,8 @@ const unsafeResolvers = {
       getMaisonMereAAPByGestionnaireAccountId({
         gestionnaireAccountId: accountId,
       }),
+    organisms: ({ id: accountId }: { id: string }) =>
+      getOrganismsByAccountId({ accountId }),
   },
   Organism: {
     maisonMereAAP: (organism: Organism) => {
