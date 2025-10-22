@@ -5,8 +5,6 @@ export const getAccountsByOrganismId = async ({
 }: {
   organismId: string;
 }) =>
-  prismaClient.organism
-    .findUnique({
-      where: { id: organismId },
-    })
-    .accounts();
+  prismaClient.account.findMany({
+    where: { organismOnAccounts: { some: { organismId } } },
+  });
