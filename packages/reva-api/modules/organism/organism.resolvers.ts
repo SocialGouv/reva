@@ -11,6 +11,7 @@ import {
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
 import { logger } from "@/modules/shared/logger/logger";
+import { prismaClient } from "@/prisma/client";
 
 import { buildAAPAuditLogUserInfoFromContext } from "../aap-log/features/logAAPAuditEvent";
 import { getAccountById } from "../account/features/getAccount";
@@ -266,8 +267,18 @@ const unsafeResolvers = {
         keycloakId: context.auth.userInfo?.sub || "",
       });
 
+      if (!account) {
+        throw new Error("Utilisateur non autorisé");
+      }
+
       const maisonMereAAP = await getMaisonMereAAPByGestionnaireAccountId({
-        gestionnaireAccountId: account?.id || "",
+        gestionnaireAccountId: account.id,
+      });
+
+      const organismOnAccounts = await prismaClient.organismOnAccount.findMany({
+        where: {
+          accountId: account.id,
+        },
       });
 
       // Pour pouvoir mettre à jour l'agence, il faut remplir au moins une condition parmi :
@@ -276,7 +287,7 @@ const unsafeResolvers = {
       // - Être le gestionnaire de la maison mere
       if (
         !context.auth.hasRole("admin") &&
-        account?.organismId !== organismId &&
+        !organismOnAccounts.some((oa) => oa.organismId === organismId) &&
         !maisonMereAAP
       ) {
         throw new Error("Utilisateur non autorisé");
