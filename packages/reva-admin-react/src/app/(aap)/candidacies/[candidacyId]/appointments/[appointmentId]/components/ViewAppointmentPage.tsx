@@ -12,7 +12,7 @@ import {
 
 const getAppointmentDurationLabel = (duration?: AppointmentDuration | null) => {
   if (!duration) {
-    return "";
+    return "Non renseigné";
   }
 
   switch (duration) {
@@ -93,12 +93,12 @@ export const ViewAppointmentPage = ({
         <GridRow
           data-test="location-row"
           label="Lieu :"
-          value={appointment.location}
+          value={appointment.location || "Non renseigné"}
         />
         <GridRow
           data-test="description-row"
           label="Description :"
-          value={appointment.description}
+          value={appointment.description || "Non renseigné"}
         />
       </div>
       <Button
