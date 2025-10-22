@@ -34,7 +34,9 @@ export const getCohortesVaeCollectivesForConnectedAap = async ({
   else if (userRoles.includes("manage_candidacy")) {
     const userOrganism = await prismaClient.organism.findFirst({
       where: {
-        accounts: { some: { keycloakId: userKeycloakId } },
+        organismOnAccounts: {
+          some: { account: { keycloakId: userKeycloakId } },
+        },
       },
     });
     if (!userOrganism) {
