@@ -117,9 +117,11 @@ const getCandidaciesFromDb = async ({
         organism: {
           OR: [
             {
-              accounts: {
+              organismOnAccounts: {
                 some: {
-                  keycloakId: organismAccountKeycloakId,
+                  account: {
+                    keycloakId: organismAccountKeycloakId,
+                  },
                 },
               },
             },
