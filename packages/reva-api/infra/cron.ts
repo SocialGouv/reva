@@ -32,7 +32,7 @@ const EVERY_DAY_AT_1_30_AM = "30 1 * * *";
 const EVERY_DAY_AT_1_45_AM = "45 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
 const EVERY_DAY_AT_3_AM = "0 3 * * *";
-const EVERY_SUNDAY_AT_2_AM = "0 2 * * 0";
+const EVERY_DAY_AT_4_AM = "0 4 * * *";
 
 const paymentRequestProofUpload = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_PROOF_CRONTIME || "*/2 * * * *",
@@ -298,7 +298,7 @@ CronJob.from({
 
 CronJob.from({
   cronTime:
-    process.env.SYNC_OUTSCALE_BUCKET_TO_BACKUP_CRONTIME || EVERY_SUNDAY_AT_2_AM,
+    process.env.SYNC_OUTSCALE_BUCKET_TO_BACKUP_CRONTIME || EVERY_DAY_AT_4_AM,
   onTick: () =>
     runBatchIfActive({
       batchKey: "cron.sync-outscale-bucket-to-backup",
