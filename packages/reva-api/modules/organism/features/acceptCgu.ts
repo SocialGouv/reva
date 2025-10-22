@@ -19,12 +19,16 @@ export const acceptCgu = async (context: {
   const account = await prismaClient.account.findUnique({
     where: { keycloakId },
     select: {
-      organism: {
+      organismOnAccounts: {
         select: {
-          maisonMereAAP: {
+          organism: {
             select: {
-              id: true,
-              cguVersion: true,
+              maisonMereAAP: {
+                select: {
+                  id: true,
+                  cguVersion: true,
+                },
+              },
             },
           },
         },
@@ -36,7 +40,9 @@ export const acceptCgu = async (context: {
     throw new Error(`Compte utilisateur non trouvé`);
   }
 
-  const maisonMereAAP = account.organism?.maisonMereAAP;
+  // un compte peut être associé à plusieurs organismes mais ils auront tous la meme maison mère AAP
+  // on peut donc prendre la première maison mère AAP associée au compte
+  const maisonMereAAP = account.organismOnAccounts[0].organism?.maisonMereAAP;
   if (!maisonMereAAP) {
     throw new Error(`Maison mère AAP non trouvée`);
   }
