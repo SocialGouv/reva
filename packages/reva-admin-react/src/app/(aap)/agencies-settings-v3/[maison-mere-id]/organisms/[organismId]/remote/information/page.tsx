@@ -166,7 +166,7 @@ const InformationsRemotePage = () => {
             <fieldset className="grid grid-cols-1 md:grid-cols-3 gap-x-6">
               <Input
                 className="col-span-3"
-                label="Nom de la structure (affiché aux candidats)"
+                label="Nom de la structure"
                 state={errors.nomPublic ? "error" : "default"}
                 stateRelatedMessage={errors.nomPublic?.message}
                 nativeInputProps={{ ...register("nomPublic") }}
@@ -180,7 +180,7 @@ const InformationsRemotePage = () => {
                 stateRelatedMessage={errors.telephone?.message}
               />
               <Input
-                label="Adresse électronique de contact (affiché aux candidats)"
+                label="Adresse électronique de contact"
                 state={errors.emailContact ? "error" : "default"}
                 stateRelatedMessage={errors.emailContact?.message}
                 nativeInputProps={{

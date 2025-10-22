@@ -197,7 +197,7 @@ const OrganismInformationForm = ({
             <div className="lg:grid grid-cols-1 md:grid-cols-3 gap-x-6">
               <Input
                 className="col-span-3"
-                label="Nom du lieu d’accueil (affiché aux candidats)"
+                label="Nom du lieu d’accueil"
                 nativeInputProps={{ ...register("nomPublic") }}
                 state={errors.nomPublic ? "error" : "default"}
                 stateRelatedMessage={errors.nomPublic?.message?.toString()}
@@ -242,7 +242,7 @@ const OrganismInformationForm = ({
               />
 
               <Input
-                label="Adresse électronique de contact (affiché aux candidats)"
+                label="Adresse électronique de contact"
                 nativeInputProps={{ ...register("emailContact") }}
                 state={errors.emailContact ? "error" : "default"}
                 stateRelatedMessage={errors.emailContact?.message?.toString()}
@@ -256,7 +256,7 @@ const OrganismInformationForm = ({
               />
 
               <Checkbox
-                className="col-span-3"
+                className="col-span-3 mb-6"
                 options={[
                   {
                     label:
@@ -270,7 +270,7 @@ const OrganismInformationForm = ({
               />
 
               <RadioButtons
-                className="col-span-3"
+                className="col-span-3 mb-0"
                 legend="Le lieu d’accueil est-il conforme aux normes d'accessibilité pour les personnes à mobilité réduite ?"
                 options={[
                   {
