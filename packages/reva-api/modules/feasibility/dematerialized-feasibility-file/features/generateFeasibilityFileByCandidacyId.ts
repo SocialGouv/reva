@@ -91,6 +91,11 @@ export const generateFeasibilityFileByCandidacyId = async (
         include: {
           goal: true,
         },
+        orderBy: {
+          goal: {
+            order: "asc",
+          },
+        },
       },
     },
   });
@@ -217,11 +222,7 @@ export const generateFeasibilityFileByCandidacyId = async (
     const { goals } = candidacy;
 
     if (goals.length > 0) {
-      const sortedGoals = [...goals]
-        .map(({ goal }) => goal)
-        .sort((first, second) => first.order - second.order);
-
-      addGoals(doc, { goals: sortedGoals });
+      addGoals(doc, { goals: goals.map(({ goal }) => goal) });
     }
 
     if (dematerializedFeasibilityFile.aapDecision) {
