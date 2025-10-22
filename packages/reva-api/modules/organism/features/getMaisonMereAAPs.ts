@@ -46,9 +46,11 @@ export const buildMaisonMereFilters: (
   const filterOrganismAccounts: Prisma.MaisonMereAAPWhereInput = {
     organismes: {
       some: {
-        accounts: {
+        organismOnAccounts: {
           some: {
-            OR: accountContainsFilter,
+            account: {
+              OR: accountContainsFilter,
+            },
           },
         },
       },
