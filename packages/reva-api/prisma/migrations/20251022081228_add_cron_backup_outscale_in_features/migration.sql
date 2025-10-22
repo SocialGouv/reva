@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('cron.sync-outscale-bucket-to-backup', 'Sauvegarde automatique de l''outscale bucket vers le backup', 'Sauvegarde automatique de l''outscale bucket vers le backup');
