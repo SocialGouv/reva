@@ -49,7 +49,7 @@ export const syncOutscaleBucketToBackup = async (): Promise<void> => {
 
   try {
     // Récupération des objets source avec métadonnées (optimisé)
-    logger.info("Listing objects from source bucket with metadata...");
+    logger.info(`Listing objects from ${sourceBucket} bucket with metadata`);
     const sourceObjects = new Map<
       string,
       { ETag?: string; LastModified?: Date }
@@ -80,10 +80,12 @@ export const syncOutscaleBucketToBackup = async (): Promise<void> => {
       continuationToken = response.NextContinuationToken;
     } while (continuationToken);
 
-    logger.info(`Found ${sourceObjects.size} objects in source bucket`);
+    logger.info(
+      `Found ${sourceObjects.size} objects in ${sourceBucket} bucket`,
+    );
 
     // Récupération des objets backup avec métadonnées
-    logger.info("Listing objects from backup bucket with metadata...");
+    logger.info(`Listing objects from ${backupBucket} bucket with metadata`);
     const backupObjects = new Map<
       string,
       { ETag?: string; LastModified?: Date }
@@ -114,10 +116,12 @@ export const syncOutscaleBucketToBackup = async (): Promise<void> => {
       continuationToken = response.NextContinuationToken;
     } while (continuationToken);
 
-    logger.info(`Found ${backupObjects.size} objects in backup bucket`);
+    logger.info(
+      `Found ${backupObjects.size} objects in ${backupBucket} bucket`,
+    );
 
     logger.info("==========================================");
-    logger.info("Starting synchronization...");
+    logger.info("Starting synchronization");
 
     const copyOperations: string[] = [];
     let skippedCount = 0;
