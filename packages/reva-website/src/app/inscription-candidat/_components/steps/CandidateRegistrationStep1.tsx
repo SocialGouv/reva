@@ -32,8 +32,8 @@ export const CandidateRegistrationStep1 = ({
                 Z, utile pour réaliser sereinement votre parcours.
               </p>
               <p className="mt-6 font-semibold">
-                Cette accompagnement peut être financé par votre Compte
-                Personnel de Formation.
+                Cet accompagnement peut être financé par votre Compte Personnel
+                de Formation.
               </p>
             </>
           }
