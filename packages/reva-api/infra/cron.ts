@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 import { checkAndUpdateCandidaciesInactifConfirme } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifConfirme";
 import { checkAndUpdateCandidaciesInactifEnAttente } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifEnAttente";
 import { sendReminderToAAPForMissingSwornStatement } from "@/modules/feasibility/dematerialized-feasibility-file/features/sendReminderToAAPForMissingSwornStatement";
+import { syncOutscaleBucketToBackup } from "@/scripts/syncOutcsaleBucketToBackup";
 
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
 import { sendAutoCandidacyDropOutConfirmationEmails } from "../modules/candidacy/features/sendAutoCandidacyDropOutConfirmationEmails";
@@ -31,6 +32,7 @@ const EVERY_DAY_AT_1_30_AM = "30 1 * * *";
 const EVERY_DAY_AT_1_45_AM = "45 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
 const EVERY_DAY_AT_3_AM = "0 3 * * *";
+const EVERY_SUNDAY_AT_2_AM = "0 2 * * 0";
 
 const paymentRequestProofUpload = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_PROOF_CRONTIME || "*/2 * * * *",
@@ -288,6 +290,21 @@ CronJob.from({
           "Running batch.send-reminder-to-aap-for-missing-sworn-statement",
         );
         await sendReminderToAAPForMissingSwornStatement();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+CronJob.from({
+  cronTime:
+    process.env.SYNC_OUTSCALE_BUCKET_TO_BACKUP_CRONTIME || EVERY_SUNDAY_AT_2_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "cron.sync-outscale-bucket-to-backup",
+      batchCallback: async () => {
+        logger.info("Running Outscale bucket backup sync");
+        await syncOutscaleBucketToBackup();
       },
     }),
   start: true,
