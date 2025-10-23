@@ -1,0 +1,2 @@
+insert into features (key, label, description) values ('cron.overwrite-outscale-backup-hebdo', 'Sauvegarde automatique de l''outscale bucket vers le backup hebdomadaire', 'Sauvegarde automatique de l''outscale bucket vers le backup hebdomadaire');
+insert into features (key, label, description) values ('cron.overwrite-outscale-backup-mensuel', 'Sauvegarde automatique de l''outscale bucket vers le backup mensuel', 'Sauvegarde automatique de l''outscale bucket vers le backup mensuel');
