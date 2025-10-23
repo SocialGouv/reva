@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 import { checkAndUpdateCandidaciesInactifConfirme } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifConfirme";
 import { checkAndUpdateCandidaciesInactifEnAttente } from "@/modules/candidacy/features/checkAndUpdateCandidaciesInactifEnAttente";
 import { sendReminderToAAPForMissingSwornStatement } from "@/modules/feasibility/dematerialized-feasibility-file/features/sendReminderToAAPForMissingSwornStatement";
+import { overwriteOutscaleBackupBucket } from "@/scripts/overwriteOutscaleBackupBucket";
 import { syncOutscaleBucketToBackup } from "@/scripts/syncOutcsaleBucketToBackup";
 
 import { deleteExpiredCandidacies } from "../modules/candidacy/features/deleteExpiredCandidacies";
@@ -33,6 +34,8 @@ const EVERY_DAY_AT_1_45_AM = "45 1 * * *";
 const EVERY_DAY_AT_2_AM = "0 2 * * *";
 const EVERY_DAY_AT_3_AM = "0 3 * * *";
 const EVERY_DAY_AT_4_AM = "0 4 * * *";
+const EVERY_SUNDAY_AT_2_AM = "0 2 * * 0";
+const EVERY_1ST_OF_MONTH_AT_3_AM = "0 3 1 * *";
 
 const paymentRequestProofUpload = CronJob.from({
   cronTime: process.env.BATCH_PAYMENT_REQUEST_PROOF_CRONTIME || "*/2 * * * *",
@@ -305,6 +308,41 @@ CronJob.from({
       batchCallback: async () => {
         logger.info("Running Outscale bucket backup sync");
         await syncOutscaleBucketToBackup();
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Backup hebdomadaire outscale backup
+CronJob.from({
+  cronTime: process.env.OUTSCALE_BACKUP_HEBDO_CRONTIME || EVERY_SUNDAY_AT_2_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "cron.overwrite-outscale-backup-hebdo",
+      batchCallback: async () => {
+        logger.info("Running overwrite outscale backup hebdomadaire");
+        const sourceBucket = process.env.OUTSCALE_BUCKET_NAME!;
+        const backupBucket = process.env.OUTSCALE_BACKUP_HEBDO_BUCKET_NAME!;
+        await overwriteOutscaleBackupBucket({ sourceBucket, backupBucket });
+      },
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+// Backup mensuel outscale backup
+CronJob.from({
+  cronTime:
+    process.env.OUTSCALE_BACKUP_MENSUEL_CRONTIME || EVERY_1ST_OF_MONTH_AT_3_AM,
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "cron.overwrite-outscale-backup-mensuel",
+      batchCallback: async () => {
+        logger.info("Running overwrite outscale backup mensuel");
+        const sourceBucket = process.env.OUTSCALE_BUCKET_NAME!;
+        const backupBucket = process.env.OUTSCALE_BACKUP_MENSUEL_BUCKET_NAME!;
+        await overwriteOutscaleBackupBucket({ sourceBucket, backupBucket });
       },
     }),
   start: true,
