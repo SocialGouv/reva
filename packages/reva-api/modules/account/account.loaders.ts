@@ -2,17 +2,6 @@ import { prismaClient } from "@/prisma/client";
 
 export const loaders = {
   Account: {
-    organism: async (queries: { obj: { organismId?: string } }[]) => {
-      const organismIds: string[] = queries
-        .map(({ obj }) => obj.organismId)
-        .filter((organismId) => !!organismId) as string[];
-
-      const organisms = await prismaClient.organism.findMany({
-        where: { id: { in: organismIds } },
-      });
-
-      return organismIds.map((cid) => organisms.find((c) => c.id === cid));
-    },
     certificationAuthority: async (
       queries: { obj: { certificationAuthorityId?: string } }[],
     ) => {

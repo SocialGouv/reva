@@ -10,7 +10,6 @@ type Account {
   firstname: String
   lastname: String
   certificationAuthority: CertificationAuthority
-  organism: Organism
   disabledAt: Timestamp
   keycloakId: String
 }
