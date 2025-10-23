@@ -32,7 +32,7 @@ const CertificationAuthorityDashboard = () => {
     return null;
   }
 
-  return <iframe src={iframeUrl} className="w-full h-screen" />;
+  return <iframe src={iframeUrl} className="w-full h-[3200px]" />;
 };
 
 export default CertificationAuthorityDashboard;
