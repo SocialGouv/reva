@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import SideMenu, { SideMenuProps } from "@codegouvfr/react-dsfr/SideMenu";
 import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
@@ -77,6 +78,22 @@ export default function CertificationsLayout({
               items: validatedManuItems,
             },
             ...toValidateMenuItems,
+            {
+              isActive: false,
+              linkProps: {
+                href: "https://tally.so/r/w4PdvY",
+                target: "_blank",
+              },
+              text: (
+                <Button
+                  data-test="add-certification-button"
+                  size="small"
+                  priority="secondary"
+                >
+                  Ajouter une certification
+                </Button>
+              ),
+            },
           ]}
         />
       </nav>
