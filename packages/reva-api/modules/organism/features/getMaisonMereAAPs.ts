@@ -38,7 +38,11 @@ export const buildMaisonMereFilters: (
   const filterOrganisms: Prisma.MaisonMereAAPWhereInput = {
     organismes: {
       some: {
-        OR: [containsFilter("contactAdministrativeEmail")],
+        OR: [
+          containsFilter("contactAdministrativeEmail"),
+          containsFilter("nomPublic"),
+          containsFilter("label"),
+        ],
       },
     },
   };
