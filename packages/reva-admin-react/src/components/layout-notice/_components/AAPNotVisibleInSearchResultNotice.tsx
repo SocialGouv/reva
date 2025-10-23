@@ -10,7 +10,7 @@ import { useGraphQlClient } from "../../graphql/graphql-client/GraphqlClient";
 const getOrganismQuery = graphql(`
   query getOrganismForAAPVisibilityCheck {
     account_getAccountForConnectedUser {
-      organism {
+      organisms {
         id
         isVisibleInCandidateSearchResults
       }
@@ -27,8 +27,10 @@ export const useAAPVisibilityCheck = () => {
       queryFn: () => graphqlClient.request(getOrganismQuery),
     });
 
+  //TODO: gérer le cas où l'utilisateur a plusieurs organismes lorsque les interfaces seront prêtes
+  //Pour l'instant le compte à au plus un organisme
   const organism =
-    getOrganismResponse?.account_getAccountForConnectedUser?.organism;
+    getOrganismResponse?.account_getAccountForConnectedUser?.organisms?.[0];
 
   const isVisibleInSearchResults =
     !!organism?.isVisibleInCandidateSearchResults;

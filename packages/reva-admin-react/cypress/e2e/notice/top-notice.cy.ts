@@ -8,7 +8,7 @@ function interceptCandidacies({
   isCguAccepted: boolean;
 }) {
   cy.fixture("visibility/organism.json").then((visibility) => {
-    visibility.data.account_getAccountForConnectedUser.organism.isVisibleInCandidateSearchResults =
+    visibility.data.account_getAccountForConnectedUser.organisms[0].isVisibleInCandidateSearchResults =
       isVisibleInCandidateSearchResults;
 
     cy.intercept("POST", "/api/graphql", (req) => {

@@ -1,10 +1,12 @@
 {
   "data": {
     "account_getAccountForConnectedUser": {
-      "organism": {
-        "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
-        "isVisibleInCandidateSearchResults": true
-      }
+      "organisms": [
+        {
+          "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
+          "isVisibleInCandidateSearchResults": true
+        }
+      ]
     }
   }
 }
