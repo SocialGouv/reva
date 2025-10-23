@@ -11,14 +11,18 @@ const CollaborateurUserAccount = () => {
   const { userAccount, collaborateurOrganismsInfoStatus } =
     useUpdateUserAccountPage();
 
+  //TODO: gérer le cas où l'utilisateur a plusieurs organismes lorsque les interfaces seront prêtes
+  //Pour l'instant le compte à au plus un organisme
+  const organism = userAccount?.organisms?.[0];
+
   const defaultValues = useMemo(
     () => ({
       email: userAccount?.email || "",
       firstname: userAccount?.firstname || "",
       lastname: userAccount?.lastname || "",
-      organismId: userAccount?.organism?.id,
+      organismId: organism?.id,
       modalitesAccompagnement:
-        userAccount?.organism?.modaliteAccompagnement === "A_DISTANCE"
+        organism?.modaliteAccompagnement === "A_DISTANCE"
           ? ("REMOTE" as const)
           : ("ONSITE" as const),
     }),
@@ -26,15 +30,15 @@ const CollaborateurUserAccount = () => {
       userAccount?.email,
       userAccount?.firstname,
       userAccount?.lastname,
-      userAccount?.organism?.id,
-      userAccount?.organism?.modaliteAccompagnement,
+      organism?.id,
+      organism?.modaliteAccompagnement,
     ],
   );
 
   if (
     collaborateurOrganismsInfoStatus !== "success" ||
     !userAccount ||
-    !userAccount.organism
+    !organism
   ) {
     return null;
   }
@@ -49,11 +53,9 @@ const CollaborateurUserAccount = () => {
         defaultValues={defaultValues}
         emailFieldDisabled
         organism={{
-          id: userAccount.organism.id,
-          label: `${userAccount.organism.label} 
-        ${`( ${
-          userAccount.organism.nomPublic || "Nom commercial non renseignés"
-        } )`}`,
+          id: organism.id,
+          label: `${organism.label} 
+        ${`( ${organism.nomPublic || "Nom commercial non renseignés"} )`}`,
         }}
       />
     </div>

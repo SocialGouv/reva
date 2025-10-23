@@ -11,7 +11,7 @@ const getCollaborateurOrganismsInfoQuery = graphql(`
       firstname
       lastname
       email
-      organism {
+      organisms {
         id
         modaliteAccompagnement
         label
