@@ -43,25 +43,26 @@ const GestionnaireMaisonMereAAPUserAccount = () => {
     }
   };
 
-  const defaultValues = useMemo(
-    () => ({
+  const defaultValues = useMemo(() => {
+    //TODO: gérer le cas où l'utilisateur a plusieurs organismes lorsque les interfaces seront prêtes
+    //Pour l'instant le compte à au plus un organisme
+    const userAccountOrganism = userAccount?.organisms?.[0];
+    return {
       email: userAccount?.email || "",
       firstname: userAccount?.firstname || "",
       lastname: userAccount?.lastname || "",
-      organismId: userAccount?.organism?.id,
+      organismId: userAccountOrganism?.id,
       modalitesAccompagnement:
-        userAccount?.organism?.modaliteAccompagnement === "A_DISTANCE"
+        userAccountOrganism?.modaliteAccompagnement === "A_DISTANCE"
           ? ("REMOTE" as const)
           : ("ONSITE" as const),
-    }),
-    [
-      userAccount?.email,
-      userAccount?.firstname,
-      userAccount?.lastname,
-      userAccount?.organism?.id,
-      userAccount?.organism?.modaliteAccompagnement,
-    ],
-  );
+    };
+  }, [
+    userAccount?.email,
+    userAccount?.firstname,
+    userAccount?.lastname,
+    userAccount?.organisms,
+  ]);
 
   if (!agenciesInfoIsSuccess) {
     return null;
