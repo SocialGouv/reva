@@ -15,9 +15,6 @@ import AccountSetup from "./_components/account-setup/AccountSetup";
 const accountWithMaisonMereQuery = graphql(`
   query getAccountInfo {
     account_getAccountForConnectedUser {
-      organism {
-        id
-      }
       maisonMereAAP {
         showAccountSetup
         id
