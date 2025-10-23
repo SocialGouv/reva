@@ -7,7 +7,7 @@ import { graphql } from "@/graphql/generated";
 const GestionnaireMaisonMerAAPOrganismInfoQuery = graphql(`
   query getGestionnaireMaisonMerAAPOrganismInfoQuery {
     account_getAccountForConnectedUser {
-      organism {
+      organisms {
         contactAdministrativeEmail
         contactAdministrativePhone
       }
@@ -24,12 +24,15 @@ export const useOrganismInformationForm = () => {
       graphqlClient.request(GestionnaireMaisonMerAAPOrganismInfoQuery),
   });
 
+  //Un gestionnaire de maison mère AAP n'est sensé être rattaché qu'à un seul organisme,
+  // la partie remote de sa maison mère
+  const organism =
+    organismData?.account_getAccountForConnectedUser?.organisms?.[0];
+
   const gestionnaireMaisonMerAAPOrganismPhone =
-    organismData?.account_getAccountForConnectedUser?.organism
-      ?.contactAdministrativePhone;
+    organism?.contactAdministrativePhone;
   const gestionnaireMaisonMerAAPOrganismEmail =
-    organismData?.account_getAccountForConnectedUser?.organism
-      ?.contactAdministrativeEmail;
+    organism?.contactAdministrativeEmail;
 
   return {
     gestionnaireMaisonMerAAPOrganismPhone,
