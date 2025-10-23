@@ -7,4 +7,7 @@ export const getGoals = async (): Promise<Goal[]> =>
     where: {
       isActive: true,
     },
+    orderBy: {
+      order: "asc",
+    },
   });
