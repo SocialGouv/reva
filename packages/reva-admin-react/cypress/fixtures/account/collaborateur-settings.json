@@ -4,33 +4,35 @@
       "maisonMereAAP": {
         "id": "7b7539e7-a30c-4a6e-b13a-a82cdb6b4081"
       },
-      "organism": {
-        "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
-        "isOnSite": false,
-        "isRemote": true,
-        "isVisibleInCandidateSearchResults": false,
-        "remoteZones": ["FRANCE_METROPOLITAINE"],
-        "accounts": [
-          {
-            "id": "e45b3b63-6bf4-4181-801d-51b19c722580",
-            "firstname": "John",
-            "lastname": "Doe",
-            "email": "joen.doe@example.com"
-          },
-          {
-            "id": "8f5fcf2d-ef76-4560-90d0-b151186b1c46",
-            "firstname": "Alice",
-            "lastname": "Doe",
-            "email": "alice.doe@example.com"
-          },
-          {
-            "id": "6d1ffe00-a8b5-4f4f-a5ea-d1fe71282ec5",
-            "firstname": "Bob",
-            "lastname": "Joe",
-            "email": "bob.joe@example.com"
-          }
-        ]
-      }
+      "organisms": [
+        {
+          "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
+          "isOnSite": false,
+          "isRemote": true,
+          "isVisibleInCandidateSearchResults": false,
+          "remoteZones": ["FRANCE_METROPOLITAINE"],
+          "accounts": [
+            {
+              "id": "e45b3b63-6bf4-4181-801d-51b19c722580",
+              "firstname": "John",
+              "lastname": "Doe",
+              "email": "joen.doe@example.com"
+            },
+            {
+              "id": "8f5fcf2d-ef76-4560-90d0-b151186b1c46",
+              "firstname": "Alice",
+              "lastname": "Doe",
+              "email": "alice.doe@example.com"
+            },
+            {
+              "id": "6d1ffe00-a8b5-4f4f-a5ea-d1fe71282ec5",
+              "firstname": "Bob",
+              "lastname": "Joe",
+              "email": "bob.joe@example.com"
+            }
+          ]
+        }
+      ]
     }
   }
 }

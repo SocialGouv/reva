@@ -10,7 +10,7 @@ const CollaborareurSettingsInfoQuery = graphql(`
       maisonMereAAP {
         id
       }
-      organism {
+      organisms {
         id
         label
         modaliteAccompagnement
@@ -40,8 +40,12 @@ export const useCollaborateurSettings = () => {
 
   const account =
     collaborateurSettingsResponse?.account_getAccountForConnectedUser;
+
+  //TODO: gérer le cas où l'utilisateur a plusieurs organismes lorsque les interfaces seront prêtes
+  //Pour l'instant le compte à au plus un organisme
   const organism =
-    collaborateurSettingsResponse?.account_getAccountForConnectedUser?.organism;
+    collaborateurSettingsResponse?.account_getAccountForConnectedUser
+      ?.organisms?.[0];
 
   const maisonMereAAPId = account?.maisonMereAAP?.id;
 

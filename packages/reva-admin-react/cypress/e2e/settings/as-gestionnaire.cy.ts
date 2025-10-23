@@ -10,9 +10,9 @@ function visitSettings({
   isMCFCompatible?: boolean | null;
 }) {
   cy.fixture("account/gestionnaire-settings.json").then((settings) => {
-    settings.data.account_getAccountForConnectedUser.organism.maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP =
+    settings.data.account_getAccountForConnectedUser.organisms[0].maisonMereAAP.statutValidationInformationsJuridiquesMaisonMereAAP =
       informationsJuridiques;
-    settings.data.account_getAccountForConnectedUser.organism.maisonMereAAP.isMCFCompatible =
+    settings.data.account_getAccountForConnectedUser.organisms[0].maisonMereAAP.isMCFCompatible =
       isMCFCompatible;
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(

@@ -2,84 +2,86 @@
   "data": {
     "account_getAccountForConnectedUser": {
       "id": "account-1",
-      "organism": {
-        "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
-        "modaliteAccompagnement": "A_DISTANCE",
-        "modaliteAccompagnementRenseigneeEtValide": true,
-        "isVisibleInCandidateSearchResults": false,
-        "remoteZones": ["FRANCE_METROPOLITAINE"],
-        "accounts": [
-          {
-            "id": "8f5fcf2d-ef76-4560-90d0-b151186b1c46",
-            "firstname": "Alice",
-            "lastname": "Doe",
-            "email": "alice.doe@example.com"
-          }
-        ],
-        "maisonMereAAP": {
-          "statutValidationInformationsJuridiquesMaisonMereAAP": "A_METTRE_A_JOUR",
-          "organisms": [
+      "organisms": [
+        {
+          "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
+          "modaliteAccompagnement": "A_DISTANCE",
+          "modaliteAccompagnementRenseigneeEtValide": true,
+          "isVisibleInCandidateSearchResults": false,
+          "remoteZones": ["FRANCE_METROPOLITAINE"],
+          "accounts": [
             {
-              "id": "2be04b85-ed75-41fb-9248-97fc178ba664",
-              "isRemote": true,
-              "isOnSite": false,
-              "isVisibleInCandidateSearchResults": false,
-              "remoteZones": [],
-              "accounts": [
-                {
-                  "id": "account-1",
-                  "firstname": "John",
-                  "lastname": "Doe",
-                  "email": "joen.doe@example.com"
-                }
-              ]
-            },
-            {
-              "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
-              "modaliteAccompagnement": "LIEU_ACCUEIL",
-              "modaliteAccompagnementRenseigneeEtValide": true,
-              "remoteZones": ["FRANCE_METROPOLITAINE"],
-              "accounts": [
-                {
-                  "id": "account-2",
-                  "firstname": "Alice",
-                  "lastname": "Doe",
-                  "email": "alice.doe@example.com"
-                },
-                {
-                  "id": "account-3",
-                  "firstname": "Catherine",
-                  "lastname": "Doe",
-                  "email": "catherine.doe@example.com"
-                }
-              ]
-            },
-            {
-              "id": "fb10a5d2-c081-418b-ab92-5a11314ada84",
-              "modaliteAccompagnement": "LIEU_ACCUEIL",
-              "modaliteAccompagnementRenseigneeEtValide": true,
-              "isVisibleInCandidateSearchResults": false,
-              "remoteZones": [],
-              "accounts": [
-                {
-                  "id": "account-4",
-                  "firstname": "Bob",
-                  "lastname": "Doe",
-                  "email": "bob.doe@example.com"
-                }
-              ]
-            },
-            {
-              "id": "513be886-4f99-44d3-8edd-6ba2987dccd0",
-              "modaliteAccompagnement": "LIEU_ACCUEIL",
-              "modaliteAccompagnementRenseigneeEtValide": true,
-              "isVisibleInCandidateSearchResults": true,
-              "remoteZones": [],
-              "accounts": []
+              "id": "8f5fcf2d-ef76-4560-90d0-b151186b1c46",
+              "firstname": "Alice",
+              "lastname": "Doe",
+              "email": "alice.doe@example.com"
             }
-          ]
+          ],
+          "maisonMereAAP": {
+            "statutValidationInformationsJuridiquesMaisonMereAAP": "A_METTRE_A_JOUR",
+            "organisms": [
+              {
+                "id": "2be04b85-ed75-41fb-9248-97fc178ba664",
+                "isRemote": true,
+                "isOnSite": false,
+                "isVisibleInCandidateSearchResults": false,
+                "remoteZones": [],
+                "accounts": [
+                  {
+                    "id": "account-1",
+                    "firstname": "John",
+                    "lastname": "Doe",
+                    "email": "joen.doe@example.com"
+                  }
+                ]
+              },
+              {
+                "id": "29994a9a-f166-48b9-974f-f3b3dbccda19",
+                "modaliteAccompagnement": "LIEU_ACCUEIL",
+                "modaliteAccompagnementRenseigneeEtValide": true,
+                "remoteZones": ["FRANCE_METROPOLITAINE"],
+                "accounts": [
+                  {
+                    "id": "account-2",
+                    "firstname": "Alice",
+                    "lastname": "Doe",
+                    "email": "alice.doe@example.com"
+                  },
+                  {
+                    "id": "account-3",
+                    "firstname": "Catherine",
+                    "lastname": "Doe",
+                    "email": "catherine.doe@example.com"
+                  }
+                ]
+              },
+              {
+                "id": "fb10a5d2-c081-418b-ab92-5a11314ada84",
+                "modaliteAccompagnement": "LIEU_ACCUEIL",
+                "modaliteAccompagnementRenseigneeEtValide": true,
+                "isVisibleInCandidateSearchResults": false,
+                "remoteZones": [],
+                "accounts": [
+                  {
+                    "id": "account-4",
+                    "firstname": "Bob",
+                    "lastname": "Doe",
+                    "email": "bob.doe@example.com"
+                  }
+                ]
+              },
+              {
+                "id": "513be886-4f99-44d3-8edd-6ba2987dccd0",
+                "modaliteAccompagnement": "LIEU_ACCUEIL",
+                "modaliteAccompagnementRenseigneeEtValide": true,
+                "isVisibleInCandidateSearchResults": true,
+                "remoteZones": [],
+                "accounts": []
+              }
+            ]
+          }
         }
-      }
+      ]
     }
   }
 }

@@ -8,7 +8,7 @@ const GestionnaireMaisonMereAAPSettingsInfoQuery = graphql(`
   query getGestionnaireMaisonMereAAPSettingsInfo {
     account_getAccountForConnectedUser {
       id
-      organism {
+      organisms {
         id
         isVisibleInCandidateSearchResults
         remoteZones
@@ -50,13 +50,13 @@ export const useGestionnaireMaisonMereAAPSettings = () => {
       graphqlClient.request(GestionnaireMaisonMereAAPSettingsInfoQuery),
   });
 
-  const maisonMereAAP =
-    gestionnaireMaisonMerAAPSettingsResponse?.account_getAccountForConnectedUser
-      ?.organism?.maisonMereAAP;
-
+  //TODO: gérer le cas où l'utilisateur a plusieurs organismes lorsque les interfaces seront prêtes
+  //Pour l'instant le compte à au plus un organisme
   const organism =
     gestionnaireMaisonMerAAPSettingsResponse?.account_getAccountForConnectedUser
-      ?.organism;
+      ?.organisms?.[0];
+
+  const maisonMereAAP = organism?.maisonMereAAP;
 
   const gestionnaireAccountId =
     gestionnaireMaisonMerAAPSettingsResponse?.account_getAccountForConnectedUser

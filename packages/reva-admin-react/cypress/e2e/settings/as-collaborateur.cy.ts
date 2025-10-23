@@ -10,11 +10,11 @@ function visitSettings({
   isVisibleInCandidateSearchResults: boolean;
 }) {
   cy.fixture("account/collaborateur-settings.json").then((settings) => {
-    settings.data.account_getAccountForConnectedUser.organism.modaliteAccompagnement =
+    settings.data.account_getAccountForConnectedUser.organisms[0].modaliteAccompagnement =
       modaliteAccompagnement;
-    settings.data.account_getAccountForConnectedUser.organism.modaliteAccompagnementRenseigneeEtValide =
+    settings.data.account_getAccountForConnectedUser.organisms[0].modaliteAccompagnementRenseigneeEtValide =
       modaliteAccompagnementRenseigneeEtValide;
-    settings.data.account_getAccountForConnectedUser.organism.isVisibleInCandidateSearchResults =
+    settings.data.account_getAccountForConnectedUser.organisms[0].isVisibleInCandidateSearchResults =
       isVisibleInCandidateSearchResults;
 
     cy.intercept("POST", "/api/graphql", (req) => {
