@@ -12,8 +12,6 @@ const createS3Client = () => {
   if (
     !process.env.OUTSCALE_ACCESS_KEY_ID ||
     !process.env.OUTSCALE_SECRET_ACCESS_KEY ||
-    !process.env.OUTSCALE_BUCKET_NAME ||
-    !process.env.OUTSCALE_BACKUP_BUCKET_NAME ||
     !process.env.OUTSCALE_BUCKET_REGION ||
     !process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT
   ) {
