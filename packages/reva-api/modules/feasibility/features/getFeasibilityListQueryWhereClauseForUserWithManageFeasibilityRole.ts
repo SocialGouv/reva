@@ -10,7 +10,7 @@ export const getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole 
     isCertificationAuthorityLocalAccount,
     certificationAuthorityLocalAccount,
   }: {
-    account: Account | null;
+    account: Pick<Account, "certificationAuthorityId"> | null;
     isCertificationAuthorityLocalAccount: boolean;
     certificationAuthorityLocalAccount: CertificationAuthorityLocalAccount | null;
   }): Prisma.FeasibilityWhereInput => {
