@@ -81,8 +81,8 @@ test.describe("appointments page", () => {
     );
     await aapCommonWait(page);
 
-    expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Gestion des rendez-vous",
-    );
+    await expect(
+      page.getByTestId("appointments-page").getByRole("heading", { level: 1 }),
+    ).toHaveText("Gestion des rendez-vous");
   });
 });
