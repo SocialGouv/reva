@@ -28,8 +28,8 @@ const appointmentFormSchema = z
       ])
       .optional()
       .nullable(),
-    location: sanitizedOptionalText(),
-    description: sanitizedOptionalText(),
+    location: sanitizedOptionalText().nullable(),
+    description: sanitizedOptionalText().nullable(),
   })
   .superRefine((data, ctx) => {
     if (isBefore(parseISO(data.date), startOfToday())) {
