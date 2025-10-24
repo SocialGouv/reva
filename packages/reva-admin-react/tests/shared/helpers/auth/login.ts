@@ -45,7 +45,5 @@ export const login = async ({ page, role }: { page: Page; role: "aap" }) => {
         });
       },
     );
-
-    await page.goto(`http://localhost:4003/admin2/`);
   }
 };
