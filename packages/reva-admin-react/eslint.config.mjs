@@ -3,8 +3,8 @@ import { fileURLToPath } from "url";
 
 import { fixupConfigRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
-import noOnlyTestsPlugin from "eslint-plugin-no-only-tests";
 import { defineConfig } from "eslint/config";
+import noOnlyTestsPlugin from "eslint-plugin-no-only-tests";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -44,6 +44,7 @@ export default defineConfig([
             "**/layout.tsx",
             "codegen.ts",
             "cypress.config.ts",
+            "playwright.config.ts",
           ],
         },
       ],
@@ -98,10 +99,7 @@ export default defineConfig([
     },
   },
   {
-    files: [
-      "cypress/**/*.ts",
-      "cypress.config.ts",
-    ],
+    files: ["cypress/**/*.ts", "cypress.config.ts"],
     plugins: {
       "no-only-tests": noOnlyTestsPlugin,
     },
