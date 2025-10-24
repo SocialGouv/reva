@@ -12,6 +12,10 @@ import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GenderEnum } from "@/constants/genders.constant";
+import {
+  sanitizedOptionalPhone,
+  sanitizedOptionalText,
+} from "@/utils/input-sanitization";
 
 import { Candidacy } from "@/graphql/generated/graphql";
 
@@ -24,8 +28,8 @@ import { useCandidacyFunding } from "./_components/useCandidacyFunding.hook";
 const errorNumber = "Veuillez saisir une valeur numérique.";
 
 const candidacyFundingSchema = z.object({
-  candidateSecondname: z.string().optional(),
-  candidateThirdname: z.string().optional(),
+  candidateSecondname: sanitizedOptionalText(),
+  candidateThirdname: sanitizedOptionalText(),
   candidateGender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
   individualHourCount: z.number({
     invalid_type_error: errorNumber,
@@ -63,10 +67,10 @@ const candidacyFundingSchema = z.object({
   otherTrainingCost: z.number({
     invalid_type_error: errorNumber,
   }),
-  fundingContactFirstname: z.string().optional(),
-  fundingContactLastname: z.string().optional(),
+  fundingContactFirstname: sanitizedOptionalText(),
+  fundingContactLastname: sanitizedOptionalText(),
   fundingContactEmail: z.string().optional(),
-  fundingContactPhone: z.string().optional(),
+  fundingContactPhone: sanitizedOptionalPhone(),
   confirmation: z.literal<boolean>(true),
 });
 

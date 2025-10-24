@@ -10,7 +10,8 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { successToast, graphqlErrorToast } from "@/components/toast/toast";
+import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedOptionalText } from "@/utils/input-sanitization";
 
 import { useCandidacyStatus } from "../../../_components/candidacy.hook";
 
@@ -35,7 +36,7 @@ const archiveSchema = z.object({
       message: "Merci de remplir ce champ",
     },
   ),
-  archivingReasonAdditionalInformation: z.string().optional(),
+  archivingReasonAdditionalInformation: sanitizedOptionalText(),
 });
 
 type ArchiveFormData = z.infer<typeof archiveSchema>;

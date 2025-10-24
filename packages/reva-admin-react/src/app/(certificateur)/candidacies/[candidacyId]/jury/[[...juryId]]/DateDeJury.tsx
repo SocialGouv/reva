@@ -18,6 +18,10 @@ import { z } from "zod";
 
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { errorToast } from "@/components/toast/toast";
+import {
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { DateDeJuryCard } from "./DateDeJuryCard";
 import { HistoryDateDeJuryView } from "./HistoryDateDeJuryView";
@@ -25,10 +29,10 @@ import { useJuryPageLogic } from "./juryPageLogic";
 
 const schema = z
   .object({
-    date: z.string(),
-    time: z.string().optional(),
-    address: z.string().optional(),
-    information: z.string().optional(),
+    date: sanitizedText(),
+    time: sanitizedOptionalText(),
+    address: sanitizedOptionalText(),
+    information: sanitizedOptionalText(),
     convocationFile: z.object({ 0: z.instanceof(File).optional() }),
     dossierValidationUpdatedAt: z.string(),
   })

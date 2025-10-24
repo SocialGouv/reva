@@ -1,10 +1,17 @@
 import { z } from "zod";
 
+import {
+  sanitizedEmail,
+  sanitizedOptionalText,
+  sanitizedPhone,
+  sanitizedText,
+} from "@/utils/input-sanitization";
+
 export const informationRemoteFormSchema = z
   .object({
-    nomPublic: z.string(),
-    telephone: z.string().optional(),
-    siteInternet: z.string().optional(),
+    nomPublic: sanitizedText(),
+    telephone: sanitizedPhone(),
+    siteInternet: sanitizedOptionalText(),
     emailContact: z
       .union([
         z
@@ -13,11 +20,7 @@ export const informationRemoteFormSchema = z
             0,
             "Le champ doit être vide ou contenir une adresse électronique",
           ),
-        z
-          .string()
-          .email(
-            "Le champ doit être vide ou contenir une adresse électronique",
-          ),
+        sanitizedEmail(),
       ])
       .optional()
       .default(""),

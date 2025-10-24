@@ -5,8 +5,10 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { sanitizedText } from "@/utils/input-sanitization";
+
 const schema = z.object({
-  reason: z.string().min(1, "Merci de remplir ce champ"),
+  reason: sanitizedText(),
 });
 
 type Form = z.infer<typeof schema>;

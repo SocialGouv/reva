@@ -6,12 +6,13 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { SortableList } from "@/components/sortable-list";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 const prerequisitesFormSchema = z.object({
   prerequisites: z
     .object({
       id: z.string().optional(),
-      label: z.string().min(1, "Merci de remplir ce champ").default(""),
+      label: sanitizedText(),
       index: z.number(),
     })
     .array(),

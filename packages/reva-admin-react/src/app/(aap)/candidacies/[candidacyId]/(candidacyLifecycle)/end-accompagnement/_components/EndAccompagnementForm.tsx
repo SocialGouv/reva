@@ -10,14 +10,13 @@ import z from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { useEndAccompagnement } from "../end-accompagnement.hook";
 
 const schema = z
   .object({
-    endAccompagnementDate: z.string().min(1, {
-      message: "Veuillez sélectionner une date",
-    }),
+    endAccompagnementDate: sanitizedText(),
   })
   .superRefine(({ endAccompagnementDate }, ctx) => {
     const dateIsInFuture = isAfter(endAccompagnementDate, new Date());

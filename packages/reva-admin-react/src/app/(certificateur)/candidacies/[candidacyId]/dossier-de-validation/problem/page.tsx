@@ -11,9 +11,10 @@ import { useDossierDeValidationProblemPageLogic } from "@/app/(certificateur)/ca
 import { BackButton } from "@/components/back-button/BackButton";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 const schema = z.object({
-  decisionComment: z.string().min(1, "Merci de remplir ce champ"),
+  decisionComment: sanitizedText(),
 });
 
 export type DossierDeValidationProblemFormData = z.infer<typeof schema>;

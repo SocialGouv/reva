@@ -17,6 +17,10 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FranceCompetencesLogo } from "@/components/logo/france-competences-logo/FranceCompetencesLogo";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import {
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { CertificationJuryFrequency } from "@/graphql/generated/graphql";
 
@@ -54,15 +58,11 @@ const zodSchema = z
       ...JuryFrequencies.map(({ id }) => id),
       "Autre",
     ]),
-    juryFrequencyOther: z.string().optional(),
-    juryPlace: z.string().optional(),
+    juryFrequencyOther: sanitizedOptionalText(),
+    juryPlace: sanitizedOptionalText(),
     juryEstimatedCost: z.number().optional().nullable(),
-    startOfVisibility: z.string({
-      invalid_type_error: "Champs requis",
-    }),
-    endOfVisibility: z.string({
-      invalid_type_error: "Champs requis",
-    }),
+    startOfVisibility: sanitizedText(),
+    endOfVisibility: sanitizedText(),
   })
   .superRefine(
     (

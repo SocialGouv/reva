@@ -12,6 +12,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 import {
@@ -29,7 +30,7 @@ const schema = z.object({
       }),
     })
     .array(),
-  blocText: z.string().trim().min(1, "Merci de remplir ce champ"),
+  blocText: sanitizedText(),
 });
 
 type FormData = z.infer<typeof schema>;

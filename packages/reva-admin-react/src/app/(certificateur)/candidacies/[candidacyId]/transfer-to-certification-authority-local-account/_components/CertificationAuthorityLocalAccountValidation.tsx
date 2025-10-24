@@ -4,14 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { sanitizedText } from "@/utils/input-sanitization";
+
 import { CertificationAuthorityLocalAccount } from "@/graphql/generated/graphql";
 
 import { CertificationAuthorityLocalAccountCard } from "./CertificationAuthorityLocalAccountCard";
 
 const schema = z.object({
-  reason: z.string().trim().min(1, {
-    message: "Ce champ est requis",
-  }),
+  reason: sanitizedText(),
 });
 
 export const CertificationAuthorityLocalAccountValidation = ({

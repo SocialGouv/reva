@@ -11,11 +11,12 @@ import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { errorToast, successToast } from "@/components/toast/toast";
 import { REST_API_URL } from "@/config/config";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 const schema = z
   .object({
-    managerFirstname: z.string().min(1, "Merci de remplir ce champ."),
-    managerLastname: z.string().min(1, "Merci de remplir ce champ."),
+    managerFirstname: sanitizedText(),
+    managerLastname: sanitizedText(),
     attestationURSSAF: z.object({
       0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
     }),

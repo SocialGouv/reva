@@ -6,7 +6,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
-import { UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
 import { CompanyBadges } from "@/components/company-preview/CompanyPreview.component";
@@ -213,7 +213,7 @@ const GeneralInformationPage = () => {
             <GrayCard>
               <h2>Dirigeant et administrateur du compte</h2>
               {isAdmin ? (
-                <AccountInfoForm register={register} />
+                <AccountInfoForm register={register} errors={errors} />
               ) : (
                 <AccountInfo maisonMereAAP={maisonMereAAP} />
               )}
@@ -299,8 +299,19 @@ const AccountInfo = ({ maisonMereAAP }: { maisonMereAAP: MaisonMereAap }) => (
 
 const AccountInfoForm = ({
   register,
+  errors,
 }: {
   register: UseFormRegister<{
+    managerFirstname: string;
+    managerLastname: string;
+    gestionnaireFirstname: string;
+    gestionnaireLastname: string;
+    gestionnaireEmail: string;
+    siret: string;
+    phone: string;
+    gestionBranch: boolean;
+  }>;
+  errors: FieldErrors<{
     managerFirstname: string;
     managerLastname: string;
     gestionnaireFirstname: string;
@@ -315,23 +326,38 @@ const AccountInfoForm = ({
     <Input
       label="Prénom du dirigeant(e)"
       nativeInputProps={register("managerFirstname")}
+      state={errors.managerFirstname ? "error" : "default"}
+      stateRelatedMessage={errors.managerFirstname?.message}
     />
     <Input
       label="Nom du dirigeant(e)"
       nativeInputProps={register("managerLastname")}
+      state={errors.managerLastname ? "error" : "default"}
+      stateRelatedMessage={errors.managerLastname?.message}
     />
     <Input
       label="Prénom du gestionnaire"
       nativeInputProps={register("gestionnaireFirstname")}
+      state={errors.gestionnaireFirstname ? "error" : "default"}
+      stateRelatedMessage={errors.gestionnaireFirstname?.message}
     />
     <Input
       label="Nom du gestionnaire"
       nativeInputProps={register("gestionnaireLastname")}
+      state={errors.gestionnaireLastname ? "error" : "default"}
+      stateRelatedMessage={errors.gestionnaireLastname?.message}
     />
     <Input
       label="Adresse électronique du gestionnaire"
       nativeInputProps={register("gestionnaireEmail")}
+      state={errors.gestionnaireEmail ? "error" : "default"}
+      stateRelatedMessage={errors.gestionnaireEmail?.message}
     />
-    <Input label="Téléphone" nativeInputProps={register("phone")} />
+    <Input
+      label="Téléphone"
+      nativeInputProps={register("phone")}
+      state={errors.phone ? "error" : "default"}
+      stateRelatedMessage={errors.phone?.message}
+    />
   </div>
 );

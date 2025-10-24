@@ -1,29 +1,28 @@
 import { z } from "zod";
 
+import {
+  sanitizedEmail,
+  sanitizedOptionalText,
+  sanitizedPhone,
+  sanitizedText,
+  sanitizedZipCode,
+} from "@/utils/input-sanitization";
+
 const AddressFragmentsSchema = z.object({
-  adresseNumeroEtNomDeRue: z.string().min(1, "Rue requise"),
-  adresseCodePostal: z.string().min(1, "Code postal requis"),
-  adresseVille: z.string().min(1, "Ville requise"),
+  adresseNumeroEtNomDeRue: sanitizedText(),
+  adresseCodePostal: sanitizedZipCode(),
+  adresseVille: sanitizedText(),
 });
 
 export const organismInformationFormSchema = z
   .object({
-    adresseComplete: z.string().trim().default(""),
+    adresseComplete: sanitizedText(),
     adresseFragments: AddressFragmentsSchema.optional(),
-    adresseInformationsComplementaires: z.string().optional().default(""),
-    nomPublic: z
-      .string()
-      .min(2, "Ce champ doit contenir au moins 2 caractères")
-      .default(""),
-    telephone: z
-      .string()
-      .length(10, "Ce champ doit contenir 10 chiffres")
-      .default(""),
-    siteInternet: z.string().optional().default(""),
-    emailContact: z
-      .string()
-      .email("Le champ doit contenir une adresse électronique")
-      .default(""),
+    adresseInformationsComplementaires: sanitizedOptionalText(),
+    nomPublic: sanitizedText({ minLength: 2 }).default(""),
+    telephone: sanitizedPhone(),
+    siteInternet: sanitizedOptionalText(),
+    emailContact: sanitizedEmail(),
     conformeNormesAccessibilite: z
       .enum(["CONFORME", "NON_CONFORME", ""])
       .superRefine((val, ctx) => {
@@ -50,14 +49,14 @@ export const organismInformationFormSchema = z
   }))
   .pipe(
     z.object({
-      adresseNumeroEtNomDeRue: z.string(),
-      adresseCodePostal: z.string(),
-      adresseVille: z.string(),
-      adresseInformationsComplementaires: z.string().optional().default(""),
-      nomPublic: z.string(),
-      telephone: z.string(),
-      siteInternet: z.string().optional().default(""),
-      emailContact: z.string().email(),
+      adresseNumeroEtNomDeRue: sanitizedText(),
+      adresseCodePostal: sanitizedZipCode(),
+      adresseVille: sanitizedText(),
+      adresseInformationsComplementaires: sanitizedOptionalText(),
+      nomPublic: sanitizedText(),
+      telephone: sanitizedPhone(),
+      siteInternet: sanitizedOptionalText(),
+      emailContact: sanitizedEmail(),
       conformeNormesAccessibilite: z.enum(["CONFORME", "NON_CONFORME"]),
     }),
   );

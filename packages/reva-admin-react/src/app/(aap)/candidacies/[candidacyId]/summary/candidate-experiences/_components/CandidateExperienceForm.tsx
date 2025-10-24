@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 const durationValues = [
   "unknown",
@@ -33,9 +34,9 @@ const durationToString: {
 
 const schema = z
   .object({
-    title: z.string().min(1, "Merci de remplir ce champ"),
-    description: z.string(),
-    startedAt: z.string().min(1, "Merci de remplir ce champ"),
+    title: sanitizedText(),
+    description: sanitizedText(),
+    startedAt: sanitizedText(),
     duration: z.enum(durationValues),
   })
   .superRefine((data, ctx) => {

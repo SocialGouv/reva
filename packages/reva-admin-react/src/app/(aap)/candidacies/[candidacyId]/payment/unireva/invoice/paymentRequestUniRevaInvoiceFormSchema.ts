@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+import { sanitizedText } from "@/utils/input-sanitization";
+
 export const paymentRequestUniRevaInvoiceSchema = z.object({
-  invoiceNumber: z.string().min(1, "Merci de remplir ce champ"),
+  invoiceNumber: sanitizedText(),
   individualEffectiveHourCount: z.number().default(0),
   individualEffectiveCost: z.number().default(0),
   collectiveEffectiveHourCount: z.number().default(0),

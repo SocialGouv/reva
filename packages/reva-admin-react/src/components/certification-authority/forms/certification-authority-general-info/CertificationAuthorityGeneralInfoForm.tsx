@@ -9,22 +9,23 @@ import { z } from "zod";
 
 import { useAuth } from "@/components/auth/auth";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import {
+  sanitizedEmail,
+  sanitizedOptionalPhone,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
 
 type FormData = z.infer<typeof schema>;
 
 const schema = z.object({
-  accountFirstname: z.string(),
-  accountLastname: z.string().min(1, "Merci de remplir ce champ"),
-  accountEmail: z
-    .string()
-    .email("Le champ doit contenir une adresse électronique valide"),
-  contactFullName: z.string().min(1, "Merci de remplir ce champ"),
-  contactEmail: z
-    .string()
-    .email("Le champ doit contenir une adresse électronique valide"),
-  contactPhone: z.string().optional(),
+  accountFirstname: sanitizedText(),
+  accountLastname: sanitizedText(),
+  accountEmail: sanitizedEmail(),
+  contactFullName: sanitizedText(),
+  contactEmail: sanitizedEmail(),
+  contactPhone: sanitizedOptionalPhone(),
   isGlobalContact: z.boolean(),
 });
 

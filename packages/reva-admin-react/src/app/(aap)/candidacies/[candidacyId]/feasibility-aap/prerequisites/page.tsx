@@ -10,6 +10,7 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import type { PrerequisiteInput as PrerequisiteInputType } from "@/graphql/generated/graphql";
 
@@ -21,7 +22,7 @@ const schema = z.object({
   prerequisites: z.array(
     z.object({
       id: z.string().optional(),
-      label: z.string().min(1, "Merci de remplir ce champ"),
+      label: sanitizedText(),
       state: z.enum(["ACQUIRED", "IN_PROGRESS", "RECOMMENDED"]).optional(),
     }),
   ),

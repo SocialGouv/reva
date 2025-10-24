@@ -9,6 +9,7 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedEmail, sanitizedText } from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 
@@ -31,10 +32,10 @@ const createCommanditaireVaeCollectiveMutation = graphql(`
 `);
 
 const porteurDeProjetVaeCollectiveSchema = z.object({
-  raisonSociale: z.string().min(1, "Merci de remplir ce champ"),
-  gestionnaireEmail: z.string().min(1, "Merci de remplir ce champ"),
-  gestionnaireFirstname: z.string().min(1, "Merci de remplir ce champ"),
-  gestionnaireLastname: z.string().min(1, "Merci de remplir ce champ"),
+  raisonSociale: sanitizedText(),
+  gestionnaireEmail: sanitizedEmail(),
+  gestionnaireFirstname: sanitizedText(),
+  gestionnaireLastname: sanitizedText(),
 });
 
 type PorteurDeProjetVaeCollectiveFormValues = z.infer<

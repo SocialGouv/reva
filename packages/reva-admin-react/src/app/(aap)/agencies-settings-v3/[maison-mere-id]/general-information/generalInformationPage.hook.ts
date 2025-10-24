@@ -7,6 +7,12 @@ import { z } from "zod";
 
 import { useAuth } from "@/components/auth/auth";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import {
+  sanitizedEmail,
+  sanitizedPhone,
+  sanitizedSiret,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 import {
@@ -101,15 +107,13 @@ const updateMaisonMereLegalInformationMutation = graphql(`
 `);
 
 const schema = z.object({
-  siret: z.string().regex(/^\d{14}$/, {
-    message: "Le numéro de SIRET doit contenir 14 chiffres.",
-  }),
-  managerFirstname: z.string(),
-  managerLastname: z.string(),
-  gestionnaireFirstname: z.string(),
-  gestionnaireLastname: z.string(),
-  gestionnaireEmail: z.string().email(),
-  phone: z.string(),
+  siret: sanitizedSiret(),
+  managerFirstname: sanitizedText(),
+  managerLastname: sanitizedText(),
+  gestionnaireFirstname: sanitizedText(),
+  gestionnaireLastname: sanitizedText(),
+  gestionnaireEmail: sanitizedEmail(),
+  phone: sanitizedPhone(),
   gestionBranch: z.boolean(),
 });
 

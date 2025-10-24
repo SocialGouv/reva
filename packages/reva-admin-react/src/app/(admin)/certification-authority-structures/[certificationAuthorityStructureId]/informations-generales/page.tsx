@@ -9,13 +9,14 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 import { useInformationGeneralesPage } from "./informationsGenerales.hooks";
 
 const schema = z.object({
-  label: z.string().min(1, "Merci de remplir ce champ."),
+  label: sanitizedText(),
 });
 
 type FormData = z.infer<typeof schema>;

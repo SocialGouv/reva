@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { NoCertificationAuthorityAlert } from "./NoCertificationAuthorityAlert";
 import { NoCertificationRegistryManagerAlert } from "./NoCertificationRegistryManagerAlert";
@@ -23,10 +24,7 @@ type CertificationForForm = {
 type StructureForForm = { id: string; label: string };
 
 const certificationStructureFormSchema = z.object({
-  certificationAuthorityStructureId: z
-    .string()
-    .min(1, "Merci de remplir ce champ")
-    .default(""),
+  certificationAuthorityStructureId: sanitizedText(),
   certificationAuthorities: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),

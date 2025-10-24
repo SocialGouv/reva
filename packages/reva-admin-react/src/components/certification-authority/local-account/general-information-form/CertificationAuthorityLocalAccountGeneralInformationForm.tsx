@@ -6,23 +6,21 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import {
+  sanitizedEmail,
+  sanitizedOptionalPhone,
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 const schema = z.object({
-  accountFirstname: z.string().optional().default(""),
-  accountLastname: z
-    .string()
-    .min(2, "Ce champ doit contenir au moins 2 caractères")
-    .default(""),
-  accountEmail: z
-    .string()
-    .email("Le champ doit contenir une adresse électronique valide")
-    .default(""),
+  accountFirstname: sanitizedOptionalText(),
+  accountLastname: sanitizedText({ minLength: 2 }),
+  accountEmail: sanitizedEmail(),
 
-  contactFullName: z.string().min(1, "Merci de remplir ce champ"),
-  contactEmail: z
-    .string()
-    .email("Le champ doit contenir une adresse électronique valide"),
-  contactPhone: z.string().optional(),
+  contactFullName: sanitizedText(),
+  contactEmail: sanitizedEmail(),
+  contactPhone: sanitizedOptionalPhone(),
 });
 
 export type LocalAccountFormData = z.infer<typeof schema>;

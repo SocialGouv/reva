@@ -12,11 +12,12 @@ import * as z from "zod";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { useAddCertificationPage } from "./addCertification.hook";
 
 const zodSchema = z.object({
-  rncp: z.string().min(1, "Champs requis"),
+  rncp: sanitizedText(),
 });
 
 type CompanySiretStepFormSchema = z.infer<typeof zodSchema>;

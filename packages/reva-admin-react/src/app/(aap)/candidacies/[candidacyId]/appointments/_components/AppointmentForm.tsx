@@ -7,12 +7,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import {
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 const appointmentFormSchema = z
   .object({
-    title: z.string().min(1, "Merci de remplir ce champ"),
-    date: z.string().min(1, "Merci de remplir ce champ"),
-    time: z.string().min(1, "Merci de remplir ce champ"),
+    title: sanitizedText(),
+    date: sanitizedText(),
+    time: sanitizedText(),
     duration: z
       .enum([
         "",
@@ -24,8 +28,8 @@ const appointmentFormSchema = z
       ])
       .optional()
       .nullable(),
-    location: z.string().optional().nullable(),
-    description: z.string().optional().nullable(),
+    location: sanitizedOptionalText(),
+    description: sanitizedOptionalText(),
   })
   .superRefine((data, ctx) => {
     if (isBefore(parseISO(data.date), startOfToday())) {

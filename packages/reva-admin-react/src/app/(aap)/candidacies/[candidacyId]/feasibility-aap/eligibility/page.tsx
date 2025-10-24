@@ -14,6 +14,7 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedOptionalText } from "@/utils/input-sanitization";
 
 import { useEligibility } from "./_components/eligibility.hook";
 
@@ -25,7 +26,7 @@ const schema = z
         invalid_type_error: "Veuillez sélectionner une situation",
       },
     ),
-    eligibilityValidUntil: z.string().optional(),
+    eligibilityValidUntil: sanitizedOptionalText(),
     timeEnough: z.enum(["", "true", "false"]).optional(),
   })
   .superRefine(({ eligibility, eligibilityValidUntil, timeEnough }, ctx) => {

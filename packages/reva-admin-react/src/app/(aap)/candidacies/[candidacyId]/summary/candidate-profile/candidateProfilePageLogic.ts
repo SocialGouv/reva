@@ -7,15 +7,14 @@ import { z } from "zod";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 
 const schema = z.object({
-  highestDegreeId: z.string().min(1, "Merci de remplir ce champ"),
+  highestDegreeId: sanitizedText(),
   highestDegreeLabel: z.string(),
-  niveauDeFormationLePlusEleveDegreeId: z
-    .string()
-    .min(1, "Merci de remplir ce champ"),
+  niveauDeFormationLePlusEleveDegreeId: sanitizedText(),
 });
 
 type FormData = z.infer<typeof schema>;

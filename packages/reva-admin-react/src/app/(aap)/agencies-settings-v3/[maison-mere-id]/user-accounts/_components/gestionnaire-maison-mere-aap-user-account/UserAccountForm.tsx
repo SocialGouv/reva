@@ -7,20 +7,12 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { sanitizedEmail, sanitizedText } from "@/utils/input-sanitization";
 
 const userAccountFormSchema = z.object({
-  firstname: z
-    .string()
-    .min(2, "Ce champ doit contenir au moins 2 caractères")
-    .default(""),
-  lastname: z
-    .string()
-    .min(2, "Ce champ doit contenir au moins 2 caractères")
-    .default(""),
-  email: z
-    .string()
-    .email("Le champ doit contenir une adresse électronique")
-    .default(""),
+  firstname: sanitizedText({ minLength: 2 }),
+  lastname: sanitizedText({ minLength: 2 }),
+  email: sanitizedEmail(),
 
   modalitesAccompagnement: z.enum(["ONSITE", "REMOTE"], {
     invalid_type_error: "Merci de remplir ce champ",

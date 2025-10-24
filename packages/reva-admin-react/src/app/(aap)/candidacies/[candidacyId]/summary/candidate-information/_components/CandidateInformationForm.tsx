@@ -236,6 +236,8 @@ const CandidateInformationForm = ({
             label="Nom d'usage (optionnel)"
             className="w-full mb-0"
             nativeInputProps={register("givenName")}
+            state={errors.givenName ? "error" : "default"}
+            stateRelatedMessage={errors.givenName?.message}
           />
         </div>
         <div className="flex gap-8">
@@ -250,11 +252,15 @@ const CandidateInformationForm = ({
             label="Prénom 2 (optionnel)"
             className="w-full mb-0"
             nativeInputProps={register("firstname2")}
+            state={errors.firstname2 ? "error" : "default"}
+            stateRelatedMessage={errors.firstname2?.message}
           />
           <Input
             label="Prénom 3 (optionnel)"
             className="w-full mb-0"
             nativeInputProps={register("firstname3")}
+            state={errors.firstname3 ? "error" : "default"}
+            stateRelatedMessage={errors.firstname3?.message}
           />
         </div>
         <div className="flex">
@@ -359,6 +365,8 @@ const CandidateInformationForm = ({
             },
           ]}
           className="mb-0 w-fit"
+          state={errors.street ? "error" : "default"}
+          stateRelatedMessage={errors.street?.message}
         />
 
         <div className="flex gap-8">

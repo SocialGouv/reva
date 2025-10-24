@@ -10,21 +10,20 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { Impersonate } from "@/components/impersonate/Impersonate.component";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import {
+  sanitizedEmail,
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 import { useCertificationRegistryPage } from "./responsableReferentiel.hooks";
 
 const schema = z.object({
-  accountFirstname: z.string().optional().default(""),
-  accountLastname: z
-    .string()
-    .min(2, "Ce champ doit contenir au moins 2 caractères")
-    .default(""),
-  accountEmail: z
-    .string()
-    .email("Le champ doit contenir une adresse électronique")
-    .default(""),
+  accountFirstname: sanitizedOptionalText(),
+  accountLastname: sanitizedText({ minLength: 2 }),
+  accountEmail: sanitizedEmail(),
 });
 
 type FormData = z.infer<typeof schema>;

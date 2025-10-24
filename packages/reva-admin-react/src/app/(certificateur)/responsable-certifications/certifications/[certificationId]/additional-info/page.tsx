@@ -13,6 +13,11 @@ import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import {
+  sanitizedOptionalPhone,
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { File as GQLFile } from "@/graphql/generated/graphql";
 
@@ -67,14 +72,14 @@ const schema = z
       })
       .array(),
     dossierDeValidationLink: z.string().optional(),
-    linkToReferential: z.string().min(1, "Merci de remplir ce champ"),
+    linkToReferential: sanitizedText(),
     linkToCorrespondenceTable: z.string().optional(),
     linkToJuryGuide: z.string().optional(),
-    certificationExpertContactDetails: z.string().optional(),
-    certificationExpertContactPhone: z.string().optional(),
+    certificationExpertContactDetails: sanitizedOptionalText(),
+    certificationExpertContactPhone: sanitizedOptionalPhone(),
     certificationExpertContactEmail: z.string().optional(),
-    usefulResources: z.string().optional(),
-    commentsForAAP: z.string().optional(),
+    usefulResources: sanitizedOptionalText(),
+    commentsForAAP: sanitizedOptionalText(),
   })
   .superRefine(
     (

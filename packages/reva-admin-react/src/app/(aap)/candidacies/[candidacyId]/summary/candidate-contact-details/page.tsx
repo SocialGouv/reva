@@ -10,12 +10,13 @@ import { useAuth } from "@/components/auth/auth";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedEmail, sanitizedPhone } from "@/utils/input-sanitization";
 
 import { useCandidateContactDetailsPageLogic } from "./candidateContactDetails.hook";
 
 const schema = z.object({
-  phone: z.string().min(1, "Merci de remplir ce champ"),
-  email: z.string().min(1, "Merci de remplir ce champ"),
+  phone: sanitizedPhone(),
+  email: sanitizedEmail(),
 });
 
 type FormData = z.infer<typeof schema>;

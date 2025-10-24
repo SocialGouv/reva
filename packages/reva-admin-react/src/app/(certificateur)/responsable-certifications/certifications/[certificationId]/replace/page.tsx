@@ -14,11 +14,12 @@ import * as z from "zod";
 import { useAuth } from "@/components/auth/auth";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { useReplaceCertificationPage } from "./replaceCertification.hook";
 
 const zodSchema = z.object({
-  rncp: z.string().min(1, "Champs requis"),
+  rncp: sanitizedText(),
 });
 
 type ReplaceCertificationFormSchema = z.infer<typeof zodSchema>;

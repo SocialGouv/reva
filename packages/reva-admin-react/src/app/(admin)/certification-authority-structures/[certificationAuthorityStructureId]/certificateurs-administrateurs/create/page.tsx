@@ -8,16 +8,17 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedEmail, sanitizedText } from "@/utils/input-sanitization";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
 import { useCreateCertificationAuthorityPage } from "./createCertificationAuthority.hooks";
 
 const schema = z.object({
-  label: z.string().min(1, "Merci de remplir ce champ"),
-  firstname: z.string(),
-  lastname: z.string().min(1, "Merci de remplir ce champ"),
-  email: z.string().min(1, "Merci de remplir ce champ"),
+  label: sanitizedText(),
+  firstname: sanitizedText(),
+  lastname: sanitizedText(),
+  email: sanitizedEmail(),
 });
 
 type FormData = z.infer<typeof schema>;

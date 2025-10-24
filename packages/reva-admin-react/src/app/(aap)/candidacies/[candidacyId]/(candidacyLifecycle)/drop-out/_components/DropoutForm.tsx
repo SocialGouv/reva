@@ -8,12 +8,16 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast } from "@/components/toast/toast";
+import {
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { ActiveDropoutReasons, useDropout } from "./useDropout";
 
 const schema = z.object({
-  otherReasonContent: z.string().optional(),
-  dropOutReasonId: z.string().min(1, "Merci de remplir ce champ"),
+  otherReasonContent: sanitizedOptionalText(),
+  dropOutReasonId: sanitizedText(),
 });
 
 export const DropoutForm = ({

@@ -2,30 +2,30 @@ import { isBefore, sub, toDate } from "date-fns";
 import { z } from "zod";
 
 import { GenderEnum } from "@/constants/genders.constant";
-
-const defaultErrorMessage = "Merci de remplir ce champ";
+import {
+  sanitizedOptionalText,
+  sanitizedText,
+  sanitizedZipCode,
+} from "@/utils/input-sanitization";
 
 export const candidateInformationSchema = z
   .object({
     gender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
-    lastname: z.string().min(1, defaultErrorMessage),
-    givenName: z.string().optional(),
-    firstname: z.string().min(1, defaultErrorMessage),
-    firstname2: z.string().optional(),
-    firstname3: z.string().optional(),
-    birthdate: z.string(),
-    country: z.string().min(1, defaultErrorMessage).default("France"),
-    birthDepartment: z.string().optional(),
-    birthCity: z.string().min(1, defaultErrorMessage),
-    nationality: z.string().min(1, defaultErrorMessage),
+    lastname: sanitizedText(),
+    givenName: sanitizedOptionalText(),
+    firstname: sanitizedText(),
+    firstname2: sanitizedOptionalText(),
+    firstname3: sanitizedOptionalText(),
+    birthdate: sanitizedText(),
+    country: sanitizedText().default("France"),
+    birthDepartment: sanitizedOptionalText(),
+    birthCity: sanitizedText(),
+    nationality: sanitizedText(),
     countryIsFrance: z.boolean(),
-    street: z.string().min(1, defaultErrorMessage),
-    city: z.string().min(1, defaultErrorMessage),
-    zip: z
-      .string()
-      .min(5, "Le code postal doit contenir au moins 5 chiffres")
-      .regex(/^\d{5}$/, "Le code postal est invalide"),
-    addressComplement: z.string().optional(),
+    street: sanitizedText(),
+    city: sanitizedText(),
+    zip: sanitizedZipCode(),
+    addressComplement: sanitizedOptionalText(),
   })
   .superRefine((data, ctx) => {
     if (data.birthdate) {
