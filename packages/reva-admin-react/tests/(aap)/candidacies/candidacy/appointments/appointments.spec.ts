@@ -79,7 +79,7 @@ test.describe("appointments page", () => {
     await page.goto(
       "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
     );
-    await aapCommonWait(page);
+    //  await aapCommonWait(page);
 
     await expect(
       page.getByTestId("appointments-page").getByRole("heading", { level: 1 }),
