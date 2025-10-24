@@ -142,7 +142,7 @@ context("when I access the candidacy appointments page", () => {
     cy.admin("/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/");
     waitForQueries();
 
-    cy.get('[data-test="appointments-page"]')
+    cy.get('[data-testid="appointments-page"]')
       .children("h1")
       .should("have.text", "Gestion des rendez-vous");
   });
