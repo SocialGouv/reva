@@ -17,7 +17,9 @@
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "cypress:open": "cross-env TZ=Europe/Paris cypress open",
     "cypress:ci": "cross-env TZ=Europe/Paris cypress run",
-    "test:ci": "start-server-and-test 'PORT=3003 node .next/standalone/packages/reva-admin-react/server.js' http://localhost:3003/admin2/ cypress:ci"
+    "test:ci": "start-server-and-test 'PORT=3003 node .next/standalone/packages/reva-admin-react/server.js' http://localhost:3003/admin2/ cypress:ci",
+    "test": "playwright test --project=chromium",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.23.4",
