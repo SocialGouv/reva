@@ -40,6 +40,7 @@ export const sanitizedOptionalText = ({
   return z
     .string()
     .optional()
+    .transform((val) => val ?? "")
     .pipe(sanitizedText({ minLength: 0, maxLength }));
 };
 
@@ -83,6 +84,7 @@ export const sanitizedOptionalPhone = ({
   return z
     .string()
     .optional()
+    .transform((val) => val ?? "")
     .pipe(sanitizedPhone({ minLength: 0, maxLength }));
 };
 
