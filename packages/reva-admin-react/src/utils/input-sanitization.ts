@@ -1,12 +1,17 @@
 import { z } from "zod";
 
+const REGEX_SPECIAL_CHARACTERS = /["&\\;)"@]/;
+const REGEX_SPECIAL_CHARACTERS_MESSAGE =
+  "Les caractères spéciaux ne sont pas autorisés";
+const DEFAULT_MAX_LENGTH = 1000;
+
 /**
  * Zod schema for personal names (firstname, lastname, etc.)
  * Validates against special characters and enforces minimum length
  */
 export const sanitizedText = ({
   minLength = 1,
-  maxLength = 255,
+  maxLength = DEFAULT_MAX_LENGTH,
 }: { minLength?: number; maxLength?: number } = {}) => {
   return z
     .string()
@@ -22,10 +27,10 @@ export const sanitizedText = ({
     .refine(
       (value: string) => {
         if (!value) return true;
-        return !/["&\\;)"@]/.test(value);
+        return !REGEX_SPECIAL_CHARACTERS.test(value);
       },
       {
-        message: "Les caractères spéciaux ne sont pas autorisés",
+        message: REGEX_SPECIAL_CHARACTERS_MESSAGE,
       },
     );
 };
@@ -35,7 +40,7 @@ export const sanitizedText = ({
  * Validates against special characters and enforces length
  */
 export const sanitizedOptionalText = ({
-  maxLength = 255,
+  maxLength = DEFAULT_MAX_LENGTH,
 }: { maxLength?: number } = {}) => {
   return z
     .string()
@@ -66,10 +71,10 @@ export const sanitizedPhone = ({
     .refine(
       (value: string) => {
         if (!value) return true;
-        return !/["&\\;)"@]/.test(value);
+        return !REGEX_SPECIAL_CHARACTERS.test(value);
       },
       {
-        message: "Les caractères spéciaux ne sont pas autorisés",
+        message: REGEX_SPECIAL_CHARACTERS_MESSAGE,
       },
     );
 };
@@ -101,10 +106,10 @@ export const sanitizedZipCode = ({ length = 5 }: { length?: number } = {}) => {
     .refine(
       (value: string) => {
         if (!value) return true;
-        return !/["&\\;)"@]/.test(value);
+        return !REGEX_SPECIAL_CHARACTERS.test(value);
       },
       {
-        message: "Les caractères spéciaux ne sont pas autorisés",
+        message: REGEX_SPECIAL_CHARACTERS_MESSAGE,
       },
     );
 };
