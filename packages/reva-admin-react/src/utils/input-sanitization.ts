@@ -55,15 +55,7 @@ export const sanitizedOptionalText = ({
  * Validates against special characters and enforces length
  */
 export const sanitizedPhone = () => {
-  const regex = /^\+?\d{10,12}$/;
-
-  return z
-    .string()
-    .trim()
-    .regex(
-      regex,
-      "Le numéro de téléphone doit commencer par + (facultatif) suivi de 10 à 12 chiffres",
-    );
+  return z.string().trim().regex(REGEX_PHONE, REGEX_PHONE_MESSAGE);
 };
 
 export const sanitizedOptionalPhone = () => {
