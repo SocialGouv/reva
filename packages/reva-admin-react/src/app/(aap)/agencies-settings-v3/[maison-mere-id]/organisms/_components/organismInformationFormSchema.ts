@@ -19,7 +19,7 @@ export const organismInformationFormSchema = z
     adresseComplete: sanitizedText(),
     adresseFragments: AddressFragmentsSchema.optional(),
     adresseInformationsComplementaires: sanitizedOptionalText(),
-    nomPublic: sanitizedText({ minLength: 2 }).default(""),
+    nomPublic: sanitizedText({ minLength: 2 }),
     telephone: sanitizedPhone(),
     siteInternet: sanitizedOptionalText(),
     emailContact: sanitizedEmail(),

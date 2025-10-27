@@ -106,15 +106,6 @@ export const sanitizedZipCode = ({ length = 5 }: { length?: number } = {}) => {
       {
         message: "Les caractères spéciaux ne sont pas autorisés",
       },
-    )
-    .refine(
-      (value: string) => {
-        if (!value) return true;
-        return /^\d{5}$/.test(value);
-      },
-      {
-        message: "Le code postal est invalide",
-      },
     );
 };
 
@@ -126,16 +117,7 @@ export const sanitizedEmail = () => {
   return z
     .string()
     .trim()
-    .email("Le champ doit contenir une adresse électronique valide")
-    .refine(
-      (value: string) => {
-        if (!value) return true;
-        return !/["&\\;)"]/.test(value);
-      },
-      {
-        message: "Les caractères spéciaux ne sont pas autorisés",
-      },
-    );
+    .email("Le champ doit contenir une adresse électronique valide");
 };
 
 /**
