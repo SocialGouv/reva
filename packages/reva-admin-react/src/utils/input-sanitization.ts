@@ -96,8 +96,11 @@ export const sanitizedOptionalEmail = () => {
   return z
     .string()
     .trim()
-    .email("Le champ doit contenir une adresse électronique valide")
-    .optional();
+    .optional()
+    .refine(
+      (val) => !val || z.string().email().safeParse(val).success,
+      "Le champ doit contenir une adresse électronique valide",
+    );
 };
 
 /**
@@ -122,6 +125,9 @@ export const sanitizedOptionalUrl = () => {
   return z
     .string()
     .trim()
-    .url("Le champ doit contenir une URL valide")
-    .optional();
+    .optional()
+    .refine(
+      (val) => !val || z.string().url().safeParse(val).success,
+      "Le champ doit contenir une URL valide",
+    );
 };

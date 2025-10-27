@@ -78,7 +78,7 @@ context("when i access the update certification info page ", () => {
       .should("have.focus");
   });
 
-  it("not let me sumbmit the form when DV telplate is empty", function () {
+  it("not let me sumbmit the form when DV template and link are empty", function () {
     interceptCertificationWithInfo();
     cy.admin(
       "http://localhost:3003/admin2/responsable-certifications/certifications/1504d576-82e5-449d-9597-1350fbdbfa50/additional-info",
@@ -91,7 +91,7 @@ context("when i access the update certification info page ", () => {
 
     cy.get('[data-test="referential-link-input"] input')
       .clear()
-      .type("updated referential link");
+      .type("https://www.google.com");
 
     cy.get("button").contains("Enregistrer").click();
     cy.get(
@@ -126,7 +126,7 @@ context("when i access the update certification info page ", () => {
 
     cy.get('[data-test="referential-link-input"] input')
       .clear()
-      .type("updated referential link");
+      .type("https://www.google.com");
 
     cy.get("button").contains("Enregistrer").click();
     cy.wait("@updateCertificationAdditionalInfo");
