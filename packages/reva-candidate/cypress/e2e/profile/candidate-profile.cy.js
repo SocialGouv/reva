@@ -2,7 +2,7 @@ import { format } from "date-fns";
 
 import { stubQuery } from "../../utils/graphql";
 
-import candidacy1Data from "./fixtures/candidacy1.json";
+import candidate1Data from "./fixtures/candidate1.json";
 import countries from "./fixtures/countries.json";
 import departments from "./fixtures/departments.json";
 
@@ -37,7 +37,7 @@ const TOAST_ERROR = '[data-testid="toast-error"]';
 const FRANCE_COUNTRY_ID = "208ef9d1-4d18-475b-9f5f-575da5f7218c";
 
 context("Candidate Profile Page", () => {
-  const candidate = candidacy1Data.data.getCandidacyById.candidate;
+  const candidate = candidate1Data.data.candidate_getCandidateWithCandidacy;
 
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
@@ -51,11 +51,7 @@ context("Candidate Profile Page", () => {
       stubQuery(req, "getCandidacyByIdWithCandidate", "candidacy1.json");
       stubQuery(req, "getCandidacyByIdForDashboard", "candidacy1.json");
 
-      stubQuery(
-        req,
-        "getCandidacyByIdWithCandidateForProfilePage",
-        candidacy1Data,
-      );
+      stubQuery(req, "getCandidateForProfilePage", candidate1Data);
       stubQuery(req, "getCountries", countries);
       stubQuery(req, "getDepartments", departments);
     });
@@ -68,11 +64,11 @@ context("Candidate Profile Page", () => {
       "@getCandidacyByIdWithCandidate",
       "@getCandidacyByIdForDashboard",
     ]);
-    cy.visit("/c1/profile");
+    cy.visit("/profile");
     cy.wait([
       "@getDepartments",
       "@getCountries",
-      "@getCandidacyByIdWithCandidateForProfilePage",
+      "@getCandidateForProfilePage",
     ]);
   });
 
@@ -292,116 +288,6 @@ context("Candidate Profile Page", () => {
       cy.get(COUNTRY_SELECT).select(2);
       cy.get(BIRTH_DEPARTMENT_SELECT).should("be.disabled");
       cy.get(SUBMIT_BUTTON).should("not.be.disabled");
-    });
-  });
-
-  describe("Form Field Disabling Based on Candidacy Status", () => {
-    beforeEach(() => {
-      cy.intercept("POST", "/api/graphql", (req) => {
-        stubQuery(
-          req,
-          "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
-          "candidacies-with-candidacy-1.json",
-        );
-        stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy1.json");
-        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
-        stubQuery(req, "getCandidacyByIdWithCandidate", "candidacy1.json");
-        stubQuery(req, "getCandidacyByIdForDashboard", "candidacy1.json");
-
-        const submittedCandidacyData = {
-          ...candidacy1Data,
-        };
-
-        submittedCandidacyData.data.getCandidacyById.status = "PRISE_EN_CHARGE";
-
-        stubQuery(
-          req,
-          "getCandidacyByIdWithCandidateForProfilePage",
-          submittedCandidacyData,
-        );
-        stubQuery(req, "getCountries", countries);
-        stubQuery(req, "getDepartments", departments);
-      });
-
-      cy.login();
-      cy.wait([
-        "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
-        "@activeFeaturesForConnectedUser",
-        "@getCandidacyByIdForCandidacyGuard",
-        "@getCandidacyByIdWithCandidate",
-        "@getCandidacyByIdForDashboard",
-      ]);
-      cy.visit("/c1/profile");
-      cy.wait([
-        "@getCandidacyByIdWithCandidateForProfilePage",
-        "@getCountries",
-        "@getDepartments",
-      ]);
-    });
-
-    it("should disable form fields when candidacy status is PRISE_EN_CHARGE", () => {
-      cy.get(FIRSTNAME_INPUT).should("be.disabled");
-      cy.get(LASTNAME_INPUT).should("be.disabled");
-      cy.get(GIVEN_NAME_INPUT).should("be.disabled");
-      cy.get(FIRSTNAME2_INPUT).should("be.disabled");
-      cy.get(FIRSTNAME3_INPUT).should("be.disabled");
-      cy.get(GENDER_SELECT).should("be.disabled");
-      cy.get(BIRTH_CITY_INPUT).should("be.disabled");
-      cy.get(BIRTHDATE_INPUT).should("be.disabled");
-      cy.get(BIRTH_DEPARTMENT_SELECT).should("be.disabled");
-      cy.get(COUNTRY_SELECT).should("be.disabled");
-    });
-
-    it("should still allow form submission with disabled fields", () => {
-      cy.get(STREET_INPUT).clear().type("Modified Street");
-      cy.get(SUBMIT_BUTTON).should("not.be.disabled");
-
-      cy.intercept("POST", "/api/graphql", (req) => {
-        if (req.body.operationName === "updateCandidateInformationMutation") {
-          req.reply({
-            data: {
-              candidate_updateCandidateInformationBySelf: {
-                id: "12345678-1234-1234-1234-123456789abc",
-              },
-            },
-          });
-        }
-      }).as("updateCandidateInformation");
-
-      cy.get(SUBMIT_BUTTON).click();
-
-      cy.wait("@updateCandidateInformation");
-      cy.get(TOAST_SUCCESS).should("be.visible");
-    });
-
-    it("should allow editing address and contact information even when candidacy is submitted", () => {
-      cy.get(STREET_INPUT).should("not.be.disabled");
-      cy.get(CITY_INPUT).should("not.be.disabled");
-      cy.get(ZIP_INPUT).should("not.be.disabled");
-      cy.get(PHONE_INPUT).should("not.be.disabled");
-      cy.get(EMAIL_INPUT).should("not.be.disabled");
-      cy.get(ADDRESS_COMPLEMENT_INPUT).should("not.be.disabled");
-
-      cy.get(STREET_INPUT).clear().type("123 New Street");
-      cy.get(CITY_INPUT).clear().type("New City");
-      cy.get(ZIP_INPUT).clear().type("54321");
-
-      cy.intercept("POST", "/api/graphql", (req) => {
-        if (req.body.operationName === "updateCandidateInformationMutation") {
-          req.reply({
-            data: {
-              candidate_updateCandidateInformationBySelf: {
-                id: "12345678-1234-1234-1234-123456789abc",
-              },
-            },
-          });
-        }
-      }).as("updateCandidateInformation");
-
-      cy.get(SUBMIT_BUTTON).click();
-
-      cy.wait("@updateCandidateInformation");
-      cy.get(TOAST_SUCCESS).should("be.visible");
     });
   });
 });

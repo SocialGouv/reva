@@ -9,10 +9,46 @@ const GET_CANDIDATE_WITH_CANDIDACY_FOR_CANDIDACIES_GUARD = graphql(`
     candidate_getCandidateWithCandidacy {
       candidacies {
         id
+        sentAt
+        financeModule
+        status
+        candidacyStatuses {
+          status
+          createdAt
+        }
+        organism {
+          label
+          nomPublic
+          modaliteAccompagnement
+        }
         certification {
           id
           label
           codeRncp
+        }
+        cohorteVaeCollective {
+          nom
+          commanditaireVaeCollective {
+            raisonSociale
+          }
+        }
+        feasibility {
+          dematerializedFeasibilityFile {
+            sentToCandidateAt
+            isReadyToBeSentToCertificationAuthority
+            isReadyToBeSentToCandidate
+            candidateConfirmationAt
+            swornStatementFileId
+          }
+          decision
+          feasibilityFileSentAt
+        }
+        jury {
+          dateOfSession
+          result
+        }
+        candidacyDropOut {
+          createdAt
         }
       }
     }

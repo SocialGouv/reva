@@ -3,45 +3,42 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
 
-import { useHeader } from "@/app/_components/layout/Header.hook";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 const getNavigation = ({
-  candidacyId,
   currentPathname,
   candidateHelpIsActive,
 }: {
-  candidacyId: string;
   currentPathname: string;
   candidateHelpIsActive: boolean;
 }) => {
   return [
     {
-      text: "Ma candidature",
+      text: "Mes candidatures",
       linkProps: {
-        href: `/${candidacyId}`,
+        href: `/`,
         target: "_self",
       },
-      isActive: currentPathname === `/${candidacyId}/`,
+      isActive: currentPathname === `/`,
     },
     {
       text: "Mon profil",
       linkProps: {
-        href: `/${candidacyId}/profile`,
+        href: `/profile`,
         target: "_self",
       },
-      isActive: currentPathname.startsWith(`/${candidacyId}/profile`),
+      isActive: currentPathname.startsWith(`/profile`),
     },
     ...(candidateHelpIsActive
       ? [
           {
             text: "Aide",
             linkProps: {
-              href: `/${candidacyId}/help`,
+              href: `/help`,
               target: "_self",
             },
-            isActive: currentPathname.startsWith(`/${candidacyId}/help`),
+            isActive: currentPathname.startsWith(`/help`),
           },
         ]
       : []),
@@ -52,12 +49,6 @@ export const Header = () => {
 
   const currentPathname = usePathname();
 
-  const { candidacyId, candidacy } = useHeader();
-
-  const isInactifEnAttente = candidacy?.activite === "INACTIF_EN_ATTENTE";
-  const isEndAccompagnementPending =
-    candidacy?.endAccompagnementStatus === "PENDING";
-
   const isCandidacyDeletedPath =
     currentPathname.startsWith("/candidacy-deleted");
 
@@ -66,14 +57,9 @@ export const Header = () => {
   const candidateHelpIsActive = isFeatureActive("candidate-help");
 
   const navigation =
-    !candidacyId ||
-    !authenticated ||
-    isInactifEnAttente ||
-    isCandidacyDeletedPath ||
-    isEndAccompagnementPending
+    !authenticated || isCandidacyDeletedPath
       ? []
       : getNavigation({
-          candidacyId,
           currentPathname,
           candidateHelpIsActive,
         });

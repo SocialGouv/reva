@@ -42,8 +42,27 @@ module.exports = {
           500: "#666666",
           700: "#3A3A3A",
           800: "#161616",
+          //
+          contrast: "#EEEEEE",
+          altblueFrance: "#F5F5FE",
+          mentionGrey: "#666666",
+          labelGrey: "#161616",
+          defaultGrey: "#FFFFFF",
+          titleGrey: "#161616",
         },
         dsfrOrange: { 500: "#f94608" },
+        //
+        dsfr: {
+          "blue-france-sun-113": "#000091",
+          orange: { 500: "#f94608" },
+          "light-text-mention-grey": "#666666",
+          "light-neutral-grey-1000": "#F6F6F6",
+          "light-decisions-text-default-warning": "#B34000",
+          "light-decisions-background-contrast-warning": "#FFE9E6",
+          "light-decisions-border-border-default-grey": "#DDDDDD",
+          "light-decisions-border-border-disabled-grey": "#E5E5E5",
+          "light-decisions-text-disabled-grey": "#929292",
+        },
         fvae: {
           red: {
             100: "#FFE7DF",

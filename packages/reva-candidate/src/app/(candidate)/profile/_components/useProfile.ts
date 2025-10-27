@@ -1,40 +1,35 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
 import { CandidateUpdateInformationBySelfInput } from "@/graphql/generated/graphql";
 
-const getCandidacyByIdWithCandidateForProfilePage = graphql(`
-  query getCandidacyByIdWithCandidateForProfilePage($candidacyId: ID!) {
-    getCandidacyById(id: $candidacyId) {
+const getCandidateForProfilePage = graphql(`
+  query getCandidateForProfilePage {
+    candidate_getCandidateWithCandidacy {
       id
-      status
-      candidate {
+      firstname
+      lastname
+      givenName
+      firstname2
+      firstname3
+      gender
+      birthCity
+      birthdate
+      birthDepartment {
         id
-        firstname
-        lastname
-        givenName
-        firstname2
-        firstname3
-        gender
-        birthCity
-        birthdate
-        birthDepartment {
-          id
-        }
-        country {
-          id
-        }
-        nationality
-        street
-        city
-        zip
-        phone
-        email
-        addressComplement
       }
+      country {
+        id
+      }
+      nationality
+      street
+      city
+      zip
+      phone
+      email
+      addressComplement
     }
   }
 `);
@@ -61,16 +56,9 @@ const getDepartments = graphql(`
 export const useProfile = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { candidacyId } = useParams<{
-    candidacyId: string;
-  }>();
-
   const { data: getCandidateData } = useQuery({
     queryKey: ["candidacy", "getCandidateForProfilePage"],
-    queryFn: () =>
-      graphqlClient.request(getCandidacyByIdWithCandidateForProfilePage, {
-        candidacyId,
-      }),
+    queryFn: () => graphqlClient.request(getCandidateForProfilePage),
   });
 
   const { data: getCountriesData } = useQuery({
@@ -83,12 +71,11 @@ export const useProfile = () => {
     queryFn: () => graphqlClient.request(getDepartments),
   });
 
-  const candidacy = getCandidateData?.getCandidacyById;
-  const candidate = getCandidateData?.getCandidacyById?.candidate;
+  const candidate = getCandidateData?.candidate_getCandidateWithCandidacy;
   const countries = getCountriesData?.getCountries;
   const departments = getDepartmentsData?.getDepartments;
 
-  const candidacyAlreadySubmitted = candidacy?.status !== "PROJET";
+  const candidacyAlreadySubmitted = false; //candidacy?.status !== "PROJET";
 
   return {
     candidate,

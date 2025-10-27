@@ -1,6 +1,8 @@
+import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 
+import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 
@@ -55,32 +57,56 @@ const SelectCandidacy = ({
 }: {
   candidacies: CandidacyForCandidaciesGuard[];
 }) => {
-  const router = useRouter();
-
   if (candidacies.length === 0) {
     return <div>No candidacies</div>;
   }
 
   return (
     <div>
-      <h1>Sélectionner une candidature</h1>
+      <h1>Mes candidatures et parcours</h1>
+
+      <p>
+        Voici la liste de vos candidatures France VAE. Sélectionnez celle de
+        votre choix pour suivre son évolution et accomplir les prochaines étapes
+        de votre parcours.
+      </p>
 
       {candidacies.map((candidacy) => (
-        <div key={candidacy.id} className="flex flex-col">
-          <div
-            className="flex flex-row gap-2 cursor-pointer"
-            onClick={() => {
-              router.push(`./${candidacy.id}`);
-            }}
-          >
-            <div className="text-sm font-bold">
-              {candidacy.certification?.codeRncp}
-            </div>
-            <div className="text-sm font-bold">
-              {candidacy.certification?.label}
-            </div>
-          </div>
-        </div>
+        <CandidacyCard
+          key={candidacy.id}
+          candidacyId={candidacy.id}
+          certificationLabel={
+            candidacy.certification
+              ? `RNCP ${candidacy?.certification.codeRncp} : ${candidacy?.certification?.label}`
+              : undefined
+          }
+          organismLabel={
+            candidacy.organism?.nomPublic || candidacy.organism?.label
+          }
+          organismModalitateAccompagnement={
+            candidacy.organism?.modaliteAccompagnement
+          }
+          candidacySentAt={
+            candidacy.candidacyStatuses.some((s) => s.status === "VALIDATION")
+              ? toDate(
+                  candidacy.candidacyStatuses.find(
+                    (s) => s.status === "VALIDATION",
+                  )?.createdAt || 0,
+                )
+              : undefined
+          }
+          fundable={candidacy.financeModule !== "hors_plateforme"}
+          vaeCollective={!!candidacy.cohorteVaeCollective}
+          vaeCollectiveCommanditaireLabel={
+            candidacy.cohorteVaeCollective?.commanditaireVaeCollective
+              .raisonSociale
+          }
+          vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
+          status={candidacy.status}
+          feasibility={candidacy.feasibility}
+          jury={candidacy.jury}
+          dropout={candidacy.candidacyDropOut}
+        />
       ))}
     </div>
   );
