@@ -100,7 +100,7 @@ const CandidacySummaryPage = () => {
               className="h-[38px]"
               onClick={() => {
                 window.open(
-                  `${process.env.NEXT_PUBLIC_CANDIDATE_REACT_URL}/${candidacy.id}`,
+                  `${process.env.NEXT_PUBLIC_CANDIDATE_REACT_URL}/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}`,
                   "_blank",
                 );
               }}

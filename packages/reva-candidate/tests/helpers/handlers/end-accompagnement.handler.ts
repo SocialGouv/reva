@@ -1,10 +1,9 @@
 import { graphql, Page } from "next/experimental/testmode/playwright/msw";
 
 import { graphQLResolver } from "@tests/helpers/network/msw";
-import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { Candidacy } from "@/graphql/generated/graphql";
+import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 
 interface EndAccompagnementHandlersOptions {
   candidacy: CandidacyEntity;
@@ -13,12 +12,13 @@ interface EndAccompagnementHandlersOptions {
 
 const endAccompagnementWait = async (page: Page) => {
   await Promise.all([
+    waitGraphQL(page, "candidate_getCandidateForCandidatesGuard"),
+    waitGraphQL(page, "getCandidateByIdForCandidateGuard"),
     waitGraphQL(
       page,
-      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     ),
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
-    waitGraphQL(page, "getCandidacyByIdWithCandidateForHeader"),
     waitGraphQL(page, "getCandidacyByIdForCandidacyGuard"),
   ]);
 };
@@ -36,16 +36,28 @@ export const endAccompagnementHandlers = ({
   return {
     handlers: [
       fvae.query(
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
         graphQLResolver({
           candidate_getCandidateWithCandidacy: {
-            candidacies: [candidacy],
+            ...candidacy.candidate,
           },
         }),
       ),
       fvae.query(
-        "getCandidacyByIdWithCandidateForHeader",
-        graphQLResolver(candidacyInput),
+        "getCandidateByIdForCandidateGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
+            ...candidacy.candidate,
+          },
+        }),
+      ),
+      fvae.query(
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
+            candidacies: [candidacy],
+          },
+        }),
       ),
       fvae.query(
         "getCandidacyByIdForCandidacyGuard",

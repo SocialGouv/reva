@@ -6,34 +6,31 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { CandidateUpdateInformationBySelfInput } from "@/graphql/generated/graphql";
 
-const getCandidacyByIdWithCandidateForProfilePage = graphql(`
-  query getCandidacyByIdWithCandidateForProfilePage($candidacyId: ID!) {
-    getCandidacyById(id: $candidacyId) {
+const getCandidateByIdForProfilePage = graphql(`
+  query getCandidateByIdForProfilePage($candidateId: ID!) {
+    candidate_getCandidateById(id: $candidateId) {
       id
-      candidate {
+      firstname
+      lastname
+      givenName
+      firstname2
+      firstname3
+      gender
+      birthCity
+      birthdate
+      birthDepartment {
         id
-        firstname
-        lastname
-        givenName
-        firstname2
-        firstname3
-        gender
-        birthCity
-        birthdate
-        birthDepartment {
-          id
-        }
-        country {
-          id
-        }
-        nationality
-        street
-        city
-        zip
-        phone
-        email
-        addressComplement
       }
+      country {
+        id
+      }
+      nationality
+      street
+      city
+      zip
+      phone
+      email
+      addressComplement
     }
   }
 `);
@@ -60,16 +57,14 @@ const getDepartments = graphql(`
 export const useProfile = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { candidacyId } = useParams<{
-    candidacyId: string;
+  const { candidateId } = useParams<{
+    candidateId: string;
   }>();
 
   const { data: getCandidateData } = useQuery({
-    queryKey: ["candidacy", "getCandidateForProfilePage"],
+    queryKey: ["candidate", "getCandidateByIdForProfilePage"],
     queryFn: () =>
-      graphqlClient.request(getCandidacyByIdWithCandidateForProfilePage, {
-        candidacyId,
-      }),
+      graphqlClient.request(getCandidateByIdForProfilePage, { candidateId }),
   });
 
   const { data: getCountriesData } = useQuery({
@@ -82,14 +77,17 @@ export const useProfile = () => {
     queryFn: () => graphqlClient.request(getDepartments),
   });
 
-  const candidate = getCandidateData?.getCandidacyById?.candidate;
+  const candidate = getCandidateData?.candidate_getCandidateById;
   const countries = getCountriesData?.getCountries;
   const departments = getDepartmentsData?.getDepartments;
+
+  const candidacyAlreadySubmitted = false; //candidacy?.status !== "PROJET";
 
   return {
     candidate,
     countries,
     departments,
+    candidacyAlreadySubmitted,
   };
 };
 

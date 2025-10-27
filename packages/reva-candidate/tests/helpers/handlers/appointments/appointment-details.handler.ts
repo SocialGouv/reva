@@ -7,10 +7,13 @@ import { Appointment, Candidacy } from "@/graphql/generated/graphql";
 
 export async function navigateToAppointmentDetailsPage(
   page: Page,
+  candidateId: string,
   candidacyId: string,
   appointmentId: string,
 ) {
-  await page.goto(`${candidacyId}/appointments/${appointmentId}/`);
+  await page.goto(
+    `candidates/${candidateId}/candidacies/${candidacyId}/appointments/${appointmentId}/`,
+  );
 }
 
 interface AppointmentDetailsHandlersOptions {
@@ -20,16 +23,10 @@ interface AppointmentDetailsHandlersOptions {
 }
 
 const appointmentDetailsWait = async (page: Page) => {
-  const featuresQuery = waitGraphQL(page, "activeFeaturesForConnectedUser");
-
-  const pastAppointmentsQuery = waitGraphQL(page, "getOrganism");
-
-  const futureAppointmentsQuery = waitGraphQL(page, "getAppointmentDetails");
-
   await Promise.all([
-    featuresQuery,
-    pastAppointmentsQuery,
-    futureAppointmentsQuery,
+    waitGraphQL(page, "activeFeaturesForConnectedUser"),
+    waitGraphQL(page, "getOrganism"),
+    waitGraphQL(page, "getAppointmentDetails"),
   ]);
 };
 
@@ -51,9 +48,25 @@ export const appointmentDetailsHandlers = ({
   return {
     handlers: [
       fvae.query(
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
         graphQLResolver({
           candidate_getCandidateWithCandidacy: {
+            ...candidacy.candidate,
+          },
+        }),
+      ),
+      fvae.query(
+        "getCandidateByIdForCandidateGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
+            ...candidacy.candidate,
+          },
+        }),
+      ),
+      fvae.query(
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
             candidacies: [candidacy],
           },
         }),
@@ -64,10 +77,6 @@ export const appointmentDetailsHandlers = ({
       ),
       fvae.query(
         "getCandidacyByIdWithCandidate",
-        graphQLResolver(candidacyInput),
-      ),
-      fvae.query(
-        "getCandidacyByIdWithCandidateForHeader",
         graphQLResolver(candidacyInput),
       ),
       fvae.query("getOrganism", graphQLResolver(candidacyInput)),

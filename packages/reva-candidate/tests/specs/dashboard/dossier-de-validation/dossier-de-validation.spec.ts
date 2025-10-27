@@ -24,10 +24,7 @@ import {
 } from "@tests/helpers/handlers/dossier-de-validation/upload";
 import { waitGraphQL, waitRest } from "@tests/helpers/network/requests";
 
-import {
-  JuryResult,
-  TypeAccompagnement,
-} from "@/graphql/generated/graphql";
+import { JuryResult, TypeAccompagnement } from "@/graphql/generated/graphql";
 
 import type { MswFixture } from "next/experimental/testmode/playwright/msw";
 
@@ -125,7 +122,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
       await dossierValidationButton.click();
       await expect(page).toHaveURL(
-        `/candidat/${candidacy.id}/dossier-de-validation/`,
+        `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/dossier-de-validation/`,
       );
     });
 
@@ -140,7 +137,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
       await login(page);
-      await navigateToDossierValidation(page, candidacy.id);
+      await navigateToDossierValidation(
+        page,
+        candidacy.candidate?.id,
+        candidacy.id,
+      );
       await dossierDeValidationWait(page);
 
       const dateInput = page.locator(
@@ -173,7 +174,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
       await login(page);
-      await navigateToDossierValidation(page, candidacy.id);
+      await navigateToDossierValidation(
+        page,
+        candidacy.candidate?.id,
+        candidacy.id,
+      );
       await dossierDeValidationWait(page);
       await clickDossierTab(page);
 
@@ -219,7 +224,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       await mockDossierValidationUpload(page);
 
       await login(page);
-      await navigateToDossierValidation(page, candidacy.id);
+      await navigateToDossierValidation(
+        page,
+        candidacy.candidate?.id,
+        candidacy.id,
+      );
       await dossierDeValidationWait(page);
       await clickDossierTab(page);
 
@@ -245,7 +254,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         .click();
       await uploadRequest;
 
-      await expect(page).toHaveURL(`/candidat/${candidacy.id}/`);
+      await expect(page).toHaveURL(
+        `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/`,
+      );
     });
 
     test("should let me add and remove additional attachments", async ({
@@ -259,7 +270,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
       await login(page);
-      await navigateToDossierValidation(page, candidacy.id);
+      await navigateToDossierValidation(
+        page,
+        candidacy.candidate?.id,
+        candidacy.id,
+      );
       await dossierDeValidationWait(page);
       await clickDossierTab(page);
 
@@ -377,7 +392,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
         await clickDossierTab(page);
 
@@ -385,9 +404,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           '[data-testid="dossier-de-validation-signale-alert"]',
         );
         await expect(alert).toBeVisible();
-        await expect(
-          alert.locator(".fr-alert__title"),
-        ).toContainText("Dossier de validation signalé par le certificateur le 01/09/2025");
+        await expect(alert.locator(".fr-alert__title")).toContainText(
+          "Dossier de validation signalé par le certificateur le 01/09/2025",
+        );
         await expect(alert).toContainText("Motif du signalement :");
         await expect(alert).toContainText(signalReason);
       });
@@ -428,7 +447,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
         await clickDossierTab(page);
 
@@ -487,7 +510,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           );
 
           await login(page);
-          await navigateToDossierValidation(page, candidacy.id);
+          await navigateToDossierValidation(
+            page,
+            candidacy.candidate?.id,
+            candidacy.id,
+          );
           await dossierDeValidationWait(page);
           await clickDossierTab(page);
 
@@ -524,7 +551,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
         await clickDossierTab(page);
 
@@ -612,7 +643,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
         await clickDossierTab(page);
 
@@ -662,7 +697,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
         await clickDossierTab(page);
 
@@ -689,12 +728,18 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           activeDossierDeValidation: {
             dossierDeValidationOtherFiles: [],
           },
-          jury: createJuryEntity({ result: "FULL_SUCCESS_OF_FULL_CERTIFICATION" }),
+          jury: createJuryEntity({
+            result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+          }),
         });
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
 
         await page.getByRole("tab", { name: "Date" }).click();
@@ -721,13 +766,19 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dossierDeValidationOtherFiles: [],
             dossierDeValidationSentAt: sentDate.getTime(),
           },
-          jury: createJuryEntity({ result: "FULL_SUCCESS_OF_FULL_CERTIFICATION" }),
+          jury: createJuryEntity({
+            result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+          }),
         });
 
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
 
         const sentAlert = page.locator(

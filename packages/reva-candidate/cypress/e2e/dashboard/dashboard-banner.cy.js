@@ -1,15 +1,25 @@
 import { addDays, subMonths, format } from "date-fns";
 
+import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
+
+const candidate = candidate1Data.data.candidate_getCandidateById;
 
 context("Dashboard Banner", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
+        "candidate1-for-candidates-guard.json",
+      );
+      stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+      stubQuery(
+        req,
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "candidacies-with-candidacy-1.json",
       );
+
       stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
@@ -23,7 +33,9 @@ context("Dashboard Banner", () => {
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@candidate_getCandidateForCandidatesGuard",
+      "@getCandidateByIdForCandidateGuard",
+      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",

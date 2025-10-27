@@ -52,6 +52,7 @@ type Candidate {
 }
 
 type Query {
+  candidate_getCandidateById(id: ID!): Candidate
   candidate_getCandidateWithCandidacy: Candidate!
 }
 

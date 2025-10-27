@@ -1,12 +1,21 @@
+import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
 
 import candidacy1DropOut from "./fixtures/candidacy1-dropped-out.json";
+
+const candidate = candidate1Data.data.candidate_getCandidateById;
 
 function interceptCandidacy() {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
       req,
-      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidate_getCandidateForCandidatesGuard",
+      "candidate1-for-candidates-guard.json",
+    );
+    stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+    stubQuery(
+      req,
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "candidacies-with-candidacy-1.json",
     );
     stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy1DropOut);
@@ -17,14 +26,18 @@ function interceptCandidacy() {
   cy.login();
 
   cy.wait([
-    "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+    "@candidate_getCandidateForCandidatesGuard",
+    "@getCandidateByIdForCandidateGuard",
+    "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     "@activeFeaturesForConnectedUser",
     "@getCandidacyByIdForCandidacyGuard",
     "@getCandidacyByIdWithCandidate",
     "@getCandidacyByIdForDashboard",
   ]);
 
-  cy.visit("/c1/candidacy-dropout-decision/dropout-confirmation");
+  cy.visit(
+    `/candidates/${candidate.id}/candidacies/c1/candidacy-dropout-decision/dropout-confirmation`,
+  );
 }
 
 context("Candidacy dropout confirmation page", () => {
@@ -42,6 +55,9 @@ context("Candidacy dropout confirmation page", () => {
     cy.get(
       '[data-testid="candidacy-dropout-confirmation-back-button"]',
     ).click();
-    cy.url().should("eq", Cypress.config().baseUrl + "c1/");
+    cy.url().should(
+      "eq",
+      Cypress.config().baseUrl + `candidates/${candidate.id}/candidacies/c1/`,
+    );
   });
 });

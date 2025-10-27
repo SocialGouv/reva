@@ -1,16 +1,18 @@
 import { graphql, Page } from "next/experimental/testmode/playwright/msw";
 
 import { graphQLResolver } from "@tests/helpers/network/msw";
-import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { Candidacy } from "@/graphql/generated/graphql";
+import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 
 export async function navigateToAppointmentListPage(
   page: Page,
+  candidateId: string,
   candidacyId: string,
 ) {
-  await page.goto(`${candidacyId}/appointments/`);
+  await page.goto(
+    `candidates/${candidateId}/candidacies/${candidacyId}/appointments/`,
+  );
 }
 
 interface DashboardHandlersOptions {
@@ -20,16 +22,10 @@ interface DashboardHandlersOptions {
 }
 
 const appointmentListWait = async (page: Page) => {
-  const featuresQuery = waitGraphQL(page, "activeFeaturesForConnectedUser");
-
-  const pastAppointmentsQuery = waitGraphQL(page, "getPastAppointments");
-
-  const futureAppointmentsQuery = waitGraphQL(page, "getFutureAppointments");
-
   await Promise.all([
-    featuresQuery,
-    pastAppointmentsQuery,
-    futureAppointmentsQuery,
+    waitGraphQL(page, "activeFeaturesForConnectedUser"),
+    waitGraphQL(page, "getPastAppointments"),
+    waitGraphQL(page, "getFutureAppointments"),
   ]);
 };
 
@@ -56,9 +52,25 @@ export const appointmentListHandlers = ({
   return {
     handlers: [
       fvae.query(
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
         graphQLResolver({
           candidate_getCandidateWithCandidacy: {
+            ...candidacy.candidate,
+          },
+        }),
+      ),
+      fvae.query(
+        "getCandidateByIdForCandidateGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
+            ...candidacy.candidate,
+          },
+        }),
+      ),
+      fvae.query(
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
             candidacies: [candidacy],
           },
         }),
@@ -69,10 +81,6 @@ export const appointmentListHandlers = ({
       ),
       fvae.query(
         "getCandidacyByIdWithCandidate",
-        graphQLResolver(candidacyInput),
-      ),
-      fvae.query(
-        "getCandidacyByIdWithCandidateForHeader",
         graphQLResolver(candidacyInput),
       ),
       fvae.query("getFutureAppointments", graphQLResolver(candidacyInput)),

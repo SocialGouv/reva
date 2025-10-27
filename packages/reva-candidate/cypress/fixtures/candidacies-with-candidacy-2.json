@@ -1,6 +1,6 @@
 {
   "data": {
-    "candidate_getCandidateWithCandidacy": {
+    "candidate_getCandidateById": {
       "candidacies": [
         {
           "id": "c2"

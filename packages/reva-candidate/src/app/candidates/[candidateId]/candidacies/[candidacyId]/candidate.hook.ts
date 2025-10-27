@@ -13,6 +13,10 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE = graphql(`
         firstname
         lastname
       }
+      certification {
+        label
+        codeRncp
+      }
     }
   }
 `);
@@ -33,8 +37,9 @@ export const useCandidate = () => {
   });
 
   const candidate = candidateWithCandidacy?.getCandidacyById?.candidate;
-
+  const certification = candidateWithCandidacy?.getCandidacyById?.certification;
   return {
     candidate,
+    certification,
   };
 };

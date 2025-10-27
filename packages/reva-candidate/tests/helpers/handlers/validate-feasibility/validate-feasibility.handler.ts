@@ -10,7 +10,6 @@ import { waitGraphQL } from "@tests/helpers/network/requests";
 const validateFeasibilityWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "getCandidacyByIdForCandidacyGuard"),
-    waitGraphQL(page, "getCandidacyByIdWithCandidateForHeader"),
     waitGraphQL(page, "getCandidacyByIdWithCandidateForValidateFeasibility"),
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
   ]);
@@ -18,9 +17,12 @@ const validateFeasibilityWait = async (page: Page) => {
 
 export const navigateToValidateFeasibility = async (
   page: Page,
+  candidateId: string,
   candidacyId: string,
 ) => {
-  await page.goto(`${candidacyId}/validate-feasibility/`);
+  await page.goto(
+    `candidates/${candidateId}/candidacies/${candidacyId}/validate-feasibility/`,
+  );
 };
 
 export const validateFeasibilityHandlers = () => {
@@ -28,17 +30,39 @@ export const validateFeasibilityHandlers = () => {
 
   const candidacyWithCandidate =
     getCandidacyByIdWithCandidateForValidateFeasibility.data.getCandidacyById;
+  const candidate = candidacyWithCandidate.candidate;
 
   const candidacyId = candidacyWithCandidate.id;
+  const candidateId = candidate.id;
 
   return {
     handlers: [
       fvae.query(
-        "getCandidacyByIdForCandidacyGuard",
-        graphQLResolver(getCandidacyByIdForCandidacyGuard),
+        "candidate_getCandidateForCandidatesGuard",
+        graphQLResolver({
+          candidate_getCandidateWithCandidacy: {
+            ...candidate,
+          },
+        }),
       ),
       fvae.query(
-        "getCandidacyByIdWithCandidateForHeader",
+        "getCandidateByIdForCandidateGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
+            ...candidate,
+          },
+        }),
+      ),
+      fvae.query(
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
+            candidacies: [candidacyWithCandidate],
+          },
+        }),
+      ),
+      fvae.query(
+        "getCandidacyByIdForCandidacyGuard",
         graphQLResolver(getCandidacyByIdForCandidacyGuard),
       ),
       fvae.query(
@@ -69,6 +93,7 @@ export const validateFeasibilityHandlers = () => {
       ),
     ],
     candidacyId,
+    candidateId,
     validateFeasibilityWait,
   };
 };

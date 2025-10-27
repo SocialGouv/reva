@@ -157,11 +157,13 @@ test.describe("Next actions tiles", () => {
         await expect(btn).toBeVisible();
         await btn.scrollIntoViewIfNeeded();
         await Promise.all([
-          page.waitForURL(`/candidat/${candidacy.id}/submit-candidacy/`),
+          page.waitForURL(
+            `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/submit-candidacy/`,
+          ),
           btn.click(),
         ]);
         await expect(page).toHaveURL(
-          `/candidat/${candidacy.id}/submit-candidacy/`,
+          `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/submit-candidacy/`,
         );
       });
     });
@@ -197,7 +199,7 @@ test.describe("Next actions tiles", () => {
         await expect(btn).toBeVisible();
         await btn.click();
         await expect(page).toHaveURL(
-          `/candidat/${candidacy.id}/validate-training/`,
+          `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/validate-training/`,
         );
       });
     });
@@ -243,7 +245,7 @@ test.describe("Next actions tiles", () => {
         await expect(btn).toBeVisible();
         await btn.click();
         await expect(page).toHaveURL(
-          `/candidat/${candidacy.id}/validate-feasibility/`,
+          `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/validate-feasibility/`,
         );
       });
     });
@@ -324,10 +326,14 @@ test.describe("Next actions tiles", () => {
         });
         await expect(btn).toBeVisible();
         await Promise.all([
-          page.waitForURL(`/candidat/${candidacy.id}/feasibility/`),
+          page.waitForURL(
+            `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/feasibility/`,
+          ),
           btn.click(),
         ]);
-        await expect(page).toHaveURL(`/candidat/${candidacy.id}/feasibility/`);
+        await expect(page).toHaveURL(
+          `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/feasibility/`,
+        );
       });
     });
   });
@@ -372,7 +378,7 @@ test.describe("Next actions tiles", () => {
             await expect(btn).toBeVisible();
             await btn.click();
             await expect(page).toHaveURL(
-              `/candidat/${candidacy.id}/dossier-de-validation/`,
+              `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/dossier-de-validation/`,
             );
           });
         });
@@ -439,7 +445,7 @@ test.describe("Next actions tiles", () => {
             await expect(btn).toBeVisible();
             await btn.click();
             await expect(page).toHaveURL(
-              `/candidat/${candidacy.id}/dossier-de-validation/`,
+              `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/dossier-de-validation/`,
             );
           });
         });

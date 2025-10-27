@@ -1,3 +1,4 @@
+import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
 
 import candidacy1AutonomeAdmissibleFeasibilityStep from "./fixtures/candidacy1-autonome-admissible-feasibility-step.json";
@@ -9,14 +10,23 @@ import candidacy1AutonomeRejectedFeasibilityStep from "./fixtures/candidacy1-aut
 const FEASIBILITY_TILE = '[data-testid="feasibility-tile"]';
 const FEASIBILITY_TILE_BUTTON = '[data-testid="feasibility-tile"] button';
 
+const candidate = candidate1Data.data.candidate_getCandidateById;
+
 context("Accompagnement autonome - Dossier de faisabilité", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
+        "candidate1-for-candidates-guard.json",
+      );
+      stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+      stubQuery(
+        req,
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "candidacies-with-candidacy-1.json",
       );
+
       stubQuery(
         req,
         "getCandidacyByIdForCandidacyGuard",
@@ -42,7 +52,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@candidate_getCandidateForCandidatesGuard",
+      "@getCandidateByIdForCandidateGuard",
+      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",
@@ -56,7 +68,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
   });
 
   it("should show the upload form on /feasibility when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
-    cy.visit("/c1/feasibility/");
+    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-upload-form"]').should("exist");
@@ -66,11 +78,6 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
-        "candidacies-with-candidacy-1.json",
-      );
-      stubQuery(
-        req,
         "getCandidacyByIdForCandidacyGuard",
         candidacy1AutonomeIncompleteFeasibilityStep,
       );
@@ -92,7 +99,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit("/c1/feasibility/");
+    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-upload-form"]').should("exist");
@@ -102,11 +109,6 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
-        "candidacies-with-candidacy-1.json",
-      );
-      stubQuery(
-        req,
         "getCandidacyByIdForCandidacyGuard",
         candidacy1AutonomePendingFeasibilityStep,
       );
@@ -128,7 +130,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit("/c1/feasibility/");
+    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-decision-pending"]').should("exist");
@@ -142,11 +144,6 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
-        "candidacies-with-candidacy-1.json",
-      );
-      stubQuery(
-        req,
         "getCandidacyByIdForCandidacyGuard",
         candidacy1AutonomePendingFeasibilityStep,
       );
@@ -168,7 +165,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit("/c1/feasibility/");
+    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-upload-form"]').should("not.exist");
@@ -184,11 +181,6 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
-        "candidacies-with-candidacy-1.json",
-      );
-      stubQuery(
-        req,
         "getCandidacyByIdForCandidacyGuard",
         candidacy1AutonomeIncompleteFeasibilityStep,
       );
@@ -210,7 +202,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit("/c1/feasibility/");
+    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-decision-incomplete"]').should("exist");
@@ -228,11 +220,6 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
-        "candidacies-with-candidacy-1.json",
-      );
-      stubQuery(
-        req,
         "getCandidacyByIdForCandidacyGuard",
         candidacy1AutonomeAdmissibleFeasibilityStep,
       );
@@ -254,7 +241,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit("/c1/feasibility/");
+    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-decision-admissible"]').should("exist");
@@ -269,11 +256,6 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
-        "candidacies-with-candidacy-1.json",
-      );
-      stubQuery(
-        req,
         "getCandidacyByIdForCandidacyGuard",
         candidacy1AutonomeRejectedFeasibilityStep,
       );
@@ -295,7 +277,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit("/c1/feasibility/");
+    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-decision-rejected"]').should("exist");

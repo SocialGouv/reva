@@ -23,7 +23,9 @@ const loginAndWait = async ({
 }) => {
   await login(page);
   await endAccompagnementWait(page);
-  await page.waitForURL(`/candidat/${candidacy.id}/end-accompagnement/`);
+  await page.waitForURL(
+    `/candidat/candidates/${candidacy.candidate?.id}/candidacies/${candidacy.id}/end-accompagnement/`,
+  );
   await waitGraphQL(page, "getCandidacyByIdWithCandidateForEndAccompagnement");
 };
 

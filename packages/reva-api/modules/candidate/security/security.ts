@@ -6,6 +6,8 @@ import {
 } from "@/modules/shared/security/presets";
 
 export const resolversSecurityMap = {
+  "Query.candidate_getCandidateById": isAdminOrOwnerOfCandidate,
+
   "Mutation.*": defaultSecurity, // forbidden
 
   "Mutation.candidate_askForRegistration": isAnyone,

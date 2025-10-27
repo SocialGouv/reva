@@ -25,9 +25,11 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 async function loginAndWaitForInitialLoad(page: Page) {
   await login(page);
   await Promise.all([
+    waitGraphQL(page, "candidate_getCandidateForCandidatesGuard"),
+    waitGraphQL(page, "getCandidateByIdForCandidateGuard"),
     waitGraphQL(
       page,
-      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     ),
     waitGraphQL(page, "getCandidacyByIdForCandidacyGuard"),
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
@@ -37,9 +39,25 @@ async function loginAndWaitForInitialLoad(page: Page) {
 function createUpdateExperienceHandlers(candidacy: CandidacyEntity) {
   return [
     fvae.query(
-      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidate_getCandidateForCandidatesGuard",
       graphQLResolver({
         candidate_getCandidateWithCandidacy: {
+          ...candidate,
+        },
+      }),
+    ),
+    fvae.query(
+      "getCandidateByIdForCandidateGuard",
+      graphQLResolver({
+        candidate_getCandidateById: {
+          ...candidate,
+        },
+      }),
+    ),
+    fvae.query(
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+      graphQLResolver({
+        candidate_getCandidateById: {
           candidacies: [candidacy],
         },
       }),
@@ -85,7 +103,9 @@ test.describe("Candidacy in PROJET status", () => {
   test("shows delete button", async ({ page }) => {
     await loginAndWaitForInitialLoad(page);
 
-    await page.goto(`/candidat/${candidacy.id}/experiences/exp-1`);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/experiences/exp-1`,
+    );
     await waitGraphQL(page, "getCandidacyByIdForUpdateExperience");
 
     await expect(
@@ -98,7 +118,9 @@ test.describe("Candidacy in PROJET status", () => {
   }) => {
     await loginAndWaitForInitialLoad(page);
 
-    await page.goto(`/candidat/${candidacy.id}/experiences/exp-1`);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/experiences/exp-1`,
+    );
     await waitGraphQL(page, "getCandidacyByIdForUpdateExperience");
 
     const deleteButton = page.getByRole("button", {
@@ -118,7 +140,9 @@ test.describe("Candidacy in PROJET status", () => {
   test("closes modal when clicking Annuler", async ({ page }) => {
     await loginAndWaitForInitialLoad(page);
 
-    await page.goto(`/candidat/${candidacy.id}/experiences/exp-1`);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/experiences/exp-1`,
+    );
     await waitGraphQL(page, "getCandidacyByIdForUpdateExperience");
 
     await page
@@ -137,7 +161,9 @@ test.describe("Candidacy in PROJET status", () => {
   test("deletes experience and redirects when confirming", async ({ page }) => {
     await loginAndWaitForInitialLoad(page);
 
-    await page.goto(`/candidat/${candidacy.id}/experiences/exp-1`);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/experiences/exp-1`,
+    );
     await waitGraphQL(page, "getCandidacyByIdForUpdateExperience");
 
     const deleteButton = page.getByRole("button", {
@@ -157,7 +183,9 @@ test.describe("Candidacy in PROJET status", () => {
     await confirmButton.click({ force: true });
     await deleteMutationPromise;
 
-    await expect(page).toHaveURL(`/candidat/${candidacy.id}/experiences/`);
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/experiences/`,
+    );
   });
 });
 
@@ -177,7 +205,9 @@ test.describe("Candidacy in PARCOURS_CONFIRME status", () => {
   test("hides delete button", async ({ page }) => {
     await loginAndWaitForInitialLoad(page);
 
-    await page.goto(`/candidat/${candidacy.id}/experiences/exp-1`);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/experiences/exp-1`,
+    );
     await waitGraphQL(page, "getCandidacyByIdForUpdateExperience");
 
     await expect(

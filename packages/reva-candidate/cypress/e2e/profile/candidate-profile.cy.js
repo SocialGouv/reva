@@ -1,8 +1,8 @@
 import { format } from "date-fns";
 
+import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
 
-import candidacy1Data from "./fixtures/candidacy1.json";
 import countries from "./fixtures/countries.json";
 import departments from "./fixtures/departments.json";
 
@@ -36,43 +36,48 @@ const TOAST_ERROR = '[data-testid="toast-error"]';
 // Data constants
 const FRANCE_COUNTRY_ID = "208ef9d1-4d18-475b-9f5f-575da5f7218c";
 
-context("Candidate Profile Page", () => {
-  const candidate = candidacy1Data.data.getCandidacyById.candidate;
+const candidate = candidate1Data.data.candidate_getCandidateById;
 
+context("Candidate Profile Page", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
+        "candidate1-for-candidates-guard.json",
+      );
+      stubQuery(req, "getCandidateByIdForCandidateGuard", "candidate1.json");
+      stubQuery(
+        req,
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "candidacies-with-candidacy-1.json",
       );
+
       stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy1.json");
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "getCandidacyByIdWithCandidate", "candidacy1.json");
       stubQuery(req, "getCandidacyByIdForDashboard", "candidacy1.json");
 
-      stubQuery(
-        req,
-        "getCandidacyByIdWithCandidateForProfilePage",
-        candidacy1Data,
-      );
+      stubQuery(req, "getCandidateByIdForProfilePage", candidate1Data);
       stubQuery(req, "getCountries", countries);
       stubQuery(req, "getDepartments", departments);
     });
 
     cy.login();
     cy.wait([
-      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@candidate_getCandidateForCandidatesGuard",
+      "@getCandidateByIdForCandidateGuard",
+      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",
       "@getCandidacyByIdForDashboard",
     ]);
-    cy.visit("/c1/profile");
+    cy.visit(`/candidates/${candidate.id}/profile`);
     cy.wait([
       "@getDepartments",
       "@getCountries",
-      "@getCandidacyByIdWithCandidateForProfilePage",
+      "@getCandidateByIdForProfilePage",
     ]);
   });
 
@@ -169,7 +174,7 @@ context("Candidate Profile Page", () => {
           req.reply({
             data: {
               candidate_updateCandidateInformationBySelf: {
-                id: "12345678-1234-1234-1234-123456789abc",
+                id: candidate.id,
               },
             },
           });
@@ -228,7 +233,7 @@ context("Candidate Profile Page", () => {
           req.reply({
             data: {
               candidate_updateCandidateInformationBySelf: {
-                id: "12345678-1234-1234-1234-123456789abc",
+                id: candidate.id,
               },
             },
           });
@@ -254,7 +259,7 @@ context("Candidate Profile Page", () => {
           req.reply({
             data: {
               candidate_updateCandidateInformationBySelf: {
-                id: "12345678-1234-1234-1234-123456789abc",
+                id: candidate.id,
               },
             },
           });

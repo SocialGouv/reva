@@ -1,8 +1,12 @@
 import { subMonths } from "date-fns";
 
+import candidate1Data from "../../fixtures/candidate1.json";
+
 import { stubQuery } from "../../utils/graphql";
 
 import candidacy1DropOut from "./fixtures/candidacy1-dropped-out.json";
+
+const candidate = candidate1Data.data.candidate_getCandidateById;
 
 function interceptCandidacy({
   droppedOut = false,
@@ -36,9 +40,16 @@ function interceptCandidacy({
 
     stubQuery(
       req,
-      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidate_getCandidateForCandidatesGuard",
+      "candidate1-for-candidates-guard.json",
+    );
+    stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+    stubQuery(
+      req,
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "candidacies-with-candidacy-1.json",
     );
+
     stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
     stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
@@ -47,7 +58,9 @@ function interceptCandidacy({
   cy.login();
 
   cy.wait([
-    "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+    "@candidate_getCandidateForCandidatesGuard",
+    "@getCandidateByIdForCandidateGuard",
+    "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     "@activeFeaturesForConnectedUser",
     "@getCandidacyByIdForCandidacyGuard",
     "@getCandidacyByIdWithCandidate",
@@ -70,7 +83,8 @@ context("Candidacy dropout warning", () => {
         cy.get('[data-testid="drop-out-warning-decision-button"]').click();
         cy.url().should(
           "eq",
-          "http://localhost:3004/candidat/c1/candidacy-dropout-decision/",
+          Cypress.config().baseUrl +
+            `candidates/${candidate.id}/candidacies/c1/candidacy-dropout-decision/`,
         );
       });
 

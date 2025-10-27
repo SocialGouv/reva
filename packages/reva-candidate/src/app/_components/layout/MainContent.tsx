@@ -13,11 +13,15 @@ const UNAUTHENTICATED_PATHS = [
 export const MainContent = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
-  const { candidacyId } = useParams<{
-    candidacyId?: string;
+  const { candidateId } = useParams<{
+    candidateId?: string;
   }>();
 
-  const isRootPath = pathname === (candidacyId ? `/${candidacyId}/` : "/");
+  const isRootPath =
+    pathname === "/" ||
+    pathname === `/candidates/` ||
+    pathname === `/candidates/${candidateId}/`;
+
   const isUnAuthenticatedPath = UNAUTHENTICATED_PATHS.some((path) =>
     pathname.startsWith(path),
   );

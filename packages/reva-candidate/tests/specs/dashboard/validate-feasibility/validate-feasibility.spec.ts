@@ -7,7 +7,7 @@ import {
 } from "@tests/helpers/handlers/validate-feasibility/validate-feasibility.handler";
 
 test.describe("Dematerialized feasibility résumé", () => {
-  const { handlers, validateFeasibilityWait, candidacyId } =
+  const { handlers, validateFeasibilityWait, candidateId, candidacyId } =
     validateFeasibilityHandlers();
 
   test.use({
@@ -26,7 +26,7 @@ test.describe("Dematerialized feasibility résumé", () => {
     });
 
     await login(page);
-    await navigateToValidateFeasibility(page, candidacyId);
+    await navigateToValidateFeasibility(page, candidateId, candidacyId);
     await validateFeasibilityWait(page);
   });
 

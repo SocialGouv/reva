@@ -91,9 +91,9 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     (isUnauthenticatedPath && !authenticated) ||
     (!isUnauthenticatedPath && authenticated);
 
-  if (canRender) {
-    return children;
+  if (!canRender) {
+    return <LoaderWithLayout />;
   }
 
-  return <LoaderWithLayout />;
+  return children;
 };

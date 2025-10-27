@@ -2,19 +2,25 @@ import { expect, test } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
+import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import {
   appointmentListHandlers,
   navigateToAppointmentListPage,
 } from "@tests/helpers/handlers/appointments/appointment-list.handler";
 
-import { Candidacy } from "@/graphql/generated/graphql";
+import { Candidate } from "@/graphql/generated/graphql";
 
-const createCandidacyWithAppointments = () => {
+const createCandidacyWithAppointments = ({
+  candidate,
+}: {
+  candidate: Candidate;
+}) => {
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 1);
   const pastDate = new Date();
   pastDate.setDate(pastDate.getDate() - 1);
   const candidacy = createCandidacyEntity({
+    candidate,
     appointments: {
       rows: [
         {
@@ -52,7 +58,8 @@ const createCandidacyWithAppointments = () => {
 };
 
 test.describe("Appointment list for candidacy with past appointments", () => {
-  const candidacy = createCandidacyWithAppointments();
+  const candidate = createCandidateEntity({}) as Candidate;
+  const candidacy = createCandidacyWithAppointments({ candidate });
   const { handlers, appointmentListWait } = appointmentListHandlers({
     candidacy,
   });
@@ -63,7 +70,7 @@ test.describe("Appointment list for candidacy with past appointments", () => {
 
   test("should display the list of future appointments", async ({ page }) => {
     await login(page);
-    await navigateToAppointmentListPage(page, candidacy.id);
+    await navigateToAppointmentListPage(page, candidate.id, candidacy.id);
 
     await appointmentListWait(page);
     await expect(
@@ -83,7 +90,7 @@ test.describe("Appointment list for candidacy with past appointments", () => {
     page,
   }) => {
     await login(page);
-    await navigateToAppointmentListPage(page, candidacy.id);
+    await navigateToAppointmentListPage(page, candidate.id, candidacy.id);
 
     await appointmentListWait(page);
     await expect(
@@ -106,7 +113,8 @@ test.describe("Appointment list for candidacy with past appointments", () => {
 });
 
 test.describe("Appointment list for candidacy without past appointments", () => {
-  const candidacy = createCandidacyWithAppointments();
+  const candidate = createCandidateEntity({}) as Candidate;
+  const candidacy = createCandidacyWithAppointments({ candidate });
 
   const { handlers, appointmentListWait } = appointmentListHandlers({
     candidacy,
@@ -121,7 +129,7 @@ test.describe("Appointment list for candidacy without past appointments", () => 
     page,
   }) => {
     await login(page);
-    await navigateToAppointmentListPage(page, candidacy.id);
+    await navigateToAppointmentListPage(page, candidate.id, candidacy.id);
 
     await appointmentListWait(page);
     await expect(

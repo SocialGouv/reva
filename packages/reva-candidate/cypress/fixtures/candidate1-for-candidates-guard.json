@@ -1,0 +1,28 @@
+{
+  "data": {
+    "candidate_getCandidateWithCandidacy": {
+      "id": "12345678-1234-1234-1234-123456789abc",
+      "firstname": "John",
+      "lastname": "Doe",
+      "givenName": "Johnny",
+      "firstname2": "Robert",
+      "firstname3": "William",
+      "gender": "man",
+      "birthCity": "Paris",
+      "birthdate": "1990-01-01",
+      "birthDepartment": {
+        "id": "71d7f6c9-238a-4891-abda-1748d0b80efa"
+      },
+      "country": {
+        "id": "bb45940d-1e06-4c69-adc6-bb0714100225"
+      },
+      "nationality": "Française",
+      "street": "123 Rue de la Paix",
+      "city": "Paris",
+      "zip": "75001",
+      "phone": "0601020304",
+      "email": "email@example.com",
+      "addressComplement": "Appartement 42"
+    }
+  }
+}

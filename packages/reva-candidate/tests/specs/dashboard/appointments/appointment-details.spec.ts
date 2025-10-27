@@ -4,17 +4,25 @@ import { formatIso8601Date } from "@/utils/formatIso8601Date";
 import { formatIso8601Time } from "@/utils/formatIso8601Time";
 import { login } from "@tests/helpers/auth/auth";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
+import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
 import {
   appointmentDetailsHandlers,
   navigateToAppointmentDetailsPage,
 } from "@tests/helpers/handlers/appointments/appointment-details.handler";
 
-import { Appointment, Candidacy, Organism } from "@/graphql/generated/graphql";
+import {
+  Appointment,
+  Candidacy,
+  Candidate,
+  Organism,
+} from "@/graphql/generated/graphql";
 
 test.describe("Appointment details page", () => {
+  const candidate = createCandidateEntity({}) as Candidate;
   const organism = createOrganismEntity({}) as Organism;
   const candidacy = createCandidacyEntity({
+    candidate,
     organism,
   }) as Candidacy;
 
@@ -44,7 +52,12 @@ test.describe("Appointment details page", () => {
     page,
   }) => {
     await login(page);
-    await navigateToAppointmentDetailsPage(page, candidacy.id, appointment.id);
+    await navigateToAppointmentDetailsPage(
+      page,
+      candidate.id,
+      candidacy.id,
+      appointment.id,
+    );
 
     await appointmentDetailsWait(page);
     await expect(
@@ -56,7 +69,12 @@ test.describe("Appointment details page", () => {
     page,
   }) => {
     await login(page);
-    await navigateToAppointmentDetailsPage(page, candidacy.id, appointment.id);
+    await navigateToAppointmentDetailsPage(
+      page,
+      candidate.id,
+      candidacy.id,
+      appointment.id,
+    );
 
     await appointmentDetailsWait(page);
     await expect(
@@ -78,7 +96,12 @@ test.describe("Appointment details page", () => {
     page,
   }) => {
     await login(page);
-    await navigateToAppointmentDetailsPage(page, candidacy.id, appointment.id);
+    await navigateToAppointmentDetailsPage(
+      page,
+      candidate.id,
+      candidacy.id,
+      appointment.id,
+    );
 
     await appointmentDetailsWait(page);
     await expect(
@@ -97,8 +120,10 @@ test.describe("Appointment details page", () => {
 });
 
 test.describe("Appointment details with missing optional info", () => {
+  const candidate = createCandidateEntity({}) as Candidate;
   const organism = createOrganismEntity({}) as Organism;
   const candidacy = createCandidacyEntity({
+    candidate,
     organism,
   }) as Candidacy;
 
@@ -125,7 +150,12 @@ test.describe("Appointment details with missing optional info", () => {
     page,
   }) => {
     await login(page);
-    await navigateToAppointmentDetailsPage(page, candidacy.id, appointment.id);
+    await navigateToAppointmentDetailsPage(
+      page,
+      candidate.id,
+      candidacy.id,
+      appointment.id,
+    );
 
     await appointmentDetailsWait(page);
     await expect(

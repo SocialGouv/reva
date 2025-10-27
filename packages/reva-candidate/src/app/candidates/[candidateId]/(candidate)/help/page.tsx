@@ -1,6 +1,5 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tile from "@codegouvfr/react-dsfr/Tile";
@@ -144,18 +143,6 @@ export default async function HelpPage() {
     await getHelpPageItems();
   return (
     <PageLayout title="Aide">
-      <Breadcrumb
-        currentPageLabel="Aide"
-        className="mb-4"
-        segments={[
-          {
-            label: "Ma candidature",
-            linkProps: {
-              href: "../",
-            },
-          },
-        ]}
-      />
       <h1 className="mb-6">Aide</h1>
       <p className="text-xl mb-12">
         Retrouvez toute la documentation nécessaire à l'autonomie sur mon

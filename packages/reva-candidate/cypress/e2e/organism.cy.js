@@ -1,3 +1,4 @@
+import candidate1Data from "../fixtures/candidate1.json";
 import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Empty candidacy", () => {
@@ -5,7 +6,13 @@ context("Empty candidacy", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
+        "candidate1-for-candidates-guard.json",
+      );
+      stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+      stubQuery(
+        req,
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "candidacies-with-candidacy-1.json",
       );
       stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy1.json");
@@ -16,7 +23,9 @@ context("Empty candidacy", () => {
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@candidate_getCandidateForCandidatesGuard",
+      "@getCandidateByIdForCandidateGuard",
+      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",
@@ -33,7 +42,13 @@ context("Candidacy with certification selected", () => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
+        "candidate1-for-candidates-guard.json",
+      );
+      stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+      stubQuery(
+        req,
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "candidacies-with-candidacy-3.json",
       );
       stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy3.json");
@@ -48,7 +63,9 @@ context("Candidacy with certification selected", () => {
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@candidate_getCandidateForCandidatesGuard",
+      "@getCandidateByIdForCandidateGuard",
+      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",
@@ -147,7 +164,13 @@ context("Candidacy with no organism results", () => {
       stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
+        "candidate1-for-candidates-guard.json",
+      );
+      stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+      stubQuery(
+        req,
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "candidacies-with-candidacy-3.json",
       );
       stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy3.json");
@@ -169,7 +192,9 @@ context("Candidacy with no organism results", () => {
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@candidate_getCandidateForCandidatesGuard",
+      "@getCandidateByIdForCandidateGuard",
+      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",

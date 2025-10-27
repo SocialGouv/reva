@@ -8,11 +8,14 @@ import {
   DossierDeValidationDecision,
 } from "@/graphql/generated/graphql";
 
+import candidate1Data from "../fixtures/candidate1.json";
 import { stubQuery } from "../utils/graphql";
 
 const DATE_NOW = new Date();
 const ESTIMATED_DATE = addMonths(DATE_NOW, 10);
 const SENT_DATE = addDays(DATE_NOW, 15);
+
+const candidate = candidate1Data.data.candidate_getCandidateById;
 
 interface DossierDeValidationFixture {
   decision?: DossierDeValidationDecision;
@@ -118,7 +121,13 @@ function setupGraphQLStubs(
     stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     stubQuery(
       req,
-      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidate_getCandidateForCandidatesGuard",
+      "candidate1-for-candidates-guard.json",
+    );
+    stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+    stubQuery(
+      req,
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "candidacies-with-candidacy-1.json",
     );
     allQueries.forEach((query) => {
@@ -129,7 +138,9 @@ function setupGraphQLStubs(
 
 function loginAndWaitForQueries(queryAliases: string[] = []) {
   const defaultAliases = [
-    "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+    "@candidate_getCandidateForCandidatesGuard",
+    "@getCandidateByIdForCandidateGuard",
+    "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     "@getCandidacyByIdForCandidacyGuard",
     "@getCandidacyByIdWithCandidate",
     "@getCandidacyByIdForDashboard",
@@ -140,7 +151,9 @@ function loginAndWaitForQueries(queryAliases: string[] = []) {
 }
 
 function navigateToDossierValidation(candidacyId: string) {
-  cy.visit(`/${candidacyId}/dossier-de-validation/`);
+  cy.visit(
+    `/candidates/${candidate.id}/candidacies/${candidacyId}/dossier-de-validation/`,
+  );
   cy.wait("@getCandidacyByIdForDossierDeValidationPage");
 }
 

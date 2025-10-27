@@ -5,11 +5,11 @@ import { useEffect } from "react";
 
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 
-export default function HomePage() {
+export default function CandidatesPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("./candidates");
+    router.push("./candidacies");
   }, [router]);
 
   return <LoaderWithLayout />;

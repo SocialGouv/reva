@@ -1,6 +1,6 @@
 "use client";
 
-import { CandidacyGuard } from "../_components/guards/CandidacyGuard";
+import { CandidacyGuard } from "../../../../_components/guards/CandidacyGuard";
 
 export default function CandidacyLayout({
   children,

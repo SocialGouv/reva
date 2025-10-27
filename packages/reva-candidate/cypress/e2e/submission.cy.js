@@ -1,3 +1,4 @@
+import candidate1Data from "../fixtures/candidate1.json";
 import { stubQuery } from "../utils/graphql";
 
 context("Submission", () => {
@@ -5,7 +6,13 @@ context("Submission", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
+        "candidate1-for-candidates-guard.json",
+      );
+      stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+      stubQuery(
+        req,
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "candidacies-with-candidacy-2.json",
       );
       stubQuery(
@@ -28,7 +35,9 @@ context("Submission", () => {
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@candidate_getCandidateForCandidatesGuard",
+      "@getCandidateByIdForCandidateGuard",
+      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",
@@ -44,7 +53,13 @@ context("Submission", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
+        "candidate1-for-candidates-guard.json",
+      );
+      stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+      stubQuery(
+        req,
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "candidacies-with-candidacy-2.json",
       );
       stubQuery(
@@ -67,7 +82,9 @@ context("Submission", () => {
     cy.login();
 
     cy.wait([
-      "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "@candidate_getCandidateForCandidatesGuard",
+      "@getCandidateByIdForCandidateGuard",
+      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",

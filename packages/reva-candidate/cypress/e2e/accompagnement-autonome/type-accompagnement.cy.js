@@ -1,14 +1,23 @@
+import candidate1Data from "../../fixtures/candidate1.json";
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
 const DASHBOARD_AUTONOME = '[data-testid="dashboard-autonome"]';
 const DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE =
   '[data-testid="type-accompagnement-tile"]';
 
+const candidate = candidate1Data.data.candidate_getCandidateById;
+
 const interceptCandidacy = (candidacy) => {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(
       req,
-      "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+      "candidate_getCandidateForCandidatesGuard",
+      "candidate1-for-candidates-guard.json",
+    );
+    stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+    stubQuery(
+      req,
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "candidacies-with-candidacy-1.json",
     );
     stubQuery(
@@ -44,7 +53,9 @@ const interceptCandidacy = (candidacy) => {
   });
   cy.login();
   cy.wait([
-    "@candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+    "@candidate_getCandidateForCandidatesGuard",
+    "@getCandidateByIdForCandidateGuard",
+    "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     "@activeFeaturesForConnectedUser",
     "@getCandidacyByIdForCandidacyGuard",
     "@getCandidacyByIdWithCandidate",
@@ -57,7 +68,6 @@ context("Type accompagnement", () => {
     cy.fixture("candidacy1.json").then((candidacy) => {
       candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
       interceptCandidacy(candidacy);
-      console.log(candidacy);
     });
 
     cy.get(DASHBOARD_AUTONOME).should("exist");
@@ -85,7 +95,7 @@ context("Type accompagnement", () => {
     cy.get(DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE).click();
     cy.location("pathname").should(
       "equal",
-      "/candidat/c1/type-accompagnement/",
+      `/candidat/candidates/${candidate.id}/candidacies/c1/type-accompagnement/`,
     );
   });
 
@@ -97,7 +107,7 @@ context("Type accompagnement", () => {
       },
     );
 
-    cy.visit("/c1/type-accompagnement");
+    cy.visit(`/candidates/${candidate.id}/candidacies/c1/type-accompagnement`);
     cy.wait("@getCandidacyByIdForTypeAccompagnementPage");
 
     cy.get("h1").should("contain.text", "Modalités de parcours");
@@ -110,6 +120,9 @@ context("Type accompagnement", () => {
     cy.wait("@updateTypeAccompagnementForTypeAccompagnementPage");
 
     cy.wait(5000);
-    cy.location("pathname").should("equal", "/candidat/c1/");
+    cy.location("pathname").should(
+      "equal",
+      `/candidat/candidates/${candidate.id}/candidacies/c1/`,
+    );
   });
 });

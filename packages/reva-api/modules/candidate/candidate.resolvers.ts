@@ -16,6 +16,7 @@ import { candidateForgotPassword } from "./features/candidateForgotPassword";
 import { candidateLoginWithCredentials } from "./features/candidateLoginWithCredentials";
 import { candidateLoginWithToken } from "./features/candidateLoginWithToken";
 import { candidateResetPassword } from "./features/candidateResetPassword";
+import { getCandidateById } from "./features/getCandidateById";
 import { getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists } from "./features/getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists";
 import { getHighestDegreeById } from "./features/getHighestDegreeById";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
@@ -83,6 +84,8 @@ const unsafeResolvers = {
       getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists({
         context,
       }),
+    candidate_getCandidateById: async (_: any, params: { id: string }) =>
+      getCandidateById({ candidateId: params.id }),
   },
   Mutation: {
     candidate_askForRegistration: async (

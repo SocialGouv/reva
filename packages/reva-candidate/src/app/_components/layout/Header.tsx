@@ -1,47 +1,60 @@
 "use client";
 
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
-import { useHeader } from "@/app/_components/layout/Header.hook";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
 const getNavigation = ({
-  candidacyId,
   currentPathname,
   candidateHelpIsActive,
+  candidateId,
+  candidacyId,
+  isMultiCandidacyFeatureActive,
 }: {
-  candidacyId: string;
   currentPathname: string;
   candidateHelpIsActive: boolean;
+  candidateId: string;
+  candidacyId: string;
+  isMultiCandidacyFeatureActive: boolean;
 }) => {
   return [
     {
-      text: "Ma candidature",
+      text: isMultiCandidacyFeatureActive
+        ? "Mes candidatures"
+        : "Ma candidature",
       linkProps: {
-        href: `/${candidacyId}`,
+        href: `/candidates/${candidateId}/`,
         target: "_self",
       },
-      isActive: currentPathname === `/${candidacyId}/`,
+      isActive:
+        currentPathname ===
+        (isMultiCandidacyFeatureActive
+          ? `/candidates/${candidateId}/candidacies/`
+          : `/candidates/${candidateId}/candidacies/${candidacyId}/`),
     },
     {
       text: "Mon profil",
       linkProps: {
-        href: `/${candidacyId}/profile`,
+        href: `/candidates/${candidateId}/profile`,
         target: "_self",
       },
-      isActive: currentPathname.startsWith(`/${candidacyId}/profile`),
+      isActive: currentPathname.startsWith(
+        `/candidates/${candidateId}/profile`,
+      ),
     },
     ...(candidateHelpIsActive
       ? [
           {
             text: "Aide",
             linkProps: {
-              href: `/${candidacyId}/help`,
+              href: `/candidates/${candidateId}/help`,
               target: "_self",
             },
-            isActive: currentPathname.startsWith(`/${candidacyId}/help`),
+            isActive: currentPathname.startsWith(
+              `/candidates/${candidateId}/help`,
+            ),
           },
         ]
       : []),
@@ -52,30 +65,29 @@ export const Header = () => {
 
   const currentPathname = usePathname();
 
-  const { candidacyId, candidacy } = useHeader();
+  const { candidateId, candidacyId } = useParams<{
+    candidateId: string;
+    candidacyId: string;
+  }>();
 
-  const isInactifEnAttente = candidacy?.activite === "INACTIF_EN_ATTENTE";
-  const isEndAccompagnementPending =
-    candidacy?.endAccompagnementStatus === "PENDING";
-
-  const isCandidacyDeletedPath =
-    currentPathname.startsWith("/candidacy-deleted");
+  const isCandidacyDeletedPath = currentPathname.startsWith(
+    `/candidates/${candidateId}/candidacies/${candidacyId}/candidacy-deleted`,
+  );
 
   const { isFeatureActive } = useAnonymousFeatureFlipping();
 
   const candidateHelpIsActive = isFeatureActive("candidate-help");
+  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
   const navigation =
-    !candidacyId ||
-    !authenticated ||
-    isInactifEnAttente ||
-    isCandidacyDeletedPath ||
-    isEndAccompagnementPending
+    !authenticated || isCandidacyDeletedPath
       ? []
       : getNavigation({
-          candidacyId,
           currentPathname,
           candidateHelpIsActive,
+          candidateId,
+          candidacyId,
+          isMultiCandidacyFeatureActive,
         });
 
   return (

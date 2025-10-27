@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { UseValidateFeasibilityCandidacy } from "@/app/[candidacyId]/(project)/(accompagne)/validate-feasibility/validate-feasibility.hooks";
+import { UseValidateFeasibilityCandidacy } from "@/app/candidates/[candidateId]/candidacies/[candidacyId]/(project)/(accompagne)/validate-feasibility/validate-feasibility.hooks";
 
 import {
   Candidate,

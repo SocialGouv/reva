@@ -2,16 +2,18 @@ import { graphql, Page } from "next/experimental/testmode/playwright/msw";
 
 import readyForJuryMutation from "@tests/fixtures/candidate/dossier-de-validation/ready-for-jury-mutation.json";
 import { graphQLResolver } from "@tests/helpers/network/msw";
-import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { Candidacy } from "@/graphql/generated/graphql";
+import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 
 export async function navigateToDossierValidation(
   page: Page,
+  candidateId: string,
   candidacyId: string,
 ) {
-  await page.goto(`${candidacyId}/dossier-de-validation/`);
+  await page.goto(
+    `candidates/${candidateId}/candidacies/${candidacyId}/dossier-de-validation/`,
+  );
 }
 
 export async function clickDossierTab(page: Page) {
@@ -24,14 +26,10 @@ interface DashboardHandlersOptions {
 }
 
 const dossierDeValidationWait = async (page: Page) => {
-  const featuresQuery = waitGraphQL(page, "activeFeaturesForConnectedUser");
-
-  const dossierDeValidationQuery = waitGraphQL(
-    page,
-    "getCandidacyByIdForDossierDeValidationPage",
-  );
-
-  await Promise.all([featuresQuery, dossierDeValidationQuery]);
+  await Promise.all([
+    waitGraphQL(page, "activeFeaturesForConnectedUser"),
+    waitGraphQL(page, "getCandidacyByIdForDossierDeValidationPage"),
+  ]);
 };
 
 export const dossierDeValidationHandlers = ({
@@ -47,9 +45,25 @@ export const dossierDeValidationHandlers = ({
   return {
     handlers: [
       fvae.query(
-        "candidate_getCandidateWithCandidaciesForCandidaciesGuard",
+        "candidate_getCandidateForCandidatesGuard",
         graphQLResolver({
           candidate_getCandidateWithCandidacy: {
+            ...candidacy.candidate,
+          },
+        }),
+      ),
+      fvae.query(
+        "getCandidateByIdForCandidateGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
+            ...candidacy.candidate,
+          },
+        }),
+      ),
+      fvae.query(
+        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+        graphQLResolver({
+          candidate_getCandidateById: {
             candidacies: [candidacy],
           },
         }),
