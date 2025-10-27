@@ -67,9 +67,10 @@ const unsafeResolvers = {
     candidacy: async ({ id: candidateId }: { id: string }) =>
       getFirstActiveCandidacyByCandidateId({ candidateId }),
     candidacies: async ({ id: candidateId }: { id: string }) => {
-      const activeCandidacy = getFirstActiveCandidacyByCandidateId({
+      const activeCandidacy = await getFirstActiveCandidacyByCandidateId({
         candidateId,
       });
+
       return activeCandidacy ? [activeCandidacy] : [];
     },
   },
