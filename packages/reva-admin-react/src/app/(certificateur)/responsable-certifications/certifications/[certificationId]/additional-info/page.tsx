@@ -14,9 +14,11 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import {
+  sanitizedOptionalEmail,
   sanitizedOptionalPhone,
   sanitizedOptionalText,
-  sanitizedText,
+  sanitizedOptionalUrl,
+  sanitizedUrl,
 } from "@/utils/input-sanitization";
 
 import { File as GQLFile } from "@/graphql/generated/graphql";
@@ -71,13 +73,13 @@ const schema = z
         0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
       })
       .array(),
-    dossierDeValidationLink: z.string().optional(),
-    linkToReferential: sanitizedText(),
-    linkToCorrespondenceTable: z.string().optional(),
-    linkToJuryGuide: z.string().optional(),
+    dossierDeValidationLink: sanitizedOptionalUrl(),
+    linkToReferential: sanitizedUrl(),
+    linkToCorrespondenceTable: sanitizedOptionalUrl(),
+    linkToJuryGuide: sanitizedOptionalUrl(),
     certificationExpertContactDetails: sanitizedOptionalText(),
     certificationExpertContactPhone: sanitizedOptionalPhone(),
-    certificationExpertContactEmail: z.string().optional(),
+    certificationExpertContactEmail: sanitizedOptionalEmail(),
     usefulResources: sanitizedOptionalText(),
     commentsForAAP: sanitizedOptionalText(),
   })
@@ -287,6 +289,8 @@ const AdditionalInfoForm = ({
             placeholder: "https://",
             ...register("linkToJuryGuide"),
           }}
+          state={errors.linkToJuryGuide ? "error" : "default"}
+          stateRelatedMessage={errors.linkToJuryGuide?.message}
         />
         <Input
           label="Lien vers le tableau des correspondances et dispenses de blocs (optionnel) :"
@@ -354,6 +358,12 @@ const AdditionalInfoForm = ({
             nativeInputProps={{
               ...register("certificationExpertContactDetails"),
             }}
+            state={
+              errors.certificationExpertContactDetails ? "error" : "default"
+            }
+            stateRelatedMessage={
+              errors.certificationExpertContactDetails?.message
+            }
           />
           <div className="flex flex-col gap-0 lg:flex-row lg:gap-6">
             <Input
@@ -362,6 +372,12 @@ const AdditionalInfoForm = ({
               nativeInputProps={{
                 ...register("certificationExpertContactPhone"),
               }}
+              state={
+                errors.certificationExpertContactPhone ? "error" : "default"
+              }
+              stateRelatedMessage={
+                errors.certificationExpertContactPhone?.message
+              }
             />
             <Input
               label="Adresse électronique (optionnel) :"
@@ -369,6 +385,12 @@ const AdditionalInfoForm = ({
               nativeInputProps={{
                 ...register("certificationExpertContactEmail"),
               }}
+              state={
+                errors.certificationExpertContactEmail ? "error" : "default"
+              }
+              stateRelatedMessage={
+                errors.certificationExpertContactEmail?.message
+              }
             />
           </div>
         </div>
@@ -379,11 +401,15 @@ const AdditionalInfoForm = ({
             label="Aide au parcours de VAE (optionnel) :"
             textArea
             nativeTextAreaProps={{ ...register("usefulResources") }}
+            state={errors.usefulResources ? "error" : "default"}
+            stateRelatedMessage={errors.usefulResources?.message}
           />
           <Input
             label="Remarques à destination des AAP et candidats (optionnel) :"
             textArea
             nativeTextAreaProps={{ ...register("commentsForAAP") }}
+            state={errors.commentsForAAP ? "error" : "default"}
+            stateRelatedMessage={errors.commentsForAAP?.message}
           />
         </div>
       </div>

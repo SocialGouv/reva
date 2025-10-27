@@ -20,15 +20,13 @@ import { CandidacyBackButton } from "@/components/candidacy-back-button/Candidac
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 
 const schema = z
   .object({
-    firstAppointmentOccuredAt: z.string({
-      required_error:
-        "Cette information est obligatoire pour continuer le parcours.",
-    }),
+    firstAppointmentOccuredAt: sanitizedText(),
     candidacyCreatedAt: z.string(),
   })
   .superRefine(({ firstAppointmentOccuredAt, candidacyCreatedAt }, ctx) => {

@@ -192,6 +192,8 @@ const InformationsRemotePage = () => {
                 nativeInputProps={{
                   ...register("siteInternet"),
                 }}
+                state={errors.siteInternet ? "error" : "default"}
+                stateRelatedMessage={errors.siteInternet?.message}
               />
             </fieldset>
             <fieldset className="flex flex-col mt-6">

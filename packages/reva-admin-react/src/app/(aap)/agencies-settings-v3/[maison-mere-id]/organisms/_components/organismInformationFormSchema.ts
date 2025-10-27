@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   sanitizedEmail,
   sanitizedOptionalText,
+  sanitizedOptionalUrl,
   sanitizedPhone,
   sanitizedText,
   sanitizedZipCode,
@@ -21,7 +22,7 @@ export const organismInformationFormSchema = z
     adresseInformationsComplementaires: sanitizedOptionalText(),
     nomPublic: sanitizedText({ minLength: 2 }),
     telephone: sanitizedPhone(),
-    siteInternet: sanitizedOptionalText(),
+    siteInternet: sanitizedOptionalUrl(),
     emailContact: sanitizedEmail(),
     conformeNormesAccessibilite: z
       .enum(["CONFORME", "NON_CONFORME", ""])
@@ -55,7 +56,7 @@ export const organismInformationFormSchema = z
       adresseInformationsComplementaires: sanitizedOptionalText(),
       nomPublic: sanitizedText(),
       telephone: sanitizedPhone(),
-      siteInternet: sanitizedOptionalText(),
+      siteInternet: sanitizedOptionalUrl(),
       emailContact: sanitizedEmail(),
       conformeNormesAccessibilite: z.enum(["CONFORME", "NON_CONFORME"]),
     }),

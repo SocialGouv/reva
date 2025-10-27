@@ -13,12 +13,13 @@ import { CandidacyBackButton } from "@/components/candidacy-back-button/Candidac
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedOptionalText } from "@/utils/input-sanitization";
 
 import { useExamInfoPage } from "./examInfo";
 
 const examInfoSchema = z.object({
-  estimatedExamDate: z.string(),
-  actualExamDate: z.string(),
+  estimatedExamDate: sanitizedOptionalText(),
+  actualExamDate: sanitizedOptionalText(),
   examResult: z.enum([
     "SUCCESS",
     "PARTIAL_SUCCESS",

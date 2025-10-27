@@ -12,6 +12,7 @@ import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import {
   sanitizedEmail,
   sanitizedOptionalPhone,
+  sanitizedOptionalText,
   sanitizedText,
 } from "@/utils/input-sanitization";
 
@@ -20,7 +21,7 @@ import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralIn
 type FormData = z.infer<typeof schema>;
 
 const schema = z.object({
-  accountFirstname: sanitizedText(),
+  accountFirstname: sanitizedOptionalText(),
   accountLastname: sanitizedText(),
   accountEmail: sanitizedEmail(),
   contactFullName: sanitizedText(),
@@ -198,6 +199,8 @@ export const CertificationAuthorityGeneralInfoForm = ({
                     ...register("contactPhone"),
                   }}
                   data-test="certification-authority-contact-phone"
+                  state={errors.contactPhone ? "error" : "default"}
+                  stateRelatedMessage={errors.contactPhone?.message}
                 />
               </div>
               <Checkbox
@@ -211,6 +214,8 @@ export const CertificationAuthorityGeneralInfoForm = ({
                     nativeInputProps: { ...register("isGlobalContact") },
                   },
                 ]}
+                state={errors.isGlobalContact ? "error" : "default"}
+                stateRelatedMessage={errors.isGlobalContact?.message}
               />
             </div>
           </form>

@@ -13,7 +13,7 @@ import { graphql } from "@/graphql/generated";
 
 const schema = z.object({
   highestDegreeId: sanitizedText(),
-  highestDegreeLabel: z.string(),
+  highestDegreeLabel: sanitizedText(),
   niveauDeFormationLePlusEleveDegreeId: sanitizedText(),
 });
 

@@ -9,6 +9,7 @@ import { z } from "zod";
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { sanitizedOptionalText } from "@/utils/input-sanitization";
 
 const decisionWarningModal = createModal({
   id: "decision-warning",
@@ -87,7 +88,7 @@ const schema = z
         return { message: "Merci de remplir ce champ" };
       },
     }),
-    comment: z.string(),
+    comment: sanitizedOptionalText(),
     infoFile: z.object({ 0: z.instanceof(File).optional() }),
   })
   .superRefine(({ decision, comment }, { addIssue }) => {
@@ -197,6 +198,8 @@ export const FeasibilityValidationForm = ({
             description="Ce courrier sera joint au message envoyé au candidat."
             hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
             nativeInputProps={register("infoFile")}
+            state={errors.infoFile ? "error" : "default"}
+            stateRelatedMessage={errors.infoFile?.[0]?.message}
           />
         </fieldset>
         <br />

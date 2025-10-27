@@ -40,7 +40,7 @@ export default function ReplaceCertificationPage() {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     watch,
   } = useForm<ReplaceCertificationFormSchema>({
     resolver: zodResolver(zodSchema),
@@ -126,6 +126,8 @@ export default function ReplaceCertificationPage() {
               required: true,
             }}
             className="md:w-1/4 mb-0"
+            state={errors.rncp ? "error" : "default"}
+            stateRelatedMessage={errors.rncp?.message}
           />
         </form>
 

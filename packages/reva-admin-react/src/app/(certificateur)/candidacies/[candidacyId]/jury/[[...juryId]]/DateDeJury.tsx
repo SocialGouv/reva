@@ -230,6 +230,8 @@ export const DateDeJury = () => {
                   ...register("time"),
                   defaultValue: jury?.timeOfSession || "",
                 }}
+                state={errors.time ? "error" : "default"}
+                stateRelatedMessage={errors.time?.message}
               />
               <Input
                 className="flex-1"
@@ -238,6 +240,8 @@ export const DateDeJury = () => {
                   ...register("address"),
                   defaultValue: jury?.addressOfSession || "",
                 }}
+                state={errors.address ? "error" : "default"}
+                stateRelatedMessage={errors.address?.message}
               />
               <input
                 type="hidden"
@@ -250,6 +254,8 @@ export const DateDeJury = () => {
                 ...register("information"),
                 defaultValue: jury?.informationOfSession || "",
               }}
+              state={errors.information ? "error" : "default"}
+              stateRelatedMessage={errors.information?.message}
             />
             <FancyUpload
               title="Joindre la convocation officielle (optionnel)"

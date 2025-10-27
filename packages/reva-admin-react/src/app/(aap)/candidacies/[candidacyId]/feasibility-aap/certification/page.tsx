@@ -13,13 +13,14 @@ import { useCertificationPageLogic } from "@/app/(aap)/candidacies/[candidacyId]
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { sanitizedOptionalText } from "@/utils/input-sanitization";
 
 import { CertificationCard } from "../../_components/CertificationCard";
 
 const schema = z.object({
-  option: z.string(),
-  firstForeignLanguage: z.string(),
-  secondForeignlanguage: z.string(),
+  option: sanitizedOptionalText(),
+  firstForeignLanguage: sanitizedOptionalText(),
+  secondForeignlanguage: sanitizedOptionalText(),
   completion: z.enum(["PARTIAL", "COMPLETE"], {
     invalid_type_error: "Merci de remplir ce champ",
   }),
@@ -156,6 +157,8 @@ const CertificationPage = () => {
             hintText="(Le cas échéant)"
             nativeInputProps={{ ...register("option") }}
             data-test="certification-option-input"
+            state={errors.option ? "error" : "default"}
+            stateRelatedMessage={errors.option?.message}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
@@ -163,12 +166,16 @@ const CertificationPage = () => {
               hintText="(Le cas échéant)"
               nativeInputProps={{ ...register("firstForeignLanguage") }}
               data-test="certification-first-foreign-language-input"
+              state={errors.firstForeignLanguage ? "error" : "default"}
+              stateRelatedMessage={errors.firstForeignLanguage?.message}
             />
             <Input
               label="Langue vivante 2"
               hintText="(Le cas échéant)"
               nativeInputProps={{ ...register("secondForeignlanguage") }}
               data-test="certification-second-foreign-language-input"
+              state={errors.secondForeignlanguage ? "error" : "default"}
+              stateRelatedMessage={errors.secondForeignlanguage?.message}
             />
           </div>
 

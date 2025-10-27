@@ -44,8 +44,8 @@ const trainingFormSchema = z.object({
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),
 
-  certificateSkills: z.string(),
-  otherTraining: z.string(),
+  certificateSkills: sanitizedOptionalText(),
+  otherTraining: sanitizedOptionalText(),
   certificationScope: z.enum(["PARTIAL", "COMPLETE"], {
     errorMap: () => ({
       message: "Merci de remplir ce champ",
@@ -323,6 +323,8 @@ export const TrainingForm = ({
               ...register(`mandatoryTrainings.${tIndex}.checked`),
             },
           }))}
+          state={errors.mandatoryTrainings ? "error" : "default"}
+          stateRelatedMessage={errors.mandatoryTrainings?.message}
         />
         <Checkbox
           disabled={disabled}
@@ -334,6 +336,8 @@ export const TrainingForm = ({
               ...register(`basicSkills.${sIndex}.checked`),
             },
           }))}
+          state={errors.basicSkills ? "error" : "default"}
+          stateRelatedMessage={errors.basicSkills?.message}
         />
       </div>
       <br />

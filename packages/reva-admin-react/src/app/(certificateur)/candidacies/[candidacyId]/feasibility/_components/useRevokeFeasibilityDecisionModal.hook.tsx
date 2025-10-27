@@ -1,11 +1,17 @@
 import Input from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import z from "zod";
 
-type Form = {
-  reason: string;
-};
+import { sanitizedOptionalText } from "@/utils/input-sanitization";
+
+const schema = z.object({
+  reason: sanitizedOptionalText(),
+});
+
+type Form = z.infer<typeof schema>;
 
 export const useRevokeFeasibilityDecisionModal = () => {
   const revokeFeasibilityDecisionModal = useMemo(
@@ -35,14 +41,14 @@ const createRevokeFeasibilityDecisionModal = (
   const Component = ({
     onConfirmButtonClick,
   }: {
-    onConfirmButtonClick: (data: { reason: string }) => Promise<void>;
+    onConfirmButtonClick: (data: Form) => Promise<void>;
   }) => {
     const {
       register,
       handleSubmit,
       reset,
-      formState: { isSubmitting },
-    } = useForm<Form>();
+      formState: { isSubmitting, errors },
+    } = useForm<Form>({ resolver: zodResolver(schema) });
 
     const handleConfirmButtonClick = handleSubmit(async (data) => {
       await onConfirmButtonClick(data);
@@ -94,6 +100,8 @@ const createRevokeFeasibilityDecisionModal = (
                 rows: 3,
                 ...register("reason"),
               }}
+              state={errors.reason ? "error" : "default"}
+              stateRelatedMessage={errors.reason?.message}
             />
             <p className="mb-2">
               Voulez vous confirmer l'annulation de cette décision ?

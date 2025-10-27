@@ -8,7 +8,11 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { sanitizedEmail, sanitizedText } from "@/utils/input-sanitization";
+import {
+  sanitizedEmail,
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
@@ -16,7 +20,7 @@ import { useCreateCertificationAuthorityPage } from "./createCertificationAuthor
 
 const schema = z.object({
   label: sanitizedText(),
-  firstname: sanitizedText(),
+  firstname: sanitizedOptionalText(),
   lastname: sanitizedText(),
   email: sanitizedEmail(),
 });

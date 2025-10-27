@@ -1,13 +1,18 @@
 import { z } from "zod";
 
-const REGEX_SPECIAL_CHARACTERS = /["&\\;)"@]/;
+const REGEX_SPECIAL_CHARACTERS = /[&\\;`@{}[\]<>|~^$%#*+=]/;
 const REGEX_SPECIAL_CHARACTERS_MESSAGE =
   "Les caractères spéciaux ne sont pas autorisés";
+const REGEX_ZIP_CODE = /^\d{5}$/;
+const REGEX_ZIP_CODE_MESSAGE = "Le code postal doit contenir 5 chiffres";
+const REGEX_PHONE = /^\+?\d{10,12}$/;
+const REGEX_PHONE_MESSAGE =
+  "Le numéro de téléphone doit commencer par + (facultatif) suivi de 10 à 12 chiffres";
 const DEFAULT_MAX_LENGTH = 1000;
 
 /**
- * Zod schema for personal names (firstname, lastname, etc.)
- * Validates against special characters and enforces minimum length
+ * Zod schema for text
+ * Validates against special characters and enforces length
  */
 export const sanitizedText = ({
   minLength = 1,
@@ -35,10 +40,6 @@ export const sanitizedText = ({
     );
 };
 
-/**
- * Zod schema for optional text
- * Validates against special characters and enforces length
- */
 export const sanitizedOptionalText = ({
   maxLength = DEFAULT_MAX_LENGTH,
 }: { maxLength?: number } = {}) => {
@@ -53,65 +54,31 @@ export const sanitizedOptionalText = ({
  * Zod schema for phone numbers
  * Validates against special characters and enforces length
  */
-export const sanitizedPhone = ({
-  minLength = 10,
-  maxLength = 12,
-}: { minLength?: number; maxLength?: number } = {}) => {
+export const sanitizedPhone = () => {
+  const regex = /^\+?\d{10,12}$/;
+
   return z
     .string()
     .trim()
-    .min(
-      minLength,
-      `Ce champ doit contenir minimum ${minLength === 1 ? "1 chiffre" : `${minLength} chiffres`}`,
-    )
-    .max(
-      maxLength,
-      `Ce champ doit contenir maximum ${maxLength === 1 ? "1 chiffre" : `${maxLength} chiffres`}`,
-    )
-    .refine(
-      (value: string) => {
-        if (!value) return true;
-        return !REGEX_SPECIAL_CHARACTERS.test(value);
-      },
-      {
-        message: REGEX_SPECIAL_CHARACTERS_MESSAGE,
-      },
+    .regex(
+      regex,
+      "Le numéro de téléphone doit commencer par + (facultatif) suivi de 10 à 12 chiffres",
     );
 };
 
-/**
- * Zod schema for optional phone numbers
- * Validates against special characters and enforces length
- */
-export const sanitizedOptionalPhone = ({
-  maxLength = 12,
-}: { maxLength?: number } = {}) => {
+export const sanitizedOptionalPhone = () => {
   return z
     .string()
     .optional()
-    .transform((val) => val ?? "")
-    .pipe(sanitizedPhone({ minLength: 0, maxLength }));
+    .refine((val) => !val || REGEX_PHONE.test(val), REGEX_PHONE_MESSAGE);
 };
 
 /**
  * Zod schema for zip codes
  * Validates against special characters and enforces numeric pattern
  */
-export const sanitizedZipCode = ({ length = 5 }: { length?: number } = {}) => {
-  const regex = new RegExp(`^\\d{${length}}$`);
-  return z
-    .string()
-    .trim()
-    .regex(regex, `Le code postal doit contenir ${length} chiffres`)
-    .refine(
-      (value: string) => {
-        if (!value) return true;
-        return !REGEX_SPECIAL_CHARACTERS.test(value);
-      },
-      {
-        message: REGEX_SPECIAL_CHARACTERS_MESSAGE,
-      },
-    );
+export const sanitizedZipCode = () => {
+  return z.string().trim().regex(REGEX_ZIP_CODE, REGEX_ZIP_CODE_MESSAGE);
 };
 
 /**
@@ -125,6 +92,14 @@ export const sanitizedEmail = () => {
     .email("Le champ doit contenir une adresse électronique valide");
 };
 
+export const sanitizedOptionalEmail = () => {
+  return z
+    .string()
+    .trim()
+    .email("Le champ doit contenir une adresse électronique valide")
+    .optional();
+};
+
 /**
  * Zod schema for siret numbers
  * Enforces 14 digits pattern
@@ -133,4 +108,20 @@ export const sanitizedSiret = () => {
   return z.string().regex(/^\d{14}$/, {
     message: "Le numéro de SIRET doit contenir 14 chiffres",
   });
+};
+
+/**
+ * Zod schema for URLs
+ * Validates against special characters and enforces URL pattern
+ */
+export const sanitizedUrl = () => {
+  return z.string().trim().url("Le champ doit contenir une URL valide");
+};
+
+export const sanitizedOptionalUrl = () => {
+  return z
+    .string()
+    .trim()
+    .url("Le champ doit contenir une URL valide")
+    .optional();
 };

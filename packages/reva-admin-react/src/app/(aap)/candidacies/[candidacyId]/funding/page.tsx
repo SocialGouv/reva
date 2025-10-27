@@ -13,6 +13,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { GenderEnum } from "@/constants/genders.constant";
 import {
+  sanitizedOptionalEmail,
   sanitizedOptionalPhone,
   sanitizedOptionalText,
 } from "@/utils/input-sanitization";
@@ -69,7 +70,7 @@ const candidacyFundingSchema = z.object({
   }),
   fundingContactFirstname: sanitizedOptionalText(),
   fundingContactLastname: sanitizedOptionalText(),
-  fundingContactEmail: z.string().optional(),
+  fundingContactEmail: sanitizedOptionalEmail(),
   fundingContactPhone: sanitizedOptionalPhone(),
   confirmation: z.literal<boolean>(true),
 });

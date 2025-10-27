@@ -256,6 +256,8 @@ export const Resultat = () => {
               textArea
               hintText="Indiquer ici toutes les réserves, consignes ou attendus éventuels."
               disabled={!editable}
+              state={errors.informationOfResult ? "error" : "default"}
+              stateRelatedMessage={errors.informationOfResult?.message}
             />
 
             <div className="flex flex-row items-end">
