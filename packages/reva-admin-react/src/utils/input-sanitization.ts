@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const REGEX_SPECIAL_CHARACTERS = /[&\\;`@{}[\]<>|~^$%#*+=]/;
+const REGEX_SPECIAL_CHARACTERS = /[&\\;`@{}[\]<>|~^$%#*+=/]/;
 const REGEX_SPECIAL_CHARACTERS_MESSAGE =
   "Les caractères spéciaux ne sont pas autorisés";
 const REGEX_ZIP_CODE = /^\d{5}$/;
