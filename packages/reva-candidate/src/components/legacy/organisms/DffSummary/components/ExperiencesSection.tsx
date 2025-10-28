@@ -17,7 +17,7 @@ export default function ExperiencesSection({
     unknown: "inconnue",
   };
   return (
-    <div className="mb-8">
+    <section className="mb-8">
       <div className="flex">
         <span className="fr-icon-briefcase-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">Expériences professionnelles</h2>
@@ -37,6 +37,6 @@ export default function ExperiencesSection({
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }

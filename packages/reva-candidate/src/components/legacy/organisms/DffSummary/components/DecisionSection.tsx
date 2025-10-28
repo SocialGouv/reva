@@ -36,7 +36,7 @@ export default function DecisionSection({
   const isDecisionUnfavorable = decision === "UNFAVORABLE";
 
   return (
-    <div>
+    <section>
       <div className="flex">
         <span className="fr-icon-thumb-up-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">L&apos;avis de mon accompagnateur </h2>
@@ -59,6 +59,6 @@ export default function DecisionSection({
           disabled={candidateDecisionCommentDisabled}
         />
       )}
-    </div>
+    </section>
   );
 }

@@ -2,7 +2,7 @@ import { Goal } from "@/graphql/generated/graphql";
 
 export default function GoalsSection({ goals }: { goals: Goal[] }) {
   return (
-    <div>
+    <section>
       <div className="flex">
         <svg
           className="mr-2"
@@ -19,6 +19,6 @@ export default function GoalsSection({ goals }: { goals: Goal[] }) {
       {goals.map((goal) => (
         <p key={goal.id}>{goal.label}</p>
       ))}
-    </div>
+    </section>
   );
 }

@@ -173,10 +173,9 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays professional experiences", async ({ page }) => {
-    const experiencesSection = page
-      .locator("div")
-      .filter({ hasText: /Expériences professionnelles/ })
-      .first();
+    const experiencesSection = page.locator("section", {
+      has: page.getByRole("heading", { name: "Expériences professionnelles" }),
+    });
 
     await expect(
       experiencesSection.getByText("Cheffe d'equipe logistique"),
@@ -197,10 +196,9 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays training hours", async ({ page }) => {
-    const trainingSection = page
-      .locator("div")
-      .filter({ hasText: /Parcours proposé/ })
-      .first();
+    const trainingSection = page.locator("section", {
+      has: page.getByRole("heading", { name: "Parcours proposé" }),
+    });
 
     await expect(
       trainingSection.getByText("Accompagnement individuel : 42h"),
@@ -217,10 +215,9 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays goals", async ({ page }) => {
-    const goalsSection = page
-      .locator("div")
-      .filter({ hasText: /Mes objectifs/ })
-      .first();
+    const goalsSection = page.locator("section", {
+      has: page.getByRole("heading", { name: "Mes objectifs" }),
+    });
 
     await expect(
       goalsSection.getByText("Trouver plus facilement un emploi"),
@@ -231,10 +228,11 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays AAP comment", async ({ page }) => {
-    const commentSection = page
-      .locator("div")
-      .filter({ hasText: /L'avis de mon accompagnateur/ })
-      .first();
+    const commentSection = page.locator("section", {
+      has: page.getByRole("heading", {
+        name: "L'avis de mon accompagnateur",
+      }),
+    });
 
     await expect(commentSection.getByText("Favorable")).toBeVisible();
     await expect(

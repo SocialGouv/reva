@@ -14,7 +14,7 @@ export default function ParcoursSection({
   collectiveHourCount?: number | null;
 }) {
   return (
-    <div>
+    <section>
       <div className="flex">
         <span className="fr-icon-time-fill fr-icon--lg mr-2" />
         <h2>Parcours proposé</h2>
@@ -44,6 +44,6 @@ export default function ParcoursSection({
           </p>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
