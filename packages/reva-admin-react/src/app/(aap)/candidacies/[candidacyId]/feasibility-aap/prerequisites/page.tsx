@@ -21,7 +21,11 @@ const schema = z.object({
     z.object({
       id: z.string().optional().nullable(),
       label: sanitizedText(),
-      state: z.enum(["ACQUIRED", "IN_PROGRESS", "RECOMMENDED"]).optional(),
+      state: z
+        .enum(["ACQUIRED", "IN_PROGRESS"], {
+          message: "Merci de sélectionner une réponse",
+        })
+        .optional(),
       certificationPrerequisiteId: z.string().optional().nullable(),
     }),
   ),
@@ -118,9 +122,13 @@ export default function PrerequisitesPage() {
           resetForm();
         }}
       >
-        {hasNoPrerequisites && (
+        {hasNoPrerequisites ? (
           <p className="mt-4" data-test="no-prerequisites-message">
             Il n'y a pas de prérequis pour cette certification.
+          </p>
+        ) : (
+          <p className="mt-4">
+            Le candidat est-il détenteur des prérequis exigés ?
           </p>
         )}
         <div>

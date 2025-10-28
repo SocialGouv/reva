@@ -37,23 +37,16 @@ export const PrerequisiteInput = ({
           stateRelatedMessage={errorState}
           options={[
             {
-              label: "Acquis",
+              label: "Oui",
               nativeInputProps: {
                 value: "ACQUIRED",
                 ...register(`prerequisites.${index}.state`),
               },
             },
             {
-              label: "En cours d'obtention",
+              label: "Non",
               nativeInputProps: {
                 value: "IN_PROGRESS",
-                ...register(`prerequisites.${index}.state`),
-              },
-            },
-            {
-              label: "À préconiser",
-              nativeInputProps: {
-                value: "RECOMMENDED",
                 ...register(`prerequisites.${index}.state`),
               },
             },
