@@ -4,6 +4,7 @@ import { isAdmin } from "@/modules/shared/security/presets";
 
 import { isGestionnaireOfMaisonMereAAP } from "./security/isGestionnaireOfMaisonMereAAP.security";
 import { isOwnerOfOrganism } from "./security/isOwnerOfOrganism";
+import { isOwnerOrCanManageOrganism } from "./security/isOwnerOrCanManageOrganism.security";
 
 const isAdminOrGestionnaireOfMaisonMereAAP = [
   hasRole(["admin", "gestion_maison_mere_aap"]),
@@ -78,4 +79,7 @@ export const resolversSecurityMap = {
     isAdminOrGestionnaireOfMaisonMereAAP,
 
   "MaisonMereAAPLegalInformationDocumentsDecision.internalComment": isAdmin,
+
+  "Mutation.organism_updateDisponiblePourVaeCollective":
+    isOwnerOrCanManageOrganism,
 };

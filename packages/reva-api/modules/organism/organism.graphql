@@ -54,6 +54,7 @@ type Organism {
   adresseCodePostal: String
   adresseVille: String
   conformeNormesAccessibilite: ConformiteNormeAccessibilite
+  disponiblePourVaeCollective: Boolean!
 }
 
 enum OrganismModaliteAccompagnement {
@@ -286,6 +287,12 @@ type Mutation {
   organism_updateFermePourAbsenceOuConges(
     organismId: ID!
     fermePourAbsenceOuConges: Boolean!
+  ): Organism!
+
+
+  organism_updateDisponiblePourVaeCollective(
+    organismId: ID!
+    disponiblePourVaeCollective: Boolean!
   ): Organism!
 
   organism_updateOrganismDegreesAndFormacodes(

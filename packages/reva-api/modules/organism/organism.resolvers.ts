@@ -60,6 +60,7 @@ import { updateMaisonMereLegalInformation } from "./features/updateMaisonMereLeg
 import { updateMaisonMereOrganismsIsActive } from "./features/updateMaisonMereOrganismsIsActive";
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
+import { updateOrganismDisponiblePourVaeCollective } from "./features/updateOrganismDisponiblePourVaeCollective";
 import { resolversSecurityMap } from "./organism.security";
 import {
   CreateLieuAccueilInfoInput,
@@ -302,6 +303,20 @@ const unsafeResolvers = {
         userInfo: buildAAPAuditLogUserInfoFromContext(context),
       });
     },
+    organism_updateDisponiblePourVaeCollective: async (
+      _parent: unknown,
+      {
+        organismId,
+        disponiblePourVaeCollective,
+      }: {
+        organismId: string;
+        disponiblePourVaeCollective: boolean;
+      },
+    ) =>
+      updateOrganismDisponiblePourVaeCollective({
+        organismId,
+        disponiblePourVaeCollective,
+      }),
     organism_createLieuAccueilInfo: async (
       _parent: unknown,
       {
