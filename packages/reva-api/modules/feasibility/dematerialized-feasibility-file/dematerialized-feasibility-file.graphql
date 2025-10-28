@@ -12,6 +12,7 @@ type DematerializedFeasibilityFile {
   certificationCompetenceDetails: [CertificationCompetenceDetails!]!
   prerequisitesPartComplete: Boolean!
   prerequisites: [Prerequisite]!
+  dffAndCertificationPrerequisites: [PrerequisiteFromDffAndCertification]!
   aapDecision: DFFileAapDecision
   aapDecisionComment: String
   candidateDecisionComment: String
@@ -49,11 +50,18 @@ type Prerequisite {
   label: String!
   state: PrerequisiteState!
 }
+type PrerequisiteFromDffAndCertification {
+  id: ID
+  label: String!
+  state: PrerequisiteState
+  certificationPrerequisiteId: String
+}
 
 input PrerequisiteInput {
   id: ID
   label: String!
   state: PrerequisiteState!
+  certificationPrerequisiteId: String
 }
 
 enum CompetenceBlocsPartCompletion {

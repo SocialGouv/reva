@@ -1696,11 +1696,12 @@ enum PrerequisiteState {
 }
 
 model CertificationPrerequisite {
-  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label           String        @db.Text
-  index           Int           @db.Integer
-  certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
-  certificationId String        @map("certification_id") @db.Uuid
+  id               String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label            String            @db.Text
+  index            Int               @db.Integer
+  certification    Certification     @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  certificationId  String            @map("certification_id") @db.Uuid
+  dffPrerequisites DFFPrerequisite[]
 
   @@map("certification_prerequisite")
 }
@@ -1711,6 +1712,8 @@ model DFFPrerequisite {
   state                           PrerequisiteState
   DematerializedFeasibilityFile   DematerializedFeasibilityFile? @relation(fields: [dematerializedFeasibilityFileId], references: [id], onDelete: Cascade)
   dematerializedFeasibilityFileId String?                        @db.Uuid
+  certificationPrerequisiteId     String?                        @map("certification_prerequisite_id") @db.Uuid
+  certificationPrerequisite       CertificationPrerequisite?     @relation(fields: [certificationPrerequisiteId], references: [id])
 
   @@map("dff_prerequisite")
 }
