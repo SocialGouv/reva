@@ -340,20 +340,24 @@ const FormacodesCcnsDegreesForm = ({
                                   nativeInputProps: {
                                     checked: isTotallySelected,
                                     onChange: (e) => {
-                                      setValue("organismFormacodes", {
-                                        ...watchedOrganismFormacodes,
-                                        ...subDomainsForDomain.reduce(
-                                          (acc, d) => ({
-                                            ...acc,
-                                            [d.id]: {
-                                              id: d.id,
-                                              code: d.code,
-                                              checked: e.target.checked,
-                                            },
-                                          }),
-                                          {},
-                                        ),
-                                      });
+                                      setValue(
+                                        "organismFormacodes",
+                                        {
+                                          ...watchedOrganismFormacodes,
+                                          ...subDomainsForDomain.reduce(
+                                            (acc, d) => ({
+                                              ...acc,
+                                              [d.id]: {
+                                                id: d.id,
+                                                code: d.code,
+                                                checked: e.target.checked,
+                                              },
+                                            }),
+                                            {},
+                                          ),
+                                        },
+                                        { shouldDirty: true },
+                                      );
                                     },
                                   },
                                 },
