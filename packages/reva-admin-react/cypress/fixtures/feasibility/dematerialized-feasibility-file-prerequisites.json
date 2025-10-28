@@ -3,7 +3,8 @@
     "feasibility_getActiveFeasibilityByCandidacyId": {
       "dematerializedFeasibilityFile": {
         "prerequisitesPartComplete": false,
-        "prerequisites": []
+        "prerequisites": [],
+        "dffAndCertificationPrerequisites": []
       }
     }
   }

@@ -55,77 +55,38 @@ function visitFeasibilityPrerequisites() {
 
 describe("Dematerialized Feasibility File - Prerequisites Page", () => {
   context("Initial form state", () => {
-    it("should display an empty prerequisites form with disabled submit button", () => {
+    // it("should display an empty prerequisites form with disabled submit button if prerequisites are complete", () => {
+    //   visitFeasibilityPrerequisites();
+
+    //   cy.get('[data-test="form-buttons"]')
+    //     .should("exist")
+    //     .within(() => {
+    //       cy.get("button").should("be.disabled");
+    //     });
+    // });
+    it("should display an empty prerequisites form with enabled submit button if prerequisites have never been saved", () => {
       visitFeasibilityPrerequisites();
 
       cy.get('[data-test="form-buttons"]')
         .should("exist")
         .within(() => {
-          cy.get("button").should("be.disabled");
+          cy.get("button").should("be.enabled");
         });
     });
   });
 
-  context("No Prerequisites Checkbox", () => {
-    it("should enable form submission when indicating no prerequisites are required", () => {
+  context("No Prerequisites message", () => {
+    it("should display a message if no prerequisites are required", () => {
       visitFeasibilityPrerequisites();
 
-      cy.get('[data-test="has-no-prerequisites-checkbox-input"]').check({
-        force: true,
-      });
-
-      cy.get('[data-test="form-buttons"]')
-        .should("exist")
-        .within(() => {
-          cy.get("button").should("not.be.disabled");
-        });
-    });
-
-    it("should remove all prerequisite inputs when indicating no prerequisites", () => {
-      visitFeasibilityPrerequisites();
-
-      cy.get('[data-test="prerequisite-input-0"]')
-        .should("exist")
-        .within(() => {
-          cy.get('textarea[name="prerequisites.0.label"]').type(
-            "First prerequisite",
-          );
-          cy.get('input[name="prerequisites.0.state"][value="ACQUIRED"]').check(
-            {
-              force: true,
-            },
-          );
-        });
-
-      cy.get('[data-test="add-prerequisite-button"]').click();
-      cy.get('[data-test="prerequisite-input-1"]')
-        .should("exist")
-        .within(() => {
-          cy.get('textarea[name="prerequisites.1.label"]').type(
-            "Second prerequisite",
-          );
-          cy.get(
-            'input[name="prerequisites.1.state"][value="IN_PROGRESS"]',
-          ).check({
-            force: true,
-          });
-        });
-
-      cy.get('[data-test="prerequisite-input-0"]').should("exist");
-      cy.get('[data-test="prerequisite-input-1"]').should("exist");
-
-      cy.get('[data-test="has-no-prerequisites-checkbox-input"]').check({
-        force: true,
-      });
-
-      cy.get('[data-test="prerequisite-input-0"]').should("not.exist");
-      cy.get('[data-test="prerequisite-input-1"]').should("not.exist");
+      cy.get('[data-test="no-prerequisites-message"]').should("exist");
     });
   });
 
   context("Prerequisites Management", () => {
     it("should show error when submitting with empty prerequisite label", () => {
       visitFeasibilityPrerequisites();
+      cy.get('[data-test="add-prerequisite-button"]').click({ force: true });
 
       cy.get('[data-test="prerequisite-input-0"]')
         .should("exist")
@@ -151,6 +112,7 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
 
     it("should allow adding multiple prerequisites with different states", () => {
       visitFeasibilityPrerequisites();
+      cy.get('[data-test="add-prerequisite-button"]').click({ force: true });
 
       cy.get('[data-test="prerequisite-input-0"]')
         .should("exist")
@@ -192,6 +154,8 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
     it("should allow removing individual prerequisites", () => {
       visitFeasibilityPrerequisites();
 
+      cy.get('[data-test="add-prerequisite-button"]').click({ force: true });
+
       cy.get('[data-test="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
@@ -213,6 +177,8 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
 
     it("should allow toggling between all prerequisite states", () => {
       visitFeasibilityPrerequisites();
+
+      cy.get('[data-test="add-prerequisite-button"]').click({ force: true });
 
       cy.get('[data-test="prerequisite-input-0"]')
         .should("exist")
