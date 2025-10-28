@@ -1692,7 +1692,6 @@ model DFFCertificationCompetenceDetails {
 enum PrerequisiteState {
   ACQUIRED
   IN_PROGRESS
-  RECOMMENDED
 }
 
 model CertificationPrerequisite {

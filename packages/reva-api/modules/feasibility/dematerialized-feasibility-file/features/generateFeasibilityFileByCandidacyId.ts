@@ -875,9 +875,6 @@ const addCertification = (
     const inProgress = dematerializedFeasibilityFile.prerequisites.filter(
       (p) => p.state == "IN_PROGRESS",
     );
-    const recommended = dematerializedFeasibilityFile.prerequisites.filter(
-      (p) => p.state == "RECOMMENDED",
-    );
 
     if (acquired.length > 0) {
       doc
@@ -937,43 +934,6 @@ const addCertification = (
 
       for (let index = 0; index < inProgress.length; index++) {
         const prerequisite = inProgress[index];
-
-        doc
-          .font("assets/fonts/Marianne/Marianne-Regular.otf")
-          .fontSize(10)
-          .fillColor("#3a3a3a")
-          .text(
-            `${prerequisite.label.replace(/(\r\n|\n|\r)/gm, "")}`,
-            doc.x,
-            doc.y + 10,
-            {
-              align: "left",
-            },
-          );
-      }
-    }
-
-    if (recommended.length > 0) {
-      doc
-        .font("assets/fonts/Marianne/Marianne-Medium.otf")
-        .fontSize(10)
-        .table({
-          position: { x: doc.x, y: doc.y + 20 },
-          data: [
-            [
-              {
-                border: 0,
-                backgroundColor: "#e3e3fd",
-                textColor: "#000091",
-                padding: "16px 24px",
-                text: "Préconisés",
-              },
-            ],
-          ],
-        });
-
-      for (let index = 0; index < recommended.length; index++) {
-        const prerequisite = recommended[index];
 
         doc
           .font("assets/fonts/Marianne/Marianne-Regular.otf")

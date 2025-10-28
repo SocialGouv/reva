@@ -38,7 +38,7 @@ export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
   }[];
 }
 
-type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS" | "RECOMMENDED";
+type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS";
 
 export interface DematerializedFeasibilityFileCreateOrUpdateAapDecisionInput {
   aapDecision: DFFileAapDecision;
