@@ -28,7 +28,7 @@ export default function EligibilitySection({
   eligibilityValidUntil: Date | null;
 }) {
   return (
-    <section className="mb-8">
+    <section>
       <div className="flex">
         <span className="ri-folder-check-fill fr-icon--lg mr-2" />
         <h2>Recevabilité du candidat</h2>

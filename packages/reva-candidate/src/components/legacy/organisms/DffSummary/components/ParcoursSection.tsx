@@ -37,7 +37,7 @@ export default function ParcoursSection({
       </div>
 
       <h4 className="mb-2">Savoir de base</h4>
-      <div className="mb-6">
+      <div>
         {basicSkills.map((skill) => (
           <p key={skill.id} className="mb-2">
             {skill.label}

@@ -17,7 +17,7 @@ export default function ExperiencesSection({
     unknown: "inconnue",
   };
   return (
-    <section className="mb-8">
+    <section>
       <div className="flex">
         <span className="fr-icon-briefcase-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">Expériences professionnelles</h2>

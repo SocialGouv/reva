@@ -15,13 +15,12 @@ export function BannerSummary({
         )}`}
         severity="success"
         title=""
-        className="mb-12"
       />
     );
   }
 
   return (
-    <p className="text-xl mb-12">
+    <p className="text-xl">
       Vous avez en partie rempli ce dossier avec votre accompagnateur. Vérifiez
       les informations puis validez votre dossier en envoyant une attestation
       sur l'honneur à votre accompagnateur. Il se chargera ensuite de le

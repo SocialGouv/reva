@@ -100,7 +100,7 @@ export default function CertificationSection({
         ))}
       </div>
       <h5 className="mb-0">Prérequis obligatoires</h5>
-      <div className="mb-8 mt-4">
+      <div className="mt-4">
         {noPrerequisites && (
           <p>
             Il n&apos;y a pas de prérequis obligatoires pour cette certification

@@ -72,7 +72,7 @@ export function DffSummary({
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-8">
       <BannerSummary
         feasibilitySentToCertificationAuthorityAt={
           feasibility.feasibilityFileSentAt
