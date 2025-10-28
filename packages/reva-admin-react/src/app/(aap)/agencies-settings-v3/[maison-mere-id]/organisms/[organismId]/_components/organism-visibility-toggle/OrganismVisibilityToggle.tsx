@@ -74,13 +74,15 @@ export const OrganismVisibilityToggle = ({
   };
 
   return (
-    <ToggleSwitch
-      label="Je souhaite que la structure soit disponible dans les résultats de recherche"
-      inputTitle="Je souhaite que la structure soit disponible dans les résultats de recherche"
-      labelPosition="left"
-      showCheckedHint={false}
-      checked={!organism?.fermePourAbsenceOuConges}
-      onChange={(checked) => handleVisibilityChange(checked)}
-    />
+    <div className="flex flex-col border-t border-t-neutral-200 border-b border-b-neutral-200 py-4">
+      <ToggleSwitch
+        label="Je souhaite que la structure soit disponible dans les résultats de recherche"
+        inputTitle="Je souhaite que la structure soit disponible dans les résultats de recherche"
+        labelPosition="left"
+        showCheckedHint={false}
+        checked={!organism?.fermePourAbsenceOuConges}
+        onChange={(checked) => handleVisibilityChange(checked)}
+      />
+    </div>
   );
 };

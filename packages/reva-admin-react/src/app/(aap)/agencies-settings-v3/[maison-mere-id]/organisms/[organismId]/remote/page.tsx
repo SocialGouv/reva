@@ -14,6 +14,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 
 import { getRemoteZoneLabel } from "../../../../_components/getRemoteZoneLabel";
+import { OrganismDisponiblePourVaeCollectiveToggle } from "../_components/organism-disponible-pour-vae-collective-toggle/OrganismDisponiblePourVaeCollectiveToggle";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 
 const getOrganismQuery = graphql(`
@@ -193,9 +194,16 @@ export default function RemotePage() {
             </Accordion>
           )}
         </EnhancedSectionCard>
-        <div className="flex flex-col mt-6">
-          <OrganismVisibilityToggle organismId={organismId} />
-        </div>
+        <OrganismDisponiblePourVaeCollectiveToggle
+          organismId={organismId}
+          ToggleLabel={
+            <span>
+              Je souhaite activer la <strong>VAE collective</strong> pour
+              l'accompagnement à distance.
+            </span>
+          }
+        />
+        <OrganismVisibilityToggle organismId={organismId} />
       </div>
     </div>
   );

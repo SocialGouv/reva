@@ -9,6 +9,7 @@ import Link from "next/link";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
+import { OrganismDisponiblePourVaeCollectiveToggle } from "../_components/organism-disponible-pour-vae-collective-toggle/OrganismDisponiblePourVaeCollectiveToggle";
 import { OrganismVisibilityToggle } from "../_components/organism-visibility-toggle/OrganismVisibilityToggle";
 
 import { useOnSiteOrganism } from "./_components/onSiteOrganism.hook";
@@ -161,9 +162,17 @@ export default function OnSitePage() {
             </Accordion>
           )}
         </EnhancedSectionCard>
-        <div className="flex flex-col mt-6">
-          <OrganismVisibilityToggle organismId={organismId} />
-        </div>
+        <OrganismDisponiblePourVaeCollectiveToggle
+          organismId={organismId}
+          ToggleLabel={
+            <span>
+              Je souhaite activer la <strong>VAE collective</strong> dans ce
+              lieu d'accueil.
+            </span>
+          }
+        />
+
+        <OrganismVisibilityToggle organismId={organismId} />
       </div>
     </div>
   );
