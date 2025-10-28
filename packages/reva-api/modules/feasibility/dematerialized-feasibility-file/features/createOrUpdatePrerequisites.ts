@@ -24,9 +24,43 @@ export const createOrUpdatePrerequisites = async ({
     throw new Error("Dossier de faisabilité dématérialisé non trouvé");
   }
 
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: {
+      id: candidacyId,
+    },
+    include: {
+      certification: {
+        include: {
+          prerequisites: true,
+        },
+      },
+    },
+  });
+
+  const certificationPrerequisites = candidacy?.certification?.prerequisites;
+  if (!certificationPrerequisites) {
+    throw new Error("Prérequis de certification non trouvés");
+  }
+  const certificationPrerequisitesIds = certificationPrerequisites.map(
+    (p) => p.id,
+  );
+  const incomingCertificationPrerequisitesIds = prerequisites
+    .filter((p) => p.certificationPrerequisiteId)
+    .map((p) => p.certificationPrerequisiteId);
+
+  if (
+    certificationPrerequisitesIds.some(
+      (id) => !incomingCertificationPrerequisitesIds.includes(id),
+    )
+  ) {
+    throw new Error(
+      "Certains prérequis attachés à la certification sont manquants",
+    );
+  }
+
   if (dFF.prerequisitesPartComplete) {
-    const existingIds = dFF.prerequisites.map((p) => p.id);
     const incomingIds = prerequisites.filter((p) => p.id).map((p) => p.id);
+    const existingIds = dFF.prerequisites.map((p) => p.id);
     const toDelete = dFF.prerequisites.filter(
       (p) => !incomingIds.includes(p.id),
     );
@@ -59,7 +93,12 @@ export const createOrUpdatePrerequisites = async ({
       where: { id: dFF.id },
       data: {
         prerequisites: {
-          createMany: { data: prerequisites },
+          createMany: {
+            data: prerequisites.map((p) => ({
+              ...p,
+              id: p.id || uuidv4(),
+            })),
+          },
         },
         prerequisitesPartComplete: true,
       },

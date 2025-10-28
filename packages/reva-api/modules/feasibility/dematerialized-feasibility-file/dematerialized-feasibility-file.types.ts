@@ -30,7 +30,12 @@ export interface DematerializedFeasibilityFileCreateOrUpdateEligibilityRequireme
 type CompetenceDetailState = "YES" | "NO" | "PARTIALLY";
 
 export interface DematerializedFeasibilityFileCreateOrUpdatePrerequisitesInput {
-  prerequisites: { id?: string; label: string; state: PrerequisiteState }[];
+  prerequisites: {
+    id?: string;
+    label: string;
+    state: PrerequisiteState;
+    certificationPrerequisiteId?: string;
+  }[];
 }
 
 type PrerequisiteState = "ACQUIRED" | "IN_PROGRESS" | "RECOMMENDED";

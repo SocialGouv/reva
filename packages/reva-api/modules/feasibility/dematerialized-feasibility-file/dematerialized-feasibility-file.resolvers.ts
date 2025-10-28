@@ -30,6 +30,7 @@ import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStat
 import { getCertificationCompetenceDetailsByDFFId } from "./features/getCertificationCompetenceDetailsByDFFId";
 import { getDematerializedFeasibilityFileByFeasibilityId } from "./features/getDematerializedFeasibilityFileByFeasibilityId";
 import { getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls } from "./features/getDematerializedFeasibilityFileFilesNamesAndUrls";
+import { getDFFAndCertificationPrerequisitesByFeasibilityId } from "./features/getDFFAndCertificationPrerequisitesByFeasibilityId";
 import { getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId } from "./features/getDFFCertificationCompetenceBlocByDFFIdAndCertificationCompetenceBlocId";
 import { getDFFCertificationCompetenceBlocsByDFFId } from "./features/getDFFCertificationCompetenceBlocsByDFFId";
 import { getDffFileNameAndUrl } from "./features/getDffFileNameAndUrl";
@@ -68,8 +69,26 @@ const unsafeResolvers = {
       getCertificationCompetenceDetailsByDFFId({
         dematerializedFeasibilityFileId,
       }),
-    prerequisites: ({ id: dematerializedFeasibilityFileId }: { id: string }) =>
-      getPrerequisitesByDFFId({ dematerializedFeasibilityFileId }),
+    prerequisites: ({
+      id: dematerializedFeasibilityFileId,
+    }: {
+      id: string;
+      feasibilityId: string;
+    }) =>
+      getPrerequisitesByDFFId({
+        dematerializedFeasibilityFileId,
+      }),
+    dffAndCertificationPrerequisites: ({
+      id: dematerializedFeasibilityFileId,
+      feasibilityId,
+    }: {
+      id: string;
+      feasibilityId: string;
+    }) =>
+      getDFFAndCertificationPrerequisitesByFeasibilityId({
+        dematerializedFeasibilityFileId,
+        feasibilityId,
+      }),
     attachments: ({ id: dematerializedFeasibilityFileId }: { id: string }) =>
       getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls({
         dematerializedFeasibilityFileId,
