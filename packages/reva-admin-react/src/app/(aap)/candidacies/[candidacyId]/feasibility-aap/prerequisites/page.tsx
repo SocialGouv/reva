@@ -1,6 +1,5 @@
 "use client";
 
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
@@ -18,12 +17,12 @@ import { PrerequisiteInput } from "./_components/PrerequisiteInput";
 import { usePrerequisites } from "./_components/prerequisites.hook";
 
 const schema = z.object({
-  hasNoPrerequisites: z.boolean(),
   prerequisites: z.array(
     z.object({
-      id: z.string().optional(),
+      id: z.string().optional().nullable(),
       label: sanitizedText(),
       state: z.enum(["ACQUIRED", "IN_PROGRESS", "RECOMMENDED"]).optional(),
+      certificationPrerequisiteId: z.string().optional().nullable(),
     }),
   ),
 });
@@ -38,30 +37,21 @@ export default function PrerequisitesPage() {
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
   const {
     prerequisites: candidacyPrerequisites,
-    prerequisitesPartComplete,
     createOrUpdatePrerequisitesMutation,
     isLoadingPrerequisites,
+    prerequisitesPartComplete,
   } = usePrerequisites();
   const defaultValues: PrerequisitesFormData = useMemo(() => {
-    if (prerequisitesPartComplete) {
-      return {
-        hasNoPrerequisites: !candidacyPrerequisites?.length,
-        prerequisites:
-          (candidacyPrerequisites as PrerequisitesFormData["prerequisites"]) ??
-          [],
-      };
-    }
     return {
-      hasNoPrerequisites: false,
-      prerequisites: [{ label: "", state: undefined }],
+      prerequisites:
+        (candidacyPrerequisites as PrerequisitesFormData["prerequisites"]) ??
+        [],
     };
-  }, [candidacyPrerequisites, prerequisitesPartComplete]);
+  }, [candidacyPrerequisites]);
   const {
     register,
     watch,
     setValue,
-    setError,
-    clearErrors,
     handleSubmit,
     formState: { isDirty, isSubmitting, errors },
     reset,
@@ -69,22 +59,16 @@ export default function PrerequisitesPage() {
     resolver: zodResolver(schema),
     defaultValues,
   });
-  const hasNoPrerequisites = watch("hasNoPrerequisites");
   const prerequisites = watch("prerequisites");
+  const hasNoPrerequisites = prerequisites.length === 0;
   const undefinedPrerequisites = prerequisites.some((p) => !p.state);
   const formIsValid = !undefinedPrerequisites || hasNoPrerequisites;
   const canSubmit =
     (isDirty ||
-      watch("prerequisites").length !== defaultValues.prerequisites.length) &&
+      prerequisites.length !== defaultValues.prerequisites.length ||
+      hasNoPrerequisites) &&
     formIsValid;
-
   const handleFormSubmit = handleSubmit(async (data) => {
-    if (!data.hasNoPrerequisites && !data.prerequisites.length) {
-      setError("hasNoPrerequisites", {
-        message: "Vous devez cocher la case si aucun prérequis n'est requis",
-      });
-      return;
-    }
     try {
       await createOrUpdatePrerequisitesMutation({
         prerequisites: data.prerequisites as PrerequisiteInputType[],
@@ -102,20 +86,6 @@ export default function PrerequisitesPage() {
   );
 
   useEffect(resetForm, [resetForm]);
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      clearErrors();
-      setValue("prerequisites", [], { shouldDirty: true });
-    } else {
-      setValue("prerequisites", [{ label: "", state: undefined }], {
-        shouldDirty: true,
-      });
-    }
-    setValue("hasNoPrerequisites", e.target.checked, {
-      shouldDirty: true,
-    });
-  };
 
   if (isLoadingPrerequisites) {
     return null;
@@ -148,29 +118,19 @@ export default function PrerequisitesPage() {
           resetForm();
         }}
       >
-        <Checkbox
-          className="my-8"
-          state={errors.hasNoPrerequisites ? "error" : "default"}
-          stateRelatedMessage={errors.hasNoPrerequisites?.message}
-          options={[
-            {
-              label: "Il n'y a pas de prérequis pour cette certification.",
-              nativeInputProps: {
-                ...{ "data-test": "has-no-prerequisites-checkbox-input" },
-                ...register("hasNoPrerequisites"),
-                onChange: handleCheckboxChange,
-              },
-            },
-          ]}
-          data-test="has-no-prerequisites-checkbox"
-        />
-        {!hasNoPrerequisites && (
-          <div>
-            {prerequisites?.map(({ state }, index) => (
+        {hasNoPrerequisites && (
+          <p className="mt-4" data-test="no-prerequisites-message">
+            Il n'y a pas de prérequis pour cette certification.
+          </p>
+        )}
+        <div>
+          {prerequisites?.map(
+            ({ state, certificationPrerequisiteId }, index) => (
               <PrerequisiteInput
                 key={index}
                 register={register}
                 index={index}
+                readonly={!!certificationPrerequisiteId}
                 onDelete={() => {
                   setValue(
                     "prerequisites",
@@ -183,27 +143,28 @@ export default function PrerequisitesPage() {
                   state && errors.prerequisites?.[index]?.state?.message
                 }
               />
-            ))}
-            <div
-              className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
-              onClick={() => {
-                setValue(
-                  "prerequisites",
-                  [...(prerequisites ?? []), { label: "", state: undefined }],
-                  { shouldDirty: true },
-                );
-              }}
-              data-test="add-prerequisite-button"
-            >
-              <span className="fr-icon-add-line fr-icon--sm" />
-              <span className="text-sm">Ajouter un prérequis</span>
-            </div>
-          </div>
-        )}
+            ),
+          )}
+        </div>
+        <div
+          className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
+          onClick={() => {
+            setValue(
+              "prerequisites",
+              [...(prerequisites ?? []), { label: "", state: undefined }],
+              { shouldDirty: true },
+            );
+          }}
+          data-test="add-prerequisite-button"
+        >
+          <span className="fr-icon-add-line fr-icon--sm" />
+          <span className="text-sm">Ajouter un prérequis</span>
+        </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
           formState={{
-            isDirty,
+            isDirty:
+              isDirty || (hasNoPrerequisites && !prerequisitesPartComplete),
             isSubmitting,
             canSubmit,
           }}

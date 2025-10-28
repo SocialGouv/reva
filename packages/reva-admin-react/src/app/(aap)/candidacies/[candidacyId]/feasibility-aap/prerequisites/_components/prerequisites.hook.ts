@@ -13,10 +13,11 @@ const feasibilityWithDematerializedFeasibilityFileByCandidacyId = graphql(`
     feasibility_getActiveFeasibilityByCandidacyId(candidacyId: $candidacyId) {
       dematerializedFeasibilityFile {
         prerequisitesPartComplete
-        prerequisites {
+        dffAndCertificationPrerequisites {
           id
           label
           state
+          certificationPrerequisiteId
         }
       }
     }
@@ -78,7 +79,7 @@ export const usePrerequisites = () => {
 
   const prerequisites =
     data?.feasibility_getActiveFeasibilityByCandidacyId
-      ?.dematerializedFeasibilityFile?.prerequisites;
+      ?.dematerializedFeasibilityFile?.dffAndCertificationPrerequisites;
   const prerequisitesPartComplete =
     data?.feasibility_getActiveFeasibilityByCandidacyId
       ?.dematerializedFeasibilityFile?.prerequisitesPartComplete;

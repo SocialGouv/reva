@@ -10,12 +10,14 @@ export const PrerequisiteInput = ({
   onDelete,
   errorLabel,
   errorState,
+  readonly = false,
 }: {
   register: UseFormRegister<PrerequisitesFormData>;
   index: number;
   onDelete: () => void;
   errorLabel?: string;
   errorState?: string;
+  readonly?: boolean;
 }) => {
   return (
     <div data-test={`prerequisite-input-${index}`}>
@@ -25,6 +27,7 @@ export const PrerequisiteInput = ({
         state={errorLabel ? "error" : "default"}
         stateRelatedMessage={errorLabel}
         textArea
+        disabled={readonly}
       />
       <div className="flex justify-between my-4">
         <RadioButtons
@@ -57,14 +60,16 @@ export const PrerequisiteInput = ({
           ]}
           small
         />
-        <div
-          className="flex gap-2 cursor-pointer text-blue-900 items-center"
-          onClick={onDelete}
-          data-test={`delete-prerequisite-button-${index}`}
-        >
-          <span className="fr-icon-delete-bin-line fr-icon--sm" />
-          <span className="text-sm font-medium">Supprimer</span>
-        </div>
+        {!readonly && (
+          <div
+            className="flex gap-2 cursor-pointer text-blue-900 items-center"
+            onClick={onDelete}
+            data-test={`delete-prerequisite-button-${index}`}
+          >
+            <span className="fr-icon-delete-bin-line fr-icon--sm" />
+            <span className="text-sm font-medium">Supprimer</span>
+          </div>
+        )}
       </div>
       <hr className="my-4" />
     </div>
