@@ -131,6 +131,7 @@ export default function PrerequisitesPage() {
             severity="info"
             description="Le certificateur n’a transmis aucun pré-requis obligatoire."
             small
+            data-test="no-prerequisites-message"
           />
         ) : (
           <p className="mt-4">
