@@ -11,16 +11,21 @@ import * as z from "zod";
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { CompanySummary } from "@/components/professional-space/inscription/component/CompanySummary";
 import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
+import {
+  sanitizedEmail,
+  sanitizedPhone,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 export const AccountInfoStepForm = () => {
   const { professionalSpaceInfos, submitAccountInfoStep } =
     useProfessionalSpaceSubscriptionContext();
 
   const zodSchema = z.object({
-    accountFirstname: z.string().min(1, "Merci de remplir ce champ"),
-    accountLastname: z.string().min(1, "Merci de remplir ce champ"),
-    accountEmail: z.string().email("L'adresse électronique est incomplète"),
-    accountPhoneNumber: z.string().min(1, "Merci de remplir ce champ"),
+    accountFirstname: sanitizedText(),
+    accountLastname: sanitizedText(),
+    accountEmail: sanitizedEmail(),
+    accountPhoneNumber: sanitizedPhone(),
     delegataire: z.boolean(),
   });
 

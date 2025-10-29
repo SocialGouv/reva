@@ -11,6 +11,11 @@ import * as z from "zod";
 
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { GRAPHQL_API_URL } from "@/config/config";
+import {
+  sanitizedEmail,
+  sanitizedPhone,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 
@@ -30,15 +35,11 @@ interface DepartmentOption {
 }
 
 const zodSchema = z.object({
-  lastname: z.string().min(1, "Merci de remplir ce champ"),
-  firstname: z.string().min(1, "Merci de remplir ce champ"),
-  phone: z.string().min(10, "Veuillez entrer un numéro de téléphone valide"),
-  email: z.string().email("Format attendu : nom@domaine.fr"),
-  departmentId: z
-    .string({
-      required_error: "Merci de remplir ce champ",
-    })
-    .min(1, "Merci de remplir ce champ"),
+  lastname: sanitizedText(),
+  firstname: sanitizedText(),
+  phone: sanitizedPhone(),
+  email: sanitizedEmail(),
+  departmentId: sanitizedText(),
   notSecteurPublic: z.boolean().refine((val) => val, {
     message:
       "Vous ne pouvez pas accéder à une VAE via France VAE si vous dépendez du secteur public.",
