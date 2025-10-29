@@ -14,6 +14,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { ExperienceDuration } from "@/constants/experience-duration.constant";
 import { PageLayout } from "@/layouts/page.layout";
+import { sanitizedText } from "@/utils/input-sanitization";
 
 import { useUpdateExperience } from "./update-experience.hooks";
 
@@ -29,12 +30,12 @@ const durationOptions: { label: string; value: ExperienceDuration }[] = [
 ];
 
 const schema = z.object({
-  title: z.string().min(1, "Ce champ est requis"),
-  startedAt: z.string().min(1, "Ce champ est requis"),
+  title: sanitizedText(),
+  startedAt: sanitizedText(),
   duration: z.nativeEnum(ExperienceDuration, {
     errorMap: () => ({ message: "Ce champ est requis" }),
   }),
-  description: z.string().min(1, "Ce champ est requis"),
+  description: sanitizedText(),
 });
 
 type ExperienceForm = z.infer<typeof schema>;

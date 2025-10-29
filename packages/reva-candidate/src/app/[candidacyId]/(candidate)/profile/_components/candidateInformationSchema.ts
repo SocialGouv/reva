@@ -3,33 +3,35 @@ import { z } from "zod";
 
 import { GenderEnum } from "@/constants/genders.constant";
 import { deserializeStringToPhoneNumberStructure } from "@/utils/deserializeStringToPhoneNumberStructure.util";
-
-const defaultErrorMessage = "Merci de remplir ce champ";
+import {
+  sanitizedEmail,
+  sanitizedOptionalText,
+  sanitizedPhone,
+  sanitizedText,
+  sanitizedZipCode,
+} from "@/utils/input-sanitization";
 
 export const candidateInformationSchema = (inputShouldBeDisabled: boolean) =>
   z
     .object({
       gender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
-      lastname: z.string().min(1, defaultErrorMessage),
-      givenName: z.string().optional(),
-      firstname: z.string().min(1, defaultErrorMessage),
-      firstname2: z.string().optional(),
-      firstname3: z.string().optional(),
-      birthdate: z.string().optional(),
-      country: z.string().min(1, defaultErrorMessage).default("France"),
-      birthDepartment: z.string().optional(),
-      birthCity: z.string().optional(),
-      nationality: z.string().optional(),
+      lastname: sanitizedText(),
+      givenName: sanitizedOptionalText(),
+      firstname: sanitizedText(),
+      firstname2: sanitizedOptionalText(),
+      firstname3: sanitizedOptionalText(),
+      birthdate: sanitizedOptionalText(),
+      country: sanitizedText().default("France"),
+      birthDepartment: sanitizedOptionalText(),
+      birthCity: sanitizedOptionalText(),
+      nationality: sanitizedOptionalText(),
       countryIsFrance: z.boolean(),
-      street: z.string().optional(),
-      city: z.string().optional(),
-      zip: z.union([
-        z.string().regex(/^\d{5}$/, "Le code postal est invalide"),
-        z.literal(""),
-      ]),
-      phone: z.string(),
-      email: z.string().email(defaultErrorMessage),
-      addressComplement: z.string().optional(),
+      street: sanitizedOptionalText(),
+      city: sanitizedOptionalText(),
+      zip: z.union([sanitizedZipCode(), z.literal("")]),
+      phone: sanitizedPhone(),
+      email: sanitizedEmail(),
+      addressComplement: sanitizedOptionalText(),
     })
     .superRefine((data, ctx) => {
       if (data.birthdate) {

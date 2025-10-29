@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
+import z from "zod";
 
 import { DownloadTile } from "@/components/download-tile/DownloadTile";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
