@@ -10,28 +10,27 @@ export const PrerequisiteInput = ({
   onDelete,
   errorLabel,
   errorState,
-  readonly = false,
 }: {
   register: UseFormRegister<PrerequisitesFormData>;
   index: number;
   onDelete: () => void;
   errorLabel?: string;
   errorState?: string;
-  readonly?: boolean;
 }) => {
   return (
     <div data-test={`prerequisite-input-${index}`}>
       <Input
+        className="m-0"
         label="Intitulé du prérequis :"
-        nativeTextAreaProps={register(`prerequisites.${index}.label`)}
+        nativeTextAreaProps={register(`aapPrerequisites.${index}.label`)}
         state={errorLabel ? "error" : "default"}
         stateRelatedMessage={errorLabel}
         textArea
-        disabled={readonly}
       />
-      <div className="flex justify-between my-4">
+      <div className="flex flex-col justify-between my-4">
         <RadioButtons
-          className="m-0"
+          legend="Le candidat est-il détenteur de ce pré-requis ?"
+          className="m-0 p-0"
           orientation="horizontal"
           state={errorState ? "error" : "default"}
           stateRelatedMessage={errorState}
@@ -40,31 +39,29 @@ export const PrerequisiteInput = ({
               label: "Oui",
               nativeInputProps: {
                 value: "ACQUIRED",
-                ...register(`prerequisites.${index}.state`),
+                ...register(`aapPrerequisites.${index}.state`),
               },
             },
             {
               label: "Non",
               nativeInputProps: {
                 value: "IN_PROGRESS",
-                ...register(`prerequisites.${index}.state`),
+                ...register(`aapPrerequisites.${index}.state`),
               },
             },
           ]}
           small
         />
-        {!readonly && (
-          <div
-            className="flex gap-2 cursor-pointer text-blue-900 items-center"
-            onClick={onDelete}
-            data-test={`delete-prerequisite-button-${index}`}
-          >
-            <span className="fr-icon-delete-bin-line fr-icon--sm" />
-            <span className="text-sm font-medium">Supprimer</span>
-          </div>
-        )}
+        <div
+          className="flex gap-2 cursor-pointer text-blue-900 items-center self-end"
+          onClick={onDelete}
+          data-test={`delete-prerequisite-button-${index}`}
+        >
+          <span className="fr-icon-delete-bin-line fr-icon--sm" />
+          <span className="text-sm font-medium">Supprimer</span>
+        </div>
       </div>
-      <hr className="my-4" />
+      <hr className="mt-4 mb-0" />
     </div>
   );
 };

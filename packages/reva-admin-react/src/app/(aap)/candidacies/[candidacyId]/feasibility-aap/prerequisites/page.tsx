@@ -4,30 +4,42 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { sanitizedText } from "@/utils/input-sanitization";
+import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 import type { PrerequisiteInput as PrerequisiteInputType } from "@/graphql/generated/graphql";
 
+import { CertificationPrerequisiteInput } from "./_components/CertificationPrerequisiteInput";
 import { PrerequisiteInput } from "./_components/PrerequisiteInput";
 import { usePrerequisites } from "./_components/prerequisites.hook";
 
 const schema = z.object({
-  prerequisites: z.array(
+  aapPrerequisites: z.array(
     z.object({
-      id: z.string().optional().nullable(),
-      label: sanitizedText(),
+      id: z.string().uuid().optional().nullable(),
+      label: sanitizedTextAllowSpecialCharacters(),
       state: z
         .enum(["ACQUIRED", "IN_PROGRESS"], {
           message: "Merci de sélectionner une réponse",
         })
         .optional(),
-      certificationPrerequisiteId: z.string().optional().nullable(),
+    }),
+  ),
+  certificationPrerequisites: z.array(
+    z.object({
+      id: z.string().uuid().optional().nullable(),
+      label: sanitizedTextAllowSpecialCharacters(),
+      state: z
+        .enum(["ACQUIRED", "IN_PROGRESS"], {
+          message: "Merci de sélectionner une réponse",
+        })
+        .optional(),
+      certificationPrerequisiteId: z.string().uuid(),
     }),
   ),
 });
@@ -41,42 +53,76 @@ export default function PrerequisitesPage() {
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
   const {
-    prerequisites: candidacyPrerequisites,
+    prerequisites: dffPrerequisites,
     createOrUpdatePrerequisitesMutation,
     isLoadingPrerequisites,
     prerequisitesPartComplete,
   } = usePrerequisites();
   const defaultValues: PrerequisitesFormData = useMemo(() => {
     return {
-      prerequisites:
-        (candidacyPrerequisites as PrerequisitesFormData["prerequisites"]) ??
-        [],
+      aapPrerequisites:
+        (dffPrerequisites?.filter(
+          (p) => p?.certificationPrerequisiteId === null,
+        ) as PrerequisitesFormData["aapPrerequisites"]) ?? [],
+      certificationPrerequisites:
+        (dffPrerequisites?.filter(
+          (p) => p?.certificationPrerequisiteId !== null,
+        ) as PrerequisitesFormData["certificationPrerequisites"]) ?? [],
     };
-  }, [candidacyPrerequisites]);
+  }, [dffPrerequisites]);
   const {
     register,
     watch,
-    setValue,
     handleSubmit,
     formState: { isDirty, isSubmitting, errors },
     reset,
+    control,
   } = useForm<PrerequisitesFormData>({
     resolver: zodResolver(schema),
     defaultValues,
   });
-  const prerequisites = watch("prerequisites");
-  const hasNoPrerequisites = prerequisites.length === 0;
-  const undefinedPrerequisites = prerequisites.some((p) => !p.state);
-  const formIsValid = !undefinedPrerequisites || hasNoPrerequisites;
+
+  const {
+    fields: aapPrerequisitesFields,
+    append: appendAapPrerequisite,
+    remove: removeAapPrerequisite,
+  } = useFieldArray({
+    control,
+    name: "aapPrerequisites",
+  });
+  const { fields: certificationPrerequisitesFields } = useFieldArray({
+    control,
+    name: "certificationPrerequisites",
+  });
+
+  const aapPrerequisites = watch("aapPrerequisites");
+  const certificationPrerequisites = watch("certificationPrerequisites");
+
+  const hasNoCertificationPrerequisites =
+    certificationPrerequisites.length === 0;
+
+  const undefinedAapPrerequisites = aapPrerequisites.some((p) => !p.state);
+  const undefinedCertificationPrerequisites = certificationPrerequisites.some(
+    (p) => !p.state,
+  );
+  const formIsValid =
+    !undefinedAapPrerequisites && !undefinedCertificationPrerequisites;
   const canSubmit =
     (isDirty ||
-      prerequisites.length !== defaultValues.prerequisites.length ||
-      hasNoPrerequisites) &&
+      aapPrerequisites.length !== defaultValues.aapPrerequisites.length ||
+      certificationPrerequisites.length !==
+        defaultValues.certificationPrerequisites.length ||
+      hasNoCertificationPrerequisites) &&
     formIsValid;
+
   const handleFormSubmit = handleSubmit(async (data) => {
     try {
+      const dataToSubmit = [
+        ...data.aapPrerequisites,
+        ...data.certificationPrerequisites,
+      ];
       await createOrUpdatePrerequisitesMutation({
-        prerequisites: data.prerequisites as PrerequisiteInputType[],
+        prerequisites: dataToSubmit as PrerequisiteInputType[],
       });
       successToast("Modifications enregistrées");
       router.push(feasibilitySummaryUrl);
@@ -125,7 +171,7 @@ export default function PrerequisitesPage() {
           resetForm();
         }}
       >
-        {hasNoPrerequisites ? (
+        {hasNoCertificationPrerequisites ? (
           <Alert
             className="mt-8 mb-8"
             severity="info"
@@ -134,41 +180,49 @@ export default function PrerequisitesPage() {
             data-test="no-prerequisites-message"
           />
         ) : (
-          <p className="mt-4">
-            Le candidat est-il détenteur des pré-requis exigés ?
-          </p>
-        )}
-        <div>
-          {prerequisites?.map(
-            ({ state, certificationPrerequisiteId }, index) => (
-              <PrerequisiteInput
+          <div className="flex flex-col gap-4 p-6 pb-4 border border-dsfr-light-decisions-border-border-default-grey mt-8 mb-4">
+            <p className="text-lg font-bold m-0 text-dsfrGray-titleGrey border-b border-dsfr-light-decisions-border-border-default-grey pb-6">
+              Pré-requis obligatoires renseignés par le certificateur :
+            </p>
+            {certificationPrerequisitesFields?.map(({ label }, index) => (
+              <CertificationPrerequisiteInput
                 key={index}
                 register={register}
                 index={index}
-                readonly={!!certificationPrerequisiteId}
-                onDelete={() => {
-                  setValue(
-                    "prerequisites",
-                    prerequisites.filter((_, i) => i !== index),
-                    { shouldDirty: true },
-                  );
-                }}
-                errorLabel={errors.prerequisites?.[index]?.label?.message}
+                label={label}
+                errorLabel={
+                  errors.certificationPrerequisites?.[index]?.label?.message
+                }
                 errorState={
-                  state && errors.prerequisites?.[index]?.state?.message
+                  errors.certificationPrerequisites?.[index]?.state?.message
                 }
               />
-            ),
-          )}
+            ))}
+          </div>
+        )}
+        <div>
+          {aapPrerequisitesFields?.map(({ state }, index) => (
+            <PrerequisiteInput
+              key={index}
+              register={register}
+              index={index}
+              onDelete={() => {
+                removeAapPrerequisite(index);
+              }}
+              errorLabel={errors.aapPrerequisites?.[index]?.label?.message}
+              errorState={
+                state && errors.aapPrerequisites?.[index]?.state?.message
+              }
+            />
+          ))}
         </div>
         <div
           className="flex cursor-pointer gap-2 text-blue-900 items-center w-fit"
           onClick={() => {
-            setValue(
-              "prerequisites",
-              [...(prerequisites ?? []), { label: "", state: undefined }],
-              { shouldDirty: true },
-            );
+            appendAapPrerequisite({
+              label: "",
+              state: undefined,
+            });
           }}
           data-test="add-prerequisite-button"
         >
@@ -179,7 +233,8 @@ export default function PrerequisitesPage() {
           backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
           formState={{
             isDirty:
-              isDirty || (hasNoPrerequisites && !prerequisitesPartComplete),
+              isDirty ||
+              (hasNoCertificationPrerequisites && !prerequisitesPartComplete),
             isSubmitting,
             canSubmit,
           }}
