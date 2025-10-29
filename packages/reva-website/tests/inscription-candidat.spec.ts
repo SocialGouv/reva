@@ -158,7 +158,7 @@ test.describe("AAP available on certification", () => {
       await page.getByTestId("tile-autonome").click();
       await page.getByLabel("Prénom").fill("Alice");
       await page.getByLabel("Nom", { exact: true }).fill("Doe");
-      await page.getByLabel("Téléphone").fill("+33 1 01 01 01 01");
+      await page.getByLabel("Téléphone").fill("+33101010101");
       await page
         .getByLabel("Adresse électronique de connexion")
         .fill("alice.doe@example.com");
@@ -180,7 +180,7 @@ test.describe("AAP available on certification", () => {
 
       await page.getByLabel("Prénom").fill("Alice");
       await page.getByLabel("Nom", { exact: true }).fill("Doe");
-      await page.getByLabel("Téléphone").fill("+33 1 01 01 01 01");
+      await page.getByLabel("Téléphone").fill("+33101010101");
       await page
         .getByLabel("Adresse électronique de connexion")
         .fill("alice.doe@example.com");
