@@ -197,11 +197,6 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
           ).check({
             force: true,
           });
-          cy.get(
-            'input[name="prerequisites.0.state"][value="RECOMMENDED"]',
-          ).check({
-            force: true,
-          });
         });
     });
   });
