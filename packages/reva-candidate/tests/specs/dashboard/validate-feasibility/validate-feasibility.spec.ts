@@ -83,10 +83,11 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays certification information", async ({ page }) => {
-    const certificationSection = page
-      .locator("div")
-      .filter({ hasText: /Certification visée/ })
-      .first();
+    const certificationSection = page.locator("section", {
+      has: page.getByRole("heading", {
+        name: "Certification visée",
+      }),
+    });
 
     await expect(
       certificationSection.getByRole("heading", {
@@ -99,18 +100,25 @@ test.describe("Dematerialized feasibility résumé", () => {
     ).toBeVisible();
 
     await expect(
-      certificationSection.getByText("Langue vivante 1 :Anglais"),
-    ).toBeVisible();
+      certificationSection.getByLabel("Langue vivante 1 :"),
+    ).toHaveText("Anglais");
     await expect(
-      certificationSection.getByText("Langue vivante 2 :Espagnol"),
-    ).toBeVisible();
+      certificationSection.getByLabel("Langue vivante 2 :"),
+    ).toHaveText("Espagnol");
   });
 
   test("displays blocs de competences", async ({ page }) => {
-    const blocsSection = page
-      .locator("div")
-      .filter({ hasText: /Blocs de compétences/ })
-      .first();
+    const certificationSection = page.locator("section", {
+      has: page.getByRole("heading", {
+        name: "Certification visée",
+      }),
+    });
+
+    const blocsSection = certificationSection.locator("section", {
+      has: page.getByRole("heading", {
+        name: "Blocs de compétences",
+      }),
+    });
 
     const blocA = blocsSection.locator("section").filter({
       hasText: "48379857 - Organiser et piloter les activites logistiques",
@@ -154,10 +162,17 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays prerequisites", async ({ page }) => {
-    const prerequisitesSection = page
-      .locator("div")
-      .filter({ hasText: /Prérequis obligatoires/ })
-      .first();
+    const certificationSection = page.locator("section", {
+      has: page.getByRole("heading", {
+        name: "Certification visée",
+      }),
+    });
+
+    const prerequisitesSection = certificationSection.locator("section", {
+      has: page.getByRole("heading", {
+        name: "Prérequis obligatoires",
+      }),
+    });
 
     await expect(
       prerequisitesSection.getByText(

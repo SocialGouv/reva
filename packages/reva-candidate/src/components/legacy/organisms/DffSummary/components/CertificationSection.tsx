@@ -48,7 +48,7 @@ export default function CertificationSection({
   const noPrerequisites = !prerequisites?.length;
 
   return (
-    <div>
+    <section>
       <div className="flex">
         <span className="fr-icon-award-fill fr-icon--lg mr-2" />
         <h2>Certification visée</h2>
@@ -58,24 +58,45 @@ export default function CertificationSection({
         RNCP {certification?.codeRncp}
       </p>
       {!!option && (
-        <>
-          <p className="mb-0">Option ou parcours:</p>
-          <p className="font-medium">{option}</p>
-        </>
+        <dl className="my-4">
+          <dt id="certification-option-label" className="font-normal">
+            Option ou parcours :
+          </dt>
+          <dd
+            aria-labelledby="certification-option-label"
+            className="font-medium"
+          >
+            {option}
+          </dd>
+        </dl>
       )}
       {(firstForeignLanguage || secondForeignLanguage) && (
         <div className="flex gap-2 mb-4">
           {firstForeignLanguage && (
-            <div className="flex flex-col flex-1">
-              <p className="mb-0">Langue vivante 1 :</p>
-              <p className="mb-0 font-medium">{firstForeignLanguage}</p>
-            </div>
+            <dl className="flex flex-col flex-1">
+              <dt id="certification-first-language-label">
+                Langue vivante 1 :
+              </dt>
+              <dd
+                aria-labelledby="certification-first-language-label"
+                className="font-medium"
+              >
+                {firstForeignLanguage}
+              </dd>
+            </dl>
           )}
           {secondForeignLanguage && (
-            <div className="flex flex-col flex-1">
-              <p className="mb-0">Langue vivante 2 :</p>
-              <p className="mb-0 font-medium">{secondForeignLanguage}</p>
-            </div>
+            <dl className="flex flex-col flex-1">
+              <dt id="certification-second-language-label">
+                Langue vivante 2 :
+              </dt>
+              <dd
+                aria-labelledby="certification-second-language-label"
+                className="font-medium"
+              >
+                {secondForeignLanguage}
+              </dd>
+            </dl>
           )}
         </div>
       )}
@@ -85,55 +106,61 @@ export default function CertificationSection({
           : "La certification dans sa totalité"}
       </CallOut>
 
-      <h5 className="mb-0">Blocs de compétences</h5>
+      <section className="mt-4">
+        <h5 className="mb-0">Blocs de compétences</h5>
 
-      <div className="mb-8 mt-4">
-        {blocsDeCompetences?.map((bc) => (
-          <CertificationCompetenceAccordion
-            key={bc.certificationCompetenceBloc.id}
-            defaultExpanded
-            competenceBloc={bc.certificationCompetenceBloc}
-            competenceBlocText={bc.text}
-            competenceDetails={certificationCompetenceDetails}
-            hideAccordionContent={isEligibilityRequirementPartial}
-          />
-        ))}
-      </div>
-      <h5 className="mb-0">Prérequis obligatoires</h5>
-      <div className="mt-4">
-        {noPrerequisites && (
-          <p>
-            Il n&apos;y a pas de prérequis obligatoires pour cette certification
-          </p>
-        )}
-        {!!prequisitesByStatus?.acquired?.length && (
-          <Accordion label="Acquis" defaultExpanded>
-            <ul>
-              {prequisitesByStatus?.acquired?.map((prerequisite) => (
-                <li key={prerequisite?.id}>{prerequisite?.label}</li>
-              ))}
-            </ul>
-          </Accordion>
-        )}
-        {!!prequisitesByStatus?.inProgress?.length && (
-          <Accordion label="En cours" defaultExpanded>
-            <ul>
-              {prequisitesByStatus?.inProgress?.map((prerequisite) => (
-                <li key={prerequisite?.id}>{prerequisite?.label}</li>
-              ))}
-            </ul>
-          </Accordion>
-        )}
-        {!!prequisitesByStatus?.recommended?.length && (
-          <Accordion label="Préconisés" defaultExpanded>
-            <ul>
-              {prequisitesByStatus?.recommended?.map((prerequisite) => (
-                <li key={prerequisite?.id}>{prerequisite?.label}</li>
-              ))}
-            </ul>
-          </Accordion>
-        )}
-      </div>
-    </div>
+        <div className="mt-4 mb-6">
+          {blocsDeCompetences?.map((bc) => (
+            <CertificationCompetenceAccordion
+              key={bc.certificationCompetenceBloc.id}
+              defaultExpanded
+              competenceBloc={bc.certificationCompetenceBloc}
+              competenceBlocText={bc.text}
+              competenceDetails={certificationCompetenceDetails}
+              hideAccordionContent={isEligibilityRequirementPartial}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h5 className="mb-0">Prérequis obligatoires</h5>
+        <div className="mt-4">
+          {noPrerequisites && (
+            <p>
+              Il n&apos;y a pas de prérequis obligatoires pour cette
+              certification
+            </p>
+          )}
+          {!!prequisitesByStatus?.acquired?.length && (
+            <Accordion label="Acquis" defaultExpanded>
+              <ul>
+                {prequisitesByStatus?.acquired?.map((prerequisite) => (
+                  <li key={prerequisite?.id}>{prerequisite?.label}</li>
+                ))}
+              </ul>
+            </Accordion>
+          )}
+          {!!prequisitesByStatus?.inProgress?.length && (
+            <Accordion label="En cours" defaultExpanded>
+              <ul>
+                {prequisitesByStatus?.inProgress?.map((prerequisite) => (
+                  <li key={prerequisite?.id}>{prerequisite?.label}</li>
+                ))}
+              </ul>
+            </Accordion>
+          )}
+          {!!prequisitesByStatus?.recommended?.length && (
+            <Accordion label="Préconisés" defaultExpanded>
+              <ul>
+                {prequisitesByStatus?.recommended?.map((prerequisite) => (
+                  <li key={prerequisite?.id}>{prerequisite?.label}</li>
+                ))}
+              </ul>
+            </Accordion>
+          )}
+        </div>
+      </section>
+    </section>
   );
 }
