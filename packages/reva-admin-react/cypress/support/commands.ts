@@ -40,10 +40,10 @@ function auth({ url, token }: { url: string; token: string }) {
         }),
       );
 
-      win.cookieStore.set(
-        "tarteaucitron",
-        "!matomotm=false!crisp=false!produktly=false",
-      );
+      // win.cookieStore.set(
+      //   "tarteaucitron",
+      //   "!matomotm=false!crisp=false!produktly=false",
+      // );
       // const originalLocalStorageRemoveItem = win.localStorage.removeItem;
 
       // // We prevent Keycloak from removing the dummy state from localStorage
