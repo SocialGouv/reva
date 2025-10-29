@@ -98,7 +98,7 @@ export default function PrerequisitesPage() {
 
   return (
     <div className="flex flex-col">
-      <h1>Prérequis obligatoires</h1>
+      <h1>Pré-requis obligatoires</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
         Un pré-requis obligatoire est une condition exigée par le certificateur
@@ -135,7 +135,7 @@ export default function PrerequisitesPage() {
           />
         ) : (
           <p className="mt-4">
-            Le candidat est-il détenteur des prérequis exigés ?
+            Le candidat est-il détenteur des pré-requis exigés ?
           </p>
         )}
         <div>
@@ -173,7 +173,7 @@ export default function PrerequisitesPage() {
           data-test="add-prerequisite-button"
         >
           <span className="fr-icon-add-line fr-icon--sm" />
-          <span className="text-sm font-medium">Ajouter un prérequis</span>
+          <span className="text-sm font-medium">Ajouter un pré-requis</span>
         </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
