@@ -11,6 +11,11 @@ import * as z from "zod";
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { useProfessionalSpaceSubscriptionContext } from "@/components/professional-space/inscription/context/ProfessionalSpaceSubscriptionContext";
+import {
+  sanitizedSiret,
+  sanitizedText,
+  sanitizedUrl,
+} from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 
@@ -32,14 +37,14 @@ const legalStatuses = [
 ] as const;
 
 const zodSchema = z.object({
-  companySiret: z.string().length(14, "doit comporter 14 chiffres"),
+  companySiret: sanitizedSiret(),
   companyLegalStatus: z.enum(legalStatuses, {
     required_error: "obligatoire",
   }),
-  companyName: z.string().min(1, "obligatoire"),
-  companyWebsite: z.union([z.literal(""), z.string().url()]),
-  managerFirstname: z.string().min(1, "obligatoire"),
-  managerLastname: z.string().min(1, "obligatoire"),
+  companyName: sanitizedText(),
+  companyWebsite: z.union([z.literal(""), sanitizedUrl()]),
+  managerFirstname: sanitizedText(),
+  managerLastname: sanitizedText(),
 });
 
 type CompanySiretStepFormSchema = z.infer<typeof zodSchema>;
