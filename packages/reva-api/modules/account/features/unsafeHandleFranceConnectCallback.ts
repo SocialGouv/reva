@@ -6,16 +6,22 @@ import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandid
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "@/prisma/client";
 
+import {
+  sanitizedEmail,
+  sanitizedOptionalText,
+  sanitizedText,
+} from "../utils/input-sanitization";
+
 const FranceConnectClaimsSchema = z.object({
   sub: z.string(),
-  email: z.string().email(),
-  given_name: z.string(),
-  family_name: z.string(),
-  preferred_username: z.string().optional(),
+  email: sanitizedEmail(),
+  given_name: sanitizedText(),
+  family_name: sanitizedText(),
+  preferred_username: sanitizedOptionalText(),
   gender: z.enum(["male", "female"]),
-  birthdate: z.string(),
-  birthplace: z.string().optional(),
-  birthcountry: z.string().optional(),
+  birthdate: sanitizedText(),
+  birthplace: sanitizedOptionalText(),
+  birthcountry: sanitizedOptionalText(),
 });
 
 type FranceConnectClaims = z.infer<typeof FranceConnectClaimsSchema>;
@@ -31,7 +37,7 @@ type TokenResponse = z.infer<typeof TokenResponseSchema>;
 
 const AccessTokenPayloadSchema = z.object({
   sub: z.string(),
-  email: z.string().email(),
+  email: sanitizedEmail(),
 });
 
 /**
