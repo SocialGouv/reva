@@ -91,13 +91,13 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
       cy.get('[data-test="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
-          cy.get('input[name="prerequisites.0.state"][value="ACQUIRED"]').check(
-            {
-              force: true,
-            },
-          );
           cy.get(
-            'input[name="prerequisites.0.state"][value="ACQUIRED"]',
+            'input[name="aapPrerequisites.0.state"][value="ACQUIRED"]',
+          ).check({
+            force: true,
+          });
+          cy.get(
+            'input[name="aapPrerequisites.0.state"][value="ACQUIRED"]',
           ).should("be.checked");
         });
 
@@ -117,15 +117,15 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
       cy.get('[data-test="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
-          cy.get('textarea[name="prerequisites.0.label"]').type(
+          cy.get('textarea[name="aapPrerequisites.0.label"]').type(
             "First prerequisite",
           );
 
-          cy.get('input[name="prerequisites.0.state"][value="ACQUIRED"]').check(
-            {
-              force: true,
-            },
-          );
+          cy.get(
+            'input[name="aapPrerequisites.0.state"][value="ACQUIRED"]',
+          ).check({
+            force: true,
+          });
         });
 
       cy.get('[data-test="add-prerequisite-button"]').click();
@@ -133,12 +133,12 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
       cy.get('[data-test="prerequisite-input-1"]')
         .should("exist")
         .within(() => {
-          cy.get('textarea[name="prerequisites.1.label"]').type(
+          cy.get('textarea[name="aapPrerequisites.1.label"]').type(
             "Second prerequisite",
           );
 
           cy.get(
-            'input[name="prerequisites.1.state"][value="IN_PROGRESS"]',
+            'input[name="aapPrerequisites.1.state"][value="IN_PROGRESS"]',
           ).check({
             force: true,
           });
@@ -159,7 +159,7 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
       cy.get('[data-test="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
-          cy.get('textarea[name="prerequisites.0.label"]').type(
+          cy.get('textarea[name="aapPrerequisites.0.label"]').type(
             "To be deleted",
           );
         });
@@ -183,17 +183,17 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
       cy.get('[data-test="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
-          cy.get('textarea[name="prerequisites.0.label"]').type(
+          cy.get('textarea[name="aapPrerequisites.0.label"]').type(
             "Test prerequisite",
           );
 
-          cy.get('input[name="prerequisites.0.state"][value="ACQUIRED"]').check(
-            {
-              force: true,
-            },
-          );
           cy.get(
-            'input[name="prerequisites.0.state"][value="IN_PROGRESS"]',
+            'input[name="aapPrerequisites.0.state"][value="ACQUIRED"]',
+          ).check({
+            force: true,
+          });
+          cy.get(
+            'input[name="aapPrerequisites.0.state"][value="IN_PROGRESS"]',
           ).check({
             force: true,
           });
