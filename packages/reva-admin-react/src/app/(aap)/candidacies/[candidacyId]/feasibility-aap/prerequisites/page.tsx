@@ -1,5 +1,6 @@
 "use client";
 
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
@@ -100,11 +101,13 @@ export default function PrerequisitesPage() {
       <h1>Prérequis obligatoires</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        Un prérequis obligatoire est une condition exigée par le certificateur
-        afin que le candidat puisse passer devant le jury VAE ou recevoir le
-        parchemin lié à la certification.
+        Un pré-requis obligatoire est une condition exigée par le certificateur
+        afin que le candidat puisse passer devant le jury ou recevoir le
+        parchemin lié à la certification. Certains pré-requis peuvent être
+        renseignés par le certificateur. Vous pouvez tout de même en ajouter si
+        cela vous semble utile, pertinent... etc
       </p>
-      <p className="text-xl font-bold text-neutral-900 mb-2">
+      <p className=" mb-2">
         Retrouvez plus d’informations sur le fonctionnement des certifications
         dans notre{" "}
         <a
@@ -123,9 +126,12 @@ export default function PrerequisitesPage() {
         }}
       >
         {hasNoPrerequisites ? (
-          <p className="mt-4" data-test="no-prerequisites-message">
-            Il n'y a pas de prérequis pour cette certification.
-          </p>
+          <Alert
+            className="mt-8 mb-8"
+            severity="info"
+            description="Le certificateur n’a transmis aucun pré-requis obligatoire."
+            small
+          />
         ) : (
           <p className="mt-4">
             Le candidat est-il détenteur des prérequis exigés ?
@@ -166,7 +172,7 @@ export default function PrerequisitesPage() {
           data-test="add-prerequisite-button"
         >
           <span className="fr-icon-add-line fr-icon--sm" />
-          <span className="text-sm">Ajouter un prérequis</span>
+          <span className="text-sm font-medium">Ajouter un prérequis</span>
         </div>
         <FormButtons
           backUrl={`/candidacies/${candidacyId}/feasibility-aap`}
