@@ -23,11 +23,13 @@ export const CertificationPrerequisiteInput = ({
         value={label}
         name={`certificationPrerequisites.${index}.label`}
       />
-      <p className="m-0 mb-4 text-dsfrGray-labelGrey">
-        Le candidat est-il détenteur du pré-requis exigé ? : {label}
-      </p>
+      <p className="m-0 mb-4 text-dsfrGray-labelGrey">{label}</p>
       <RadioButtons
-        className="m-0 p-0"
+        legend={
+          <p className="mb-4 font-bold">
+            Le candidat est-il détenteur du pré-requis exigé ?
+          </p>
+        }
         orientation="horizontal"
         state={errorState ? "error" : "default"}
         stateRelatedMessage={errorLabel}
