@@ -14,7 +14,7 @@ export const GenericAppointmentTile = ({
   type,
   showTimezone = false,
 }: {
-  id: string;
+  id?: string;
   date: string;
   type: AppointmentType;
   showTimezone?: boolean;
@@ -45,7 +45,7 @@ export const GenericAppointmentTile = ({
     return format(dateWithAddedOffset, "HH:mm");
   }, [now, timezoneOffset, showTimezone]);
 
-  return (
+  return id ? (
     <Tile
       data-test="rendez-vous-generique-tile"
       small
@@ -66,9 +66,29 @@ export const GenericAppointmentTile = ({
           ? `(GMT${timezoneOffset > 0 ? "+" : ""}${formatedOffset}) ${timezoneName}`
           : ""
       }
-      linkProps={{
-        href: `./appointments/${id}`,
+      linkProps={{ href: `./appointments/${id}` }}
+    />
+  ) : (
+    <Tile
+      data-test="rendez-vous-generique-tile"
+      small
+      orientation="horizontal"
+      classes={{
+        content: "pb-0",
       }}
+      start={
+        <Tag small>
+          {type === "RENDEZ_VOUS_PEDAGOGIQUE"
+            ? "Rendez-vous pédagogique"
+            : "Rendez-vous de suivi"}
+        </Tag>
+      }
+      title={`${formatIso8601Date(date)} - ${formatIso8601Time(date)}`}
+      desc={
+        showTimezone
+          ? `(GMT${timezoneOffset > 0 ? "+" : ""}${formatedOffset}) ${timezoneName}`
+          : ""
+      }
     />
   );
 };
