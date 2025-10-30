@@ -115,6 +115,14 @@ export const updateCandidate = async ({
           },
         },
       },
+      dossierDeValidation: {
+        where: {
+          isActive: true,
+        },
+        select: {
+          dossierDeValidationFileId: true,
+        },
+      },
     },
   });
 
@@ -140,9 +148,11 @@ export const updateCandidate = async ({
   });
 
   await Promise.all(
+    // On régénère le pdf du dossier de faisabilité pour toutes les candidatures sans dossier de validation
     candidacies.map(async (c) => {
       if (
-        c.Feasibility?.[0]?.dematerializedFeasibilityFile?.feasibilityFileId
+        c.Feasibility?.[0]?.dematerializedFeasibilityFile?.feasibilityFileId &&
+        !c.dossierDeValidation?.[0]?.dossierDeValidationFileId
       ) {
         logger.info(`Updating feasibility PDF file for candidacy ${c.id}...`);
         try {
