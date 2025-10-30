@@ -29,16 +29,13 @@ export const PrerequisitesSection = ({
       inProgress: prerequisites?.filter(
         (prerequisite) => prerequisite?.state === "IN_PROGRESS",
       ),
-      recommended: prerequisites?.filter(
-        (prerequisite) => prerequisite?.state === "RECOMMENDED",
-      ),
     };
   }, [prerequisites]);
   const noPrerequisites = !prerequisites?.length;
 
   return (
     <EnhancedSectionCard
-      title="Prérequis obligatoires"
+      title="Pré-requis obligatoires"
       titleIconClass="fr-icon-checkbox-circle-fill"
       status={prerequisitesPartComplete ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/prerequisites`}
@@ -67,15 +64,6 @@ export const PrerequisitesSection = ({
               <Accordion label="En cours">
                 <ul>
                   {prequisitesByStatus?.inProgress?.map((prerequisite) => (
-                    <li key={prerequisite?.id}>{prerequisite?.label}</li>
-                  ))}
-                </ul>
-              </Accordion>
-            )}
-            {!!prequisitesByStatus?.recommended?.length && (
-              <Accordion label="Préconisés">
-                <ul>
-                  {prequisitesByStatus?.recommended?.map((prerequisite) => (
                     <li key={prerequisite?.id}>{prerequisite?.label}</li>
                   ))}
                 </ul>
