@@ -74,7 +74,7 @@ export const PrerequisitesSection = ({
       {disabled && (
         <SmallNotice>
           Vous devez d'abord détailler la certification visée avant d'intégrer
-          les prérequis.
+          les pré-requis.
         </SmallNotice>
       )}
     </EnhancedSectionCard>
