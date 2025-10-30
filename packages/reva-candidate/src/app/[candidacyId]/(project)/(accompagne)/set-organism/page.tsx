@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { EmptyState } from "@/components/empty-state/EmptyState";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
-import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/OrganismCard";
+import { OldOrganismCard } from "@/components/legacy/organisms/OldOrganismCard/OldOrganismCard";
 import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/OrganismFilters";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 import { graphqlErrorToast } from "@/components/toast/toast";
@@ -279,7 +279,7 @@ const Organisms: React.FC<PropsOrganisms> = ({
           .filter((_, index) => indexPredicate(index))
           .map((organism) => {
             return (
-              <OrganismCard
+              <OldOrganismCard
                 key={organism.id}
                 isSelected={selectedOrganismId == organism.id}
                 organism={organism}

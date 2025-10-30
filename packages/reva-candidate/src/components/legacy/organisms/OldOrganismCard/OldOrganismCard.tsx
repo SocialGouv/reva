@@ -28,7 +28,7 @@ const FermePourAbsenceOuCongesButton = () => (
   </Button>
 );
 
-export const OrganismCard = ({
+export const OldOrganismCard = ({
   organism,
   onClick,
   isSelected,
