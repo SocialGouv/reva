@@ -108,13 +108,13 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays blocs de competences", async ({ page }) => {
-    const certificationSection = page.locator("section", {
+    const experiencesSection = page.locator("section", {
       has: page.getByRole("heading", {
-        name: "Certification visée",
+        name: "Expériences professionnelles",
       }),
     });
 
-    const blocsSection = certificationSection.locator("section", {
+    const blocsSection = experiencesSection.locator("section", {
       has: page.getByRole("heading", {
         name: "Blocs de compétences",
       }),

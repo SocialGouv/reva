@@ -85,23 +85,25 @@ export function DffSummary({
         }
         eligibilityValidUntil={eligibilityValidUntil as Date | null}
       />
-      <CandidateSection candidate={candidacy.candidate as Candidate} />
       <CertificationSection
         option={option}
         firstForeignLanguage={firstForeignLanguage}
         secondForeignLanguage={secondForeignLanguage}
         certification={certification as Certification}
         prerequisites={prerequisites as Prerequisite[]}
+        isCertificationPartial={!!candidacy?.isCertificationPartial}
+      />
+      <CandidateSection candidate={candidacy.candidate as Candidate} />
+      <ExperiencesSection
+        experiences={experiences}
         blocsDeCompetences={
           blocsDeCompetences as DffCertificationCompetenceBloc[]
         }
         certificationCompetenceDetails={
           certificationCompetenceDetails as CertificationCompetenceDetails[]
         }
-        isCertificationPartial={!!candidacy?.isCertificationPartial}
         isEligibilityRequirementPartial={isEligibilityRequirementPartial}
       />
-      <ExperiencesSection experiences={experiences} />
       <ParcoursSection
         basicSkills={basicSkills}
         mandatoryTrainings={mandatoryTrainings}

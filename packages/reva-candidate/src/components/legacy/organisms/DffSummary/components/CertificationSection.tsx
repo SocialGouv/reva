@@ -2,14 +2,7 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useMemo } from "react";
 
-import {
-  Certification,
-  CertificationCompetenceDetails,
-  DffCertificationCompetenceBloc,
-  Prerequisite,
-} from "@/graphql/generated/graphql";
-
-import { CertificationCompetenceAccordion } from "./CertificationCompetenceAccordion";
+import { Certification, Prerequisite } from "@/graphql/generated/graphql";
 
 export default function CertificationSection({
   option,
@@ -17,20 +10,14 @@ export default function CertificationSection({
   secondForeignLanguage,
   certification,
   prerequisites,
-  blocsDeCompetences,
-  certificationCompetenceDetails,
   isCertificationPartial,
-  isEligibilityRequirementPartial,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
   secondForeignLanguage?: string | null;
   certification?: Certification | null;
   prerequisites?: Prerequisite[] | null;
-  blocsDeCompetences?: DffCertificationCompetenceBloc[] | null;
-  certificationCompetenceDetails: CertificationCompetenceDetails[];
   isCertificationPartial: boolean;
-  isEligibilityRequirementPartial: boolean;
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -107,23 +94,6 @@ export default function CertificationSection({
       </CallOut>
 
       <section className="mt-4">
-        <h5 className="mb-0">Blocs de compétences</h5>
-
-        <div className="mt-4 mb-6">
-          {blocsDeCompetences?.map((bc) => (
-            <CertificationCompetenceAccordion
-              key={bc.certificationCompetenceBloc.id}
-              defaultExpanded
-              competenceBloc={bc.certificationCompetenceBloc}
-              competenceBlocText={bc.text}
-              competenceDetails={certificationCompetenceDetails}
-              hideAccordionContent={isEligibilityRequirementPartial}
-            />
-          ))}
-        </div>
-      </section>
-
-      <section>
         <h5 className="mb-0">Prérequis obligatoires</h5>
         <div className="mt-4">
           {noPrerequisites && (
