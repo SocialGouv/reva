@@ -181,6 +181,7 @@ const getRandomActiveOrganismForCertification = async ({
                  o.modalite_accompagnement_renseignee_et_valide as "modaliteAccompagnementRenseigneeEtValide",
                  o.maison_mere_aap_id as "maisonMereAAPId",
                  o.ferme_pour_absence_ou_conges as "fermePourAbsenceOuConges",
+                 o.conforme_norme_accessibilite as "conformeNormesAccessibilite",
                  ao.organism_id as "organismId"
             ${fromClause}
             ${whereClause}
@@ -289,6 +290,7 @@ const getAAPsWithZipCode = async ({
                  o.modalite_accompagnement_renseignee_et_valide as "modaliteAccompagnementRenseigneeEtValide",
                  o.maison_mere_aap_id as "maisonMereAAPId",
                  o.ferme_pour_absence_ou_conges as "fermePourAbsenceOuConges",
+                 o.conforme_norme_accessibilite as "conformeNormesAccessibilite",
                  ao.organism_id as "organismId",
                   (earth_distance(ll_to_earth(${latitude}, ${longitude}), o.ll_to_earth::earth) / 1000) AS "distanceKm"
       FROM organism o
