@@ -63,11 +63,11 @@ const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
   { name: "prerequisites", title: "Prérequis obligatoires" },
   { name: "candidate", title: "M. Dupont Jean" },
   { name: "educationLevel", title: "Niveau de formation" },
+  { name: "goals", title: "Objectifs poursuivis par le candidat" },
   { name: "experiences", title: "Expériences professionnelles" },
   { name: "competenceBloc", title: "Blocs de compétences" },
   { name: "trainingPlan", title: "Parcours envisagé" },
   { name: "basicSkills", title: "Savoir de base" },
-  { name: "goals", title: "Objectifs poursuivis par le candidat" },
   { name: "decision", title: "Avis de faisabilité" },
 ];
 

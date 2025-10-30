@@ -181,6 +181,12 @@ export const generateFeasibilityFileByCandidacyId = async (
       addCandidate(doc, { candidate });
     }
 
+    const { goals } = candidacy;
+
+    if (goals.length > 0) {
+      addGoals(doc, { goals: goals.map(({ goal }) => goal) });
+    }
+
     const { experiences } = candidacy;
 
     if (experiences.length > 0) {
@@ -220,12 +226,6 @@ export const generateFeasibilityFileByCandidacyId = async (
       individualHourCount,
       collectiveHourCount,
     });
-
-    const { goals } = candidacy;
-
-    if (goals.length > 0) {
-      addGoals(doc, { goals: goals.map(({ goal }) => goal) });
-    }
 
     if (dematerializedFeasibilityFile.aapDecision) {
       addDecision(doc, {
