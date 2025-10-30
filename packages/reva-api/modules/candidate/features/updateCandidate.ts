@@ -102,25 +102,19 @@ export const updateCandidate = async ({
 
   const candidacies = await prismaClient.candidacy.findMany({
     where: { candidateId: id },
-    include: {
+    select: {
+      id: true,
       Feasibility: {
         where: {
           isActive: true,
         },
-        include: {
+        select: {
+          feasibilityFileSentAt: true,
           dematerializedFeasibilityFile: {
             select: {
               feasibilityFileId: true,
             },
           },
-        },
-      },
-      dossierDeValidation: {
-        where: {
-          isActive: true,
-        },
-        select: {
-          dossierDeValidationFileId: true,
         },
       },
     },
@@ -148,11 +142,11 @@ export const updateCandidate = async ({
   });
 
   await Promise.all(
-    // On régénère le pdf du dossier de faisabilité pour toutes les candidatures sans dossier de validation
+    // On régénère le pdf du dossier de faisabilité de toutes les candidatures pour lesquelles le DF n'a pas été envoyé
     candidacies.map(async (c) => {
       if (
         c.Feasibility?.[0]?.dematerializedFeasibilityFile?.feasibilityFileId &&
-        !c.dossierDeValidation?.[0]?.dossierDeValidationFileId
+        !c.Feasibility?.[0]?.feasibilityFileSentAt
       ) {
         logger.info(`Updating feasibility PDF file for candidacy ${c.id}...`);
         try {
