@@ -9,10 +9,12 @@ import { formatIso8601Time } from "@/utils/formatIso8601Time";
 import { AppointmentType } from "@/graphql/generated/graphql";
 
 export const GenericAppointmentTile = ({
+  id,
   date,
   type,
   showTimezone = false,
 }: {
+  id: string;
   date: string;
   type: AppointmentType;
   showTimezone?: boolean;
@@ -64,6 +66,9 @@ export const GenericAppointmentTile = ({
           ? `(GMT${timezoneOffset > 0 ? "+" : ""}${formatedOffset}) ${timezoneName}`
           : ""
       }
+      linkProps={{
+        href: `./appointments/${id}`,
+      }}
     />
   );
 };

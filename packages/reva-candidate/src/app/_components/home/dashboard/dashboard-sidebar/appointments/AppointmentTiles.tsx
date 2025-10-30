@@ -56,6 +56,7 @@ export const AppointmentTiles = ({
       >
         {candidacy.appointments?.rows?.map((appointment) => (
           <GenericAppointmentTile
+            id={appointment.id}
             key={appointment.id}
             date={appointment.date}
             type={appointment.type}
