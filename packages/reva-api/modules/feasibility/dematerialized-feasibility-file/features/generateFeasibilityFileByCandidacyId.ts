@@ -24,6 +24,12 @@ import PDFDocument from "pdfkit";
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { prismaClient } from "@/prisma/client";
 
+type CompetenceBloc = DFFCertificationCompetenceBloc & {
+  certificationCompetenceBloc: CertificationCompetenceBloc & {
+    competences: CertificationCompetence[];
+  };
+};
+
 export const generateFeasibilityFileByCandidacyId = async (
   candidacyId: string,
 ): Promise<Buffer | undefined> => {
@@ -165,12 +171,6 @@ export const generateFeasibilityFileByCandidacyId = async (
       );
     }
 
-    const { candidate } = candidacy;
-
-    if (candidate) {
-      addCandidate(doc, { candidate });
-    }
-
     const { certification } = candidacy;
 
     if (certification) {
@@ -181,11 +181,19 @@ export const generateFeasibilityFileByCandidacyId = async (
       });
     }
 
+    const { candidate } = candidacy;
+
+    if (candidate) {
+      addCandidate(doc, { candidate });
+    }
+
     const { experiences } = candidacy;
 
     if (experiences.length > 0) {
       addExperiences(doc, { experiences });
     }
+
+    addCompetenciesBlocs(doc, { dematerializedFeasibilityFile });
 
     const {
       basicSkills,
@@ -716,148 +724,6 @@ const addCertification = (
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
     .fontSize(14)
     .fillColor("#161616")
-    .text("Blocs de compétences", doc.x, doc.y + 20, { align: "left" });
-
-  const competenceBlocs =
-    dematerializedFeasibilityFile.dffCertificationCompetenceBlocs;
-
-  for (let indexBloc = 0; indexBloc < competenceBlocs.length; indexBloc++) {
-    const competenceBloc = competenceBlocs[indexBloc];
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Medium.otf")
-      .fontSize(10)
-      .table({
-        position: { x: doc.x, y: doc.y + 20 },
-        data: [
-          [
-            {
-              border: 0,
-              backgroundColor: "#e3e3fd",
-              textColor: "#000091",
-              padding: "16px 24px",
-              text: `${competenceBloc.certificationCompetenceBloc.code} - ${competenceBloc.certificationCompetenceBloc.label}`,
-            },
-          ],
-        ],
-      });
-
-    const competences = competenceBloc.certificationCompetenceBloc.competences;
-
-    for (
-      let indexCompetence = 0;
-      indexCompetence < competences.length;
-      indexCompetence++
-    ) {
-      const competence = competences[indexCompetence];
-
-      const state =
-        dematerializedFeasibilityFile.dffCertificationCompetenceDetails.find(
-          (detail) => detail.certificationCompetenceId == competence.id,
-        )?.state || "TO_COMPLETE";
-
-      if (state == "YES") {
-        doc
-          .font("assets/fonts/Marianne/Marianne-Bold.otf")
-          .fontSize(10)
-          .table({
-            position: { x: doc.x, y: doc.y + 20 },
-            columnStyles: [30],
-            data: [
-              [
-                {
-                  border: 0,
-                  backgroundColor: "#b8fec9",
-                  textColor: "#18753c",
-                  text: "OUI",
-                  align: "center",
-                },
-              ],
-            ],
-          });
-      } else if (state == "NO") {
-        doc
-          .font("assets/fonts/Marianne/Marianne-Bold.otf")
-          .fontSize(10)
-          .table({
-            position: { x: doc.x, y: doc.y + 20 },
-            columnStyles: [36],
-            data: [
-              [
-                {
-                  border: 0,
-                  backgroundColor: "#ffe9e9",
-                  textColor: "#ce0500",
-                  text: "NON",
-                  align: "center",
-                },
-              ],
-            ],
-          });
-      } else if (state == "PARTIALLY") {
-        doc
-          .font("assets/fonts/Marianne/Marianne-Bold.otf")
-          .fontSize(10)
-          .table({
-            position: { x: doc.x, y: doc.y + 20 },
-            columnStyles: [92],
-            data: [
-              [
-                {
-                  border: 0,
-                  backgroundColor: "#feebd0",
-                  textColor: "#695240",
-                  text: "PARTIELLEMENT",
-                  align: "center",
-                },
-              ],
-            ],
-          });
-      } else if (state == "TO_COMPLETE") {
-        doc
-          .font("assets/fonts/Marianne/Marianne-Bold.otf")
-          .fontSize(10)
-          .table({
-            position: { x: doc.x, y: doc.y + 20 },
-            columnStyles: [30],
-            data: [
-              [
-                {
-                  border: 0,
-                  backgroundColor: "#ffe9e6",
-                  textColor: "#b34000",
-                  text: "À COMPLÉTER",
-                  align: "center",
-                },
-              ],
-            ],
-          });
-      }
-
-      doc
-        .font("assets/fonts/Marianne/Marianne-Bold.otf")
-        .fontSize(10)
-        .fillColor("#161616")
-        .text(`${competence.label.replace(/(\r\n|\n|\r)/gm, "")}`, {
-          align: "left",
-        });
-    }
-
-    if (competenceBloc.text) {
-      doc
-        .font("assets/fonts/Marianne/Marianne-Regular.otf")
-        .fontSize(10)
-        .fillColor("#3a3a3a")
-        .text(`${competenceBloc.text}`, doc.x, doc.y + 20, {
-          align: "left",
-        });
-    }
-  }
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(14)
-    .fillColor("#161616")
     .text("Prérequis obligatoires", doc.x, doc.y + 20, { align: "left" });
 
   if (dematerializedFeasibilityFile.prerequisites.length == 0) {
@@ -1030,6 +896,160 @@ const addExperiences = (
       .text(`${experience?.description}`, {
         align: "left",
       });
+  }
+};
+
+const addCompetenciesBlocs = (
+  doc: PDFKit.PDFDocument,
+  params: {
+    dematerializedFeasibilityFile: DematerializedFeasibilityFile & {
+      dffCertificationCompetenceBlocs: CompetenceBloc[];
+      dffCertificationCompetenceDetails: DFFCertificationCompetenceDetails[];
+    };
+  },
+) => {
+  const { dematerializedFeasibilityFile } = params;
+
+  doc
+    .font("assets/fonts/Marianne/Marianne-Bold.otf")
+    .fontSize(14)
+    .fillColor("#161616")
+    .text("Blocs de compétences", doc.x, doc.y + 20, { align: "left" });
+
+  const competenceBlocs =
+    dematerializedFeasibilityFile.dffCertificationCompetenceBlocs;
+
+  for (let indexBloc = 0; indexBloc < competenceBlocs.length; indexBloc++) {
+    const competenceBloc = competenceBlocs[indexBloc];
+
+    doc
+      .font("assets/fonts/Marianne/Marianne-Medium.otf")
+      .fontSize(10)
+      .table({
+        position: { x: doc.x, y: doc.y + 20 },
+        data: [
+          [
+            {
+              border: 0,
+              backgroundColor: "#e3e3fd",
+              textColor: "#000091",
+              padding: "16px 24px",
+              text: `${competenceBloc.certificationCompetenceBloc.code} - ${competenceBloc.certificationCompetenceBloc.label}`,
+            },
+          ],
+        ],
+      });
+
+    const competences = competenceBloc.certificationCompetenceBloc.competences;
+
+    for (
+      let indexCompetence = 0;
+      indexCompetence < competences.length;
+      indexCompetence++
+    ) {
+      const competence = competences[indexCompetence];
+
+      const state =
+        dematerializedFeasibilityFile.dffCertificationCompetenceDetails.find(
+          (detail) => detail.certificationCompetenceId == competence.id,
+        )?.state || "TO_COMPLETE";
+
+      if (state == "YES") {
+        doc
+          .font("assets/fonts/Marianne/Marianne-Bold.otf")
+          .fontSize(10)
+          .table({
+            position: { x: doc.x, y: doc.y + 20 },
+            columnStyles: [30],
+            data: [
+              [
+                {
+                  border: 0,
+                  backgroundColor: "#b8fec9",
+                  textColor: "#18753c",
+                  text: "OUI",
+                  align: "center",
+                },
+              ],
+            ],
+          });
+      } else if (state == "NO") {
+        doc
+          .font("assets/fonts/Marianne/Marianne-Bold.otf")
+          .fontSize(10)
+          .table({
+            position: { x: doc.x, y: doc.y + 20 },
+            columnStyles: [36],
+            data: [
+              [
+                {
+                  border: 0,
+                  backgroundColor: "#ffe9e9",
+                  textColor: "#ce0500",
+                  text: "NON",
+                  align: "center",
+                },
+              ],
+            ],
+          });
+      } else if (state == "PARTIALLY") {
+        doc
+          .font("assets/fonts/Marianne/Marianne-Bold.otf")
+          .fontSize(10)
+          .table({
+            position: { x: doc.x, y: doc.y + 20 },
+            columnStyles: [92],
+            data: [
+              [
+                {
+                  border: 0,
+                  backgroundColor: "#feebd0",
+                  textColor: "#695240",
+                  text: "PARTIELLEMENT",
+                  align: "center",
+                },
+              ],
+            ],
+          });
+      } else if (state == "TO_COMPLETE") {
+        doc
+          .font("assets/fonts/Marianne/Marianne-Bold.otf")
+          .fontSize(10)
+          .table({
+            position: { x: doc.x, y: doc.y + 20 },
+            columnStyles: [30],
+            data: [
+              [
+                {
+                  border: 0,
+                  backgroundColor: "#ffe9e6",
+                  textColor: "#b34000",
+                  text: "À COMPLÉTER",
+                  align: "center",
+                },
+              ],
+            ],
+          });
+      }
+
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(10)
+        .fillColor("#161616")
+        .text(`${competence.label.replace(/(\r\n|\n|\r)/gm, "")}`, {
+          align: "left",
+        });
+    }
+
+    if (competenceBloc.text) {
+      doc
+        .font("assets/fonts/Marianne/Marianne-Regular.otf")
+        .fontSize(10)
+        .fillColor("#3a3a3a")
+        .text(`${competenceBloc.text}`, doc.x, doc.y + 20, {
+          align: "left",
+        });
+    }
   }
 };
 

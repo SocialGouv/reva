@@ -59,12 +59,12 @@ const getCanonicalLines = (value: string) =>
 
 const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
   { name: "admissibility", title: "Dossier de faisabilité" },
+  { name: "certification", title: "Certification visée" },
+  { name: "prerequisites", title: "Prérequis obligatoires" },
   { name: "candidate", title: "M. Dupont Jean" },
   { name: "educationLevel", title: "Niveau de formation" },
-  { name: "certification", title: "Certification visée" },
-  { name: "competenceBloc", title: "Blocs de compétences" },
-  { name: "prerequisites", title: "Prérequis obligatoires" },
   { name: "experiences", title: "Expériences professionnelles" },
+  { name: "competenceBloc", title: "Blocs de compétences" },
   { name: "trainingPlan", title: "Parcours envisagé" },
   { name: "basicSkills", title: "Savoir de base" },
   { name: "goals", title: "Objectifs poursuivis par le candidat" },
