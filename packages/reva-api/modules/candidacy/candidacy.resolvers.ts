@@ -34,6 +34,7 @@ import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { canAccessCandidacy } from "./features/canAccessCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
+import { deleteExperienceFromCandidacy } from "./features/deleteExperienceFromCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getCandidacies } from "./features/getCandicacies";
 import { getCandidacy } from "./features/getCandidacy";
@@ -260,6 +261,19 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         experienceId: payload.experienceId,
         experience: payload.experience,
+        userKeycloakId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
+
+    candidacy_deleteExperience: async (
+      _: unknown,
+      payload: any,
+      context: GraphqlContext,
+    ) =>
+      deleteExperienceFromCandidacy({
+        candidacyId: payload.candidacyId,
+        experienceId: payload.experienceId,
         userKeycloakId: context.auth.userInfo?.sub,
         userEmail: context.auth.userInfo?.email,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],

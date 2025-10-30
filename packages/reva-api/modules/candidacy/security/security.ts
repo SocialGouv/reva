@@ -39,6 +39,7 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateGoals": isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_updateExperience": isOwnerOrCanManageCandidacy,
   "Mutation.candidacy_addExperience": isOwnerOrCanManageCandidacy,
+  "Mutation.candidacy_deleteExperience": isOwnerOrCanManageCandidacy,
   "Mutation.candidacy_selectOrganism": isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_selectOrganismAsAdmin": isAdmin,
   "Mutation.candidacy_submitCandidacy": isAdminOrOwnerOfCandidacy,

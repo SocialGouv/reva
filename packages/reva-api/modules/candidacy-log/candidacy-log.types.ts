@@ -20,6 +20,7 @@ export type CandidacyLogEventTypeAndDetails =
         | "CANDIDACY_SUBMITTED"
         | "EXPERIENCE_ADDED"
         | "EXPERIENCE_UPDATED"
+        | "EXPERIENCE_DELETED"
         | "GOALS_UPDATED"
         | "CONTACT_INFO_UPDATED"
         | "CANDIDACY_DELETED"

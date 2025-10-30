@@ -60,6 +60,9 @@ export const getCandidacyLogMessage = ({
     case "EXPERIENCE_UPDATED":
       return log("Expérience modifiée");
 
+    case "EXPERIENCE_DELETED":
+      return log("Expérience supprimée");
+
     case "GOALS_UPDATED":
       return log("Objectifs saisis");
 

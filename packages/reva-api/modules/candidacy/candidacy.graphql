@@ -319,6 +319,7 @@ type Mutation {
     experienceId: ID!
     experience: ExperienceInput
   ): Experience
+  candidacy_deleteExperience(candidacyId: ID!, experienceId: ID!): Boolean
   candidacy_updateGoals(candidacyId: ID!, goals: [CandidateGoalInput!]!): Int!
   candidacy_updateContact(
     candidateId: ID!
