@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, parseISO, toDate } from "date-fns";
@@ -43,6 +45,11 @@ const schema = z.object({
 
 type ExperienceForm = z.infer<typeof schema>;
 
+const deleteConfirmationModal = createModal({
+  id: "delete-experience-confirmation-modal",
+  isOpenedByDefault: false,
+});
+
 export default function UpdateExperience() {
   const router = useRouter();
   const params = useParams<{ experienceId: string }>();
@@ -51,6 +58,7 @@ export default function UpdateExperience() {
 
   const {
     updateExperience,
+    deleteExperience,
     canEditCandidacy,
     candidacy,
     candidacyAlreadySubmitted,
@@ -105,6 +113,21 @@ export default function UpdateExperience() {
           duration: data.duration,
           description: data.description || "",
         },
+      });
+      router.push(backUrl);
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!candidacy?.id) {
+      return;
+    }
+    try {
+      await deleteExperience.mutateAsync({
+        candidacyId: candidacy.id,
+        experienceId,
       });
       router.push(backUrl);
     } catch (error) {
@@ -184,6 +207,24 @@ export default function UpdateExperience() {
             disabled={inputShouldBeDisabled}
           />
         </fieldset>
+
+        <hr className="mt-4 pb-4" />
+
+        {canEditCandidacy && !candidacyAlreadySubmitted && (
+          <Button
+            priority="tertiary no outline"
+            size="small"
+            iconId="fr-icon-delete-line"
+            onClick={() => deleteConfirmationModal.open()}
+            disabled={deleteExperience.isPending}
+            nativeButtonProps={{
+              type: "button",
+            }}
+          >
+            Supprimer cette expérience
+          </Button>
+        )}
+
         <FormButtons
           backUrl={backUrl}
           formState={{
@@ -193,6 +234,37 @@ export default function UpdateExperience() {
           }}
         />
       </form>
+
+      <deleteConfirmationModal.Component
+        title={
+          <span className="ml-2">Voulez-vous supprimer cette expérience ?</span>
+        }
+        iconId="fr-icon-warning-fill"
+        buttons={[
+          {
+            priority: "secondary",
+            children: "Annuler",
+            nativeButtonProps: {
+              "aria-label": "Annuler la suppression",
+            },
+          },
+          {
+            priority: "primary",
+            onClick: handleDelete,
+            children: "Supprimer",
+            disabled: deleteExperience.isPending,
+            doClosesModal: false,
+            nativeButtonProps: {
+              "aria-label": "Confirmer la suppression de l'expérience",
+            },
+          },
+        ]}
+      >
+        <p>
+          Attention, cette action est irréversible. Une fois supprimée, vous ne
+          pourrez pas revenir en arrière.
+        </p>
+      </deleteConfirmationModal.Component>
     </PageLayout>
   );
 }

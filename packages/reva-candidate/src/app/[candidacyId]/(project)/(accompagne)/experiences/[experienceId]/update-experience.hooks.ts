@@ -49,6 +49,15 @@ const UPDATE_EXPERIENCE = graphql(`
   }
 `);
 
+const DELETE_EXPERIENCE = graphql(`
+  mutation delete_experience($candidacyId: ID!, $experienceId: ID!) {
+    candidacy_deleteExperience(
+      candidacyId: $candidacyId
+      experienceId: $experienceId
+    )
+  }
+`);
+
 export const useUpdateExperience = () => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
@@ -88,6 +97,26 @@ export const useUpdateExperience = () => {
     },
   });
 
+  const deleteExperience = useMutation({
+    mutationKey: ["candidacy_deleteExperience"],
+    mutationFn: ({
+      candidacyId,
+      experienceId,
+    }: {
+      candidacyId: string;
+      experienceId: string;
+    }) =>
+      graphqlClient.request(DELETE_EXPERIENCE, {
+        candidacyId,
+        experienceId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["candidacy"],
+      });
+    },
+  });
+
   const candidacy = data?.getCandidacyById;
 
   const canEditCandidacy = candidateCanEditCandidacy({
@@ -100,6 +129,7 @@ export const useUpdateExperience = () => {
 
   return {
     updateExperience,
+    deleteExperience,
     canEditCandidacy,
     candidacy,
     candidacyAlreadySubmitted,
