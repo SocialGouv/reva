@@ -31,10 +31,8 @@ const CandidateInformationForm = ({
   candidate,
   countries,
   departments,
-  candidacyAlreadySubmitted,
 }: {
   candidate: CandidateUseProfile;
-  candidacyAlreadySubmitted: boolean;
   countries?: Countries;
   departments?: Departments;
 }) => {
@@ -55,8 +53,6 @@ const CandidateInformationForm = ({
     { label: "Ne se prononce pas", value: "undisclosed" },
   ];
 
-  const inputShouldBeDisabled = candidacyAlreadySubmitted;
-
   const {
     register,
     watch,
@@ -66,7 +62,7 @@ const CandidateInformationForm = ({
     clearErrors,
     handleSubmit,
   } = useForm<FormCandidateInformationData>({
-    resolver: zodResolver(candidateInformationSchema(inputShouldBeDisabled)),
+    resolver: zodResolver(candidateInformationSchema()),
     defaultValues: {
       firstname: candidate?.firstname,
       lastname: candidate?.lastname,
@@ -214,7 +210,6 @@ const CandidateInformationForm = ({
           <Select
             label="Civilité"
             className="w-full mb-0"
-            disabled={inputShouldBeDisabled}
             nativeSelectProps={register("gender")}
             state={errors.gender ? "error" : "default"}
             stateRelatedMessage={errors.gender?.message}
@@ -235,7 +230,6 @@ const CandidateInformationForm = ({
           <Input
             label="Nom de naissance"
             className="w-full mb-0"
-            disabled={inputShouldBeDisabled}
             nativeInputProps={register("lastname")}
             state={errors.lastname ? "error" : "default"}
             stateRelatedMessage={errors.lastname?.message}
@@ -244,7 +238,6 @@ const CandidateInformationForm = ({
           <Input
             label="Nom d'usage (optionnel)"
             className="w-full mb-0"
-            disabled={inputShouldBeDisabled}
             nativeInputProps={register("givenName")}
             data-testid="given-name-input"
           />
@@ -253,7 +246,6 @@ const CandidateInformationForm = ({
           <Input
             label="Prénom principal"
             className="w-full mb-0"
-            disabled={inputShouldBeDisabled}
             nativeInputProps={register("firstname")}
             state={errors.firstname ? "error" : "default"}
             stateRelatedMessage={errors.firstname?.message}
@@ -262,14 +254,12 @@ const CandidateInformationForm = ({
           <Input
             label="Prénom 2 (optionnel)"
             className="w-full mb-0"
-            disabled={inputShouldBeDisabled}
             nativeInputProps={register("firstname2")}
             data-testid="firstname2-input"
           />
           <Input
             label="Prénom 3 (optionnel)"
             className="w-full mb-0"
-            disabled={inputShouldBeDisabled}
             nativeInputProps={register("firstname3")}
             data-testid="firstname3-input"
           />
@@ -278,7 +268,6 @@ const CandidateInformationForm = ({
           <Input
             label="Date de naissance"
             className="w-full mb-0"
-            disabled={inputShouldBeDisabled}
             nativeInputProps={{
               ...register("birthdate"),
               type: "date",
@@ -290,7 +279,6 @@ const CandidateInformationForm = ({
           <Select
             className="w-full mb-0"
             label="Pays de naissance"
-            disabled={inputShouldBeDisabled}
             nativeSelectProps={register("country")}
             state={errors.country ? "error" : "default"}
             stateRelatedMessage={errors.country?.message}
@@ -305,7 +293,7 @@ const CandidateInformationForm = ({
           <Select
             className="w-full mb-0"
             label="Département de naissance"
-            disabled={disabledDepartment || inputShouldBeDisabled}
+            disabled={disabledDepartment}
             nativeSelectProps={register("birthDepartment")}
             state={errors.birthDepartment ? "error" : "default"}
             stateRelatedMessage={errors.birthDepartment?.message}
@@ -328,7 +316,6 @@ const CandidateInformationForm = ({
             state={errors.birthCity ? "error" : "default"}
             stateRelatedMessage={errors.birthCity?.message}
             data-testid="birth-city-input"
-            disabled={inputShouldBeDisabled}
           />
         </div>
         <div className="flex gap-8">
@@ -339,7 +326,6 @@ const CandidateInformationForm = ({
             state={errors.nationality ? "error" : "default"}
             stateRelatedMessage={errors.nationality?.message}
             data-testid="nationality-input"
-            disabled={inputShouldBeDisabled}
           />
         </div>
         <h2 className="mb-0 md:mt-4 text-xl font-bold">

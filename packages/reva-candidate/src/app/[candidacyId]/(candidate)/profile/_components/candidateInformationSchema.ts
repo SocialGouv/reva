@@ -11,7 +11,7 @@ import {
   sanitizedZipCode,
 } from "@/utils/input-sanitization";
 
-export const candidateInformationSchema = (inputShouldBeDisabled: boolean) =>
+export const candidateInformationSchema = () =>
   z
     .object({
       gender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
@@ -78,11 +78,7 @@ export const candidateInformationSchema = (inputShouldBeDisabled: boolean) =>
         });
       }
 
-      if (
-        data.countryIsFrance &&
-        !data.birthDepartment?.length &&
-        !inputShouldBeDisabled
-      ) {
+      if (data.countryIsFrance && !data.birthDepartment?.length) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Merci de remplir ce champ",

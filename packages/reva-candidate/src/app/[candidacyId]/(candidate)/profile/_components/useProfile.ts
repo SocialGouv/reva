@@ -10,7 +10,6 @@ const getCandidacyByIdWithCandidateForProfilePage = graphql(`
   query getCandidacyByIdWithCandidateForProfilePage($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
-      status
       candidate {
         id
         firstname
@@ -83,18 +82,14 @@ export const useProfile = () => {
     queryFn: () => graphqlClient.request(getDepartments),
   });
 
-  const candidacy = getCandidateData?.getCandidacyById;
   const candidate = getCandidateData?.getCandidacyById?.candidate;
   const countries = getCountriesData?.getCountries;
   const departments = getDepartmentsData?.getDepartments;
-
-  const candidacyAlreadySubmitted = candidacy?.status !== "PROJET";
 
   return {
     candidate,
     countries,
     departments,
-    candidacyAlreadySubmitted,
   };
 };
 
