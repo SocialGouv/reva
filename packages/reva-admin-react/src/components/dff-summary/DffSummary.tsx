@@ -134,6 +134,7 @@ export function DffSummary({
           isCertificationPartial={candidacy?.isCertificationPartial}
         />
         <CandidateSection candidate={candidacy?.candidate as Candidate} />
+        <GoalsSection goals={goals} />
         <ExperiencesSection
           experiences={experiences}
           blocsDeCompetences={blocsDeCompetences}
@@ -147,7 +148,6 @@ export function DffSummary({
           individualHourCount={individualHourCount}
           collectiveHourCount={collectiveHourCount}
         />
-        <GoalsSection goals={goals} />
         <DecisionSection
           decision={aapDecision}
           decisionComment={aapDecisionComment}

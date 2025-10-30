@@ -2,7 +2,7 @@ import { Goal } from "@/graphql/generated/graphql";
 
 export default function GoalsSection({ goals }: { goals: Goal[] }) {
   return (
-    <div>
+    <div className="mt-8">
       <div className="flex">
         <svg
           className="mr-2"
