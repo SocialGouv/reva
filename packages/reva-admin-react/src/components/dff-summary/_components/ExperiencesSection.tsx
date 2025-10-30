@@ -1,12 +1,24 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import { format } from "date-fns";
 
-import { Experience } from "@/graphql/generated/graphql";
+import {
+  CertificationCompetenceDetails,
+  DffCertificationCompetenceBloc,
+  Experience,
+} from "@/graphql/generated/graphql";
+
+import { CertificationCompetenceAccordion } from "./CertificationCompetenceAccordion";
 
 export default function ExperiencesSection({
   experiences,
+  blocsDeCompetences,
+  certificationCompetenceDetails,
+  isEligibilityRequirementPartial,
 }: {
   experiences: Experience[];
+  blocsDeCompetences: DffCertificationCompetenceBloc[];
+  certificationCompetenceDetails: CertificationCompetenceDetails[];
+  isEligibilityRequirementPartial: boolean;
 }) {
   const durationLabel = {
     betweenOneAndThreeYears: "entre 1 et 3 ans",
@@ -17,7 +29,7 @@ export default function ExperiencesSection({
     unknown: "inconnue",
   };
   return (
-    <div className="mb-8">
+    <div className="my-8">
       <div className="flex">
         <span className="fr-icon-briefcase-fill fr-icon--lg mr-2" />
         <h2 className="mb-0">Expériences professionnelles</h2>
@@ -36,6 +48,25 @@ export default function ExperiencesSection({
               <p>{experience?.description}</p>
             </Accordion>
           ))}
+        </div>
+      )}
+
+      {blocsDeCompetences.length > 0 && (
+        <div className="mt-8">
+          <h5 className="mb-0">Blocs de compétences</h5>
+
+          <div className="mt-4">
+            {blocsDeCompetences.map((bc) => (
+              <CertificationCompetenceAccordion
+                key={bc.certificationCompetenceBloc.id}
+                defaultExpanded
+                competenceBloc={bc.certificationCompetenceBloc}
+                competenceBlocText={bc.text}
+                competenceDetails={certificationCompetenceDetails}
+                hideAccordionContent={isEligibilityRequirementPartial}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -2,14 +2,7 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useMemo } from "react";
 
-import {
-  Certification,
-  CertificationCompetenceDetails,
-  DffCertificationCompetenceBloc,
-  Prerequisite,
-} from "@/graphql/generated/graphql";
-
-import { CertificationCompetenceAccordion } from "./CertificationCompetenceAccordion";
+import { Certification, Prerequisite } from "@/graphql/generated/graphql";
 
 export default function CertificationSection({
   option,
@@ -17,20 +10,14 @@ export default function CertificationSection({
   secondForeignLanguage,
   certification,
   prerequisites,
-  blocsDeCompetences,
-  certificationCompetenceDetails,
   isCertificationPartial,
-  isEligibilityRequirementPartial,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
   secondForeignLanguage?: string | null;
   certification?: Certification | null;
   prerequisites?: Prerequisite[] | null;
-  blocsDeCompetences: DffCertificationCompetenceBloc[];
-  certificationCompetenceDetails: CertificationCompetenceDetails[];
   isCertificationPartial?: boolean | null;
-  isEligibilityRequirementPartial: boolean;
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -86,21 +73,7 @@ export default function CertificationSection({
           : "La certification dans sa totalité"}
       </CallOut>
 
-      <h5 className="mb-0">Blocs de compétences</h5>
-
-      <div className="mb-8 mt-4">
-        {blocsDeCompetences.map((bc) => (
-          <CertificationCompetenceAccordion
-            key={bc.certificationCompetenceBloc.id}
-            defaultExpanded
-            competenceBloc={bc.certificationCompetenceBloc}
-            competenceBlocText={bc.text}
-            competenceDetails={certificationCompetenceDetails}
-            hideAccordionContent={isEligibilityRequirementPartial}
-          />
-        ))}
-      </div>
-      <h5 className="mb-0">Prérequis obligatoires</h5>
+      <h5 className="mb-0 mt-4">Prérequis obligatoires</h5>
       <div className="mb-8 mt-4">
         {noPrerequisites && (
           <p>

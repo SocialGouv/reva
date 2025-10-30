@@ -137,6 +137,16 @@ const AapFeasibilityPage = () => {
             certification={certification as Certification}
             isFeasibilityEditable={isFeasibilityEditable}
           />
+          <PrerequisitesSection
+            prerequisites={
+              dematerializedFeasibilityFile?.prerequisites as Prerequisite[]
+            }
+            prerequisitesPartComplete={
+              dematerializedFeasibilityFile?.prerequisitesPartComplete
+            }
+            disabled={!dematerializedFeasibilityFile?.certificationPartComplete}
+            isEditable={isFeasibilityEditable}
+          />
           <CompetenciesBlocksSection
             blocsDeCompetences={
               dematerializedFeasibilityFile?.blocsDeCompetences as DffCertificationCompetenceBloc[]
@@ -158,16 +168,6 @@ const AapFeasibilityPage = () => {
             }
             isEditable={isFeasibilityEditable}
             isEligibilityRequirementPartial={isEligibilityRequirementPartial}
-          />
-          <PrerequisitesSection
-            prerequisites={
-              dematerializedFeasibilityFile?.prerequisites as Prerequisite[]
-            }
-            prerequisitesPartComplete={
-              dematerializedFeasibilityFile?.prerequisitesPartComplete
-            }
-            disabled={!dematerializedFeasibilityFile?.certificationPartComplete}
-            isEditable={isFeasibilityEditable}
           />
           <DecisionSection
             aapDecision={
