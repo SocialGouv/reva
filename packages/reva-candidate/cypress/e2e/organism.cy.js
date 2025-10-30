@@ -62,10 +62,7 @@ context("Candidacy with certification selected", () => {
 
   it("list all available organisms", function () {
     cy.get('[data-test="project-organisms-organism-o1"]').within(() => {
-      cy.get('[data-test="project-organisms-organism-label"]').should(
-        "have.text",
-        "Architecte 1",
-      );
+      cy.get(".fr-card__title").should("have.text", "Architecte 1");
       cy.get('[data-test="project-organisms-organism-email"]').should(
         "have.text",
         "email@exemple.com",
@@ -79,10 +76,7 @@ context("Candidacy with certification selected", () => {
     });
 
     cy.get('[data-test="project-organisms-organism-o2"]').within(() => {
-      cy.get('[data-test="project-organisms-organism-label"]').should(
-        "have.text",
-        "Architecte 2",
-      );
+      cy.get(".fr-card__title").should("have.text", "Architecte 2");
       cy.get('[data-test="project-organisms-organism-email"]').should(
         "have.text",
         "email2@exemple.com",

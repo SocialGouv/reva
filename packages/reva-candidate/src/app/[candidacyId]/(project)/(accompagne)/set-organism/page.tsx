@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { EmptyState } from "@/components/empty-state/EmptyState";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
-import { OldOrganismCard } from "@/components/legacy/organisms/OldOrganismCard/OldOrganismCard";
+import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/OrganismCard";
 import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/OrganismFilters";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 import { graphqlErrorToast } from "@/components/toast/toast";
@@ -267,41 +267,20 @@ const Organisms: React.FC<PropsOrganisms> = ({
   submitOrganism,
   availableOrganisms = { rows: [], totalRows: 0 },
   selectedOrganismId,
-}) => {
-  const OrganismGroup = ({
-    indexPredicate,
-  }: {
-    indexPredicate: (index: number) => boolean;
-  }) => {
-    return (
-      <>
-        {availableOrganisms.rows
-          .filter((_, index) => indexPredicate(index))
-          .map((organism) => {
-            return (
-              <OldOrganismCard
-                key={organism.id}
-                isSelected={selectedOrganismId == organism.id}
-                organism={organism}
-                onClick={() => submitOrganism({ organismId: organism.id })}
-              />
-            );
-          })}
-      </>
-    );
-  };
-
-  return (
-    <div className="flex flex-row gap-4 max-w-3xl">
-      <div className="md:columns-1 w-[50%] space-y-4">
-        {<OrganismGroup indexPredicate={(i) => i % 2 === 0} />}
-      </div>
-      <div className="md:columns-1 w-[50%] space-y-4">
-        {<OrganismGroup indexPredicate={(i) => i % 2 === 1} />}
-      </div>
-    </div>
-  );
-};
+}) => (
+  <div className="flex flex-col gap-4">
+    {availableOrganisms.rows.map((organism) => {
+      return (
+        <OrganismCard
+          key={organism.id}
+          isSelected={selectedOrganismId == organism.id}
+          organism={organism}
+          onClick={() => submitOrganism({ organismId: organism.id })}
+        />
+      );
+    })}
+  </div>
+);
 
 const NoOrganisms = ({
   organismSearchText,

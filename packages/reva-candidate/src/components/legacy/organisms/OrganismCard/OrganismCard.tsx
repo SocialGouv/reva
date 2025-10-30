@@ -100,16 +100,28 @@ const Tags = ({
 }) => (
   <div className="flex gap-2">
     {remote && (
-      <Tag iconId="fr-icon-customer-service-fill" small>
+      <Tag
+        data-test="project-organisms-remote-tag"
+        iconId="fr-icon-customer-service-fill"
+        small
+      >
         À distance
       </Tag>
     )}
     {onSite && (
-      <Tag iconId="fr-icon-home-4-fill" small>
+      <Tag
+        data-test="project-organisms-onsite-tag"
+        iconId="fr-icon-home-4-fill"
+        small
+      >
         Sur site
       </Tag>
     )}
-    {mcf && <Tag small>MCF</Tag>}
+    {mcf && (
+      <Tag data-test="project-organisms-mcf-tag" small>
+        MCF
+      </Tag>
+    )}
   </div>
 );
 
@@ -172,13 +184,13 @@ const Description = ({
     )}
     {phone && (
       <>
-        {phone}
+        <span data-test="project-organisms-organism-phone">{phone}</span>
         <br />
       </>
     )}
     {email && (
       <>
-        {email}
+        <span data-test="project-organisms-organism-email">{email}</span>
         <br />
       </>
     )}
