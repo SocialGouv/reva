@@ -24,12 +24,6 @@ import PDFDocument from "pdfkit";
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { prismaClient } from "@/prisma/client";
 
-type CompetenceBloc = DFFCertificationCompetenceBloc & {
-  certificationCompetenceBloc: CertificationCompetenceBloc & {
-    competences: CertificationCompetence[];
-  };
-};
-
 export const generateFeasibilityFileByCandidacyId = async (
   candidacyId: string,
 ): Promise<Buffer | undefined> => {
