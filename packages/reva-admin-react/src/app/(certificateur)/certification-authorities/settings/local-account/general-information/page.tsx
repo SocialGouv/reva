@@ -35,7 +35,7 @@ export default function CertificationAuthorityLocalAccountGeneralInformationPage
   };
 
   return (
-    <div data-test="general-information-local-account-page">
+    <div data-testid="general-information-local-account-page">
       <Breadcrumb
         segments={[
           {

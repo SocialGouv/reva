@@ -51,7 +51,7 @@ export default function CertificationDetailsPage() {
       </h1>
       {candidacy && canUpdateCertification && (
         <Button
-          data-test="candidacy-change-certification-button"
+          data-testid="candidacy-change-certification-button"
           linkProps={{
             href: `/candidacies/${candidacyId}/reorientation`,
           }}
@@ -70,7 +70,7 @@ const PageContent = ({
   certification: CertificationForPage;
 }) => {
   return (
-    <div data-test="certification-details-page" className="w-full">
+    <div data-testid="certification-details-page" className="w-full">
       <div className="flex flex-col gap-8">
         <CertificationSummaryCard certification={certification} />
         <CertificationCompetenceBlocsSummaryCard

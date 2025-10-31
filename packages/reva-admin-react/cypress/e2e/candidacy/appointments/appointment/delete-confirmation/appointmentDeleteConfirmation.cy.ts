@@ -42,16 +42,16 @@ context("when I access the delete appointment confirmation page", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="appointment-delete-confirmation-page-title"]').should(
+    cy.get('[data-testid="appointment-delete-confirmation-page-title"]').should(
       "have.text",
       "Rendez-vous supprimé",
     );
-    cy.get('[data-test="appointment-delete-confirmation-page-date"]').should(
+    cy.get('[data-testid="appointment-delete-confirmation-page-date"]').should(
       "have.text",
       "Le 01/01/2025 à 10:00",
     );
     cy.get(
-      '[data-test="appointment-delete-confirmation-page-candidate"]',
+      '[data-testid="appointment-delete-confirmation-page-candidate"]',
     ).should("have.text", "Candidat : Doe John");
   });
 });

@@ -25,7 +25,7 @@ interface CandidacySectionCardProps {
   titleIconClass?: string;
   badge?: ReactNode;
   disabled?: boolean;
-  "data-test"?: string;
+  "data-testid"?: string;
 }
 
 export const SectionCard = ({
@@ -39,10 +39,10 @@ export const SectionCard = ({
   buttonIconId,
   badge,
   disabled = false,
-  "data-test": dataTest,
+  "data-testid": dataTest,
 }: CandidacySectionCardProps & HasButton) => {
   return (
-    <GrayCard data-test={dataTest}>
+    <GrayCard data-testid={dataTest}>
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center gap-4 w-full">
           <h2
@@ -57,7 +57,7 @@ export const SectionCard = ({
             <div>{!disabled && badge}</div>
             {hasButton && (
               <Button
-                data-test="action-button"
+                data-testid="action-button"
                 onClick={buttonOnClick}
                 priority={buttonPriority}
                 disabled={disabled}

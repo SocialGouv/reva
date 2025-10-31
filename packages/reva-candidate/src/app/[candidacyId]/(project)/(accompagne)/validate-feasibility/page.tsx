@@ -206,7 +206,7 @@ export default function ValidateFeasibility() {
         <div className="flex flex-row items-center justify-between">
           <Button
             type="button"
-            data-test="back"
+            data-testid="back"
             priority="secondary"
             nativeButtonProps={{
               onClick: () => {
@@ -219,7 +219,7 @@ export default function ValidateFeasibility() {
 
           <Button
             type="submit"
-            data-test="submit"
+            data-testid="submit"
             disabled={
               formIsDisabled ||
               !dematerializedFeasibilityFile?.isReadyToBeSentToCandidate

@@ -48,7 +48,7 @@ export const SendFileCertificationAuthoritySection = ({
         desc="Si le certificateur juge que c'est incomplet, il vous le renverra."
         detail="voir le dossier"
         linkProps={{ href: navigationUrl }}
-        data-test="send-file-certification-authority-tile-sent"
+        data-testid="send-file-certification-authority-tile-sent"
       />
     );
   }
@@ -59,7 +59,7 @@ export const SendFileCertificationAuthoritySection = ({
         {...TILE_COMMON_PROPS}
         desc="Le candidat a validé son dossier, vous pouvez maintenant vérifier et envoyer le dossier au certificateur."
         linkProps={{ href: navigationUrl }}
-        data-test="send-file-certification-authority-tile-ready"
+        data-testid="send-file-certification-authority-tile-ready"
       />
     );
   }
@@ -76,7 +76,7 @@ export const SendFileCertificationAuthoritySection = ({
         <CustomErrorBadge label="En attente d’envoi pour validation au candidat" />
       }
       desc="Le candidat doit valider et transmettre une attestation sur l’honneur pour ce dossier avant que vous puissiez l'envoyer au certificateur. Vous serez notifié lorsque le candidat aura effectué cette action."
-      data-test="send-file-certification-authority-tile-pending-validation"
+      data-testid="send-file-certification-authority-tile-pending-validation"
       style={{
         paddingBottom: "0",
         color: "grey",

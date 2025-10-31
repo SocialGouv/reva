@@ -72,7 +72,7 @@ const PageContent = ({
   const isEditable = certification.status == "BROUILLON";
 
   return (
-    <div data-test="update-certification-page">
+    <div data-testid="update-certification-page">
       <h1>{certification.label}</h1>
       <p className="mb-12 text-xl">
         Pour faciliter l’ajout, renseignez le code RNCP pour pré-remplir le
@@ -84,7 +84,7 @@ const PageContent = ({
       <div className="flex flex-col gap-8">
         {isEditable && (
           <div
-            data-test="button-reset"
+            data-testid="button-reset"
             className="flex flex-row justify-end mt-2"
           >
             <Button
@@ -130,7 +130,7 @@ const PageContent = ({
         />
 
         <EnhancedSectionCard
-          data-test="certification-structure-summary-card"
+          data-testid="certification-structure-summary-card"
           title="Structure certificatrice et gestionnaires"
           titleIconClass="fr-icon-group-fill"
           isEditable
@@ -145,7 +145,7 @@ const PageContent = ({
             <>
               <Info
                 title="Structure certificatrice"
-                data-test="certification-authority-structure-label"
+                data-testid="certification-authority-structure-label"
               >
                 {certification.certificationAuthorityStructure?.label}
               </Info>
@@ -160,7 +160,7 @@ const PageContent = ({
                   </h3>
                   <ul
                     className="list-none"
-                    data-test="certification-authority-list"
+                    data-testid="certification-authority-list"
                   >
                     {certification.certificationAuthorities.map((ca) => (
                       <li
@@ -192,7 +192,7 @@ const PageContent = ({
               pas encore des candidats.
             </p>
             <Button
-              data-test="button-send"
+              data-testid="button-send"
               disabled={!certification.certificationAuthorityStructure}
               className="h-[40px] self-end"
               onClick={onClickSend}
@@ -217,14 +217,14 @@ const Info = ({
   title,
   children,
   className,
-  "data-test": dataTest,
+  "data-testid": dataTest,
 }: {
   title: string;
   children: ReactNode;
   className?: string;
-  "data-test"?: string;
+  "data-testid"?: string;
 }) => (
-  <dl data-test={dataTest} className={`${className || ""}`}>
+  <dl data-testid={dataTest} className={`${className || ""}`}>
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>

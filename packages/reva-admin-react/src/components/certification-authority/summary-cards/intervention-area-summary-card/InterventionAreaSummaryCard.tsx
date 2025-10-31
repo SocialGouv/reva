@@ -21,7 +21,7 @@ export default function InterventionAreaSummaryCard({
   const isInterventionAreaComplete = regions.length > 0;
   return (
     <EnhancedSectionCard
-      data-test="intervention-area-summary-card"
+      data-testid="intervention-area-summary-card"
       title="Zone d'intervention"
       titleIconClass="fr-icon-road-map-fill"
       isEditable={!!updateButtonHref}
@@ -32,7 +32,7 @@ export default function InterventionAreaSummaryCard({
         <Accordion label={r.label} key={r.id}>
           <div className="flex flex-wrap gap-2">
             {r.departments.map((d) => (
-              <Tag key={d.id} data-test={`department-tag-${d.code}`}>
+              <Tag key={d.id} data-testid={`department-tag-${d.code}`}>
                 {d.label} ({d.code})
               </Tag>
             ))}

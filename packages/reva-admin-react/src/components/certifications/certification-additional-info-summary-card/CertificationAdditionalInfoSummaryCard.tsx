@@ -34,7 +34,7 @@ export const CertificationAdditionalInfoSummaryCard = ({
   } | null;
 }) => (
   <EnhancedSectionCard
-    data-test="additional-info-summary-card"
+    data-testid="additional-info-summary-card"
     isEditable={isAdmin ? false : isEditable}
     title="Documentation"
     titleIconClass="fr-icon-info-fill"
@@ -42,7 +42,10 @@ export const CertificationAdditionalInfoSummaryCard = ({
     buttonOnClickHref={updateButtonHref}
   >
     {certificationAdditionalInfo ? (
-      <div className="flex flex-col gap-4" data-test="additional-info-content">
+      <div
+        className="flex flex-col gap-4"
+        data-testid="additional-info-content"
+      >
         <section className="flex flex-col gap-4">
           <section className="flex flex-col gap-4">
             <h3 className="mb-0">Documents essentiels :</h3>
@@ -137,7 +140,7 @@ export const CertificationAdditionalInfoSummaryCard = ({
         </section>
       </div>
     ) : !isAdmin ? (
-      <SmallNotice className="mt-1" data-test="no-additional-info-message">
+      <SmallNotice className="mt-1" data-testid="no-additional-info-message">
         Transmettez aux AAP et aux candidats des ressources qui faciliteront le
         déroulé de l’accompagnement et du parcours VAE.
       </SmallNotice>

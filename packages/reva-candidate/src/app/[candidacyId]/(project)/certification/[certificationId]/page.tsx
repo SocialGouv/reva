@@ -77,7 +77,7 @@ export default async function CertificationDetail({
   }
 
   return (
-    <PageLayout title="Choix du diplôme" data-test={`certificates`}>
+    <PageLayout title="Choix du diplôme" data-testid={`certificates`}>
       <CertificationBreadcrumbs currentlyShownCertification={certification} />
       <CertificationPage certification={certification} />
       <CertificationChangeButtons selectedCertification={certification} />

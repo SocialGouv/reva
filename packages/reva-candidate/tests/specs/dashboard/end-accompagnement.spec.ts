@@ -119,7 +119,7 @@ test.describe("End Accompagnement Page", () => {
 
       await expect(
         page.locator(
-          '[data-test="candidacy-end-accompagnement-confirm-button"]',
+          '[data-testid="candidacy-end-accompagnement-confirm-button"]',
         ),
       ).toBeVisible();
     });
@@ -178,10 +178,10 @@ test.describe("End Accompagnement Page", () => {
       await loginAndWait({ page, candidacy, endAccompagnementWait });
 
       const submitButton = page.locator(
-        '[data-test="candidacy-end-accompagnement-confirm-button"]',
+        '[data-testid="candidacy-end-accompagnement-confirm-button"]',
       );
       const radioGroup = page.locator(
-        '[data-test="candidacy-end-accompagnement-radio-buttons"]',
+        '[data-testid="candidacy-end-accompagnement-radio-buttons"]',
       );
       await expect(radioGroup).not.toHaveAttribute(
         "class",
@@ -227,7 +227,7 @@ test.describe("End Accompagnement Page", () => {
       await confirmedRadio.click({ force: true });
 
       const submitButton = page.locator(
-        '[data-test="candidacy-end-accompagnement-confirm-button"]',
+        '[data-testid="candidacy-end-accompagnement-confirm-button"]',
       );
 
       const mutationPromise = waitGraphQL(
@@ -268,7 +268,7 @@ test.describe("End Accompagnement Page", () => {
       await expect(refusedRadio).toBeChecked();
 
       const submitButton = page.locator(
-        '[data-test="candidacy-end-accompagnement-confirm-button"]',
+        '[data-testid="candidacy-end-accompagnement-confirm-button"]',
       );
 
       const mutationPromise = waitGraphQL(

@@ -62,11 +62,11 @@ context("Candidate contact details", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCandidateContactDetails");
     cy.get("h1").should("contain", "Coordonnées du candidat");
-    cy.get('[data-test="phone-input"] input').should(
+    cy.get('[data-testid="phone-input"] input').should(
       "have.value",
       "0600000000",
     );
-    cy.get('[data-test="email-input"] input').should(
+    cy.get('[data-testid="email-input"] input').should(
       "have.value",
       "jane.doe@example.com",
     );
@@ -86,7 +86,7 @@ context("Candidate contact details", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCandidateContactDetails");
 
-    cy.get('[data-test="back-button"]').click();
+    cy.get('[data-testid="back-button"]').click();
     cy.url().should(
       "eq",
       Cypress.config().baseUrl +
@@ -110,8 +110,8 @@ context("Candidate contact details", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCandidateContactDetails");
 
-    cy.get('[data-test="phone-input"] input').clear().type("1111111111");
-    cy.get('[data-test="email-input"] input')
+    cy.get('[data-testid="phone-input"] input').clear().type("1111111111");
+    cy.get('[data-testid="email-input"] input')
       .clear()
       .type("mynewemail@example.com");
 
@@ -142,6 +142,6 @@ context("Candidate contact details", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCandidateContactDetails");
 
-    cy.get('[data-test="email-input"] input').should("be.disabled");
+    cy.get('[data-testid="email-input"] input').should("be.disabled");
   });
 });

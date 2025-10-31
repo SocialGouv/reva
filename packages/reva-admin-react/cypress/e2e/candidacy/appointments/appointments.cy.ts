@@ -155,7 +155,7 @@ context("when I access the candidacy appointments page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="upcoming-appointments-list"]')
+      cy.get('[data-testid="upcoming-appointments-list"]')
         .children("li")
         .should("have.length", 1);
     });
@@ -167,12 +167,12 @@ context("when I access the candidacy appointments page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="upcoming-appointments-list"]')
+      cy.get('[data-testid="upcoming-appointments-list"]')
         .children("li")
         .first()
         .should("not.have.attr", "href");
 
-      cy.get('[data-test="upcoming-appointments-list"]')
+      cy.get('[data-testid="upcoming-appointments-list"]')
         .children("li")
         .first()
         .click();
@@ -189,7 +189,7 @@ context("when I access the candidacy appointments page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="add-appointment-button"]').click();
+      cy.get('[data-testid="add-appointment-button"]').click();
       cy.url().should(
         "eq",
         `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_DE_SUIVI`,
@@ -204,7 +204,7 @@ context("when I access the candidacy appointments page", () => {
         "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
       );
       waitForQueries();
-      cy.get('[data-test="add-appointment-button"]').should("be.disabled");
+      cy.get('[data-testid="add-appointment-button"]').should("be.disabled");
     });
 
     it("shows the 'add first appointment' card", function () {
@@ -213,7 +213,7 @@ context("when I access the candidacy appointments page", () => {
         "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
       );
       waitForQueries();
-      cy.get('[data-test="add-first-appointment-card"]').should("exist");
+      cy.get('[data-testid="add-first-appointment-card"]').should("exist");
     });
 
     it("leads me to the add appointment page when I click on the 'add first appointment' card", function () {
@@ -222,7 +222,7 @@ context("when I access the candidacy appointments page", () => {
         "/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/",
       );
       waitForQueries();
-      cy.get('[data-test="add-first-appointment-card"]').click();
+      cy.get('[data-testid="add-first-appointment-card"]').click();
       cy.url().should(
         "eq",
         `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/add-appointment/?type=RENDEZ_VOUS_PEDAGOGIQUE`,

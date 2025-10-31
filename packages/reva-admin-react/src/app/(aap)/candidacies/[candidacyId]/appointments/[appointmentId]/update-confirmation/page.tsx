@@ -27,7 +27,7 @@ export default function AppointmentUpdateConfirmationPage() {
   return (
     <div className="w-full flex flex-col items-center md:flex-col-reverse">
       <div className="flex flex-col md:items-center">
-        <h1 data-test="appointment-update-confirmation-page-title">
+        <h1 data-testid="appointment-update-confirmation-page-title">
           Rendez-vous enregistré
         </h1>
         <p className="text-xl mb-2">
@@ -41,7 +41,7 @@ export default function AppointmentUpdateConfirmationPage() {
           Le candidat aura accès aux détails du rendez vous depuis son espace.
         </p>
         <Button
-          data-test="appointment-update-confirmation-page-go-back-to-appointments-button"
+          data-testid="appointment-update-confirmation-page-go-back-to-appointments-button"
           className="w-full flex justify-center md:justify-start md:w-auto"
           linkProps={{ href: `/candidacies/${candidacyId}/appointments` }}
         >

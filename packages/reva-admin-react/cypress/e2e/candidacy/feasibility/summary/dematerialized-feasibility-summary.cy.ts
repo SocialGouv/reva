@@ -146,11 +146,11 @@ describe("Dematerialized feasibility summary", () => {
         setupInterceptions();
         visit();
         cy.wait(waitAliases);
-        cy.get("[data-test='dff-summary']").should("be.visible");
+        cy.get("[data-testid='dff-summary']").should("be.visible");
       });
 
       it("displays the eligibility badge with the validity information", () => {
-        cy.get("[data-test='dff-summary']").within(() => {
+        cy.get("[data-testid='dff-summary']").within(() => {
           cy.contains("Accès au dossier de faisabilité intégral").should(
             "be.visible",
           );
@@ -159,7 +159,7 @@ describe("Dematerialized feasibility summary", () => {
       });
 
       it("shows candidate identification and contact details", () => {
-        cy.get("[data-test='dff-summary']").within(() => {
+        cy.get("[data-testid='dff-summary']").within(() => {
           cy.contains("Mme").should("be.visible");
           cy.contains("Bertrand Camille").should("be.visible");
           cy.contains(", Sabine").should("be.visible");
@@ -189,7 +189,7 @@ describe("Dematerialized feasibility summary", () => {
       });
 
       it("renders certification information and languages", () => {
-        cy.get("[data-test='dff-summary']").within(() => {
+        cy.get("[data-testid='dff-summary']").within(() => {
           cy.contains("Titre professionnel Responsable logistique").should(
             "be.visible",
           );
@@ -211,8 +211,8 @@ describe("Dematerialized feasibility summary", () => {
       });
 
       it("shows experience details", () => {
-        cy.get("[data-test='dff-summary']").within(() => {
-          cy.get("[data-test='experience-accordion-0']").within(() => {
+        cy.get("[data-testid='dff-summary']").within(() => {
+          cy.get("[data-testid='experience-accordion-0']").within(() => {
             cy.contains("Expérience 1 - Chef d'équipe logistique").should(
               "be.visible",
             );
@@ -223,7 +223,7 @@ describe("Dematerialized feasibility summary", () => {
             ).should("be.visible");
           });
 
-          cy.get("[data-test='experience-accordion-1']").within(() => {
+          cy.get("[data-testid='experience-accordion-1']").within(() => {
             cy.contains(
               "Expérience 2 - Responsable adjoint d'exploitation",
             ).should("be.visible");
@@ -237,7 +237,7 @@ describe("Dematerialized feasibility summary", () => {
       });
 
       it("displays competence blocks with their states", () => {
-        cy.get("[data-test='dff-summary']").within(() => {
+        cy.get("[data-testid='dff-summary']").within(() => {
           cy.contains(
             "button",
             "48379857 - Organiser et piloter les activités logistiques",
@@ -278,7 +278,7 @@ describe("Dematerialized feasibility summary", () => {
       });
 
       it("groups prerequisites by status", () => {
-        cy.get("[data-test='dff-summary']").within(() => {
+        cy.get("[data-testid='dff-summary']").within(() => {
           cy.contains("button", "Acquis")
             .parents("section.fr-accordion")
             .find("li")
@@ -297,7 +297,7 @@ describe("Dematerialized feasibility summary", () => {
       });
 
       it("shows planned parcours, goals and decision data", () => {
-        cy.get("[data-test='dff-summary']").within(() => {
+        cy.get("[data-testid='dff-summary']").within(() => {
           cy.contains("Accompagnement individuel : 42h").should("be.visible");
           cy.contains("Accompagnement collectif : 18h").should("be.visible");
           cy.contains("Formation : 9h").should("be.visible");
@@ -323,7 +323,7 @@ describe("Dematerialized feasibility summary", () => {
       });
 
       it("lists attachments", () => {
-        cy.get("[data-test='dff-summary']").within(() => {
+        cy.get("[data-testid='dff-summary']").within(() => {
           cy.contains("cv-candidat.pdf").should("be.visible");
           cy.contains("plan-action.pdf").should("be.visible");
           cy.contains("attestation-honneur.pdf").should("be.visible");
@@ -332,8 +332,8 @@ describe("Dematerialized feasibility summary", () => {
 
       if (label === "certificateur summary page") {
         it("shows the contact blocks", () => {
-          cy.get("[data-test='contact-infos-section']").within(() => {
-            cy.get("[data-test='organism-contact-info-tile']")
+          cy.get("[data-testid='contact-infos-section']").within(() => {
+            cy.get("[data-testid='organism-contact-info-tile']")
               .should("be.visible")
               .and("contain.text", "Organisme AAP Méditerranée")
               .and("contain.text", "10 quai du Port")
@@ -342,17 +342,17 @@ describe("Dematerialized feasibility summary", () => {
               .and("contain.text", "0499010203")
               .and("contain.text", "suivi@organism-aap.fr");
 
-            cy.get("[data-test='certification-authority-contact-info-tile']")
+            cy.get("[data-testid='certification-authority-contact-info-tile']")
               .should("be.visible")
               .and("contain.text", "Certificateur Métiers Services");
 
-            cy.get("[data-test='certification-authority-local-account-0']")
+            cy.get("[data-testid='certification-authority-local-account-0']")
               .should("be.visible")
               .and("contain.text", "Claire Lemaire")
               .and("contain.text", "claire.lemaire@certificateur.fr")
               .and("contain.text", "0600000001");
 
-            cy.get("[data-test='certification-authority-local-account-1']")
+            cy.get("[data-testid='certification-authority-local-account-1']")
               .should("be.visible")
               .and("contain.text", "David Roussel")
               .and("contain.text", "david.roussel@certificateur.fr")
@@ -361,7 +361,7 @@ describe("Dematerialized feasibility summary", () => {
         });
       } else {
         it("hides the contact blocks", () => {
-          cy.get("[data-test='contact-infos-section']").should("not.exist");
+          cy.get("[data-testid='contact-infos-section']").should("not.exist");
         });
       }
     });

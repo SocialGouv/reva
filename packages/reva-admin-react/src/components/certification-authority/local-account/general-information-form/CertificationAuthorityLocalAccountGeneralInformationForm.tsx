@@ -59,7 +59,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
         <Input
-          data-test="account-lastname-input"
+          data-testid="account-lastname-input"
           label="Nom de la personne ou du compte"
           nativeInputProps={{ ...register("accountLastname") }}
           disabled={disableAccountFields}
@@ -67,7 +67,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
           stateRelatedMessage={errors.accountLastname?.message}
         />
         <Input
-          data-test="account-firstname-input"
+          data-testid="account-firstname-input"
           label="Prénom (optionnel)"
           nativeInputProps={{ ...register("accountFirstname") }}
           disabled={disableAccountFields}
@@ -75,7 +75,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
           stateRelatedMessage={errors.accountFirstname?.message}
         />
         <Input
-          data-test="account-email-input"
+          data-testid="account-email-input"
           label="Adresse électronique de connexion"
           nativeInputProps={{
             autoComplete: "email",
@@ -95,7 +95,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
         <Input
-          data-test="contact-full-name-input"
+          data-testid="contact-full-name-input"
           className="col-span-full"
           label="Service associé "
           nativeInputProps={{ ...register("contactFullName") }}
@@ -103,7 +103,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
           stateRelatedMessage={errors.contactFullName?.message}
         />
         <Input
-          data-test="contact-email-input"
+          data-testid="contact-email-input"
           label="Adresse électronique"
           nativeInputProps={{
             autoComplete: "email",
@@ -114,7 +114,7 @@ export const CertificationAuthorityLocalAccountGeneralInformationForm = ({
           stateRelatedMessage={errors.contactEmail?.message}
         />
         <Input
-          data-test="contact-phone-input"
+          data-testid="contact-phone-input"
           className="md:max-w-[280px] md:mt-6"
           label="Téléphone (optionnel)"
           nativeInputProps={{

@@ -6,7 +6,7 @@ export const NoCertificationAuthorityAlert = ({
   className?: string;
 }) => (
   <Alert
-    data-test="no-certification-authority-alert"
+    data-testid="no-certification-authority-alert"
     className={className}
     severity="warning"
     title="Il n’y a pas de gestionnaire des candidatures pour cette certification"

@@ -61,13 +61,13 @@ context("Candidacy dropout warning", () => {
       it("should show the warning when the drop out has not been confirmed", function () {
         interceptCandidacy({ droppedOut: true });
 
-        cy.get('[data-test="drop-out-warning"]').should("exist");
+        cy.get('[data-testid="drop-out-warning"]').should("exist");
       });
 
       it("should let me click the decision button and lead me to the decision page", function () {
         interceptCandidacy({ droppedOut: true });
 
-        cy.get('[data-test="drop-out-warning-decision-button"]').click();
+        cy.get('[data-testid="drop-out-warning-decision-button"]').click();
         cy.url().should(
           "eq",
           "http://localhost:3004/candidat/c1/candidacy-dropout-decision/",
@@ -81,8 +81,8 @@ context("Candidacy dropout warning", () => {
             proofReceivedByAdmin: true,
           });
 
-          cy.get('[data-test="drop-out-warning"]').should("exist");
-          cy.get('[data-test="drop-out-warning-decision-button"]').should(
+          cy.get('[data-testid="drop-out-warning"]').should("exist");
+          cy.get('[data-testid="drop-out-warning-decision-button"]').should(
             "not.exist",
           );
         });
@@ -94,8 +94,8 @@ context("Candidacy dropout warning", () => {
             dropOutConfirmedByCandidate: true,
           });
 
-          cy.get('[data-test="drop-out-warning"]').should("exist");
-          cy.get('[data-test="drop-out-warning-decision-button"]').should(
+          cy.get('[data-testid="drop-out-warning"]').should("exist");
+          cy.get('[data-testid="drop-out-warning-decision-button"]').should(
             "not.exist",
           );
         });
@@ -108,8 +108,8 @@ context("Candidacy dropout warning", () => {
           dropOutDate: subMonths(new Date(), 6),
         });
 
-        cy.get('[data-test="drop-out-warning"]').should("exist");
-        cy.get('[data-test="drop-out-warning-decision-button"]').should(
+        cy.get('[data-testid="drop-out-warning"]').should("exist");
+        cy.get('[data-testid="drop-out-warning-decision-button"]').should(
           "not.exist",
         );
       });
@@ -119,7 +119,7 @@ context("Candidacy dropout warning", () => {
     it("should not show the warning", function () {
       interceptCandidacy({});
 
-      cy.get('[data-test="drop-out-warning"]').should("not.exist");
+      cy.get('[data-testid="drop-out-warning"]').should("not.exist");
     });
   });
 });

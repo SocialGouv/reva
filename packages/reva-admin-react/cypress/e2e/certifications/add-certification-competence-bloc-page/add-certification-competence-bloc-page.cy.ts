@@ -44,7 +44,7 @@ context("when i access the add certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForAddCompetenceBlocPage");
 
-    cy.get('[data-test="add-certification-competence-bloc-page"]')
+    cy.get('[data-testid="add-certification-competence-bloc-page"]')
       .children("h1")
       .should("have.text", "Ajouter un bloc de compétences");
   });
@@ -59,7 +59,7 @@ context("when i access the add certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForAddCompetenceBlocPage");
 
-    cy.get('[data-test="competence-bloc-label-input"] input')
+    cy.get('[data-testid="competence-bloc-label-input"] input')
       .clear()
       .type("updated competence bloc label");
 
@@ -82,9 +82,9 @@ context("when i access the add certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForAddCompetenceBlocPage");
 
-    cy.get('[data-test="add-competence-button"]').click();
+    cy.get('[data-testid="add-competence-button"]').click();
 
-    cy.get('[data-test="competence-list"] input').should("have.length", 1);
+    cy.get('[data-testid="competence-list"] input').should("have.length", 1);
   });
 
   it("let me delete a competence from the competence bloc", function () {
@@ -96,13 +96,13 @@ context("when i access the add certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForAddCompetenceBlocPage");
 
-    cy.get('[data-test="add-competence-button"]').click();
-    cy.get('[data-test="add-competence-button"]').click();
+    cy.get('[data-testid="add-competence-button"]').click();
+    cy.get('[data-testid="add-competence-button"]').click();
 
-    cy.get('[data-test="competence-list"] input').should("have.length", 2);
+    cy.get('[data-testid="competence-list"] input').should("have.length", 2);
 
-    cy.get('[data-test="delete-competence-button"]').eq(1).click();
+    cy.get('[data-testid="delete-competence-button"]').eq(1).click();
 
-    cy.get('[data-test="competence-list"] input').should("have.length", 1);
+    cy.get('[data-testid="competence-list"] input').should("have.length", 1);
   });
 });

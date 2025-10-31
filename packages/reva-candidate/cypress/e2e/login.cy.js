@@ -10,11 +10,11 @@ context("Login", () => {
     });
 
     cy.visit("/");
-    cy.get('[data-test="login-home"] #emailForMagicLink').type(email);
+    cy.get('[data-testid="login-home"] #emailForMagicLink').type(email);
 
-    cy.get('[data-test="login-home-submit"]').click();
+    cy.get('[data-testid="login-home-submit"]').click();
     cy.wait("@candidate_askForLogin");
 
-    cy.get('[data-test="login-confirmation"]');
+    cy.get('[data-testid="login-confirmation"]');
   });
 });

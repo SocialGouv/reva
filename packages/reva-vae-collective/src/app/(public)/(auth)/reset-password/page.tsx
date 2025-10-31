@@ -48,7 +48,7 @@ export default function ResetPasswordPage() {
           <Button
             type="submit"
             className="w-full justify-center"
-            data-test="reset-password-home-submit"
+            data-testid="reset-password-home-submit"
             disabled={pending || !isPasswordValid}
           >
             Enregistrer

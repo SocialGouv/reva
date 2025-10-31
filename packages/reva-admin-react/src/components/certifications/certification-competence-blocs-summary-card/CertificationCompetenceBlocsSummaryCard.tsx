@@ -30,7 +30,7 @@ export const CertificationCompetenceBlocsSummaryCard = ({
     }) => (
   <SectionCard
     title="Blocs de compétences"
-    data-test="competence-blocs-summary-card"
+    data-testid="competence-blocs-summary-card"
     titleIconClass="fr-icon-survey-fill"
     {...(() =>
       isEditable && onAddBlocCompetenceButtonClick
@@ -51,10 +51,10 @@ export const CertificationCompetenceBlocsSummaryCard = ({
       </p>
     )}
 
-    <ul className="pl-0" data-test="competence-blocs-list">
+    <ul className="pl-0" data-testid="competence-blocs-list">
       {competenceBlocs.map((bloc) => (
         <li
-          data-test="competence-bloc"
+          data-testid="competence-bloc"
           className="flex items-start justify-between gap-6 border-b border-dsfr-light-decisions-border-border-default-grey"
           key={bloc.id}
         >
@@ -63,7 +63,7 @@ export const CertificationCompetenceBlocsSummaryCard = ({
             label={bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label}
             defaultExpanded
           >
-            <ul data-test="competences-list">
+            <ul data-testid="competences-list">
               {bloc.competences.map((competence) => (
                 <li key={competence.id}>{competence.label}</li>
               ))}
@@ -71,7 +71,7 @@ export const CertificationCompetenceBlocsSummaryCard = ({
           </Accordion>
           {isEditable && (
             <Button
-              data-test="update-competence-bloc-button"
+              data-testid="update-competence-bloc-button"
               priority="tertiary no outline"
               onClick={() => onUpdateCompetenceBlocButtonClick(bloc.id)}
             >

@@ -140,7 +140,7 @@ export const UpdateAppointmentPage = ({
       </modal.Component>
       <div
         className="flex flex-col w-full"
-        data-test="update-appointments-page"
+        data-testid="update-appointments-page"
       >
         <h1>{title}</h1>
         <FormOptionalFieldsDisclaimer />

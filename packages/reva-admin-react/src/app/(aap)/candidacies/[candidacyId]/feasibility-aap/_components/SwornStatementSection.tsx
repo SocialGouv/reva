@@ -22,7 +22,7 @@ export const SwornStatementSection = ({
       isEditable={isEditable}
       disabled={!sentToCandidateAt}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/sworn-statement`}
-      data-test="sworn-statement-section"
+      data-testid="sworn-statement-section"
     >
       {!sentToCandidateAt && (
         <SmallNotice>

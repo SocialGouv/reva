@@ -8,7 +8,7 @@ export const CertificationTile = ({
   selectedCertificationId?: string | null;
 }) => (
   <Tile
-    data-test="certification-tile"
+    data-testid="certification-tile"
     start={<CompleteIncompleteBadge isComplete={!!selectedCertificationId} />}
     title="Diplôme visé"
     small

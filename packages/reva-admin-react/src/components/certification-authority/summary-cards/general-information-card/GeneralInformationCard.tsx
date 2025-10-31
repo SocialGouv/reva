@@ -26,12 +26,12 @@ export default function GeneralInformationCard({
       isEditable
       status={isComplete ? "COMPLETED" : "TO_COMPLETE"}
       buttonOnClickHref={`${hrefPrefix}/informations-generales`}
-      data-test="certification-authority-general-information-card"
+      data-testid="certification-authority-general-information-card"
     >
       <div className="pl-10">
         <p
           className="text-xl font-bold mb-2"
-          data-test="certification-authority-label"
+          data-testid="certification-authority-label"
         >
           {certificationAuthority.label}
         </p>
@@ -40,13 +40,13 @@ export default function GeneralInformationCard({
             <div className="flex gap-x-2">
               <p>Contact référent :</p>
               <div>
-                <p className="my-0 font-medium" data-test="contact-full-name">
+                <p className="my-0 font-medium" data-testid="contact-full-name">
                   {certificationAuthority.contactFullName}
                 </p>
-                <p className="my-0 font-medium" data-test="contact-email">
+                <p className="my-0 font-medium" data-testid="contact-email">
                   {certificationAuthority.contactEmail}
                 </p>
-                <p className="my-0 font-medium" data-test="contact-phone">
+                <p className="my-0 font-medium" data-testid="contact-phone">
                   {certificationAuthority.contactPhone}
                 </p>
               </div>
@@ -54,10 +54,10 @@ export default function GeneralInformationCard({
           </>
         ) : (
           <div className="flex flex-col gap-y-6">
-            <Badge severity="new" small data-test="no-contact-badge">
+            <Badge severity="new" small data-testid="no-contact-badge">
               Aucun contact référent
             </Badge>
-            <SmallNotice className="-ml-10" data-test="no-contact-notice">
+            <SmallNotice className="-ml-10" data-testid="no-contact-notice">
               Ajoutez un contact référent pour améliorer le suivi et la
               communication avec les AAP et les candidats
             </SmallNotice>

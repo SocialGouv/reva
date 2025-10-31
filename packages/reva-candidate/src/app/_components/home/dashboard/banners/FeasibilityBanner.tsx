@@ -22,7 +22,7 @@ export const FeasibilityBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="admissible-feasibility-banner">
+          <div data-testid="admissible-feasibility-banner">
             {!readyForJuryEstimatedAt ? (
               <>
                 Vous êtes recevable ! Vous pouvez débuter la rédaction de votre
@@ -51,7 +51,7 @@ export const FeasibilityBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="creating-feasibility-banner">
+          <div data-testid="creating-feasibility-banner">
             Votre accompagnateur est en train de remplir votre dossier de
             faisabilité. Une fois terminé, il vous sera transmis. Vous devrez le
             valider avant qu'il soit envoyé au certificateur.
@@ -71,7 +71,7 @@ export const FeasibilityBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="draft-feasibility-banner">
+          <div data-testid="draft-feasibility-banner">
             Votre dossier de faisabilité est désormais consultable ! Vérifiez-le
             puis transmettez une attestation sur l’honneur signée à votre
             accompagnateur pour valider le dossier de faisabilité.
@@ -91,7 +91,7 @@ export const FeasibilityBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="draft-feasibility-no-sworn-statement-banner">
+          <div data-testid="draft-feasibility-no-sworn-statement-banner">
             Vous avez validé votre dossier de faisabilité. Si vous n’avez
             toujours pas transmis votre attestation sur l’honneur, n’oubliez pas
             de l’envoyer à votre accompagnateur.
@@ -111,7 +111,7 @@ export const FeasibilityBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="draft-feasibility-with-sworn-statement-banner">
+          <div data-testid="draft-feasibility-with-sworn-statement-banner">
             Vous avez validé votre dossier de faisabilité. Votre accompagnateur
             le transmettra à votre certificateur.
           </div>
@@ -126,7 +126,7 @@ export const FeasibilityBanner = ({
       <BaseBanner
         content={
           <div
-            data-test={
+            data-testid={
               isPendingAccompagne
                 ? "pending-feasibility-banner"
                 : "autonome-pending-feasibility-banner"
@@ -149,7 +149,7 @@ export const FeasibilityBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="incomplete-feasibility-banner">
+          <div data-testid="incomplete-feasibility-banner">
             Votre dossier de faisabilité est incomplet. Votre accompagnateur est
             en train de le mettre à jour et vous le renverra bientôt pour
             validation.
@@ -165,7 +165,7 @@ export const FeasibilityBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="autonome-incomplete-feasibility-banner">
+          <div data-testid="autonome-incomplete-feasibility-banner">
             Votre certificateur a notifié qu’il manquait des éléments à votre
             dossier de faisabilité. Rendez vous dans la section “Dossier de
             faisabilité” pour connaitre les raisons et transmettre un nouveau
@@ -182,7 +182,7 @@ export const FeasibilityBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="rejected-feasibility-banner">
+          <div data-testid="rejected-feasibility-banner">
             Votre dossier de faisabilité n’a pas été validé par le certificateur
             : votre parcours VAE s’arrête ici.
           </div>

@@ -47,7 +47,7 @@ const CertificationAuthorityAdminComponent = ({
   return (
     <div
       className="flex flex-col flex-1"
-      data-test="certification-authority-admin-page"
+      data-testid="certification-authority-admin-page"
     >
       <CertificationAuthorityStructureBreadcrumb
         certificationAuthorityStructureId={certificationAuthorityStructureId}

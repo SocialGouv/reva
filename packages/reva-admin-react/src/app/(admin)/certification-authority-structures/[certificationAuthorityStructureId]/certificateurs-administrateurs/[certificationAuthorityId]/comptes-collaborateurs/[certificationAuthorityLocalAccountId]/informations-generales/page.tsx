@@ -64,7 +64,7 @@ export default function AddLocalAccountPage() {
   return (
     <div
       className="flex flex-col h-full"
-      data-test="update-certification-authority-local-account-general-information-page"
+      data-testid="update-certification-authority-local-account-general-information-page"
     >
       <AdminCertificationAuthorityLocalAccountBreadcrumb
         certificationAuthorityStructureId={certificationAuthorityStructureId}
@@ -96,7 +96,7 @@ export default function AddLocalAccountPage() {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6  mb-8">
         <Input
-          data-test="certification-authority-label-input"
+          data-testid="certification-authority-label-input"
           label="Gestionnaire de candidatures"
           disabled
           nativeInputProps={{

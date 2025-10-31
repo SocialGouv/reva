@@ -5,7 +5,7 @@ export const CustomErrorBadge = ({
   label: string;
   dataTest?: string;
 }) => (
-  <div data-test={dataTest}>
+  <div data-testid={dataTest}>
     <div
       className={`text-[#6E445A] bg-[#FEE7FC] inline-flex items-center gap-1 rounded px-1 h-6`}
     >

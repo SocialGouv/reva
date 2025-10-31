@@ -22,7 +22,7 @@ export const AttachmentsSection = ({
       status={attachmentsPartComplete ? "COMPLETED" : "TO_COMPLETE"}
       isEditable={isEditable}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/attachments`}
-      data-test="attachments-section"
+      data-testid="attachments-section"
     >
       {!!attachments?.length &&
         attachments.map(({ id, file }) => {

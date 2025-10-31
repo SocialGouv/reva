@@ -57,7 +57,7 @@ export default function CertificationDescriptionPage() {
   });
 
   return (
-    <div data-test="add-fc-certification-page">
+    <div data-testid="add-fc-certification-page">
       <h1>Descriptif de la certification</h1>
       <p className="mb-12 text-xl">
         Pour faciliter l’ajout, renseignez le code RNCP pour pré-remplir le
@@ -72,7 +72,7 @@ export default function CertificationDescriptionPage() {
           className="flex gap-8"
         >
           <Input
-            data-test="fc-certification-description-input"
+            data-testid="fc-certification-description-input"
             label="Code RNCP"
             nativeInputProps={{
               ...register("rncp"),
@@ -84,14 +84,14 @@ export default function CertificationDescriptionPage() {
           />
         </form>
         <EnhancedSectionCard
-          data-test="fc-certification-description-card"
+          data-testid="fc-certification-description-card"
           title={`Informations liées au code RNCP ${certification?.NUMERO_FICHE.replace("RNCP", "") || ""}`}
           isEditable
         >
           {certification && (
             <div className="flex flex-col gap-6">
               <h3
-                data-test="fc-certification-description-card-title"
+                data-testid="fc-certification-description-card-title"
                 className="mb-0"
               >
                 Descriptif de la certification avec France compétences

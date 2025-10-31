@@ -12,7 +12,7 @@ const NoCertifications = () => {
   return (
     <div
       className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto"
-      data-test="no-certifications"
+      data-testid="no-certifications"
     >
       <div className="col-span-2 m-auto">
         <h1 className="">
@@ -51,7 +51,7 @@ const CertificationsToValidate = ({
   return (
     <div
       className="grid grid-cols-3 grid-rows-1 w-11/12 mx-auto"
-      data-test="certifications-to-validate"
+      data-testid="certifications-to-validate"
     >
       <div className="col-span-2 m-auto">
         <h1 className="">

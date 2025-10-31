@@ -28,7 +28,7 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForListPage");
-    cy.get('[data-test="results"]').children().should("have.length", 3);
+    cy.get('[data-testid="results"]').children().should("have.length", 3);
   });
 
   it("let me click on the 'add certification' button", function () {
@@ -39,7 +39,7 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForListPage");
-    cy.get('[data-test="add-certification-button"]').click();
+    cy.get('[data-testid="add-certification-button"]').click();
     cy.url().should(
       "eq",
       "http://localhost:3003/admin2/certifications/add-certification/",
@@ -54,7 +54,7 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForListPage");
-    cy.get('[data-test="access-certification-button"]').eq(1).click();
+    cy.get('[data-testid="access-certification-button"]').eq(1).click();
     cy.url().should(
       "eq",
       "http://localhost:3003/admin2/certifications/654c9471-6e2e-4ff2-a5d8-2069e78ea0d6/",

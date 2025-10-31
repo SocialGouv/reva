@@ -47,7 +47,7 @@ context("when I access the registry manager homepage", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
-    cy.get('[data-test="no-certifications"]').should("be.visible");
+    cy.get('[data-testid="no-certifications"]').should("be.visible");
   });
 
   it("show correct component when registry manager has certifications to validate", function () {
@@ -58,8 +58,8 @@ context("when I access the registry manager homepage", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
-    cy.get('[data-test="no-certifications"]').should("not.exist");
-    cy.get('[data-test="certifications-to-validate"]').should("be.visible");
+    cy.get('[data-testid="no-certifications"]').should("not.exist");
+    cy.get('[data-testid="certifications-to-validate"]').should("be.visible");
     cy.get('[data-testid="efa751cb-f5c2-4d90-b390-e5726eeebb19"]').should(
       "be.visible",
     );
@@ -93,7 +93,9 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
-    cy.get('[data-test="no-certifications-to-validate"]').should("be.visible");
+    cy.get('[data-testid="no-certifications-to-validate"]').should(
+      "be.visible",
+    );
   });
 
   it("show correct empty state component when there are no visible certifications", function () {
@@ -106,7 +108,7 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
-    cy.get('[data-test="no-visible-certifications"]').should("be.visible");
+    cy.get('[data-testid="no-visible-certifications"]').should("be.visible");
   });
 
   it("show correct empty state component when there are no invisible certifications", function () {
@@ -119,7 +121,7 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
-    cy.get('[data-test="no-invisible-certifications"]').should("be.visible");
+    cy.get('[data-testid="no-invisible-certifications"]').should("be.visible");
   });
 
   it("let me click on the 'access certification' button when status is A_VALIDER_PAR_CERTIFICATEUR", function () {
@@ -130,7 +132,7 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
-    cy.get('[data-test="access-certification-button"]').click({
+    cy.get('[data-testid="access-certification-button"]').click({
       force: true,
     });
     cy.url().should(
@@ -149,7 +151,7 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
-    cy.get('[data-test="access-certification-button"]').click({
+    cy.get('[data-testid="access-certification-button"]').click({
       force: true,
     });
     cy.url().should(
@@ -168,7 +170,7 @@ context("when i access the certification list", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
-    cy.get('[data-test="access-certification-button"]').click({
+    cy.get('[data-testid="access-certification-button"]').click({
       force: true,
     });
     cy.url().should(

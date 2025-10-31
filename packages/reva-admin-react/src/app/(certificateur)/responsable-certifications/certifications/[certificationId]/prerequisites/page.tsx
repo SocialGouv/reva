@@ -64,7 +64,7 @@ const PageContent = ({
   certification: CertificationForPage;
   onSubmit(data: PrerequisitesFormData): Promise<void>;
 }) => (
-  <div data-test="update-certification-prerequisites-page">
+  <div data-testid="update-certification-prerequisites-page">
     <Breadcrumb
       currentPageLabel={"Prérequis Obligatoires"}
       homeLinkProps={{

@@ -24,7 +24,7 @@ context("when i access the add certification page ", () => {
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
-    cy.get('[data-test="add-certification-page"]')
+    cy.get('[data-testid="add-certification-page"]')
       .children("h1")
       .should("have.text", "Ajout d'une certification");
   });
@@ -36,7 +36,7 @@ context("when i access the add certification page ", () => {
     cy.wait("@activeFeaturesForConnectedUser");
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
-    cy.get('[data-test="certification-description-card"] button').click();
+    cy.get('[data-testid="certification-description-card"] button').click();
     cy.url().should(
       "eq",
       "http://localhost:3003/admin2/certifications/add-certification/description/",

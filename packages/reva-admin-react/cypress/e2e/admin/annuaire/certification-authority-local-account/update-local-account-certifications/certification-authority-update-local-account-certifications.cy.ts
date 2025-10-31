@@ -45,7 +45,7 @@ context("main page", () => {
       );
 
       cy.get(
-        '[data-test="update-certification-authority-local-account-certifications-page"]',
+        '[data-testid="update-certification-authority-local-account-certifications-page"]',
       )
         .children("h1")
         .should("have.text", "Certifications gérées");
@@ -65,15 +65,15 @@ context("main page", () => {
       );
 
       cy.get(
-        '[data-test="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
+        '[data-testid="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
       ).should("not.be.checked");
 
       cy.get(
-        '[data-test="tree-select-item-49872 - Diplôme d\'Etat Conseiller en économie sociale et familiale - DEESF"] input',
+        '[data-testid="tree-select-item-49872 - Diplôme d\'Etat Conseiller en économie sociale et familiale - DEESF"] input',
       ).should("be.checked");
 
       cy.get(
-        '[data-test="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
+        '[data-testid="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
       ).should("not.be.checked");
     });
 
@@ -91,7 +91,7 @@ context("main page", () => {
       );
 
       cy.get(
-        '[data-test="update-certification-authority-local-account-certifications-page"] button[type="submit"]',
+        '[data-testid="update-certification-authority-local-account-certifications-page"] button[type="submit"]',
       ).should("be.disabled");
     });
 
@@ -109,13 +109,13 @@ context("main page", () => {
       );
 
       cy.get(
-        '[data-test="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
+        '[data-testid="tree-select-item-37310 - CQP Animateur d\'équipe autonome de production industrielle"] input',
       ).check({
         force: true,
       });
 
       cy.get(
-        '[data-test="update-certification-authority-local-account-certifications-page"] button[type="submit"]',
+        '[data-testid="update-certification-authority-local-account-certifications-page"] button[type="submit"]',
       ).click();
 
       cy.wait(

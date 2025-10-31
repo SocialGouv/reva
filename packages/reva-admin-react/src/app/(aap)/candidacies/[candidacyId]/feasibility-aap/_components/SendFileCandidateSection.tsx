@@ -47,7 +47,7 @@ export const SendFileCandidateSection = ({
         desc="Vous avez fait de nouvelles modifications sur le dossier ou prévoyez d'en faire ? Vous devrez renvoyer le dossier au candidat afin qu'il valide la nouvelle version."
         detail="voir le dossier"
         linkProps={{ href: navigationUrl }}
-        data-test="send-file-candidate-tile-sent"
+        data-testid="send-file-candidate-tile-sent"
       />
     );
   }
@@ -58,7 +58,7 @@ export const SendFileCandidateSection = ({
         {...TILE_COMMON_PROPS}
         desc="Le candidat doit valider ce dossier avant que vous puissiez l'envoyer au certificateur."
         linkProps={{ href: navigationUrl }}
-        data-test="send-file-candidate-tile-ready"
+        data-testid="send-file-candidate-tile-ready"
       />
     );
   }
@@ -72,7 +72,7 @@ export const SendFileCandidateSection = ({
         paddingBottom: "0",
         color: "grey",
       }}
-      data-test="send-file-candidate-tile-uncompleted"
+      data-testid="send-file-candidate-tile-uncompleted"
     />
   );
 };

@@ -140,7 +140,7 @@ export default function EndAccompagnementPage() {
           legend="Voulez-vous accepter la fin de votre accompagnement pour ce parcours de VAE ?"
           stateRelatedMessage={errors.endAccompagnement?.message}
           state={errors.endAccompagnement ? "error" : "default"}
-          data-test="candidacy-end-accompagnement-radio-buttons"
+          data-testid="candidacy-end-accompagnement-radio-buttons"
           className="hide-radio-img"
           options={[
             {
@@ -169,7 +169,7 @@ export default function EndAccompagnementPage() {
           type="submit"
           disabled={isSubmitting}
           className="flex self-end"
-          data-test="candidacy-end-accompagnement-confirm-button"
+          data-testid="candidacy-end-accompagnement-confirm-button"
         >
           Confirmer la décision
         </Button>

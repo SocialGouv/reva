@@ -243,7 +243,7 @@ const CompetenciesBlockPage = () => {
               }}
               stateRelatedMessage={errors?.blocText?.message}
               state={errors?.blocText ? "error" : "default"}
-              data-test="block-comment-input"
+              data-testid="block-comment-input"
             />
             <FormButtons
               backUrl={`/candidacies/${candidacyId}/feasibility-aap`}

@@ -93,7 +93,7 @@ describe("Revoke PDF Feasibility Decision", () => {
         ]);
 
         cy.get(
-          `[data-test="feasibility-page-pdf-${decision.toLowerCase()}"]`,
+          `[data-testid="feasibility-page-pdf-${decision.toLowerCase()}"]`,
         ).should("exist");
 
         cy.get("button").contains("Annuler la décision").should("not.exist");
@@ -140,7 +140,7 @@ describe("Revoke PDF Feasibility Decision", () => {
         ]);
 
         cy.get(
-          `[data-test="feasibility-page-pdf-${decision.toLowerCase()}"]`,
+          `[data-testid="feasibility-page-pdf-${decision.toLowerCase()}"]`,
         ).should("exist");
 
         cy.get("button").contains("Annuler la décision").should("be.visible");
@@ -161,7 +161,7 @@ describe("Revoke PDF Feasibility Decision", () => {
       cy.wait("@getCandidacyWithFeasibilityQuery");
       cy.wait("@getCandidacyWithFeasibilityUploadedPdfQuery");
 
-      cy.get(`[data-test="feasibility-page-pdf-admissible"]`).should("exist");
+      cy.get(`[data-testid="feasibility-page-pdf-admissible"]`).should("exist");
 
       cy.get("button")
         .contains("Annuler la décision")
@@ -187,7 +187,7 @@ describe("Revoke PDF Feasibility Decision", () => {
       cy.wait("@revokeCertificationAuthorityDecisionPdf");
       cy.wait("@getCandidacyWithFeasibilityUploadedPdfQuery");
 
-      cy.get(`[data-test="feasibility-page-pdf-complete"]`).should("exist");
+      cy.get(`[data-testid="feasibility-page-pdf-complete"]`).should("exist");
     });
 
     ["COMPLETE", "INCOMPLETE"].forEach((decision) => {
@@ -218,7 +218,7 @@ describe("Revoke PDF Feasibility Decision", () => {
         ]);
 
         cy.get(
-          `[data-test="feasibility-page-pdf-${decision.toLowerCase()}"]`,
+          `[data-testid="feasibility-page-pdf-${decision.toLowerCase()}"]`,
         ).should("exist");
 
         cy.get("button").contains("Annuler la décision").should("not.exist");
@@ -254,7 +254,7 @@ describe("Revoke PDF Feasibility Decision", () => {
             "@getCandidacyWithFeasibilityUploadedPdfQuery",
           ]);
 
-          cy.get(`[data-test="feasibility-page-pdf-admissible"]`).should(
+          cy.get(`[data-testid="feasibility-page-pdf-admissible"]`).should(
             "exist",
           );
 

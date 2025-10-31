@@ -10,7 +10,7 @@ export default function LogoutConfirmation() {
 
   return (
     <PageLayout
-      data-test="logout-confirmation"
+      data-testid="logout-confirmation"
       title="Confirmation de déconnexion"
       className="flex flex-col items-center justify-center text-center p-6 pt-8"
     >
@@ -19,7 +19,7 @@ export default function LogoutConfirmation() {
       </h1>
 
       <Button
-        data-test="logout-confirmation-back-to-home"
+        data-testid="logout-confirmation-back-to-home"
         className="mt-6"
         onClick={() => {
           router.push("/login");

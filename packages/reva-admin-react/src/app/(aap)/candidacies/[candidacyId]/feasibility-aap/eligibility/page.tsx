@@ -178,7 +178,7 @@ export default function EligibilityPage() {
           label="Situation du candidat"
           hint="Sélectionnez le cas dans lequel se trouve votre candidat actuellement"
           nativeSelectProps={{ ...register("eligibility"), defaultValue: "" }}
-          data-test="eligibility-select"
+          data-testid="eligibility-select"
         >
           <option value="" disabled>
             Choisir une situation
@@ -208,7 +208,7 @@ export default function EligibilityPage() {
           disabled={areOptionalFieldsDisabled}
           state={errors.eligibilityValidUntil ? "error" : "default"}
           stateRelatedMessage={errors.eligibilityValidUntil?.message}
-          data-test="eligibility-valid-until-input"
+          data-testid="eligibility-valid-until-input"
         />
 
         <RadioButtons
@@ -233,7 +233,7 @@ export default function EligibilityPage() {
           ]}
           state={errors.timeEnough ? "error" : "default"}
           stateRelatedMessage={errors.timeEnough?.message}
-          data-test="eligibility-time-enough-radio-buttons"
+          data-testid="eligibility-time-enough-radio-buttons"
         />
 
         <CallOut title="Bon à savoir">

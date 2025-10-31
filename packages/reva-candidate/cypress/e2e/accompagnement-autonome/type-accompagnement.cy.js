@@ -1,8 +1,8 @@
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
-const DASHBOARD_AUTONOME = '[data-test="dashboard-autonome"]';
+const DASHBOARD_AUTONOME = '[data-testid="dashboard-autonome"]';
 const DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE =
-  '[data-test="type-accompagnement-tile"]';
+  '[data-testid="type-accompagnement-tile"]';
 
 const interceptCandidacy = (candidacy) => {
   cy.intercept("POST", "/api/graphql", (req) => {
@@ -105,8 +105,8 @@ context("Type accompagnement", () => {
     cy.get(".type-accompagnement-accompagne-radio-button ~ label").click();
     cy.get(".type-accompagnement-accompagne-radio-button").should("be.checked");
 
-    cy.get('[data-test="submit-type-accompagnement-form-button"]').click();
-    cy.get('[data-test="submit-type-accompagnement-modal-button"]').click();
+    cy.get('[data-testid="submit-type-accompagnement-form-button"]').click();
+    cy.get('[data-testid="submit-type-accompagnement-modal-button"]').click();
     cy.wait("@updateTypeAccompagnementForTypeAccompagnementPage");
 
     cy.wait(5000);

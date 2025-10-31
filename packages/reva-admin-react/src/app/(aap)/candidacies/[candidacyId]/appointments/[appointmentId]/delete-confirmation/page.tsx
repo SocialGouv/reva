@@ -25,24 +25,24 @@ export default function AppointmentDeleteConfirmationPage() {
   return (
     <div className="w-full flex flex-col items-center md:flex-col-reverse">
       <div className="flex flex-col md:items-center">
-        <h1 data-test="appointment-delete-confirmation-page-title">
+        <h1 data-testid="appointment-delete-confirmation-page-title">
           Rendez-vous supprimé
         </h1>
         <p
           className="text-xl mb-2"
-          data-test="appointment-delete-confirmation-page-date"
+          data-testid="appointment-delete-confirmation-page-date"
         >
           Le {formatIso8601Date(date)} à {formatIso8601Time(date)}
         </p>
         <p
           className="text-xl mb-6"
-          data-test="appointment-delete-confirmation-page-candidate"
+          data-testid="appointment-delete-confirmation-page-candidate"
         >
           Candidat : {candidateLastName} {candidateFirstName}
         </p>
 
         <Button
-          data-test="appointment-update-confirmation-page-go-back-to-appointments-button"
+          data-testid="appointment-update-confirmation-page-go-back-to-appointments-button"
           className="w-full flex justify-center md:justify-start md:w-auto"
           linkProps={{ href: `/candidacies/${candidacyId}/appointments` }}
         >

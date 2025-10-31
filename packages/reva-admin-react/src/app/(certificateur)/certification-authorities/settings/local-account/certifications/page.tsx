@@ -14,7 +14,7 @@ export default function CertificationsPage() {
   return (
     <div
       className="flex flex-col h-full"
-      data-test="certifications-local-account-page"
+      data-testid="certifications-local-account-page"
     >
       <Breadcrumb
         segments={[

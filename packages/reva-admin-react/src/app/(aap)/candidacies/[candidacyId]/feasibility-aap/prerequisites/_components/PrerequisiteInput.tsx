@@ -18,7 +18,7 @@ export const PrerequisiteInput = ({
   errorState?: string;
 }) => {
   return (
-    <div data-test={`prerequisite-input-${index}`}>
+    <div data-testid={`prerequisite-input-${index}`}>
       <Input
         className="m-0"
         label="Intitulé du prérequis :"
@@ -55,7 +55,7 @@ export const PrerequisiteInput = ({
         <div
           className="flex gap-2 cursor-pointer text-blue-900 items-center self-end"
           onClick={onDelete}
-          data-test={`delete-prerequisite-button-${index}`}
+          data-testid={`delete-prerequisite-button-${index}`}
         >
           <span className="fr-icon-delete-bin-line fr-icon--sm" />
           <span className="text-sm font-medium">Supprimer</span>

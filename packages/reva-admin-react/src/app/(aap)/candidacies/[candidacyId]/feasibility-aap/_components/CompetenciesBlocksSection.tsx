@@ -60,7 +60,7 @@ export const CompetenciesBlocksSection = ({
         )
       }
       disabled={disabled}
-      data-test="competencies-blocks-section"
+      data-testid="competencies-blocks-section"
     >
       {!!blocsDeCompetences?.length && (
         <ul className="list-none flex flex-col gap-2">
@@ -83,7 +83,7 @@ export const CompetenciesBlocksSection = ({
                   linkProps={{
                     href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
                   }}
-                  data-test="competencies-blocks-section-button"
+                  data-testid="competencies-blocks-section-button"
                 >
                   <span className="mx-auto">
                     {bloc.complete ? "Modifier" : "Compléter"}

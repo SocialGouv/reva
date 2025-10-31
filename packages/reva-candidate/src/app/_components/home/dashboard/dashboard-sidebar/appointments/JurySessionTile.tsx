@@ -19,7 +19,7 @@ export const JurySessionTile = ({
 
   return (
     <Tile
-      data-test="jury-session-tile"
+      data-testid="jury-session-tile"
       small
       orientation="horizontal"
       classes={{

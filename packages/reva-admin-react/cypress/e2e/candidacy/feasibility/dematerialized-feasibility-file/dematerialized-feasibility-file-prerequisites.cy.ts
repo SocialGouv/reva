@@ -58,7 +58,7 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
     // it("should display an empty prerequisites form with disabled submit button if prerequisites are complete", () => {
     //   visitFeasibilityPrerequisites();
 
-    //   cy.get('[data-test="form-buttons"]')
+    //   cy.get('[data-testid="form-buttons"]')
     //     .should("exist")
     //     .within(() => {
     //       cy.get("button").should("be.disabled");
@@ -67,7 +67,7 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
     it("should display an empty prerequisites form with enabled submit button if prerequisites have never been saved", () => {
       visitFeasibilityPrerequisites();
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.enabled");
@@ -79,16 +79,16 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
     it("should display a message if no prerequisites are required", () => {
       visitFeasibilityPrerequisites();
 
-      cy.get('[data-test="no-prerequisites-message"]').should("exist");
+      cy.get('[data-testid="no-prerequisites-message"]').should("exist");
     });
   });
 
   context("Prerequisites Management", () => {
     it("should show error when submitting with empty prerequisite label", () => {
       visitFeasibilityPrerequisites();
-      cy.get('[data-test="add-prerequisite-button"]').click({ force: true });
+      cy.get('[data-testid="add-prerequisite-button"]').click({ force: true });
 
-      cy.get('[data-test="prerequisite-input-0"]')
+      cy.get('[data-testid="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
           cy.get(
@@ -101,20 +101,20 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
           ).should("be.checked");
         });
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .find('button[type="submit"]')
         .click({ force: true });
 
-      cy.get('[data-test="prerequisite-input-0"]').within(() => {
+      cy.get('[data-testid="prerequisite-input-0"]').within(() => {
         cy.get(".fr-error-text").should("exist");
       });
     });
 
     it("should allow adding multiple prerequisites with different states", () => {
       visitFeasibilityPrerequisites();
-      cy.get('[data-test="add-prerequisite-button"]').click({ force: true });
+      cy.get('[data-testid="add-prerequisite-button"]').click({ force: true });
 
-      cy.get('[data-test="prerequisite-input-0"]')
+      cy.get('[data-testid="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
           cy.get('textarea[name="aapPrerequisites.0.label"]').type(
@@ -128,9 +128,9 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
           });
         });
 
-      cy.get('[data-test="add-prerequisite-button"]').click();
+      cy.get('[data-testid="add-prerequisite-button"]').click();
 
-      cy.get('[data-test="prerequisite-input-1"]')
+      cy.get('[data-testid="prerequisite-input-1"]')
         .should("exist")
         .within(() => {
           cy.get('textarea[name="aapPrerequisites.1.label"]').type(
@@ -144,7 +144,7 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
           });
         });
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -154,9 +154,9 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
     it("should allow removing individual prerequisites", () => {
       visitFeasibilityPrerequisites();
 
-      cy.get('[data-test="add-prerequisite-button"]').click({ force: true });
+      cy.get('[data-testid="add-prerequisite-button"]').click({ force: true });
 
-      cy.get('[data-test="prerequisite-input-0"]')
+      cy.get('[data-testid="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
           cy.get('textarea[name="aapPrerequisites.0.label"]').type(
@@ -164,23 +164,23 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
           );
         });
 
-      cy.get('[data-test="add-prerequisite-button"]').click();
+      cy.get('[data-testid="add-prerequisite-button"]').click();
 
-      cy.get('[data-test="prerequisite-input-0"]').should("exist");
-      cy.get('[data-test="prerequisite-input-1"]').should("exist");
+      cy.get('[data-testid="prerequisite-input-0"]').should("exist");
+      cy.get('[data-testid="prerequisite-input-1"]').should("exist");
 
-      cy.get('[data-test="delete-prerequisite-button-0"]').click();
+      cy.get('[data-testid="delete-prerequisite-button-0"]').click();
 
-      cy.get('[data-test="prerequisite-input-0"]').should("exist");
-      cy.get('[data-test="prerequisite-input-1"]').should("not.exist");
+      cy.get('[data-testid="prerequisite-input-0"]').should("exist");
+      cy.get('[data-testid="prerequisite-input-1"]').should("not.exist");
     });
 
     it("should allow toggling between all prerequisite states", () => {
       visitFeasibilityPrerequisites();
 
-      cy.get('[data-test="add-prerequisite-button"]').click({ force: true });
+      cy.get('[data-testid="add-prerequisite-button"]').click({ force: true });
 
-      cy.get('[data-test="prerequisite-input-0"]')
+      cy.get('[data-testid="prerequisite-input-0"]')
         .should("exist")
         .within(() => {
           cy.get('textarea[name="aapPrerequisites.0.label"]').type(
@@ -205,7 +205,7 @@ describe("Dematerialized Feasibility File - Prerequisites Page", () => {
     it("should provide navigation back to feasibility summary", () => {
       visitFeasibilityPrerequisites();
 
-      cy.get('[data-test="back-button"]').click();
+      cy.get('[data-testid="back-button"]').click();
 
       cy.url().should("include", "/feasibility-aap");
     });

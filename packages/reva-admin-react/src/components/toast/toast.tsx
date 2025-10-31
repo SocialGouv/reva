@@ -26,7 +26,7 @@ const genericToast = (props: {
         onClose={() => {
           toast.dismiss();
         }}
-        data-test={`toast-${severity}`}
+        data-testid={`toast-${severity}`}
       />
     ),
     { duration: closable ? 10000 : 3000 },

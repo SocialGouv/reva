@@ -196,7 +196,7 @@ const Form = ({
 
           <Button
             className="md:ml-auto"
-            data-test="submit-type-accompagnement-form-button"
+            data-testid="submit-type-accompagnement-form-button"
             onClick={() => {
               if (typeAccompagnement == defaultValues.typeAccompagnement) {
                 router.push("../");
@@ -221,7 +221,7 @@ const Form = ({
             {
               children: "Confirmer",
               nativeButtonProps: {
-                "data-test": "submit-type-accompagnement-modal-button",
+                "data-testid": "submit-type-accompagnement-modal-button",
               },
             },
           ]}

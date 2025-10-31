@@ -3,22 +3,23 @@ import { stubQuery } from "../../../utils/graphql";
 import cguCertificateurFixture from "./fixtures/cgu-certificateur.json";
 
 const SELECTORS = {
-  CGU_FORM: '[data-test="cgu-certificateur-form"]',
+  CGU_FORM: '[data-testid="cgu-certificateur-form"]',
   CGU_ACCEPTANCE_CHECKBOX:
-    '[data-test="cgu-certificateur-cgu-acceptance-input"]',
+    '[data-testid="cgu-certificateur-cgu-acceptance-input"]',
   CHARTER_ACCEPTANCE_CHECKBOX:
-    '[data-test="cgu-certificateur-charter-acceptance-input"]',
-  CGU_SUBMIT_BUTTON: '[data-test="cgu-certificateur-submit"]',
-  CGU_IGNORE_BUTTON: '[data-test="cgu-certificateur-ignore"]',
+    '[data-testid="cgu-certificateur-charter-acceptance-input"]',
+  CGU_SUBMIT_BUTTON: '[data-testid="cgu-certificateur-submit"]',
+  CGU_IGNORE_BUTTON: '[data-testid="cgu-certificateur-ignore"]',
   IGNORE_MODAL_IGNORE_BUTTON:
-    '[data-test="cgu-certificateur-ignore-modal-ignore-button"]',
+    '[data-testid="cgu-certificateur-ignore-modal-ignore-button"]',
   IGNORE_MODAL_RELIRE_BUTTON:
-    '[data-test="cgu-certificateur-ignore-modal-relire-button"]',
-  TOAST_SUCCESS: '[data-test="toast-success"]',
-  TOAST_ERROR: '[data-test="toast-error"]',
-  AWAITING_MANAGER_VALIDATION: '[data-test="cgu-awaiting-manager-validation"]',
-  SHOW_CGU_BUTTON: '[data-test="cgu-show-button"]',
-  CGU: '[data-test="cgu"]',
+    '[data-testid="cgu-certificateur-ignore-modal-relire-button"]',
+  TOAST_SUCCESS: '[data-testid="toast-success"]',
+  TOAST_ERROR: '[data-testid="toast-error"]',
+  AWAITING_MANAGER_VALIDATION:
+    '[data-testid="cgu-awaiting-manager-validation"]',
+  SHOW_CGU_BUTTON: '[data-testid="cgu-show-button"]',
+  CGU: '[data-testid="cgu"]',
   MODAL_CONTAINER_SELECTOR: '[id="modal-ignore-cgu-certificateur"]',
 };
 

@@ -49,7 +49,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <PageLayout title="Connexion" data-test="login-home" className="p-6 pt-8">
+    <PageLayout title="Connexion" data-testid="login-home" className="p-6 pt-8">
       <h1 className="mb-10">Réinitialiser votre mot de passe France VAE</h1>
 
       <form className="flex flex-col gap-6" onSubmit={onSubmit}>
@@ -102,7 +102,7 @@ export default function ForgotPassword() {
         <Button
           type="submit"
           className="w-full justify-center"
-          data-test="reset-password-home-submit"
+          data-testid="reset-password-home-submit"
           disabled={resetPassword.isPending}
         >
           Mettre à jour

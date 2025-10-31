@@ -17,7 +17,7 @@ const NoCertificationsToValidate = () => {
   return (
     <div
       className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto"
-      data-test="no-certifications-to-validate"
+      data-testid="no-certifications-to-validate"
     >
       <div className="col-span-2 m-auto">
         <h1 className="">Aucune certification à valider</h1>
@@ -43,7 +43,7 @@ const NoVisibleCertifications = () => {
   return (
     <div
       className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto"
-      data-test="no-visible-certifications"
+      data-testid="no-visible-certifications"
     >
       <div className="col-span-2 m-auto">
         <h1 className="">Aucune certification visible</h1>
@@ -77,7 +77,7 @@ const NoInvisibleCertifications = () => {
   return (
     <div
       className="grid grid-cols-3 grid-rows-1 w-11/12 m-auto"
-      data-test="no-invisible-certifications"
+      data-testid="no-invisible-certifications"
     >
       <div className="col-span-2 m-auto">
         <h1 className="">Aucune certification invisible</h1>
@@ -204,7 +204,7 @@ export default function RegistryManagerHomepage() {
               <span>{c.certificationAuthorityStructure?.label}</span>
               <span>Date d'échéance : {format(c.expiresAt, "dd/MM/yyyy")}</span>
               <Button
-                data-test="access-certification-button"
+                data-testid="access-certification-button"
                 className="mt-2 ml-auto"
                 linkProps={{
                   href: `/responsable-certifications/certifications/${c.id}`,
@@ -232,7 +232,7 @@ const BadgeCertificationStatus = ({
       <Badge
         noIcon
         severity="new"
-        data-test="certification-timeline-element-envoye-pour-validation-badge"
+        data-testid="certification-timeline-element-envoye-pour-validation-badge"
       >
         à valider
       </Badge>
@@ -243,7 +243,7 @@ const BadgeCertificationStatus = ({
       <Badge
         noIcon
         severity="warning"
-        data-test="certification-timeline-element-invisible-badge"
+        data-testid="certification-timeline-element-invisible-badge"
       >
         INVISIBLE
       </Badge>
@@ -253,7 +253,7 @@ const BadgeCertificationStatus = ({
       <Badge
         noIcon
         severity="success"
-        data-test="certification-timeline-element-visible-badge"
+        data-testid="certification-timeline-element-visible-badge"
       >
         VISIBLE
       </Badge>

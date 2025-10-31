@@ -45,7 +45,10 @@ export default function CandidacyDropOutDecisionPage() {
   });
 
   return (
-    <div className="flex flex-col " data-test="candidacy-dropout-decision-page">
+    <div
+      className="flex flex-col "
+      data-testid="candidacy-dropout-decision-page"
+    >
       <h1 className="text-dsfrGray-800 mb-0">Abandon du parcours VAE</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl">

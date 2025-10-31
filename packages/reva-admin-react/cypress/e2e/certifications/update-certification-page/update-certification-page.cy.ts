@@ -75,7 +75,7 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForUpdateCertificationPage");
 
-    cy.get('[data-test="update-certification-page"]')
+    cy.get('[data-testid="update-certification-page"]')
       .children("h1")
       .should("have.text", "BP Boucher");
   });
@@ -92,17 +92,17 @@ context("when i access the update certification page ", () => {
 
       //2 competence blocs
       cy.get(
-        '[data-test="update-certification-page"] [data-test="competence-blocs-list"] [data-test="competence-bloc"]',
+        '[data-testid="update-certification-page"] [data-testid="competence-blocs-list"] [data-testid="competence-bloc"]',
       ).should("have.length", 2);
 
       //4 competence for the first competence bloc
       cy.get(
-        '[data-test="update-certification-page"] [data-test="competence-blocs-list"] [data-test="competence-bloc"]:first-child [data-test="competences-list"] > li',
+        '[data-testid="update-certification-page"] [data-testid="competence-blocs-list"] [data-testid="competence-bloc"]:first-child [data-testid="competences-list"] > li',
       ).should("have.length", 4);
 
       //2 competence for the second competence bloc
       cy.get(
-        '[data-test="update-certification-page"] [data-test="competence-blocs-list"] [data-test="competence-bloc"]:nth-child(2) [data-test="competences-list"] > li',
+        '[data-testid="update-certification-page"] [data-testid="competence-blocs-list"] [data-testid="competence-bloc"]:nth-child(2) [data-testid="competences-list"] > li',
       ).should("have.length", 2);
     });
 
@@ -116,7 +116,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="update-certification-page"] [data-test="competence-blocs-list"] [data-test="competence-bloc"]:first-child [data-test="update-competence-bloc-button"]',
+        '[data-testid="update-certification-page"] [data-testid="competence-blocs-list"] [data-testid="competence-bloc"]:first-child [data-testid="update-competence-bloc-button"]',
       ).click();
 
       cy.url().should(
@@ -135,7 +135,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="competence-blocs-summary-card"] [data-test="action-button"] ',
+        '[data-testid="competence-blocs-summary-card"] [data-testid="action-button"] ',
       ).click();
       cy.url().should(
         "eq",
@@ -155,7 +155,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="to-complete-badge"]',
+        '[data-testid="certification-structure-summary-card"] [data-testid="to-complete-badge"]',
       ).should("exist");
     });
 
@@ -169,7 +169,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="completed-badge"]',
+        '[data-testid="certification-structure-summary-card"] [data-testid="completed-badge"]',
       ).should("exist");
     });
 
@@ -183,7 +183,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="certification-authority-structure-label"] dd',
+        '[data-testid="certification-structure-summary-card"] [data-testid="certification-authority-structure-label"] dd',
       ).should(
         "have.text",
         "Ministère de l'Education Nationale et de la Jeunesse",
@@ -203,10 +203,10 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="certification-authority-list"] > li',
+        '[data-testid="certification-structure-summary-card"] [data-testid="certification-authority-list"] > li',
       ).should("have.length", 3);
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="no-certification-authority-alert"]',
+        '[data-testid="certification-structure-summary-card"] [data-testid="no-certification-authority-alert"]',
       ).should("not.exist");
     });
 
@@ -220,10 +220,10 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="certification-authority-list"]',
+        '[data-testid="certification-structure-summary-card"] [data-testid="certification-authority-list"]',
       ).should("not.exist");
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="no-certification-authority-alert"]',
+        '[data-testid="certification-structure-summary-card"] [data-testid="no-certification-authority-alert"]',
       ).should("exist");
     });
 
@@ -239,7 +239,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="no-certification-registry-manager-alert"]',
+        '[data-testid="certification-structure-summary-card"] [data-testid="no-certification-registry-manager-alert"]',
       ).should("exist");
     });
 
@@ -256,7 +256,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="no-certification-registry-manager-alert"]',
+        '[data-testid="certification-structure-summary-card"] [data-testid="no-certification-registry-manager-alert"]',
       ).should("not.exist");
     });
 
@@ -270,7 +270,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="certification-structure-summary-card"] [data-test="action-button"] ',
+        '[data-testid="certification-structure-summary-card"] [data-testid="action-button"] ',
       ).click();
       cy.url().should(
         "eq",
@@ -287,8 +287,8 @@ context("when i access the update certification page ", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationForUpdateCertificationPage");
 
-      cy.get('[data-test="button-send"]').should("exist");
-      cy.get('[data-test="button-reset"]').should("exist");
+      cy.get('[data-testid="button-send"]').should("exist");
+      cy.get('[data-testid="button-reset"]').should("exist");
     });
 
     it("let me check if buttons 'envoyer' and 'réinitialiser' are no more visible if status different from 'BROUILLON'", function () {
@@ -300,8 +300,8 @@ context("when i access the update certification page ", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationForUpdateCertificationPage");
 
-      cy.get('[data-test="button-send"]').should("not.exist");
-      cy.get('[data-test="button-reset"]').should("not.exist");
+      cy.get('[data-testid="button-send"]').should("not.exist");
+      cy.get('[data-testid="button-reset"]').should("not.exist");
     });
   });
 
@@ -316,7 +316,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="update-certification-page"] [data-test="prerequisites-summary-card"] [data-test="prerequisite-list"] [data-test="prerequisite"]',
+        '[data-testid="update-certification-page"] [data-testid="prerequisites-summary-card"] [data-testid="prerequisite-list"] [data-testid="prerequisite"]',
       ).should("have.length", 2);
     });
 
@@ -330,7 +330,7 @@ context("when i access the update certification page ", () => {
       cy.wait("@getCertificationForUpdateCertificationPage");
 
       cy.get(
-        '[data-test="update-certification-page"] [data-test="prerequisites-summary-card"]  [data-test="action-button"]',
+        '[data-testid="update-certification-page"] [data-testid="prerequisites-summary-card"]  [data-testid="action-button"]',
       ).click();
 
       cy.url().should(

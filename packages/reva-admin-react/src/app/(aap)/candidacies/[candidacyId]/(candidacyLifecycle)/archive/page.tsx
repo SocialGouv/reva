@@ -12,7 +12,7 @@ const CandidacyArchivePage = () => {
 
   return (
     <>
-      <h1 data-test="archive-candidacy-title">Archivage de la candidature</h1>
+      <h1 data-testid="archive-candidacy-title">Archivage de la candidature</h1>
       {candidacy.status === "ARCHIVE" ? (
         <ViewArchivedCandidacy candidacy={candidacy} />
       ) : (

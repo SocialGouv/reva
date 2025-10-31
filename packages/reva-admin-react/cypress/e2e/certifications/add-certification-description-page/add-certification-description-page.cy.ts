@@ -48,7 +48,7 @@ context("when i access the add certification description page ", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
 
-    cy.get('[data-test="add-fc-certification-page"]')
+    cy.get('[data-testid="add-fc-certification-page"]')
       .children("h1")
       .should("have.text", "Descriptif de la certification");
   });
@@ -63,7 +63,7 @@ context("when i access the add certification description page ", () => {
 
     cy.get("button").contains("Enregistrer").click();
 
-    cy.get('[data-test="fc-certification-description-input"]')
+    cy.get('[data-testid="fc-certification-description-input"]')
       .children("input")
       .should("have.focus");
   });
@@ -77,13 +77,13 @@ context("when i access the add certification description page ", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
 
-    cy.get('[data-test="fc-certification-description-input"]')
+    cy.get('[data-testid="fc-certification-description-input"]')
       .children("input")
       .type("3890");
 
     cy.wait("@getFCCertificationForAddCertificationPage");
 
-    cy.get('[data-test="fc-certification-description-card-title"]').should(
+    cy.get('[data-testid="fc-certification-description-card-title"]').should(
       "have.text",
       "Descriptif de la certification avec France compétences",
     );
@@ -98,7 +98,7 @@ context("when i access the add certification description page ", () => {
     cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
 
-    cy.get('[data-test="fc-certification-description-input"]')
+    cy.get('[data-testid="fc-certification-description-input"]')
       .children("input")
       .type("3890");
 

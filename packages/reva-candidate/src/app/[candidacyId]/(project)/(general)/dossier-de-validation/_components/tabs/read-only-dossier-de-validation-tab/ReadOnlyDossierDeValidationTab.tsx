@@ -36,7 +36,7 @@ export const ReadOnlyDossierDeValidationTab = ({
     <div className="flex gap-6">
       <main className="flex-1">
         <Alert
-          data-test="dossier-de-validation-sent-alert"
+          data-testid="dossier-de-validation-sent-alert"
           title={`Dossier de validation envoyé au certificateur le ${dossierDeValidationSentAt ? format(dossierDeValidationSentAt, "dd/MM/yyyy") : ""}`}
           severity="success"
           description={

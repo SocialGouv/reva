@@ -338,7 +338,7 @@ export default function AttachmentsPage() {
               onClick={() => {
                 appendAdditionalFiles({ 0: undefined });
               }}
-              data-test="add-additional-file-button"
+              data-testid="add-additional-file-button"
             >
               <span className="fr-icon-add-line fr-icon--sm" />
               <span className="text-sm">Ajouter une pièce jointe</span>

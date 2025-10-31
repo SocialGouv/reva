@@ -16,7 +16,7 @@ export const DashboardSidebar = ({
   return (
     <div
       className={`flex flex-col gap-y-8 ${className || ""}`}
-      data-test="dashboard-sidebar"
+      data-testid="dashboard-sidebar"
     >
       {isNextActionsFeatureActive && <NextActionTiles candidacy={candidacy} />}
       <AppointmentTiles candidacy={candidacy} />

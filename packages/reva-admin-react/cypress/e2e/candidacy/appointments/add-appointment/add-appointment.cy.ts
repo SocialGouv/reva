@@ -64,7 +64,7 @@ context("when I access the candidacy add appointment page", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="add-appointments-page"]')
+    cy.get('[data-testid="add-appointments-page"]')
       .children("h1")
       .should("have.text", "Rendez-vous pédagogique de Doe John");
   });
@@ -76,7 +76,7 @@ context("when I access the candidacy add appointment page", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="title-input"] input').should(
+    cy.get('[data-testid="title-input"] input').should(
       "have.value",
       "Rendez-vous pédagogique",
     );
@@ -91,18 +91,18 @@ context("when I try to validate the form ", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="title-input"] input').clear();
+    cy.get('[data-testid="title-input"] input').clear();
 
     cy.get("button[type='submit']").click();
-    cy.get('[data-test="title-input"]').should(
+    cy.get('[data-testid="title-input"]').should(
       "have.class",
       "fr-input-group--error",
     );
-    cy.get('[data-test="date-input"]').should(
+    cy.get('[data-testid="date-input"]').should(
       "have.class",
       "fr-input-group--error",
     );
-    cy.get('[data-test="time-input"]').should(
+    cy.get('[data-testid="time-input"]').should(
       "have.class",
       "fr-input-group--error",
     );
@@ -115,13 +115,13 @@ context("when I try to validate the form ", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="title-input"] input').type("Test Appointment");
-    cy.get('[data-test="date-input"] input').type("2005-01-01");
-    cy.get('[data-test="time-input"] input').type("10:00");
+    cy.get('[data-testid="title-input"] input').type("Test Appointment");
+    cy.get('[data-testid="date-input"] input').type("2005-01-01");
+    cy.get('[data-testid="time-input"] input').type("10:00");
 
     cy.get("button[type='submit']").click();
 
-    cy.get('[data-test="date-input"]').should(
+    cy.get('[data-testid="date-input"]').should(
       "have.class",
       "fr-input-group--error",
     );
@@ -134,9 +134,9 @@ context("when I try to validate the form ", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="title-input"] input').type("Test Appointment");
-    cy.get('[data-test="date-input"] input').type("2225-01-01");
-    cy.get('[data-test="time-input"] input').type("10:00");
+    cy.get('[data-testid="title-input"] input').type("Test Appointment");
+    cy.get('[data-testid="date-input"] input').type("2225-01-01");
+    cy.get('[data-testid="time-input"] input').type("10:00");
 
     cy.get("button[type='submit']").click();
 
@@ -157,12 +157,16 @@ context("when I try to validate the form ", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="title-input"] input').clear().type("Test Appointment");
-    cy.get('[data-test="date-input"] input').type("2225-01-01");
-    cy.get('[data-test="time-input"] input').type("10:00");
-    cy.get('[data-test="duration-input"] select').select("ONE_HOUR");
-    cy.get('[data-test="location-input"] input').type("Test Location");
-    cy.get('[data-test="description-input"] textarea').type("Test Description");
+    cy.get('[data-testid="title-input"] input')
+      .clear()
+      .type("Test Appointment");
+    cy.get('[data-testid="date-input"] input').type("2225-01-01");
+    cy.get('[data-testid="time-input"] input').type("10:00");
+    cy.get('[data-testid="duration-input"] select').select("ONE_HOUR");
+    cy.get('[data-testid="location-input"] input').type("Test Location");
+    cy.get('[data-testid="description-input"] textarea').type(
+      "Test Description",
+    );
 
     cy.get("button[type='submit']").click();
 

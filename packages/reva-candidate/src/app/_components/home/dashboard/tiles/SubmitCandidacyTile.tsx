@@ -3,13 +3,13 @@ import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 
 const SentBadge = () => (
-  <Badge severity="success" data-test="sent-badge">
+  <Badge severity="success" data-testid="sent-badge">
     Envoyée
   </Badge>
 );
 
 const ToSendBadge = () => (
-  <Badge severity="warning" data-test="to-send-badge">
+  <Badge severity="warning" data-testid="to-send-badge">
     à envoyer
   </Badge>
 );
@@ -25,7 +25,7 @@ export const SubmitCandidacyTile = ({
 
   return (
     <Tile
-      data-test="submit-candidacy-tile"
+      data-testid="submit-candidacy-tile"
       start={
         <>
           {candidacyAlreadySubmitted ? (

@@ -90,7 +90,7 @@ export const FeasibilityUploadedPdf = () => {
   return (
     <div
       className="flex flex-col flex-1 mb-2 w-full"
-      data-test={`feasibility-page-pdf-${feasibility?.decision?.toLowerCase() || "pending"}`}
+      data-testid={`feasibility-page-pdf-${feasibility?.decision?.toLowerCase() || "pending"}`}
     >
       {feasibility && (
         <revokeDecisionModal.Component

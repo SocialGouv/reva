@@ -58,7 +58,7 @@ describe("Dematerialized Feasibility File - Competencies Block Page", () => {
     it("should display the competencies block form with disabled submit button", function () {
       visitFeasibilityCompetenciesBlock();
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
@@ -70,11 +70,11 @@ describe("Dematerialized Feasibility File - Competencies Block Page", () => {
     it("should enable submit button when adding a valid block comment", function () {
       visitFeasibilityCompetenciesBlock();
 
-      cy.get('[data-test="block-comment-input"]')
+      cy.get('[data-testid="block-comment-input"]')
         .should("exist")
         .type("Test comment for the block");
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -84,11 +84,11 @@ describe("Dematerialized Feasibility File - Competencies Block Page", () => {
     it("should keep submit button disabled when block comment is empty", function () {
       visitFeasibilityCompetenciesBlock();
 
-      cy.get('[data-test="block-comment-input"]')
+      cy.get('[data-testid="block-comment-input"]')
         .should("exist")
         .and("have.value", "");
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .find('button[type="submit"]')
         .should("be.disabled");
     });
@@ -98,7 +98,7 @@ describe("Dematerialized Feasibility File - Competencies Block Page", () => {
     it("should provide a link back to the feasibility summary page", function () {
       visitFeasibilityCompetenciesBlock();
 
-      cy.get('[data-test="back-button"]').click();
+      cy.get('[data-testid="back-button"]').click();
 
       cy.url().should("include", "/feasibility-aap");
     });

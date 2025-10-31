@@ -28,7 +28,7 @@ export const AppointmentsBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="waiting-for-appointment-banner">
+          <div data-testid="waiting-for-appointment-banner">
             Votre accompagnateur vous enverra prochainement un date de
             rendez-vous pour parler de votre projet. Si vous n’avez toujours pas
             eu de retour 2 semaines après l’envoi de votre candidature,
@@ -44,7 +44,7 @@ export const AppointmentsBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="first-appointment-scheduled-banner">
+          <div data-testid="first-appointment-scheduled-banner">
             <b>Information importante :</b> un rendez-vous est prévu le{" "}
             {formatIso8601Date(firstAppointmentOccuredAt)} avec{" "}
             <em>{organism?.nomPublic || organism?.label}</em>.
@@ -62,7 +62,7 @@ export const AppointmentsBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="training-to-validate-banner">
+          <div data-testid="training-to-validate-banner">
             Vous pouvez maintenant consulter, vérifier et valider votre parcours
             et le financement prévu.
           </div>
@@ -76,7 +76,7 @@ export const AppointmentsBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="waiting-for-training-banner">
+          <div data-testid="waiting-for-training-banner">
             Votre accompagnateur est en train de compléter votre parcours
             construit ensemble (heures d'accompagnement, formations, etc…). Vous
             pourrez le consulter très prochainement !

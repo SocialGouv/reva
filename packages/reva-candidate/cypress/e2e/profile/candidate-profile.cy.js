@@ -7,8 +7,8 @@ import countries from "./fixtures/countries.json";
 import departments from "./fixtures/departments.json";
 
 // Form elements selectors
-const SUBMIT_BUTTON = '[data-test="form-buttons"] button[type="submit"]';
-const RESET_BUTTON = '[data-test="form-buttons"] button[type="reset"]';
+const SUBMIT_BUTTON = '[data-testid="form-buttons"] button[type="submit"]';
+const RESET_BUTTON = '[data-testid="form-buttons"] button[type="reset"]';
 const FIRSTNAME_INPUT = '[data-testid="firstname-input"] input';
 const LASTNAME_INPUT = '[data-testid="lastname-input"] input';
 const GIVEN_NAME_INPUT = '[data-testid="given-name-input"] input';

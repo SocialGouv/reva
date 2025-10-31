@@ -47,7 +47,7 @@ export const GenericAppointmentTile = ({
 
   return id ? (
     <Tile
-      data-test="rendez-vous-generique-tile"
+      data-testid="rendez-vous-generique-tile"
       small
       orientation="horizontal"
       classes={{
@@ -70,7 +70,7 @@ export const GenericAppointmentTile = ({
     />
   ) : (
     <Tile
-      data-test="rendez-vous-generique-tile"
+      data-testid="rendez-vous-generique-tile"
       small
       orientation="horizontal"
       classes={{

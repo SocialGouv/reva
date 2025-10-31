@@ -54,7 +54,7 @@ export default function SetCertification() {
       .rows;
 
   return (
-    <PageLayout title="Choix du diplôme" data-test={`certificates`}>
+    <PageLayout title="Choix du diplôme" data-testid={`certificates`}>
       <Breadcrumb
         currentPageLabel="Choisir un diplôme"
         className="mb-0"

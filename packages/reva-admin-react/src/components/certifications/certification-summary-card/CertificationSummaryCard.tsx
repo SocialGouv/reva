@@ -62,7 +62,7 @@ export default function CertificationSummaryCard({
 }) {
   return (
     <EnhancedSectionCard
-      data-test="certification-description-card"
+      data-testid="certification-description-card"
       title="Descriptif de la certification"
       titleIconClass="fr-icon-award-fill"
     >
@@ -169,14 +169,14 @@ const Info = ({
   title,
   children,
   className,
-  "data-test": dataTest,
+  "data-testid": dataTest,
 }: {
   title: string;
   children: ReactNode;
   className?: string;
-  "data-test"?: string;
+  "data-testid"?: string;
 }) => (
-  <dl data-test={dataTest} className={`${className || ""}`}>
+  <dl data-testid={dataTest} className={`${className || ""}`}>
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>

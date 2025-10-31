@@ -18,7 +18,7 @@ export const DashboardAutonomeTilesGroup = ({
   return (
     <div
       className={`flex flex-col gap-y-8 ${className || ""}`}
-      data-test="dashboard-autonome"
+      data-testid="dashboard-autonome"
     >
       <DashboardTilesSection
         title="Compléter ma candidature"

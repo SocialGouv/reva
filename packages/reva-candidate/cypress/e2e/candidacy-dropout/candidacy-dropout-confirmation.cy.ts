@@ -30,14 +30,18 @@ function interceptCandidacy() {
 context("Candidacy dropout confirmation page", () => {
   it("should let me access the page", function () {
     interceptCandidacy();
-    cy.get('[data-test="candidacy-dropout-confirmation-page"]').should("exist");
+    cy.get('[data-testid="candidacy-dropout-confirmation-page"]').should(
+      "exist",
+    );
     cy.get("h1").should("contain.text", "Votre parcours VAE est abandonné");
   });
 
   it("should redirect me to the homepage when i click on the back button", function () {
     interceptCandidacy();
 
-    cy.get('[data-test="candidacy-dropout-confirmation-back-button"]').click();
+    cy.get(
+      '[data-testid="candidacy-dropout-confirmation-back-button"]',
+    ).click();
     cy.url().should("eq", Cypress.config().baseUrl + "c1/");
   });
 });

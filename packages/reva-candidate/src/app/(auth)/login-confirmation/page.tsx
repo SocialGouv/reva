@@ -7,7 +7,7 @@ export default function LoginConfirmation() {
     <PageLayout
       title="Confirmation de connexion"
       className="flex flex-col items-center justify-center text-center p-6 pt-8"
-      data-test="login-confirmation"
+      data-testid="login-confirmation"
     >
       <h1 className="text-3xl font-bold text-dsfrGray-800">
         Un courriel vous a été envoyé.

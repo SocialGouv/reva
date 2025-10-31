@@ -64,7 +64,7 @@ test.describe("Next actions tiles", () => {
         await login(page);
         await dashboardWait(page);
         await expect(
-          page.locator('[data-test="dashboard-sidebar"]'),
+          page.locator('[data-testid="dashboard-sidebar"]'),
         ).toBeVisible();
         await expect(
           page.getByRole("button", { name: "Remplir mes objectifs" }),
@@ -199,7 +199,8 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Valider mon dossier de faisabilité", () => {
-      const dematerializedFeasibilityFile = createDematerializedFeasibilityFileEntity({
+      const dematerializedFeasibilityFile =
+        createDematerializedFeasibilityFileEntity({
           sentToCandidateAt: new Date().getTime(),
         });
       const feasibility = createFeasibilityEntity({
@@ -244,7 +245,8 @@ test.describe("Next actions tiles", () => {
     });
 
     test.describe("Envoyer votre attestation", () => {
-      const dematerializedFeasibilityFile = createDematerializedFeasibilityFileEntity({
+      const dematerializedFeasibilityFile =
+        createDematerializedFeasibilityFileEntity({
           sentToCandidateAt: new Date().getTime(),
           candidateConfirmationAt: new Date().getTime(),
         });
@@ -464,7 +466,7 @@ test.describe("Next actions tiles", () => {
         await login(page);
         await dashboardWait(page);
         await expect(
-          page.locator('[data-test="no-action-tile"]'),
+          page.locator('[data-testid="no-action-tile"]'),
         ).toBeVisible();
       });
     });

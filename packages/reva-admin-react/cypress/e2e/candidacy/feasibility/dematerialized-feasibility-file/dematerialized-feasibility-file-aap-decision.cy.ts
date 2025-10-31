@@ -58,7 +58,7 @@ describe("Dematerialized Feasibility File - AAP Decision Page", () => {
     it("should display an empty form with submit button disabled", () => {
       visitFeasibilityDecision();
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
@@ -70,15 +70,15 @@ describe("Dematerialized Feasibility File - AAP Decision Page", () => {
     it("should display an error when submitting without selecting a decision", () => {
       visitFeasibilityDecision();
 
-      cy.get('[data-test="aap-decision-comment-input"]').type(
+      cy.get('[data-testid="aap-decision-comment-input"]').type(
         "This is a valid comment for the decision",
       );
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .find('button[type="submit"]')
         .click();
 
-      cy.get('[data-test="aap-decision-radio-buttons"]').within(() => {
+      cy.get('[data-testid="aap-decision-radio-buttons"]').within(() => {
         cy.get(".fr-message--error").should("exist");
       });
     });
@@ -87,12 +87,12 @@ describe("Dematerialized Feasibility File - AAP Decision Page", () => {
       visitFeasibilityDecision();
 
       cy.get(
-        '[data-test="aap-decision-radio-buttons"] input[value="FAVORABLE"]',
+        '[data-testid="aap-decision-radio-buttons"] input[value="FAVORABLE"]',
       ).check({
         force: true,
       });
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .find('button[type="submit"]')
         .click();
 
@@ -103,16 +103,16 @@ describe("Dematerialized Feasibility File - AAP Decision Page", () => {
       visitFeasibilityDecision();
 
       cy.get(
-        '[data-test="aap-decision-radio-buttons"] input[value="FAVORABLE"]',
+        '[data-testid="aap-decision-radio-buttons"] input[value="FAVORABLE"]',
       ).check({
         force: true,
       });
 
-      cy.get('[data-test="aap-decision-comment-input"]').type(
+      cy.get('[data-testid="aap-decision-comment-input"]').type(
         "This is a valid comment for the decision",
       );
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -122,13 +122,13 @@ describe("Dematerialized Feasibility File - AAP Decision Page", () => {
     it("should allow switching between favorable and unfavorable decisions", () => {
       visitFeasibilityDecision();
 
-      cy.get('[data-test="aap-decision-radio-buttons"]').within(() => {
+      cy.get('[data-testid="aap-decision-radio-buttons"]').within(() => {
         cy.get('input[value="FAVORABLE"]').check({
           force: true,
         });
       });
 
-      cy.get('[data-test="aap-decision-radio-buttons"]').within(() => {
+      cy.get('[data-testid="aap-decision-radio-buttons"]').within(() => {
         cy.get('input[value="UNFAVORABLE"]').check({
           force: true,
         });
@@ -139,7 +139,7 @@ describe("Dematerialized Feasibility File - AAP Decision Page", () => {
   context("Navigation", () => {
     it("should provide a back link to the feasibility summary", () => {
       visitFeasibilityDecision();
-      cy.get('[data-test="back-button"]').click();
+      cy.get('[data-testid="back-button"]').click();
 
       cy.url().should("include", "/feasibility-aap");
     });

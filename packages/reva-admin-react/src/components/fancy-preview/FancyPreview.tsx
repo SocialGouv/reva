@@ -17,7 +17,7 @@ export const FancyPreview = (props: Props) => {
   return (
     <div
       className="flex flex-col gap-4 first:border-t border-gray-200 border-b"
-      data-test={`feasibility-files-preview-${title}`}
+      data-testid={`feasibility-files-preview-${title}`}
     >
       <div
         className={`flex flex-row items-center justify-between px-4 py-3 cursor-pointer ${backgroundColor}`}
@@ -29,7 +29,7 @@ export const FancyPreview = (props: Props) => {
         <span
           className={`text-blue-800 ${display ? "fr-icon-eye-off-fill" : "fr-icon-eye-fill"}`}
           aria-hidden="true"
-          data-test={`feasibility-files-preview-${title}-toggle`}
+          data-testid={`feasibility-files-preview-${title}-toggle`}
         />
       </div>
       {display && (

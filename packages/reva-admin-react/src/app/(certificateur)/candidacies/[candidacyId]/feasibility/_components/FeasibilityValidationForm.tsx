@@ -55,7 +55,7 @@ const DecisionWarningModal = ({
           children: "Confirmer",
           type: "button",
           nativeButtonProps: {
-            "data-test": "submit-decision-modal-button",
+            "data-testid": "submit-decision-modal-button",
             onClick: onSubmit,
           },
         },

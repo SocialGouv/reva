@@ -79,7 +79,7 @@ export default function CertificationChangeButtons({
       {certification?.id === selectedCertificationId &&
         candidacy.hasMoreThanOneCertificationAvailable && (
           <Button
-            data-test="change-certification-button"
+            data-testid="change-certification-button"
             priority="tertiary no outline"
             className="justify-center w-[100%] md:w-fit"
             onClick={() => {
@@ -93,7 +93,7 @@ export default function CertificationChangeButtons({
 
       {certification?.id !== selectedCertificationId && (
         <Button
-          data-test="submit-certification-button"
+          data-testid="submit-certification-button"
           className="justify-center w-[100%]  md:w-fit"
           disabled={updateCertification.isPending || !canEditCandidacy}
           onClick={onSubmit}

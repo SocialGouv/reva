@@ -118,7 +118,7 @@ export const StructureForm = ({
   };
 
   return (
-    <div data-test="update-certification-structure-page">
+    <div data-testid="update-certification-structure-page">
       <Breadcrumb
         currentPageLabel="Structure certificatrice et gestionnaires"
         homeLinkProps={{
@@ -150,7 +150,7 @@ export const StructureForm = ({
         }}
       >
         <Select
-          data-test="certification-authority-structure-select"
+          data-testid="certification-authority-structure-select"
           label="Structure certificatrice"
           hint="La structure certificatrice (organismes et ministères) est l’entité morale à l’origine de l’enregistrement de cette certification au RNCP."
           nativeSelectProps={{

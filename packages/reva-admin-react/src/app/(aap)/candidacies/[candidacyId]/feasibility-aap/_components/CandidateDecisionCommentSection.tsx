@@ -10,7 +10,7 @@ export const CandidateDecisionCommentSection = ({
     <EnhancedSectionCard
       title="Commentaire du candidat"
       titleIconClass="ri-message-3-fill"
-      data-test="candidate-decision-comment-section"
+      data-testid="candidate-decision-comment-section"
     >
       <p className="md:pl-8 md:pr-6">“{candidateDecisionComment}”</p>
       <SmallNotice>

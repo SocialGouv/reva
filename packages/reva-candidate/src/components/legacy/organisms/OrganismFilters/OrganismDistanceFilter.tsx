@@ -45,7 +45,7 @@ export const OrganismDistanceFilter = ({
           Où souhaitez-vous réaliser votre accompagnement ?
         </legend>
         <Input
-          data-test="input-wrapper-zip"
+          data-testid="input-wrapper-zip"
           label=""
           disabled={disabled}
           nativeInputProps={{
@@ -67,7 +67,7 @@ export const OrganismDistanceFilter = ({
               label:
                 "Afficher uniquement les sites pouvant recevoir des personnes à mobilité réduite (PMR)",
               nativeInputProps: {
-                ...{ "data-test": "checkbox-wrapper-pmr-input" },
+                ...{ "data-testid": "checkbox-wrapper-pmr-input" },
                 disabled,
                 onChange: handleChangePmr,
                 checked: filters.organismSearchPmr,

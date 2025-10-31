@@ -9,7 +9,7 @@ export const ReadyForJuryTile = ({
   readyForJuryEstimatedAt: string;
 }) => (
   <Tile
-    data-test="ready-for-jury-tile"
+    data-testid="ready-for-jury-tile"
     small
     orientation="horizontal"
     start={

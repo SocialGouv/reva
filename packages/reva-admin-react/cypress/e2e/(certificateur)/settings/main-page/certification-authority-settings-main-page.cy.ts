@@ -36,7 +36,7 @@ context("main page", () => {
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
       );
 
-      cy.get('[data-test="certification-authority-settings-page"]')
+      cy.get('[data-testid="certification-authority-settings-page"]')
         .children("h1")
         .should("have.text", "Paramètres");
     });
@@ -57,31 +57,31 @@ context("general information summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"]',
+        '[data-testid="certification-authority-general-information-card"]',
       ).should("exist");
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] h2',
+        '[data-testid="certification-authority-general-information-card"] h2',
       ).should("have.text", "Informations générales");
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="certification-authority-label"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="certification-authority-label"]',
       ).should("have.text", "certification authority label");
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="contact-full-name"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="contact-full-name"]',
       ).should("have.text", "jane doe");
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="contact-email"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="contact-email"]',
       ).should("have.text", "monemail@example.com");
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="contact-phone"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="contact-phone"]',
       ).should("have.text", "0101010101");
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="completed-badge"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="completed-badge"]',
       ).should("exist");
     });
 
@@ -97,13 +97,13 @@ context("general information summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="action-button"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="action-button"]',
       ).should("have.text", "Modifier");
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="action-button"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="action-button"]',
       ).should("be.enabled");
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="action-button"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="action-button"]',
       ).click();
 
       cy.url().should(
@@ -124,7 +124,7 @@ context("general information summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="to-complete-badge"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="to-complete-badge"]',
       ).should("exist");
     });
 
@@ -140,7 +140,7 @@ context("general information summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="no-contact-badge"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="no-contact-badge"]',
       ).should("exist");
     });
 
@@ -156,7 +156,7 @@ context("general information summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-general-information-card"] [data-test="no-contact-notice"]',
+        '[data-testid="certification-authority-general-information-card"] [data-testid="no-contact-notice"]',
       ).should("exist");
     });
   });
@@ -176,7 +176,7 @@ context("local accounts summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card"] h2',
+        '[data-testid="certification-authority-local-accounts-summary-card"] h2',
       ).should("have.text", "Comptes locaux");
     });
 
@@ -192,7 +192,7 @@ context("local accounts summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card-list"]',
+        '[data-testid="certification-authority-local-accounts-summary-card-list"]',
       )
         .children("li")
         .should("have.length", 2);
@@ -210,11 +210,11 @@ context("local accounts summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card-list"]',
+        '[data-testid="certification-authority-local-accounts-summary-card-list"]',
       )
         .children("li")
         .first()
-        .find('[data-test="no-contact-referent-badge"]')
+        .find('[data-testid="no-contact-referent-badge"]')
         .should("exist");
     });
 
@@ -230,11 +230,11 @@ context("local accounts summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card-list"]',
+        '[data-testid="certification-authority-local-accounts-summary-card-list"]',
       )
         .children("li")
         .last()
-        .find('[data-test="no-contact-referent-badge"]')
+        .find('[data-testid="no-contact-referent-badge"]')
         .should("not.exist");
     });
   });
@@ -251,7 +251,7 @@ context("local accounts summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card"] [data-test="action-button"]',
+        '[data-testid="certification-authority-local-accounts-summary-card"] [data-testid="action-button"]',
       ).click();
 
       cy.url().should(
@@ -274,11 +274,11 @@ context("local accounts summary card", () => {
       );
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card-list"]',
+        '[data-testid="certification-authority-local-accounts-summary-card-list"]',
       )
         .children("li")
         .first()
-        .find('[data-test="update-local-account-button"]')
+        .find('[data-testid="update-local-account-button"]')
         .click();
 
       cy.url().should(

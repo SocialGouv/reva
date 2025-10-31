@@ -71,10 +71,10 @@ test.describe("Appointment list for candidacy with past appointments", () => {
     ).toBeVisible();
     for (const app of candidacy.appointments.rows) {
       await expect(
-        page.locator(`[data-test="future-appointment-${app.id}"]`),
+        page.locator(`[data-testid="future-appointment-${app.id}"]`),
       ).toBeVisible();
       await expect(
-        page.locator(`[data-test="future-appointment-${app.id}"] h3`),
+        page.locator(`[data-testid="future-appointment-${app.id}"] h3`),
       ).toHaveText(app.title);
     }
   });
@@ -95,10 +95,10 @@ test.describe("Appointment list for candidacy with past appointments", () => {
     for (const app of candidacy.appointments.rows) {
       if (app.temporalStatus === "PAST") {
         await expect(
-          page.locator(`[data-test="past-appointment-${app.id}"]`),
+          page.locator(`[data-testid="past-appointment-${app.id}"]`),
         ).toBeVisible();
         await expect(
-          page.locator(`[data-test="past-appointment-${app.id}"] h3`),
+          page.locator(`[data-testid="past-appointment-${app.id}"] h3`),
         ).toHaveText(app.title);
       }
     }

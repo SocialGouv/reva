@@ -84,12 +84,12 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="no-rendez-vous-tile"]').should("be.visible");
-          cy.get('[data-test="rendez-vous-generique-tile"]').should(
+          cy.get('[data-testid="no-rendez-vous-tile"]').should("be.visible");
+          cy.get('[data-testid="rendez-vous-generique-tile"]').should(
             "not.exist",
           );
-          cy.get('[data-test="ready-for-jury-tile"]').should("not.exist");
-          cy.get('[data-test="jury-session-tile"]').should("not.exist");
+          cy.get('[data-testid="ready-for-jury-tile"]').should("not.exist");
+          cy.get('[data-testid="jury-session-tile"]').should("not.exist");
         },
       );
     });
@@ -118,8 +118,8 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
         },
       );
 
-      cy.get('[data-test="rendez-vous-generique-tile"]').should("be.visible");
-      cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
+      cy.get('[data-testid="rendez-vous-generique-tile"]').should("be.visible");
+      cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
     });
 
     it("should display 'tous mes rendez-vous' button when there is at least one appointment, whether past or future", () => {
@@ -132,7 +132,9 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="all-appointments-button"]').should("be.visible");
+          cy.get('[data-testid="all-appointments-button"]').should(
+            "be.visible",
+          );
         },
       );
     });
@@ -157,14 +159,14 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="rendez-vous-generique-tile"]').should(
+          cy.get('[data-testid="rendez-vous-generique-tile"]').should(
             "be.visible",
           );
-          cy.get('[data-test="rendez-vous-generique-tile"] p.fr-tag').should(
+          cy.get('[data-testid="rendez-vous-generique-tile"] p.fr-tag').should(
             "have.text",
             "Rendez-vous de suivi",
           );
-          cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
+          cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
         },
       );
     });
@@ -184,8 +186,8 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="ready-for-jury-tile"]').should("be.visible");
-          cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
+          cy.get('[data-testid="ready-for-jury-tile"]').should("be.visible");
+          cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
         },
       );
     });
@@ -203,8 +205,8 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="ready-for-jury-tile"]').should("not.exist");
-          cy.get('[data-test="no-rendez-vous-tile"]').should("be.visible");
+          cy.get('[data-testid="ready-for-jury-tile"]').should("not.exist");
+          cy.get('[data-testid="no-rendez-vous-tile"]').should("be.visible");
         },
       );
     });
@@ -241,8 +243,10 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
               interceptGraphQL(candidacy);
 
-              cy.get('[data-test="ready-for-jury-tile"]').should("be.visible");
-              cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
+              cy.get('[data-testid="ready-for-jury-tile"]').should(
+                "be.visible",
+              );
+              cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
             },
           );
         });
@@ -263,8 +267,8 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="jury-session-tile"]').should("be.visible");
-          cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
+          cy.get('[data-testid="jury-session-tile"]').should("be.visible");
+          cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
         },
       );
     });
@@ -281,8 +285,8 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="jury-session-tile"]').should("not.exist");
-          cy.get('[data-test="no-rendez-vous-tile"]').should("be.visible");
+          cy.get('[data-testid="jury-session-tile"]').should("not.exist");
+          cy.get('[data-testid="no-rendez-vous-tile"]').should("be.visible");
         },
       );
     });
@@ -324,12 +328,12 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="rendez-vous-generique-tile"]').should(
+          cy.get('[data-testid="rendez-vous-generique-tile"]').should(
             "be.visible",
           );
-          cy.get('[data-test="ready-for-jury-tile"]').should("be.visible");
-          cy.get('[data-test="jury-session-tile"]').should("be.visible");
-          cy.get('[data-test="no-rendez-vous-tile"]').should("not.exist");
+          cy.get('[data-testid="ready-for-jury-tile"]').should("be.visible");
+          cy.get('[data-testid="jury-session-tile"]').should("be.visible");
+          cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
         },
       );
     });

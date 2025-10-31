@@ -57,10 +57,9 @@ context("global tests", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationAuthorityStructureWithRegistryManager");
 
-      cy.get('[data-test="certification-registry-manager-page-title"]').should(
-        "have.text",
-        "Responsable de certifications",
-      );
+      cy.get(
+        '[data-testid="certification-registry-manager-page-title"]',
+      ).should("have.text", "Responsable de certifications");
     });
   });
 });

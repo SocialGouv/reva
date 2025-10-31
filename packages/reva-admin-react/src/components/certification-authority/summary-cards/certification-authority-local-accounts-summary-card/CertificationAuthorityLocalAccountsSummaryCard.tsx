@@ -25,7 +25,7 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
   const router = useRouter();
   return (
     <SectionCard
-      data-test="certification-authority-local-accounts-summary-card"
+      data-testid="certification-authority-local-accounts-summary-card"
       title="Comptes locaux"
       titleIconClass="fr-icon-team-fill"
       hasButton={true}
@@ -35,7 +35,7 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
     >
       <ul
         className="list-none"
-        data-test="certification-authority-local-accounts-summary-card-list"
+        data-testid="certification-authority-local-accounts-summary-card-list"
       >
         {accounts.map(({ account, id, contactEmail }) => (
           <li
@@ -54,7 +54,7 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
                 <Badge
                   severity="new"
                   small
-                  data-test="no-contact-referent-badge"
+                  data-testid="no-contact-referent-badge"
                 >
                   Aucun contact référent
                 </Badge>
@@ -62,7 +62,7 @@ export const CertificationAuthorityLocalAccountsSummaryCard = ({
             </div>
             <span>
               <Button
-                data-test="update-local-account-button"
+                data-testid="update-local-account-button"
                 priority="tertiary no outline"
                 size="small"
                 linkProps={{

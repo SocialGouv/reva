@@ -6,8 +6,8 @@ import candidacy1AutonomeIncompleteFeasibilityStep from "./fixtures/candidacy1-a
 import candidacy1AutonomePendingFeasibilityStep from "./fixtures/candidacy1-autonome-pending-feasibility-step.json";
 import candidacy1AutonomeRejectedFeasibilityStep from "./fixtures/candidacy1-autonome-rejected-feasibility-step.json";
 
-const FEASIBILITY_TILE = '[data-test="feasibility-tile"]';
-const FEASIBILITY_TILE_BUTTON = '[data-test="feasibility-tile"] button';
+const FEASIBILITY_TILE = '[data-testid="feasibility-tile"]';
+const FEASIBILITY_TILE_BUTTON = '[data-testid="feasibility-tile"] button';
 
 context("Accompagnement autonome - Dossier de faisabilité", () => {
   beforeEach(() => {
@@ -59,7 +59,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.visit("/c1/feasibility/");
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
-    cy.get('[data-test="feasibility-upload-form"]').should("exist");
+    cy.get('[data-testid="feasibility-upload-form"]').should("exist");
   });
 
   it("should show the upload form on /feasibility when the type_accompagnement is autonome and the decision is INCOMPLETE", function () {
@@ -95,7 +95,7 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.visit("/c1/feasibility/");
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
-    cy.get('[data-test="feasibility-upload-form"]').should("exist");
+    cy.get('[data-testid="feasibility-upload-form"]').should("exist");
   });
 
   it("should show an info box with file sending date on /feasibility page when the type_accompagnement is autonome, decision is PENDING", function () {
@@ -131,8 +131,8 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.visit("/c1/feasibility/");
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
-    cy.get('[data-test="feasibility-decision-pending"]').should("exist");
-    cy.get('[data-test="feasibility-decision-pending"] > h3').should(
+    cy.get('[data-testid="feasibility-decision-pending"]').should("exist");
+    cy.get('[data-testid="feasibility-decision-pending"] > h3').should(
       "contain.text",
       "Dossier envoyé le 09/10/2024",
     );
@@ -171,12 +171,12 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.visit("/c1/feasibility/");
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
-    cy.get('[data-test="feasibility-upload-form"]').should("not.exist");
+    cy.get('[data-testid="feasibility-upload-form"]').should("not.exist");
     cy.get(
-      '[data-test="feasibility-files-preview-dossier_de_faisabilite.pdf"]',
+      '[data-testid="feasibility-files-preview-dossier_de_faisabilite.pdf"]',
     ).should("exist");
     cy.get(
-      '[data-test="feasibility-files-preview-dossier_de_faisabilite.pdf"] > * > label',
+      '[data-testid="feasibility-files-preview-dossier_de_faisabilite.pdf"] > * > label',
     ).should("contain.text", "dossier_de_faisabilite.pdf");
   });
 
@@ -213,12 +213,12 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.visit("/c1/feasibility/");
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
-    cy.get('[data-test="feasibility-decision-incomplete"]').should("exist");
-    cy.get('[data-test="feasibility-decision-incomplete"] > h3').should(
+    cy.get('[data-testid="feasibility-decision-incomplete"]').should("exist");
+    cy.get('[data-testid="feasibility-decision-incomplete"] > h3').should(
       "contain.text",
       "Dossier déclaré incomplet le 09/10/2024",
     );
-    cy.get('[data-test="feasibility-decision-incomplete"] > div > p').should(
+    cy.get('[data-testid="feasibility-decision-incomplete"] > div > p').should(
       "contain.text",
       '"test comment"',
     );
@@ -257,12 +257,12 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.visit("/c1/feasibility/");
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
-    cy.get('[data-test="feasibility-decision-admissible"]').should("exist");
-    cy.get('[data-test="feasibility-decision-admissible"] > h3').should(
+    cy.get('[data-testid="feasibility-decision-admissible"]').should("exist");
+    cy.get('[data-testid="feasibility-decision-admissible"] > h3').should(
       "contain.text",
       "Dossier déclaré recevable le 09/10/2024",
     );
-    cy.get('[data-test="decision-files"]').should("exist");
+    cy.get('[data-testid="decision-files"]').should("exist");
   });
 
   it("should show an info box with date of REJECTED decision on /feasibility page when the type_accompagnement is autonome, decision is REJECTED", function () {
@@ -298,12 +298,12 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
     cy.visit("/c1/feasibility/");
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
-    cy.get('[data-test="feasibility-decision-rejected"]').should("exist");
-    cy.get('[data-test="feasibility-decision-rejected"] > h3').should(
+    cy.get('[data-testid="feasibility-decision-rejected"]').should("exist");
+    cy.get('[data-testid="feasibility-decision-rejected"] > h3').should(
       "contain.text",
       "Dossier déclaré non recevable le 09/10/2024",
     );
-    cy.get('[data-test="feasibility-decision-rejected"] > div > p').should(
+    cy.get('[data-testid="feasibility-decision-rejected"] > div > p').should(
       "contain.text",
       '"test comment"',
     );

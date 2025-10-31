@@ -158,7 +158,7 @@ const getNavigationTabs = ({
           text: LABELS.STRUCTURES_ACCOMPAGNATRICES,
           href: PATHS.MAISON_MERE_AAP,
           isActive: currentPathname.startsWith(PATHS.MAISON_MERE_AAP),
-          additionalProps: { "data-test": "maison-mere-aap-link" },
+          additionalProps: { "data-testid": "maison-mere-aap-link" },
         }),
         createTab({
           text: LABELS.STRUCTURES_CERTIFICATRICES,

@@ -41,7 +41,7 @@ export default function ExperiencesSection({
               key={experience.id}
               label={`Expérience ${index + 1} - ${experience.title}`}
               defaultExpanded
-              data-test={`experience-accordion-${index}`}
+              data-testid={`experience-accordion-${index}`}
             >
               <p>Démarrée le {format(experience?.startedAt, "dd MMMM yyyy")}</p>
               <p>Expérience {durationLabel[experience?.duration]}</p>

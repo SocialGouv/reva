@@ -51,7 +51,7 @@ export default function InterventionAreaPage() {
   return (
     <div
       className="flex flex-col h-full"
-      data-test="update-certification-authority-local-account-intervention-area-page"
+      data-testid="update-certification-authority-local-account-intervention-area-page"
     >
       <Breadcrumb
         segments={[

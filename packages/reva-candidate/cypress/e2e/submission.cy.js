@@ -35,7 +35,7 @@ context("Submission", () => {
       "@getCandidacyByIdForDashboard",
     ]);
 
-    cy.get('[data-test="submit-candidacy-tile"] button').should(
+    cy.get('[data-testid="submit-candidacy-tile"] button').should(
       "not.be.disabled",
     );
   });
@@ -74,7 +74,7 @@ context("Submission", () => {
       "@getCandidacyByIdForDashboard",
     ]);
 
-    cy.get('[data-test="submit-candidacy-tile"] button').should(
+    cy.get('[data-testid="submit-candidacy-tile"] button').should(
       "not.be.disabled",
     );
   });

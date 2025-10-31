@@ -49,7 +49,7 @@ context("Candidacy dropout decision page", () => {
   });
 
   it("should let me access the page", function () {
-    cy.get('[data-test="candidacy-dropout-decision-page"]').should("exist");
+    cy.get('[data-testid="candidacy-dropout-decision-page"]').should("exist");
     cy.get("h1").should("contain.text", "Abandon du parcours VAE");
   });
   it("should let me validate my drop out and lead me to the confirmation page", function () {

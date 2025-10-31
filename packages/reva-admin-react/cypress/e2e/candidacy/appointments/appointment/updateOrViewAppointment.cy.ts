@@ -89,7 +89,7 @@ context("when I access the candidacy add appointment page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="update-appointments-page"]')
+      cy.get('[data-testid="update-appointments-page"]')
         .children("h1")
         .should("have.text", "Rendez-vous de suivi de Doe John");
     });
@@ -101,24 +101,24 @@ context("when I access the candidacy add appointment page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="title-input"] input').should(
+      cy.get('[data-testid="title-input"] input').should(
         "have.value",
         "Rendez-vous de suivi",
       );
-      cy.get('[data-test="date-input"] input').should(
+      cy.get('[data-testid="date-input"] input').should(
         "have.value",
         "2025-01-01",
       );
-      cy.get('[data-test="time-input"] input').should("have.value", "10:00");
-      cy.get('[data-test="duration-input"] select').should(
+      cy.get('[data-testid="time-input"] input').should("have.value", "10:00");
+      cy.get('[data-testid="duration-input"] select').should(
         "have.value",
         "ONE_HOUR",
       );
-      cy.get('[data-test="location-input"] input').should(
+      cy.get('[data-testid="location-input"] input').should(
         "have.value",
         "Test Location",
       );
-      cy.get('[data-test="description-input"] textarea').should(
+      cy.get('[data-testid="description-input"] textarea').should(
         "have.value",
         "Test Description",
       );
@@ -141,12 +141,12 @@ context("when I access the candidacy add appointment page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="title-input"] input').type("Updated Appointment");
-      cy.get('[data-test="date-input"] input').type("2027-01-01");
-      cy.get('[data-test="time-input"] input').type("18:00");
-      cy.get('[data-test="duration-input"] select').select("TWO_HOURS");
-      cy.get('[data-test="location-input"] input').type("Updated Location");
-      cy.get('[data-test="description-input"] textarea').type(
+      cy.get('[data-testid="title-input"] input').type("Updated Appointment");
+      cy.get('[data-testid="date-input"] input').type("2027-01-01");
+      cy.get('[data-testid="time-input"] input').type("18:00");
+      cy.get('[data-testid="duration-input"] select').select("TWO_HOURS");
+      cy.get('[data-testid="location-input"] input').type("Updated Location");
+      cy.get('[data-testid="description-input"] textarea').type(
         "Updated Description",
       );
 
@@ -167,7 +167,7 @@ context("when I access the candidacy add appointment page", () => {
         );
         waitForQueries();
 
-        cy.get('[data-test="delete-appointment-button"]').click();
+        cy.get('[data-testid="delete-appointment-button"]').click();
         cy.get(".confirm-appointment-deletion-modal-button").click();
 
         cy.wait("@deleteAppointmentForUpdateAppointmentPage");
@@ -186,7 +186,7 @@ context("when I access the candidacy add appointment page", () => {
         );
         waitForQueries();
 
-        cy.get('[data-test="delete-appointment-button"]').should("not.exist");
+        cy.get('[data-testid="delete-appointment-button"]').should("not.exist");
       });
     });
   });
@@ -198,7 +198,7 @@ context("when I access the candidacy add appointment page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="view-appointments-page"]')
+      cy.get('[data-testid="view-appointments-page"]')
         .children("h1")
         .should("have.text", "Rendez-vous de suivi");
     });
@@ -211,17 +211,20 @@ context("when I access the candidacy add appointment page", () => {
       );
       waitForQueries();
 
-      cy.get('[data-test="rendez-vous-pedagogique-tile"] .fr-tag').should(
+      cy.get('[data-testid="rendez-vous-pedagogique-tile"] .fr-tag').should(
         "have.text",
         "Rendez-vous de suivi",
       );
       cy.get(
-        '[data-test="rendez-vous-pedagogique-tile"] .fr-tile__title',
+        '[data-testid="rendez-vous-pedagogique-tile"] .fr-tile__title',
       ).should("have.text", "01/01/2025 - 10:00");
-      cy.get('[data-test="candidate-row"]').should("have.text", "Doe John");
-      cy.get('[data-test="duration-row"] ').should("have.text", "1 heure");
-      cy.get('[data-test="location-row"]').should("have.text", "Test Location");
-      cy.get('[data-test="description-row"]').should(
+      cy.get('[data-testid="candidate-row"]').should("have.text", "Doe John");
+      cy.get('[data-testid="duration-row"] ').should("have.text", "1 heure");
+      cy.get('[data-testid="location-row"]').should(
+        "have.text",
+        "Test Location",
+      );
+      cy.get('[data-testid="description-row"]').should(
         "have.text",
         "Test Description",
       );
@@ -235,7 +238,7 @@ context("when I access the candidacy add appointment page", () => {
       );
       waitForQueries();
 
-      cy.get("[data-test='back-button']").click();
+      cy.get("[data-testid='back-button']").click();
       cy.url().should(
         "eq",
         `${Cypress.config().baseUrl}/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/appointments/`,

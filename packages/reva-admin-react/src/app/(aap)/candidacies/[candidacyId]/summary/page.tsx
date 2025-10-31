@@ -118,7 +118,7 @@ const CandidacySummaryPage = () => {
         </p>
         {showFundingAlert && (
           <Alert
-            data-test="funding-request-not-available-alert"
+            data-testid="funding-request-not-available-alert"
             severity="warning"
             title="Ce parcours n’est plus finançable via France VAE "
             description={
@@ -142,7 +142,7 @@ const CandidacySummaryPage = () => {
             <CertificationCard candidacy={candidacy} />
 
             <EnhancedSectionCard
-              data-test="candidate-information"
+              data-testid="candidate-information"
               title="Les informations du candidat"
               buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-information`}
               status={
@@ -177,27 +177,27 @@ const CandidacySummaryPage = () => {
             </EnhancedSectionCard>
 
             <EnhancedSectionCard
-              data-test="candidate-contact-details"
+              data-testid="candidate-contact-details"
               title="Les coordonnées du candidat"
               buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-contact-details`}
               isEditable
             >
               <p
                 className="mb-0 font-medium"
-                data-test="candidate-contact-details-phone"
+                data-testid="candidate-contact-details-phone"
               >
                 {candidate.phone}
               </p>
               <p
                 className="mb-0 font-medium"
-                data-test="candidate-contact-details-email"
+                data-testid="candidate-contact-details-email"
               >
                 {candidate.email}
               </p>
             </EnhancedSectionCard>
             {candidacy.feasibilityFormat === "DEMATERIALIZED" && (
               <EnhancedSectionCard
-                data-test="candidate-profile"
+                data-testid="candidate-profile"
                 title="Son profil"
                 buttonOnClickHref={`/candidacies/${candidacyId}/summary/candidate-profile`}
                 isEditable={isCandidateEditable}
@@ -249,7 +249,7 @@ const CandidacySummaryPage = () => {
                         <p
                           key={i}
                           className="mb-4 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-4"
-                          data-test={`certification-authority-local-account-${i}`}
+                          data-testid={`certification-authority-local-account-${i}`}
                         >
                           {account?.contactFullName} <br />
                           {account?.contactEmail} <br />

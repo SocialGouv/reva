@@ -11,7 +11,7 @@ export const Cgu = ({
   chapo: BlocksContent;
   updatedAt: string;
 }) => (
-  <div data-test="cgu">
+  <div data-testid="cgu">
     <BlocksRenderer
       content={chapo}
       blocks={{

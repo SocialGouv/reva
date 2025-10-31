@@ -53,7 +53,7 @@ context("when i access the update certification structure page ", () => {
     );
     cy.wait("@getCertificationAuthoritiesForUpdateCertificationStructurePage");
 
-    cy.get('[data-test="update-certification-structure-page"]')
+    cy.get('[data-testid="update-certification-structure-page"]')
       .children("h1")
       .should("have.text", "Structure certificatrice et gestionnaires");
   });
@@ -71,7 +71,7 @@ context("when i access the update certification structure page ", () => {
     );
     cy.wait("@getCertificationAuthoritiesForUpdateCertificationStructurePage");
     cy.get(
-      '[data-test="certification-authority-structure-select"] select',
+      '[data-testid="certification-authority-structure-select"] select',
     ).select("IPERIA");
     cy.wait("@getCertificationAuthoritiesForUpdateCertificationStructurePage");
 

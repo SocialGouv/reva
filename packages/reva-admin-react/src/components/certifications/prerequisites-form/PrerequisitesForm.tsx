@@ -79,7 +79,7 @@ export const PrerequisitesForm = ({
       <p className="mb-0">Prérequis:</p>
       <div
         className="flex flex-col gap-2 mb-2 pl-4"
-        data-test="prerequisite-list"
+        data-testid="prerequisite-list"
       >
         <SortableList
           items={prerequisitesFields}
@@ -106,7 +106,7 @@ export const PrerequisitesForm = ({
                   }}
                 />
                 <Button
-                  data-test="delete-prerequisite-button"
+                  data-testid="delete-prerequisite-button"
                   type="button"
                   priority="tertiary no outline"
                   iconId="fr-icon-delete-line"
@@ -121,7 +121,7 @@ export const PrerequisitesForm = ({
         />
       </div>
       <Button
-        data-test="add-prerequisite-button"
+        data-testid="add-prerequisite-button"
         type="button"
         priority="tertiary no outline"
         iconId="fr-icon-add-line"
@@ -135,7 +135,7 @@ export const PrerequisitesForm = ({
       <hr className="mt-6 mb-1" />
       {onDeletePrerequisitesButtonClick && (
         <Button
-          data-test="delete-prerequisite-bloc-button"
+          data-testid="delete-prerequisite-bloc-button"
           type="button"
           priority="tertiary no outline"
           iconId="fr-icon-delete-line"

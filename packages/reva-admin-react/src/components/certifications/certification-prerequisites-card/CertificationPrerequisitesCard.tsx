@@ -13,7 +13,7 @@ export default function CertificationPrerequisitesCard({
 }) {
   return (
     <EnhancedSectionCard
-      data-test="prerequisites-summary-card"
+      data-testid="prerequisites-summary-card"
       isEditable={isEditable}
       buttonOnClickHref={buttonOnClickHref}
       customButtonTitle={customButtonTitle}
@@ -21,15 +21,15 @@ export default function CertificationPrerequisitesCard({
       titleIconClass="fr-icon-success-fill"
     >
       {prerequisites.length ? (
-        <ul className="ml-10" data-test="prerequisite-list">
+        <ul className="ml-10" data-testid="prerequisite-list">
           {prerequisites.map((p) => (
-            <li key={p.id} data-test="prerequisite">
+            <li key={p.id} data-testid="prerequisite">
               {p.label}
             </li>
           ))}
         </ul>
       ) : (
-        <p className="ml-10 mb-0" data-test="no-prerequisite-message">
+        <p className="ml-10 mb-0" data-testid="no-prerequisite-message">
           Aucun prérequis renseigné pour cette certification.
         </p>
       )}

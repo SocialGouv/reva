@@ -102,7 +102,7 @@ export default function ReplaceCertificationPage() {
   }
 
   return (
-    <div data-test="replace-certification-page">
+    <div data-testid="replace-certification-page">
       <h1>Remplacer une certification</h1>
       <p className="mb-12 text-xl">
         Pour remplacer une certification, saisissez son code RNCP afin de mettre
@@ -119,7 +119,7 @@ export default function ReplaceCertificationPage() {
           className="flex gap-8"
         >
           <Input
-            data-test="replace-certification-rncp-input"
+            data-testid="replace-certification-rncp-input"
             label="Code RNCP"
             nativeInputProps={{
               ...register("rncp"),
@@ -133,13 +133,13 @@ export default function ReplaceCertificationPage() {
 
         {fcCertification && (
           <EnhancedSectionCard
-            data-test="fc-certification-description-card"
+            data-testid="fc-certification-description-card"
             title={`Informations liées au code RNCP ${fcCertification?.NUMERO_FICHE.replace("RNCP", "") || ""}`}
             isEditable
           >
             <div className="flex flex-col gap-6">
               <h3
-                data-test="fc-certification-description-card-title"
+                data-testid="fc-certification-description-card-title"
                 className="mb-0"
               >
                 Descriptif de la certification avec France compétences

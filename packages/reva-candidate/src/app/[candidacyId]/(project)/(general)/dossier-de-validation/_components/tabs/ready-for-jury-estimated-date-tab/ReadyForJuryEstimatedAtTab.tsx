@@ -37,7 +37,7 @@ export const ReadyForJuryEstimatedDateTab = ({
       >
         <Input
           label="Date prévisionelle"
-          data-test="ready-for-jury-estimated-date-input"
+          data-testid="ready-for-jury-estimated-date-input"
           className="w-[282px] mb-0"
           nativeInputProps={{
             type: "date",
@@ -53,7 +53,7 @@ export const ReadyForJuryEstimatedDateTab = ({
           nativeButtonProps={{
             disabled: !readyForJuryEstimatedAt?.match(/^\d{4}-\d{2}-\d{2}$/),
           }}
-          data-test="submit-ready-for-jury-estimated-date-form-button"
+          data-testid="submit-ready-for-jury-estimated-date-form-button"
         >
           Valider
         </Button>

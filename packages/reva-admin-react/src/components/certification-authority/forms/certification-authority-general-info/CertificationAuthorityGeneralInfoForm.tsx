@@ -121,7 +121,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
               label="Nom de la structure"
               nativeInputProps={{ value: certificationAuthority.label }}
               disabled
-              data-test="certification-authority-label"
+              data-testid="certification-authority-label"
             />
             <div className="flex gap-4">
               <Input
@@ -131,7 +131,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   ...register("accountLastname"),
                 }}
                 disabled={!isAdmin}
-                data-test="certification-authority-account-lastname"
+                data-testid="certification-authority-account-lastname"
                 state={errors.accountLastname ? "error" : "default"}
                 stateRelatedMessage={errors.accountLastname?.message}
               />
@@ -142,7 +142,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   ...register("accountFirstname"),
                 }}
                 disabled={!isAdmin}
-                data-test="certification-authority-account-firstname"
+                data-testid="certification-authority-account-firstname"
                 state={errors.accountFirstname ? "error" : "default"}
                 stateRelatedMessage={errors.accountFirstname?.message}
               />
@@ -154,7 +154,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
               }}
               disabled={!isAdmin}
               className="w-[calc(50%-0.5rem)]"
-              data-test="certification-authority-account-email"
+              data-testid="certification-authority-account-email"
               state={errors.accountEmail ? "error" : "default"}
               stateRelatedMessage={errors.accountEmail?.message}
             />
@@ -178,7 +178,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                 nativeInputProps={{
                   ...register("contactFullName"),
                 }}
-                data-test="certification-authority-contact-full-name"
+                data-testid="certification-authority-contact-full-name"
               />
               <div className="flex flex-col md:flex-row gap-4 grow items-end">
                 <Input
@@ -190,7 +190,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   nativeInputProps={{
                     ...register("contactEmail"),
                   }}
-                  data-test="certification-authority-contact-email"
+                  data-testid="certification-authority-contact-email"
                 />
                 <Input
                   className="w-full"
@@ -198,7 +198,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
                   nativeInputProps={{
                     ...register("contactPhone"),
                   }}
-                  data-test="certification-authority-contact-phone"
+                  data-testid="certification-authority-contact-phone"
                   state={errors.contactPhone ? "error" : "default"}
                   stateRelatedMessage={errors.contactPhone?.message}
                 />
@@ -239,7 +239,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
               form: "certificationAuthorityForm",
             }}
             disabled={isSubmitting || !isDirty}
-            data-test="certification-authority-submit-button"
+            data-testid="certification-authority-submit-button"
           >
             Enregistrer
           </Button>

@@ -23,7 +23,7 @@ export const CandidacyModalities = ({
   modaliteAccompagnement: OrganismModaliteAccompagnement | undefined;
 }) => {
   const FundableBadge = () => (
-    <Tag small data-test={fundable ? "tag-fundable" : "tag-not-fundable"}>
+    <Tag small data-testid={fundable ? "tag-fundable" : "tag-not-fundable"}>
       {fundable ? "Finançable France VAE" : "Financement droit commun"}
     </Tag>
   );
@@ -39,7 +39,7 @@ export const CandidacyModalities = ({
       <Tag
         small
         iconId={accompagnementConfig.iconId}
-        data-test={accompagnementConfig.dataTest}
+        data-testid={accompagnementConfig.dataTest}
       >
         {accompagnementConfig.value}
       </Tag>

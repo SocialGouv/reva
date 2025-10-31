@@ -39,7 +39,7 @@ export default function FeasibilityDecisionDisplay({
           <Alert
             className="mb-8"
             severity="error"
-            data-test="feasibility-decision-rejected"
+            data-testid="feasibility-decision-rejected"
             title={`Dossier déclaré non recevable le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <>
@@ -66,7 +66,7 @@ export default function FeasibilityDecisionDisplay({
           <Alert
             className="mb-8"
             severity="warning"
-            data-test="feasibility-decision-incomplete"
+            data-testid="feasibility-decision-incomplete"
             title={`Dossier déclaré incomplet le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <>
@@ -91,7 +91,7 @@ export default function FeasibilityDecisionDisplay({
         <Alert
           className="mb-8"
           severity="info"
-          data-test="feasibility-decision-pending"
+          data-testid="feasibility-decision-pending"
           title={`Dossier envoyé le ${toDate(feasibilityFileSentAt!).toLocaleDateString("fr-FR")}`}
           description={
             <>
@@ -110,7 +110,7 @@ export default function FeasibilityDecisionDisplay({
           <Alert
             className="mb-8"
             severity="success"
-            data-test="feasibility-decision-admissible"
+            data-testid="feasibility-decision-admissible"
             title={`Dossier déclaré recevable le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <>
@@ -123,7 +123,7 @@ export default function FeasibilityDecisionDisplay({
             }
           />
           {decisionFile && (
-            <div className="mb-8 p-6" data-test="decision-files">
+            <div className="mb-8 p-6" data-testid="decision-files">
               <h2>
                 <span className="fr-icon-attachment-fill fr-icon--lg mr-2" />
                 Pièces jointes

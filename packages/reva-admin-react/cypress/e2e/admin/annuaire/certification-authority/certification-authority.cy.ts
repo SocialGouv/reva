@@ -33,7 +33,7 @@ context("main page", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationAuthorityForAdminPage");
 
-      cy.get('[data-test="certification-authority-admin-page"] h1').should(
+      cy.get('[data-testid="certification-authority-admin-page"] h1').should(
         "have.text",
         "certification authority label",
       );
@@ -55,7 +55,7 @@ context("local accounts summary card", () => {
       cy.wait("@getCertificationAuthorityForAdminPage");
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card"] h2',
+        '[data-testid="certification-authority-local-accounts-summary-card"] h2',
       ).should("have.text", "Comptes locaux");
     });
 
@@ -71,7 +71,7 @@ context("local accounts summary card", () => {
       cy.wait("@getCertificationAuthorityForAdminPage");
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card-list"]',
+        '[data-testid="certification-authority-local-accounts-summary-card-list"]',
       )
         .children("li")
         .should("have.length", 2);
@@ -89,11 +89,11 @@ context("local accounts summary card", () => {
       cy.wait("@getCertificationAuthorityForAdminPage");
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card-list"]',
+        '[data-testid="certification-authority-local-accounts-summary-card-list"]',
       )
         .children("li")
         .first()
-        .find('[data-test="no-contact-referent-badge"]')
+        .find('[data-testid="no-contact-referent-badge"]')
         .should("exist");
     });
 
@@ -109,11 +109,11 @@ context("local accounts summary card", () => {
       cy.wait("@getCertificationAuthorityForAdminPage");
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card-list"]',
+        '[data-testid="certification-authority-local-accounts-summary-card-list"]',
       )
         .children("li")
         .last()
-        .find('[data-test="no-contact-referent-badge"]')
+        .find('[data-testid="no-contact-referent-badge"]')
         .should("not.exist");
     });
   });
@@ -130,7 +130,7 @@ context("local accounts summary card", () => {
       cy.wait("@getCertificationAuthorityForAdminPage");
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card"] [data-test="action-button"]',
+        '[data-testid="certification-authority-local-accounts-summary-card"] [data-testid="action-button"]',
       ).click();
 
       cy.url().should(
@@ -153,11 +153,11 @@ context("local accounts summary card", () => {
       cy.wait("@getCertificationAuthorityForAdminPage");
 
       cy.get(
-        '[data-test="certification-authority-local-accounts-summary-card-list"]',
+        '[data-testid="certification-authority-local-accounts-summary-card-list"]',
       )
         .children("li")
         .first()
-        .find('[data-test="update-local-account-button"]')
+        .find('[data-testid="update-local-account-button"]')
         .click();
 
       cy.url().should(

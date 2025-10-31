@@ -100,7 +100,7 @@ const CandidateContactDetailsForm = ({
         <div className="flex flex-col md:flex-row gap-6">
           <Input
             className="flex-1"
-            data-test="phone-input"
+            data-testid="phone-input"
             label="Numéro de téléphone"
             nativeInputProps={{ ...register("phone") }}
             state={errors.phone ? "error" : "default"}
@@ -108,7 +108,7 @@ const CandidateContactDetailsForm = ({
           />
           <Input
             className="flex-1"
-            data-test="email-input"
+            data-testid="email-input"
             disabled={!!emailInputDisabled}
             label="Adresse électronique"
             nativeInputProps={{ ...register("email") }}

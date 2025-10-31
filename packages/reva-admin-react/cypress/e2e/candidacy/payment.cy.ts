@@ -63,7 +63,7 @@ context("Payment form", () => {
       proofReceivedByAdmin: false,
     });
     cy.wait("@getCandidacyForPaymentRequestUnifvaeInvoicePage");
-    cy.get('[data-test="payment-request-not-available"]').should("exist");
+    cy.get('[data-testid="payment-request-not-available"]').should("exist");
   });
 
   it("do not display any alert when dropped-out 4 month ago", function () {
@@ -73,16 +73,16 @@ context("Payment form", () => {
     });
     cy.wait("@getCandidacyForPaymentRequestUnifvaeInvoicePage");
     // Make sure the form is ready before testing non-existence of the alert
-    cy.get('[data-test="payment-form"]').should("exist");
-    cy.get('[data-test="payment-request-not-available"]').should("not.exist");
+    cy.get('[data-testid="payment-form"]').should("exist");
+    cy.get('[data-testid="payment-request-not-available"]').should("not.exist");
   });
 
   it("do not display any alert when has not dropped-out", function () {
     visitPayment({});
     cy.wait("@getCandidacyForPaymentRequestUnifvaeInvoicePage");
     // Make sure the form is ready before testing non-existence of the alert
-    cy.get('[data-test="payment-form"]').should("exist");
-    cy.get('[data-test="payment-request-not-available"]').should("not.exist");
+    cy.get('[data-testid="payment-form"]').should("exist");
+    cy.get('[data-testid="payment-request-not-available"]').should("not.exist");
   });
 
   it("do not display any alert when dropped-out less than 4 month ago but with proof received by admin", function () {
@@ -92,7 +92,7 @@ context("Payment form", () => {
     });
     cy.wait("@getCandidacyForPaymentRequestUnifvaeInvoicePage");
     // Make sure the form is ready before testing non-existence of the alert
-    cy.get('[data-test="payment-form"]').should("exist");
-    cy.get('[data-test="payment-request-not-available"]').should("not.exist");
+    cy.get('[data-testid="payment-form"]').should("exist");
+    cy.get('[data-testid="payment-request-not-available"]').should("not.exist");
   });
 });

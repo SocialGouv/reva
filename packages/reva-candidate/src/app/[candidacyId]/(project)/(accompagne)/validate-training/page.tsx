@@ -200,7 +200,7 @@ export default function ValidateTraining() {
   const TrainingValidationForm = () => (
     <div className="flex flex-col gap-12">
       <Checkbox
-        data-test="accept-conditions-checkbox-group"
+        data-testid="accept-conditions-checkbox-group"
         className="mb-0"
         legend="Conditions générales"
         options={trainingOptions.map((option) => checkboxOption(option))}
@@ -215,7 +215,7 @@ export default function ValidateTraining() {
           Retour
         </Button>
         <Button
-          data-test="submit-training-program-button"
+          data-testid="submit-training-program-button"
           className="justify-center w-[100%]  md:w-fit"
           nativeButtonProps={{
             onClick: onSubmit,
@@ -242,7 +242,7 @@ export default function ValidateTraining() {
       </p>
       <ul
         className="text-dsfrGray-700 list-disc list-inside"
-        data-test="general-informations"
+        data-testid="general-informations"
       >
         {candidacy.isCertificationPartial ? (
           <li>Certification visée partiellement</li>
@@ -254,7 +254,7 @@ export default function ValidateTraining() {
       {mandatoryTrainings?.length ? (
         <TrainingSection
           title="Formations obligatoires"
-          data-test="mandatory-training-section"
+          data-testid="mandatory-training-section"
         >
           <ul className="list-disc list-inside">
             {mandatoryTrainings.map((mt) => (
@@ -268,7 +268,7 @@ export default function ValidateTraining() {
       {basicSkills?.length ? (
         <TrainingSection
           title="Savoirs de base"
-          data-test="basic-skills-section"
+          data-testid="basic-skills-section"
         >
           <ul className="list-disc list-inside">
             {basicSkills.map((mt) => (
@@ -282,13 +282,13 @@ export default function ValidateTraining() {
       {certificateSkills && (
         <TrainingSection
           title="Bloc de compétences métiers"
-          data-test="certificate-skills-section"
+          data-testid="certificate-skills-section"
         >
           <p>{certificateSkills}</p>
         </TrainingSection>
       )}
       {otherTraining && (
-        <TrainingSection title="Autre" data-test="other-training-section">
+        <TrainingSection title="Autre" data-testid="other-training-section">
           <p>{otherTraining}</p>
         </TrainingSection>
       )}
@@ -342,17 +342,17 @@ const TrainingSection = ({
   title,
   children,
   className,
-  "data-test": dataTest,
+  "data-testid": dataTest,
 }: {
   title: string;
   children?: React.ReactNode;
   className?: string;
 
-  "data-test"?: string;
+  "data-testid"?: string;
 }) => (
   <section
     className={`text-dsfrGray-800 mt-4 ${className || ""}`}
-    data-test={dataTest}
+    data-testid={dataTest}
   >
     <h2 className="text-dsfrGray-800 text-3xl font-bold mb-3">{title} :</h2>
     {children}

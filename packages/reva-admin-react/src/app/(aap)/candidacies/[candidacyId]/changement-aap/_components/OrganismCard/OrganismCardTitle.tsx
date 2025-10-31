@@ -14,7 +14,10 @@ export const OrganismCardTitle = ({
   label: string;
 }) => {
   return (
-    <div data-test="project-organisms-organism-label" className="font-semibold">
+    <div
+      data-testid="project-organisms-organism-label"
+      className="font-semibold"
+    >
       {website ? (
         <a
           className="fr-link text-xl"

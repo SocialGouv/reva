@@ -66,7 +66,7 @@ feasibilityFormats.forEach((feasibilityFormat) => {
         modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacySummaryById");
-      cy.get('[data-test="funding-request-not-available-alert"]').should(
+      cy.get('[data-testid="funding-request-not-available-alert"]').should(
         "exist",
       );
     });
@@ -78,7 +78,7 @@ feasibilityFormats.forEach((feasibilityFormat) => {
         modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacyMenuAndCandidateInfos");
-      cy.get('[data-test="tag-not-fundable"]').should("exist");
+      cy.get('[data-testid="tag-not-fundable"]').should("exist");
     });
 
     it("display a specific tag when accompagnement is on site", function () {
@@ -88,7 +88,7 @@ feasibilityFormats.forEach((feasibilityFormat) => {
         modaliteAccompagnement: "LIEU_ACCUEIL",
       });
       cy.wait("@getCandidacyMenuAndCandidateInfos");
-      cy.get('[data-test="tag-on-site"]').should("exist");
+      cy.get('[data-testid="tag-on-site"]').should("exist");
     });
 
     it("display a specific tag when accompagnement is remote", function () {
@@ -98,7 +98,7 @@ feasibilityFormats.forEach((feasibilityFormat) => {
         modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacyMenuAndCandidateInfos");
-      cy.get('[data-test="tag-remote"]').should("exist");
+      cy.get('[data-testid="tag-remote"]').should("exist");
     });
   });
 });
@@ -111,8 +111,8 @@ context("Candidacy summary page", () => {
       modaliteAccompagnement: "A_DISTANCE",
     });
     cy.wait("@getCandidacySummaryById");
-    cy.get('[data-test="candidate-information"]').should("exist");
-    cy.get('[data-test="funding-request-not-available-alert"]').should(
+    cy.get('[data-testid="candidate-information"]').should("exist");
+    cy.get('[data-testid="funding-request-not-available-alert"]').should(
       "not.exist",
     );
   });
@@ -124,8 +124,8 @@ context("Candidacy summary page", () => {
       modaliteAccompagnement: "A_DISTANCE",
     });
     cy.wait("@getCandidacySummaryById");
-    cy.get('[data-test="candidate-information"] button').should("exist");
-    cy.get('[data-test="candidate-profile"] button').should("exist");
+    cy.get('[data-testid="candidate-information"] button').should("exist");
+    cy.get('[data-testid="candidate-profile"] button').should("exist");
   });
 
   it("display 'to complete' badges on new dematerialized candidacy", function () {
@@ -136,10 +136,10 @@ context("Candidacy summary page", () => {
     });
     cy.wait("@getCandidacySummaryById");
     cy.get(
-      '[data-test="candidate-information"] [data-test="to-complete-badge"]',
+      '[data-testid="candidate-information"] [data-testid="to-complete-badge"]',
     ).should("exist");
     cy.get(
-      '[data-test="candidate-profile"] [data-test="to-complete-badge"]',
+      '[data-testid="candidate-profile"] [data-testid="to-complete-badge"]',
     ).should("exist");
   });
 
@@ -150,11 +150,11 @@ context("Candidacy summary page", () => {
       modaliteAccompagnement: "A_DISTANCE",
     });
     cy.wait("@getCandidacySummaryById");
-    cy.get('[data-test="candidate-contact-details"]').should("exist");
-    cy.get('[data-test="candidate-contact-details-phone"]').contains(
+    cy.get('[data-testid="candidate-contact-details"]').should("exist");
+    cy.get('[data-testid="candidate-contact-details-phone"]').contains(
       "06000000",
     );
-    cy.get('[data-test="candidate-contact-details-email"]').contains(
+    cy.get('[data-testid="candidate-contact-details-email"]').contains(
       "alice.doe@example.com",
     );
   });
@@ -167,7 +167,7 @@ context("Candidacy summary page", () => {
     });
     cy.wait("@getCandidacySummaryById");
     cy.get(
-      '[data-test="candidate-contact-details"] [data-test="action-button"]',
+      '[data-testid="candidate-contact-details"] [data-testid="action-button"]',
     ).click();
     cy.url().should(
       "eq",
@@ -183,28 +183,28 @@ context("Candidacy summary page", () => {
       modaliteAccompagnement: "A_DISTANCE",
     });
     cy.wait("@getCandidacySummaryById");
-    cy.get('[data-test="certification-authority-local-account-0"]').should(
+    cy.get('[data-testid="certification-authority-local-account-0"]').should(
       "exist",
     );
-    cy.get('[data-test="certification-authority-local-account-1"]').should(
+    cy.get('[data-testid="certification-authority-local-account-1"]').should(
       "exist",
     );
-    cy.get('[data-test="certification-authority-local-account-0"]').contains(
+    cy.get('[data-testid="certification-authority-local-account-0"]').contains(
       "Jane Doe public contact",
     );
-    cy.get('[data-test="certification-authority-local-account-0"]').contains(
+    cy.get('[data-testid="certification-authority-local-account-0"]').contains(
       "janedoepublic@uncertificateur.fr",
     );
-    cy.get('[data-test="certification-authority-local-account-0"]').contains(
+    cy.get('[data-testid="certification-authority-local-account-0"]').contains(
       "0123456789",
     );
-    cy.get('[data-test="certification-authority-local-account-1"]').contains(
+    cy.get('[data-testid="certification-authority-local-account-1"]').contains(
       "John Doe public contact",
     );
-    cy.get('[data-test="certification-authority-local-account-1"]').contains(
+    cy.get('[data-testid="certification-authority-local-account-1"]').contains(
       "johndoepublic@uncertificateur.fr",
     );
-    cy.get('[data-test="certification-authority-local-account-1"]').contains(
+    cy.get('[data-testid="certification-authority-local-account-1"]').contains(
       "023456789",
     );
   });
@@ -217,7 +217,7 @@ context("Candidacy summary page", () => {
         modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacySummaryById");
-      cy.get('[data-test="archive-candidacy-button"]').should("exist");
+      cy.get('[data-testid="archive-candidacy-button"]').should("exist");
     });
 
     it("do not display the archive candidacy button when the candidacy status is equal or above DOSSIER_FAISABILITE_RECEVABLE", function () {
@@ -228,8 +228,8 @@ context("Candidacy summary page", () => {
         candidacyStatus: "DOSSIER_FAISABILITE_RECEVABLE",
       });
       cy.wait("@getCandidacySummaryById");
-      cy.get('[data-test="candidate-information"]').should("exist");
-      cy.get('[data-test="archive-candidacy-button"]').should("not.exist");
+      cy.get('[data-testid="candidate-information"]').should("exist");
+      cy.get('[data-testid="archive-candidacy-button"]').should("not.exist");
     });
 
     it("do not display the archive candidacy button when candidacy is already archived without being reoriented", function () {
@@ -240,8 +240,8 @@ context("Candidacy summary page", () => {
         candidacyStatus: "ARCHIVE",
       });
       cy.wait("@getCandidacySummaryById");
-      cy.get('[data-test="candidate-information"]').should("exist");
-      cy.get('[data-test="archive-candidacy-button"]').should("not.exist");
+      cy.get('[data-testid="candidate-information"]').should("exist");
+      cy.get('[data-testid="archive-candidacy-button"]').should("not.exist");
     });
 
     it("leads me to the archive candidacy page when the archive candidacy button is clicked", function () {
@@ -251,7 +251,7 @@ context("Candidacy summary page", () => {
         modaliteAccompagnement: "A_DISTANCE",
       });
       cy.wait("@getCandidacySummaryById");
-      cy.get('[data-test="archive-candidacy-button"]').click();
+      cy.get('[data-testid="archive-candidacy-button"]').click();
       cy.url().should(
         "eq",
         Cypress.config().baseUrl +

@@ -69,7 +69,7 @@ export const ArchiveCandidacyForm = ({
   if (!canBeArchived) {
     return (
       <Alert
-        data-test="candidacy-cannot-be-archived-alert"
+        data-testid="candidacy-cannot-be-archived-alert"
         title=""
         severity="warning"
         className="my-4"
@@ -159,11 +159,11 @@ export const ArchiveCandidacyForm = ({
       </p>
       <form onSubmit={handleFormSubmit}>
         <RadioButtons
-          data-test="archiving-reason-radio-buttons"
+          data-testid="archiving-reason-radio-buttons"
           options={availableArchivingReasons.map((r) => ({
             label: r.label,
             nativeInputProps: {
-              "data-test": `archiving-reason-radio-button-${r.value}`,
+              "data-testid": `archiving-reason-radio-button-${r.value}`,
               value: r.value,
               ...register("archivingReason"),
             },

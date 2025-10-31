@@ -83,7 +83,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   return (
     <div
       className="flex flex-col flex-1"
-      data-test="update-certification-authority-local-account-page"
+      data-testid="update-certification-authority-local-account-page"
     >
       {certificationAuthorityLocalAccount && (
         <div className="flex flex-col">
@@ -145,7 +145,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
                   onClick: handleDeleteCertificationAuthorityLocalAccount,
                   children: "Continuer",
                   nativeButtonProps: {
-                    "data-test":
+                    "data-testid":
                       "delete-certification-authority-local-account-confirm-button",
                   },
                 },
@@ -154,7 +154,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
               <p>Cette action est irréversible.</p>
             </deleteConfirmationModal.Component>
             <LocalAccountGeneraInformationCard
-              data-test="local-account-general-information-summary-card"
+              data-testid="local-account-general-information-summary-card"
               updateGeneralInformationPageUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/${certificationAuthorityLocalAccountId}/informations-generales`}
               contactFullName={
                 certificationAuthorityLocalAccount.contactFullName
@@ -167,18 +167,18 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
               }
             />
             <InterventionAreaSummaryCard
-              data-test="intervention-area-summary-card"
+              data-testid="intervention-area-summary-card"
               updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/${certificationAuthorityLocalAccountId}/zone-intervention`}
               regions={regionsAndDepartments}
             />
 
             <CertificationsSummaryCard
-              data-test="certifications-summary-card"
+              data-testid="certifications-summary-card"
               updateButtonHref={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/comptes-collaborateurs/${certificationAuthorityLocalAccountId}/certifications`}
               certifications={certificationAuthorityLocalAccount.certifications}
             />
             <Tile
-              data-test="delete-certification-authority-local-account-button"
+              data-testid="delete-certification-authority-local-account-button"
               title={
                 <span>
                   <span className="fr-icon-delete-fill fr-icon--sm mr-2" />

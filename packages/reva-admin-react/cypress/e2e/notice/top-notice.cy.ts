@@ -49,8 +49,8 @@ context("for an gestionnaire aap", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getOrganismForAAPVisibilityCheck");
 
-      cy.get('[data-test="new-cgu-notice"]').should("exist");
-      cy.get('[data-test="not-visible-alert-notice"]').should("not.exist");
+      cy.get('[data-testid="new-cgu-notice"]').should("exist");
+      cy.get('[data-testid="not-visible-alert-notice"]').should("not.exist");
     });
   });
 
@@ -65,8 +65,8 @@ context("for an gestionnaire aap", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getOrganismForAAPVisibilityCheck");
 
-      cy.get('[data-test="results"]').should("exist");
-      cy.get('[data-test="new-cgu-notice"]').should("not.exist");
+      cy.get('[data-testid="results"]').should("exist");
+      cy.get('[data-testid="new-cgu-notice"]').should("not.exist");
     });
 
     it("should not display a not-visible notice", function () {
@@ -79,8 +79,8 @@ context("for an gestionnaire aap", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getOrganismForAAPVisibilityCheck");
 
-      cy.get('[data-test="results"]').should("exist");
-      cy.get('[data-test="not-visible-alert-notice"]').should("not.exist");
+      cy.get('[data-testid="results"]').should("exist");
+      cy.get('[data-testid="not-visible-alert-notice"]').should("not.exist");
     });
   });
 });
@@ -96,9 +96,9 @@ context("for an aap collaborateur", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getOrganismForAAPVisibilityCheck");
 
-    cy.get('[data-test="results"]').should("exist");
-    cy.get('[data-test="not-visible-alert-notice"]').should("not.exist");
-    cy.get('[data-test="new-cgu-notice"]').should("not.exist");
+    cy.get('[data-testid="results"]').should("exist");
+    cy.get('[data-testid="not-visible-alert-notice"]').should("not.exist");
+    cy.get('[data-testid="new-cgu-notice"]').should("not.exist");
   });
 
   it("display a not-visible notice when organism is closed", function () {
@@ -111,7 +111,7 @@ context("for an aap collaborateur", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getOrganismForAAPVisibilityCheck");
 
-    cy.get('[data-test="not-visible-alert-notice"]').should("exist");
-    cy.get('[data-test="new-cgu-notice"]').should("not.exist");
+    cy.get('[data-testid="not-visible-alert-notice"]').should("exist");
+    cy.get('[data-testid="new-cgu-notice"]').should("not.exist");
   });
 });

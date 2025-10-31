@@ -43,7 +43,7 @@ export function FeasibilityBanner({
             <Alert
               className="mb-4"
               severity="error"
-              data-test="feasibility-decision-rejected"
+              data-testid="feasibility-decision-rejected"
               title={`Dossier déclaré comme "non recevable" le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
               description={
                 <p>
@@ -75,7 +75,7 @@ export function FeasibilityBanner({
           <Alert
             className="mb-12"
             severity="warning"
-            data-test="feasibility-decision-incomplete"
+            data-testid="feasibility-decision-incomplete"
             title={`Dossier renvoyé car "incomplet" le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             description={
               <p>
@@ -105,7 +105,7 @@ export function FeasibilityBanner({
             <Alert
               className="mb-4"
               severity="success"
-              data-test="feasibility-decision-admissible"
+              data-testid="feasibility-decision-admissible"
               small
               description={`Recevabilité acceptée le  ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
             />

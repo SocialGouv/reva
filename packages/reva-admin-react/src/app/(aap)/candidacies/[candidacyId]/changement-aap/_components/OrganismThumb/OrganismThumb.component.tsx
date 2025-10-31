@@ -29,7 +29,7 @@ export const OrganismThumb = (props: Props) => {
           aria-hidden="true"
         ></span>
         <a
-          data-test="project-organisms-organism-email"
+          data-testid="project-organisms-organism-email"
           href={`mailto:${email}`}
         >
           {email}

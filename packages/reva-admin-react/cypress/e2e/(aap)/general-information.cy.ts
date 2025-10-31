@@ -93,9 +93,9 @@ describe("General Information Page", () => {
         qualiopiStatus: true,
       });
 
-      cy.get('[data-test="siege-social-badge"]').should("exist");
-      cy.get('[data-test="en-activite-badge"]').should("exist");
-      cy.get('[data-test="qualiopi-actif-badge"]').should("exist");
+      cy.get('[data-testid="siege-social-badge"]').should("exist");
+      cy.get('[data-testid="en-activite-badge"]').should("exist");
+      cy.get('[data-testid="qualiopi-actif-badge"]').should("exist");
     });
 
     it("should indicate secondary establishment status when not a headquarters", () => {
@@ -103,7 +103,7 @@ describe("General Information Page", () => {
         siegeSocial: false,
       });
 
-      cy.get('[data-test="etablissement-secondaire-badge"]').should("exist");
+      cy.get('[data-testid="etablissement-secondaire-badge"]').should("exist");
     });
 
     it("should show establishment closure status with specific closure date", () => {
@@ -111,7 +111,7 @@ describe("General Information Page", () => {
         dateFermeture: "2023-12-31",
       });
 
-      cy.get('[data-test="ferme-badge"]')
+      cy.get('[data-testid="ferme-badge"]')
         .should("exist")
         .and("contain.text", "Fermé le 31/12/2023");
     });
@@ -121,7 +121,7 @@ describe("General Information Page", () => {
         qualiopiStatus: false,
       });
 
-      cy.get('[data-test="qualiopi-inactif-badge"]').should("exist");
+      cy.get('[data-testid="qualiopi-inactif-badge"]').should("exist");
     });
   });
 
@@ -160,19 +160,19 @@ describe("General Information Page", () => {
             dateFermeture: establishmentClosingDate,
           });
 
-          cy.get('[data-test="download-attestation-referencement"]').should(
+          cy.get('[data-testid="download-attestation-referencement"]').should(
             isDownloadEnabled ? "be.enabled" : "be.disabled",
           );
 
           if (!isDownloadEnabled) {
-            cy.get('[data-test="attestation-referencement-warning"]')
+            cy.get('[data-testid="attestation-referencement-warning"]')
               .should("be.visible")
               .and(
                 "contain.text",
                 "Vous ne pouvez pas générer d'attestation si votre compte n'est pas à jour ou si votre établissement a fermé.",
               );
           } else {
-            cy.get('[data-test="attestation-referencement-warning"]').should(
+            cy.get('[data-testid="attestation-referencement-warning"]').should(
               "not.exist",
             );
           }

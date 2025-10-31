@@ -22,7 +22,10 @@ const DossierValidationBadge = ({
   switch (true) {
     case canSubmitAgainAfterJury:
       return (
-        <Badge severity="warning" data-test="dossier-validation-badge-to-send">
+        <Badge
+          severity="warning"
+          data-testid="dossier-validation-badge-to-send"
+        >
           à transmettre
         </Badge>
       );
@@ -30,13 +33,19 @@ const DossierValidationBadge = ({
     case (!activeDossierDeValidation || decision === "INCOMPLETE") &&
       feasibility?.decision === "ADMISSIBLE":
       return (
-        <Badge severity="warning" data-test="dossier-validation-badge-to-send">
+        <Badge
+          severity="warning"
+          data-testid="dossier-validation-badge-to-send"
+        >
           à transmettre
         </Badge>
       );
     case decision === "PENDING" || decision === "COMPLETE":
       return (
-        <Badge severity="success" data-test="dossier-validation-badge-pending">
+        <Badge
+          severity="success"
+          data-testid="dossier-validation-badge-pending"
+        >
           envoyé au certificateur
         </Badge>
       );
@@ -44,7 +53,7 @@ const DossierValidationBadge = ({
       return (
         <Badge
           severity="warning"
-          data-test="dossier-validation-badge-incomplete"
+          data-testid="dossier-validation-badge-incomplete"
         >
           incomplet
         </Badge>
@@ -82,7 +91,7 @@ export const DossierValidationTile = ({
 
   return (
     <Tile
-      data-test="dossier-validation-tile"
+      data-testid="dossier-validation-tile"
       disabled={
         feasibility?.decision !== "ADMISSIBLE" && !canSubmitAgainAfterJury
       }

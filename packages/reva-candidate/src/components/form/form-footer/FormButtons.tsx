@@ -21,7 +21,7 @@ const BackConfirmationModal = ({ onConfirm }: { onConfirm(): void }) => {
             type: "button",
             "aria-label":
               "Rester sur la page et continuer à éditer le formulaire",
-            "data-test": "stay-on-page-button",
+            "data-testid": "stay-on-page-button",
           },
         },
         {
@@ -31,7 +31,7 @@ const BackConfirmationModal = ({ onConfirm }: { onConfirm(): void }) => {
           nativeButtonProps: {
             type: "button",
             "aria-label": "Quitter la page sans enregistrer les modifications",
-            "data-test": "leave-page-button",
+            "data-testid": "leave-page-button",
           },
         },
       ]}
@@ -78,7 +78,7 @@ export const FormButtons = ({
     <>
       <div
         className={`flex gap-4 items-center justify-between mt-10 ${className || ""}`}
-        data-test="form-buttons"
+        data-testid="form-buttons"
         role="group"
         aria-label="Actions du formulaire"
       >

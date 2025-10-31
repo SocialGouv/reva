@@ -7,7 +7,7 @@ import dropOutConfirmationImage from "./assets/dropout_confirmation_image.png";
 
 export default function CandidacyDropOutConfirmationPage() {
   return (
-    <div className="flex" data-test="candidacy-dropout-confirmation-page">
+    <div className="flex" data-testid="candidacy-dropout-confirmation-page">
       <div className="flex flex-col mt-16 mb-5">
         <h1 className="text-dsfrGray-800">Votre parcours VAE est abandonné</h1>
         <p className="text-xl">
@@ -15,7 +15,7 @@ export default function CandidacyDropOutConfirmationPage() {
           accompagnateur a été informé de votre décision.
         </p>
         <Button
-          data-test="candidacy-dropout-confirmation-back-button"
+          data-testid="candidacy-dropout-confirmation-back-button"
           linkProps={{ href: "../../" }}
         >
           Revenir à mon espace

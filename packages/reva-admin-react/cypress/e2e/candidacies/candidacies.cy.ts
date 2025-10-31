@@ -27,7 +27,7 @@ context("Candidacy", () => {
 
   it("display all candidacies", function () {
     cy.wait("@getCandidaciesByStatus");
-    cy.get('[data-test="results"]').children().should("have.length", 2);
+    cy.get('[data-testid="results"]').children().should("have.length", 2);
   });
 
   it("navigate to proper urls when changing filters", function () {

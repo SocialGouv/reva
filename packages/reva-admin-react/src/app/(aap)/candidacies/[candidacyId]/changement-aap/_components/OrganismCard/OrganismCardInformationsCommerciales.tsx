@@ -24,7 +24,7 @@ export const OrganismCardInformationsCommerciales = ({
           o.adresseCodePostal ||
           o.adresseVille) ? (
           <address
-            data-test="project-organisms-organism-address"
+            data-testid="project-organisms-organism-address"
             className="not-italic"
           >
             {o.adresseNumeroEtNomDeRue}

@@ -8,7 +8,7 @@ export const GoalsTile = ({
   hasCompletedGoals: boolean;
 }) => (
   <Tile
-    data-test="goals-tile"
+    data-testid="goals-tile"
     start={<CompleteIncompleteBadge isComplete={hasCompletedGoals} />}
     title="Objectifs"
     small

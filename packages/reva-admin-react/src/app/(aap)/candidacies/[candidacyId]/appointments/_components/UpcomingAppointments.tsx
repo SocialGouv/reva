@@ -87,7 +87,7 @@ const UpcomingAppointmentsContent = ({
   !!upcomingAppointments ? (
     <ul
       className="pl-0 flex flex-col gap-4"
-      data-test="upcoming-appointments-list"
+      data-testid="upcoming-appointments-list"
     >
       {upcomingAppointments.map((appointment) => (
         <li key={appointment.id}>

@@ -27,7 +27,7 @@ context("main page", () => {
       cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
 
-      cy.get('[data-test="add-certification-authority-local-account-page"]')
+      cy.get('[data-testid="add-certification-authority-local-account-page"]')
         .children("h1")
         .should("have.text", "Nouveau compte local");
     });
@@ -47,7 +47,7 @@ context("general information summary card", () => {
       cy.wait("@getMaisonMereCGUQuery");
 
       cy.get(
-        '[data-test="local-account-general-information-summary-card"] [data-test="action-button"]',
+        '[data-testid="local-account-general-information-summary-card"] [data-testid="action-button"]',
       ).click();
 
       cy.url().should(

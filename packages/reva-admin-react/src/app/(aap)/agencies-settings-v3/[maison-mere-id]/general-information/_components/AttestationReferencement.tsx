@@ -178,7 +178,7 @@ export const AttestationReferencement = ({
         onClick={() => generateAttestationPDF({ raisonSociale, siret })}
         priority="secondary"
         disabled={!canDownloadAttestationReferencement}
-        data-test="download-attestation-referencement"
+        data-testid="download-attestation-referencement"
       >
         Générer le PDF
       </Button>
@@ -186,7 +186,7 @@ export const AttestationReferencement = ({
     {!canDownloadAttestationReferencement && (
       <p
         className="pl-8 w-3/4 mb-0"
-        data-test="attestation-referencement-warning"
+        data-testid="attestation-referencement-warning"
       >
         Vous ne pouvez pas générer d'attestation si votre compte n'est pas à
         jour ou si votre établissement a fermé.

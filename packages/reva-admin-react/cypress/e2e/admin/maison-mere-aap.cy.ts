@@ -22,12 +22,12 @@ context("Admin", () => {
 
   it("display all maisons mères", function () {
     cy.wait("@getMaisonMereAAPs");
-    cy.get('[data-test="results"]').children().should("have.length", 10);
+    cy.get('[data-testid="results"]').children().should("have.length", 10);
   });
 
   it("display the proper header menu and active items", function () {
     cy.wait("@getMaisonMereAAPs");
-    cy.get('[data-test="maison-mere-aap-link"]').should(
+    cy.get('[data-testid="maison-mere-aap-link"]').should(
       "have.attr",
       "aria-current",
       "page",

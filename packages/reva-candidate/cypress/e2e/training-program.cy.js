@@ -41,30 +41,30 @@ context("Training Program", () => {
         "@getCandidacyByIdForDashboard",
       ]);
 
-      cy.get('[data-test="training-tile"] button').click();
+      cy.get('[data-testid="training-tile"] button').click();
       cy.wait("@getCandidacyByIdForValidateTraining");
     });
 
     it("display all fields", () => {
-      cy.get('[data-test="general-informations"]')
+      cy.get('[data-testid="general-informations"]')
         .children("li")
         .should("have.length", 3);
 
-      cy.get('[data-test="mandatory-training-section"]')
+      cy.get('[data-testid="mandatory-training-section"]')
         .children("ul")
         .children("li")
         .should("have.length", 3);
 
-      cy.get('[data-test="basic-skills-section"]')
+      cy.get('[data-testid="basic-skills-section"]')
         .children("ul")
         .children("li")
         .should("have.length", 2);
 
-      cy.get('[data-test="certificate-skills-section"]')
+      cy.get('[data-testid="certificate-skills-section"]')
         .children("p")
         .should("have.text", "Blocs de compétences métier");
 
-      cy.get('[data-test="other-training-section"]')
+      cy.get('[data-testid="other-training-section"]')
         .children("p")
         .should("have.text", "Autres actions de formations complémentaires");
     });
@@ -110,24 +110,24 @@ context("Training Program", () => {
         "@getCandidacyByIdForDashboard",
       ]);
 
-      cy.get('[data-test="training-tile"] button').click();
+      cy.get('[data-testid="training-tile"] button').click();
       cy.wait("@getCandidacyByIdForValidateTraining");
     });
 
     it("don't display missing fields", () => {
-      cy.get('[data-test="general-informations"]')
+      cy.get('[data-testid="general-informations"]')
         .children("li")
         .should("have.length", 3);
 
-      cy.get('[data-test="mandatory-training-section"]').should("not.exist");
+      cy.get('[data-testid="mandatory-training-section"]').should("not.exist");
 
-      cy.get('[data-test="basic-skills-section"]').should("not.exist");
+      cy.get('[data-testid="basic-skills-section"]').should("not.exist");
 
-      cy.get('[data-test="certificate-skills-section"]')
+      cy.get('[data-testid="certificate-skills-section"]')
         .children("p")
         .should("have.text", "Blocs de compétences métier");
 
-      cy.get('[data-test="other-training-section"]')
+      cy.get('[data-testid="other-training-section"]')
         .children("p")
         .should("have.text", "Autres actions de formations complémentaires");
     });
@@ -178,22 +178,22 @@ context("Training Program", () => {
         "@getCandidacyByIdForDashboard",
       ]);
 
-      cy.get('[data-test="training-tile"] button').click();
+      cy.get('[data-testid="training-tile"] button').click();
       cy.wait("@getCandidacyByIdForValidateTraining");
 
-      cy.get('[data-test="accept-conditions-checkbox-group"]')
+      cy.get('[data-testid="accept-conditions-checkbox-group"]')
         .find("input")
         .not("be.checked");
 
-      cy.get('[data-test="submit-training-program-button"]').should(
+      cy.get('[data-testid="submit-training-program-button"]').should(
         "be.disabled",
       );
 
-      cy.get('[data-test="accept-conditions-checkbox-group"]')
+      cy.get('[data-testid="accept-conditions-checkbox-group"]')
         .find("label")
         .click({ multiple: true });
 
-      cy.get('[data-test="submit-training-program-button"]')
+      cy.get('[data-testid="submit-training-program-button"]')
         .should("not.be.disabled")
         .click();
 
@@ -246,21 +246,21 @@ context("Training Program", () => {
         "@getCandidacyByIdForDashboard",
       ]);
 
-      cy.get('[data-test="training-tile"] button').click();
+      cy.get('[data-testid="training-tile"] button').click();
       cy.wait("@getCandidacyByIdForValidateTraining");
 
-      cy.get('[data-test="accept-conditions-checkbox-group"]')
+      cy.get('[data-testid="accept-conditions-checkbox-group"]')
         .find("input")
         .not("be.checked");
 
-      cy.get('[data-test="submit-training-program-button"]').should(
+      cy.get('[data-testid="submit-training-program-button"]').should(
         "be.disabled",
       );
-      cy.get('[data-test="accept-conditions-checkbox-group"]')
+      cy.get('[data-testid="accept-conditions-checkbox-group"]')
         .find("label")
         .click({ multiple: true });
 
-      cy.get('[data-test="submit-training-program-button"]')
+      cy.get('[data-testid="submit-training-program-button"]')
         .should("not.be.disabled")
         .click();
       cy.wait("@training_confirmTrainingForm");

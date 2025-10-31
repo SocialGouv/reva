@@ -11,7 +11,7 @@ export const TypeAccompagnementTile = ({
   disabled?: boolean;
 }) => (
   <Tile
-    data-test="type-accompagnement-tile"
+    data-testid="type-accompagnement-tile"
     disabled={disabled}
     start={
       <Tag small>

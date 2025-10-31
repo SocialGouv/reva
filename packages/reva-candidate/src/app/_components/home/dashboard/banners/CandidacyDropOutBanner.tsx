@@ -22,7 +22,7 @@ export const CandidacyDropOutBanner = ({
   });
 
   const content = (
-    <div data-test="drop-out-warning">
+    <div data-testid="drop-out-warning">
       Votre parcours est en abandon depuis le{" "}
       {format(toDate(candidacyDropOut.createdAt), "dd/MM/yyyy")}.{" "}
       {dropOutConfirmed

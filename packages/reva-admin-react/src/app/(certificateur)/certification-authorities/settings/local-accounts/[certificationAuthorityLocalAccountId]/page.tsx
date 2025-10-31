@@ -73,7 +73,7 @@ export default function UpdateLocalAccountPage() {
   return (
     <div
       className="flex flex-col"
-      data-test="update-certification-authority-local-account-page"
+      data-testid="update-certification-authority-local-account-page"
     >
       <deleteConfirmationModal.Component
         title="Vous allez supprimer ce compte."
@@ -85,7 +85,7 @@ export default function UpdateLocalAccountPage() {
             onClick: handleDeleteCertificationAuthorityLocalAccount,
             children: "Continuer",
             nativeButtonProps: {
-              "data-test":
+              "data-testid":
                 "delete-certification-authority-local-account-confirm-button",
             },
           },
@@ -135,7 +135,7 @@ export default function UpdateLocalAccountPage() {
           updateButtonHref={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/certifications`}
         />
         <Tile
-          data-test="delete-certification-authority-local-account-button"
+          data-testid="delete-certification-authority-local-account-button"
           title={
             <span>
               <span className="fr-icon-delete-fill fr-icon--sm mr-2" />

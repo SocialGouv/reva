@@ -198,30 +198,30 @@ export const CompanyBadges = ({
 }) => (
   <div className={`flex flex-col md:flex-row gap-2 ${className || ""}`}>
     {siegeSocial ? (
-      <Badge severity="success" data-test="siege-social-badge">
+      <Badge severity="success" data-testid="siege-social-badge">
         Siège social
       </Badge>
     ) : (
-      <Badge severity="error" data-test="etablissement-secondaire-badge">
+      <Badge severity="error" data-testid="etablissement-secondaire-badge">
         Établissement secondaire
       </Badge>
     )}
     {!dateFermeture ? (
-      <Badge severity="success" data-test="en-activite-badge">
+      <Badge severity="success" data-testid="en-activite-badge">
         En activité
       </Badge>
     ) : (
-      <Badge severity="error" data-test="ferme-badge">
+      <Badge severity="error" data-testid="ferme-badge">
         Fermé le {format(dateFermeture, "dd/MM/yyyy")}
       </Badge>
     )}
     {qualiopiStatus && (
-      <Badge severity="success" data-test="qualiopi-actif-badge">
+      <Badge severity="success" data-testid="qualiopi-actif-badge">
         Qualiopi VAE Actif
       </Badge>
     )}
     {!qualiopiStatus && (
-      <Badge severity="warning" data-test="qualiopi-inactif-badge">
+      <Badge severity="warning" data-testid="qualiopi-inactif-badge">
         Qualiopi VAE Inactif
       </Badge>
     )}

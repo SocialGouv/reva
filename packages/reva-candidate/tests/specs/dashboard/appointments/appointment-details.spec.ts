@@ -60,15 +60,17 @@ test.describe("Appointment details page", () => {
 
     await appointmentDetailsWait(page);
     await expect(
-      page.locator('[data-test="rendez-vous-generique-tile"]'),
+      page.locator('[data-testid="rendez-vous-generique-tile"]'),
     ).toBeVisible();
     await expect(
-      page.locator('[data-test="rendez-vous-generique-tile"] h3'),
+      page.locator('[data-testid="rendez-vous-generique-tile"] h3'),
     ).toHaveText(
       `${formatIso8601Date(appointment.date)} - ${formatIso8601Time(appointment.date)}`,
     );
     await expect(
-      page.locator('[data-test="rendez-vous-generique-tile"] .fr-tile__start'),
+      page.locator(
+        '[data-testid="rendez-vous-generique-tile"] .fr-tile__start',
+      ),
     ).toHaveText("Rendez-vous pédagogique");
   });
 
@@ -80,17 +82,17 @@ test.describe("Appointment details page", () => {
 
     await appointmentDetailsWait(page);
     await expect(
-      page.locator('[data-test="appointment-organized-by"]'),
+      page.locator('[data-testid="appointment-organized-by"]'),
     ).toHaveText(organism.nomPublic || organism.label);
-    await expect(page.locator('[data-test="appointment-location"]')).toHaveText(
-      appointment.location!,
-    );
     await expect(
-      page.locator('[data-test="appointment-description"]'),
+      page.locator('[data-testid="appointment-location"]'),
+    ).toHaveText(appointment.location!);
+    await expect(
+      page.locator('[data-testid="appointment-description"]'),
     ).toHaveText(appointment.description!);
-    await expect(page.locator('[data-test="appointment-duration"]')).toHaveText(
-      "1 heure",
-    );
+    await expect(
+      page.locator('[data-testid="appointment-duration"]'),
+    ).toHaveText("1 heure");
   });
 });
 
@@ -126,15 +128,19 @@ test.describe("Appointment details with missing optional info", () => {
     await navigateToAppointmentDetailsPage(page, candidacy.id, appointment.id);
 
     await appointmentDetailsWait(page);
-    await expect(page.locator('[data-test="appointment-location"]')).toHaveText(
-      "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous.",
-    );
     await expect(
-      page.locator('[data-test="appointment-description"]'),
+      page.locator('[data-testid="appointment-location"]'),
     ).toHaveText(
       "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous.",
     );
-    await expect(page.locator('[data-test="appointment-duration"]')).toHaveText(
+    await expect(
+      page.locator('[data-testid="appointment-description"]'),
+    ).toHaveText(
+      "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous.",
+    );
+    await expect(
+      page.locator('[data-testid="appointment-duration"]'),
+    ).toHaveText(
       "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous.",
     );
   });

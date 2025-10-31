@@ -34,11 +34,11 @@ test.describe("Authenticated on dashboard", () => {
     await dashboardWait(page);
 
     await expect(
-      page.locator('[data-test="candidate-dashboard"]'),
+      page.locator('[data-testid="candidate-dashboard"]'),
     ).toBeVisible();
 
     await expect(
-      page.locator('[data-test="project-home-fullname"]'),
+      page.locator('[data-testid="project-home-fullname"]'),
     ).toHaveText("John Doe");
   });
 

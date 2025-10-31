@@ -156,7 +156,7 @@ const CertificationPage = () => {
             label="Option ou parcours"
             hintText="(Le cas échéant)"
             nativeInputProps={{ ...register("option") }}
-            data-test="certification-option-input"
+            data-testid="certification-option-input"
             state={errors.option ? "error" : "default"}
             stateRelatedMessage={errors.option?.message}
           />
@@ -165,7 +165,7 @@ const CertificationPage = () => {
               label="Langue vivante 1"
               hintText="(Le cas échéant)"
               nativeInputProps={{ ...register("firstForeignLanguage") }}
-              data-test="certification-first-foreign-language-input"
+              data-testid="certification-first-foreign-language-input"
               state={errors.firstForeignLanguage ? "error" : "default"}
               stateRelatedMessage={errors.firstForeignLanguage?.message}
             />
@@ -173,7 +173,7 @@ const CertificationPage = () => {
               label="Langue vivante 2"
               hintText="(Le cas échéant)"
               nativeInputProps={{ ...register("secondForeignlanguage") }}
-              data-test="certification-second-foreign-language-input"
+              data-testid="certification-second-foreign-language-input"
               state={errors.secondForeignlanguage ? "error" : "default"}
               stateRelatedMessage={errors.secondForeignlanguage?.message}
             />
@@ -201,7 +201,7 @@ const CertificationPage = () => {
             ]}
             state={errors.completion ? "error" : "default"}
             stateRelatedMessage={errors.completion?.message}
-            data-test="certification-completion-radio-buttons"
+            data-testid="certification-completion-radio-buttons"
           />
 
           <Checkbox
@@ -218,7 +218,7 @@ const CertificationPage = () => {
                 ...register(`competenceBlocs.${blocIndex}.checked`),
               },
             }))}
-            data-test="competence-blocs-checkbox"
+            data-testid="competence-blocs-checkbox"
           />
           <FormButtons
             backUrl={`/candidacies/${candidacyId}/feasibility-aap`}

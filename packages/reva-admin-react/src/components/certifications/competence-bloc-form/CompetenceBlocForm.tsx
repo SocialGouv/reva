@@ -78,7 +78,7 @@ export const CompetenceBlocForm = ({
       }}
     >
       <Input
-        data-test="competence-bloc-label-input"
+        data-testid="competence-bloc-label-input"
         label="Intitulé du bloc de compétences"
         state={errors.label ? "error" : "default"}
         stateRelatedMessage={errors.label?.message?.toString()}
@@ -88,7 +88,7 @@ export const CompetenceBlocForm = ({
       />
       <div
         className="flex flex-col gap-2 mb-2 pl-4"
-        data-test="competence-list"
+        data-testid="competence-list"
       >
         <SortableList
           items={competencesFields}
@@ -115,7 +115,7 @@ export const CompetenceBlocForm = ({
                   }}
                 />
                 <Button
-                  data-test="delete-competence-button"
+                  data-testid="delete-competence-button"
                   type="button"
                   priority="tertiary no outline"
                   iconId="fr-icon-delete-line"
@@ -130,7 +130,7 @@ export const CompetenceBlocForm = ({
         />
       </div>
       <Button
-        data-test="add-competence-button"
+        data-testid="add-competence-button"
         type="button"
         priority="tertiary no outline"
         iconId="fr-icon-add-line"
@@ -145,7 +145,7 @@ export const CompetenceBlocForm = ({
         <>
           <hr className="mt-6 mb-1" />
           <Button
-            data-test="delete-competence-bloc-button"
+            data-testid="delete-competence-bloc-button"
             type="button"
             priority="tertiary no outline"
             iconId="fr-icon-delete-line"

@@ -48,7 +48,7 @@ context("main page", () => {
         );
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"]',
+          '[data-testid="update-certification-authority-local-account-general-information-page"]',
         )
           .children("h1")
           .should("have.text", "Informations générales");
@@ -68,31 +68,31 @@ context("main page", () => {
         );
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="certification-authority-label-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="certification-authority-label-input"] input',
         ).should("have.value", "Certification Authority");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="account-lastname-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="account-lastname-input"] input',
         ).should("have.value", "doe");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="account-firstname-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="account-firstname-input"] input',
         ).should("have.value", "jane");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="account-email-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="account-email-input"] input',
         ).should("have.value", "monemail@example.com");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-full-name-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="contact-full-name-input"] input',
         ).should("have.value", "contact full name");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-email-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="contact-email-input"] input',
         ).should("have.value", "contact@example.com");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-phone-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="contact-phone-input"] input',
         ).should("have.value", "0123456789");
       });
 
@@ -110,7 +110,7 @@ context("main page", () => {
         );
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] button[type="submit"]',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] button[type="submit"]',
         ).should("be.disabled");
       });
 
@@ -128,25 +128,25 @@ context("main page", () => {
         );
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-full-name-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="contact-full-name-input"] input',
         )
           .clear()
           .type("new contact full name");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-email-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="contact-email-input"] input',
         )
           .clear()
           .type("newcontact.email@example.com");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] [data-test="contact-phone-input"] input',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] [data-testid="contact-phone-input"] input',
         )
           .clear()
           .type("9999999999");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-general-information-page"] button[type="submit"]',
+          '[data-testid="update-certification-authority-local-account-general-information-page"] button[type="submit"]',
         ).click();
 
         cy.wait(

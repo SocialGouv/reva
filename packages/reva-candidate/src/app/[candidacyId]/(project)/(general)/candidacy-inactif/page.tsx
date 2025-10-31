@@ -201,7 +201,7 @@ export default function CandidacyInactifPage() {
           legend="Voulez-vous continuer votre projet de VAE ?"
           stateRelatedMessage={errors.continueCandidacy?.message}
           state={errors.continueCandidacy ? "error" : "default"}
-          data-test="candidacy-inactif-radio-buttons"
+          data-testid="candidacy-inactif-radio-buttons"
           className="hide-radio-img"
           options={[
             {
@@ -228,7 +228,7 @@ export default function CandidacyInactifPage() {
           type="submit"
           disabled={isSubmitting}
           className="flex self-end"
-          data-test="candidacy-inactif-confirm-button"
+          data-testid="candidacy-inactif-confirm-button"
         >
           Confirmer la décision
         </Button>

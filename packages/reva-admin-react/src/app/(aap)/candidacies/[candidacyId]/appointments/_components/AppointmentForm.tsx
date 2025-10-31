@@ -70,7 +70,7 @@ export const AppointmentForm = ({
       onSubmit={handleSubmit(onSubmit, (e) => console.error(e))}
     >
       <Input
-        data-test="title-input"
+        data-testid="title-input"
         label="Intitulé :"
         className="col-span-full"
         nativeInputProps={{ ...register("title") }}
@@ -78,21 +78,21 @@ export const AppointmentForm = ({
         stateRelatedMessage={errors.title?.message}
       />
       <Input
-        data-test="date-input"
+        data-testid="date-input"
         label="Date :"
         nativeInputProps={{ type: "date", ...register("date") }}
         state={errors.date ? "error" : "default"}
         stateRelatedMessage={errors.date?.message}
       />
       <Input
-        data-test="time-input"
+        data-testid="time-input"
         label="Heure de convocation :"
         nativeInputProps={{ type: "time", ...register("time") }}
         state={errors.time ? "error" : "default"}
         stateRelatedMessage={errors.time?.message}
       />
       <Select
-        data-test="duration-input"
+        data-testid="duration-input"
         label="Durée estimée: (Optionnel)"
         nativeSelectProps={{ ...register("duration") }}
         state={errors.duration ? "error" : "default"}
@@ -106,7 +106,7 @@ export const AppointmentForm = ({
         <option value="FOUR_HOURS">4 heures</option>
       </Select>
       <Input
-        data-test="location-input"
+        data-testid="location-input"
         label="Lieu : (Optionnel)"
         hintText="Ajouter une adresse, un lieu ou un lien de visioconférence en fonction de la modalité d’accompagnement envisagée."
         className="col-span-full"
@@ -115,7 +115,7 @@ export const AppointmentForm = ({
         stateRelatedMessage={errors.location?.message}
       />
       <Input
-        data-test="description-input"
+        data-testid="description-input"
         textArea
         nativeTextAreaProps={{ rows: 3, ...register("description") }}
         label="Description : (Optionnel)"
@@ -125,7 +125,7 @@ export const AppointmentForm = ({
       />
       {onDeleteButtonClick && (
         <Button
-          data-test="delete-appointment-button"
+          data-testid="delete-appointment-button"
           type="button"
           onClick={onDeleteButtonClick}
           priority="tertiary no outline"

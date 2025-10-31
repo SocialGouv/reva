@@ -194,7 +194,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
           sub(new Date(), { months: 4 }),
         ) && (
           <Alert
-            data-test="payment-request-not-available"
+            data-testid="payment-request-not-available"
             className="my-4"
             severity="error"
             title="La demande de paiement n’est pas disponible"
@@ -226,7 +226,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
       <hr />
       {getCandidacyStatus === "success" && candidacy && (
         <form
-          data-test="payment-form"
+          data-testid="payment-form"
           className="flex flex-col"
           onSubmit={handleFormSubmit}
           onReset={(e) => {

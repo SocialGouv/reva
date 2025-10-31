@@ -5,12 +5,12 @@ import fcCertificationRncp3890 from "./fixtures/get-fc-certification-rncp-3890.j
 import replaceCertificationResponse from "./fixtures/replace-certification-mutation-response.json";
 
 const SELECTORS = {
-  RNCP_INPUT: '[data-test="replace-certification-rncp-input"] input',
+  RNCP_INPUT: '[data-testid="replace-certification-rncp-input"] input',
   FORM: "#replaceCertificationForm",
   CERTIFICATION_DESCRIPTION_CARD:
-    '[data-test="fc-certification-description-card"]',
+    '[data-testid="fc-certification-description-card"]',
   CERTIFICATION_DESCRIPTION_CARD_TITLE:
-    '[data-test="fc-certification-description-card-title"]',
+    '[data-testid="fc-certification-description-card-title"]',
   NEXT_BUTTON: 'button[type="submit"]',
   RESET_BUTTON: 'button:contains("Réinitialiser")',
   BACK_BUTTON: 'a:contains("Retour")',

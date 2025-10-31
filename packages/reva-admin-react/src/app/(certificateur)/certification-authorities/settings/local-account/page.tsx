@@ -36,7 +36,7 @@ export default function LocalAccountSettingsPage() {
   });
 
   return (
-    <div className="flex flex-col" data-test="local-account-settings-page">
+    <div className="flex flex-col" data-testid="local-account-settings-page">
       <h1>Paramètres</h1>
       <p className="mb-12">
         Retrouvez l'ensemble des informations liées à ce compte local. Pour
@@ -45,7 +45,7 @@ export default function LocalAccountSettingsPage() {
       </p>
       <div className="w-full flex flex-col gap-8">
         <EnhancedSectionCard
-          data-test="local-account-general-information-summary-card"
+          data-testid="local-account-general-information-summary-card"
           title="Informations générales"
           titleIconClass="fr-icon-information-fill"
           isEditable
@@ -56,23 +56,30 @@ export default function LocalAccountSettingsPage() {
               <div className="flex gap-x-2">
                 <p>Contact référent :</p>
                 <div>
-                  <p className="my-0 font-medium" data-test="contact-full-name">
+                  <p
+                    className="my-0 font-medium"
+                    data-testid="contact-full-name"
+                  >
                     {certificationAuthorityLocalAccount?.contactFullName}
                   </p>
-                  <p className="my-0 font-medium" data-test="contact-email">
+                  <p className="my-0 font-medium" data-testid="contact-email">
                     {certificationAuthorityLocalAccount?.contactEmail}
                   </p>
                 </div>
               </div>
             ) : (
-              <Badge severity="new" small data-test="no-contact-details-badge">
+              <Badge
+                severity="new"
+                small
+                data-testid="no-contact-details-badge"
+              >
                 Aucun contact référent
               </Badge>
             )}
           </div>
         </EnhancedSectionCard>
         <EnhancedSectionCard
-          data-test="intervention-area-summary-card"
+          data-testid="intervention-area-summary-card"
           title="Zone d'intervention"
           titleIconClass="fr-icon-road-map-fill"
           isEditable={false}
@@ -84,7 +91,7 @@ export default function LocalAccountSettingsPage() {
             <Accordion label={r.label} key={r.id}>
               <div className="flex flex-wrap gap-2">
                 {r.departments.map((d) => (
-                  <Tag key={d.id} data-test={`department-tag-${d.code}`}>
+                  <Tag key={d.id} data-testid={`department-tag-${d.code}`}>
                     {d.label} ({d.code})
                   </Tag>
                 ))}
@@ -93,7 +100,7 @@ export default function LocalAccountSettingsPage() {
           ))}
         </EnhancedSectionCard>
         <EnhancedSectionCard
-          data-test="certifications-summary-card"
+          data-testid="certifications-summary-card"
           title="Certifications gérées"
           titleIconClass="fr-icon-award-fill"
           isEditable
@@ -104,7 +111,7 @@ export default function LocalAccountSettingsPage() {
             <div className="flex flex-col gap-6">
               <Badge
                 className="bg-[#FEE7FC] text-[#6E445A]"
-                data-test="certifications-count-badge"
+                data-testid="certifications-count-badge"
               >
                 {certificationsCount} certifications gérées
               </Badge>

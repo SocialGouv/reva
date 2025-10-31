@@ -70,7 +70,7 @@ const AppointmentDetailPage = () => {
                 <td className="w-1/3 py-4">Programmé par :</td>
                 <td
                   className="w-2/3 font-bold py-4"
-                  data-test="appointment-organized-by"
+                  data-testid="appointment-organized-by"
                 >
                   {organism?.nomPublic || organism?.label}
                 </td>
@@ -79,7 +79,7 @@ const AppointmentDetailPage = () => {
                 <td className="w-1/3 py-4">Durée : </td>
                 <td
                   className="w-2/3 font-bold py-4"
-                  data-test="appointment-duration"
+                  data-testid="appointment-duration"
                 >
                   {appointment.duration
                     ? durationToPlainText[appointment.duration]
@@ -90,7 +90,7 @@ const AppointmentDetailPage = () => {
                 <td className="w-1/3 py-4">Lieu : </td>
                 <td
                   className="w-2/3 font-bold py-4"
-                  data-test="appointment-location"
+                  data-testid="appointment-location"
                 >
                   {appointment.location ||
                     "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous."}
@@ -100,7 +100,7 @@ const AppointmentDetailPage = () => {
                 <td className="w-1/3 py-4">Description : </td>
                 <td
                   className="w-2/3 font-bold py-4"
-                  data-test="appointment-description"
+                  data-testid="appointment-description"
                 >
                   {appointment.description ||
                     "Non renseigné, pour plus d’information contactez la personne à l’initiative de ce rendez-vous."}

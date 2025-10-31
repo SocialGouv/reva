@@ -99,7 +99,7 @@ export const FancyUpload = ({
   }
 
   return (
-    <div className={`relative ${className || ""}`} data-test={dataTest}>
+    <div className={`relative ${className || ""}`} data-testid={dataTest}>
       <Upload
         className={`border bg-dsfr-light-neutral-grey-1000 p-8`}
         label={
@@ -121,7 +121,7 @@ export const FancyUpload = ({
 
                     onClickDelete();
                   }}
-                  data-test="delete-file-button"
+                  data-testid="delete-file-button"
                 >
                   Supprimer
                   <span className="fr-icon-delete-line" />

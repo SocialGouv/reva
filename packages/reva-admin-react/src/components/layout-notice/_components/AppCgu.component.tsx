@@ -4,7 +4,7 @@ import Link from "next/link";
 export const AapCgu = () => {
   return (
     <Notice
-      data-test="new-cgu-notice"
+      data-testid="new-cgu-notice"
       isClosable
       className="-mb-8"
       title={

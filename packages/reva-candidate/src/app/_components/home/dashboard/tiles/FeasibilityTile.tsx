@@ -30,7 +30,7 @@ const FeasibilityBadge = ({
       isSentToCandidate &&
       !isCandidateConfirmed:
       return (
-        <Badge severity="warning" data-test="feasibility-badge-to-validate">
+        <Badge severity="warning" data-testid="feasibility-badge-to-validate">
           à valider
         </Badge>
       );
@@ -41,7 +41,10 @@ const FeasibilityBadge = ({
       !candidacyIsAutonome &&
       !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt:
       return (
-        <Badge severity="info" data-test="feasibility-waiting-for-attestation">
+        <Badge
+          severity="info"
+          data-testid="feasibility-waiting-for-attestation"
+        >
           attente attestation
         </Badge>
       );
@@ -49,31 +52,31 @@ const FeasibilityBadge = ({
       !needsAttestation &&
       !candidacyIsAutonome:
       return (
-        <Badge severity="info" data-test="feasibility-badge-to-send">
+        <Badge severity="info" data-testid="feasibility-badge-to-send">
           à envoyer au certificateur
         </Badge>
       );
     case candidacyIsAutonome && (!decision || decision === "INCOMPLETE"):
       return (
-        <Badge severity="warning" data-test="feasibility-badge-to-send">
+        <Badge severity="warning" data-testid="feasibility-badge-to-send">
           à envoyer
         </Badge>
       );
     case decision === "ADMISSIBLE":
       return (
-        <Badge severity="success" data-test="feasibility-badge-admissible">
+        <Badge severity="success" data-testid="feasibility-badge-admissible">
           recevable
         </Badge>
       );
     case decision === "PENDING" || decision === "COMPLETE":
       return (
-        <Badge severity="info" data-test="feasibility-badge-pending">
+        <Badge severity="info" data-testid="feasibility-badge-pending">
           envoyé au certificateur
         </Badge>
       );
     case decision === "REJECTED":
       return (
-        <Badge severity="error" data-test="feasibility-badge-rejected">
+        <Badge severity="error" data-testid="feasibility-badge-rejected">
           non recevable
         </Badge>
       );
@@ -130,7 +133,7 @@ export const FeasibilityTile = ({
 
   return (
     <Tile
-      data-test="feasibility-tile"
+      data-testid="feasibility-tile"
       disabled={feasibilityTileDisabled}
       title="Dossier de faisabilité"
       start={

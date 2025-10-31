@@ -12,14 +12,14 @@ export default function ResetPasswordConfirmation() {
     <PageLayout
       title="Confirmation de réinitialisation de mot de passe"
       className="flex flex-col items-center justify-center text-center p-6 pt-8"
-      data-test="reset-password-confirmation"
+      data-testid="reset-password-confirmation"
     >
       <h1 className="text-3xl font-bold text-dsfrGray-800">
         Votre mot de passe a bien été réinitialisé.
       </h1>
 
       <Button
-        data-test="logout-confirmation-back-to-home"
+        data-testid="logout-confirmation-back-to-home"
         className="mt-6"
         onClick={() => {
           router.push("/login");

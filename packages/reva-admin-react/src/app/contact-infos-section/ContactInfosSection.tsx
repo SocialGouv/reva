@@ -39,7 +39,7 @@ export const ContactInfosSection = ({
   );
   return (
     <TileGroup icon="fr-icon-team-line" title="Contacts">
-      <div className="flex flex-row" data-test="contact-infos-section">
+      <div className="flex flex-row" data-testid="contact-infos-section">
         {organism && (
           <Tile
             className="basis-1/2 grow h-auto"
@@ -50,7 +50,7 @@ export const ContactInfosSection = ({
             title="Architecte accompagnateur de parcours"
             small
             desc={
-              <div data-test="organism-contact-info-tile">
+              <div data-testid="organism-contact-info-tile">
                 <div>{organism?.nomPublic || organism?.label}</div>
                 <div>{organism?.adresseNumeroEtNomDeRue}</div>
                 <div>{organism?.adresseInformationsComplementaires}</div>
@@ -70,14 +70,14 @@ export const ContactInfosSection = ({
             small
             orientation="horizontal"
             desc={
-              <div data-test="certification-authority-contact-info-tile">
+              <div data-testid="certification-authority-contact-info-tile">
                 {certificationAuthority?.label}
                 {filteredAccounts && filteredAccounts.length > 0 ? (
                   filteredAccounts.map((account, i) => (
                     <div
                       key={i}
                       className="[&:not(:last-child)]:border-b-2 [&:not(:last-child)]:mb-4 [&:not(:last-child)]:pb-4"
-                      data-test={`certification-authority-local-account-${i}`}
+                      data-testid={`certification-authority-local-account-${i}`}
                     >
                       {account?.contactFullName} <br />
                       {account?.contactEmail} <br />
@@ -85,7 +85,7 @@ export const ContactInfosSection = ({
                     </div>
                   ))
                 ) : (
-                  <div data-test="certification-authority-contact-info-tile">
+                  <div data-testid="certification-authority-contact-info-tile">
                     <div>{certificationAuthority?.contactFullName}</div>
                     <div>{certificationAuthority?.contactEmail}</div>
                     <div>{certificationAuthority?.contactPhone}</div>

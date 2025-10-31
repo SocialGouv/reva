@@ -47,7 +47,7 @@ context("main page", () => {
         );
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-intervention-area-page"]',
+          '[data-testid="update-certification-authority-local-account-intervention-area-page"]',
         )
           .children("h1")
           .should("have.text", "Zone d’intervention");
@@ -67,15 +67,15 @@ context("main page", () => {
         );
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-intervention-area-page"] [data-test="tree-select-item-Auvergne-Rhône-Alpes"] input',
+          '[data-testid="update-certification-authority-local-account-intervention-area-page"] [data-testid="tree-select-item-Auvergne-Rhône-Alpes"] input',
         ).should("be.checked");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-intervention-area-page"] [data-test="tree-select-item-Ain (01)"] input',
+          '[data-testid="update-certification-authority-local-account-intervention-area-page"] [data-testid="tree-select-item-Ain (01)"] input',
         ).should("be.checked");
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-intervention-area-page"] [data-test="tree-select-item-Rhône (69)"] input',
+          '[data-testid="update-certification-authority-local-account-intervention-area-page"] [data-testid="tree-select-item-Rhône (69)"] input',
         ).should("be.checked");
       });
 
@@ -93,7 +93,7 @@ context("main page", () => {
         );
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-intervention-area-page"] button[type="submit"]',
+          '[data-testid="update-certification-authority-local-account-intervention-area-page"] button[type="submit"]',
         ).should("be.disabled");
       });
 
@@ -111,17 +111,17 @@ context("main page", () => {
         );
 
         cy.get(
-          '[data-test="tree-select-item-Pays de la Loire"] .fr-accordion__btn',
+          '[data-testid="tree-select-item-Pays de la Loire"] .fr-accordion__btn',
         ).click({ force: true });
 
         cy.get(
-          '[data-test="tree-select-item-Loire-Atlantique (44)"] input',
+          '[data-testid="tree-select-item-Loire-Atlantique (44)"] input',
         ).check({
           force: true,
         });
 
         cy.get(
-          '[data-test="update-certification-authority-local-account-intervention-area-page"] button[type="submit"]',
+          '[data-testid="update-certification-authority-local-account-intervention-area-page"] button[type="submit"]',
         ).click();
 
         cy.wait(

@@ -69,7 +69,7 @@ export const OrganismFilters = ({
         >
           <div className="-mb-6">
             <Button
-              data-test="button-select-onsite"
+              data-testid="button-select-onsite"
               aria-pressed={organismSearchOnsite}
               priority="tertiary no outline"
               title="Choisir sur site"
@@ -91,7 +91,7 @@ export const OrganismFilters = ({
               </Tag>
             </Button>
             <Button
-              data-test="button-select-remote"
+              data-testid="button-select-remote"
               aria-pressed={organismSearchRemote}
               priority="tertiary no outline"
               title="Choisir à distance"
@@ -113,7 +113,7 @@ export const OrganismFilters = ({
               </Tag>
             </Button>
             <Button
-              data-test="button-open-modal-distance"
+              data-testid="button-open-modal-distance"
               priority="tertiary no outline"
               title="Quelle option à distance choisir ?"
               iconId="fr-icon-information-fill"
@@ -159,7 +159,7 @@ export const OrganismFilters = ({
         <Accordion label="Référencement MCF" defaultExpanded>
           <div className="-mb-6">
             <Button
-              data-test="button-open-modal-mcf"
+              data-testid="button-open-modal-mcf"
               priority="tertiary no outline"
               title="Quelle option à distance choisir ?"
               iconId="fr-icon-information-fill"
@@ -188,7 +188,7 @@ export const OrganismFilters = ({
                   label:
                     "Afficher les accompagnateurs référencés sur Mon Compte Formation (MCF)",
                   nativeInputProps: {
-                    ...{ "data-test": "checkbox-wrapper-mcf-input" },
+                    ...{ "data-testid": "checkbox-wrapper-mcf-input" },
                     checked: filters.organismSearchMcf,
                     onChange: (e) => {
                       onSearch({
@@ -206,7 +206,7 @@ export const OrganismFilters = ({
 
       <div className="flex justify-center">
         <Button
-          data-test="sidebar-button-reset-filters"
+          data-testid="sidebar-button-reset-filters"
           priority="tertiary no outline"
           onClick={() => {
             onSearch({

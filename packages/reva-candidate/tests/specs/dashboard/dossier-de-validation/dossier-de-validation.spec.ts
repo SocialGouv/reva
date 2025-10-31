@@ -30,7 +30,9 @@ typesAccompagnement.forEach((typeAccompagnement) => {
     test.describe("Inactive dossier de validation", () => {
       const certification = createCertificationEntity();
       const organism =
-        typeAccompagnement === "ACCOMPAGNE" ? createOrganismEntity() : undefined;
+        typeAccompagnement === "ACCOMPAGNE"
+          ? createOrganismEntity()
+          : undefined;
       const candidate = createCandidateEntity();
       const candidacy = createCandidacyEntity({
         candidate,
@@ -55,7 +57,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         await dashboardWait(page);
 
         const dossierValidationButton = page
-          .locator('[data-test="dossier-validation-tile"]')
+          .locator('[data-testid="dossier-validation-tile"]')
           .getByRole("button");
 
         await expect(dossierValidationButton).toBeVisible();
@@ -98,7 +100,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           await dashboardWait(page);
 
           const dossierValidationButton = page
-            .locator('[data-test="dossier-validation-tile"]')
+            .locator('[data-testid="dossier-validation-tile"]')
             .getByRole("button");
           await expect(dossierValidationButton).not.toBeDisabled();
 
@@ -146,14 +148,14 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           await dossierDeValidationWait(page);
 
           const dateInput = page.locator(
-            '[data-test="ready-for-jury-estimated-date-input"]',
+            '[data-testid="ready-for-jury-estimated-date-input"]',
           );
           await dateInput
             .getByRole("textbox")
             .fill(format(ESTIMATED_DATE, "yyyy-MM-dd"));
 
           const submitButton = page.locator(
-            '[data-test="submit-ready-for-jury-estimated-date-form-button"]',
+            '[data-testid="submit-ready-for-jury-estimated-date-form-button"]',
           );
 
           const updateJuryDateMutation = waitGraphQL(
@@ -202,7 +204,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           await clickDossierTab(page);
 
           const checkboxGroup = page.locator(
-            '[data-test="dossier-de-validation-checkbox-group"]',
+            '[data-testid="dossier-de-validation-checkbox-group"]',
           );
           const labels = checkboxGroup.locator("label");
           const count = await labels.count();
@@ -213,7 +215,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             await label.click();
           }
           await page
-            .locator('[data-test="submit-dossier-de-validation-form-button"]')
+            .locator('[data-testid="submit-dossier-de-validation-form-button"]')
             .click();
 
           const errorText = page.locator(
@@ -275,7 +277,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           );
 
           const checkboxGroup = page.locator(
-            '[data-test="dossier-de-validation-checkbox-group"]',
+            '[data-testid="dossier-de-validation-checkbox-group"]',
           );
           const labels = checkboxGroup.locator("label");
           const count = await labels.count();
@@ -285,7 +287,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
           const uploadRequest = waitRest(page, "upload-dossier-de-validation");
           await page
-            .locator('[data-test="submit-dossier-de-validation-form-button"]')
+            .locator('[data-testid="submit-dossier-de-validation-form-button"]')
             .click();
           await uploadRequest;
 

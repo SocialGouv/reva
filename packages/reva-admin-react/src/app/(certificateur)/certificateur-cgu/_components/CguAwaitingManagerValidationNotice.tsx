@@ -15,7 +15,7 @@ export const CguAwaitingManagerValidationNotice = ({
   return (
     <div
       className="flex items-center justify-center gap-28"
-      data-test="cgu-awaiting-manager-validation"
+      data-testid="cgu-awaiting-manager-validation"
     >
       <div>
         <h1>Mise à jour des conditions générales d'utilisation</h1>
@@ -39,7 +39,7 @@ export const CguAwaitingManagerValidationNotice = ({
         <Button
           onClick={() => setShowCgu(true)}
           priority="secondary"
-          data-test="cgu-show-button"
+          data-testid="cgu-show-button"
         >
           <span>Voir les conditions générales d'utilisation</span>
         </Button>

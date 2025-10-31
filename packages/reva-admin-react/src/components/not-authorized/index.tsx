@@ -5,7 +5,7 @@ import { PICTOGRAMS } from "../pictograms/Pictograms";
 export const NotAuthorized = () => {
   return (
     <EmptyState
-      data-test="not-authorized"
+      data-testid="not-authorized"
       title="Accès restreint"
       pictogram={PICTOGRAMS.padlockXL}
       orientation="horizontal"

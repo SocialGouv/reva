@@ -47,7 +47,7 @@ context("when i access the update certification info page ", () => {
       "@getCertificationForCertificationRegistryManagerUpdateAdditionalInfoPage",
     );
 
-    cy.get('[data-test="update-certification-additional-info-page"]')
+    cy.get('[data-testid="update-certification-additional-info-page"]')
       .children("h1")
       .should("have.text", "Documentation");
   });
@@ -63,17 +63,19 @@ context("when i access the update certification info page ", () => {
       "@getCertificationForCertificationRegistryManagerUpdateAdditionalInfoPage",
     );
 
-    cy.get('[data-test="dossier-de-validation-template-upload"]').within(() => {
-      cy.get('input[type="file"]').selectFile(
-        "cypress/fixtures/files/test-file.pdf",
-        { force: true },
-      );
-    });
+    cy.get('[data-testid="dossier-de-validation-template-upload"]').within(
+      () => {
+        cy.get('input[type="file"]').selectFile(
+          "cypress/fixtures/files/test-file.pdf",
+          { force: true },
+        );
+      },
+    );
 
-    cy.get('[data-test="referential-link-input"] input').clear();
+    cy.get('[data-testid="referential-link-input"] input').clear();
 
     cy.get("button").contains("Enregistrer").click();
-    cy.get('[data-test="referential-link-input"]')
+    cy.get('[data-testid="referential-link-input"]')
       .children("input")
       .should("have.focus");
   });
@@ -89,18 +91,18 @@ context("when i access the update certification info page ", () => {
       "@getCertificationForCertificationRegistryManagerUpdateAdditionalInfoPage",
     );
 
-    cy.get('[data-test="referential-link-input"] input')
+    cy.get('[data-testid="referential-link-input"] input')
       .clear()
       .type("https://www.google.com");
 
     cy.get("button").contains("Enregistrer").click();
     cy.get(
-      '[data-test="dossier-de-validation-template-upload"] p.fr-error-text',
+      '[data-testid="dossier-de-validation-template-upload"] p.fr-error-text',
     )
       .should("be.visible")
       .and("have.text", "Vous devez renseigner au moins un de ces deux champs");
 
-    cy.get('[data-test="dossier-de-validation-link"] p.fr-error-text')
+    cy.get('[data-testid="dossier-de-validation-link"] p.fr-error-text')
       .should("be.visible")
       .and("have.text", "Vous devez renseigner au moins un de ces deux champs");
   });
@@ -117,14 +119,16 @@ context("when i access the update certification info page ", () => {
       "@getCertificationForCertificationRegistryManagerUpdateAdditionalInfoPage",
     );
 
-    cy.get('[data-test="dossier-de-validation-template-upload"]').within(() => {
-      cy.get('input[type="file"]').selectFile(
-        "cypress/fixtures/files/test-file.pdf",
-        { force: true },
-      );
-    });
+    cy.get('[data-testid="dossier-de-validation-template-upload"]').within(
+      () => {
+        cy.get('input[type="file"]').selectFile(
+          "cypress/fixtures/files/test-file.pdf",
+          { force: true },
+        );
+      },
+    );
 
-    cy.get('[data-test="referential-link-input"] input')
+    cy.get('[data-testid="referential-link-input"] input')
       .clear()
       .type("https://www.google.com");
 

@@ -18,7 +18,7 @@ const CertificationAuthorityGeneralInfoAdminPage = () => {
     <div className="flex flex-col flex-1">
       <h1
         className="flex-1"
-        data-test="certification-authority-general-info-page-title"
+        data-testid="certification-authority-general-info-page-title"
       >
         Informations générales
       </h1>

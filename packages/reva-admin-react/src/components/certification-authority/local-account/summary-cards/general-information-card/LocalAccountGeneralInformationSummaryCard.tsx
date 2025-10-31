@@ -14,7 +14,7 @@ export default function LocalAccountGeneralInformationSummaryCard({
 }) {
   return (
     <EnhancedSectionCard
-      data-test="local-account-general-information-summary-card"
+      data-testid="local-account-general-information-summary-card"
       title="Informations générales"
       titleIconClass="fr-icon-information-fill"
       isEditable
@@ -26,16 +26,16 @@ export default function LocalAccountGeneralInformationSummaryCard({
           <div className="flex gap-x-2">
             <p>Contact référent :</p>
             <div>
-              <p className="my-0 font-medium" data-test="contact-full-name">
+              <p className="my-0 font-medium" data-testid="contact-full-name">
                 {contactFullName}
               </p>
-              <p className="my-0 font-medium" data-test="contact-email">
+              <p className="my-0 font-medium" data-testid="contact-email">
                 {contactEmail}
               </p>
             </div>
           </div>
         ) : (
-          <Badge severity="new" small data-test="no-contact-details-badge">
+          <Badge severity="new" small data-testid="no-contact-details-badge">
             Aucun contact référent
           </Badge>
         )}

@@ -172,7 +172,7 @@ export const AdminAction = ({
   disabledDescription,
   description,
   detail,
-  "data-test": dataTest,
+  "data-testid": dataTest,
   start,
 }: {
   title: string;
@@ -182,11 +182,11 @@ export const AdminAction = ({
   disabledDescription?: string;
   description?: string;
   detail?: string;
-  "data-test"?: string;
+  "data-testid"?: string;
   start?: ComponentProps<typeof Tile>["start"];
 }) => (
   <Tile
-    data-test={dataTest}
+    data-testid={dataTest}
     title={title}
     enlargeLinkOrButton
     orientation="horizontal"

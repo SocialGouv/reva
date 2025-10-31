@@ -6,7 +6,7 @@ export const NoCertificationRegistryManagerAlert = ({
   className?: string;
 }) => (
   <Alert
-    data-test="no-certification-registry-manager-alert"
+    data-testid="no-certification-registry-manager-alert"
     className={className}
     severity="warning"
     title="Cette structure certificatrice n’a aucun responsable des certifications pour le moment"

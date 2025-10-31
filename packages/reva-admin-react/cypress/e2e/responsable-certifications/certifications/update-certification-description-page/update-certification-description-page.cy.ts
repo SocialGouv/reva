@@ -43,7 +43,7 @@ context("when i access the update certification description page ", () => {
       "@getCertificationForCertificationRegistryManagerUpdateCertificationDescriptionPage",
     );
 
-    cy.get('[data-test="certification-description-card"]')
+    cy.get('[data-testid="certification-description-card"]')
       .children("div")
       .children("div")
       .children("h2")

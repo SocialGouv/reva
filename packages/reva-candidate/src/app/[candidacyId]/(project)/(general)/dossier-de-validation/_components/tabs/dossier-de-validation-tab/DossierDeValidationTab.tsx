@@ -222,7 +222,7 @@ export const DossierDeValidationTab = ({
       {dossierDeValidation?.decision === "INCOMPLETE" && currentProblem && (
         <>
           <Alert
-            data-test="dossier-de-validation-signale-alert"
+            data-testid="dossier-de-validation-signale-alert"
             className="mb-6"
             severity="warning"
             title={`Dossier de validation signalé par le certificateur le ${format(currentProblem.decisionSentAt, "dd/MM/yyyy")}`}
@@ -346,7 +346,7 @@ export const DossierDeValidationTab = ({
             <Checkbox
               className="mr-0"
               legend="Avant de finaliser votre envoi"
-              data-test="dossier-de-validation-checkbox-group"
+              data-testid="dossier-de-validation-checkbox-group"
               options={[
                 {
                   label:
@@ -386,7 +386,7 @@ export const DossierDeValidationTab = ({
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                data-test="submit-dossier-de-validation-form-button"
+                data-testid="submit-dossier-de-validation-form-button"
               >
                 Envoyer les documents
               </Button>

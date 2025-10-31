@@ -63,22 +63,22 @@ describe("Dematerialized Feasibility File Certification Page", () => {
     it("should allow filling optional certification details and selecting specific competence blocs", function () {
       visitFeasibilityCertification();
 
-      cy.get('[data-test="certification-option-input"]')
+      cy.get('[data-testid="certification-option-input"]')
         .find("input")
         .should("exist")
         .type("Test Option");
 
-      cy.get('[data-test="certification-first-foreign-language-input"]')
+      cy.get('[data-testid="certification-first-foreign-language-input"]')
         .find("input")
         .should("exist")
         .type("English");
 
-      cy.get('[data-test="certification-second-foreign-language-input"]')
+      cy.get('[data-testid="certification-second-foreign-language-input"]')
         .find("input")
         .should("exist")
         .type("Spanish");
 
-      cy.get('[data-test="certification-completion-radio-buttons"]')
+      cy.get('[data-testid="certification-completion-radio-buttons"]')
         .find('input[value="PARTIAL"]')
         .check({ force: true });
 
@@ -86,7 +86,7 @@ describe("Dematerialized Feasibility File Certification Page", () => {
 
       cy.get('input[type="checkbox"]').first().check({ force: true });
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");

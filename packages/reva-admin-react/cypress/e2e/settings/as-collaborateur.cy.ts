@@ -50,9 +50,9 @@ context("Collaborateur AAP settings page", () => {
     });
     cy.wait("@getCollaborateurSettingsInfo");
     // Make  sure the page is ready before checking non-existence of the general information section
-    cy.get('[data-test="remote-organism"]').should("exist");
-    cy.get('[data-test="general-information"]').should("not.exist");
-    cy.get('[data-test="user-accounts"]').should("not.exist");
+    cy.get('[data-testid="remote-organism"]').should("exist");
+    cy.get('[data-testid="general-information"]').should("not.exist");
+    cy.get('[data-testid="user-accounts"]').should("not.exist");
   });
 
   context("for a remote organism", () => {
@@ -63,10 +63,10 @@ context("Collaborateur AAP settings page", () => {
         isVisibleInCandidateSearchResults: true,
       });
       cy.wait("@getCollaborateurSettingsInfo");
-      cy.get('[data-test="remote-organism"]').should("exist");
-      cy.get('[data-test="user-account"]').should("exist");
-      cy.get('[data-test="on-site-organism"]').should("not.exist");
-      cy.get('[data-test="on-site-organisms"]').should("not.exist");
+      cy.get('[data-testid="remote-organism"]').should("exist");
+      cy.get('[data-testid="user-account"]').should("exist");
+      cy.get('[data-testid="on-site-organism"]').should("not.exist");
+      cy.get('[data-testid="on-site-organisms"]').should("not.exist");
     });
 
     it("display a remote section with a 'visible badge' when organism is opened for new candidacies", function () {
@@ -77,7 +77,7 @@ context("Collaborateur AAP settings page", () => {
       });
       cy.wait("@getCollaborateurSettingsInfo");
       cy.get(
-        '[data-test="remote-organism"] [data-test="visible-badge"]',
+        '[data-testid="remote-organism"] [data-testid="visible-badge"]',
       ).should("exist");
     });
 
@@ -89,7 +89,7 @@ context("Collaborateur AAP settings page", () => {
       });
       cy.wait("@getCollaborateurSettingsInfo");
       cy.get(
-        '[data-test="remote-organism"] [data-test="invisible-badge"]',
+        '[data-testid="remote-organism"] [data-testid="invisible-badge"]',
       ).should("exist");
     });
   });
@@ -102,10 +102,10 @@ context("Collaborateur AAP settings page", () => {
         isVisibleInCandidateSearchResults: true,
       });
       cy.wait("@getCollaborateurSettingsInfo");
-      cy.get('[data-test="on-site-organism"]').should("exist");
-      cy.get('[data-test="user-account"]').should("exist");
-      cy.get('[data-test="remote-organism"]').should("not.exist");
-      cy.get('[data-test="on-site-organisms"]').should("not.exist");
+      cy.get('[data-testid="on-site-organism"]').should("exist");
+      cy.get('[data-testid="user-account"]').should("exist");
+      cy.get('[data-testid="remote-organism"]').should("not.exist");
+      cy.get('[data-testid="on-site-organisms"]').should("not.exist");
     });
   });
 });

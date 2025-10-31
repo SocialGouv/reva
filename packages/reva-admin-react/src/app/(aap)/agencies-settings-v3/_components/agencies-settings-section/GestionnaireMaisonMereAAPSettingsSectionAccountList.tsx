@@ -25,20 +25,20 @@ export const GestionnaireMaisonMereAAPSettingsSectionAccountList = ({
         .filter((account) => isAdmin || !account.disabledAt)
         .map((account) => (
           <li
-            data-test={account.id}
+            data-testid={account.id}
             key={account.id}
             className="flex justify-between items-center py-3 border-neutral-300 border-t last:border-b"
           >
             <div className="flex items-center gap-x-6">
               {organism.modaliteAccompagnement === "A_DISTANCE" && (
                 <i
-                  data-test="remote-badge"
+                  data-testid="remote-badge"
                   className="fr-icon-headphone-fill fr-icon--sm"
                 ></i>
               )}
               {organism.modaliteAccompagnement === "LIEU_ACCUEIL" && (
                 <i
-                  data-test="on-site-badge"
+                  data-testid="on-site-badge"
                   className="fr-icon-home-4-fill fr-icon--sm"
                 ></i>
               )}

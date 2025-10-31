@@ -41,7 +41,7 @@ export const PrerequisitesSection = ({
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/prerequisites`}
       disabled={disabled}
       isEditable={isEditable}
-      data-test="prerequisites-section"
+      data-testid="prerequisites-section"
     >
       {prerequisitesPartComplete &&
         !disabled &&

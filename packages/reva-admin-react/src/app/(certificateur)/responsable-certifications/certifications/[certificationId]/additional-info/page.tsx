@@ -35,7 +35,7 @@ export default function CertificationAdditionalInfoPage() {
   }
 
   return (
-    <div data-test="update-certification-additional-info-page">
+    <div data-testid="update-certification-additional-info-page">
       <Breadcrumb
         currentPageLabel="Documentation"
         segments={[
@@ -261,7 +261,7 @@ const AdditionalInfoForm = ({
             Ou renseigner le lien vers la trame du dossier
           </label>
           <Input
-            data-test="dossier-de-validation-link"
+            data-testid="dossier-de-validation-link"
             label="Lien vers la trame :"
             className="flex-1"
             disabled={!!watchedDossierDeValidationTemplate?.[0]}
@@ -274,7 +274,7 @@ const AdditionalInfoForm = ({
           />
         </div>
         <Input
-          data-test="referential-link-input"
+          data-testid="referential-link-input"
           label="Lien vers les référentiels d’activités et de compétences :"
           state={errors.linkToReferential ? "error" : "default"}
           stateRelatedMessage={errors.linkToReferential?.message}

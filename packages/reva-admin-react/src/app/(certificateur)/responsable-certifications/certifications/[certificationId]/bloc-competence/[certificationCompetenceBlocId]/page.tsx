@@ -56,7 +56,7 @@ const PageContent = ({
   competenceBloc: CertificationCompetenceBlocForPage;
   onSubmit(data: CompetenceBlocFormData): Promise<void>;
 }) => (
-  <div data-test="certification-registry-manager-update-certification-competence-bloc-page">
+  <div data-testid="certification-registry-manager-update-certification-competence-bloc-page">
     <Breadcrumb
       currentPageLabel={`${competenceBloc.code} - ${competenceBloc.label}`}
       homeLinkProps={{

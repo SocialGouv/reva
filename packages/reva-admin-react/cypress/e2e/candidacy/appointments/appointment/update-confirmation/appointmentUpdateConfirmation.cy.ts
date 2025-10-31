@@ -66,7 +66,7 @@ context("when I access the update appointment confirmation page", () => {
     );
     waitForQueries();
 
-    cy.get('[data-test="appointment-update-confirmation-page-title"]').should(
+    cy.get('[data-testid="appointment-update-confirmation-page-title"]').should(
       "have.text",
       "Rendez-vous enregistré",
     );
@@ -80,7 +80,7 @@ context("when I access the update appointment confirmation page", () => {
     waitForQueries();
 
     cy.get(
-      '[data-test="appointment-update-confirmation-page-go-back-to-appointments-button"]',
+      '[data-testid="appointment-update-confirmation-page-go-back-to-appointments-button"]',
     ).click();
     cy.url().should(
       "eq",

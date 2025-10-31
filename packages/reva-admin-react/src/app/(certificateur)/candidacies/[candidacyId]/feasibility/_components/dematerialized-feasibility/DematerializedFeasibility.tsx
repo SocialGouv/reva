@@ -173,7 +173,7 @@ export const DematerializedFeasibility = () => {
 
   return (
     <div
-      data-test={`feasibility-page-dematerialized-${feasibility?.decision?.toLowerCase() || "pending"}`}
+      data-testid={`feasibility-page-dematerialized-${feasibility?.decision?.toLowerCase() || "pending"}`}
     >
       <revokeDecisionModal.Component
         onConfirmButtonClick={async (data: { reason: string }) => {

@@ -4,7 +4,7 @@ import { DefaultLoader } from "./DefaultLoader";
 
 export const LoaderWithLayout = () => (
   <PageLayout
-    data-test="loading-guard"
+    data-testid="loading-guard"
     className="flex-1 flex flex-col items-center justify-center"
   >
     <div className="w-8">

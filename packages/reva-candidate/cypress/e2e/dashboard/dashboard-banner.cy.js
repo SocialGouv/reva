@@ -53,10 +53,12 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="need-to-complete-info-banner"]').should(
+        cy.get('[data-testid="need-to-complete-info-banner"]').should(
           "be.visible",
         );
-        cy.get('[data-test="can-submit-candidacy-banner"]').should("not.exist");
+        cy.get('[data-testid="can-submit-candidacy-banner"]').should(
+          "not.exist",
+        );
       });
     });
 
@@ -84,10 +86,10 @@ context("Dashboard Banner", () => {
             stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
           });
 
-          cy.get('[data-test="need-to-complete-info-banner"]').should(
+          cy.get('[data-testid="need-to-complete-info-banner"]').should(
             "be.visible",
           );
-          cy.get('[data-test="can-submit-candidacy-banner"]').should(
+          cy.get('[data-testid="can-submit-candidacy-banner"]').should(
             "not.exist",
           );
         });
@@ -115,10 +117,10 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="need-to-complete-info-banner"]').should(
+        cy.get('[data-testid="need-to-complete-info-banner"]').should(
           "not.exist",
         );
-        cy.get('[data-test="can-submit-candidacy-banner"]').should(
+        cy.get('[data-testid="can-submit-candidacy-banner"]').should(
           "be.visible",
         );
       });
@@ -141,8 +143,8 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="drop-out-warning"]').should("be.visible");
-        cy.get('[data-test="drop-out-warning-decision-button"]').should(
+        cy.get('[data-testid="drop-out-warning"]').should("be.visible");
+        cy.get('[data-testid="drop-out-warning-decision-button"]').should(
           "be.visible",
         );
       });
@@ -163,8 +165,8 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="drop-out-warning"]').should("be.visible");
-        cy.get('[data-test="drop-out-warning-decision-button"]').should(
+        cy.get('[data-testid="drop-out-warning"]').should("be.visible");
+        cy.get('[data-testid="drop-out-warning-decision-button"]').should(
           "not.exist",
         );
       });
@@ -184,7 +186,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="pending-dv-banner"]').should("be.visible");
+        cy.get('[data-testid="pending-dv-banner"]').should("be.visible");
       });
     });
 
@@ -200,7 +202,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="incomplete-dv-banner"]').should("be.visible");
+        cy.get('[data-testid="incomplete-dv-banner"]').should("be.visible");
       });
     });
   });
@@ -220,7 +222,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="admissible-feasibility-banner"]').should(
+        cy.get('[data-testid="admissible-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -239,7 +241,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="admissible-feasibility-banner"]').should(
+        cy.get('[data-testid="admissible-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -261,7 +263,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="draft-feasibility-banner"]').should("be.visible");
+        cy.get('[data-testid="draft-feasibility-banner"]').should("be.visible");
       });
     });
 
@@ -278,7 +280,9 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="pending-feasibility-banner"]').should("be.visible");
+        cy.get('[data-testid="pending-feasibility-banner"]').should(
+          "be.visible",
+        );
       });
     });
 
@@ -295,7 +299,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="autonome-pending-feasibility-banner"]').should(
+        cy.get('[data-testid="autonome-pending-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -314,7 +318,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="incomplete-feasibility-banner"]').should(
+        cy.get('[data-testid="incomplete-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -333,7 +337,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="autonome-incomplete-feasibility-banner"]').should(
+        cy.get('[data-testid="autonome-incomplete-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -351,7 +355,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="rejected-feasibility-banner"]').should(
+        cy.get('[data-testid="rejected-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -371,7 +375,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="waiting-for-appointment-banner"]').should(
+        cy.get('[data-testid="waiting-for-appointment-banner"]').should(
           "be.visible",
         );
       });
@@ -395,7 +399,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="first-appointment-scheduled-banner"]').should(
+        cy.get('[data-testid="first-appointment-scheduled-banner"]').should(
           "be.visible",
         );
       });
@@ -420,7 +424,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="creating-feasibility-banner"]').should(
+        cy.get('[data-testid="creating-feasibility-banner"]').should(
           "be.visible",
         );
       });
@@ -439,7 +443,7 @@ context("Dashboard Banner", () => {
           stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
         });
 
-        cy.get('[data-test="waiting-for-training-banner"]').should(
+        cy.get('[data-testid="waiting-for-training-banner"]').should(
           "be.visible",
         );
       });

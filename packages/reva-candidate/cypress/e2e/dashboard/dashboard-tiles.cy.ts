@@ -62,25 +62,25 @@ context("Dashboard Tiles", () => {
         interceptGraphQL(candidacy);
 
         cy.get(
-          '[data-test="certification-tile"] [data-test="incomplete-badge"]',
+          '[data-testid="certification-tile"] [data-testid="incomplete-badge"]',
         ).should("be.visible");
 
         cy.get(
-          '[data-test="goals-tile"] [data-test="incomplete-badge"]',
+          '[data-testid="goals-tile"] [data-testid="incomplete-badge"]',
         ).should("be.visible");
 
         cy.get(
-          '[data-test="experiences-tile"] [data-test="incomplete-badge"]',
+          '[data-testid="experiences-tile"] [data-testid="incomplete-badge"]',
         ).should("be.visible");
 
         cy.get(
-          '[data-test="organism-tile"] [data-test="incomplete-badge"]',
+          '[data-testid="organism-tile"] [data-testid="incomplete-badge"]',
         ).should("be.visible");
 
         cy.get(
-          '[data-test="submit-candidacy-tile"] [data-test="to-send-badge"]',
+          '[data-testid="submit-candidacy-tile"] [data-testid="to-send-badge"]',
         ).should("not.exist");
-        cy.get('[data-test="submit-candidacy-tile"] button').should(
+        cy.get('[data-testid="submit-candidacy-tile"] button').should(
           "be.disabled",
         );
       });
@@ -119,12 +119,12 @@ context("Dashboard Tiles", () => {
           interceptGraphQL(candidacy);
 
           cy.get(
-            `[data-test="${fieldInfo.field}-tile"] [data-test="complete-badge"]`,
+            `[data-testid="${fieldInfo.field}-tile"] [data-testid="complete-badge"]`,
           ).should("be.visible");
           cy.get(
-            '[data-test="submit-candidacy-tile"] [data-test="to-send-badge"]',
+            '[data-testid="submit-candidacy-tile"] [data-testid="to-send-badge"]',
           ).should("not.exist");
-          cy.get('[data-test="submit-candidacy-tile"] button').should(
+          cy.get('[data-testid="submit-candidacy-tile"] button').should(
             "be.disabled",
           );
         });
@@ -149,9 +149,9 @@ context("Dashboard Tiles", () => {
         interceptGraphQL(candidacy);
 
         cy.get(
-          '[data-test="submit-candidacy-tile"] [data-test="to-send-badge"]',
+          '[data-testid="submit-candidacy-tile"] [data-testid="to-send-badge"]',
         ).should("be.visible");
-        cy.get('[data-test="submit-candidacy-tile"] button').should(
+        cy.get('[data-testid="submit-candidacy-tile"] button').should(
           "not.be.disabled",
         );
       });
@@ -170,7 +170,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-badge-admissible"]').should(
+        cy.get('[data-testid="feasibility-badge-admissible"]').should(
           "be.visible",
         );
       });
@@ -189,7 +189,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-badge-to-validate"]').should(
+        cy.get('[data-testid="feasibility-badge-to-validate"]').should(
           "be.visible",
         );
       });
@@ -209,7 +209,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-waiting-for-attestation"]').should(
+        cy.get('[data-testid="feasibility-waiting-for-attestation"]').should(
           "be.visible",
         );
       });
@@ -230,8 +230,10 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-badge-to-send"]').should("be.visible");
-        cy.get('[data-test="feasibility-badge-to-send"]').should(
+        cy.get('[data-testid="feasibility-badge-to-send"]').should(
+          "be.visible",
+        );
+        cy.get('[data-testid="feasibility-badge-to-send"]').should(
           "have.text",
           "à envoyer au certificateur",
         );
@@ -247,8 +249,10 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-badge-to-send"]').should("be.visible");
-        cy.get('[data-test="feasibility-badge-to-send"]').should(
+        cy.get('[data-testid="feasibility-badge-to-send"]').should(
+          "be.visible",
+        );
+        cy.get('[data-testid="feasibility-badge-to-send"]').should(
           "have.text",
           "à envoyer",
         );
@@ -270,8 +274,10 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-badge-pending"]').should("be.visible");
-        cy.get('[data-test="feasibility-badge-pending"]').should(
+        cy.get('[data-testid="feasibility-badge-pending"]').should(
+          "be.visible",
+        );
+        cy.get('[data-testid="feasibility-badge-pending"]').should(
           "have.text",
           "envoyé au certificateur",
         );
@@ -292,8 +298,10 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-badge-pending"]').should("be.visible");
-        cy.get('[data-test="feasibility-badge-pending"]').should(
+        cy.get('[data-testid="feasibility-badge-pending"]').should(
+          "be.visible",
+        );
+        cy.get('[data-testid="feasibility-badge-pending"]').should(
           "have.text",
           "envoyé au certificateur",
         );
@@ -314,8 +322,10 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-badge-rejected"]').should("be.visible");
-        cy.get('[data-test="feasibility-badge-rejected"]').should(
+        cy.get('[data-testid="feasibility-badge-rejected"]').should(
+          "be.visible",
+        );
+        cy.get('[data-testid="feasibility-badge-rejected"]').should(
           "have.text",
           "non recevable",
         );
@@ -326,7 +336,7 @@ context("Dashboard Tiles", () => {
       cy.fixture("candidacy1.json").then((candidacy) => {
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-tile"] button').should("be.disabled");
+        cy.get('[data-testid="feasibility-tile"] button').should("be.disabled");
       });
     });
 
@@ -342,7 +352,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-tile"] button').should("be.disabled");
+        cy.get('[data-testid="feasibility-tile"] button').should("be.disabled");
       });
     });
 
@@ -361,7 +371,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="feasibility-tile"] button').should("be.disabled");
+        cy.get('[data-testid="feasibility-tile"] button').should("be.disabled");
       });
     });
   });
@@ -384,7 +394,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="dossier-validation-badge-pending"]').should(
+        cy.get('[data-testid="dossier-validation-badge-pending"]').should(
           "be.visible",
         );
       });
@@ -398,7 +408,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="dossier-validation-badge-incomplete"]').should(
+        cy.get('[data-testid="dossier-validation-badge-incomplete"]').should(
           "be.visible",
         );
       });
@@ -413,7 +423,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="dossier-validation-badge-to-send"]').should(
+        cy.get('[data-testid="dossier-validation-badge-to-send"]').should(
           "be.visible",
         );
       });
@@ -430,7 +440,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="dossier-validation-badge-to-send"]').should(
+        cy.get('[data-testid="dossier-validation-badge-to-send"]').should(
           "be.visible",
         );
       });
@@ -445,7 +455,7 @@ context("Dashboard Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="dossier-validation-badge-to-send"]').should(
+          cy.get('[data-testid="dossier-validation-badge-to-send"]').should(
             "be.visible",
           );
         });
@@ -460,7 +470,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="training-tile"] button').should("be.disabled");
+        cy.get('[data-testid="training-tile"] button').should("be.disabled");
       });
     });
 
@@ -470,7 +480,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="training-tile"] button').should("be.disabled");
+        cy.get('[data-testid="training-tile"] button').should("be.disabled");
       });
     });
 
@@ -484,7 +494,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="training-tile"] button').should("be.disabled");
+        cy.get('[data-testid="training-tile"] button').should("be.disabled");
       });
     });
 
@@ -498,7 +508,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="training-status-badge-in-progress"]').should(
+        cy.get('[data-testid="training-status-badge-in-progress"]').should(
           "be.visible",
         );
       });
@@ -514,7 +524,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="training-status-badge-in-progress"]').should(
+        cy.get('[data-testid="training-status-badge-in-progress"]').should(
           "be.visible",
         );
       });
@@ -530,7 +540,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="training-status-badge-to-validate"]').should(
+        cy.get('[data-testid="training-status-badge-to-validate"]').should(
           "be.visible",
         );
       });
@@ -542,7 +552,7 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-test="training-status-badge-validated"]').should(
+        cy.get('[data-testid="training-status-badge-validated"]').should(
           "be.visible",
         );
       });

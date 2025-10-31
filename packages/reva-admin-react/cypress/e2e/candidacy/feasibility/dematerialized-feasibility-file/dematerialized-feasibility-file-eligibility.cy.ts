@@ -64,7 +64,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     it("should have disabled form buttons by default", function () {
       visitFeasibilityEligibility();
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
@@ -76,29 +76,29 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     it("should disable date and time fields when TOTAL eligibility is selected", function () {
       visitFeasibilityEligibility();
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
         });
 
-      cy.get('[data-test="eligibility-select"]')
+      cy.get('[data-testid="eligibility-select"]')
         .children("select")
         .select("TOTAL");
 
-      cy.get('[data-test="eligibility-valid-until-input"]')
+      cy.get('[data-testid="eligibility-valid-until-input"]')
         .should("exist")
         .within(() => {
           cy.get("input").should("be.disabled");
         });
 
-      cy.get('[data-test="eligibility-time-enough-radio-buttons"]')
+      cy.get('[data-testid="eligibility-time-enough-radio-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("input").should("be.disabled");
         });
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -110,17 +110,17 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     it("should handle PARTIAL eligibility with future date validation", function () {
       visitFeasibilityEligibility();
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
         });
 
-      cy.get('[data-test="eligibility-select"]')
+      cy.get('[data-testid="eligibility-select"]')
         .children("select")
         .select("PARTIAL");
 
-      cy.get('[data-test="eligibility-valid-until-input"]')
+      cy.get('[data-testid="eligibility-valid-until-input"]')
         .should("exist")
         .within(() => {
           cy.get("input")
@@ -129,7 +129,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
             .type(DF_FORMATED_DATE_6_MONTHS_FROM_NOW);
         });
 
-      cy.get('[data-test="eligibility-time-enough-radio-buttons"]')
+      cy.get('[data-testid="eligibility-time-enough-radio-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("input")
@@ -138,7 +138,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
             .check({ force: true });
         });
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -148,17 +148,17 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     it("should show error message when submitting PARTIAL eligibility with past date", function () {
       visitFeasibilityEligibility();
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("be.disabled");
         });
 
-      cy.get('[data-test="eligibility-select"]')
+      cy.get('[data-testid="eligibility-select"]')
         .children("select")
         .select("PARTIAL");
 
-      cy.get('[data-test="eligibility-valid-until-input"]')
+      cy.get('[data-testid="eligibility-valid-until-input"]')
         .should("exist")
         .within(() => {
           cy.get("input")
@@ -167,7 +167,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
             .type(DF_FORMATED_DATE_6_MONTHS_AGO);
         });
 
-      cy.get('[data-test="eligibility-time-enough-radio-buttons"]')
+      cy.get('[data-testid="eligibility-time-enough-radio-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("input")
@@ -176,18 +176,18 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
             .check({ force: true });
         });
 
-      cy.get('[data-test="eligibility-valid-until-input"]').within(() => {
+      cy.get('[data-testid="eligibility-valid-until-input"]').within(() => {
         cy.get('[class*="fr-error-text"]').should("not.exist");
       });
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
           cy.get("button").last().click();
         });
 
-      cy.get('[data-test="eligibility-valid-until-input"]').within(() => {
+      cy.get('[data-testid="eligibility-valid-until-input"]').within(() => {
         cy.get('[class*="fr-error-text"]').should("exist");
       });
     });
@@ -196,29 +196,29 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
       it("should disable date and time fields when PARTIAL_WITH_CHANGE eligibility is selected", function () {
         visitFeasibilityEligibility();
 
-        cy.get('[data-test="form-buttons"]')
+        cy.get('[data-testid="form-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("button").should("be.disabled");
           });
 
-        cy.get('[data-test="eligibility-select"]')
+        cy.get('[data-testid="eligibility-select"]')
           .children("select")
           .select("PARTIAL_WITH_CHANGE");
 
-        cy.get('[data-test="eligibility-valid-until-input"]')
+        cy.get('[data-testid="eligibility-valid-until-input"]')
           .should("exist")
           .within(() => {
             cy.get("input").should("be.disabled");
           });
 
-        cy.get('[data-test="eligibility-time-enough-radio-buttons"]')
+        cy.get('[data-testid="eligibility-time-enough-radio-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("input").should("be.disabled");
           });
 
-        cy.get('[data-test="form-buttons"]')
+        cy.get('[data-testid="form-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("button").should("not.be.disabled");
@@ -230,17 +230,17 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
       it("should handle PARTIAL_WITHOUT_CHANGE eligibility with future date validation", function () {
         visitFeasibilityEligibility();
 
-        cy.get('[data-test="form-buttons"]')
+        cy.get('[data-testid="form-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("button").should("be.disabled");
           });
 
-        cy.get('[data-test="eligibility-select"]')
+        cy.get('[data-testid="eligibility-select"]')
           .children("select")
           .select("PARTIAL_WITHOUT_CHANGE");
 
-        cy.get('[data-test="eligibility-valid-until-input"]')
+        cy.get('[data-testid="eligibility-valid-until-input"]')
           .should("exist")
           .within(() => {
             cy.get("input")
@@ -249,7 +249,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
               .type(DF_FORMATED_DATE_6_MONTHS_FROM_NOW);
           });
 
-        cy.get('[data-test="eligibility-time-enough-radio-buttons"]')
+        cy.get('[data-testid="eligibility-time-enough-radio-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("input")
@@ -258,7 +258,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
               .check({ force: true });
           });
 
-        cy.get('[data-test="form-buttons"]')
+        cy.get('[data-testid="form-buttons"]')
           .should("exist")
           .within(() => {
             cy.get("button").should("not.be.disabled");

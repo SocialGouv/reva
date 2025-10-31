@@ -18,7 +18,7 @@ export const DossierDeValidationBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="pending-dv-banner">
+          <div data-testid="pending-dv-banner">
             Votre dossier de validation a bien été envoyé au certificateur. Vous
             recevrez prochainement une convocation pour votre passage devant le
             jury. En cas d’erreur ou d’oubli, contactez votre certificateur dans
@@ -33,7 +33,7 @@ export const DossierDeValidationBanner = ({
     return (
       <BaseBanner
         content={
-          <div data-test="incomplete-dv-banner">
+          <div data-testid="incomplete-dv-banner">
             Le certificateur a signalé que votre dossier de validation
             comportait des erreurs. Rendez vous dans la section “Dossier de
             validation” pour connaitre les raisons et transmettre un nouveau

@@ -197,7 +197,7 @@ const FundingPage = () => {
         )}
       </div>
       <FormProvider {...methods}>
-        <form data-test="funding-form" className="flex flex-col">
+        <form data-testid="funding-form" className="flex flex-col">
           <InformationCandidatBlock
             candidacy={candidacy as Candidacy}
             isReadOnly

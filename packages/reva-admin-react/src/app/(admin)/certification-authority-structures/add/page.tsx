@@ -60,7 +60,7 @@ export default function AddCertificationAuthorityStructurePage() {
   };
 
   return (
-    <div data-test="add-certification-authority-structure-page">
+    <div data-testid="add-certification-authority-structure-page">
       <h1>Nouvelle structure certificatrice</h1>
       <p>
         Vous êtes sur le point de créer une nouvelle structure certificatrice.

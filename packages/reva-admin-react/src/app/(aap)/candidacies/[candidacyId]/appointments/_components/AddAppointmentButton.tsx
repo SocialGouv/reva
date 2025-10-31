@@ -20,7 +20,7 @@ export const AddAppointmentButton = ({
   return (
     <Button
       className={className || ""}
-      data-test="add-appointment-button"
+      data-testid="add-appointment-button"
       priority="tertiary no outline"
       iconId="fr-icon-add-line"
       {...addAppointmentButtonExtraProps}

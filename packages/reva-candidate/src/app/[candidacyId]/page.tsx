@@ -11,10 +11,10 @@ export default function Home() {
   const { candidate } = useCandidate();
 
   return (
-    <PageLayout data-test="candidate-dashboard">
+    <PageLayout data-testid="candidate-dashboard">
       <NameBadge
         as="h2"
-        data-test="project-home-fullname"
+        data-testid="project-home-fullname"
         firstname={candidate?.firstname}
         lastname={candidate?.lastname}
       />

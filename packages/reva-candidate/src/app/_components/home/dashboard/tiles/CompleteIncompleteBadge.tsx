@@ -7,7 +7,7 @@ export const CompleteIncompleteBadge = ({
 }) => (
   <Badge
     severity={isComplete ? "success" : "warning"}
-    data-test={isComplete ? "complete-badge" : "incomplete-badge"}
+    data-testid={isComplete ? "complete-badge" : "incomplete-badge"}
   >
     {isComplete ? "complété" : "à compléter"}
   </Badge>

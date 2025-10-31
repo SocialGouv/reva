@@ -177,7 +177,7 @@ export default function PrerequisitesPage() {
             severity="info"
             description="Le certificateur n’a transmis aucun pré-requis obligatoire."
             small
-            data-test="no-prerequisites-message"
+            data-testid="no-prerequisites-message"
           />
         ) : (
           <div className="flex flex-col gap-4 p-6 pb-4 border border-dsfr-light-decisions-border-border-default-grey mt-8 mb-4">
@@ -224,7 +224,7 @@ export default function PrerequisitesPage() {
               state: undefined,
             });
           }}
-          data-test="add-prerequisite-button"
+          data-testid="add-prerequisite-button"
         >
           <span className="fr-icon-add-line fr-icon--sm" />
           <span className="text-sm font-medium">Ajouter un pré-requis</span>

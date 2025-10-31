@@ -24,7 +24,7 @@ export const DecisionSection = ({
   const DecisionBadge = () => {
     if (aapDecision === "FAVORABLE") {
       return (
-        <Badge severity="success" noIcon data-test="favorable-badge">
+        <Badge severity="success" noIcon data-testid="favorable-badge">
           Favorable
         </Badge>
       );
@@ -47,7 +47,7 @@ export const DecisionSection = ({
       disabled={disabled}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/decision`}
       CustomBadge={<DecisionBadge />}
-      data-test="decision-section"
+      data-testid="decision-section"
     >
       {aapDecisionComment && <p className="md:pl-10">“{aapDecisionComment}”</p>}
       {disabled && (

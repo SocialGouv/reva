@@ -51,7 +51,7 @@ context("Admin", () => {
   it("display the page when i access it", function () {
     visitArchive({ userProfile: "admin" });
     cy.wait("@getCandidacyForArchivePage");
-    cy.get('[data-test="archive-candidacy-title"]').should(
+    cy.get('[data-testid="archive-candidacy-title"]').should(
       "have.text",
       "Archivage de la candidature",
     );
@@ -70,25 +70,27 @@ context("Admin", () => {
       it(`shows the correct archival reasons when the feasibility result is not known and the candidacy status is ${status}`, function () {
         visitArchive({ userProfile: "admin", candidacyStatus: status });
         cy.wait("@getCandidacyForArchivePage");
-        cy.get('[data-test="archiving-reason-radio-buttons"]').should("exist");
+        cy.get('[data-testid="archiving-reason-radio-buttons"]').should(
+          "exist",
+        );
         cy.get(
-          '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
+          '[data-testid="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
         ).should("exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-REORIENTATION_HORS_FRANCE_VAE"]',
+          '[data-testid="archiving-reason-radio-button-REORIENTATION_HORS_FRANCE_VAE"]',
         ).should("exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-PROBLEME_FINANCEMENT"]',
+          '[data-testid="archiving-reason-radio-button-PROBLEME_FINANCEMENT"]',
         ).should("exist");
-        cy.get('[data-test="archiving-reason-radio-button-AUTRE"]').should(
+        cy.get('[data-testid="archiving-reason-radio-button-AUTRE"]').should(
           "exist",
         );
 
         cy.get(
-          '[data-test="archiving-reason-radio-button-MULTI_CANDIDATURES"]',
+          '[data-testid="archiving-reason-radio-button-MULTI_CANDIDATURES"]',
         ).should("not.exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-PASSAGE_AUTONOME_A_ACCOMPAGNE"]',
+          '[data-testid="archiving-reason-radio-button-PASSAGE_AUTONOME_A_ACCOMPAGNE"]',
         ).should("not.exist");
       });
     },
@@ -106,25 +108,27 @@ context("Admin", () => {
       it(`shows the correct archival reasons when the feasibility result is known and the candidacy status is ${status}`, function () {
         visitArchive({ userProfile: "admin", candidacyStatus: status });
         cy.wait("@getCandidacyForArchivePage");
-        cy.get('[data-test="archiving-reason-radio-buttons"]').should("exist");
+        cy.get('[data-testid="archiving-reason-radio-buttons"]').should(
+          "exist",
+        );
         cy.get(
-          '[data-test="archiving-reason-radio-button-MULTI_CANDIDATURES"]',
+          '[data-testid="archiving-reason-radio-button-MULTI_CANDIDATURES"]',
         ).should("exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-PASSAGE_AUTONOME_A_ACCOMPAGNE"]',
+          '[data-testid="archiving-reason-radio-button-PASSAGE_AUTONOME_A_ACCOMPAGNE"]',
         ).should("exist");
-        cy.get('[data-test="archiving-reason-radio-button-AUTRE"]').should(
+        cy.get('[data-testid="archiving-reason-radio-button-AUTRE"]').should(
           "exist",
         );
 
         cy.get(
-          '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
+          '[data-testid="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
         ).should("not.exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-REORIENTATION_HORS_FRANCE_VAE"]',
+          '[data-testid="archiving-reason-radio-button-REORIENTATION_HORS_FRANCE_VAE"]',
         ).should("not.exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-PROBLEME_FINANCEMENT"]',
+          '[data-testid="archiving-reason-radio-button-PROBLEME_FINANCEMENT"]',
         ).should("not.exist");
       });
     },
@@ -146,7 +150,7 @@ context("Admin", () => {
     });
     cy.wait("@getCandidacyForArchivePage");
     cy.get(
-      '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
+      '[data-testid="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
     ).click({ force: true });
     cy.get("button").contains("Enregistrer").click();
     cy.get("button").contains("Confirmer").click();
@@ -163,7 +167,7 @@ context("AAP", () => {
   it("display the page when i access it", function () {
     visitArchive({ userProfile: "aap" });
     cy.wait("@getCandidacyForArchivePage");
-    cy.get('[data-test="archive-candidacy-title"]').should(
+    cy.get('[data-testid="archive-candidacy-title"]').should(
       "have.text",
       "Archivage de la candidature",
     );
@@ -180,25 +184,27 @@ context("AAP", () => {
       it(`shows the correct archival reasons when the feasibility result is not known and the candidacy status is ${status}`, function () {
         visitArchive({ userProfile: "aap", candidacyStatus: status });
         cy.wait("@getCandidacyForArchivePage");
-        cy.get('[data-test="archiving-reason-radio-buttons"]').should("exist");
+        cy.get('[data-testid="archiving-reason-radio-buttons"]').should(
+          "exist",
+        );
         cy.get(
-          '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
+          '[data-testid="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
         ).should("exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-REORIENTATION_HORS_FRANCE_VAE"]',
+          '[data-testid="archiving-reason-radio-button-REORIENTATION_HORS_FRANCE_VAE"]',
         ).should("exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-PROBLEME_FINANCEMENT"]',
+          '[data-testid="archiving-reason-radio-button-PROBLEME_FINANCEMENT"]',
         ).should("exist");
-        cy.get('[data-test="archiving-reason-radio-button-AUTRE"]').should(
+        cy.get('[data-testid="archiving-reason-radio-button-AUTRE"]').should(
           "exist",
         );
 
         cy.get(
-          '[data-test="archiving-reason-radio-button-MULTI_CANDIDATURES"]',
+          '[data-testid="archiving-reason-radio-button-MULTI_CANDIDATURES"]',
         ).should("not.exist");
         cy.get(
-          '[data-test="archiving-reason-radio-button-PASSAGE_AUTONOME_A_ACCOMPAGNE"]',
+          '[data-testid="archiving-reason-radio-button-PASSAGE_AUTONOME_A_ACCOMPAGNE"]',
         ).should("not.exist");
       });
     },
@@ -218,10 +224,10 @@ context("AAP", () => {
     it(`shows me an alert when the feasibility result is known and the candidacy status is ${status}`, function () {
       visitArchive({ userProfile: "aap", candidacyStatus: status });
       cy.wait("@getCandidacyForArchivePage");
-      cy.get('[data-test="candidacy-cannot-be-archived-alert"]').should(
+      cy.get('[data-testid="candidacy-cannot-be-archived-alert"]').should(
         "exist",
       );
-      cy.get('[data-test="archiving-reason-radio-buttons"]').should(
+      cy.get('[data-testid="archiving-reason-radio-buttons"]').should(
         "not.exist",
       );
     });
@@ -237,7 +243,7 @@ context("AAP", () => {
     visitArchive({ userProfile: "aap", candidacyStatus: "PARCOURS_CONFIRME" });
     cy.wait("@getCandidacyForArchivePage");
     cy.get(
-      '[data-test="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
+      '[data-testid="archiving-reason-radio-button-INACTIVITE_CANDIDAT"]',
     ).click({ force: true });
     cy.get("button").contains("Enregistrer").click();
     cy.get("button").contains("Confirmer").click();

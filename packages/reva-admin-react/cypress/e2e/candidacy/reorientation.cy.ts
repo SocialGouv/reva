@@ -92,7 +92,7 @@ describe("Certification reorientation page", () => {
             ).should("exist");
           });
 
-        cy.get('[data-test="results"] > div').should("have.length", 2);
+        cy.get('[data-testid="results"] > div').should("have.length", 2);
 
         [
           {
@@ -107,7 +107,7 @@ describe("Certification reorientation page", () => {
           },
         ].forEach((certification) => {
           cy.contains(
-            '[data-test="results"] > div',
+            '[data-testid="results"] > div',
             certification.label,
           ).within(() => {
             cy.contains(certification.typeDiplome).should("exist");
@@ -126,7 +126,7 @@ describe("Certification reorientation page", () => {
         cy.wait("@getCertificationsForCandidate");
 
         cy.contains(
-          '[data-test="results"] > div',
+          '[data-testid="results"] > div',
           "Titre professionnel Agent de restauration",
         )
           .find("button")

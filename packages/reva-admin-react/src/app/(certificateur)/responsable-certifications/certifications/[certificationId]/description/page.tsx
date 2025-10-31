@@ -308,7 +308,7 @@ const PageContent = ({
   );
 
   return (
-    <div data-test="certification-registry-manager-update-certification-description-page">
+    <div data-testid="certification-registry-manager-update-certification-description-page">
       <h1>Descriptif de la certification</h1>
       <p className="mb-12 text-xl">
         Complétez ou modifiez les informations concernant cette certification.
@@ -318,7 +318,7 @@ const PageContent = ({
 
       <div className="flex flex-col gap-8">
         <EnhancedSectionCard
-          data-test="certification-description-card"
+          data-testid="certification-description-card"
           title={`Informations liées au code RNCP ${certification.codeRncp}`}
           status="TO_COMPLETE"
         >
@@ -486,7 +486,7 @@ const PageContent = ({
 
                   <Input
                     className="lg:min-w-96"
-                    data-test="certification-description-jury_frequency_other-input"
+                    data-testid="certification-description-jury_frequency_other-input"
                     label="Autre fréquence :"
                     disabled={juryFrequency != "Autre"}
                     nativeInputProps={{
@@ -498,7 +498,7 @@ const PageContent = ({
                 </div>
                 <Input
                   className="m-0"
-                  data-test="certification-description-jury_place-input"
+                  data-testid="certification-description-jury_place-input"
                   label="Lieu où se déroulera le passage (optionnel) :"
                   hintText="À renseigner s’il existe peu de lieux de passage pour cette certification. Exemple : nom d’une ville, code postal, nom du service en région..."
                   nativeInputProps={{

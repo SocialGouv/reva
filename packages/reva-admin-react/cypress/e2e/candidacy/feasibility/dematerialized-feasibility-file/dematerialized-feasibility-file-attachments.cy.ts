@@ -65,7 +65,7 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
     it("should display an empty form with enabled submit button", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="form-buttons"]').should("exist");
+      cy.get('[data-testid="form-buttons"]').should("exist");
     });
   });
 
@@ -74,36 +74,36 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
       visitFeasibilityAttachments();
 
       cy.get(
-        `[data-test="feasibility-files-preview-${FILE_TITLES.ID_CARD}"]`,
+        `[data-testid="feasibility-files-preview-${FILE_TITLES.ID_CARD}"]`,
       ).should("not.exist");
 
-      cy.get('[data-test="id-card-upload"]').within(() => {
+      cy.get('[data-testid="id-card-upload"]').within(() => {
         cy.get('input[type="file"]').selectFile(
           "cypress/fixtures/files/test-file.pdf",
           { force: true },
         );
       });
 
-      cy.get(`[data-test="feasibility-files-preview-${FILE_TITLES.ID_CARD}"]`)
+      cy.get(`[data-testid="feasibility-files-preview-${FILE_TITLES.ID_CARD}"]`)
         .should("exist")
         .within(() => {
           cy.get("iframe").should("be.visible");
           cy.get(
-            `[data-test="feasibility-files-preview-${FILE_TITLES.ID_CARD}-toggle"]`,
+            `[data-testid="feasibility-files-preview-${FILE_TITLES.ID_CARD}-toggle"]`,
           ).should("exist");
         });
 
       cy.get(
-        `[data-test="feasibility-files-preview-${FILE_TITLES.ID_CARD}-toggle"]`,
+        `[data-testid="feasibility-files-preview-${FILE_TITLES.ID_CARD}-toggle"]`,
       ).click();
       cy.get("iframe").should("not.be.visible");
 
       cy.get(
-        `[data-test="feasibility-files-preview-${FILE_TITLES.ID_CARD}-toggle"]`,
+        `[data-testid="feasibility-files-preview-${FILE_TITLES.ID_CARD}-toggle"]`,
       ).click();
       cy.get("iframe").should("be.visible");
 
-      cy.get('[data-test="form-buttons"]')
+      cy.get('[data-testid="form-buttons"]')
         .should("exist")
         .within(() => {
           cy.get("button").should("not.be.disabled");
@@ -113,7 +113,7 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
     it("should handle equivalence proof upload with preview (optional)", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="equivalence-proof-upload"]').within(() => {
+      cy.get('[data-testid="equivalence-proof-upload"]').within(() => {
         cy.get('input[type="file"]').selectFile(
           "cypress/fixtures/files/test-file.pdf",
           { force: true },
@@ -121,7 +121,7 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
       });
 
       cy.get(
-        `[data-test="feasibility-files-preview-${FILE_TITLES.EQUIVALENCE_PROOF}"]`,
+        `[data-testid="feasibility-files-preview-${FILE_TITLES.EQUIVALENCE_PROOF}"]`,
       )
         .should("exist")
         .within(() => {
@@ -132,7 +132,7 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
     it("should handle training certificate upload with preview (optional)", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="training-certificate-upload"]').within(() => {
+      cy.get('[data-testid="training-certificate-upload"]').within(() => {
         cy.get('input[type="file"]').selectFile(
           "cypress/fixtures/files/test-file.pdf",
           { force: true },
@@ -140,7 +140,7 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
       });
 
       cy.get(
-        `[data-test="feasibility-files-preview-${FILE_TITLES.TRAINING_CERTIFICATE}"]`,
+        `[data-testid="feasibility-files-preview-${FILE_TITLES.TRAINING_CERTIFICATE}"]`,
       )
         .should("exist")
         .within(() => {
@@ -152,10 +152,10 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
       visitFeasibilityAttachments();
 
       cy.get(
-        `[data-test="feasibility-files-preview-${FILE_TITLES.EQUIVALENCE_PROOF}"]`,
+        `[data-testid="feasibility-files-preview-${FILE_TITLES.EQUIVALENCE_PROOF}"]`,
       ).should("not.exist");
       cy.get(
-        `[data-test="feasibility-files-preview-${FILE_TITLES.TRAINING_CERTIFICATE}"]`,
+        `[data-testid="feasibility-files-preview-${FILE_TITLES.TRAINING_CERTIFICATE}"]`,
       ).should("not.exist");
     });
   });
@@ -164,55 +164,55 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
     it("should allow adding and removing additional files", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="add-additional-file-button"]').click();
+      cy.get('[data-testid="add-additional-file-button"]').click();
 
-      cy.get('[data-test="additional-file-0"]')
+      cy.get('[data-testid="additional-file-0"]')
         .should("exist")
         .within(() => {
-          cy.get('[data-test="delete-file-button"]')
+          cy.get('[data-testid="delete-file-button"]')
             .should("be.visible")
             .click();
         });
 
-      cy.get('[data-test="additional-file-0"]').should("not.exist");
+      cy.get('[data-testid="additional-file-0"]').should("not.exist");
     });
 
     it("should enforce maximum limit of 8 additional files", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="add-additional-file-button"]')
+      cy.get('[data-testid="add-additional-file-button"]')
         .should("exist")
         .click();
 
-      cy.get('[data-test="add-additional-file-button"]')
+      cy.get('[data-testid="add-additional-file-button"]')
         .should("exist")
         .click();
 
-      cy.get('[data-test="add-additional-file-button"]')
+      cy.get('[data-testid="add-additional-file-button"]')
         .should("exist")
         .click();
 
-      cy.get('[data-test="add-additional-file-button"]')
+      cy.get('[data-testid="add-additional-file-button"]')
         .should("exist")
         .click();
 
-      cy.get('[data-test="add-additional-file-button"]')
+      cy.get('[data-testid="add-additional-file-button"]')
         .should("exist")
         .click();
 
-      cy.get('[data-test="add-additional-file-button"]')
+      cy.get('[data-testid="add-additional-file-button"]')
         .should("exist")
         .click();
 
-      cy.get('[data-test="add-additional-file-button"]')
+      cy.get('[data-testid="add-additional-file-button"]')
         .should("exist")
         .click();
 
-      cy.get('[data-test="add-additional-file-button"]')
+      cy.get('[data-testid="add-additional-file-button"]')
         .should("exist")
         .click();
 
-      cy.get('[data-test="add-additional-file-button"]').should("not.exist");
+      cy.get('[data-testid="add-additional-file-button"]').should("not.exist");
     });
   });
 
@@ -220,7 +220,7 @@ describe("Dematerialized Feasibility File - Attachments Page", () => {
     it("should provide navigation back to feasibility summary", () => {
       visitFeasibilityAttachments();
 
-      cy.get('[data-test="back-button"]').click();
+      cy.get('[data-testid="back-button"]').click();
 
       cy.url().should("include", "/feasibility-aap");
     });

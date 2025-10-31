@@ -17,7 +17,7 @@ const ProfessionalSpaceInscriptionConfirmationPage = () => {
       <OrganismBackground>
         <div
           className="flex justify-between w-full items-center"
-          data-test="has-subscribed-successfully"
+          data-testid="has-subscribed-successfully"
         >
           <div className="flex flex-col justify-center">
             <h1>Votre demande d'inscription est enregistrée</h1>

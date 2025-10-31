@@ -7,7 +7,7 @@ export default function ForgotPasswordConfirmation() {
     <PageLayout
       title="Confirmation de demande de réinitialisation de mot de passe"
       className="flex flex-col items-center justify-center text-center p-6 pt-8"
-      data-test="forgot-password-confirmation"
+      data-testid="forgot-password-confirmation"
     >
       <h1 className="text-3xl font-bold text-dsfrGray-800">
         Un courriel vous a été envoyé.

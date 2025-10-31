@@ -29,7 +29,7 @@ export const OrganismTile = ({
 
   return (
     <Tile
-      data-test="organism-tile"
+      data-testid="organism-tile"
       start={
         endAccompagnementConfirmed ? (
           <Tag small>Accompagnement terminé</Tag>

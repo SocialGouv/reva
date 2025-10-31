@@ -92,53 +92,53 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
   context("When the feasibility file is in its initial state", () => {
     it("should display all sections", function () {
       visitFeasibility();
-      cy.get("[data-test='eligibility-section']").should("exist");
-      cy.get("[data-test='certification-section']").should("exist");
-      cy.get("[data-test='competencies-blocks-section']").should("exist");
-      cy.get("[data-test='prerequisites-section']").should("exist");
-      cy.get("[data-test='decision-section']").should("exist");
-      cy.get("[data-test='attachments-section']").should("exist");
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='eligibility-section']").should("exist");
+      cy.get("[data-testid='certification-section']").should("exist");
+      cy.get("[data-testid='competencies-blocks-section']").should("exist");
+      cy.get("[data-testid='prerequisites-section']").should("exist");
+      cy.get("[data-testid='decision-section']").should("exist");
+      cy.get("[data-testid='attachments-section']").should("exist");
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "exist",
       );
-      cy.get("[data-test='sworn-statement-section']").should("exist");
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='sworn-statement-section']").should("exist");
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-pending-validation']",
+        "[data-testid='send-file-certification-authority-tile-pending-validation']",
       ).should("exist");
     });
 
     it("should display 'to complete' badges for eligibility, certification, decision, and attachments sections", function () {
       visitFeasibility();
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='to-complete-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='to-complete-badge']").should("exist");
         cy.get("button").should("not.be.disabled");
       });
 
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='to-complete-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='to-complete-badge']").should("exist");
         cy.get("button").should("not.be.disabled");
       });
 
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
-        cy.get("[data-test='to-complete-badge']").should("not.exist");
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
+        cy.get("[data-testid='to-complete-badge']").should("not.exist");
         cy.get("button").should("not.exist");
       });
 
-      cy.get("[data-test='prerequisites-section']").within(() => {
-        cy.get("[data-test='to-complete-badge']").should("not.exist");
+      cy.get("[data-testid='prerequisites-section']").within(() => {
+        cy.get("[data-testid='to-complete-badge']").should("not.exist");
         cy.get("button").should("be.disabled");
       });
 
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='to-complete-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='to-complete-badge']").should("exist");
         cy.get("button").should("not.be.disabled");
       });
 
-      cy.get("[data-test='attachments-section']").within(() => {
-        cy.get("[data-test='to-complete-badge']").should("exist");
+      cy.get("[data-testid='attachments-section']").within(() => {
+        cy.get("[data-testid='to-complete-badge']").should("exist");
         cy.get("button").should("not.be.disabled");
       });
     });
@@ -157,36 +157,38 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityEligibilityCompleted,
       });
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
         cy.get("button").should("not.exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
+      cy.get("[data-testid='prerequisites-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
-      cy.get("[data-test='decision-section']").within(() => {
+      cy.get("[data-testid='decision-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
+      cy.get("[data-testid='attachments-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should(
+        "not.exist",
+      );
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-pending-validation']",
+        "[data-testid='send-file-certification-authority-tile-pending-validation']",
       ).should("exist");
     });
   });
@@ -206,39 +208,41 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityEligibilityAndCertificationCompleted,
       });
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
+      cy.get("[data-testid='prerequisites-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='decision-section']").within(() => {
+      cy.get("[data-testid='decision-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
+      cy.get("[data-testid='attachments-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should(
+        "not.exist",
+      );
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-pending-validation']",
+        "[data-testid='send-file-certification-authority-tile-pending-validation']",
       ).should("exist");
     });
   });
@@ -257,39 +261,41 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityEligibilityPartial,
       });
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
         cy.get("button").should("not.exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
+      cy.get("[data-testid='prerequisites-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='decision-section']").within(() => {
+      cy.get("[data-testid='decision-section']").within(() => {
         cy.get("button").should("not.exist");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
+      cy.get("[data-testid='attachments-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should(
+        "not.exist",
+      );
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-pending-validation']",
+        "[data-testid='send-file-certification-authority-tile-pending-validation']",
       ).should("exist");
     });
   });
@@ -315,39 +321,41 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
         visitFeasibility({
           feasibility: feasibilityEligibilityAndCertificationCompleted,
         });
-        cy.get("[data-test='eligibility-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("exist");
+        cy.get("[data-testid='eligibility-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("exist");
         });
-        cy.get("[data-test='certification-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("exist");
+        cy.get("[data-testid='certification-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("exist");
         });
-        cy.get("[data-test='competencies-blocks-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("exist");
+        cy.get("[data-testid='competencies-blocks-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("exist");
         });
-        cy.get("[data-test='prerequisites-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("exist");
+        cy.get("[data-testid='prerequisites-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("exist");
         });
-        cy.get("[data-test='decision-section']").within(() => {
-          cy.get("[data-test='favorable-badge']").should("exist");
+        cy.get("[data-testid='decision-section']").within(() => {
+          cy.get("[data-testid='favorable-badge']").should("exist");
         });
-        cy.get("[data-test='attachments-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("exist");
+        cy.get("[data-testid='attachments-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("exist");
         });
-        cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
           "not.exist",
         );
-        cy.get("[data-test='send-file-candidate-tile-ready']").should("exist");
-        cy.get("[data-test='send-file-candidate-tile-sent']").should(
+        cy.get("[data-testid='send-file-candidate-tile-ready']").should(
+          "exist",
+        );
+        cy.get("[data-testid='send-file-candidate-tile-sent']").should(
           "not.exist",
         );
-        cy.get("[data-test='sworn-statement-section']").within(() => {
+        cy.get("[data-testid='sworn-statement-section']").within(() => {
           cy.get("button").should("be.disabled");
         });
-        cy.get("[data-test='candidate-decision-comment-section']").should(
+        cy.get("[data-testid='candidate-decision-comment-section']").should(
           "not.exist",
         );
         cy.get(
-          "[data-test='send-file-certification-authority-tile-pending-validation']",
+          "[data-testid='send-file-certification-authority-tile-pending-validation']",
         ).should("exist");
       });
     },
@@ -374,40 +382,40 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
         feasibility: feasibilityWithSentToCandidate,
       });
 
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='prerequisites-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='favorable-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='favorable-badge']").should("exist");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='attachments-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
-      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should("exist");
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should("exist");
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-pending-validation']",
+        "[data-testid='send-file-certification-authority-tile-pending-validation']",
       ).should("exist");
     });
   });
@@ -431,37 +439,39 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityUnfavorableDecision,
       });
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='prerequisites-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='unfavorable-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='unfavorable-badge']").should("exist");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='attachments-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should("exist");
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should("exist");
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should(
+        "not.exist",
+      );
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-pending-validation']",
+        "[data-testid='send-file-certification-authority-tile-pending-validation']",
       ).should("exist");
     });
 
@@ -478,10 +488,10 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityWithUnfavorableDecision,
       });
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='unfavorable-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='unfavorable-badge']").should("exist");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "exist",
       );
     });
@@ -507,39 +517,39 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityAllCompleted,
       });
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='prerequisites-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='favorable-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='favorable-badge']").should("exist");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='attachments-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should("exist");
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-pending-validation']",
+        "[data-testid='send-file-certification-authority-tile-pending-validation']",
       ).should("exist");
     });
 
@@ -564,39 +574,39 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityAllCompletedWithSwornAttestation,
       });
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='prerequisites-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='favorable-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='favorable-badge']").should("exist");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='attachments-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should("exist");
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-ready']",
+        "[data-testid='send-file-certification-authority-tile-ready']",
       ).should("exist");
     });
 
@@ -621,39 +631,39 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityAllCompleted,
       });
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='prerequisites-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='favorable-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='favorable-badge']").should("exist");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='attachments-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should("exist");
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-ready']",
+        "[data-testid='send-file-certification-authority-tile-ready']",
       ).should("exist");
     });
   });
@@ -684,47 +694,47 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
         visitFeasibility({
           feasibility: feasibilityFileSent,
         });
-        cy.get("[data-test='eligibility-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("not.exist");
+        cy.get("[data-testid='eligibility-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("not.exist");
           cy.get("button").should("not.exist");
         });
-        cy.get("[data-test='certification-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("not.exist");
+        cy.get("[data-testid='certification-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("not.exist");
           cy.get("button").should("not.exist");
         });
-        cy.get("[data-test='competencies-blocks-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("not.exist");
-          cy.get("[data-test='competencies-blocks-section-button']").should(
+        cy.get("[data-testid='competencies-blocks-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("not.exist");
+          cy.get("[data-testid='competencies-blocks-section-button']").should(
             "not.exist",
           );
         });
-        cy.get("[data-test='prerequisites-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("not.exist");
+        cy.get("[data-testid='prerequisites-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("not.exist");
           cy.get("button").should("not.exist");
         });
-        cy.get("[data-test='decision-section']").within(() => {
-          cy.get("[data-test='favorable-badge']").should("not.exist");
+        cy.get("[data-testid='decision-section']").within(() => {
+          cy.get("[data-testid='favorable-badge']").should("not.exist");
           cy.get("button").should("not.exist");
         });
-        cy.get("[data-test='attachments-section']").within(() => {
-          cy.get("[data-test='completed-badge']").should("not.exist");
+        cy.get("[data-testid='attachments-section']").within(() => {
+          cy.get("[data-testid='completed-badge']").should("not.exist");
           cy.get("button").should("not.exist");
         });
-        cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+        cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
           "not.exist",
         );
-        cy.get("[data-test='send-file-candidate-tile-ready']").should(
+        cy.get("[data-testid='send-file-candidate-tile-ready']").should(
           "not.exist",
         );
-        cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
-        cy.get("[data-test='sworn-statement-section']").within(() => {
+        cy.get("[data-testid='send-file-candidate-tile-sent']").should("exist");
+        cy.get("[data-testid='sworn-statement-section']").within(() => {
           cy.get("button").should("not.exist");
         });
-        cy.get("[data-test='candidate-decision-comment-section']").should(
+        cy.get("[data-testid='candidate-decision-comment-section']").should(
           "not.exist",
         );
         cy.get(
-          "[data-test='send-file-certification-authority-tile-sent']",
+          "[data-testid='send-file-certification-authority-tile-sent']",
         ).should("exist");
       });
     },
@@ -735,29 +745,29 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
       });
-      cy.get("[data-test='dff-summary']").should("exist");
+      cy.get("[data-testid='dff-summary']").should("exist");
     });
 
     it("should display the contact info section with the correct information", () => {
       visitFeasibility({
         feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
       });
-      cy.get("[data-test='contact-infos-section']").within(() => {
-        cy.get("[data-test='organism-contact-info-tile']").should("exist");
-        cy.get("[data-test='organism-contact-info-tile']").contains(
+      cy.get("[data-testid='contact-infos-section']").within(() => {
+        cy.get("[data-testid='organism-contact-info-tile']").should("exist");
+        cy.get("[data-testid='organism-contact-info-tile']").contains(
           "Organisme Lorem Ipsum nom public",
         );
       });
 
-      cy.get("[data-test='certification-authority-contact-info-tile']").should(
+      cy.get(
+        "[data-testid='certification-authority-contact-info-tile']",
+      ).should("exist");
+      cy.get("[data-testid='certification-authority-local-account-0']").should(
         "exist",
       );
-      cy.get("[data-test='certification-authority-local-account-0']").should(
-        "exist",
-      );
-      cy.get("[data-test='certification-authority-local-account-0']").contains(
-        "Jane Doe public contact",
-      );
+      cy.get(
+        "[data-testid='certification-authority-local-account-0']",
+      ).contains("Jane Doe public contact");
     });
 
     it("should display the feasibility summary when the decision is REJECTED", () => {
@@ -782,7 +792,7 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityRejectedDecision,
       });
-      cy.get("[data-test='dff-summary']").should("exist");
+      cy.get("[data-testid='dff-summary']").should("exist");
     });
   });
 
@@ -811,38 +821,40 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityIncompleteDecision,
       });
-      cy.get("[data-test='decision-incomplete-alert']").should("exist");
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='decision-incomplete-alert']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='prerequisites-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='favorable-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='favorable-badge']").should("exist");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='attachments-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should("exist");
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("not.exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should("exist");
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should(
+        "not.exist",
+      );
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-pending-validation']",
+        "[data-testid='send-file-certification-authority-tile-pending-validation']",
       ).should("exist");
     });
 
@@ -870,39 +882,39 @@ describe("Candidacy Dematerialized Feasibility File Page", () => {
       visitFeasibility({
         feasibility: feasibilityIncompleteDecision,
       });
-      cy.get("[data-test='eligibility-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='eligibility-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='certification-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='certification-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='competencies-blocks-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='competencies-blocks-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='prerequisites-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='prerequisites-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='decision-section']").within(() => {
-        cy.get("[data-test='favorable-badge']").should("exist");
+      cy.get("[data-testid='decision-section']").within(() => {
+        cy.get("[data-testid='favorable-badge']").should("exist");
       });
-      cy.get("[data-test='attachments-section']").within(() => {
-        cy.get("[data-test='completed-badge']").should("exist");
+      cy.get("[data-testid='attachments-section']").within(() => {
+        cy.get("[data-testid='completed-badge']").should("exist");
       });
-      cy.get("[data-test='send-file-candidate-tile-uncompleted']").should(
+      cy.get("[data-testid='send-file-candidate-tile-uncompleted']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-ready']").should(
+      cy.get("[data-testid='send-file-candidate-tile-ready']").should(
         "not.exist",
       );
-      cy.get("[data-test='send-file-candidate-tile-sent']").should("exist");
-      cy.get("[data-test='sworn-statement-section']").within(() => {
+      cy.get("[data-testid='send-file-candidate-tile-sent']").should("exist");
+      cy.get("[data-testid='sworn-statement-section']").within(() => {
         cy.get("button").should("not.be.disabled");
       });
-      cy.get("[data-test='candidate-decision-comment-section']").should(
+      cy.get("[data-testid='candidate-decision-comment-section']").should(
         "not.exist",
       );
       cy.get(
-        "[data-test='send-file-certification-authority-tile-ready']",
+        "[data-testid='send-file-certification-authority-tile-ready']",
       ).should("exist");
     });
   });

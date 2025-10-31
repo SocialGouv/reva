@@ -71,7 +71,7 @@ export const AAPSettingsSectionOnSite = ({
 
   return (
     <EnhancedSectionCard
-      data-test="on-site-organisms"
+      data-testid="on-site-organisms"
       title="Accompagnement en présentiel"
       buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/add-agency`}
       titleIconClass="fr-icon-home-4-fill"

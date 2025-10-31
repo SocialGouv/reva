@@ -85,9 +85,9 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="no-contact-tile"]').should("be.visible");
-          cy.get('[data-test="aap-contact-tile"]').should("not.exist");
-          cy.get('[data-test="certification-authority-contact-tile"]').should(
+          cy.get('[data-testid="no-contact-tile"]').should("be.visible");
+          cy.get('[data-testid="aap-contact-tile"]').should("not.exist");
+          cy.get('[data-testid="certification-authority-contact-tile"]').should(
             "not.exist",
           );
         },
@@ -109,8 +109,8 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="aap-contact-tile"]').should("be.visible");
-          cy.get('[data-test="no-contact-tile"]').should("not.exist");
+          cy.get('[data-testid="aap-contact-tile"]').should("be.visible");
+          cy.get('[data-testid="no-contact-tile"]').should("not.exist");
         },
       );
     });
@@ -132,14 +132,14 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="aap-contact-tile"]').should("be.visible");
-          cy.get('[data-test="aap-contact-tile"]')
+          cy.get('[data-testid="aap-contact-tile"]').should("be.visible");
+          cy.get('[data-testid="aap-contact-tile"]')
             .contains("123 Rue de Test")
             .should("be.visible");
-          cy.get('[data-test="aap-contact-tile"]')
+          cy.get('[data-testid="aap-contact-tile"]')
             .contains("Bâtiment A")
             .should("be.visible");
-          cy.get('[data-test="aap-contact-tile"]')
+          cy.get('[data-testid="aap-contact-tile"]')
             .contains("75001 Paris")
             .should("be.visible");
         },
@@ -160,8 +160,8 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="aap-contact-tile"]').should("be.visible");
-          cy.get('[data-test="aap-contact-tile"]')
+          cy.get('[data-testid="aap-contact-tile"]').should("be.visible");
+          cy.get('[data-testid="aap-contact-tile"]')
             .contains("Public Organism Name")
             .should("be.visible");
         },
@@ -181,11 +181,11 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="aap-contact-tile"]').should("be.visible");
-          cy.get('[data-test="aap-contact-tile"]')
+          cy.get('[data-testid="aap-contact-tile"]').should("be.visible");
+          cy.get('[data-testid="aap-contact-tile"]')
             .contains("admin@organism.test")
             .should("be.visible");
-          cy.get('[data-test="aap-contact-tile"]')
+          cy.get('[data-testid="aap-contact-tile"]')
             .contains("9876543210")
             .should("be.visible");
         },
@@ -208,10 +208,10 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="certification-authority-contact-tile"]').should(
+          cy.get('[data-testid="certification-authority-contact-tile"]').should(
             "be.visible",
           );
-          cy.get('[data-test="no-contact-tile"]').should("not.exist");
+          cy.get('[data-testid="no-contact-tile"]').should("not.exist");
         },
       );
     });
@@ -230,13 +230,13 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="certification-authority-contact-tile"]')
+          cy.get('[data-testid="certification-authority-contact-tile"]')
             .contains("Test Certification Authority")
             .should("be.visible");
-          cy.get('[data-test="certification-authority-contact-tile"]')
+          cy.get('[data-testid="certification-authority-contact-tile"]')
             .contains("John Doe")
             .should("be.visible");
-          cy.get('[data-test="certification-authority-contact-tile"]')
+          cy.get('[data-testid="certification-authority-contact-tile"]')
             .contains("john.doe@authority.test")
             .should("be.visible");
         },
@@ -269,16 +269,16 @@ context("Dashboard Sidebar - Contact Tiles", () => {
             ];
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="certification-authority-contact-tile"]')
+          cy.get('[data-testid="certification-authority-contact-tile"]')
             .contains("Test Certification Authority")
             .should("be.visible");
-          cy.get('[data-test="certification-authority-contact-tile"]')
+          cy.get('[data-testid="certification-authority-contact-tile"]')
             .contains("Jane Doe public contact")
             .should("be.visible");
-          cy.get('[data-test="certification-authority-contact-tile"]')
+          cy.get('[data-testid="certification-authority-contact-tile"]')
             .contains("janedoepublic@uncertificateur.fr")
             .should("be.visible");
-          cy.get('[data-test="certification-authority-contact-tile"]')
+          cy.get('[data-testid="certification-authority-contact-tile"]')
             .contains("0123456789")
             .should("be.visible");
         },
@@ -297,10 +297,10 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="certification-authority-contact-tile"]').should(
+          cy.get('[data-testid="certification-authority-contact-tile"]').should(
             "be.visible",
           );
-          cy.get('[data-test="certification-authority-contact-tile"]')
+          cy.get('[data-testid="certification-authority-contact-tile"]')
             .contains("Test Certification Authority")
             .should("be.visible");
         },
@@ -329,11 +329,11 @@ context("Dashboard Sidebar - Contact Tiles", () => {
 
           interceptGraphQL(candidacy);
 
-          cy.get('[data-test="aap-contact-tile"]').should("be.visible");
-          cy.get('[data-test="certification-authority-contact-tile"]').should(
+          cy.get('[data-testid="aap-contact-tile"]').should("be.visible");
+          cy.get('[data-testid="certification-authority-contact-tile"]').should(
             "be.visible",
           );
-          cy.get('[data-test="no-contact-tile"]').should("not.exist");
+          cy.get('[data-testid="no-contact-tile"]').should("not.exist");
         },
       );
     });

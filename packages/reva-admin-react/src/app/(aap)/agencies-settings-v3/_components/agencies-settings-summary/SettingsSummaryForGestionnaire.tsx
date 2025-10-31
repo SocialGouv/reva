@@ -71,7 +71,7 @@ export const SettingsSummaryForGestionnaire = ({
   return (
     <div className="flex flex-col gap-8 mt-4 w-full">
       <EnhancedSectionCard
-        data-test="general-information"
+        data-testid="general-information"
         title="Informations générales"
         status={isGeneralInformationCompleted ? "COMPLETED" : "TO_COMPLETE"}
         isEditable
@@ -79,7 +79,7 @@ export const SettingsSummaryForGestionnaire = ({
         titleIconClass="fr-icon-information-fill"
       />
       <EnhancedSectionCard
-        data-test="financing-methods"
+        data-testid="financing-methods"
         title="Modalités de financement"
         status={isFinancingMethodsCompleted ? "COMPLETED" : "TO_COMPLETE"}
         isEditable
@@ -87,14 +87,17 @@ export const SettingsSummaryForGestionnaire = ({
         titleIconClass="fr-icon-coin-fill"
       >
         {!isFinancingMethodsCompleted && (
-          <p data-test="no-financing-method-text">
+          <p data-testid="no-financing-method-text">
             Vous êtes référencé sur la plateforme Mon Compte Formation ?
             Faites-le faire savoir aux candidats afin qu’ils puissent financer
             l’accompagnement via ce dispositif.
           </p>
         )}
         {isFinancingMethodsCompleted && (
-          <Highlight className="[&_p]:mb-0" data-test="financing-methods-text">
+          <Highlight
+            className="[&_p]:mb-0"
+            data-testid="financing-methods-text"
+          >
             {maisonMereAAP.isMCFCompatible
               ? "Référencé Mon Compte Formation"
               : "Non-référencé Mon Compte Formation"}
@@ -113,7 +116,7 @@ export const SettingsSummaryForGestionnaire = ({
         isEditable={!isAdmin}
       />
       <EnhancedSectionCard
-        data-test="user-accounts"
+        data-testid="user-accounts"
         title="Comptes collaborateurs"
         isEditable={!isAdmin}
         disabled={!isGeneralInformationCompleted}

@@ -12,7 +12,7 @@ export const BackButton = ({
     onClick={navigateBack}
     type="button"
     aria-label="Retour à la page précédente"
-    data-test="back-button"
+    data-testid="back-button"
     className={className}
   >
     Retour

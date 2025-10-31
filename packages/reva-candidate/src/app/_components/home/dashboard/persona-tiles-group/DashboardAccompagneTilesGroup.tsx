@@ -36,7 +36,7 @@ export const DashboardAccompagneTilesGroup = ({
   return (
     <div
       className={`flex flex-col gap-y-8 ${className || ""}`}
-      data-test="dashboard-accompagne"
+      data-testid="dashboard-accompagne"
     >
       <DashboardTilesSection
         title="Compléter ma candidature"

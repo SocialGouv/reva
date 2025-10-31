@@ -86,7 +86,7 @@ export default function CertificationsLayout({
               },
               text: (
                 <Button
-                  data-test="add-certification-button"
+                  data-testid="add-certification-button"
                   size="small"
                   priority="secondary"
                 >

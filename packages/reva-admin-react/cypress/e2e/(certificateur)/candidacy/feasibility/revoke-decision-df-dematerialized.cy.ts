@@ -93,7 +93,7 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
         ]);
 
         cy.get(
-          `[data-test="feasibility-page-dematerialized-${decision.toLowerCase()}"]`,
+          `[data-testid="feasibility-page-dematerialized-${decision.toLowerCase()}"]`,
         ).should("exist");
 
         cy.get("button").contains("Annuler la décision").should("not.exist");
@@ -140,7 +140,7 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
         ]);
 
         cy.get(
-          `[data-test="feasibility-page-dematerialized-${decision.toLowerCase()}"]`,
+          `[data-testid="feasibility-page-dematerialized-${decision.toLowerCase()}"]`,
         ).should("exist");
 
         cy.get("button").contains("Annuler la décision").should("be.visible");
@@ -161,9 +161,9 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
       cy.wait("@getCandidacyWithFeasibilityQuery");
       cy.wait("@feasibilityGetActiveFeasibilityByCandidacyId");
 
-      cy.get(`[data-test="feasibility-page-dematerialized-admissible"]`).should(
-        "exist",
-      );
+      cy.get(
+        `[data-testid="feasibility-page-dematerialized-admissible"]`,
+      ).should("exist");
 
       cy.get("button")
         .contains("Annuler la décision")
@@ -189,7 +189,7 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
       cy.wait("@revokeCertificationAuthorityDecision");
       cy.wait("@feasibilityGetActiveFeasibilityByCandidacyId");
 
-      cy.get(`[data-test="feasibility-page-dematerialized-complete"]`).should(
+      cy.get(`[data-testid="feasibility-page-dematerialized-complete"]`).should(
         "exist",
       );
     });
@@ -222,7 +222,7 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
         ]);
 
         cy.get(
-          `[data-test="feasibility-page-dematerialized-${decision.toLowerCase()}"]`,
+          `[data-testid="feasibility-page-dematerialized-${decision.toLowerCase()}"]`,
         ).should("exist");
 
         cy.get("button").contains("Annuler la décision").should("not.exist");
@@ -260,7 +260,7 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
           ]);
 
           cy.get(
-            `[data-test="feasibility-page-dematerialized-admissible"]`,
+            `[data-testid="feasibility-page-dematerialized-admissible"]`,
           ).should("exist");
 
           cy.get("button").contains("Annuler la décision").should("not.exist");

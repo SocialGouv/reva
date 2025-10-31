@@ -21,14 +21,14 @@ export const OrganismCardDescription = ({
           aria-hidden="true"
         ></span>
         <a
-          data-test="project-organisms-organism-email"
+          data-testid="project-organisms-organism-email"
           href={`mailto:${email}`}
         >
           {email}
         </a>
       </p>
 
-      <p data-test="project-organisms-organism-phone" className="mb-0">
+      <p data-testid="project-organisms-organism-phone" className="mb-0">
         {phone && (
           <>
             <span
@@ -43,7 +43,7 @@ export const OrganismCardDescription = ({
       <div className="flex gap-2">
         {isOnSite && (
           <Tag
-            data-test="project-organisms-onsite-tag"
+            data-testid="project-organisms-onsite-tag"
             className="min-h-4 text-xs sm:text-sm sm:min-h-8"
           >
             <span
@@ -55,7 +55,7 @@ export const OrganismCardDescription = ({
         )}
         {isRemote && (
           <Tag
-            data-test="project-organisms-remote-tag"
+            data-testid="project-organisms-remote-tag"
             className="min-h-4 text-xs sm:text-sm sm:min-h-8"
           >
             <span
@@ -67,7 +67,7 @@ export const OrganismCardDescription = ({
         )}
         {isMCFCompatible && (
           <Tag
-            data-test="project-organisms-mcf-tag"
+            data-testid="project-organisms-mcf-tag"
             className="min-h-4 text-xs sm:text-sm sm:min-h-8"
           >
             <span

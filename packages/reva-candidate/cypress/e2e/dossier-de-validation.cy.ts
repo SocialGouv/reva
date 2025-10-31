@@ -205,7 +205,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           loginAndWaitForQueries();
           navigateToDossierValidation(candidacy.data.getCandidacyById.id);
 
-          cy.get('[data-test="dossier-de-validation-sent-alert"]').should(
+          cy.get('[data-testid="dossier-de-validation-sent-alert"]').should(
             "exist",
           );
         });
@@ -224,7 +224,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           setupGraphQLStubs(candidacy);
           loginAndWaitForQueries();
 
-          cy.get('[data-test="dossier-validation-tile"] button').should(
+          cy.get('[data-testid="dossier-validation-tile"] button').should(
             "not.be.disabled",
           );
         });
@@ -244,10 +244,10 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           setupGraphQLStubs(candidacy);
           loginAndWaitForQueries();
 
-          cy.get('[data-test="dossier-validation-tile"] button').should(
+          cy.get('[data-testid="dossier-validation-tile"] button').should(
             "exist",
           );
-          cy.get('[data-test="incomplete-dv-banner"]').should("exist");
+          cy.get('[data-testid="incomplete-dv-banner"]').should("exist");
         });
       });
 
@@ -271,20 +271,20 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           ]);
           loginAndWaitForQueries();
 
-          cy.get('[data-test="dossier-validation-tile"] button').click();
+          cy.get('[data-testid="dossier-validation-tile"] button').click();
           cy.wait("@getCandidacyByIdForDossierDeValidationPage");
           clickDossierTab();
 
-          cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
+          cy.get('[data-testid="dossier-de-validation-signale-alert"]').should(
             "exist",
           );
           cy.get(
-            '[data-test="dossier-de-validation-signale-alert"] .fr-alert__title',
+            '[data-testid="dossier-de-validation-signale-alert"] .fr-alert__title',
           ).should(
             "contain",
             "Dossier de validation signalé par le certificateur le 01/09/2025",
           );
-          cy.get('[data-test="dossier-de-validation-signale-alert"]')
+          cy.get('[data-testid="dossier-de-validation-signale-alert"]')
             .should("contain", "Motif du signalement :")
             .should("contain", signalReason);
         });
@@ -326,11 +326,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           ]);
           loginAndWaitForQueries();
 
-          cy.get('[data-test="dossier-validation-tile"] button').click();
+          cy.get('[data-testid="dossier-validation-tile"] button').click();
           cy.wait("@getCandidacyByIdForDossierDeValidationPage");
           clickDossierTab();
 
-          cy.get('[data-test="dossier-de-validation-signale-alert"]').should(
+          cy.get('[data-testid="dossier-de-validation-signale-alert"]').should(
             "exist",
           );
           cy.get(".fr-accordion").should(
@@ -429,10 +429,10 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             ]);
             loginAndWaitForQueries();
 
-            cy.get('[data-test="dossier-validation-tile"] button').should(
+            cy.get('[data-testid="dossier-validation-tile"] button').should(
               "not.be.disabled",
             );
-            cy.get('[data-test="dossier-validation-badge-to-send"]').should(
+            cy.get('[data-testid="dossier-validation-badge-to-send"]').should(
               "exist",
             );
           });
@@ -663,7 +663,7 @@ context("File upload validation", () => {
       "file contents",
       "text/plain",
     );
-    cy.get('[data-test="submit-dossier-de-validation-form-button"]').click();
+    cy.get('[data-testid="submit-dossier-de-validation-form-button"]').click();
     cy.get(".dossier-de-validation-file-upload .fr-error-text").should(
       "contain",
       "Le format de fichier n'est pas supporté. Essayez avec un .jpg, .png ou .pdf.",
@@ -679,7 +679,7 @@ context("File upload validation", () => {
       largeContent,
       "application/pdf",
     );
-    cy.get('[data-test="submit-dossier-de-validation-form-button"]').click();
+    cy.get('[data-testid="submit-dossier-de-validation-form-button"]').click();
 
     cy.get(".dossier-de-validation-file-upload .fr-error-text").should(
       "contain",
@@ -694,7 +694,7 @@ context("File upload validation", () => {
       "valid pdf content",
       "application/pdf",
     );
-    cy.get('[data-test="submit-dossier-de-validation-form-button"]').click();
+    cy.get('[data-testid="submit-dossier-de-validation-form-button"]').click();
     cy.get(".dossier-de-validation-file-upload .fr-error-text").should(
       "not.exist",
     );

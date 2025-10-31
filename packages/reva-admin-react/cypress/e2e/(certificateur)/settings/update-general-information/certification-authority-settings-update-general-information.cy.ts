@@ -37,7 +37,7 @@ context("main page", () => {
       cy.wait("@getCertificationAuthorityGeneralInfoForEditPage");
 
       cy.get(
-        '[data-test="certification-authority-general-info-page-title"]',
+        '[data-testid="certification-authority-general-info-page-title"]',
       ).should("have.text", "Informations générales");
     });
 
@@ -52,33 +52,33 @@ context("main page", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationAuthorityGeneralInfoForEditPage");
 
-      cy.get('[data-test="certification-authority-label"] input').should(
+      cy.get('[data-testid="certification-authority-label"] input').should(
         "have.value",
         "certification authority label",
       );
 
       cy.get(
-        '[data-test="certification-authority-account-lastname"] input',
+        '[data-testid="certification-authority-account-lastname"] input',
       ).should("have.value", "doe admin");
 
       cy.get(
-        '[data-test="certification-authority-account-firstname"] input',
+        '[data-testid="certification-authority-account-firstname"] input',
       ).should("have.value", "jane admin");
 
       cy.get(
-        '[data-test="certification-authority-account-email"] input',
+        '[data-testid="certification-authority-account-email"] input',
       ).should("have.value", "monemaildeconnexion@example.com");
 
       cy.get(
-        '[data-test="certification-authority-contact-full-name"] input',
+        '[data-testid="certification-authority-contact-full-name"] input',
       ).should("have.value", "jane doe");
 
       cy.get(
-        '[data-test="certification-authority-contact-email"] input',
+        '[data-testid="certification-authority-contact-email"] input',
       ).should("have.value", "monemail@example.com");
 
       cy.get(
-        '[data-test="certification-authority-contact-phone"] input',
+        '[data-testid="certification-authority-contact-phone"] input',
       ).should("have.value", "0101010101");
     });
 
@@ -93,7 +93,7 @@ context("main page", () => {
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationAuthorityGeneralInfoForEditPage");
 
-      cy.get('[data-test="certification-authority-submit-button"]').should(
+      cy.get('[data-testid="certification-authority-submit-button"]').should(
         "be.disabled",
       );
     });

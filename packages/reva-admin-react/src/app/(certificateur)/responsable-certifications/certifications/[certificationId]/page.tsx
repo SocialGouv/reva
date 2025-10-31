@@ -112,7 +112,7 @@ const PageContent = ({
     isDescriptionComplete && certification.additionalInfo;
 
   return (
-    <div data-test="certification-registry-manager-update-certification-page">
+    <div data-testid="certification-registry-manager-update-certification-page">
       <h1>
         {certification.codeRncp} - {certification.label}
       </h1>
@@ -124,7 +124,7 @@ const PageContent = ({
       </p>
       <div className="flex flex-col gap-8">
         <EnhancedSectionCard
-          data-test="certification-description-card"
+          data-testid="certification-description-card"
           title="Descriptif de la certification"
           status={isDescriptionComplete ? "COMPLETED" : "TO_COMPLETE"}
           isEditable={isDescriptionSectionEditable}
@@ -252,7 +252,7 @@ const PageContent = ({
           }
         />
         <EnhancedSectionCard
-          data-test="prerequisites-summary-card"
+          data-testid="prerequisites-summary-card"
           isEditable={isPreRequisitesSectionEditable}
           title="Prérequis obligatoires"
           titleIconClass="fr-icon-success-fill"
@@ -260,13 +260,13 @@ const PageContent = ({
           buttonOnClickHref={`/responsable-certifications/certifications/${certification.id}/prerequisites`}
         >
           {certification.prerequisites.length ? (
-            <ul className="ml-10" data-test="prerequisite-list">
+            <ul className="ml-10" data-testid="prerequisite-list">
               {certification.prerequisites.map((p) => (
                 <li key={p.id}>{p.label}</li>
               ))}
             </ul>
           ) : (
-            <p className="ml-10 mb-0" data-test="no-prerequisite-message">
+            <p className="ml-10 mb-0" data-testid="no-prerequisite-message">
               Aucun prérequis renseigné pour cette certification.
             </p>
           )}
@@ -309,7 +309,7 @@ const PageContent = ({
             </p>
             <div className="flex justify-end">
               <Button
-                data-test="replace-certification-button"
+                data-testid="replace-certification-button"
                 priority="primary"
                 onClick={() =>
                   router.push(
@@ -345,7 +345,7 @@ const PageContent = ({
       {isValidationButtonEnabled && (
         <div
           className={`flex gap-4 items-center justify-between mt-10`}
-          data-test="form-buttons"
+          data-testid="form-buttons"
         >
           <div className="flex gap-x-2 ml-auto">
             <Button
@@ -415,14 +415,14 @@ const Info = ({
   title,
   children,
   className,
-  "data-test": dataTest,
+  "data-testid": dataTest,
 }: {
   title: string;
   children: ReactNode;
   className?: string;
-  "data-test"?: string;
+  "data-testid"?: string;
 }) => (
-  <dl data-test={dataTest} className={`${className || ""}`}>
+  <dl data-testid={dataTest} className={`${className || ""}`}>
     <dt className="mb-1">{title}</dt>
     <dd className="font-medium">{children}</dd>
   </dl>

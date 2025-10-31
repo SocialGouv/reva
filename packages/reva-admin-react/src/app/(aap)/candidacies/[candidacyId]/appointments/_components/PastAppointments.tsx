@@ -101,7 +101,7 @@ const PastAppointmentsContent = ({
     <div className="flex flex-col gap-4">
       <ul
         className="pl-0 flex flex-col gap-4"
-        data-test="past-appointments-list"
+        data-testid="past-appointments-list"
       >
         {pastAppointments.map((appointment) => (
           <li key={appointment.id} className="list-none">

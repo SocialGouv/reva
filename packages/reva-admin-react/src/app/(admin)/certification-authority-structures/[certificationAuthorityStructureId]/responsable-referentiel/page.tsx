@@ -125,7 +125,7 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
   return (
     <div
       className="flex flex-col flex-1"
-      data-test="certification-registry-manager-page"
+      data-testid="certification-registry-manager-page"
     >
       <CertificationAuthorityStructureBreadcrumb
         certificationAuthorityStructureId={certificationAuthorityStructureId}
@@ -135,7 +135,7 @@ const CertificationAuthorityStructureInformationsGeneralesPage = () => {
         pageLabel="Responsable de certifications"
       />
       <div className="flex flex-row justify-between">
-        <h1 data-test="certification-registry-manager-page-title">
+        <h1 data-testid="certification-registry-manager-page-title">
           Responsable de certifications
         </h1>
 

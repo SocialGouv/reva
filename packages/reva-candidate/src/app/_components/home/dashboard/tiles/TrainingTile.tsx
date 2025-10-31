@@ -18,13 +18,13 @@ const TrainingStatusBadge = ({
     isBefore(parseISO(firstAppointmentOccuredAt), new Date())
   ) {
     return (
-      <Badge severity="info" data-test="training-status-badge-in-progress">
+      <Badge severity="info" data-testid="training-status-badge-in-progress">
         En cours
       </Badge>
     );
   } else if (candidacyStatus == "PARCOURS_ENVOYE") {
     return (
-      <Badge severity="warning" data-test="training-status-badge-to-validate">
+      <Badge severity="warning" data-testid="training-status-badge-to-validate">
         À valider
       </Badge>
     );
@@ -35,7 +35,7 @@ const TrainingStatusBadge = ({
       candidacyStatus !== "PROJET")
   ) {
     return (
-      <Badge severity="success" data-test="training-status-badge-validated">
+      <Badge severity="success" data-testid="training-status-badge-validated">
         Validé
       </Badge>
     );
@@ -58,7 +58,7 @@ export const TrainingTile = ({
 
   return (
     <Tile
-      data-test="training-tile"
+      data-testid="training-tile"
       disabled={shouldDisableTile}
       title="Parcours et financement"
       start={

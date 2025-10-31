@@ -56,13 +56,13 @@ export const ViewAppointmentPage = ({
   const timeZoneInfo = `(GMT${tzOffset <= 0 ? "+" : "-"}${Math.abs(tzOffset)}) ${tz}`;
 
   return (
-    <div className="flex flex-col w-full" data-test="view-appointments-page">
+    <div className="flex flex-col w-full" data-testid="view-appointments-page">
       <h1>{appointment.title}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr]">
         <div className="mb-8 mr-4">
           <Tile
-            data-test="rendez-vous-pedagogique-tile"
+            data-testid="rendez-vous-pedagogique-tile"
             start={
               <Tag small>
                 {appointment.type === "RENDEZ_VOUS_PEDAGOGIQUE"
@@ -81,28 +81,28 @@ export const ViewAppointmentPage = ({
           />
         </div>
         <GridRow
-          data-test="candidate-row"
+          data-testid="candidate-row"
           label="Candidat :"
           value={`${candidate.lastname} ${candidate.firstname}`}
         />
         <GridRow
-          data-test="duration-row"
+          data-testid="duration-row"
           label="Durée estimée :"
           value={getAppointmentDurationLabel(appointment.duration)}
         />
         <GridRow
-          data-test="location-row"
+          data-testid="location-row"
           label="Lieu :"
           value={appointment.location || "Non renseigné"}
         />
         <GridRow
-          data-test="description-row"
+          data-testid="description-row"
           label="Description :"
           value={appointment.description || "Non renseigné"}
         />
       </div>
       <Button
-        data-test="back-button"
+        data-testid="back-button"
         priority="secondary"
         className="mt-12"
         linkProps={{ href: `/candidacies/${candidacyId}/appointments` }}
@@ -116,16 +116,16 @@ export const ViewAppointmentPage = ({
 const GridRow = ({
   label,
   value,
-  "data-test": dataTest,
+  "data-testid": dataTest,
 }: {
   label: string;
   value?: string | null;
-  "data-test"?: string;
+  "data-testid"?: string;
 }) => {
   return (
     <>
       <div className="col-start-1">{label}</div>
-      <div data-test={dataTest || ""} className="break-all">
+      <div data-testid={dataTest || ""} className="break-all">
         <strong>{value}</strong>
       </div>
       <hr className="col-span-full mt-4 pb-4" />

@@ -77,9 +77,9 @@ describe("Certification change button visibility", () => {
             userProfile,
           });
 
-          cy.get('[data-test="candidacy-change-certification-button"]').should(
-            "exist",
-          );
+          cy.get(
+            '[data-testid="candidacy-change-certification-button"]',
+          ).should("exist");
         });
       });
 
@@ -90,13 +90,13 @@ describe("Certification change button visibility", () => {
             userProfile,
           });
 
-          cy.get('[data-test="certification-description-card"]').should(
+          cy.get('[data-testid="certification-description-card"]').should(
             "exist",
           );
 
-          cy.get('[data-test="candidacy-change-certification-button"]').should(
-            "not.exist",
-          );
+          cy.get(
+            '[data-testid="candidacy-change-certification-button"]',
+          ).should("not.exist");
         });
       });
 
@@ -110,7 +110,7 @@ describe("Certification change button visibility", () => {
           },
         });
 
-        cy.get('[data-test="candidacy-change-certification-button"]').should(
+        cy.get('[data-testid="candidacy-change-certification-button"]').should(
           "not.exist",
         );
       });

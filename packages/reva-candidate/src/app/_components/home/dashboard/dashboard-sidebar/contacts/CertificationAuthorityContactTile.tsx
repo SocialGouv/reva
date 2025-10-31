@@ -24,7 +24,7 @@ export const CertificationAuthorityContactTile = ({
   );
   return (
     <Tile
-      data-test="certification-authority-contact-tile"
+      data-testid="certification-authority-contact-tile"
       title="Mon certificateur"
       small
       orientation="horizontal"
@@ -34,14 +34,14 @@ export const CertificationAuthorityContactTile = ({
         desc: "w-full text-wrap",
       }}
       desc={
-        <div data-test="certification-authority-contact-info-tile">
+        <div data-testid="certification-authority-contact-info-tile">
           {certificationAuthority?.label}
           {filteredAccounts && filteredAccounts.length > 0 ? (
             filteredAccounts.map((account, i) => (
               <div
                 key={i}
                 className="[&:not(:last-child)]:border-b-2 [&:not(:last-child)]:mb-4 [&:not(:last-child)]:pb-4"
-                data-test={`certification-authority-local-account-${i}`}
+                data-testid={`certification-authority-local-account-${i}`}
               >
                 {account?.contactFullName} <br />
                 {account?.contactEmail} <br />
@@ -49,7 +49,7 @@ export const CertificationAuthorityContactTile = ({
               </div>
             ))
           ) : (
-            <div data-test="certification-authority-contact-info-tile">
+            <div data-testid="certification-authority-contact-info-tile">
               <div>{certificationAuthority?.contactFullName}</div>
               <div>{certificationAuthority?.contactEmail}</div>
               <div>{certificationAuthority?.contactPhone}</div>

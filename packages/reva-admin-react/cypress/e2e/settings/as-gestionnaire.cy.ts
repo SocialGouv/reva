@@ -46,7 +46,7 @@ context("Gestionnaire AAP settings page", () => {
       });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
-        '[data-test="general-information"] [data-test="to-complete-badge"]',
+        '[data-testid="general-information"] [data-testid="to-complete-badge"]',
       ).should("exist");
     });
 
@@ -56,7 +56,7 @@ context("Gestionnaire AAP settings page", () => {
       });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
-        '[data-test="general-information"] [data-test="completed-badge"]',
+        '[data-testid="general-information"] [data-testid="completed-badge"]',
       ).should("exist");
     });
 
@@ -66,7 +66,7 @@ context("Gestionnaire AAP settings page", () => {
       });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
-        '[data-test="general-information"] [data-test="completed-badge"]',
+        '[data-testid="general-information"] [data-testid="completed-badge"]',
       ).should("exist");
     });
   });
@@ -74,40 +74,40 @@ context("Gestionnaire AAP settings page", () => {
   it("should display remote and user account list section and no on-site section", function () {
     visitSettings({ informationsJuridiques: "A_JOUR" });
     cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
-    cy.get('[data-test="remote-organism"]').should("exist");
-    cy.get('[data-test="on-site-organisms"]').should("exist");
-    cy.get('[data-test="on-site-organism"]').should("not.exist");
+    cy.get('[data-testid="remote-organism"]').should("exist");
+    cy.get('[data-testid="on-site-organisms"]').should("exist");
+    cy.get('[data-testid="on-site-organism"]').should("not.exist");
   });
 
   context("on the account list section", () => {
     it("the add button should be disabled when the gestionnaire aap account is not verified", function () {
       visitSettings({ informationsJuridiques: "A_METTRE_A_JOUR" });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
-      cy.get('[data-test="user-accounts"] [data-test="action-button"]').should(
-        "be.disabled",
-      );
+      cy.get(
+        '[data-testid="user-accounts"] [data-testid="action-button"]',
+      ).should("be.disabled");
     });
 
     it("the add button should be enabled when the gestionnaire aap account is up to date", function () {
       visitSettings({ informationsJuridiques: "A_JOUR" });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
-      cy.get('[data-test="user-accounts"] [data-test="action-button"]').should(
-        "be.enabled",
-      );
+      cy.get(
+        '[data-testid="user-accounts"] [data-testid="action-button"]',
+      ).should("be.enabled");
     });
 
     it("display all accounts, except the gestionnaire aap account, with info details", function () {
       visitSettings({ informationsJuridiques: "A_JOUR" });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
-      cy.get('[data-test="user-accounts"] li').should("have.length", 3);
+      cy.get('[data-testid="user-accounts"] li').should("have.length", 3);
       cy.get(
-        '[data-test="user-accounts"] [data-test="account-2"] [data-test="on-site-badge"]',
+        '[data-testid="user-accounts"] [data-testid="account-2"] [data-testid="on-site-badge"]',
       ).should("exist");
-      cy.get('[data-test="user-accounts"] [data-test="account-3"]').should(
+      cy.get('[data-testid="user-accounts"] [data-testid="account-3"]').should(
         "contain",
         "Catherine Doe",
       );
-      cy.get('[data-test="user-accounts"] [data-test="account-4"]').should(
+      cy.get('[data-testid="user-accounts"] [data-testid="account-4"]').should(
         "contain",
         "bob.doe@example.com",
       );
@@ -119,10 +119,10 @@ context("Gestionnaire AAP settings page", () => {
       visitSettings({});
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
-        '[data-test="financing-methods"] [data-test="to-complete-badge"]',
+        '[data-testid="financing-methods"] [data-testid="to-complete-badge"]',
       ).should("exist");
       cy.get(
-        '[data-test="financing-methods"] [data-test="no-financing-method-text"]',
+        '[data-testid="financing-methods"] [data-testid="no-financing-method-text"]',
       ).should(
         "contain.text",
         "Vous êtes référencé sur la plateforme Mon Compte Formation ? Faites-le faire savoir aux candidats afin qu’ils puissent financer l’accompagnement via ce dispositif.",
@@ -132,20 +132,20 @@ context("Gestionnaire AAP settings page", () => {
       visitSettings({ isMCFCompatible: true });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
-        '[data-test="financing-methods"] [data-test="completed-badge"]',
+        '[data-testid="financing-methods"] [data-testid="completed-badge"]',
       ).should("exist");
       cy.get(
-        '[data-test="financing-methods"] [data-test="financing-methods-text"]',
+        '[data-testid="financing-methods"] [data-testid="financing-methods-text"]',
       ).should("contain.text", "Référencé Mon Compte Formation");
     });
     it("display a 'completed badge' when the AAP is not MCP compatible ", function () {
       visitSettings({ isMCFCompatible: false });
       cy.wait("@getGestionnaireMaisonMereAAPSettingsInfo");
       cy.get(
-        '[data-test="financing-methods"] [data-test="completed-badge"]',
+        '[data-testid="financing-methods"] [data-testid="completed-badge"]',
       ).should("exist");
       cy.get(
-        '[data-test="financing-methods"] [data-test="financing-methods-text"]',
+        '[data-testid="financing-methods"] [data-testid="financing-methods-text"]',
       ).should("contain.text", "Non-référencé Mon Compte Formation");
     });
   });

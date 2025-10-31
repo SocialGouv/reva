@@ -84,7 +84,7 @@ export default function SubmitCandidacy() {
       <div className="flex justify-between mt-12">
         <BackButton navigateBack={() => router.push("../")} />
         <Button
-          data-test="project-submit"
+          data-testid="project-submit"
           onClick={onSubmitCandidacy}
           disabled={
             candidacyAlreadySubmitted ||

@@ -10,7 +10,7 @@ interface Props {
   className?: string;
   title?: string;
   displayBackToHome?: boolean;
-  "data-test"?: string;
+  "data-testid"?: string;
 }
 
 export const PageLayout = ({
@@ -21,7 +21,10 @@ export const PageLayout = ({
   ...props
 }: Props) => {
   return (
-    <div className={`flex-1 ${className || ""}`} data-test={props["data-test"]}>
+    <div
+      className={`flex-1 ${className || ""}`}
+      data-testid={props["data-testid"]}
+    >
       <Head>{title && <title>{title} - France VAE</title>}</Head>
 
       {displayBackToHome && <BackToHomeButton />}

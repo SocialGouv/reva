@@ -134,7 +134,7 @@ export default function SetOrganism() {
     redirect("../");
   }
   return (
-    <PageLayout title="Choix de l'accompagnateur" data-test={`organisms`}>
+    <PageLayout title="Choix de l'accompagnateur" data-testid={`organisms`}>
       <Breadcrumb
         currentPageLabel="Choix de l'accompagnateur"
         className="mb-0"
@@ -222,7 +222,7 @@ export default function SetOrganism() {
           <div className="mt-4 w-full flex flex-row items-center justify-center">
             {state.hasMore ? (
               <Button
-                data-test="project-organisms-refresh-organisms"
+                data-testid="project-organisms-refresh-organisms"
                 priority="secondary"
                 nativeButtonProps={{
                   onClick: () => {
@@ -292,7 +292,7 @@ const NoOrganisms = ({
   if (organismSearchText) {
     return (
       <EmptyState
-        data-test="no-results-for-search-by-name"
+        data-testid="no-results-for-search-by-name"
         title={`Pas de résultats pour "${organismSearchText}"`}
         pictogram={PICTOGRAMS.searchLG}
       >
@@ -310,7 +310,7 @@ const NoOrganisms = ({
 
   return (
     <EmptyState
-      data-test="no-results-for-filters"
+      data-testid="no-results-for-filters"
       title="Aucun résultat trouvé"
       pictogram={PICTOGRAMS.searchLG}
     >
@@ -319,7 +319,7 @@ const NoOrganisms = ({
         critères sélectionnés.
       </p>
       <Button
-        data-test="no-results-button-reset-filters"
+        data-testid="no-results-button-reset-filters"
         onClick={resetFilters}
       >
         Réinitialiser les filtres

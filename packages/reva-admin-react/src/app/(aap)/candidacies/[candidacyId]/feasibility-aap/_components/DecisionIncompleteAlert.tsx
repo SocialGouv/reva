@@ -15,7 +15,7 @@ export const DecisionIncompleteAlert = ({
   history: FeasibilityHistory[];
 }) => {
   return (
-    <div className="mb-12 mt-6" data-test="decision-incomplete-alert">
+    <div className="mb-12 mt-6" data-testid="decision-incomplete-alert">
       <Alert
         title={`Dossier déclaré incomplet le ${format(decisionSentAt, "dd/MM/yyyy")}`}
         severity="warning"

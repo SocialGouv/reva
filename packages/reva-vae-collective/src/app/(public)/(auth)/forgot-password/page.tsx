@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
           <Button
             type="submit"
             className="w-full justify-center mt-auto"
-            data-test="forgot-password-home-submit"
+            data-testid="forgot-password-home-submit"
             disabled={pending}
           >
             Envoyer la demande

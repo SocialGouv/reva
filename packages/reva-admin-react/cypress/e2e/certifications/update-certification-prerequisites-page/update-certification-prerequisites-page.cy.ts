@@ -47,7 +47,7 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForUpdateCertificationPrerequisitesPage");
 
-    cy.get('[data-test="update-certification-prerequisites-page"]')
+    cy.get('[data-testid="update-certification-prerequisites-page"]')
       .children("h1")
       .should("have.text", "Prérequis obligatoires");
   });
@@ -74,7 +74,7 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForUpdateCertificationPrerequisitesPage");
 
-    cy.get('[data-test="prerequisite-list"] input')
+    cy.get('[data-testid="prerequisite-list"] input')
       .eq(0)
       .clear()
       .type("updated prerequisite");
@@ -94,11 +94,11 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForUpdateCertificationPrerequisitesPage");
 
-    cy.get('[data-test="prerequisite-list"] input').should("have.length", 2);
+    cy.get('[data-testid="prerequisite-list"] input').should("have.length", 2);
 
-    cy.get('[data-test="add-prerequisite-button"]').click();
+    cy.get('[data-testid="add-prerequisite-button"]').click();
 
-    cy.get('[data-test="prerequisite-list"] input').should("have.length", 3);
+    cy.get('[data-testid="prerequisite-list"] input').should("have.length", 3);
   });
 
   it("let me delete a prerequisite from the certification", function () {
@@ -110,10 +110,10 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationForUpdateCertificationPrerequisitesPage");
 
-    cy.get('[data-test="prerequisite-list"] input').should("have.length", 2);
+    cy.get('[data-testid="prerequisite-list"] input').should("have.length", 2);
 
-    cy.get('[data-test="delete-prerequisite-button"]').eq(1).click();
+    cy.get('[data-testid="delete-prerequisite-button"]').eq(1).click();
 
-    cy.get('[data-test="prerequisite-list"] input').should("have.length", 1);
+    cy.get('[data-testid="prerequisite-list"] input').should("have.length", 1);
   });
 });

@@ -27,7 +27,7 @@ export const SettingsSummaryForCollaborateur = () => {
         )}
         {organism?.modaliteAccompagnement === "LIEU_ACCUEIL" && (
           <EnhancedSectionCard
-            data-test="on-site-organism"
+            data-testid="on-site-organism"
             title="Accompagnement en présentiel"
             buttonOnClickHref="/agencies-settings-v3/on-site"
             titleIconClass="fr-icon-home-4-fill"
@@ -65,7 +65,7 @@ export const SettingsSummaryForCollaborateur = () => {
           </EnhancedSectionCard>
         )}
         <EnhancedSectionCard
-          data-test="user-account"
+          data-testid="user-account"
           title="Informations de connexion"
           isEditable={false}
           titleIconClass="fr-icon-account-fill"
@@ -76,13 +76,13 @@ export const SettingsSummaryForCollaborateur = () => {
             <div className="flex gap-x-6">
               {organism.modaliteAccompagnement == "A_DISTANCE" && (
                 <i
-                  data-test="remote-badge"
+                  data-testid="remote-badge"
                   className="fr-icon-headphone-fill fr-icon--sm"
                 ></i>
               )}
               {organism.modaliteAccompagnement === "LIEU_ACCUEIL" && (
                 <i
-                  data-test="on-site-badge"
+                  data-testid="on-site-badge"
                   className="fr-icon-home-4-fill fr-icon--sm"
                 ></i>
               )}

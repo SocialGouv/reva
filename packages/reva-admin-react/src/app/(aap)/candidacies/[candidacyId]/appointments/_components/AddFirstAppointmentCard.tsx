@@ -8,7 +8,7 @@ export const AddFirstAppointmentCard = ({
 }) => {
   return (
     <Card
-      data-test="add-first-appointment-card"
+      data-testid="add-first-appointment-card"
       enlargeLink
       size="small"
       start={<Tag small>Rendez-vous pédagogique</Tag>}

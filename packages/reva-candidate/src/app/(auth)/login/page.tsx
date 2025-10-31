@@ -65,7 +65,7 @@ export default function Login() {
   };
 
   return (
-    <PageLayout title="Connexion" data-test="login-home" className="p-6 pt-8">
+    <PageLayout title="Connexion" data-testid="login-home" className="p-6 pt-8">
       <h1 className="mb-10">Connexion à France VAE</h1>
       {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") && (
         <div className="flex flex-col gap-4 mb-6">
@@ -170,7 +170,7 @@ export default function Login() {
         <Button
           type="submit"
           className="w-full justify-center"
-          data-test="login-home-submit"
+          data-testid="login-home-submit"
           disabled={isPending}
         >
           Se connecter
@@ -184,7 +184,7 @@ export default function Login() {
           type="button"
           className="w-full justify-center"
           priority="secondary"
-          data-test="login-home-start-vae"
+          data-testid="login-home-start-vae"
           onClick={() => {
             window.location.href = "/espace-candidat/";
           }}

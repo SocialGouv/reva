@@ -44,7 +44,7 @@ export const OrganismCard = ({
 
   return (
     <Card
-      data-test={`project-organisms-organism-${organism.id}`}
+      data-testid={`project-organisms-organism-${organism.id}`}
       title={mandatoryInfo.label}
       start={
         <div className="flex flex-col gap-2 mb-2">
@@ -101,7 +101,7 @@ const Tags = ({
   <div className="flex gap-2">
     {remote && (
       <Tag
-        data-test="project-organisms-remote-tag"
+        data-testid="project-organisms-remote-tag"
         iconId="fr-icon-customer-service-fill"
         small
       >
@@ -110,7 +110,7 @@ const Tags = ({
     )}
     {onSite && (
       <Tag
-        data-test="project-organisms-onsite-tag"
+        data-testid="project-organisms-onsite-tag"
         iconId="fr-icon-home-4-fill"
         small
       >
@@ -118,7 +118,7 @@ const Tags = ({
       </Tag>
     )}
     {mcf && (
-      <Tag data-test="project-organisms-mcf-tag" small>
+      <Tag data-testid="project-organisms-mcf-tag" small>
         MCF
       </Tag>
     )}
@@ -161,7 +161,7 @@ const Description = ({
     adresseCodePostal ||
     adresseVille ? (
       <address
-        data-test="project-organisms-organism-address"
+        data-testid="project-organisms-organism-address"
         className="not-italic"
       >
         {adresseNumeroEtNomDeRue}
@@ -184,13 +184,13 @@ const Description = ({
     )}
     {phone && (
       <>
-        <span data-test="project-organisms-organism-phone">{phone}</span>
+        <span data-testid="project-organisms-organism-phone">{phone}</span>
         <br />
       </>
     )}
     {email && (
       <>
-        <span data-test="project-organisms-organism-email">{email}</span>
+        <span data-testid="project-organisms-organism-email">{email}</span>
         <br />
       </>
     )}
@@ -211,7 +211,7 @@ const SelectButton = ({
   onClick: () => void;
 }) => (
   <Button
-    data-test={`project-organisms-submit-organism-${organismId}`}
+    data-testid={`project-organisms-submit-organism-${organismId}`}
     size="small"
     nativeButtonProps={{ onClick }}
     disabled={isSelected}

@@ -54,7 +54,7 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCompetenceBlocForUpdateCompetenceBlocPage");
 
-    cy.get('[data-test="update-certification-competence-bloc-page"]')
+    cy.get('[data-testid="update-certification-competence-bloc-page"]')
       .children("h1")
       .should(
         "have.text",
@@ -84,7 +84,7 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCompetenceBlocForUpdateCompetenceBlocPage");
 
-    cy.get('[data-test="competence-bloc-label-input"] input')
+    cy.get('[data-testid="competence-bloc-label-input"] input')
       .clear()
       .type("updated competence bloc label");
 
@@ -107,11 +107,11 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCompetenceBlocForUpdateCompetenceBlocPage");
 
-    cy.get('[data-test="competence-list"] input').should("have.length", 4);
+    cy.get('[data-testid="competence-list"] input').should("have.length", 4);
 
-    cy.get('[data-test="add-competence-button"]').click();
+    cy.get('[data-testid="add-competence-button"]').click();
 
-    cy.get('[data-test="competence-list"] input').should("have.length", 5);
+    cy.get('[data-testid="competence-list"] input').should("have.length", 5);
   });
 
   it("let me delete a competence from the competence bloc", function () {
@@ -123,11 +123,11 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCompetenceBlocForUpdateCompetenceBlocPage");
 
-    cy.get('[data-test="competence-list"] input').should("have.length", 4);
+    cy.get('[data-testid="competence-list"] input').should("have.length", 4);
 
-    cy.get('[data-test="delete-competence-button"]').eq(1).click();
+    cy.get('[data-testid="delete-competence-button"]').eq(1).click();
 
-    cy.get('[data-test="competence-list"] input').should("have.length", 3);
+    cy.get('[data-testid="competence-list"] input').should("have.length", 3);
   });
 
   it("let me delete a competence bloc", function () {
@@ -140,7 +140,7 @@ context("when i access the update certification page ", () => {
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCompetenceBlocForUpdateCompetenceBlocPage");
 
-    cy.get('[data-test="delete-competence-bloc-button"]').click();
+    cy.get('[data-testid="delete-competence-bloc-button"]').click();
 
     cy.wait("@deleteCertificationCompetenceBlocForUpdateCompetenceBlocPage");
 

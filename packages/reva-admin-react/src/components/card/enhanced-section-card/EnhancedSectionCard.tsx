@@ -16,7 +16,7 @@ export const EnhancedSectionCard = ({
   children,
   CustomBadge,
   customButtonTitle,
-  "data-test": dataTest,
+  "data-testid": dataTest,
 }: {
   title: string;
   titleIconClass?: string;
@@ -27,7 +27,7 @@ export const EnhancedSectionCard = ({
   children?: ReactNode;
   CustomBadge?: ReactNode;
   customButtonTitle?: string;
-  "data-test"?: string;
+  "data-testid"?: string;
 }) => {
   const router = useRouter();
 
@@ -42,7 +42,7 @@ export const EnhancedSectionCard = ({
   if (isEditable && buttonOnClickHref) {
     return (
       <SectionCard
-        data-test={dataTest}
+        data-testid={dataTest}
         title={title}
         titleIconClass={titleIconClass}
         badge={badge}
@@ -60,7 +60,7 @@ export const EnhancedSectionCard = ({
   if (isEditable) {
     return (
       <SectionCard
-        data-test={dataTest}
+        data-testid={dataTest}
         title={title}
         titleIconClass={titleIconClass}
         badge={badge}
@@ -73,7 +73,7 @@ export const EnhancedSectionCard = ({
 
   return (
     <SectionCard
-      data-test={dataTest}
+      data-testid={dataTest}
       title={title}
       titleIconClass={titleIconClass}
       hasButton={false}

@@ -24,17 +24,17 @@ export const AAPSettingsSummarySectionRemote = ({
 
   return (
     <EnhancedSectionCard
-      data-test="remote-organism"
+      data-testid="remote-organism"
       title="Accompagnement à distance"
       buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organism.id}/remote`}
       isEditable={true}
       CustomBadge={
         organism.isVisibleInCandidateSearchResults ? (
-          <Badge data-test="visible-badge" severity="success">
+          <Badge data-testid="visible-badge" severity="success">
             Visible
           </Badge>
         ) : (
-          <Badge data-test="invisible-badge" severity="error">
+          <Badge data-testid="invisible-badge" severity="error">
             Invisible
           </Badge>
         )

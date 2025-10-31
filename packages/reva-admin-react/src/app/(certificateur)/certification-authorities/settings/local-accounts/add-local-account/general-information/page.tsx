@@ -41,7 +41,7 @@ export default function AddLocalAccountPage() {
   return (
     <div
       className="flex flex-col h-full"
-      data-test="add-certification-authority-local-account-general-information-page"
+      data-testid="add-certification-authority-local-account-general-information-page"
     >
       <Breadcrumb
         segments={[

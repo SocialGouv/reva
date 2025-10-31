@@ -107,7 +107,7 @@ const CertificationListPage = () => {
                   Date d'échéance : {format(c.expiresAt, "dd/MM/yyyy")}
                 </span>
                 <Button
-                  data-test="access-certification-button"
+                  data-testid="access-certification-button"
                   className="mt-2 ml-auto"
                   linkProps={{
                     href: `/certifications/${c.id}`,
@@ -147,7 +147,7 @@ const BadgeCertificationStatus = ({
       <Badge
         noIcon
         severity="new"
-        data-test="certification-timeline-element-brouillon-badge"
+        data-testid="certification-timeline-element-brouillon-badge"
       >
         BROUILLON
       </Badge>
@@ -157,7 +157,7 @@ const BadgeCertificationStatus = ({
       <Badge
         noIcon
         severity="info"
-        data-test="certification-timeline-element-envoye-pour-validation-badge"
+        data-testid="certification-timeline-element-envoye-pour-validation-badge"
       >
         ENVOYÉ POUR VALIDATION
       </Badge>
@@ -168,7 +168,7 @@ const BadgeCertificationStatus = ({
       <Badge
         noIcon
         severity="warning"
-        data-test="certification-timeline-element-invisible-badge"
+        data-testid="certification-timeline-element-invisible-badge"
       >
         INVISIBLE
       </Badge>
@@ -178,7 +178,7 @@ const BadgeCertificationStatus = ({
       <Badge
         noIcon
         severity="success"
-        data-test="certification-timeline-element-visible-badge"
+        data-testid="certification-timeline-element-visible-badge"
       >
         VISIBLE
       </Badge>

@@ -8,7 +8,7 @@ export default function LogoutConfirmation() {
       </h1>
 
       <Button
-        data-test="logout-confirmation-back-to-home"
+        data-testid="logout-confirmation-back-to-home"
         className="mt-6"
         linkProps={{ href: "/login" }}
       >

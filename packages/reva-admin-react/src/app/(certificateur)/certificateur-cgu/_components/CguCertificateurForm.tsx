@@ -51,7 +51,7 @@ export function CguCertificateurForm() {
     <>
       <form
         onSubmit={handleSubmit(submitCgu)}
-        data-test="cgu-certificateur-form"
+        data-testid="cgu-certificateur-form"
       >
         <fieldset>
           <hr className="mt-6 mb-8" />
@@ -64,7 +64,7 @@ export function CguCertificateurForm() {
                   "Je reconnais avoir lu et pris connaissance de la charte certificateur.",
                 nativeInputProps: {
                   ...{
-                    "data-test": "cgu-certificateur-charter-acceptance-input",
+                    "data-testid": "cgu-certificateur-charter-acceptance-input",
                   },
                   ...register("charterAcceptance"),
                 },
@@ -72,13 +72,15 @@ export function CguCertificateurForm() {
             ]}
           />
           <Checkbox
-            data-test="cgu-certificateur-cgu-acceptance"
+            data-testid="cgu-certificateur-cgu-acceptance"
             options={[
               {
                 label:
                   "J'accepte les nouvelles conditions générales d'utilisation.",
                 nativeInputProps: {
-                  ...{ "data-test": "cgu-certificateur-cgu-acceptance-input" },
+                  ...{
+                    "data-testid": "cgu-certificateur-cgu-acceptance-input",
+                  },
                   ...register("cguAcceptance"),
                 },
               },
@@ -90,14 +92,14 @@ export function CguCertificateurForm() {
             type="button"
             priority="tertiary no outline"
             onClick={modalIgnoreCgu.open}
-            data-test="cgu-certificateur-ignore"
+            data-testid="cgu-certificateur-ignore"
           >
             Ignorer les CGU
           </Button>
           <Button
             type="submit"
             disabled={!isValid}
-            data-test="cgu-certificateur-submit"
+            data-testid="cgu-certificateur-submit"
           >
             Valider les CGU
           </Button>
@@ -112,14 +114,14 @@ export function CguCertificateurForm() {
             children: "Ignorer les CGU",
             nativeButtonProps: {
               onClick: logout,
-              "data-test": "cgu-certificateur-ignore-modal-ignore-button",
+              "data-testid": "cgu-certificateur-ignore-modal-ignore-button",
             },
           },
 
           {
             children: "Relire les CGU",
             nativeButtonProps: {
-              "data-test": "cgu-certificateur-ignore-modal-relire-button",
+              "data-testid": "cgu-certificateur-ignore-modal-relire-button",
             },
           },
         ]}

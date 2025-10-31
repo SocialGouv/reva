@@ -98,7 +98,7 @@ export const SearchList = <T,>({
       />
 
       <ul
-        data-test="results"
+        data-testid="results"
         className={`flex flex-col gap-5 my-0 pl-0 ${childrenContainerClassName}`}
       >
         {searchResultsPage.rows.map((r) => children?.(r))}

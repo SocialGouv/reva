@@ -56,7 +56,7 @@ export const OrganismCard = ({
 
   return (
     <div
-      data-test={`project-organisms-organism-${organism.id}`}
+      data-testid={`project-organisms-organism-${organism.id}`}
       className="break-inside-avoid-column border border-dsfrGray-200 p-6 flex flex-col gap-y-4"
     >
       <OrganismCardTitle
@@ -79,7 +79,7 @@ export const OrganismCard = ({
           <OrganismCardDistance distanceKm={organism.distanceKm} />
         </div>
         <Button
-          data-test={`project-organisms-submit-organism-${organism.id}`}
+          data-testid={`project-organisms-submit-organism-${organism.id}`}
           priority="secondary"
           size="small"
           nativeButtonProps={{ onClick }}
