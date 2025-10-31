@@ -152,9 +152,14 @@ test.describe("add appointment page", () => {
 
       await page.locator("button[type='submit']").click();
 
+      const createAppointmentMutationPromise = waitGraphQL(
+        page,
+        "createAppointmentForAddAppointmentPage",
+      );
+
       await page.locator("#send-email-to-candidate-modal-button").click();
 
-      await waitGraphQL(page, "createAppointmentForAddAppointmentPage");
+      await createAppointmentMutationPromise;
 
       await expect(page).toHaveURL(
         `/admin2/candidacies/${CANDIDACY_ID}/appointments/${APPOINTMENT_ID}/update-confirmation/`,
@@ -192,9 +197,14 @@ test.describe("add appointment page", () => {
 
       await page.locator("button[type='submit']").click();
 
+      const createAppointmentMutationPromise = waitGraphQL(
+        page,
+        "createAppointmentForAddAppointmentPage",
+      );
+
       await page.locator("#send-email-to-candidate-modal-button").click();
 
-      await waitGraphQL(page, "createAppointmentForAddAppointmentPage");
+      await createAppointmentMutationPromise;
 
       await expect(page).toHaveURL(
         `/admin2/candidacies/${CANDIDACY_ID}/appointments/${APPOINTMENT_ID}/update-confirmation/`,
