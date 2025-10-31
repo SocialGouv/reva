@@ -94,7 +94,7 @@ export default function AddAppointmentPage() {
 
   return (
     <div className="flex flex-col w-full" data-testid="add-appointments-page">
-      <h1>{title}</h1>
+      <h1 data-testid="add-appointments-page-title">{title}</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">{description}</p>
       <AppointmentForm
