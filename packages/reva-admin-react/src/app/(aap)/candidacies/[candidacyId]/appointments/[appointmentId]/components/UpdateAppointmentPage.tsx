@@ -142,7 +142,7 @@ export const UpdateAppointmentPage = ({
         className="flex flex-col w-full"
         data-testid="update-appointments-page"
       >
-        <h1>{title}</h1>
+        <h1 data-testid="update-appointments-page-title">{title}</h1>
         <FormOptionalFieldsDisclaimer />
         <p className="text-xl mb-12">{description}</p>
 
