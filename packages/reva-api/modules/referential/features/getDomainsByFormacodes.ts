@@ -68,6 +68,7 @@ export const getSubdomains = (
   FORMACODES: RNCPCertification["FORMACODES"],
   referential: Formacode[],
 ): CertificationFormacode[] => {
+  const domains: CertificationFormacode[] = [];
   const subDomains: CertificationFormacode[] = [];
 
   for (let index = 0; index < FORMACODES.length; index++) {
@@ -87,17 +88,57 @@ export const getSubdomains = (
     }
 
     const parents = getParents(formacode, referential);
+
+    // Set domains
+    const domain = parents.find((formacode) => formacode.type == "DOMAIN");
+
+    // Set sub domains
     const subDomain = parents.find(
       (formacode) => formacode.type == "SUB_DOMAIN",
     );
+
     if (
       subDomain &&
-      subDomains.findIndex((domain) => domain.code == subDomain.code) == -1
+      subDomains.findIndex((_subDomain) => _subDomain.code == subDomain.code) ==
+        -1
     ) {
       subDomains.push({
         ...subDomain,
         isMain,
       });
+    }
+
+    // If no sub domain, add domain
+    if (
+      !subDomain &&
+      domain &&
+      domains.findIndex((_domain) => _domain.code == domain.code) == -1
+    ) {
+      domains.push({
+        ...domain,
+        isMain,
+      });
+    }
+  }
+
+  // If domains, get all sub domains from domains and add them to sub domains
+  for (const domain of domains) {
+    const subDomainsOfDomain = referential.filter(
+      (formacode) =>
+        formacode.parentCode == domain.code && formacode.type == "SUB_DOMAIN",
+    );
+
+    for (const subDomain of subDomainsOfDomain) {
+      if (
+        subDomains.findIndex(
+          (_subDomain) => _subDomain.code == subDomain.code,
+        ) == -1
+      ) {
+        subDomains.push({
+          ...subDomain,
+          isMain: false,
+        });
+      }
     }
   }
 
