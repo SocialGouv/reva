@@ -76,7 +76,7 @@ export const CguStep = ({
       <p className="text-xl mt-8 mb-12">
         Bienvenue sur la page de création de compte professionnel de France VAE.
         Suivez les prochaines étapes pour rejoindre la communauté des
-        Archirectes Accompagnateurs de Parcours !
+        Architectes Accompagnateurs de Parcours !
       </p>
       <Alert
         className="mb-12"
