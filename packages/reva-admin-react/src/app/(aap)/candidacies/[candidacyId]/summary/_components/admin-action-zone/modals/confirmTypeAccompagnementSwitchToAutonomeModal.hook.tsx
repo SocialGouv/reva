@@ -5,10 +5,10 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { sanitizedText } from "@/utils/input-sanitization";
+import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 const schema = z.object({
-  reason: sanitizedText(),
+  reason: sanitizedTextAllowSpecialCharacters(),
 });
 
 type Form = z.infer<typeof schema>;

@@ -7,7 +7,10 @@ import { Fragment, useCallback } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { sanitizedOptionalText } from "@/utils/input-sanitization";
+import {
+  sanitizedOptionalText,
+  sanitizedOptionalTextAllowSpecialCharacters,
+} from "@/utils/input-sanitization";
 
 import { OTHER_FINANCING_METHOD_ID } from "../trainingPage.hook";
 
@@ -55,7 +58,7 @@ const trainingFormSchema = z.object({
     .object({
       id: z.string(),
       label: z.string(),
-      aapDescription: sanitizedOptionalText().nullable(),
+      aapDescription: sanitizedOptionalTextAllowSpecialCharacters().nullable(),
       amount: z
         .number({
           errorMap: () => ({
@@ -68,7 +71,8 @@ const trainingFormSchema = z.object({
     .array(),
 
   candidacyFinancingMethodOtherSourceChecked: z.boolean(),
-  candidacyFinancingMethodOtherSourceText: sanitizedOptionalText(),
+  candidacyFinancingMethodOtherSourceText:
+    sanitizedOptionalTextAllowSpecialCharacters(),
 });
 
 type TrainingFormData = z.infer<typeof trainingFormSchema>;

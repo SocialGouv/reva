@@ -4,14 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { sanitizedText } from "@/utils/input-sanitization";
+import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 import { CertificationAuthority } from "@/graphql/generated/graphql";
 
 import { CertificationAuthorityCard } from "./CertificationAuthorityCard";
 
 const schema = z.object({
-  reason: sanitizedText(),
+  reason: sanitizedTextAllowSpecialCharacters(),
 });
 export const CertificationAuthorityValidation = ({
   certificationAuthority,

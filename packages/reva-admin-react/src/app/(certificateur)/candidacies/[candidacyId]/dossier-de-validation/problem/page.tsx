@@ -11,10 +11,10 @@ import { useDossierDeValidationProblemPageLogic } from "@/app/(certificateur)/ca
 import { BackButton } from "@/components/back-button/BackButton";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { sanitizedText } from "@/utils/input-sanitization";
+import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 const schema = z.object({
-  decisionComment: sanitizedText(),
+  decisionComment: sanitizedTextAllowSpecialCharacters(),
 });
 
 export type DossierDeValidationProblemFormData = z.infer<typeof schema>;

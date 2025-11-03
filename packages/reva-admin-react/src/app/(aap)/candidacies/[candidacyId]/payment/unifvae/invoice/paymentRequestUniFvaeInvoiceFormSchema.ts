@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { sanitizedText } from "@/utils/input-sanitization";
+import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 export const paymentRequestUniFvaeInvoiceSchema = z.object({
-  invoiceNumber: sanitizedText(),
+  invoiceNumber: sanitizedTextAllowSpecialCharacters(),
   individualEffectiveHourCount: z.number().default(0),
   individualEffectiveCost: z.number().default(0),
   collectiveEffectiveHourCount: z.number().default(0),

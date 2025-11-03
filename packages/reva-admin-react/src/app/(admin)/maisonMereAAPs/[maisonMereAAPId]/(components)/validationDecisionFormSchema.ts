@@ -1,14 +1,14 @@
 import { z } from "zod";
 
-import { sanitizedOptionalText } from "@/utils/input-sanitization";
+import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 export const validationDecisionFormSchema = z
   .object({
     decision: z.enum(["VALIDE", "DEMANDE_DE_PRECISION"], {
       invalid_type_error: "Veuillez sélectionner une décision",
     }),
-    aapComment: sanitizedOptionalText(),
-    internalComment: sanitizedOptionalText(),
+    aapComment: sanitizedOptionalTextAllowSpecialCharacters(),
+    internalComment: sanitizedOptionalTextAllowSpecialCharacters(),
   })
   .superRefine((data, ctx) => {
     if (data.decision === "DEMANDE_DE_PRECISION" && data.aapComment === "") {

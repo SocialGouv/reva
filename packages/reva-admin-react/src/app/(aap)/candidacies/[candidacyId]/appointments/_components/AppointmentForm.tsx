@@ -9,6 +9,7 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import {
   sanitizedOptionalText,
+  sanitizedOptionalTextAllowSpecialCharacters,
   sanitizedText,
 } from "@/utils/input-sanitization";
 
@@ -29,7 +30,7 @@ const appointmentFormSchema = z
       .optional()
       .nullable(),
     location: sanitizedOptionalText().nullable(),
-    description: sanitizedOptionalText().nullable(),
+    description: sanitizedOptionalTextAllowSpecialCharacters().nullable(),
   })
   .superRefine((data, ctx) => {
     if (isBefore(parseISO(data.date), startOfToday())) {
