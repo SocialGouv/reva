@@ -14,7 +14,7 @@ import { z } from "zod";
 import { useAuth } from "@/components/auth/auth";
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { sanitizedOptionalText } from "@/utils/input-sanitization";
+import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 import { JuryResult } from "@/graphql/generated/graphql";
 
@@ -71,13 +71,13 @@ const schema = z.object({
     "CANDIDATE_EXCUSED",
     "CANDIDATE_ABSENT",
   ]),
-  informationOfResult: sanitizedOptionalText(),
+  informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
 });
 
 type ResultatFormData = z.infer<typeof schema>;
 
 const revokeSchema = z.object({
-  reason: sanitizedOptionalText(),
+  reason: sanitizedOptionalTextAllowSpecialCharacters(),
 });
 
 type RevokeFormData = z.infer<typeof revokeSchema>;

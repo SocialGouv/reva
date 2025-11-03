@@ -8,7 +8,10 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { sanitizedText } from "@/utils/input-sanitization";
+import {
+  sanitizedText,
+  sanitizedTextAllowSpecialCharacters,
+} from "@/utils/input-sanitization";
 
 const durationValues = [
   "unknown",
@@ -35,7 +38,7 @@ const durationToString: {
 const schema = z
   .object({
     title: sanitizedText(),
-    description: sanitizedText(),
+    description: sanitizedTextAllowSpecialCharacters(),
     startedAt: sanitizedText(),
     duration: z.enum(durationValues),
   })

@@ -20,6 +20,7 @@ import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { errorToast } from "@/components/toast/toast";
 import {
   sanitizedOptionalText,
+  sanitizedOptionalTextAllowSpecialCharacters,
   sanitizedText,
 } from "@/utils/input-sanitization";
 
@@ -32,7 +33,7 @@ const schema = z
     date: sanitizedText(),
     time: sanitizedOptionalText(),
     address: sanitizedOptionalText(),
-    information: sanitizedOptionalText(),
+    information: sanitizedOptionalTextAllowSpecialCharacters(),
     convocationFile: z.object({ 0: z.instanceof(File).optional() }),
     dossierValidationUpdatedAt: z.string(),
   })

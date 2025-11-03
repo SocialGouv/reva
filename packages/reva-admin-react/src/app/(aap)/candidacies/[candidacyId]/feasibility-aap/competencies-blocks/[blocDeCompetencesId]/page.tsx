@@ -12,7 +12,7 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { sanitizedText } from "@/utils/input-sanitization";
+import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 import {
@@ -30,7 +30,10 @@ const schema = z.object({
       }),
     })
     .array(),
-  blocText: sanitizedText({ minLength: 1, maxLength: 10000 }),
+  blocText: sanitizedTextAllowSpecialCharacters({
+    minLength: 1,
+    maxLength: 10000,
+  }),
 });
 
 type FormData = z.infer<typeof schema>;

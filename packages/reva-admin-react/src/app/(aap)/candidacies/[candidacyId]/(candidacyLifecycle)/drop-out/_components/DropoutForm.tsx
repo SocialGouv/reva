@@ -9,14 +9,14 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import {
-  sanitizedOptionalText,
+  sanitizedOptionalTextAllowSpecialCharacters,
   sanitizedText,
 } from "@/utils/input-sanitization";
 
 import { ActiveDropoutReasons, useDropout } from "./useDropout";
 
 const schema = z.object({
-  otherReasonContent: sanitizedOptionalText(),
+  otherReasonContent: sanitizedOptionalTextAllowSpecialCharacters(),
   dropOutReasonId: sanitizedText(),
 });
 

@@ -11,7 +11,7 @@ import { z } from "zod";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { sanitizedText } from "@/utils/input-sanitization";
+import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 import { useDecision } from "./_components/decision.hook";
 
@@ -20,7 +20,7 @@ const schema = z
     aapDecision: z.enum(["FAVORABLE", "UNFAVORABLE"], {
       invalid_type_error: "Veuillez sélectionner un avis",
     }),
-    aapDecisionComment: sanitizedText(),
+    aapDecisionComment: sanitizedTextAllowSpecialCharacters(),
   })
   .superRefine(({ aapDecision }, ctx) => {
     if (!aapDecision) {
