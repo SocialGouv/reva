@@ -9,7 +9,7 @@ import { z } from "zod";
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { FancyUpload } from "@/components/fancy-upload/FancyUpload";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { sanitizedOptionalText } from "@/utils/input-sanitization";
+import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 const decisionWarningModal = createModal({
   id: "decision-warning",
@@ -88,7 +88,7 @@ const schema = z
         return { message: "Merci de remplir ce champ" };
       },
     }),
-    comment: sanitizedOptionalText(),
+    comment: sanitizedOptionalTextAllowSpecialCharacters(),
     infoFile: z.object({ 0: z.instanceof(File).optional() }),
   })
   .superRefine(({ decision, comment }, { addIssue }) => {

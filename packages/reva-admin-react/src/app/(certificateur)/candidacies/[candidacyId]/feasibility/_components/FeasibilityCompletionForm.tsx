@@ -5,7 +5,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
-import { sanitizedOptionalText } from "@/utils/input-sanitization";
+import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 const schema = z
   .object({
@@ -14,7 +14,7 @@ const schema = z
         return { message: "Merci de remplir ce champ" };
       },
     }),
-    comment: sanitizedOptionalText(),
+    comment: sanitizedOptionalTextAllowSpecialCharacters(),
   })
   .superRefine(({ decision, comment }, { addIssue }) => {
     if (decision === "INCOMPLETE" && !comment) {
