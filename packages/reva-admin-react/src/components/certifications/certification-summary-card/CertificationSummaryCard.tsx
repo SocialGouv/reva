@@ -38,7 +38,6 @@ export default function CertificationSummaryCard({
     rncpPublishedAt?: number | null;
     rncpExpiresAt?: number | null;
     availableAt: number;
-    expiresAt: number;
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
     juryTypeMiseEnSituationProfessionnelle?: CertificationJuryTypeOfModality | null;
     juryPlace?: string | null;
@@ -68,8 +67,8 @@ export default function CertificationSummaryCard({
     >
       <div className="flex flex-col gap-4">
         <Info title="Visibilité sur France VAE">
-          {certification.availableAt && certification.expiresAt ? (
-            <div>{`du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.expiresAt, "dd/MM/yyyy")}`}</div>
+          {certification.availableAt && certification.rncpExpiresAt ? (
+            <div>{`du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.rncpExpiresAt, "dd/MM/yyyy")}`}</div>
           ) : (
             "À compléter"
           )}

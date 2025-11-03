@@ -1,5 +1,5 @@
 import { CertificationStatus } from "@prisma/client";
-import { startOfToday, isAfter, isBefore, isEqual } from "date-fns";
+import { isAfter, isBefore, isEqual, startOfToday } from "date-fns";
 
 import { prismaClient } from "@/prisma/client";
 
@@ -29,29 +29,29 @@ export const validateCertification = async ({
     ((certification.juryFrequency && certification.juryFrequency?.length > 0) ||
       certification.juryFrequencyOther) &&
     certification.availableAt &&
-    certification.expiresAt;
+    certification.rncpExpiresAt;
 
   if (!isDescriptionComplete) {
     throw new Error("La description de la certification n'est pas complète");
   }
 
-  const isTodayBetweenAvalaibleAtAndExpiresAt =
+  const isTodayBetweenAvalaibleAtAndRncpExpiresAt =
     isAfter(startOfToday(), certification.availableAt) &&
-    isBefore(startOfToday(), certification.expiresAt);
+    isBefore(startOfToday(), certification.rncpExpiresAt);
 
   const isTodayEqualsToAvailableAt = isEqual(
     startOfToday(),
     certification.availableAt,
   );
-  const idTodayEqualsToExpiresAt = isEqual(
+  const idTodayEqualsToRncpExpiresAt = isEqual(
     startOfToday(),
-    certification.expiresAt,
+    certification.rncpExpiresAt,
   );
 
   const visible =
     isTodayEqualsToAvailableAt ||
-    isTodayBetweenAvalaibleAtAndExpiresAt ||
-    idTodayEqualsToExpiresAt;
+    isTodayBetweenAvalaibleAtAndRncpExpiresAt ||
+    idTodayEqualsToRncpExpiresAt;
 
   return await prismaClient.certification.update({
     where: { id: certificationId },

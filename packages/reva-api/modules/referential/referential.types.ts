@@ -118,7 +118,6 @@ export interface UpdateCertificationDescriptionInput {
   juryPlace?: string;
   juryEstimatedCost: number;
   availableAt: Date;
-  expiresAt: Date;
 }
 
 export interface ValidateCertificationInput {

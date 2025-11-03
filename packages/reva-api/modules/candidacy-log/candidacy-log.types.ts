@@ -123,7 +123,7 @@ export type CandidacyLogEventTypeAndDetails =
     }
   | {
       eventType: "ADMISSIBILITY_FVAE_UPDATED";
-      details: { isAlreadyAdmissible: boolean; expiresAt: Date | null };
+      details: { isAlreadyAdmissible: boolean; rncpExpiresAt: Date | null };
     }
   | {
       eventType: "TYPE_ACCOMPAGNEMENT_UPDATED";

@@ -22,7 +22,7 @@ export const createCertificationEntity = (
       longLabel: "Degree 1",
     },
     domains: [],
-    expiresAt: new Date().getTime(),
+    rncpExpiresAt: new Date().getTime(),
     isAapAvailable: true,
     level: 1,
     prerequisites: [],

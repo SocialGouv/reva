@@ -106,7 +106,7 @@ const PageContent = ({
     ((certification.juryFrequency && certification.juryFrequency?.length > 0) ||
       certification.juryFrequencyOther) &&
     certification.availableAt &&
-    certification.expiresAt;
+    certification.rncpExpiresAt;
 
   const canValidateCertification =
     isDescriptionComplete && certification.additionalInfo;
@@ -133,8 +133,8 @@ const PageContent = ({
         >
           <div className="flex flex-col gap-4">
             <Info title="Visibilité sur France VAE">
-              {certification.availableAt && certification.expiresAt ? (
-                <div>{`du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.expiresAt, "dd/MM/yyyy")}`}</div>
+              {certification.availableAt && certification.rncpExpiresAt ? (
+                <div>{`du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.rncpExpiresAt, "dd/MM/yyyy")}`}</div>
               ) : (
                 "À compléter"
               )}
@@ -404,7 +404,7 @@ const PageContent = ({
             <label className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification.codeRncp}`}</label>
             <h6 className="mb-0">{certification.label}</h6>
           </div>
-          {`Elle sera visible sur la plateforme France VAE du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.expiresAt, "dd/MM/yyyy")}.`}
+          {`Elle sera visible sur la plateforme France VAE du ${format(certification.availableAt, "dd/MM/yyyy")} au ${format(certification.rncpExpiresAt, "dd/MM/yyyy")}.`}
         </div>
       </modal.Component>
     </div>

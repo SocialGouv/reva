@@ -39,7 +39,7 @@ export const updateCertificationWithRncpFields = async (params: {
       `La certification avec le code rncp ${codeRncp} n'a pas de date de fin d'enregistrement`,
     );
   }
-  const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
+  const rncpExpiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
 
   // Update certification from based on RNCP
   await prismaClient.certification.update({
@@ -48,12 +48,11 @@ export const updateCertificationWithRncpFields = async (params: {
       label,
       level,
       availableAt,
-      expiresAt,
       // RNCP Fields
       rncpLabel: rncpCertification.INTITULE,
       rncpLevel: getLevelFromRNCPCertification(rncpCertification),
       rncpTypeDiplome: rncpCertification.ABREGE?.LIBELLE,
-      rncpExpiresAt: new Date(rncpCertification.DATE_FIN_ENREGISTREMENT),
+      rncpExpiresAt,
       rncpDeliveryDeadline: rncpCertification.DATE_LIMITE_DELIVRANCE
         ? new Date(rncpCertification.DATE_LIMITE_DELIVRANCE)
         : null,

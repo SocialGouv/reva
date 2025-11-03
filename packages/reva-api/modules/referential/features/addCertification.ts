@@ -49,7 +49,7 @@ export const addCertification = async (params: { codeRncp: string }) => {
       `La certification avec le code rncp ${codeRncp} n'a pas de date de fin d'enregistrement`,
     );
   }
-  const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
+  const rncpExpiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
 
   //generate the certification id beforehand since we need it for the firstVersionCertificationId column
   const newCertificationId = uuidV4();
@@ -64,12 +64,11 @@ export const addCertification = async (params: { codeRncp: string }) => {
       label,
       level,
       availableAt,
-      expiresAt,
       // RNCP Fields
       rncpLabel: label,
       rncpLevel: level,
       rncpTypeDiplome: rncpCertification.ABREGE?.LIBELLE,
-      rncpExpiresAt: expiresAt,
+      rncpExpiresAt,
       rncpDeliveryDeadline: rncpCertification.DATE_LIMITE_DELIVRANCE
         ? new Date(rncpCertification.DATE_LIMITE_DELIVRANCE)
         : null,

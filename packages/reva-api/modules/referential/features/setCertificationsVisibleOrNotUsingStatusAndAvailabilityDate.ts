@@ -9,7 +9,7 @@ export const setCertificationsVisibleOrNotUsingStatusAndAvailabilityDate = () =>
       where: {
         status: "VALIDE_PAR_CERTIFICATEUR",
         availableAt: { lte: startOfToday() },
-        expiresAt: { gt: startOfToday() },
+        rncpExpiresAt: { gt: startOfToday() },
       },
       data: { visible: true },
     }),

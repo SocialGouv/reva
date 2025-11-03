@@ -20,7 +20,7 @@ const NOTIFICATION_PERIOD_DAYS = 30;
 
 interface CertificationsParamsBrevo {
   label: string;
-  expiresAt: string;
+  rncpExpiresAt: string;
   index: number;
   rncpId: string;
   url: string;
@@ -29,7 +29,7 @@ interface CertificationsParamsBrevo {
 interface CertificationData {
   id: string;
   label: string;
-  expiresAt: Date;
+  rncpExpiresAt: Date;
   rncpId: string;
 }
 
@@ -41,9 +41,9 @@ const getCertificationUrl = (certificationId: string) =>
 const formatCertificationsParamsForBrevo = (
   certifications: CertificationData[],
 ): CertificationsParamsBrevo[] => {
-  return certifications.map(({ label, expiresAt, rncpId, id }, index) => ({
+  return certifications.map(({ label, rncpExpiresAt, rncpId, id }, index) => ({
     label,
-    expiresAt: format(expiresAt, "dd MMMM yyyy"),
+    rncpExpiresAt: format(rncpExpiresAt, "dd MMMM yyyy"),
     index: index + 1,
     rncpId,
     url: getCertificationUrl(id),
@@ -97,7 +97,7 @@ export const sendEmailsForCertificationExpiration = async () => {
           certificationAuthorityStructure: {
             certifications: {
               some: {
-                expiresAt: {
+                rncpExpiresAt: {
                   // Fenêtre de 30 jours : après aujourd'hui jusqu'au 30ème jour inclus
                   lte: addDays(today, NOTIFICATION_PERIOD_DAYS),
                   gt: today,
@@ -117,7 +117,7 @@ export const sendEmailsForCertificationExpiration = async () => {
             include: {
               certifications: {
                 where: {
-                  expiresAt: {
+                  rncpExpiresAt: {
                     lte: addDays(today, NOTIFICATION_PERIOD_DAYS),
                     gt: today,
                   },
@@ -136,7 +136,7 @@ export const sendEmailsForCertificationExpiration = async () => {
                 select: {
                   id: true,
                   label: true,
-                  expiresAt: true,
+                  rncpExpiresAt: true,
                   rncpId: true,
                 },
               },
@@ -169,7 +169,7 @@ export const sendEmailsForCertificationExpiration = async () => {
           certificationAuthorityStructure: {
             certifications: {
               some: {
-                expiresAt: {
+                rncpExpiresAt: {
                   // 18h avant hier pour couvrir les certifications à minuit UTC+2 quand la CI utilise UTC
                   gte: subHours(subDays(today, 1), 6),
                   lt: today,
@@ -189,7 +189,7 @@ export const sendEmailsForCertificationExpiration = async () => {
             include: {
               certifications: {
                 where: {
-                  expiresAt: {
+                  rncpExpiresAt: {
                     gte: subHours(subDays(today, 1), 6),
                     lt: today,
                   },
@@ -204,7 +204,7 @@ export const sendEmailsForCertificationExpiration = async () => {
                 select: {
                   id: true,
                   label: true,
-                  expiresAt: true,
+                  rncpExpiresAt: true,
                   rncpId: true,
                 },
               },

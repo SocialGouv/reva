@@ -11,7 +11,7 @@
           "certificationAuthorityStructure": {
             "label": "Structure certificatrice inconnue"
           },
-          "expiresAt": 1711922400000
+          "rncpExpiresAt": 1711922400000
         },
         {
           "id": "654c9471-6e2e-4ff2-a5d8-2069e78ea0d6",
@@ -22,7 +22,7 @@
           "certificationAuthorityStructure": {
             "label": "Structure certificatrice inconnue"
           },
-          "expiresAt": 1719784800000
+          "rncpExpiresAt": 1719784800000
         },
         {
           "id": "efa751cb-f5c2-4d90-b390-e5726eeebb19",
@@ -33,7 +33,7 @@
           "certificationAuthorityStructure": {
             "label": "Ministère de l'Education Nationale et de la Jeunesse"
           },
-          "expiresAt": 1719792000000
+          "rncpExpiresAt": 1719792000000
         }
       ],
       "info": {

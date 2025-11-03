@@ -15,7 +15,6 @@ export const updateCertificationDescription = async ({
   juryPlace,
   juryEstimatedCost,
   availableAt,
-  expiresAt,
 }: UpdateCertificationDescriptionInput) => {
   const certification = await getCertificationById({ certificationId });
   if (!certification) {
@@ -57,7 +56,6 @@ export const updateCertificationDescription = async ({
       juryPlace,
       juryEstimatedCost,
       availableAt,
-      expiresAt,
     },
   });
 };

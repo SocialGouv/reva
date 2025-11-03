@@ -81,7 +81,7 @@ export const searchCertificationsForCandidate = async ({
   const commonQuery = organismId ? organismQuery : allCertificationsQuery;
 
   const certifications =
-    (await prismaClient.$queryRaw`select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp", c.available_at as "availableAt", c.expires_at as "expiresAt"
+    (await prismaClient.$queryRaw`select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp", c.available_at as "availableAt", c.rncp_expires_at as "rncpExpiresAt"
       ${commonQuery}
       order by c.label offset ${realOffset} limit ${realLimit}`) as Certification[];
 

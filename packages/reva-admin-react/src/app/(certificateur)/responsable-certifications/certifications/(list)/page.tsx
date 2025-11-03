@@ -3,7 +3,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 import Image from "next/image";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
@@ -202,7 +202,9 @@ export default function RegistryManagerHomepage() {
               </div>
               <span className="text-lg font-bold">{c.label}</span>
               <span>{c.certificationAuthorityStructure?.label}</span>
-              <span>Date d'échéance : {format(c.expiresAt, "dd/MM/yyyy")}</span>
+              <span>
+                Date d'échéance : {format(c.rncpExpiresAt, "dd/MM/yyyy")}
+              </span>
               <Button
                 data-testid="access-certification-button"
                 className="mt-2 ml-auto"

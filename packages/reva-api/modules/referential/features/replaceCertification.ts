@@ -71,7 +71,7 @@ export const replaceCertification = async (params: {
     );
   }
 
-  const expiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
+  const rncpExpiresAt = new Date(rncpCertification.DATE_FIN_ENREGISTREMENT);
 
   const newCertification = await prismaClient.certification.create({
     data: {
@@ -84,15 +84,13 @@ export const replaceCertification = async (params: {
       label,
       level,
       availableAt,
-      expiresAt,
       visible: false,
-
       // Set RNCP fields:
       rncpId: codeRncp,
       rncpLabel: label,
       rncpLevel: level,
       rncpTypeDiplome: rncpCertification.ABREGE?.LIBELLE,
-      rncpExpiresAt: expiresAt,
+      rncpExpiresAt,
       rncpDeliveryDeadline: rncpCertification.DATE_LIMITE_DELIVRANCE
         ? new Date(rncpCertification.DATE_LIMITE_DELIVRANCE)
         : null,

@@ -62,17 +62,10 @@ const zodSchema = z
     juryPlace: sanitizedOptionalText(),
     juryEstimatedCost: z.number().optional().nullable(),
     startOfVisibility: sanitizedText(),
-    endOfVisibility: sanitizedText(),
   })
   .superRefine(
     (
-      {
-        juryTypeOfTest,
-        juryFrequency,
-        juryFrequencyOther,
-        startOfVisibility,
-        endOfVisibility,
-      },
+      { juryTypeOfTest, juryFrequency, juryFrequencyOther, startOfVisibility },
       { addIssue },
     ) => {
       if (
@@ -108,14 +101,6 @@ const zodSchema = z
       if (isNaN(Date.parse(startOfVisibility))) {
         addIssue({
           path: ["startOfVisibility"],
-          message: "Veuillez renseigner ce champ",
-          code: z.ZodIssueCode.custom,
-        });
-      }
-
-      if (isNaN(Date.parse(endOfVisibility))) {
-        addIssue({
-          path: ["endOfVisibility"],
           message: "Veuillez renseigner ce champ",
           code: z.ZodIssueCode.custom,
         });
@@ -203,11 +188,6 @@ const PageContent = ({
       startOfVisibility: certification.availableAt
         ? format(certification.availableAt, "yyyy-MM-dd")
         : undefined,
-      endOfVisibility: certification.expiresAt
-        ? format(certification.expiresAt, "yyyy-MM-dd")
-        : certification.rncpExpiresAt
-          ? format(certification.rncpExpiresAt, "yyyy-MM-dd")
-          : undefined,
     }),
     [certification],
   );
@@ -251,14 +231,6 @@ const PageContent = ({
           "Europe/Paris",
         );
 
-        const endOfVisibility = toDate(data.endOfVisibility);
-        const tzEndOfVisibility = new TZDate(
-          endOfVisibility.getFullYear(),
-          endOfVisibility.getMonth(),
-          endOfVisibility.getDate(),
-          "Europe/Paris",
-        );
-
         await updateCertificationDescription.mutateAsync({
           certificationId: certification.id,
           juryTypeMiseEnSituationProfessionnelle:
@@ -290,7 +262,6 @@ const PageContent = ({
           juryPlace: data.juryPlace,
           juryEstimatedCost: data.juryEstimatedCost,
           availableAt: tzStartOfVisibility.getTime(),
-          expiresAt: tzEndOfVisibility.getTime(),
         });
 
         successToast("Les informations ont été enregistrées");
@@ -558,14 +529,15 @@ const PageContent = ({
                 />
 
                 <Input
-                  label="Jusqu'à quand sera-t-elle visible ?"
-                  hintText="Max. 4 à 5 mois avant le dernier jury programmé. "
+                  label="Jusqu'à quand sera-t-elle visible"
                   nativeInputProps={{
-                    ...register("endOfVisibility"),
                     type: "date",
+                    value: certification.rncpExpiresAt
+                      ? format(certification.rncpExpiresAt, "yyyy-MM-dd")
+                      : undefined,
                   }}
-                  state={errors.endOfVisibility ? "error" : "default"}
-                  stateRelatedMessage={errors.endOfVisibility?.message}
+                  disabled
+                  className="flex flex-col justify-between"
                 />
               </div>
             </div>

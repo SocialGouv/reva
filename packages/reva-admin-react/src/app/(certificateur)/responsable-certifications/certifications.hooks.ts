@@ -28,7 +28,7 @@ const getCertificationsQuery = graphql(`
         certificationAuthorityStructure {
           label
         }
-        expiresAt
+        rncpExpiresAt
       }
       info {
         totalRows

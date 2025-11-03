@@ -16,7 +16,6 @@ const getCertificationQuery = graphql(`
       rncpEffectiveAt
       rncpDeliveryDeadline
       availableAt
-      expiresAt
       typeDiplome
       juryTypeMiseEnSituationProfessionnelle
       juryTypeSoutenanceOrale

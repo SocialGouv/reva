@@ -50,7 +50,7 @@ function interceptCertification({
               withDescription
                 ? {
                     availableAt: 1688162400000,
-                    expiresAt: 1688162500000,
+                    rncpExpiresAt: 1688162500000,
                     juryTypeMiseEnSituationProfessionnelle: null,
                     juryTypeSoutenanceOrale: "PRESENTIEL",
                     juryFrequency: "MONTHLY",

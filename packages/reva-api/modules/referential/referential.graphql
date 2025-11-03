@@ -39,9 +39,8 @@ type Certification {
   degree: Degree!
   conventionsCollectives: [ConventionCollective!]!
   availableAt: Timestamp!
-  expiresAt: Timestamp!
   competenceBlocs: [CertificationCompetenceBloc!]!
-  rncpExpiresAt: Timestamp
+  rncpExpiresAt: Timestamp!
   rncpPublishedAt: Timestamp
   rncpEffectiveAt: Timestamp
   rncpDeliveryDeadline: Timestamp
@@ -418,7 +417,6 @@ input UpdateCertificationDescriptionInput {
   juryPlace: String
   juryEstimatedCost: Decimal
   availableAt: Timestamp
-  expiresAt: Timestamp
 }
 
 input ValidateCertificationInput {

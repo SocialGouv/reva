@@ -36,7 +36,7 @@ const getCertificationsQuery = graphql(`
         certificationAuthorityStructure {
           label
         }
-        expiresAt
+        rncpExpiresAt
       }
       info {
         totalRows
@@ -104,7 +104,7 @@ const CertificationListPage = () => {
                 <span className="text-lg font-bold">{c.label}</span>
                 <span>{c.certificationAuthorityStructure?.label}</span>
                 <span>
-                  Date d'échéance : {format(c.expiresAt, "dd/MM/yyyy")}
+                  Date d'échéance : {format(c.rncpExpiresAt, "dd/MM/yyyy")}
                 </span>
                 <Button
                   data-testid="access-certification-button"

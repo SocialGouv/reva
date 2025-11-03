@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Prisma, CertificationStatus, FeasibilityFormat } from "@prisma/client";
+import { CertificationStatus, FeasibilityFormat, Prisma } from "@prisma/client";
 import { v4 as uuidV4 } from "uuid";
 
 import { prismaClient } from "@/prisma/client";
@@ -27,7 +27,6 @@ export const createCertificationHelper = async (
       status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
       visible: true,
       availableAt: faker.date.past(),
-      expiresAt: faker.date.future(),
       feasibilityFormat: FeasibilityFormat.UPLOADED_PDF,
       rncpLabel: faker.lorem.word(),
       rncpLevel: 1,
