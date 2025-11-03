@@ -30,7 +30,7 @@ const schema = z.object({
       }),
     })
     .array(),
-  blocText: sanitizedText(),
+  blocText: sanitizedText({ minLength: 1, maxLength: 10000 }),
 });
 
 type FormData = z.infer<typeof schema>;
