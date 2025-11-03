@@ -68,7 +68,6 @@ model Certification {
   searchable_text                                   Unsupported("tsvector")?                            @default(dbgenerated("to_tsvector('simple'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || ((COALESCE(rncp_id, ''::character varying))::text || ' '::text) || ((COALESCE(rncp_type_diplome, ''::character varying))::text || ' '::text))))"))
   certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
   availableAt                                       DateTime                                            @map("available_at") @db.Timestamptz(6)
-  expiresAt                                         DateTime                                            @map("expires_at") @db.Timestamptz(6)
   juryModalities                                    CertificationJuryModality[]                         @default([]) @map("jury_modalities")
   juryTypeMiseEnSituationProfessionnelle            CertificationJuryTypeOfModality?                    @map("jury_type_mise_en_situation_professionnelle")
   juryTypeSoutenanceOrale                           CertificationJuryTypeOfModality?                    @map("jury_type_soutenance_orale")
@@ -92,7 +91,7 @@ model Certification {
   rncpLabel             String?   @map("rncp_label") @db.VarChar(255)
   rncpLevel             Int?      @map("rncp_level")
   rncpTypeDiplome       String?   @map("rncp_type_diplome") @db.VarChar(255)
-  rncpExpiresAt         DateTime? @map("rncp_expires_at") @db.Timestamptz(6)
+  rncpExpiresAt         DateTime  @map("rncp_expires_at") @db.Timestamptz(6)
   rncpPublishedAt       DateTime? @map("rncp_published_at") @db.Timestamptz(6)
   rncpEffectiveAt       DateTime? @map("rncp_effective_at") @db.Timestamptz(6)
   rncpDeliveryDeadline  DateTime? @map("rncp_delivery_deadline") @db.Timestamptz(6)
