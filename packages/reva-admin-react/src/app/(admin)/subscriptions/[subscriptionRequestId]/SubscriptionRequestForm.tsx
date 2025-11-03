@@ -11,7 +11,7 @@ import { z } from "zod";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { sanitizedOptionalText } from "@/utils/input-sanitization";
+import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 
@@ -39,8 +39,8 @@ const rejectSubscriptionRequestMutation = graphql(`
 
 const schema = z.object({
   decision: z.enum(["rejected", "validated"]),
-  rejectionReason: sanitizedOptionalText(),
-  internalComment: sanitizedOptionalText(),
+  rejectionReason: sanitizedOptionalTextAllowSpecialCharacters(),
+  internalComment: sanitizedOptionalTextAllowSpecialCharacters(),
 });
 
 type FormData = z.infer<typeof schema>;

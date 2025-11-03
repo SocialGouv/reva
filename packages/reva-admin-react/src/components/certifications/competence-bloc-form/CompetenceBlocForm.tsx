@@ -6,14 +6,14 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { SortableList } from "@/components/sortable-list";
-import { sanitizedText } from "@/utils/input-sanitization";
+import { sanitizedTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
 const competenceBlocFormSchema = z.object({
-  label: sanitizedText(),
+  label: sanitizedTextAllowSpecialCharacters(),
   competences: z
     .object({
       id: z.string().optional(),
-      label: sanitizedText(),
+      label: sanitizedTextAllowSpecialCharacters(),
       index: z.number(),
     })
     .array(),

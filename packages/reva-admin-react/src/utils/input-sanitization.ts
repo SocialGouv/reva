@@ -40,6 +40,16 @@ export const sanitizedText = ({
     );
 };
 
+export const sanitizedOptionalText = ({
+  maxLength = DEFAULT_MAX_LENGTH,
+}: { maxLength?: number } = {}) => {
+  return z
+    .string()
+    .optional()
+    .transform((val) => val ?? "")
+    .pipe(sanitizedText({ minLength: 0, maxLength }));
+};
+
 /**
  * Zod schema for text
  * Enforces length
@@ -61,14 +71,14 @@ export const sanitizedTextAllowSpecialCharacters = ({
     );
 };
 
-export const sanitizedOptionalText = ({
+export const sanitizedOptionalTextAllowSpecialCharacters = ({
   maxLength = DEFAULT_MAX_LENGTH,
 }: { maxLength?: number } = {}) => {
   return z
     .string()
     .optional()
     .transform((val) => val ?? "")
-    .pipe(sanitizedText({ minLength: 0, maxLength }));
+    .pipe(sanitizedTextAllowSpecialCharacters({ minLength: 0, maxLength }));
 };
 
 /**
