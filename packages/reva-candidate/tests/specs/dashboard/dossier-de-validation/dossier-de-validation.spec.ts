@@ -326,6 +326,126 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       ).toHaveCount(0);
     });
 
+    test.describe("Incomplete dossier de validation", () => {
+      test(`should show a 'to complete' badge and a warning in the dashboard for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_DE_VALIDATION_SIGNALE",
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+            decision: "INCOMPLETE",
+          },
+        });
+        const { dashboardWait } = useDashboardScenario(msw, candidacy);
+
+        await login(page);
+        await dashboardWait(page);
+
+        await expect(
+          page
+            .locator('[data-testid="dossier-validation-tile"]')
+            .getByRole("button"),
+        ).toBeVisible();
+        await expect(
+          page.locator('[data-testid="incomplete-dv-banner"]'),
+        ).toBeVisible();
+      });
+
+      test(`should show a 'dossier de validation signalé' alert with date and reason if i open a signaled dossier de validation for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const signalDate = new Date("2025-09-01");
+        const signalReason = "Le dossier de validation est illisible.";
+
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_DE_VALIDATION_SIGNALE",
+          feasibility: createAdmissibleFeasibility(),
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+            decision: "INCOMPLETE",
+            decisionSentAt: signalDate.getTime(),
+            decisionComment: signalReason,
+          },
+        });
+        const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+        await clickDossierTab(page);
+
+        const alert = page.locator(
+          '[data-testid="dossier-de-validation-signale-alert"]',
+        );
+        await expect(alert).toBeVisible();
+        await expect(
+          alert.locator(".fr-alert__title"),
+        ).toContainText("Dossier de validation signalé par le certificateur le 01/09/2025");
+        await expect(alert).toContainText("Motif du signalement :");
+        await expect(alert).toContainText(signalReason);
+      });
+
+      test(`should show accordion with previous dossiers when there are multiple signalements for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const currentSignalDate = new Date("2024-03-20");
+        const currentSignalReason = "Dernier commentaire";
+        const previousSignalDate1 = new Date("2024-02-10");
+        const previousSignalReason1 = "Premier commentaire";
+        const previousSignalDate2 = new Date("2024-01-05");
+        const previousSignalReason2 = "Deuxième commentaire";
+
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_DE_VALIDATION_SIGNALE",
+          feasibility: createAdmissibleFeasibility(),
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+            decision: "INCOMPLETE",
+            decisionSentAt: currentSignalDate.getTime(),
+            decisionComment: currentSignalReason,
+            history: [
+              {
+                id: "history-1",
+                decisionSentAt: previousSignalDate1.getTime(),
+                decisionComment: previousSignalReason1,
+              },
+              {
+                id: "history-2",
+                decisionSentAt: previousSignalDate2.getTime(),
+                decisionComment: previousSignalReason2,
+              },
+            ],
+          },
+        });
+        const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+        await clickDossierTab(page);
+
+        await expect(
+          page.locator('[data-testid="dossier-de-validation-signale-alert"]'),
+        ).toBeVisible();
+
+        const accordion = page.locator(".fr-accordion");
+        await expect(accordion).toContainText(
+          "Voir les anciens dossiers de validation",
+        );
+        await accordion.locator(".fr-accordion__btn").click();
+
+        const collapse = page.locator(".fr-accordion .fr-collapse");
+        await expect(collapse).toContainText("Dossier signalé le 10/02/2024");
+        await expect(collapse).toContainText(previousSignalReason1);
+        await expect(collapse).toContainText("Dossier signalé le 05/01/2024");
+        await expect(collapse).toContainText(previousSignalReason2);
+      });
+    });
+
     test.describe("Read only views", () => {
       test("should let me view a read only version of the ready for jury date tab when dossier de validation is sent and no failed jury result", async ({
         page,
