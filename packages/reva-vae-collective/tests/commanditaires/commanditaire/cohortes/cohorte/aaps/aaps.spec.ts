@@ -38,6 +38,7 @@ test.use({
                 totalRows: 2,
                 totalPages: 1,
                 currentPage: 1,
+                disponiblePourVaeCollective: true,
               },
               rows: [
                 {

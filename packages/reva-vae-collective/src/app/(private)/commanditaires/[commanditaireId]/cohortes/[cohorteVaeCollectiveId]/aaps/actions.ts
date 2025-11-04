@@ -40,6 +40,7 @@ const searchOrganismQuery = graphql(`
       searchText: $searchText
       offset: $offset
       limit: $limit
+      disponiblePourVaeCollective: true
     ) {
       info {
         totalRows
