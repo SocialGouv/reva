@@ -3,7 +3,7 @@ import { z } from "zod";
 const REGEX_SPECIAL_CHARACTERS = /[&\\;`@{}[\]<>|~^$%#*+=/]/;
 const REGEX_SPECIAL_CHARACTERS_MESSAGE =
   "Les caractères spéciaux ne sont pas autorisés";
-const DEFAULT_MAX_LENGTH = 1000;
+const DEFAULT_MAX_LENGTH = 10000;
 
 /**
  * Zod schema for text

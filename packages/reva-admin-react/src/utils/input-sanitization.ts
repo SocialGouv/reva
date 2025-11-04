@@ -8,7 +8,7 @@ const REGEX_ZIP_CODE_MESSAGE = "Le code postal doit contenir 5 chiffres";
 const REGEX_PHONE = /^\+?\d{10,12}$/;
 const REGEX_PHONE_MESSAGE =
   "Le numéro de téléphone doit commencer par + (facultatif) suivi de 10 à 12 chiffres";
-const DEFAULT_MAX_LENGTH = 1000;
+const DEFAULT_MAX_LENGTH = 10000;
 
 /**
  * Zod schema for text
