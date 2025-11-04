@@ -228,30 +228,30 @@ const CandidacyLayoutSideMenu = ({
       },
       isActive: isActive("PROJET_HORS_ABANDON"),
     });
-  }
-  const cohorteSelected = !!searchParams.get("cohorteVaeCollectiveId");
-  sideMenuItems.push({
-    text: `VAE Collective ${getCounterText("VAE_COLLECTIVE")}`,
-    linkProps: {
-      href: hrefSideMenu("VAE_COLLECTIVE"),
-    },
-    isActive: isActive("VAE_COLLECTIVE") && !cohorteSelected,
-    ...(!!cohortesVaeCollectives.length
-      ? {
-          items: cohortesVaeCollectives.map((cohorteVaeCollective) => ({
-            text: cohorteVaeCollective.nom,
-            linkProps: {
-              href: hrefSideMenu("VAE_COLLECTIVE", {
+    const cohorteSelected = !!searchParams.get("cohorteVaeCollectiveId");
+    sideMenuItems.push({
+      text: `VAE Collective ${getCounterText("VAE_COLLECTIVE")}`,
+      linkProps: {
+        href: hrefSideMenu("VAE_COLLECTIVE"),
+      },
+      isActive: isActive("VAE_COLLECTIVE") && !cohorteSelected,
+      ...(!!cohortesVaeCollectives.length
+        ? {
+            items: cohortesVaeCollectives.map((cohorteVaeCollective) => ({
+              text: cohorteVaeCollective.nom,
+              linkProps: {
+                href: hrefSideMenu("VAE_COLLECTIVE", {
+                  cohorteVaeCollectiveId: cohorteVaeCollective.id,
+                }),
+              },
+              isActive: isActive("VAE_COLLECTIVE", {
                 cohorteVaeCollectiveId: cohorteVaeCollective.id,
               }),
-            },
-            isActive: isActive("VAE_COLLECTIVE", {
-              cohorteVaeCollectiveId: cohorteVaeCollective.id,
-            }),
-          })),
-        }
-      : {}),
-  });
+            })),
+          }
+        : {}),
+    });
+  }
 
   if (isFeatureActive("END_ACCOMPAGNEMENT")) {
     sideMenuItems.push({
