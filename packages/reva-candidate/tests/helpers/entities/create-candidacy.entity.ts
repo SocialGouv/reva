@@ -27,7 +27,7 @@ export type CandidacyEntity = Partial<
   appointments: Candidacy["appointments"];
 };
 
-type CreateCandidacyEntityOptions = {
+export type CreateCandidacyEntityOptions = {
   status?: CandidacyStatusStep;
   readyForJuryEstimatedAt?: Candidacy["readyForJuryEstimatedAt"];
   typeAccompagnement?: Candidacy["typeAccompagnement"];
