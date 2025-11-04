@@ -17,6 +17,7 @@ import {
   sanitizedOptionalEmail,
   sanitizedOptionalPhone,
   sanitizedOptionalText,
+  sanitizedOptionalTextAllowSpecialCharacters,
   sanitizedOptionalUrl,
   sanitizedUrl,
 } from "@/utils/input-sanitization";
@@ -80,8 +81,8 @@ const schema = z
     certificationExpertContactDetails: sanitizedOptionalText(),
     certificationExpertContactPhone: sanitizedOptionalPhone(),
     certificationExpertContactEmail: sanitizedOptionalEmail(),
-    usefulResources: sanitizedOptionalText(),
-    commentsForAAP: sanitizedOptionalText(),
+    usefulResources: sanitizedOptionalTextAllowSpecialCharacters(),
+    commentsForAAP: sanitizedOptionalTextAllowSpecialCharacters(),
   })
   .superRefine(
     (

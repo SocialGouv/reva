@@ -51,6 +51,37 @@ export const sanitizedOptionalText = ({
 };
 
 /**
+ * Zod schema for text
+ * Enforces length
+ */
+export const sanitizedTextAllowSpecialCharacters = ({
+  minLength = 1,
+  maxLength = DEFAULT_MAX_LENGTH,
+}: { minLength?: number; maxLength?: number } = {}) => {
+  return z
+    .string()
+    .trim()
+    .min(
+      minLength,
+      `Ce champ doit contenir au moins ${minLength === 1 ? "1 caractère" : `${minLength} caractères`}`,
+    )
+    .max(
+      maxLength,
+      `Ce champ doit contenir maximum ${maxLength === 1 ? "1 caractère" : `${maxLength} caractères`}`,
+    );
+};
+
+export const sanitizedOptionalTextAllowSpecialCharacters = ({
+  maxLength = DEFAULT_MAX_LENGTH,
+}: { maxLength?: number } = {}) => {
+  return z
+    .string()
+    .optional()
+    .transform((val) => val ?? "")
+    .pipe(sanitizedTextAllowSpecialCharacters({ minLength: 0, maxLength }));
+};
+
+/**
  * Zod schema for phone numbers
  * Validates against special characters and enforces length
  */
