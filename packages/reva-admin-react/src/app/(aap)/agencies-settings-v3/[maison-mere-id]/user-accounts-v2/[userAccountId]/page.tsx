@@ -13,10 +13,15 @@ const UpdateUserAccountPage = () => {
     userAccountId: string;
   }>();
 
+  const backUrl = isAdmin
+    ? `/maison-mere-aap/${maisonMereAAPId}`
+    : `/agencies-settings-v3`;
+
   return isGestionnaireMaisonMereAAP || isAdmin ? (
     <GestionnaireMaisonMereAAPUserAccount
       maisonMereAAPId={maisonMereAAPId}
       userAccountId={userAccountId}
+      backUrl={backUrl}
     />
   ) : null;
 };

@@ -14,6 +14,9 @@ const getMaisonMerAAPUserAccountsQuery = graphql(`
           id
           firstname
           lastname
+          organisms {
+            id
+          }
         }
       }
     }
