@@ -1,4 +1,4 @@
-import { addMonths, format } from "date-fns";
+import { addDays, addMonths, format } from "date-fns";
 import { expect, test } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
@@ -397,6 +397,145 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             page.locator('input[name^="dossierDeValidationOtherFiles"]'),
           ).toHaveCount(0);
         });
+      });
+    });
+
+    test.describe("Read only views", () => {
+      test("should let me view a read only version of the ready for jury date tab when dossier de validation is sent and no failed jury result", async ({
+        page,
+        msw,
+      }) => {
+        const certification = createCertificationEntity();
+        const organism =
+          typeAccompagnement === "ACCOMPAGNE"
+            ? createOrganismEntity()
+            : undefined;
+        const feasibility = createFeasibilityEntity({
+          decision: "ADMISSIBLE",
+          feasibilityFileSentAt: new Date().getTime(),
+        });
+        const candidate = createCandidateEntity();
+        const candidacy = createCandidacyEntity({
+          candidate,
+          status: "DOSSIER_DE_VALIDATION_ENVOYE",
+          certification,
+          organism,
+          typeAccompagnement,
+          feasibility,
+          readyForJuryEstimatedAt: format(ESTIMATED_DATE, "yyyy-MM-dd"),
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+          },
+          juryResult: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+        });
+
+        const { handlers, dossierDeValidationWait } =
+          dossierDeValidationHandlers({ candidacy });
+
+        msw.use(...handlers);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+
+        await page.getByRole("tab", { name: "Date" }).click();
+
+        const readyForJuryText = page.locator(
+          ".ready-for-jury-estimated-date-text",
+        );
+        await expect(readyForJuryText).toBeVisible();
+        await expect(readyForJuryText).toContainText(
+          format(ESTIMATED_DATE, "dd/MM/yyyy"),
+        );
+      });
+
+      test("should let me view a read only version of the dossier de validation tab when dossier is sent and no failed jury result", async ({
+        page,
+        msw,
+      }) => {
+        const sentDate = addDays(DATE_NOW, 15);
+        const certification = createCertificationEntity();
+        const organism =
+          typeAccompagnement === "ACCOMPAGNE"
+            ? createOrganismEntity()
+            : undefined;
+        const feasibility = createFeasibilityEntity({
+          decision: "ADMISSIBLE",
+          feasibilityFileSentAt: new Date().getTime(),
+        });
+        const candidate = createCandidateEntity();
+        const candidacy = createCandidacyEntity({
+          candidate,
+          status: "DOSSIER_DE_VALIDATION_ENVOYE",
+          certification,
+          organism,
+          typeAccompagnement,
+          feasibility,
+          readyForJuryEstimatedAt: format(ESTIMATED_DATE, "yyyy-MM-dd"),
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+            dossierDeValidationSentAt: sentDate.getTime(),
+          },
+          juryResult: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+        });
+
+        const { handlers, dossierDeValidationWait } =
+          dossierDeValidationHandlers({ candidacy });
+
+        msw.use(...handlers);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+
+        const sentAlert = page.locator(
+          '[data-testid="dossier-de-validation-sent-alert"]',
+        );
+        await expect(sentAlert).toBeVisible();
+      });
+
+      test("should not be read only when dossier is sent but has failed jury result", async ({
+        page,
+        msw,
+      }) => {
+        const sentDate = addDays(DATE_NOW, 15);
+        const certification = createCertificationEntity();
+        const organism =
+          typeAccompagnement === "ACCOMPAGNE"
+            ? createOrganismEntity()
+            : undefined;
+        const feasibility = createFeasibilityEntity({
+          decision: "ADMISSIBLE",
+          feasibilityFileSentAt: new Date().getTime(),
+        });
+        const candidate = createCandidateEntity();
+        const candidacy = createCandidacyEntity({
+          candidate,
+          status: "DOSSIER_DE_VALIDATION_ENVOYE",
+          certification,
+          organism,
+          typeAccompagnement,
+          feasibility,
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+            dossierDeValidationSentAt: sentDate.getTime(),
+          },
+          juryResult: "FAILURE",
+        });
+
+        const { handlers, dashboardWait } = dashboardHandlers({ candidacy });
+
+        msw.use(...handlers);
+
+        await login(page);
+        await dashboardWait(page);
+
+        const dossierValidationButton = page
+          .locator('[data-testid="dossier-validation-tile"]')
+          .getByRole("button");
+
+        await expect(dossierValidationButton).toBeVisible();
+        await expect(dossierValidationButton).not.toBeDisabled();
       });
     });
   });
