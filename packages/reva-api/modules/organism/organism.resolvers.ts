@@ -614,6 +614,7 @@ const unsafeResolvers = {
         limit?: number;
         certificationId?: string;
         searchText?: string;
+        disponiblePourVaeCollective?: boolean;
       },
     ) => searchOrganisms(params),
   },

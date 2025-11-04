@@ -179,6 +179,7 @@ type Query {
     limit: Int
     certificationId: ID
     searchText: String
+    disponiblePourVaeCollective: Boolean
   ): OrganismPage!
 }
 

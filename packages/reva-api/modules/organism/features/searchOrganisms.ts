@@ -10,17 +10,23 @@ export const searchOrganisms = async ({
   offset = 0,
   searchText,
   certificationId,
+  disponiblePourVaeCollective,
 }: {
   limit?: number;
   offset?: number;
   searchText?: string;
   certificationId?: string;
+  disponiblePourVaeCollective?: boolean;
 }) => {
   const fromClause = Prisma.raw(`from organism o
     join active_organism_by_available_certification_based_on_formacode ao on ao.organism_id = o.id
     join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id`);
 
   let whereClause = Prisma.sql`where o.modalite_accompagnement_renseignee_et_valide`;
+
+  if (disponiblePourVaeCollective) {
+    whereClause = Prisma.sql`${whereClause} and o.disponible_pour_vae_collective = true`;
+  }
 
   if (certificationId) {
     whereClause = Prisma.sql`${whereClause} and ao.certification_id=uuid(${certificationId})`;
@@ -61,7 +67,7 @@ export const searchOrganisms = async ({
                  o.modalite_accompagnement as "modaliteAccompagnement",
                  o.modalite_accompagnement_renseignee_et_valide as "modaliteAccompagnementRenseigneeEtValide",
                  o.maison_mere_aap_id as "maisonMereAAPId",
-                 o.conforme_norme_accessibilite as "conformeNormesAccessibilite" 
+                 o.conforme_norme_accessibilite as "conformeNormesAccessibilite"
             ${fromClause}
             ${whereClause}
           order by o.nom_public, o.label limit ${limit} offset ${offset}`;
