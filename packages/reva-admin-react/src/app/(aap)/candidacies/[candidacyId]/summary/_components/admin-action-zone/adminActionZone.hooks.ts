@@ -19,14 +19,13 @@ const updateCandidacyFinanceModuleToHorsPlateformeMutation = graphql(`
   }
 `);
 
-const updateCandidacyTypeAccompagnementToAutonomeMutation = graphql(`
-  mutation updateCandidacyTypeAccompagnementToAutonome(
+const setCandidacyTypeAccompagnementToAutonomeMutation = graphql(`
+  mutation setCandidacyTypeAccompagnementToAutonome(
     $candidacyId: UUID!
     $reason: String
   ) {
-    candidacy_updateTypeAccompagnement(
+    candidacy_setTypeAccompagnementToAutonome(
       candidacyId: $candidacyId
-      typeAccompagnement: AUTONOME
       reason: $reason
     ) {
       id
@@ -72,10 +71,10 @@ export const useAdminActionZone = ({
       candidacyId: string;
       reason: string;
     }) =>
-      graphqlClient.request(
-        updateCandidacyTypeAccompagnementToAutonomeMutation,
-        { candidacyId, reason },
-      ),
+      graphqlClient.request(setCandidacyTypeAccompagnementToAutonomeMutation, {
+        candidacyId,
+        reason,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [candidacyId],

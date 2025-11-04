@@ -353,6 +353,9 @@ type Mutation {
   candidacy_updateTypeAccompagnement(
     candidacyId: UUID!
     typeAccompagnement: TypeAccompagnement!
+  ): Candidacy!
+  candidacy_setTypeAccompagnementToAutonome(
+    candidacyId: UUID!
     reason: String
   ): Candidacy!
   candidacy_updateCandidateCandidacyDropoutDecision(

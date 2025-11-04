@@ -53,6 +53,7 @@ import { searchOrganismsForCandidacy } from "./features/searchOrganismsForCandid
 import { searchOrganismsForCandidacyAsAdmin } from "./features/searchOrganismsForCandidacyAsAdmin";
 import { selectOrganismForCandidacy } from "./features/selectOrganismForCandidacy";
 import { selectOrganismForCandidacyAsAdmin } from "./features/selectOrganismForCandidacyAsAdmin";
+import { setCandidacyTypeAccompagnementToAutonome } from "./features/setCandidacyTypeAccompagnementToAutonome";
 import { setReadyForJuryEstimatedAt } from "./features/setReadyForJuryEstimatedAt";
 import { submitCandidacy } from "./features/submitCandidacy";
 import { submitEndAccompagnement } from "./features/submitEndAccompagnement";
@@ -599,18 +600,15 @@ const unsafeResolvers = {
       {
         candidacyId,
         typeAccompagnement,
-        reason,
       }: {
         candidacyId: string;
         typeAccompagnement: CandidacyTypeAccompagnement;
-        reason?: string;
       },
       context: GraphqlContext,
     ) => {
       const result = await updateCandidacyTypeAccompagnement({
         candidacyId,
         typeAccompagnement,
-        userIsAdmin: context.auth.hasRole("admin"),
       });
       await logCandidacyAuditEvent({
         candidacyId,
@@ -618,7 +616,31 @@ const unsafeResolvers = {
         userKeycloakId: context.auth.userInfo?.sub,
         userRoles: context.auth.userInfo?.realm_access?.roles || [],
         userEmail: context.auth.userInfo?.email,
-        details: { typeAccompagnement, reason },
+        details: { typeAccompagnement },
+      });
+      return result;
+    },
+    candidacy_setTypeAccompagnementToAutonome: async (
+      _parent: unknown,
+      {
+        candidacyId,
+        reason,
+      }: {
+        candidacyId: string;
+        reason: string;
+      },
+      context: GraphqlContext,
+    ) => {
+      const result = await setCandidacyTypeAccompagnementToAutonome({
+        candidacyId,
+      });
+      await logCandidacyAuditEvent({
+        candidacyId,
+        eventType: "TYPE_ACCOMPAGNEMENT_UPDATED",
+        userKeycloakId: context.auth.userInfo?.sub,
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+        userEmail: context.auth.userInfo?.email,
+        details: { typeAccompagnement: "AUTONOME", reason },
       });
       return result;
     },

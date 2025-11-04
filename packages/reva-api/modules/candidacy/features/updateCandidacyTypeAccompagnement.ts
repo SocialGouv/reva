@@ -1,7 +1,6 @@
 import { Candidacy, CandidacyTypeAccompagnement } from "@prisma/client";
 
 import { isCandidacyStatusEqualOrAboveGivenStatus } from "@/modules/candidacy-menu/features/isCandidacyStatusEqualOrAboveGivenStatus";
-import { getActiveFeasibilityByCandidacyid } from "@/modules/feasibility/feasibility.features";
 import { getCertificationById } from "@/modules/referential/features/getCertificationById";
 import { prismaClient } from "@/prisma/client";
 
@@ -11,11 +10,9 @@ import { updateCandidacyStatus } from "./updateCandidacyStatus";
 export const updateCandidacyTypeAccompagnement = async ({
   candidacyId,
   typeAccompagnement,
-  userIsAdmin,
 }: {
   candidacyId: string;
   typeAccompagnement: CandidacyTypeAccompagnement;
-  userIsAdmin: boolean;
 }): Promise<Candidacy> => {
   const candidacy = await getCandidacyById({ candidacyId });
 
@@ -23,62 +20,15 @@ export const updateCandidacyTypeAccompagnement = async ({
     throw new Error("Candidature non trouvée");
   }
 
-  if (userIsAdmin) {
-    //admin can change the type of accompniement from ACCOMPAGNE to AUTONOME with more leaway than a candidate
-    if (typeAccompagnement !== "AUTONOME") {
-      throw new Error(
-        "Impossible de modifier le type d'accompagnement. Seul le passage de ACCOMPAGNE à AUTONOME est autorisé",
-      );
-    }
-    if (candidacy.financeModule !== "hors_plateforme") {
-      throw new Error(
-        "Impossible de modifier le type d'accompagnement si l'utilisateur n'est pas hors financement",
-      );
-    }
-    if (candidacy.feasibilityFormat === "DEMATERIALIZED") {
-      const activeFeasibility = await getActiveFeasibilityByCandidacyid({
-        candidacyId,
-      });
-
-      if (activeFeasibility && activeFeasibility.decision !== "ADMISSIBLE") {
-        throw new Error(
-          "Impossible de modifier le type d'accompagnement d'un DF dématérialisé si la recevabilité n'est pas valide",
-        );
-      } else if (
-        activeFeasibility &&
-        activeFeasibility.decision === "ADMISSIBLE"
-      ) {
-        // On ne modifie pas le format d'un DF déjà admis
-        return prismaClient.candidacy.update({
-          where: { id: candidacyId },
-          data: {
-            typeAccompagnement: "AUTONOME",
-            organism: { disconnect: true },
-          },
-        });
-      }
-    }
-    // Si pas de DF envoyé, on passe au DF papier
-    return prismaClient.candidacy.update({
-      where: { id: candidacyId },
-      data: {
-        typeAccompagnement: "AUTONOME",
-        feasibilityFormat: "UPLOADED_PDF",
-        organism: { disconnect: true },
-      },
-    });
-  } else {
-    //user is a candidate and has more restrictions when changing the type of accompaniment
-    if (
-      candidacy.typeAccompagnement === "ACCOMPAGNE" &&
-      isCandidacyStatusEqualOrAboveGivenStatus(candidacy.status)(
-        "PARCOURS_CONFIRME",
-      )
-    ) {
-      throw new Error(
-        "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
-      );
-    }
+  if (
+    candidacy.typeAccompagnement === "ACCOMPAGNE" &&
+    isCandidacyStatusEqualOrAboveGivenStatus(candidacy.status)(
+      "PARCOURS_CONFIRME",
+    )
+  ) {
+    throw new Error(
+      "Impossible de modifier le type d'accompagnement une fois le parcours confirmé",
+    );
   }
 
   if (

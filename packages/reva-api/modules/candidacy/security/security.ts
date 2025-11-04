@@ -44,6 +44,7 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_selectOrganismAsAdmin": isAdmin,
   "Mutation.candidacy_submitCandidacy": isAdminOrOwnerOfCandidacy,
   "Mutation.candidacy_updateTypeAccompagnement": isAdminOrOwnerOfCandidacy,
+  "Mutation.candidacy_setTypeAccompagnementToAutonome": isAdmin,
 
   // Mutation manager
   "Mutation.candidacy_takeOver": isCandidacyCompanion,
