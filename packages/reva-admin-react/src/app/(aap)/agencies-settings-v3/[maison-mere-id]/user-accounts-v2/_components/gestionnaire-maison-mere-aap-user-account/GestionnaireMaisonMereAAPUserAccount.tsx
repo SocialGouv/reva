@@ -36,12 +36,14 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
       </p>
       <div className="flex flex-col gap-6">
         <EnhancedSectionCard
+          data-testid="informations-connexion-card"
           title="Informations de connexion"
           titleIconClass="fr-icon-info-fill"
           isEditable
           buttonOnClickHref="informations-connexion"
         />
         <EnhancedSectionCard
+          data-testid="positionnement-card"
           title="Positionnement"
           titleIconClass="fr-icon-building-fill"
           CustomBadge={
