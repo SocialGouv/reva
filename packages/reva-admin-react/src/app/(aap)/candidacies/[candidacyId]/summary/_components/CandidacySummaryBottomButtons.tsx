@@ -45,17 +45,6 @@ export const CandidacySummaryBottomButtons = ({
               Actions administratives
             </p>
           </div>
-          {canDropout && (
-            <AdminAction
-              title="Déclarer l'abandon du candidat"
-              description="Le candidat ne pourra plus déposer de dossier de faisabilité sur le même diplôme durant cette année civile."
-              detail="Accessible tout au long du parcours."
-              linkProps={{
-                href: `/candidacies/${candidacyId}/drop-out`,
-                target: "_self",
-              }}
-            />
-          )}
           {canEndAccompagnement && candidacy.endAccompagnementStatus && (
             <EndAccompagnementTile
               candidacyId={candidacyId}
