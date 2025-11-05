@@ -23,7 +23,10 @@ import {
 } from "@tests/helpers/handlers/dossier-de-validation/upload";
 import { waitGraphQL, waitRest } from "@tests/helpers/network/requests";
 
-import { TypeAccompagnement } from "@/graphql/generated/graphql";
+import {
+  JuryResult,
+  TypeAccompagnement,
+} from "@/graphql/generated/graphql";
 
 import type { MswFixture } from "next/experimental/testmode/playwright/msw";
 
@@ -443,6 +446,233 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         await expect(collapse).toContainText(previousSignalReason1);
         await expect(collapse).toContainText("Dossier signalé le 05/01/2024");
         await expect(collapse).toContainText(previousSignalReason2);
+      });
+    });
+
+    test.describe("Failed jury result", () => {
+      const failedJuryResults: JuryResult[] = [
+        "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+        "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+        "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
+        "FAILURE",
+        "CANDIDATE_EXCUSED",
+        "CANDIDATE_ABSENT",
+      ];
+
+      failedJuryResults.forEach((result) => {
+        test(`should display certificateur comment and date when jury has a ${result} for ${typeAccompagnement}`, async ({
+          page,
+          msw,
+        }) => {
+          const informationOfResult = "Lorem ipsum failorum";
+          const dateOfSession = addDays(DATE_NOW, -30);
+          const dateOfResult = addDays(DATE_NOW, -30);
+
+          const candidacy = createCandidacyFor(typeAccompagnement, {
+            status: "DOSSIER_DE_VALIDATION_ENVOYE",
+            juryResult: result,
+            juryInfo: {
+              informationOfResult,
+              dateOfResult: dateOfResult.getTime(),
+              dateOfSession: dateOfSession.getTime(),
+            },
+            activeDossierDeValidation: {
+              dossierDeValidationOtherFiles: [],
+            },
+          });
+          const { dossierDeValidationWait } = useDossierScenario(
+            msw,
+            candidacy,
+          );
+
+          await login(page);
+          await navigateToDossierValidation(page, candidacy.id);
+          await dossierDeValidationWait(page);
+          await clickDossierTab(page);
+
+          const alertTitle = page.locator(".fr-alert--info .fr-alert__title");
+          await expect(alertTitle).toContainText(
+            format(dateOfResult, "dd/MM/yyyy"),
+          );
+
+          const alert = page.locator(".fr-alert--info");
+          await expect(alert).toContainText(informationOfResult);
+        });
+      });
+
+      test(`should not display certificateur info when jury is FULL_SUCCESS_OF_FULL_CERTIFICATION for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const informationOfResult = "Lorem ipsum";
+        const dateOfSession = addDays(DATE_NOW, -30);
+        const dateOfResult = addDays(DATE_NOW, -30);
+
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_DE_VALIDATION_ENVOYE",
+          juryResult: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+          juryInfo: {
+            informationOfResult,
+            dateOfResult: dateOfResult.getTime(),
+            dateOfSession: dateOfSession.getTime(),
+          },
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+          },
+        });
+        const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+        await clickDossierTab(page);
+
+        const alert = page.locator(".fr-alert--info");
+        await expect(alert).not.toBeVisible();
+      });
+
+      failedJuryResults.forEach((juryResult) => {
+        test(`should show active dossier de validation when jury result is ${juryResult} for ${typeAccompagnement}`, async ({
+          page,
+          msw,
+        }) => {
+          const candidacy = createCandidacyFor(typeAccompagnement, {
+            juryResult,
+          });
+          const { dashboardWait } = useDashboardScenario(msw, candidacy);
+
+          await login(page);
+          await dashboardWait(page);
+
+          const dossierValidationButton = page
+            .locator('[data-testid="dossier-validation-tile"]')
+            .getByRole("button");
+          await expect(dossierValidationButton).not.toBeDisabled();
+
+          const badge = page.locator(
+            '[data-testid="dossier-validation-badge-to-send"]',
+          );
+          await expect(badge).toBeVisible();
+        });
+      });
+
+      test(`should display accordion with the last submitted dossier when jury has failed and only the last one for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const dateOfSession = addDays(DATE_NOW, -30);
+        const dateOfResult = addDays(DATE_NOW, -30);
+        const dossierSentDate = addDays(DATE_NOW, -45);
+        const informationOfResult = "Lorem ipsum failorum";
+
+        const incompleteDV1Date = addDays(DATE_NOW, -120);
+        const incompleteDV2Date = addDays(DATE_NOW, -90);
+
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_DE_VALIDATION_ENVOYE",
+          juryResult: "FAILURE",
+          juryInfo: {
+            informationOfResult,
+            dateOfResult: dateOfResult.getTime(),
+            dateOfSession: dateOfSession.getTime(),
+          },
+          activeDossierDeValidation: {
+            dossierDeValidationSentAt: dossierSentDate.getTime(),
+            dossierDeValidationFile: {
+              name: "dossier-validation-final.pdf",
+              previewUrl: "https://example.com/dossier-final.pdf",
+              mimeType: "application/pdf",
+              url: "https://example.com/dossier-final.pdf",
+            },
+            dossierDeValidationOtherFiles: [
+              {
+                name: "annexe1.pdf",
+                previewUrl: "https://example.com/annexe1.pdf",
+              },
+              {
+                name: "annexe2.jpg",
+                previewUrl: "https://example.com/annexe2.jpg",
+              },
+            ],
+            history: [
+              {
+                id: "dossier-incomplete-1",
+                decisionSentAt: incompleteDV1Date.getTime(),
+                decisionComment: "comment 1",
+              },
+              {
+                id: "dossier-incomplete-2",
+                decisionSentAt: incompleteDV2Date.getTime(),
+                decisionComment: "comment 2",
+              },
+            ],
+          },
+        });
+        const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+        await clickDossierTab(page);
+
+        const accordion = page.locator(".fr-accordion");
+        await expect(accordion).toContainText(
+          "Voir le dernier dossier soutenu devant le jury",
+        );
+
+        await accordion.locator(".fr-accordion__btn").click();
+
+        const collapse = page.locator(".fr-accordion .fr-collapse");
+        await expect(collapse).toContainText(
+          `Dossier déposé le ${format(dossierSentDate, "dd/MM/yyyy")}`,
+        );
+        await expect(collapse).toContainText("Soutenu devant le jury le :");
+        await expect(collapse).toContainText(
+          format(dateOfResult, "dd/MM/yyyy"),
+        );
+        await expect(collapse).toContainText("Contenu du dossier :");
+        await expect(collapse).toContainText("dossier-validation-final.pdf");
+        await expect(collapse).toContainText("annexe1.pdf");
+        await expect(collapse).toContainText("annexe2.jpg");
+
+        const collapses = page.locator(".fr-accordion .fr-collapse");
+        await expect(collapses).toHaveCount(1);
+      });
+
+      test(`should not display accordion when jury has failed result but no dossier was sent for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const dateOfSession = addDays(DATE_NOW, -30);
+        const dateOfResult = addDays(DATE_NOW, -30);
+
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_DE_VALIDATION_ENVOYE",
+          juryResult: "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+          juryInfo: {
+            informationOfResult: "Partial success",
+            dateOfResult: dateOfResult.getTime(),
+            dateOfSession: dateOfSession.getTime(),
+          },
+          activeDossierDeValidation: {
+            dossierDeValidationOtherFiles: [],
+          },
+        });
+        const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+        await clickDossierTab(page);
+
+        const alert = page.locator(".fr-alert--info");
+        await expect(alert).toBeVisible();
+
+        const accordionsGroup = page.locator(".fr-accordions-group");
+        await expect(accordionsGroup).not.toBeVisible();
+
+        const accordion = page.locator(".fr-accordion");
+        await expect(accordion).not.toBeVisible();
       });
     });
 

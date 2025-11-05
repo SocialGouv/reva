@@ -39,6 +39,11 @@ export type CreateCandidacyEntityOptions = {
   endAccompagnementStatus?: CandidacyEntity["endAccompagnementStatus"];
   appointments?: Candidacy["appointments"];
   juryResult?: JuryResult;
+  juryInfo?: {
+    dateOfResult?: number;
+    dateOfSession?: number;
+    informationOfResult?: string;
+  };
   goalsCount?: number;
   experiencesCount?: number;
   candidacyAlreadySubmitted?: boolean;
@@ -53,6 +58,7 @@ export const createCandidacyEntity = (
     status,
     readyForJuryEstimatedAt,
     juryResult,
+    juryInfo,
     activeDossierDeValidation,
     goalsCount,
     experiencesCount,
@@ -112,7 +118,9 @@ export const createCandidacyEntity = (
     candidacy.jury = {
       result: juryResult,
       isResultTemporary: null,
-      dateOfSession: Date.now(),
+      dateOfSession: juryInfo?.dateOfSession || Date.now(),
+      dateOfResult: juryInfo?.dateOfResult || null,
+      informationOfResult: juryInfo?.informationOfResult || null,
       timeOfSession: null,
       timeSpecified: null,
     };
