@@ -6,7 +6,7 @@ import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { graphql } from "@/graphql/generated";
 import { getGraphQLClient } from "@/graphql/strapi";
 
-export const revalidate = 3600;
+export const fetchCache = "default-cache";
 
 export const generateMetadata = async ({
   params,
