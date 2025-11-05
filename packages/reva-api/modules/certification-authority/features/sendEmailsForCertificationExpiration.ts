@@ -1,5 +1,6 @@
 import { CertificationEmailType } from "@prisma/client";
 import { addDays, format, startOfToday, subDays, subHours } from "date-fns";
+import { fr } from "date-fns/locale/fr";
 
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
@@ -43,7 +44,7 @@ const formatCertificationsParamsForBrevo = (
 ): CertificationsParamsBrevo[] => {
   return certifications.map(({ label, rncpExpiresAt, rncpId, id }, index) => ({
     label,
-    rncpExpiresAt: format(rncpExpiresAt, "dd MMMM yyyy"),
+    rncpExpiresAt: format(rncpExpiresAt, "dd MMMM yyyy", { locale: fr }),
     index: index + 1,
     rncpId,
     url: getCertificationUrl(id),
