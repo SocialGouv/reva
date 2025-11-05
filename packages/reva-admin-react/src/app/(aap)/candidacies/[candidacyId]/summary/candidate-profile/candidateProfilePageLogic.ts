@@ -1,23 +1,26 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { sanitizedText } from "@/utils/input-sanitization";
+import {
+  sanitizedOptionalText,
+  sanitizedText,
+} from "@/utils/input-sanitization";
 
 import { graphql } from "@/graphql/generated";
 
-const schema = z.object({
-  highestDegreeId: sanitizedText(),
-  highestDegreeLabel: sanitizedText(),
-  niveauDeFormationLePlusEleveDegreeId: sanitizedText(),
-});
+// const schema = z.object({
+//   highestDegreeId: sanitizedText(),
+//   highestDegreeLabel: sanitizedText(),
+//   niveauDeFormationLePlusEleveDegreeId: sanitizedText(),
+// });
 
-type FormData = z.infer<typeof schema>;
+// type FormData = z.infer<typeof schema>;
 
 const getCandidateProfileQuery = graphql(`
   query getCandidateProfile($candidacyId: ID!) {
@@ -100,6 +103,32 @@ export const useCandidateProfilePageLogic = () => {
   const candidate = getCandidateProfileResponse?.getCandidacyById?.candidate;
 
   const degrees = getReferentialResponse?.getDegrees;
+  const degreeLevelOne = degrees?.find((d) => d.level === 1);
+
+  const schema = useMemo(() => {
+    return z
+      .object({
+        highestDegreeId: sanitizedText(),
+        highestDegreeLabel: sanitizedOptionalText(),
+        niveauDeFormationLePlusEleveDegreeId: sanitizedText(),
+      })
+      .superRefine((data, ctx) => {
+        const highestDegreeId = data?.highestDegreeId;
+        // Le champ highestDegreeLabel est obligatoire si le niveau de formation le plus élevé n'est pas le niveau 1 (sans qualification)
+        if (
+          highestDegreeId !== degreeLevelOne?.id &&
+          !data?.highestDegreeLabel
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Merci de remplir ce champ",
+            path: ["highestDegreeLabel"],
+          });
+        }
+      });
+  }, [degreeLevelOne]);
+
+  type FormData = z.infer<typeof schema>;
 
   const methods = useForm<FormData>({
     resolver: zodResolver(schema),
