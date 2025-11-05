@@ -46,7 +46,7 @@ export interface CreateLieuAccueilInfoInput {
 }
 
 export interface CreateOrganismAccountInput {
-  organismId: string;
+  organismId?: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;

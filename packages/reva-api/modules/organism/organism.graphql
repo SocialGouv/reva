@@ -247,7 +247,7 @@ input UpdateMaisonMereAccountSetupInput {
 }
 
 input CreateOrganimsAccountInput {
-  organismId: ID!
+  organismId: ID
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!
@@ -290,7 +290,6 @@ type Mutation {
     organismId: ID!
     fermePourAbsenceOuConges: Boolean!
   ): Organism!
-
 
   organism_updateDisponiblePourVaeCollective(
     organismId: ID!
