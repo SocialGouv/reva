@@ -63,14 +63,13 @@ export default function CertificationsLayout({
       <nav
         role="navigation"
         aria-label="Menu latéral"
-        className="flex flex-col gap-4 md:basis-[300px]"
+        className="flex flex-col gap-4 md:basis-[300px] overflow-hidden"
       >
         <SideMenu
           className="flex-shrink-0 flex-grow-0 md:basis-[300px]"
           align="left"
           burgerMenuButtonText="Toutes les certifications"
           sticky
-          fullHeight
           title="Toutes les certifications"
           items={[
             {
