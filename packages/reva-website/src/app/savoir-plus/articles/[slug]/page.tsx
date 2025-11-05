@@ -4,7 +4,7 @@ import { draftMode } from "next/headers";
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 
 import { graphql } from "@/graphql/generated";
-import { strapi } from "@/graphql/strapi";
+import { getGraphQLClient } from "@/graphql/strapi";
 
 export const revalidate = 3600;
 
@@ -93,6 +93,7 @@ const articleQuery = graphql(`
 `);
 
 const getArticleDAide = async (slug: string, preview = false) => {
+  const strapi = getGraphQLClient(preview);
   const articles = await strapi.request(articleQuery, {
     filters: { slug: { eq: slug } },
     publicationState: preview ? "DRAFT" : "PUBLISHED",

@@ -11,3 +11,13 @@ if (process.env.APP_ENV === "test") {
 }
 
 export const strapi = new GraphQLClient(STRAPI_GRAPHQL_API_URL, { headers });
+
+export const getGraphQLClient = (preview = false) => {
+  return new GraphQLClient(STRAPI_GRAPHQL_API_URL, {
+    headers,
+    cache: preview ? "no-store" : "force-cache",
+    next: {
+      revalidate: preview ? 0 : 1200,
+    },
+  });
+};
