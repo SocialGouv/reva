@@ -7,6 +7,10 @@ import { createCertificationEntity } from "@tests/helpers/entities/create-certif
 import { createDematerializedFeasibilityFileEntity } from "@tests/helpers/entities/create-dematerialized-feasibility-file.entity";
 import { createDossierDeValidationEntity } from "@tests/helpers/entities/create-dossier-de-validation.entity";
 import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
+import {
+  createJuryEntity,
+  type JuryEntity,
+} from "@tests/helpers/entities/create-jury.entity";
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 
@@ -382,7 +386,7 @@ test.describe("Next actions tiles", () => {
             label: "incomplete";
             activeDossierDeValidationDecision: "INCOMPLETE";
           }
-        | { label: "after failed jury"; juryResult: JuryResult };
+        | { label: "after failed jury"; jury: JuryEntity };
 
       const scenarios: ValidationScenario[] = [
         { label: "no decision", activeDossierDeValidationDecision: null },
@@ -390,7 +394,7 @@ test.describe("Next actions tiles", () => {
           label: "incomplete",
           activeDossierDeValidationDecision: "INCOMPLETE",
         },
-        { label: "after failed jury", juryResult: "FAILURE" },
+        { label: "after failed jury", jury: createJuryEntity({ result: "FAILURE" }) },
       ];
 
       scenarios.forEach((scenario) => {
@@ -411,10 +415,10 @@ test.describe("Next actions tiles", () => {
             candidate,
             feasibility,
             activeDossierDeValidation,
-            juryResult:
+            jury:
               scenario.label === "after failed jury"
-                ? scenario.juryResult
-                : undefined,
+                ? scenario.jury
+                : null,
           });
           const { handlers, dashboardWait } = dashboardHandlers({
             candidacy,

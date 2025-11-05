@@ -4,12 +4,12 @@ import {
   Certification,
   DossierDeValidation,
   Jury,
-  JuryResult,
   Organism,
 } from "@/graphql/generated/graphql";
 
 import type { CandidateEntity } from "./create-candidate.entity";
 import type { FeasibilityEntity } from "./create-feasibility.entity";
+import type { JuryEntity } from "./create-jury.entity";
 
 // Allow partials for nested fields
 // But make "id" and "appointments" fields required to avoid undefined checks in tests
@@ -38,12 +38,7 @@ export type CreateCandidacyEntityOptions = {
   activeDossierDeValidation?: Partial<DossierDeValidation> | null;
   endAccompagnementStatus?: CandidacyEntity["endAccompagnementStatus"];
   appointments?: Candidacy["appointments"];
-  juryResult?: JuryResult;
-  juryInfo?: {
-    dateOfResult?: number;
-    dateOfSession?: number;
-    informationOfResult?: string;
-  };
+  jury?: JuryEntity | null;
   goalsCount?: number;
   experiencesCount?: number;
   candidacyAlreadySubmitted?: boolean;
@@ -57,8 +52,7 @@ export const createCandidacyEntity = (
     certification,
     status,
     readyForJuryEstimatedAt,
-    juryResult,
-    juryInfo,
+    jury,
     activeDossierDeValidation,
     goalsCount,
     experiencesCount,
@@ -98,7 +92,7 @@ export const createCandidacyEntity = (
     derniereDateActivite: new Date().getTime(),
     createdAt: new Date().getTime(),
     feasibility,
-    jury: null,
+    jury: jury || null,
     activeDossierDeValidation,
     goals: [],
     experiences: [],
@@ -112,18 +106,6 @@ export const createCandidacyEntity = (
   if (organism) {
     candidacy.organism = organism;
     candidacy.typeAccompagnement = "ACCOMPAGNE";
-  }
-
-  if (juryResult) {
-    candidacy.jury = {
-      result: juryResult,
-      isResultTemporary: null,
-      dateOfSession: juryInfo?.dateOfSession || Date.now(),
-      dateOfResult: juryInfo?.dateOfResult || null,
-      informationOfResult: juryInfo?.informationOfResult || null,
-      timeOfSession: null,
-      timeSpecified: null,
-    };
   }
 
   if (typeof goalsCount === "number") {

@@ -10,6 +10,7 @@ import {
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
 import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
+import { createJuryEntity } from "@tests/helpers/entities/create-jury.entity";
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 import {
@@ -470,12 +471,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
           const candidacy = createCandidacyFor(typeAccompagnement, {
             status: "DOSSIER_DE_VALIDATION_ENVOYE",
-            juryResult: result,
-            juryInfo: {
+            jury: createJuryEntity({
+              result,
               informationOfResult,
               dateOfResult: dateOfResult.getTime(),
               dateOfSession: dateOfSession.getTime(),
-            },
+            }),
             activeDossierDeValidation: {
               dossierDeValidationOtherFiles: [],
             },
@@ -510,12 +511,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
         const candidacy = createCandidacyFor(typeAccompagnement, {
           status: "DOSSIER_DE_VALIDATION_ENVOYE",
-          juryResult: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-          juryInfo: {
+          jury: createJuryEntity({
+            result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
             informationOfResult,
             dateOfResult: dateOfResult.getTime(),
             dateOfSession: dateOfSession.getTime(),
-          },
+          }),
           activeDossierDeValidation: {
             dossierDeValidationOtherFiles: [],
           },
@@ -537,7 +538,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           msw,
         }) => {
           const candidacy = createCandidacyFor(typeAccompagnement, {
-            juryResult,
+            jury: createJuryEntity({ result: juryResult }),
           });
           const { dashboardWait } = useDashboardScenario(msw, candidacy);
 
@@ -570,12 +571,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
         const candidacy = createCandidacyFor(typeAccompagnement, {
           status: "DOSSIER_DE_VALIDATION_ENVOYE",
-          juryResult: "FAILURE",
-          juryInfo: {
+          jury: createJuryEntity({
+            result: "FAILURE",
             informationOfResult,
             dateOfResult: dateOfResult.getTime(),
             dateOfSession: dateOfSession.getTime(),
-          },
+          }),
           activeDossierDeValidation: {
             dossierDeValidationSentAt: dossierSentDate.getTime(),
             dossierDeValidationFile: {
@@ -648,12 +649,12 @@ typesAccompagnement.forEach((typeAccompagnement) => {
 
         const candidacy = createCandidacyFor(typeAccompagnement, {
           status: "DOSSIER_DE_VALIDATION_ENVOYE",
-          juryResult: "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-          juryInfo: {
+          jury: createJuryEntity({
+            result: "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
             informationOfResult: "Partial success",
             dateOfResult: dateOfResult.getTime(),
             dateOfSession: dateOfSession.getTime(),
-          },
+          }),
           activeDossierDeValidation: {
             dossierDeValidationOtherFiles: [],
           },
@@ -688,7 +689,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
           activeDossierDeValidation: {
             dossierDeValidationOtherFiles: [],
           },
-          juryResult: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+          jury: createJuryEntity({ result: "FULL_SUCCESS_OF_FULL_CERTIFICATION" }),
         });
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
@@ -720,7 +721,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dossierDeValidationOtherFiles: [],
             dossierDeValidationSentAt: sentDate.getTime(),
           },
-          juryResult: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+          jury: createJuryEntity({ result: "FULL_SUCCESS_OF_FULL_CERTIFICATION" }),
         });
 
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
@@ -747,7 +748,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             dossierDeValidationOtherFiles: [],
             dossierDeValidationSentAt: sentDate.getTime(),
           },
-          juryResult: "FAILURE",
+          jury: createJuryEntity({ result: "FAILURE" }),
         });
 
         const { dashboardWait } = useDashboardScenario(msw, candidacy);
