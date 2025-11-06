@@ -87,7 +87,10 @@ export default function Login() {
           </p>
 
           <Input
-            disabled={email.length > 0 || askForLogin.isPending}
+            disabled={
+              (email.length > 0 && emailForMagicLink.length === 0) ||
+              askForLogin.isPending
+            }
             hintText="Format attendu : nom@domaine.fr"
             nativeInputProps={{
               id: "emailForMagicLink",
