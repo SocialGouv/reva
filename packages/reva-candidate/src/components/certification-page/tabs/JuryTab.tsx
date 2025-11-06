@@ -28,7 +28,7 @@ export const JuryTab = ({
     {
       <div className="flex flex-col items-start md:flex-row md:items-center gap-2">
         <div className="w-[400px]">Montant à régler au certificateur :</div>
-        {juryEstimatedCost ? (
+        {juryEstimatedCost !== null && juryEstimatedCost !== undefined ? (
           <Tag>
             <span className="fr-icon-money-euro-circle-fill fr-icon--sm mr-1" />
             {juryEstimatedCost}
