@@ -576,6 +576,7 @@ enum RemoteZone {
   LA_REUNION
   SAINTE_LUCIE_SAINT_MARTIN
   SAINT_PIERRE_ET_MIQUELON
+  SAINT_BARTHELEMY
 }
 
 model OrganismOnRemoteZone {

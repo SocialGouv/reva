@@ -613,6 +613,12 @@ const departments = [
     codeRegion: "06",
     timezone: "Indian/Mayotte",
   },
+  {
+    label: "Saint-Barthélemy",
+    code: "977",
+    codeRegion: "977",
+    timezone: "America/St_Barthelemy",
+  },
 ];
 
 export const upsertDepartments = async (prisma: PrismaClient) => {

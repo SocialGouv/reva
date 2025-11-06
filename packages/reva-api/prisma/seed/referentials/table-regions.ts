@@ -77,6 +77,10 @@ const regions = [
     label: "Saint-Martin",
     code: "07",
   },
+  {
+    label: "Saint-Barthélemy",
+    code: "977",
+  },
 ];
 
 export const upsertRegions = async (prisma: PrismaClient) => {

@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "RemoteZone" ADD VALUE 'SAINT_BARTHELEMY';

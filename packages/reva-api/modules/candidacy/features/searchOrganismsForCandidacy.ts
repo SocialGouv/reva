@@ -337,6 +337,8 @@ const getRemoteZoneFromDepartment = async ({
       return "SAINT_PIERRE_ET_MIQUELON";
     case "976":
       return "MAYOTTE";
+    case "977":
+      return "SAINT_BARTHELEMY";
     default:
       return "FRANCE_METROPOLITAINE";
   }
