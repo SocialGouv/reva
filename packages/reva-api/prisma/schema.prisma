@@ -493,6 +493,7 @@ model Account {
   disabledAt                         DateTime?                            @map("disabled_at") @db.Timestamptz(6)
   commanditaireVaeCollective         CommanditaireVaeCollective[]
   organismOnAccounts                 OrganismOnAccount[]
+  maisonMereAAPs                     MaisonMereAAPOnAccount[]
 
   @@index([email])
   @@index([organismId])
@@ -1506,10 +1507,21 @@ model MaisonMereAAP {
   maisonMereAAPLegalInformationDocumentsDecision      MaisonMereAAPLegalInformationDocumentsDecision[]
   isMCFCompatible                                     Boolean?                                            @map("is_mcf_compatible")
   AAPLog                                              AAPLog[]
+  comptesCollaborateurs                               MaisonMereAAPOnAccount[]
 
   @@index([typologie])
   @@index([gestionnaireAccountId])
   @@map("maison_mere_aap")
+}
+
+model MaisonMereAAPOnAccount {
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  maisonMereAAP   MaisonMereAAP @relation(fields: [maisonMereAAPId], references: [id])
+  maisonMereAAPId String        @map("maison_mere_aap_id") @db.Uuid
+  account         Account       @relation(fields: [accountId], references: [id])
+  accountId       String        @map("account_id") @db.Uuid
+
+  @@map("maison_mere_aap_on_account")
 }
 
 model MaisonMereAAPOnConventionCollective {
