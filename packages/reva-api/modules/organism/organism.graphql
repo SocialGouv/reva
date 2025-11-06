@@ -248,6 +248,7 @@ input UpdateMaisonMereAccountSetupInput {
 
 input CreateOrganimsAccountInput {
   organismId: ID
+  maisonMereAAPId: ID!
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!

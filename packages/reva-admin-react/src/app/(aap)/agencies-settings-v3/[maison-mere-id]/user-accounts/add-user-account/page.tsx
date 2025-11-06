@@ -28,6 +28,7 @@ const AddUserAccountPage = () => {
   const handleFormSubmit = async (data: UserAccountFormData) => {
     try {
       await createUserAccount.mutateAsync({
+        maisonMereAAPId,
         accountEmail: data.email,
         accountFirstname: data.firstname,
         accountLastname: data.lastname,

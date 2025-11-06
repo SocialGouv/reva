@@ -12,6 +12,7 @@ import { updateOrganismOnAccountAssociation } from "./updateOrganismOnAccountAss
 
 export const createOrganismAccount = async ({
   organismId,
+  maisonMereAAPId,
   accountEmail,
   accountFirstname,
   accountLastname,
@@ -23,13 +24,24 @@ export const createOrganismAccount = async ({
   });
 
   if (isAApUserAccountV2FeatureActive) {
-    return createAccount({
+    const account = await createAccount({
       email: accountEmail,
       username: accountEmail,
       firstname: accountFirstname,
       lastname: accountLastname,
       group: "organism",
     });
+
+    await prismaClient.maisonMereAAPOnAccount.create({
+      data: {
+        accountId: account.id,
+        maisonMereAAPId,
+      },
+    });
+
+    return account;
+
+    //TODO log audit event
   } else {
     if (!organismId) {
       throw new Error("L'identifiant de l'organisme est obligatoire");
@@ -65,6 +77,13 @@ export const createOrganismAccount = async ({
     await updateOrganismOnAccountAssociation({
       accountId: account.id,
       organismIds: [organismId],
+    });
+
+    await prismaClient.maisonMereAAPOnAccount.create({
+      data: {
+        accountId: account.id,
+        maisonMereAAPId: maisonMereAAPId,
+      },
     });
 
     if (organism.maisonMereAAPId) {
