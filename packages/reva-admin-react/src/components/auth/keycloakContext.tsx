@@ -69,6 +69,14 @@ export const KeycloakProvider = ({
           keycloakInstance.onAuthError = async () => {
             console.log("Auth error");
           };
+          keycloakInstance.onAuthLogout = async () => {
+            console.log("Auth logout");
+            setAuthenticated(false);
+            setAccessToken("");
+            keycloakInstance.login({
+              redirectUri: window.location.href,
+            });
+          };
           keycloakInstance.onAuthRefreshSuccess = async () => {
             console.log("Token refresh success");
             setAccessToken(keycloakInstance.token);
