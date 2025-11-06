@@ -18,5 +18,7 @@ export const getRemoteZoneLabel = (remoteZone: RemoteZone) => {
       return "Saint-Martin (UTC-4)";
     case "SAINT_PIERRE_ET_MIQUELON":
       return "Saint-Pierre-et-Miquelon (UTC-2)";
+    case "SAINT_BARTHELEMY":
+      return "Saint-Barthélemy (UTC-4)";
   }
 };

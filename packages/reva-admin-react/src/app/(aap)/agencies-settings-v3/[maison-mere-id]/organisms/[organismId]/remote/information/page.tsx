@@ -60,6 +60,8 @@ const InformationsRemotePage = () => {
       isRemoteSainteLucieSaintMartin: organism?.remoteZones?.includes(
         "SAINTE_LUCIE_SAINT_MARTIN",
       ),
+      isRemoteSaintBarthelemy:
+        organism?.remoteZones?.includes("SAINT_BARTHELEMY"),
     } as InformationRemoteFormData);
   }, [organism, reset]);
 
@@ -76,6 +78,7 @@ const InformationsRemotePage = () => {
         isRemoteMayotte,
         isRemoteSaintPierreEtMiquelon,
         isRemoteSainteLucieSaintMartin,
+        isRemoteSaintBarthelemy,
         ...informationsCommerciales
       } = data;
 
@@ -104,6 +107,9 @@ const InformationsRemotePage = () => {
       }
       if (isRemoteSainteLucieSaintMartin) {
         remoteZones.push("SAINTE_LUCIE_SAINT_MARTIN");
+      }
+      if (isRemoteSaintBarthelemy) {
+        remoteZones.push("SAINT_BARTHELEMY");
       }
       await createOrUpdateInformationsCommercialesAndRemoteStatus.mutateAsync({
         organismId: organism?.id,
@@ -247,6 +253,12 @@ const InformationsRemotePage = () => {
                     label: "Saint-Martin (UTC-4)",
                     nativeInputProps: {
                       ...register("isRemoteSainteLucieSaintMartin"),
+                    },
+                  },
+                  {
+                    label: "Saint-Barthélemy (UTC-4)",
+                    nativeInputProps: {
+                      ...register("isRemoteSaintBarthelemy"),
                     },
                   },
                 ]}

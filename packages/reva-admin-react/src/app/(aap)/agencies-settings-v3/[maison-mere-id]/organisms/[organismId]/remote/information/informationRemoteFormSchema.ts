@@ -21,6 +21,7 @@ export const informationRemoteFormSchema = z
     isRemoteLaReunion: z.boolean(),
     isRemoteSaintPierreEtMiquelon: z.boolean(),
     isRemoteSainteLucieSaintMartin: z.boolean(),
+    isRemoteSaintBarthelemy: z.boolean(),
   })
   .superRefine(
     (
@@ -31,6 +32,7 @@ export const informationRemoteFormSchema = z
         isRemoteLaReunion,
         isRemoteMartinique,
         isRemoteMayotte,
+        isRemoteSaintBarthelemy,
         nomPublic,
         emailContact,
         telephone,
@@ -74,6 +76,7 @@ export const informationRemoteFormSchema = z
           isRemoteLaReunion,
           isRemoteMartinique,
           isRemoteMayotte,
+          isRemoteSaintBarthelemy,
         ].some((r) => !!r)
       ) {
         addIssue({
