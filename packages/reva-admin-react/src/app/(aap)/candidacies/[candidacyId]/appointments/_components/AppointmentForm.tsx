@@ -8,7 +8,6 @@ import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import {
-  sanitizedOptionalText,
   sanitizedOptionalTextAllowSpecialCharacters,
   sanitizedText,
 } from "@/utils/input-sanitization";
@@ -29,7 +28,7 @@ const appointmentFormSchema = z
       ])
       .optional()
       .nullable(),
-    location: sanitizedOptionalText().nullable(),
+    location: sanitizedOptionalTextAllowSpecialCharacters().nullable(),
     description: sanitizedOptionalTextAllowSpecialCharacters().nullable(),
   })
   .superRefine((data, ctx) => {
