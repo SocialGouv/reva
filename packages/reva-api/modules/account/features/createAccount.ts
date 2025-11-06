@@ -1,7 +1,6 @@
 import { Account } from "@prisma/client";
 
 import { getCertificationAuthorityById } from "@/modules/feasibility/feasibility.features";
-import { getOrganismById } from "@/modules/organism/database/organisms";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -39,15 +38,6 @@ export const createAccount = async (params: {
   switch (params.group) {
     case "admin":
       // for admins, no specific checks
-      break;
-
-    case "organism":
-      if (params.organismId && !(await getOrganismById(params.organismId))) {
-        throw new FunctionalError(
-          FunctionalCodeError.ORGANISM_NOT_FOUND,
-          `Organisme non trouvé`,
-        );
-      }
       break;
 
     case "certification_authority":

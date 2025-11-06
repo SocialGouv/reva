@@ -48,13 +48,6 @@ type CreateOrganismInput =
       modaliteAccompagnementRenseigneeEtValide: true;
     };
 
-export const getOrganismById = async (organismId: string) =>
-  prismaClient.organism.findUnique({
-    where: {
-      id: organismId,
-    },
-  });
-
 export const createOrganism = async (data: CreateOrganismInput) => {
   const { degreeIds, ccnIds, ...otherData } = data;
 
