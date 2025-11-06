@@ -814,4 +814,13 @@
     "region_id": "4dd6b825-4e41-44e5-8aa5-f5b1109e0632",
     "created_at": "2024-04-24 12:22:19.432+00",
     "updated_at": null
-  }]
+  },
+  {
+    "id": "977",
+    "label": "Saint-Barthélemy",
+    "code": "977",
+    "region_id": "977",
+    "created_at": "2025-11-06 12:22:19.434+00",
+    "updated_at": null
+  }
+]
