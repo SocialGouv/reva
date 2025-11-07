@@ -88,7 +88,7 @@ export const useSetOrganism = ({
   }>();
 
   const { data: getCandidateWithCandidacy } = useQuery({
-    queryKey: ["candidacy", "set-organism"],
+    queryKey: ["candidacy", "set-organism", candidacyId],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_FOR_SET_ORGANISM, {
         candidacyId,

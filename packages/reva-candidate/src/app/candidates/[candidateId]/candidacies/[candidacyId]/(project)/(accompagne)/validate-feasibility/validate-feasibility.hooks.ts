@@ -174,7 +174,7 @@ export const useValidateFeasibility = () => {
   }>();
 
   const { data } = useQuery({
-    queryKey: ["candidacy", "validate-feasibility"],
+    queryKey: ["candidacy", "validate-feasibility", candidacyId],
     queryFn: () =>
       graphqlClient.request(
         GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_VALIDATE_FEASIBILITY,

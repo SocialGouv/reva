@@ -73,7 +73,7 @@ export const useCandidaciesGuard = () => {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ["candidate", "candidacies-guard"],
+    queryKey: ["candidate", "candidacies-guard", candidateId],
     queryFn: () =>
       graphqlClient.request(
         GET_CANDIDATE_BY_ID_WITH_CANDIDACY_FOR_CANDIDACIES_GUARD,

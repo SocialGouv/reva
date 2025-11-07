@@ -84,7 +84,7 @@ export const useFeasibilityPage = () => {
   }>();
 
   const { data: getCandidateResponse, status: queryStatus } = useSuspenseQuery({
-    queryKey: ["candidacy", "getCandidacyByIdForFeasibilityPage"],
+    queryKey: ["candidacy", "getCandidacyByIdForFeasibilityPage", candidacyId],
     queryFn: () =>
       graphqlClient.request(getCandidacyByIdForFeasibilityPage, {
         candidacyId,

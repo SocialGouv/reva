@@ -42,7 +42,7 @@ export const useAppointmentDetail = () => {
   }>();
 
   const { data: getAppointmentDetailsQueryData } = useQuery({
-    queryKey: [appointmentId, "appointmentDetails"],
+    queryKey: [appointmentId, "appointmentDetails", candidacyId],
     queryFn: () =>
       graphqlClient.request(getAppointmentDetailsQuery, {
         candidacyId,
@@ -51,7 +51,7 @@ export const useAppointmentDetail = () => {
   });
 
   const { data: getOrganismQueryData } = useQuery({
-    queryKey: [candidacyId, "Organism"],
+    queryKey: [candidacyId, "Organism", candidacyId],
     queryFn: () =>
       graphqlClient.request(getOrganismQuery, {
         candidacyId,

@@ -50,7 +50,7 @@ export const useCandidacyForCertification = () => {
   }>();
 
   const { data, isRefetching } = useSuspenseQuery({
-    queryKey: ["candidacy", "getCandidacyByIdWithCertification"],
+    queryKey: ["candidacy", "getCandidacyByIdWithCertification", candidacyId],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_WITH_CERTIFICATION, {
         candidacyId,

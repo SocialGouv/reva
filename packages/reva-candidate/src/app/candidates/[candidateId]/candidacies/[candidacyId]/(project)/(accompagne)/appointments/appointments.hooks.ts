@@ -66,7 +66,7 @@ export const useAppointments = ({
   }>();
 
   const { data: getPastAppointmentsQueryData } = useQuery({
-    queryKey: [pastLimit, pastOffset, "pastAppointments"],
+    queryKey: [pastLimit, pastOffset, "pastAppointments", candidacyId],
     queryFn: () =>
       graphqlClient.request(getPastAppointmentsQuery, {
         candidacyId,
@@ -76,7 +76,7 @@ export const useAppointments = ({
   });
 
   const { data: getFutureAppointmentsQueryData } = useQuery({
-    queryKey: [futureLimit, futureOffset, "futureAppointments"],
+    queryKey: [futureLimit, futureOffset, "futureAppointments", candidacyId],
     queryFn: () =>
       graphqlClient.request(getFutureAppointmentsQuery, {
         candidacyId,

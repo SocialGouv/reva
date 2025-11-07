@@ -62,7 +62,7 @@ export const useProfile = () => {
   }>();
 
   const { data: getCandidateData } = useQuery({
-    queryKey: ["candidate", "getCandidateByIdForProfilePage"],
+    queryKey: ["candidate", "getCandidateByIdForProfilePage", candidateId],
     queryFn: () =>
       graphqlClient.request(getCandidateByIdForProfilePage, { candidateId }),
   });

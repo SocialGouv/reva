@@ -42,7 +42,11 @@ export const useTypeAccompagnementPage = () => {
   }>();
 
   const { data: getCandidateResponse, status: queryStatus } = useQuery({
-    queryKey: ["candidacy", "getCandidacyByIdForTypeAccompagnementPage"],
+    queryKey: [
+      "candidacy",
+      "getCandidacyByIdForTypeAccompagnementPage",
+      candidacyId,
+    ],
     queryFn: () =>
       graphqlClient.request(getCandidacyByIdForTypeAccompagnementPage, {
         candidacyId,

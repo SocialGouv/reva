@@ -80,7 +80,7 @@ export const useCandidacyForCertificationSearch = () => {
   }>();
 
   const { data, isLoading } = useSuspenseQuery({
-    queryKey: ["candidacy", "search-certification"],
+    queryKey: ["candidacy", "search-certification", candidacyId],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_FOR_SEARCH_CERTIFICATION_PAGE, {
         candidacyId,
@@ -120,7 +120,12 @@ export const useSetCertification = ({
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
 
   const searchCertificationsForCandidate = useSuspenseQuery({
-    queryKey: ["searchCertificationsForCandidate", searchText, currentPage],
+    queryKey: [
+      "searchCertificationsForCandidate",
+      searchText,
+      currentPage,
+      candidacyId,
+    ],
     queryFn: () =>
       graphqlClient.request(SEARCH_CERTIFICATIONS_FOR_CANDIDATE, {
         offset,

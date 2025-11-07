@@ -30,7 +30,7 @@ export const useCandidate = () => {
   }>();
 
   const { data: candidateWithCandidacy } = useQuery({
-    queryKey: ["candidacy", "home"],
+    queryKey: ["candidacy", "home", candidacyId],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_WITH_CANDIDATE, {
         candidacyId,

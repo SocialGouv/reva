@@ -59,7 +59,7 @@ export const useEndAccompagnement = () => {
   }>();
 
   const { data, isLoading: isEndAccompagnementLoading } = useQuery({
-    queryKey: ["candidacy", "end-accompagnement"],
+    queryKey: ["candidacy", "end-accompagnement", candidacyId],
     queryFn: () =>
       graphqlClient.request(
         GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_END_ACCOMPAGNEMENT,

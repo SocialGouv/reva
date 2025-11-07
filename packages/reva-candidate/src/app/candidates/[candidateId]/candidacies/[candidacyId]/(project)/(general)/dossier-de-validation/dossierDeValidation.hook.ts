@@ -79,7 +79,11 @@ export const useDossierDeValidationPage = () => {
   }>();
 
   const { data: getCandidacyByIdResponse, status: queryStatus } = useQuery({
-    queryKey: ["candidacy", "getCandidacyByIdForDossierDeValidationPage"],
+    queryKey: [
+      "candidacy",
+      "getCandidacyByIdForDossierDeValidationPage",
+      candidacyId,
+    ],
     queryFn: () =>
       graphqlClient.request(getCandidacyByIdForDossierDeValidationPage, {
         candidacyId,

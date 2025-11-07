@@ -104,7 +104,7 @@ export const useCandidacyForDashboard = () => {
   }>();
 
   const { data } = useSuspenseQuery({
-    queryKey: ["candidacy", "dashboard"],
+    queryKey: ["candidacy", "dashboard", candidacyId],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_FOR_DASHBOARD, {
         candidacyId,

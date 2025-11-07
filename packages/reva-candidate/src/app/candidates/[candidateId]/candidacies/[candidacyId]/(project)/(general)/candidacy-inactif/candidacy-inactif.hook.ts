@@ -60,7 +60,7 @@ export const useCandidacyInactif = () => {
   }>();
 
   const { data, isLoading: isCandidacyInactifLoading } = useQuery({
-    queryKey: ["candidacy", "candidacy-inactif"],
+    queryKey: ["candidacy", "candidacy-inactif", candidacyId],
     queryFn: () =>
       graphqlClient.request(
         GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_CANDIDACY_INACTIF,

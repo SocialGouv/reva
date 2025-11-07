@@ -63,7 +63,7 @@ export const useValidateTraining = () => {
   }>();
 
   const { data: candidateWithCandidacyResponse } = useQuery({
-    queryKey: ["candidacy", "getCandidacyByIdForValidateTraining"],
+    queryKey: ["candidacy", "getCandidacyByIdForValidateTraining", candidacyId],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_FOR_VALIDATE_TRAINING, {
         candidacyId,

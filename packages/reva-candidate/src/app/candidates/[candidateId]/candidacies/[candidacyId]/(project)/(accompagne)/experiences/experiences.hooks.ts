@@ -34,7 +34,7 @@ export const useExperiences = () => {
   }>();
 
   const { data } = useQuery({
-    queryKey: ["candidacy", "getCandidacyByIdForExperiencesPage"],
+    queryKey: ["candidacy", "getCandidacyByIdForExperiencesPage", candidacyId],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_FOR_EXPERIENCES_PAGE, {
         candidacyId,

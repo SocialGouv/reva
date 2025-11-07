@@ -67,7 +67,7 @@ export const useUpdateExperience = () => {
   }>();
 
   const { data } = useQuery({
-    queryKey: ["candidacy", "getCandidacyByIdForUpdateExperience"],
+    queryKey: ["candidacy", "getCandidacyByIdForUpdateExperience", candidacyId],
     queryFn: () =>
       graphqlClient.request(getCandidacyByIdForUpdateExperience, {
         candidacyId,

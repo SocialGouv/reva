@@ -31,7 +31,7 @@ export const useJurySession = () => {
   }>();
 
   const { data } = useSuspenseQuery({
-    queryKey: ["candidacy", "jury-session"],
+    queryKey: ["candidacy", "jury-session", candidacyId],
     queryFn: () =>
       graphqlClient.request(GET_CANDIDACY_BY_ID_FOR_JURY_SESSION, {
         candidacyId,

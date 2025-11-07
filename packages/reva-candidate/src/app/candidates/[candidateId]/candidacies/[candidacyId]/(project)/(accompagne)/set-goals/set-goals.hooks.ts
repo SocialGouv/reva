@@ -54,7 +54,7 @@ export const useSetGoals = () => {
   }>();
 
   const { data: getCandidateData } = useQuery({
-    queryKey: ["candidacy", "getCandidacyByIdForSetGoals"],
+    queryKey: ["candidacy", "getCandidacyByIdForSetGoals", candidacyId],
     queryFn: () =>
       graphqlClient.request(getCandidacyByIdForSetGoals, {
         candidacyId,
