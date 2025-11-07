@@ -372,7 +372,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
         await clickDossierTab(page);
 
@@ -406,7 +410,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
         await clickDossierTab(page);
 
@@ -441,7 +449,11 @@ typesAccompagnement.forEach((typeAccompagnement) => {
         const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
 
         await login(page);
-        await navigateToDossierValidation(page, candidacy.id);
+        await navigateToDossierValidation(
+          page,
+          candidacy.candidate?.id,
+          candidacy.id,
+        );
         await dossierDeValidationWait(page);
         await clickDossierTab(page);
 
