@@ -1,4 +1,9 @@
-import { DematerializedFeasibilityFile, Feasibility, FeasibilityUploadedPdf, File } from "@/graphql/generated/graphql";
+import {
+  DematerializedFeasibilityFile,
+  Feasibility,
+  FeasibilityUploadedPdf,
+  File,
+} from "@/graphql/generated/graphql";
 
 export type FeasibilityEntity = Partial<
   Omit<Feasibility, "dematerializedFeasibilityFile" | "feasibilityUploadedPdf">
@@ -17,16 +22,23 @@ export const createFeasibilityUploadedPdfEntity = (
     certificateOfAttendanceFile,
   } = options || {};
 
-  const defaultFile: File = {
+  const defaultFeasibilityFile: File = {
     name: "dossier_de_faisabilite.pdf",
-    url: "https://example.com",
-    previewUrl: "https://example.com",
+    url: "https://example.com/dossier_de_faisabilite.pdf",
+    previewUrl: "https://example.com/dossier_de_faisabilite.pdf",
+    mimeType: "application/pdf",
+  };
+
+  const defaultIdFile: File = {
+    name: "piece_identite.pdf",
+    url: "https://example.com/piece_identite.pdf",
+    previewUrl: "https://example.com/piece_identite.pdf",
     mimeType: "application/pdf",
   };
 
   return {
-    feasibilityFile: feasibilityFile ?? defaultFile,
-    IDFile: IDFile ?? defaultFile,
+    feasibilityFile: feasibilityFile ?? defaultFeasibilityFile,
+    IDFile: IDFile ?? defaultIdFile,
     documentaryProofFile: documentaryProofFile ?? null,
     certificateOfAttendanceFile: certificateOfAttendanceFile ?? null,
   };
