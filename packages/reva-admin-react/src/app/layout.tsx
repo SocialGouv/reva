@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import Keycloak from "keycloak-js";
+import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
@@ -50,6 +51,8 @@ const keycloakInstance =
 const queryClient = new QueryClient();
 
 setDefaultOptions({ locale: fr });
+
+const WHITE_CARD_LAYOUT_EXCLUDED_PATHS = ["/candidacies/annuaire"] as const;
 
 export default function RootLayout({
   children,
@@ -104,7 +107,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
   const { authenticated, keycloakUser } = useKeycloakContext();
   const { status: featureFlippingHookStatus, isFeatureActive } =
     useFeatureflipping();
-
+  const pathname = usePathname();
   const shouldLoadCrisp =
     authenticated && isFeatureActive("SHOW_CRISP_IN_ADMIN");
 
@@ -151,6 +154,14 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
     return "lg:bg-unknown";
   };
 
+  const isWhiteCardLayoutExcludedPath = WHITE_CARD_LAYOUT_EXCLUDED_PATHS.some(
+    (path) => pathname.startsWith(path),
+  );
+
+  const childrenWhiteCardLayoutClassname = isWhiteCardLayoutExcludedPath
+    ? ""
+    : "bg-white lg:shadow-lifted";
+
   return (
     featureFlippingHookStatus === "INITIALIZED" && (
       <div className="w-full min-h-screen flex flex-col">
@@ -176,7 +187,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
         >
           <div className="fr-container flex flex-col flex-1">
             <div
-              className={`fr-container lg:shadow-lifted flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row bg-white mb-12`}
+              className={`fr-container flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row mb-12 ${childrenWhiteCardLayoutClassname}`}
             >
               {authenticated && children}
             </div>

@@ -46,6 +46,7 @@ const PATHS = {
   STATISTIQUES: "/dashboard",
   SUBSCRIPTIONS: "/subscriptions/pending",
   VAE_COLLECTIVES: "/vae-collectives",
+  CERTIFICATEUR_CANDIDACIES_ANNUAIRE: "/candidacies/annuaire",
 } as const;
 
 const LABELS = {
@@ -85,7 +86,7 @@ const createTab = ({
 
 const isAAPCandidaciesPath = (pathname: string) => {
   const exclusionPattern =
-    /\/candidacies\/(?!(dossiers-de-validation|feasibilities|juries)\/).*/;
+    /\/candidacies\/(?!(dossiers-de-validation|feasibilities|juries|annuaire)\/).*/;
   const subPathPattern =
     /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/;
 
@@ -97,7 +98,7 @@ const isAAPVaeCollectivesPath = (pathname: string) =>
 
 const isCertificationAuthorityCandidaciesPath = (pathname: string) => {
   const mainPattern =
-    /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)/;
+    /\/candidacies\/(feasibilities)|(dossiers-de-validation)|(juries)|(annuaire)/;
   const subPathPattern =
     /\/candidacies\/.*\/(feasibility\/)|(dossier-de-validation\/)|(jury\/)|(transfer.*\/)/;
 
@@ -117,6 +118,7 @@ const getNavigationTabs = ({
   showPorteursDeProjetVaeCollectiveMenu,
   showAAPAideTab,
   showCertificateurAideTab,
+  isCertificateurCandidaciesAnnuaireFeatureActive,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -130,7 +132,12 @@ const getNavigationTabs = ({
   showPorteursDeProjetVaeCollectiveMenu: boolean;
   showAAPAideTab: boolean;
   showCertificateurAideTab: boolean;
+  isCertificateurCandidaciesAnnuaireFeatureActive: boolean;
 }) => {
+  const certificateurCandidaciesPath =
+    isCertificateurCandidaciesAnnuaireFeatureActive
+      ? PATHS.CERTIFICATEUR_CANDIDACIES_ANNUAIRE
+      : PATHS.FEASIBILITIES;
   const adminTabs = [
     createTab({
       text: LABELS.CANDIDACIES,
@@ -182,7 +189,7 @@ const getNavigationTabs = ({
     },
     createTab({
       text: LABELS.ADMIN_CERTIFICATION_AUTHORITY_CANDIDACIES,
-      href: PATHS.FEASIBILITIES,
+      href: certificateurCandidaciesPath,
       isActive: isCertificationAuthorityCandidaciesPath(currentPathname),
     }),
     {
@@ -261,7 +268,7 @@ const getNavigationTabs = ({
   const certificationAuthorityAdminTabs = [
     createTab({
       text: LABELS.CANDIDACIES,
-      href: PATHS.FEASIBILITIES,
+      href: certificateurCandidaciesPath,
       isActive: isCertificationAuthorityCandidaciesPath(currentPathname),
     }),
     createTab({
@@ -294,7 +301,7 @@ const getNavigationTabs = ({
   const certificationAuthorityLocalAccountTabs = [
     createTab({
       text: LABELS.CANDIDACIES,
-      href: PATHS.FEASIBILITIES,
+      href: certificateurCandidaciesPath,
       isActive: isCertificationAuthorityCandidaciesPath(currentPathname),
     }),
     createTab({
@@ -363,6 +370,9 @@ export const Header = () => {
   const isAAPAideFeatureActive = isFeatureActive("AAP_HELP");
   const isCertificateurAideFeatureActive =
     isFeatureActive("CERTIFICATEUR_HELP");
+  const isCertificateurCandidaciesAnnuaireFeatureActive = isFeatureActive(
+    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
+  );
 
   const { data: getCohortesVaeCollectivesForConnectedAap } = useQuery({
     queryKey: ["aap", "getCohortesVaeCollectivesForConnectedAap"],
@@ -396,6 +406,7 @@ export const Header = () => {
     showPorteursDeProjetVaeCollectiveMenu,
     showAAPAideTab,
     showCertificateurAideTab,
+    isCertificateurCandidaciesAnnuaireFeatureActive,
   });
 
   return (

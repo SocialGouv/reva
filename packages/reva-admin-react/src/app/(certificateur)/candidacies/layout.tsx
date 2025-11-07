@@ -199,10 +199,12 @@ const CandidaciesLayout = ({ children }: { children: ReactNode }) => {
   });
 
   //Only apply layout if children are direct descendants (ie: /candidacies/feasibilities but not /candidacies/feasibilities/feasibilityId)
+  // Also exclude annuaire page
   const isPagePathAfterFirstlevel = !!currentPathname.match(
     /\/candidacies(\/.+){2,}/,
   );
-  if (isPagePathAfterFirstlevel) {
+  const isAnnuairePage = currentPathname.startsWith("/candidacies/annuaire");
+  if (isPagePathAfterFirstlevel || isAnnuairePage) {
     return <>{children}</>;
   }
 
