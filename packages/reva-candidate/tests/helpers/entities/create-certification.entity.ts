@@ -26,6 +26,7 @@ export const createCertificationEntity = (
     isAapAvailable: true,
     level: 1,
     prerequisites: [],
+    ...options,
   };
 
   return certification;

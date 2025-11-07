@@ -345,6 +345,117 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       ).toHaveCount(0);
     });
 
+    test.describe("Resources Section", () => {
+      test(`should display resources section with PDF template download for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const certification = createCertificationEntity({
+          additionalInfo: {
+            id: "additional-info-1",
+            additionalDocuments: [],
+            linkToReferential: "https://example.com/referential",
+            dossierDeValidationTemplate: {
+              name: "Trame_Dossier_Validation.pdf",
+              previewUrl: "https://example.com/template.pdf",
+              mimeType: "application/pdf",
+              url: "https://example.com/template.pdf",
+            },
+            dossierDeValidationLink: null,
+          },
+        });
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          feasibility: createAdmissibleFeasibility(),
+          certification,
+        });
+        const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+        await clickDossierTab(page);
+
+        const aside = page.locator("aside");
+        await expect(aside).toContainText("Trame du dossier de validation");
+        await expect(
+          aside.locator(
+            "a[href='https://example.com/template.pdf'][target='_blank']",
+          ),
+        ).toBeVisible();
+      });
+
+      test(`should display resources section with URL template link for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const certification = createCertificationEntity({
+          additionalInfo: {
+            id: "additional-info-2",
+            additionalDocuments: [],
+            linkToReferential: "https://example.com/referential",
+            dossierDeValidationTemplate: null,
+            dossierDeValidationLink: "https://example.com/template-link",
+          },
+        });
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          feasibility: createAdmissibleFeasibility(),
+          certification,
+        });
+        const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+        await clickDossierTab(page);
+
+        const aside = page.locator("aside");
+        await expect(aside).toContainText("Ressources :");
+        await expect(
+          aside.locator(
+            "a[href='https://example.com/template-link'][target='_blank']",
+          ),
+        ).toBeVisible();
+        await expect(aside).toContainText("Trame du dossier de validation");
+      });
+
+      test(`should display resources section without template when no template is provided for ${typeAccompagnement}`, async ({
+        page,
+        msw,
+      }) => {
+        const certification = createCertificationEntity({
+          additionalInfo: {
+            id: "additional-info-3",
+            additionalDocuments: [],
+            linkToReferential: "https://example.com/referential",
+            dossierDeValidationTemplate: null,
+            dossierDeValidationLink: null,
+          },
+        });
+        const candidacy = createCandidacyFor(typeAccompagnement, {
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          feasibility: createAdmissibleFeasibility(),
+          certification,
+        });
+        const { dossierDeValidationWait } = useDossierScenario(msw, candidacy);
+
+        await login(page);
+        await navigateToDossierValidation(page, candidacy.id);
+        await dossierDeValidationWait(page);
+        await clickDossierTab(page);
+
+        const aside = page.locator("aside");
+        await expect(aside).not.toContainText("Trame du dossier de validation");
+        await expect(aside).toContainText(
+          "Comment rédiger son dossier de validation ?",
+        );
+        await expect(aside).toContainText(
+          "Consultez la fiche de la certification",
+        );
+      });
+    });
+
     test.describe("Incomplete dossier de validation", () => {
       test(`should show a 'to complete' badge and a warning in the dashboard for ${typeAccompagnement}`, async ({
         page,
