@@ -9,6 +9,7 @@ import {
 } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createDossierDeValidationEntity } from "@tests/helpers/entities/create-dossier-de-validation.entity";
 import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
 import { createJuryEntity } from "@tests/helpers/entities/create-jury.entity";
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
@@ -554,16 +555,24 @@ typesAccompagnement.forEach((typeAccompagnement) => {
             decisionSentAt: currentSignalDate.getTime(),
             decisionComment: currentSignalReason,
             history: [
-              {
+              createDossierDeValidationEntity({
                 id: "history-1",
                 decisionSentAt: previousSignalDate1.getTime(),
                 decisionComment: previousSignalReason1,
-              },
-              {
+                decision: "INCOMPLETE",
+                createdAt: previousSignalDate1.getTime(),
+                dossierDeValidationSentAt: previousSignalDate1.getTime(),
+                isActive: false,
+              }),
+              createDossierDeValidationEntity({
                 id: "history-2",
                 decisionSentAt: previousSignalDate2.getTime(),
                 decisionComment: previousSignalReason2,
-              },
+                decision: "INCOMPLETE",
+                createdAt: previousSignalDate2.getTime(),
+                dossierDeValidationSentAt: previousSignalDate2.getTime(),
+                isActive: false,
+              }),
             ],
           },
         });
@@ -743,23 +752,35 @@ typesAccompagnement.forEach((typeAccompagnement) => {
               {
                 name: "annexe1.pdf",
                 previewUrl: "https://example.com/annexe1.pdf",
+                mimeType: "application/pdf",
+                url: "https://example.com/annexe1.pdf",
               },
               {
                 name: "annexe2.jpg",
                 previewUrl: "https://example.com/annexe2.jpg",
+                mimeType: "image/jpeg",
+                url: "https://example.com/annexe2.jpg",
               },
             ],
             history: [
-              {
+              createDossierDeValidationEntity({
                 id: "dossier-incomplete-1",
                 decisionSentAt: incompleteDV1Date.getTime(),
                 decisionComment: "comment 1",
-              },
-              {
+                decision: "INCOMPLETE",
+                createdAt: incompleteDV1Date.getTime(),
+                dossierDeValidationSentAt: incompleteDV1Date.getTime(),
+                isActive: false,
+              }),
+              createDossierDeValidationEntity({
                 id: "dossier-incomplete-2",
                 decisionSentAt: incompleteDV2Date.getTime(),
                 decisionComment: "comment 2",
-              },
+                decision: "INCOMPLETE",
+                createdAt: incompleteDV2Date.getTime(),
+                dossierDeValidationSentAt: incompleteDV2Date.getTime(),
+                isActive: false,
+              }),
             ],
           },
         });

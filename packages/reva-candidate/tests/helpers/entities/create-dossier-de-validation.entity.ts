@@ -1,9 +1,20 @@
 import { DossierDeValidation } from "@/graphql/generated/graphql";
 
+export type DossierDeValidationEntity = Omit<
+  Partial<DossierDeValidation>,
+  "history"
+> & {
+  history?: DossierDeValidationEntity[];
+};
+
 export const createDossierDeValidationEntity = (
-  options?: Partial<DossierDeValidation>,
-): Partial<DossierDeValidation> => {
-  const { decision, dossierDeValidationOtherFiles } = options || {};
+  options?: DossierDeValidationEntity,
+): DossierDeValidationEntity => {
+  const {
+    decision,
+    dossierDeValidationOtherFiles,
+    ...dossierDeValidationOverrides
+  } = options || {};
 
   return {
     decision: decision || "INCOMPLETE",
@@ -11,5 +22,6 @@ export const createDossierDeValidationEntity = (
     dossierDeValidationFile: undefined,
     isActive: true,
     id: "dossier-de-validation-1",
+    ...dossierDeValidationOverrides,
   };
 };

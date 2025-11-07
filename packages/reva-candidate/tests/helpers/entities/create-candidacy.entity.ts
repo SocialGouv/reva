@@ -2,12 +2,12 @@ import {
   Candidacy,
   CandidacyStatusStep,
   Certification,
-  DossierDeValidation,
   Jury,
   Organism,
 } from "@/graphql/generated/graphql";
 
 import type { CandidateEntity } from "./create-candidate.entity";
+import type { DossierDeValidationEntity } from "./create-dossier-de-validation.entity";
 import type { FeasibilityEntity } from "./create-feasibility.entity";
 import type { JuryEntity } from "./create-jury.entity";
 
@@ -22,7 +22,7 @@ export type CandidacyEntity = Partial<
   candidate?: CandidateEntity | null;
   jury?: Partial<Jury> | null;
   feasibility?: FeasibilityEntity | null;
-  activeDossierDeValidation?: Partial<DossierDeValidation> | null;
+  activeDossierDeValidation?: DossierDeValidationEntity | null;
   id: Candidacy["id"];
   appointments: Candidacy["appointments"];
 };
@@ -35,7 +35,7 @@ export type CreateCandidacyEntityOptions = {
   certification?: Certification | null;
   feasibility?: FeasibilityEntity | null;
   candidate?: CandidateEntity | null;
-  activeDossierDeValidation?: Partial<DossierDeValidation> | null;
+  activeDossierDeValidation?: DossierDeValidationEntity | null;
   endAccompagnementStatus?: CandidacyEntity["endAccompagnementStatus"];
   appointments?: Candidacy["appointments"];
   jury?: JuryEntity | null;
