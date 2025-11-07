@@ -15,10 +15,10 @@ const GET_CANDIDATE_FOR_CANDIDATES_GUARD = graphql(`
   }
 `);
 
-export const useCandidatesGuard = () => {
+export const useCandidates = () => {
   const { graphqlClient } = useGraphQlClient();
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["candidate", "candidates-guard"],
     queryFn: () => graphqlClient.request(GET_CANDIDATE_FOR_CANDIDATES_GUARD),
   });
@@ -26,7 +26,6 @@ export const useCandidatesGuard = () => {
   const candidate = data?.candidate_getCandidateWithCandidacy;
 
   return {
-    isLoading,
     candidate,
   };
 };

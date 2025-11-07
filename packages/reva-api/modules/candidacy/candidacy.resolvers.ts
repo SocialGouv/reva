@@ -24,6 +24,7 @@ import {
   CandidacyBusinessEvent,
   CandidacySortByFilter,
   CandidacyStatusFilter,
+  CreateCandidacyInput,
   SearchOrganismFilter,
 } from "./candidacy.types";
 import { sendCandidacyArchivedEmailToCertificateur } from "./emails/sendCandidacyArchivedEmailToCertificateur";
@@ -34,6 +35,7 @@ import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { canAccessCandidacy } from "./features/canAccessCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
+import { createCandidacy } from "./features/createCandidacy";
 import { deleteExperienceFromCandidacy } from "./features/deleteExperienceFromCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getCandidacies } from "./features/getCandicacies";
@@ -215,6 +217,19 @@ const unsafeResolvers = {
       }),
   },
   Mutation: {
+    candidacy_createCandidacy: async (
+      _: unknown,
+      payload: {
+        candidateId: string;
+        data: CreateCandidacyInput;
+      },
+      _context: GraphqlContext,
+    ) => {
+      return createCandidacy({
+        candidateId: payload.candidateId,
+        ...payload.data,
+      });
+    },
     candidacy_submitCandidacy: async (
       _: unknown,
       payload: { candidacyId: string },

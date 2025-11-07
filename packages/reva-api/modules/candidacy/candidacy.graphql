@@ -308,7 +308,17 @@ input DropOutInput {
   otherReasonContent: String
 }
 
+input CreateCandidacyInput {
+  certificationId: UUID
+  typeAccompagnement: TypeAccompagnement
+  cohorteVaeCollectiveId: UUID
+}
+
 type Mutation {
+  candidacy_createCandidacy(
+    candidateId: UUID!
+    data: CreateCandidacyInput!
+  ): Candidacy
   candidacy_submitCandidacy(candidacyId: ID!): Candidacy
   candidacy_addExperience(
     candidacyId: ID!

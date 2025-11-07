@@ -25,7 +25,9 @@ const getNavigation = ({
         ? "Mes candidatures"
         : "Ma candidature",
       linkProps: {
-        href: `/candidates/${candidateId}/`,
+        href: isMultiCandidacyFeatureActive
+          ? `/candidates/${candidateId}/candidacies/`
+          : `/candidates/${candidateId}/`,
         target: "_self",
       },
       isActive:

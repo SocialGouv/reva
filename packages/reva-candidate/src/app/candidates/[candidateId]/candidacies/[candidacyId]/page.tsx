@@ -30,7 +30,7 @@ export default function Home() {
             {
               label: "Mes candidatures",
               linkProps: {
-                href: "/",
+                href: `../`,
               },
             },
           ]}

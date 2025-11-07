@@ -1,5 +1,7 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import { TypeAccompagnement } from "../candidate/candidate.types";
+
 export interface CandidacyDropOut {
   status: CandidacyStatusStep;
   otherReasonContent?: string | null;
@@ -116,4 +118,10 @@ export interface ArchiveCandidaciesParams {
   candidacyIds: string[];
   archivingReason: CandidacyArchivingReason;
   archivingReasonAdditionalInformation?: string | null;
+}
+
+export interface CreateCandidacyInput {
+  certificationId?: string;
+  typeAccompagnement?: TypeAccompagnement;
+  cohorteVaeCollectiveId?: string;
 }

@@ -2,6 +2,7 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 
 import { prismaClient } from "@/prisma/client";
 
+import { getActiveCandidaciesByCandidateId } from "../candidacy/features/getActiveCandidaciesByCandidateId";
 import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
 import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 
@@ -67,13 +68,8 @@ const unsafeResolvers = {
       getHighestDegreeById({ highestDegreeId }),
     candidacy: async ({ id: candidateId }: { id: string }) =>
       getFirstActiveCandidacyByCandidateId({ candidateId }),
-    candidacies: async ({ id: candidateId }: { id: string }) => {
-      const activeCandidacy = await getFirstActiveCandidacyByCandidateId({
-        candidateId,
-      });
-
-      return activeCandidacy ? [activeCandidacy] : [];
-    },
+    candidacies: async ({ id: candidateId }: { id: string }) =>
+      getActiveCandidaciesByCandidateId({ candidateId }),
   },
   Query: {
     candidate_getCandidateWithCandidacy: (

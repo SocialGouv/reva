@@ -9,11 +9,13 @@ import { prismaClient } from "@/prisma/client";
 export const createCandidacy = async ({
   candidateId,
   typeAccompagnement,
+  certificationId,
   cohorteVaeCollectiveId,
   tx,
 }: {
   candidateId: string;
-  typeAccompagnement: CandidacyTypeAccompagnement;
+  typeAccompagnement?: CandidacyTypeAccompagnement;
+  certificationId?: string;
   cohorteVaeCollectiveId?: string;
   tx?: Prisma.TransactionClient;
 }) => {
@@ -25,6 +27,7 @@ export const createCandidacy = async ({
     data: {
       typeAccompagnement,
       candidateId,
+      certificationId,
       admissibility: { create: {} },
       examInfo: { create: {} },
       status: "PROJET",

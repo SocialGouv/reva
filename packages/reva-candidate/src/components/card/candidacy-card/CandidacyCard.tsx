@@ -9,6 +9,7 @@ import {
   FeasibilityDecision,
   JuryResult,
   OrganismModaliteAccompagnement,
+  TypeAccompagnement,
 } from "@/graphql/generated/graphql";
 
 type Feasibility = {
@@ -120,6 +121,7 @@ export const CandidacyCard = ({
   feasibility,
   jury,
   dropout,
+  typeAccompagnement,
 }: {
   candidacyId: string;
   certificationLabel?: string;
@@ -135,6 +137,7 @@ export const CandidacyCard = ({
   feasibility?: Feasibility;
   jury?: Jury;
   dropout?: Dropout;
+  typeAccompagnement: TypeAccompagnement;
 }) => {
   const router = useRouter();
 
@@ -148,6 +151,9 @@ export const CandidacyCard = ({
     >
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
+          <Tag small>
+            {typeAccompagnement === "ACCOMPAGNE" ? "Accompagné" : "Autonome"}
+          </Tag>
           {organismModalitateAccompagnement == "A_DISTANCE" && (
             <Tag small iconId="fr-icon-headphone-fill">
               À distance

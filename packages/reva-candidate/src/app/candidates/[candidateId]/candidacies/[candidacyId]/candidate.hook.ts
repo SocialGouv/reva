@@ -10,6 +10,7 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       candidate {
+        id
         firstname
         lastname
       }
