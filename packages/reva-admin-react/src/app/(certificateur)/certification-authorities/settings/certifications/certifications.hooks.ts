@@ -44,40 +44,25 @@ export const useCertificationsPage = () => {
     getCertificationAuthorityAndCertificationsResponse
       ?.account_getAccountForConnectedUser?.certificationAuthority;
 
-  const certificationAuthorityStructuresCertifications = useMemo(() => {
-    const certifications: {
-      id: string;
-      label: string;
-      codeRncp: string;
-    }[] = [];
+  const certifications = useMemo(() => {
+    const structureIds = new Set<string>();
 
     for (const cas of certificationAuthority?.certificationAuthorityStructures ||
       []) {
       for (const c of cas.certifications) {
-        if (certifications.findIndex((cert) => cert.id === c.id) === -1) {
-          certifications.push(c);
-        }
+        structureIds.add(c.id);
       }
     }
 
-    return certifications;
-  }, [certificationAuthority?.certificationAuthorityStructures]);
-
-  const certifications = useMemo(
-    () =>
-      certificationAuthorityStructuresCertifications.map((c) => ({
-        id: c.id,
-        label: `${c.codeRncp} - ${c.label}`,
-        selected:
-          certificationAuthority?.certifications.findIndex(
-            (cert) => cert.id === c.id,
-          ) != -1,
-      })),
-    [
-      certificationAuthority?.certifications,
-      certificationAuthorityStructuresCertifications,
-    ],
-  );
+    return certificationAuthority?.certifications?.map((c) => ({
+      id: c.id,
+      label: `${c.codeRncp} - ${c.label}`,
+      selected: structureIds.has(c.id),
+    }));
+  }, [
+    certificationAuthority?.certifications,
+    certificationAuthority?.certificationAuthorityStructures,
+  ]);
 
   return {
     certificationAuthority,
