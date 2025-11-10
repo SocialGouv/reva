@@ -21,7 +21,7 @@ export type S3File = {
   allowedFileTypes: string[];
 };
 
-const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
+const SIGNED_URL_EXPIRE_SECONDS = 60 * 30;
 
 const createS3Client = () => {
   if (
