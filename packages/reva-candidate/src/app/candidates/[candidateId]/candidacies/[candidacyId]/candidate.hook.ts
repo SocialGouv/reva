@@ -13,6 +13,7 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE = graphql(`
         id
         firstname
         lastname
+        givenName
       }
       certification {
         label

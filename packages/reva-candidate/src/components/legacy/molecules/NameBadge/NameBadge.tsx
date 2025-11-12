@@ -28,16 +28,18 @@ export const NameBadge = ({
   "data-testid": dataTest,
   firstname,
   lastname,
+  givenName,
 }: {
   as: React.ElementType;
   className?: string;
   "data-testid"?: string;
   firstname?: string;
   lastname?: string;
+  givenName?: string;
 }) => {
   return (
     <BasicNameBadge as={as} className={className} data-testid={dataTest}>
-      {firstname} {lastname}
+      {givenName ? givenName : lastname} {firstname}
     </BasicNameBadge>
   );
 };

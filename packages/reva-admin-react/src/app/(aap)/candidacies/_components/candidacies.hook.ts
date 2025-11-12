@@ -71,6 +71,8 @@ const getCandidaciesByStatus = graphql(`
         id
         candidate {
           firstname
+          firstname2
+          firstname3
           lastname
           givenName
           department {

@@ -128,6 +128,8 @@ export default function CandidaciesPage() {
               key={candidacy.id}
               candidacyId={candidacy.id}
               candidateFirstname={candidacy.candidate?.firstname || ""}
+              candidateFirstname2={candidacy.candidate?.firstname2 || undefined}
+              candidateFirstname3={candidacy.candidate?.firstname3 || undefined}
               candidateLastname={candidacy.candidate?.lastname || ""}
               candidateGivenName={candidacy.candidate?.givenName || undefined}
               certificationLabel={

@@ -108,6 +108,8 @@ const StatusTag = ({
 export const CandidacyCard = ({
   candidacyId,
   candidateFirstname,
+  candidateFirstname2,
+  candidateFirstname3,
   candidateLastname,
   candidateGivenName,
   certificationLabel,
@@ -128,6 +130,8 @@ export const CandidacyCard = ({
 }: {
   candidacyId: string;
   candidateFirstname: string;
+  candidateFirstname2?: string;
+  candidateFirstname3?: string;
   candidateLastname: string;
   candidateGivenName?: string;
   certificationLabel?: string;
@@ -191,6 +195,8 @@ export const CandidacyCard = ({
             ? `${candidateGivenName} (${candidateLastname})`
             : candidateLastname}{" "}
           {candidateFirstname}
+          {candidateFirstname2 && <span>, {candidateFirstname2}</span>}
+          {candidateFirstname3 && <span>, {candidateFirstname3}</span>}
         </div>
 
         <p className="m-0 text-sm">

@@ -42,6 +42,7 @@ export default function Home() {
         data-testid="project-home-fullname"
         firstname={candidate?.firstname}
         lastname={candidate?.lastname}
+        givenName={candidate?.givenName || undefined}
       />
       <Dashboard />
     </PageLayout>

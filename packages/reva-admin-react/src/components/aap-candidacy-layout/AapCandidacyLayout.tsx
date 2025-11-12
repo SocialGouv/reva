@@ -86,11 +86,9 @@ export const AapCandidacyLayout = ({ children }: { children: ReactNode }) => {
       <CandidacyLayoutSideMenu isLoading={isLoadingMenu}>
         <div className="flex text-xl font-bold mt-2 md:mt-0 mb-2">
           <span className="fr-icon--xl fr-icon-user-fill mr-2" />
-          <span className="capitalize">
-            {candidate?.givenName
-              ? `${candidate.givenName.toLowerCase()} (${candidate.lastname.toLowerCase()})`
-              : candidate?.lastname.toLowerCase()}{" "}
-            {candidate?.firstname.toLowerCase()}
+          <span>
+            {candidate?.givenName ? candidate.givenName : candidate?.lastname}{" "}
+            {candidate?.firstname}
           </span>
         </div>
         <CandidacyModalities
