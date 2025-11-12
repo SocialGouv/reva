@@ -1,12 +1,12 @@
 import { faker } from "@faker-js/faker";
-import { LegalStatus, MaisonMereAAP } from "@prisma/client";
+import { LegalStatus, Prisma } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
 
 import { createAccountHelper } from "./create-account-helper";
 
 export const createMaisonMereAapHelper = async (
-  mmArgs?: Partial<MaisonMereAAP>,
+  mmArgs?: Partial<Prisma.MaisonMereAAPUncheckedCreateInput>,
 ) => {
   const account = await createAccountHelper();
 
@@ -29,3 +29,17 @@ export const createMaisonMereAapHelper = async (
     },
   });
 };
+
+export const attachCollaborateurAccountToMaisonMereAAP = async ({
+  maisonMereAAPId,
+  collaborateurAccountId,
+}: {
+  maisonMereAAPId: string;
+  collaborateurAccountId: string;
+}) =>
+  prismaClient.maisonMereAAPOnAccount.create({
+    data: {
+      accountId: collaborateurAccountId,
+      maisonMereAAPId,
+    },
+  });
