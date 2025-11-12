@@ -45,27 +45,37 @@ export const useCertificationsPage = () => {
       ?.account_getAccountForConnectedUser?.certificationAuthority;
 
   const certifications = useMemo(() => {
-    const certificationAuthorityCertificationIds = new Set<string>();
+    const selectedCertificationIds = new Set(
+      certificationAuthority?.certifications?.map((c) => c.id) || [],
+    );
 
-    for (const certification of certificationAuthority?.certifications || []) {
-      certificationAuthorityCertificationIds.add(certification.id);
-    }
+    const certificationsMap = new Map<
+      string,
+      { id: string; label: string; selected: boolean }
+    >();
 
-    return certificationAuthority?.certificationAuthorityStructures
-      ?.flatMap(
-        (certificationAuthorityStructure) =>
-          certificationAuthorityStructure.certifications,
-      )
-      .map((certification) => ({
-        id: certification.id,
-        label: `${certification.codeRncp} - ${certification.label}`,
-        selected: certificationAuthorityCertificationIds.has(certification.id),
-      }));
+    // On gère le cas où il y a plusieurs structures de certification
+    // On ajoute les certifications de chaque structure à la map
+    // On vérifie si la certification est déjà dans la map, si c'est le cas, on ne l'ajoute pas pour éviter les doublons
+    certificationAuthority?.certificationAuthorityStructures
+      ?.flatMap((structure) => structure.certifications)
+      .forEach((certification) => {
+        if (certificationsMap.has(certification.id)) {
+          return;
+        }
+
+        certificationsMap.set(certification.id, {
+          id: certification.id,
+          label: `${certification.codeRncp} - ${certification.label}`,
+          selected: selectedCertificationIds.has(certification.id),
+        });
+      });
+
+    return Array.from(certificationsMap.values());
   }, [
     certificationAuthority?.certifications,
     certificationAuthority?.certificationAuthorityStructures,
   ]);
-
   return {
     certificationAuthority,
     certifications,
