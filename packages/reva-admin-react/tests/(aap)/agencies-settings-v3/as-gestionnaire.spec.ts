@@ -325,6 +325,7 @@ test.describe("Gestionnaire AAP settings page", () => {
           { scope: "test" },
         ],
       });
+
       test("leads me to the user account v2 page when I click on the 'Modifier' button of a user account card", async ({
         page,
         msw,
@@ -346,6 +347,28 @@ test.describe("Gestionnaire AAP settings page", () => {
 
         await expect(page).toHaveURL(
           `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/user-accounts-v2/account-2/`,
+        );
+      });
+
+      test("leads me to the create user account v2 page when I click on the 'Créer un compte' button of the user accounts section", async ({
+        page,
+        msw,
+      }) => {
+        msw.use(
+          ...createSettingsHandlers({ informationsJuridiques: "A_JOUR" }),
+        );
+
+        await login({ role: "aap", page });
+
+        await page.goto(`/admin2/agencies-settings-v3/`);
+        await waitForPageQueries(page);
+        await page
+          .getByTestId("user-accounts")
+          .getByRole("button", { name: "Créer un compte" })
+          .click();
+
+        await expect(page).toHaveURL(
+          `/admin2/agencies-settings-v3/${MAISON_MERE_ID}/user-accounts-v2/add-user-account/`,
         );
       });
     });

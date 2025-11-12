@@ -61,6 +61,7 @@ export const UserAccountForm = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
           <Input
             label="Nom"
+            data-testid="lastname-input"
             state={errors.lastname ? "error" : "default"}
             stateRelatedMessage={errors.lastname?.message?.toString()}
             nativeInputProps={{
@@ -71,6 +72,7 @@ export const UserAccountForm = ({
           />
           <Input
             label="Prénom"
+            data-testid="firstname-input"
             state={errors.firstname ? "error" : "default"}
             stateRelatedMessage={errors.firstname?.message?.toString()}
             nativeInputProps={{
@@ -81,6 +83,7 @@ export const UserAccountForm = ({
           />
           <Input
             label="Adresse électronique de connexion"
+            data-testid="email-input"
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message?.toString()}
             nativeInputProps={{
