@@ -3,6 +3,7 @@ import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 
 import { candidateCanSubmitCandidacyToAap } from "@/utils/candidateCanSubmitCandidacyToAap.util";
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { CandidacyUseCandidateForDashboard } from "../../dashboard.hooks";
 import TileGroup from "../../tiles/TileGroup";
@@ -11,6 +12,7 @@ import { NoActionTile } from "./NoContactTile";
 
 interface NextActionTile {
   title: string;
+  description?: string;
   link?: string;
   action?: () => void;
 }
@@ -200,6 +202,9 @@ const getNextActionTiles = ({
           canSubmitAgainAfterJury),
       tile: {
         title: "Envoyer mon dossier de validation",
+        description: candidacy.readyForJuryEstimatedAt
+          ? `Date prévisionnelle de dépot le : ${formatIso8601Date(candidacy.readyForJuryEstimatedAt)}`
+          : undefined,
         link: ROUTES.DOSSIER_DE_VALIDATION,
       },
     },
@@ -227,6 +232,7 @@ export const NextActionTiles = ({
           <Tile
             key={tile.title}
             title={tile.title}
+            desc={tile.description}
             small
             orientation="horizontal"
             classes={{

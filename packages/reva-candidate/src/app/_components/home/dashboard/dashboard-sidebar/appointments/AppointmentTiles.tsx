@@ -9,40 +9,17 @@ import TileGroup from "../../tiles/TileGroup";
 import { GenericAppointmentTile } from "./GenericAppointmentTile";
 import { JurySessionTile } from "./JurySessionTile";
 import { NoRendezVousTile } from "./NoRendezVousTile";
-import { ReadyForJuryTile } from "./ReadyForJuryTile";
 
 export const AppointmentTiles = ({
   candidacy,
 }: {
   candidacy: CandidacyUseCandidateForDashboard;
 }) => {
-  // When the candidacy has a failed jury result,
-  // the user can submit another dossier de validation
-  const failedJuryResults = [
-    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
-    "FAILURE",
-    "CANDIDATE_EXCUSED",
-    "CANDIDATE_ABSENT",
-  ];
-
-  const canSubmitAgainAfterJury = failedJuryResults.includes(
-    candidacy.jury?.result || "",
-  );
-
-  const isReadyForJury =
-    candidacy.readyForJuryEstimatedAt &&
-    (candidacy.activeDossierDeValidation?.decision !== "PENDING" ||
-      canSubmitAgainAfterJury);
-
   const hasDateOfJurySession =
     candidacy.jury && isAfter(candidacy.jury.dateOfSession, new Date());
 
   const hasNoAppointment =
-    candidacy.appointments?.rows?.length === 0 &&
-    !isReadyForJury &&
-    !hasDateOfJurySession;
+    candidacy.appointments?.rows?.length === 0 && !hasDateOfJurySession;
 
   const { isFeatureActive } = useFeatureFlipping();
 
@@ -62,12 +39,6 @@ export const AppointmentTiles = ({
             type={appointment.type}
           />
         ))}
-
-        {isReadyForJury && (
-          <ReadyForJuryTile
-            readyForJuryEstimatedAt={candidacy.readyForJuryEstimatedAt!}
-          />
-        )}
 
         {hasDateOfJurySession && <JurySessionTile jury={candidacy.jury} />}
 
