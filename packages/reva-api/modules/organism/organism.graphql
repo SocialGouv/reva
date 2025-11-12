@@ -108,6 +108,7 @@ type MaisonMereAAP {
   dateExpirationCertificationQualiopi: Timestamp
   gestionnaire: Account!
   organisms: [Organism!]!
+  comptesCollaborateurs: [Account!]!
   statutValidationInformationsJuridiquesMaisonMereAAP: StatutValidationInformationsJuridiquesMaisonMereAAP!
   maisonMereAAPOnConventionCollectives: [MaisonMereAAPOnConventionCollective!]!
   legalInformationDocumentsDecisions(

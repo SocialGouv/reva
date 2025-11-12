@@ -34,6 +34,7 @@ import { createOrUpdateRemoteOrganismGeneralInformation } from "./features/creat
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
+import { getComptesCollaborateursByMaisonMereAAPId } from "./features/getComptesCollaborateursByMaisonMereAAPId";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
@@ -141,6 +142,8 @@ const unsafeResolvers = {
     }: {
       gestionnaireAccountId: string;
     }) => getAccountById({ id: gestionnaireAccountId }),
+    comptesCollaborateurs: ({ id: maisonMereAAPId }: { id: string }) =>
+      getComptesCollaborateursByMaisonMereAAPId({ maisonMereAAPId }),
     legalInformationDocumentsDecisions: (
       { id }: { id: string },
       {

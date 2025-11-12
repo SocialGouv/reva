@@ -64,6 +64,9 @@ export const resolversSecurityMap = {
   "MaisonMereAAP.organisms":
     isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
 
+  "MaisonMereAAP.comptesCollaborateurs":
+    isAdminOrGestionnaireOfMaisonMereAAPOfOrganismOrOwnerOfOrganism,
+
   "MaisonMereAAP.legalInformationDocuments": isAdmin,
 
   "MaisonMereAAP.legalInformationDocumentsDecisions":
