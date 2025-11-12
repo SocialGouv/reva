@@ -59,6 +59,7 @@ export const KeycloakProvider = ({
           onLoad: "check-sso",
           silentCheckSsoRedirectUri: `${window.location.origin}/admin2/silent-check-sso.html`,
           checkLoginIframe: true,
+          pkceMethod: "S256",
         };
 
         try {

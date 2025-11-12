@@ -150,6 +150,7 @@ const initKeycloak = async (params: InitKeycloakParams) => {
     onLoad: "check-sso",
     silentCheckSsoRedirectUri: `${window.location.origin}/vae-collective/silent-check-sso.html`,
     checkLoginIframe: false,
+    pkceMethod: "S256",
   };
 
   if (tokens) {

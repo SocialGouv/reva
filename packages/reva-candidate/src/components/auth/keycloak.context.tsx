@@ -143,6 +143,7 @@ const initKeycloak = async (params: InitKeycloakParams) => {
     onLoad: "check-sso",
     silentCheckSsoRedirectUri: `${window.location.origin}/candidat/silent-check-sso.html`,
     checkLoginIframe: false,
+    pkceMethod: "S256",
   };
 
   if (tokens) {
