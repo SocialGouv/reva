@@ -110,9 +110,14 @@ test.describe("Settings Add user account v2", () => {
           .fill("john.doe@example.com");
         await page.getByRole("button", { name: "Créer" }).click();
 
+        const mutationPromise = waitGraphQL(
+          page,
+          "createOrganismAccountForAddUserAccountPage",
+        );
+
         await page.getByRole("button", { name: "Créer" }).click();
 
-        await waitGraphQL(page, "createOrganismAccountForAddUserAccountPage");
+        await mutationPromise;
 
         await expect(page).toHaveURL("/admin2/agencies-settings-v3/");
       });
