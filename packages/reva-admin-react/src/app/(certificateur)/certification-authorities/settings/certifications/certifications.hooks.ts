@@ -45,20 +45,22 @@ export const useCertificationsPage = () => {
       ?.account_getAccountForConnectedUser?.certificationAuthority;
 
   const certifications = useMemo(() => {
-    const structureIds = new Set<string>();
+    const certificationAuthorityCertificationIds = new Set<string>();
 
-    for (const cas of certificationAuthority?.certificationAuthorityStructures ||
-      []) {
-      for (const c of cas.certifications) {
-        structureIds.add(c.id);
-      }
+    for (const certification of certificationAuthority?.certifications || []) {
+      certificationAuthorityCertificationIds.add(certification.id);
     }
 
-    return certificationAuthority?.certifications?.map((c) => ({
-      id: c.id,
-      label: `${c.codeRncp} - ${c.label}`,
-      selected: structureIds.has(c.id),
-    }));
+    return certificationAuthority?.certificationAuthorityStructures
+      ?.flatMap(
+        (certificationAuthorityStructure) =>
+          certificationAuthorityStructure.certifications,
+      )
+      .map((certification) => ({
+        id: certification.id,
+        label: `${certification.codeRncp} - ${certification.label}`,
+        selected: certificationAuthorityCertificationIds.has(certification.id),
+      }));
   }, [
     certificationAuthority?.certifications,
     certificationAuthority?.certificationAuthorityStructures,
