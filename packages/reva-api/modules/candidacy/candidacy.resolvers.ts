@@ -25,6 +25,7 @@ import {
   CandidacySortByFilter,
   CandidacyStatusFilter,
   CreateCandidacyInput,
+  GetCandidaciesForCertificationAuthorityInput,
   SearchOrganismFilter,
 } from "./candidacy.types";
 import { sendCandidacyArchivedEmailToCertificateur } from "./emails/sendCandidacyArchivedEmailToCertificateur";
@@ -39,6 +40,7 @@ import { createCandidacy } from "./features/createCandidacy";
 import { deleteExperienceFromCandidacy } from "./features/deleteExperienceFromCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getCandidacies } from "./features/getCandicacies";
+import { getCandidaciesForCertificationAuthority } from "./features/getCandidaciesForCertificationAuthority";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
@@ -214,6 +216,27 @@ const unsafeResolvers = {
         candidacyId,
         keycloakId: context.auth.userInfo?.sub || "",
         roles: context.auth.userInfo?.realm_access?.roles || [],
+      }),
+    candidacy_getCandidaciesForCertificationAuthority: async (
+      _: unknown,
+      {
+        certificationAuthorityId,
+        offset,
+        limit = 10,
+        searchFilter,
+        statusFilter,
+        sortByFilter,
+      }: GetCandidaciesForCertificationAuthorityInput,
+      context: GraphqlContext,
+    ) =>
+      getCandidaciesForCertificationAuthority({
+        certificationAuthorityId,
+        hasRole: context.auth.hasRole,
+        offset,
+        limit,
+        searchFilter,
+        statusFilter,
+        sortByFilter,
       }),
   },
   Mutation: {

@@ -5,6 +5,7 @@ import {
   defaultSecurity,
   isAdmin,
   isAdminOrCandidacyCompanion,
+  isAdminOrCertificationAuthority,
   isAdminOrManager,
   isAdminOrOwnerOfCandidate,
   isAnyone,
@@ -25,6 +26,8 @@ export const resolversSecurityMap = {
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
 
   "Query.getCandidacies": isAdminOrManager,
+  "Query.candidacy_getCandidaciesForCertificationAuthority":
+    isAdminOrCertificationAuthority,
 
   "Query.getCandidacyById": [canAccessCandidacy],
   "Query.candidacy_canAccessCandidacy": isAnyone,

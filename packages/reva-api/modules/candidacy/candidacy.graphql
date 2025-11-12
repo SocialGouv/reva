@@ -281,6 +281,15 @@ type Query {
     searchFilter: String
   ): CandidacyConventionCollectivePaginated!
   candidacy_canAccessCandidacy(candidacyId: ID!): Boolean!
+  candidacy_getCandidaciesForCertificationAuthority(
+    certificationAuthorityId: ID
+    cohorteVaeCollectiveId: ID
+    offset: Int
+    limit: Int
+    searchFilter: String
+    statusFilter: CandidacyStatusFilter
+    sortByFilter: CandidacySortByFilter
+  ): CandidacyPage!
 }
 
 # MUTATIONS

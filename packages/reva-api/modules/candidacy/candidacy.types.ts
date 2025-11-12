@@ -125,3 +125,12 @@ export interface CreateCandidacyInput {
   typeAccompagnement?: TypeAccompagnement;
   cohorteVaeCollectiveId?: string;
 }
+
+export interface GetCandidaciesForCertificationAuthorityInput {
+  certificationAuthorityId?: string;
+  offset?: number;
+  limit?: number;
+  searchFilter?: string;
+  statusFilter?: CandidacyStatusFilter;
+  sortByFilter?: CandidacySortByFilter;
+}
