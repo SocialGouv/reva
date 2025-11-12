@@ -2,6 +2,7 @@ import { Highlight } from "@codegouvfr/react-dsfr/Highlight";
 
 import { GestionnaireMaisonMereAAPSettingsSectionAccountList } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-section/GestionnaireMaisonMereAAPSettingsSectionAccountList";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 import { Account, MaisonMereAap, Organism } from "@/graphql/generated/graphql";
@@ -41,6 +42,9 @@ export const SettingsSummaryForGestionnaire = ({
   gestionnaireAccountId: string;
   isAdmin: boolean;
 }) => {
+  const { isFeatureActive } = useFeatureflipping();
+  const isUserAccountV2Featureactive = isFeatureActive("AAP_USER_ACCOUNT_V2");
+
   if (!maisonMereAAP) {
     return null;
   }
@@ -120,7 +124,11 @@ export const SettingsSummaryForGestionnaire = ({
         title="Comptes collaborateurs"
         isEditable={!isAdmin}
         disabled={!isGeneralInformationCompleted}
-        buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAP.id}/user-accounts/add-user-account`}
+        buttonOnClickHref={
+          isUserAccountV2Featureactive
+            ? `/agencies-settings-v3/${maisonMereAAP.id}/user-accounts-v2/add-user-account`
+            : `/agencies-settings-v3/${maisonMereAAP.id}/user-accounts/add-user-account`
+        }
         titleIconClass="fr-icon-team-fill"
         CustomBadge={<div />}
         status={hasOtherAccounts ? "COMPLETED" : "TO_COMPLETE"}
