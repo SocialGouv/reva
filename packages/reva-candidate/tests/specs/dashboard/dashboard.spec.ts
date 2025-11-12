@@ -37,7 +37,7 @@ test.describe("Authenticated on dashboard", () => {
 
     await expect(
       page.locator('[data-testid="project-home-fullname"]'),
-    ).toHaveText("John Doe");
+    ).toHaveText("Doe John");
   });
 
   test("shows logout button", async ({ page }) => {
