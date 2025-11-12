@@ -3,13 +3,10 @@ import { addDays, format, subDays } from "date-fns";
 import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
 
-const candidate = candidate1Data.data.candidate_getCandidateById;
-
 interface CandidacyFixture {
   data: {
     getCandidacyById: {
       firstAppointmentOccuredAt: string | null;
-      readyForJuryEstimatedAt: string | null;
       jury: {
         dateOfSession: number;
         timeSpecified: boolean;
@@ -80,7 +77,6 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
           appointments: {
             rows: [],
           },
-          readyForJuryEstimatedAt: null,
           jury: null,
         },
       },
@@ -183,88 +179,6 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
     });
   });
 
-  describe("ReadyForJuryTile", () => {
-    it("should display when ready for jury date is set and dossier decision is not pending", () => {
-      cy.fixture("candidacy1.json").then(
-        (initialCandidacy: CandidacyFixture) => {
-          const candidacy = resetAppointmentData(initialCandidacy);
-          const futureReadyDate = format(addDays(new Date(), 30), "yyyy-MM-dd");
-          candidacy.data.getCandidacyById.readyForJuryEstimatedAt =
-            futureReadyDate;
-          candidacy.data.getCandidacyById.activeDossierDeValidation = {
-            decision: "INCOMPLETE",
-          };
-
-          interceptGraphQL(candidacy);
-
-          cy.get('[data-testid="ready-for-jury-tile"]').should("be.visible");
-          cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
-        },
-      );
-    });
-
-    it("should not display when dossier decision is PENDING", () => {
-      cy.fixture("candidacy1.json").then(
-        (initialCandidacy: CandidacyFixture) => {
-          const candidacy = resetAppointmentData(initialCandidacy);
-          const futureReadyDate = format(addDays(new Date(), 30), "yyyy-MM-dd");
-          candidacy.data.getCandidacyById.readyForJuryEstimatedAt =
-            futureReadyDate;
-          candidacy.data.getCandidacyById.activeDossierDeValidation = {
-            decision: "PENDING",
-          };
-
-          interceptGraphQL(candidacy);
-
-          cy.get('[data-testid="ready-for-jury-tile"]').should("not.exist");
-          cy.get('[data-testid="no-rendez-vous-tile"]').should("be.visible");
-        },
-      );
-    });
-
-    describe("Post-Jury Scenarios", () => {
-      const failedJuryResults = [
-        "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-        "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-        "PARTIAL_SUCCESS_PENDING_CONFIRMATION",
-        "FAILURE",
-        "CANDIDATE_EXCUSED",
-        "CANDIDATE_ABSENT",
-      ];
-
-      failedJuryResults.forEach((juryResult) => {
-        it(`should display when candidate has a jury result of ${juryResult}`, () => {
-          cy.fixture("candidacy1.json").then(
-            (initialCandidacy: CandidacyFixture) => {
-              const candidacy = resetAppointmentData(initialCandidacy);
-              const futureReadyDate = format(
-                addDays(new Date(), 30),
-                "yyyy-MM-dd",
-              );
-              candidacy.data.getCandidacyById.readyForJuryEstimatedAt =
-                futureReadyDate;
-              candidacy.data.getCandidacyById.activeDossierDeValidation = {
-                decision: "PENDING",
-              };
-              candidacy.data.getCandidacyById.jury = {
-                result: juryResult,
-                dateOfSession: subDays(new Date(), 15).getTime(),
-                timeSpecified: false,
-              };
-
-              interceptGraphQL(candidacy);
-
-              cy.get('[data-testid="ready-for-jury-tile"]').should(
-                "be.visible",
-              );
-              cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
-            },
-          );
-        });
-      });
-    });
-  });
-
   describe("JurySessionTile", () => {
     it("should display when jury session is in the future", () => {
       cy.fixture("candidacy1.json").then(
@@ -312,10 +226,6 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
             addDays(new Date(), 5),
             "yyyy-MM-dd",
           );
-          const futureReadyDate = format(
-            addDays(new Date(), 30).getTime(),
-            "yyyy-MM-dd",
-          );
           const futureJuryDate = addDays(new Date(), 60).getTime();
 
           candidacy.data.getCandidacyById.appointments = {
@@ -327,8 +237,6 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
               },
             ],
           };
-          candidacy.data.getCandidacyById.readyForJuryEstimatedAt =
-            futureReadyDate;
           candidacy.data.getCandidacyById.activeDossierDeValidation = {
             decision: "INCOMPLETE",
           };
@@ -342,7 +250,6 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
           cy.get('[data-testid="rendez-vous-generique-tile"]').should(
             "be.visible",
           );
-          cy.get('[data-testid="ready-for-jury-tile"]').should("be.visible");
           cy.get('[data-testid="jury-session-tile"]').should("be.visible");
           cy.get('[data-testid="no-rendez-vous-tile"]').should("not.exist");
         },
