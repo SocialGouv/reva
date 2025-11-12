@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@codegouvfr/react-dsfr/Button";
-import { toDate } from "date-fns";
+import { toDate, isAfter } from "date-fns";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 
@@ -9,10 +9,10 @@ import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 
-import { useCandidaciesGuard } from "./candidacies.hook";
+import { useCandidacies } from "./candidacies.hook";
 
 export default function CandidaciesPage() {
-  const { candidate, isLoading } = useCandidaciesGuard();
+  const { candidate, isLoading } = useCandidacies();
 
   const router = useRouter();
 
@@ -89,15 +89,29 @@ export default function CandidaciesPage() {
                   )
                 : undefined
             }
-            fundable={candidacy.financeModule !== "hors_plateforme"}
             vaeCollective={!!candidacy.cohorteVaeCollective}
             vaeCollectiveCommanditaireLabel={
               candidacy.cohorteVaeCollective?.commanditaireVaeCollective
                 .raisonSociale
             }
             vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
-            status={candidacy.status}
+            currentStatus={candidacy.status}
+            previousStatus={
+              candidacy.candidacyStatuses.sort((a, b) =>
+                isAfter(a.createdAt, b.createdAt) ? 1 : -1,
+              )[1]?.status
+            }
+            firstAppointmentOccuredAt={
+              candidacy.firstAppointmentOccuredAt
+                ? toDate(candidacy.firstAppointmentOccuredAt)
+                : undefined
+            }
             feasibility={candidacy.feasibility}
+            readyForJuryEstimatedAt={
+              candidacy.readyForJuryEstimatedAt
+                ? toDate(candidacy.readyForJuryEstimatedAt)
+                : undefined
+            }
             jury={candidacy.jury}
             dropout={candidacy.candidacyDropOut}
           />

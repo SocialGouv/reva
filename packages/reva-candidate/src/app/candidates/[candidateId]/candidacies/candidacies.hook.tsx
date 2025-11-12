@@ -13,9 +13,9 @@ const GET_CANDIDATE_BY_ID_WITH_CANDIDACY_FOR_CANDIDACIES_GUARD = graphql(`
       candidacies {
         id
         sentAt
-        financeModule
         status
         typeAccompagnement
+        firstAppointmentOccuredAt
         candidacyStatuses {
           status
           createdAt
@@ -47,6 +47,7 @@ const GET_CANDIDATE_BY_ID_WITH_CANDIDACY_FOR_CANDIDACIES_GUARD = graphql(`
           decision
           feasibilityFileSentAt
         }
+        readyForJuryEstimatedAt
         jury {
           dateOfSession
           result
@@ -59,7 +60,7 @@ const GET_CANDIDATE_BY_ID_WITH_CANDIDACY_FOR_CANDIDACIES_GUARD = graphql(`
   }
 `);
 
-export const useCandidaciesGuard = () => {
+export const useCandidacies = () => {
   const { graphqlClient } = useGraphQlClient();
 
   const { candidateId } = useParams<{
