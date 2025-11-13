@@ -69,6 +69,21 @@ const dropOutCandidacyFourMonthsAgoMinusOneMinute = async ({
   });
 
 describe("Unifvae ayment request", () => {
+  const ensureCertificationWithRncp = async (label: string, rncpId: string) => {
+    const existingCertification = await prismaClient.certification.findUnique({
+      where: { rncpId },
+    });
+
+    if (existingCertification) {
+      return existingCertification;
+    }
+
+    return createCertificationHelper({
+      label,
+      rncpId,
+    });
+  };
+
   test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 4 months ago then succeed after 4 months", async () => {
     const candidacyInput = await createCandidacyHelper({
       candidacyArgs: {
@@ -274,12 +289,8 @@ describe("Unifvae ayment request", () => {
     ["DEAES", "36004"],
   ])(
     "should reject a payment request of more than 3200€ when the funding request has been sent the 02/06/2024 and the certification %s with rncp %s",
-    async () => {
-      const cert = await createCertificationHelper({ rncpId: "4495" });
-
-      if (!cert) {
-        throw new Error("Certification DEAS not found");
-      }
+    async (certificationName: string, rncpId: string) => {
+      const cert = await ensureCertificationWithRncp(certificationName, rncpId);
 
       const candidacyInput = await createCandidacyHelper({
         candidacyArgs: {
@@ -331,12 +342,8 @@ describe("Unifvae ayment request", () => {
     ["DEAES", "36004"],
   ])(
     "should accept a payment request of more than 3200€ when the funding request has been sent before the 02/06/2024 and the certification is %s with rncp %s",
-    async () => {
-      const cert = await createCertificationHelper({ rncpId: "4495" });
-
-      if (!cert) {
-        throw new Error("Certification DEAS not found");
-      }
+    async (certificationName: string, rncpId: string) => {
+      const cert = await ensureCertificationWithRncp(certificationName, rncpId);
       const candidacyInput = await createCandidacyHelper({
         candidacyArgs: {
           financeModule: "unifvae",

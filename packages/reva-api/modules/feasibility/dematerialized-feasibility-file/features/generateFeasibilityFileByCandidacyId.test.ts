@@ -121,7 +121,6 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
 
   const certification = await createCertificationHelper({
     label: "Manager de la performance",
-    rncpId: "99999",
     rncpLabel: "Manager de la performance",
     feasibilityFormat: FeasibilityFormat.DEMATERIALIZED,
   });
@@ -280,12 +279,13 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     "Utilisation des règles de base de calcul et du raisonnement mathématique",
   );
 
-  return { candidacyId: candidacy.id };
+  return { candidacyId: candidacy.id, certification };
 };
 
 describe("demat feasibility pdf generation", () => {
   let canonicalPdfLines: string[] = [];
   let structuredSections: StructuredSection[] = [];
+  let rncpId: string;
 
   const getSection = (sectionName: string) => {
     const section = structuredSections.find(({ name }) => name === sectionName);
@@ -323,8 +323,9 @@ describe("demat feasibility pdf generation", () => {
   };
 
   beforeAll(async () => {
-    const { candidacyId } = await setupCompleteDematerializedFeasibilityFile();
-
+    const { candidacyId, certification } =
+      await setupCompleteDematerializedFeasibilityFile();
+    rncpId = certification.rncpId;
     const pdfBuffer = await generateFeasibilityFileByCandidacyId(candidacyId);
 
     expect(pdfBuffer).toBeInstanceOf(Buffer);
@@ -445,7 +446,7 @@ describe("demat feasibility pdf generation", () => {
       `
         Certification visée
         Manager de la performance
-        RNCP 99999
+        RNCP ${rncpId}
         Option ou parcours :
         Option Performance
         Langue vivante 1 :

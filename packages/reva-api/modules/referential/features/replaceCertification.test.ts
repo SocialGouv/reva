@@ -5,6 +5,7 @@ import {
   CertificationJuryModality,
   CertificationJuryTypeOfModality,
   CertificationStatus,
+  Prisma,
 } from "@prisma/client";
 
 import { graphql } from "@/modules/graphql/generated";
@@ -46,17 +47,32 @@ const replaceCertificationMutation = graphql(`
   }
 `);
 
-// Generate unique RNCP codes for each test run to avoid conflicts
-const CURRENT_RNCP = `8${Date.now()}`;
-const NEW_RNCP = `9${Date.now()}`;
-const OTHER_RNCP = `9${Date.now() + 1}`;
 const NEW_INTITULE = "Intitulé de certification";
 
-async function createExistingCertification(rncpId = CURRENT_RNCP) {
-  return createCertificationHelper({
+type CertificationForReplacement = {
+  certification: Prisma.PromiseReturnType<typeof createCertificationHelper>;
+  targetRncpId: string;
+};
+
+async function createCertificationForReplacement(): Promise<CertificationForReplacement> {
+  const certification = await createCertificationHelper({
     status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
-    rncpId,
   });
+
+  const targetRncpId = certification.rncpId;
+
+  const updated = await prismaClient.certification.update({
+    where: { id: certification.id },
+    data: { rncpId: faker.string.uuid() },
+  });
+
+  return {
+    certification: {
+      ...certification,
+      rncpId: updated.rncpId,
+    },
+    targetRncpId,
+  };
 }
 
 async function createFormaCodeAndMockReferential() {
@@ -111,17 +127,10 @@ function getRegistryManagerGraphQLClient(
   });
 }
 
-beforeEach(async () => {
-  await prismaClient.certification.deleteMany({
-    where: {
-      rncpId: NEW_RNCP,
-    },
-  });
-});
-
 it("should add a new certification with the correct status", async () => {
   await createFormaCodeAndMockReferential();
-  const existingCertification = await createExistingCertification();
+  const { certification: existingCertification, targetRncpId } =
+    await createCertificationForReplacement();
 
   const { certificationRegistryManager } =
     await createStructureWithCertification(existingCertification.id);
@@ -132,7 +141,7 @@ it("should add a new certification with the correct status", async () => {
 
   const response = await graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP,
+      codeRncp: targetRncpId,
       certificationId: existingCertification.id,
     },
   });
@@ -144,7 +153,8 @@ it("should add a new certification with the correct status", async () => {
 
 it("should add a new certification with the correct base and formacode info", async () => {
   await createFormaCodeAndMockReferential();
-  const existingCertification = await createExistingCertification();
+  const { certification: existingCertification, targetRncpId } =
+    await createCertificationForReplacement();
 
   const { certificationRegistryManager } =
     await createStructureWithCertification(existingCertification.id);
@@ -155,14 +165,14 @@ it("should add a new certification with the correct base and formacode info", as
 
   const response = await graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP,
+      codeRncp: targetRncpId,
       certificationId: existingCertification.id,
     },
   });
 
   const newCertification = response.referential_replaceCertification;
 
-  expect(newCertification.codeRncp).toBe(NEW_RNCP);
+  expect(newCertification.codeRncp).toBe(targetRncpId);
   expect(newCertification.label).toBe(NEW_INTITULE);
 
   expect(newCertification.prerequisites).toHaveLength(2);
@@ -176,7 +186,8 @@ it("should add a new certification with the correct base and formacode info", as
 
 it("should add a new certification linked to the previous one", async () => {
   await createFormaCodeAndMockReferential();
-  const existingCertification = await createExistingCertification();
+  const { certification: existingCertification, targetRncpId } =
+    await createCertificationForReplacement();
 
   const { certificationRegistryManager } =
     await createStructureWithCertification(existingCertification.id);
@@ -187,7 +198,7 @@ it("should add a new certification linked to the previous one", async () => {
 
   const response = await graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP,
+      codeRncp: targetRncpId,
       certificationId: existingCertification.id,
     },
   });
@@ -210,10 +221,10 @@ it("should carry over the first version certification id of the previous certifi
 
   const firstVersionCertification = await createCertificationHelper({
     status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
-    rncpId: CURRENT_RNCP,
   });
 
-  const existingCertification = await createExistingCertification();
+  const { certification: existingCertification, targetRncpId } =
+    await createCertificationForReplacement();
 
   await prismaClient.certification.update({
     where: { id: existingCertification.id },
@@ -231,7 +242,7 @@ it("should carry over the first version certification id of the previous certifi
 
   const response = await graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP,
+      codeRncp: targetRncpId,
       certificationId: existingCertification.id,
     },
   });
@@ -273,7 +284,6 @@ it("should copy all relationships and data from the previous certification", asy
 
   const existingCertification = await createCertificationHelper({
     status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
-    rncpId: CURRENT_RNCP,
     certificationOnConventionCollective: {
       create: {
         ccnId: conventionCollective.id,
@@ -287,6 +297,12 @@ it("should copy all relationships and data from the previous certification", asy
       },
     },
     ...juryInfo,
+  });
+  const targetRncpId = existingCertification.rncpId;
+
+  await prismaClient.certification.update({
+    where: { id: existingCertification.id },
+    data: { rncpId: faker.string.uuid() },
   });
 
   const { certificationRegistryManager } =
@@ -315,7 +331,7 @@ it("should copy all relationships and data from the previous certification", asy
 
   const response = await graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP,
+      codeRncp: targetRncpId,
       certificationId: existingCertification.id,
     },
   });
@@ -377,11 +393,11 @@ it("should copy all relationships and data from the previous certification", asy
 });
 
 it("should throw an error if a certification with the same RNCP code already exists", async () => {
-  await createExistingCertification();
+  const { targetRncpId } = await createCertificationForReplacement();
 
   const certificationToReplace = await createCertificationHelper({
     status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
-    rncpId: NEW_RNCP,
+    rncpId: targetRncpId,
   });
 
   const { certificationRegistryManager } =
@@ -393,14 +409,14 @@ it("should throw an error if a certification with the same RNCP code already exi
 
   const promise = graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP, // This code already exists
+      codeRncp: targetRncpId, // This code already exists
       certificationId: certificationToReplace.id,
     },
   });
 
   await expect(promise).rejects.toThrow(
     getGraphQLError(
-      `Une certification avec le code RNCP ${NEW_RNCP} existe déjà`,
+      `Une certification avec le code RNCP ${targetRncpId} existe déjà`,
     ),
   );
 });
@@ -416,10 +432,11 @@ it("should throw an error if certification to replace does not exist", async () 
   });
 
   const nonExistentId = faker.string.uuid();
+  const nonExistentRncpId = faker.string.numeric(5);
 
   const promise = graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP,
+      codeRncp: nonExistentRncpId,
       certificationId: nonExistentId,
     },
   });
@@ -430,7 +447,8 @@ it("should throw an error if certification to replace does not exist", async () 
 });
 
 it("should throw an error if RNCP certification does not exist", async () => {
-  const existingCertification = await createExistingCertification();
+  const { certification: existingCertification } =
+    await createCertificationForReplacement();
 
   const { certificationRegistryManager } =
     await createStructureWithCertification(existingCertification.id);
@@ -446,27 +464,29 @@ it("should throw an error if RNCP certification does not exist", async () => {
     certificationRegistryManager,
   );
 
+  const nonExistentRncpId = faker.string.numeric(5);
+
   const promise = graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: OTHER_RNCP,
+      codeRncp: nonExistentRncpId,
       certificationId: existingCertification.id,
     },
   });
 
   await expect(promise).rejects.toThrow(
     getGraphQLError(
-      `La certification avec le code RNCP ${OTHER_RNCP} n'existe pas dans le référentiel RNCP`,
+      `La certification avec le code RNCP ${nonExistentRncpId} n'existe pas dans le référentiel RNCP`,
     ),
   );
 });
 
 it("should throw an error if a more recent version already exists", async () => {
   await createFormaCodeAndMockReferential();
-  const existingCertification = await createExistingCertification();
+  const { certification: existingCertification, targetRncpId } =
+    await createCertificationForReplacement();
 
   await createCertificationHelper({
     status: CertificationStatus.VALIDE_PAR_CERTIFICATEUR,
-    rncpId: OTHER_RNCP,
     previousVersionCertificationId: existingCertification.id,
   });
 
@@ -478,7 +498,7 @@ it("should throw an error if a more recent version already exists", async () => 
   );
   const promise = graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP,
+      codeRncp: targetRncpId,
       certificationId: existingCertification.id,
     },
   });
@@ -492,7 +512,8 @@ it("should throw an error if a more recent version already exists", async () => 
 
 it("should remove certification from candidacies in PROJET status", async () => {
   await createFormaCodeAndMockReferential();
-  const existingCertification = await createExistingCertification();
+  const { certification: existingCertification, targetRncpId } =
+    await createCertificationForReplacement();
 
   const { certificationRegistryManager } =
     await createStructureWithCertification(existingCertification.id);
@@ -514,7 +535,7 @@ it("should remove certification from candidacies in PROJET status", async () => 
 
   await graphqlClient.request(replaceCertificationMutation, {
     input: {
-      codeRncp: NEW_RNCP,
+      codeRncp: targetRncpId,
       certificationId: existingCertification.id,
     },
   });
@@ -538,7 +559,8 @@ it.each(nonProjetStatuses)(
   "should keep certification for candidacies in %s status",
   async (status: CandidacyStatusStep) => {
     await createFormaCodeAndMockReferential();
-    const existingCertification = await createExistingCertification();
+    const { certification: existingCertification, targetRncpId } =
+      await createCertificationForReplacement();
 
     const { certificationRegistryManager } =
       await createStructureWithCertification(existingCertification.id);
@@ -554,7 +576,7 @@ it.each(nonProjetStatuses)(
 
     await graphqlClient.request(replaceCertificationMutation, {
       input: {
-        codeRncp: NEW_RNCP,
+        codeRncp: targetRncpId,
         certificationId: existingCertification.id,
       },
     });
