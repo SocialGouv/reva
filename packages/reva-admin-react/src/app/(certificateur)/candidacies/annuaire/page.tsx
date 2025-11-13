@@ -13,6 +13,7 @@ import {
 
 import { useAnnuaire } from "./_components/annuaire.hook";
 import { CandidacyCard } from "./_components/CandidacyCard";
+import { FiltersSection } from "./_components/FiltersSection";
 
 export default function AnnuairePage() {
   const searchParams = useSearchParams();
@@ -99,11 +100,11 @@ export default function AnnuairePage() {
         />
       </div>
       <div className="flex gap-4">
-        <div className="bg-white w-1/4">Filter</div>
+        <FiltersSection />
         <div className="w-3/4">
           <div className="flex flex-col">
             <SearchResultsHeader
-              className="mb-2 mt-8"
+              className="mt-2 mb-4"
               defaultSearchFilter={paramsSearchFilter}
               onSearchFilterChange={onSearchFilterChange}
               resultCount={paginationInfo?.totalRows || 0}
