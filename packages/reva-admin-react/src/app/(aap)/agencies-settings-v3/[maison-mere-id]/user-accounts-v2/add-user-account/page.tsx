@@ -25,13 +25,13 @@ const AddUserAccountPage = () => {
 
   const handleFormSubmit = async (data: UserAccountFormData) => {
     try {
-      await createUserAccount.mutateAsync({
+      const result = await createUserAccount.mutateAsync({
         accountEmail: data.email,
         accountFirstname: data.firstname,
         accountLastname: data.lastname,
       });
       successToast("Compte créé");
-      router.push(backUrl);
+      router.push(`../${result.organism_createAccount?.id}`);
     } catch (e) {
       graphqlErrorToast(e);
     }

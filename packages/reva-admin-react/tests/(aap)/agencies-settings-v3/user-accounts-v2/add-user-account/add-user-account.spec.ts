@@ -119,7 +119,9 @@ test.describe("Settings Add user account v2", () => {
 
         await mutationPromise;
 
-        await expect(page).toHaveURL("/admin2/agencies-settings-v3/");
+        await expect(page).toHaveURL(
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/new-account-id/",
+        );
       });
     });
   });
