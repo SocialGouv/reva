@@ -80,6 +80,10 @@ const PaymentRequestUniFvaeInvoicePage = () => {
     candidacy,
   });
 
+  const endAccompagnementConfirmed =
+    candidacy?.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+    candidacy?.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
+
   const {
     register,
     control,
@@ -189,6 +193,7 @@ const PaymentRequestUniFvaeInvoicePage = () => {
         candidacy?.candidacyDropOut &&
         !candidacy.candidacyDropOut.proofReceivedByAdmin &&
         !candidacy.candidacyDropOut.dropOutConfirmedByCandidate &&
+        !endAccompagnementConfirmed &&
         isAfter(
           candidacy?.candidacyDropOut?.createdAt,
           sub(new Date(), { months: 4 }),
