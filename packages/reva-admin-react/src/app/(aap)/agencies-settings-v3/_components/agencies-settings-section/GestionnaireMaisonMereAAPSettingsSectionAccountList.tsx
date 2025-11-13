@@ -35,18 +35,6 @@ export const GestionnaireMaisonMereAAPSettingsSectionAccountList = ({
               className="flex justify-between items-center py-3 border-neutral-300 border-t last:border-b"
             >
               <div className="flex items-center gap-x-6">
-                {organism.modaliteAccompagnement === "A_DISTANCE" && (
-                  <i
-                    data-testid="remote-badge"
-                    className="fr-icon-headphone-fill fr-icon--sm"
-                  ></i>
-                )}
-                {organism.modaliteAccompagnement === "LIEU_ACCUEIL" && (
-                  <i
-                    data-testid="on-site-badge"
-                    className="fr-icon-home-4-fill fr-icon--sm"
-                  ></i>
-                )}
                 <div>
                   <span className="font-bold">
                     {account.firstname} {account.lastname}

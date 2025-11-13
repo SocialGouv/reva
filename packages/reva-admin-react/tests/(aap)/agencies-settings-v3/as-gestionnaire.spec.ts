@@ -299,9 +299,7 @@ test.describe("Gestionnaire AAP settings page", () => {
 
       const userAccounts = page.getByTestId("user-accounts");
       await expect(userAccounts.locator("li")).toHaveCount(3);
-      await expect(
-        userAccounts.getByTestId("account-2").getByTestId("on-site-badge"),
-      ).toBeVisible();
+
       await expect(userAccounts.getByTestId("account-3")).toContainText(
         "Catherine Doe",
       );
