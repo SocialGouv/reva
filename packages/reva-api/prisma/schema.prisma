@@ -59,7 +59,7 @@ model Certification {
   summary                                           String?
   status                                            CertificationStatus                                 @default(BROUILLON) @map("status")
   visible                                           Boolean                                             @default(false)
-  rncpId                                            String                                              @map("rncp_id") @db.VarChar(255)
+  rncpId                                            String                                              @unique @map("rncp_id") @db.VarChar(255)
   organismsAndRegions                               OrganismsOnRegionsAndCertifications[]
   createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
