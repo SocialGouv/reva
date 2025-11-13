@@ -1,7 +1,7 @@
 "use client";
 import SearchBar from "@codegouvfr/react-dsfr/SearchBar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Pagination } from "@/components/pagination/Pagination";
 import { SearchResultsHeader } from "@/components/search-results-header/SearchResultsHeader";
@@ -45,6 +45,10 @@ export default function AnnuairePage() {
     });
     return params;
   }, [searchParams]);
+
+  useEffect(() => {
+    setSearchFilter(paramsSearchFilter);
+  }, [paramsSearchFilter]);
 
   const onSearchFilterChange = useCallback(
     (filter: string) => {
