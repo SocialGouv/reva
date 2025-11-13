@@ -30,7 +30,7 @@ export const createCertificationHelper = async (
       feasibilityFormat: FeasibilityFormat.UPLOADED_PDF,
       rncpLabel: faker.lorem.word(),
       rncpLevel: 1,
-      rncpId: "37795",
+      rncpId: faker.string.numeric(5),
       rncpTypeDiplome: "HyperDoctorat" as const,
       rncpExpiresAt: faker.date.future(),
       rncpDeliveryDeadline: faker.date.future(),
