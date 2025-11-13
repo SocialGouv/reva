@@ -13,6 +13,9 @@ const GET_CANDIDACY_BY_ID_FOR_CANDIDACY_GUARD = graphql(`
       derniereDateActivite
       typeAccompagnement
       endAccompagnementStatus
+      candidate {
+        id
+      }
     }
   }
 `);

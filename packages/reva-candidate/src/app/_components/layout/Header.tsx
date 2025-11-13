@@ -6,6 +6,12 @@ import { useParams, usePathname } from "next/navigation";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
+const NAVIGATION_FORBIDDEN_PATHS = [
+  "/end-accompagnement",
+  "/candidacy-inactif",
+  "/candidacy-deleted",
+];
+
 const getNavigation = ({
   currentPathname,
   candidateHelpIsActive,
@@ -62,6 +68,7 @@ const getNavigation = ({
       : []),
   ];
 };
+
 export const Header = () => {
   const { authenticated, logout } = useKeycloakContext();
 
@@ -72,17 +79,17 @@ export const Header = () => {
     candidacyId: string;
   }>();
 
-  const isCandidacyDeletedPath = currentPathname.startsWith(
-    `/candidates/${candidateId}/candidacies/${candidacyId}/candidacy-deleted`,
-  );
-
   const { isFeatureActive } = useAnonymousFeatureFlipping();
 
   const candidateHelpIsActive = isFeatureActive("candidate-help");
   const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
+  const isForbiddenPath = NAVIGATION_FORBIDDEN_PATHS.some((path) =>
+    currentPathname.includes(path),
+  );
+
   const navigation =
-    !authenticated || isCandidacyDeletedPath
+    !authenticated || isForbiddenPath
       ? []
       : getNavigation({
           currentPathname,

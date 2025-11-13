@@ -37,6 +37,7 @@ export type CreateCandidacyEntityOptions = {
   candidate?: CandidateEntity | null;
   activeDossierDeValidation?: DossierDeValidationEntity | null;
   endAccompagnementStatus?: CandidacyEntity["endAccompagnementStatus"];
+  endAccompagnementDate?: CandidacyEntity["endAccompagnementDate"];
   appointments?: Candidacy["appointments"];
   jury?: JuryEntity | null;
   goalsCount?: number;
@@ -61,6 +62,7 @@ export const createCandidacyEntity = (
     feasibility,
     candidate,
     endAccompagnementStatus,
+    endAccompagnementDate,
     appointments,
   } = options;
 
@@ -101,6 +103,7 @@ export const createCandidacyEntity = (
     sentAt: null,
     candidate,
     endAccompagnementStatus,
+    endAccompagnementDate,
   };
 
   if (organism) {

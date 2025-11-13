@@ -21,24 +21,59 @@ export default function CandidaciesPage() {
   const { isFeatureActive } = useFeatureFlipping();
   const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
+  const inactifEnAttenteCandidacy = useMemo(() => {
+    return candidacies.find(
+      (candidacy) => candidacy.activite === "INACTIF_EN_ATTENTE",
+    );
+  }, [candidacies]);
+
+  const endAccompagnementPendingCandidacy = useMemo(() => {
+    return candidacies.find(
+      (candidacy) => candidacy.endAccompagnementStatus === "PENDING",
+    );
+  }, [candidacies]);
+
   useEffect(() => {
     if (isMultiCandidacyFeatureActive) {
+      if (inactifEnAttenteCandidacy) {
+        router.push(`./${inactifEnAttenteCandidacy.id}/candidacy-inactif`);
+      } else if (endAccompagnementPendingCandidacy) {
+        router.push(
+          `./${endAccompagnementPendingCandidacy.id}/end-accompagnement`,
+        );
+      }
       return;
     }
 
     if (candidacies.length > 0) {
       router.push(`./${candidacies[0].id}`);
     }
-  }, [candidacies, isMultiCandidacyFeatureActive, router]);
+  }, [
+    candidacies,
+    endAccompagnementPendingCandidacy,
+    inactifEnAttenteCandidacy,
+    isMultiCandidacyFeatureActive,
+    router,
+  ]);
+
+  if (isLoading) {
+    return <LoaderWithLayout />;
+  }
+
+  if (isMultiCandidacyFeatureActive) {
+    if (inactifEnAttenteCandidacy || endAccompagnementPendingCandidacy) {
+      return <LoaderWithLayout />;
+    }
+  }
 
   if (!isMultiCandidacyFeatureActive) {
-    if (isLoading || candidacies.length > 0) {
+    if (candidacies.length > 0) {
       return <LoaderWithLayout />;
     }
   }
 
   if (candidacies.length === 0) {
-    return <div>Vous n'avez pas de candidatures</div>;
+    return <p>Vous n'avez pas de candidatures</p>;
   }
 
   return (

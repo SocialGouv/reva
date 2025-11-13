@@ -19,25 +19,29 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (isError) {
-    return <div>Vous n'avez pas accès à cette candidature</div>;
+    return <p>Vous n'avez pas accès à cette candidature</p>;
   }
+
+  const isInactifEnAttente = candidacy?.activite === "INACTIF_EN_ATTENTE";
 
   const isEndAccompagnementPending =
     candidacy?.endAccompagnementStatus === "PENDING";
-
-  const isInactifEnAttente = candidacy?.activite === "INACTIF_EN_ATTENTE";
 
   if (
     isInactifEnAttente &&
     !INACTIF_PATHS.some((path) => pathname.includes(path))
   ) {
-    redirect("./candidacy-inactif");
+    redirect(
+      `/candidates/${candidacy?.candidate?.id}/candidacies/${candidacy?.id}/candidacy-inactif`,
+    );
   } else if (
     isEndAccompagnementPending &&
     !END_ACCOMPAGNEMENT_PATHS.some((path) => pathname.includes(path)) &&
     !INACTIF_PATHS.some((path) => pathname.includes(path))
   ) {
-    redirect("./end-accompagnement");
+    redirect(
+      `/candidates/${candidacy?.candidate?.id}/candidacies/${candidacy?.id}/end-accompagnement`,
+    );
   }
 
   return children;

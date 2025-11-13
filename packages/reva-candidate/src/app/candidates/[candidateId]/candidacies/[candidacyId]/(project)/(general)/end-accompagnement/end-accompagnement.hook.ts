@@ -10,6 +10,7 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_END_ACCOMPAGNEMENT = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       endAccompagnementStatus
+      endAccompagnementDate
       candidate {
         firstname
         firstname2
@@ -85,7 +86,9 @@ export const useEndAccompagnement = () => {
           endAccompagnement,
         }),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["candidacy"] });
+        queryClient.invalidateQueries({
+          queryKey: ["candidacy"],
+        });
       },
     },
   );

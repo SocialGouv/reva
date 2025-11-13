@@ -54,6 +54,7 @@ test.describe("End Accompagnement Page", () => {
       typeAccompagnement: "ACCOMPAGNE",
       feasibility,
       endAccompagnementStatus: "PENDING",
+      endAccompagnementDate: new Date().getTime(),
     });
 
     const { handlers, endAccompagnementWait } = endAccompagnementHandlers({

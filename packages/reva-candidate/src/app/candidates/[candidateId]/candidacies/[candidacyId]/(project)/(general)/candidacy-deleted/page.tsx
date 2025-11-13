@@ -1,11 +1,18 @@
 "use client";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { PageLayout } from "@/layouts/page.layout";
 
 export default function CandidacyDeletedPage() {
+  const router = useRouter();
+
+  const { isFeatureActive } = useFeatureFlipping();
+  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
+
   const { logout } = useKeycloakContext();
 
   return (
@@ -20,7 +27,12 @@ export default function CandidacyDeletedPage() {
           souhaitez en déposer une nouvelle, vous pouvez le faire depuis votre
           espace.
         </p>
-        <Button onClick={logout} priority="secondary">
+        <Button
+          onClick={
+            isMultiCandidacyFeatureActive ? () => router.push("../../") : logout
+          }
+          priority="secondary"
+        >
           Revenir à l'accueil
         </Button>
       </div>

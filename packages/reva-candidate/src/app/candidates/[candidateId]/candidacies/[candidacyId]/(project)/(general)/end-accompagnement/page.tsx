@@ -5,7 +5,7 @@ import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import z from "zod";
@@ -50,7 +50,6 @@ const schema = z.object({
 });
 
 export default function EndAccompagnementPage() {
-  const router = useRouter();
   const {
     handleSubmit,
     register,
@@ -99,7 +98,6 @@ export default function EndAccompagnementPage() {
         endAccompagnement,
       });
       toast.success("Décision enregistrée");
-      router.push("../");
     } catch (error) {
       graphqlErrorToast(error);
     }
@@ -111,11 +109,19 @@ export default function EndAccompagnementPage() {
       <FormOptionalFieldsDisclaimer className="mb-6" />
       <p className="text-xl mb-12">
         Votre accompagnateur a déclaré la fin de votre accompagnement sur ce
-        parcours de VAE en date du XX/XX/XXXX. Vous avez la possibilité de
-        confirmer ou de refuser cette fin d'accompagnement. Dans tous les cas,
-        vous aurez toujours accès à votre candidature pour finaliser votre VAE.
+        parcours de VAE
+        {candidacy.endAccompagnementDate
+          ? ` en date du ${format(new Date(candidacy.endAccompagnementDate), "dd/MM/yyyy")}`
+          : ""}
+        . Vous avez la possibilité de confirmer ou de refuser cette fin
+        d'accompagnement. Cette décision ne concerne que la candidature
+        ci-dessous. Dans tous les cas, vous aurez toujours accès à votre
+        candidature pour finaliser votre VAE.
       </p>
       <div className="mb-12">
+        <p className="text-md font-bold mb-4">
+          Candidature concernée par la fin d’accompagnement
+        </p>
         <Card
           start={getBadge({ modaliteAccompagnement })}
           imageComponent={null}
@@ -137,27 +143,27 @@ export default function EndAccompagnementPage() {
       </div>
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         <RadioButtons
-          legend="Voulez-vous accepter la fin de votre accompagnement pour ce parcours de VAE ?"
+          legend="Voulez-vous accepter la fin de votre accompagnement pour cette candidature de VAE ?"
           stateRelatedMessage={errors.endAccompagnement?.message}
           state={errors.endAccompagnement ? "error" : "default"}
           data-testid="candidacy-end-accompagnement-radio-buttons"
           className="hide-radio-img"
           options={[
             {
-              label: "Oui, mon accompagnement est terminé.",
+              label:
+                "Oui, mon accompagnement est terminé pour cette candidature.",
               illustration: null,
-              hintText:
-                "Votre parcours continue ! Prochaine étape : [déposer votre dossier de validation].",
+              hintText: "Votre parcours continue !",
               nativeInputProps: {
                 ...register("endAccompagnement"),
                 value: "CONFIRMED",
               },
             },
             {
-              label: "Non, je souhaite continuer mon accompagnement.",
+              label:
+                "Non, je souhaite continuer mon accompagnement pour cette candidature.",
               illustration: null,
-              hintText:
-                "Reprenez votre accompagnement comme précédemment. Prochaine étape : [déposer votre dossier de validation].",
+              hintText: "Reprenez votre accompagnement comme précédemment.",
               nativeInputProps: {
                 ...register("endAccompagnement"),
                 value: "REFUSED",
