@@ -133,4 +133,5 @@ export interface GetCandidaciesForCertificationAuthorityInput {
   searchFilter?: string;
   statusFilter?: CandidacyStatusFilter;
   sortByFilter?: CandidacySortByFilter;
+  cohorteVaeCollectiveId?: string;
 }
