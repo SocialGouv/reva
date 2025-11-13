@@ -8,65 +8,63 @@ import { Account } from "@/graphql/generated/graphql";
 export const GestionnaireMaisonMereAAPSettingsSectionAccountList = ({
   maisonMereAAPId,
   gestionnaireAccountId,
-  organisms,
   isAdmin,
+  comptesCollaborateurs,
 }: {
   maisonMereAAPId: string;
   gestionnaireAccountId: string;
-  organisms: {
-    accounts: Account[];
-    modaliteAccompagnement: "A_DISTANCE" | "LIEU_ACCUEIL";
-  }[];
   isAdmin?: boolean;
+  comptesCollaborateurs: Pick<
+    Account,
+    "id" | "email" | "firstname" | "lastname" | "disabledAt"
+  >[];
 }) => {
   const { isFeatureActive } = useFeatureflipping();
   const isUserAccountV2Featureactive = isFeatureActive("AAP_USER_ACCOUNT_V2");
 
   return (
     <ul className="ml-6 mb-8">
-      {organisms.map((organism) =>
-        organism.accounts
-          .filter((account) => account.id !== gestionnaireAccountId)
-          .filter((account) => isAdmin || !account.disabledAt)
-          .map((account) => (
-            <li
-              data-testid={account.id}
-              key={account.id}
-              className="flex justify-between items-center py-3 border-neutral-300 border-t last:border-b"
-            >
-              <div className="flex items-center gap-x-6">
-                <div>
-                  <span className="font-bold">
-                    {account.firstname} {account.lastname}
-                  </span>
-                  {" - "}
-                  {account.email}
-                </div>
+      {comptesCollaborateurs
+        .filter((account) => account.id !== gestionnaireAccountId)
+        .filter((account) => isAdmin || !account.disabledAt)
+        .map((account) => (
+          <li
+            data-testid={account.id}
+            key={account.id}
+            className="flex justify-between items-center py-3 border-neutral-300 border-t last:border-b"
+          >
+            <div className="flex items-center gap-x-6">
+              <div>
+                <span className="font-bold">
+                  {account.firstname} {account.lastname}
+                </span>
+                {" - "}
+                {account.email}
               </div>
-              <div className="flex justify-between items-center">
-                {!account.disabledAt && isAdmin && (
-                  <Impersonate accountId={account.id} size="small" />
-                )}
+            </div>
+            <div className="flex justify-between items-center">
+              {!account.disabledAt && isAdmin && (
+                <Impersonate accountId={account.id} size="small" />
+              )}
 
-                <Button
-                  linkProps={
-                    isUserAccountV2Featureactive
-                      ? {
-                          href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${account.id}`,
-                        }
-                      : {
-                          href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
-                        }
-                  }
-                  priority="tertiary no outline"
-                  size="small"
-                >
-                  {!account.disabledAt ? "Modifier" : "Visualiser"}
-                </Button>
-              </div>
-            </li>
-          )),
-      )}
+              <Button
+                linkProps={
+                  isUserAccountV2Featureactive
+                    ? {
+                        href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${account.id}`,
+                      }
+                    : {
+                        href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
+                      }
+                }
+                priority="tertiary no outline"
+                size="small"
+              >
+                {!account.disabledAt ? "Modifier" : "Visualiser"}
+              </Button>
+            </div>
+          </li>
+        ))}
     </ul>
   );
 };

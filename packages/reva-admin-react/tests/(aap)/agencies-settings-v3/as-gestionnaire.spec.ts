@@ -48,6 +48,36 @@ function createSettingsHandlers(args?: {
             statutValidationInformationsJuridiquesMaisonMereAAP:
               informationsJuridiques,
             isMCFCompatible,
+            comptesCollaborateurs: [
+              {
+                id: "account-1",
+                firstname: "John",
+                lastname: "Doe",
+                email: "joen.doe@example.com",
+                disabledAt: null,
+              },
+              {
+                id: "account-2",
+                firstname: "Alice",
+                lastname: "Doe",
+                email: "alice.doe@example.com",
+                disabledAt: null,
+              },
+              {
+                id: "account-3",
+                firstname: "Catherine",
+                lastname: "Doe",
+                email: "catherine.doe@example.com",
+                disabledAt: null,
+              },
+              {
+                id: "account-4",
+                firstname: "Bob",
+                lastname: "Doe",
+                email: "bob.doe@example.com",
+                disabledAt: null,
+              },
+            ],
             organisms: [
               {
                 id: "2be04b85-ed75-41fb-9248-97fc178ba664",
@@ -59,15 +89,6 @@ function createSettingsHandlers(args?: {
                 label: "Remote Organism",
                 modaliteAccompagnement: "A_DISTANCE",
                 modaliteAccompagnementRenseigneeEtValide: true,
-                accounts: [
-                  {
-                    id: "account-1",
-                    firstname: "John",
-                    lastname: "Doe",
-                    email: "joen.doe@example.com",
-                    disabledAt: null,
-                  },
-                ],
               },
               {
                 id: "29994a9a-f166-48b9-974f-f3b3dbccda19",
@@ -79,22 +100,6 @@ function createSettingsHandlers(args?: {
                 isVisibleInCandidateSearchResults: false,
                 isRemote: false,
                 isOnSite: true,
-                accounts: [
-                  {
-                    id: "account-2",
-                    firstname: "Alice",
-                    lastname: "Doe",
-                    email: "alice.doe@example.com",
-                    disabledAt: null,
-                  },
-                  {
-                    id: "account-3",
-                    firstname: "Catherine",
-                    lastname: "Doe",
-                    email: "catherine.doe@example.com",
-                    disabledAt: null,
-                  },
-                ],
               },
               {
                 id: "fb10a5d2-c081-418b-ab92-5a11314ada84",
@@ -106,15 +111,6 @@ function createSettingsHandlers(args?: {
                 label: "Another On-site Organism",
                 isRemote: false,
                 isOnSite: true,
-                accounts: [
-                  {
-                    id: "account-4",
-                    firstname: "Bob",
-                    lastname: "Doe",
-                    email: "bob.doe@example.com",
-                    disabledAt: null,
-                  },
-                ],
               },
               {
                 id: "513be886-4f99-44d3-8edd-6ba2987dccd0",
@@ -126,7 +122,6 @@ function createSettingsHandlers(args?: {
                 label: "Visible Organism",
                 isRemote: false,
                 isOnSite: true,
-                accounts: [],
               },
             ],
           },

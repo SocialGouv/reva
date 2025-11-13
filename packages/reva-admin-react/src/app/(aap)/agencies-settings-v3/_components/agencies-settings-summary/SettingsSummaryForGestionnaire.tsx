@@ -36,11 +36,16 @@ export const SettingsSummaryForGestionnaire = ({
   organism,
   gestionnaireAccountId,
   isAdmin,
+  comptesCollaborateurs,
 }: {
   maisonMereAAP: MaisonMereAap;
   organism: Organism;
   gestionnaireAccountId: string;
   isAdmin: boolean;
+  comptesCollaborateurs: Pick<
+    Account,
+    "id" | "email" | "firstname" | "lastname" | "disabledAt"
+  >[];
 }) => {
   const { isFeatureActive } = useFeatureflipping();
   const isUserAccountV2Featureactive = isFeatureActive("AAP_USER_ACCOUNT_V2");
@@ -60,17 +65,15 @@ export const SettingsSummaryForGestionnaire = ({
     maisonMereAAP: maisonMereAAP as MaisonMereAap,
   });
 
-  let otherAccounts = maisonMereAAP.organisms.reduce((acc, organism) => {
-    const accounts = organism.accounts.filter(
-      (account) => account.id != gestionnaireAccountId,
-    );
-    return [...acc, ...accounts];
-  }, [] as Account[]);
+  let otherAccounts = comptesCollaborateurs.filter(
+    (account) => account.id != gestionnaireAccountId,
+  );
 
   otherAccounts = isAdmin
     ? otherAccounts
     : otherAccounts.filter((account) => !account.disabledAt);
-  const hasOtherAccounts = otherAccounts.length > 0;
+
+  const hasOtherAccounts = !!otherAccounts.length;
 
   return (
     <div className="flex flex-col gap-8 mt-4 w-full">
@@ -137,9 +140,9 @@ export const SettingsSummaryForGestionnaire = ({
         {hasOtherAccounts ? (
           <GestionnaireMaisonMereAAPSettingsSectionAccountList
             gestionnaireAccountId={gestionnaireAccountId}
-            organisms={maisonMereAAP.organisms}
             maisonMereAAPId={maisonMereAAP.id}
             isAdmin={isAdmin}
+            comptesCollaborateurs={comptesCollaborateurs}
           />
         ) : (
           <p className="ml-10 md:w-4/5">

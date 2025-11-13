@@ -19,21 +19,18 @@ const MaisonMereAAPQuery = graphql(`
       }
       organisms {
         modaliteAccompagnement
-        accounts {
-          id
-        }
         nomPublic
         label
         id
         isVisibleInCandidateSearchResults
         remoteZones
-        accounts {
-          id
-          email
-          firstname
-          lastname
-          disabledAt
-        }
+      }
+      comptesCollaborateurs {
+        id
+        email
+        firstname
+        lastname
+        disabledAt
       }
     }
   }
@@ -102,12 +99,15 @@ export const useMaisonMereAAP = (id: string) => {
 
   const gestionnaireAccountId = maisonMereAAP?.gestionnaire.id;
 
+  const comptesCollaborateurs = maisonMereAAP?.comptesCollaborateurs;
+
   return {
     maisonMereAAPResponse,
     maisonMereAAPStatus,
     maisonMereAAP,
     remoteOrganism,
     gestionnaireAccountId,
+    comptesCollaborateurs,
     updateOrganismIsActive,
     updateMaisonMereIsSignalized,
     isAdmin,

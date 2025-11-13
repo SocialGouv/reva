@@ -19,6 +19,7 @@ const MaisonMereAapPage = () => {
     maisonMereAAP,
     remoteOrganism,
     gestionnaireAccountId,
+    comptesCollaborateurs,
     updateOrganismIsActive,
     updateMaisonMereIsSignalized,
     isAdmin,
@@ -114,6 +115,7 @@ const MaisonMereAapPage = () => {
       <SettingsSummaryForGestionnaire
         gestionnaireAccountId={gestionnaireAccountId}
         organism={remoteOrganism as Organism}
+        comptesCollaborateurs={comptesCollaborateurs || []}
         maisonMereAAP={maisonMereAAP as MaisonMereAap}
         isAdmin={isAdmin}
       />

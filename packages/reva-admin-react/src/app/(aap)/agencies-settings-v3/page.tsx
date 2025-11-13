@@ -36,8 +36,16 @@ const SettingsSummaryForGestionnaireSection = ({
 }: {
   isAdmin: boolean;
 }) => {
-  const { maisonMereAAP, organism, gestionnaireAccountId } =
-    useGestionnaireMaisonMereAAPSettings();
+  const {
+    maisonMereAAP,
+    comptesCollaborateurs,
+    organism,
+    gestionnaireAccountId,
+  } = useGestionnaireMaisonMereAAPSettings();
+
+  if (!maisonMereAAP || !comptesCollaborateurs || !organism) {
+    return null;
+  }
 
   return (
     <SettingsSummaryForGestionnaire
@@ -45,6 +53,7 @@ const SettingsSummaryForGestionnaireSection = ({
       organism={organism as Organism}
       gestionnaireAccountId={gestionnaireAccountId as string}
       isAdmin={isAdmin}
+      comptesCollaborateurs={comptesCollaborateurs}
     />
   );
 };

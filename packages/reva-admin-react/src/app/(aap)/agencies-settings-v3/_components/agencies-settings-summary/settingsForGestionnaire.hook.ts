@@ -24,13 +24,13 @@ const GestionnaireMaisonMereAAPSettingsInfoQuery = graphql(`
             id
             isVisibleInCandidateSearchResults
             remoteZones
-            accounts {
-              id
-              email
-              firstname
-              lastname
-              disabledAt
-            }
+          }
+          comptesCollaborateurs {
+            id
+            email
+            firstname
+            lastname
+            disabledAt
           }
         }
       }
@@ -62,11 +62,14 @@ export const useGestionnaireMaisonMereAAPSettings = () => {
     gestionnaireMaisonMerAAPSettingsResponse?.account_getAccountForConnectedUser
       ?.id;
 
+  const comptesCollaborateurs = maisonMereAAP?.comptesCollaborateurs;
+
   return {
     gestionnaireMaisonMerAAPSettingsResponse,
     gestionnaireMaisonMerAAPSettingsStatus,
     maisonMereAAP,
     organism,
     gestionnaireAccountId,
+    comptesCollaborateurs,
   };
 };
