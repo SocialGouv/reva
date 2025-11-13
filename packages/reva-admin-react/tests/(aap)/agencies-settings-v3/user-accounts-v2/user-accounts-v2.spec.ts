@@ -29,19 +29,14 @@ const createUserAccountV2Handlers = () => {
     graphQLResolver({
       organism_getMaisonMereAAPById: {
         id: "a8e32301-86b8-414b-8b55-af86d289adee",
-        organisms: [
+        comptesCollaborateurs: [
           {
-            id: "8475dff5-1c9b-4fb3-a8d9-93ada523d165",
-            accounts: [
+            id: "account-2",
+            firstname: "John",
+            lastname: "Doe",
+            organisms: [
               {
-                id: "account-2",
-                firstname: "John",
-                lastname: "Doe",
-                organisms: [
-                  {
-                    id: "8475dff5-1c9b-4fb3-a8d9-93ada523d165",
-                  },
-                ],
+                id: "8475dff5-1c9b-4fb3-a8d9-93ada523d165",
               },
             ],
           },

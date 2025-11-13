@@ -8,15 +8,12 @@ const getMaisonMerAAPUserAccountsQuery = graphql(`
   query getMaisonMerAAPUserAccounts($maisonMereAAPId: ID!) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       id
-      organisms {
+      comptesCollaborateurs {
         id
-        accounts {
+        firstname
+        lastname
+        organisms {
           id
-          firstname
-          lastname
-          organisms {
-            id
-          }
         }
       }
     }
@@ -41,9 +38,8 @@ export const useGestionnaireMaisonMereAAPUserAccount = ({
   });
 
   const userAccounts =
-    maisonMerAAPUserAccounts?.organism_getMaisonMereAAPById?.organisms?.flatMap(
-      (o) => o.accounts,
-    );
+    maisonMerAAPUserAccounts?.organism_getMaisonMereAAPById
+      .comptesCollaborateurs;
 
   const userAccount = userAccounts?.find((a) => a.id === userAccountId);
 
