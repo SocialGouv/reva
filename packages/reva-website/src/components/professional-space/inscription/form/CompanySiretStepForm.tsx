@@ -14,6 +14,7 @@ import { useProfessionalSpaceSubscriptionContext } from "@/components/profession
 import {
   sanitizedSiret,
   sanitizedText,
+  sanitizedTextAllowSpecialCharacters,
   sanitizedUrl,
 } from "@/utils/input-sanitization";
 
@@ -41,7 +42,7 @@ const zodSchema = z.object({
   companyLegalStatus: z.enum(legalStatuses, {
     required_error: "obligatoire",
   }),
-  companyName: sanitizedText(),
+  companyName: sanitizedTextAllowSpecialCharacters(),
   companyWebsite: z.union([z.literal(""), sanitizedUrl()]),
   managerFirstname: sanitizedText(),
   managerLastname: sanitizedText(),
