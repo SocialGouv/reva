@@ -140,5 +140,3 @@ export type OrganismUseCandidateForDashboard =
   CandidacyUseCandidateForDashboard["organism"];
 export type DossierDeValidationUseCandidateForDashboard =
   CandidacyUseCandidateForDashboard["activeDossierDeValidation"];
-export type CandidacyDropOutUseCandidateForDashboard =
-  CandidacyUseCandidateForDashboard["candidacyDropOut"];
