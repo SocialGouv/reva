@@ -1,15 +1,18 @@
-import Tag from "@codegouvfr/react-dsfr/Tag";
-import { format, isAfter } from "date-fns";
+import { format, isAfter, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 
 import {
+  CandidacyStatus,
   CandidacyStatusStep,
   FeasibilityDecision,
   JuryResult,
   OrganismModaliteAccompagnement,
+  TypeAccompagnement,
 } from "@/graphql/generated/graphql";
+
+import { CandidacyTagsAap } from "../../candidacy-tags-aap/CandidacyTagsAap";
 
 type Feasibility = {
   dematerializedFeasibilityFile?: {
@@ -32,79 +35,6 @@ type Dropout = {
   createdAt: number;
 } | null;
 
-const StatusTag = ({
-  status,
-  feasibility,
-  jury,
-  dropout,
-}: {
-  status: CandidacyStatusStep;
-  feasibility?: Feasibility;
-  jury?: Jury;
-  dropout?: Dropout;
-}) => {
-  const isSentToCandidate =
-    !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;
-  const hasCandidateConfirmed =
-    !!feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt;
-  const isJuryUpcoming = jury && isAfter(jury.dateOfSession, new Date());
-
-  const resultIsSuccess =
-    jury?.result === "FULL_SUCCESS_OF_FULL_CERTIFICATION" ||
-    jury?.result === "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION";
-  const resultIsPartialSuccess =
-    jury?.result === "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION" ||
-    jury?.result === "PARTIAL_SUCCESS_PENDING_CONFIRMATION" ||
-    jury?.result === "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION";
-
-  switch (true) {
-    case status === "ARCHIVE":
-      return <Tag small>Candidature supprimée</Tag>;
-    case !!dropout:
-      return <Tag small>Candidature abandonnée</Tag>;
-    case status === "PROJET":
-      return <Tag small>Projet en cours d'édition</Tag>;
-    case status === "VALIDATION":
-      return <Tag small>Nouvelle candidature</Tag>;
-    case status === "PRISE_EN_CHARGE":
-      return <Tag small>Candidature prise en charge</Tag>;
-    case status === "PARCOURS_ENVOYE":
-      return <Tag small>Parcours envoyé</Tag>;
-    case status === "PARCOURS_CONFIRME":
-      return <Tag small>Parcours confirmé par le candidat</Tag>;
-    case isSentToCandidate &&
-      !hasCandidateConfirmed &&
-      feasibility.decision === "DRAFT":
-      return <Tag small>Dossier de faisabilité envoyé au candidat</Tag>;
-    case isSentToCandidate &&
-      hasCandidateConfirmed &&
-      feasibility.decision === "DRAFT":
-      return <Tag small>Dossier de faisabilité confirmé par le candidat</Tag>;
-    case status === "DOSSIER_FAISABILITE_ENVOYE":
-      return <Tag small>Dossier de faisabilité envoyé au certificateur</Tag>;
-    case status === "DOSSIER_FAISABILITE_INCOMPLET":
-      return <Tag small>Dossier de faisabilité incomplet</Tag>;
-    case status === "DOSSIER_FAISABILITE_RECEVABLE":
-      return <Tag small>Recevable</Tag>;
-    case status === "DOSSIER_FAISABILITE_NON_RECEVABLE":
-      return <Tag small>Non recevable</Tag>;
-    case status === "DOSSIER_DE_VALIDATION_ENVOYE" && !jury:
-      return <Tag small>Dossier de validation envoyé</Tag>;
-    case status === "DOSSIER_DE_VALIDATION_SIGNALE":
-      return <Tag small>Dossier de validation signalé</Tag>;
-    case isJuryUpcoming:
-      return <Tag small>Jury programmé</Tag>;
-    case jury && !isJuryUpcoming && !jury.result:
-      return <Tag small>En attente de résultat</Tag>;
-    case resultIsPartialSuccess:
-      return <Tag small>Réussite partielle</Tag>;
-    case resultIsSuccess:
-      return <Tag small>Réussite totale</Tag>;
-    default:
-      return null;
-  }
-};
-
 export const CandidacyCard = ({
   candidacyId,
   candidateFirstname,
@@ -117,14 +47,16 @@ export const CandidacyCard = ({
   departmentCode,
   organismLabel,
   organismModalitateAccompagnement,
-  candidacySentAt,
-  fundable,
   vaeCollective,
   vaeCollectiveCommanditaireLabel,
   vaeCollectiveProjetLabel,
   vaeCollectiveCohortLabel,
+  typeAccompagnement,
   status,
+  statusHistory,
+  firstAppointmentOccuredAt,
   feasibility,
+  readyForJuryEstimatedAt,
   jury,
   dropout,
 }: {
@@ -140,17 +72,31 @@ export const CandidacyCard = ({
   organismLabel?: string;
   organismModalitateAccompagnement?: OrganismModaliteAccompagnement;
   candidacySentAt?: Date;
-  fundable: boolean;
   vaeCollective?: boolean;
   vaeCollectiveCommanditaireLabel?: string;
   vaeCollectiveProjetLabel?: string;
   vaeCollectiveCohortLabel?: string;
+  typeAccompagnement: TypeAccompagnement;
   status: CandidacyStatusStep;
+  statusHistory: Omit<CandidacyStatus, "id">[];
+  firstAppointmentOccuredAt?: Date;
   feasibility?: Feasibility;
+  readyForJuryEstimatedAt?: Date;
   jury?: Jury;
   dropout?: Dropout;
 }) => {
   const router = useRouter();
+
+  const currentStatus = status;
+  const previousStatus = statusHistory.sort((a, b) =>
+    isAfter(a.createdAt, b.createdAt) ? 1 : -1,
+  )[1]?.status;
+
+  const validationStatus = statusHistory.find((s) => s.status === "VALIDATION");
+
+  const candidacySentAt = validationStatus
+    ? toDate(validationStatus.createdAt)
+    : undefined;
 
   return (
     <WhiteCard
@@ -162,22 +108,14 @@ export const CandidacyCard = ({
     >
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
-          {organismModalitateAccompagnement == "A_DISTANCE" && (
-            <Tag small iconId="fr-icon-headphone-fill">
-              À distance
-            </Tag>
-          )}
-          {organismModalitateAccompagnement == "LIEU_ACCUEIL" && (
-            <Tag small iconId="fr-icon-home-4-fill">
-              Sur site
-            </Tag>
-          )}
-          <Tag small>
-            {fundable ? "Finançable France VAE" : "Financement droit commun"}
-          </Tag>
-          {vaeCollective && <Tag small>VAE collective</Tag>}
-          <StatusTag
-            status={status}
+          <CandidacyTagsAap
+            currentStatus={currentStatus}
+            previousStatus={previousStatus}
+            typeAccompagnement={typeAccompagnement}
+            firstAppointmentOccuredAt={firstAppointmentOccuredAt}
+            readyForJuryEstimatedAt={readyForJuryEstimatedAt}
+            organismModalitateAccompagnement={organismModalitateAccompagnement}
+            vaeCollective={vaeCollective}
             jury={jury}
             feasibility={feasibility}
             dropout={dropout}

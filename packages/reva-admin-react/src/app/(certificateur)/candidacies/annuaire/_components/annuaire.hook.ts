@@ -29,6 +29,7 @@ const getCandidaciesForAnnuaire = graphql(`
     ) {
       rows {
         id
+        typeAccompagnement
         candidate {
           firstname
           lastname
@@ -65,6 +66,10 @@ const getCandidaciesForAnnuaire = graphql(`
           createdAt
         }
         status
+        candidacyStatuses {
+          status
+          createdAt
+        }
       }
       info {
         totalRows

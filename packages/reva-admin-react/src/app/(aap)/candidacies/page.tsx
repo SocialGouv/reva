@@ -145,18 +145,6 @@ export default function CandidaciesPage() {
               organismModalitateAccompagnement={
                 candidacy.organism?.modaliteAccompagnement
               }
-              candidacySentAt={
-                candidacy.candidacyStatuses.some(
-                  (s) => s.status === "VALIDATION",
-                )
-                  ? toDate(
-                      candidacy.candidacyStatuses.find(
-                        (s) => s.status === "VALIDATION",
-                      )?.createdAt || 0,
-                    )
-                  : undefined
-              }
-              fundable={candidacy.financeModule !== "hors_plateforme"}
               vaeCollective={!!candidacy.cohorteVaeCollective}
               vaeCollectiveCommanditaireLabel={
                 candidacy.cohorteVaeCollective?.commanditaireVaeCollective
@@ -164,7 +152,14 @@ export default function CandidaciesPage() {
               }
               vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
               status={candidacy.status}
+              statusHistory={candidacy.candidacyStatuses}
+              typeAccompagnement={candidacy.typeAccompagnement}
               feasibility={candidacy.feasibility}
+              readyForJuryEstimatedAt={
+                candidacy.readyForJuryEstimatedAt
+                  ? toDate(candidacy.readyForJuryEstimatedAt)
+                  : undefined
+              }
               jury={candidacy.jury}
               dropout={candidacy.candidacyDropOut}
             />

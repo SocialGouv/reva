@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@codegouvfr/react-dsfr/Button";
-import { toDate, isAfter } from "date-fns";
+import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 
@@ -67,7 +67,6 @@ export default function CandidaciesPage() {
         {candidacies.map((candidacy) => (
           <CandidacyCard
             key={candidacy.id}
-            typeAccompagnement={candidacy.typeAccompagnement}
             candidacyId={candidacy.id}
             certificationLabel={
               candidacy.certification
@@ -80,27 +79,15 @@ export default function CandidaciesPage() {
             organismModalitateAccompagnement={
               candidacy.organism?.modaliteAccompagnement
             }
-            candidacySentAt={
-              candidacy.candidacyStatuses.some((s) => s.status === "VALIDATION")
-                ? toDate(
-                    candidacy.candidacyStatuses.find(
-                      (s) => s.status === "VALIDATION",
-                    )?.createdAt || 0,
-                  )
-                : undefined
-            }
             vaeCollective={!!candidacy.cohorteVaeCollective}
             vaeCollectiveCommanditaireLabel={
               candidacy.cohorteVaeCollective?.commanditaireVaeCollective
                 .raisonSociale
             }
             vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
-            currentStatus={candidacy.status}
-            previousStatus={
-              candidacy.candidacyStatuses.sort((a, b) =>
-                isAfter(a.createdAt, b.createdAt) ? 1 : -1,
-              )[1]?.status
-            }
+            typeAccompagnement={candidacy.typeAccompagnement}
+            status={candidacy.status}
+            statusHistory={candidacy.candidacyStatuses}
             firstAppointmentOccuredAt={
               candidacy.firstAppointmentOccuredAt
                 ? toDate(candidacy.firstAppointmentOccuredAt)

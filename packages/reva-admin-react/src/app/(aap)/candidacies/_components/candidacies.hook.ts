@@ -89,12 +89,12 @@ const getCandidaciesByStatus = graphql(`
           nomPublic
           modaliteAccompagnement
         }
-        financeModule
+        status
         candidacyStatuses {
           status
           createdAt
         }
-        status
+        typeAccompagnement
         feasibility {
           dematerializedFeasibilityFile {
             sentToCandidateAt
@@ -109,6 +109,7 @@ const getCandidaciesByStatus = graphql(`
         candidacyDropOut {
           createdAt
         }
+        readyForJuryEstimatedAt
         jury {
           dateOfSession
           result

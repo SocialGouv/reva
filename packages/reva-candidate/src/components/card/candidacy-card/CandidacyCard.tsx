@@ -1,9 +1,10 @@
-import { format } from "date-fns";
+import { format, isAfter, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
 
 import {
+  CandidacyStatus,
   CandidacyStatusStep,
   FeasibilityDecision,
   JuryResult,
@@ -39,39 +40,48 @@ export const CandidacyCard = ({
   certificationLabel,
   organismLabel,
   organismModalitateAccompagnement,
-  candidacySentAt,
   vaeCollective,
   vaeCollectiveCommanditaireLabel,
   vaeCollectiveProjetLabel,
   vaeCollectiveCohortLabel,
-  currentStatus,
-  previousStatus,
+  typeAccompagnement,
+  status,
+  statusHistory,
   firstAppointmentOccuredAt,
   feasibility,
   readyForJuryEstimatedAt,
   jury,
   dropout,
-  typeAccompagnement,
 }: {
   candidacyId: string;
   certificationLabel?: string;
   organismLabel?: string;
   organismModalitateAccompagnement?: OrganismModaliteAccompagnement;
-  candidacySentAt?: Date;
   vaeCollective?: boolean;
   vaeCollectiveCommanditaireLabel?: string;
   vaeCollectiveProjetLabel?: string;
   vaeCollectiveCohortLabel?: string;
-  currentStatus: CandidacyStatusStep;
-  previousStatus?: CandidacyStatusStep;
+  typeAccompagnement: TypeAccompagnement;
+  status: CandidacyStatusStep;
+  statusHistory: Omit<CandidacyStatus, "id">[];
   firstAppointmentOccuredAt?: Date;
   feasibility?: Feasibility;
   readyForJuryEstimatedAt?: Date;
   jury?: Jury;
   dropout?: Dropout;
-  typeAccompagnement: TypeAccompagnement;
 }) => {
   const router = useRouter();
+
+  const currentStatus = status;
+  const previousStatus = statusHistory.sort((a, b) =>
+    isAfter(a.createdAt, b.createdAt) ? 1 : -1,
+  )[1]?.status;
+
+  const validationStatus = statusHistory.find((s) => s.status === "VALIDATION");
+
+  const candidacySentAt = validationStatus
+    ? toDate(validationStatus.createdAt)
+    : undefined;
 
   return (
     <WhiteCard

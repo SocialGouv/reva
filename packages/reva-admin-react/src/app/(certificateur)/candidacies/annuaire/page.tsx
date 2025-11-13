@@ -124,10 +124,9 @@ export default function AnnuairePage() {
                   certificationCode={candidacy.certification?.codeRncp || ""}
                   certificationLabel={candidacy.certification?.label || ""}
                   organismLabel={candidacy.organism?.label || ""}
-                  organismModalitateAccompagnement={
-                    candidacy.organism?.modaliteAccompagnement || ""
-                  }
-                  candidacyStatus={candidacy.status}
+                  typeAccompagnement={candidacy.typeAccompagnement}
+                  status={candidacy.status}
+                  statusHistory={candidacy.candidacyStatuses}
                   jury={candidacy.jury}
                   dropout={candidacy.candidacyDropOut}
                   feasibilityFileSentAt={

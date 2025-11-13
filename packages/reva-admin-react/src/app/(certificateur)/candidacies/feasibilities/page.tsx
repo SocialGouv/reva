@@ -37,6 +37,7 @@ const getFeasibilitiesQuery = graphql(`
         id
         feasibilityFileSentAt
         candidacy {
+          typeAccompagnement
           organism {
             nomPublic
             label
@@ -55,6 +56,10 @@ const getFeasibilitiesQuery = graphql(`
             }
           }
           status
+          candidacyStatuses {
+            status
+            createdAt
+          }
           candidacyDropOut {
             createdAt
           }

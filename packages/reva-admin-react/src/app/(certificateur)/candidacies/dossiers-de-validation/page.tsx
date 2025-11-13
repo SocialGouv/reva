@@ -47,7 +47,12 @@ const getDossiersDeValidationQuery = graphql(`
               code
             }
           }
+          typeAccompagnement
           status
+          candidacyStatuses {
+            status
+            createdAt
+          }
           candidacyDropOut {
             createdAt
           }

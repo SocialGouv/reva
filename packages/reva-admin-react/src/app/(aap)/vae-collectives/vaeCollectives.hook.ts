@@ -55,6 +55,7 @@ const getCandidaciesQuery = graphql(`
           createdAt
         }
         status
+        typeAccompagnement
         feasibility {
           dematerializedFeasibilityFile {
             sentToCandidateAt

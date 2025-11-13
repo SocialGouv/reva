@@ -88,14 +88,15 @@ export default function VAECollectivePage() {
                         )
                       : undefined
                   }
-                  fundable={candidacy.financeModule !== "hors_plateforme"}
                   vaeCollective={!!candidacy.cohorteVaeCollective}
                   vaeCollectiveCommanditaireLabel={
                     candidacy.cohorteVaeCollective?.commanditaireVaeCollective
                       .raisonSociale
                   }
                   vaeCollectiveCohortLabel={candidacy.cohorteVaeCollective?.nom}
+                  typeAccompagnement={candidacy.typeAccompagnement}
                   status={candidacy.status}
+                  statusHistory={candidacy.candidacyStatuses}
                   feasibility={candidacy.feasibility}
                   jury={candidacy.jury}
                   dropout={candidacy.candidacyDropOut}

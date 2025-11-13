@@ -35,6 +35,7 @@ const getJuriesQuery = graphql(`
         id
         candidacy {
           id
+          typeAccompagnement
           certification {
             codeRncp
             label
@@ -48,6 +49,10 @@ const getJuriesQuery = graphql(`
             }
           }
           status
+          candidacyStatuses {
+            status
+            createdAt
+          }
           candidacyDropOut {
             createdAt
           }

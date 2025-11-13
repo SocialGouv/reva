@@ -15,11 +15,9 @@ export type DropoutCandidacyStatus = {
 export const CandidacyStatusTag = ({
   status,
   jury,
-  dropout,
 }: {
   status: CandidacyStatusStep;
   jury?: JuryCandidacyStatus | null;
-  dropout?: DropoutCandidacyStatus;
 }) => {
   const isJuryUpcoming = jury && isAfter(jury.dateOfSession, new Date());
 
@@ -32,10 +30,6 @@ export const CandidacyStatusTag = ({
     jury?.result === "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION";
 
   switch (true) {
-    case status === "ARCHIVE":
-      return <Tag small>Dossier supprimé</Tag>;
-    case !!dropout:
-      return <Tag small>Dossier abandonné</Tag>;
     case status === "DOSSIER_FAISABILITE_ENVOYE":
       return <Tag small>Nouveau dossier de faisabilité</Tag>;
     case status === "DOSSIER_FAISABILITE_COMPLET":
@@ -47,7 +41,12 @@ export const CandidacyStatusTag = ({
     case status === "DOSSIER_FAISABILITE_NON_RECEVABLE":
       return <Tag small>Non recevable</Tag>;
     case status === "DOSSIER_DE_VALIDATION_ENVOYE" && !jury:
-      return <Tag small>Dossier de validation reçu</Tag>;
+      return (
+        <>
+          <Tag small>Dossier de validation reçu</Tag>
+          <Tag small>Jury à programmer</Tag>
+        </>
+      );
     case status === "DOSSIER_DE_VALIDATION_SIGNALE":
       return <Tag small>Dossier de validation signalé</Tag>;
     case isJuryUpcoming:

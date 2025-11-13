@@ -1,6 +1,6 @@
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tag from "@codegouvfr/react-dsfr/Tag";
-import { format } from "date-fns";
+import { format, isAfter } from "date-fns";
 
 import {
   CandidacyStatusTag,
@@ -8,7 +8,11 @@ import {
   JuryCandidacyStatus,
 } from "@/components/candidacy-status-tag/CandidacyStatusTag";
 
-import { CandidacyStatusStep } from "@/graphql/generated/graphql";
+import {
+  CandidacyStatusStep,
+  TypeAccompagnement,
+} from "@/graphql/generated/graphql";
+import { CandidacyStatus } from "@/graphql/generated/graphql";
 
 export const CandidacyCard = ({
   candidateFullName,
@@ -16,7 +20,8 @@ export const CandidacyCard = ({
   certificationCode,
   certificationLabel,
   organismLabel,
-  candidacyStatus,
+  status,
+  statusHistory,
   jury,
   dropout,
   departmentLabel,
@@ -25,7 +30,7 @@ export const CandidacyCard = ({
   dateOfSession,
   candidacyId,
   searchResultLink,
-  organismModalitateAccompagnement,
+  typeAccompagnement,
 }: {
   candidateFullName: string;
   cohorteVaeCollective: {
@@ -40,43 +45,45 @@ export const CandidacyCard = ({
   certificationCode: string;
   certificationLabel: string;
   organismLabel: string;
-  organismModalitateAccompagnement: string;
-  candidacyStatus: CandidacyStatusStep;
+  typeAccompagnement: TypeAccompagnement;
+  status: CandidacyStatusStep;
+  statusHistory: Omit<CandidacyStatus, "id">[];
   jury?: JuryCandidacyStatus | null;
   dropout?: DropoutCandidacyStatus | null;
   departmentLabel: string;
   candidacyId: string;
   searchResultLink: (candidacyId: string) => string;
 }) => {
+  const currentStatus = status;
+  const previousStatus = statusHistory.sort((a, b) =>
+    isAfter(a.createdAt, b.createdAt) ? 1 : -1,
+  )[1]?.status;
+
   return (
     <Card
       title={candidateFullName}
       shadow
       size="small"
       start={
-        <ul className="list-none m-0 mb-1 p-0 flex gap-2">
-          {cohorteVaeCollective && (
-            <li>
-              <Tag small>VAE Collective</Tag>
-            </li>
+        <div className="flex flex-row gap-2 mb-2">
+          {typeAccompagnement == "AUTONOME" && <Tag small>Autonome</Tag>}
+
+          {typeAccompagnement == "ACCOMPAGNE" && <Tag small>Accompagné</Tag>}
+
+          {!!cohorteVaeCollective && <Tag small>VAE Collective</Tag>}
+
+          {currentStatus != "ARCHIVE" && (
+            <CandidacyStatusTag status={currentStatus} jury={jury} />
           )}
-          {organismModalitateAccompagnement && (
-            <li>
-              <Tag small>
-                {organismModalitateAccompagnement === "LIEU_ACCUEIL"
-                  ? "Sur site"
-                  : "À distance"}
-              </Tag>
-            </li>
+
+          {currentStatus === "ARCHIVE" && previousStatus && (
+            <CandidacyStatusTag status={previousStatus} jury={jury} />
           )}
-          <li>
-            <CandidacyStatusTag
-              status={candidacyStatus}
-              jury={jury}
-              dropout={dropout}
-            />
-          </li>
-        </ul>
+
+          {!!dropout && <Tag small>Candidature abandonnée</Tag>}
+
+          {currentStatus === "ARCHIVE" && <Tag small>Candidature archivée</Tag>}
+        </div>
       }
       detail={departmentLabel}
       desc={
