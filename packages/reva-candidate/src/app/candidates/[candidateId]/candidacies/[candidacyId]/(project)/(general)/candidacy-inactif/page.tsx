@@ -44,8 +44,7 @@ const getText = ({
   if (hasFeasibilityAdmissible) {
     return {
       subtitle: `Vous êtes recevable et semblez inactif depuis bientôt 6 mois, vous
-        n'avez pas encore déposé votre dossier de validation. Continuez-vous
-        toujours votre parcours de VAE ? Sans réponse de votre part avant le
+        n'avez pas encore déposé votre dossier de validation pour cette candidature. Souhaitez-vous continuer votre candidature VAE ? Sans réponse de votre part avant le
         ${inactifEnAttenteThreshold}, votre parcours sera considéré en abandon.`,
       continueButtonText: "Oui, je continue mon parcours VAE",
       continueHintText:
@@ -54,7 +53,7 @@ const getText = ({
       stopHintText:
         "Votre parcours sera considéré en abandon. Vous ne pourrez pas finaliser votre VAE.",
       bottomCardText: `Recevable le ${format(
-        new Date(feasibilityDecisionAdmissibleAt || ""),
+        new Date(feasibilityDecisionAdmissibleAt || 0),
         "dd/MM/yyyy",
       )}`,
     };
@@ -62,8 +61,8 @@ const getText = ({
 
   return {
     subtitle: `Vous vous êtes inscrit sur France VAE depuis bientôt 2 mois,
-    mais vous n'avez pas encore déposé votre dossier de faisabilité.
-    Souhaitez-vous toujours réaliser votre projet de VAE ? Sans réponse de votre part avant le
+    mais vous n'avez pas encore déposé votre dossier de faisabilité pour cette candidature.
+    Souhaitez-vous poursuivre cette candidature VAE ? Sans réponse de votre part avant le
     ${inactifEnAttenteThreshold}, votre candidature sera supprimée.`,
     continueButtonText: "Oui, je continue ma candidature",
     continueHintText:
@@ -72,7 +71,7 @@ const getText = ({
     stopHintText:
       "Votre candidature sera supprimée. Vous avez la possibilité de candidater à nouveau.",
     bottomCardText: `Candidature créée le ${format(
-      new Date(candidacyCreatedAt || ""),
+      new Date(candidacyCreatedAt || 0),
       "dd/MM/yyyy",
     )}`,
   };
@@ -186,6 +185,9 @@ export default function CandidacyInactifPage() {
       <FormOptionalFieldsDisclaimer className="mb-6" />
       <p className="text-xl mb-12">{subtitle}</p>
       <div className="mb-12">
+        <p className="text-md font-bold mb-4">
+          Candidature concernée par l'inactivité
+        </p>
         <Card
           start={getBadge({ modaliteAccompagnement })}
           imageComponent={null}
@@ -198,7 +200,7 @@ export default function CandidacyInactifPage() {
       </div>
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         <RadioButtons
-          legend="Voulez-vous continuer votre projet de VAE ?"
+          legend="Voulez-vous continuer cette candidature VAE ?"
           stateRelatedMessage={errors.continueCandidacy?.message}
           state={errors.continueCandidacy ? "error" : "default"}
           data-testid="candidacy-inactif-radio-buttons"
