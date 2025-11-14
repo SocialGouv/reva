@@ -35,14 +35,17 @@ const BasicBackButton = ({
 export const BackButton = (props: Omit<BasicBackButtonProps, "onClick">) => {
   const router = useRouter();
 
-  const { candidacyId } = useParams<{
+  const { candidateId, candidacyId } = useParams<{
+    candidateId: string;
     candidacyId: string;
   }>();
 
   return (
     <BasicBackButton
       {...props}
-      onClick={() => router.push(`/${candidacyId}`)}
+      onClick={() =>
+        router.push(`/candidates/${candidateId}/candidacies/${candidacyId}`)
+      }
     />
   );
 };
