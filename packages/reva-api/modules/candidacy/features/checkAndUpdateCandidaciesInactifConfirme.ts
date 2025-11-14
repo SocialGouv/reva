@@ -1,6 +1,7 @@
 import { ActiviteStatut } from "@prisma/client";
 import { subDays } from "date-fns";
 
+import { processInBatches } from "@/modules/shared/batch/processInBatches";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
@@ -40,23 +41,29 @@ export const checkAndUpdateCandidaciesInactifConfirme = async () => {
         },
       });
 
-    const candidaciesToArchiveIds =
+    const candidaciesToArchiveIds = new Set(
       candidaciesInactifEnAttenteBeforeFeasibilityAdmissibleToArchive.map(
         ({ id }) => id,
-      );
-    if (candidaciesToArchiveIds.length) {
-      await archiveCandidacies({
-        candidacyIds: candidaciesToArchiveIds,
-        archivingReason: "INACTIVITE_CANDIDAT",
-      });
-      await prismaClient.candidacy.updateMany({
-        where: {
-          id: {
-            in: candidaciesToArchiveIds,
-          },
-        },
-        data: {
-          activite: ActiviteStatut.INACTIF_CONFIRME,
+      ),
+    );
+    if (candidaciesToArchiveIds.size) {
+      await processInBatches({
+        items: candidaciesToArchiveIds,
+        handler: async (batch) => {
+          await archiveCandidacies({
+            candidacyIds: batch,
+            archivingReason: "INACTIVITE_CANDIDAT",
+          });
+          await prismaClient.candidacy.updateMany({
+            where: {
+              id: {
+                in: batch,
+              },
+            },
+            data: {
+              activite: ActiviteStatut.INACTIF_CONFIRME,
+            },
+          });
         },
       });
     }
@@ -81,31 +88,37 @@ export const checkAndUpdateCandidaciesInactifConfirme = async () => {
         },
       });
 
-    const candidacyToDropOutIds =
+    const candidacyToDropOutIds = new Set(
       candidaciesInactifEnAttenteAfterFeasibilityAdmissibleToDropOut.map(
         ({ id }) => id,
-      );
+      ),
+    );
 
-    if (candidacyToDropOutIds.length) {
+    if (candidacyToDropOutIds.size) {
       const dropOutReasonId = await prismaClient.dropOutReason.findFirst({
         where: {
           label: "Inactivité depuis 6 mois",
         },
       });
-      await dropOutCandidacies({
-        candidacyIds: candidacyToDropOutIds,
-        dropOutReasonId: dropOutReasonId?.id || "",
-        proofReceivedByAdmin: true,
-      });
+      await processInBatches({
+        items: candidacyToDropOutIds,
+        handler: async (batch) => {
+          await dropOutCandidacies({
+            candidacyIds: batch,
+            dropOutReasonId: dropOutReasonId?.id || "",
+            proofReceivedByAdmin: true,
+          });
 
-      await prismaClient.candidacy.updateMany({
-        where: {
-          id: {
-            in: candidacyToDropOutIds,
-          },
-        },
-        data: {
-          activite: ActiviteStatut.INACTIF_CONFIRME,
+          await prismaClient.candidacy.updateMany({
+            where: {
+              id: {
+                in: batch,
+              },
+            },
+            data: {
+              activite: ActiviteStatut.INACTIF_CONFIRME,
+            },
+          });
         },
       });
     }

@@ -1,5 +1,6 @@
 import { add, startOfDay } from "date-fns";
 
+import { processInBatches } from "@/modules/shared/batch/processInBatches";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
@@ -20,35 +21,22 @@ export const deleteExpiredCandidacies = async () => {
 
   const candidacyIds = candidacies.map(({ id }) => id);
 
-  for (const candidacyId of candidacyIds) {
-    try {
-      await prismaClient.admissibility.delete({ where: { candidacyId } });
-    } catch (error) {
-      logger.error(error);
-    }
-
-    try {
-      await prismaClient.examInfo.delete({ where: { candidacyId } });
-    } catch (error) {
-      logger.error(error);
-    }
-
-    try {
-      await prismaClient.candidacyDropOut.delete({ where: { candidacyId } });
-    } catch (error) {
-      logger.error(error);
-    }
-
-    try {
-      await prismaClient.candidacyLog.deleteMany({ where: { candidacyId } });
-    } catch (error) {
-      logger.error(error);
-    }
-
-    try {
-      await prismaClient.candidacy.delete({ where: { id: candidacyId } });
-    } catch (error) {
-      logger.error(error);
-    }
-  }
+  await processInBatches({
+    items: candidacyIds,
+    handler: async (batch) => {
+      try {
+        // Cascade delete will automatically remove related records:
+        // admissibility, examInfo, candidacyDropOut, candidacyLog, etc.
+        await prismaClient.candidacy.deleteMany({
+          where: {
+            id: {
+              in: batch,
+            },
+          },
+        });
+      } catch (error) {
+        logger.error(error, `Failed to delete candidacy batch`);
+      }
+    },
+  });
 };

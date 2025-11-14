@@ -158,7 +158,7 @@ CronJob.from({
 
 // Delete expired candidacies
 CronJob.from({
-  cronTime: process.env.BACTH_DELETE_EXPIRED_CANDIDACIES || EVERY_DAY_AT_2_AM,
+  cronTime: process.env.BATCH_DELETE_EXPIRED_CANDIDACIES || EVERY_DAY_AT_2_AM,
   onTick: () =>
     runBatchIfActive({
       batchKey: "batch.delete-expired-candidacies",

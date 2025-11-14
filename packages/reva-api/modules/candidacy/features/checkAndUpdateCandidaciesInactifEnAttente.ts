@@ -1,6 +1,7 @@
 import { ActiviteStatut, CandidacyEmailType } from "@prisma/client";
 import { addDays, format, subDays } from "date-fns";
 
+import { processInBatches } from "@/modules/shared/batch/processInBatches";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
@@ -58,36 +59,47 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
       });
 
     if (candidaciesBeforeFeasibilityAdmissible.length) {
-      for (const candidacy of candidaciesBeforeFeasibilityAdmissible) {
-        const candidateEmail = candidacy.candidate?.email;
-        const candidateFullName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
-        const candidateKeycloakId = candidacy.candidate?.keycloakId;
-
-        await prismaClient.candidacy.update({
-          where: {
-            id: candidacy.id,
-          },
-          data: {
-            activite: ActiviteStatut.INACTIF_EN_ATTENTE,
-            dateInactifEnAttente: new Date(),
-          },
-        });
-        if (candidateEmail && candidateKeycloakId) {
-          await sendInactifEnAttenteBeforeFeasibilityAdmissibleToCandidate({
-            candidateEmail,
-            thresholdDateInactifConfirme,
-            candidateFullName,
-          });
-
-          await prismaClient.candidacyEmail.create({
+      await processInBatches({
+        items: candidaciesBeforeFeasibilityAdmissible,
+        handler: async (batch) => {
+          // Batch update candidacy statuses
+          const candidacyIds = batch.map((c) => c.id);
+          await prismaClient.candidacy.updateMany({
+            where: {
+              id: {
+                in: candidacyIds,
+              },
+            },
             data: {
-              candidacyId: candidacy.id,
-              emailType:
-                CandidacyEmailType.INACTIF_EN_ATTENTE_BEFORE_FEASIBILITY_ADMISSIBLE_TO_CANDIDATE,
+              activite: ActiviteStatut.INACTIF_EN_ATTENTE,
+              dateInactifEnAttente: new Date(),
             },
           });
-        }
-      }
+
+          // Send emails one by one
+          for (const candidacy of batch) {
+            const candidateEmail = candidacy.candidate?.email;
+            const candidateFullName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
+            const candidateKeycloakId = candidacy.candidate?.keycloakId;
+
+            if (candidateEmail && candidateKeycloakId) {
+              await sendInactifEnAttenteBeforeFeasibilityAdmissibleToCandidate({
+                candidateEmail,
+                thresholdDateInactifConfirme,
+                candidateFullName,
+              });
+
+              await prismaClient.candidacyEmail.create({
+                data: {
+                  candidacyId: candidacy.id,
+                  emailType:
+                    CandidacyEmailType.INACTIF_EN_ATTENTE_BEFORE_FEASIBILITY_ADMISSIBLE_TO_CANDIDATE,
+                },
+              });
+            }
+          }
+        },
+      });
     }
 
     // Candidatures inactives après avoir un dossier de faisabilité admissible
@@ -127,36 +139,47 @@ export const checkAndUpdateCandidaciesInactifEnAttente = async () => {
       });
 
     if (candidaciesAfterFeasibilityAdmissible.length) {
-      for (const candidacy of candidaciesAfterFeasibilityAdmissible) {
-        const candidateEmail = candidacy.candidate?.email;
-        const candidateFullName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
-        const candidateKeycloakId = candidacy.candidate?.keycloakId;
-
-        await prismaClient.candidacy.update({
-          where: {
-            id: candidacy.id,
-          },
-          data: {
-            activite: ActiviteStatut.INACTIF_EN_ATTENTE,
-            dateInactifEnAttente: new Date(),
-          },
-        });
-        if (candidateEmail && candidateKeycloakId) {
-          await sendInactifEnAttenteAfterFeasibilityAdmissibleToCandidate({
-            candidateEmail,
-            thresholdDateInactifConfirme,
-            candidateFullName,
-          });
-
-          await prismaClient.candidacyEmail.create({
+      await processInBatches({
+        items: candidaciesAfterFeasibilityAdmissible,
+        handler: async (batch) => {
+          // Batch update candidacy statuses
+          const candidacyIds = batch.map((c) => c.id);
+          await prismaClient.candidacy.updateMany({
+            where: {
+              id: {
+                in: candidacyIds,
+              },
+            },
             data: {
-              candidacyId: candidacy.id,
-              emailType:
-                CandidacyEmailType.INACTIF_EN_ATTENTE_AFTER_FEASIBILITY_ADMISSIBLE_TO_CANDIDATE,
+              activite: ActiviteStatut.INACTIF_EN_ATTENTE,
+              dateInactifEnAttente: new Date(),
             },
           });
-        }
-      }
+
+          // Send emails one by one
+          for (const candidacy of batch) {
+            const candidateEmail = candidacy.candidate?.email;
+            const candidateFullName = `${candidacy.candidate?.firstname} ${candidacy.candidate?.lastname}`;
+            const candidateKeycloakId = candidacy.candidate?.keycloakId;
+
+            if (candidateEmail && candidateKeycloakId) {
+              await sendInactifEnAttenteAfterFeasibilityAdmissibleToCandidate({
+                candidateEmail,
+                thresholdDateInactifConfirme,
+                candidateFullName,
+              });
+
+              await prismaClient.candidacyEmail.create({
+                data: {
+                  candidacyId: candidacy.id,
+                  emailType:
+                    CandidacyEmailType.INACTIF_EN_ATTENTE_AFTER_FEASIBILITY_ADMISSIBLE_TO_CANDIDATE,
+                },
+              });
+            }
+          }
+        },
+      });
     }
   } catch (error) {
     logger.error(error);
