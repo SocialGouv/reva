@@ -10,6 +10,12 @@ const getCandidacyByIdForFeasibilityPage = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       typeAccompagnement
+      warningOnFeasibilitySubmission
+      certification {
+        id
+        label
+        codeRncp
+      }
       feasibility {
         id
         decision

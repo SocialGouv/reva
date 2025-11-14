@@ -45,6 +45,8 @@ import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { canManageFeasibility } from "./features/canManageFeasibility";
 import { deleteFeasibilityIDFile } from "./features/deleteFeasibilityIDFile";
 import { getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole } from "./features/getFeasibilityListQueryWhereClauseForUserWithManageFeasibilityRole";
+import { getWarningOnFeasibilitySubmissionForCandidacyId } from "./features/getWarningOnFeasibealitySubmissionForCandidacyId";
+import { throwErrorOnFeasibilitySubmissionWarning } from "./features/throwErrorOnFeasibilitySubmissionWarning";
 import { validateFeasibility } from "./features/validateFeasibility";
 import {
   FeasibilityStatusFilter,
@@ -114,6 +116,13 @@ export const createFeasibility = async ({
       candidate: { select: { departmentId: true } },
     },
   });
+
+  // Get the feasibility submission warning
+  const feasibilitySubmissionWarning =
+    await getWarningOnFeasibilitySubmissionForCandidacyId(candidacyId);
+
+  // Throw error if the feasibility submission warning is not NONE to avoid further processing
+  throwErrorOnFeasibilitySubmissionWarning(feasibilitySubmissionWarning);
 
   const lastStatus = candidacy?.status;
 

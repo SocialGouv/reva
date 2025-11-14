@@ -6,6 +6,8 @@ import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers"
 import { prismaClient } from "@/prisma/client";
 
 import { sendNewFeasibilitySubmittedEmail } from "../../emails/sendNewFeasibilitySubmittedEmail";
+import { getWarningOnFeasibilitySubmissionForCandidacyId } from "../../features/getWarningOnFeasibealitySubmissionForCandidacyId";
+import { throwErrorOnFeasibilitySubmissionWarning } from "../../features/throwErrorOnFeasibilitySubmissionWarning";
 
 export const sendDFFToCertificationAuthority = async ({
   dematerializedFeasibilityFileId,
@@ -18,6 +20,13 @@ export const sendDFFToCertificationAuthority = async ({
   candidacyId: string;
   context: GraphqlContext;
 }) => {
+  // Get the feasibility submission warning
+  const feasibilitySubmissionWarning =
+    await getWarningOnFeasibilitySubmissionForCandidacyId(candidacyId);
+
+  // Throw error if the feasibility submission warning is not NONE to avoid further processing
+  throwErrorOnFeasibilitySubmissionWarning(feasibilitySubmissionWarning);
+
   const now = new Date().toISOString();
 
   const existingFeasibility = await prismaClient.feasibility.findFirst({

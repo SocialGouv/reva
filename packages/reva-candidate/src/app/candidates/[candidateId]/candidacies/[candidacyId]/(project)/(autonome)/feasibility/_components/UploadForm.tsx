@@ -10,12 +10,14 @@ type UploadFormProps = {
   errors: UploadFormType["formState"]["errors"];
   register: UploadFormType["register"];
   requirements: FeasibilityFormData["requirements"];
+  disabled?: boolean;
 };
 
 export const UploadForm = ({
   errors,
   register,
   requirements,
+  disabled,
 }: UploadFormProps) => {
   return (
     <div className="flex flex-col gap-4" data-testid="feasibility-upload-form">
@@ -26,6 +28,7 @@ export const UploadForm = ({
         nativeInputProps={{
           ...register("feasibilityFile"),
           accept: ".pdf",
+          disabled,
         }}
         state={errors.feasibilityFile ? "error" : "default"}
         stateRelatedMessage={errors.feasibilityFile?.[0]?.message}
@@ -36,6 +39,7 @@ export const UploadForm = ({
         hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
         nativeInputProps={{
           ...register("idFile"),
+          disabled,
         }}
         state={errors.idFile ? "error" : "default"}
         stateRelatedMessage={errors.idFile?.[0]?.message}
@@ -47,6 +51,7 @@ export const UploadForm = ({
         nativeInputProps={{
           ...register("documentaryProofFile"),
           accept: ".pdf",
+          disabled,
         }}
         state={errors.documentaryProofFile ? "error" : "default"}
         stateRelatedMessage={errors.documentaryProofFile?.[0]?.message}
@@ -58,6 +63,7 @@ export const UploadForm = ({
         nativeInputProps={{
           ...register("certificateOfAttendanceFile"),
           accept: ".pdf",
+          disabled,
         }}
         state={errors.certificateOfAttendanceFile ? "error" : "default"}
         stateRelatedMessage={errors.certificateOfAttendanceFile?.[0]?.message}
@@ -73,6 +79,7 @@ export const UploadForm = ({
             nativeInputProps: {
               required: true,
               ...register(`requirements.${optionId}.checked`),
+              disabled,
             },
           }))}
         />

@@ -24,9 +24,11 @@ const TILE_COMMON_PROPS = {
 export const SendFileCertificationAuthoritySection = ({
   sentToCertificationAuthorityAt,
   isReadyToBeSentToCertificationAuthority,
+  disabled,
 }: {
   sentToCertificationAuthorityAt?: Date | null;
   isReadyToBeSentToCertificationAuthority: boolean;
+  disabled?: boolean;
 }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -54,12 +56,15 @@ export const SendFileCertificationAuthoritySection = ({
   }
 
   if (isReadyToBeSentToCertificationAuthority) {
+    const tileProps = disabled
+      ? { disabled: true }
+      : { linkProps: { href: navigationUrl } };
     return (
       <Tile
         {...TILE_COMMON_PROPS}
         desc="Le candidat a validé son dossier, vous pouvez maintenant vérifier et envoyer le dossier au certificateur."
-        linkProps={{ href: navigationUrl }}
         data-testid="send-file-certification-authority-tile-ready"
+        {...tileProps}
       />
     );
   }

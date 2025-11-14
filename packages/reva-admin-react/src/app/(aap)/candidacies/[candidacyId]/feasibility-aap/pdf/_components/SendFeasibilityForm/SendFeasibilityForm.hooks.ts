@@ -48,6 +48,7 @@ const getCandidacyQuery = graphql(`
         contactFullName
         contactEmail
       }
+      warningOnFeasibilitySubmission
       feasibility {
         id
         decision

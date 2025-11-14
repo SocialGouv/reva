@@ -198,6 +198,27 @@ export const SendFeasibilityForm = (): React.ReactNode => {
   return (
     <div className="mt-12">
       <FeasibilityBanner feasibility={feasibility} />
+
+      {candidacy.warningOnFeasibilitySubmission ===
+        "MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED" && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="Une demande de recevabilité existe déjà pour ce diplôme"
+          description={`Vous avez déjà transmis une demande de recevabilité en cours pour ${candidacy?.certification?.label}, visée en totalité, en ${new Date().getFullYear()}. Si vous avez abandonné votre candidature, nous vous invitons à la reprendre ou à soumettre un nouveau dossier de faisabilité à partir de Janvier ${new Date().getFullYear() + 1}.`}
+        />
+      )}
+
+      {candidacy.warningOnFeasibilitySubmission ===
+        "MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED" && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="Nombre maximum de demandes de recevabilité atteintes"
+          description={`Vous avez déjà transmis 3 demandes de recevabilité sur des diplômes visés en totalité (l’ensemble des blocs) pour l’année ${new Date().getFullYear()}. Vous pourrez soumettre le dossier de faisabilité pour le diplôme ${candidacy?.certification?.label}, visé en totalité, à partir de Janvier ${new Date().getFullYear() + 1}.`}
+        />
+      )}
+
       <form
         onSubmit={handleFormSubmit}
         onReset={(e) => {
@@ -219,6 +240,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
                 ...register("certificationAuthorityId"),
                 required: true,
               }}
+              disabled={candidacy?.warningOnFeasibilitySubmission !== "NONE"}
             >
               <>
                 <option disabled hidden value="">
@@ -257,13 +279,16 @@ export const SendFeasibilityForm = (): React.ReactNode => {
               errors={errors}
               register={register}
               requirements={requirements}
+              disabled={candidacy?.warningOnFeasibilitySubmission !== "NONE"}
             />
             <FormButtons
               formState={{
                 isDirty: isDirty,
                 isSubmitting: isSubmitting,
                 canSubmit:
-                  certificationAuthorities.length > 0 && areRequirementsChecked,
+                  certificationAuthorities.length > 0 &&
+                  areRequirementsChecked &&
+                  candidacy?.warningOnFeasibilitySubmission === "NONE",
               }}
               backUrl="/"
               submitButtonLabel="Envoyer"

@@ -13,6 +13,10 @@ const getCandidacyById = graphql(`
       collectiveHourCount
       additionalHourCount
       isCertificationPartial
+      candidate {
+        firstname
+        lastname
+      }
       organism {
         contactAdministrativePhone
         contactAdministrativeEmail
@@ -59,6 +63,7 @@ const getCandidacyById = graphql(`
         label
         codeRncp
       }
+      warningOnFeasibilitySubmission
       feasibility {
         decision
         decisionSentAt
@@ -162,6 +167,7 @@ export const useAapFeasibilityPageLogic = () => {
   const feasibility = candidacy?.feasibility;
   const dematerializedFeasibilityFile =
     candidacy?.feasibility?.dematerializedFeasibilityFile;
+
   return {
     certification,
     candidacy,

@@ -43,9 +43,16 @@ type File {
   createdAt: Timestamp
 }
 
+enum FeasibilitySubmissionWarning {
+  NONE
+  MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED
+  MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED
+}
+
 type Candidacy {
   certificationAuthorities: [CertificationAuthority!]!
   feasibility: Feasibility
+  warningOnFeasibilitySubmission: FeasibilitySubmissionWarning!
 }
 
 type FeasibilityCountByCategory {

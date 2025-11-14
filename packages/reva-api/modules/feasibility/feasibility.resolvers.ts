@@ -13,6 +13,7 @@ import {
 import { resolversSecurityMap } from "./feasibility.security";
 import { FeasibilityCategoryFilter } from "./feasibility.types";
 import { getFeasibilityHistory } from "./features/getFeasibilityHistory";
+import { getWarningOnFeasibilitySubmissionForCandidacyId } from "./features/getWarningOnFeasibealitySubmissionForCandidacyId";
 import { revokeCertificationAuthorityDecision } from "./features/revokeCertificationAuthorityDecision";
 import { updateFeasibilityFileTemplateFirstReadAt } from "./features/updateFeasibilityFileTemplateFirstReadAt";
 
@@ -22,6 +23,8 @@ const unsafeResolvers = {
       getCertificationAuthorities({ candidacyId }),
     feasibility: ({ id: candidacyId }: { id: string }) =>
       getActiveFeasibilityByCandidacyid({ candidacyId }),
+    warningOnFeasibilitySubmission: ({ id: candidacyId }: { id: string }) =>
+      getWarningOnFeasibilitySubmissionForCandidacyId(candidacyId),
   },
   Feasibility: {
     decisionFile: ({

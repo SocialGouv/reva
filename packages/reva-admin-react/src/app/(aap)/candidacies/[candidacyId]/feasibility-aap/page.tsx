@@ -1,5 +1,6 @@
 "use client";
 
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { toDate } from "date-fns";
 
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
@@ -76,7 +77,7 @@ const AapFeasibilityPage = () => {
     dematerializedFeasibilityFile?.eligibilityRequirement ===
     "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
-  if (!feasibility) {
+  if (!candidacy || !feasibility) {
     return null;
   }
 
@@ -109,6 +110,27 @@ const AapFeasibilityPage = () => {
         Remplissez toutes les catégories afin de pouvoir envoyer le dossier au
         certificateur.
       </p>
+
+      {candidacy.warningOnFeasibilitySubmission ===
+        "MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED" && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="Une demande de recevabilité existe déjà pour ce diplôme"
+          description={`${candidacy.candidate.firstname} ${candidacy.candidate.lastname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label}, visée en totalité, en ${new Date().getFullYear()}. Vous pouvez reprendre la candidature existante si elle a été abandonnée, ou soumettre une nouvelle demande à partir de Janvier ${new Date().getFullYear() + 1}.`}
+        />
+      )}
+
+      {candidacy.warningOnFeasibilitySubmission ===
+        "MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED" && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="Nombre maximum de demandes de recevabilité atteintes"
+          description={`${candidacy.candidate.firstname} ${candidacy.candidate.lastname} a déjà transmis 3 demandes de recevabilité sur des certifications visées en totalité pour l’année ${new Date().getFullYear()}. Vous pourrez soumettre le dossier de faisabilité pour la certification ${certification?.label}, visée en totalité, à partir de Janvier ${new Date().getFullYear() + 1}.`}
+        />
+      )}
+
       {displayDecisionIncompleteAlert && (
         <DecisionIncompleteAlert
           decisionSentAt={decisionSentAt}
@@ -223,6 +245,7 @@ const AapFeasibilityPage = () => {
             isReadyToBeSentToCertificationAuthority={
               !!dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
             }
+            disabled={candidacy.warningOnFeasibilitySubmission !== "NONE"}
           />
         </ul>
       )}

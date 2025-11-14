@@ -44,6 +44,10 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
 
   const feasibility = candidacy.data?.getCandidacyById?.feasibility;
   const organism = candidacy.data?.getCandidacyById?.organism;
+  const candidate = candidacy.data?.getCandidacyById?.candidate;
+  const certification = candidacy.data?.getCandidacyById?.certification;
+  const warningOnFeasibilitySubmission =
+    candidacy.data?.getCandidacyById?.warningOnFeasibilitySubmission;
 
   const certificationAuthorities = useMemo(
     () => candidacy.data?.getCandidacyById?.certificationAuthorities || [],
@@ -161,7 +165,28 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
 
   return (
     <>
+      {warningOnFeasibilitySubmission ===
+        "MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED" && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="Une demande de recevabilité existe déjà pour ce diplôme"
+          description={`${candidate?.firstname} ${candidate?.lastname} a déjà transmis une demande de recevabilité pour la certification ${certification?.label}, visée en totalité, en ${new Date().getFullYear()}. Vous pouvez reprendre la candidature existante si elle a été abandonnée, ou soumettre une nouvelle demande à partir de Janvier ${new Date().getFullYear() + 1}.`}
+        />
+      )}
+
+      {warningOnFeasibilitySubmission ===
+        "MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED" && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="Nombre maximum de demandes de recevabilité atteintes"
+          description={`${candidate?.firstname} ${candidate?.lastname} a déjà transmis 3 demandes de recevabilité sur des certifications visées en totalité pour l’année ${new Date().getFullYear()}. Vous pourrez soumettre le dossier de faisabilité pour la certification ${certification?.label}, visée en totalité, à partir de Janvier ${new Date().getFullYear() + 1}.`}
+        />
+      )}
+
       <h5 className="mb-0">Pièces jointes</h5>
+
       <Alert
         severity="info"
         small
@@ -182,6 +207,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
           nativeInputProps={{
             ...register("feasibilityFile"),
             accept: ".pdf",
+            disabled: warningOnFeasibilitySubmission !== "NONE",
           }}
           state={errors.feasibilityFile ? "error" : "default"}
           stateRelatedMessage={errors.feasibilityFile?.[0]?.message}
@@ -192,6 +218,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
           hint="Formats supportés : jpg, png, pdf avec un poids maximum de 2Mo"
           nativeInputProps={{
             ...register("idFile"),
+            disabled: warningOnFeasibilitySubmission !== "NONE",
           }}
           state={errors.idFile ? "error" : "default"}
           stateRelatedMessage={errors.idFile?.[0]?.message}
@@ -203,6 +230,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
           nativeInputProps={{
             ...register("documentaryProofFile"),
             accept: ".pdf",
+            disabled: warningOnFeasibilitySubmission !== "NONE",
           }}
           state={errors.documentaryProofFile ? "error" : "default"}
           stateRelatedMessage={errors.documentaryProofFile?.[0]?.message}
@@ -214,6 +242,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
           nativeInputProps={{
             ...register("certificateOfAttendanceFile"),
             accept: ".pdf",
+            disabled: warningOnFeasibilitySubmission !== "NONE",
           }}
           state={errors.certificateOfAttendanceFile ? "error" : "default"}
           stateRelatedMessage={errors.certificateOfAttendanceFile?.[0]?.message}
@@ -232,6 +261,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
               value: certificationAuthorityId || "",
               required: true,
             }}
+            disabled={warningOnFeasibilitySubmission !== "NONE"}
           >
             <>
               <option disabled hidden value="">
@@ -270,6 +300,7 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
                 nativeInputProps: {
                   required: true,
                   ...register(`requirements.${optionId}.checked`),
+                  disabled: warningOnFeasibilitySubmission !== "NONE",
                 },
               }))}
             />
@@ -280,7 +311,10 @@ export const SendFeasibilityForm = (props: Props): React.ReactNode => {
           <Button
             priority="primary"
             type="submit"
-            disabled={sendFeasibility.isPending}
+            disabled={
+              sendFeasibility.isPending ||
+              warningOnFeasibilitySubmission !== "NONE"
+            }
           >
             Valider
           </Button>
