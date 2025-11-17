@@ -17,6 +17,7 @@ const juryResultLabels: { [key in JuryResult]: string } = {
   FAILURE: "Non validation",
   CANDIDATE_EXCUSED: "Candidat excusé sur justificatif",
   CANDIDATE_ABSENT: "Candidat non présent",
+  AWAITING_RESULT: "En attente de résultat",
 };
 
 const juryResultNotice: {
@@ -30,6 +31,7 @@ const juryResultNotice: {
   FAILURE: "error",
   CANDIDATE_EXCUSED: "new",
   CANDIDATE_ABSENT: "new",
+  AWAITING_RESULT: "info",
 };
 
 type JuryType = {
