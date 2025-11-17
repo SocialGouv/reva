@@ -317,7 +317,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows[0].id).toBe(feasibility.candidacy.id);
     });
 
-    test("should filter candidacies with jury SCHEDULED (jury actif sans résultat)", async () => {
+    test("should filter candidacies with jury SCHEDULED (jury actif)", async () => {
       const feasibility = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
@@ -327,11 +327,10 @@ describe("getCandidaciesForCertificationAuthority", () => {
         candidacyId: feasibility.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
         dateOfSession: new Date(),
-        dateOfResult: null,
         isActive: true,
       });
 
-      // Candidature avec résultat (ne doit pas matcher)
+      // Candidature sans jury actif (ne doit pas matcher)
       const feasibility2 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
@@ -340,9 +339,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
         candidacyId: feasibility2.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
         dateOfSession: new Date(),
-        dateOfResult: new Date(),
-        result: "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-        isActive: true,
+        isActive: false,
       });
 
       const result = await getCandidaciesForCertificationAuthority({
@@ -378,7 +375,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
         },
       });
 
-      // Candidature programmée (jury actif sans résultat)
+      // Candidature programmée (jury actif)
       const feasibility2 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
@@ -387,7 +384,6 @@ describe("getCandidaciesForCertificationAuthority", () => {
         candidacyId: feasibility2.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
         dateOfSession: new Date(),
-        dateOfResult: null,
         isActive: true,
       });
 
@@ -431,49 +427,6 @@ describe("getCandidaciesForCertificationAuthority", () => {
         certificationAuthorityId: certificationAuthority.id,
         hasRole: () => true,
         juryStatuses: ["TO_SCHEDULE"],
-      });
-
-      expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].id).toBe(feasibility.candidacy.id);
-    });
-
-    test("should filter candidacies with AWAITING_RESULT status (session future sans résultat)", async () => {
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 7);
-
-      const feasibility = await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-      );
-
-      await createJuryHelper({
-        candidacyId: feasibility.candidacy.id,
-        certificationAuthorityId: certificationAuthority.id,
-        dateOfSession: futureDate,
-        result: null,
-        isActive: true,
-      });
-
-      // Candidature avec session passée (ne doit pas matcher)
-      const pastDate = new Date();
-      pastDate.setDate(pastDate.getDate() - 7);
-
-      const feasibility2 = await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-      );
-      await createJuryHelper({
-        candidacyId: feasibility2.candidacy.id,
-        certificationAuthorityId: certificationAuthority.id,
-        dateOfSession: pastDate,
-        result: null,
-        isActive: true,
-      });
-
-      const result = await getCandidaciesForCertificationAuthority({
-        certificationAuthorityId: certificationAuthority.id,
-        hasRole: () => true,
-        juryStatuses: ["AWAITING_RESULT"],
       });
 
       expect(result.rows).toHaveLength(1);
@@ -577,6 +530,49 @@ describe("getCandidaciesForCertificationAuthority", () => {
       });
 
       expect(result.rows).toHaveLength(2);
+    });
+
+    test("should filter candidacies with AWAITING_RESULT (session future sans résultat)", async () => {
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 7);
+
+      const feasibility = await createFeasibilityUploadedPdfHelper(
+        { certificationAuthorityId: certificationAuthority.id },
+        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+      );
+
+      await createJuryHelper({
+        candidacyId: feasibility.candidacy.id,
+        certificationAuthorityId: certificationAuthority.id,
+        dateOfSession: futureDate,
+        result: null,
+        isActive: true,
+      });
+
+      // Candidature avec session passée (ne doit pas matcher)
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 7);
+
+      const feasibility2 = await createFeasibilityUploadedPdfHelper(
+        { certificationAuthorityId: certificationAuthority.id },
+        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+      );
+      await createJuryHelper({
+        candidacyId: feasibility2.candidacy.id,
+        certificationAuthorityId: certificationAuthority.id,
+        dateOfSession: pastDate,
+        result: null,
+        isActive: true,
+      });
+
+      const result = await getCandidaciesForCertificationAuthority({
+        certificationAuthorityId: certificationAuthority.id,
+        hasRole: () => true,
+        juryResults: ["AWAITING_RESULT" as any],
+      });
+
+      expect(result.rows).toHaveLength(1);
+      expect(result.rows[0].id).toBe(feasibility.candidacy.id);
     });
 
     test("should only include active juries in jury result filters", async () => {

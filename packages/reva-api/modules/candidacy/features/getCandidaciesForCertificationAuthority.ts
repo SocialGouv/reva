@@ -80,23 +80,11 @@ export const getCandidaciesForCertificationAuthority = async ({
           OR: [{ Jury: { none: {} } }, { Jury: { none: { isActive: true } } }],
         });
       } else if (juryStatus === "SCHEDULED") {
-        // Programmé: jury actif sans résultat
+        // Programmé: entrée dans la table jury avec au moins un is_active = true
         juryClause.push({
           Jury: {
             some: {
               isActive: true,
-              dateOfResult: null,
-            },
-          },
-        });
-      } else if (juryStatus === "AWAITING_RESULT") {
-        // En attente de résultat: date de session passée et pas encore de résultat
-        juryClause.push({
-          Jury: {
-            some: {
-              isActive: true,
-              dateOfSession: { gt: new Date() },
-              result: null,
             },
           },
         });
@@ -109,16 +97,46 @@ export const getCandidaciesForCertificationAuthority = async ({
 
   // Filtre par résultats de jury
   if (juryResults && juryResults.length > 0) {
-    additionalClauses.push({
-      Jury: {
-        some: {
-          isActive: true,
-          result: {
-            in: juryResults,
+    // Séparer les résultats réels des cas spéciaux
+    const hasAwaitingResult = (juryResults as string[]).includes(
+      "AWAITING_RESULT",
+    );
+    const actualResults = juryResults.filter(
+      (r) => (r as string) !== "AWAITING_RESULT",
+    );
+
+    const resultClauses: Prisma.CandidacyWhereInput[] = [];
+
+    // Résultats avec valeur
+    if (actualResults.length > 0) {
+      resultClauses.push({
+        Jury: {
+          some: {
+            isActive: true,
+            result: {
+              in: actualResults,
+            },
           },
         },
-      },
-    });
+      });
+    }
+
+    // En attente de résultat : date future ET result null
+    if (hasAwaitingResult) {
+      resultClauses.push({
+        Jury: {
+          some: {
+            isActive: true,
+            dateOfSession: { gt: new Date() },
+            result: null,
+          },
+        },
+      });
+    }
+
+    if (resultClauses.length > 0) {
+      additionalClauses.push({ OR: resultClauses });
+    }
   }
   const whereClause: Prisma.CandidacyWhereInput = {
     status: {

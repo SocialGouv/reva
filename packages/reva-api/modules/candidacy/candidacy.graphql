@@ -224,7 +224,6 @@ enum CandidacySortByFilter {
 enum JuryStatusFilter {
   TO_SCHEDULE
   SCHEDULED
-  AWAITING_RESULT
 }
 
 enum DistanceStatus {
