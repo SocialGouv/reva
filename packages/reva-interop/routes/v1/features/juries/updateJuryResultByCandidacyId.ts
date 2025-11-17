@@ -44,6 +44,7 @@ const resultatMapFromInteropToGql: Record<
   ECHEC: "FAILURE",
   CANDIDAT_EXCUSE: "CANDIDATE_EXCUSED",
   CANDIDAT_ABSENT: "CANDIDATE_ABSENT",
+  EN_ATTENTE_DE_RESULTAT: "AWAITING_RESULT",
 };
 
 export const updateJuryResultByCandidacyId = async (

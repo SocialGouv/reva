@@ -679,6 +679,7 @@ export const resultatJurySchema = {
     "ECHEC",
     "CANDIDAT_EXCUSE",
     "CANDIDAT_ABSENT",
+    "EN_ATTENTE_DE_RESULTAT",
   ],
   description: "Résultat d'un jury.\n",
   example: "SUCCES_TOTAL_CERTIFICATION_COMPLETE_SOUS_RESERVE",
