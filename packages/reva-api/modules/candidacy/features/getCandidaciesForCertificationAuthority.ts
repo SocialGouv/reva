@@ -29,6 +29,11 @@ export const getCandidaciesForCertificationAuthority = async ({
   searchFilter,
   sortByFilter,
   cohorteVaeCollectiveId,
+  feasibilityStatuses,
+  validationStatuses,
+  juryStatuses,
+  juryResults,
+  includeDropouts = false,
 }: GetCandidaciesForCertificationAuthorityInput & {
   hasRole(role: string): boolean;
 }) => {
@@ -36,6 +41,84 @@ export const getCandidaciesForCertificationAuthority = async ({
     throw new Error(
       "Vous n'avez pas les permissions nécessaires pour accéder à cette ressource",
     );
+  }
+
+  const additionalClauses: Prisma.CandidacyWhereInput[] = [];
+
+  // Filtre par statuts de faisabilité
+  if (feasibilityStatuses && feasibilityStatuses.length > 0) {
+    additionalClauses.push({
+      status: {
+        in: feasibilityStatuses,
+      },
+    });
+  }
+
+  // Filtre par statuts de validation
+  if (validationStatuses && validationStatuses.length > 0) {
+    additionalClauses.push({
+      status: {
+        in: validationStatuses,
+      },
+    });
+  }
+
+  // Filtre par statuts de passage devant le jury
+  if (juryStatuses && juryStatuses.length > 0) {
+    const juryClause: Prisma.CandidacyWhereInput[] = [];
+    juryStatuses.forEach((juryStatus) => {
+      if (juryStatus === "TO_SCHEDULE") {
+        // À programmer: DossierDeValidation actif avec décision PENDING ou COMPLETE
+        // ET (pas de jury OU seulement des jurys inactifs)
+        juryClause.push({
+          dossierDeValidation: {
+            some: {
+              isActive: true,
+              decision: { in: ["PENDING", "COMPLETE"] },
+            },
+          },
+          OR: [{ Jury: { none: {} } }, { Jury: { none: { isActive: true } } }],
+        });
+      } else if (juryStatus === "SCHEDULED") {
+        // Programmé: jury actif sans résultat
+        juryClause.push({
+          Jury: {
+            some: {
+              isActive: true,
+              dateOfResult: null,
+            },
+          },
+        });
+      } else if (juryStatus === "AWAITING_RESULT") {
+        // En attente de résultat: date de session passée et pas encore de résultat
+        juryClause.push({
+          Jury: {
+            some: {
+              isActive: true,
+              dateOfSession: { gt: new Date() },
+              result: null,
+            },
+          },
+        });
+      }
+    });
+    if (juryClause.length > 0) {
+      additionalClauses.push({ OR: juryClause });
+    }
+  }
+
+  // Filtre par résultats de jury
+  if (juryResults && juryResults.length > 0) {
+    additionalClauses.push({
+      Jury: {
+        some: {
+          isActive: true,
+          result: {
+            in: juryResults,
+          },
+        },
+      },
+    });
   }
   const whereClause: Prisma.CandidacyWhereInput = {
     status: {
@@ -46,9 +129,11 @@ export const getCandidaciesForCertificationAuthority = async ({
         certificationAuthorityId: certificationAuthorityId,
       },
     },
-    ...getWhereClauseFromStatusFilter(statusFilter),
+    ...getWhereClauseFromStatusFilter(statusFilter, includeDropouts),
     ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
     ...(cohorteVaeCollectiveId ? { cohorteVaeCollectiveId } : {}),
+    ...(additionalClauses.length > 0 ? { OR: additionalClauses } : {}),
+    ...(!includeDropouts && !statusFilter ? { candidacyDropOut: null } : {}),
   };
 
   const totalRows = await prismaClient.candidacy.count({

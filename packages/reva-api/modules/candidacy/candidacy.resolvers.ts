@@ -15,6 +15,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidateById } from "../candidate/features/getCandidateById";
+import { CandidacySortByFilter } from "../graphql/generated/graphql";
 import { getOrganismById } from "../organism/features/getOrganism";
 import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 
@@ -22,7 +23,6 @@ import {
   ArchiveCandidacyParams,
   Candidacy,
   CandidacyBusinessEvent,
-  CandidacySortByFilter,
   CandidacyStatusFilter,
   CreateCandidacyInput,
   GetCandidaciesForCertificationAuthorityInput,
@@ -226,6 +226,12 @@ const unsafeResolvers = {
         searchFilter,
         statusFilter,
         sortByFilter,
+        cohorteVaeCollectiveId,
+        feasibilityStatuses,
+        validationStatuses,
+        juryStatuses,
+        juryResults,
+        includeDropouts,
       }: GetCandidaciesForCertificationAuthorityInput,
       context: GraphqlContext,
     ) =>
@@ -237,6 +243,12 @@ const unsafeResolvers = {
         searchFilter,
         statusFilter,
         sortByFilter,
+        cohorteVaeCollectiveId,
+        feasibilityStatuses,
+        validationStatuses,
+        juryStatuses,
+        juryResults,
+        includeDropouts,
       }),
   },
   Mutation: {

@@ -221,6 +221,12 @@ enum CandidacySortByFilter {
   DATE_ENVOI_DESC
 }
 
+enum JuryStatusFilter {
+  TO_SCHEDULE
+  SCHEDULED
+  AWAITING_RESULT
+}
+
 enum DistanceStatus {
   ONSITE
   REMOTE
@@ -289,6 +295,11 @@ type Query {
     searchFilter: String
     statusFilter: CandidacyStatusFilter
     sortByFilter: CandidacySortByFilter
+    feasibilityStatuses: [CandidacyStatusStep!]
+    validationStatuses: [CandidacyStatusStep!]
+    juryStatuses: [JuryStatusFilter!]
+    juryResults: [JuryResult!]
+    includeDropouts: Boolean
   ): CandidacyPage!
 }
 

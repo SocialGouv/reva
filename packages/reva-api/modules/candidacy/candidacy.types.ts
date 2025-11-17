@@ -1,6 +1,11 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
 import { TypeAccompagnement } from "../candidate/candidate.types";
+import {
+  CandidacySortByFilter,
+  JuryResult,
+  JuryStatusFilter,
+} from "../graphql/generated/graphql";
 
 export interface CandidacyDropOut {
   status: CandidacyStatusStep;
@@ -82,16 +87,6 @@ export const candidacyStatusFilters = [
 
 export type CandidacyStatusFilter = (typeof candidacyStatusFilters)[number];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const candidacySortByFilters = [
-  "DATE_CREATION_ASC",
-  "DATE_CREATION_DESC",
-  "DATE_ENVOI_ASC",
-  "DATE_ENVOI_DESC",
-] as const;
-
-export type CandidacySortByFilter = (typeof candidacySortByFilters)[number];
-
 export interface SearchOrganismFilter {
   distanceStatus?: string;
   pmr?: boolean;
@@ -134,4 +129,9 @@ export interface GetCandidaciesForCertificationAuthorityInput {
   statusFilter?: CandidacyStatusFilter;
   sortByFilter?: CandidacySortByFilter;
   cohorteVaeCollectiveId?: string;
+  feasibilityStatuses?: CandidacyStatusStep[];
+  validationStatuses?: CandidacyStatusStep[];
+  juryStatuses?: JuryStatusFilter[];
+  juryResults?: JuryResult[];
+  includeDropouts?: boolean;
 }
