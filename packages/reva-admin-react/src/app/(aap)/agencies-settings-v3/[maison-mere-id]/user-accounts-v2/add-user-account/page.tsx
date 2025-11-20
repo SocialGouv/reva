@@ -40,6 +40,9 @@ const AddUserAccountPage = () => {
     <div className="w-full flex flex-col">
       <h1>Création d’un compte collaborateur</h1>
       <FormOptionalFieldsDisclaimer />
+      <p className="mb-10 text-xl">
+        Le collaborateur ajouté recevra un courriel pour finaliser son compte.
+      </p>
       <UserAccountForm
         onSubmit={handleFormSubmit}
         backUrl={backUrl}

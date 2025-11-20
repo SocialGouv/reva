@@ -47,62 +47,57 @@ export const UserAccountForm = ({
   }, [defaultValues, reset]);
 
   return (
-    <>
-      <p className="mb-10 text-xl">
-        Le collaborateur ajouté recevra un courriel pour finaliser son compte.
-      </p>
-      <form
-        onSubmit={handleFormSubmit}
-        onReset={(e) => {
-          e.preventDefault();
-          handleReset();
-        }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
-          <Input
-            label="Nom"
-            data-testid="lastname-input"
-            state={errors.lastname ? "error" : "default"}
-            stateRelatedMessage={errors.lastname?.message?.toString()}
-            nativeInputProps={{
-              ...register("lastname"),
-              autoComplete: "family-name",
-            }}
-            disabled={disabled}
-          />
-          <Input
-            label="Prénom"
-            data-testid="firstname-input"
-            state={errors.firstname ? "error" : "default"}
-            stateRelatedMessage={errors.firstname?.message?.toString()}
-            nativeInputProps={{
-              ...register("firstname"),
-              autoComplete: "given-name",
-            }}
-            disabled={disabled}
-          />
-          <Input
-            label="Adresse électronique de connexion"
-            data-testid="email-input"
-            state={errors.email ? "error" : "default"}
-            stateRelatedMessage={errors.email?.message?.toString()}
-            nativeInputProps={{
-              ...register("email"),
-              autoComplete: "email",
-              type: "email",
-              spellCheck: "false",
-            }}
-            disabled={disabled}
-          />
-        </div>
-        <FormButtons
-          formState={{ isDirty, isSubmitting }}
-          backButtonLabel="Annuler"
-          submitButtonLabel={submitButtonLabel}
-          hideResetButton
-          backUrl={backUrl}
+    <form
+      onSubmit={handleFormSubmit}
+      onReset={(e) => {
+        e.preventDefault();
+        handleReset();
+      }}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+        <Input
+          label="Nom"
+          data-testid="lastname-input"
+          state={errors.lastname ? "error" : "default"}
+          stateRelatedMessage={errors.lastname?.message?.toString()}
+          nativeInputProps={{
+            ...register("lastname"),
+            autoComplete: "family-name",
+          }}
+          disabled={disabled}
         />
-      </form>
-    </>
+        <Input
+          label="Prénom"
+          data-testid="firstname-input"
+          state={errors.firstname ? "error" : "default"}
+          stateRelatedMessage={errors.firstname?.message?.toString()}
+          nativeInputProps={{
+            ...register("firstname"),
+            autoComplete: "given-name",
+          }}
+          disabled={disabled}
+        />
+        <Input
+          label="Adresse électronique de connexion"
+          data-testid="email-input"
+          state={errors.email ? "error" : "default"}
+          stateRelatedMessage={errors.email?.message?.toString()}
+          nativeInputProps={{
+            ...register("email"),
+            autoComplete: "email",
+            type: "email",
+            spellCheck: "false",
+          }}
+          disabled={disabled}
+        />
+      </div>
+      <FormButtons
+        formState={{ isDirty, isSubmitting }}
+        backButtonLabel="Annuler"
+        submitButtonLabel={submitButtonLabel}
+        hideResetButton
+        backUrl={backUrl}
+      />
+    </form>
   );
 };
