@@ -131,11 +131,16 @@ export const CertificationAdditionalInfoSummaryCard = ({
                 </p>
               )}
               {certificationAdditionalInfo.certificationExpertContactEmail && (
-                <p className="mb-0">
+                <p className="mb-2">
                   {certificationAdditionalInfo.certificationExpertContactEmail}
                 </p>
               )}
             </div>
+            {certificationAdditionalInfo.usefulResources && (
+              <p className="mb-0">
+                {certificationAdditionalInfo.usefulResources}
+              </p>
+            )}
           </div>
         </section>
       </div>
