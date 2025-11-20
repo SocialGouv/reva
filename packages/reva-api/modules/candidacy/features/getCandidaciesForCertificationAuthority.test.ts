@@ -12,7 +12,7 @@ import { getCandidaciesForCertificationAuthority } from "./getCandidaciesForCert
 
 describe("getCandidaciesForCertificationAuthority", () => {
   describe("Permissions", () => {
-    test("should throw error when user has manage_feasibility role but no certificationAuthorityId", async () => {
+    test("lève une erreur si l'utilisateur a le rôle manage_feasibility sans certificationAuthorityId", async () => {
       await expect(async () => {
         await getCandidaciesForCertificationAuthority({
           hasRole: (role) => role === "manage_feasibility",
@@ -22,7 +22,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       );
     });
 
-    test("should not throw error when user has manage_feasibility role with certificationAuthorityId", async () => {
+    test("n'échoue pas quand le rôle manage_feasibility dispose d'un certificationAuthorityId", async () => {
       const certificationAuthority = await createCertificationAuthorityHelper();
 
       const result = await getCandidaciesForCertificationAuthority({
@@ -36,119 +36,53 @@ describe("getCandidaciesForCertificationAuthority", () => {
     });
   });
 
-  describe("Feasibility Status Filters", () => {
+  describe("Filtres de statut faisabilité", () => {
     let certificationAuthority: Awaited<
       ReturnType<typeof createCertificationAuthorityHelper>
     >;
+
+    const FEASIBILITY_STATUSES = [
+      CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
+      CandidacyStatusStep.DOSSIER_FAISABILITE_COMPLET,
+      CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+      CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+      CandidacyStatusStep.DOSSIER_FAISABILITE_NON_RECEVABLE,
+    ] as const;
 
     beforeEach(async () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should filter candidacies with DOSSIER_FAISABILITE_ENVOYE status", async () => {
-      const feasibility = await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
-      );
+    test.each(FEASIBILITY_STATUSES)(
+      "filtre les candidatures sur le statut de faisabilité %s",
+      async (status: (typeof FEASIBILITY_STATUSES)[number]) => {
+        const feasibility = await createFeasibilityUploadedPdfHelper(
+          { certificationAuthorityId: certificationAuthority.id },
+          status,
+        );
 
-      // Créer une autre candidature avec un statut différent
-      await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-      );
+        const differentStatus =
+          FEASIBILITY_STATUSES.find((s) => s !== status) ??
+          CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE;
 
-      const result = await getCandidaciesForCertificationAuthority({
-        certificationAuthorityId: certificationAuthority.id,
-        hasRole: () => true,
-        feasibilityStatuses: [CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE],
-      });
+        await createFeasibilityUploadedPdfHelper(
+          { certificationAuthorityId: certificationAuthority.id },
+          differentStatus,
+        );
 
-      expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].id).toBe(feasibility.candidacy.id);
-      expect(result.rows[0].status).toBe(
-        CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
-      );
-    });
+        const result = await getCandidaciesForCertificationAuthority({
+          certificationAuthorityId: certificationAuthority.id,
+          hasRole: () => true,
+          feasibilityStatuses: [status],
+        });
 
-    test("should filter candidacies with DOSSIER_FAISABILITE_COMPLET status", async () => {
-      await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_FAISABILITE_COMPLET,
-      );
+        expect(result.rows).toHaveLength(1);
+        expect(result.rows[0].id).toBe(feasibility.candidacy.id);
+        expect(result.rows[0].status).toBe(status);
+      },
+    );
 
-      const result = await getCandidaciesForCertificationAuthority({
-        certificationAuthorityId: certificationAuthority.id,
-        hasRole: () => true,
-        feasibilityStatuses: [CandidacyStatusStep.DOSSIER_FAISABILITE_COMPLET],
-      });
-
-      expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].status).toBe(
-        CandidacyStatusStep.DOSSIER_FAISABILITE_COMPLET,
-      );
-    });
-
-    test("should filter candidacies with DOSSIER_FAISABILITE_INCOMPLET status", async () => {
-      await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
-      );
-
-      const result = await getCandidaciesForCertificationAuthority({
-        certificationAuthorityId: certificationAuthority.id,
-        hasRole: () => true,
-        feasibilityStatuses: [
-          CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
-        ],
-      });
-
-      expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].status).toBe(
-        CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
-      );
-    });
-
-    test("should filter candidacies with DOSSIER_FAISABILITE_RECEVABLE status", async () => {
-      await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-      );
-
-      const result = await getCandidaciesForCertificationAuthority({
-        certificationAuthorityId: certificationAuthority.id,
-        hasRole: () => true,
-        feasibilityStatuses: [
-          CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-        ],
-      });
-
-      expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].status).toBe(
-        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-      );
-    });
-
-    test("should filter candidacies with DOSSIER_FAISABILITE_NON_RECEVABLE status", async () => {
-      await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_FAISABILITE_NON_RECEVABLE,
-      );
-
-      const result = await getCandidaciesForCertificationAuthority({
-        certificationAuthorityId: certificationAuthority.id,
-        hasRole: () => true,
-        feasibilityStatuses: [
-          CandidacyStatusStep.DOSSIER_FAISABILITE_NON_RECEVABLE,
-        ],
-      });
-
-      expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].status).toBe(
-        CandidacyStatusStep.DOSSIER_FAISABILITE_NON_RECEVABLE,
-      );
-    });
-
-    test("should filter candidacies with multiple feasibility statuses (OR logic)", async () => {
+    test("applique une logique OU entre plusieurs statuts de faisabilité", async () => {
       const feasibility1 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
@@ -182,52 +116,41 @@ describe("getCandidaciesForCertificationAuthority", () => {
     });
   });
 
-  describe("Validation Status Filters", () => {
+  describe("Filtres de statut validation", () => {
     let certificationAuthority: Awaited<
       ReturnType<typeof createCertificationAuthorityHelper>
     >;
+
+    const VALIDATION_STATUSES = [
+      CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+      CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE,
+    ] as const;
 
     beforeEach(async () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should filter candidacies with DOSSIER_DE_VALIDATION_ENVOYE status", async () => {
-      await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
-      );
+    test.each(VALIDATION_STATUSES)(
+      "filtre les candidatures sur le statut de validation %s",
+      async (status: (typeof VALIDATION_STATUSES)[number]) => {
+        const feasibility = await createFeasibilityUploadedPdfHelper(
+          { certificationAuthorityId: certificationAuthority.id },
+          status,
+        );
 
-      const result = await getCandidaciesForCertificationAuthority({
-        certificationAuthorityId: certificationAuthority.id,
-        hasRole: () => true,
-        validationStatuses: [CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE],
-      });
+        const result = await getCandidaciesForCertificationAuthority({
+          certificationAuthorityId: certificationAuthority.id,
+          hasRole: () => true,
+          validationStatuses: [status],
+        });
 
-      expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].status).toBe(
-        CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
-      );
-    });
+        expect(result.rows).toHaveLength(1);
+        expect(result.rows[0].id).toBe(feasibility.candidacy.id);
+        expect(result.rows[0].status).toBe(status);
+      },
+    );
 
-    test("should filter candidacies with DOSSIER_DE_VALIDATION_SIGNALE status", async () => {
-      await createFeasibilityUploadedPdfHelper(
-        { certificationAuthorityId: certificationAuthority.id },
-        CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE,
-      );
-
-      const result = await getCandidaciesForCertificationAuthority({
-        certificationAuthorityId: certificationAuthority.id,
-        hasRole: () => true,
-        validationStatuses: [CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE],
-      });
-
-      expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].status).toBe(
-        CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE,
-      );
-    });
-
-    test("should filter candidacies with multiple validation statuses (OR logic)", async () => {
+    test("applique une logique OU entre plusieurs statuts de validation", async () => {
       await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
@@ -259,7 +182,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should filter candidacies with jury TO_SCHEDULE (statut DV envoyé sans jury actif)", async () => {
+    test("filtre les candidatures avec le statut jury TO_SCHEDULE (DV envoyé sans jury actif)", async () => {
       const toSchedule = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
@@ -293,7 +216,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows[0].id).toBe(toSchedule.candidacy.id);
     });
 
-    test("should filter candidacies with jury SCHEDULED (jury actif dans le futur)", async () => {
+    test("filtre les candidatures avec le statut jury SCHEDULED (jury actif à venir)", async () => {
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + 7);
       const scheduled = await createFeasibilityUploadedPdfHelper(
@@ -343,7 +266,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows[0].id).toBe(scheduled.candidacy.id);
     });
 
-    test("should filter candidacies with multiple jury statuses (logique OR)", async () => {
+    test("applique une logique OU entre plusieurs statuts de jury", async () => {
       const toSchedule = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
@@ -377,7 +300,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       );
     });
 
-    test("should include only active juries in jury status filters", async () => {
+    test("n'inclut que les jurys actifs dans les filtres de statut de jury", async () => {
       const feasibility = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
@@ -421,7 +344,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       "CANDIDATE_EXCUSED",
       "CANDIDATE_ABSENT",
     ] as const)(
-      "should filter candidacies with jury result %s",
+      "filtre les candidatures pour le résultat de jury %s",
       async (
         juryResult:
           | "FULL_SUCCESS_OF_FULL_CERTIFICATION"
@@ -465,7 +388,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       },
     );
 
-    test("should filter candidacies with multiple jury results (OR logic)", async () => {
+    test("applique une logique OU entre plusieurs résultats de jury", async () => {
       const feasibility1 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
@@ -500,7 +423,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows).toHaveLength(2);
     });
 
-    test("should filter candidacies with AWAITING_RESULT (session passée sans résultat)", async () => {
+    test("filtre les candidatures avec AWAITING_RESULT (session passée sans résultat)", async () => {
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - 7);
 
@@ -544,7 +467,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows[0].id).toBe(feasibility.candidacy.id);
     });
 
-    test("should only include active juries in jury result filters", async () => {
+    test("n'inclut que les jurys actifs dans les filtres de résultat", async () => {
       const feasibility = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
@@ -576,7 +499,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should exclude dropout candidacies by default (includeDropouts = false)", async () => {
+    test("exclut les abandons par défaut (includeDropouts = false)", async () => {
       const feasibility = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
@@ -608,7 +531,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       );
     });
 
-    test("should include dropout candidacies when includeDropouts = true", async () => {
+    test("inclut les abandons lorsque includeDropouts = true", async () => {
       const candidacyDropOut = await createCandidacyDropOutHelper();
       await prismaClient.feasibility.create({
         data: {
@@ -632,7 +555,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       ).toBe(true);
     });
 
-    test("should include dropout candidacies when includeDropouts = true even with a statusFilter", async () => {
+    test("inclut les abandons avec includeDropouts = true même avec un statusFilter", async () => {
       // Créer une candidature normale (sans abandon)
       const normalFeasibility = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
@@ -705,7 +628,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should filter candidacies by cohorteVaeCollectiveId", async () => {
+    test("filtre les candidatures par cohorteVaeCollectiveId", async () => {
       const vaeCollective = await createCohorteVaeCollectiveHelper();
 
       const candidacy = await createCandidacyHelper({
@@ -748,7 +671,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should filter candidacies by search term in candidate name", async () => {
+    test("filtre les candidatures par terme recherché sur le nom du candidat", async () => {
       const candidacy = await createCandidacyHelper({
         candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
       });
@@ -790,7 +713,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should sort candidacies by DATE_CREATION_DESC", async () => {
+    test("trie les candidatures par DATE_CREATION_DESC", async () => {
       const feasibility1 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
@@ -814,7 +737,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows[1].id).toBe(feasibility1.candidacy.id);
     });
 
-    test("should sort candidacies by DATE_CREATION_ASC", async () => {
+    test("trie les candidatures par DATE_CREATION_ASC", async () => {
       const feasibility1 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
@@ -847,7 +770,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should paginate results correctly with limit and offset", async () => {
+    test("pagine correctement avec limit et offset", async () => {
       // Créer 5 candidatures
       for (let i = 0; i < 5; i++) {
         await createFeasibilityUploadedPdfHelper(
@@ -868,7 +791,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.info.currentPage).toBe(1);
     });
 
-    test("should return correct page with offset", async () => {
+    test("retourne la page attendue lorsque offset est renseigné", async () => {
       // Créer 5 candidatures
       const candidacies = [];
       for (let i = 0; i < 5; i++) {
@@ -901,7 +824,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should apply feasibility AND jury filters together", async () => {
+    test("applique conjointement les filtres faisabilité et jury", async () => {
       const feasibility1 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
@@ -949,7 +872,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       );
     });
 
-    test("should apply validation AND jury result filters together", async () => {
+    test("applique conjointement les filtres validation et résultats de jury", async () => {
       const feasibility1 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
@@ -984,7 +907,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows.length).toBeGreaterThanOrEqual(1);
     });
 
-    test("should apply all filters together with includeDropouts", async () => {
+    test("applique l'ensemble des filtres tout en gérant includeDropouts", async () => {
       const vaeCollective = await createCohorteVaeCollectiveHelper();
 
       const candidacy = await createCandidacyHelper({
@@ -1033,7 +956,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should return empty results when no candidacies match filters", async () => {
+    test("retourne un résultat vide quand aucun filtre ne correspond", async () => {
       const result = await getCandidaciesForCertificationAuthority({
         certificationAuthorityId: certificationAuthority.id,
         hasRole: () => true,
@@ -1046,7 +969,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.info.totalRows).toBe(0);
     });
 
-    test("should handle empty filter arrays correctly", async () => {
+    test("gère correctement des tableaux de filtres vides", async () => {
       await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
@@ -1064,7 +987,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows.length).toBeGreaterThanOrEqual(1);
     });
 
-    test("should only return candidacies within CANDIDACY_STATUS_TO_INCLUDE list", async () => {
+    test("ne retourne que les statuts inclus dans CANDIDACY_STATUS_TO_INCLUDE", async () => {
       // Ces statuts devraient être inclus
       await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
@@ -1102,7 +1025,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       ).toBe(true);
     });
 
-    test("should only return candidacies linked to the certification authority", async () => {
+    test("retourne uniquement les candidatures liées à la certification authority", async () => {
       const otherCertificationAuthority =
         await createCertificationAuthorityHelper();
 
