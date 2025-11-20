@@ -40,6 +40,7 @@ const statusMapFromGqlToInterop: Record<
   ADMISSIBLE: "RECEVABLE",
   INCOMPLETE: "INCOMPLET",
   COMPLETE: "COMPLET",
+  PENDING: "EN_ATTENTE",
 };
 
 const buildPreviewUrl = (path: string) => {

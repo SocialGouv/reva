@@ -687,7 +687,7 @@ export const resultatJurySchema = {
 export const decisionDossierDeFaisabiliteSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabilite",
   type: "string",
-  enum: ["IRRECEVABLE", "RECEVABLE", "INCOMPLET", "COMPLET"],
+  enum: ["IRRECEVABLE", "RECEVABLE", "INCOMPLET", "COMPLET", "EN_ATTENTE"],
   description: "Décision sur le dossier de faisabilité.",
   example: "INCOMPLET",
 } as const;

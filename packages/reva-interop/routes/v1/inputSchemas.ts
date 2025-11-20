@@ -1,11 +1,19 @@
 import { FastifyInstance } from "fastify";
 
+export const decisionDossierDeFaisabiliteSchemaInput = {
+  $id: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabiliteInput",
+  type: "string",
+  enum: ["IRRECEVABLE", "RECEVABLE", "INCOMPLET", "COMPLET"],
+  description: "Décision sur le dossier de faisabilité.",
+  example: "INCOMPLET",
+} as const;
+
 const dossierDeFaisabiliteDecisionInputSchema = {
   $id: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionInput",
   type: "object",
   properties: {
     decision: {
-      $ref: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabilite",
+      $ref: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabiliteInput",
     },
     commentaire: {
       type: "string",
@@ -111,6 +119,7 @@ export const resultatJuryInputSchema = {
 export const addInputSchemas = (fastify: FastifyInstance) => {
   fastify.addSchema(dossierDeFaisabiliteDecisionInputSchema);
   fastify.addSchema(dossierDeValidationDecisionInputSchema);
+  fastify.addSchema(decisionDossierDeFaisabiliteSchemaInput);
   fastify.addSchema(sessionJuryInputSchema);
   fastify.addSchema(resultatJuryInputSchema);
 };

@@ -2,7 +2,7 @@ import { Client } from "@urql/core";
 
 import { graphql } from "../../../../graphql/generated/index.js";
 import { UploadedFile } from "../../../../utils/types.js";
-import { decisionDossierDeFaisabiliteSchema } from "../../schemas.js";
+import { decisionDossierDeFaisabiliteSchemaInput } from "../../inputSchemas.js";
 
 const getFeasibilityDecisionByCandidacyIdQuery = graphql(`
   query getFeasibilityDecisionByCandidacyIdQuery($candidacyId: ID!) {
@@ -39,7 +39,7 @@ const createFeasibilityDecisionByCandidacyIdMutation = graphql(`
 `);
 
 const statusMapFromInteropToGql: Record<
-  (typeof decisionDossierDeFaisabiliteSchema)["enum"][number],
+  (typeof decisionDossierDeFaisabiliteSchemaInput)["enum"][number],
   "REJECTED" | "ADMISSIBLE" | "INCOMPLETE" | "COMPLETE"
 > = {
   IRRECEVABLE: "REJECTED",
@@ -53,7 +53,7 @@ export const createFeasibilityDecisionByCandidacyId = async (
   keycloakJwt: string,
   candidacyId: string,
   params: {
-    decision: (typeof decisionDossierDeFaisabiliteSchema)["enum"][number];
+    decision: (typeof decisionDossierDeFaisabiliteSchemaInput)["enum"][number];
     commentaire?: string;
     document?: UploadedFile;
   },
@@ -107,7 +107,7 @@ const createFeasibilityDecisionForPdf = async (
   keycloakJwt: string,
   feasibilityId: string,
   params: {
-    decision: (typeof decisionDossierDeFaisabiliteSchema)["enum"][number];
+    decision: (typeof decisionDossierDeFaisabiliteSchemaInput)["enum"][number];
     commentaire?: string;
     document?: UploadedFile;
   },
@@ -149,7 +149,7 @@ const createFeasibilityDecisionForDemat = async (
   graphqlClient: Client,
   candidacyId: string,
   params: {
-    decision: (typeof decisionDossierDeFaisabiliteSchema)["enum"][number];
+    decision: (typeof decisionDossierDeFaisabiliteSchemaInput)["enum"][number];
     commentaire?: string;
     document?: UploadedFile;
   },

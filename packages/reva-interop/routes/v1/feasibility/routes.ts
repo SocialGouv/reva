@@ -12,13 +12,13 @@ import { getFeasibilityByCandidacyId } from "../features/feasibilities/getFeasib
 import { mapGetFeasibilityByCandidacyId } from "../features/feasibilities/getFeasibilityByCandidacyId.mapper.js";
 import { getFeasibilityHistoryByCandidacyId } from "../features/feasibilities/getFeasibilityHistoryByCandidacyId.js";
 import { mapGetFeasibilityHistoryByCandidacyId } from "../features/feasibilities/getFeasibilityHistoryByCandidacyId.mapper.js";
+import { decisionDossierDeFaisabiliteSchemaInput } from "../inputSchemas.js";
 import {
   dossiersDeFaisabiliteResponseSchema,
   pageInfoSchema,
 } from "../responseSchemas.js";
 import {
   candidacyIdSchema,
-  decisionDossierDeFaisabiliteSchema,
   dossierDeFaisabiliteDecisionSchema,
   dossierDeFaisabiliteSchema,
   dureeExperienceSchema,
@@ -122,7 +122,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
       JsonSchemaToTsProvider<{
         ValidatorSchemaOptions: {
           references: [
-            typeof decisionDossierDeFaisabiliteSchema,
+            typeof decisionDossierDeFaisabiliteSchemaInput,
             typeof dossierDeFaisabiliteDecisionSchema,
             typeof candidacyIdSchema,
           ];
@@ -144,7 +144,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
               type: "object",
               properties: {
                 value: {
-                  $ref: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabilite",
+                  $ref: "http://vae.gouv.fr/components/schemas/DecisionDossierDeFaisabiliteInput",
                 },
               },
             },
