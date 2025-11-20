@@ -110,8 +110,12 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       );
     }
 
+    const endAccompagnementConfirmed =
+      candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
+      candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
+
     // If the candidate has dropped out for less than 4 months and no proof of dropout has been received by the france vae admin
-    // and the candidate has not confirmed his dropout, we prevent the payment request creation
+    // and the candidate has not confirmed his dropout, and the end of accompagnement has not been confirmed we prevent the payment request creation
     if (
       candidacy.candidacyDropOut &&
       !candidacy.candidacyDropOut.proofReceivedByAdmin &&
@@ -119,7 +123,8 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
       isAfter(
         candidacy.candidacyDropOut.createdAt,
         sub(new Date(), { months: 4 }),
-      )
+      ) &&
+      !endAccompagnementConfirmed
     ) {
       throw new Error(
         "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
