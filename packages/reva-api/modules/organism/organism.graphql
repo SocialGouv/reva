@@ -257,7 +257,7 @@ input CreateOrganimsAccountInput {
 
 input UpdateOrganimsAccountAndOrganismInput {
   accountId: ID!
-  organismId: ID!
+  organismId: ID
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!

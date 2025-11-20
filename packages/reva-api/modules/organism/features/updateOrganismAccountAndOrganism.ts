@@ -4,6 +4,7 @@ import {
 } from "@/modules/aap-log/features/logAAPAuditEvent";
 import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateAccountById } from "@/modules/account/features/updateAccount";
+import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "@/prisma/client";
 
 import { UpdateOrganimsAccountAndOrganismInput } from "../organism.types";
@@ -20,6 +21,11 @@ export const updateOrganismAccountAndOrganism = async ({
 }: UpdateOrganimsAccountAndOrganismInput & {
   userInfo: AAPAuditLogUserInfo;
 }) => {
+  const isAApUserAccountV2FeatureActive = await isFeatureActiveForUser({
+    userKeycloakId: userInfo.userKeycloakId,
+    feature: "AAP_USER_ACCOUNT_V2",
+  });
+
   const account = await getAccountById({
     id: accountId,
   });
@@ -28,44 +34,63 @@ export const updateOrganismAccountAndOrganism = async ({
     throw Error("Compte utilisateur non trouvé");
   }
 
-  const organism = await prismaClient.organism.findUnique({
-    where: { id: organismId },
-  });
-
-  if (!organism) {
-    throw Error("L'organisme n'a pas été trouvé");
-  }
-
-  await updateAccountById({
-    accountId: account.id,
-    accountData: {
-      email: accountEmail,
-      firstname: accountFirstname,
-      lastname: accountLastname,
-    },
-  });
-
-  const result = await prismaClient.account.update({
-    where: { id: account.id },
-    data: { organismId },
-  });
-
-  await updateOrganismOnAccountAssociation({
-    accountId,
-    organismIds: [organismId], //TODO update this when we allow on account to be linked to multiple organisms
-  });
-
-  if (organism.maisonMereAAPId) {
-    await logAAPAuditEvent({
-      eventType: "ORGANISM_ACCOUNT_UPDATED",
-      maisonMereAAPId: organism.maisonMereAAPId,
-      details: {
-        accountEmail,
-        organismId,
-        organismLabel: organism.label,
+  if (isAApUserAccountV2FeatureActive) {
+    const result = await updateAccountById({
+      accountId: account.id,
+      accountData: {
+        email: accountEmail,
+        firstname: accountFirstname,
+        lastname: accountLastname,
       },
-      userInfo,
     });
+
+    //TODO log audit event
+
+    return result;
+  } else {
+    if (!organismId) {
+      throw Error("L'identifiant de l'organisme est obligatoire");
+    }
+
+    const organism = await prismaClient.organism.findUnique({
+      where: { id: organismId },
+    });
+
+    if (!organism) {
+      throw Error("L'organisme n'a pas été trouvé");
+    }
+
+    await updateAccountById({
+      accountId: account.id,
+      accountData: {
+        email: accountEmail,
+        firstname: accountFirstname,
+        lastname: accountLastname,
+      },
+    });
+
+    const result = await prismaClient.account.update({
+      where: { id: account.id },
+      data: { organismId },
+    });
+
+    await updateOrganismOnAccountAssociation({
+      accountId,
+      organismIds: [organismId], //TODO update this when we allow on account to be linked to multiple organisms
+    });
+
+    if (organism.maisonMereAAPId) {
+      await logAAPAuditEvent({
+        eventType: "ORGANISM_ACCOUNT_UPDATED",
+        maisonMereAAPId: organism.maisonMereAAPId,
+        details: {
+          accountEmail,
+          organismId,
+          organismLabel: organism.label,
+        },
+        userInfo,
+      });
+    }
+    return result;
   }
-  return result;
 };

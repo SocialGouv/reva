@@ -54,7 +54,7 @@ export interface CreateOrganismAccountInput {
 }
 
 export interface UpdateOrganimsAccountAndOrganismInput {
-  organismId: string;
+  organismId?: string;
   accountId: string;
   accountFirstname: string;
   accountLastname: string;
