@@ -43,11 +43,7 @@ const AddUserAccountPage = () => {
       <p className="mb-10 text-xl">
         Le collaborateur ajouté recevra un courriel pour finaliser son compte.
       </p>
-      <UserAccountForm
-        onSubmit={handleFormSubmit}
-        backUrl={backUrl}
-        submitButtonLabel="Créer"
-      />
+      <UserAccountForm onSubmit={handleFormSubmit} backUrl={backUrl} />
     </div>
   );
 };

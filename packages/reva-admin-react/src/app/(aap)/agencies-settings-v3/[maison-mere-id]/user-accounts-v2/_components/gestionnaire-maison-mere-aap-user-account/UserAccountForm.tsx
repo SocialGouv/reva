@@ -20,14 +20,14 @@ export const UserAccountForm = ({
   defaultValues,
   backUrl,
   disabled,
-  submitButtonLabel = "Enregistrer",
 }: {
   onSubmit(data: UserAccountFormData): Promise<void>;
   defaultValues?: UserAccountFormData;
   backUrl: string;
   disabled?: boolean;
-  submitButtonLabel?: string;
 }) => {
+  const submitButtonLabel = defaultValues ? "Enregistrer" : "Créer";
+
   const methods = useForm<UserAccountFormData>({
     resolver: zodResolver(userAccountFormSchema),
     defaultValues,
