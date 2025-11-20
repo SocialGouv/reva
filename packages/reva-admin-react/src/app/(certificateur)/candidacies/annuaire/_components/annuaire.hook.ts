@@ -75,12 +75,6 @@ const getCandidaciesForAnnuaire = graphql(`
             raisonSociale
           }
         }
-        feasibility {
-          feasibilityFileSentAt
-        }
-        activeDossierDeValidation {
-          dossierDeValidationSentAt
-        }
         jury {
           dateOfSession
           result

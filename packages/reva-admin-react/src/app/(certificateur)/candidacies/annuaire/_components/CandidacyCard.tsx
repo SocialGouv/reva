@@ -1,6 +1,6 @@
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tag from "@codegouvfr/react-dsfr/Tag";
-import { format, isAfter } from "date-fns";
+import { isAfter } from "date-fns";
 
 import {
   CandidacyStatusTag,
@@ -9,10 +9,10 @@ import {
 } from "@/components/candidacy-status-tag/CandidacyStatusTag";
 
 import {
+  CandidacyStatus,
   CandidacyStatusStep,
   TypeAccompagnement,
 } from "@/graphql/generated/graphql";
-import { CandidacyStatus } from "@/graphql/generated/graphql";
 
 export const CandidacyCard = ({
   candidateFullName,
@@ -25,9 +25,6 @@ export const CandidacyCard = ({
   jury,
   dropout,
   departmentLabel,
-  feasibilityFileSentAt,
-  dossierDeValidationSentAt,
-  dateOfSession,
   candidacyId,
   searchResultLink,
   typeAccompagnement,
@@ -39,9 +36,6 @@ export const CandidacyCard = ({
       raisonSociale: string;
     };
   } | null;
-  feasibilityFileSentAt: number | null;
-  dossierDeValidationSentAt: number | null;
-  dateOfSession: number | null;
   certificationCode: string;
   certificationLabel: string;
   organismLabel: string;
@@ -107,22 +101,6 @@ export const CandidacyCard = ({
             </>
           )}
         </div>
-      }
-      endDetail={
-        <>
-          <div>
-            {feasibilityFileSentAt &&
-              `Dossier envoyé le ${format(feasibilityFileSentAt, "d MMM yyyy")}`}
-          </div>
-          <div>
-            {dossierDeValidationSentAt &&
-              `Dossier de validation envoyé le ${format(dossierDeValidationSentAt, "d MMM yyyy")}`}
-          </div>
-          <div>
-            {dateOfSession &&
-              `Jury programmé le ${format(dateOfSession, "d MMM yyyy")}`}
-          </div>
-        </>
       }
       linkProps={{
         href: searchResultLink(candidacyId),

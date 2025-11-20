@@ -141,14 +141,6 @@ export default function AnnuairePage() {
                       statusHistory={candidacy.candidacyStatuses}
                       jury={candidacy.jury}
                       dropout={candidacy.candidacyDropOut}
-                      feasibilityFileSentAt={
-                        candidacy.feasibility?.feasibilityFileSentAt || null
-                      }
-                      dossierDeValidationSentAt={
-                        candidacy.activeDossierDeValidation
-                          ?.dossierDeValidationSentAt || null
-                      }
-                      dateOfSession={candidacy.jury?.dateOfSession || null}
                       departmentLabel={
                         candidacy.candidate?.department?.label || ""
                       }
