@@ -32,6 +32,9 @@ export const resolversSecurityMap = {
 
   "Query.organism_searchOrganisms": isAdminOrGestionnaireVaeCollective,
 
+  "Query.organism_getCompteCollaborateurById":
+    isAdminOrGestionnaireOfMaisonMereAAP,
+
   "Mutation.organism_updateMaisonMereIsSignalized": isAdmin,
 
   "Mutation.organism_acceptCgu": [hasRole(["gestion_maison_mere_aap"])],

@@ -34,6 +34,7 @@ import { createOrUpdateRemoteOrganismGeneralInformation } from "./features/creat
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
+import { getCompteCollaborateurById } from "./features/getCompteCollaborateurById";
 import { getComptesCollaborateursByMaisonMereAAPId } from "./features/getComptesCollaborateursByMaisonMereAAPId";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
@@ -620,6 +621,12 @@ const unsafeResolvers = {
         disponiblePourVaeCollective?: boolean;
       },
     ) => searchOrganisms(params),
+    organism_getCompteCollaborateurById: async (
+      _parent: unknown,
+      params: {
+        accountId: string;
+      },
+    ) => getCompteCollaborateurById({ accountId: params.accountId }),
   },
 };
 

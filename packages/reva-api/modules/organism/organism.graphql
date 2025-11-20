@@ -183,6 +183,10 @@ type Query {
     searchText: String
     disponiblePourVaeCollective: Boolean
   ): OrganismPage!
+  organism_getCompteCollaborateurById(
+    maisonMereAAPId: ID!
+    accountId: ID!
+  ): Account!
 }
 
 input UpdateOrganismInput {

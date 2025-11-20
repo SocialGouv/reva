@@ -8,12 +8,26 @@ import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
 
-const request = graphql(`
+const maisonMereAAPComptesCollaborateursQuery = graphql(`
   query maisonMereAAPComptesCollaborateurs($maisonMereAAPId: ID!) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       comptesCollaborateurs {
         id
       }
+    }
+  }
+`);
+
+const compteCollaborateurByIdQuery = graphql(`
+  query compteCollaborateurById($maisonMereAAPId: ID!, $accountId: ID!) {
+    organism_getCompteCollaborateurById(
+      maisonMereAAPId: $maisonMereAAPId
+      accountId: $accountId
+    ) {
+      id
+      firstname
+      lastname
+      email
     }
   }
 `);
@@ -50,9 +64,12 @@ describe("MaisonMereAAP resolvers", () => {
         },
       });
 
-      const comptesCollaborateurs = await graphqlClient.request(request, {
-        maisonMereAAPId: maisonMereAAP.id,
-      });
+      const comptesCollaborateurs = await graphqlClient.request(
+        maisonMereAAPComptesCollaborateursQuery,
+        {
+          maisonMereAAPId: maisonMereAAP.id,
+        },
+      );
 
       expect(
         comptesCollaborateurs.organism_getMaisonMereAAPById
@@ -91,8 +108,81 @@ describe("MaisonMereAAP resolvers", () => {
       });
 
       await expect(
-        graphqlClient.request(request, {
+        graphqlClient.request(maisonMereAAPComptesCollaborateursQuery, {
           maisonMereAAPId: otherMaisonMereAAP.id,
+        }),
+      ).rejects.toThrowError(
+        "Vous n'êtes pas autorisé à accéder à cette maison mère",
+      );
+    });
+
+    it("should return the compte collaborateur by id", async () => {
+      const collaborateurAccount = await createAccountHelper();
+      const maisonMereAAP = await createMaisonMereAapHelper();
+
+      attachCollaborateurAccountToMaisonMereAAP({
+        maisonMereAAPId: maisonMereAAP.id,
+        collaborateurAccountId: collaborateurAccount.id,
+      });
+
+      const aapKeycloakId = maisonMereAAP.gestionnaire.keycloakId;
+
+      const graphqlClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "gestion_maison_mere_aap",
+            keycloakId: aapKeycloakId,
+          }),
+        },
+      });
+
+      const comptesCollaborateurs = await graphqlClient.request(
+        compteCollaborateurByIdQuery,
+        {
+          maisonMereAAPId: maisonMereAAP.id,
+          accountId: collaborateurAccount.id,
+        },
+      );
+
+      expect(comptesCollaborateurs.organism_getCompteCollaborateurById.id).toBe(
+        collaborateurAccount.id,
+      );
+    });
+
+    it("should throw an error when accessing a compte collaborateur of a different maison mere", async () => {
+      //compte collaborateur associated to the maison mere of the aap
+      const collaborateurAccount = await createAccountHelper();
+      const maisonMereAAP = await createMaisonMereAapHelper();
+
+      attachCollaborateurAccountToMaisonMereAAP({
+        maisonMereAAPId: maisonMereAAP.id,
+        collaborateurAccountId: collaborateurAccount.id,
+      });
+
+      const aapKeycloakId = maisonMereAAP.gestionnaire.keycloakId;
+
+      //other maison mere and compte collaborateur with a different gestionnaire
+      const collaborateurAccountOfOtherMaisonMere = await createAccountHelper();
+      const otherMaisonMereAAP = await createMaisonMereAapHelper();
+
+      attachCollaborateurAccountToMaisonMereAAP({
+        maisonMereAAPId: otherMaisonMereAAP.id,
+        collaborateurAccountId: collaborateurAccountOfOtherMaisonMere.id,
+      });
+
+      const graphqlClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "gestion_maison_mere_aap",
+            keycloakId: aapKeycloakId,
+          }),
+        },
+      });
+
+      await expect(
+        graphqlClient.request(compteCollaborateurByIdQuery, {
+          maisonMereAAPId: otherMaisonMereAAP.id,
+          accountId: collaborateurAccountOfOtherMaisonMere.id,
         }),
       ).rejects.toThrowError(
         "Vous n'êtes pas autorisé à accéder à cette maison mère",
