@@ -68,23 +68,22 @@ export const getCandidaciesForCertificationAuthority = async ({
     const juryClause: Prisma.CandidacyWhereInput[] = [];
     juryStatuses.forEach((juryStatus) => {
       if (juryStatus === "TO_SCHEDULE") {
-        // À programmer: DossierDeValidation actif avec décision PENDING ou COMPLETE
-        // ET (pas de jury OU seulement des jurys inactifs)
+        // À programmer: statut DOSSIER_DE_VALIDATION_ENVOYE sans jury actif
         juryClause.push({
-          dossierDeValidation: {
-            some: {
+          status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+          Jury: {
+            none: {
               isActive: true,
-              decision: { in: ["PENDING", "COMPLETE"] },
             },
           },
-          OR: [{ Jury: { none: {} } }, { Jury: { none: { isActive: true } } }],
         });
       } else if (juryStatus === "SCHEDULED") {
-        // Programmé: entrée dans la table jury avec au moins un is_active = true
+        // Programmé: jury actif avec date future
         juryClause.push({
           Jury: {
             some: {
               isActive: true,
+              dateOfSession: { gt: new Date() },
             },
           },
         });
@@ -121,13 +120,13 @@ export const getCandidaciesForCertificationAuthority = async ({
       });
     }
 
-    // En attente de résultat : date future ET result null
+    // En attente de résultat : date passée ET result null
     if (hasAwaitingResult) {
       resultClauses.push({
         Jury: {
           some: {
             isActive: true,
-            dateOfSession: { gt: new Date() },
+            dateOfSession: { lte: new Date() },
             result: null,
           },
         },

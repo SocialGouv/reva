@@ -259,53 +259,29 @@ describe("getCandidaciesForCertificationAuthority", () => {
       certificationAuthority = await createCertificationAuthorityHelper();
     });
 
-    test("should filter candidacies with jury TO_SCHEDULE (DossierDeValidation actif mais pas de jury)", async () => {
-      const feasibility = await createFeasibilityUploadedPdfHelper(
+    test("should filter candidacies with jury TO_SCHEDULE (statut DV envoyé sans jury actif)", async () => {
+      const toSchedule = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
       );
-
-      // Créer un DossierDeValidation avec décision PENDING
-      const file = await prismaClient.file.create({
-        data: { name: "test.pdf", mimeType: "application/pdf", path: "/test" },
-      });
-      await prismaClient.dossierDeValidation.create({
-        data: {
-          candidacyId: feasibility.candidacy.id,
-          certificationAuthorityId: certificationAuthority.id,
-          dossierDeValidationFileId: file.id,
-          decision: "PENDING",
-          isActive: true,
-        },
-      });
 
       // Candidature avec jury actif (ne doit pas matcher)
-      const feasibility2 = await createFeasibilityUploadedPdfHelper(
+      const withActiveJury = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
       );
-      const file2 = await prismaClient.file.create({
-        data: {
-          name: "test2.pdf",
-          mimeType: "application/pdf",
-          path: "/test2",
-        },
-      });
-      await prismaClient.dossierDeValidation.create({
-        data: {
-          candidacyId: feasibility2.candidacy.id,
-          certificationAuthorityId: certificationAuthority.id,
-          dossierDeValidationFileId: file2.id,
-          decision: "COMPLETE",
-          isActive: true,
-        },
-      });
       await createJuryHelper({
-        candidacyId: feasibility2.candidacy.id,
+        candidacyId: withActiveJury.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
         dateOfSession: new Date(),
         isActive: true,
       });
+
+      // Statut différent sans jury (ne doit pas matcher)
+      await createFeasibilityUploadedPdfHelper(
+        { certificationAuthorityId: certificationAuthority.id },
+        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+      );
 
       const result = await getCandidaciesForCertificationAuthority({
         certificationAuthorityId: certificationAuthority.id,
@@ -314,31 +290,46 @@ describe("getCandidaciesForCertificationAuthority", () => {
       });
 
       expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].id).toBe(feasibility.candidacy.id);
+      expect(result.rows[0].id).toBe(toSchedule.candidacy.id);
     });
 
-    test("should filter candidacies with jury SCHEDULED (jury actif)", async () => {
-      const feasibility = await createFeasibilityUploadedPdfHelper(
+    test("should filter candidacies with jury SCHEDULED (jury actif dans le futur)", async () => {
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 7);
+      const scheduled = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
       );
-
       await createJuryHelper({
-        candidacyId: feasibility.candidacy.id,
+        candidacyId: scheduled.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
-        dateOfSession: new Date(),
+        dateOfSession: futureDate,
         isActive: true,
       });
 
-      // Candidature sans jury actif (ne doit pas matcher)
-      const feasibility2 = await createFeasibilityUploadedPdfHelper(
+      // Jury passé (ne doit pas matcher)
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 7);
+      const pastJury = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
       );
       await createJuryHelper({
-        candidacyId: feasibility2.candidacy.id,
+        candidacyId: pastJury.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
-        dateOfSession: new Date(),
+        dateOfSession: pastDate,
+        isActive: true,
+      });
+
+      // Jury futur mais inactif (ne doit pas matcher)
+      const inactiveJury = await createFeasibilityUploadedPdfHelper(
+        { certificationAuthorityId: certificationAuthority.id },
+        CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+      );
+      await createJuryHelper({
+        candidacyId: inactiveJury.candidacy.id,
+        certificationAuthorityId: certificationAuthority.id,
+        dateOfSession: futureDate,
         isActive: false,
       });
 
@@ -349,41 +340,25 @@ describe("getCandidaciesForCertificationAuthority", () => {
       });
 
       expect(result.rows).toHaveLength(1);
-      expect(result.rows[0].id).toBe(feasibility.candidacy.id);
+      expect(result.rows[0].id).toBe(scheduled.candidacy.id);
     });
 
     test("should filter candidacies with multiple jury statuses (logique OR)", async () => {
-      // Candidature à programmer (DossierDeValidation sans jury)
-      const feasibility1 = await createFeasibilityUploadedPdfHelper(
+      const toSchedule = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
       );
-      const file1 = await prismaClient.file.create({
-        data: {
-          name: "test1.pdf",
-          mimeType: "application/pdf",
-          path: "/test1",
-        },
-      });
-      await prismaClient.dossierDeValidation.create({
-        data: {
-          candidacyId: feasibility1.candidacy.id,
-          certificationAuthorityId: certificationAuthority.id,
-          dossierDeValidationFileId: file1.id,
-          decision: "PENDING",
-          isActive: true,
-        },
-      });
 
-      // Candidature programmée (jury actif)
-      const feasibility2 = await createFeasibilityUploadedPdfHelper(
+      const scheduled = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
       );
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 3);
       await createJuryHelper({
-        candidacyId: feasibility2.candidacy.id,
+        candidacyId: scheduled.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
-        dateOfSession: new Date(),
+        dateOfSession: futureDate,
         isActive: true,
       });
 
@@ -394,6 +369,12 @@ describe("getCandidaciesForCertificationAuthority", () => {
       });
 
       expect(result.rows).toHaveLength(2);
+      expect(result.rows.some((c) => c.id === toSchedule.candidacy.id)).toBe(
+        true,
+      );
+      expect(result.rows.some((c) => c.id === scheduled.candidacy.id)).toBe(
+        true,
+      );
     });
 
     test("should include only active juries in jury status filters", async () => {
@@ -401,19 +382,6 @@ describe("getCandidaciesForCertificationAuthority", () => {
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
       );
-
-      const file = await prismaClient.file.create({
-        data: { name: "test.pdf", mimeType: "application/pdf", path: "/test" },
-      });
-      await prismaClient.dossierDeValidation.create({
-        data: {
-          candidacyId: feasibility.candidacy.id,
-          certificationAuthorityId: certificationAuthority.id,
-          dossierDeValidationFileId: file.id,
-          decision: "COMPLETE",
-          isActive: true,
-        },
-      });
 
       // Jury inactif - la candidature devrait matcher TO_SCHEDULE
       await createJuryHelper({
@@ -532,10 +500,11 @@ describe("getCandidaciesForCertificationAuthority", () => {
       expect(result.rows).toHaveLength(2);
     });
 
-    test("should filter candidacies with AWAITING_RESULT (session future sans résultat)", async () => {
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 7);
+    test("should filter candidacies with AWAITING_RESULT (session passée sans résultat)", async () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 7);
 
+      // Candidature avec session passée (doit matcher)
       const feasibility = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
         CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
@@ -544,14 +513,14 @@ describe("getCandidaciesForCertificationAuthority", () => {
       await createJuryHelper({
         candidacyId: feasibility.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
-        dateOfSession: futureDate,
+        dateOfSession: pastDate,
         result: null,
         isActive: true,
       });
 
-      // Candidature avec session passée (ne doit pas matcher)
-      const pastDate = new Date();
-      pastDate.setDate(pastDate.getDate() - 7);
+      // Candidature avec session future (ne doit pas matcher)
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 7);
 
       const feasibility2 = await createFeasibilityUploadedPdfHelper(
         { certificationAuthorityId: certificationAuthority.id },
@@ -560,7 +529,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       await createJuryHelper({
         candidacyId: feasibility2.candidacy.id,
         certificationAuthorityId: certificationAuthority.id,
-        dateOfSession: pastDate,
+        dateOfSession: futureDate,
         result: null,
         isActive: true,
       });

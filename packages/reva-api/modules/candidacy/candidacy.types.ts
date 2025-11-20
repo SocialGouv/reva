@@ -3,7 +3,7 @@ import { CandidacyStatusStep } from "@prisma/client";
 import { TypeAccompagnement } from "../candidate/candidate.types";
 import {
   CandidacySortByFilter,
-  JuryResult,
+  JuryResultFilter,
   JuryStatusFilter,
 } from "../graphql/generated/graphql";
 
@@ -132,6 +132,6 @@ export interface GetCandidaciesForCertificationAuthorityInput {
   feasibilityStatuses?: CandidacyStatusStep[];
   validationStatuses?: CandidacyStatusStep[];
   juryStatuses?: JuryStatusFilter[];
-  juryResults?: JuryResult[];
+  juryResults?: JuryResultFilter[];
   includeDropouts?: boolean;
 }
