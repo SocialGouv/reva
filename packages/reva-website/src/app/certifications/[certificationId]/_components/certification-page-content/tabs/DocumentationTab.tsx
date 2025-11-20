@@ -130,28 +130,30 @@ const DocumentationTab = ({
         </div>
       ) : null}
 
-      {additionalInfo?.certificationExpertContactDetails && (
-        <div className="flex flex-col gap-4 mt-6">
-          <h2 className="text-xl my-0">Informations complémentaires</h2>
-          <div>
-            <p className="mb-2">
-              {additionalInfo?.certificationExpertContactDetails}
-            </p>
-            <p className="mb-0">
-              {additionalInfo?.certificationExpertContactPhone}{" "}
-              {additionalInfo?.certificationExpertContactEmail}
-            </p>
-          </div>
-          {additionalInfo?.usefulResources && (
+      <div className="flex flex-col gap-4 mt-6">
+        {additionalInfo?.certificationExpertContactDetails && (
+          <>
+            <h2 className="text-xl my-0">Informations complémentaires</h2>
             <div>
-              <p className="mb-0">
-                Ressources complémentaires pour aider au parcours VAE :
+              <p className="mb-2">
+                {additionalInfo?.certificationExpertContactDetails}
               </p>
-              <p className="mb-0">{additionalInfo?.usefulResources}</p>
+              <p className="mb-0">
+                {additionalInfo?.certificationExpertContactPhone}{" "}
+                {additionalInfo?.certificationExpertContactEmail}
+              </p>
             </div>
-          )}
-        </div>
-      )}
+          </>
+        )}
+        {additionalInfo?.usefulResources && (
+          <div>
+            <p className="mb-0">
+              Ressources complémentaires pour aider au parcours VAE :
+            </p>
+            <p className="mb-0">{additionalInfo?.usefulResources}</p>
+          </div>
+        )}
+      </div>
     </>
   );
 };
