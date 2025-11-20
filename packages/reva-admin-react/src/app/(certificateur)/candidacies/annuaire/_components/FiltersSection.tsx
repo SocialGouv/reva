@@ -5,7 +5,7 @@ import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
 
 import {
   CandidacyStatusStep,
-  JuryResult,
+  JuryResultFilter,
   JuryStatusFilter,
 } from "@/graphql/generated/graphql";
 
@@ -17,8 +17,8 @@ interface FiltersSectionProps {
   onToggleFeasibilityStatus: (status: CandidacyStatusStep) => void;
   onToggleValidationStatus: (status: CandidacyStatusStep) => void;
   onToggleJuryStatus: (status: JuryStatusFilter) => void;
-  onToggleJuryResult: (result: JuryResult) => void;
-  onToggleMultipleJuryResults: (results: JuryResult[]) => void;
+  onToggleJuryResult: (result: JuryResultFilter) => void;
+  onToggleMultipleJuryResults: (results: JuryResultFilter[]) => void;
   onToggleCohorte: (cohorteId: string) => void;
   onToggleIncludeDropouts: () => void;
   onClearFilters: () => void;

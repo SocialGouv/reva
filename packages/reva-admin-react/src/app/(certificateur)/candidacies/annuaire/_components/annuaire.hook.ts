@@ -9,7 +9,7 @@ import {
   CandidacySortByFilter,
   CandidacyStatusFilter,
   CandidacyStatusStep,
-  JuryResult,
+  JuryResultFilter,
   JuryStatusFilter,
 } from "@/graphql/generated/graphql";
 
@@ -17,7 +17,7 @@ export interface AnnuaireFilters {
   feasibilityStatuses: CandidacyStatusStep[];
   validationStatuses: CandidacyStatusStep[];
   juryStatuses: JuryStatusFilter[];
-  juryResults: JuryResult[];
+  juryResults: JuryResultFilter[];
   cohorteIds: string[];
   includeDropouts: boolean;
 }
@@ -42,7 +42,7 @@ const getCandidaciesForAnnuaire = graphql(`
     $feasibilityStatuses: [CandidacyStatusStep!]
     $validationStatuses: [CandidacyStatusStep!]
     $juryStatuses: [JuryStatusFilter!]
-    $juryResults: [JuryResult!]
+    $juryResults: [JuryResultFilter!]
     $includeDropouts: Boolean
   ) {
     candidacy_getCandidaciesForCertificationAuthority(
@@ -135,7 +135,7 @@ export const useAnnuaire = () => {
         ? (juryStatusParam.split(",") as JuryStatusFilter[])
         : [],
       juryResults: juryResultParam
-        ? (juryResultParam.split(",") as JuryResult[])
+        ? (juryResultParam.split(",") as JuryResultFilter[])
         : [],
       cohorteIds: cohorteParam ? cohorteParam.split(",") : [],
       includeDropouts: dropoutParam === "true",
@@ -316,7 +316,7 @@ export const useAnnuaire = () => {
   );
 
   const toggleJuryResult = useCallback(
-    (result: JuryResult) => {
+    (result: JuryResultFilter) => {
       const newResults = filters.juryResults.includes(result)
         ? filters.juryResults.filter((r) => r !== result)
         : [...filters.juryResults, result];
@@ -326,7 +326,7 @@ export const useAnnuaire = () => {
   );
 
   const toggleMultipleJuryResults = useCallback(
-    (results: JuryResult[]) => {
+    (results: JuryResultFilter[]) => {
       const allSelected = results.every((r) => filters.juryResults.includes(r));
       const newResults = allSelected
         ? filters.juryResults.filter((r) => !results.includes(r))

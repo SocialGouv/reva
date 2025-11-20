@@ -39,7 +39,6 @@ const resultatMapFromGqlToInterop: Record<
   FAILURE: "ECHEC",
   CANDIDATE_EXCUSED: "CANDIDAT_EXCUSE",
   CANDIDATE_ABSENT: "CANDIDAT_ABSENT",
-  AWAITING_RESULT: "EN_ATTENTE_DE_RESULTAT",
 };
 
 const mapJuryResultat = (

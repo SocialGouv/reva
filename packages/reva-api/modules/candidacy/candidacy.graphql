@@ -297,7 +297,7 @@ type Query {
     feasibilityStatuses: [CandidacyStatusStep!]
     validationStatuses: [CandidacyStatusStep!]
     juryStatuses: [JuryStatusFilter!]
-    juryResults: [JuryResult!]
+    juryResults: [JuryResultFilter!]
     includeDropouts: Boolean
   ): CandidacyPage!
 }

@@ -568,7 +568,7 @@ describe("getCandidaciesForCertificationAuthority", () => {
       const result = await getCandidaciesForCertificationAuthority({
         certificationAuthorityId: certificationAuthority.id,
         hasRole: () => true,
-        juryResults: ["AWAITING_RESULT" as any],
+        juryResults: ["AWAITING_RESULT"],
       });
 
       expect(result.rows).toHaveLength(1);
