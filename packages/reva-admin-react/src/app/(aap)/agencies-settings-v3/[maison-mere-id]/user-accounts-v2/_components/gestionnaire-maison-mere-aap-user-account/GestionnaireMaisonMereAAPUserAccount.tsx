@@ -1,5 +1,6 @@
 "use client";
 
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
@@ -25,6 +26,15 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
   const userOrganismsCount = userAccount?.organisms?.length || 0;
   return (
     <div className="w-full flex flex-col">
+      <Breadcrumb
+        currentPageLabel={`${userAccount?.lastname} ${userAccount?.firstname} `}
+        segments={[
+          {
+            label: "Paramètres",
+            linkProps: { href: "/agencies-settings-v3" },
+          },
+        ]}
+      />
       <h1>
         {userAccount?.lastname} {userAccount?.firstname}
       </h1>

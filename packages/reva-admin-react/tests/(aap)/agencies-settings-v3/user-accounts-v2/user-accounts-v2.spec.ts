@@ -115,4 +115,18 @@ test.describe("Settings User accounts v2", () => {
       });
     });
   });
+  test.describe("when I use the breadcrumb", () => {
+    test("it let me go back to the root settings page", async ({ page }) => {
+      await login({ role: "aap", page });
+      await page.goto(
+        "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+      );
+      await waitForPageQueries(page);
+      await page
+        .locator(".fr-breadcrumb")
+        .getByRole("link", { name: "Paramètres" })
+        .click();
+      await expect(page).toHaveURL("/admin2/agencies-settings-v3/");
+    });
+  });
 });
