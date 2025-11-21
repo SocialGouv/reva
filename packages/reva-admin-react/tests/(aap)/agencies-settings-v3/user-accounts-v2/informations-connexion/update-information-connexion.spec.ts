@@ -166,5 +166,30 @@ test.describe("Settings update user account information connexion", () => {
         );
       });
     });
+    test.describe("when I use the breadcrumb", () => {
+      test("it let me go back to the user account page", async ({ page }) => {
+        await login({ role: "aap", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+        );
+        await waitForPageQueries(page);
+        await page.getByRole("link", { name: "Doe John" }).click();
+        await expect(page).toHaveURL(
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
+        );
+      });
+      test("it let me go back to the root settings page", async ({ page }) => {
+        await login({ role: "aap", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+        );
+        await waitForPageQueries(page);
+        await page
+          .locator(".fr-breadcrumb")
+          .getByRole("link", { name: "Paramètres" })
+          .click();
+        await expect(page).toHaveURL("/admin2/agencies-settings-v3/");
+      });
+    });
   });
 });

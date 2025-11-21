@@ -1,4 +1,5 @@
 "use client";
+import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useRouter } from "next/navigation";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
@@ -45,6 +46,21 @@ const InformationsConnexionPage = () => {
   }
   return (
     <div className="w-full flex flex-col">
+      <Breadcrumb
+        currentPageLabel="Informations de connexion"
+        segments={[
+          {
+            label: "Paramètres",
+            linkProps: { href: "/agencies-settings-v3" },
+          },
+          {
+            label: userAccount.lastname + " " + userAccount.firstname,
+            linkProps: {
+              href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`,
+            },
+          },
+        ]}
+      />
       <h1>Informations de connexion</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
