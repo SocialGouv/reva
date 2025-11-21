@@ -47,6 +47,26 @@ const juryResultLabels: { [key in JuryResult]: string } = {
   CANDIDATE_EXCUSED: "Candidat excusé sur justificatif",
   CANDIDATE_ABSENT: "Candidat non présent",
 };
+// Options communes à tous les types de certification
+const COMMON_OPTIONS = [
+  "FAILURE",
+  "CANDIDATE_EXCUSED",
+  "CANDIDATE_ABSENT",
+] as const;
+
+// Options spécifiques à la certification partielle
+const PARTIAL_CERTIFICATION_OPTIONS = [
+  "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  ...COMMON_OPTIONS,
+] as const;
+
+// Options spécifiques à la certification totale
+const FULL_CERTIFICATION_OPTIONS = [
+  "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  ...COMMON_OPTIONS,
+] as const;
 
 const juryResultNotice: {
   [key in JuryResult]: "info" | "new" | "success" | "error";
@@ -61,20 +81,25 @@ const juryResultNotice: {
   CANDIDATE_ABSENT: "new",
 };
 
-const schema = z.object({
-  result: z.enum([
-    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "FAILURE",
-    "CANDIDATE_EXCUSED",
-    "CANDIDATE_ABSENT",
-  ]),
-  informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
-});
+const getSchema = (isCertificationPartial: boolean) =>
+  z.object({
+    result: isCertificationPartial
+      ? z.enum(PARTIAL_CERTIFICATION_OPTIONS)
+      : z.enum(FULL_CERTIFICATION_OPTIONS),
+    informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
+  });
 
-type ResultatFormData = z.infer<typeof schema>;
+type ResultatFormData = {
+  result:
+    | "FULL_SUCCESS_OF_FULL_CERTIFICATION"
+    | "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION"
+    | "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION"
+    | "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION"
+    | "FAILURE"
+    | "CANDIDATE_EXCUSED"
+    | "CANDIDATE_ABSENT";
+  informationOfResult: string;
+};
 
 const revokeSchema = z.object({
   reason: sanitizedOptionalTextAllowSpecialCharacters(),
@@ -86,24 +111,20 @@ export const Resultat = () => {
   const { getCandidacy, updateJuryResult, revokeJuryDecision } =
     useJuryPageLogic();
   const { isAdmin } = useAuth();
-  const availableResultOptions = [
-    "FULL_SUCCESS_OF_FULL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
-    "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
-    "FAILURE",
-    "CANDIDATE_EXCUSED",
-    "CANDIDATE_ABSENT",
-  ];
 
   const candidacy = getCandidacy.data?.getCandidacyById;
 
+  const availableResultOptions = candidacy?.isCertificationPartial
+    ? PARTIAL_CERTIFICATION_OPTIONS
+    : FULL_CERTIFICATION_OPTIONS;
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors, isValid, isSubmitting },
-  } = useForm<ResultatFormData>({ resolver: zodResolver(schema) });
+  } = useForm<ResultatFormData>({
+    resolver: zodResolver(getSchema(!!candidacy?.isCertificationPartial)),
+  });
 
   const {
     register: revokeRegister,
