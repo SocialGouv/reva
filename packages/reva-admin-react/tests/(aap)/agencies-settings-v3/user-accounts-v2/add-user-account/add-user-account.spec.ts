@@ -100,7 +100,6 @@ test.describe("Settings Add user account v2", () => {
           "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/add-user-account/",
         );
         await waitForPageQueries(page);
-        await page.getByRole("button", { name: "Créer" }).click();
 
         await page.getByTestId("lastname-input").locator("input").fill("Doe");
         await page.getByTestId("firstname-input").locator("input").fill("John");
