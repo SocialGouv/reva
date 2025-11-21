@@ -1,4 +1,4 @@
-import { stubQuery, stubMutation } from "../../../../utils/graphql";
+import { stubMutation, stubQuery } from "../../../../utils/graphql";
 
 import certificationBpBoucher from "./fixtures/certification-bp-boucher.json";
 import fcCertificationRncp3890 from "./fixtures/get-fc-certification-rncp-3890.json";
@@ -28,11 +28,7 @@ context("Replace Certification Page", () => {
         "activeFeaturesForConnectedUser",
         "features/active-features.json",
       );
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility/admin.json",
-      );
+
       stubQuery(
         req,
         "getMaisonMereCGUQuery",

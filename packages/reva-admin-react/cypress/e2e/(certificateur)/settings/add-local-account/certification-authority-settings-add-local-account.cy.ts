@@ -6,7 +6,6 @@ function interceptAddLocalAccount() {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -24,7 +23,6 @@ context("main page", () => {
         "/certification-authorities/settings/local-accounts/add-local-account",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
 
       cy.get('[data-testid="add-certification-authority-local-account-page"]')
@@ -43,7 +41,6 @@ context("general information summary card", () => {
         "/certification-authorities/settings/local-accounts/add-local-account",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
 
       cy.get(

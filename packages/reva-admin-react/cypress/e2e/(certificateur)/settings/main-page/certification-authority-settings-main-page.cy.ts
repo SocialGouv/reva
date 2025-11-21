@@ -7,7 +7,6 @@ import certificationAuthoritySettingsFixture from "./fixtures/certification-auth
 function interceptSettings(hasContactInfo = true) {
   cy.intercept("POST", "/api/graphql", (req) => {
     stubQuery(req, "activeFeaturesForConnectedUser", activeFeaturesFixture);
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -30,7 +29,6 @@ context("main page", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -50,7 +48,6 @@ context("general information summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -90,7 +87,6 @@ context("general information summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -117,7 +113,6 @@ context("general information summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -133,7 +128,6 @@ context("general information summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -149,7 +143,6 @@ context("general information summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -169,7 +162,6 @@ context("local accounts summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -185,7 +177,6 @@ context("local accounts summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -203,7 +194,6 @@ context("local accounts summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -223,7 +213,6 @@ context("local accounts summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -244,7 +233,6 @@ context("local accounts summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",
@@ -267,7 +255,6 @@ context("local accounts summary card", () => {
 
       cy.certificateur("/certification-authorities/settings");
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityForCertificationAuthoritySettingsPage",

@@ -12,16 +12,6 @@ function setupCommonGestionnaireIntercepts() {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", {
-      data: {
-        account_getAccountForConnectedUser: {
-          organism: {
-            id: "0415e62b-cb2e-4251-b45b-eb0df9082b2d",
-            isVisibleInCandidateSearchResults: true,
-          },
-        },
-      },
-    });
     stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
     stubQuery(req, "getGestionnaireMaisonMerAAPOrganismInfoQuery", {
       data: {
@@ -52,7 +42,6 @@ function visitAddLieuAccueil() {
   );
 
   cy.wait([
-    "@getOrganismForAAPVisibilityCheck",
     "@getAccountInfo",
     "@getMaisonMereCGUQuery",
     "@activeFeaturesForConnectedUser",
@@ -103,7 +92,6 @@ function visitUpdateOrganismInformation() {
 
   cy.wait([
     "@getOrganismForInformationOnSitePage",
-    "@getOrganismForAAPVisibilityCheck",
     "@getAccountInfo",
     "@getMaisonMereCGUQuery",
     "@activeFeaturesForConnectedUser",

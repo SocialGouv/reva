@@ -10,7 +10,7 @@ function interceptCertification() {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
+
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -45,7 +45,7 @@ context("when i access the add certification description page ", () => {
 
     cy.admin("/certifications/add-certification/description");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
 
     cy.get('[data-testid="add-fc-certification-page"]')
@@ -58,7 +58,7 @@ context("when i access the add certification description page ", () => {
 
     cy.admin("/certifications/add-certification/description");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
 
     cy.get("button").contains("Enregistrer").click();
@@ -74,7 +74,7 @@ context("when i access the add certification description page ", () => {
 
     cy.admin("/certifications/add-certification/description");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
 
     cy.get('[data-testid="fc-certification-description-input"]')
@@ -95,7 +95,7 @@ context("when i access the add certification description page ", () => {
 
     cy.admin("/certifications/add-certification/description");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
 
     cy.get('[data-testid="fc-certification-description-input"]')

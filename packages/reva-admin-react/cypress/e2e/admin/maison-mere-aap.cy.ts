@@ -8,11 +8,6 @@ context("Admin", () => {
         "activeFeaturesForConnectedUser",
         "features/active-features.json",
       );
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility/admin.json",
-      );
       stubQuery(req, "getAccountInfo", "account/admin-info.json");
       stubQuery(req, "getMaisonMereAAPs", "admin/maison-mere-aaps.json");
     });

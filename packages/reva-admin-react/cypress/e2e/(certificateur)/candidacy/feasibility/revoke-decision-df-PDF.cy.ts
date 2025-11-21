@@ -1,10 +1,9 @@
-import { stubQuery, stubMutation } from "../../../../utils/graphql";
+import { stubMutation, stubQuery } from "../../../../utils/graphql";
 import candidacyInfoForLayout from "../../fixtures/candidacy-info-for-layout.json";
 import dossierDeValidationCountByCategory from "../../fixtures/dossier-de-validation-count-by-category.json";
 import feasibilityCountByCategory from "../../fixtures/feasibility-count-by-category.json";
 import juryCountByCategory from "../../fixtures/jury-count-by-category.json";
 import maisonMereCGU from "../../fixtures/maison-mere-cgu.json";
-import organismForAAPVisibilityCheck from "../../fixtures/organism-for-aap-visibility-check.json";
 
 import candidacyPdfAdmissible from "./fixtures/feasibility-pdf-admissible.json";
 import candidacyPdfComplete from "./fixtures/feasibility-pdf-complete.json";
@@ -23,12 +22,6 @@ describe("Revoke PDF Feasibility Decision", () => {
           activeFeaturesForConnectedUser: [],
         },
       });
-
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        organismForAAPVisibilityCheck,
-      );
 
       stubQuery(req, "getMaisonMereCGUQuery", maisonMereCGU);
 
@@ -81,7 +74,6 @@ describe("Revoke PDF Feasibility Decision", () => {
 
         cy.wait([
           "@activeFeaturesForConnectedUser",
-          "@getOrganismForAAPVisibilityCheck",
           "@getMaisonMereCGUQuery",
           "@getCandidacyWithCandidateInfoForLayout",
           "@getFeasibilityCountByCategory",
@@ -128,7 +120,6 @@ describe("Revoke PDF Feasibility Decision", () => {
 
         cy.wait([
           "@activeFeaturesForConnectedUser",
-          "@getOrganismForAAPVisibilityCheck",
           "@getMaisonMereCGUQuery",
           "@getCandidacyWithCandidateInfoForLayout",
           "@getFeasibilityCountByCategory",
@@ -206,7 +197,6 @@ describe("Revoke PDF Feasibility Decision", () => {
 
         cy.wait([
           "@activeFeaturesForConnectedUser",
-          "@getOrganismForAAPVisibilityCheck",
           "@getMaisonMereCGUQuery",
           "@getCandidacyWithCandidateInfoForLayout",
           "@getFeasibilityCountByCategory",
@@ -243,7 +233,6 @@ describe("Revoke PDF Feasibility Decision", () => {
 
           cy.wait([
             "@activeFeaturesForConnectedUser",
-            "@getOrganismForAAPVisibilityCheck",
             "@getMaisonMereCGUQuery",
             "@getCandidacyWithCandidateInfoForLayout",
             "@getFeasibilityCountByCategory",

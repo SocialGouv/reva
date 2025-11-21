@@ -24,11 +24,6 @@ function visitCertificationDetails({
             },
           });
 
-          stubQuery(
-            req,
-            "getOrganismForAAPVisibilityCheck",
-            "visibility/admin.json",
-          );
           stubQuery(req, "getAccountInfo", "account/admin-info.json");
           stubQuery(
             req,

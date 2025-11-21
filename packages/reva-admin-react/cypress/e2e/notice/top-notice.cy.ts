@@ -17,7 +17,6 @@ function interceptCandidacies({
         "activeFeaturesForConnectedUser",
         "features/active-features.json",
       );
-      stubQuery(req, "getOrganismForAAPVisibilityCheck", visibility);
       stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
       stubQuery(
         req,
@@ -47,7 +46,6 @@ context("for an gestionnaire aap", () => {
 
       cy.gestionnaire("/candidacies");
       cy.wait("@getMaisonMereCGUQuery");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
 
       cy.get('[data-testid="new-cgu-notice"]').should("exist");
       cy.get('[data-testid="not-visible-alert-notice"]').should("not.exist");
@@ -63,7 +61,6 @@ context("for an gestionnaire aap", () => {
 
       cy.gestionnaire("/candidacies");
       cy.wait("@getMaisonMereCGUQuery");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
 
       cy.get('[data-testid="results"]').should("exist");
       cy.get('[data-testid="new-cgu-notice"]').should("not.exist");
@@ -77,41 +74,9 @@ context("for an gestionnaire aap", () => {
 
       cy.gestionnaire("/candidacies");
       cy.wait("@getMaisonMereCGUQuery");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
 
       cy.get('[data-testid="results"]').should("exist");
       cy.get('[data-testid="not-visible-alert-notice"]').should("not.exist");
     });
-  });
-});
-
-context("for an aap collaborateur", () => {
-  it("should not display a cgu notice, even if the gestionnaire aap hasn't accepted the latest CGU", function () {
-    interceptCandidacies({
-      isVisibleInCandidateSearchResults: true,
-      isCguAccepted: false,
-    });
-
-    cy.collaborateur("/candidacies");
-    cy.wait("@getMaisonMereCGUQuery");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
-
-    cy.get('[data-testid="results"]').should("exist");
-    cy.get('[data-testid="not-visible-alert-notice"]').should("not.exist");
-    cy.get('[data-testid="new-cgu-notice"]').should("not.exist");
-  });
-
-  it("display a not-visible notice when organism is closed", function () {
-    interceptCandidacies({
-      isVisibleInCandidateSearchResults: false,
-      isCguAccepted: false,
-    });
-
-    cy.collaborateur("/candidacies");
-    cy.wait("@getMaisonMereCGUQuery");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
-
-    cy.get('[data-testid="not-visible-alert-notice"]').should("exist");
-    cy.get('[data-testid="new-cgu-notice"]').should("not.exist");
   });
 });

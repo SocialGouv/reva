@@ -136,7 +136,6 @@ function visitCguCertificateur({
     }
 
     stubQuery(req, "getMaisonMereCGUQuery", { data: {} });
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", { data: {} });
     stubQuery(req, "getKeycloakConfig", {
       data: { getKeycloakConfig: { url: "", realm: "", clientId: "" } },
     });

@@ -12,11 +12,7 @@ function visitFeasibilityPrerequisites() {
       "getMaisonMereCGUQuery",
       "account/gestionnaire-cgu-accepted.json",
     );
-    stubQuery(
-      req,
-      "getOrganismForAAPVisibilityCheck",
-      "visibility/organism.json",
-    );
+
     stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
 
     stubQuery(
@@ -45,7 +41,6 @@ function visitFeasibilityPrerequisites() {
   cy.wait([
     "@activeFeaturesForConnectedUser",
     "@getMaisonMereCGUQuery",
-    "@getOrganismForAAPVisibilityCheck",
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@feasibilityWithDematerializedFeasibilityFileByCandidacyId",
@@ -55,15 +50,6 @@ function visitFeasibilityPrerequisites() {
 
 describe("Dematerialized Feasibility File - Prerequisites Page", () => {
   context("Initial form state", () => {
-    // it("should display an empty prerequisites form with disabled submit button if prerequisites are complete", () => {
-    //   visitFeasibilityPrerequisites();
-
-    //   cy.get('[data-testid="form-buttons"]')
-    //     .should("exist")
-    //     .within(() => {
-    //       cy.get("button").should("be.disabled");
-    //     });
-    // });
     it("should display an empty prerequisites form with enabled submit button if prerequisites have never been saved", () => {
       visitFeasibilityPrerequisites();
 

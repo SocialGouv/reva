@@ -13,11 +13,7 @@ function visitFeasibilityEligibility() {
         "activeFeaturesForConnectedUser",
         "features/active-features.json",
       );
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility/organism.json",
-      );
+
       stubQuery(
         req,
         "getMaisonMereCGUQuery",
@@ -51,7 +47,6 @@ function visitFeasibilityEligibility() {
   cy.wait([
     "@activeFeaturesForConnectedUser",
     "@getMaisonMereCGUQuery",
-    "@getOrganismForAAPVisibilityCheck",
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@getCandidacyByIdForAapFeasibilityEligibilityPage",

@@ -14,7 +14,7 @@ function interceptQueries() {
         activeFeaturesForConnectedUser: [],
       },
     });
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
+
     stubQuery(req, "getAccountInfo", "account/admin-info.json");
     stubQuery(
       req,
@@ -56,7 +56,7 @@ context("Candidate contact details", () => {
     );
 
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getAccountInfo");
     cy.wait("@getCandidacyMenuAndCandidateInfos");
     cy.wait("@getMaisonMereCGUQuery");
@@ -80,7 +80,7 @@ context("Candidate contact details", () => {
     );
 
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getAccountInfo");
     cy.wait("@getCandidacyMenuAndCandidateInfos");
     cy.wait("@getMaisonMereCGUQuery");
@@ -104,7 +104,7 @@ context("Candidate contact details", () => {
     );
 
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getAccountInfo");
     cy.wait("@getCandidacyMenuAndCandidateInfos");
     cy.wait("@getMaisonMereCGUQuery");
@@ -136,7 +136,7 @@ context("Candidate contact details", () => {
     );
 
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getAccountInfo");
     cy.wait("@getCandidacyMenuAndCandidateInfos");
     cy.wait("@getMaisonMereCGUQuery");

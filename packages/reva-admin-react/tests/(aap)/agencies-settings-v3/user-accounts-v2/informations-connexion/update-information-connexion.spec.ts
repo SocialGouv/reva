@@ -16,7 +16,6 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 async function waitForPageQueries(page: Page) {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
-    waitGraphQL(page, "getOrganismForAAPVisibilityCheck"),
     waitGraphQL(page, "getAccountInfo"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
     waitGraphQL(page, "getUserAccountForUpdateUserAccountPage"),

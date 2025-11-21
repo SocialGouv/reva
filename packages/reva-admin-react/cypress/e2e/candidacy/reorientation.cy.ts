@@ -16,14 +16,8 @@ function visitReorientation({
       },
     });
     if (userProfile === "aap") {
-      stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/aap.json");
       stubQuery(req, "getAccountInfo", "account/aap-info.json");
     } else {
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility/admin.json",
-      );
       stubQuery(req, "getAccountInfo", "account/admin-info.json");
     }
 

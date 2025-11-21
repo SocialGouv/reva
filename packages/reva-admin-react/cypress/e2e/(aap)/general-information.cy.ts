@@ -22,14 +22,7 @@ function visitGeneralInformation({
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", {
-      account_getAccountForConnectedUser: {
-        organism: {
-          id: "0415e62b-cb2e-4251-b45b-eb0df9082b2d",
-          isVisibleInCandidateSearchResults: true,
-        },
-      },
-    });
+
     stubQuery(req, "getAccountInfo", "account/admin-info.json");
     stubQuery(req, "getAccountMaisonMereGeneralInformation", {
       data: {
@@ -76,7 +69,6 @@ function visitGeneralInformation({
 
   cy.wait([
     "@getAccountMaisonMereGeneralInformation",
-    "@getOrganismForAAPVisibilityCheck",
     "@getAccountInfo",
     "@getMaisonMereCGUQuery",
     "@activeFeaturesForConnectedUser",

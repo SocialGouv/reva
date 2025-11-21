@@ -1,4 +1,4 @@
-import { stubQuery, stubMutation } from "../../../../utils/graphql";
+import { stubMutation, stubQuery } from "../../../../utils/graphql";
 
 import certificationAuthorityLocalAccountNoContactDetailsFixture from "./fixtures/certification-authority-local-account-no-contact-details.json";
 import certificationAuthorityLocalAccountFixture from "./fixtures/certification-authority-local-account.json";
@@ -11,7 +11,6 @@ function interceptUpdateLocalAccount(params?: { noContactDetails?: boolean }) {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -41,7 +40,6 @@ context("main page", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
@@ -65,7 +63,6 @@ context("general information summary card", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
@@ -100,7 +97,6 @@ context("general information summary card", () => {
         );
 
         cy.wait("@activeFeaturesForConnectedUser");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait(
           "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
@@ -119,7 +115,6 @@ context("when i click on the update button ", () => {
       "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
     );
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait(
       "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
@@ -145,7 +140,6 @@ context("intervention area summary card", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
@@ -170,7 +164,6 @@ context("intervention area summary card", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
@@ -197,7 +190,6 @@ context("certifications summary card", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
@@ -223,7 +215,6 @@ context("certifications summary card", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
@@ -250,7 +241,6 @@ context("delete button", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
       );
@@ -270,7 +260,6 @@ context("delete button", () => {
           "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869",
         );
         cy.wait("@activeFeaturesForConnectedUser");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
         cy.wait(
           "@getCertificationAuthorityLocalAccountForAUpdateCertificationAuthorityLocalAccountPage",
         );

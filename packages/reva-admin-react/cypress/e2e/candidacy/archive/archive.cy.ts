@@ -20,11 +20,6 @@ function visitArchive({
         },
       });
 
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility/admin.json",
-      );
       stubQuery(req, "getAccountInfo", "account/admin-info.json");
 
       stubQuery(req, "getCandidacyForArchivePage", candidacy);

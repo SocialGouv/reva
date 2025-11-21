@@ -9,7 +9,7 @@ function interceptCertifications(status: string, visible = true) {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
+
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -44,7 +44,7 @@ context("when I access the registry manager homepage", () => {
 
     cy.admin("/responsable-certifications/");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.get('[data-testid="no-certifications"]').should("be.visible");
@@ -55,7 +55,7 @@ context("when I access the registry manager homepage", () => {
 
     cy.admin("/responsable-certifications/");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.get('[data-testid="no-certifications"]').should("not.exist");
@@ -76,7 +76,7 @@ context("when i access the certification list", () => {
 
     cy.admin("/responsable-certifications/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.url().should(
@@ -90,7 +90,7 @@ context("when i access the certification list", () => {
 
     cy.admin("/responsable-certifications/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.get('[data-testid="no-certifications-to-validate"]').should(
@@ -105,7 +105,7 @@ context("when i access the certification list", () => {
       "/responsable-certifications/certifications?status=VALIDE_PAR_CERTIFICATEUR&visible=true&page=1",
     );
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.get('[data-testid="no-visible-certifications"]').should("be.visible");
@@ -118,7 +118,7 @@ context("when i access the certification list", () => {
       "/responsable-certifications/certifications?status=VALIDE_PAR_CERTIFICATEUR&visible=false&page=1",
     );
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.get('[data-testid="no-invisible-certifications"]').should("be.visible");
@@ -129,7 +129,7 @@ context("when i access the certification list", () => {
 
     cy.admin("/responsable-certifications/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.get('[data-testid="access-certification-button"]').click({
@@ -148,7 +148,7 @@ context("when i access the certification list", () => {
       "/responsable-certifications/certifications?status=VALIDE_PAR_CERTIFICATEUR&visible=true&page=1",
     );
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.get('[data-testid="access-certification-button"]').click({
@@ -167,7 +167,7 @@ context("when i access the certification list", () => {
       "/responsable-certifications/certifications?status=VALIDE_PAR_CERTIFICATEUR&visible=false&page=1",
     );
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForRegistryManager");
     cy.get('[data-testid="access-certification-button"]').click({

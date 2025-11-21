@@ -49,11 +49,7 @@ function visitFeasibility({
           "getMaisonMereCGUQuery",
           "account/gestionnaire-cgu-accepted.json",
         );
-        stubQuery(
-          req,
-          "getOrganismForAAPVisibilityCheck",
-          "visibility/organism.json",
-        );
+
         stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
         candidacy.data.getCandidacyById.feasibility = feasibility;
         stubQuery(req, "getCandidacyByIdForAAPFeasibilityPage", candidacy);
@@ -80,7 +76,6 @@ function visitFeasibility({
   cy.wait([
     "@activeFeaturesForConnectedUser",
     "@getMaisonMereCGUQuery",
-    "@getOrganismForAAPVisibilityCheck",
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@getCandidacyByIdForAAPFeasibilityPage",

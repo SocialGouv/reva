@@ -142,7 +142,6 @@ async function waitForPageQueries(page: Page) {
   await Promise.all([
     waitGraphQL(page, "getGestionnaireMaisonMereAAPSettingsInfo"),
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
-    waitGraphQL(page, "getOrganismForAAPVisibilityCheck"),
     waitGraphQL(page, "getAccountInfo"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
   ]);

@@ -3,7 +3,6 @@ import dossierDeValidationCountByCategory from "../../../(certificateur)/fixture
 import feasibilityCountByCategory from "../../../(certificateur)/fixtures/feasibility-count-by-category.json";
 import juryCountByCategory from "../../../(certificateur)/fixtures/jury-count-by-category.json";
 import maisonMereCGU from "../../../(certificateur)/fixtures/maison-mere-cgu.json";
-import organismForAAPVisibilityCheck from "../../../(certificateur)/fixtures/organism-for-aap-visibility-check.json";
 import { stubQuery } from "../../../../utils/graphql";
 
 import aapFeasibilitySummary from "./fixtures/aap-dematerialized-summary.json";
@@ -29,11 +28,6 @@ const scenarios: Scenario[] = [
         stubQuery(req, "activeFeaturesForConnectedUser", {
           data: { activeFeaturesForConnectedUser: [] },
         });
-        stubQuery(
-          req,
-          "getOrganismForAAPVisibilityCheck",
-          organismForAAPVisibilityCheck,
-        );
         stubQuery(req, "getMaisonMereCGUQuery", maisonMereCGU);
         stubQuery(
           req,
@@ -72,7 +66,6 @@ const scenarios: Scenario[] = [
     visit: () => cy.certificateur(`/candidacies/${candidacy.id}/feasibility/`),
     waitAliases: [
       "@activeFeaturesForConnectedUser",
-      "@getOrganismForAAPVisibilityCheck",
       "@getMaisonMereCGUQuery",
       "@getCandidacyWithCandidateInfoForLayout",
       "@getFeasibilityCountByCategory",
@@ -96,11 +89,6 @@ const scenarios: Scenario[] = [
           req,
           "getMaisonMereCGUQuery",
           "account/gestionnaire-cgu-accepted.json",
-        );
-        stubQuery(
-          req,
-          "getOrganismForAAPVisibilityCheck",
-          "visibility/organism.json",
         );
         stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
         stubQuery(
@@ -130,7 +118,6 @@ const scenarios: Scenario[] = [
     waitAliases: [
       "@activeFeaturesForConnectedUser",
       "@getMaisonMereCGUQuery",
-      "@getOrganismForAAPVisibilityCheck",
       "@getAccountInfo",
       "@getCandidacyMenuAndCandidateInfos",
       "@candidacy_canAccessCandidacy",

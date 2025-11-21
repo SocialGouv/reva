@@ -9,7 +9,7 @@ function interceptAddLocalAccount() {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
+
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -32,7 +32,7 @@ context("main page", () => {
         "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/ajouter",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityAndStructureForAdminAddLocalAccountPage",
@@ -54,7 +54,7 @@ context("general information summary card", () => {
         "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/ajouter",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityAndStructureForAdminAddLocalAccountPage",

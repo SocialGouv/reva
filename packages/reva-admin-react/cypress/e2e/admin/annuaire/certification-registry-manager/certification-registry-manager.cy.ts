@@ -16,7 +16,7 @@ function interceptCertificationRegistryManager({
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
+
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -53,7 +53,7 @@ context("global tests", () => {
         "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/responsable-referentiel",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationAuthorityStructureWithRegistryManager");
 
@@ -72,7 +72,7 @@ context("with no existing registry manager", () => {
       "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/responsable-referentiel",
     );
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationAuthorityStructureWithRegistryManager");
 
@@ -100,7 +100,7 @@ context("with an existing registry manager", () => {
       "/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/responsable-referentiel",
     );
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationAuthorityStructureWithRegistryManager");
 

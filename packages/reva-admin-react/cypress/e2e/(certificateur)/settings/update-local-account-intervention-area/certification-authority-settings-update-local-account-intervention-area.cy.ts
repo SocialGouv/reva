@@ -10,7 +10,6 @@ function interceptUpdateLocalAccountInterventionArea() {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -40,7 +39,6 @@ context("main page", () => {
           "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/intervention-area",
         );
         cy.wait("@activeFeaturesForConnectedUser");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait(
           "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
@@ -60,7 +58,6 @@ context("main page", () => {
           "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/intervention-area",
         );
         cy.wait("@activeFeaturesForConnectedUser");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait(
           "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
@@ -86,7 +83,6 @@ context("main page", () => {
           "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/intervention-area",
         );
         cy.wait("@activeFeaturesForConnectedUser");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait(
           "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",
@@ -104,7 +100,6 @@ context("main page", () => {
           "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/intervention-area",
         );
         cy.wait("@activeFeaturesForConnectedUser");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait(
           "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountInterventionAreaPage",

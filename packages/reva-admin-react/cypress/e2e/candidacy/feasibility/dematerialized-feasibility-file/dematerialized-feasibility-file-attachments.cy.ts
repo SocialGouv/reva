@@ -19,11 +19,7 @@ function visitFeasibilityAttachments() {
       "getMaisonMereCGUQuery",
       "account/gestionnaire-cgu-accepted.json",
     );
-    stubQuery(
-      req,
-      "getOrganismForAAPVisibilityCheck",
-      "visibility/organism.json",
-    );
+
     stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
 
     stubQuery(
@@ -52,7 +48,6 @@ function visitFeasibilityAttachments() {
   cy.wait([
     "@activeFeaturesForConnectedUser",
     "@getMaisonMereCGUQuery",
-    "@getOrganismForAAPVisibilityCheck",
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@feasibilityWithDematerializedFeasibilityFileAttachmentsByCandidacyId",

@@ -8,7 +8,6 @@ const aapCommonWait = async (page: Page) => {
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getAccountInfo"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
-    waitGraphQL(page, "getOrganismForAAPVisibilityCheck"),
     waitGraphQL(page, "getCandidacyMenuAndCandidateInfos"),
     waitGraphQL(page, "candidacy_canAccessCandidacy"),
   ]);
@@ -46,7 +45,6 @@ export const getAAPCommonHandlers = () => {
           },
         }),
       ),
-      fvae.query("getOrganismForAAPVisibilityCheck", graphQLResolver({})),
       fvae.query(
         "getCandidacyMenuAndCandidateInfos",
         graphQLResolver({

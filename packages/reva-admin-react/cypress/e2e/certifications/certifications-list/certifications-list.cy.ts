@@ -9,7 +9,7 @@ function interceptCertifications() {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
+
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -25,7 +25,7 @@ context("when i access the certification list", () => {
 
     cy.admin("/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForListPage");
     cy.get('[data-testid="results"]').children().should("have.length", 3);
@@ -36,7 +36,7 @@ context("when i access the certification list", () => {
 
     cy.admin("/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForListPage");
     cy.get('[data-testid="add-certification-button"]').click();
@@ -51,7 +51,7 @@ context("when i access the certification list", () => {
 
     cy.admin("/certifications");
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait("@getCertificationsV2ForListPage");
     cy.get('[data-testid="access-certification-button"]').eq(1).click();

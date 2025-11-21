@@ -10,7 +10,6 @@ function interceptUpdateLocalAccountCertifications() {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -38,7 +37,6 @@ context("main page", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage",
@@ -58,7 +56,6 @@ context("main page", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage",
@@ -84,7 +81,6 @@ context("main page", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage",
@@ -102,7 +98,6 @@ context("main page", () => {
         "/certification-authorities/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationAuthorityLocalAccountForUpdateCertificationAuthorityLocalAccountCertificationsPage",

@@ -23,11 +23,6 @@ function visitSettings({
         "activeFeaturesForConnectedUser",
         "features/active-features.json",
       );
-      stubQuery(
-        req,
-        "getOrganismForAAPVisibilityCheck",
-        "visibility/organism.json",
-      );
       stubQuery(req, "getCollaborateurSettingsInfo", settings);
       stubQuery(req, "getAccountInfo", "account/collaborateur-info.json");
       stubQuery(

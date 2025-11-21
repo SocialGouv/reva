@@ -21,7 +21,7 @@ function interceptCertification({
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
+
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -86,7 +86,7 @@ context("when i access the update certification page ", () => {
       "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
     );
     cy.wait("@activeFeaturesForConnectedUser");
-    cy.wait("@getOrganismForAAPVisibilityCheck");
+
     cy.wait("@getMaisonMereCGUQuery");
     cy.wait(
       "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -107,7 +107,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -136,7 +136,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -161,7 +161,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -179,7 +179,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -197,7 +197,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -222,7 +222,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -243,7 +243,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -264,7 +264,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -289,7 +289,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -312,7 +312,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -336,7 +336,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -360,7 +360,7 @@ context("when i access the update certification page ", () => {
           "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
         );
         cy.wait("@activeFeaturesForConnectedUser");
-        cy.wait("@getOrganismForAAPVisibilityCheck");
+
         cy.wait("@getMaisonMereCGUQuery");
         cy.wait(
           "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",
@@ -381,7 +381,7 @@ context("when i access the update certification page ", () => {
         "/responsable-certifications/certifications/bf78b4d6-f6ac-4c8f-9e6b-d6c6ae9e891b",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
+
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait(
         "@getCertificationForCertificationRegistryManagerUpdateCertificationPage",

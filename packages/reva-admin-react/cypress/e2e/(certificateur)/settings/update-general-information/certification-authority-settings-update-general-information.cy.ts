@@ -9,7 +9,6 @@ function interceptUpdateGeneralInformation() {
       "activeFeaturesForConnectedUser",
       "features/active-features.json",
     );
-    stubQuery(req, "getOrganismForAAPVisibilityCheck", "visibility/admin.json");
     stubQuery(
       req,
       "getMaisonMereCGUQuery",
@@ -32,7 +31,6 @@ context("main page", () => {
         "/certification-authorities/settings/informations-generales",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationAuthorityGeneralInfoForEditPage");
 
@@ -48,7 +46,6 @@ context("main page", () => {
         "/certification-authorities/settings/informations-generales",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationAuthorityGeneralInfoForEditPage");
 
@@ -89,7 +86,6 @@ context("main page", () => {
         "/certification-authorities/settings/informations-generales",
       );
       cy.wait("@activeFeaturesForConnectedUser");
-      cy.wait("@getOrganismForAAPVisibilityCheck");
       cy.wait("@getMaisonMereCGUQuery");
       cy.wait("@getCertificationAuthorityGeneralInfoForEditPage");
 

@@ -12,11 +12,7 @@ function visitFeasibilityDecision() {
       "getMaisonMereCGUQuery",
       "account/gestionnaire-cgu-accepted.json",
     );
-    stubQuery(
-      req,
-      "getOrganismForAAPVisibilityCheck",
-      "visibility/organism.json",
-    );
+
     stubQuery(req, "getAccountInfo", "account/gestionnaire-info.json");
 
     stubQuery(
@@ -45,7 +41,6 @@ function visitFeasibilityDecision() {
   cy.wait([
     "@activeFeaturesForConnectedUser",
     "@getMaisonMereCGUQuery",
-    "@getOrganismForAAPVisibilityCheck",
     "@getAccountInfo",
     "@getCandidacyMenuAndCandidateInfos",
     "@feasibilityWithDematerializedFeasibilityFileDecisionByCandidacyId",
