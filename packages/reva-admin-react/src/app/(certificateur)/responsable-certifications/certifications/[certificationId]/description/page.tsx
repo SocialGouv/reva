@@ -511,9 +511,9 @@ const PageContent = ({
               <p className="m-0">
                 La certification sera visible par les candidats et les AAP,
                 permettant le dépôt de candidatures à partir des dates indiquées
-                ci-dessous. Ces dates sont préremplies avec celles de France
-                Compétences, mais vous pouvez les modifier pour ajuster la
-                visibilité sur la plateforme.
+                ci-dessous. La date de fin de mise en visibilité est non
+                modifiable, et correspond à l'arrivée à échéance de la
+                certification sur France Compétences
               </p>
 
               <div className="flex flex-row gap-6">
