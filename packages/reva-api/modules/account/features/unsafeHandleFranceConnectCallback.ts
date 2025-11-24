@@ -12,12 +12,17 @@ import {
   sanitizedText,
 } from "../utils/input-sanitization";
 
+const preferredUsernameSchema = z
+  .union([sanitizedEmail(), sanitizedText({ minLength: 0 })])
+  .optional()
+  .transform((val) => val ?? "");
+
 const FranceConnectClaimsSchema = z.object({
   sub: z.string(),
   email: sanitizedEmail(),
   given_name: sanitizedText(),
   family_name: sanitizedText(),
-  preferred_username: sanitizedOptionalText(),
+  preferred_username: preferredUsernameSchema,
   gender: z.enum(["male", "female"]),
   birthdate: sanitizedText(),
   birthplace: sanitizedOptionalText(),
