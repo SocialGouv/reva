@@ -56,7 +56,6 @@ context("Admin", () => {
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
     "PARCOURS_CONFIRME",
-    "DOSSIER_FAISABILITE_ENVOYE",
     "DOSSIER_FAISABILITE_COMPLET",
     "DOSSIER_FAISABILITE_INCOMPLET",
   ];
@@ -154,6 +153,20 @@ context("Admin", () => {
       "eq",
       Cypress.config().baseUrl +
         "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/summary/",
+    );
+  });
+
+  it("blocks archiving when the feasibility file has been sent", function () {
+    visitArchive({
+      userProfile: "admin",
+      candidacyStatus: "DOSSIER_FAISABILITE_ENVOYE",
+    });
+    cy.wait("@getCandidacyForArchivePage");
+    cy.get('[data-testid="candidacy-cannot-be-archived-alert"]').should(
+      "exist",
+    );
+    cy.get('[data-testid="archiving-reason-radio-buttons"]').should(
+      "not.exist",
     );
   });
 });
