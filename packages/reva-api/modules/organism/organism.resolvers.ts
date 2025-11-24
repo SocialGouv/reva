@@ -49,6 +49,7 @@ import { getOrganismCcnsByOrganismId } from "./features/getOrganismCcnsByOrganis
 import { getOrganismCertificationsByOrganismId } from "./features/getOrganismCertificationsByOrganismId";
 import { getOrganismFormacodesByOrganismId } from "./features/getOrganismFormacodesByOrganismId";
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
+import { getPaginatedOrganismsByMaisonMereAAPId } from "./features/getPaginatedOrganismsByMaisonMereAAPId";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
 import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
 import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
@@ -140,6 +141,15 @@ const unsafeResolvers = {
       getMaisonMereAAPOnConventionCollectives({ maisonMereAAPId: id }),
     organisms: ({ id: maisonMereAAPId }: { id: string }) =>
       getOrganismsByMaisonAAPId({ maisonMereAAPId }),
+    paginatedOrganisms: (
+      { id: maisonMereAAPId }: { id: string },
+      { offset, limit }: { offset: number; limit: number },
+    ) =>
+      getPaginatedOrganismsByMaisonMereAAPId({
+        maisonMereAAPId,
+        offset,
+        limit,
+      }),
     gestionnaire: ({
       gestionnaireAccountId,
     }: {

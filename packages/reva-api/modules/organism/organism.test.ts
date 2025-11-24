@@ -191,6 +191,63 @@ describe("MaisonMereAAP resolvers", () => {
       );
     });
   });
+  describe("paginated organisms list", () => {
+    it("should return the paginated organisms list for the maisonMereAAP", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const organism1 = await createOrganismHelper({
+        maisonMereAAPId: maisonMereAAP.id,
+      });
+      const organism2 = await createOrganismHelper({
+        maisonMereAAPId: maisonMereAAP.id,
+      });
+
+      const otherMaisonMereAAP = await createMaisonMereAapHelper();
+      await createOrganismHelper({
+        maisonMereAAPId: otherMaisonMereAAP.id,
+      });
+
+      const paginatedOrganismsQuery = graphql(`
+        query paginatedOrganisms(
+          $maisonMereAAPId: ID!
+          $offset: Int
+          $limit: Int
+        ) {
+          organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
+            paginatedOrganisms(offset: $offset, limit: $limit) {
+              rows {
+                id
+              }
+            }
+          }
+        }
+      `);
+
+      const graphqlClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "gestion_maison_mere_aap",
+            keycloakId: maisonMereAAP.gestionnaire.keycloakId,
+          }),
+        },
+      });
+
+      const paginatedOrganisms = await graphqlClient.request(
+        paginatedOrganismsQuery,
+        {
+          maisonMereAAPId: maisonMereAAP.id,
+          offset: 0,
+          limit: 10,
+        },
+      );
+
+      expect(
+        paginatedOrganisms.organism_getMaisonMereAAPById.paginatedOrganisms
+          .rows,
+      ).toEqual(
+        expect.arrayContaining([{ id: organism1.id }, { id: organism2.id }]),
+      );
+    });
+  });
 });
 
 describe("Positionnement compte collaborateur", () => {
