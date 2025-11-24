@@ -46,10 +46,10 @@ const getText = ({
       subtitle: `Vous êtes recevable et semblez inactif depuis bientôt 6 mois, vous
         n'avez pas encore déposé votre dossier de validation pour cette candidature. Souhaitez-vous continuer votre candidature France VAE ? Sans réponse de votre part avant le
         ${inactifEnAttenteThreshold}, votre parcours sera considéré en abandon.`,
-      continueButtonText: "Oui, je continue ma candidature",
+      continueButtonText: "Oui, je continue mon parcours VAE",
       continueHintText:
         "Prochaine étape : [déposer votre dossier de validation].",
-      stopButtonText: "Non, je souhaite arrêter ma candidature",
+      stopButtonText: "Non, je souhaite arrêter mon parcours VAE",
       stopHintText:
         "Votre parcours sera considéré en abandon. Vous ne pourrez pas finaliser votre VAE.",
       bottomCardText: `Recevable le ${format(
@@ -64,10 +64,10 @@ const getText = ({
     mais vous n'avez pas encore déposé votre dossier de faisabilité pour cette candidature.
     Souhaitez-vous poursuivre cette candidature France VAE ? Sans réponse de votre part avant le
     ${inactifEnAttenteThreshold}, votre candidature sera supprimée.`,
-    continueButtonText: "Oui, je continue ma candidature",
+    continueButtonText: "Oui, je continue mon parcours VAE",
     continueHintText:
       "Continuez de compléter toutes les sections de votre candidature afin qu'elle soit la plus complète possible.",
-    stopButtonText: "Non, je souhaite arrêter ma candidature",
+    stopButtonText: "Non, je souhaite arrêter mon parcours VAE",
     stopHintText:
       "Votre candidature sera supprimée. Vous avez la possibilité de candidater à nouveau.",
     bottomCardText: `Candidature créée le ${format(

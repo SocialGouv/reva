@@ -1,0 +1,32 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "c1",
+      "candidacyDropOut": {
+        "createdAt": "2021-09-01T00:00:00Z"
+      },
+      "candidate": {
+        "firstname": "John",
+        "firstname2": "Robert",
+        "firstname3": "William",
+        "lastname": "Doe",
+        "givenName": "Johnny",
+        "department": {
+          "label": "Paris",
+          "code": "75"
+        }
+      },
+      "certification": {
+        "codeRncp": "34692",
+        "label": "Titre 2"
+      },
+      "feasibility": {
+        "decisionSentAt": "2021-09-01T00:00:00Z"
+      },
+      "organism": {
+        "modaliteAccompagnement": "LIEU_ACCUEIL",
+        "label": "Architecte 1"
+      }
+    }
+  }
+}

@@ -3,8 +3,6 @@ import { addDays, subMonths, format } from "date-fns";
 import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
 
-const candidate = candidate1Data.data.candidate_getCandidateById;
-
 context("Dashboard Banner", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {

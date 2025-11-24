@@ -1,0 +1,38 @@
+{
+  "data": {
+    "getCandidacyById": {
+      "id": "c1",
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "email@example.com",
+        "phone": "06 01 02 03 04"
+      },
+      "typeAccompagnement": "ACCOMPAGNE",
+      "certificationId": null,
+      "organism": null,
+      "createdAt": null,
+      "certification": null,
+      "experiences": [],
+      "goals": [],
+      "status": "PROJET",
+      "candidacyStatuses": [
+        {
+          "status": "PROJET"
+        }
+      ],
+      "appointmentCount": 0,
+      "certificateSkills": null,
+      "otherTraining": null,
+      "individualHourCount": null,
+      "collectiveHourCount": null,
+      "additionalHourCount": null,
+      "basicSkills": [],
+      "mandatoryTrainings": [],
+      "candidacyDropOut": {
+        "createdAt": 1580428800000,
+        "dropOutConfirmedByCandidate": false
+      }
+    }
+  }
+}
