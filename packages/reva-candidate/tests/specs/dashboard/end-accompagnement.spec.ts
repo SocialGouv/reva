@@ -104,7 +104,7 @@ test.describe("End Accompagnement Page", () => {
 
       await expect(
         page.getByText(
-          "Voulez-vous accepter la fin de votre accompagnement pour cette candidature VAE ?",
+          "Voulez-vous accepter la fin de votre accompagnement pour cette candidature France VAE ?",
         ),
       ).toBeVisible();
 

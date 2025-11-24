@@ -143,7 +143,7 @@ export default function EndAccompagnementPage() {
       </div>
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         <RadioButtons
-          legend="Voulez-vous accepter la fin de votre accompagnement pour cette candidature VAE ?"
+          legend="Voulez-vous accepter la fin de votre accompagnement pour cette candidature France VAE ?"
           stateRelatedMessage={errors.endAccompagnement?.message}
           state={errors.endAccompagnement ? "error" : "default"}
           data-testid="candidacy-end-accompagnement-radio-buttons"

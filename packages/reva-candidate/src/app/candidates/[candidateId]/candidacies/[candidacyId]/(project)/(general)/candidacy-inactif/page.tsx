@@ -44,12 +44,12 @@ const getText = ({
   if (hasFeasibilityAdmissible) {
     return {
       subtitle: `Vous êtes recevable et semblez inactif depuis bientôt 6 mois, vous
-        n'avez pas encore déposé votre dossier de validation pour cette candidature. Souhaitez-vous continuer votre candidature VAE ? Sans réponse de votre part avant le
+        n'avez pas encore déposé votre dossier de validation pour cette candidature. Souhaitez-vous continuer votre candidature France VAE ? Sans réponse de votre part avant le
         ${inactifEnAttenteThreshold}, votre parcours sera considéré en abandon.`,
-      continueButtonText: "Oui, je continue mon parcours VAE",
+      continueButtonText: "Oui, je continue ma candidature",
       continueHintText:
         "Prochaine étape : [déposer votre dossier de validation].",
-      stopButtonText: "Non, je souhaite arrêter mon parcours VAE",
+      stopButtonText: "Non, je souhaite arrêter ma candidature",
       stopHintText:
         "Votre parcours sera considéré en abandon. Vous ne pourrez pas finaliser votre VAE.",
       bottomCardText: `Recevable le ${format(
@@ -62,7 +62,7 @@ const getText = ({
   return {
     subtitle: `Vous vous êtes inscrit sur France VAE depuis bientôt 2 mois,
     mais vous n'avez pas encore déposé votre dossier de faisabilité pour cette candidature.
-    Souhaitez-vous poursuivre cette candidature VAE ? Sans réponse de votre part avant le
+    Souhaitez-vous poursuivre cette candidature France VAE ? Sans réponse de votre part avant le
     ${inactifEnAttenteThreshold}, votre candidature sera supprimée.`,
     continueButtonText: "Oui, je continue ma candidature",
     continueHintText:
@@ -200,7 +200,7 @@ export default function CandidacyInactifPage() {
       </div>
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
         <RadioButtons
-          legend="Voulez-vous continuer cette candidature VAE ?"
+          legend="Voulez-vous continuer cette candidature France VAE ?"
           stateRelatedMessage={errors.continueCandidacy?.message}
           state={errors.continueCandidacy ? "error" : "default"}
           data-testid="candidacy-inactif-radio-buttons"
