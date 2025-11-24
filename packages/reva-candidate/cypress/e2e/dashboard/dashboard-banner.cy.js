@@ -139,6 +139,52 @@ context("Dashboard Banner", () => {
     });
   });
 
+  describe("Drop Out Banner", () => {
+    it("should display drop out warning when candidacy is in drop out state", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        const dropOutDate = new Date();
+        candidacy.data.getCandidacyById.candidacyDropOut = {
+          proofReceivedByAdmin: false,
+          createdAt: dropOutDate.toISOString(),
+          dropOutConfirmedByCandidate: false,
+        };
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
+        });
+
+        cy.get('[data-testid="drop-out-warning"]').should("be.visible");
+        cy.get('[data-testid="drop-out-warning-decision-button"]').should(
+          "be.visible",
+        );
+      });
+    });
+
+    it("should not show decision button when drop out is confirmed", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        const dropOutDate = new Date();
+        candidacy.data.getCandidacyById.candidacyDropOut = {
+          proofReceivedByAdmin: true,
+          createdAt: dropOutDate.toISOString(),
+          dropOutConfirmedByCandidate: true,
+        };
+
+        cy.intercept("POST", "/api/graphql", (req) => {
+          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
+        });
+
+        cy.get('[data-testid="drop-out-warning"]').should("be.visible");
+        cy.get('[data-testid="drop-out-warning-decision-button"]').should(
+          "not.exist",
+        );
+      });
+    });
+  });
+
   describe("Validation Dossier Banners", () => {
     it("should display pending dossier validation banner", () => {
       cy.fixture("candidacy1.json").then((candidacy) => {

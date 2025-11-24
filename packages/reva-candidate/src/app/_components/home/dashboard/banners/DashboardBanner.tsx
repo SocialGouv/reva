@@ -1,6 +1,7 @@
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 
 import { AppointmentsBanner } from "./AppointmentsBanner";
+import { CandidacyDropOutBanner } from "./CandidacyDropOutBanner";
 import { CandidacySubmissionBanner } from "./CandidacySubmissionBanner";
 import { DossierDeValidationBanner } from "./DossierDeValidationBanner";
 import { FeasibilityBanner } from "./FeasibilityBanner";
@@ -24,6 +25,7 @@ export const DashboardBanner = (props: BannerProps) => {
     status,
     activeDossierDeValidation,
     jury,
+    candidacyDropOut,
     typeAccompagnement,
   } = candidacy;
 
@@ -46,6 +48,10 @@ export const DashboardBanner = (props: BannerProps) => {
   const displayAppointmentsBanner = !!(
     candidacyAlreadySubmitted && candidacyIsAccompagne
   );
+
+  if (candidacyDropOut) {
+    return <CandidacyDropOutBanner candidacyDropOut={candidacyDropOut} />;
+  }
 
   if (jury) {
     return <JuryBanner jury={jury} />;
