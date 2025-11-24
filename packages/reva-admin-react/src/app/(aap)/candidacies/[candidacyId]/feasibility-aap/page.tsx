@@ -1,7 +1,7 @@
 "use client";
 
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import { toDate } from "date-fns";
+import { format, isBefore, toDate } from "date-fns";
 
 import { useAapFeasibilityPageLogic } from "@/app/(aap)/candidacies/[candidacyId]/feasibility-aap/aapFeasibilityPageLogic";
 import { DecisionSentComponent } from "@/components/alert-decision-sent-feasibility/DecisionSentComponent";
@@ -66,8 +66,12 @@ const AapFeasibilityPage = () => {
   const decisionComment = feasibility?.decisionComment;
   const history = feasibility?.history;
   const feasibilityDecisionIsIncomplete = decision === "INCOMPLETE";
+  const hasCertificationRncpExpired =
+    !!certification?.rncpExpiresAt &&
+    isBefore(certification?.rncpExpiresAt, new Date());
   const isFeasibilityEditable =
-    !feasibilityFileSentAt || feasibilityDecisionIsIncomplete;
+    (!feasibilityFileSentAt || feasibilityDecisionIsIncomplete) &&
+    !hasCertificationRncpExpired;
   const isFeasibilityReceivedOrRejected =
     decision === "ADMISSIBLE" || decision === "REJECTED";
   const displayDecisionIncompleteAlert =
@@ -110,6 +114,28 @@ const AapFeasibilityPage = () => {
         Remplissez toutes les catégories afin de pouvoir envoyer le dossier au
         certificateur.
       </p>
+
+      {hasCertificationRncpExpired && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="La certification visée a expiré"
+          description={
+            <>
+              <p className="mb-4">
+                La certification <em>{certification?.label}</em> a expiré le{" "}
+                {format(certification?.rncpExpiresAt, "dd/MM/yyyy")}.
+              </p>
+              <p>
+                Il est impossible d’envoyer le dossier de faisabilité du
+                candidat au certificateur. Vous devez attendre le renouvellement
+                de la certification, changer de certification ou vous pouvez
+                contacter le certificateur en charge de la candidature.
+              </p>
+            </>
+          }
+        />
+      )}
 
       {candidacy.warningOnFeasibilitySubmission ===
         "MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED" && (
@@ -218,7 +244,8 @@ const AapFeasibilityPage = () => {
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
             }
             isReadyToBeSentToCandidate={
-              !!dematerializedFeasibilityFile?.isReadyToBeSentToCandidate
+              !!dematerializedFeasibilityFile?.isReadyToBeSentToCandidate &&
+              !hasCertificationRncpExpired
             }
           />
           {dematerializedFeasibilityFile?.candidateDecisionComment && (
