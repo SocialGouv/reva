@@ -1,6 +1,8 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Card, { CardProps } from "@codegouvfr/react-dsfr/Card";
 
+import { Pagination } from "../pagination/Pagination";
+
 type MultiSelectItemProps = Pick<
   CardProps,
   "title" | "desc" | "start" | "end"
@@ -12,6 +14,9 @@ type MultiSelectListProps = {
   pageItems: MultiSelectItemProps[];
   selectedItemsIds: string[];
   onSelectionChange?: (args: { itemId: string; selected: boolean }) => void;
+  currentPage: number;
+  totalPages: number;
+  basePaginationUrl: string;
   className?: string;
 };
 
@@ -19,6 +24,9 @@ export const MultiSelectList = ({
   pageItems,
   selectedItemsIds,
   onSelectionChange,
+  currentPage,
+  totalPages,
+  basePaginationUrl,
   className = "",
 }: MultiSelectListProps) => (
   <div className={`flex flex-col gap-4 ${className}`}>
@@ -55,5 +63,11 @@ export const MultiSelectList = ({
         }
       />
     ))}
+    <Pagination
+      className="mx-auto"
+      totalPages={totalPages}
+      currentPage={currentPage}
+      baseHref={basePaginationUrl}
+    />
   </div>
 );
