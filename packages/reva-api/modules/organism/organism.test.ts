@@ -1,9 +1,11 @@
+import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
 import {
   attachCollaborateurAccountToMaisonMereAAP,
   createMaisonMereAapHelper,
 } from "@/test/helpers/entities/create-maison-mere-aap-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
@@ -188,5 +190,111 @@ describe("MaisonMereAAP resolvers", () => {
         "Vous n'êtes pas autorisé à accéder à cette maison mère",
       );
     });
+  });
+});
+
+describe("Positionnement compte collaborateur", () => {
+  it("should update the positionnement of a compte collaborateur", async () => {
+    const collaborateurAccount = await createAccountHelper();
+    const maisonMereAAP = await createMaisonMereAapHelper();
+
+    const organism = await createOrganismHelper({
+      maisonMereAAPId: maisonMereAAP.id,
+    });
+
+    attachCollaborateurAccountToMaisonMereAAP({
+      maisonMereAAPId: maisonMereAAP.id,
+      collaborateurAccountId: collaborateurAccount.id,
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "gestion_maison_mere_aap",
+          keycloakId: maisonMereAAP.gestionnaire.keycloakId,
+        }),
+      },
+    });
+
+    const updatePositionnementCollaborateurMutation = graphql(`
+      mutation updatePositionnementCollaborateur(
+        $maisonMereAAPId: ID!
+        $positionnement: PositionnementCollaborateurInput!
+      ) {
+        organism_updatePositionnementCollaborateur(
+          maisonMereAAPId: $maisonMereAAPId
+          positionnement: $positionnement
+        ) {
+          id
+        }
+      }
+    `);
+
+    await graphqlClient.request(updatePositionnementCollaborateurMutation, {
+      maisonMereAAPId: maisonMereAAP.id,
+      positionnement: {
+        accountId: collaborateurAccount.id,
+        organismIds: [organism.id],
+      },
+    });
+
+    const organismsOfAccount = await prismaClient.organismOnAccount.findMany({
+      where: {
+        accountId: collaborateurAccount.id,
+      },
+    });
+
+    expect(organismsOfAccount.length).toBe(1);
+    expect(organismsOfAccount[0].organismId).toBe(organism.id);
+  });
+
+  it("should throw an error when updating the positionnement of a compte collaborateur from another maison mere", async () => {
+    const collaborateurAccount = await createAccountHelper();
+    const maisonMereAAP = await createMaisonMereAapHelper();
+    const otherMaisonMereAAP = await createMaisonMereAapHelper();
+
+    const organism = await createOrganismHelper({
+      maisonMereAAPId: maisonMereAAP.id,
+    });
+
+    attachCollaborateurAccountToMaisonMereAAP({
+      maisonMereAAPId: maisonMereAAP.id,
+      collaborateurAccountId: collaborateurAccount.id,
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "gestion_maison_mere_aap",
+          keycloakId: maisonMereAAP.gestionnaire.keycloakId,
+        }),
+      },
+    });
+
+    const updatePositionnementCollaborateurMutation = graphql(`
+      mutation updatePositionnementCollaborateur(
+        $maisonMereAAPId: ID!
+        $positionnement: PositionnementCollaborateurInput!
+      ) {
+        organism_updatePositionnementCollaborateur(
+          maisonMereAAPId: $maisonMereAAPId
+          positionnement: $positionnement
+        ) {
+          id
+        }
+      }
+    `);
+
+    await expect(
+      graphqlClient.request(updatePositionnementCollaborateurMutation, {
+        maisonMereAAPId: otherMaisonMereAAP.id,
+        positionnement: {
+          accountId: collaborateurAccount.id,
+          organismIds: [organism.id],
+        },
+      }),
+    ).rejects.toThrowError(
+      "Vous n'êtes pas autorisé à accéder à cette maison mère",
+    );
   });
 });

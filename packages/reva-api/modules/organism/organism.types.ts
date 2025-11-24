@@ -100,3 +100,8 @@ export type RemoteZone =
   | "SAINT_PIERRE_ET_MIQUELON"
   | "SAINTE_LUCIE_SAINT_MARTIN"
   | "SAINT_BARTHELEMY";
+
+export type PositionnementCollaborateurInput = {
+  accountId: string;
+  organismIds: string[];
+};

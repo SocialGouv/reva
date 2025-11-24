@@ -291,6 +291,11 @@ input UpdateMaisonMereLegalInformationInput {
   gestionBranch: Boolean!
 }
 
+input PositionnementCollaborateurInput {
+  accountId: ID!
+  organismIds: [ID!]!
+}
+
 type Mutation {
   organism_updateFermePourAbsenceOuConges(
     organismId: ID!
@@ -351,4 +356,9 @@ type Mutation {
     maisonMereAAPId: ID!
     informationsCommerciales: CreateOrUpdateOnSiteOrganismGeneralInformationInput!
   ): Organism!
+
+  organism_updatePositionnementCollaborateur(
+    maisonMereAAPId: ID!
+    positionnement: PositionnementCollaborateurInput!
+  ): Account!
 }

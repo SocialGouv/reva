@@ -88,4 +88,7 @@ export const resolversSecurityMap = {
 
   "Mutation.organism_updateDisponiblePourVaeCollective":
     isOwnerOrCanManageOrganism,
+
+  "Mutation.organism_updatePositionnementCollaborateur":
+    isAdminOrGestionnaireOfMaisonMereAAP,
 };

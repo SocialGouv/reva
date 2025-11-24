@@ -63,11 +63,13 @@ import { updateMaisonMereOrganismsIsActive } from "./features/updateMaisonMereOr
 import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 import { updateOrganismDisponiblePourVaeCollective } from "./features/updateOrganismDisponiblePourVaeCollective";
+import { updatePositionnementCollaborateur } from "./features/updatePositionnementCollaborateur";
 import { resolversSecurityMap } from "./organism.security";
 import {
   CreateLieuAccueilInfoInput,
   CreateOrganismAccountInput,
   OrganismInformationsCommerciales,
+  PositionnementCollaborateurInput,
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
   UpdateMaisonMereLegalInformationInput,
@@ -527,6 +529,15 @@ const unsafeResolvers = {
       updateMaisonMereAAPFinancingMethods({
         ...params,
         userInfo: buildAAPAuditLogUserInfoFromContext(context),
+      }),
+    organism_updatePositionnementCollaborateur: async (
+      _parent: unknown,
+      params: {
+        positionnement: PositionnementCollaborateurInput;
+      },
+    ) =>
+      updatePositionnementCollaborateur({
+        ...params.positionnement,
       }),
   },
   Query: {
