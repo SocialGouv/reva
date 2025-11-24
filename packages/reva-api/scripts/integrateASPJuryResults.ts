@@ -26,6 +26,11 @@ const main = async () => {
           isResultTemporary: true,
           certificationAuthorityId: "<CERTIFICATION_AUTHORITY_ID>",
           dateOfSession: parse(
+            candidacy.date_convocation_jury_plenier,
+            "dd/MM/yyyy",
+            new Date(),
+          ),
+          dateOfResult: parse(
             candidacy.date_passage_jury_plenier,
             "dd/MM/yyyy",
             new Date(),
