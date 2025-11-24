@@ -19,7 +19,8 @@ export const CandidacyStatusTag = ({
   status: CandidacyStatusStep;
   jury?: JuryCandidacyStatus | null;
 }) => {
-  const isJuryUpcoming = jury && isAfter(jury.dateOfSession, new Date());
+  const isJuryUpcoming =
+    jury && !jury.result && isAfter(jury.dateOfSession, new Date());
 
   const resultIsSuccess =
     jury?.result === "FULL_SUCCESS_OF_FULL_CERTIFICATION" ||
