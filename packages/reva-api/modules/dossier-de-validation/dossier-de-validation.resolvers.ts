@@ -7,9 +7,9 @@ import { getActiveDossierDeValidationByCandidacyId } from "./features/getActiveD
 import { getActiveDossierDeValidationCountByCategory } from "./features/getActiveDossierDeValidationCountByCategory";
 import { getActiveDossiersDeValidation } from "./features/getActiveDossiersDeValidation";
 import { getDossierDeValidationById } from "./features/getDossierDeValidationById";
+import { getDossierDeValidationFilesNamesAndUrls } from "./features/getDossierDeValidationFilesNamesAndUrls";
 import { getDossierDeValidationHistory } from "./features/getDossierDeValidationHistory";
 import { getDossierDeValidationOtherFilesNamesAndUrls } from "./features/getDossierDeValidationOtherFilesNamesAndUrls";
-import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
 import { getHistoryDossierDeValidationByCandidacyId } from "./features/getHistoryDossierDeValidationByCandidacyId";
 import { markDossierDeValidationAsComplete } from "./features/markDossierDeValidationAsComplete";
 import { markDossierDeValidationAsIncomplete } from "./features/markDossierDeValidationAsIncomplete";
@@ -25,7 +25,7 @@ const unsafeResolvers = {
       dossierDeValidationFileId: string;
     }) =>
       (
-        await getFilesNamesAndUrls({
+        await getDossierDeValidationFilesNamesAndUrls({
           candidacyId,
           fileIds: [dossierDeValidationFileId],
         })

@@ -1,6 +1,6 @@
 import { prismaClient } from "@/prisma/client";
 
-import { getFilesNamesAndUrls } from "./getFilesNamesAndUrls";
+import { getDossierDeValidationFilesNamesAndUrls } from "./getDossierDeValidationFilesNamesAndUrls";
 
 export const getDossierDeValidationOtherFilesNamesAndUrls = async ({
   candidacyId,
@@ -14,7 +14,7 @@ export const getDossierDeValidationOtherFilesNamesAndUrls = async ({
       where: { dossierDeValidationId },
     });
 
-  return getFilesNamesAndUrls({
+  return getDossierDeValidationFilesNamesAndUrls({
     candidacyId,
     fileIds: otherFiles.map((f) => f.fileId),
   });

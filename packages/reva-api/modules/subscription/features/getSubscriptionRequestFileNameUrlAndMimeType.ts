@@ -25,12 +25,15 @@ export const getSubscriptionRequestFileNameUrlAndMimeType = async ({
       lettreDeDelegationFile: true,
     },
   });
+
   if (!sr) {
     throw new Error("Demande d'inscription non trouvée");
   }
+
   let filename = "";
   let mimeType = "";
   let filePath = "";
+
   switch (fileType) {
     case "attestationURSSAFFile":
       filename = sr.attestationURSSAFFile?.name || "";
@@ -54,16 +57,18 @@ export const getSubscriptionRequestFileNameUrlAndMimeType = async ({
       break;
   }
 
-  const url = (await getDownloadLink(filePath))?.replace(
+  if (!filename) {
+    return null;
+  }
+
+  const url = (await getDownloadLink({ filePath, filename }))?.replace(
     OOS_DOMAIN,
     FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
   );
 
-  return filename
-    ? {
-        name: filename,
-        mimeType,
-        url,
-      }
-    : null;
+  return {
+    name: filename,
+    mimeType,
+    url,
+  };
 };

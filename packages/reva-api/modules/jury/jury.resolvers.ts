@@ -12,8 +12,8 @@ import { getActiveJuries } from "./features/getActiveJuries";
 import { getActivejuryByCandidacyId } from "./features/getActiveJuryByCandidacyId";
 import { getActiveJuryCountByCategory } from "./features/getActiveJuryCountByCategory";
 import { getExamInfo } from "./features/getExamInfo";
-import { getFilesNamesAndUrls } from "./features/getFilesNamesAndUrls";
 import { getHistoryJuryByCandidacyId } from "./features/getHistoryJuryByCandidacyId";
+import { getJuryFilesNamesAndUrls } from "./features/getJuryFilesNamesAndUrls";
 import { revokeJuryDecision } from "./features/revokeJuryDecision";
 import { updateExamInfo } from "./features/updateExamInfo";
 import { updateResultOfJury } from "./features/updateResultOfJury";
@@ -43,7 +43,7 @@ const unsafeResolvers = {
     }) =>
       convocationFileId
         ? (
-            await getFilesNamesAndUrls({
+            await getJuryFilesNamesAndUrls({
               candidacyId,
               fileIds: [convocationFileId],
             })

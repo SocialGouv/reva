@@ -24,13 +24,16 @@ export const getDffFileNameAndUrl = async ({
     });
 
   const feasibilityFile = dematerializedFeasibilityFile?.feasibilityFile;
-
   const candidacyId = dematerializedFeasibilityFile?.feasibility.candidacyId;
+
   if (!feasibilityFile || !candidacyId) {
     return null;
   }
 
-  const downloadUrl = await getDownloadLink(feasibilityFile.path);
+  const downloadUrl = await getDownloadLink({
+    filePath: feasibilityFile.path,
+    filename: feasibilityFile.name,
+  });
 
   return {
     id: feasibilityFile.id,

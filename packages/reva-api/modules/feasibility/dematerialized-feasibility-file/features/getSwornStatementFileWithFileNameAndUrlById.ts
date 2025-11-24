@@ -18,7 +18,11 @@ export const getSwornStatementFileWithFileNameAndUrlById = async ({
     return null;
   }
 
-  const url = await getDownloadLink(file.path);
+  const url = await getDownloadLink({
+    filePath: file.path,
+    filename: file.name,
+  });
+
   return {
     name: file.name,
     mimeType: file.mimeType,

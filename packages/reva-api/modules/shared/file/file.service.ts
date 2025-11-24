@@ -58,9 +58,13 @@ export const getUploadLink = async (
   filePath: string,
 ): Promise<string | undefined> => getSignedUrlForUpload(filePath);
 
-export const getDownloadLink = async (
-  filePath: string,
-): Promise<string | undefined> => getSignedUrlForDownload(filePath);
+export const getDownloadLink = async ({
+  filePath,
+  filename,
+}: {
+  filePath: string;
+  filename?: string;
+}): Promise<string | undefined> => getSignedUrlForDownload(filePath, filename);
 
 export const fileExists = async (filePath: string): Promise<boolean> => {
   try {
@@ -180,13 +184,24 @@ export const getSignedUrlForUpload = async (
   }
 };
 
+const buildContentDisposition = (filename?: string) => {
+  if (!filename) return undefined;
+
+  const sanitizedFilename = filename.replace(/["\r\n]/g, "");
+  const encodedFilename = encodeURIComponent(sanitizedFilename);
+
+  return `inline; filename="${sanitizedFilename}"; filename*=UTF-8''${encodedFilename}`;
+};
+
 export const getSignedUrlForDownload = async (
   filePath: string,
+  filename?: string,
 ): Promise<string | undefined> => {
   try {
     const command = new GetObjectCommand({
       Bucket: process.env.OUTSCALE_BUCKET_NAME,
       Key: filePath,
+      ResponseContentDisposition: buildContentDisposition(filename),
     });
     if (!client) return;
     return await getSignedUrl(client, command, {

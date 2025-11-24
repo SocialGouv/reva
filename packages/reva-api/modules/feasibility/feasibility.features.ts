@@ -419,32 +419,33 @@ export const getFileNameAndUrl = async ({
   candidacyId: string;
   fileId: string;
 }) => {
-  if (fileId) {
-    const file = await prismaClient.file.findFirst({
-      where: { id: fileId },
-    });
-
-    if (!file) {
-      throw new Error("Fichier non trouvé");
-    }
-
-    const downloadUrl = await getDownloadLink(file?.path);
-
-    return {
-      createdAt: file.createdAt,
-      name: file.name || "",
-      mimeType: file.mimeType,
-      url: file
-        ? `${process.env.BASE_URL}/api/candidacy/${candidacyId}/feasibility/file/${fileId}`
-        : "",
-      previewUrl: downloadUrl?.replace(
-        OOS_DOMAIN,
-        FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
-      ),
-    };
-  } else {
+  if (!fileId) {
     return null;
   }
+
+  const file = await prismaClient.file.findFirst({
+    where: { id: fileId },
+  });
+
+  if (!file) {
+    throw new Error("Fichier non trouvé");
+  }
+
+  const downloadUrl = await getDownloadLink({
+    filePath: file.path,
+    filename: file.name,
+  });
+
+  return {
+    createdAt: file.createdAt,
+    name: file.name || "",
+    mimeType: file.mimeType,
+    url: `${process.env.BASE_URL}/api/candidacy/${candidacyId}/feasibility/file/${fileId}`,
+    previewUrl: downloadUrl?.replace(
+      OOS_DOMAIN,
+      FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+    ),
+  };
 };
 
 export const getActiveFeasibilityCountByCategory = async ({

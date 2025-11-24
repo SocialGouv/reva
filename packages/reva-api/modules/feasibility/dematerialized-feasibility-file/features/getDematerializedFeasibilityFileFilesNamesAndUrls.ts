@@ -18,9 +18,13 @@ export const getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls =
       },
     });
 
-    const dffAttachmentsFiles = dffAttachmentsWithFiles.map(
-      async (dffAttachment) => {
-        const url = await getDownloadLink(dffAttachment.file.path);
+    return Promise.all(
+      dffAttachmentsWithFiles.map(async (dffAttachment) => {
+        const url = await getDownloadLink({
+          filePath: dffAttachment.file.path,
+          filename: dffAttachment.file.name,
+        });
+
         return {
           ...dffAttachment,
           file: {
@@ -33,7 +37,6 @@ export const getDematerializedFeasibilityFileAttachmentsFilesNamesAndUrls =
             ),
           },
         };
-      },
+      }),
     );
-    return dffAttachmentsFiles;
   };

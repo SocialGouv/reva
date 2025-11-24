@@ -111,7 +111,10 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           throw new Error("Fichier non trouvé");
         }
 
-        const fileLink = await getDownloadLink(file?.path);
+        const fileLink = await getDownloadLink({
+          filePath: file.path,
+          filename: file.name,
+        });
 
         if (fileLink) {
           reply

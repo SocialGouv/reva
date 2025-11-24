@@ -27,12 +27,15 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
           lettreDeDelegationFile: true,
         },
       });
+
     if (!docs) {
       throw new Error("Documents d'informations légales non trouvés");
     }
+
     let filename = "";
     let mimeType = "";
     let filePath = "";
+
     switch (fileType) {
       case "attestationURSSAFFile":
         filename = docs.attestationURSSAFFile.name;
@@ -56,17 +59,19 @@ export const getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType =
         break;
     }
 
-    const url = await getDownloadLink(filePath);
+    if (!filename) {
+      return null;
+    }
 
-    return filename
-      ? {
-          name: filename,
-          mimeType,
-          url,
-          previewUrl: url?.replace(
-            OOS_DOMAIN,
-            FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
-          ),
-        }
-      : null;
+    const url = await getDownloadLink({ filePath, filename });
+
+    return {
+      name: filename,
+      mimeType,
+      url,
+      previewUrl: url?.replace(
+        OOS_DOMAIN,
+        FILE_PREVIEW_ROUTE_PATH_ADMIN_FRONTEND,
+      ),
+    };
   };
