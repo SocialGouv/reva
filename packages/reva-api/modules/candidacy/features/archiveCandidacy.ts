@@ -36,6 +36,15 @@ export const archiveCandidacy = async (params: ArchiveCandidacyParams) => {
     );
   }
 
+  const isWaitingForFeasibilityDecision =
+    candidacy.status === "DOSSIER_FAISABILITE_ENVOYE";
+
+  if (isWaitingForFeasibilityDecision) {
+    throw new Error(
+      `La candidature ${params.candidacyId} ne peut pas être archivée car le dossier de faisabilité est envoyé et une décision du certificateur est en attente`,
+    );
+  }
+
   try {
     return prismaClient.$transaction(async (tx) => {
       await updateCandidacyStatus({

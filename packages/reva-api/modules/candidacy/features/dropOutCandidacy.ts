@@ -43,6 +43,8 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
   }
 
   const candidacyStatus = candidacy.status;
+  const isWaitingForFeasibilityDecision =
+    candidacyStatus === "DOSSIER_FAISABILITE_ENVOYE";
 
   const hasDropOut = Boolean(candidacy.candidacyDropOut);
 
@@ -66,6 +68,12 @@ export const dropOutCandidacy = async (params: DropOutCandidacyParams) => {
     logger.error(error);
     throw new Error(
       `${FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON} La raison d'abandon ${params.dropOutReasonId} n'a pas pu être sélectionnée: ${error}`,
+    );
+  }
+
+  if (isWaitingForFeasibilityDecision) {
+    throw new Error(
+      `La candidature ${params.candidacyId} ne peut pas être abandonnée car le dossier de faisabilité est envoyé et une décision du certificateur est en attente`,
     );
   }
 

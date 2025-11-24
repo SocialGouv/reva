@@ -55,28 +55,51 @@ describe("drop out candidacy", () => {
     );
   });
 
+  test.each(["manage_candidacy", "admin"])(
+    "should fail when feasibility file has been sent and decision pending (role: %s)",
+    async (role: KeyCloakUserRole) => {
+      const dropoutReason = await createDropOutReasonHelper();
+      const candidacy = await createCandidacyHelper({
+        candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
+      });
+
+      await expect(async () => {
+        await dropOutCandidacy({
+          candidacyId: candidacy.id,
+          dropOutReasonId: dropoutReason.id,
+          userRoles: [role],
+        });
+      }).rejects.toThrow(
+        `La candidature ${candidacy.id} ne peut pas être abandonnée car le dossier de faisabilité est envoyé et une décision du certificateur est en attente`,
+      );
+    },
+  );
+
   test.each<CandidacyStatusStep>([
     "DOSSIER_FAISABILITE_INCOMPLET",
-    "DOSSIER_FAISABILITE_ENVOYE",
-  ])("should allow AAP to drop out candidacy at %s status", async (status) => {
-    const dropoutReason = await createDropOutReasonHelper();
-    const candidacy = await createCandidacyHelper({
-      candidacyActiveStatus: status,
-    });
-    await dropOutCandidacy({
-      candidacyId: candidacy.id,
-      dropOutReasonId: dropoutReason.id,
-      userRoles: ["manage_candidacy"],
-    });
-    const candidacyDropOut = await prismaClient.candidacyDropOut.findUnique({
-      where: {
+    "DOSSIER_FAISABILITE_COMPLET",
+  ])(
+    "should allow AAP to drop out candidacy at %s status",
+    async (status: CandidacyStatusStep) => {
+      const dropoutReason = await createDropOutReasonHelper();
+      const candidacy = await createCandidacyHelper({
+        candidacyActiveStatus: status,
+      });
+      await dropOutCandidacy({
         candidacyId: candidacy.id,
-      },
-      include: {
-        dropOutReason: true,
-      },
-    });
-    expect(candidacyDropOut).not.toBeNull();
-    expect(candidacyDropOut?.dropOutReason.id).toEqual(dropoutReason.id);
-  });
+        dropOutReasonId: dropoutReason.id,
+        userRoles: ["manage_candidacy"],
+      });
+      const candidacyDropOut = await prismaClient.candidacyDropOut.findUnique({
+        where: {
+          candidacyId: candidacy.id,
+        },
+        include: {
+          dropOutReason: true,
+        },
+      });
+      expect(candidacyDropOut).not.toBeNull();
+      expect(candidacyDropOut?.dropOutReason.id).toEqual(dropoutReason.id);
+    },
+  );
 });

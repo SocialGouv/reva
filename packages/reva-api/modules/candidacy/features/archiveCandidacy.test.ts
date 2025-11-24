@@ -62,4 +62,19 @@ describe("archive candidacy", () => {
       "additional information",
     );
   });
+
+  test("should fail when feasibility file has been sent", async () => {
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_ENVOYE,
+    });
+
+    await expect(async () => {
+      await archiveCandidacy({
+        candidacyId: candidacy.id,
+        archivingReason: "INACTIVITE_CANDIDAT",
+      });
+    }).rejects.toThrow(
+      `La candidature ${candidacy.id} ne peut pas être archivée car le dossier de faisabilité est envoyé et une décision du certificateur est en attente`,
+    );
+  });
 });
