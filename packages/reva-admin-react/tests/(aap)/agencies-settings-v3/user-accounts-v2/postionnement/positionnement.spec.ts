@@ -18,24 +18,82 @@ async function waitForPageQueries(page: Page) {
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getAccountInfo"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
-    waitGraphQL(page, "getUserAccountForPositionnementPage"),
+    waitGraphQL(
+      page,
+      "getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage",
+    ),
   ]);
 }
 
 const updateUserAccountPositionnementHandlers = () => {
   const getUserAccountForPositionnementPageHandler = fvae.query(
-    "getUserAccountForPositionnementPage",
+    "getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage",
     graphQLResolver({
+      organism_getMaisonMereAAPById: {
+        id: "a8e32301-86b8-414b-8b55-af86d289adee",
+        organisms: [
+          {
+            id: "81c18b2c-fee8-4244-854d-826e6fe56f3f",
+            label: "Organism 1",
+            adresseNumeroEtNomDeRue: "123 Main St",
+            adresseInformationsComplementaires: "Apt 4B",
+            adresseCodePostal: "12345",
+            adresseVille: "Anytown",
+            conformeNormesAccessibilite: true,
+            modaliteAccompagnement: "remote",
+            disponiblePourVaeCollective: true,
+          },
+          {
+            id: "c31cb1cb-799d-4ffa-a387-1c6c87758415",
+            label: "Organism 1",
+            adresseNumeroEtNomDeRue: "123 Main St",
+            adresseInformationsComplementaires: "Apt 4B",
+            adresseCodePostal: "12345",
+            adresseVille: "Anytown",
+            conformeNormesAccessibilite: true,
+            modaliteAccompagnement: "remote",
+            disponiblePourVaeCollective: true,
+          },
+          {
+            id: "1657abab-6a9e-42eb-9d15-6f4bf31e980a",
+            label: "Organism 1",
+            adresseNumeroEtNomDeRue: "123 Main St",
+            adresseInformationsComplementaires: "Apt 4B",
+            adresseCodePostal: "12345",
+            adresseVille: "Anytown",
+            conformeNormesAccessibilite: true,
+            modaliteAccompagnement: "remote",
+            disponiblePourVaeCollective: true,
+          },
+        ],
+      },
       organism_getCompteCollaborateurById: {
         id: "account-1",
         firstname: "John",
         lastname: "Doe",
         email: "john.doe@example.com",
+        organisms: [
+          {
+            id: "c31cb1cb-799d-4ffa-a387-1c6c87758415",
+          },
+        ],
       },
     }),
   );
 
-  return [getUserAccountForPositionnementPageHandler];
+  const updateUserAccountPositionnementHandler = fvae.mutation(
+    "updateUserAccountPositionnementForPositionnementPage",
+    graphQLResolver({
+      organism_updatePositionnementCollaborateur: {
+        id: "account-1",
+      },
+    }),
+  );
+
+  return [
+    getUserAccountForPositionnementPageHandler,
+    updateUserAccountPositionnementHandler,
+  ];
 };
 
 test.describe("Settings update user account positionnement", () => {
@@ -72,6 +130,63 @@ test.describe("Settings update user account positionnement", () => {
         );
       });
     });
+
+    test.describe("when I use the user account positionnement component", async () => {
+      test("it shows the correct organisms list", async ({ page }) => {
+        await login({ role: "aap", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+        );
+        await waitForPageQueries(page);
+
+        await expect(
+          page
+            .getByTestId(
+              "multi-select-list-item-81c18b2c-fee8-4244-854d-826e6fe56f3f",
+            )
+            .getByRole("button", { name: "Ajouter" }),
+        ).toBeVisible();
+        await expect(
+          page
+            .getByTestId(
+              "multi-select-list-item-c31cb1cb-799d-4ffa-a387-1c6c87758415",
+            )
+            .getByRole("button", { name: "Retirer" }),
+        ).toBeVisible();
+        await expect(
+          page
+            .getByTestId(
+              "multi-select-list-item-1657abab-6a9e-42eb-9d15-6f4bf31e980a",
+            )
+            .getByRole("button", { name: "Ajouter" }),
+        ).toBeVisible();
+      });
+
+      test("it let me add an organism to the user account positionnement", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+        );
+        await waitForPageQueries(page);
+
+        const mutationPromise = waitGraphQL(
+          page,
+          "updateUserAccountPositionnementForPositionnementPage",
+        );
+
+        await page
+          .getByTestId(
+            "multi-select-list-item-1657abab-6a9e-42eb-9d15-6f4bf31e980a",
+          )
+          .getByRole("button", { name: "Ajouter" })
+          .click();
+
+        await mutationPromise;
+      });
+    });
+
     test.describe("when I use the breadcrumb", () => {
       test("it let me go back to the user account page", async ({ page }) => {
         await login({ role: "aap", page });
