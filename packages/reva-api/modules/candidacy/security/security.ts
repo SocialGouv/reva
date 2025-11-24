@@ -7,10 +7,10 @@ import {
   isAdminOrCandidacyCompanion,
   isAdminOrCertificationAuthority,
   isAdminOrManager,
-  isAdminOrOwnerOfCandidate,
   isAnyone,
   isCandidacyCompanion,
   isOwnerOfCandidacy,
+  isAdminOrOwnerOfCandidate,
   isOwnerOrCanManageCandidacy,
 } from "@/modules/shared/security/presets";
 
@@ -59,7 +59,7 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateAppointmentInformations":
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_submitTypologyForm": isAdminOrCandidacyCompanion,
-  "Mutation.candidacy_dropOut": isAdmin,
+  "Mutation.candidacy_dropOut": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_validateDropOut": isAdmin,
   "Mutation.candidacy_cancelDropOutById": isAdmin,
   "Mutation.candidacy_createOrUpdatePaymentRequest":
