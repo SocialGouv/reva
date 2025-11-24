@@ -43,59 +43,77 @@ export type CandidacyForStatus = {
 };
 
 export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
-  const isCandidacyReoriented = !!candidacy.reorientationReason;
-  const isCandidacyArchived = candidacy.status === "ARCHIVE";
-
   const { isAdmin } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
 
-  const candidacyCurrentActiveStatus = useMemo(() => {
+  const currentStatus = useMemo(() => {
     return candidacy.status;
   }, [candidacy]);
 
-  const isCandidacyArchivedAndNotReoriented =
-    isCandidacyArchived && !isCandidacyReoriented;
-
+  const isCandidacyReoriented = !!candidacy.reorientationReason;
+  const isCandidacyArchived = currentStatus === "ARCHIVE";
   const isCandidacyDroppedOut = !!candidacy.candidacyDropOut;
 
-  const canBeArchived =
-    candidacyCurrentActiveStatus &&
-    !isCandidacyArchivedAndNotReoriented &&
-    (!isCandidacyStatusEqualOrAbove(
-      candidacyCurrentActiveStatus,
-      "DOSSIER_FAISABILITE_INCOMPLET",
-    ) ||
-      isAdmin);
+  const isArchivedAndNotReoriented =
+    isCandidacyArchived && !isCandidacyReoriented;
 
-  const canBeRestored = isCandidacyArchivedAndNotReoriented && isAdmin;
+  const isWaitingForFeasibilityDecision =
+    currentStatus === "DOSSIER_FAISABILITE_ENVOYE";
 
-  const isFeasibilitySent = isCandidacyStatusEqualOrAbove(
-    candidacy.status,
+  const isFeasibilitySentOrLater = isCandidacyStatusEqualOrAbove(
+    currentStatus,
     "DOSSIER_FAISABILITE_ENVOYE",
   );
 
   const isFeasibilityIncomplete =
-    candidacy.status === "DOSSIER_FAISABILITE_INCOMPLET";
+    currentStatus === "DOSSIER_FAISABILITE_INCOMPLET";
 
-  const endAccompagnementConfirmed =
+  const isFeasibilityIncompletOrLater = isCandidacyStatusEqualOrAbove(
+    currentStatus,
+    "DOSSIER_FAISABILITE_INCOMPLET",
+  );
+
+  const isEndAccompagnementConfirmed =
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
 
-  //an admin can dropout a candidacy if it's not dropped out nor archived
-  const canDropout = isAdmin
-    ? !isCandidacyDroppedOut && !isCandidacyArchivedAndNotReoriented
-    : //an aap can dropout a candidacy if it's not dropped out nor archived and only if its feasibility file has been sent or is incomplete and the end accompagnement has not been confirmed
-      !isCandidacyDroppedOut &&
-      !isCandidacyArchivedAndNotReoriented &&
-      (isFeasibilitySent || isFeasibilityIncomplete) &&
-      !endAccompagnementConfirmed;
+  const hasDropoutProofReceived =
+    !!candidacy.candidacyDropOut?.proofReceivedByAdmin;
+
+  // Permissions d'archivage
+  const canBeArchived =
+    !isWaitingForFeasibilityDecision &&
+    currentStatus &&
+    !isArchivedAndNotReoriented &&
+    (!isFeasibilityIncompletOrLater || isAdmin);
+
+  const canBeRestored = isArchivedAndNotReoriented && isAdmin;
+
+  // Permissions d'abandon
+  // Admin : peut abandonner si non abandonnée, non archivée, et pas en attente de décision
+  const canDropoutAsAdmin =
+    !isCandidacyDroppedOut &&
+    !isArchivedAndNotReoriented &&
+    !isWaitingForFeasibilityDecision;
+
+  // AAP : peut abandonner si non abandonnée, non archivée, dossier de faisabilité envoyé ou incomplet,
+  // fin d'accompagnement non confirmée, et pas en attente de décision
+  const canDropoutAsAap =
+    !isCandidacyDroppedOut &&
+    !isArchivedAndNotReoriented &&
+    (isFeasibilitySentOrLater || isFeasibilityIncomplete) &&
+    !isEndAccompagnementConfirmed &&
+    !isWaitingForFeasibilityDecision;
+
+  const canDropout = isAdmin ? canDropoutAsAdmin : canDropoutAsAap;
 
   const canCancelDropout =
     isCandidacyDroppedOut &&
-    !candidacy.candidacyDropOut?.proofReceivedByAdmin &&
-    !isCandidacyArchivedAndNotReoriented &&
+    !hasDropoutProofReceived &&
+    !isArchivedAndNotReoriented &&
     !!isAdmin;
 
+  // Permissions de financement et accompagnement
   const canSwitchFinanceModuleToHorsPlateforme =
     isAdmin && candidacy.financeModule === "unifvae";
 
@@ -104,14 +122,18 @@ export const useCandidacyStatus = (candidacy: CandidacyForStatus) => {
     candidacy.financeModule === "hors_plateforme" &&
     candidacy.typeAccompagnement === "ACCOMPAGNE";
 
+  // Permissions de fin d'accompagnement
   const isFeatureEndAccompagnementActive =
     isFeatureActive("END_ACCOMPAGNEMENT");
-  const hasDfAdmissible = candidacy.feasibility?.decision === "ADMISSIBLE";
+
+  const hasFeasibilityAdmissible =
+    candidacy.feasibility?.decision === "ADMISSIBLE";
+
   const canEndAccompagnement =
-    hasDfAdmissible && isFeatureEndAccompagnementActive;
+    hasFeasibilityAdmissible && isFeatureEndAccompagnementActive;
 
   return {
-    candidacyCurrentActiveStatus,
+    candidacyCurrentActiveStatus: currentStatus,
     isCandidacyDroppedOut,
     canBeArchived,
     canBeRestored,
