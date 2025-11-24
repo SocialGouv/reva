@@ -23,19 +23,26 @@ const getUserAccountAndMaisonMereAAPOrganismsQuery = graphql(`
   query getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage(
     $maisonMereAAPId: ID!
     $userAccountId: ID!
+    $organismsOffset: Int!
+    $organismsLimit: Int!
   ) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       id
-      organisms {
-        id
-        label
-        adresseNumeroEtNomDeRue
-        adresseInformationsComplementaires
-        adresseCodePostal
-        adresseVille
-        conformeNormesAccessibilite
-        modaliteAccompagnement
-        disponiblePourVaeCollective
+      paginatedOrganisms(offset: $organismsOffset, limit: $organismsLimit) {
+        rows {
+          id
+          label
+          adresseNumeroEtNomDeRue
+          adresseInformationsComplementaires
+          adresseCodePostal
+          adresseVille
+          conformeNormesAccessibilite
+          modaliteAccompagnement
+          disponiblePourVaeCollective
+        }
+        info {
+          totalPages
+        }
       }
     }
     organism_getCompteCollaborateurById(
@@ -56,10 +63,15 @@ const getUserAccountAndMaisonMereAAPOrganismsQuery = graphql(`
 export const usePositionnementPage = ({
   maisonMereAAPId,
   userAccountId,
+  page = 1,
 }: {
   userAccountId: string;
   maisonMereAAPId: string;
+  page: number;
 }) => {
+  const RECORDS_PER_PAGE = 10;
+  const organismsOffset = (page - 1) * RECORDS_PER_PAGE;
+
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
 
@@ -67,12 +79,15 @@ export const usePositionnementPage = ({
     queryKey: [
       userAccountId,
       maisonMereAAPId,
+      page,
       "agencies-settings-positionnement-page",
     ],
     queryFn: () =>
       graphqlClient.request(getUserAccountAndMaisonMereAAPOrganismsQuery, {
         maisonMereAAPId,
         userAccountId,
+        organismsOffset,
+        organismsLimit: RECORDS_PER_PAGE,
       }),
   });
 
@@ -88,6 +103,7 @@ export const usePositionnementPage = ({
         queryKey: [
           userAccountId,
           maisonMereAAPId,
+          page,
           "agencies-settings-positionnement-page",
         ],
       });
@@ -97,13 +113,15 @@ export const usePositionnementPage = ({
   const userAccount =
     userAccountAndMaisonMereAAPOrganismsData?.organism_getCompteCollaborateurById;
 
-  const maisonMereAAPOrganisms =
-    userAccountAndMaisonMereAAPOrganismsData?.organism_getMaisonMereAAPById
-      ?.organisms || [];
+  const maisonMereAAPOrganismsPage = userAccountAndMaisonMereAAPOrganismsData
+    ?.organism_getMaisonMereAAPById?.paginatedOrganisms || {
+    rows: [],
+    info: { totalPages: 0 },
+  };
 
   return {
     userAccount,
-    maisonMereAAPOrganisms,
+    maisonMereAAPOrganismsPage,
     updatePositionnementCollaborateur,
   };
 };

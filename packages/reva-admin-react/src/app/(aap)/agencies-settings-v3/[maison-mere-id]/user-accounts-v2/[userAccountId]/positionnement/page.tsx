@@ -2,7 +2,7 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
@@ -20,13 +20,17 @@ const PositionnementPage = () => {
     userAccountId: string;
   }>();
 
+  const searchParamsPage = useSearchParams().get("page");
+  const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
+
   const {
     userAccount,
-    maisonMereAAPOrganisms,
+    maisonMereAAPOrganismsPage,
     updatePositionnementCollaborateur,
   } = usePositionnementPage({
     maisonMereAAPId,
     userAccountId,
+    page: currentPage,
   });
   const backUrl = `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`;
 
@@ -64,9 +68,12 @@ const PositionnementPage = () => {
 
       <MultiSelectList
         className="mb-12"
-        pageItems={maisonMereAAPOrganisms.map((organism) =>
+        pageItems={maisonMereAAPOrganismsPage.rows.map((organism) =>
           getOrganismMultiSelectItem({ organism }),
         )}
+        currentPage={currentPage}
+        totalPages={maisonMereAAPOrganismsPage.info.totalPages}
+        basePaginationUrl={`/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}/positionnement`}
         selectedItemsIds={userOrganismIds}
         onSelectionChange={({ itemId, selected }) => {
           updatePositionnementCollaborateur.mutate({
