@@ -74,7 +74,7 @@ export const ResourcesSection = ({ certification }: ResourcesSectionProps) => {
         </div>
         <div>
           <Link
-            href={`/certification/${certification.id}/`}
+            href={`../certification/${certification.id}/`}
             className="fr-link fr-link--sm"
             target="_blank"
           >
