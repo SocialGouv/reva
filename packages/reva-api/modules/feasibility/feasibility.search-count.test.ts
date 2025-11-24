@@ -46,12 +46,18 @@ beforeEach(async () => {
   await createCandidacyHelper({
     candidacyActiveStatus: "ARCHIVE",
   });
-  candidacyToDropOut = await createFeasibilityUploadedPdfHelper();
+  candidacyToDropOut = await createFeasibilityUploadedPdfHelper(
+    {},
+    "DOSSIER_FAISABILITE_COMPLET",
+  );
   await createCandidacyDropOutHelper({
     candidacyId: candidacyToDropOut.candidacy.id,
   });
 
-  candidacyToArchive = await createFeasibilityUploadedPdfHelper();
+  candidacyToArchive = await createFeasibilityUploadedPdfHelper(
+    {},
+    "DOSSIER_FAISABILITE_COMPLET",
+  );
   await archiveCandidacy({
     candidacyId: candidacyToArchive.candidacy.id,
     archivingReason: "INACTIVITE_CANDIDAT",
