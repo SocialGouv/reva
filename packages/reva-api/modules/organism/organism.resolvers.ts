@@ -143,10 +143,19 @@ const unsafeResolvers = {
       getOrganismsByMaisonAAPId({ maisonMereAAPId }),
     paginatedOrganisms: (
       { id: maisonMereAAPId }: { id: string },
-      { offset, limit }: { offset: number; limit: number },
+      {
+        offset,
+        limit,
+        collaborateurAccountIdFilter,
+      }: {
+        offset: number;
+        limit: number;
+        collaborateurAccountIdFilter?: string;
+      },
     ) =>
       getPaginatedOrganismsByMaisonMereAAPId({
         maisonMereAAPId,
+        collaborateurAccountIdFilter,
         offset,
         limit,
       }),

@@ -5,7 +5,10 @@ import {
   attachCollaborateurAccountToMaisonMereAAP,
   createMaisonMereAapHelper,
 } from "@/test/helpers/entities/create-maison-mere-aap-helper";
-import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
+import {
+  attachCollaborateurAccountToOrganism,
+  createOrganismHelper,
+} from "@/test/helpers/entities/create-organism-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../graphql/generated";
@@ -30,6 +33,27 @@ const compteCollaborateurByIdQuery = graphql(`
       firstname
       lastname
       email
+    }
+  }
+`);
+
+const paginatedOrganismsQuery = graphql(`
+  query paginatedOrganisms(
+    $maisonMereAAPId: ID!
+    $offset: Int
+    $limit: Int
+    $collaborateurAccountIdFilter: ID
+  ) {
+    organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
+      paginatedOrganisms(
+        offset: $offset
+        limit: $limit
+        collaborateurAccountIdFilter: $collaborateurAccountIdFilter
+      ) {
+        rows {
+          id
+        }
+      }
     }
   }
 `);
@@ -191,6 +215,7 @@ describe("MaisonMereAAP resolvers", () => {
       );
     });
   });
+
   describe("paginated organisms list", () => {
     it("should return the paginated organisms list for the maisonMereAAP", async () => {
       const maisonMereAAP = await createMaisonMereAapHelper();
@@ -205,22 +230,6 @@ describe("MaisonMereAAP resolvers", () => {
       await createOrganismHelper({
         maisonMereAAPId: otherMaisonMereAAP.id,
       });
-
-      const paginatedOrganismsQuery = graphql(`
-        query paginatedOrganisms(
-          $maisonMereAAPId: ID!
-          $offset: Int
-          $limit: Int
-        ) {
-          organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
-            paginatedOrganisms(offset: $offset, limit: $limit) {
-              rows {
-                id
-              }
-            }
-          }
-        }
-      `);
 
       const graphqlClient = getGraphQLClient({
         headers: {
@@ -246,6 +255,47 @@ describe("MaisonMereAAP resolvers", () => {
       ).toEqual(
         expect.arrayContaining([{ id: organism1.id }, { id: organism2.id }]),
       );
+    });
+
+    it("should return the paginated organisms list for the maisonMereAAP with a collaborateur account filter", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const organism1 = await createOrganismHelper({
+        maisonMereAAPId: maisonMereAAP.id,
+      });
+      await createOrganismHelper({
+        maisonMereAAPId: maisonMereAAP.id,
+      });
+
+      const collaborateurAccount = await createAccountHelper();
+
+      attachCollaborateurAccountToOrganism({
+        organismId: organism1.id,
+        collaborateurAccountId: collaborateurAccount.id,
+      });
+
+      const graphqlClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "gestion_maison_mere_aap",
+            keycloakId: maisonMereAAP.gestionnaire.keycloakId,
+          }),
+        },
+      });
+
+      const paginatedOrganisms = await graphqlClient.request(
+        paginatedOrganismsQuery,
+        {
+          maisonMereAAPId: maisonMereAAP.id,
+          collaborateurAccountIdFilter: collaborateurAccount.id,
+          offset: 0,
+          limit: 10,
+        },
+      );
+
+      expect(
+        paginatedOrganisms.organism_getMaisonMereAAPById.paginatedOrganisms
+          .rows,
+      ).toEqual([{ id: organism1.id }]);
     });
   });
 });
