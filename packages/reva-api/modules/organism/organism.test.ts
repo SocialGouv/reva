@@ -276,7 +276,7 @@ describe("Positionnement compte collaborateur", () => {
     const updatePositionnementCollaborateurMutation = graphql(`
       mutation updatePositionnementCollaborateur(
         $maisonMereAAPId: ID!
-        $positionnement: PositionnementCollaborateurInput!
+        $positionnement: UpdatePositionnementCollaborateurInput!
       ) {
         organism_updatePositionnementCollaborateur(
           maisonMereAAPId: $maisonMereAAPId
@@ -331,7 +331,7 @@ describe("Positionnement compte collaborateur", () => {
     const updatePositionnementCollaborateurMutation = graphql(`
       mutation updatePositionnementCollaborateur(
         $maisonMereAAPId: ID!
-        $positionnement: PositionnementCollaborateurInput!
+        $positionnement: UpdatePositionnementCollaborateurInput!
       ) {
         organism_updatePositionnementCollaborateur(
           maisonMereAAPId: $maisonMereAAPId

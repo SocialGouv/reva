@@ -3,12 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
-import { PositionnementCollaborateurInput } from "@/graphql/generated/graphql";
+import { UpdatePositionnementCollaborateurInput } from "@/graphql/generated/graphql";
 
 const updatePositionnementCollaborateurMutation = graphql(`
   mutation updateUserAccountPositionnementForPositionnementPage(
     $maisonMereAAPId: ID!
-    $positionnement: PositionnementCollaborateurInput!
+    $positionnement: UpdatePositionnementCollaborateurInput!
   ) {
     organism_updatePositionnementCollaborateur(
       maisonMereAAPId: $maisonMereAAPId
@@ -92,7 +92,7 @@ export const usePositionnementPage = ({
   });
 
   const updatePositionnementCollaborateur = useMutation({
-    mutationFn: (positionnement: PositionnementCollaborateurInput) =>
+    mutationFn: (positionnement: UpdatePositionnementCollaborateurInput) =>
       graphqlClient.request(updatePositionnementCollaborateurMutation, {
         maisonMereAAPId,
         positionnement,

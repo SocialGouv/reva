@@ -70,7 +70,7 @@ import {
   CreateLieuAccueilInfoInput,
   CreateOrganismAccountInput,
   OrganismInformationsCommerciales,
-  PositionnementCollaborateurInput,
+  UpdatePositionnementCollaborateurInput,
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
   UpdateMaisonMereLegalInformationInput,
@@ -543,7 +543,7 @@ const unsafeResolvers = {
     organism_updatePositionnementCollaborateur: async (
       _parent: unknown,
       params: {
-        positionnement: PositionnementCollaborateurInput;
+        positionnement: UpdatePositionnementCollaborateurInput;
       },
     ) =>
       updatePositionnementCollaborateur({

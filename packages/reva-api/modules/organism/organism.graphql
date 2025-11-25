@@ -297,7 +297,7 @@ input UpdateMaisonMereLegalInformationInput {
   gestionBranch: Boolean!
 }
 
-input PositionnementCollaborateurInput {
+input UpdatePositionnementCollaborateurInput {
   accountId: ID!
   organismIds: [ID!]!
 }
@@ -365,6 +365,6 @@ type Mutation {
 
   organism_updatePositionnementCollaborateur(
     maisonMereAAPId: ID!
-    positionnement: PositionnementCollaborateurInput!
+    positionnement: UpdatePositionnementCollaborateurInput!
   ): Account!
 }
