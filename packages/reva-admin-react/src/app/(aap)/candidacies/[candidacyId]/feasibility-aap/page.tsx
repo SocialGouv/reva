@@ -56,7 +56,6 @@ const AapFeasibilityPage = () => {
     dematerializedFeasibilityFile,
     queryStatus,
     feasibility,
-    isCertificationPartial,
     candidacy,
   } = useAapFeasibilityPageLogic();
 
@@ -178,7 +177,7 @@ const AapFeasibilityPage = () => {
             isFeasibilityEditable={isFeasibilityEditable}
           />
           <CertificationSection
-            isCertificationPartial={!!isCertificationPartial}
+            isCertificationPartial={!!candidacy.isCertificationPartial}
             dematerializedFeasibilityFile={
               dematerializedFeasibilityFile as DematerializedFeasibilityFile
             }

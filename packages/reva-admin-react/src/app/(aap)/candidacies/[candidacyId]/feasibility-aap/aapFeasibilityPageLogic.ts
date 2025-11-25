@@ -175,6 +175,5 @@ export const useAapFeasibilityPageLogic = () => {
     dematerializedFeasibilityFile,
     queryStatus: getCandidacyByIdStatus,
     feasibility,
-    isCertificationPartial: candidacy?.isCertificationPartial,
   };
 };

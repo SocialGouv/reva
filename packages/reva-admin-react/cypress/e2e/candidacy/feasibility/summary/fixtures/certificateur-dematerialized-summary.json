@@ -141,6 +141,7 @@
       "candidacy": {
         "id": "42288593-2a6b-4606-aedd-0d76348b39f4",
         "status": "DOSSIER_FAISABILITE_COMPLET",
+        "isCertificationPartial": false,
         "organism": {
           "contactAdministrativePhone": "0145678901",
           "contactAdministrativeEmail": "contact@organism-aap.fr",
