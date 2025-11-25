@@ -11,6 +11,8 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_DROP_OUT_DECISION = graphql(`
       id
       candidacyDropOut {
         createdAt
+        dropOutConfirmedByCandidate
+        proofReceivedByAdmin
       }
       candidate {
         firstname
@@ -74,7 +76,6 @@ export const useDropOutDecisionPage = () => {
   const candidacy = data?.getCandidacyById;
 
   const updateCandidateCandidacyDropoutDecision = useMutation({
-    mutationKey: ["updateCandidateCandidacyDropoutDecisionMutation"],
     mutationFn: ({ dropOutConfirmed }: { dropOutConfirmed: boolean }) =>
       graphqlClient.request(updateCandidateCandidacyDropoutDecisionMutation, {
         candidacyId,
@@ -82,10 +83,7 @@ export const useDropOutDecisionPage = () => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          "candidacy",
-          "updateCandidateCandidacyDropoutDecisionMutation",
-        ],
+        queryKey: ["candidacy"],
       });
     },
   });

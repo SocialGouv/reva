@@ -5,7 +5,7 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, toDate, addMonths } from "date-fns";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -14,6 +14,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
+import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 
 import { OrganismModaliteAccompagnement } from "@/graphql/generated/graphql";
 
@@ -76,6 +77,22 @@ export default function CandidacyDropOutDecisionPage() {
     return null;
   }
 
+  const dropOutConfirmed =
+    candidacy.candidacyDropOut &&
+    isDropOutConfirmed({
+      dropOutConfirmedByCandidate:
+        candidacy.candidacyDropOut.dropOutConfirmedByCandidate,
+      proofReceivedByAdmin: candidacy.candidacyDropOut.proofReceivedByAdmin,
+      dropOutDate: toDate(candidacy.candidacyDropOut.createdAt),
+    });
+
+  if (
+    !candidacy.candidacyDropOut ||
+    (dropOutConfirmed && !updateCandidateCandidacyDropoutDecision.isSuccess)
+  ) {
+    return redirect("../");
+  }
+
   const candidate = candidacy.candidate;
 
   const candidateFullName = `${candidate?.lastname} ${candidate?.givenName ? candidate?.givenName : ""} ${candidate?.firstname} ${candidate?.firstname2 || ""} ${candidate?.firstname3 || ""}`;
@@ -93,7 +110,9 @@ export default function CandidacyDropOutDecisionPage() {
         dropOutConfirmed,
       });
 
-      router.push(dropOutConfirmed ? "./dropout-confirmation" : "../");
+      if (dropOutConfirmed) {
+        router.push("./dropout-confirmation");
+      }
     } catch (e) {
       graphqlErrorToast(e);
     }
