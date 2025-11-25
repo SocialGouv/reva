@@ -43,6 +43,7 @@ export const FiltersSection = ({
       <h2 className="mb-0">Statut :</h2>
       <Accordion label="Dossier de faisabilité" className="bg-white">
         <Checkbox
+          small
           options={[
             {
               label: "Nouveau dossier",
@@ -102,6 +103,7 @@ export const FiltersSection = ({
 
       <Accordion label="Dossier de validation" className="bg-white">
         <Checkbox
+          small
           options={[
             {
               label: "Reçu",
@@ -129,6 +131,7 @@ export const FiltersSection = ({
 
       <Accordion label="Passage devant le jury" className="bg-white">
         <Checkbox
+          small
           options={[
             {
               label: "A programmer",
@@ -150,6 +153,7 @@ export const FiltersSection = ({
 
       <Accordion label="Résultat de jury" className="bg-white">
         <Checkbox
+          small
           options={[
             {
               label: "En attente de résultat",
@@ -226,6 +230,7 @@ export const FiltersSection = ({
       {cohortes.length > 0 && (
         <Accordion label="VAE Collective" className="bg-white">
           <Checkbox
+            small
             options={cohortes.map((cohorte) => ({
               label: cohorte.nom,
               nativeInputProps: {
@@ -237,7 +242,7 @@ export const FiltersSection = ({
         </Accordion>
       )}
 
-      <div className="bg-white p-4 border-b border-neutral-300">
+      <div className="py-4 border-b border-neutral-300">
         <ToggleSwitch
           label="Afficher les candidatures abandonnées"
           inputTitle="Afficher les candidatures abandonnées"

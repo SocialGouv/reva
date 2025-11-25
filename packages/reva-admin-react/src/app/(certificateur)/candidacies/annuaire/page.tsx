@@ -53,7 +53,6 @@ export default function AnnuairePage() {
 
   return (
     <div>
-      <h1 className="mb-10">Candidatures</h1>
       <div className="bg-white px-8 py-6 mb-10 shadow-lifted">
         <SearchBar
           label="Rechercher"
