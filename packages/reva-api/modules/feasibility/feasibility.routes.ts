@@ -1,4 +1,5 @@
 import fastifyMultipart from "@fastify/multipart";
+import { isBefore } from "date-fns";
 import { FastifyPluginAsync } from "fastify";
 
 import { logger } from "@/modules/shared/logger/logger";
@@ -245,6 +246,33 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         return reply.status(403).send({
           err: "Vous n'êtes pas autorisé à gérer cette candidature.",
         });
+      }
+
+      const candidacy = await prismaClient.candidacy.findUnique({
+        where: {
+          id: request.body.candidacyId.value,
+        },
+        select: {
+          certification: {
+            select: {
+              rncpExpiresAt: true,
+            },
+          },
+        },
+      });
+
+      const certification = candidacy?.certification;
+
+      if (!certification) {
+        return reply.status(400).send("Le diplôme visé n'a pas été trouvé.");
+      }
+
+      const hasCertificationRncpExpired =
+        !!certification?.rncpExpiresAt &&
+        isBefore(certification.rncpExpiresAt, new Date());
+
+      if (hasCertificationRncpExpired) {
+        return reply.status(400).send("Le diplôme visé a expiré.");
       }
 
       const feasibilityFile = request.body.feasibilityFile;
