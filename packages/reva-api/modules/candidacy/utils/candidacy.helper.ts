@@ -44,8 +44,6 @@ export const getStatusFromStatusFilter = (statusFilter: string) => {
 
 export const getWhereClauseFromStatusFilter = (
   statusFilter?: CandidacyStatusFilter,
-  // Only exclude dropouts if includeDropouts is false
-  includeDropouts = false,
 ) => {
   let whereClause: Prisma.CandidacyWhereInput = {};
   switch (statusFilter) {
@@ -63,7 +61,7 @@ export const getWhereClauseFromStatusFilter = (
       if (status !== null) {
         whereClause = {
           ...whereClause,
-          ...(!includeDropouts ? { candidacyDropOut: null } : {}),
+          candidacyDropOut: null,
           endAccompagnementStatus: {
             notIn: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
           },
@@ -75,7 +73,7 @@ export const getWhereClauseFromStatusFilter = (
     case "ACTIVE_HORS_ABANDON":
       whereClause = {
         ...whereClause,
-        ...(!includeDropouts ? { candidacyDropOut: null } : {}),
+        candidacyDropOut: null,
         status: {
           notIn: ["ARCHIVE", "PROJET", "DOSSIER_FAISABILITE_NON_RECEVABLE"],
         },
@@ -93,7 +91,7 @@ export const getWhereClauseFromStatusFilter = (
     case "ARCHIVE_HORS_ABANDON_HORS_REORIENTATION":
       whereClause = {
         ...whereClause,
-        ...(!includeDropouts ? { candidacyDropOut: null } : {}),
+        candidacyDropOut: null,
         reorientationReasonId: null,
         status: "ARCHIVE",
       };
@@ -108,7 +106,7 @@ export const getWhereClauseFromStatusFilter = (
     case "JURY_HORS_ABANDON": {
       whereClause = {
         ...whereClause,
-        ...(!includeDropouts ? { candidacyDropOut: null } : {}),
+        candidacyDropOut: null,
         Jury: {
           some: { AND: { isActive: true } },
         },
@@ -119,7 +117,7 @@ export const getWhereClauseFromStatusFilter = (
     case "JURY_PROGRAMME_HORS_ABANDON": {
       whereClause = {
         ...whereClause,
-        ...(!includeDropouts ? { candidacyDropOut: null } : {}),
+        candidacyDropOut: null,
         Jury: {
           some: { AND: { isActive: true, dateOfResult: null } },
         },
@@ -130,7 +128,7 @@ export const getWhereClauseFromStatusFilter = (
     case "JURY_PASSE_HORS_ABANDON": {
       whereClause = {
         ...whereClause,
-        ...(!includeDropouts ? { candidacyDropOut: null } : {}),
+        candidacyDropOut: null,
         Jury: {
           some: { AND: { isActive: true, dateOfResult: { not: null } } },
         },
@@ -141,7 +139,7 @@ export const getWhereClauseFromStatusFilter = (
     case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
       whereClause = {
         ...whereClause,
-        ...(!includeDropouts ? { candidacyDropOut: null } : {}),
+        candidacyDropOut: null,
         status: {
           in: ["DOSSIER_FAISABILITE_ENVOYE", "DOSSIER_FAISABILITE_COMPLET"],
         },
@@ -150,7 +148,7 @@ export const getWhereClauseFromStatusFilter = (
     case "VAE_COLLECTIVE":
       whereClause = {
         ...whereClause,
-        ...(!includeDropouts ? { candidacyDropOut: null } : {}),
+        candidacyDropOut: null,
         cohorteVaeCollectiveId: { not: null },
       };
       break;
