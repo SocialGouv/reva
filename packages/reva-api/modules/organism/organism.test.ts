@@ -250,6 +250,11 @@ describe("MaisonMereAAP resolvers", () => {
       );
 
       expect(
+        paginatedOrganisms.organism_getMaisonMereAAPById.paginatedOrganisms.rows
+          .length,
+      ).toBe(2);
+
+      expect(
         paginatedOrganisms.organism_getMaisonMereAAPById.paginatedOrganisms
           .rows,
       ).toEqual(
