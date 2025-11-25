@@ -15,6 +15,7 @@ const getCandidacyByIdForFeasibilityPage = graphql(`
         id
         label
         codeRncp
+        rncpExpiresAt
       }
       feasibility {
         id

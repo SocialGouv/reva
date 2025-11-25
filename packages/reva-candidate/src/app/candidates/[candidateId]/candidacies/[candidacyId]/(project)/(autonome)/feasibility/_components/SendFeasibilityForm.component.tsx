@@ -2,6 +2,8 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isBefore } from "date-fns";
+import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -55,6 +57,9 @@ export const SendFeasibilityForm = (): React.ReactNode => {
   const feasibility = candidacy?.feasibility;
 
   const certificationAuthorities = candidacy?.certificationAuthorities || [];
+  const hasCertificationRncpExpired =
+    !!candidacy?.certification?.rncpExpiresAt &&
+    isBefore(candidacy?.certification?.rncpExpiresAt, new Date());
   const canUpload =
     !candidacy?.feasibility || candidacy.feasibility.decision == "INCOMPLETE";
 
@@ -199,6 +204,29 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     <div className="mt-12">
       <FeasibilityBanner feasibility={feasibility} />
 
+      {hasCertificationRncpExpired && (
+        <Alert
+          className="mt-6 mb-12"
+          severity="error"
+          title="Le diplôme visé a expiré"
+          description={
+            <>
+              <p className="mb-4">
+                Le diplôme <em>{candidacy?.certification?.label}</em> a expiré
+                le{" "}
+                {format(candidacy.certification!.rncpExpiresAt, "dd/MM/yyyy")}.
+              </p>
+              <p>
+                Il est impossible d’envoyer votre dossier de faisabilité au
+                certificateur. Vous devez attendre le renouvellement du diplôme,
+                changer de diplôme ou vous pouvez contacter le certificateur en
+                charge de votre candidature.
+              </p>
+            </>
+          }
+        />
+      )}
+
       {candidacy.warningOnFeasibilitySubmission ===
         "MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED" && (
         <Alert
@@ -240,7 +268,10 @@ export const SendFeasibilityForm = (): React.ReactNode => {
                 ...register("certificationAuthorityId"),
                 required: true,
               }}
-              disabled={candidacy?.warningOnFeasibilitySubmission !== "NONE"}
+              disabled={
+                candidacy?.warningOnFeasibilitySubmission !== "NONE" ||
+                hasCertificationRncpExpired
+              }
             >
               <>
                 <option disabled hidden value="">
@@ -279,7 +310,10 @@ export const SendFeasibilityForm = (): React.ReactNode => {
               errors={errors}
               register={register}
               requirements={requirements}
-              disabled={candidacy?.warningOnFeasibilitySubmission !== "NONE"}
+              disabled={
+                candidacy?.warningOnFeasibilitySubmission !== "NONE" ||
+                hasCertificationRncpExpired
+              }
             />
             <FormButtons
               formState={{
@@ -288,7 +322,8 @@ export const SendFeasibilityForm = (): React.ReactNode => {
                 canSubmit:
                   certificationAuthorities.length > 0 &&
                   areRequirementsChecked &&
-                  candidacy?.warningOnFeasibilitySubmission === "NONE",
+                  candidacy?.warningOnFeasibilitySubmission === "NONE" &&
+                  !hasCertificationRncpExpired,
               }}
               backUrl="/"
               submitButtonLabel="Envoyer"
