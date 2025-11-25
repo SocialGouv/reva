@@ -5,6 +5,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 
 import { BackButton } from "@/components/back-button/BackButton";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
 import { DossierDeValidationCard } from "./_components/DossierDeValidationCard";
@@ -12,11 +13,17 @@ import { HistoryDossierDeValidationView } from "./_components/HistoryDossierDeVa
 import { useDossierDeValidationPageLogic } from "./dossierDeValidationPageLogic";
 
 const DossierDeValidationPage = () => {
+  const { isFeatureActive } = useFeatureflipping();
+  const isCertificateurCandidaciesAnnuaireEnabled = isFeatureActive(
+    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
+  );
+
+  const candidaciesUrl = isCertificateurCandidaciesAnnuaireEnabled
+    ? "/candidacies/annuaire"
+    : "/candidacies/dossiers-de-validation";
   return (
     <div className="flex flex-col w-full">
-      <BackButton href="/candidacies/dossiers-de-validation">
-        Tous les dossiers
-      </BackButton>
+      <BackButton href={candidaciesUrl}>Tous les dossiers</BackButton>
       <h1>Dossier de validation</h1>
       <Tabs
         tabs={[

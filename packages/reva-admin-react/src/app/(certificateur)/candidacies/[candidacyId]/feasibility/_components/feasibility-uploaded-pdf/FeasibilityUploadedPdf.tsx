@@ -7,6 +7,7 @@ import { ContactInfosSection } from "@/app/contact-infos-section/ContactInfosSec
 import { useAuth } from "@/components/auth/auth";
 import { BackButton } from "@/components/back-button/BackButton";
 import { FancyPreview } from "@/components/fancy-preview/FancyPreview";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 
 import { FeasibilityBanner } from "../FeasibilityBanner";
@@ -30,6 +31,14 @@ export const FeasibilityUploadedPdf = () => {
   const queryClient = useQueryClient();
   const { isAdmin } = useAuth();
   const revokeDecisionModal = useRevokeFeasibilityDecisionModal();
+  const { isFeatureActive } = useFeatureflipping();
+  const isCertificateurCandidaciesAnnuaireEnabled = isFeatureActive(
+    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
+  );
+
+  const candidaciesUrl = isCertificateurCandidaciesAnnuaireEnabled
+    ? "/candidacies/annuaire"
+    : "/candidacies/feasibilities";
 
   const handleCompletionFormSubmit = async (
     data: FeasibilityCompletionFormData,
@@ -39,7 +48,7 @@ export const FeasibilityUploadedPdf = () => {
       comment: data.comment,
     });
     if (result.ok) {
-      router.push("/candidacies/feasibilities");
+      router.push(candidaciesUrl);
     } else {
       errorToast(await result.text());
     }
@@ -54,7 +63,7 @@ export const FeasibilityUploadedPdf = () => {
       infoFile: data.infoFile?.[0],
     });
     if (result.ok) {
-      router.push("/candidacies/feasibilities");
+      router.push(candidaciesUrl);
     } else {
       errorToast(await result.text());
     }
@@ -107,9 +116,7 @@ export const FeasibilityUploadedPdf = () => {
           }}
         />
       )}
-      <BackButton href="/candidacies/feasibilities">
-        Tous les dossiers
-      </BackButton>
+      <BackButton href={candidaciesUrl}>Tous les dossiers</BackButton>
       {feasibility && candidacy && (
         <div className="flex flex-col gap-8">
           <div>
