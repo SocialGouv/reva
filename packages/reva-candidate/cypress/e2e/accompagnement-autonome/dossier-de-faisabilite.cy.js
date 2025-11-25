@@ -68,7 +68,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
   });
 
   it("should show the upload form on /feasibility when the type_accompagnement is autonome and the candidacy status is 'PROJECT'", function () {
-    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
+    cy.visit(
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/feasibility/`,
+    );
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-upload-form"]').should("exist");
@@ -99,7 +101,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
+    cy.visit(
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/feasibility/`,
+    );
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-upload-form"]').should("exist");
@@ -130,7 +134,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
+    cy.visit(
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/feasibility/`,
+    );
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-decision-pending"]').should("exist");
@@ -165,7 +171,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
+    cy.visit(
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/feasibility/`,
+    );
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-upload-form"]').should("not.exist");
@@ -202,7 +210,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
+    cy.visit(
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/feasibility/`,
+    );
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-decision-incomplete"]').should("exist");
@@ -241,7 +251,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
+    cy.visit(
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/feasibility/`,
+    );
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-decision-admissible"]').should("exist");
@@ -277,7 +289,9 @@ context("Accompagnement autonome - Dossier de faisabilité", () => {
       );
     });
 
-    cy.visit(`/candidates/${candidate.id}/candidacies/c1/feasibility/`);
+    cy.visit(
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/feasibility/`,
+    );
     cy.wait("@getCandidacyByIdForFeasibilityPage");
 
     cy.get('[data-testid="feasibility-decision-rejected"]').should("exist");

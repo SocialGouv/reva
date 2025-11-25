@@ -83,7 +83,7 @@ context("Candidacy dropout warning", () => {
         cy.url().should(
           "eq",
           Cypress.config().baseUrl +
-            `candidates/${candidate.id}/candidacies/c1/candidacy-dropout-decision/`,
+            `candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/candidacy-dropout-decision/`,
         );
       });
 

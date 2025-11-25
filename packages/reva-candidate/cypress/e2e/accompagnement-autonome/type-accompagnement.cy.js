@@ -95,7 +95,7 @@ context("Type accompagnement", () => {
     cy.get(DASHBOARD_TYPE_ACCOMPAGNEMENT_TILE).click();
     cy.location("pathname").should(
       "equal",
-      `/candidat/candidates/${candidate.id}/candidacies/c1/type-accompagnement/`,
+      `/candidat/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/type-accompagnement/`,
     );
   });
 
@@ -107,7 +107,9 @@ context("Type accompagnement", () => {
       },
     );
 
-    cy.visit(`/candidates/${candidate.id}/candidacies/c1/type-accompagnement`);
+    cy.visit(
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/type-accompagnement`,
+    );
     cy.wait("@getCandidacyByIdForTypeAccompagnementPage");
 
     cy.get("h1").should("contain.text", "Modalités de parcours");
@@ -122,7 +124,7 @@ context("Type accompagnement", () => {
     cy.wait(5000);
     cy.location("pathname").should(
       "equal",
-      `/candidat/candidates/${candidate.id}/candidacies/c1/`,
+      `/candidat/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/`,
     );
   });
 });

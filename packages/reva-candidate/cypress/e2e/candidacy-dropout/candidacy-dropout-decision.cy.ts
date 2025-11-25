@@ -1,7 +1,6 @@
 import candidate1Data from "../../fixtures/candidate1.json";
 import { stubMutation, stubQuery } from "../../utils/graphql";
 
-import candidacy1DropoutDecision from "./fixtures/candidacy1-dropout-decision.json";
 import candidacy1DroppedOut from "./fixtures/candidacy1-dropped-out.json";
 
 const candidate = candidate1Data.data.candidate_getCandidateById;
@@ -13,8 +12,9 @@ function interceptCandidacy() {
         getCandidacyById: {
           ...candidacy1DroppedOut.data.getCandidacyById,
           candidacyDropOut: {
-            createdAt: "2021-09-01T00:00:00Z",
-            dropOutConfirmedByCandidate: true,
+            createdAt: Date.now() - 1000 * 60 * 60 * 24 * 30,
+            dropOutConfirmedByCandidate: false,
+            proofReceivedByAdmin: false,
           },
         },
       },
@@ -38,14 +38,16 @@ function interceptCandidacy() {
     stubQuery(
       req,
       "getCandidacyByIdWithCandidateForDropOutDecision",
-      candidacy1DropoutDecision,
+      candidacy,
     );
 
-    stubMutation(
-      req,
-      "updateCandidateCandidacyDropoutDecision",
-      candidacy1DroppedOut,
-    );
+    stubMutation(req, "updateCandidateCandidacyDropoutDecision", {
+      data: {
+        candidacy_updateCandidateCandidacyDropoutDecision: {
+          id: candidacy.data.getCandidacyById.id,
+        },
+      },
+    });
   });
 }
 
@@ -59,19 +61,19 @@ context("Candidacy dropout decision page", () => {
       "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
-      "@getCandidacyByIdWithCandidate",
       "@getCandidacyByIdForDashboard",
+      "@getCandidacyByIdWithCandidateForDropOutDecision",
     ]);
     cy.visit(
-      `/candidates/${candidate.id}/candidacies/c1/candidacy-dropout-decision/`,
+      `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/candidacy-dropout-decision/`,
     );
   });
 
   it("should let me access the page", function () {
     cy.get('[data-testid="candidacy-dropout-decision-page"]').should("exist");
-    cy.wait("@getCandidacyByIdWithCandidateForDropOutDecision");
     cy.get("h1").should("contain.text", "Abandon d’une candidature VAE");
   });
+
   it("should let me validate my drop out and lead me to the confirmation page", function () {
     cy.get(".drop-out-confirmation-radio-button~label").click();
     cy.get("button[type=submit]").click();
@@ -79,16 +81,43 @@ context("Candidacy dropout decision page", () => {
     cy.url().should(
       "eq",
       Cypress.config().baseUrl +
-        `candidates/${candidate.id}/candidacies/c1/candidacy-dropout-decision/dropout-confirmation/`,
+        `candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/candidacy-dropout-decision/dropout-confirmation/`,
     );
   });
+
   it("should let me cancel my drop out and redirect me to the homepage", function () {
     cy.get(".drop-out-cancelation-radio-button~label").click();
+
+    cy.intercept("POST", "/api/graphql", (req) => {
+      const candidacy = {
+        data: {
+          getCandidacyById: {
+            ...candidacy1DroppedOut.data.getCandidacyById,
+            candidacyDropOut: null,
+          },
+        },
+      };
+
+      stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+      stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+      stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
+      stubQuery(
+        req,
+        "getCandidacyByIdWithCandidateForDropOutDecision",
+        candidacy,
+      );
+    });
+
     cy.get("button[type=submit]").click();
+
     cy.wait("@updateCandidateCandidacyDropoutDecision");
+
+    cy.wait("@getCandidacyByIdWithCandidateForDropOutDecision");
+
     cy.url().should(
       "eq",
-      Cypress.config().baseUrl + `candidates/${candidate.id}/candidacies/c1/`,
+      Cypress.config().baseUrl +
+        `candidates/${candidate.id}/candidacies/${candidacy1DroppedOut.data.getCandidacyById.id}/`,
     );
   });
 });

@@ -1,7 +1,7 @@
 {
   "data": {
     "getCandidacyById": {
-      "id": "c2",
+      "id": "5fd54f24-a4fb-4e5c-b422-ed020fa4f89f",
       "candidate": {
         "firstname": "John",
         "lastname": "Doe",
@@ -19,7 +19,7 @@
       },
       "createdAt": 1664376421912,
       "certification": {
-        "id": "c1",
+        "id": "c6898498-3b07-4b84-9120-b163aacbd916",
         "label": "Titre 1",
         "summary": "résumé 1",
         "codeRncp": "34691",

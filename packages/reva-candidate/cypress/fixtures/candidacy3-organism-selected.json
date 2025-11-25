@@ -1,7 +1,7 @@
 {
   "data": {
     "getCandidacyById": {
-      "id": "c3",
+      "id": "b5b996a2-2c5f-421c-ac06-19c37c4178b8",
       "typeAccompagnement": "ACCOMPAGNE",
       "candidate": {
         "firstname": "John",
@@ -17,7 +17,7 @@
       },
       "createdAt": 1664376421912,
       "certification": {
-        "id": "c1",
+        "id": "c6898498-3b07-4b84-9120-b163aacbd916",
         "label": "Titre 1",
         "summary": "résumé 1",
         "codeRncp": "34691",

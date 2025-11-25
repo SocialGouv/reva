@@ -36,7 +36,7 @@ function interceptCandidacy() {
   ]);
 
   cy.visit(
-    `/candidates/${candidate.id}/candidacies/c1/candidacy-dropout-decision/dropout-confirmation`,
+    `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/candidacy-dropout-decision/dropout-confirmation`,
   );
 }
 
@@ -57,7 +57,8 @@ context("Candidacy dropout confirmation page", () => {
     ).click();
     cy.url().should(
       "eq",
-      Cypress.config().baseUrl + `candidates/${candidate.id}/candidacies/c1/`,
+      Cypress.config().baseUrl +
+        `candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/`,
     );
   });
 });

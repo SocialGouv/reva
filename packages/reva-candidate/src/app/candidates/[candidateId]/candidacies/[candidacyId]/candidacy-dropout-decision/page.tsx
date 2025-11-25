@@ -5,7 +5,7 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, toDate, addMonths } from "date-fns";
-import { useRouter, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -90,7 +90,7 @@ export default function CandidacyDropOutDecisionPage() {
     !candidacy.candidacyDropOut ||
     (dropOutConfirmed && !updateCandidateCandidacyDropoutDecision.isSuccess)
   ) {
-    return redirect("../");
+    return router.push("../");
   }
 
   const candidate = candidacy.candidate;
