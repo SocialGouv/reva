@@ -122,7 +122,6 @@ export interface CreateCandidacyInput {
 }
 
 export interface GetCandidaciesForCertificationAuthorityInput {
-  certificationAuthorityId?: string;
   offset?: number;
   limit?: number;
   searchFilter?: string;

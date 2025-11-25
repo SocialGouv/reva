@@ -38,7 +38,6 @@ const getCandidaciesForAnnuaire = graphql(`
     $sortByFilter: CandidacySortByFilter
     $offset: Int
     $cohorteVaeCollectiveId: ID
-    $certificationAuthorityId: ID
     $feasibilityStatuses: [CandidacyStatusStep!]
     $validationStatuses: [CandidacyStatusStep!]
     $juryStatuses: [JuryStatusFilter!]
@@ -51,7 +50,6 @@ const getCandidaciesForAnnuaire = graphql(`
       sortByFilter: $sortByFilter
       limit: 10
       offset: $offset
-      certificationAuthorityId: $certificationAuthorityId
       cohorteVaeCollectiveId: $cohorteVaeCollectiveId
       feasibilityStatuses: $feasibilityStatuses
       validationStatuses: $validationStatuses

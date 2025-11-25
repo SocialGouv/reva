@@ -287,7 +287,6 @@ type Query {
   ): CandidacyConventionCollectivePaginated!
   candidacy_canAccessCandidacy(candidacyId: ID!): Boolean!
   candidacy_getCandidaciesForCertificationAuthority(
-    certificationAuthorityId: ID
     cohorteVaeCollectiveId: ID
     offset: Int
     limit: Int

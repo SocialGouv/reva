@@ -220,7 +220,6 @@ const unsafeResolvers = {
     candidacy_getCandidaciesForCertificationAuthority: async (
       _: unknown,
       {
-        certificationAuthorityId,
         offset,
         limit = 10,
         searchFilter,
@@ -236,8 +235,7 @@ const unsafeResolvers = {
       context: GraphqlContext,
     ) =>
       getCandidaciesForCertificationAuthority({
-        certificationAuthorityId,
-        hasRole: context.auth.hasRole,
+        context,
         offset,
         limit,
         searchFilter,
