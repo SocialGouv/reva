@@ -78,38 +78,42 @@ export default function Login() {
         </div>
       )}
       <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-        <div className="flex flex-col gap-4">
-          <h2 className="mb-0">Se connecter avec un lien</h2>
+        {!isFeatureActive("DISABLE_CANDIDATE_MAGIC_LINK_LOGIN") && (
+          <>
+            <div className="flex flex-col gap-4">
+              <h2 className="mb-0">Se connecter avec un lien</h2>
 
-          <p className="mb-0">
-            Vous recevrez un courriel avec un lien qui vous redirigera vers
-            votre espace candidat.
-          </p>
+              <p className="mb-0">
+                Vous recevrez un courriel avec un lien qui vous redirigera vers
+                votre espace candidat.
+              </p>
 
-          <Input
-            disabled={
-              (email.length > 0 && emailForMagicLink.length === 0) ||
-              askForLogin.isPending
-            }
-            hintText="Format attendu : nom@domaine.fr"
-            nativeInputProps={{
-              id: "emailForMagicLink",
-              name: "emailForMagicLink",
-              required: true,
-              type: "email",
-              autoComplete: "email",
-              spellCheck: "false",
-              onChange: (e) => setEmailForMagicLink(e.target.value),
-            }}
-            label="Adresse électronique"
-          />
-        </div>
+              <Input
+                disabled={
+                  (email.length > 0 && emailForMagicLink.length === 0) ||
+                  askForLogin.isPending
+                }
+                hintText="Format attendu : nom@domaine.fr"
+                nativeInputProps={{
+                  id: "emailForMagicLink",
+                  name: "emailForMagicLink",
+                  required: true,
+                  type: "email",
+                  autoComplete: "email",
+                  spellCheck: "false",
+                  onChange: (e) => setEmailForMagicLink(e.target.value),
+                }}
+                label="Adresse électronique"
+              />
+            </div>
 
-        <div className="flex flex-row items-center gap-3">
-          <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-          ou
-          <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-        </div>
+            <div className="flex flex-row items-center gap-3">
+              <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
+              ou
+              <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
+            </div>
+          </>
+        )}
 
         <div className="flex flex-col gap-4">
           <h2 className="mb-0">Se connecter avec mot de passe</h2>

@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('DISABLE_CANDIDATE_MAGIC_LINK_LOGIN', 'Désactiver la connexion d''un candidat avec un magic link', 'Désactiver la connexion d''un candidat avec un magic link');
