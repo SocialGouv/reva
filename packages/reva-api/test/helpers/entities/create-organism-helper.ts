@@ -54,3 +54,17 @@ export const createOrganismHelper = async (
     },
   });
 };
+
+export const attachCollaborateurAccountToOrganism = async ({
+  organismId,
+  collaborateurAccountId,
+}: {
+  organismId: string;
+  collaborateurAccountId: string;
+}) =>
+  prismaClient.organismOnAccount.create({
+    data: {
+      accountId: collaborateurAccountId,
+      organismId,
+    },
+  });
