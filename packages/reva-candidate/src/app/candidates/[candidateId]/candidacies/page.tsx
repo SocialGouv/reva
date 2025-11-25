@@ -8,6 +8,7 @@ import React, { useEffect, useMemo } from "react";
 import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
+import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 
 import { useCandidacies } from "./candidacies.hook";
 
@@ -34,7 +35,16 @@ export default function CandidaciesPage() {
   }, [candidacies]);
 
   const dropOutPendingCandidacy = useMemo(() => {
-    return candidacies.find((candidacy) => candidacy.candidacyDropOut);
+    return candidacies.find(
+      (candidacy) =>
+        candidacy.candidacyDropOut &&
+        !isDropOutConfirmed({
+          dropOutConfirmedByCandidate:
+            candidacy.candidacyDropOut.dropOutConfirmedByCandidate,
+          proofReceivedByAdmin: candidacy.candidacyDropOut.proofReceivedByAdmin,
+          dropOutDate: toDate(candidacy.candidacyDropOut.createdAt),
+        }),
+    );
   }, [candidacies]);
 
   useEffect(() => {

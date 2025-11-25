@@ -1,7 +1,9 @@
-import { redirect, usePathname } from "next/navigation";
+import { toDate } from "date-fns";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
+import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 
 import { useCandidacyGuard } from "./CandidacyGuard.hook";
 
@@ -11,6 +13,8 @@ const DROP_OUT_DECISION_PATHS = ["/candidacy-dropout-decision"];
 
 export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   const { candidacy, isLoading, isError } = useCandidacyGuard();
+
+  const router = useRouter();
 
   const pathname = usePathname();
 
@@ -27,13 +31,20 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   const isEndAccompagnementPending =
     candidacy?.endAccompagnementStatus === "PENDING";
 
-  const isDropOutPending = candidacy?.candidacyDropOut;
+  const isDropOutPending =
+    candidacy?.candidacyDropOut &&
+    !isDropOutConfirmed({
+      dropOutConfirmedByCandidate:
+        candidacy.candidacyDropOut.dropOutConfirmedByCandidate,
+      proofReceivedByAdmin: candidacy.candidacyDropOut.proofReceivedByAdmin,
+      dropOutDate: toDate(candidacy.candidacyDropOut.createdAt),
+    });
 
   if (
     isInactifEnAttente &&
     !INACTIF_PATHS.some((path) => pathname.includes(path))
   ) {
-    redirect(
+    router.push(
       `/candidates/${candidacy?.candidate?.id}/candidacies/${candidacy?.id}/candidacy-inactif`,
     );
   } else if (
@@ -41,7 +52,7 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
     !END_ACCOMPAGNEMENT_PATHS.some((path) => pathname.includes(path)) &&
     !INACTIF_PATHS.some((path) => pathname.includes(path))
   ) {
-    redirect(
+    router.push(
       `/candidates/${candidacy?.candidate?.id}/candidacies/${candidacy?.id}/end-accompagnement`,
     );
   } else if (
@@ -50,7 +61,7 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
     !END_ACCOMPAGNEMENT_PATHS.some((path) => pathname.includes(path)) &&
     !INACTIF_PATHS.some((path) => pathname.includes(path))
   ) {
-    redirect(
+    router.push(
       `/candidates/${candidacy?.candidate?.id}/candidacies/${candidacy?.id}/candidacy-dropout-decision`,
     );
   }

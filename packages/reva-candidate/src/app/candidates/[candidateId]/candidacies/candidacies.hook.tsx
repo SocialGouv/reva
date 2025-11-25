@@ -56,6 +56,8 @@ const GET_CANDIDATE_BY_ID_WITH_CANDIDACY_FOR_CANDIDACIES_GUARD = graphql(`
         }
         candidacyDropOut {
           createdAt
+          proofReceivedByAdmin
+          dropOutConfirmedByCandidate
         }
       }
     }

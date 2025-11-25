@@ -37,6 +37,14 @@ function interceptCandidacy({
       },
     };
 
+    const candidacies = {
+      data: {
+        candidate_getCandidateById: {
+          candidacies: [candidacy.data.getCandidacyById],
+        },
+      },
+    };
+
     stubQuery(
       req,
       "candidate_getCandidateForCandidatesGuard",
@@ -46,7 +54,7 @@ function interceptCandidacy({
     stubQuery(
       req,
       "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
-      "candidacies-with-candidacy-1.json",
+      candidacies,
     );
 
     stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
@@ -62,7 +70,6 @@ function interceptCandidacy({
     "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     "@activeFeaturesForConnectedUser",
     "@getCandidacyByIdForCandidacyGuard",
-    "@getCandidacyByIdWithCandidate",
     "@getCandidacyByIdForDashboard",
   ]);
 }
@@ -70,16 +77,9 @@ function interceptCandidacy({
 context("Candidacy dropout warning", () => {
   context("When the candidacy has  been dropped out", () => {
     context("And it has been less than 6 months since the drop out", () => {
-      it("should show the warning when the drop out has not been confirmed", function () {
+      it("should redirect to candidacy dropout decision page when the drop out has not been confirmed", function () {
         interceptCandidacy({ droppedOut: true });
 
-        cy.get('[data-testid="drop-out-warning"]').should("exist");
-      });
-
-      it("should let me click the decision button and lead me to the decision page", function () {
-        interceptCandidacy({ droppedOut: true });
-
-        cy.get('[data-testid="drop-out-warning-decision-button"]').click();
         cy.url().should(
           "eq",
           Cypress.config().baseUrl +
@@ -128,9 +128,12 @@ context("Candidacy dropout warning", () => {
       });
     });
   });
+
   context("When the candidacy has not been dropped out", () => {
     it("should not show the warning", function () {
       interceptCandidacy({});
+
+      cy.wait(["@getCandidacyByIdWithCandidate"]);
 
       cy.get('[data-testid="drop-out-warning"]').should("not.exist");
     });

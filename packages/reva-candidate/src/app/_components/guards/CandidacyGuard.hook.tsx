@@ -15,6 +15,8 @@ const GET_CANDIDACY_BY_ID_FOR_CANDIDACY_GUARD = graphql(`
       endAccompagnementStatus
       candidacyDropOut {
         createdAt
+        proofReceivedByAdmin
+        dropOutConfirmedByCandidate
       }
       candidate {
         id

@@ -6,6 +6,7 @@
         "createdAt": "2021-09-01T00:00:00Z"
       },
       "candidate": {
+        "id": "12345678-1234-1234-1234-123456789abc",
         "firstname": "John",
         "firstname2": "Robert",
         "firstname3": "William",
