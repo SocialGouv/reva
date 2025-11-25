@@ -190,6 +190,29 @@ test.describe("Settings update user account positionnement", () => {
 
         await mutationPromise;
       });
+
+      test("it let me toggle the only show added items switch", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+        );
+        await waitForPageQueries(page);
+
+        const queryPromise = waitGraphQL(
+          page,
+          "getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage",
+        );
+
+        await page
+          .getByRole("checkbox", {
+            name: "Afficher uniquement les organismes ajoutés",
+          })
+          .click();
+
+        await queryPromise;
+      });
     });
 
     test.describe("when I use the breadcrumb", () => {

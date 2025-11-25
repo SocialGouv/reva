@@ -3,7 +3,7 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { useParams, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
 
@@ -23,6 +23,8 @@ const PositionnementPage = () => {
   const searchParamsPage = useSearchParams().get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
 
+  const [onlyShowUserOrganisms, setOnlyShowUserOrganisms] = useState(false);
+
   const {
     userAccount,
     maisonMereAAPOrganismsPage,
@@ -31,6 +33,7 @@ const PositionnementPage = () => {
     maisonMereAAPId,
     userAccountId,
     page: currentPage,
+    onlyShowUserOrganisms,
   });
   const backUrl = `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`;
 
@@ -83,6 +86,9 @@ const PositionnementPage = () => {
               : userOrganismIds.filter((id) => id !== itemId),
           });
         }}
+        onlyShowAddedItemsSwitchLabel="Afficher uniquement les organismes ajoutés"
+        onlyShowAddedItems={onlyShowUserOrganisms}
+        onOnlyShowAddedItemsSwitchChange={setOnlyShowUserOrganisms}
       />
       <Button
         priority="secondary"
