@@ -40,7 +40,6 @@ export const FiltersSection = ({
 }: FiltersSectionProps) => {
   return (
     <div className="w-1/4 flex flex-col gap-4">
-      <h2 className="mb-0">Statut :</h2>
       <Accordion label="Dossier de faisabilité" className="bg-white">
         <Checkbox
           small

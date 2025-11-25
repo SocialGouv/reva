@@ -53,6 +53,7 @@ export default function AnnuairePage() {
 
   return (
     <div>
+      <h1 className="mb-10">Candidatures</h1>
       <div className="bg-white px-8 py-6 mb-10 shadow-lifted">
         <SearchBar
           label="Rechercher"
@@ -80,7 +81,7 @@ export default function AnnuairePage() {
           )}
         />
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-6">
         <FiltersSection
           filters={filters}
           cohortes={cohortes}
