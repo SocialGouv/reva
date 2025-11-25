@@ -66,7 +66,7 @@ export default function Login() {
 
   return (
     <PageLayout title="Connexion" data-testid="login-home" className="p-6 pt-8">
-      <h1 className="mb-10">Connexion à France VAE</h1>
+      <h1 className="mb-10">Connexion candidat</h1>
       {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") && (
         <div className="flex flex-col gap-4 mb-6">
           <FranceConnectButton url={getFranceConnectLoginUrl()} />
@@ -131,7 +131,7 @@ export default function Login() {
               spellCheck: "false",
               onChange: (e) => setEmail(e.target.value),
             }}
-            label="Adresse électronique"
+            label="Identifiant"
           />
 
           <Input
@@ -169,7 +169,7 @@ export default function Login() {
 
           <div className="border-t border-gray-200 pt-6">
             <Link className="text-dsfrBlue-500" href="/forgot-password/">
-              Mot de passe oublié
+              Mot de passe oublié ?
             </Link>
           </div>
         </div>

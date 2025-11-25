@@ -35,6 +35,7 @@ export const AppLayout = ({ children }: { children: React.ReactNode }) => {
       <Header />
       {showMagicLinkNotice && (
         <Notice
+          data-testid="magic-link-disabled-notice"
           className="[&_p]:text-balance [&_p]:text-center"
           title={
             <>

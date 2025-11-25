@@ -78,7 +78,9 @@ test.describe("Login page", () => {
       ).toBeVisible();
 
       await expect(
-        page.getByRole("link", { name: "Mot de passe oublié ?" }),
+        page
+          .getByTestId("magic-link-disabled-notice")
+          .getByRole("link", { name: "Mot de passe oublié ?" }),
       ).toBeVisible();
     });
   });
