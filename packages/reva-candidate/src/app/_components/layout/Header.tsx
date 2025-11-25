@@ -10,6 +10,8 @@ const NAVIGATION_FORBIDDEN_PATHS = [
   "/end-accompagnement",
   "/candidacy-inactif",
   "/candidacy-deleted",
+  "/candidacy-dropout-decision",
+  "/dropout-confirmation",
 ];
 
 const getNavigation = ({

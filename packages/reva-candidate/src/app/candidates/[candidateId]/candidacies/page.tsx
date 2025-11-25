@@ -33,6 +33,10 @@ export default function CandidaciesPage() {
     );
   }, [candidacies]);
 
+  const dropOutPendingCandidacy = useMemo(() => {
+    return candidacies.find((candidacy) => candidacy.candidacyDropOut);
+  }, [candidacies]);
+
   useEffect(() => {
     if (isMultiCandidacyFeatureActive) {
       if (inactifEnAttenteCandidacy) {
@@ -40,6 +44,10 @@ export default function CandidaciesPage() {
       } else if (endAccompagnementPendingCandidacy) {
         router.push(
           `./${endAccompagnementPendingCandidacy.id}/end-accompagnement`,
+        );
+      } else if (dropOutPendingCandidacy) {
+        router.push(
+          `./${dropOutPendingCandidacy.id}/candidacy-dropout-decision`,
         );
       }
       return;
@@ -51,6 +59,7 @@ export default function CandidaciesPage() {
   }, [
     candidacies,
     endAccompagnementPendingCandidacy,
+    dropOutPendingCandidacy,
     inactifEnAttenteCandidacy,
     isMultiCandidacyFeatureActive,
     router,
@@ -61,7 +70,11 @@ export default function CandidaciesPage() {
   }
 
   if (isMultiCandidacyFeatureActive) {
-    if (inactifEnAttenteCandidacy || endAccompagnementPendingCandidacy) {
+    if (
+      inactifEnAttenteCandidacy ||
+      endAccompagnementPendingCandidacy ||
+      dropOutPendingCandidacy
+    ) {
       return <LoaderWithLayout />;
     }
   }

@@ -6,8 +6,8 @@ import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { useCandidacyGuard } from "./CandidacyGuard.hook";
 
 const INACTIF_PATHS = ["/candidacy-inactif", "/candidacy-deleted"];
-
 const END_ACCOMPAGNEMENT_PATHS = ["/end-accompagnement"];
+const DROP_OUT_DECISION_PATHS = ["/candidacy-dropout-decision"];
 
 export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   const { candidacy, isLoading, isError } = useCandidacyGuard();
@@ -27,6 +27,8 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   const isEndAccompagnementPending =
     candidacy?.endAccompagnementStatus === "PENDING";
 
+  const isDropOutPending = candidacy?.candidacyDropOut;
+
   if (
     isInactifEnAttente &&
     !INACTIF_PATHS.some((path) => pathname.includes(path))
@@ -41,6 +43,15 @@ export const CandidacyGuard = ({ children }: { children: React.ReactNode }) => {
   ) {
     redirect(
       `/candidates/${candidacy?.candidate?.id}/candidacies/${candidacy?.id}/end-accompagnement`,
+    );
+  } else if (
+    isDropOutPending &&
+    !DROP_OUT_DECISION_PATHS.some((path) => pathname.includes(path)) &&
+    !END_ACCOMPAGNEMENT_PATHS.some((path) => pathname.includes(path)) &&
+    !INACTIF_PATHS.some((path) => pathname.includes(path))
+  ) {
+    redirect(
+      `/candidates/${candidacy?.candidate?.id}/candidacies/${candidacy?.id}/candidacy-dropout-decision`,
     );
   }
 

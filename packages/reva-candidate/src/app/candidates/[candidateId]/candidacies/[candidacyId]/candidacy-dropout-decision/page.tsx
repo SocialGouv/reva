@@ -181,7 +181,6 @@ export default function CandidacyDropOutDecisionPage() {
           ]}
         />
         <FormButtons
-          backUrl="../"
           formState={{
             isDirty,
             isSubmitting,
