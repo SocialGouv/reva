@@ -11,12 +11,12 @@ type MultiSelectItemProps = Pick<
   "title" | "desc" | "start" | "end"
 > & {
   id: string;
+  selected: boolean;
 };
 
 type MultiSelectListProps = {
   className?: string;
   pageItems: MultiSelectItemProps[];
-  selectedItemsIds: string[];
   onSelectionChange?: (args: { itemId: string; selected: boolean }) => void;
   currentPage: number;
   totalPages: number;
@@ -27,7 +27,6 @@ type MultiSelectListProps = {
 export const MultiSelectList = ({
   className = "",
   pageItems,
-  selectedItemsIds,
   onSelectionChange,
   currentPage,
   totalPages,
@@ -80,7 +79,7 @@ export const MultiSelectList = ({
               size="small"
               {...item}
               endDetail={
-                selectedItemsIds.includes(item.id) ? (
+                item.selected ? (
                   <Button
                     onClick={() =>
                       onSelectionChange?.({

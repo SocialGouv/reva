@@ -74,11 +74,13 @@ const PositionnementPage = () => {
       <MultiSelectList
         className="mb-12"
         pageItems={maisonMereAAPOrganismsPage.rows.map((organism) =>
-          getOrganismMultiSelectItem({ organism }),
+          getOrganismMultiSelectItem({
+            organism,
+            selected: userOrganismIds.includes(organism.id),
+          }),
         )}
         currentPage={currentPage}
         totalPages={maisonMereAAPOrganismsPage.info.totalPages}
-        selectedItemsIds={userOrganismIds}
         onSelectionChange={({ itemId, selected }) => {
           updatePositionnementCollaborateur.mutate({
             accountId: userAccountId,
@@ -105,6 +107,7 @@ export default PositionnementPage;
 
 const getOrganismMultiSelectItem = ({
   organism,
+  selected,
 }: {
   organism: Pick<
     Organism,
@@ -118,8 +121,10 @@ const getOrganismMultiSelectItem = ({
     | "adresseVille"
     | "conformeNormesAccessibilite"
   >;
+  selected: boolean;
 }) => ({
   id: organism.id,
+  selected,
   title: organism.label,
   start: (
     <div className="flex gap-2">
