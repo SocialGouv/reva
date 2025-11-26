@@ -91,6 +91,9 @@ const PositionnementPage = () => {
         }}
         onlyShowAddedItemsSwitchLabel="Afficher uniquement les organismes ajoutés"
         searchBarLabel="Rechercher par intitulé de l’organisme, code postal ou ville"
+        emptyStateTitle="Aucun lieu (présentiel et/ou distanciel) trouvé"
+        emptyStateDescription="Vous n’avez pas encore configuré le lieu (présentiel et/ou distanciel) recherché ? Créez-le dès maintenant, puis ajoutez-le aux collaborateurs concernés."
+        emptyStateShowAllItemsButtonLabel="Afficher tous les organismes"
       />
       <Button
         priority="secondary"
