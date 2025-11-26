@@ -3,7 +3,7 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { useParams, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
 
@@ -20,10 +20,10 @@ const PositionnementPage = () => {
     userAccountId: string;
   }>();
 
-  const searchParamsPage = useSearchParams().get("page");
+  const searchParams = useSearchParams();
+  const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
-
-  const [onlyShowUserOrganisms, setOnlyShowUserOrganisms] = useState(false);
+  const onlyShowAddedItems = searchParams.get("onlyShowAddedItems") === "true";
 
   const {
     userAccount,
@@ -33,7 +33,7 @@ const PositionnementPage = () => {
     maisonMereAAPId,
     userAccountId,
     page: currentPage,
-    onlyShowUserOrganisms,
+    onlyShowUserOrganisms: onlyShowAddedItems,
   });
   const backUrl = `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`;
 
@@ -76,7 +76,6 @@ const PositionnementPage = () => {
         )}
         currentPage={currentPage}
         totalPages={maisonMereAAPOrganismsPage.info.totalPages}
-        basePaginationUrl={`/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}/positionnement`}
         selectedItemsIds={userOrganismIds}
         onSelectionChange={({ itemId, selected }) => {
           updatePositionnementCollaborateur.mutate({
@@ -87,8 +86,6 @@ const PositionnementPage = () => {
           });
         }}
         onlyShowAddedItemsSwitchLabel="Afficher uniquement les organismes ajoutés"
-        onlyShowAddedItems={onlyShowUserOrganisms}
-        onOnlyShowAddedItemsSwitchChange={setOnlyShowUserOrganisms}
       />
       <Button
         priority="secondary"
