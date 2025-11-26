@@ -20,7 +20,6 @@ type MultiSelectListProps = {
   className?: string;
   pageItems: MultiSelectItemProps[];
   onSelectionChange?: (args: { itemId: string; selected: boolean }) => void;
-  currentPage: number;
   totalPages: number;
   onlyShowAddedItemsSwitchLabel?: string;
   searchBarLabel?: string;
@@ -33,7 +32,6 @@ export const MultiSelectList = ({
   className = "",
   pageItems,
   onSelectionChange,
-  currentPage,
   totalPages,
   onlyShowAddedItemsSwitchLabel = "Afficher uniquement les éléments ajoutés",
   searchBarLabel = "Rechercher",
@@ -45,6 +43,9 @@ export const MultiSelectList = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const currentPage = searchParams.get("page")
+    ? Number(searchParams.get("page"))
+    : 1;
   const onlyShowAddedItems = searchParams.get("onlyShowAddedItems") === "true";
   const searchFilter = searchParams.get("searchFilter");
 

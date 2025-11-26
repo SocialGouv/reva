@@ -79,7 +79,6 @@ const PositionnementPage = () => {
             selected: userOrganismIds.includes(organism.id),
           }),
         )}
-        currentPage={currentPage}
         totalPages={maisonMereAAPOrganismsPage.info.totalPages}
         onSelectionChange={({ itemId, selected }) => {
           updatePositionnementCollaborateur.mutate({
