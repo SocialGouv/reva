@@ -6,6 +6,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Pagination } from "../pagination/Pagination";
 
+import { MultiSelectListEmptyState } from "./MultiSelectListEmptyState";
+
 type MultiSelectItemProps = Pick<
   CardProps,
   "title" | "desc" | "start" | "end"
@@ -22,6 +24,9 @@ type MultiSelectListProps = {
   totalPages: number;
   onlyShowAddedItemsSwitchLabel?: string;
   searchBarLabel?: string;
+  emptyStateTitle?: string;
+  emptyStateDescription?: string;
+  emptyStateShowAllItemsButtonLabel?: string;
 };
 
 export const MultiSelectList = ({
@@ -32,6 +37,9 @@ export const MultiSelectList = ({
   totalPages,
   onlyShowAddedItemsSwitchLabel = "Afficher uniquement les éléments ajoutés",
   searchBarLabel = "Rechercher",
+  emptyStateTitle,
+  emptyStateDescription,
+  emptyStateShowAllItemsButtonLabel,
 }: MultiSelectListProps) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -54,6 +62,14 @@ export const MultiSelectList = ({
     router.push(`${pathname}?${queryParams.toString()}`);
   };
 
+  const resetAllFilters = () => {
+    const queryParams = new URLSearchParams(searchParams);
+    queryParams.delete("searchFilter");
+    queryParams.delete("onlyShowAddedItems");
+    queryParams.set("page", "1");
+    router.push(`${pathname}?${queryParams.toString()}`);
+  };
+
   return (
     <div className={`flex flex-col gap-8 ${className}`}>
       <SearchBar
@@ -72,39 +88,48 @@ export const MultiSelectList = ({
           checked={onlyShowAddedItems}
         />
         <div className="flex flex-col w-full gap-4 ">
-          {pageItems.map((item) => (
-            <Card
-              data-testid={`multi-select-list-item-${item.id}`}
-              key={item.id}
-              size="small"
-              {...item}
-              endDetail={
-                item.selected ? (
-                  <Button
-                    onClick={() =>
-                      onSelectionChange?.({
-                        itemId: item.id,
-                        selected: false,
-                      })
-                    }
-                  >
-                    Retirer
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() =>
-                      onSelectionChange?.({
-                        itemId: item.id,
-                        selected: true,
-                      })
-                    }
-                  >
-                    Ajouter
-                  </Button>
-                )
-              }
+          {pageItems.length > 0 ? (
+            pageItems.map((item) => (
+              <Card
+                data-testid={`multi-select-list-item-${item.id}`}
+                key={item.id}
+                size="small"
+                {...item}
+                endDetail={
+                  item.selected ? (
+                    <Button
+                      onClick={() =>
+                        onSelectionChange?.({
+                          itemId: item.id,
+                          selected: false,
+                        })
+                      }
+                    >
+                      Retirer
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() =>
+                        onSelectionChange?.({
+                          itemId: item.id,
+                          selected: true,
+                        })
+                      }
+                    >
+                      Ajouter
+                    </Button>
+                  )
+                }
+              />
+            ))
+          ) : (
+            <MultiSelectListEmptyState
+              onShowAllItemsButtonClick={resetAllFilters}
+              title={emptyStateTitle}
+              description={emptyStateDescription}
+              showAllItemsButtonLabel={emptyStateShowAllItemsButtonLabel}
             />
-          ))}
+          )}
           <Pagination
             className="mx-auto"
             totalPages={totalPages}
