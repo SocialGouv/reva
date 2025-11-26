@@ -25,6 +25,7 @@ const getUserAccountAndMaisonMereAAPOrganismsQuery = graphql(`
     $userAccountId: ID!
     $organismsOffset: Int!
     $organismsLimit: Int!
+    $organismsSearchFilter: String
     $collaborateurAccountIdFilter: ID
   ) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
@@ -32,6 +33,7 @@ const getUserAccountAndMaisonMereAAPOrganismsQuery = graphql(`
       paginatedOrganisms(
         offset: $organismsOffset
         limit: $organismsLimit
+        searchFilter: $organismsSearchFilter
         collaborateurAccountIdFilter: $collaborateurAccountIdFilter
       ) {
         rows {
@@ -69,11 +71,13 @@ export const usePositionnementPage = ({
   maisonMereAAPId,
   userAccountId,
   page = 1,
+  organismsSearchFilter,
   onlyShowUserOrganisms = false,
 }: {
   userAccountId: string;
   maisonMereAAPId: string;
   page: number;
+  organismsSearchFilter?: string | null;
   onlyShowUserOrganisms: boolean;
 }) => {
   const RECORDS_PER_PAGE = 10;
@@ -86,6 +90,7 @@ export const usePositionnementPage = ({
     queryKey: [
       userAccountId,
       maisonMereAAPId,
+      organismsSearchFilter,
       onlyShowUserOrganisms,
       page,
       "agencies-settings-positionnement-page",
@@ -96,6 +101,7 @@ export const usePositionnementPage = ({
         userAccountId,
         organismsOffset,
         organismsLimit: RECORDS_PER_PAGE,
+        organismsSearchFilter,
         collaborateurAccountIdFilter: onlyShowUserOrganisms
           ? userAccountId
           : undefined,
@@ -114,6 +120,7 @@ export const usePositionnementPage = ({
         queryKey: [
           userAccountId,
           maisonMereAAPId,
+          organismsSearchFilter,
           onlyShowUserOrganisms,
           page,
           "agencies-settings-positionnement-page",

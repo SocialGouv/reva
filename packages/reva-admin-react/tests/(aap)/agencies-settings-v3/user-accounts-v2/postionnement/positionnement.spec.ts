@@ -213,6 +213,28 @@ test.describe("Settings update user account positionnement", () => {
 
         await queryPromise;
       });
+
+      test("it let me search for an organism", async ({ page }) => {
+        await login({ role: "aap", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+        );
+        await waitForPageQueries(page);
+
+        const queryPromise = waitGraphQL(
+          page,
+          "getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage",
+        );
+
+        const searchBar = page.getByRole("searchbox", {
+          name: "Rechercher par intitulé de l’organisme, code postal ou ville",
+        });
+
+        await searchBar.fill("Test Organism");
+        await searchBar.press("Enter");
+
+        await queryPromise;
+      });
     });
 
     test.describe("when I use the breadcrumb", () => {

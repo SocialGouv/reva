@@ -24,6 +24,7 @@ const PositionnementPage = () => {
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
   const onlyShowAddedItems = searchParams.get("onlyShowAddedItems") === "true";
+  const searchFilter = searchParams.get("searchFilter");
 
   const {
     userAccount,
@@ -34,6 +35,7 @@ const PositionnementPage = () => {
     userAccountId,
     page: currentPage,
     onlyShowUserOrganisms: onlyShowAddedItems,
+    organismsSearchFilter: searchFilter,
   });
   const backUrl = `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`;
 
@@ -86,6 +88,7 @@ const PositionnementPage = () => {
           });
         }}
         onlyShowAddedItemsSwitchLabel="Afficher uniquement les organismes ajoutés"
+        searchBarLabel="Rechercher par intitulé de l’organisme, code postal ou ville"
       />
       <Button
         priority="secondary"
