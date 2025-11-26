@@ -39,10 +39,11 @@ export const FiltersSection = ({
   hasActiveFilters,
 }: FiltersSectionProps) => {
   return (
-    <div className="w-1/4 flex flex-col gap-4">
+    <div className="flex w-[282px] shrink-0 flex-col gap-4">
       <Accordion label="Dossier de faisabilité" className="bg-white">
         <Checkbox
           small
+          className="mb-0"
           options={[
             {
               label: "Nouveau dossier",
@@ -103,6 +104,7 @@ export const FiltersSection = ({
       <Accordion label="Dossier de validation" className="bg-white">
         <Checkbox
           small
+          className="mb-0"
           options={[
             {
               label: "Reçu",
@@ -131,6 +133,7 @@ export const FiltersSection = ({
       <Accordion label="Passage devant le jury" className="bg-white">
         <Checkbox
           small
+          className="mb-0"
           options={[
             {
               label: "A programmer",
@@ -153,6 +156,7 @@ export const FiltersSection = ({
       <Accordion label="Résultat de jury" className="bg-white">
         <Checkbox
           small
+          className="mb-0"
           options={[
             {
               label: "En attente de résultat",
@@ -230,6 +234,7 @@ export const FiltersSection = ({
         <Accordion label="VAE Collective" className="bg-white">
           <Checkbox
             small
+            className="mb-0"
             options={cohortes.map((cohorte) => ({
               label: cohorte.nom,
               nativeInputProps: {

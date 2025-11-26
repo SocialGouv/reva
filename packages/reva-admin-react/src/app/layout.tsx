@@ -160,7 +160,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
 
   const childrenWhiteCardLayoutClassname = isWhiteCardLayoutExcludedPath
     ? ""
-    : "bg-white lg:shadow-lifted";
+    : "bg-white lg:shadow-lifted pt-4 md:pt-8 mt-0";
 
   return (
     featureFlippingHookStatus === "INITIALIZED" && (
@@ -187,7 +187,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
         >
           <div className="fr-container flex flex-col flex-1">
             <div
-              className={`fr-container flex-1 md:mt-8 px-1 pt-4 md:px-8 md:pt-8 md:pb-8 fr-grid-row mb-12 ${childrenWhiteCardLayoutClassname}`}
+              className={`fr-container flex-1 px-1 mt-4 md:mt-8 md:px-6 md:pb-8 fr-grid-row mb-12 ${childrenWhiteCardLayoutClassname}`}
             >
               {authenticated && children}
             </div>

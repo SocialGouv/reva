@@ -1,9 +1,9 @@
 "use client";
+import DsfrPagination from "@codegouvfr/react-dsfr/Pagination";
 import SearchBar from "@codegouvfr/react-dsfr/SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { Pagination } from "@/components/pagination/Pagination";
 import { SearchResultsHeader } from "@/components/search-results-header/SearchResultsHeader";
 
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
@@ -37,8 +37,8 @@ export default function AnnuairePage() {
 
   const [localSearchFilter, setLocalSearchFilter] = useState(searchFilter);
 
-  const searchParamsWithoutPage = useMemo(() => {
-    let params = {};
+  const searchParamsWithoutPage = useMemo<Record<string, string>>(() => {
+    let params: Record<string, string> = {};
     searchParams.forEach((value, key) => {
       if (key.toLowerCase() !== "page") {
         params = { ...params, [key]: value };
@@ -47,14 +47,22 @@ export default function AnnuairePage() {
     return params;
   }, [searchParams]);
 
+  const buildPageHref = (page: number) => {
+    const params = new URLSearchParams(searchParamsWithoutPage);
+    params.set("page", String(page));
+    const queryString = params.toString();
+
+    return queryString ? `${pathname}?${queryString}` : pathname;
+  };
+
   useEffect(() => {
     setLocalSearchFilter(searchFilter);
   }, [searchFilter]);
 
   return (
-    <div>
+    <div className="mx-auto max-w-[1248px]">
       <h1 className="mb-10">Candidatures</h1>
-      <div className="bg-white px-8 py-6 mb-10 shadow-lifted">
+      <div className="mb-10 bg-white px-6 py-8 shadow-lifted">
         <SearchBar
           label="Rechercher"
           allowEmptySearch
@@ -95,17 +103,17 @@ export default function AnnuairePage() {
           onClearFilters={clearFilters}
           hasActiveFilters={hasActiveFilters}
         />
-        <div className="w-3/4">
+        <div className="flex-1">
           <div className="flex flex-col">
             <SearchResultsHeader
-              className="mt-2 mb-4"
+              className="mb-4"
               defaultSearchFilter={searchFilter}
               onSearchFilterChange={onSearchFilterChange}
               resultCount={candidacies?.info.totalRows || 0}
               addButton={undefined}
             />
 
-            <ul data-testid="results" className="flex flex-col gap-5 my-0 pl-0">
+            <ul data-testid="results" className="my-0 flex flex-col gap-5 pl-0">
               {isLoading
                 ? Array.from({ length: 10 }).map((_, index) => (
                     <CandidacyCardSkeleton key={index} />
@@ -155,13 +163,15 @@ export default function AnnuairePage() {
             <br />
 
             {candidacies?.info && (
-              <Pagination
-                totalPages={candidacies.info.totalPages}
-                currentPage={candidacies.info.currentPage}
-                baseHref={pathname}
-                className="mx-auto my-12"
-                baseParams={searchParamsWithoutPage}
-              />
+              <div className="mx-auto my-12 flex">
+                <DsfrPagination
+                  defaultPage={candidacies.info.currentPage}
+                  count={candidacies.info.totalPages}
+                  getPageLinkProps={(page) => ({
+                    href: buildPageHref(page),
+                  })}
+                />
+              </div>
             )}
           </div>
         </div>
