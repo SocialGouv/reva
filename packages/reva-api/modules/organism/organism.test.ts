@@ -42,12 +42,14 @@ const paginatedOrganismsQuery = graphql(`
     $maisonMereAAPId: ID!
     $offset: Int
     $limit: Int
+    $searchFilter: String
     $collaborateurAccountIdFilter: ID
   ) {
     organism_getMaisonMereAAPById(maisonMereAAPId: $maisonMereAAPId) {
       paginatedOrganisms(
         offset: $offset
         limit: $limit
+        searchFilter: $searchFilter
         collaborateurAccountIdFilter: $collaborateurAccountIdFilter
       ) {
         rows {
@@ -292,6 +294,42 @@ describe("MaisonMereAAP resolvers", () => {
         {
           maisonMereAAPId: maisonMereAAP.id,
           collaborateurAccountIdFilter: collaborateurAccount.id,
+          offset: 0,
+          limit: 10,
+        },
+      );
+
+      expect(
+        paginatedOrganisms.organism_getMaisonMereAAPById.paginatedOrganisms
+          .rows,
+      ).toEqual([{ id: organism1.id }]);
+    });
+
+    it("should return the paginated organisms list for the maisonMereAAP with a searchfilter", async () => {
+      const maisonMereAAP = await createMaisonMereAapHelper();
+      const organism1 = await createOrganismHelper({
+        maisonMereAAPId: maisonMereAAP.id,
+        label: "Test Organism",
+      });
+      await createOrganismHelper({
+        maisonMereAAPId: maisonMereAAP.id,
+        label: "Other Organism",
+      });
+
+      const graphqlClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "gestion_maison_mere_aap",
+            keycloakId: maisonMereAAP.gestionnaire.keycloakId,
+          }),
+        },
+      });
+
+      const paginatedOrganisms = await graphqlClient.request(
+        paginatedOrganismsQuery,
+        {
+          maisonMereAAPId: maisonMereAAP.id,
+          searchFilter: "Test",
           offset: 0,
           limit: 10,
         },

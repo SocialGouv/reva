@@ -5,11 +5,13 @@ import { prismaClient } from "@/prisma/client";
 
 export const getPaginatedOrganismsByMaisonMereAAPId = async ({
   maisonMereAAPId,
+  searchFilter,
   collaborateurAccountIdFilter,
   offset,
   limit,
 }: {
   maisonMereAAPId: string;
+  searchFilter?: string;
   collaborateurAccountIdFilter?: string;
   offset: number;
   limit: number;
@@ -22,6 +24,14 @@ export const getPaginatedOrganismsByMaisonMereAAPId = async ({
     where.organismOnAccounts = {
       some: { accountId: collaborateurAccountIdFilter },
     };
+  }
+
+  if (searchFilter) {
+    where.OR = [
+      { label: { contains: searchFilter, mode: "insensitive" } },
+      { adresseCodePostal: { contains: searchFilter, mode: "insensitive" } },
+      { adresseVille: { contains: searchFilter, mode: "insensitive" } },
+    ];
   }
 
   const results = await prismaClient.organism.findMany({

@@ -116,6 +116,7 @@ type MaisonMereAAP {
   paginatedOrganisms(
     offset: Int
     limit: Int
+    searchFilter: String
     collaborateurAccountIdFilter: ID #if set, only return organisms that the collaborateur account has access to
   ): OrganismPage!
   comptesCollaborateurs: [Account!]!

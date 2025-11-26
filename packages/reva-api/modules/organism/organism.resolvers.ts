@@ -146,15 +146,18 @@ const unsafeResolvers = {
       {
         offset,
         limit,
+        searchFilter,
         collaborateurAccountIdFilter,
       }: {
         offset: number;
         limit: number;
+        searchFilter?: string;
         collaborateurAccountIdFilter?: string;
       },
     ) =>
       getPaginatedOrganismsByMaisonMereAAPId({
         maisonMereAAPId,
+        searchFilter,
         collaborateurAccountIdFilter,
         offset,
         limit,
