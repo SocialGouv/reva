@@ -65,7 +65,7 @@ model Certification {
   updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
   certificationOnConventionCollective               CertificationOnConventionCollective[]
   certificationAuthorityOnCertification             CertificationAuthorityOnCertification[]
-  searchable_text                                   Unsupported("tsvector")?                            @default(dbgenerated("to_tsvector('simple'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || ((COALESCE(rncp_id, ''::character varying))::text || ' '::text) || ((COALESCE(rncp_type_diplome, ''::character varying))::text || ' '::text))))"))
+  searchable_text                                   Unsupported("tsvector")?                            @default(dbgenerated("to_tsvector('simple'::regconfig, immutable_unaccent(((((COALESCE(label, ''::character varying))::text || ' '::text) || ((COALESCE(rncp_id, ''::character varying))::text || ' '::text)) || ((COALESCE(rncp_type_diplome, ''::character varying))::text || ' '::text))))"))
   certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
   availableAt                                       DateTime                                            @map("available_at") @db.Timestamptz(6)
   juryModalities                                    CertificationJuryModality[]                         @default([]) @map("jury_modalities")
