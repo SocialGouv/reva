@@ -40,6 +40,7 @@ const updateUserAccountPositionnementHandlers = (args?: {
               rows: [],
               info: {
                 totalPages: 0,
+                totalRows: 0,
               },
             }
           : {
@@ -80,6 +81,7 @@ const updateUserAccountPositionnementHandlers = (args?: {
               ],
               info: {
                 totalPages: 1,
+                totalRows: 3,
               },
             },
       },

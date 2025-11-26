@@ -79,7 +79,11 @@ const PositionnementPage = () => {
             selected: userOrganismIds.includes(organism.id),
           }),
         )}
-        totalPages={maisonMereAAPOrganismsPage.info.totalPages}
+        paginationInfo={{
+          totalItems: maisonMereAAPOrganismsPage.info.totalRows,
+          totalPages: maisonMereAAPOrganismsPage.info.totalPages,
+        }}
+        itemTypeLabelForSearchResultsCount="organisme(s)"
         onSelectionChange={({ itemId, selected }) => {
           updatePositionnementCollaborateur.mutate({
             accountId: userAccountId,

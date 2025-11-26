@@ -20,7 +20,11 @@ type MultiSelectListProps = {
   className?: string;
   pageItems: MultiSelectItemProps[];
   onSelectionChange?: (args: { itemId: string; selected: boolean }) => void;
-  totalPages: number;
+  paginationInfo: {
+    totalItems: number;
+    totalPages: number;
+  };
+  itemTypeLabelForSearchResultsCount?: string;
   onlyShowAddedItemsSwitchLabel?: string;
   searchBarLabel?: string;
   emptyStateTitle?: string;
@@ -32,7 +36,8 @@ export const MultiSelectList = ({
   className = "",
   pageItems,
   onSelectionChange,
-  totalPages,
+  paginationInfo: { totalItems, totalPages },
+  itemTypeLabelForSearchResultsCount = "élément(s)",
   onlyShowAddedItemsSwitchLabel = "Afficher uniquement les éléments ajoutés",
   searchBarLabel = "Rechercher",
   emptyStateTitle,
@@ -90,39 +95,42 @@ export const MultiSelectList = ({
         />
         <div className="flex flex-col w-full gap-4 ">
           {pageItems.length > 0 ? (
-            pageItems.map((item) => (
-              <Card
-                data-testid={`multi-select-list-item-${item.id}`}
-                key={item.id}
-                size="small"
-                {...item}
-                endDetail={
-                  item.selected ? (
-                    <Button
-                      onClick={() =>
-                        onSelectionChange?.({
-                          itemId: item.id,
-                          selected: false,
-                        })
-                      }
-                    >
-                      Retirer
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() =>
-                        onSelectionChange?.({
-                          itemId: item.id,
-                          selected: true,
-                        })
-                      }
-                    >
-                      Ajouter
-                    </Button>
-                  )
-                }
-              />
-            ))
+            <>
+              <span className="text-xs text-dsfr-light-text-mention-grey">{`Résultat : ${pageItems.length} sur ${totalItems} ${itemTypeLabelForSearchResultsCount}`}</span>
+              {pageItems.map((item) => (
+                <Card
+                  data-testid={`multi-select-list-item-${item.id}`}
+                  key={item.id}
+                  size="small"
+                  {...item}
+                  endDetail={
+                    item.selected ? (
+                      <Button
+                        onClick={() =>
+                          onSelectionChange?.({
+                            itemId: item.id,
+                            selected: false,
+                          })
+                        }
+                      >
+                        Retirer
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() =>
+                          onSelectionChange?.({
+                            itemId: item.id,
+                            selected: true,
+                          })
+                        }
+                      >
+                        Ajouter
+                      </Button>
+                    )
+                  }
+                />
+              ))}
+            </>
           ) : (
             <MultiSelectListEmptyState
               onShowAllItemsButtonClick={resetAllFilters}

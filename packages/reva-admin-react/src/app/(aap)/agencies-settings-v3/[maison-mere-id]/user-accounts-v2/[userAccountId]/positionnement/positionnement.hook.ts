@@ -49,6 +49,7 @@ const getUserAccountAndMaisonMereAAPOrganismsQuery = graphql(`
         }
         info {
           totalPages
+          totalRows
         }
       }
     }
@@ -135,7 +136,7 @@ export const usePositionnementPage = ({
   const maisonMereAAPOrganismsPage = userAccountAndMaisonMereAAPOrganismsData
     ?.organism_getMaisonMereAAPById?.paginatedOrganisms || {
     rows: [],
-    info: { totalPages: 0 },
+    info: { totalPages: 0, totalRows: 0 },
   };
 
   return {
