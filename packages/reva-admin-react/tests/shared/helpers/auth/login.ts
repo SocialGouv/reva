@@ -1,8 +1,15 @@
 import { Page } from "@playwright/test";
 
 import aapToken from "./tokens/aapToken.json";
+import adminToken from "./tokens/adminToken.json";
 
-export const login = async ({ page, role }: { page: Page; role: "aap" }) => {
+export const login = async ({
+  page,
+  role,
+}: {
+  page: Page;
+  role: "aap" | "admin";
+}) => {
   await page.route(
     "**/auth/realms/reva/protocol/openid-connect/3p-cookies/step1.html",
     async (route) => {
@@ -34,16 +41,23 @@ export const login = async ({ page, role }: { page: Page; role: "aap" }) => {
     },
   );
 
-  if (role === "aap") {
-    const tokens = aapToken;
+  let tokens = {};
 
-    await page.route(
-      "**/realms/reva/protocol/openid-connect/token",
-      async (route) => {
-        await route.fulfill({
-          json: tokens,
-        });
-      },
-    );
+  switch (role) {
+    case "aap":
+      tokens = aapToken;
+      break;
+    case "admin":
+      tokens = adminToken;
+      break;
   }
+
+  await page.route(
+    "**/realms/reva/protocol/openid-connect/token",
+    async (route) => {
+      await route.fulfill({
+        json: tokens,
+      });
+    },
+  );
 };
