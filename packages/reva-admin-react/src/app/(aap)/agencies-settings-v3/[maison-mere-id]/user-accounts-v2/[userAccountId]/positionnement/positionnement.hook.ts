@@ -39,6 +39,7 @@ const getUserAccountAndMaisonMereAAPOrganismsQuery = graphql(`
         rows {
           id
           label
+          nomPublic
           adresseNumeroEtNomDeRue
           adresseInformationsComplementaires
           adresseCodePostal

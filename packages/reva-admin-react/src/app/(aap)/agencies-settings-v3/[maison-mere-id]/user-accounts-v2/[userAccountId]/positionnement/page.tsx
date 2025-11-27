@@ -117,6 +117,7 @@ const getOrganismMultiSelectItem = ({
     Organism,
     | "id"
     | "label"
+    | "nomPublic"
     | "modaliteAccompagnement"
     | "disponiblePourVaeCollective"
     | "adresseNumeroEtNomDeRue"
@@ -129,7 +130,7 @@ const getOrganismMultiSelectItem = ({
 }) => ({
   id: organism.id,
   selected,
-  title: organism.label,
+  title: organism.nomPublic || organism.label,
   start: (
     <div className="flex gap-2">
       {organism.modaliteAccompagnement === "A_DISTANCE" && (
