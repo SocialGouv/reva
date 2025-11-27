@@ -54,76 +54,99 @@ test.describe("Settings User accounts v2", () => {
       { scope: "test" },
     ],
   });
-  test.describe("as a Gestionnaire AAP", () => {
-    test.describe("when I access the user accounts v2 page for a user account", () => {
-      test("it shows the correct title", async ({ page }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
-        );
-        await waitForPageQueries(page);
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-          "Doe John",
-        );
-      });
 
-      test("it let me go back to the settings page", async ({ page }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
-        );
-        await waitForPageQueries(page);
-        await page.getByRole("link", { name: "Retour" }).click();
-        await expect(page).toHaveURL("/admin2/agencies-settings-v3/");
-      });
+  [
+    {
+      label: "As a Gestionnaire AAP",
+      role: "aap" as const,
+      backUrl: "/admin2/agencies-settings-v3/",
+      rootBreadCrumbLabel: "Paramètres",
+      rootBreadCrumbUrl: "/admin2/agencies-settings-v3/",
+    },
+    {
+      label: "As an Admin",
+      role: "admin" as const,
+      backUrl: "/admin2/maison-mere-aap/a8e32301-86b8-414b-8b55-af86d289adee/",
+      rootBreadCrumbLabel: "Maison mère AAP",
+      rootBreadCrumbUrl:
+        "/admin2/maison-mere-aap/a8e32301-86b8-414b-8b55-af86d289adee/",
+    },
+  ].forEach(
+    ({ role, label, backUrl, rootBreadCrumbLabel, rootBreadCrumbUrl }) => {
+      test.describe(label, () => {
+        test.describe("when I access the user accounts v2 page for a user account", () => {
+          test("it shows the correct title", async ({ page }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+            );
+            await waitForPageQueries(page);
+            await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+              "Doe John",
+            );
+          });
 
-      test("it let me go to the connexion information page when I click on the 'Informations de connexion' card", async ({
-        page,
-      }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
-        );
-        await waitForPageQueries(page);
-        await page
-          .getByTestId("informations-connexion-card")
-          .getByRole("button", { name: "Modifier" })
-          .click();
-        await expect(page).toHaveURL(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/informations-connexion/",
-        );
-      });
+          test("it let me go back to the settings page", async ({ page }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+            );
+            await waitForPageQueries(page);
+            await page.getByRole("link", { name: "Retour" }).click();
+            await expect(page).toHaveURL(backUrl);
+          });
 
-      test("it let me go to the positionnement page when I click on the 'Positionnement' card", async ({
-        page,
-      }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
-        );
-        await waitForPageQueries(page);
-        await page
-          .getByTestId("positionnement-card")
-          .getByRole("button", { name: "Modifier" })
-          .click();
-        await expect(page).toHaveURL(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/positionnement/",
-        );
+          test("it let me go to the connexion information page when I click on the 'Informations de connexion' card", async ({
+            page,
+          }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+            );
+            await waitForPageQueries(page);
+            await page
+              .getByTestId("informations-connexion-card")
+              .getByRole("button", { name: "Modifier" })
+              .click();
+            await expect(page).toHaveURL(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/informations-connexion/",
+            );
+          });
+
+          test("it let me go to the positionnement page when I click on the 'Positionnement' card", async ({
+            page,
+          }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+            );
+            await waitForPageQueries(page);
+            await page
+              .getByTestId("positionnement-card")
+              .getByRole("button", { name: "Modifier" })
+              .click();
+            await expect(page).toHaveURL(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/positionnement/",
+            );
+          });
+        });
+        test.describe("when I use the breadcrumb", () => {
+          test("it let me go back to the root settings page", async ({
+            page,
+          }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+            );
+            await waitForPageQueries(page);
+            await page
+              .locator(".fr-breadcrumb")
+              .getByRole("link", { name: rootBreadCrumbLabel })
+              .click();
+            await expect(page).toHaveURL(rootBreadCrumbUrl);
+          });
+        });
       });
-    });
-  });
-  test.describe("when I use the breadcrumb", () => {
-    test("it let me go back to the root settings page", async ({ page }) => {
-      await login({ role: "aap", page });
-      await page.goto(
-        "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
-      );
-      await waitForPageQueries(page);
-      await page
-        .locator(".fr-breadcrumb")
-        .getByRole("link", { name: "Paramètres" })
-        .click();
-      await expect(page).toHaveURL("/admin2/agencies-settings-v3/");
-    });
-  });
+    },
+  );
 });
