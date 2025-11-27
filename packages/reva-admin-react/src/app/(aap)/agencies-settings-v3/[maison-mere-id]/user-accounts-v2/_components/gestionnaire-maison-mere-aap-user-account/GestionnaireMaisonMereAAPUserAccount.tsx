@@ -72,7 +72,7 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
         className="mt-12"
         linkProps={{ href: backUrl }}
       >
-        Retour aux collaborateurs
+        Retour
       </Button>
     </div>
   );

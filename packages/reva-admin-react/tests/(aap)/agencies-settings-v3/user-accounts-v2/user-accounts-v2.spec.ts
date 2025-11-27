@@ -73,9 +73,7 @@ test.describe("Settings User accounts v2", () => {
           "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
         );
         await waitForPageQueries(page);
-        await page
-          .getByRole("link", { name: "Retour aux collaborateurs" })
-          .click();
+        await page.getByRole("link", { name: "Retour" }).click();
         await expect(page).toHaveURL("/admin2/agencies-settings-v3/");
       });
 
