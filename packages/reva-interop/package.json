@@ -10,7 +10,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon -e ts,json,graphql --exec tsx -w . ./index.ts",
-    "prebuild": "npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
+    "prebuild": "npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "build": "tsc",
@@ -20,7 +20,7 @@
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --color routes utils",
-    "postinstall": "npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts"
+    "postinstall": "npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts"
   },
   "author": "",
   "devDependencies": {

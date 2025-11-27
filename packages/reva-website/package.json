@@ -9,7 +9,7 @@
   "scripts": {
     "predev": "react-dsfr update-icons && graphql-codegen --config codegen.ts",
     "dev": "next dev -p 3002",
-    "prebuild": "react-dsfr update-icons && node ./src/scripts/generateRobotsTxt.js && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate",
+    "prebuild": "react-dsfr update-icons && node ./src/scripts/generateRobotsTxt.js && npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate",
     "build": "next build && node copy-assets.js",
     "start": "node .next/standalone/packages/reva-website/server.js",
     "lint": "next lint",

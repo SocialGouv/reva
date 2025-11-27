@@ -9,7 +9,7 @@
   "scripts": {
     "predev": "react-dsfr update-icons && graphql-codegen --config codegen.ts",
     "dev": "next dev -p 3004",
-    "prebuild": "react-dsfr update-icons && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
+    "prebuild": "react-dsfr update-icons && npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
     "build": "next build && node copy-assets.js",
     "start": "node .next/standalone/server.js",
     "lint": "eslint src",

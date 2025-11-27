@@ -25,7 +25,7 @@ REVA est un monorepo qui regroupe :
 
 ### Applications Next.js
 
-- `packages/reva-admin-react`: Back-office métier pour l'équipe France VAE, les certificateurs et les organismes. 
+- `packages/reva-admin-react`: Back-office métier pour l'équipe France VAE, les certificateurs et les organismes.
 - `packages/reva-candidate`: Application pour les candidats (dépôt de candidature, dossier de faisabilité, jury, etc.).
 - `packages/reva-vae-collective`: Portail dédié aux porteurs de projets de VAE collective.
 - `packages/reva-website`: Site vitrine France VAE.
@@ -38,13 +38,13 @@ REVA est un monorepo qui regroupe :
 ## Mise en route
 
 1. Installer Node.js 22 et npm.
-2. Cloner le dépôt puis installer les dépendances : `npm install`.
+2. Cloner le dépôt puis installer les dépendances : `npm ci`.
 3. Initialiser la configuration : copier les `.env.example` vers `.env` et compléter les secrets.
 4. Appliquer les migrations Prisma : `npm run prisma:migrate:deploy`.
 5. Démarrer l’ensemble API + fronts : `npm run dev`.
 
 Voir les scripts dans les `package.json` pour plus de détails.
 
-## En savoir plus 
+## En savoir plus
 
 - [docs/keycloak.md](docs/keycloak.md)
