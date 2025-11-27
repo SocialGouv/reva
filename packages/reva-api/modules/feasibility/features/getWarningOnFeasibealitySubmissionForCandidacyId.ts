@@ -26,10 +26,6 @@ export const getWarningOnFeasibilitySubmissionForCandidacyId = async (
     return FeasibilitySubmissionWarning.NONE;
   }
 
-  if (candidacy.isCertificationPartial) {
-    return FeasibilitySubmissionWarning.NONE;
-  }
-
   const candidacies = await prismaClient.candidacy.findMany({
     where: {
       candidateId: candidacy.candidateId,
@@ -53,8 +49,17 @@ export const getWarningOnFeasibilitySubmissionForCandidacyId = async (
 
       const feasibility = candidacy.Feasibility[0];
 
+      // If the feasibility is not submitted, we don't count it
+      if (!feasibility) return acc;
+
       // If the feasibility is not sent, we don't count it
-      if (!feasibility || !feasibility.feasibilityFileSentAt) return acc;
+      if (!feasibility.feasibilityFileSentAt) return acc;
+
+      // If the feasibility is draft, we don't count it
+      if (feasibility.decision == "DRAFT") return acc;
+
+      // If the feasibility is rejected, we don't count it
+      if (feasibility.decision == "REJECTED") return acc;
 
       const feasibilityYear = new Date(
         feasibility.feasibilityFileSentAt,
@@ -73,11 +78,13 @@ export const getWarningOnFeasibilitySubmissionForCandidacyId = async (
     {} as Record<string, number>,
   );
 
-  const totalCrossCertifications = Object.keys(
-    submittedFeasibilitiesPerCertificationId,
-  ).length;
-  if (totalCrossCertifications >= 3) {
-    return FeasibilitySubmissionWarning.MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED;
+  if (!candidacy.isCertificationPartial) {
+    const totalCrossCertifications = Object.keys(
+      submittedFeasibilitiesPerCertificationId,
+    ).length;
+    if (totalCrossCertifications >= 3) {
+      return FeasibilitySubmissionWarning.MAX_SUBMISSIONS_CROSS_CERTIFICATION_REACHED;
+    }
   }
 
   const totalUniqueCertification =
