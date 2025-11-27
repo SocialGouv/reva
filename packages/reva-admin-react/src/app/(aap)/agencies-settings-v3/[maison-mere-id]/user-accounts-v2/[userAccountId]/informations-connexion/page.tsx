@@ -1,5 +1,4 @@
 "use client";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useRouter } from "next/navigation";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
@@ -9,6 +8,7 @@ import {
   UserAccountForm,
   UserAccountFormData,
 } from "../../_components/gestionnaire-maison-mere-aap-user-account/UserAccountForm";
+import { SettingsBreadcrumb } from "../../_components/SettingsBreadcrumb";
 
 import { useUpdateUserAccountPage } from "./updateUserAccount.hook";
 
@@ -46,13 +46,10 @@ const InformationsConnexionPage = () => {
   }
   return (
     <div className="w-full flex flex-col">
-      <Breadcrumb
+      <SettingsBreadcrumb
         currentPageLabel="Informations de connexion"
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
+        maisonMereAAPId={maisonMereAAPId}
+        segmentsAfterBaseSegments={[
           {
             label: userAccount.lastname + " " + userAccount.firstname,
             linkProps: {
@@ -61,6 +58,7 @@ const InformationsConnexionPage = () => {
           },
         ]}
       />
+
       <h1>Informations de connexion</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">

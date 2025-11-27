@@ -1,5 +1,4 @@
 "use client";
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { useParams, useSearchParams } from "next/navigation";
@@ -8,6 +7,8 @@ import { useMemo } from "react";
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
 
 import { Organism } from "@/graphql/generated/graphql";
+
+import { SettingsBreadcrumb } from "../../_components/SettingsBreadcrumb";
 
 import { usePositionnementPage } from "./positionnement.hook";
 
@@ -49,13 +50,10 @@ const PositionnementPage = () => {
   }
   return (
     <div className="w-full flex flex-col">
-      <Breadcrumb
-        currentPageLabel="Positionnement"
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
+      <SettingsBreadcrumb
+        currentPageLabel="Informations de connexion"
+        maisonMereAAPId={maisonMereAAPId}
+        segmentsAfterBaseSegments={[
           {
             label: userAccount.lastname + " " + userAccount.firstname,
             linkProps: {

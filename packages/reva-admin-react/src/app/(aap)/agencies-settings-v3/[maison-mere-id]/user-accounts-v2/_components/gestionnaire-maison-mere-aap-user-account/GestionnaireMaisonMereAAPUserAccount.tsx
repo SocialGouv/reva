@@ -1,11 +1,12 @@
 "use client";
 
-import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+
+import { SettingsBreadcrumb } from "../SettingsBreadcrumb";
 
 import { useGestionnaireMaisonMereAAPUserAccount } from "./gestionnaireMaisonMereAAPUserAccount.hook";
 
@@ -26,14 +27,9 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
   const userOrganismsCount = userAccount?.organisms?.length || 0;
   return (
     <div className="w-full flex flex-col">
-      <Breadcrumb
+      <SettingsBreadcrumb
         currentPageLabel={`${userAccount?.lastname} ${userAccount?.firstname} `}
-        segments={[
-          {
-            label: "Paramètres",
-            linkProps: { href: "/agencies-settings-v3" },
-          },
-        ]}
+        maisonMereAAPId={maisonMereAAPId}
       />
       <h1>
         {userAccount?.lastname} {userAccount?.firstname}
