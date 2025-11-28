@@ -21,6 +21,12 @@ export const confirmPaymentRequest = async ({
     throw new Error("Candidature non trouvée");
   }
 
+  if (candidacy.paymentRequestDeadlinePassed) {
+    throw new Error(
+      "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation",
+    );
+  }
+
   if (!candidacy.organismId) {
     throw new Error("Pas d'organisme pour la candidature");
   }

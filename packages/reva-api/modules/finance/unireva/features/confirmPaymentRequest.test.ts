@@ -1,9 +1,15 @@
 import { FundingRequest } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createPaymentRequestUnirevaHelper } from "@/test/helpers/entities/create-payment-request-unireva-helper";
+
 import { PaymentRequest } from "../finance.types";
 
-import { mapPaymentRequestBatchContent } from "./confirmPaymentRequest";
+import {
+  confirmPaymentRequest,
+  mapPaymentRequestBatchContent,
+} from "./confirmPaymentRequest";
 
 describe("payment request", () => {
   describe("tests on mapping code", () => {
@@ -59,5 +65,25 @@ describe("payment request", () => {
         SiretAP: "siret1234",
       });
     });
+  });
+  test("should reject the payment request confirmation when the candidacy payment request deadline has passed", async () => {
+    const candidacy = await createCandidacyHelper({
+      candidacyArgs: {
+        financeModule: "unireva",
+        paymentRequestDeadlinePassed: true,
+      },
+    });
+
+    await createPaymentRequestUnirevaHelper({
+      candidacyId: candidacy.id,
+    });
+
+    await expect(
+      confirmPaymentRequest({
+        candidacyId: candidacy.id,
+      }),
+    ).rejects.toThrowError(
+      "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation",
+    );
   });
 });

@@ -11,7 +11,10 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityUploadedPdfHelper } from "@/test/helpers/entities/create-feasibility-uploaded-pdf-helper";
 import { createFundingRequestUnifvaeHelper } from "@/test/helpers/entities/create-funding-request-unifvae-helper";
+import { createPaymentRequestUnifvaeHelper } from "@/test/helpers/entities/create-payment-request-unifvae-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
+
+import { confirmPaymentRequestUnifvae } from "./finance.unifvae.features";
 
 const injectGraphqlPaymentRequestCreation = async ({
   keycloakId,
@@ -68,234 +71,156 @@ const dropOutCandidacyFourMonthsAgoMinusOneMinute = async ({
     },
   });
 
-describe("Unifvae ayment request", () => {
-  const ensureCertificationWithRncp = async (label: string, rncpId: string) => {
-    const existingCertification = await prismaClient.certification.findUnique({
-      where: { rncpId },
-    });
-
-    if (existingCertification) {
-      return existingCertification;
-    }
-
-    return createCertificationHelper({
-      label,
-      rncpId,
-    });
-  };
-
-  test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 4 months ago then succeed after 4 months", async () => {
-    const candidacyInput = await createCandidacyHelper({
-      candidacyArgs: {
-        financeModule: "unifvae",
-      },
-      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-    });
-    const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityFileSentAt: new Date(),
-      candidacyId: candidacyInput.id,
-    });
-    const candidacy = feasibility.candidacy;
-    const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
-
-    await createFundingRequestUnifvaeHelper({
-      candidacyId: candidacy.id,
-      createdAt: new Date("2022-06-02T00:00:00.000Z"),
-    });
-
-    await dropOutCandidacyFourMonthsAgoMinusOneMinute({
-      proofReceivedByAdmin: false,
-      candidacyId: candidacy.id,
-    });
-
-    const resp = await injectGraphqlPaymentRequestCreation({
-      keycloakId: organismKeycloakId,
-      candidacyId: candidacy.id,
-    });
-
-    expect(resp.statusCode).toBe(200);
-    const obj = resp.json();
-    expect(obj).toHaveProperty("errors");
-    expect(obj.errors[0].message).toBe(
-      "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
-    );
-
-    await prismaClient.candidacy.update({
-      where: { id: candidacy.id },
-      data: {
-        candidacyDropOut: {
-          update: CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
+describe("Unifvae payment request", () => {
+  describe("Payment request creation", () => {
+    const ensureCertificationWithRncp = async (
+      label: string,
+      rncpId: string,
+    ) => {
+      const existingCertification = await prismaClient.certification.findUnique(
+        {
+          where: { rncpId },
         },
-      },
-    });
+      );
 
-    const resp2 = await injectGraphqlPaymentRequestCreation({
-      keycloakId: organismKeycloakId,
-      candidacyId: candidacy.id,
-    });
+      if (existingCertification) {
+        return existingCertification;
+      }
 
-    const obj2 = resp2.json();
-    expect(obj2).not.toHaveProperty("errors");
-  });
+      return createCertificationHelper({
+        label,
+        rncpId,
+      });
+    };
 
-  test("should allow the creation of paymentRequestUnifvae when candidacy was drop out less than 6 months ago but the proof was received by an admin", async () => {
-    const candidacyInput = await createCandidacyHelper({
-      candidacyArgs: {
-        financeModule: "unifvae",
-      },
-      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-    });
-    const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityFileSentAt: new Date(),
-      candidacyId: candidacyInput.id,
-    });
-    const candidacy = feasibility.candidacy;
-    const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
-
-    await createFundingRequestUnifvaeHelper({
-      candidacyId: candidacy.id,
-      createdAt: new Date("2022-06-02T00:00:00.000Z"),
-    });
-
-    await dropOutCandidacyFourMonthsAgoMinusOneMinute({
-      proofReceivedByAdmin: true,
-      candidacyId: candidacy.id,
-    });
-
-    const resp = await injectGraphqlPaymentRequestCreation({
-      keycloakId: organismKeycloakId,
-      candidacyId: candidacy.id,
-    });
-    const obj = resp.json();
-    expect(obj).not.toHaveProperty("errors");
-  });
-
-  test("should allow the creation of paymentRequestUnifvae when candidacy was drop out less than 6 months ago but the candidate has confirmed his dropout", async () => {
-    const candidacyInput = await createCandidacyHelper({
-      candidacyArgs: {
-        financeModule: "unifvae",
-      },
-      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
-    });
-    const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityFileSentAt: new Date(),
-      candidacyId: candidacyInput.id,
-    });
-    const candidacy = feasibility.candidacy;
-    const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
-
-    await createFundingRequestUnifvaeHelper({
-      candidacyId: candidacy.id,
-      createdAt: new Date("2022-06-02T00:00:00.000Z"),
-    });
-
-    await dropOutCandidacyFourMonthsAgoMinusOneMinute({
-      dropOutConfirmedByCandidate: true,
-      candidacyId: candidacy.id,
-    });
-
-    const resp = await injectGraphqlPaymentRequestCreation({
-      keycloakId: organismKeycloakId,
-      candidacyId: candidacy.id,
-    });
-    const obj = resp.json();
-    expect(obj).not.toHaveProperty("errors");
-  });
-
-  test("should reject a payment request of more than 3200€ when the funding request has been sent the 02/06/2024", async () => {
-    const candidacyInput = await createCandidacyHelper({
-      candidacyArgs: {
-        financeModule: "unifvae",
-      },
-      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
-    });
-
-    const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityFileSentAt: new Date(),
-      decision: "ADMISSIBLE",
-      candidacyId: candidacyInput.id,
-    });
-    const candidacy = feasibility.candidacy;
-    const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
-
-    await createFundingRequestUnifvaeHelper({
-      candidacyId: candidacy.id,
-      createdAt: new Date("2024-06-02T00:00:00.000Z"),
-    });
-
-    const resp = await injectGraphqlPaymentRequestCreation({
-      keycloakId: organismKeycloakId,
-      candidacyId: candidacy.id,
-      paymentRequestOverride: {
-        basicSkillsEffectiveHourCount: 70,
-        basicSkillsEffectiveCost: 25,
-        individualEffectiveCost: 70,
-        individualEffectiveHourCount: 30,
-      },
-    });
-
-    const obj = resp.json();
-    expect(obj).toHaveProperty("errors");
-    expect(obj.errors[0].message).toBe(
-      "Le coût total de la demande ne peut dépasser 3200€ hors forfait",
-    );
-  });
-
-  test("should reject a payment request of more than 3200€ when the funding request has been sent before the 02/06/2024 and the certification is neither DEAS, DEAP or DEAES", async () => {
-    const candidacyInput = await createCandidacyHelper({
-      candidacyArgs: {
-        financeModule: "unifvae",
-      },
-      candidacyActiveStatus: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
-    });
-
-    const feasibility = await createFeasibilityUploadedPdfHelper({
-      feasibilityFileSentAt: new Date(),
-      decision: "ADMISSIBLE",
-      candidacyId: candidacyInput.id,
-    });
-    const candidacy = feasibility.candidacy;
-    const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
-
-    await createFundingRequestUnifvaeHelper({
-      candidacyId: candidacy.id,
-      createdAt: new Date("2024-06-01T00:00:00.000Z"),
-    });
-
-    const resp = await injectGraphqlPaymentRequestCreation({
-      keycloakId: organismKeycloakId,
-      candidacyId: candidacy.id,
-      paymentRequestOverride: {
-        basicSkillsEffectiveHourCount: 70,
-        basicSkillsEffectiveCost: 25,
-        individualEffectiveCost: 70,
-        individualEffectiveHourCount: 30,
-      },
-    });
-
-    const obj = resp.json();
-    expect(obj).toHaveProperty("errors");
-    expect(obj.errors[0].message).toBe(
-      "Le coût total de la demande ne peut dépasser 3200€ hors forfait",
-    );
-  });
-
-  test.each([
-    ["DEAS", "4495"],
-    ["DEAS", "35830"],
-    ["DEAP", "4496"],
-    ["DEAP", "35832"],
-    ["DEAES", "25467"],
-    ["DEAES", "36004"],
-  ])(
-    "should reject a payment request of more than 3200€ when the funding request has been sent the 02/06/2024 and the certification %s with rncp %s",
-    async (certificationName: string, rncpId: string) => {
-      const cert = await ensureCertificationWithRncp(certificationName, rncpId);
-
+    test("should fail to create paymentRequestUnifvae when candidacy was drop out less than 4 months ago then succeed after 4 months", async () => {
       const candidacyInput = await createCandidacyHelper({
         candidacyArgs: {
           financeModule: "unifvae",
-          certificationId: cert.id,
+        },
+        candidacyActiveStatus:
+          CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+      });
+      const feasibility = await createFeasibilityUploadedPdfHelper({
+        feasibilityFileSentAt: new Date(),
+        candidacyId: candidacyInput.id,
+      });
+      const candidacy = feasibility.candidacy;
+      const organismKeycloakId =
+        candidacy.organism?.accounts[0].keycloakId ?? "";
+
+      await createFundingRequestUnifvaeHelper({
+        candidacyId: candidacy.id,
+        createdAt: new Date("2022-06-02T00:00:00.000Z"),
+      });
+
+      await dropOutCandidacyFourMonthsAgoMinusOneMinute({
+        proofReceivedByAdmin: false,
+        candidacyId: candidacy.id,
+      });
+
+      const resp = await injectGraphqlPaymentRequestCreation({
+        keycloakId: organismKeycloakId,
+        candidacyId: candidacy.id,
+      });
+
+      expect(resp.statusCode).toBe(200);
+      const obj = resp.json();
+      expect(obj).toHaveProperty("errors");
+      expect(obj.errors[0].message).toBe(
+        "La demande de paiement n’est pas encore disponible. Vous y aurez accès 6 mois après la mise en abandon du candidat.",
+      );
+
+      await prismaClient.candidacy.update({
+        where: { id: candidacy.id },
+        data: {
+          candidacyDropOut: {
+            update: CANDIDACY_DROP_OUT_FOUR_MONTHS_AGO,
+          },
+        },
+      });
+
+      const resp2 = await injectGraphqlPaymentRequestCreation({
+        keycloakId: organismKeycloakId,
+        candidacyId: candidacy.id,
+      });
+
+      const obj2 = resp2.json();
+      expect(obj2).not.toHaveProperty("errors");
+    });
+
+    test("should allow the creation of paymentRequestUnifvae when candidacy was drop out less than 6 months ago but the proof was received by an admin", async () => {
+      const candidacyInput = await createCandidacyHelper({
+        candidacyArgs: {
+          financeModule: "unifvae",
+        },
+        candidacyActiveStatus:
+          CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+      });
+      const feasibility = await createFeasibilityUploadedPdfHelper({
+        feasibilityFileSentAt: new Date(),
+        candidacyId: candidacyInput.id,
+      });
+      const candidacy = feasibility.candidacy;
+      const organismKeycloakId =
+        candidacy.organism?.accounts[0].keycloakId ?? "";
+
+      await createFundingRequestUnifvaeHelper({
+        candidacyId: candidacy.id,
+        createdAt: new Date("2022-06-02T00:00:00.000Z"),
+      });
+
+      await dropOutCandidacyFourMonthsAgoMinusOneMinute({
+        proofReceivedByAdmin: true,
+        candidacyId: candidacy.id,
+      });
+
+      const resp = await injectGraphqlPaymentRequestCreation({
+        keycloakId: organismKeycloakId,
+        candidacyId: candidacy.id,
+      });
+      const obj = resp.json();
+      expect(obj).not.toHaveProperty("errors");
+    });
+
+    test("should allow the creation of paymentRequestUnifvae when candidacy was drop out less than 6 months ago but the candidate has confirmed his dropout", async () => {
+      const candidacyInput = await createCandidacyHelper({
+        candidacyArgs: {
+          financeModule: "unifvae",
+        },
+        candidacyActiveStatus:
+          CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+      });
+      const feasibility = await createFeasibilityUploadedPdfHelper({
+        feasibilityFileSentAt: new Date(),
+        candidacyId: candidacyInput.id,
+      });
+      const candidacy = feasibility.candidacy;
+      const organismKeycloakId =
+        candidacy.organism?.accounts[0].keycloakId ?? "";
+
+      await createFundingRequestUnifvaeHelper({
+        candidacyId: candidacy.id,
+        createdAt: new Date("2022-06-02T00:00:00.000Z"),
+      });
+
+      await dropOutCandidacyFourMonthsAgoMinusOneMinute({
+        dropOutConfirmedByCandidate: true,
+        candidacyId: candidacy.id,
+      });
+
+      const resp = await injectGraphqlPaymentRequestCreation({
+        keycloakId: organismKeycloakId,
+        candidacyId: candidacy.id,
+      });
+      const obj = resp.json();
+      expect(obj).not.toHaveProperty("errors");
+    });
+
+    test("should reject a payment request of more than 3200€ when the funding request has been sent the 02/06/2024", async () => {
+      const candidacyInput = await createCandidacyHelper({
+        candidacyArgs: {
+          financeModule: "unifvae",
         },
         candidacyActiveStatus: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
       });
@@ -330,24 +255,12 @@ describe("Unifvae ayment request", () => {
       expect(obj.errors[0].message).toBe(
         "Le coût total de la demande ne peut dépasser 3200€ hors forfait",
       );
-    },
-  );
+    });
 
-  test.each([
-    ["DEAS", "4495"],
-    ["DEAS", "35830"],
-    ["DEAP", "4496"],
-    ["DEAP", "35832"],
-    ["DEAES", "25467"],
-    ["DEAES", "36004"],
-  ])(
-    "should accept a payment request of more than 3200€ when the funding request has been sent before the 02/06/2024 and the certification is %s with rncp %s",
-    async (certificationName: string, rncpId: string) => {
-      const cert = await ensureCertificationWithRncp(certificationName, rncpId);
+    test("should reject a payment request of more than 3200€ when the funding request has been sent before the 02/06/2024 and the certification is neither DEAS, DEAP or DEAES", async () => {
       const candidacyInput = await createCandidacyHelper({
         candidacyArgs: {
           financeModule: "unifvae",
-          certificationId: cert.id,
         },
         candidacyActiveStatus: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
       });
@@ -378,7 +291,145 @@ describe("Unifvae ayment request", () => {
       });
 
       const obj = resp.json();
-      expect(obj).not.toHaveProperty("errors");
-    },
-  );
+      expect(obj).toHaveProperty("errors");
+      expect(obj.errors[0].message).toBe(
+        "Le coût total de la demande ne peut dépasser 3200€ hors forfait",
+      );
+    });
+
+    test.each([
+      ["DEAS", "4495"],
+      ["DEAS", "35830"],
+      ["DEAP", "4496"],
+      ["DEAP", "35832"],
+      ["DEAES", "25467"],
+      ["DEAES", "36004"],
+    ])(
+      "should reject a payment request of more than 3200€ when the funding request has been sent the 02/06/2024 and the certification %s with rncp %s",
+      async (certificationName: string, rncpId: string) => {
+        const cert = await ensureCertificationWithRncp(
+          certificationName,
+          rncpId,
+        );
+
+        const candidacyInput = await createCandidacyHelper({
+          candidacyArgs: {
+            financeModule: "unifvae",
+            certificationId: cert.id,
+          },
+          candidacyActiveStatus:
+            CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+        });
+
+        const feasibility = await createFeasibilityUploadedPdfHelper({
+          feasibilityFileSentAt: new Date(),
+          decision: "ADMISSIBLE",
+          candidacyId: candidacyInput.id,
+        });
+        const candidacy = feasibility.candidacy;
+        const organismKeycloakId =
+          candidacy.organism?.accounts[0].keycloakId ?? "";
+
+        await createFundingRequestUnifvaeHelper({
+          candidacyId: candidacy.id,
+          createdAt: new Date("2024-06-02T00:00:00.000Z"),
+        });
+
+        const resp = await injectGraphqlPaymentRequestCreation({
+          keycloakId: organismKeycloakId,
+          candidacyId: candidacy.id,
+          paymentRequestOverride: {
+            basicSkillsEffectiveHourCount: 70,
+            basicSkillsEffectiveCost: 25,
+            individualEffectiveCost: 70,
+            individualEffectiveHourCount: 30,
+          },
+        });
+
+        const obj = resp.json();
+        expect(obj).toHaveProperty("errors");
+        expect(obj.errors[0].message).toBe(
+          "Le coût total de la demande ne peut dépasser 3200€ hors forfait",
+        );
+      },
+    );
+
+    test.each([
+      ["DEAS", "4495"],
+      ["DEAS", "35830"],
+      ["DEAP", "4496"],
+      ["DEAP", "35832"],
+      ["DEAES", "25467"],
+      ["DEAES", "36004"],
+    ])(
+      "should accept a payment request of more than 3200€ when the funding request has been sent before the 02/06/2024 and the certification is %s with rncp %s",
+      async (certificationName: string, rncpId: string) => {
+        const cert = await ensureCertificationWithRncp(
+          certificationName,
+          rncpId,
+        );
+        const candidacyInput = await createCandidacyHelper({
+          candidacyArgs: {
+            financeModule: "unifvae",
+            certificationId: cert.id,
+          },
+          candidacyActiveStatus:
+            CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
+        });
+
+        const feasibility = await createFeasibilityUploadedPdfHelper({
+          feasibilityFileSentAt: new Date(),
+          decision: "ADMISSIBLE",
+          candidacyId: candidacyInput.id,
+        });
+        const candidacy = feasibility.candidacy;
+        const organismKeycloakId =
+          candidacy.organism?.accounts[0].keycloakId ?? "";
+
+        await createFundingRequestUnifvaeHelper({
+          candidacyId: candidacy.id,
+          createdAt: new Date("2024-06-01T00:00:00.000Z"),
+        });
+
+        const resp = await injectGraphqlPaymentRequestCreation({
+          keycloakId: organismKeycloakId,
+          candidacyId: candidacy.id,
+          paymentRequestOverride: {
+            basicSkillsEffectiveHourCount: 70,
+            basicSkillsEffectiveCost: 25,
+            individualEffectiveCost: 70,
+            individualEffectiveHourCount: 30,
+          },
+        });
+
+        const obj = resp.json();
+        expect(obj).not.toHaveProperty("errors");
+      },
+    );
+  });
+  describe("Payment request confirmation", () => {
+    test("should reject the payment request confirmation when the candidacy payment request deadline has passed", async () => {
+      const candidacy = await createCandidacyHelper({
+        candidacyArgs: {
+          financeModule: "unifvae",
+          paymentRequestDeadlinePassed: true,
+        },
+      });
+
+      await createPaymentRequestUnifvaeHelper({
+        candidacyId: candidacy.id,
+      });
+
+      await expect(
+        confirmPaymentRequestUnifvae({
+          candidacyId: candidacy.id,
+          userEmail: "test@test.com",
+          userRoles: ["manage_candidacy"],
+          userKeycloakId: "test",
+        }),
+      ).rejects.toThrowError(
+        "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation",
+      );
+    });
+  });
 });
