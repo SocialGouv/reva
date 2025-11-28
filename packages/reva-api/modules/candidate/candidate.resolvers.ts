@@ -5,6 +5,7 @@ import { prismaClient } from "@/prisma/client";
 import { getActiveCandidaciesByCandidateId } from "../candidacy/features/getActiveCandidaciesByCandidateId";
 import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
 import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
+import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 
 import {
   CandidateProfileUpdateInput,
@@ -18,6 +19,7 @@ import { candidateLoginWithCredentials } from "./features/candidateLoginWithCred
 import { candidateLoginWithToken } from "./features/candidateLoginWithToken";
 import { candidateResetPassword } from "./features/candidateResetPassword";
 import { getCandidateById } from "./features/getCandidateById";
+import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
 import { getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists } from "./features/getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists";
 import { getHighestDegreeById } from "./features/getHighestDegreeById";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
@@ -72,14 +74,29 @@ const unsafeResolvers = {
       getActiveCandidaciesByCandidateId({ candidateId }),
   },
   Query: {
-    candidate_getCandidateWithCandidacy: (
+    candidate_getCandidateWithCandidacy: async (
       _: unknown,
       _params: unknown,
       context: GraphqlContext,
-    ) =>
-      getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists({
-        context,
-      }),
+    ) => {
+      const keycloakId = context.auth.userInfo?.sub;
+      if (!keycloakId) {
+        throw new Error("Utilisateur non authentifié");
+      }
+
+      const isMultiCandidacyFeatureActive = await isFeatureActiveForUser({
+        userKeycloakId: keycloakId,
+        feature: "MULTI_CANDIDACY",
+      });
+
+      return isMultiCandidacyFeatureActive
+        ? getCandidateByKeycloakId({
+            keycloakId,
+          })
+        : getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists({
+            context,
+          });
+    },
     candidate_getCandidateById: async (_: any, params: { id: string }) =>
       getCandidateById({ candidateId: params.id }),
   },
