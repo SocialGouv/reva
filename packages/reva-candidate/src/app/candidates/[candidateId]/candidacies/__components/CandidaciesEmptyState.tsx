@@ -21,7 +21,7 @@ export default function CandidaciesEmptyState() {
         alt="candidature"
         width={282}
         height={319}
-        className="max-h-[319px]"
+        className="max-h-[319px] hidden md:block"
       />
     </div>
   );
