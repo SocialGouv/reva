@@ -131,7 +131,7 @@ test.describe("Settings User accounts v2", () => {
           });
         });
         test.describe("when I use the breadcrumb", () => {
-          test("it let me go back to the root settings page", async ({
+          test("it let me go back to the root page of the breadcrumb", async ({
             page,
           }) => {
             await login({ role, page });
