@@ -266,6 +266,8 @@ model Candidacy {
   endAccompagnementDate                         DateTime?                                       @map("end_accompagnement_date") @db.Timestamptz(6)
   endAccompagnementStatus                       EndAccompagnementStatus                         @default(NOT_REQUESTED) @map("end_accompagnement_status")
   appointments                                  Appointment[]
+  // indique si une candidature pouvant initialement bénéficier d'une demande de paiment a été bloquée parce que le délai de la convention uniformation est passé
+  paymentRequestDeadlinePassed                  Boolean                                         @default(false) @map("payment_request_deadline_passed")
 
   @@index([organismId])
   @@index([candidateId])
