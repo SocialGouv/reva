@@ -115,42 +115,23 @@ const updateUserAccountPositionnementHandlers = (args?: {
 };
 
 test.describe("Settings update user account positionnement", () => {
-  test.describe("as a Gestionnaire AAP", () => {
-    test.describe("when I access i access the update user account positionnement page", () => {
-      test.use({
-        mswHandlers: [
-          [...updateUserAccountPositionnementHandlers(), ...aapCommonHandlers],
-          { scope: "test" },
-        ],
-      });
-      test("it shows the correct title", async ({ page }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
-        );
-        await waitForPageQueries(page);
-
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-          "Positionnement",
-        );
-      });
-
-      test("it let me go back to the user account page", async ({ page }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
-        );
-        await waitForPageQueries(page);
-        await page.getByRole("link", { name: "Retour" }).click();
-
-        await expect(page).toHaveURL(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
-        );
-      });
-    });
-
-    test.describe("when I use the user account positionnement component", async () => {
-      test.describe("when the maison mere aap has  organisms", () => {
+  [
+    {
+      label: "As a Gestionnaire AAP",
+      role: "aap" as const,
+      rootBreadCrumbLabel: "Paramètres",
+      rootBreadCrumbUrl: "/admin2/agencies-settings-v3/",
+    },
+    {
+      label: "As an Admin",
+      role: "admin" as const,
+      rootBreadCrumbLabel: "Maison mère AAP",
+      rootBreadCrumbUrl:
+        "/admin2/maison-mere-aap/a8e32301-86b8-414b-8b55-af86d289adee/",
+    },
+  ].forEach(({ role, label, rootBreadCrumbLabel, rootBreadCrumbUrl }) => {
+    test.describe(label, () => {
+      test.describe("when I access i access the update user account positionnement page", () => {
         test.use({
           mswHandlers: [
             [
@@ -160,162 +141,205 @@ test.describe("Settings update user account positionnement", () => {
             { scope: "test" },
           ],
         });
-        test("it shows the correct organisms list", async ({ page }) => {
-          await login({ role: "aap", page });
+        test("it shows the correct title", async ({ page }) => {
+          await login({ role, page });
           await page.goto(
             "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
           );
           await waitForPageQueries(page);
 
-          await expect(
-            page
-              .getByTestId(
-                "multi-select-list-item-81c18b2c-fee8-4244-854d-826e6fe56f3f",
-              )
-              .getByRole("button", { name: "Ajouter" }),
-          ).toBeVisible();
-          await expect(
-            page
-              .getByTestId(
-                "multi-select-list-item-c31cb1cb-799d-4ffa-a387-1c6c87758415",
-              )
-              .getByRole("button", { name: "Retirer" }),
-          ).toBeVisible();
-          await expect(
-            page
-              .getByTestId(
-                "multi-select-list-item-1657abab-6a9e-42eb-9d15-6f4bf31e980a",
-              )
-              .getByRole("button", { name: "Ajouter" }),
-          ).toBeVisible();
+          await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+            "Positionnement",
+          );
         });
 
-        test("it let me add an organism to the user account positionnement", async ({
-          page,
-        }) => {
-          await login({ role: "aap", page });
+        test("it let me go back to the user account page", async ({ page }) => {
+          await login({ role, page });
           await page.goto(
             "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
           );
           await waitForPageQueries(page);
+          await page.getByRole("link", { name: "Retour" }).click();
 
-          const mutationPromise = waitGraphQL(
-            page,
-            "updateUserAccountPositionnementForPositionnementPage",
+          await expect(page).toHaveURL(
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
           );
-
-          await page
-            .getByTestId(
-              "multi-select-list-item-1657abab-6a9e-42eb-9d15-6f4bf31e980a",
-            )
-            .getByRole("button", { name: "Ajouter" })
-            .click();
-
-          await mutationPromise;
-        });
-
-        test("it let me toggle the only show added items switch", async ({
-          page,
-        }) => {
-          await login({ role: "aap", page });
-          await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
-          );
-          await waitForPageQueries(page);
-
-          const queryPromise = waitGraphQL(
-            page,
-            "getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage",
-          );
-
-          await page
-            .getByRole("checkbox", {
-              name: "Afficher uniquement les organismes ajoutés",
-            })
-            .click();
-
-          await queryPromise;
-        });
-
-        test("it let me search for an organism", async ({ page }) => {
-          await login({ role: "aap", page });
-          await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
-          );
-          await waitForPageQueries(page);
-
-          const queryPromise = waitGraphQL(
-            page,
-            "getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage",
-          );
-
-          const searchBar = page.getByRole("searchbox", {
-            name: "Rechercher par intitulé de l’organisme, code postal ou ville",
-          });
-
-          await searchBar.fill("Test Organism");
-          await searchBar.press("Enter");
-
-          await queryPromise;
         });
       });
 
-      test.describe("when the maison mere aap has no organisms", () => {
+      test.describe("when I use the user account positionnement component", async () => {
+        test.describe("when the maison mere aap has  organisms", () => {
+          test.use({
+            mswHandlers: [
+              [
+                ...updateUserAccountPositionnementHandlers(),
+                ...aapCommonHandlers,
+              ],
+              { scope: "test" },
+            ],
+          });
+          test("it shows the correct organisms list", async ({ page }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            );
+            await waitForPageQueries(page);
+
+            await expect(
+              page
+                .getByTestId(
+                  "multi-select-list-item-81c18b2c-fee8-4244-854d-826e6fe56f3f",
+                )
+                .getByRole("button", { name: "Ajouter" }),
+            ).toBeVisible();
+            await expect(
+              page
+                .getByTestId(
+                  "multi-select-list-item-c31cb1cb-799d-4ffa-a387-1c6c87758415",
+                )
+                .getByRole("button", { name: "Retirer" }),
+            ).toBeVisible();
+            await expect(
+              page
+                .getByTestId(
+                  "multi-select-list-item-1657abab-6a9e-42eb-9d15-6f4bf31e980a",
+                )
+                .getByRole("button", { name: "Ajouter" }),
+            ).toBeVisible();
+          });
+
+          test("it let me add an organism to the user account positionnement", async ({
+            page,
+          }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            );
+            await waitForPageQueries(page);
+
+            const mutationPromise = waitGraphQL(
+              page,
+              "updateUserAccountPositionnementForPositionnementPage",
+            );
+
+            await page
+              .getByTestId(
+                "multi-select-list-item-1657abab-6a9e-42eb-9d15-6f4bf31e980a",
+              )
+              .getByRole("button", { name: "Ajouter" })
+              .click();
+
+            await mutationPromise;
+          });
+
+          test("it let me toggle the only show added items switch", async ({
+            page,
+          }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            );
+            await waitForPageQueries(page);
+
+            const queryPromise = waitGraphQL(
+              page,
+              "getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage",
+            );
+
+            await page
+              .getByRole("checkbox", {
+                name: "Afficher uniquement les organismes ajoutés",
+              })
+              .click();
+
+            await queryPromise;
+          });
+
+          test("it let me search for an organism", async ({ page }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            );
+            await waitForPageQueries(page);
+
+            const queryPromise = waitGraphQL(
+              page,
+              "getUserAccountAndMaisonMereAAPOrganismsForPositionnementPage",
+            );
+
+            const searchBar = page.getByRole("searchbox", {
+              name: "Rechercher par intitulé de l’organisme, code postal ou ville",
+            });
+
+            await searchBar.fill("Test Organism");
+            await searchBar.press("Enter");
+
+            await queryPromise;
+          });
+        });
+
+        test.describe("when the maison mere aap has no organisms", () => {
+          test.use({
+            mswHandlers: [
+              [
+                ...updateUserAccountPositionnementHandlers({
+                  withoutMaisonMereAAPOrganisms: true,
+                }),
+                ...aapCommonHandlers,
+              ],
+              { scope: "test" },
+            ],
+          });
+          test("it shows the empty state component", async ({ page }) => {
+            await login({ role, page });
+            await page.goto(
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            );
+            await waitForPageQueries(page);
+            await expect(
+              page.getByRole("heading", {
+                name: "Aucun lieu (présentiel et/ou distanciel) trouvé",
+              }),
+            ).toBeVisible();
+          });
+        });
+      });
+
+      test.describe("when I use the breadcrumb", () => {
         test.use({
           mswHandlers: [
             [
-              ...updateUserAccountPositionnementHandlers({
-                withoutMaisonMereAAPOrganisms: true,
-              }),
+              ...updateUserAccountPositionnementHandlers(),
               ...aapCommonHandlers,
             ],
             { scope: "test" },
           ],
         });
-        test("it shows the empty state component", async ({ page }) => {
-          await login({ role: "aap", page });
+        test("it let me go back to the user account page", async ({ page }) => {
+          await login({ role, page });
           await page.goto(
             "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
           );
           await waitForPageQueries(page);
-          await expect(
-            page.getByRole("heading", {
-              name: "Aucun lieu (présentiel et/ou distanciel) trouvé",
-            }),
-          ).toBeVisible();
+          await page.getByRole("link", { name: "Doe John" }).click();
+          await expect(page).toHaveURL(
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
+          );
         });
-      });
-    });
-
-    test.describe("when I use the breadcrumb", () => {
-      test.use({
-        mswHandlers: [
-          [...updateUserAccountPositionnementHandlers(), ...aapCommonHandlers],
-          { scope: "test" },
-        ],
-      });
-      test("it let me go back to the user account page", async ({ page }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
-        );
-        await waitForPageQueries(page);
-        await page.getByRole("link", { name: "Doe John" }).click();
-        await expect(page).toHaveURL(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
-        );
-      });
-      test("it let me go back to the root settings page", async ({ page }) => {
-        await login({ role: "aap", page });
-        await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
-        );
-        await waitForPageQueries(page);
-        await page
-          .locator(".fr-breadcrumb")
-          .getByRole("link", { name: "Paramètres" })
-          .click();
-        await expect(page).toHaveURL("/admin2/agencies-settings-v3/");
+        test("it let me go back to the root page of the breadcrumb", async ({
+          page,
+        }) => {
+          await login({ role, page });
+          await page.goto(
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+          );
+          await waitForPageQueries(page);
+          await page
+            .locator(".fr-breadcrumb")
+            .getByRole("link", { name: rootBreadCrumbLabel })
+            .click();
+          await expect(page).toHaveURL(rootBreadCrumbUrl);
+        });
       });
     });
   });
