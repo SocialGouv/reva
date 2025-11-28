@@ -3,13 +3,14 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 
+import CandidaciesEmptyState from "./__components/CandidaciesEmptyState";
 import { useCandidacies } from "./candidacies.hook";
 
 export default function CandidaciesPage() {
@@ -96,7 +97,7 @@ export default function CandidaciesPage() {
   }
 
   if (candidacies.length === 0) {
-    return <p>Vous n'avez pas de candidatures</p>;
+    return <CandidaciesEmptyState />;
   }
 
   return (

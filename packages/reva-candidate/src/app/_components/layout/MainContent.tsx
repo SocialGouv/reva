@@ -20,7 +20,6 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
     pathname === "/" ||
     pathname === `/candidates/` ||
     pathname === `/candidates/${candidateId}/` ||
-    pathname === `/candidates/${candidateId}/candidacies/` ||
     pathname === `/candidates/${candidateId}/candidacies/${candidacyId}/` ||
     pathname === `/candidates/${candidateId}/candidacies/create/` ||
     pathname === `/candidates/${candidateId}/candidacies/certifications/` ||
@@ -50,7 +49,7 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
           </div>
         ) : (
           <div
-            className={`fr-container flex-1 md:mt-8 pt-4 md:pt-4 md:pb-4 fr-grid-row mb-12 bg-white lg:shadow-lifted`}
+            className={`fr-container md:mt-8 pt-4 md:pt-4 md:pb-4 fr-grid-row mb-12 bg-white lg:shadow-lifted`}
           >
             {children}
           </div>
