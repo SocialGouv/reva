@@ -258,7 +258,7 @@ export const addUploadedFileAndConfirmPayment = async ({
   });
 };
 
-const confirmPaymentRequestUnifvae = async ({
+export const confirmPaymentRequestUnifvae = async ({
   candidacyId,
   userKeycloakId,
   userEmail,
@@ -281,6 +281,12 @@ const confirmPaymentRequestUnifvae = async ({
   if (!candidacy) {
     throw new Error(
       "Impossible de confirmer la demande de paiement. La candidature n'a pas été trouvée",
+    );
+  }
+
+  if (candidacy.paymentRequestDeadlinePassed) {
+    throw new Error(
+      "La date limite de demande de paiement est dépassée pour cette candidature, comme spécifié dans la convention Uniformation",
     );
   }
 
