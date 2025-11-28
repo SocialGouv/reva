@@ -114,7 +114,9 @@ const PaymentRequestUniFvaeUploadPage = () => {
         queryClient.invalidateQueries({ queryKey: [candidacyId] });
         router.push(`/candidacies/${candidacyId}/summary`);
       } else {
-        errorToast(await result.text());
+        const data = await result.json();
+        const message = data.message || (await result.text());
+        errorToast(message);
       }
     },
     (e) => console.log({ e }),

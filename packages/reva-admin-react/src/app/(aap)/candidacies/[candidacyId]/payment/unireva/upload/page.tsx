@@ -65,7 +65,9 @@ const PaymentRequestUniRevaUploadPage = () => {
         successToast("Modifications enregistrées");
         router.push(`/candidacies/${candidacyId}/payment/unireva/confirmation`);
       } else {
-        errorToast(await result.text());
+        const data = await result.json();
+        const message = data.message || (await result.text());
+        errorToast(message);
       }
     },
     (e) => console.log({ e }),
