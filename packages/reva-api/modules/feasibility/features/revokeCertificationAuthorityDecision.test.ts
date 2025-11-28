@@ -145,7 +145,13 @@ describe("revokeCertificationAuthorityDecision", () => {
       },
     ])(
       "should revoke $decision decision for $format feasibility",
-      async ({ decision, format }) => {
+      async ({
+        decision,
+        format,
+      }: {
+        decision: FeasibilityStatus;
+        format: FeasibilityFormat;
+      }) => {
         const { candidacy, feasibility } = await createFeasibilityWithDecision(
           decision,
           format,
@@ -245,18 +251,21 @@ describe("revokeCertificationAuthorityDecision", () => {
       { decision: "INCOMPLETE" },
       { decision: "PENDING" },
       { decision: "DRAFT" },
-    ])("should fail to revoke $decision decision", async ({ decision }) => {
-      const { feasibility } = await createFeasibilityWithDecision(decision);
-      const adminClient = getAdminClient();
+    ])(
+      "should fail to revoke $decision decision",
+      async ({ decision }: { decision: FeasibilityStatus }) => {
+        const { feasibility } = await createFeasibilityWithDecision(decision);
+        const adminClient = getAdminClient();
 
-      await expect(
-        adminClient.request(revokeCertificationAuthorityDecisionMutation, {
-          feasibilityId: feasibility.id,
-        }),
-      ).rejects.toThrowError(
-        "La décision ne peut être annulée que pour les dossiers recevables ou non recevables",
-      );
-    });
+        await expect(
+          adminClient.request(revokeCertificationAuthorityDecisionMutation, {
+            feasibilityId: feasibility.id,
+          }),
+        ).rejects.toThrowError(
+          "La décision ne peut être annulée que pour les dossiers recevables ou non recevables",
+        );
+      },
+    );
 
     test("should fail when feasibility does not exist", async () => {
       const nonExistentFeasibilityId = "00000000-0000-0000-0000-000000000000";
@@ -272,26 +281,29 @@ describe("revokeCertificationAuthorityDecision", () => {
     test.each<CandidacyStatusStep>([
       "DOSSIER_DE_VALIDATION_ENVOYE",
       "DOSSIER_DE_VALIDATION_SIGNALE",
-    ])("should fail when candidacy status is %s", async (status) => {
-      const candidacy = await createCandidacyHelper({
-        candidacyArgs: { status },
-      });
+    ])(
+      "should fail when candidacy status is %s",
+      async (status: CandidacyStatusStep) => {
+        const candidacy = await createCandidacyHelper({
+          candidacyArgs: { status },
+        });
 
-      const feasibility = await createFeasibilityDematerializedHelper({
-        candidacyId: candidacy.id,
-        decision: "ADMISSIBLE",
-        decisionSentAt: new Date(),
-      });
+        const feasibility = await createFeasibilityDematerializedHelper({
+          candidacyId: candidacy.id,
+          decision: "ADMISSIBLE",
+          decisionSentAt: new Date(),
+        });
 
-      const adminClient = getAdminClient();
+        const adminClient = getAdminClient();
 
-      await expect(
-        adminClient.request(revokeCertificationAuthorityDecisionMutation, {
-          feasibilityId: feasibility.id,
-        }),
-      ).rejects.toThrowError(
-        "La décision ne peut être annulée que lorsque la candidature est à l'étape DOSSIER_FAISABILITE_RECEVABLE ou DOSSIER_FAISABILITE_NON_RECEVABLE",
-      );
-    });
+        await expect(
+          adminClient.request(revokeCertificationAuthorityDecisionMutation, {
+            feasibilityId: feasibility.id,
+          }),
+        ).rejects.toThrowError(
+          "La décision ne peut être annulée que lorsque la candidature est à l'étape DOSSIER_FAISABILITE_RECEVABLE ou DOSSIER_FAISABILITE_NON_RECEVABLE",
+        );
+      },
+    );
   });
 });

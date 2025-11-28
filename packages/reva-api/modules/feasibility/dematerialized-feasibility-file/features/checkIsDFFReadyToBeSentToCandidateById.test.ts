@@ -80,11 +80,11 @@ describe("checkIsDFFReadyToBeSentToCandidateById - Validates if a dematerialized
     ])(
       "should validate basic fields (attachments: %s, certification: %s, prerequisites: %s, eligibility: %s) -> expected: %s",
       async (
-        attachments,
-        certification,
-        prerequisites,
-        eligibility,
-        expected,
+        attachments: boolean,
+        certification: boolean,
+        prerequisites: boolean,
+        eligibility: DFFEligibilityRequirement | null,
+        expected: boolean,
       ) => {
         const dff: CheckIsDFFReadyToBeSentToCandidateByIdArgs = {
           attachmentsPartComplete: attachments,
@@ -111,7 +111,11 @@ describe("checkIsDFFReadyToBeSentToCandidateById - Validates if a dematerialized
       [COMPETENCE_BLOCS_COMPLETED, AAP_DECISION_FAVORABLE, true],
     ])(
       "should handle partial eligibility with competence blocs %s and AAP decision %s -> expected: %s",
-      async (competenceBlocs, aapDecision, expected) => {
+      async (
+        competenceBlocs: CompetenceBlocsPartCompletionEnum,
+        aapDecision: DFFDecision | null,
+        expected: boolean,
+      ) => {
         const dff: CheckIsDFFReadyToBeSentToCandidateByIdArgs = {
           attachmentsPartComplete: ATTACHMENTS_PART_COMPLETE,
           certificationPartComplete: CERTIFICATION_PART_COMPLETE,
@@ -135,7 +139,11 @@ describe("checkIsDFFReadyToBeSentToCandidateById - Validates if a dematerialized
       [COMPETENCE_BLOCS_COMPLETED, AAP_DECISION_FAVORABLE, true],
     ])(
       "should handle full eligibility with competence blocs %s and AAP decision %s -> expected: %s",
-      async (competenceBlocs, aapDecision, expected) => {
+      async (
+        competenceBlocs: CompetenceBlocsPartCompletionEnum,
+        aapDecision: DFFDecision | null,
+        expected: boolean,
+      ) => {
         const dff: CheckIsDFFReadyToBeSentToCandidateByIdArgs = {
           attachmentsPartComplete: ATTACHMENTS_PART_COMPLETE,
           certificationPartComplete: CERTIFICATION_PART_COMPLETE,
@@ -161,7 +169,11 @@ describe("checkIsDFFReadyToBeSentToCandidateById - Validates if a dematerialized
       [COMPETENCE_BLOCS_COMPLETED, AAP_DECISION_FAVORABLE, false],
     ])(
       "should handle missing eligibility with competence blocs %s and AAP decision %s -> expected: %s",
-      async (competenceBlocs, aapDecision, expected) => {
+      async (
+        competenceBlocs: CompetenceBlocsPartCompletionEnum,
+        aapDecision: DFFDecision | null,
+        expected: boolean,
+      ) => {
         const dff: CheckIsDFFReadyToBeSentToCandidateByIdArgs = {
           attachmentsPartComplete: ATTACHMENTS_PART_COMPLETE,
           certificationPartComplete: CERTIFICATION_PART_COMPLETE,

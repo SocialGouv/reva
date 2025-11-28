@@ -100,13 +100,13 @@ describe("checkIsDFFReadyToBeSentToCertificationAuthorityById - Validates if a d
     ])(
       "should validate basic fields (attachments: %s, certification: %s, prerequisites: %s, eligibility: %s, sworn statement: %s, confirmation: %s) -> expected: %s",
       async (
-        attachments,
-        certification,
-        prerequisites,
-        eligibility,
-        swornStatement,
-        confirmation,
-        expected,
+        attachments: boolean,
+        certification: boolean,
+        prerequisites: boolean,
+        eligibility: DFFEligibilityRequirement | null,
+        swornStatement: string | null,
+        confirmation: Date | null,
+        expected: boolean,
       ) => {
         const result =
           await checkIsDFFReadyToBeSentToCertificationAuthorityById({
@@ -134,7 +134,11 @@ describe("checkIsDFFReadyToBeSentToCertificationAuthorityById - Validates if a d
       [COMPETENCE_BLOCS_COMPLETED, AAP_DECISION_FAVORABLE, true],
     ])(
       "should handle partial eligibility with competence blocs %s and AAP decision %s -> expected: %s",
-      async (competenceBlocs, aapDecision, expected) => {
+      async (
+        competenceBlocs: CompetenceBlocsPartCompletionEnum,
+        aapDecision: DFFDecision | null,
+        expected: boolean,
+      ) => {
         const result =
           await checkIsDFFReadyToBeSentToCertificationAuthorityById({
             attachmentsPartComplete: ATTACHMENTS_PART_COMPLETE,
@@ -159,7 +163,11 @@ describe("checkIsDFFReadyToBeSentToCertificationAuthorityById - Validates if a d
       [COMPETENCE_BLOCS_COMPLETED, AAP_DECISION_FAVORABLE, true],
     ])(
       "should handle full eligibility with competence blocs %s and AAP decision %s -> expected: %s",
-      async (competenceBlocs, aapDecision, expected) => {
+      async (
+        competenceBlocs: CompetenceBlocsPartCompletionEnum,
+        aapDecision: DFFDecision | null,
+        expected: boolean,
+      ) => {
         const result =
           await checkIsDFFReadyToBeSentToCertificationAuthorityById({
             attachmentsPartComplete: ATTACHMENTS_PART_COMPLETE,

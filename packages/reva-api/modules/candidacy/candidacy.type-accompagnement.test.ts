@@ -13,7 +13,7 @@ test.each([
   "PARCOURS_ENVOYE",
 ] satisfies CandidacyStatusStep[])(
   "candidate should be able to change it's type_accompagnement to 'autonome' when the candidacy status is '%s'",
-  async (status) => {
+  async (status: CandidacyStatusStep) => {
     const candidacy = await createCandidacyHelper({
       candidacyActiveStatus: status,
       candidacyArgs: { typeAccompagnement: "ACCOMPAGNE" },

@@ -8,12 +8,10 @@ import {
   navigateToAppointmentListPage,
 } from "@tests/helpers/handlers/appointments/appointment-list.handler";
 
-import { Candidate } from "@/graphql/generated/graphql";
-
 const createCandidacyWithAppointments = ({
   candidate,
 }: {
-  candidate: Candidate;
+  candidate: ReturnType<typeof createCandidateEntity>;
 }) => {
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 1);
@@ -58,7 +56,7 @@ const createCandidacyWithAppointments = ({
 };
 
 test.describe("Appointment list for candidacy with past appointments", () => {
-  const candidate = createCandidateEntity({}) as Candidate;
+  const candidate = createCandidateEntity({});
   const candidacy = createCandidacyWithAppointments({ candidate });
   const { handlers, appointmentListWait } = appointmentListHandlers({
     candidacy,
@@ -113,7 +111,7 @@ test.describe("Appointment list for candidacy with past appointments", () => {
 });
 
 test.describe("Appointment list for candidacy without past appointments", () => {
-  const candidate = createCandidateEntity({}) as Candidate;
+  const candidate = createCandidateEntity({});
   const candidacy = createCandidacyWithAppointments({ candidate });
 
   const { handlers, appointmentListWait } = appointmentListHandlers({

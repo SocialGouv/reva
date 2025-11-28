@@ -109,27 +109,30 @@ describe("delete experience from candidacy", () => {
     "DOSSIER_DE_VALIDATION_ENVOYE",
     "DOSSIER_DE_VALIDATION_SIGNALE",
     "ARCHIVE",
-  ])("should prevent deletion when candidacy status is %s", async (status) => {
-    const candidacy = await createCandidacyHelper({
-      candidacyActiveStatus: status,
-    });
+  ])(
+    "should prevent deletion when candidacy status is %s",
+    async (status: CandidacyStatusStep) => {
+      const candidacy = await createCandidacyHelper({
+        candidacyActiveStatus: status,
+      });
 
-    const experience = await createExperienceForCandidacy(
-      candidacy.id,
-      "Test Experience",
-    );
+      const experience = await createExperienceForCandidacy(
+        candidacy.id,
+        "Test Experience",
+      );
 
-    const graphqlClient = getGraphQLClientForCandidate(
-      candidacy.candidate?.keycloakId,
-    );
+      const graphqlClient = getGraphQLClientForCandidate(
+        candidacy.candidate?.keycloakId,
+      );
 
-    await expect(
-      graphqlClient.request(deleteExperienceMutation, {
-        candidacyId: candidacy.id,
-        experienceId: experience.id,
-      }),
-    ).rejects.toThrow(
-      "Impossible de supprimer les expériences après avoir envoyé la candidature à l'AAP",
-    );
-  });
+      await expect(
+        graphqlClient.request(deleteExperienceMutation, {
+          candidacyId: candidacy.id,
+          experienceId: experience.id,
+        }),
+      ).rejects.toThrow(
+        "Impossible de supprimer les expériences après avoir envoyé la candidature à l'AAP",
+      );
+    },
+  );
 });

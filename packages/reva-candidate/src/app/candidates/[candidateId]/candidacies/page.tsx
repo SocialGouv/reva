@@ -18,7 +18,10 @@ export default function CandidaciesPage() {
 
   const router = useRouter();
 
-  const candidacies = useMemo(() => candidate?.candidacies || [], [candidate]);
+  const candidacies = useMemo(
+    () => (candidate?.candidacies ?? []).filter((c) => c !== null),
+    [candidate],
+  );
 
   const { isFeatureActive } = useFeatureFlipping();
   const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");

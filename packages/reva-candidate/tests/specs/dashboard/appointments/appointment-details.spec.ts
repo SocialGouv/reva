@@ -11,15 +11,10 @@ import {
   navigateToAppointmentDetailsPage,
 } from "@tests/helpers/handlers/appointments/appointment-details.handler";
 
-import {
-  Appointment,
-  Candidacy,
-  Candidate,
-  Organism,
-} from "@/graphql/generated/graphql";
+import { Appointment, Candidacy, Organism } from "@/graphql/generated/graphql";
 
 test.describe("Appointment details page", () => {
-  const candidate = createCandidateEntity({}) as Candidate;
+  const candidate = createCandidateEntity({});
   const organism = createOrganismEntity({}) as Organism;
   const candidacy = createCandidacyEntity({
     candidate,
@@ -120,7 +115,7 @@ test.describe("Appointment details page", () => {
 });
 
 test.describe("Appointment details with missing optional info", () => {
-  const candidate = createCandidateEntity({}) as Candidate;
+  const candidate = createCandidateEntity({});
   const organism = createOrganismEntity({}) as Organism;
   const candidacy = createCandidacyEntity({
     candidate,

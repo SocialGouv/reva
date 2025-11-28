@@ -85,7 +85,7 @@ test.each([
   "INACTIVE",
 ] satisfies CertificationStatus[])(
   "should throw an error when trying to send a certification to the certification registry manager when the certification status is  %s",
-  async (status) => {
+  async (status: CertificationStatus) => {
     const certification = await createCertificationHelper({
       status,
     });
