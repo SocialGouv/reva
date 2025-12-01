@@ -8,6 +8,7 @@ import { CertificationAdditionalInfoSummaryCard } from "@/components/certificati
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import { useCertificationDetailsPage } from "./getCertificationDetails.hook";
 
@@ -27,6 +28,14 @@ export default function CertificationDetailsPage() {
     useCertificationDetailsPage({ certificationId, candidacyId });
 
   const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
+  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
+
+  // Bloquer le changement de certification si DF incomplet et MULTI_CANDIDACY actif (sauf pour l'admin)
+  const isDfIncomplete = candidacy?.status === "DOSSIER_FAISABILITE_INCOMPLET";
+  const shouldBlockForNonAdmin =
+    isMultiCandidacyFeatureActive && isDfIncomplete && !isAdmin;
+
   const canUpdateCertification =
     (isAdmin || isGestionnaireMaisonMereAAP || isOrganism) &&
     candidacy?.status &&
@@ -38,7 +47,8 @@ export default function CertificationDetailsPage() {
       "PARCOURS_CONFIRME",
       "DOSSIER_FAISABILITE_INCOMPLET",
     ].includes(candidacy?.status) &&
-    !candidacy.candidacyDropOut;
+    !candidacy.candidacyDropOut &&
+    !shouldBlockForNonAdmin;
 
   if (!certification || getCertificationQueryStatus !== "success") {
     return null;

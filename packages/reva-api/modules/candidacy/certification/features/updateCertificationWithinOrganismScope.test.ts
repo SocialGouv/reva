@@ -10,6 +10,7 @@ import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
@@ -219,6 +220,87 @@ allowedStatuses.forEach((statut) => {
     expect(candidacyUpdated?.certificationId).toEqual(newCertification.id);
     expect(candidacyUpdated?.status).toEqual("PRISE_EN_CHARGE");
   });
+});
+
+test("should allow admin to update certification when status is DOSSIER_FAISABILITE_INCOMPLET and MULTI_CANDIDACY is active", async () => {
+  await createFeatureHelper({
+    args: {
+      key: "MULTI_CANDIDACY",
+      label: "Multi candidacy",
+      isActive: true,
+    },
+  });
+
+  const { candidacy, organism } =
+    await createCandidacyWithSocialCertificationAndOrganism({
+      statut: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+    });
+
+  const newCertification = await createCertificationSocial();
+  const organismKeycloakId = organism.accounts[0].keycloakId ?? "";
+
+  const adminGraphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: organismKeycloakId,
+      }),
+    },
+  });
+
+  const candidacy_certification_updateCertificationWithinOrganismScope =
+    graphql(`
+      mutation candidacy_certification_updateCertificationWithinOrganismScope(
+        $candidacyId: ID!
+        $certificationId: ID!
+      ) {
+        candidacy_certification_updateCertificationWithinOrganismScope(
+          candidacyId: $candidacyId
+          certificationId: $certificationId
+        )
+      }
+    `);
+
+  await adminGraphqlClient.request(
+    candidacy_certification_updateCertificationWithinOrganismScope,
+    {
+      candidacyId: candidacy.id,
+      certificationId: newCertification.id,
+    },
+  );
+
+  const candidacyUpdated = await prismaClient.candidacy.findUnique({
+    where: { id: candidacy.id },
+  });
+
+  expect(candidacyUpdated?.certificationId).toEqual(newCertification.id);
+});
+
+test("should block non-admin from updating certification when status is DOSSIER_FAISABILITE_INCOMPLET and MULTI_CANDIDACY is active", async () => {
+  await createFeatureHelper({
+    args: {
+      key: "MULTI_CANDIDACY",
+      label: "Multi candidacy",
+      isActive: true,
+    },
+  });
+
+  const { candidacy, organism } =
+    await createCandidacyWithSocialCertificationAndOrganism({
+      statut: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
+    });
+
+  const newCertification = await createCertificationSocial();
+
+  await expect(
+    updateCertificationWithinScope({
+      certification: newCertification,
+      candidacy,
+      organism,
+    }),
+  ).rejects.toThrowError(
+    "Impossible de modifier la certification lorsque le dossier de faisabilité est incomplet",
+  );
 });
 
 test("an organism should be able to update certification while a training is sent", async () => {

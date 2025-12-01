@@ -45,7 +45,13 @@ export const updateCertificationOfCandidacy = async ({
     );
   }
 
-  if (!(await canCandidateUpdateCandidacy({ candidacy }))) {
+  if (
+    !(await canCandidateUpdateCandidacy({
+      candidacy,
+      userKeycloakId,
+      userRoles,
+    }))
+  ) {
     throw new Error(
       "Impossible de changer de certification après avoir confirmé le parcours",
     );

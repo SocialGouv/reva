@@ -6,9 +6,11 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { useAuth } from "@/components/auth/auth";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -54,6 +56,7 @@ const getCandidacyQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       typeAccompagnement
       organismId
+      status
       certification {
         id
         label
@@ -93,6 +96,9 @@ const ReorientationPage = () => {
     candidacyId: string;
   }>();
   const router = useRouter();
+  const { isAdmin } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
+  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
@@ -111,6 +117,17 @@ const ReorientationPage = () => {
 
   const candidacy = getCandidacyResponse?.getCandidacyById;
   const organismId = candidacy?.organismId;
+
+  // Bloquer le changement de certification si DF incomplet et MULTI_CANDIDACY actif (sauf pour l'admin)
+  const isDfIncomplete = candidacy?.status === "DOSSIER_FAISABILITE_INCOMPLET";
+  const shouldBlockForNonAdmin =
+    isMultiCandidacyFeatureActive && isDfIncomplete && !isAdmin;
+
+  useEffect(() => {
+    if (shouldBlockForNonAdmin && candidacy) {
+      router.push(`/candidacies/${candidacyId}/summary`);
+    }
+  }, [shouldBlockForNonAdmin, candidacy, candidacyId, router]);
 
   const {
     data: getCertificationsResponse,
@@ -171,6 +188,10 @@ const ReorientationPage = () => {
   const selectedCertification = certificationPage?.rows.find(
     (c) => c.id == selectedCertificationId,
   );
+
+  if (shouldBlockForNonAdmin) {
+    return null;
+  }
 
   return (
     certificationPage && (

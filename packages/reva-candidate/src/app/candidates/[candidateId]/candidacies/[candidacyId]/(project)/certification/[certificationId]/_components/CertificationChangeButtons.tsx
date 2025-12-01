@@ -3,6 +3,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useParams, useRouter } from "next/navigation";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useCandidacyForCertification } from "./certification.hooks";
@@ -31,6 +32,16 @@ export default function CertificationChangeButtons({
     candidacy,
     isRefetching,
   } = useCandidacyForCertification();
+
+  const { isFeatureActive } = useFeatureFlipping();
+  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
+
+  const isDfIncomplete = candidacy?.status === "DOSSIER_FAISABILITE_INCOMPLET";
+  // Bloquer le changement de certification si DF incomplet et MULTI_CANDIDACY actif
+  const shouldBlockCertificationChange =
+    isMultiCandidacyFeatureActive && isDfIncomplete;
+  const canChangeCertification =
+    canEditCandidacy && !shouldBlockCertificationChange;
 
   if (isRefetching || !candidacy) {
     return null;
@@ -85,7 +96,7 @@ export default function CertificationChangeButtons({
             onClick={() => {
               router.push("../../search-certification");
             }}
-            disabled={!canEditCandidacy}
+            disabled={!canChangeCertification}
           >
             Changer de diplôme
           </Button>
@@ -95,7 +106,7 @@ export default function CertificationChangeButtons({
         <Button
           data-testid="submit-certification-button"
           className="justify-center w-[100%]  md:w-fit"
-          disabled={updateCertification.isPending || !canEditCandidacy}
+          disabled={updateCertification.isPending || !canChangeCertification}
           onClick={onSubmit}
         >
           Choisir ce diplôme
