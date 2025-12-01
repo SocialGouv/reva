@@ -1521,7 +1521,7 @@ model MaisonMereAAPOnAccount {
   maisonMereAAP   MaisonMereAAP @relation(fields: [maisonMereAAPId], references: [id])
   maisonMereAAPId String        @map("maison_mere_aap_id") @db.Uuid
   account         Account       @relation(fields: [accountId], references: [id])
-  accountId       String        @map("account_id") @db.Uuid
+  accountId       String        @unique @map("account_id") @db.Uuid
 
   @@map("maison_mere_aap_on_account")
 }
