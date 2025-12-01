@@ -5,6 +5,6 @@ export const getMaisonMereAAPByGestionnaireAccountId = ({
 }: {
   gestionnaireAccountId: string;
 }) =>
-  prismaClient.maisonMereAAP.findFirst({
+  prismaClient.maisonMereAAP.findUnique({
     where: { gestionnaireAccountId },
   });
