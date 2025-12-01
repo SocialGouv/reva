@@ -38,6 +38,7 @@ import { getCompteCollaborateurById } from "./features/getCompteCollaborateurByI
 import { getComptesCollaborateursByMaisonMereAAPId } from "./features/getComptesCollaborateursByMaisonMereAAPId";
 import { getLastProfessionalCgu } from "./features/getLastProfessionalCgu";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
+import { getMaisonMereAAPByGestionnaireAccountIdOrCollaborateurAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountIdOrCollaborateurAccountId";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
 import { getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType } from "./features/getMaisonMereAAPLegalInformationDocumentFileNameUrlAndMimeType";
 import { getMaisonMereAAPLegalInformationDocuments } from "./features/getMaisonMereAAPLegalInformationDocuments";
@@ -82,8 +83,8 @@ const unsafeResolvers = {
     agences: ({ id: accountId }: { id: string }) =>
       getAgencesByGestionnaireAccountId({ gestionnaireAccountId: accountId }),
     maisonMereAAP: ({ id: accountId }: { id: string }) =>
-      getMaisonMereAAPByGestionnaireAccountId({
-        gestionnaireAccountId: accountId,
+      getMaisonMereAAPByGestionnaireAccountIdOrCollaborateurAccountId({
+        accountId,
       }),
     organisms: ({ id: accountId }: { id: string }) =>
       getOrganismsByAccountId({ accountId }),
