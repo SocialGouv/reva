@@ -40,7 +40,7 @@ type Candidate {
   country: Country
   nationality: String
   candidacy: Candidacy
-  candidacies: [Candidacy]!
+  candidacies: [Candidacy!]!
   highestDegree: Degree
   highestDegreeLabel: String
   niveauDeFormationLePlusEleve: Degree
