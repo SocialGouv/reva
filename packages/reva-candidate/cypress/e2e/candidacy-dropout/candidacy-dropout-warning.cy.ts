@@ -70,7 +70,7 @@ function interceptCandidacy({
     "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     "@activeFeaturesForConnectedUser",
     "@getCandidacyByIdForCandidacyGuard",
-    "@getCandidacyByIdForDashboard",
+    ...(droppedOut ? [] : ["@getCandidacyByIdForDashboard"]),
   ]);
 }
 

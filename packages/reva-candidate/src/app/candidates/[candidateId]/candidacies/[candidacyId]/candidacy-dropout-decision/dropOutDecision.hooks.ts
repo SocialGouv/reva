@@ -83,7 +83,9 @@ export const useDropOutDecisionPage = () => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["candidacy"],
+        predicate: (query) =>
+          query.queryKey.includes("candidate") ||
+          query.queryKey.includes("candidacy"),
       });
     },
   });

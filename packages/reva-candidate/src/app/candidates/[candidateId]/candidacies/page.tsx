@@ -2,101 +2,28 @@
 
 import Button from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 import { CandidacyCard } from "@/components/card/candidacy-card/CandidacyCard";
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
-import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 
 import CandidaciesEmptyState from "./__components/CandidaciesEmptyState";
 import { useCandidacies } from "./candidacies.hook";
 
 export default function CandidaciesPage() {
-  const { candidate, isLoading } = useCandidacies();
+  const { candidateId } = useParams<{
+    candidateId: string;
+  }>();
+
+  const { candidate, isLoading } = useCandidacies(candidateId);
 
   const router = useRouter();
 
-  const candidacies = useMemo(
-    () => (candidate?.candidacies ?? []).filter((c) => c !== null),
-    [candidate],
-  );
-
-  const { isFeatureActive } = useFeatureFlipping();
-  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
-
-  const inactifEnAttenteCandidacy = useMemo(() => {
-    return candidacies.find(
-      (candidacy) => candidacy.activite === "INACTIF_EN_ATTENTE",
-    );
-  }, [candidacies]);
-
-  const endAccompagnementPendingCandidacy = useMemo(() => {
-    return candidacies.find(
-      (candidacy) => candidacy.endAccompagnementStatus === "PENDING",
-    );
-  }, [candidacies]);
-
-  const dropOutPendingCandidacy = useMemo(() => {
-    return candidacies.find(
-      (candidacy) =>
-        candidacy.candidacyDropOut &&
-        !isDropOutConfirmed({
-          dropOutConfirmedByCandidate:
-            candidacy.candidacyDropOut.dropOutConfirmedByCandidate,
-          proofReceivedByAdmin: candidacy.candidacyDropOut.proofReceivedByAdmin,
-          dropOutDate: toDate(candidacy.candidacyDropOut.createdAt),
-        }),
-    );
-  }, [candidacies]);
-
-  useEffect(() => {
-    if (isMultiCandidacyFeatureActive) {
-      if (inactifEnAttenteCandidacy) {
-        router.push(`./${inactifEnAttenteCandidacy.id}/candidacy-inactif`);
-      } else if (endAccompagnementPendingCandidacy) {
-        router.push(
-          `./${endAccompagnementPendingCandidacy.id}/end-accompagnement`,
-        );
-      } else if (dropOutPendingCandidacy) {
-        router.push(
-          `./${dropOutPendingCandidacy.id}/candidacy-dropout-decision`,
-        );
-      }
-      return;
-    }
-
-    if (candidacies.length > 0) {
-      router.push(`./${candidacies[0].id}`);
-    }
-  }, [
-    candidacies,
-    endAccompagnementPendingCandidacy,
-    dropOutPendingCandidacy,
-    inactifEnAttenteCandidacy,
-    isMultiCandidacyFeatureActive,
-    router,
-  ]);
+  const candidacies = useMemo(() => candidate?.candidacies || [], [candidate]);
 
   if (isLoading) {
     return <LoaderWithLayout />;
-  }
-
-  if (isMultiCandidacyFeatureActive) {
-    if (
-      inactifEnAttenteCandidacy ||
-      endAccompagnementPendingCandidacy ||
-      dropOutPendingCandidacy
-    ) {
-      return <LoaderWithLayout />;
-    }
-  }
-
-  if (!isMultiCandidacyFeatureActive) {
-    if (candidacies.length > 0) {
-      return <LoaderWithLayout />;
-    }
   }
 
   if (candidacies.length === 0) {

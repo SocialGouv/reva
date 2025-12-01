@@ -162,7 +162,9 @@ export default function CandidacyInactifPage() {
       } else {
         // On veut laisser la redirection se faire en forçant un rafraichissement des données candidate
         queryClient.invalidateQueries({
-          queryKey: ["candidacy"],
+          predicate: (query) =>
+            query.queryKey.includes("candidate") ||
+            query.queryKey.includes("candidacy"),
         });
       }
     } catch (error) {

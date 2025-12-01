@@ -62,7 +62,6 @@ context("Candidacy dropout decision page", () => {
       "@activeFeaturesForConnectedUser",
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdForDashboard",
-      "@getCandidacyByIdWithCandidateForDropOutDecision",
     ]);
     cy.visit(
       `/candidates/${candidate.id}/candidacies/c6898498-3b07-4b84-9120-b163aacbd916/candidacy-dropout-decision/`,

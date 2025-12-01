@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
@@ -10,6 +9,7 @@ const GET_CANDIDATE_BY_ID_WITH_CANDIDACY_FOR_CANDIDACIES_GUARD = graphql(`
     $candidateId: ID!
   ) {
     candidate_getCandidateById(id: $candidateId) {
+      id
       candidacies {
         id
         sentAt
@@ -64,18 +64,8 @@ const GET_CANDIDATE_BY_ID_WITH_CANDIDACY_FOR_CANDIDACIES_GUARD = graphql(`
   }
 `);
 
-export const useCandidacies = () => {
+export const useCandidacies = (candidateId: string) => {
   const { graphqlClient } = useGraphQlClient();
-
-  const { candidateId } = useParams<{
-    candidateId: string;
-  }>();
-
-  if (!candidateId) {
-    throw new Error(
-      "useCandidaciesGuard must be used with a candidateId in pathname",
-    );
-  }
 
   const { data, isLoading } = useQuery({
     queryKey: ["candidate", "candidacies-guard", candidateId],

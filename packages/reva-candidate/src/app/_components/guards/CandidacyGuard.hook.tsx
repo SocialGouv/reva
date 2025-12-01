@@ -9,18 +9,6 @@ const GET_CANDIDACY_BY_ID_FOR_CANDIDACY_GUARD = graphql(`
   query getCandidacyByIdForCandidacyGuard($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       id
-      activite
-      derniereDateActivite
-      typeAccompagnement
-      endAccompagnementStatus
-      candidacyDropOut {
-        createdAt
-        proofReceivedByAdmin
-        dropOutConfirmedByCandidate
-      }
-      candidate {
-        id
-      }
     }
   }
 `);
