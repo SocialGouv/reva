@@ -3,7 +3,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
-import { AAPSettingsSummarySectionRemote } from "../AAPSettingsSummarySectionRemote";
+import { AAPSettingsSummarySectionRemote } from "../../AAPSettingsSummarySectionRemote";
 
 import { useCollaborateurSettings } from "./settingsForCollaborateur.hook";
 

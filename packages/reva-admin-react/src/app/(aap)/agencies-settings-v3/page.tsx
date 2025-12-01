@@ -1,6 +1,6 @@
 "use client";
 
-import { SettingsSummaryForCollaborateur } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/SettingsSummaryForCollaborateur";
+import { SettingsSummaryForCollaborateur } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/settings-summary-for-collaborateur/SettingsSummaryForCollaborateur";
 import { SettingsSummaryForGestionnaire } from "@/app/(aap)/agencies-settings-v3/_components/agencies-settings-summary/SettingsSummaryForGestionnaire";
 import { useAuth } from "@/components/auth/auth";
 
