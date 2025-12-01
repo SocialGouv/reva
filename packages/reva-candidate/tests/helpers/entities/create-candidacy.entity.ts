@@ -43,6 +43,8 @@ export type CreateCandidacyEntityOptions = {
   goalsCount?: number;
   experiencesCount?: number;
   candidacyAlreadySubmitted?: boolean;
+  feasibilityFormat?: Candidacy["feasibilityFormat"];
+  certificationAuthorities?: Candidacy["certificationAuthorities"];
 };
 
 export const createCandidacyEntity = (
@@ -64,6 +66,8 @@ export const createCandidacyEntity = (
     endAccompagnementStatus,
     endAccompagnementDate,
     appointments,
+    feasibilityFormat,
+    certificationAuthorities,
   } = options;
 
   const candidacy: CandidacyEntity = {
@@ -90,7 +94,8 @@ export const createCandidacyEntity = (
     collectiveHourCount: null,
     additionalHourCount: null,
     mandatoryTrainings: [],
-    feasibilityFormat: "DEMATERIALIZED",
+    feasibilityFormat: feasibilityFormat || "DEMATERIALIZED",
+    certificationAuthorities: certificationAuthorities || [],
     derniereDateActivite: new Date().getTime(),
     createdAt: new Date().getTime(),
     feasibility,

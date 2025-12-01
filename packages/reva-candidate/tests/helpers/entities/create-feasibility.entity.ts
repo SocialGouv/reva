@@ -54,6 +54,10 @@ export const createFeasibilityEntity = (
     feasibilityFileSentAt,
     history,
     dematerializedFeasibilityFile,
+    decisionComment,
+    decisionFile,
+    certificationAuthority,
+    feasibilityUploadedPdf,
   } = options || {};
 
   return {
@@ -64,5 +68,9 @@ export const createFeasibilityEntity = (
     feasibilityFileSentAt: feasibilityFileSentAt || null,
     history: history || [],
     dematerializedFeasibilityFile: dematerializedFeasibilityFile ?? null,
+    decisionComment: decisionComment ?? null,
+    decisionFile: decisionFile ?? null,
+    certificationAuthority: certificationAuthority ?? null,
+    feasibilityUploadedPdf: feasibilityUploadedPdf ?? null,
   };
 };
