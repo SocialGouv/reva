@@ -46,6 +46,7 @@ export const cancelDropOutCandidacy = async (
         candidacyDropOut: { delete: true },
         activite: "ACTIF",
         dateInactifEnAttente: null,
+        derniereDateActivite: new Date(),
       },
     });
     // On veut retourner le dropout précédent (maintenant supprimé) pour l'utiliser dans les logs
