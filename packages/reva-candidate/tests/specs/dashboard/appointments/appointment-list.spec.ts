@@ -8,6 +8,20 @@ import {
   navigateToAppointmentListPage,
 } from "@tests/helpers/handlers/appointments/appointment-list.handler";
 
+import {
+  AppointmentTemporalStatus,
+  AppointmentType,
+} from "@/graphql/generated/graphql";
+
+type Appointment = {
+  id: string;
+  title: string;
+  date: string;
+  type: AppointmentType & "JURY";
+  temporalStatus: AppointmentTemporalStatus;
+  timeOfSession?: string;
+};
+
 const createCandidacyWithAppointments = ({
   candidate,
 }: {
@@ -42,7 +56,15 @@ const createCandidacyWithAppointments = ({
           type: "RENDEZ_VOUS_PEDAGOGIQUE",
           temporalStatus: "PAST",
         },
-      ],
+        {
+          id: "4",
+          title: "Passage devant le jury",
+          date: futureDate.toISOString(),
+          type: "JURY",
+          temporalStatus: "UPCOMING",
+          timeOfSession: "10:00",
+        },
+      ] as Appointment[],
       info: {
         currentPage: 1,
         pageLength: 10,
@@ -74,13 +96,18 @@ test.describe("Appointment list for candidacy with past appointments", () => {
     await expect(
       page.getByRole("heading", { name: "Mes prochains rendez-vous" }),
     ).toBeVisible();
-    for (const app of candidacy.appointments.rows) {
+    for (const app of candidacy.appointments.rows as Appointment[]) {
       await expect(
         page.locator(`[data-testid="future-appointment-${app.id}"]`),
       ).toBeVisible();
       await expect(
         page.locator(`[data-testid="future-appointment-${app.id}"] h3`),
       ).toHaveText(app.title);
+      if (app.type === "JURY") {
+        await expect(
+          page.locator(`[data-testid="future-appointment-${app.id}"] h3`),
+        ).toHaveText("Passage devant le jury");
+      }
     }
   });
 

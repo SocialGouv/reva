@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
+import { AppointmentType } from "@/graphql/generated/graphql";
 
 const getPastAppointmentsQuery = graphql(`
   query getPastAppointments($candidacyId: ID!, $limit: Int, $offset: Int) {
@@ -44,9 +45,23 @@ const getFutureAppointmentsQuery = graphql(`
           type
         }
       }
+      jury {
+        id
+        dateOfSession
+        timeOfSession
+        timeSpecified
+      }
     }
   }
 `);
+
+type Appointment = {
+  id: string;
+  title: string;
+  date: string;
+  type: AppointmentType | "JURY";
+  timeOfSession?: string;
+};
 
 export const useAppointments = ({
   pastLimit = 5,
@@ -85,14 +100,45 @@ export const useAppointments = ({
       }),
   });
 
+  let pastAppointments: Appointment[] =
+    getPastAppointmentsQueryData?.getCandidacyById?.appointments?.rows || [];
+  let futureAppointments: Appointment[] =
+    getFutureAppointmentsQueryData?.getCandidacyById?.appointments?.rows || [];
+
+  const jury = getFutureAppointmentsQueryData?.getCandidacyById?.jury;
+  if (jury && jury.dateOfSession && jury.dateOfSession > Date.now()) {
+    futureAppointments = [
+      ...futureAppointments,
+      {
+        id: jury.id,
+        title: "Passage devant le jury",
+        date: new Date(jury.dateOfSession).toISOString(),
+        type: "JURY",
+        timeOfSession: jury.timeOfSession?.replace(":", "h"),
+      },
+    ].sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    ) as Appointment[];
+  } else if (jury && jury.dateOfSession && jury.dateOfSession < Date.now()) {
+    pastAppointments = [
+      ...pastAppointments,
+      {
+        id: jury.id,
+        title: "Passage devant le jury",
+        date: new Date(jury.dateOfSession).toISOString(),
+        type: "JURY",
+        timeOfSession: jury.timeOfSession?.replace(":", "h"),
+      },
+    ].sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    ) as Appointment[];
+  }
+
   return {
-    pastAppointments:
-      getPastAppointmentsQueryData?.getCandidacyById?.appointments?.rows || [],
+    pastAppointments,
     totalPastAppointments:
       getPastAppointmentsQueryData?.getCandidacyById?.appointments?.info
         ?.totalRows || 0,
-    futureAppointments:
-      getFutureAppointmentsQueryData?.getCandidacyById?.appointments?.rows ||
-      [],
+    futureAppointments,
   };
 };

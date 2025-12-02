@@ -1,4 +1,4 @@
-import Badge from "@codegouvfr/react-dsfr/Badge";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 import { format } from "date-fns";
 
@@ -25,13 +25,8 @@ export const JurySessionTile = ({
       classes={{
         content: "pb-0",
       }}
-      start={
-        <Badge severity="info" small noIcon>
-          Passage devant le jury
-        </Badge>
-      }
+      start={<Tag small>Passage devant le jury</Tag>}
       title={dateOfJurySession}
-      desc="Informations détaillées"
       linkProps={{
         href: "./jury-session",
       }}

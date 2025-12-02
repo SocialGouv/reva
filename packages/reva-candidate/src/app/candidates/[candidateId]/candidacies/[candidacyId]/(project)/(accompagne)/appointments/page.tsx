@@ -9,7 +9,31 @@ import { useState } from "react";
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
 import { formatIso8601Time } from "@/utils/formatIso8601Time";
 
+import { AppointmentType } from "@/graphql/generated/graphql";
+
 import { useAppointments } from "./appointments.hooks";
+
+const getTagLabel = (type: AppointmentType | "JURY") => {
+  switch (type) {
+    case "RENDEZ_VOUS_PEDAGOGIQUE":
+      return "Rendez-vous pédagogique";
+    case "RENDEZ_VOUS_DE_SUIVI":
+      return "Rendez-vous de suivi";
+    case "JURY":
+      return "Passage devant le jury";
+  }
+};
+
+const getFormatedDateTime = (
+  date: string,
+  type: AppointmentType | "JURY",
+  timeOfSession?: string,
+) => {
+  if (type === "JURY") {
+    return `${formatIso8601Date(date)} ${timeOfSession ? `- ${timeOfSession}` : ""}`;
+  }
+  return `${formatIso8601Date(date)} - ${formatIso8601Time(date)}`;
+};
 
 export default function AppointmentsPage() {
   const { futureAppointments } = useAppointments({});
@@ -37,17 +61,20 @@ export default function AppointmentsPage() {
               enlargeLink
               size="small"
               title={appointment.title}
-              desc={`${formatIso8601Date(appointment.date)} - ${formatIso8601Time(appointment.date)}`}
-              detail={
-                <Tag small>
-                  {appointment.type === "RENDEZ_VOUS_PEDAGOGIQUE"
-                    ? "Rendez-vous pédagogique"
-                    : "Rendez-vous de suivi"}
-                </Tag>
-              }
+              desc={getFormatedDateTime(
+                appointment.date,
+                appointment.type,
+                appointment.timeOfSession,
+              )}
+              detail={<Tag small>{getTagLabel(appointment.type)}</Tag>}
               endDetail="Voir les détails"
               key={appointment.id}
-              linkProps={{ href: `./${appointment.id}` }}
+              linkProps={{
+                href:
+                  appointment.type === "JURY"
+                    ? "../jury-session"
+                    : `./${appointment.id}`,
+              }}
               data-testid={`future-appointment-${appointment.id}`}
             />
           ))}
@@ -77,14 +104,12 @@ const PastAppointments = () => {
               enlargeLink
               size="small"
               title={appointment.title}
-              desc={`${formatIso8601Date(appointment.date)} - ${formatIso8601Time(appointment.date)}`}
-              detail={
-                <Tag small>
-                  {appointment.type === "RENDEZ_VOUS_PEDAGOGIQUE"
-                    ? "Rendez-vous pédagogique"
-                    : "Rendez-vous de suivi"}
-                </Tag>
-              }
+              desc={getFormatedDateTime(
+                appointment.date,
+                appointment.type,
+                appointment.timeOfSession,
+              )}
+              detail={<Tag small>{getTagLabel(appointment.type)}</Tag>}
               endDetail="Voir les détails"
               key={appointment.id}
               linkProps={{ href: `./${appointment.id}` }}
