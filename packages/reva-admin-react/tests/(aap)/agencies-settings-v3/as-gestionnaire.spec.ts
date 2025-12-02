@@ -129,12 +129,22 @@ function createSettingsHandlers(args?: {
       ],
     },
   };
+  const getGestionnaireMaisonMereAAPSettingsInfoHandler = fvae.query(
+    "getGestionnaireMaisonMereAAPSettingsInfo",
+    graphQLResolver(settingsData),
+  );
+  const getCollaborateurSettingsInfoForAgenciesSettingsPageHandler = fvae.query(
+    "getCollaborateurSettingsInfoForAgenciesSettingsPage",
+    graphQLResolver({
+      account_getAccountForConnectedUser: {
+        id: "account-1",
+      },
+    }),
+  );
 
   return [
-    fvae.query(
-      "getGestionnaireMaisonMereAAPSettingsInfo",
-      graphQLResolver(settingsData),
-    ),
+    getGestionnaireMaisonMereAAPSettingsInfoHandler,
+    getCollaborateurSettingsInfoForAgenciesSettingsPageHandler,
   ];
 }
 
@@ -144,6 +154,7 @@ async function waitForPageQueries(page: Page) {
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getAccountInfo"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
+    waitGraphQL(page, "getCollaborateurSettingsInfoForAgenciesSettingsPage"),
   ]);
 }
 

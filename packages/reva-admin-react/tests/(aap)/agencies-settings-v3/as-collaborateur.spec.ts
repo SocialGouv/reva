@@ -17,6 +17,7 @@ function createSettingsHandlers(args?: {
   modaliteAccompagnement?: "A_DISTANCE" | "LIEU_ACCUEIL";
   modaliteAccompagnementRenseigneeEtValide?: boolean;
   isVisibleInCandidateSearchResults?: boolean;
+  withUserAccountV2Feature?: boolean;
 }) {
   const modaliteAccompagnement = args?.modaliteAccompagnement ?? "A_DISTANCE";
   const modaliteAccompagnementRenseigneeEtValide =
@@ -73,8 +74,33 @@ function createSettingsHandlers(args?: {
     },
   };
 
+  const getCollaborateurSettingsInfoPageHandler = fvae.query(
+    "getCollaborateurSettingsInfo",
+    graphQLResolver(settingsData),
+  );
+
+  const activeFeaturesForConnectedUserHandler = fvae.query(
+    "activeFeaturesForConnectedUser",
+    graphQLResolver({
+      activeFeaturesForConnectedUser: args?.withUserAccountV2Feature
+        ? ["AAP_USER_ACCOUNT_V2"]
+        : [],
+    }),
+  );
+
+  const getCollaborateurSettingsInfoForAgenciesSettingsPageHandler = fvae.query(
+    "getCollaborateurSettingsInfoForAgenciesSettingsPage",
+    graphQLResolver({
+      account_getAccountForConnectedUser: {
+        id: "account-1",
+      },
+    }),
+  );
+
   return [
-    fvae.query("getCollaborateurSettingsInfo", graphQLResolver(settingsData)),
+    getCollaborateurSettingsInfoPageHandler,
+    activeFeaturesForConnectedUserHandler,
+    getCollaborateurSettingsInfoForAgenciesSettingsPageHandler,
   ];
 }
 
@@ -84,48 +110,25 @@ async function waitForPageQueries(page: Page) {
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getAccountInfo"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
+    waitGraphQL(page, "getCollaborateurSettingsInfoForAgenciesSettingsPage"),
   ]);
 }
 
 const { aapCommonHandlers } = getAAPCommonHandlers();
 
 test.describe("Collaborateur AAP settings page", () => {
-  test("do not display general information and user account list sections", async ({
-    page,
-    msw,
-  }) => {
-    msw.use(
-      ...aapCommonHandlers,
-      ...createSettingsHandlers({
-        modaliteAccompagnement: "A_DISTANCE",
-        modaliteAccompagnementRenseigneeEtValide: true,
-        isVisibleInCandidateSearchResults: true,
-      }),
-    );
-
-    await login({ role: "aapCollaborateur", page });
-
-    await page.goto(`/admin2/agencies-settings-v3/`);
-    await waitForPageQueries(page);
-
-    // Make sure the page is ready before checking non-existence of the general information section
-    await expect(page.getByTestId("remote-organism")).toBeVisible();
-    await expect(page.getByTestId("general-information")).not.toBeVisible();
-    await expect(page.getByTestId("user-accounts")).not.toBeVisible();
-  });
-
-  test.describe("for a remote organism", () => {
-    test("display a remote and user accounts section, no on-site section", async ({
+  test.describe("Without user account v2 feature", () => {
+    test("do not display general information and user account list sections", async ({
       page,
       msw,
     }) => {
       msw.use(
-        ...aapCommonHandlers,
         ...createSettingsHandlers({
           modaliteAccompagnement: "A_DISTANCE",
           modaliteAccompagnementRenseigneeEtValide: true,
           isVisibleInCandidateSearchResults: true,
         }),
+        ...aapCommonHandlers,
       );
 
       await login({ role: "aapCollaborateur", page });
@@ -133,71 +136,120 @@ test.describe("Collaborateur AAP settings page", () => {
       await page.goto(`/admin2/agencies-settings-v3/`);
       await waitForPageQueries(page);
 
+      // Make sure the page is ready before checking non-existence of the general information section
       await expect(page.getByTestId("remote-organism")).toBeVisible();
-      await expect(page.getByTestId("user-account")).toBeVisible();
-      await expect(page.getByTestId("on-site-organism")).not.toBeVisible();
-      await expect(page.getByTestId("on-site-organisms")).not.toBeVisible();
+      await expect(page.getByTestId("general-information")).not.toBeVisible();
+      await expect(page.getByTestId("user-accounts")).not.toBeVisible();
     });
 
-    test("display a remote section with a 'visible badge' when organism is opened for new candidacies", async ({
-      page,
-      msw,
-    }) => {
-      msw.use(
-        ...aapCommonHandlers,
-        ...createSettingsHandlers({
-          modaliteAccompagnement: "A_DISTANCE",
-          modaliteAccompagnementRenseigneeEtValide: true,
-          isVisibleInCandidateSearchResults: true,
-        }),
-      );
+    test.describe("for a remote organism", () => {
+      test("display a remote and user accounts section, no on-site section", async ({
+        page,
+        msw,
+      }) => {
+        msw.use(
+          ...createSettingsHandlers({
+            modaliteAccompagnement: "A_DISTANCE",
+            modaliteAccompagnementRenseigneeEtValide: true,
+            isVisibleInCandidateSearchResults: true,
+          }),
+          ...aapCommonHandlers,
+        );
 
-      await login({ role: "aapCollaborateur", page });
+        await login({ role: "aapCollaborateur", page });
 
-      await page.goto(`/admin2/agencies-settings-v3/`);
-      await waitForPageQueries(page);
+        await page.goto(`/admin2/agencies-settings-v3/`);
+        await waitForPageQueries(page);
 
-      await expect(
-        page.getByTestId("remote-organism").getByTestId("visible-badge"),
-      ).toBeVisible();
+        await expect(page.getByTestId("remote-organism")).toBeVisible();
+        await expect(page.getByTestId("user-account")).toBeVisible();
+        await expect(page.getByTestId("on-site-organism")).not.toBeVisible();
+        await expect(page.getByTestId("on-site-organisms")).not.toBeVisible();
+      });
+
+      test("display a remote section with a 'visible badge' when organism is opened for new candidacies", async ({
+        page,
+        msw,
+      }) => {
+        msw.use(
+          ...createSettingsHandlers({
+            modaliteAccompagnement: "A_DISTANCE",
+            modaliteAccompagnementRenseigneeEtValide: true,
+            isVisibleInCandidateSearchResults: true,
+          }),
+          ...aapCommonHandlers,
+        );
+
+        await login({ role: "aapCollaborateur", page });
+
+        await page.goto(`/admin2/agencies-settings-v3/`);
+        await waitForPageQueries(page);
+
+        await expect(
+          page.getByTestId("remote-organism").getByTestId("visible-badge"),
+        ).toBeVisible();
+      });
+
+      test("display a remote section with a 'invisible badge' when organism is closed for new candidacies", async ({
+        page,
+        msw,
+      }) => {
+        msw.use(
+          ...createSettingsHandlers({
+            modaliteAccompagnement: "A_DISTANCE",
+            modaliteAccompagnementRenseigneeEtValide: true,
+            isVisibleInCandidateSearchResults: false,
+          }),
+          ...aapCommonHandlers,
+        );
+
+        await login({ role: "aapCollaborateur", page });
+
+        await page.goto(`/admin2/agencies-settings-v3/`);
+        await waitForPageQueries(page);
+
+        await expect(
+          page.getByTestId("remote-organism").getByTestId("invisible-badge"),
+        ).toBeVisible();
+      });
     });
 
-    test("display a remote section with a 'invisible badge' when organism is closed for new candidacies", async ({
-      page,
-      msw,
-    }) => {
-      msw.use(
-        ...aapCommonHandlers,
-        ...createSettingsHandlers({
-          modaliteAccompagnement: "A_DISTANCE",
-          modaliteAccompagnementRenseigneeEtValide: true,
-          isVisibleInCandidateSearchResults: false,
-        }),
-      );
+    test.describe("for an on-site organism", () => {
+      test("display a on-site and user account sections and no remote section", async ({
+        page,
+        msw,
+      }) => {
+        msw.use(
+          ...createSettingsHandlers({
+            modaliteAccompagnement: "LIEU_ACCUEIL",
+            modaliteAccompagnementRenseigneeEtValide: true,
+            isVisibleInCandidateSearchResults: true,
+          }),
+          ...aapCommonHandlers,
+        );
 
-      await login({ role: "aapCollaborateur", page });
+        await login({ role: "aapCollaborateur", page });
 
-      await page.goto(`/admin2/agencies-settings-v3/`);
-      await waitForPageQueries(page);
+        await page.goto(`/admin2/agencies-settings-v3/`);
+        await waitForPageQueries(page);
 
-      await expect(
-        page.getByTestId("remote-organism").getByTestId("invisible-badge"),
-      ).toBeVisible();
+        await expect(page.getByTestId("on-site-organism")).toBeVisible();
+        await expect(page.getByTestId("user-account")).toBeVisible();
+        await expect(page.getByTestId("remote-organism")).not.toBeVisible();
+        await expect(page.getByTestId("on-site-organisms")).not.toBeVisible();
+      });
     });
   });
-
-  test.describe("for an on-site organism", () => {
-    test("display a on-site and user account sections and no remote section", async ({
+  test.describe("With user account v2 feature", () => {
+    test("it redirects me to the collaborateur settings page", async ({
       page,
       msw,
     }) => {
       msw.use(
-        ...aapCommonHandlers,
         ...createSettingsHandlers({
-          modaliteAccompagnement: "LIEU_ACCUEIL",
-          modaliteAccompagnementRenseigneeEtValide: true,
-          isVisibleInCandidateSearchResults: true,
+          withUserAccountV2Feature: true,
         }),
+        ...aapCommonHandlers,
       );
 
       await login({ role: "aapCollaborateur", page });
@@ -205,10 +257,9 @@ test.describe("Collaborateur AAP settings page", () => {
       await page.goto(`/admin2/agencies-settings-v3/`);
       await waitForPageQueries(page);
 
-      await expect(page.getByTestId("on-site-organism")).toBeVisible();
-      await expect(page.getByTestId("user-account")).toBeVisible();
-      await expect(page.getByTestId("remote-organism")).not.toBeVisible();
-      await expect(page.getByTestId("on-site-organisms")).not.toBeVisible();
+      await expect(page).toHaveURL(
+        "/admin2/agencies-settings-v3/collaborateurs/account-1/",
+      );
     });
   });
 });
