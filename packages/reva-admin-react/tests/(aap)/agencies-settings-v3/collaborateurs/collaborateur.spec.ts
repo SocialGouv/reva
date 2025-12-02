@@ -27,5 +27,25 @@ test.describe("Collaborateur settings page", () => {
         );
       });
     });
+    test.describe("Informations de connexion summary card", () => {
+      test("it let me go to the informations de connexion page when I click on the 'Visualiser' button", async ({
+        page,
+      }) => {
+        await login({ role: "aapCollaborateur", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/collaborateurs/account-1/",
+        );
+        await waitForPageQueries(page);
+
+        page
+          .getByTestId("informations-connexion-summary-card")
+          .getByRole("button", { name: "Visualiser" })
+          .click();
+
+        await expect(page).toHaveURL(
+          "/admin2/agencies-settings-v3/collaborateurs/account-1/informations-connexion/",
+        );
+      });
+    });
   });
 });
