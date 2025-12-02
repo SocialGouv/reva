@@ -5,7 +5,7 @@ import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
@@ -18,6 +18,8 @@ import { useLogin } from "./login.hooks";
 
 export default function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const certificationId = searchParams.get("certificationId");
 
   const [emailForMagicLink, setEmailForMagicLink] = useState<string>("");
 
@@ -69,7 +71,9 @@ export default function Login() {
       <h1 className="mb-10">Connexion candidat</h1>
       {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") && (
         <div className="flex flex-col gap-4 mb-6">
-          <FranceConnectButton url={getFranceConnectLoginUrl()} />
+          <FranceConnectButton
+            url={getFranceConnectLoginUrl(certificationId ?? undefined)}
+          />
           <div className="flex flex-row items-center gap-3">
             <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
             ou

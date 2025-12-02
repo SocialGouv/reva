@@ -1,6 +1,6 @@
 import { KEYCLOAK_URL, REST_API_URL } from "@/config/config";
 
-export const getFranceConnectLoginUrl = () => {
+export const getFranceConnectLoginUrl = (certificationId?: string) => {
   /**
    * Il s'agit d'un POC pour tester la récupération
    * de données du bac à sable France Connect.
@@ -24,6 +24,14 @@ export const getFranceConnectLoginUrl = () => {
   url.searchParams.set("scope", "openid");
   url.searchParams.set("kc_idp_hint", "franceconnect");
   url.searchParams.set("response_mode", "query");
+
+  if (certificationId) {
+    // Le state OAuth sert en premier lieu à la protection CSRF.
+    // On l'utilise ici aussi pour transmettre le certificationId.
+    // TODO: utiliser un JWT chiffré (secret + date d'expiration).
+    const state = btoa(JSON.stringify({ certificationId }));
+    url.searchParams.set("state", state);
+  }
 
   return url.toString();
 };

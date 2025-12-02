@@ -38,7 +38,12 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
   });
 
   server.get<{
-    Querystring: { code: string; session_state?: string; iss?: string };
+    Querystring: {
+      code: string;
+      session_state?: string;
+      iss?: string;
+      state?: string;
+    };
   }>("/account/franceconnect/callback", {
     schema: {
       querystring: {
@@ -47,15 +52,19 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
           code: { type: "string" },
           session_state: { type: "string" },
           iss: { type: "string" },
+          state: { type: "string" },
         },
         required: ["code"],
       },
     },
     handler: async (request, reply) => {
-      const { code } = request.query;
+      const { code, state } = request.query;
 
       try {
-        const redirectUrl = await unsafeHandleFranceConnectCallback(code);
+        const redirectUrl = await unsafeHandleFranceConnectCallback(
+          code,
+          state,
+        );
         reply.redirect(redirectUrl);
       } catch (error) {
         logger.error(`[France Connect Callback] ${error}`);

@@ -1,4 +1,4 @@
-import { CandidacyStatusStep, Gender } from "@prisma/client";
+import { Gender } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 
@@ -50,7 +50,7 @@ const AccessTokenPayloadSchema = z.object({
  * This code test data retrieval from France Connect sandbox.
  * TODO: add production-ready handler with:
  * - token signature verification
- * - state verification
+ * - state verification (CSRF protection)
  * - nonce verification
  * - claims verification (iss, aud, exp, iat...)
  * - PKCE
@@ -58,8 +58,24 @@ const AccessTokenPayloadSchema = z.object({
  *
  * => Explore the opportunity to use standard libraries like openid-client
  **/
+
+// TODO: use an encrypted JWT and verify (server secret + expiration)
+const unsafeDecodeCertificationIdFromState = (
+  state?: string,
+): string | null => {
+  if (!state) return null;
+  try {
+    const decoded = JSON.parse(Buffer.from(state, "base64").toString());
+    return decoded.certificationId ?? null;
+  } catch {
+    // Invalid state
+  }
+  return null;
+};
+
 export const unsafeHandleFranceConnectCallback = async (
   code: string,
+  state?: string,
 ): Promise<string> => {
   const franceConnectEnabled = await isFeatureActiveForUser({
     feature: "FRANCE_CONNECT_AUTH_FOR_CANDIDATE",
@@ -98,14 +114,21 @@ export const unsafeHandleFranceConnectCallback = async (
 
   const keycloakId = accessTokenPayload.sub;
 
-  await getOrCreateCandidate(keycloakId, idTokenPayload);
+  const candidate = await getOrCreateCandidate(keycloakId, idTokenPayload);
 
   // TODO: add support for candidate app env var
   const baseUrl =
     process.env.NODE_ENV === "production"
       ? process.env.BASE_URL
       : "http://localhost:3004";
-  const redirectUrl = new URL(`${baseUrl}/candidat`);
+
+  const certificationId = unsafeDecodeCertificationIdFromState(state);
+
+  const redirectPath = certificationId
+    ? `/candidat/candidates/${candidate.id}/candidacies/create/certifications/${certificationId}/type-accompagnement`
+    : "/candidat";
+
+  const redirectUrl = new URL(`${baseUrl}${redirectPath}`);
 
   if (tokens.session_state) {
     redirectUrl.searchParams.set("session_state", tokens.session_state);
@@ -221,31 +244,8 @@ const createCandidateFromFranceConnect = async (
     birthCity: undefined,
   };
 
-  return prismaClient.$transaction(async (tx) => {
-    const candidate = await tx.candidate.create({
-      data: candidateData,
-    });
-
-    await tx.candidacy.create({
-      data: {
-        // TODO: replace with actual typeAccompagnement:
-        typeAccompagnement: "AUTONOME",
-        // TODO: support VAE collective cohorts:
-        cohorteVaeCollectiveId: undefined,
-        candidateId: candidate.id,
-        admissibility: { create: {} },
-        examInfo: { create: {} },
-        status: CandidacyStatusStep.PROJET,
-        financeModule: "hors_plateforme",
-        candidacyStatuses: {
-          create: {
-            status: CandidacyStatusStep.PROJET,
-          },
-        },
-      },
-    });
-
-    return candidate;
+  return prismaClient.candidate.create({
+    data: candidateData,
   });
 };
 
