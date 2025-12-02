@@ -1,12 +1,20 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isBefore, parseISO, startOfToday } from "date-fns";
+import Image from "next/image";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import {
+  createGoogleCalendarLink,
+  createIcsFile,
+  createOutlookCalendarLink,
+} from "@/utils/calendarLinks";
 import {
   sanitizedOptionalTextAllowSpecialCharacters,
   sanitizedText,
@@ -56,13 +64,29 @@ export const AppointmentForm = ({
 }) => {
   const {
     register,
-    formState: { errors },
     handleSubmit,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, errors },
+    getValues,
   } = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentFormSchema),
     defaultValues,
   });
+
+  const addToCalendarModal = createModal({
+    id: "add-to-calendar-modal",
+    isOpenedByDefault: false,
+  });
+
+  const icsDownloaHiddenLink = useRef<HTMLAnchorElement>(null);
+
+  const appointment = {
+    id: btoa(getValues("title")),
+    title: getValues("title"),
+    date: new Date(getValues("date") + "T" + getValues("time")).toISOString(),
+    duration: getValues("duration") || null,
+    location: getValues("location"),
+    description: getValues("description"),
+  };
 
   return (
     <form
@@ -123,18 +147,91 @@ export const AppointmentForm = ({
         state={errors.description ? "error" : "default"}
         stateRelatedMessage={errors.description?.message}
       />
-      {onDeleteButtonClick && (
-        <Button
-          data-testid="delete-appointment-button"
-          type="button"
-          onClick={onDeleteButtonClick}
-          priority="tertiary no outline"
-          iconId="fr-icon-delete-line"
-          className="col-span-full"
-        >
-          Supprimer ce rendez-vous
-        </Button>
-      )}
+      <div className="flex flex-col sm:flex-row gap-4 col-span-full justify-between">
+        {onDeleteButtonClick && (
+          <Button
+            data-testid="delete-appointment-button"
+            type="button"
+            onClick={onDeleteButtonClick}
+            priority="tertiary no outline"
+            iconId="fr-icon-delete-line"
+            className="col-span-full"
+          >
+            Supprimer ce rendez-vous
+          </Button>
+        )}
+        <div className="ml-auto">
+          <Button
+            priority="tertiary no outline"
+            onClick={() => addToCalendarModal.open()}
+            iconId="ri-calendar-check-line"
+            type="button"
+          >
+            Ajouter à mon agenda
+          </Button>
+        </div>
+      </div>
+      <addToCalendarModal.Component title="Ajouter à mon agenda">
+        <p>Ajoutez vos rendez-vous à votre agenda pour ne pas les oublier.</p>
+        <div className="flex flex-row gap-4 justify-center">
+          <Button
+            priority="tertiary"
+            linkProps={{ href: createGoogleCalendarLink(appointment) }}
+            className="after:hidden p-3"
+            title="Ajouter à Google Calendar"
+          >
+            <Image
+              src="/admin2/logos/icons/googlecalendar.svg"
+              alt="Google Calendar"
+              width={32}
+              height={32}
+            />
+          </Button>
+          <a
+            ref={icsDownloaHiddenLink}
+            href="#"
+            download={`${appointment.title}.ics`}
+            className="hidden"
+          ></a>
+          <Button
+            priority="tertiary"
+            className="after:hidden p-3"
+            title="Ajouter à l'agenda de votre appareil"
+            type="button"
+            onClick={() => {
+              const icsFile = createIcsFile(appointment);
+              const blob = new Blob([icsFile], { type: "text/calendar" });
+              const url = URL.createObjectURL(blob);
+              icsDownloaHiddenLink.current!.href = url;
+              icsDownloaHiddenLink.current!.click();
+              setTimeout(() => {
+                icsDownloaHiddenLink.current!.href = "";
+                window.URL.revokeObjectURL(url);
+              }, 100);
+            }}
+          >
+            <Image
+              src="/admin2/logos/icons/applecalendar.svg"
+              alt="Apple Calendar"
+              width={32}
+              height={32}
+            />
+          </Button>
+          <Button
+            priority="tertiary"
+            linkProps={{ href: createOutlookCalendarLink(appointment) }}
+            className="after:hidden p-3"
+            title="Ajouter à Outlook"
+          >
+            <Image
+              src="/admin2/logos/icons/outlook.svg"
+              alt="Outlook"
+              width={32}
+              height={32}
+            />
+          </Button>
+        </div>
+      </addToCalendarModal.Component>
       <FormButtons
         className="col-span-full"
         backUrl={backUrl}
