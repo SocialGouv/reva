@@ -1,5 +1,6 @@
 import { Page } from "@playwright/test";
 
+import aapCollaborateurToken from "./tokens/aapCollaborateurToken.json";
 import aapToken from "./tokens/aapToken.json";
 import adminToken from "./tokens/adminToken.json";
 
@@ -8,7 +9,7 @@ export const login = async ({
   role,
 }: {
   page: Page;
-  role: "aap" | "admin";
+  role: "aap" | "aapCollaborateur" | "admin";
 }) => {
   await page.route(
     "**/auth/realms/reva/protocol/openid-connect/3p-cookies/step1.html",
@@ -49,6 +50,9 @@ export const login = async ({
       break;
     case "admin":
       tokens = adminToken;
+      break;
+    case "aapCollaborateur":
+      tokens = aapCollaborateurToken;
       break;
   }
 
