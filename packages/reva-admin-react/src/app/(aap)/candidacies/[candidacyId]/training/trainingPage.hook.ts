@@ -40,6 +40,9 @@ const getCandidacyByIdWithReferential = graphql(`
           id
         }
       }
+      feasibility {
+        decision
+      }
     }
     training_getTrainings {
       id

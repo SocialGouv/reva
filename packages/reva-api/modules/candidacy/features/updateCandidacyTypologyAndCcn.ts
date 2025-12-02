@@ -21,6 +21,13 @@ export const updateCandidacyTypologyAndCcn = async (
 
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
+    include: {
+      Feasibility: {
+        where: {
+          isActive: true,
+        },
+      },
+    },
   });
   if (!candidacy) {
     throw new Error(`La candidature n'existe pas`);
@@ -45,6 +52,19 @@ export const updateCandidacyTypologyAndCcn = async (
   if (ccnRequired && !ccnId) {
     throw new Error(
       'Les typologies "SALARIE_PRIVE" et "DEMANDEUR_EMPLOI" doivent être associées à une convention collective.',
+    );
+  }
+
+  const feasibility = candidacy.Feasibility[0];
+
+  const isTypologyAndConventionCollectiveEditable =
+    !feasibility ||
+    feasibility.decision === "DRAFT" ||
+    feasibility.decision === "INCOMPLETE";
+
+  if (!isTypologyAndConventionCollectiveEditable) {
+    throw new Error(
+      "Le typologie et la convention collective ne peuvent pas être modifiées car un dossier de faisabilité a déjà été soumis.",
     );
   }
 

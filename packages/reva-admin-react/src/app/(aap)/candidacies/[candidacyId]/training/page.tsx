@@ -74,6 +74,11 @@ const TrainingPage = () => {
     }
   };
 
+  const isTypologyAndConventionCollectiveEditable =
+    !candidacy?.feasibility ||
+    candidacy.feasibility.decision === "DRAFT" ||
+    candidacy.feasibility.decision === "INCOMPLETE";
+
   return (
     <>
       <CandidacyBackButton candidacyId={candidacy?.id as string} />
@@ -90,15 +95,17 @@ const TrainingPage = () => {
                 ? ` - ${candidacy.conventionCollective?.label}`
                 : ""}
             </span>
-            <Button
-              priority="tertiary"
-              className="ml-auto"
-              size="small"
-              iconId="fr-icon-edit-line"
-              linkProps={{ href: `/candidacies/${candidacy.id}/typology` }}
-            >
-              Modifier
-            </Button>
+            {isTypologyAndConventionCollectiveEditable && (
+              <Button
+                priority="tertiary"
+                className="ml-auto"
+                size="small"
+                iconId="fr-icon-edit-line"
+                linkProps={{ href: `/candidacies/${candidacy.id}/typology` }}
+              >
+                Modifier
+              </Button>
+            )}
           </div>
           <hr />
           {getCandidacyByIdWithReferentialStatus === "success" && (
