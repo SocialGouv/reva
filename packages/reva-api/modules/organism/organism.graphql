@@ -195,7 +195,7 @@ type Query {
     disponiblePourVaeCollective: Boolean
   ): OrganismPage!
   organism_getCompteCollaborateurById(
-    maisonMereAAPId: ID!
+    maisonMereAAPId: ID
     accountId: ID!
   ): Account!
 }
