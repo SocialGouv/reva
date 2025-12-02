@@ -21,7 +21,7 @@ export const UserAccountForm = ({
   backUrl,
   disabled,
 }: {
-  onSubmit(data: UserAccountFormData): Promise<void>;
+  onSubmit?(data: UserAccountFormData): Promise<void>;
   defaultValues?: UserAccountFormData;
   backUrl: string;
   disabled?: boolean;
@@ -40,7 +40,7 @@ export const UserAccountForm = ({
     formState: { errors, isDirty, isSubmitting },
   } = methods;
 
-  const handleFormSubmit = handleSubmit(onSubmit);
+  const handleFormSubmit = handleSubmit((data) => onSubmit?.(data));
 
   const handleReset = useCallback(() => {
     reset(defaultValues);
