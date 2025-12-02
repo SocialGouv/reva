@@ -93,7 +93,8 @@ export const UserAccountForm = ({
       </div>
       <FormButtons
         formState={{ isDirty, isSubmitting }}
-        backButtonLabel="Annuler"
+        backButtonLabel={disabled ? "Retour" : "Annuler"}
+        readonly={disabled}
         submitButtonLabel={submitButtonLabel}
         hideResetButton
         backUrl={backUrl}
