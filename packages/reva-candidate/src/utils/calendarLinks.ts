@@ -1,5 +1,19 @@
 import { Appointment } from "@/graphql/generated/graphql";
 
+type JuryForCalendar = {
+  id: string;
+  dateOfSession: number;
+  addressOfSession?: string | null;
+  informationOfSession?: string | null;
+  candidacy: {
+    feasibility?: {
+      certificationAuthority?: {
+        label: string;
+      } | null;
+    } | null;
+  };
+};
+
 const durationToMinutes = {
   HALF_AN_HOUR: 30,
   ONE_HOUR: 60,
@@ -29,7 +43,7 @@ export const createGoogleCalendarLink = (
     .replace(/[-:]/g, "")
     .replace(/00\.000Z$/, "00Z");
   return encodeURI(
-    `https://calendar.google.com/calendar/u/0/r/eventedit?text=${appointment.title}&dates=${appointmentStart}${appointmentEnd ? `/${appointmentEnd}` : ""}${appointment.location ? `&location=${appointment.location}` : ""}${appointment.description ? `&details=${appointment.description}` : ""}`,
+    `https://calendar.google.com/calendar/u/0/r/eventedit?text=${appointment.title}&dates=${appointmentStart}/${appointmentEnd ? appointmentEnd : appointmentStart}${appointment.location ? `&location=${appointment.location}` : ""}${appointment.description ? `&details=${appointment.description}` : ""}`,
   );
 };
 export const createOutlookCalendarLink = (
@@ -51,4 +65,32 @@ export const createIcsFile = (
     .replace(/[-:]/g, "")
     .replace(/00\.000Z$/, "00Z");
   return `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//France VAE//FR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nBEGIN:VEVENT\nUID:${appointment.id}\nDTSTART:${appointmentStart}\nDTEND:${appointmentEnd}\nSUMMARY:${appointment.title}\nLOCATION:${appointment.location}\nDESCRIPTION:${appointment.description}\nEND:VEVENT\nEND:VCALENDAR`;
+};
+
+export const createIcsFileForJury = (jury: JuryForCalendar) => {
+  const appointmentStart = new Date(jury.dateOfSession)
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/00\.000Z$/, "00Z");
+  return `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//France VAE//FR\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nBEGIN:VEVENT\nUID:${jury.id}\nDTSTART:${appointmentStart}\nDTEND:${appointmentStart}\nSUMMARY:Jury VAE - ${jury.candidacy?.feasibility?.certificationAuthority?.label}\nLOCATION:${jury.addressOfSession}\nDESCRIPTION:${jury.informationOfSession}\nEND:VEVENT\nEND:VCALENDAR`;
+};
+
+export const createGoogleCalendarLinkForJury = (jury: JuryForCalendar) => {
+  const appointmentStart = new Date(jury.dateOfSession)
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/00\.000Z$/, "00Z");
+  return encodeURI(
+    `https://calendar.google.com/calendar/u/0/r/eventedit?text=Jury VAE - ${jury.candidacy?.feasibility?.certificationAuthority?.label}&dates=${appointmentStart}/${appointmentStart}${jury.addressOfSession ? `&location=${jury.addressOfSession}` : ""}${jury.informationOfSession ? `&details=${jury.informationOfSession}` : ""}`,
+  );
+};
+
+export const createOutlookCalendarLinkForJury = (jury: JuryForCalendar) => {
+  const appointmentStart = new Date(jury.dateOfSession)
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/00\.000Z$/, "00Z");
+  return encodeURI(
+    `https://outlook.office.com/calendar/0/deeplink/compose?subject=${jury.candidacy?.feasibility?.certificationAuthority?.label}&startdt=${appointmentStart}${jury.addressOfSession ? `&enddt=${appointmentStart}` : ""}${jury.informationOfSession ? `&body=${jury.informationOfSession}` : ""}`,
+  );
 };

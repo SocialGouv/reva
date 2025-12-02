@@ -9,6 +9,14 @@ const GET_CANDIDACY_BY_ID_FOR_JURY_SESSION = graphql(`
   query getCandidacyByIdForJurySession($candidacyId: ID!) {
     getCandidacyById(id: $candidacyId) {
       jury {
+        id
+        candidacy {
+          feasibility {
+            certificationAuthority {
+              label
+            }
+          }
+        }
         dateOfSession
         timeOfSession
         timeSpecified

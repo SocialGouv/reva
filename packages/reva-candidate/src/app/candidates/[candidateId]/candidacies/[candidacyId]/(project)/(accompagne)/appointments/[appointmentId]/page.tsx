@@ -32,8 +32,6 @@ const AppointmentDetailPage = () => {
   const icsDownloaHiddenLink = useRef<HTMLAnchorElement>(null);
 
   if (!appointment) return null;
-  console.log(createGoogleCalendarLink(appointment));
-  console.log(createOutlookCalendarLink(appointment));
   return (
     <div className="flex flex-col gap-4 w-full">
       <Breadcrumb
