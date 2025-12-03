@@ -7,7 +7,7 @@ import { RemoteZone } from "@/graphql/generated/graphql";
 
 export const AAPSettingsSummarySectionRemote = ({
   organism,
-  maisonMereAAPId,
+  detailsPageUrl,
 }: {
   organism?: {
     id: string;
@@ -16,7 +16,7 @@ export const AAPSettingsSummarySectionRemote = ({
     nomPublic?: string | null;
     modaliteAccompagnementRenseigneeEtValide: boolean;
   };
-  maisonMereAAPId: string;
+  detailsPageUrl: string;
 }) => {
   if (!organism) return null;
 
@@ -26,7 +26,7 @@ export const AAPSettingsSummarySectionRemote = ({
     <EnhancedSectionCard
       data-testid="remote-organism"
       title="Accompagnement à distance"
-      buttonOnClickHref={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organism.id}/remote`}
+      buttonOnClickHref={detailsPageUrl}
       isEditable={true}
       CustomBadge={
         organism.isVisibleInCandidateSearchResults ? (

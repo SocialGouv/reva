@@ -2,8 +2,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
-
-import { AAPSettingsSummarySectionRemote } from "../../AAPSettingsSummarySectionRemote";
+import { AAPSettingsSummarySectionRemote } from "@/components/settings/aap-settings-summary-section-remote/AAPSettingsSummarySectionRemote";
 
 import { useCollaborateurSettings } from "./settingsForCollaborateur.hook";
 
@@ -22,7 +21,7 @@ export const SettingsSummaryForCollaborateur = () => {
         {organism?.modaliteAccompagnement === "A_DISTANCE" && (
           <AAPSettingsSummarySectionRemote
             organism={organism}
-            maisonMereAAPId={maisonMereAAPId}
+            detailsPageUrl={`/agencies-settings-v3/${maisonMereAAPId}/organisms/${organism?.id}/remote`}
           />
         )}
         {organism?.modaliteAccompagnement === "LIEU_ACCUEIL" && (
