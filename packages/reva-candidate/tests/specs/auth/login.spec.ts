@@ -3,6 +3,7 @@ import { graphql } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
 import { graphQLResolver } from "@tests/helpers/network/msw";
+import { waitGraphQL } from "@tests/helpers/network/requests";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -38,6 +39,31 @@ test.describe("Login page", () => {
         ),
       ).not.toBeVisible();
     });
+
+    test("shows confirmation page after asking for a magic link", async ({
+      page,
+      msw,
+    }) => {
+      msw.use(
+        fvae.mutation(
+          "candidate_askForLogin",
+          graphQLResolver({ candidate_askForLogin: "OK" }),
+        ),
+      );
+
+      await login(page, { authenticated: false });
+
+      await page
+        .getByRole("textbox", { name: "Adresse électronique" })
+        .fill("email@example.com");
+
+      const mutationPromise = waitGraphQL(page, "candidate_askForLogin");
+
+      await page.getByTestId("login-home-submit").click();
+      await mutationPromise;
+
+      await expect(page.getByTestId("login-confirmation")).toBeVisible();
+    });
   });
 
   test.describe("when DISABLE_CANDIDATE_MAGIC_LINK_LOGIN is active", () => {
@@ -45,7 +71,9 @@ test.describe("Login page", () => {
       fvae.query(
         "activeFeaturesForConnectedUser",
         graphQLResolver({
-          activeFeaturesForConnectedUser: ["DISABLE_CANDIDATE_MAGIC_LINK_LOGIN"],
+          activeFeaturesForConnectedUser: [
+            "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
+          ],
         }),
       ),
     ];
