@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 export default function CandidaciesEmptyState() {
   const router = useRouter();
   return (
-    <div className="flex justify-between items-center w-full">
+    <div className="flex justify-between items-center w-full -mx-6 -mt-4 bg-white lg:shadow-lifted px-6 py-4 md:py-10">
       <div>
         <h1>Mes candidatures et parcours</h1>
-        <p className="text-lg mb-10">
+        <p className="text-xl mb-10">
           Valorisez votre expérience professionnelle en commençant une
           candidature dès maintenant.
         </p>
@@ -18,7 +18,7 @@ export default function CandidaciesEmptyState() {
       </div>
       <Image
         src="/candidat/images/search-glass.png"
-        alt="candidature"
+        alt="Recherche"
         width={282}
         height={319}
         className="max-h-[319px] hidden md:block"
