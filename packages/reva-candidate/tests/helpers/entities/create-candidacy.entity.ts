@@ -45,6 +45,7 @@ export type CreateCandidacyEntityOptions = {
   candidacyAlreadySubmitted?: boolean;
   feasibilityFormat?: Candidacy["feasibilityFormat"];
   certificationAuthorities?: Candidacy["certificationAuthorities"];
+  candidacyDropOut?: Candidacy["candidacyDropOut"];
 };
 
 export const createCandidacyEntity = (
@@ -68,6 +69,7 @@ export const createCandidacyEntity = (
     appointments,
     feasibilityFormat,
     certificationAuthorities,
+    candidacyDropOut,
   } = options;
 
   const candidacy: CandidacyEntity = {
@@ -109,6 +111,7 @@ export const createCandidacyEntity = (
     candidate,
     endAccompagnementStatus,
     endAccompagnementDate,
+    candidacyDropOut,
   };
 
   if (organism) {
