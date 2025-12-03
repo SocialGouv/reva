@@ -122,11 +122,13 @@ function splitString(value: string): string[] {
   );
 
   // Jump line + UpperFirst regEx
-  const regExJumpline_R = new RegExp(/(?=\r\n\r\n)/g);
+  const regExJumpline_R = new RegExp(/(?=\r\n\r\n\s?)/g);
   if (cleanedValue.match(regExJumpline_R)) {
     let list: string[] = [];
     list = cleanedValue.split(regExJumpline_R);
-    list = list.map((v) => v.replace(new RegExp(/^\r\n\r\n/), ""));
+    list = list
+      .map((v) => v.replace(new RegExp(/^\r\n\r\n\s?/), ""))
+      .filter((v) => v != "");
     return list;
   }
 
