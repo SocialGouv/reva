@@ -79,10 +79,16 @@ export const AppointmentForm = ({
 
   const icsDownloaHiddenLink = useRef<HTMLAnchorElement>(null);
 
+  const dateValue = getValues("date");
+  const timeValue = getValues("time");
+  const date =
+    dateValue && timeValue
+      ? new Date(`${dateValue}T${timeValue}`).toISOString()
+      : new Date().toISOString();
   const appointment = {
     id: btoa(getValues("title")),
     title: getValues("title"),
-    date: new Date(getValues("date") + "T" + getValues("time")).toISOString(),
+    date,
     duration: getValues("duration") || null,
     location: getValues("location"),
     description: getValues("description"),
