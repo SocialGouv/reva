@@ -47,10 +47,16 @@ export const useCollaborateurSettingsPage = ({
     (organism) => organism.modaliteAccompagnement === "A_DISTANCE",
   );
 
+  const onsiteOrganisms =
+    account?.organisms?.filter(
+      (organism) => organism.modaliteAccompagnement === "LIEU_ACCUEIL",
+    ) || [];
+
   const maisonMereAAPId = account?.maisonMereAAP?.id;
 
   return {
     remoteOrganism,
+    onsiteOrganisms,
     maisonMereAAPId,
   };
 };

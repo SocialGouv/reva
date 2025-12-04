@@ -31,6 +31,20 @@ const collaborateurHandlers = () => {
             remoteZones: ["FRANCE_METROPOLITAINE", "GUADELOUPE"],
             nomPublic: "AAP Exemple",
           },
+          {
+            id: "2",
+            modaliteAccompagnement: "LIEU_ACCUEIL",
+            modaliteAccompagnementRenseigneeEtValide: true,
+            isVisibleInCandidateSearchResults: true,
+            nomPublic: "Lieu d'accueil 1",
+          },
+          {
+            id: "3",
+            modaliteAccompagnement: "LIEU_ACCUEIL",
+            modaliteAccompagnementRenseigneeEtValide: true,
+            isVisibleInCandidateSearchResults: true,
+            nomPublic: "Lieu d'accueil 2",
+          },
         ],
       },
     }),
@@ -109,6 +123,7 @@ test.describe("Collaborateur settings page", () => {
           page.getByTestId("remote-organism").getByText("Guadeloupe (UTC-4)"),
         ).toBeVisible();
       });
+
       test("it let me go to the accompagnement à distance page when I click on the 'Visualiser' button", async ({
         page,
       }) => {
@@ -125,6 +140,43 @@ test.describe("Collaborateur settings page", () => {
 
         await expect(page).toHaveURL(
           "/admin2/agencies-settings-v3/1/organisms/1/remote/",
+        );
+      });
+    });
+
+    test.describe("Accompagnement en présentiel summary card", () => {
+      test("it displays the correct information", async ({ page }) => {
+        await login({ role: "aapCollaborateur", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/collaborateurs/account-1/",
+        );
+        await waitForPageQueries(page);
+
+        await expect(
+          page.getByTestId("onsite-organisms").getByText("Lieu d'accueil 1"),
+        ).toBeVisible();
+        await expect(
+          page.getByTestId("onsite-organisms").getByText("Lieu d'accueil 1"),
+        ).toBeVisible();
+      });
+
+      test("it let me go to the accompagnement en présentiel page when I click on the 'Modifier' button", async ({
+        page,
+      }) => {
+        await login({ role: "aapCollaborateur", page });
+        await page.goto(
+          "/admin2/agencies-settings-v3/collaborateurs/account-1/",
+        );
+        await waitForPageQueries(page);
+
+        page
+          .getByTestId("onsite-organisms")
+          .getByRole("link", { name: "Modifier" })
+          .first()
+          .click();
+
+        await expect(page).toHaveURL(
+          "/admin2/agencies-settings-v3/1/organisms/2/on-site/",
         );
       });
     });
