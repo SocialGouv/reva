@@ -105,16 +105,22 @@ export const MultiSelectList = ({
                   {...item}
                   endDetail={
                     item.selected ? (
-                      <Button
-                        onClick={() =>
-                          onSelectionChange?.({
-                            itemId: item.id,
-                            selected: false,
-                          })
-                        }
-                      >
-                        Retirer
-                      </Button>
+                      <span className="flex gap-4">
+                        <Button disabled iconId="fr-icon-check-line">
+                          Ajoutée
+                        </Button>
+                        <Button
+                          priority="tertiary no outline"
+                          onClick={() =>
+                            onSelectionChange?.({
+                              itemId: item.id,
+                              selected: false,
+                            })
+                          }
+                        >
+                          Retirer
+                        </Button>
+                      </span>
                     ) : (
                       <Button
                         onClick={() =>
