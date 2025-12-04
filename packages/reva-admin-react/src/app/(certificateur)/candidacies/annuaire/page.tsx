@@ -1,4 +1,5 @@
 "use client";
+
 import DsfrPagination from "@codegouvfr/react-dsfr/Pagination";
 import SearchBar from "@codegouvfr/react-dsfr/SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -9,6 +10,7 @@ import { SearchResultsHeader } from "@/components/search-results-header/SearchRe
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 import { useAnnuaire } from "./_components/annuaire.hook";
+import { AnnuaireEmptyState } from "./_components/AnnuaireEmptyState";
 import { CandidacyCard } from "./_components/CandidacyCard";
 import { CandidacyCardSkeleton } from "./_components/CandidacyCardSkeleton";
 import { FiltersSection } from "./_components/FiltersSection";
@@ -36,6 +38,10 @@ export default function AnnuairePage() {
   } = useAnnuaire();
 
   const [localSearchFilter, setLocalSearchFilter] = useState(searchFilter);
+  const emptyResult = useMemo(
+    () => candidacies?.info?.totalRows === 0,
+    [candidacies],
+  );
 
   const searchParamsWithoutPage = useMemo<Record<string, string>>(() => {
     let params: Record<string, string> = {};
@@ -114,55 +120,59 @@ export default function AnnuairePage() {
             />
 
             <ul data-testid="results" className="my-0 flex flex-col gap-5 pl-0">
-              {isLoading
-                ? Array.from({ length: 10 }).map((_, index) => (
-                    <CandidacyCardSkeleton key={index} />
-                  ))
-                : candidacies?.rows.map((candidacy) => (
-                    <CandidacyCard
-                      key={candidacy.id}
-                      candidateFullName={
-                        candidacy.candidate?.firstname +
-                        " " +
-                        candidacy.candidate?.lastname
-                      }
-                      cohorteVaeCollective={
-                        candidacy.cohorteVaeCollective
-                          ?.commanditaireVaeCollective
-                          ? (candidacy.cohorteVaeCollective as {
-                              nom: string;
-                              commanditaireVaeCollective: {
-                                raisonSociale: string;
-                              };
-                            })
-                          : null
-                      }
-                      certificationCode={
-                        candidacy.certification?.codeRncp || ""
-                      }
-                      certificationLabel={candidacy.certification?.label || ""}
-                      organismLabel={candidacy.organism?.label || ""}
-                      typeAccompagnement={
-                        candidacy.typeAccompagnement as TypeAccompagnement
-                      }
-                      status={candidacy.status}
-                      statusHistory={candidacy.candidacyStatuses}
-                      jury={candidacy.jury}
-                      dropout={candidacy.candidacyDropOut}
-                      departmentLabel={
-                        candidacy.candidate?.department?.label || ""
-                      }
-                      candidacyId={candidacy.id}
-                      searchResultLink={() =>
-                        "/candidacies/" + candidacy.id + "/feasibility"
-                      }
-                    />
-                  ))}
+              {isLoading ? (
+                Array.from({ length: 10 }).map((_, index) => (
+                  <CandidacyCardSkeleton key={index} />
+                ))
+              ) : emptyResult ? (
+                <AnnuaireEmptyState
+                  onClearFilters={clearFilters}
+                  hasActiveFilters={hasActiveFilters}
+                />
+              ) : (
+                candidacies?.rows.map((candidacy) => (
+                  <CandidacyCard
+                    key={candidacy.id}
+                    candidateFullName={
+                      candidacy.candidate?.firstname +
+                      " " +
+                      candidacy.candidate?.lastname
+                    }
+                    cohorteVaeCollective={
+                      candidacy.cohorteVaeCollective?.commanditaireVaeCollective
+                        ? (candidacy.cohorteVaeCollective as {
+                            nom: string;
+                            commanditaireVaeCollective: {
+                              raisonSociale: string;
+                            };
+                          })
+                        : null
+                    }
+                    certificationCode={candidacy.certification?.codeRncp || ""}
+                    certificationLabel={candidacy.certification?.label || ""}
+                    organismLabel={candidacy.organism?.label || ""}
+                    typeAccompagnement={
+                      candidacy.typeAccompagnement as TypeAccompagnement
+                    }
+                    status={candidacy.status}
+                    statusHistory={candidacy.candidacyStatuses}
+                    jury={candidacy.jury}
+                    dropout={candidacy.candidacyDropOut}
+                    departmentLabel={
+                      candidacy.candidate?.department?.label || ""
+                    }
+                    candidacyId={candidacy.id}
+                    searchResultLink={() =>
+                      "/candidacies/" + candidacy.id + "/feasibility"
+                    }
+                  />
+                ))
+              )}
             </ul>
 
             <br />
 
-            {candidacies?.info && (
+            {!emptyResult && candidacies?.info && (
               <div className="mx-auto my-12 flex">
                 <DsfrPagination
                   defaultPage={candidacies.info.currentPage}
