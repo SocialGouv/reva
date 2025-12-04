@@ -18,4 +18,4 @@ export const INACTIF_TRIGGER_AFTER_FEASIBILITY_CANDIDACY_STATUSES: CandidacyStat
   ["DOSSIER_FAISABILITE_RECEVABLE", "DOSSIER_DE_VALIDATION_SIGNALE"];
 
 // Le candidat est en état d'inactivité confirmé après une mise en inactivité en attente
-export const INACTIF_CONFIRME_TRIGGER_DAYS = 15;
+export const INACTIF_CONFIRME_TRIGGER_DAYS = 180;

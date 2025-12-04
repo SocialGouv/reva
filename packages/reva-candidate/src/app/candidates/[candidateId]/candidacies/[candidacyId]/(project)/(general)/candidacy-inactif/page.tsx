@@ -39,7 +39,7 @@ const getText = ({
   feasibilityDecisionAdmissibleAt: number | null | undefined;
 }) => {
   const inactifEnAttenteThreshold = dateInactifEnAttente
-    ? format(addDays(new Date(dateInactifEnAttente), 15), "dd/MM/yyyy")
+    ? format(addDays(new Date(dateInactifEnAttente), 180), "dd/MM/yyyy")
     : "";
   if (hasFeasibilityAdmissible) {
     return {
