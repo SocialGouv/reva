@@ -61,8 +61,21 @@ export const getCandidaciesForCertificationAuthority = async ({
 }: GetCandidaciesForCertificationAuthorityInput & {
   context: GraphqlContext;
 }) => {
-  const certificationAuthorityId =
-    await resolveCertificationAuthorityId(context);
+  const isAdmin = context.auth.hasRole("admin");
+  const { certificationAuthorityId, certificationAuthorityLocalAccountId } =
+    await resolveCertificationAuthorityInfo(context);
+
+  // Non-admin users must have a certification authority
+  if (!isAdmin && !certificationAuthorityId) {
+    return {
+      rows: [],
+      info: processPaginationInfo({
+        totalRows: 0,
+        limit,
+        offset,
+      }),
+    };
+  }
 
   const andClauses: Prisma.CandidacyWhereInput[] = [
     { status: { in: CANDIDACY_STATUS_TO_INCLUDE } },
@@ -71,6 +84,7 @@ export const getCandidaciesForCertificationAuthority = async ({
   const feasibilityFilter = buildFeasibilityFilter(
     feasibilityStatuses,
     certificationAuthorityId,
+    certificationAuthorityLocalAccountId,
   );
   if (feasibilityFilter) {
     andClauses.push({ Feasibility: feasibilityFilter });
@@ -79,9 +93,21 @@ export const getCandidaciesForCertificationAuthority = async ({
   const validationFilter = buildValidationFilter(
     validationStatuses,
     certificationAuthorityId,
+    certificationAuthorityLocalAccountId,
   );
   if (validationFilter) {
     andClauses.push({ dossierDeValidation: validationFilter });
+  }
+
+  // For local accounts, only include candidacies explicitly linked to them
+  if (certificationAuthorityLocalAccountId) {
+    andClauses.push({
+      certificationAuthorityLocalAccountOnCandidacy: {
+        some: {
+          certificationAuthorityLocalAccountId,
+        },
+      },
+    });
   }
 
   addClause(
@@ -154,30 +180,76 @@ const getOrderByClauseFromSortByFilter = (
   return undefined;
 };
 
-const resolveCertificationAuthorityId = async (
+const resolveCertificationAuthorityInfo = async (
   context: GraphqlContext,
-): Promise<string | undefined> => {
+): Promise<{
+  certificationAuthorityId: string | undefined;
+  certificationAuthorityLocalAccountId: string | undefined;
+}> => {
   if (
     !context.auth.hasRole("manage_feasibility") ||
     !context.auth.userInfo?.sub
-  )
-    return undefined;
+  ) {
+    return {
+      certificationAuthorityId: undefined,
+      certificationAuthorityLocalAccountId: undefined,
+    };
+  }
 
   try {
-    const certificationAuthority =
-      await prismaClient.certificationAuthority.findFirstOrThrow({
-        where: {
-          Account: {
-            some: { keycloakId: context.auth.userInfo.sub },
+    const account = await prismaClient.account.findUnique({
+      where: {
+        keycloakId: context.auth.userInfo.sub,
+      },
+      select: {
+        id: true,
+        certificationAuthorityId: true,
+        certificationAuthorityLocalAccount: {
+          select: {
+            id: true,
+            certificationAuthorityId: true,
           },
         },
-      });
+      },
+    });
 
-    return certificationAuthority.id;
+    if (!account) {
+      return {
+        certificationAuthorityId: undefined,
+        certificationAuthorityLocalAccountId: undefined,
+      };
+    }
+
+    // Certification Authority admin account
+    if (account.certificationAuthorityId) {
+      return {
+        certificationAuthorityId: account.certificationAuthorityId,
+        certificationAuthorityLocalAccountId: undefined,
+      };
+    }
+
+    // Certification Authority local account
+    if (
+      account.certificationAuthorityLocalAccount?.[0]?.certificationAuthorityId
+    ) {
+      return {
+        certificationAuthorityId:
+          account.certificationAuthorityLocalAccount[0]
+            .certificationAuthorityId,
+        certificationAuthorityLocalAccountId:
+          account.certificationAuthorityLocalAccount[0].id,
+      };
+    }
+
+    return {
+      certificationAuthorityId: undefined,
+      certificationAuthorityLocalAccountId: undefined,
+    };
   } catch (_error) {
-    throw new Error(
-      "Vous n'avez pas les permissions nécessaires pour accéder à cette ressource",
-    );
+    return {
+      certificationAuthorityId: undefined,
+      certificationAuthorityLocalAccountId: undefined,
+    };
   }
 };
 
@@ -193,10 +265,22 @@ const addClause = (
 const buildFeasibilityFilter = (
   statuses: CandidacyStatusStep[] | undefined,
   certificationAuthorityId?: string,
+  certificationAuthorityLocalAccountId?: string,
 ): Prisma.CandidacyWhereInput["Feasibility"] | undefined => {
   const baseFilter: Prisma.FeasibilityWhereInput = certificationAuthorityId
     ? { certificationAuthorityId }
     : {};
+
+  // For local accounts, also filter by the candidacy link
+  if (certificationAuthorityLocalAccountId) {
+    baseFilter.candidacy = {
+      certificationAuthorityLocalAccountOnCandidacy: {
+        some: {
+          certificationAuthorityLocalAccountId,
+        },
+      },
+    };
+  }
 
   const decisions = (statuses ?? [])
     .map((status) => FEASIBILITY_DECISION_BY_STATUS[status])
@@ -213,6 +297,7 @@ const buildFeasibilityFilter = (
 const buildValidationFilter = (
   statuses: CandidacyStatusStep[] | undefined,
   certificationAuthorityId?: string,
+  certificationAuthorityLocalAccountId?: string,
 ): Prisma.CandidacyWhereInput["dossierDeValidation"] | undefined => {
   if (!statuses || statuses.length === 0) {
     return undefined;
@@ -235,6 +320,17 @@ const buildValidationFilter = (
 
   if (certificationAuthorityId) {
     clause.certificationAuthorityId = certificationAuthorityId;
+  }
+
+  // For local accounts, also filter by the candidacy link
+  if (certificationAuthorityLocalAccountId) {
+    clause.candidacy = {
+      certificationAuthorityLocalAccountOnCandidacy: {
+        some: {
+          certificationAuthorityLocalAccountId,
+        },
+      },
+    };
   }
 
   return { some: clause };

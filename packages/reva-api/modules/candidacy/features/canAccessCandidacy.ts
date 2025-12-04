@@ -21,8 +21,13 @@ export const canAccessCandidacy = async ({
     return true;
   }
 
+  // Validate keycloakId before using it in queries
+  if (!keycloakId || keycloakId.trim() === "") {
+    return false;
+  }
+
   //user is candidate
-  if (roles.length === 0 || roles.indexOf("candidate") != -1) {
+  if (roles.includes("candidate")) {
     const candidate = await prismaClient.candidate.findFirst({
       where: { keycloakId },
     });

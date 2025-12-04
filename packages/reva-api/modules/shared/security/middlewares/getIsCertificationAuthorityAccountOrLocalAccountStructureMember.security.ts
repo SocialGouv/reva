@@ -93,13 +93,14 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
     }
 
-    let targetCertificationAuthority;
+    let targetCertificationAuthorityId;
     let targetCertificationAuthorityStructureId;
+
     // Selon le chemin utilisé dans le resolver, l'ID peut pointer vers :
     // 1. Un certificateur (première tentative)
     // 2. Une structure de certification (seconde tentative)
     // Cette double vérification permet de gérer les deux cas d'utilisation
-    targetCertificationAuthority =
+    const targetCertificationAuthority =
       await prismaClient.certificationAuthority.findUnique({
         where: {
           id: targetEntityId,
@@ -112,23 +113,44 @@ export const getIsCertificationAuthorityAccountOrLocalAccountStructureMember =
         },
       });
 
-    targetCertificationAuthorityStructureId =
-      targetCertificationAuthority
-        ?.certificationAuthorityOnCertificationAuthorityStructure[0]
-        ?.certificationAuthorityStructureId;
-
-    const targetCertificationAuthorityId = targetCertificationAuthority?.id;
-
-    if (!targetCertificationAuthorityStructureId) {
-      targetCertificationAuthority =
+    if (targetCertificationAuthority) {
+      targetCertificationAuthorityId = targetCertificationAuthority.id;
+      targetCertificationAuthorityStructureId =
+        targetCertificationAuthority
+          ?.certificationAuthorityOnCertificationAuthorityStructure[0]
+          ?.certificationAuthorityStructureId;
+    } else {
+      // Try to find as a structure
+      const targetStructure =
         await prismaClient.certificationAuthorityStructure.findUnique({
           where: { id: targetEntityId },
+          select: {
+            id: true,
+            certificationAuthorityOnCertificationAuthorityStructure: {
+              select: { certificationAuthorityId: true },
+            },
+          },
         });
-      targetCertificationAuthorityStructureId =
-        targetCertificationAuthority?.id;
+
+      if (targetStructure) {
+        targetCertificationAuthorityStructureId = targetStructure.id;
+        // Check if the structure is linked to the user's certification authority
+        const structureLinkedToUserAuthority =
+          targetStructure.certificationAuthorityOnCertificationAuthorityStructure.some(
+            (link) =>
+              link.certificationAuthorityId === userCertificationAuthorityId,
+          );
+
+        if (structureLinkedToUserAuthority) {
+          return next(root, args, context, info);
+        }
+      }
     }
 
-    if (!targetCertificationAuthority && !targetCertificationAuthorityId) {
+    if (
+      !targetCertificationAuthority &&
+      !targetCertificationAuthorityStructureId
+    ) {
       throw new Error(UNAUTHORIZED_ACCESS_ERROR);
     }
 
