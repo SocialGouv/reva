@@ -22,7 +22,7 @@ export const SettingsBreadcrumb = ({
           },
         },
         {
-          label: "Maison mère AAP",
+          label: "Structure certificatrice",
           linkProps: { href: `/maison-mere-aap/${maisonMereAAPId}` },
         },
       ]

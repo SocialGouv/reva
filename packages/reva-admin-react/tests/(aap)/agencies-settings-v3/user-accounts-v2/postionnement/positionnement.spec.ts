@@ -125,7 +125,7 @@ test.describe("Settings update user account positionnement", () => {
     {
       label: "As an Admin",
       role: "admin" as const,
-      rootBreadCrumbLabel: "Maison mère AAP",
+      rootBreadCrumbLabel: "Structure certificatrice",
       rootBreadCrumbUrl:
         "/admin2/maison-mere-aap/a8e32301-86b8-414b-8b55-af86d289adee/",
     },
