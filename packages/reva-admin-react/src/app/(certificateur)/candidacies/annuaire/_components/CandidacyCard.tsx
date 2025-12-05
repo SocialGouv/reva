@@ -1,6 +1,6 @@
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tag from "@codegouvfr/react-dsfr/Tag";
-import { isAfter } from "date-fns";
+import { isAfter, format } from "date-fns";
 
 import {
   CandidacyStatusTag,
@@ -28,6 +28,9 @@ export const CandidacyCard = ({
   candidacyId,
   searchResultLink,
   typeAccompagnement,
+  feasibilityFileSentAt,
+  dossierDeValidationSentAt,
+  dateOfSession,
 }: {
   candidateFullName: string;
   cohorteVaeCollective: {
@@ -46,6 +49,9 @@ export const CandidacyCard = ({
   dropout?: DropoutCandidacyStatus | null;
   departmentLabel: string;
   candidacyId: string;
+  feasibilityFileSentAt?: number | null;
+  dossierDeValidationSentAt?: number | null;
+  dateOfSession?: number | null;
   searchResultLink: (candidacyId: string) => string;
 }) => {
   const currentStatus = status;
@@ -100,6 +106,22 @@ export const CandidacyCard = ({
               </span>
             </>
           )}
+        </div>
+      }
+      endDetail={
+        <div className="flex flex-col">
+          <div>
+            {feasibilityFileSentAt &&
+              `Dossier de faisabilité envoyé le ${format(feasibilityFileSentAt, "d MMM yyyy")}`}
+          </div>
+          <div>
+            {dossierDeValidationSentAt &&
+              `Dossier de validation envoyé le ${format(dossierDeValidationSentAt, "d MMM yyyy")}`}
+          </div>
+          <div>
+            {dateOfSession &&
+              `Jury programmé le ${format(dateOfSession, "d MMM yyyy")}`}
+          </div>
         </div>
       }
       linkProps={{

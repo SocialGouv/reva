@@ -156,6 +156,14 @@ export default function AnnuairePage() {
                       searchResultLink={() =>
                         "/candidacies/" + candidacy.id + "/feasibility"
                       }
+                      feasibilityFileSentAt={
+                        candidacy.feasibility?.feasibilityFileSentAt
+                      }
+                      dossierDeValidationSentAt={
+                        candidacy.activeDossierDeValidation
+                          ?.dossierDeValidationSentAt
+                      }
+                      dateOfSession={candidacy.jury?.dateOfSession}
                     />
                   ))}
             </ul>
