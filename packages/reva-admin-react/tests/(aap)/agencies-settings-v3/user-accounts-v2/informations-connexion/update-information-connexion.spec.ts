@@ -74,7 +74,7 @@ test.describe("Settings update user account information connexion", () => {
     {
       label: "As an Admin",
       role: "admin" as const,
-      rootBreadCrumbLabel: "Structure certificatrice",
+      rootBreadCrumbLabel: "Structure accompagnatrice",
       rootBreadCrumbUrl:
         "/admin2/maison-mere-aap/a8e32301-86b8-414b-8b55-af86d289adee/",
     },
