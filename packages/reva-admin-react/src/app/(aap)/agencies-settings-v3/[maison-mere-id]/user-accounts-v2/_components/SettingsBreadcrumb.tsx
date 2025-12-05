@@ -16,12 +16,6 @@ export const SettingsBreadcrumb = ({
   const baseSegments = isAdmin
     ? [
         {
-          label: "Accueil",
-          linkProps: {
-            href: "/",
-          },
-        },
-        {
           label: "Structure certificatrice",
           linkProps: { href: `/maison-mere-aap/${maisonMereAAPId}` },
         },
