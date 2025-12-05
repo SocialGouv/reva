@@ -41,7 +41,7 @@ export const SettingsSummaryForCollaborateur = () => {
                   severity={
                     organism.isVisibleInCandidateSearchResults
                       ? "success"
-                      : "error"
+                      : "warning"
                   }
                 >
                   {organism.isVisibleInCandidateSearchResults

@@ -6,7 +6,7 @@ import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/Enh
 const VisibilityBadge = ({ isVisible }: { isVisible: boolean }) => {
   return (
     <div className="flex items-center">
-      <Badge severity={isVisible ? "success" : "error"} small>
+      <Badge severity={isVisible ? "success" : "warning"} small>
         {isVisible ? "Visible" : "Invisible"}
       </Badge>
     </div>

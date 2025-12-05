@@ -34,7 +34,7 @@ export const AAPSettingsSummarySectionRemote = ({
             Visible
           </Badge>
         ) : (
-          <Badge data-testid="invisible-badge" severity="error">
+          <Badge data-testid="invisible-badge" severity="warning">
             Invisible
           </Badge>
         )
