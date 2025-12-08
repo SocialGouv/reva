@@ -10,7 +10,7 @@ import { MultiSelectListEmptyState } from "./MultiSelectListEmptyState";
 
 type MultiSelectItemProps = Pick<
   CardProps,
-  "title" | "desc" | "start" | "end"
+  "title" | "detail" | "desc" | "start" | "end"
 > & {
   id: string;
   selected: boolean;
