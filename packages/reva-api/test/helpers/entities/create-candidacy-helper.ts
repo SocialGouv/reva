@@ -91,7 +91,15 @@ export const createCandidacyHelper = async (args?: {
           },
         },
       },
-      organism: { include: { accounts: true } },
+      organism: {
+        include: {
+          organismOnAccounts: {
+            include: {
+              account: true,
+            },
+          },
+        },
+      },
       candidate: true,
       candidacyDropOut: true,
       candidacyStatuses: true,

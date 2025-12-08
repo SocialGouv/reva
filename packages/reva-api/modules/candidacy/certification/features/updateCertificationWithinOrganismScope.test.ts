@@ -41,9 +41,10 @@ const submitTraining = async ({
   organism,
 }: {
   candidacy: { id: string };
-  organism: { accounts: { keycloakId: string }[] };
+  organism: { organismOnAccounts: { account: { keycloakId: string } }[] };
 }) => {
-  const organismKeycloakId = organism?.accounts[0].keycloakId ?? "";
+  const organismKeycloakId =
+    organism?.organismOnAccounts[0].account.keycloakId ?? "";
   const graphqlClient = getGraphQLClient({
     headers: {
       authorization: authorizationHeaderForUser({
@@ -110,9 +111,10 @@ const updateCertificationWithinScope = async ({
 }: {
   certification: { id: string };
   candidacy: { id: string };
-  organism: { accounts: { keycloakId: string }[] };
+  organism: { organismOnAccounts: { account: { keycloakId: string } }[] };
 }) => {
-  const organismKeycloakId = organism.accounts[0].keycloakId ?? "";
+  const organismKeycloakId =
+    organism.organismOnAccounts[0].account.keycloakId ?? "";
 
   const graphqlClient = getGraphQLClient({
     headers: {
@@ -237,7 +239,8 @@ test("should allow admin to update certification when status is DOSSIER_FAISABIL
     });
 
   const newCertification = await createCertificationSocial();
-  const organismKeycloakId = organism.accounts[0].keycloakId ?? "";
+  const organismKeycloakId =
+    organism.organismOnAccounts[0].account.keycloakId ?? "";
 
   const adminGraphqlClient = getGraphQLClient({
     headers: {

@@ -222,7 +222,7 @@ describe.each(["ADMIN", "AAP"] as const)(
               }
             : {
                 role: "manage_candidacy", //AAP profile
-                keycloakId: organism?.accounts[0].keycloakId,
+                keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
                 defaultAssertionOverride: {
                   ACTIVE_HORS_ABANDON: activeOrInactive === "ACTIVE" ? 5 : 0,
                   [statusFilter]: 5,
@@ -255,7 +255,7 @@ describe.each(["ADMIN", "AAP"] as const)(
             }
           : {
               role: "manage_candidacy", // AAP profile
-              keycloakId: organism?.accounts[0].keycloakId,
+              keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
               defaultAssertionOverride: { ABANDON: 5 },
             },
       );
@@ -284,7 +284,7 @@ describe.each(["ADMIN", "AAP"] as const)(
             }
           : {
               role: "manage_candidacy", //AAP profile
-              keycloakId: organism?.accounts[0].keycloakId,
+              keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
               defaultAssertionOverride: {
                 ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 5,
               },
@@ -315,7 +315,7 @@ describe.each(["ADMIN", "AAP"] as const)(
             }
           : {
               role: "manage_candidacy", //AAP profile
-              keycloakId: organism?.accounts[0].keycloakId,
+              keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
               defaultAssertionOverride: { REORIENTEE: 5 },
             },
       );
@@ -349,7 +349,7 @@ describe.each(["ADMIN", "AAP"] as const)(
             }
           : {
               role: "manage_candidacy", //AAP profile
-              keycloakId: organism?.accounts[0].keycloakId,
+              keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
               defaultAssertionOverride: {
                 ACTIVE_HORS_ABANDON: 5,
                 DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
@@ -388,7 +388,7 @@ describe.each(["ADMIN", "AAP"] as const)(
             }
           : {
               role: "manage_candidacy", //AAP profile
-              keycloakId: organism?.accounts[0].keycloakId,
+              keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
               defaultAssertionOverride: {
                 ACTIVE_HORS_ABANDON: 5,
                 DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON: 5,
@@ -413,7 +413,7 @@ describe.each(["ADMIN", "AAP"] as const)(
             }
           : {
               role: "manage_candidacy", //AAP profile
-              keycloakId: organism?.accounts[0].keycloakId,
+              keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
               searchFilter: "WRONG_CRITERIA",
             },
       );
@@ -448,7 +448,7 @@ describe.each(["ADMIN", "AAP"] as const)(
             }
           : {
               role: "manage_candidacy", //AAP profile
-              keycloakId: organism?.accounts[0].keycloakId,
+              keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
               searchFilter: organism?.label,
               defaultAssertionOverride: {
                 ACTIVE_HORS_ABANDON: 1,
@@ -488,7 +488,7 @@ describe.each(["ADMIN", "AAP"] as const)(
             }
           : {
               role: "manage_candidacy", //AAP profile
-              keycloakId: organism?.accounts[0].keycloakId,
+              keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
               searchFilter: department?.label,
               defaultAssertionOverride: {
                 ACTIVE_HORS_ABANDON: 1,
@@ -521,7 +521,7 @@ describe.each(["ADMIN", "AAP"] as const)(
               }
             : {
                 role: "manage_candidacy", //AAP profile
-                keycloakId: organism?.accounts[0].keycloakId,
+                keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
                 searchFilter: certification?.[field] as string,
                 defaultAssertionOverride: {
                   ACTIVE_HORS_ABANDON: 1,
@@ -562,7 +562,7 @@ describe.each(["ADMIN", "AAP"] as const)(
               }
             : {
                 role: "manage_candidacy", //AAP profile
-                keycloakId: organism?.accounts[0].keycloakId,
+                keycloakId: organism?.organismOnAccounts[0].account.keycloakId,
                 searchFilter: candidate?.[field] as string,
                 defaultAssertionOverride: {
                   ACTIVE_HORS_ABANDON: 1,

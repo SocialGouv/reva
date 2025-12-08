@@ -60,7 +60,7 @@ describe("candidate information update", () => {
       fastify: global.testApp,
       authorization: authorizationHeaderForUser({
         role: "gestion_maison_mere_aap",
-        keycloakId: aap?.accounts[0].keycloakId,
+        keycloakId: aap?.organismOnAccounts[0].account.keycloakId,
       }),
       payload: {
         requestType: "mutation",

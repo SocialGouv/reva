@@ -85,7 +85,7 @@ test("Aap associated to the candidacy should be able to access it", async () => 
 
   const resp = await getCandidacy({
     role: "manage_candidacy",
-    keycloakId: organism.accounts[0].keycloakId,
+    keycloakId: organism.organismOnAccounts[0].account.keycloakId,
     candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);
@@ -100,7 +100,7 @@ test("Random aap should not be able to access the candidacy", async () => {
   const candidacy = await createCandidacyHelper();
   const resp = await getCandidacy({
     role: "manage_candidacy",
-    keycloakId: organism.accounts[0].keycloakId,
+    keycloakId: organism.organismOnAccounts[0].account.keycloakId,
     candidacyId: candidacy.id,
   });
   expect(resp.statusCode).toEqual(200);

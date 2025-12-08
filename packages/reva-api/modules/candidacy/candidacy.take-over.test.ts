@@ -96,7 +96,8 @@ test("candidacy_takeOver should do nothing when candidacy status is not validati
     headers: {
       authorization: authorizationHeaderForUser({
         role: "manage_candidacy",
-        keycloakId: candidacy.organism?.accounts[0].keycloakId,
+        keycloakId:
+          candidacy.organism?.organismOnAccounts[0].account.keycloakId,
       }),
     },
   });
@@ -128,7 +129,8 @@ test("candidacy_takeOver should update candidacy statuses when active status is 
     headers: {
       authorization: authorizationHeaderForUser({
         role: "manage_candidacy",
-        keycloakId: candidacy.organism?.accounts[0].keycloakId,
+        keycloakId:
+          candidacy.organism?.organismOnAccounts[0].account.keycloakId,
       }),
     },
   });

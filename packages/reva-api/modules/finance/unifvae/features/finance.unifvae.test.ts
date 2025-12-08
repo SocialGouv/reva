@@ -107,7 +107,7 @@ describe("Unifvae payment request", () => {
       });
       const candidacy = feasibility.candidacy;
       const organismKeycloakId =
-        candidacy.organism?.accounts[0].keycloakId ?? "";
+        candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "";
 
       await createFundingRequestUnifvaeHelper({
         candidacyId: candidacy.id,
@@ -163,7 +163,7 @@ describe("Unifvae payment request", () => {
       });
       const candidacy = feasibility.candidacy;
       const organismKeycloakId =
-        candidacy.organism?.accounts[0].keycloakId ?? "";
+        candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "";
 
       await createFundingRequestUnifvaeHelper({
         candidacyId: candidacy.id,
@@ -197,7 +197,7 @@ describe("Unifvae payment request", () => {
       });
       const candidacy = feasibility.candidacy;
       const organismKeycloakId =
-        candidacy.organism?.accounts[0].keycloakId ?? "";
+        candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "";
 
       await createFundingRequestUnifvaeHelper({
         candidacyId: candidacy.id,
@@ -232,7 +232,7 @@ describe("Unifvae payment request", () => {
       });
       const candidacy = feasibility.candidacy;
       const organismKeycloakId =
-        candidacy.organism?.accounts[0].keycloakId ?? "";
+        candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "";
 
       await createFundingRequestUnifvaeHelper({
         candidacyId: candidacy.id,
@@ -272,7 +272,7 @@ describe("Unifvae payment request", () => {
       });
       const candidacy = feasibility.candidacy;
       const organismKeycloakId =
-        candidacy.organism?.accounts[0].keycloakId ?? "";
+        candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "";
 
       await createFundingRequestUnifvaeHelper({
         candidacyId: candidacy.id,
@@ -328,7 +328,7 @@ describe("Unifvae payment request", () => {
         });
         const candidacy = feasibility.candidacy;
         const organismKeycloakId =
-          candidacy.organism?.accounts[0].keycloakId ?? "";
+          candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "";
 
         await createFundingRequestUnifvaeHelper({
           candidacyId: candidacy.id,
@@ -384,7 +384,7 @@ describe("Unifvae payment request", () => {
         });
         const candidacy = feasibility.candidacy;
         const organismKeycloakId =
-          candidacy.organism?.accounts[0].keycloakId ?? "";
+          candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "";
 
         await createFundingRequestUnifvaeHelper({
           candidacyId: candidacy.id,

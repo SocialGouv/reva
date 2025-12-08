@@ -32,11 +32,6 @@ export const createOrganismHelper = async (
       nomPublic: faker.person.fullName(),
       siteInternet: faker.internet.url(),
       telephone: faker.phone.number(),
-      accounts: {
-        connect: {
-          id: account.id,
-        },
-      },
       organismOnAccounts: {
         create: {
           accountId: account.id,
@@ -45,7 +40,11 @@ export const createOrganismHelper = async (
       ...organismArgs,
     },
     include: {
-      accounts: true,
+      organismOnAccounts: {
+        include: {
+          account: true,
+        },
+      },
       maisonMereAAP: {
         include: {
           gestionnaire: true,

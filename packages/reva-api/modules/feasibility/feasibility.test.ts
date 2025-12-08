@@ -457,7 +457,7 @@ test("should validate upload of feasibility file", async () => {
     certificationAuthorityId: certificationAuthority!.id,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: candidacy.organism?.accounts[0].keycloakId,
+      keycloakId: candidacy.organism?.organismOnAccounts[0].account.keycloakId,
     }),
   });
 

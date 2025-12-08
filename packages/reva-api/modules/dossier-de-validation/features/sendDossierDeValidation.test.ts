@@ -81,7 +81,9 @@ test("should validate upload of dossier de validation", async () => {
     candidacyId: feasibility.candidacyId,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: feasibility.candidacy.organism?.accounts[0].keycloakId,
+      keycloakId:
+        feasibility.candidacy.organism?.organismOnAccounts[0].account
+          .keycloakId,
     }),
   });
 
@@ -127,7 +129,9 @@ test(`it should prevent sending again a DV when a DV is already PENDING`, async 
     candidacyId: feasibility.candidacyId,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: feasibility.candidacy.organism?.accounts[0].keycloakId,
+      keycloakId:
+        feasibility.candidacy.organism?.organismOnAccounts[0].account
+          .keycloakId,
     }),
   });
 
@@ -167,7 +171,9 @@ test(`it should prevent sending again a DV when a DV is already PENDING and jury
     candidacyId: feasibility.candidacyId,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: feasibility.candidacy.organism?.accounts[0].keycloakId,
+      keycloakId:
+        feasibility.candidacy.organism?.organismOnAccounts[0].account
+          .keycloakId,
     }),
   });
 
@@ -208,7 +214,9 @@ test(`it should prevent sending again a DV when a DV is already PENDING and when
     candidacyId: feasibility.candidacyId,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: feasibility.candidacy.organism?.accounts[0].keycloakId,
+      keycloakId:
+        feasibility.candidacy.organism?.organismOnAccounts[0].account
+          .keycloakId,
     }),
   });
 
@@ -272,7 +280,9 @@ test(`it should prevent sending again a DV when a DV is already PENDING and when
       candidacyId: feasibility.candidacyId,
       authorization: authorizationHeaderForUser({
         role: "manage_candidacy",
-        keycloakId: feasibility.candidacy.organism?.accounts[0].keycloakId,
+        keycloakId:
+          feasibility.candidacy.organism?.organismOnAccounts[0].account
+            .keycloakId,
       }),
     });
 

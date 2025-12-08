@@ -77,7 +77,8 @@ export const getCandidacyCountByStatus = async ({
     }
     //aap (manage_candidacy role) but not gestionnaire maison mère
     else {
-      fromClause = Prisma.sql`${fromClause} join account candidacyOrganismAccount on candidacyOrganismAccount.organism_id = candidacyOrganism.id`;
+      fromClause = Prisma.sql`${fromClause} join organism_on_account ooa on ooa.organism_id = candidacyOrganism.id`;
+      fromClause = Prisma.sql`${fromClause} join account candidacyOrganismAccount on candidacyOrganismAccount.id = ooa.account_id`;
       whereClause = Prisma.sql`${whereClause} and candidacyOrganismAccount.keycloak_id = ${IAMId}::uuid`;
     }
   } else if (hasRole("admin") && maisonMereAAPId) {

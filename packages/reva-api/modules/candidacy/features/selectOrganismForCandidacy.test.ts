@@ -89,7 +89,8 @@ test("a candidate should be able to select a new organism while a training is se
   const organismToSelect = await createOrganismHelper();
 
   await submitTraining({
-    keycloakId: candidacy.organism?.accounts[0].keycloakId ?? "",
+    keycloakId:
+      candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "",
     candidacyId,
   });
   const resp = await selectNewOrganism({
@@ -109,7 +110,8 @@ test("a candidate should not be able to select a new organism after the training
   const candidacy = await createCandidacyHelper();
   const candidacyId = candidacy.id;
   const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId ?? "";
+  const organismKeycloakId =
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId ?? "";
 
   const organismToSelect = await createOrganismHelper();
   await submitTraining({
@@ -162,7 +164,7 @@ test("should reset the training and update the status when selecting a new organ
   const candidacyId = candidacy.id;
   const candidateKeycloakId = candidacy.candidate?.keycloakId ?? "";
   const organism = await createOrganismHelper();
-  const organismKeycloakId = organism.accounts[0].keycloakId;
+  const organismKeycloakId = organism.organismOnAccounts[0].account.keycloakId;
 
   await submitTraining({
     keycloakId: organismKeycloakId,

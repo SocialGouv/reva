@@ -10,7 +10,8 @@ test("AAP should not be able to submit a training form if its status is in 'PROJ
   const candidacy = await createCandidacyHelper({
     candidacyActiveStatus: CandidacyStatusStep.PROJET,
   });
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
+  const organismKeycloakId =
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId;
 
   const resp = await injectGraphql({
     fastify: global.testApp,
@@ -38,7 +39,8 @@ test("AAP should be able to submit a basic training form when candidacy status i
   const candidacy = await createCandidacyHelper({
     candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
   });
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
+  const organismKeycloakId =
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId;
 
   const resp = await injectGraphql({
     fastify: global.testApp,
@@ -69,7 +71,8 @@ test("AAP should not be able to submit a basic training form without at least on
     },
     candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
   });
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
+  const organismKeycloakId =
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId;
 
   const resp = await injectGraphql({
     fastify: global.testApp,
@@ -100,7 +103,8 @@ test("AAP should not be able to submit a basic training form  with an 'other sou
     },
     candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
   });
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
+  const organismKeycloakId =
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId;
 
   const resp = await injectGraphql({
     fastify: global.testApp,
@@ -140,7 +144,8 @@ test("AAP should be able to submit a basic training form  with an 'other source'
     },
     candidacyActiveStatus: CandidacyStatusStep.PRISE_EN_CHARGE,
   });
-  const organismKeycloakId = candidacy.organism?.accounts[0].keycloakId;
+  const organismKeycloakId =
+    candidacy.organism?.organismOnAccounts[0].account.keycloakId;
 
   const resp = await injectGraphql({
     fastify: global.testApp,

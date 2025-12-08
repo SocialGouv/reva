@@ -94,7 +94,7 @@ test("an organism can access candidacy in his scope", async () => {
     headers: {
       authorization: authorizationHeaderForUser({
         role: "manage_candidacy",
-        keycloakId: organism.accounts[0].keycloakId,
+        keycloakId: organism.organismOnAccounts[0].account.keycloakId,
       }),
     },
   });
@@ -114,7 +114,7 @@ test("an organism cannot access candidacy out of his scope", async () => {
     headers: {
       authorization: authorizationHeaderForUser({
         role: "manage_candidacy",
-        keycloakId: organism.accounts[0].keycloakId,
+        keycloakId: organism.organismOnAccounts[0].account.keycloakId,
       }),
     },
   });

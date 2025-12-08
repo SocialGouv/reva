@@ -25,7 +25,9 @@ export const createDossierDeValidationHelper = async (
     include: {
       candidacy: {
         include: {
-          organism: { include: { accounts: true } },
+          organism: {
+            include: { organismOnAccounts: { include: { account: true } } },
+          },
           candidate: true,
           certification: true,
         },

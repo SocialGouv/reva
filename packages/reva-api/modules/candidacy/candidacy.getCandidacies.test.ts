@@ -50,7 +50,8 @@ describe("candidacy candidacies query", () => {
         });
 
         const resp = await getCandidacies({
-          userKeycloakId: candidacy.organism?.accounts[0].keycloakId || "",
+          userKeycloakId:
+            candidacy.organism?.organismOnAccounts[0].account.keycloakId || "",
           userRole: "manage_candidacy",
           cohorteVaeCollectiveId: cohorteVaeCollective.id,
         });
@@ -66,7 +67,8 @@ describe("candidacy candidacies query", () => {
         });
 
         const resp = await getCandidacies({
-          userKeycloakId: candidacy.organism?.accounts[0].keycloakId || "",
+          userKeycloakId:
+            candidacy.organism?.organismOnAccounts[0].account.keycloakId || "",
           userRole: "manage_candidacy",
           cohorteVaeCollectiveId: uuidv4(),
         });
@@ -84,7 +86,8 @@ describe("candidacy candidacies query", () => {
         const secondOrganism = await createOrganismHelper();
 
         const resp = await getCandidacies({
-          userKeycloakId: secondOrganism.accounts[0].keycloakId || "",
+          userKeycloakId:
+            secondOrganism.organismOnAccounts[0].account.keycloakId || "",
           userRole: "manage_candidacy",
           cohorteVaeCollectiveId: cohorteVaeCollective.id,
         });

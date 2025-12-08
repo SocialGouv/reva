@@ -40,7 +40,8 @@ describe("cohortes vae collectives for aap", () => {
     });
 
     const resp = await getCohortesForAap({
-      aapKeycloakId: candidacy.organism?.accounts[0].keycloakId || "",
+      aapKeycloakId:
+        candidacy.organism?.organismOnAccounts[0].account.keycloakId || "",
     });
 
     expect(resp.cohortesVaeCollectivesForConnectedAap.length).toBe(1);
@@ -56,7 +57,8 @@ describe("cohortes vae collectives for aap", () => {
     const secondOrganism = await createOrganismHelper();
 
     const resp = await getCohortesForAap({
-      aapKeycloakId: secondOrganism.accounts[0].keycloakId || "",
+      aapKeycloakId:
+        secondOrganism.organismOnAccounts[0].account.keycloakId || "",
     });
 
     expect(resp.cohortesVaeCollectivesForConnectedAap.length).toBe(0);

@@ -23,7 +23,9 @@ export const createFeasibilityDematerializedHelper = async (
       dematerializedFeasibilityFile: true,
       candidacy: {
         include: {
-          organism: { include: { accounts: true } },
+          organism: {
+            include: { organismOnAccounts: { include: { account: true } } },
+          },
           candidate: true,
         },
       },
