@@ -14,6 +14,7 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
     $certificationsOffset: Int!
     $certificationsLimit: Int!
     $certificationsSearchFilter: String
+    $certificationAuthorityIdFilter: ID
   ) {
     certification_authority_getCertificationAuthority(id: $id) {
       id
@@ -32,6 +33,7 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
       limit: $certificationsLimit
       offset: $certificationsOffset
       searchText: $certificationsSearchFilter
+      certificationAuthorityIdFilter: $certificationAuthorityIdFilter
     ) {
       rows {
         id
@@ -63,12 +65,12 @@ const updateCertificationAuthorityCertificationsMutation = graphql(`
 export const useCertificationsPage = ({
   certificationAuthorityId,
   page,
-  onlyShowAddedItems,
+  onlyShowAddedCertifications,
   searchFilter,
 }: {
   certificationAuthorityId: string;
   page: number;
-  onlyShowAddedItems: boolean;
+  onlyShowAddedCertifications: boolean;
   searchFilter?: string | null;
 }) => {
   const RECORDS_PER_PAGE = 10;
@@ -83,7 +85,7 @@ export const useCertificationsPage = ({
         certificationAuthorityId,
         "getCertificationAuthorityWithCertifications",
         page,
-        onlyShowAddedItems,
+        onlyShowAddedCertifications,
         searchFilter,
       ],
       queryFn: () =>
@@ -92,6 +94,9 @@ export const useCertificationsPage = ({
           certificationsOffset,
           certificationsLimit: RECORDS_PER_PAGE,
           certificationsSearchFilter: searchFilter,
+          certificationAuthorityIdFilter: onlyShowAddedCertifications
+            ? certificationAuthorityId
+            : undefined,
         }),
     });
 

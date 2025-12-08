@@ -29,7 +29,7 @@ const CertificationAuthorityCertificationsPage = () => {
   } = useCertificationsPage({
     certificationAuthorityId,
     page: currentPage,
-    onlyShowAddedItems,
+    onlyShowAddedCertifications: onlyShowAddedItems,
     searchFilter,
   });
 
