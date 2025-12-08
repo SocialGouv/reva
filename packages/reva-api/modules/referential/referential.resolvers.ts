@@ -160,6 +160,7 @@ const unsafeReferentialResolvers = {
         organismId?: string;
         searchText?: string;
         candidacyId?: string;
+        certificationAuthorityIdFilter?: string;
       },
     ) => searchCertificationsForCandidate(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>
@@ -169,6 +170,7 @@ const unsafeReferentialResolvers = {
         searchText: payload.searchText,
         status: payload.status,
         visible: payload.visible,
+        certificationAuthorityIdFilter: payload.certificationAuthorityIdFilter,
       }),
     searchCertificationsV2ForRegistryManager: (
       _: any,

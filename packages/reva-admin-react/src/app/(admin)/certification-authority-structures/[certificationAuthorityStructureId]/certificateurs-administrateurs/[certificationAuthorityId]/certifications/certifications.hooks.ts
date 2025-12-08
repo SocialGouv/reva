@@ -3,23 +3,24 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityAndCertificationsQuery = graphql(`
-  query getCertificationAuthorityForAdminCertificationsPage($id: ID!) {
+  query getCertificationAuthorityForAdminCertificationsPage(
+    $id: ID!
+    $certificationsOffset: Int!
+    $certificationsLimit: Int!
+    $certificationsSearchFilter: String
+  ) {
     certification_authority_getCertificationAuthority(id: $id) {
       id
       label
       certificationAuthorityStructures {
         id
         label
-        certifications {
-          id
-        }
       }
       certifications {
         id
@@ -27,11 +28,19 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
         label
       }
     }
-    searchCertificationsForAdmin(limit: 500, offset: 0) {
+    searchCertificationsForAdmin(
+      limit: $certificationsLimit
+      offset: $certificationsOffset
+      searchText: $certificationsSearchFilter
+    ) {
       rows {
         id
         codeRncp
         label
+      }
+      info {
+        totalRows
+        totalPages
       }
     }
   }
@@ -53,9 +62,18 @@ const updateCertificationAuthorityCertificationsMutation = graphql(`
 
 export const useCertificationsPage = ({
   certificationAuthorityId,
+  page,
+  onlyShowAddedItems,
+  searchFilter,
 }: {
   certificationAuthorityId: string;
+  page: number;
+  onlyShowAddedItems: boolean;
+  searchFilter?: string | null;
 }) => {
+  const RECORDS_PER_PAGE = 10;
+  const certificationsOffset = (page - 1) * RECORDS_PER_PAGE;
+
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
 
@@ -64,10 +82,16 @@ export const useCertificationsPage = ({
       queryKey: [
         certificationAuthorityId,
         "getCertificationAuthorityWithCertifications",
+        page,
+        onlyShowAddedItems,
+        searchFilter,
       ],
       queryFn: () =>
         graphqlClient.request(getCertificationAuthorityAndCertificationsQuery, {
           id: certificationAuthorityId,
+          certificationsOffset,
+          certificationsLimit: RECORDS_PER_PAGE,
+          certificationsSearchFilter: searchFilter,
         }),
     });
 
@@ -95,35 +119,12 @@ export const useCertificationsPage = ({
   const certificationAuthority =
     getCertificationAuthorityAndCertificationsResponse?.certification_authority_getCertificationAuthority;
 
-  const certifications = useMemo(
-    () =>
-      getCertificationAuthorityAndCertificationsResponse?.searchCertificationsForAdmin?.rows
-        .map((c) => ({
-          id: c.id,
-          label: `${c.codeRncp} - ${c.label}`,
-          selected:
-            certificationAuthority?.certifications.some(
-              (cert) => cert.id === c.id,
-            ) || false,
-        }))
-        .sort((c) =>
-          certificationAuthority?.certificationAuthorityStructures?.some(
-            (cas) => cas?.certifications.some((ca) => ca.id === c.id),
-          )
-            ? -1
-            : 1,
-        ),
-    [
-      certificationAuthority?.certificationAuthorityStructures,
-      certificationAuthority?.certifications,
-      getCertificationAuthorityAndCertificationsResponse
-        ?.searchCertificationsForAdmin?.rows,
-    ],
-  );
+  const certificationPage =
+    getCertificationAuthorityAndCertificationsResponse?.searchCertificationsForAdmin;
 
   return {
     certificationAuthority,
-    certifications,
+    certificationPage,
     updateCertificationAuthorityCertifications,
   };
 };

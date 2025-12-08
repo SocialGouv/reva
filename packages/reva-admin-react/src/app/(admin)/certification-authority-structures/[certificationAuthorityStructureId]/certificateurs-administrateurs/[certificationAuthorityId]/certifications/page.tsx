@@ -1,10 +1,9 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
-import { CertificationsForm } from "@/components/certifications-form/CertificationsForm";
-import { CertificationsFormData } from "@/components/certifications-form/CertificationsForm.hook";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
+import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { CertificationAuthorityStructureBreadcrumb } from "../../../_components/certification-authority-structure-breadcrumb/CertificationAuthorityStructureBreadcrumb";
 
@@ -17,21 +16,43 @@ const CertificationAuthorityCertificationsPage = () => {
       certificationAuthorityId: string;
     }>();
 
+  const searchParams = useSearchParams();
+  const searchParamsPage = searchParams.get("page");
+  const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
+  const onlyShowAddedItems = searchParams.get("onlyShowAddedItems") === "true";
+  const searchFilter = searchParams.get("searchFilter");
+
   const {
     certificationAuthority,
-    certifications,
+    certificationPage,
     updateCertificationAuthorityCertifications,
-  } = useCertificationsPage({ certificationAuthorityId });
+  } = useCertificationsPage({
+    certificationAuthorityId,
+    page: currentPage,
+    onlyShowAddedItems,
+    searchFilter,
+  });
 
-  const handleFormSubmit = async (data: CertificationsFormData) => {
+  const handleCertificationSelectionChange = async ({
+    itemId,
+    selected,
+  }: {
+    itemId: string;
+    selected: boolean;
+  }) => {
     try {
       await updateCertificationAuthorityCertifications.mutateAsync({
         certificationAuthorityId,
-        certificationIds: data.certifications
-          .filter((c) => c.selected)
-          .map((c) => c.id),
+        certificationIds: selected
+          ? [
+              ...(certificationAuthority?.certifications?.map((c) => c.id) ||
+                []),
+              itemId,
+            ]
+          : certificationAuthority?.certifications
+              .filter((c) => c.id !== itemId)
+              .map((c) => c.id) || [],
       });
-      successToast("Modifications enregistrées");
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -60,11 +81,26 @@ const CertificationAuthorityCertificationsPage = () => {
           Cochez les certifications proposées par la structure certificatrice.
           Vous pouvez choisir une ou plusieurs certifications.
         </p>
-        <CertificationsForm
-          handleFormSubmit={handleFormSubmit}
-          certifications={certifications}
-          fullWidth
-          backUrl={`/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/`}
+        <MultiSelectList
+          pageItems={certificationPage?.rows.map((c) => ({
+            id: c.id,
+            detail: `RNCP ${c.codeRncp}`,
+            title: c.label,
+            selected:
+              certificationAuthority?.certifications.some(
+                (cert) => cert.id === c.id,
+              ) || false,
+          }))}
+          onSelectionChange={handleCertificationSelectionChange}
+          paginationInfo={{
+            totalItems: certificationPage?.info.totalRows || 0,
+            totalPages: certificationPage?.info.totalPages || 1,
+          }}
+          itemTypeLabelForSearchResultsCount="certification(s)"
+          onlyShowAddedItemsSwitchLabel="Afficher les certifications ajoutées uniquement"
+          searchBarLabel="Rechercher par code RNCP, intitulé de certification etc..."
+          emptyStateTitle="Aucune certification trouvée"
+          emptyStateShowAllItemsButtonLabel="Afficher toutes les certifications"
         />
       </div>
     </div>

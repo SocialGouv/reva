@@ -11,12 +11,14 @@ export const searchCertificationsForAdmin = async ({
   searchText,
   status,
   visible,
+  certificationAuthorityIdFilter,
 }: {
   offset?: number;
   limit?: number;
   searchText?: string;
   status?: CertificationStatus;
   visible?: boolean;
+  certificationAuthorityIdFilter?: string; // If provided, only certifications managed by the collaborateur authority will be returned
 }): Promise<PaginatedListResult<Certification>> => {
   const realLimit = limit || 10;
   const realOffset = offset || 0;
@@ -58,6 +60,16 @@ export const searchCertificationsForAdmin = async ({
     };
   }
 
+  if (certificationAuthorityIdFilter) {
+    whereClause = {
+      ...whereClause,
+      certificationAuthorityOnCertification: {
+        some: {
+          certificationAuthorityId: certificationAuthorityIdFilter,
+        },
+      },
+    };
+  }
   const certifications = await prismaClient.certification.findMany({
     where: whereClause,
     orderBy: [{ label: "asc" }],
