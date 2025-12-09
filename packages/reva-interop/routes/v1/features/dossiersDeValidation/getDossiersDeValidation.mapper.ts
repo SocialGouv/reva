@@ -53,7 +53,7 @@ const statusMapFromGqlToInterop: Record<
 };
 
 const buildPreviewUrl = (path: string) => {
-  if (process.env.ENVIRONEMENT === "local") {
+  if (process.env.ENVIRONMENT === "local") {
     return "http://localhost:8080" + path;
   }
   return process.env.BASE_URL + path;
