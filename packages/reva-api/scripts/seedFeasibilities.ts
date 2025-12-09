@@ -1,4 +1,4 @@
-import { createReadStream } from "fs";
+import { createReadStream, readFileSync } from "fs";
 import path from "path";
 
 import { faker } from "@faker-js/faker";
@@ -15,6 +15,7 @@ import {
 } from "@prisma/client";
 import dotenv from "dotenv";
 
+import { sendDossierDeValidation } from "@/modules/dossier-de-validation/features/sendDossierDeValidation";
 import { createOrUpdateAttachments } from "@/modules/feasibility/dematerialized-feasibility-file/features/createOrUpdateAttachments";
 
 import { prismaClient } from "../prisma/client";
@@ -35,23 +36,42 @@ const COMPETENCE_DETAILS_STATES: DFFCertificationCompetenceDetailsState[] = [
   "PARTIALLY",
 ];
 
-const CERTIFICATION_RNCP_ID = "36004";
+const CERTIFICATION_RNCP_IDS = [
+  "36004",
+  "34824",
+  "37675",
+  "39793",
+  "35832",
+  "40743",
+  "35830",
+  "40692",
+  "39644",
+  "34827",
+  "37679",
+  "39645",
+  "36836",
+  "4503",
+  "39680",
+];
 const CERTIFICATION_AUTHORITY_ID = "4270391e-1beb-4366-87fd-76c6b23a47df";
 const COUNTRY_ID = "4a92a738-d112-413b-aa9a-5bc9c3cf2dc9";
 const BIRTH_DEPARTMENT_ID = "80748231-b32f-40cc-a2d1-ffa0157688b7";
 const HIGHEST_DEGREE_ID = "0151eb9a-7368-441e-9a92-484f20b67caa";
 const NATIONALITY = "France";
+const NUMBER_OF_FEASIBILITIES_TO_CREATE = 50;
 
-// const idDocumentReadStream = createReadStream(
-//   path.join(process.cwd(), "scripts/document.pdf"),
-// );
+const dossierDeValidationFile = readFileSync(
+  path.join(process.cwd(), "scripts/dossier_validation.pdf"),
+);
 
-const main = async () => {
-  console.log("Starting feasibility seeding...");
+const createFeasibilities = async (certificationRncpId: string) => {
+  console.log(
+    `Starting feasibility seeding for certification ${certificationRncpId}...`,
+  );
 
   // Find the certification
   const certification = await prismaClient.certification.findUnique({
-    where: { rncpId: CERTIFICATION_RNCP_ID },
+    where: { rncpId: certificationRncpId },
     include: {
       competenceBlocs: {
         include: {
@@ -64,7 +84,7 @@ const main = async () => {
 
   if (!certification) {
     throw new Error(
-      `Certification with rncp_id ${CERTIFICATION_RNCP_ID} not found`,
+      `Certification with rncp_id ${certificationRncpId} not found`,
     );
   }
 
@@ -146,7 +166,7 @@ const main = async () => {
   );
 
   // Create 50 feasibilities
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < NUMBER_OF_FEASIBILITIES_TO_CREATE; i++) {
     console.log(`Creating feasibility ${i + 1}/50...`);
 
     // Random feasibility status
@@ -328,12 +348,45 @@ const main = async () => {
       });
     }
 
+    if (feasibilityStatus === "ADMISSIBLE") {
+      console.log(
+        "Feasibility is admissible, creating Dossier de validation...",
+      );
+      await sendDossierDeValidation({
+        candidacyId: candidacy.id,
+        dossierDeValidationFile: {
+          filename: "dossier_validation.pdf",
+          mimetype: "application/pdf",
+          _buf: dossierDeValidationFile,
+        },
+        dossierDeValidationOtherFiles: [],
+        userKeycloakId: candidate.keycloakId,
+        userEmail: candidate.email,
+        userRoles: ["candidate"],
+      });
+    }
+
     console.log(
-      `Created feasibility ${i + 1}/50 with status ${feasibilityStatus}`,
+      `Created feasibility ${i + 1}/${NUMBER_OF_FEASIBILITIES_TO_CREATE} with status ${feasibilityStatus}. Candidacy id : ${candidacy.id}. RNCP id : ${certificationRncpId}`,
     );
   }
 
-  console.log("Feasibility seeding completed successfully!");
+  console.log(
+    `Feasibility seeding completed successfully for certification ${certificationRncpId}!`,
+  );
+};
+
+const main = async () => {
+  for (const certificationRncpId of CERTIFICATION_RNCP_IDS) {
+    try {
+      await createFeasibilities(certificationRncpId);
+    } catch (error) {
+      console.error(
+        `Error seeding feasibilities for certification ${certificationRncpId}:`,
+        error,
+      );
+    }
+  }
 };
 
 main()
