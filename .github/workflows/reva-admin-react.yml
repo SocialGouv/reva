@@ -12,7 +12,8 @@ on:
 env:
   NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL: "https://strapi.vae.gouv.fr"
   NEXT_PUBLIC_KEYCLOAK_REALM: "reva"
-  NEXT_PUBLIC_KEYCLOAK_URL: "https://auth.reva.incubateur.net"
+  # Should not be reachable, but we need to set a value and it won't work with https://auth.reva.incubateur.net
+  NEXT_PUBLIC_KEYCLOAK_URL: "http://localhost:8888/auth"
   NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: "reva-admin"
 
 jobs:
