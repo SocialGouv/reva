@@ -115,6 +115,16 @@ export const FiltersSection = ({
           className="mb-0"
           options={[
             {
+              label: "En attente",
+              nativeInputProps: {
+                checked: filters.validationStatuses.includes(
+                  "DOSSIER_FAISABILITE_RECEVABLE",
+                ),
+                onChange: () =>
+                  onToggleValidationStatus("DOSSIER_FAISABILITE_RECEVABLE"),
+              },
+            },
+            {
               label: "Reçu",
               nativeInputProps: {
                 checked: filters.validationStatuses.includes(

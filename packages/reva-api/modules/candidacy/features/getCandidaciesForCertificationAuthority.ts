@@ -37,8 +37,9 @@ const FEASIBILITY_DECISION_BY_STATUS: Partial<
 };
 
 const VALIDATION_DECISION_BY_STATUS: Partial<
-  Record<CandidacyStatusStep, DossierDeValidationStatus>
+  Record<CandidacyStatusStep, DossierDeValidationStatus | null>
 > = {
+  [CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE]: null,
   [CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE]:
     DossierDeValidationStatus.PENDING,
   [CandidacyStatusStep.DOSSIER_DE_VALIDATION_SIGNALE]:
@@ -93,8 +94,28 @@ export const getCandidaciesForCertificationAuthority = async ({
     validationStatuses,
     certificationAuthorityId,
   );
-  if (validationFilter) {
+
+  const isValidationStatusesContainNull = validationStatuses?.find(
+    (status) => status === CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
+  );
+
+  if (validationFilter && isValidationStatusesContainNull) {
+    andClauses.push({
+      OR: [
+        { dossierDeValidation: validationFilter },
+        {
+          feasibility: { decision: FeasibilityStatus.ADMISSIBLE },
+          dossierDeValidation: null,
+        },
+      ],
+    });
+  } else if (validationFilter) {
     andClauses.push({ dossierDeValidation: validationFilter });
+  } else if (isValidationStatusesContainNull) {
+    andClauses.push({
+      feasibility: { decision: FeasibilityStatus.ADMISSIBLE },
+      dossierDeValidation: null,
+    });
   }
 
   // For local accounts, only include candidacies explicitly linked to them
