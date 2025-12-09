@@ -1,5 +1,7 @@
 # France VAE
 
+Le service public de la VAE.
+
 https://vae.gouv.fr
 
 ## Introduction
