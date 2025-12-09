@@ -82,18 +82,12 @@ export const getCandidaciesForCertificationAuthority = async ({
     { candidacy: { status: { in: CANDIDACY_STATUS_TO_INCLUDE } } },
   ];
 
-  const feasibilityFilters = buildFeasibilityFilter(
-    feasibilityStatuses,
-    certificationAuthorityId,
-  );
+  const feasibilityFilters = buildFeasibilityFilter(feasibilityStatuses);
   if (feasibilityFilters) {
     andClauses.push({ feasibility: feasibilityFilters });
   }
 
-  const validationFilter = buildValidationFilter(
-    validationStatuses,
-    certificationAuthorityId,
-  );
+  const validationFilter = buildValidationFilter(validationStatuses);
 
   const isValidationStatusesContainNull = validationStatuses?.find(
     (status) => status === CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE,
@@ -105,7 +99,7 @@ export const getCandidaciesForCertificationAuthority = async ({
         { dossierDeValidation: validationFilter },
         {
           feasibility: { decision: FeasibilityStatus.ADMISSIBLE },
-          dossierDeValidation: null,
+          dossierDeValidationId: null,
         },
       ],
     });
@@ -114,7 +108,14 @@ export const getCandidaciesForCertificationAuthority = async ({
   } else if (isValidationStatusesContainNull) {
     andClauses.push({
       feasibility: { decision: FeasibilityStatus.ADMISSIBLE },
-      dossierDeValidation: null,
+      dossierDeValidationId: null,
+    });
+  }
+
+  // certificationAuthorityId filter
+  if (certificationAuthorityId) {
+    andClauses.push({
+      feasibility: { certificationAuthorityId },
     });
   }
 
@@ -317,13 +318,8 @@ const addClause = (
 
 const buildFeasibilityFilter = (
   statuses: CandidacyStatusStep[] | undefined,
-  certificationAuthorityId?: string,
 ): Prisma.CandidacyEnhancedWhereInput["feasibility"] | undefined => {
   const filters: Prisma.CandidacyEnhancedWhereInput["feasibility"] = {};
-
-  if (certificationAuthorityId) {
-    filters.certificationAuthorityId = certificationAuthorityId;
-  }
 
   const decisions = (statuses ?? [])
     .map((status) => FEASIBILITY_DECISION_BY_STATUS[status])
@@ -338,17 +334,17 @@ const buildFeasibilityFilter = (
 
 const buildValidationFilter = (
   statuses: CandidacyStatusStep[] | undefined,
-  certificationAuthorityId?: string,
 ): Prisma.CandidacyEnhancedWhereInput["dossierDeValidation"] | undefined => {
-  if (!statuses || statuses.length === 0) {
+  if (
+    !statuses ||
+    statuses.length === 0 ||
+    (statuses.length === 1 &&
+      statuses[0] === CandidacyStatusStep.DOSSIER_FAISABILITE_RECEVABLE)
+  ) {
     return undefined;
   }
 
   const filters: Prisma.CandidacyEnhancedWhereInput["dossierDeValidation"] = {};
-
-  if (certificationAuthorityId) {
-    filters.certificationAuthorityId = certificationAuthorityId;
-  }
 
   const decisions = (statuses ?? [])
     .map((status) => VALIDATION_DECISION_BY_STATUS[status])
