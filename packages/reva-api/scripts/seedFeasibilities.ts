@@ -1,3 +1,4 @@
+import { createReadStream } from "fs";
 import path from "path";
 
 import { faker } from "@faker-js/faker";
@@ -10,8 +11,11 @@ import {
   CandidateTypology,
   FinanceModule,
   Gender,
+  ExperienceDuration,
 } from "@prisma/client";
 import dotenv from "dotenv";
+
+import { createOrUpdateAttachments } from "@/modules/feasibility/dematerialized-feasibility-file/features/createOrUpdateAttachments";
 
 import { prismaClient } from "../prisma/client";
 
@@ -32,11 +36,15 @@ const COMPETENCE_DETAILS_STATES: DFFCertificationCompetenceDetailsState[] = [
 ];
 
 const CERTIFICATION_RNCP_ID = "36004";
-const CERTIFICATION_AUTHORITY_ID = "2e487410-d223-41a9-b356-15918bc39bd0";
+const CERTIFICATION_AUTHORITY_ID = "4270391e-1beb-4366-87fd-76c6b23a47df";
 const COUNTRY_ID = "4a92a738-d112-413b-aa9a-5bc9c3cf2dc9";
 const BIRTH_DEPARTMENT_ID = "80748231-b32f-40cc-a2d1-ffa0157688b7";
 const HIGHEST_DEGREE_ID = "0151eb9a-7368-441e-9a92-484f20b67caa";
 const NATIONALITY = "France";
+
+// const idDocumentReadStream = createReadStream(
+//   path.join(process.cwd(), "scripts/document.pdf"),
+// );
 
 const main = async () => {
   console.log("Starting feasibility seeding...");
@@ -138,7 +146,7 @@ const main = async () => {
   );
 
   // Create 50 feasibilities
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 5; i++) {
     console.log(`Creating feasibility ${i + 1}/50...`);
 
     // Random feasibility status
@@ -158,7 +166,7 @@ const main = async () => {
         keycloakId: faker.string.uuid(),
         firstname2: faker.helpers.maybe(() => faker.person.middleName()),
         firstname3: faker.helpers.maybe(() => faker.person.middleName()),
-        phone: faker.phone.number(),
+        phone: faker.helpers.fromRegExp(/0[1-9]{9}/),
         birthdate: faker.date.birthdate({ min: 18, max: 65, mode: "age" }),
         birthCity: faker.location.city(),
         nationality: NATIONALITY,
@@ -201,6 +209,18 @@ const main = async () => {
           CandidateTypology.DEMANDEUR_EMPLOI,
           CandidateTypology.NON_SPECIFIE,
         ]),
+        experiences: {
+          create: {
+            title: `Expérience - ${faker.lorem.word()}`,
+            description: faker.lorem.sentence(),
+            duration: faker.helpers.arrayElement(
+              Object.values(ExperienceDuration),
+            ),
+            startedAt: faker.date.past({
+              years: 10,
+            }),
+          },
+        },
         financeModule: FinanceModule.unifvae,
         status: candidacyStatus,
         candidacyStatuses: {
@@ -244,18 +264,25 @@ const main = async () => {
             prerequisitesPartComplete: true,
             attachmentsPartComplete: true,
             competenceBlocsPartCompletion: "COMPLETED",
-            feasibilityFileId: "f7bed3e2-82c1-4377-b457-20164b750cb7",
-            attachments: {
-              create: {
-                fileId: "65694389-656a-4b34-97b6-719413690c09",
-                type: "ID_CARD",
-              },
-            },
+            aapDecision: "FAVORABLE",
+            eligibilityRequirement: "FULL_ELIGIBILITY_REQUIREMENT",
           },
         },
       },
       include: {
         dematerializedFeasibilityFile: true,
+      },
+    });
+
+    await createOrUpdateAttachments({
+      candidacyId: candidacy.id,
+      input: {
+        idCard: Promise.resolve({
+          filename: "document.pdf",
+          mimetype: "application/pdf",
+          createReadStream: () =>
+            createReadStream(path.join(process.cwd(), "scripts/document.pdf")),
+        }),
       },
     });
 
