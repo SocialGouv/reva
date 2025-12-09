@@ -1,0 +1,83 @@
+name: reva-website
+
+on:
+  push:
+    paths:
+      - "packages/reva-website/**"
+      - "packages/reva-api/modules/**/*.graphql"
+      - "packages/shared/**"
+      - ".github/workflows/reva-website.yml"
+      - "!**/*.md"
+
+env:
+  NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL: "https://strapi.vae.gouv.fr"
+  NEXT_PUBLIC_WEBSITE_API_GRAPHQL: "https://reva.incubateur.net/api/graphql"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-website
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - name: Website node_modules cache
+        id: website-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-website/node_modules
+          key: website-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.website-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Running ESLint
+        run: npm run lint
+
+  playwright:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-website
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "npm"
+      - name: Website node_modules cache
+        id: website-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-website/node_modules
+          key: website-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.website-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=`npm list | grep '@playwright/test'|sed 's/.*playwright\/test@//'`" >> $GITHUB_ENV
+      - name: Cache Playwright Binaries
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Build to retrieve graphql schema from API folder
+        run: npm run build
+      - name: Run Playwright tests
+        run: npm run test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-website
+          path: packages/reva-website/playwright-report/
+          retention-days: 30

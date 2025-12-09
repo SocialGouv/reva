@@ -1,0 +1,38 @@
+name: reva-interop
+
+on:
+  push:
+    paths:
+      - "packages/reva-interop/**"
+      - "packages/reva-api/modules/**/*.graphql"
+      - ".github/workflows/reva-interop.yml"
+      - "!**/*.md"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-interop
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - name: Interop node_modules cache
+        id: interop-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-interop/node_modules
+          key: interop-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.interop-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      # Need to run the postinstall script manually if the node_modules cache is hit because in that case we don't run the npm ci command
+      - name: Run postinstall script
+        if: steps.interop-node_modules-cache.outputs.cache-hit == 'true'
+        run: npm run postinstall
+      - name: Running ESLint
+        run: npm run lint
