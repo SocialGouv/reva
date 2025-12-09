@@ -85,6 +85,6 @@ const BackButton = ({
       target: "_self",
     }}
   >
-    Retour à la page région
+    Retour aux régions
   </Button>
 );
