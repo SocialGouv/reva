@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
@@ -38,6 +39,14 @@ export const FeasibilityCompletionForm = ({
   onSubmit?(data: FeasibilityCompletionFormData): void;
   className?: string;
 }) => {
+  const { isFeatureActive } = useFeatureflipping();
+  const isCertificateurCandidaciesAnnuaireEnabled = isFeatureActive(
+    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
+  );
+  const backUrl = isCertificateurCandidaciesAnnuaireEnabled
+    ? "/candidacies/annuaire"
+    : "/candidacies/feasibilities";
+
   const {
     register,
     control,
@@ -100,10 +109,7 @@ export const FeasibilityCompletionForm = ({
         />
       </fieldset>
       <br />
-      <FormButtons
-        backUrl="/candidacies/feasibilities"
-        formState={{ isSubmitting, isDirty }}
-      />
+      <FormButtons backUrl={backUrl} formState={{ isSubmitting, isDirty }} />
     </form>
   );
 };
