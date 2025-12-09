@@ -1,0 +1,123 @@
+name: reva-candidate
+
+on:
+  push:
+    paths:
+      - "packages/reva-candidate/**"
+      - "packages/reva-api/modules/**/*.graphql"
+      - ".github/workflows/reva-candidate.yml"
+      - "!**/*.md"
+
+env:
+  NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL: "https://strapi.vae.gouv.fr"
+  NEXT_PUBLIC_APP_CANDIDAT_GRAPHQL_API_URL: "https://reva.incubateur.net/api/graphql"
+  NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_CLIENT_ID: "reva-app"
+  NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_REALM: "reva-app"
+  NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_URL: "https://auth.reva.incubateur.net"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-candidate
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - name: Candidate node_modules cache
+        id: candidate-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-candidate/node_modules
+          key: candidate-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.candidate-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Running ESLint
+        run: npm run lint
+
+  cypress:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-candidate
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - name: Candidate node_modules cache
+        id: candidate-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-candidate/node_modules
+          key: candidate-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.candidate-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Get Cypress version
+        run: echo "CYPRESS_VERSION=`npm list | grep 'cypress'|sed 's/.*cypress@//'`" >> $GITHUB_ENV
+      - name: Cypress Binaries cache
+        id: cypress-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/Cypress
+          key: cypress-${{ env.CYPRESS_VERSION }}
+      - name: Install Cypress binaries
+        if: steps.cypress-cache.outputs.cache-hit != 'true'
+        run: npx cypress install
+      - name: Build
+        run: npm run build
+      - name: Running Test
+        run: NODE_ENV=production npm run test:ci
+
+  playwright:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/reva-candidate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - name: Candidate node_modules cache
+        id: candidate-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-candidate/node_modules
+          key: candidate-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing dependencies
+        if: steps.candidate-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=`npm list | grep '@playwright/test'|sed 's/.*playwright\/test@//'`" >> $GITHUB_ENV
+      - name: Cache Playwright Binaries
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Build to retrieve graphql schema from API folder
+        run: npm run build
+      - name: Run Playwright tests
+        run: npm run test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-candidate
+          path: packages/reva-candidate/playwright-report/
+          retention-days: 30
