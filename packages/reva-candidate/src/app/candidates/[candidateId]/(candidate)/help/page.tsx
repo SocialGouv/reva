@@ -102,7 +102,7 @@ const RessourcesUtileSection = ({
 
   return (
     <div className="mb-8">
-      <h2>Ressources utiles</h2>
+      <h2>Ressources</h2>
       <p>
         À la recherche de plus d’informations ? Découvrez nos articles de blog
         pour mieux comprendre, préparer et réussir sa VAE.
