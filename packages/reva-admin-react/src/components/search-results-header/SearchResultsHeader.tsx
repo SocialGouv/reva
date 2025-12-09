@@ -18,19 +18,18 @@ export const SearchResultsHeader = ({
     resultCount > 1 ? "s" : ""
   }`;
   return (
-    <div className={`flex justify-between items-center ${className ?? ""}`}>
+    <div
+      className={`flex justify-between items-end ${className ?? ""} [&_select]:overflow-hidden [&_select]:text-ellipsis [&_select]:whitespace-nowrap`}
+    >
       {defaultSearchFilter ? (
         <div>
-          <div className="text-xs text-neutral-500">
+          <Button priority="secondary" onClick={() => onSearchFilterChange("")}>
+            Réinitialiser la recherche
+          </Button>
+
+          <div className="text-xs text-neutral-500 mt-2">
             {resultCountLabel} pour « {defaultSearchFilter} »
           </div>
-          <Button
-            className="mt-2"
-            priority="secondary"
-            onClick={() => onSearchFilterChange("")}
-          >
-            Réinitialiser le filtre
-          </Button>
         </div>
       ) : (
         <div className="text-xs text-neutral-500">{resultCountLabel}</div>

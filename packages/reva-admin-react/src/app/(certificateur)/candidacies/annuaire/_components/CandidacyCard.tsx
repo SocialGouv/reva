@@ -112,10 +112,13 @@ export const CandidacyCard = ({
         <div className="flex flex-col">
           <div>
             {feasibilityFileSentAt &&
+              !dossierDeValidationSentAt &&
+              !dateOfSession &&
               `Dossier de faisabilité envoyé le ${format(feasibilityFileSentAt, "d MMM yyyy")}`}
           </div>
           <div>
             {dossierDeValidationSentAt &&
+              !dateOfSession &&
               `Dossier de validation envoyé le ${format(dossierDeValidationSentAt, "d MMM yyyy")}`}
           </div>
           <div>
