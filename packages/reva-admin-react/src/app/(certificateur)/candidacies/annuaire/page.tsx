@@ -14,6 +14,7 @@ import { AnnuaireEmptyState } from "./_components/AnnuaireEmptyState";
 import { CandidacyCard } from "./_components/CandidacyCard";
 import { CandidacyCardSkeleton } from "./_components/CandidacyCardSkeleton";
 import { FiltersSection } from "./_components/FiltersSection";
+import { SortByBar } from "./_components/SortByBar";
 
 export default function AnnuairePage() {
   const searchParams = useSearchParams();
@@ -116,7 +117,7 @@ export default function AnnuairePage() {
               defaultSearchFilter={searchFilter}
               onSearchFilterChange={onSearchFilterChange}
               resultCount={candidacies?.info.totalRows || 0}
-              addButton={undefined}
+              addButton={<SortByBar />}
             />
 
             <ul data-testid="results" className="my-0 flex flex-col gap-5 pl-0">

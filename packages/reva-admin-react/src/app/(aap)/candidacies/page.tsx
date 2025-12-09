@@ -17,7 +17,7 @@ import {
 
 import { useCandidacies } from "./_components/candidacies.hook";
 import { CandidaciesLayout } from "./_components/CandidaciesLayout";
-import { FilterBar } from "./_components/FilterBar";
+import { SortByBar } from "./_components/SortByBar";
 
 export default function CandidaciesPage() {
   const pathname = usePathname();
@@ -121,7 +121,7 @@ export default function CandidaciesPage() {
         <SearchList
           searchFilter={searchFilter}
           searchResultsPage={candidaciesByStatus}
-          FilterBar={<FilterBar />}
+          FilterBar={<SortByBar />}
         >
           {(candidacy) => (
             <CandidacyCard

@@ -77,23 +77,21 @@ export const getCandidaciesForCertificationAuthority = async ({
     };
   }
 
-  const andClauses: Prisma.CandidacyWhereInput[] = [
-    { status: { in: CANDIDACY_STATUS_TO_INCLUDE } },
+  const andClauses: Prisma.CandidacyEnhancedWhereInput[] = [
+    { candidacy: { status: { in: CANDIDACY_STATUS_TO_INCLUDE } } },
   ];
 
-  const feasibilityFilter = buildFeasibilityFilter(
+  const feasibilityFilters = buildFeasibilityFilter(
     feasibilityStatuses,
     certificationAuthorityId,
-    certificationAuthorityLocalAccountId,
   );
-  if (feasibilityFilter) {
-    andClauses.push({ Feasibility: feasibilityFilter });
+  if (feasibilityFilters) {
+    andClauses.push({ feasibility: feasibilityFilters });
   }
 
   const validationFilter = buildValidationFilter(
     validationStatuses,
     certificationAuthorityId,
-    certificationAuthorityLocalAccountId,
   );
   if (validationFilter) {
     andClauses.push({ dossierDeValidation: validationFilter });
@@ -102,54 +100,70 @@ export const getCandidaciesForCertificationAuthority = async ({
   // For local accounts, only include candidacies explicitly linked to them
   if (certificationAuthorityLocalAccountId) {
     andClauses.push({
-      certificationAuthorityLocalAccountOnCandidacy: {
-        some: {
-          certificationAuthorityLocalAccountId,
+      candidacy: {
+        certificationAuthorityLocalAccountOnCandidacy: {
+          some: {
+            certificationAuthorityLocalAccountId,
+          },
         },
       },
     });
   }
 
-  addClause(
-    andClauses,
-    getWhereClauseFromStatusFilterForCertificationAuthority(
-      statusFilter,
-      includeDropouts,
-    ),
-  );
+  // Status filter
+  addClause(andClauses, {
+    candidacy: {
+      ...getWhereClauseFromStatusFilterForCertificationAuthority(
+        statusFilter,
+        includeDropouts,
+      ),
+    },
+  });
 
-  addClause(
-    andClauses,
-    getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
-  );
+  // Search filter
+  addClause(andClauses, {
+    candidacy: {
+      ...getWhereClauseFromSearchFilter(candidacySearchWord, searchFilter),
+    },
+  });
 
+  // Cohorte filter
   if (cohorteVaeCollectiveId) {
-    andClauses.push({ cohorteVaeCollectiveId });
+    andClauses.push({ candidacy: { cohorteVaeCollectiveId } });
   }
 
+  // Dropout filter
   if (!includeDropouts && !statusFilter) {
-    andClauses.push({ candidacyDropOut: null });
+    andClauses.push({ candidacy: { candidacyDropOut: null } });
   }
 
+  // Jury status filter
   addClause(andClauses, buildJuryStatusClause(juryStatuses));
+
+  // Jury result filter
   addClause(andClauses, buildJuryResultClause(juryResults));
 
-  const whereClause: Prisma.CandidacyWhereInput =
+  const whereClause: Prisma.CandidacyEnhancedWhereInput =
     andClauses.length === 1 ? andClauses[0] : { AND: andClauses };
 
-  const totalRows = await prismaClient.candidacy.count({
+  const totalRows = await prismaClient.candidacyEnhanced.count({
     where: whereClause,
   });
 
-  const candidacies = await prismaClient.candidacy.findMany({
+  const orderByClause = getOrderByClauseFromSortByFilter(sortByFilter);
+
+  const candidacies = await prismaClient.candidacyEnhanced.findMany({
     where: whereClause,
-    orderBy: getOrderByClauseFromSortByFilter(sortByFilter),
+    orderBy: orderByClause,
     skip: offset,
     take: limit,
+    include: {
+      candidacy: true,
+    },
   });
 
   return {
-    rows: candidacies,
+    rows: candidacies.map(({ candidacy }) => candidacy),
     info: processPaginationInfo({
       totalRows,
       limit,
@@ -159,22 +173,40 @@ export const getCandidaciesForCertificationAuthority = async ({
 };
 
 const getOrderByClauseFromSortByFilter = (
-  sortByFilter: GetCandidaciesForCertificationAuthorityInput["sortByFilter"] = "DATE_CREATION_DESC",
+  sortByFilter: GetCandidaciesForCertificationAuthorityInput["sortByFilter"] = "DOSSIER_DE_FAISABILITE_ENVOYE_DESC",
 ):
-  | Prisma.CandidacyOrderByWithRelationInput
-  | Prisma.CandidacyOrderByWithRelationInput[]
+  | Prisma.CandidacyEnhancedOrderByWithRelationInput
+  | Prisma.CandidacyEnhancedOrderByWithRelationInput[]
   | undefined => {
   if (sortByFilter === "DATE_CREATION_DESC") {
-    return [{ createdAt: "desc" }];
+    return [{ candidacy: { createdAt: "desc" } }];
   }
   if (sortByFilter === "DATE_CREATION_ASC") {
-    return [{ createdAt: "asc" }];
+    return [{ candidacy: { createdAt: "asc" } }];
   }
   if (sortByFilter === "DATE_ENVOI_DESC") {
-    return [{ sentAt: "desc" }];
+    return [{ candidacy: { sentAt: "desc" } }];
   }
   if (sortByFilter === "DATE_ENVOI_ASC") {
-    return [{ sentAt: "asc" }];
+    return [{ candidacy: { sentAt: "asc" } }];
+  }
+  if (sortByFilter === "DOSSIER_DE_FAISABILITE_ENVOYE_DESC") {
+    return [{ feasibility: { feasibilityFileSentAt: "desc" } }];
+  }
+  if (sortByFilter === "DOSSIER_DE_FAISABILITE_ENVOYE_ASC") {
+    return [{ feasibility: { feasibilityFileSentAt: "asc" } }];
+  }
+  if (sortByFilter === "DOSSIER_DE_VALIDATION_ENVOYE_DESC") {
+    return [{ dossierDeValidation: { dossierDeValidationSentAt: "desc" } }];
+  }
+  if (sortByFilter === "DOSSIER_DE_VALIDATION_ENVOYE_ASC") {
+    return [{ dossierDeValidation: { dossierDeValidationSentAt: "asc" } }];
+  }
+  if (sortByFilter === "JURY_PROGRAMME_DESC") {
+    return [{ jury: { dateOfSession: "desc" } }];
+  }
+  if (sortByFilter === "JURY_PROGRAMME_ASC") {
+    return [{ jury: { dateOfSession: "asc" } }];
   }
 
   return undefined;
@@ -254,8 +286,8 @@ const resolveCertificationAuthorityInfo = async (
 };
 
 const addClause = (
-  clauses: Prisma.CandidacyWhereInput[],
-  clause?: Prisma.CandidacyWhereInput,
+  clauses: Prisma.CandidacyEnhancedWhereInput[],
+  clause?: Prisma.CandidacyEnhancedWhereInput,
 ) => {
   if (clause && Object.keys(clause).length > 0) {
     clauses.push(clause);
@@ -265,21 +297,11 @@ const addClause = (
 const buildFeasibilityFilter = (
   statuses: CandidacyStatusStep[] | undefined,
   certificationAuthorityId?: string,
-  certificationAuthorityLocalAccountId?: string,
-): Prisma.CandidacyWhereInput["Feasibility"] | undefined => {
-  const baseFilter: Prisma.FeasibilityWhereInput = certificationAuthorityId
-    ? { certificationAuthorityId }
-    : {};
+): Prisma.CandidacyEnhancedWhereInput["feasibility"] | undefined => {
+  const filters: Prisma.CandidacyEnhancedWhereInput["feasibility"] = {};
 
-  // For local accounts, also filter by the candidacy link
-  if (certificationAuthorityLocalAccountId) {
-    baseFilter.candidacy = {
-      certificationAuthorityLocalAccountOnCandidacy: {
-        some: {
-          certificationAuthorityLocalAccountId,
-        },
-      },
-    };
+  if (certificationAuthorityId) {
+    filters.certificationAuthorityId = certificationAuthorityId;
   }
 
   const decisions = (statuses ?? [])
@@ -287,81 +309,60 @@ const buildFeasibilityFilter = (
     .filter((decision): decision is FeasibilityStatus => Boolean(decision));
 
   if (decisions.length > 0) {
-    baseFilter.isActive = true;
-    baseFilter.decision = { in: decisions };
+    filters.decision = { in: decisions };
   }
 
-  return Object.keys(baseFilter).length > 0 ? { some: baseFilter } : undefined;
+  return Object.keys(filters).length > 0 ? filters : undefined;
 };
 
 const buildValidationFilter = (
   statuses: CandidacyStatusStep[] | undefined,
   certificationAuthorityId?: string,
-  certificationAuthorityLocalAccountId?: string,
-): Prisma.CandidacyWhereInput["dossierDeValidation"] | undefined => {
+): Prisma.CandidacyEnhancedWhereInput["dossierDeValidation"] | undefined => {
   if (!statuses || statuses.length === 0) {
     return undefined;
   }
 
-  const decisions = statuses
+  const filters: Prisma.CandidacyEnhancedWhereInput["dossierDeValidation"] = {};
+
+  if (certificationAuthorityId) {
+    filters.certificationAuthorityId = certificationAuthorityId;
+  }
+
+  const decisions = (statuses ?? [])
     .map((status) => VALIDATION_DECISION_BY_STATUS[status])
     .filter((decision): decision is DossierDeValidationStatus =>
       Boolean(decision),
     );
 
-  if (decisions.length === 0) {
-    return undefined;
+  if (decisions.length > 0) {
+    filters.decision = { in: decisions };
   }
 
-  const clause: Prisma.DossierDeValidationWhereInput = {
-    isActive: true,
-    decision: { in: decisions },
-  };
-
-  if (certificationAuthorityId) {
-    clause.certificationAuthorityId = certificationAuthorityId;
-  }
-
-  // For local accounts, also filter by the candidacy link
-  if (certificationAuthorityLocalAccountId) {
-    clause.candidacy = {
-      certificationAuthorityLocalAccountOnCandidacy: {
-        some: {
-          certificationAuthorityLocalAccountId,
-        },
-      },
-    };
-  }
-
-  return { some: clause };
+  return Object.keys(filters).length > 0 ? filters : undefined;
 };
 
 const buildJuryStatusClause = (
   juryStatuses: GetCandidaciesForCertificationAuthorityInput["juryStatuses"],
-): Prisma.CandidacyWhereInput | undefined => {
+): Prisma.CandidacyEnhancedWhereInput | undefined => {
   if (!juryStatuses || juryStatuses.length === 0) {
     return undefined;
   }
 
-  const clauses: Prisma.CandidacyWhereInput[] = [];
+  const clauses: Prisma.CandidacyEnhancedWhereInput[] = [];
 
   juryStatuses.forEach((juryStatus) => {
     if (juryStatus === "TO_SCHEDULE") {
       clauses.push({
-        status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
-        Jury: {
-          none: {
-            isActive: true,
-          },
+        candidacy: {
+          status: CandidacyStatusStep.DOSSIER_DE_VALIDATION_ENVOYE,
         },
+        jury: null,
       });
     } else if (juryStatus === "SCHEDULED") {
       clauses.push({
-        Jury: {
-          some: {
-            isActive: true,
-            dateOfSession: { gt: new Date() },
-          },
+        jury: {
+          dateOfSession: { gt: new Date() },
         },
       });
     }
@@ -372,7 +373,7 @@ const buildJuryStatusClause = (
 
 const buildJuryResultClause = (
   juryResults: GetCandidaciesForCertificationAuthorityInput["juryResults"],
-): Prisma.CandidacyWhereInput | undefined => {
+): Prisma.CandidacyEnhancedWhereInput | undefined => {
   if (!juryResults || juryResults.length === 0) {
     return undefined;
   }
@@ -384,27 +385,21 @@ const buildJuryResultClause = (
     (result) => (result as string) !== "AWAITING_RESULT",
   );
 
-  const clauses: Prisma.CandidacyWhereInput[] = [];
+  const clauses: Prisma.CandidacyEnhancedWhereInput[] = [];
 
   if (actualResults.length > 0) {
     clauses.push({
-      Jury: {
-        some: {
-          isActive: true,
-          result: { in: actualResults },
-        },
+      jury: {
+        result: { in: actualResults },
       },
     });
   }
 
   if (hasAwaitingResult) {
     clauses.push({
-      Jury: {
-        some: {
-          isActive: true,
-          dateOfSession: { lte: new Date() },
-          result: null,
-        },
+      jury: {
+        dateOfSession: { lte: new Date() },
+        result: null,
       },
     });
   }

@@ -268,11 +268,26 @@ model Candidacy {
   appointments                                  Appointment[]
   // indique si une candidature pouvant initialement bénéficier d'une demande de paiment a été bloquée parce que le délai de la convention uniformation est passé
   paymentRequestDeadlinePassed                  Boolean                                         @default(false) @map("payment_request_deadline_passed")
+  candidacyEnhanced                             CandidacyEnhanced?
 
   @@index([organismId])
   @@index([candidateId])
   @@index([certificationId])
   @@map("candidacy")
+}
+
+view CandidacyEnhanced {
+  candidacyId           String               @map("candidacy_id") @db.Uuid
+  candidacy             Candidacy            @relation(fields: [candidacyId], references: [id])
+  feasibilityId         String?              @map("feasibility_id") @db.Uuid
+  feasibility           Feasibility?         @relation(fields: [feasibilityId], references: [id])
+  dossierDeValidationId String?              @map("dossier_de_validation_id") @db.Uuid
+  dossierDeValidation   DossierDeValidation? @relation(fields: [dossierDeValidationId], references: [id])
+  juryId                String?              @map("jury_id") @db.Uuid
+  jury                  Jury?                @relation(fields: [juryId], references: [id])
+
+  @@unique([candidacyId])
+  @@map("candidacy_enhanced")
 }
 
 enum EndAccompagnementStatus {
@@ -1236,6 +1251,7 @@ model Feasibility {
   feasibilityUploadedPdf        FeasibilityUploadedPdf?
   dematerializedFeasibilityFile DematerializedFeasibilityFile?
   feasibilityDecisionHistory    FeasibilityDecision[]
+  candidacyEnhanceds            CandidacyEnhanced[]
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])
@@ -1293,6 +1309,7 @@ model DossierDeValidation {
   isActive                      Boolean                               @default(true) @map("is_active")
   createdAt                     DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                     DateTime?                             @updatedAt @map("updated_at") @db.Timestamptz(6)
+  candidacyEnhanceds            CandidacyEnhanced[]
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])
@@ -1331,6 +1348,7 @@ model Jury {
   updatedAt                                             DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
   reminderToCandidateWithScheduledJurySendAt            DateTime?              @map("reminder_to_candidate_with_scheduled_jury_send_at") @db.Timestamptz(6)
   reminderToCertificationAuthorityFillJuryResultsSentAt DateTime?              @map("reminder_to_certification_authority_fill_jury_results_sent_at") @db.Timestamptz(6)
+  candidacyEnhanceds                                    CandidacyEnhanced[]
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])

@@ -146,7 +146,7 @@ export const useAnnuaire = () => {
     "ACTIVE_HORS_ABANDON";
   const sortByFilter =
     (searchParams.get("sortBy") as CandidacySortByFilter) ||
-    "DATE_CREATION_DESC";
+    "DOSSIER_DE_FAISABILITE_ENVOYE_DESC";
   const currentPage = searchParams.get("page")
     ? parseInt(searchParams.get("page") as string)
     : 1;

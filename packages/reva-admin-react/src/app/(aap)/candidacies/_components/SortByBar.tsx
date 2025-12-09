@@ -3,7 +3,7 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 import { CandidacySortByFilter } from "@/graphql/generated/graphql";
 
-export const FilterBar = () => {
+export const SortByBar = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();

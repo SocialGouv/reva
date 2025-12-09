@@ -40,7 +40,11 @@ export const FiltersSection = ({
 }: FiltersSectionProps) => {
   return (
     <div className="flex w-[282px] shrink-0 flex-col gap-4">
-      <Accordion label="Dossier de faisabilité" className="bg-white">
+      <Accordion
+        label="Dossier de faisabilité"
+        className="bg-white"
+        defaultExpanded
+      >
         <Checkbox
           small
           className="mb-0"
@@ -101,7 +105,11 @@ export const FiltersSection = ({
         />
       </Accordion>
 
-      <Accordion label="Dossier de validation" className="bg-white">
+      <Accordion
+        label="Dossier de validation"
+        className="bg-white"
+        defaultExpanded
+      >
         <Checkbox
           small
           className="mb-0"
@@ -130,7 +138,11 @@ export const FiltersSection = ({
         />
       </Accordion>
 
-      <Accordion label="Passage devant le jury" className="bg-white">
+      <Accordion
+        label="Passage devant le jury"
+        className="bg-white"
+        defaultExpanded
+      >
         <Checkbox
           small
           className="mb-0"
@@ -153,7 +165,7 @@ export const FiltersSection = ({
         />
       </Accordion>
 
-      <Accordion label="Résultat de jury" className="bg-white">
+      <Accordion label="Résultat de jury" className="bg-white" defaultExpanded>
         <Checkbox
           small
           className="mb-0"
