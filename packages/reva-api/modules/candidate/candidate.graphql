@@ -25,6 +25,9 @@ type TrainingForm {
 }
 
 type Candidate {
+  """
+  Identifiant unique du candidat
+  """
   id: UUID!
   gender: Gender
   firstname: String!
