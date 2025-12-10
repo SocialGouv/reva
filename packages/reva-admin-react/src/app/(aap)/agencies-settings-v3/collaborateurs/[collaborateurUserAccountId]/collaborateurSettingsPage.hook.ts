@@ -33,7 +33,7 @@ export const useCollaborateurSettingsPage = ({
   const { graphqlClient } = useGraphQlClient();
 
   const { data: collaborateurSettingsResponse } = useQuery({
-    queryKey: ["collaborateurSettingsInfo"],
+    queryKey: [collaborateurUserAccountId, "collaborateurSettingsInfoV2"],
     queryFn: () =>
       graphqlClient.request(collaborateurSettingsInfoQuery, {
         accountId: collaborateurUserAccountId,
