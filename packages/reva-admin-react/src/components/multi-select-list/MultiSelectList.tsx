@@ -30,6 +30,7 @@ type MultiSelectListProps = {
   emptyStateTitle?: string;
   emptyStateDescription?: string;
   emptyStateShowAllItemsButtonLabel?: string;
+  additionalElementsInFilterSidebar?: React.ReactNode;
 };
 
 export const MultiSelectList = ({
@@ -43,6 +44,7 @@ export const MultiSelectList = ({
   emptyStateTitle,
   emptyStateDescription,
   emptyStateShowAllItemsButtonLabel,
+  additionalElementsInFilterSidebar,
 }: MultiSelectListProps) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -85,14 +87,16 @@ export const MultiSelectList = ({
         allowEmptySearch
       />
       <div className="flex flex-col md:flex-row gap-6">
-        <ToggleSwitch
-          className="mb-auto"
-          inputTitle={onlyShowAddedItemsSwitchLabel}
-          label={onlyShowAddedItemsSwitchLabel}
-          labelPosition="left"
-          onChange={(checked) => handleOnlyShowAddedItemsChange(checked)}
-          checked={onlyShowAddedItems}
-        />
+        <div className="flex flex-col gap-6 mb-auto">
+          <ToggleSwitch
+            inputTitle={onlyShowAddedItemsSwitchLabel}
+            label={onlyShowAddedItemsSwitchLabel}
+            labelPosition="left"
+            onChange={(checked) => handleOnlyShowAddedItemsChange(checked)}
+            checked={onlyShowAddedItems}
+          />
+          {additionalElementsInFilterSidebar}
+        </div>
         <div className="flex flex-col w-full gap-4 ">
           {pageItems.length > 0 ? (
             <>
