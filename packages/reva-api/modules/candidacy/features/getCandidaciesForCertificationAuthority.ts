@@ -214,16 +214,36 @@ const getOrderByClauseFromSortByFilter = (
     return [{ candidacy: { sentAt: "asc" } }];
   }
   if (sortByFilter === "DOSSIER_DE_FAISABILITE_ENVOYE_DESC") {
-    return [{ feasibility: { feasibilityFileSentAt: "desc" } }];
+    return [
+      {
+        feasibility: { feasibilityFileSentAt: { sort: "desc", nulls: "last" } },
+      },
+    ];
   }
   if (sortByFilter === "DOSSIER_DE_FAISABILITE_ENVOYE_ASC") {
-    return [{ feasibility: { feasibilityFileSentAt: "asc" } }];
+    return [
+      {
+        feasibility: { feasibilityFileSentAt: { sort: "asc", nulls: "last" } },
+      },
+    ];
   }
   if (sortByFilter === "DOSSIER_DE_VALIDATION_ENVOYE_DESC") {
-    return [{ dossierDeValidation: { dossierDeValidationSentAt: "desc" } }];
+    return [
+      {
+        dossierDeValidation: {
+          dossierDeValidationSentAt: { sort: "desc", nulls: "last" },
+        },
+      },
+    ];
   }
   if (sortByFilter === "DOSSIER_DE_VALIDATION_ENVOYE_ASC") {
-    return [{ dossierDeValidation: { dossierDeValidationSentAt: "asc" } }];
+    return [
+      {
+        dossierDeValidation: {
+          dossierDeValidationSentAt: { sort: "asc", nulls: "last" },
+        },
+      },
+    ];
   }
   if (sortByFilter === "JURY_PROGRAMME_DESC") {
     return [{ jury: { dateOfSession: "desc" } }];
