@@ -322,18 +322,6 @@ const createFeasibilities = async (certificationRncpId: string) => {
       },
     });
 
-    await createOrUpdateAttachments({
-      candidacyId: candidacy.id,
-      input: {
-        idCard: Promise.resolve({
-          filename: "document.pdf",
-          mimetype: "application/pdf",
-          createReadStream: () =>
-            createReadStream(path.join(process.cwd(), "scripts/document.pdf")),
-        }),
-      },
-    });
-
     const dematerializedFeasibilityFile =
       feasibility.dematerializedFeasibilityFile;
 
@@ -375,6 +363,19 @@ const createFeasibilities = async (certificationRncpId: string) => {
         },
       });
     }
+
+    // Create and upload ID file and PDF version of the feasibility file
+    await createOrUpdateAttachments({
+      candidacyId: candidacy.id,
+      input: {
+        idCard: Promise.resolve({
+          filename: "document.pdf",
+          mimetype: "application/pdf",
+          createReadStream: () =>
+            createReadStream(path.join(process.cwd(), "scripts/document.pdf")),
+        }),
+      },
+    });
 
     if (feasibilityStatus === "ADMISSIBLE") {
       console.log(
