@@ -108,6 +108,7 @@ const CertificationAuthorityCertificationsPage = () => {
               certificationAuthority?.certifications.some(
                 (cert) => cert.id === c.id,
               ) || false,
+            detailsPageUrl: `/certifications/${c.id}`,
           }))}
           onSelectionChange={handleCertificationSelectionChange}
           paginationInfo={{

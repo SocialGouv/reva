@@ -281,6 +281,23 @@ test.describe("Certification authority certifications page", () => {
 
         await queryPromise;
       });
+
+      test("it let me view the certification details page", async ({
+        page,
+      }) => {
+        await login({ role: "admin", page });
+        await page.goto(
+          "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/certifications/",
+        );
+        await waitForPageQueries(page);
+
+        await page
+          .getByTestId("multi-select-list-item-cert-1")
+          .getByRole("link", { name: "Voir la fiche" })
+          .click();
+
+        await expect(page).toHaveURL("/admin2/certifications/cert-1/");
+      });
     });
 
     test.describe("when there are no certifications", () => {
