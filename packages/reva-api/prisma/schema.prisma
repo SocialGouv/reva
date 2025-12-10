@@ -268,7 +268,7 @@ model Candidacy {
   appointments                                  Appointment[]
   // indique si une candidature pouvant initialement bénéficier d'une demande de paiment a été bloquée parce que le délai de la convention uniformation est passé
   paymentRequestDeadlinePassed                  Boolean                                         @default(false) @map("payment_request_deadline_passed")
-  candidacyEnhanced                             CandidacyEnhanced?
+  candidacyWithLastActiveDfDvJury               CandidacyWithLastActiveDfDvJury?
 
   @@index([organismId])
   @@index([candidateId])
@@ -276,7 +276,7 @@ model Candidacy {
   @@map("candidacy")
 }
 
-view CandidacyEnhanced {
+view CandidacyWithLastActiveDfDvJury {
   candidacyId           String               @map("candidacy_id") @db.Uuid
   candidacy             Candidacy            @relation(fields: [candidacyId], references: [id])
   feasibilityId         String?              @map("feasibility_id") @db.Uuid
@@ -287,7 +287,7 @@ view CandidacyEnhanced {
   jury                  Jury?                @relation(fields: [juryId], references: [id])
 
   @@unique([candidacyId])
-  @@map("candidacy_enhanced")
+  @@map("candidacy_with_last_active_df_dv_jury")
 }
 
 enum EndAccompagnementStatus {
@@ -1233,25 +1233,25 @@ enum FeasibilityStatus {
 }
 
 model Feasibility {
-  id                            String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                     Candidacy                      @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  candidacyId                   String                         @map("candidacy_id") @db.Uuid
-  certificationAuthority        CertificationAuthority?        @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId      String?                        @map("certification_authority_id") @db.Uuid
-  feasibilityFileSentAt         DateTime?                      @map("feasibility_file_sent_at") @db.Timestamptz(6)
-  decision                      FeasibilityStatus              @default(DRAFT)
-  decisionComment               String?                        @map("decision_comment")
-  decisionSentAt                DateTime?                      @map("decision_sent_at") @db.Timestamptz(6)
-  decisionFileId                String?                        @map("decision_file_id") @db.Uuid
-  decisionFile                  File?                          @relation("decision_file", fields: [decisionFileId], references: [id])
-  isActive                      Boolean                        @default(true) @map("is_active")
-  createdAt                     DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                     DateTime?                      @updatedAt @map("updated_at") @db.Timestamptz(6)
-  feasibilityFormat             FeasibilityFormat              @default(UPLOADED_PDF) @map("feasibility_format")
-  feasibilityUploadedPdf        FeasibilityUploadedPdf?
-  dematerializedFeasibilityFile DematerializedFeasibilityFile?
-  feasibilityDecisionHistory    FeasibilityDecision[]
-  candidacyEnhanceds            CandidacyEnhanced[]
+  id                               String                            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                        Candidacy                         @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId                      String                            @map("candidacy_id") @db.Uuid
+  certificationAuthority           CertificationAuthority?           @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId         String?                           @map("certification_authority_id") @db.Uuid
+  feasibilityFileSentAt            DateTime?                         @map("feasibility_file_sent_at") @db.Timestamptz(6)
+  decision                         FeasibilityStatus                 @default(DRAFT)
+  decisionComment                  String?                           @map("decision_comment")
+  decisionSentAt                   DateTime?                         @map("decision_sent_at") @db.Timestamptz(6)
+  decisionFileId                   String?                           @map("decision_file_id") @db.Uuid
+  decisionFile                     File?                             @relation("decision_file", fields: [decisionFileId], references: [id])
+  isActive                         Boolean                           @default(true) @map("is_active")
+  createdAt                        DateTime                          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                        DateTime?                         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  feasibilityFormat                FeasibilityFormat                 @default(UPLOADED_PDF) @map("feasibility_format")
+  feasibilityUploadedPdf           FeasibilityUploadedPdf?
+  dematerializedFeasibilityFile    DematerializedFeasibilityFile?
+  feasibilityDecisionHistory       FeasibilityDecision[]
+  candidacyWithLastActiveDfDvJurys CandidacyWithLastActiveDfDvJury[]
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])
@@ -1294,22 +1294,22 @@ enum DossierDeValidationStatus {
 }
 
 model DossierDeValidation {
-  id                            String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                     Candidacy                             @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  candidacyId                   String                                @map("candidacy_id") @db.Uuid
-  certificationAuthority        CertificationAuthority                @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId      String                                @map("certification_authority_id") @db.Uuid
-  dossierDeValidationFile       File                                  @relation("dossier_de_validation_file", fields: [dossierDeValidationFileId], references: [id])
-  dossierDeValidationFileId     String                                @unique @map("dossier_de_validation_file_id") @db.Uuid
-  dossierDeValidationOtherFiles DossierDeValidationOtherFilesOnFile[]
-  dossierDeValidationSentAt     DateTime?                             @map("dossier_de_validation_file_sent_at") @db.Timestamptz(6)
-  decision                      DossierDeValidationStatus             @default(PENDING)
-  decisionComment               String?                               @map("decision_comment")
-  decisionSentAt                DateTime?                             @map("decision_sent_at") @db.Timestamptz(6)
-  isActive                      Boolean                               @default(true) @map("is_active")
-  createdAt                     DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                     DateTime?                             @updatedAt @map("updated_at") @db.Timestamptz(6)
-  candidacyEnhanceds            CandidacyEnhanced[]
+  id                               String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                        Candidacy                             @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId                      String                                @map("candidacy_id") @db.Uuid
+  certificationAuthority           CertificationAuthority                @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId         String                                @map("certification_authority_id") @db.Uuid
+  dossierDeValidationFile          File                                  @relation("dossier_de_validation_file", fields: [dossierDeValidationFileId], references: [id])
+  dossierDeValidationFileId        String                                @unique @map("dossier_de_validation_file_id") @db.Uuid
+  dossierDeValidationOtherFiles    DossierDeValidationOtherFilesOnFile[]
+  dossierDeValidationSentAt        DateTime?                             @map("dossier_de_validation_file_sent_at") @db.Timestamptz(6)
+  decision                         DossierDeValidationStatus             @default(PENDING)
+  decisionComment                  String?                               @map("decision_comment")
+  decisionSentAt                   DateTime?                             @map("decision_sent_at") @db.Timestamptz(6)
+  isActive                         Boolean                               @default(true) @map("is_active")
+  createdAt                        DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                        DateTime?                             @updatedAt @map("updated_at") @db.Timestamptz(6)
+  candidacyWithLastActiveDfDvJurys CandidacyWithLastActiveDfDvJury[]
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])
@@ -1327,28 +1327,28 @@ model DossierDeValidationOtherFilesOnFile {
 }
 
 model Jury {
-  id                                                    String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                                             Candidacy              @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  candidacyId                                           String                 @map("candidacy_id") @db.Uuid
-  certificationAuthority                                CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId                              String                 @map("certification_authority_id") @db.Uuid
-  convocationFile                                       File?                  @relation("convocation_file", fields: [convocationFileId], references: [id])
-  convocationFileId                                     String?                @map("convocation_file_id") @db.Uuid
-  dateOfSession                                         DateTime               @map("date_of_session") @db.Timestamptz(6)
-  timeOfSession                                         String?                @map("time_of_session")
-  timeSpecified                                         Boolean                @default(false) @map("time_specified")
-  addressOfSession                                      String?                @map("address_of_session")
-  informationOfSession                                  String?                @map("information_of_session")
-  result                                                String?                @map("result")
-  dateOfResult                                          DateTime?              @map("date_of_result") @db.Timestamptz(6)
-  informationOfResult                                   String?                @map("information_of_result")
-  isResultTemporary                                     Boolean?               @map("is_result_temporary")
-  isActive                                              Boolean                @default(true) @map("is_active")
-  createdAt                                             DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                                             DateTime?              @updatedAt @map("updated_at") @db.Timestamptz(6)
-  reminderToCandidateWithScheduledJurySendAt            DateTime?              @map("reminder_to_candidate_with_scheduled_jury_send_at") @db.Timestamptz(6)
-  reminderToCertificationAuthorityFillJuryResultsSentAt DateTime?              @map("reminder_to_certification_authority_fill_jury_results_sent_at") @db.Timestamptz(6)
-  candidacyEnhanceds                                    CandidacyEnhanced[]
+  id                                                    String                            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                                             Candidacy                         @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId                                           String                            @map("candidacy_id") @db.Uuid
+  certificationAuthority                                CertificationAuthority            @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId                              String                            @map("certification_authority_id") @db.Uuid
+  convocationFile                                       File?                             @relation("convocation_file", fields: [convocationFileId], references: [id])
+  convocationFileId                                     String?                           @map("convocation_file_id") @db.Uuid
+  dateOfSession                                         DateTime                          @map("date_of_session") @db.Timestamptz(6)
+  timeOfSession                                         String?                           @map("time_of_session")
+  timeSpecified                                         Boolean                           @default(false) @map("time_specified")
+  addressOfSession                                      String?                           @map("address_of_session")
+  informationOfSession                                  String?                           @map("information_of_session")
+  result                                                String?                           @map("result")
+  dateOfResult                                          DateTime?                         @map("date_of_result") @db.Timestamptz(6)
+  informationOfResult                                   String?                           @map("information_of_result")
+  isResultTemporary                                     Boolean?                          @map("is_result_temporary")
+  isActive                                              Boolean                           @default(true) @map("is_active")
+  createdAt                                             DateTime                          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                             DateTime?                         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  reminderToCandidateWithScheduledJurySendAt            DateTime?                         @map("reminder_to_candidate_with_scheduled_jury_send_at") @db.Timestamptz(6)
+  reminderToCertificationAuthorityFillJuryResultsSentAt DateTime?                         @map("reminder_to_certification_authority_fill_jury_results_sent_at") @db.Timestamptz(6)
+  candidacyWithLastActiveDfDvJurys                      CandidacyWithLastActiveDfDvJury[]
 
   @@index([candidacyId, isActive])
   @@index([certificationAuthorityId, isActive])
