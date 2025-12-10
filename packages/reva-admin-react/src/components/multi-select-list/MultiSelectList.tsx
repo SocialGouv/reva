@@ -14,6 +14,7 @@ type MultiSelectItemProps = Pick<
 > & {
   id: string;
   selected: boolean;
+  detailsPageUrl?: string;
 };
 
 type MultiSelectListProps = {
@@ -102,45 +103,58 @@ export const MultiSelectList = ({
           {pageItems.length > 0 ? (
             <>
               <span className="text-xs text-dsfr-light-text-mention-grey">{`Résultat : ${pageItems.length} sur ${totalItems} ${itemTypeLabelForSearchResultsCount}`}</span>
-              {pageItems.map((item) => (
-                <Card
-                  data-testid={`multi-select-list-item-${item.id}`}
-                  key={item.id}
-                  size="small"
-                  {...item}
-                  endDetail={
-                    item.selected ? (
-                      <span className="flex gap-4">
-                        <Button disabled iconId="fr-icon-check-line">
-                          Ajoutée
-                        </Button>
-                        <Button
-                          priority="tertiary no outline"
-                          onClick={() =>
-                            onSelectionChange?.({
-                              itemId: item.id,
-                              selected: false,
-                            })
-                          }
-                        >
-                          Retirer
-                        </Button>
-                      </span>
-                    ) : (
-                      <Button
-                        onClick={() =>
-                          onSelectionChange?.({
-                            itemId: item.id,
-                            selected: true,
-                          })
-                        }
-                      >
-                        Ajouter
-                      </Button>
-                    )
-                  }
-                />
-              ))}
+              {pageItems.map((item) => {
+                const {
+                  detailsPageUrl,
+                  id: itemId,
+                  selected,
+                  ...cardProps
+                } = item;
+                return (
+                  <Card
+                    data-testid={`multi-select-list-item-${itemId}`}
+                    key={itemId}
+                    size="small"
+                    {...cardProps}
+                    endDetail={
+                      selected ? (
+                        <span className="flex gap-4">
+                          <AlreadyAddedItemButton />
+                          {detailsPageUrl && (
+                            <ViewDetailsButton
+                              detailsPageUrl={detailsPageUrl}
+                            />
+                          )}
+                          <RemoveItemButton
+                            onClick={() =>
+                              onSelectionChange?.({
+                                itemId,
+                                selected: false,
+                              })
+                            }
+                          />
+                        </span>
+                      ) : (
+                        <span className="flex gap-4">
+                          <AddItemButton
+                            onClick={() =>
+                              onSelectionChange?.({
+                                itemId,
+                                selected: true,
+                              })
+                            }
+                          />
+                          {item.detailsPageUrl && (
+                            <ViewDetailsButton
+                              detailsPageUrl={item.detailsPageUrl}
+                            />
+                          )}
+                        </span>
+                      )
+                    }
+                  />
+                );
+              })}
             </>
           ) : (
             <MultiSelectListEmptyState
@@ -160,5 +174,37 @@ export const MultiSelectList = ({
         </div>
       </div>
     </div>
+  );
+};
+
+const ViewDetailsButton = ({ detailsPageUrl }: { detailsPageUrl: string }) => {
+  return (
+    <Button priority="secondary" linkProps={{ href: detailsPageUrl }}>
+      Voir la fiche
+    </Button>
+  );
+};
+
+const AddItemButton = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <Button priority="primary" onClick={onClick}>
+      Ajouter
+    </Button>
+  );
+};
+
+const AlreadyAddedItemButton = () => {
+  return (
+    <Button disabled iconId="fr-icon-check-line">
+      Ajoutée
+    </Button>
+  );
+};
+
+const RemoveItemButton = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <Button priority="tertiary no outline" onClick={onClick}>
+      Retirer
+    </Button>
   );
 };
