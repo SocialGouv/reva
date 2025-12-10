@@ -165,6 +165,14 @@ export const getCandidaciesForCertificationAuthority = async ({
   // Jury result filter
   addClause(andClauses, buildJuryResultClause(juryResults));
 
+  if (
+    (sortByFilter === "JURY_PROGRAMME_DESC" ||
+      sortByFilter === "JURY_PROGRAMME_ASC") &&
+    !juryStatuses?.includes("TO_SCHEDULE")
+  ) {
+    andClauses.push({ jury: { isNot: null } });
+  }
+
   const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =
     andClauses.length === 1 ? andClauses[0] : { AND: andClauses };
 
