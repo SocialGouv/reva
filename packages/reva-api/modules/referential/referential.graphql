@@ -314,6 +314,7 @@ type Query {
     status: CertificationStatus
     visible: Boolean
     certificationAuthorityIdFilter: ID # If provided, only certifications managed by the collaborateur authority will be returned
+    certificationAuthorityStructureIdFilter: ID # If provided, only certifications managed by the certification authority structure will be returned
   ): CertificationPage!
   searchCertificationsV2ForRegistryManager(
     offset: Int

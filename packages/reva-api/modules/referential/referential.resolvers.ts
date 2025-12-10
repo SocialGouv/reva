@@ -161,6 +161,7 @@ const unsafeReferentialResolvers = {
         searchText?: string;
         candidacyId?: string;
         certificationAuthorityIdFilter?: string;
+        certificationAuthorityStructureIdFilter?: string;
       },
     ) => searchCertificationsForCandidate(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>
@@ -171,6 +172,8 @@ const unsafeReferentialResolvers = {
         status: payload.status,
         visible: payload.visible,
         certificationAuthorityIdFilter: payload.certificationAuthorityIdFilter,
+        certificationAuthorityStructureIdFilter:
+          payload.certificationAuthorityStructureIdFilter,
       }),
     searchCertificationsV2ForRegistryManager: (
       _: any,
