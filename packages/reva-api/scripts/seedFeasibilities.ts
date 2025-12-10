@@ -57,7 +57,9 @@ const CERTIFICATION_RNCP_IDS = [
 const CERTIFICATION_AUTHORITY_ID = "4270391e-1beb-4366-87fd-76c6b23a47df";
 const COUNTRY_ID = "4a92a738-d112-413b-aa9a-5bc9c3cf2dc9";
 const BIRTH_DEPARTMENT_ID = "80748231-b32f-40cc-a2d1-ffa0157688b7";
-const HIGHEST_DEGREE_ID = "0151eb9a-7368-441e-9a92-484f20b67caa";
+const HIGHEST_DEGREE_ID = "60417556-0424-4683-9d16-70fa75d7a26d";
+const NIVEAU_DE_FORMATION_LE_PLUS_ELEVE_DEGREE_ID =
+  "e93d52ce-dba2-4c3e-8354-5ba504e9f5e5";
 const NATIONALITY = "France";
 const NUMBER_OF_FEASIBILITIES_TO_CREATE = 50;
 
@@ -224,6 +226,8 @@ const createFeasibilities = async (certificationRncpId: string) => {
         countryId: COUNTRY_ID,
         birthDepartmentId: BIRTH_DEPARTMENT_ID,
         highestDegreeId: HIGHEST_DEGREE_ID,
+        niveauDeFormationLePlusEleveDegreeId:
+          NIVEAU_DE_FORMATION_LE_PLUS_ELEVE_DEGREE_ID,
       },
     });
 
