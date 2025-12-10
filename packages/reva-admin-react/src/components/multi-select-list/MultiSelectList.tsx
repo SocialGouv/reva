@@ -32,6 +32,11 @@ type MultiSelectListProps = {
   emptyStateDescription?: string;
   emptyStateShowAllItemsButtonLabel?: string;
   additionalElementsInFilterSidebar?: React.ReactNode;
+  onEmptyStateShowAllItemsButtonClick?: ({
+    currentQueryParams,
+  }: {
+    currentQueryParams: URLSearchParams;
+  }) => void;
 };
 
 export const MultiSelectList = ({
@@ -46,6 +51,7 @@ export const MultiSelectList = ({
   emptyStateDescription,
   emptyStateShowAllItemsButtonLabel,
   additionalElementsInFilterSidebar,
+  onEmptyStateShowAllItemsButtonClick,
 }: MultiSelectListProps) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -77,6 +83,7 @@ export const MultiSelectList = ({
     queryParams.delete("onlyShowAddedItems");
     queryParams.set("page", "1");
     router.push(`${pathname}?${queryParams.toString()}`);
+    onEmptyStateShowAllItemsButtonClick?.({ currentQueryParams: queryParams });
   };
 
   return (
