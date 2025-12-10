@@ -237,6 +237,29 @@ test.describe("Certification authority certifications page", () => {
         await queryPromise;
       });
 
+      test("it let me toggle the show all France VAE certifications switch", async ({
+        page,
+      }) => {
+        await login({ role: "admin", page });
+        await page.goto(
+          "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/certifications/",
+        );
+        await waitForPageQueries(page);
+
+        const queryPromise = waitGraphQL(
+          page,
+          "getCertificationAuthorityForAdminCertificationsPage",
+        );
+
+        await page
+          .getByRole("checkbox", {
+            name: "Afficher toutes les certifications France VAE",
+          })
+          .click();
+
+        await queryPromise;
+      });
+
       test("it let me search for a certification", async ({ page }) => {
         await login({ role: "admin", page });
         await page.goto(

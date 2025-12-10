@@ -1,6 +1,7 @@
 "use client";
 
-import { useParams, useSearchParams } from "next/navigation";
+import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
 import { graphqlErrorToast } from "@/components/toast/toast";
@@ -16,22 +17,37 @@ const CertificationAuthorityCertificationsPage = () => {
       certificationAuthorityId: string;
     }>();
 
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
   const onlyShowAddedItems = searchParams.get("onlyShowAddedItems") === "true";
   const searchFilter = searchParams.get("searchFilter");
+  const showAllCertifications =
+    searchParams.get("showAllCertifications") === "true";
 
   const {
     certificationAuthority,
     certificationPage,
     updateCertificationAuthorityCertifications,
   } = useCertificationsPage({
+    certificationAuthorityStructureId,
     certificationAuthorityId,
     page: currentPage,
     onlyShowAddedCertifications: onlyShowAddedItems,
+    showAllCertifications,
     searchFilter,
   });
+
+  const handleShowAllCertificationsToggleChange = (checked: boolean) => {
+    const queryParams = new URLSearchParams(searchParams);
+    queryParams.set("showAllCertifications", checked ? "true" : "false");
+    queryParams.set("page", "1");
+    router.push(
+      `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/certifications?${queryParams.toString()}`,
+    );
+  };
 
   const handleCertificationSelectionChange = async ({
     itemId,
@@ -103,6 +119,18 @@ const CertificationAuthorityCertificationsPage = () => {
           searchBarLabel="Rechercher par code RNCP, intitulé de certification etc..."
           emptyStateTitle="Aucune certification trouvée"
           emptyStateShowAllItemsButtonLabel="Afficher toutes les certifications"
+          additionalElementsInFilterSidebar={
+            <ToggleSwitch
+              className="fr-toggle--border-bottom"
+              inputTitle="Afficher toutes les certifications France VAE"
+              label="Afficher toutes les certifications France VAE"
+              labelPosition="left"
+              onChange={(checked) =>
+                handleShowAllCertificationsToggleChange(checked)
+              }
+              checked={showAllCertifications}
+            />
+          }
         />
       </div>
     </div>

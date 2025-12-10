@@ -10,13 +10,16 @@ import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityAndCertificationsQuery = graphql(`
   query getCertificationAuthorityForAdminCertificationsPage(
-    $id: ID!
+    $certificationAuthorityId: ID!
     $certificationsOffset: Int!
     $certificationsLimit: Int!
     $certificationsSearchFilter: String
     $certificationAuthorityIdFilter: ID
+    $certificationAuthorityStructureIdFilter: ID
   ) {
-    certification_authority_getCertificationAuthority(id: $id) {
+    certification_authority_getCertificationAuthority(
+      id: $certificationAuthorityId
+    ) {
       id
       label
       certificationAuthorityStructures {
@@ -34,6 +37,7 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
       offset: $certificationsOffset
       searchText: $certificationsSearchFilter
       certificationAuthorityIdFilter: $certificationAuthorityIdFilter
+      certificationAuthorityStructureIdFilter: $certificationAuthorityStructureIdFilter
     ) {
       rows {
         id
@@ -63,15 +67,19 @@ const updateCertificationAuthorityCertificationsMutation = graphql(`
 `);
 
 export const useCertificationsPage = ({
+  certificationAuthorityStructureId,
   certificationAuthorityId,
   page,
   onlyShowAddedCertifications,
   searchFilter,
+  showAllCertifications,
 }: {
+  certificationAuthorityStructureId: string;
   certificationAuthorityId: string;
   page: number;
   onlyShowAddedCertifications: boolean;
   searchFilter?: string | null;
+  showAllCertifications?: boolean;
 }) => {
   const RECORDS_PER_PAGE = 10;
   const certificationsOffset = (page - 1) * RECORDS_PER_PAGE;
@@ -83,20 +91,25 @@ export const useCertificationsPage = ({
     useSuspenseQuery({
       queryKey: [
         certificationAuthorityId,
-        "getCertificationAuthorityWithCertifications",
+        certificationAuthorityStructureId,
         page,
         onlyShowAddedCertifications,
+        showAllCertifications,
         searchFilter,
+        "getCertificationAuthorityWithCertifications",
       ],
       queryFn: () =>
         graphqlClient.request(getCertificationAuthorityAndCertificationsQuery, {
-          id: certificationAuthorityId,
+          certificationAuthorityId,
           certificationsOffset,
           certificationsLimit: RECORDS_PER_PAGE,
           certificationsSearchFilter: searchFilter,
           certificationAuthorityIdFilter: onlyShowAddedCertifications
             ? certificationAuthorityId
             : undefined,
+          certificationAuthorityStructureIdFilter: showAllCertifications
+            ? undefined
+            : certificationAuthorityStructureId,
         }),
     });
 
