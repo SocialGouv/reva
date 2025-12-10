@@ -78,8 +78,10 @@ const CertificationAuthorityCertificationsPage = () => {
         />
         <h1>Certifications gérées</h1>
         <p className="text-xl">
-          Cochez les certifications proposées par la structure certificatrice.
-          Vous pouvez choisir une ou plusieurs certifications.
+          Ajouter toutes les certifications gérées depuis les certifications
+          attribuées à la structure certificatrice. Vous pouvez ajouter une
+          certification en dehors de la structure en utilisant l’option
+          “afficher les certifications non gérées par la structure”.
         </p>
         <MultiSelectList
           pageItems={certificationPage?.rows.map((c) => ({
