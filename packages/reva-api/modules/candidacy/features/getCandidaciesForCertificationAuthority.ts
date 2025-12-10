@@ -78,7 +78,7 @@ export const getCandidaciesForCertificationAuthority = async ({
     };
   }
 
-  const andClauses: Prisma.CandidacyEnhancedWhereInput[] = [
+  const andClauses: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] = [
     { candidacy: { status: { in: CANDIDACY_STATUS_TO_INCLUDE } } },
   ];
 
@@ -165,24 +165,25 @@ export const getCandidaciesForCertificationAuthority = async ({
   // Jury result filter
   addClause(andClauses, buildJuryResultClause(juryResults));
 
-  const whereClause: Prisma.CandidacyEnhancedWhereInput =
+  const whereClause: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput =
     andClauses.length === 1 ? andClauses[0] : { AND: andClauses };
 
-  const totalRows = await prismaClient.candidacyEnhanced.count({
+  const totalRows = await prismaClient.candidacyWithLastActiveDfDvJury.count({
     where: whereClause,
   });
 
   const orderByClause = getOrderByClauseFromSortByFilter(sortByFilter);
 
-  const candidacies = await prismaClient.candidacyEnhanced.findMany({
-    where: whereClause,
-    orderBy: orderByClause,
-    skip: offset,
-    take: limit,
-    include: {
-      candidacy: true,
-    },
-  });
+  const candidacies =
+    await prismaClient.candidacyWithLastActiveDfDvJury.findMany({
+      where: whereClause,
+      orderBy: orderByClause,
+      skip: offset,
+      take: limit,
+      include: {
+        candidacy: true,
+      },
+    });
 
   return {
     rows: candidacies.map(({ candidacy }) => candidacy),
@@ -197,8 +198,8 @@ export const getCandidaciesForCertificationAuthority = async ({
 const getOrderByClauseFromSortByFilter = (
   sortByFilter: GetCandidaciesForCertificationAuthorityInput["sortByFilter"] = "DOSSIER_DE_FAISABILITE_ENVOYE_DESC",
 ):
-  | Prisma.CandidacyEnhancedOrderByWithRelationInput
-  | Prisma.CandidacyEnhancedOrderByWithRelationInput[]
+  | Prisma.CandidacyWithLastActiveDfDvJuryOrderByWithRelationInput
+  | Prisma.CandidacyWithLastActiveDfDvJuryOrderByWithRelationInput[]
   | undefined => {
   if (sortByFilter === "DATE_CREATION_DESC") {
     return [{ candidacy: { createdAt: "desc" } }];
@@ -308,8 +309,8 @@ const resolveCertificationAuthorityInfo = async (
 };
 
 const addClause = (
-  clauses: Prisma.CandidacyEnhancedWhereInput[],
-  clause?: Prisma.CandidacyEnhancedWhereInput,
+  clauses: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[],
+  clause?: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput,
 ) => {
   if (clause && Object.keys(clause).length > 0) {
     clauses.push(clause);
@@ -318,8 +319,11 @@ const addClause = (
 
 const buildFeasibilityFilter = (
   statuses: CandidacyStatusStep[] | undefined,
-): Prisma.CandidacyEnhancedWhereInput["feasibility"] | undefined => {
-  const filters: Prisma.CandidacyEnhancedWhereInput["feasibility"] = {};
+):
+  | Prisma.CandidacyWithLastActiveDfDvJuryWhereInput["feasibility"]
+  | undefined => {
+  const filters: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput["feasibility"] =
+    {};
 
   const decisions = (statuses ?? [])
     .map((status) => FEASIBILITY_DECISION_BY_STATUS[status])
@@ -334,7 +338,9 @@ const buildFeasibilityFilter = (
 
 const buildValidationFilter = (
   statuses: CandidacyStatusStep[] | undefined,
-): Prisma.CandidacyEnhancedWhereInput["dossierDeValidation"] | undefined => {
+):
+  | Prisma.CandidacyWithLastActiveDfDvJuryWhereInput["dossierDeValidation"]
+  | undefined => {
   if (
     !statuses ||
     statuses.length === 0 ||
@@ -344,7 +350,8 @@ const buildValidationFilter = (
     return undefined;
   }
 
-  const filters: Prisma.CandidacyEnhancedWhereInput["dossierDeValidation"] = {};
+  const filters: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput["dossierDeValidation"] =
+    {};
 
   const decisions = (statuses ?? [])
     .map((status) => VALIDATION_DECISION_BY_STATUS[status])
@@ -361,12 +368,12 @@ const buildValidationFilter = (
 
 const buildJuryStatusClause = (
   juryStatuses: GetCandidaciesForCertificationAuthorityInput["juryStatuses"],
-): Prisma.CandidacyEnhancedWhereInput | undefined => {
+): Prisma.CandidacyWithLastActiveDfDvJuryWhereInput | undefined => {
   if (!juryStatuses || juryStatuses.length === 0) {
     return undefined;
   }
 
-  const clauses: Prisma.CandidacyEnhancedWhereInput[] = [];
+  const clauses: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] = [];
 
   juryStatuses.forEach((juryStatus) => {
     if (juryStatus === "TO_SCHEDULE") {
@@ -390,7 +397,7 @@ const buildJuryStatusClause = (
 
 const buildJuryResultClause = (
   juryResults: GetCandidaciesForCertificationAuthorityInput["juryResults"],
-): Prisma.CandidacyEnhancedWhereInput | undefined => {
+): Prisma.CandidacyWithLastActiveDfDvJuryWhereInput | undefined => {
   if (!juryResults || juryResults.length === 0) {
     return undefined;
   }
@@ -402,7 +409,7 @@ const buildJuryResultClause = (
     (result) => (result as string) !== "AWAITING_RESULT",
   );
 
-  const clauses: Prisma.CandidacyEnhancedWhereInput[] = [];
+  const clauses: Prisma.CandidacyWithLastActiveDfDvJuryWhereInput[] = [];
 
   if (actualResults.length > 0) {
     clauses.push({
