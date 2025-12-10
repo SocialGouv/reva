@@ -3,28 +3,42 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityStructureAndCertificationsQuery = graphql(`
-  query getCertificationAuthorityStructureForAdminCertificationsPage($id: ID!) {
-    certification_authority_getCertificationAuthorityStructure(id: $id) {
+  query getCertificationAuthorityStructureForAdminCertificationsPage(
+    $certificationAuthorityStructureId: ID!
+    $certificationsLimit: Int!
+    $certificationsOffset: Int!
+    $certificationsSearchFilter: String
+    $certificationAuthorityStructureIdFilter: ID
+  ) {
+    certification_authority_getCertificationAuthorityStructure(
+      id: $certificationAuthorityStructureId
+    ) {
       id
       label
       certifications {
         id
-        codeRncp
-        label
       }
     }
-    searchCertificationsForAdmin(limit: 500, offset: 0) {
+    searchCertificationsForAdmin(
+      limit: $certificationsLimit
+      offset: $certificationsOffset
+      searchText: $certificationsSearchFilter
+      certificationAuthorityStructureIdFilter: $certificationAuthorityStructureIdFilter
+    ) {
       rows {
         id
         codeRncp
         label
+      }
+      info {
+        totalRows
+        totalPages
       }
     }
   }
@@ -46,9 +60,18 @@ const updateCertificationAuthorityStructureCertificationsMutation = graphql(`
 
 export const useCertificationsPage = ({
   certificationAuthorityStructureId,
+  page,
+  onlyShowAddedCertifications,
+  searchFilter,
 }: {
   certificationAuthorityStructureId: string;
+  page: number;
+  onlyShowAddedCertifications: boolean;
+  searchFilter?: string | null;
 }) => {
+  const RECORDS_PER_PAGE = 10;
+  const certificationsOffset = (page - 1) * RECORDS_PER_PAGE;
+
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
 
@@ -56,13 +79,22 @@ export const useCertificationsPage = ({
     useSuspenseQuery({
       queryKey: [
         certificationAuthorityStructureId,
+        page,
+        onlyShowAddedCertifications,
+        searchFilter,
         "getCertificationAuthorityStructureWithCertifications",
       ],
       queryFn: () =>
         graphqlClient.request(
           getCertificationAuthorityStructureAndCertificationsQuery,
           {
-            id: certificationAuthorityStructureId,
+            certificationAuthorityStructureId,
+            certificationsOffset,
+            certificationsLimit: RECORDS_PER_PAGE,
+            certificationsSearchFilter: searchFilter,
+            certificationAuthorityStructureIdFilter: onlyShowAddedCertifications
+              ? certificationAuthorityStructureId
+              : undefined,
           },
         ),
     });
@@ -91,28 +123,12 @@ export const useCertificationsPage = ({
   const certificationAuthorityStructure =
     getCertificationAuthorityStructureAndCertificationsResponse?.certification_authority_getCertificationAuthorityStructure;
 
-  const certifications = useMemo(
-    () =>
-      getCertificationAuthorityStructureAndCertificationsResponse?.searchCertificationsForAdmin?.rows
-        .map((c) => ({
-          id: c.id,
-          label: `${c.codeRncp} - ${c.label}`,
-          selected:
-            certificationAuthorityStructure?.certifications.some(
-              (cert) => cert.id === c.id,
-            ) || false,
-        }))
-        .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)),
-    [
-      certificationAuthorityStructure?.certifications,
-      getCertificationAuthorityStructureAndCertificationsResponse
-        ?.searchCertificationsForAdmin?.rows,
-    ],
-  );
+  const certificationPage =
+    getCertificationAuthorityStructureAndCertificationsResponse?.searchCertificationsForAdmin;
 
   return {
     certificationAuthorityStructure,
-    certifications,
+    certificationPage,
     updateCertificationAuthorityStructureCertifications,
   };
 };
