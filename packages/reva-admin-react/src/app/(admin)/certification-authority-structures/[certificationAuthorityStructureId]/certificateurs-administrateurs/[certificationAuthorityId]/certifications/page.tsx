@@ -49,6 +49,17 @@ const CertificationAuthorityCertificationsPage = () => {
     );
   };
 
+  const handleEmptyStateShowAllItemsButtonClick = ({
+    currentQueryParams,
+  }: {
+    currentQueryParams: URLSearchParams;
+  }) => {
+    currentQueryParams.delete("showAllCertifications");
+    router.push(
+      `/certification-authority-structures/${certificationAuthorityStructureId}/certificateurs-administrateurs/${certificationAuthorityId}/certifications?${currentQueryParams.toString()}`,
+    );
+  };
+
   const handleCertificationSelectionChange = async ({
     itemId,
     selected,
@@ -131,6 +142,9 @@ const CertificationAuthorityCertificationsPage = () => {
               }
               checked={showAllCertifications}
             />
+          }
+          onEmptyStateShowAllItemsButtonClick={
+            handleEmptyStateShowAllItemsButtonClick
           }
         />
       </div>
