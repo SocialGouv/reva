@@ -87,13 +87,14 @@ export const MultiSelectList = ({
         allowEmptySearch
       />
       <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex flex-col gap-6 mb-auto">
+        <div className="flex flex-col gap-4 mb-auto">
           <ToggleSwitch
             inputTitle={onlyShowAddedItemsSwitchLabel}
             label={onlyShowAddedItemsSwitchLabel}
             labelPosition="left"
             onChange={(checked) => handleOnlyShowAddedItemsChange(checked)}
             checked={onlyShowAddedItems}
+            className="fr-toggle--border-bottom"
           />
           {additionalElementsInFilterSidebar}
         </div>
