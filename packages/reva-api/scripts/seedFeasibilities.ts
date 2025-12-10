@@ -17,6 +17,7 @@ import dotenv from "dotenv";
 
 import { sendDossierDeValidation } from "@/modules/dossier-de-validation/features/sendDossierDeValidation";
 import { createOrUpdateAttachments } from "@/modules/feasibility/dematerialized-feasibility-file/features/createOrUpdateAttachments";
+import { addCertification } from "@/modules/referential/features/addCertification";
 
 import { prismaClient } from "../prisma/client";
 
@@ -65,12 +66,23 @@ const dossierDeValidationFile = readFileSync(
 );
 
 const createFeasibilities = async (certificationRncpId: string) => {
+  // Verify certification authority exists
+  const certificationAuthority =
+    await prismaClient.certificationAuthority.findUnique({
+      where: { id: CERTIFICATION_AUTHORITY_ID },
+    });
+
+  if (!certificationAuthority) {
+    throw new Error(
+      `Certification authority with id ${CERTIFICATION_AUTHORITY_ID} not found`,
+    );
+  }
   console.log(
-    `Starting feasibility seeding for certification ${certificationRncpId}...`,
+    `Starting feasibility seeding for certification ${certificationRncpId} and certification authority ${certificationAuthority.label}...`,
   );
 
   // Find the certification
-  const certification = await prismaClient.certification.findUnique({
+  let certification = await prismaClient.certification.findUnique({
     where: { rncpId: certificationRncpId },
     include: {
       competenceBlocs: {
@@ -83,20 +95,32 @@ const createFeasibilities = async (certificationRncpId: string) => {
   });
 
   if (!certification) {
-    throw new Error(
-      `Certification with rncp_id ${certificationRncpId} not found`,
+    console.warn(
+      `⚠️ Certification with rncp_id ${certificationRncpId} not found, attempting to retrieve it from France compétences and save it...`,
     );
-  }
-
-  // Verify certification authority exists
-  const certificationAuthority =
-    await prismaClient.certificationAuthority.findUnique({
-      where: { id: CERTIFICATION_AUTHORITY_ID },
+    await addCertification({ codeRncp: certificationRncpId });
+    certification = await prismaClient.certification.update({
+      data: {
+        status: "VALIDE_PAR_CERTIFICATEUR",
+        visible: true,
+      },
+      where: { rncpId: certificationRncpId },
+      include: {
+        competenceBlocs: {
+          include: {
+            competences: true,
+          },
+        },
+        prerequisites: true,
+      },
     });
-
-  if (!certificationAuthority) {
-    throw new Error(
-      `Certification authority with id ${CERTIFICATION_AUTHORITY_ID} not found`,
+    if (!certification) {
+      throw new Error(
+        `Certification with rncp_id ${certificationRncpId} not found after retrieval from France compétences`,
+      );
+    }
+    console.log(
+      `📜 Certification with rncp_id ${certificationRncpId} added from France compétences`,
     );
   }
 
@@ -367,12 +391,12 @@ const createFeasibilities = async (certificationRncpId: string) => {
     }
 
     console.log(
-      `Created feasibility ${i + 1}/${NUMBER_OF_FEASIBILITIES_TO_CREATE} with status ${feasibilityStatus}. Candidacy id : ${candidacy.id}. RNCP id : ${certificationRncpId}`,
+      `✅ Created feasibility ${i + 1}/${NUMBER_OF_FEASIBILITIES_TO_CREATE} with status ${feasibilityStatus}. Candidacy id : ${candidacy.id}. RNCP id : ${certificationRncpId}`,
     );
   }
 
   console.log(
-    `Feasibility seeding completed successfully for certification ${certificationRncpId}!`,
+    `✅ Feasibility seeding completed successfully for certification ${certificationRncpId} and certification authority ${certificationAuthority.label}!`,
   );
 };
 
@@ -382,7 +406,7 @@ const main = async () => {
       await createFeasibilities(certificationRncpId);
     } catch (error) {
       console.error(
-        `Error seeding feasibilities for certification ${certificationRncpId}:`,
+        `❌ Error seeding feasibilities for certification ${certificationRncpId}:`,
         error,
       );
     }
@@ -391,7 +415,7 @@ const main = async () => {
 
 main()
   .catch((error) => {
-    console.error("Error seeding feasibilities:", error);
+    console.error("❌ Error seeding feasibilities:", error);
     process.exit(1);
   })
   .finally(async () => {
