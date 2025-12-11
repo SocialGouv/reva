@@ -88,6 +88,14 @@ type Candidacy {
   sentAt: Timestamp
   endAccompagnementDate: Timestamp
   endAccompagnementStatus: EndAccompagnementStatus
+  candidateInfo: CandidacyCandidateInfo
+}
+
+type CandidacyCandidateInfo {
+  street: String
+  city: String
+  zip: String
+  addressComplement: String
 }
 
 enum ActiviteStatut {

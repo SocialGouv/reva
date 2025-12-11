@@ -133,7 +133,15 @@ export function DffSummary({
           prerequisites={prerequisites as Prerequisite[]}
           isCertificationPartial={candidacy?.isCertificationPartial}
         />
-        <CandidateSection candidate={candidacy?.candidate as Candidate} />
+        <CandidateSection
+          candidate={{
+            ...(candidacy?.candidate as Candidate),
+            street: candidacy?.candidateInfo?.street,
+            zip: candidacy?.candidateInfo?.zip,
+            city: candidacy?.candidateInfo?.city,
+            addressComplement: candidacy?.candidateInfo?.addressComplement,
+          }}
+        />
         <GoalsSection goals={goals} />
         <ExperiencesSection
           experiences={experiences}

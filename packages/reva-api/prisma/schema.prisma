@@ -269,11 +269,25 @@ model Candidacy {
   // indique si une candidature pouvant initialement bénéficier d'une demande de paiment a été bloquée parce que le délai de la convention uniformation est passé
   paymentRequestDeadlinePassed                  Boolean                                         @default(false) @map("payment_request_deadline_passed")
   candidacyWithLastActiveDfDvJury               CandidacyWithLastActiveDfDvJury?
+  candidacyCandidateInfo                        CandidacyCandidateInfo?
 
   @@index([organismId])
   @@index([candidateId])
   @@index([certificationId])
   @@map("candidacy")
+}
+
+model CandidacyCandidateInfo {
+  id                String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacyId       String    @map("candidacy_id") @db.Uuid
+  candidacy         Candidacy @relation(fields: [candidacyId], references: [id])
+  street            String?   @map("street") @db.VarChar(255)
+  city              String?   @map("city") @db.VarChar(255)
+  zip               String?   @map("zip") @db.VarChar(5)
+  addressComplement String?   @map("address_complement") @db.VarChar(255)
+
+  @@unique([candidacyId])
+  @@map("candidacy_candidate_info")
 }
 
 view CandidacyWithLastActiveDfDvJury {

@@ -132,14 +132,34 @@ export const updateCandidate = async ({
     ),
   );
 
-  const updatedCandidate = await prismaClient.candidate.update({
-    where: { id },
-    data: {
-      ...candidateInput,
-      birthDepartmentId:
-        countrySelected.label == "France" ? birthDepartmentId : undefined,
-    },
-  });
+  const candidaciesWithoutFeasibility = candidacies.filter(
+    (c) => !c.Feasibility?.[0] || !c.Feasibility?.[0]?.feasibilityFileSentAt,
+  );
+
+  const [updatedCandidate] = await prismaClient.$transaction([
+    prismaClient.candidate.update({
+      where: { id },
+      data: {
+        ...candidateInput,
+        birthDepartmentId:
+          countrySelected.label == "France" ? birthDepartmentId : undefined,
+      },
+    }),
+    prismaClient.candidacyCandidateInfo.deleteMany({
+      where: {
+        candidacyId: { in: candidaciesWithoutFeasibility.map((c) => c.id) },
+      },
+    }),
+    prismaClient.candidacyCandidateInfo.createMany({
+      data: candidaciesWithoutFeasibility.map((c) => ({
+        candidacyId: c.id,
+        street: candidateInput.street,
+        city: candidateInput.city,
+        zip: candidateInput.zip,
+        addressComplement: candidateInput.addressComplement,
+      })),
+    }),
+  ]);
 
   await Promise.all(
     // On régénère le pdf du dossier de faisabilité de toutes les candidatures pour lesquelles le DF n'a pas été envoyé

@@ -136,6 +136,12 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           description
         }
         certificateSkills
+        candidateInfo {
+          street
+          city
+          zip
+          addressComplement
+        }
         candidate {
           highestDegree {
             level

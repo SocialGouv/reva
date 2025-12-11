@@ -21,6 +21,12 @@ const getCandidacyById = graphql(`
         codeRncp
         label
       }
+      candidateInfo {
+        street
+        city
+        zip
+        addressComplement
+      }
       candidate {
         id
         firstname
