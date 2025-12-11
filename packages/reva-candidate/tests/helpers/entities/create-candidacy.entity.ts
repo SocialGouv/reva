@@ -46,7 +46,23 @@ export type CreateCandidacyEntityOptions = {
   feasibilityFormat?: Candidacy["feasibilityFormat"];
   certificationAuthorities?: Candidacy["certificationAuthorities"];
   candidacyDropOut?: Candidacy["candidacyDropOut"];
+  basicSkills?: Candidacy["basicSkills"];
+  mandatoryTrainings?: Candidacy["mandatoryTrainings"];
+  certificateSkills?: Candidacy["certificateSkills"];
+  otherTraining?: Candidacy["otherTraining"];
+  individualHourCount?: Candidacy["individualHourCount"];
+  collectiveHourCount?: Candidacy["collectiveHourCount"];
+  additionalHourCount?: Candidacy["additionalHourCount"];
+  candidacyStatuses?: Candidacy["candidacyStatuses"];
 };
+
+export function createCandidacyStatuses(statuses: CandidacyStatusStep[]) {
+  return statuses.map((status, i) => ({
+    id: String(i + 1),
+    status,
+    createdAt: Date.now(),
+  }));
+}
 
 export const createCandidacyEntity = (
   options: CreateCandidacyEntityOptions,
@@ -70,6 +86,14 @@ export const createCandidacyEntity = (
     feasibilityFormat,
     certificationAuthorities,
     candidacyDropOut,
+    basicSkills,
+    mandatoryTrainings,
+    certificateSkills,
+    otherTraining,
+    individualHourCount,
+    collectiveHourCount,
+    additionalHourCount,
+    candidacyStatuses,
   } = options;
 
   const candidacy: CandidacyEntity = {
@@ -87,15 +111,15 @@ export const createCandidacyEntity = (
         totalRows: 0,
       },
     },
-    basicSkills: [],
+    basicSkills: basicSkills ?? [],
     candidacyLogs: [],
-    candidacyStatuses: [],
-    certificateSkills: null,
-    otherTraining: null,
-    individualHourCount: null,
-    collectiveHourCount: null,
-    additionalHourCount: null,
-    mandatoryTrainings: [],
+    candidacyStatuses: candidacyStatuses ?? [],
+    certificateSkills: certificateSkills ?? null,
+    otherTraining: otherTraining ?? null,
+    individualHourCount: individualHourCount ?? null,
+    collectiveHourCount: collectiveHourCount ?? null,
+    additionalHourCount: additionalHourCount ?? null,
+    mandatoryTrainings: mandatoryTrainings ?? [],
     feasibilityFormat: feasibilityFormat || "DEMATERIALIZED",
     certificationAuthorities: certificationAuthorities || [],
     derniereDateActivite: new Date().getTime(),
