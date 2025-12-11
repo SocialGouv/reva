@@ -193,7 +193,9 @@ const createFeasibilities = async (certificationRncpId: string) => {
 
   // Create 50 feasibilities
   for (let i = 0; i < NUMBER_OF_FEASIBILITIES_TO_CREATE; i++) {
-    console.log(`Creating feasibility ${i + 1}/50...`);
+    console.log(
+      `Creating feasibility ${i + 1}/${NUMBER_OF_FEASIBILITIES_TO_CREATE}...`,
+    );
 
     // Random feasibility status
     const feasibilityStatus = faker.helpers.arrayElement(FEASIBILITY_STATUSES);
