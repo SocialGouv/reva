@@ -137,9 +137,7 @@ const CertificationAuthorityCertificationsPage = () => {
               inputTitle="Afficher toutes les certifications France VAE"
               label="Afficher toutes les certifications France VAE"
               labelPosition="left"
-              onChange={(checked) =>
-                handleShowAllCertificationsToggleChange(checked)
-              }
+              onChange={handleShowAllCertificationsToggleChange}
               checked={showAllCertifications}
             />
           }
