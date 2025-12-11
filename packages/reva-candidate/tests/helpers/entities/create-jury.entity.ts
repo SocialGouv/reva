@@ -2,7 +2,7 @@ import { Jury, JuryResult } from "@/graphql/generated/graphql";
 
 export type JuryEntity = Partial<Jury>;
 
-export type CreateJuryEntityOptions = {
+type CreateJuryEntityOptions = {
   result?: JuryResult;
   dateOfSession?: number;
   dateOfResult?: number | null;

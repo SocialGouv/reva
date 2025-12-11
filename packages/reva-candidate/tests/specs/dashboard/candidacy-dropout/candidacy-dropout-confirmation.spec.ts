@@ -1,11 +1,12 @@
 import { Page } from "@playwright/test";
 import { expect, test } from "next/experimental/testmode/playwright/msw";
-import type { MswFixture } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
+
+import type { MswFixture } from "next/experimental/testmode/playwright/msw";
 
 const candidate = createCandidateEntity();
 const candidacy = createCandidacyEntity({

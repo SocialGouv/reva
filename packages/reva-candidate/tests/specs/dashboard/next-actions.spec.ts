@@ -14,7 +14,7 @@ import {
 import { createOrganismEntity } from "@tests/helpers/entities/create-organism.entity";
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 
-import { JuryResult, TypeAccompagnement } from "@/graphql/generated/graphql";
+import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
 const FEATURE_FLAG = ["CANDIDATE_NEXT_ACTIONS"];
 
@@ -400,7 +400,10 @@ test.describe("Next actions tiles", () => {
           label: "incomplete",
           activeDossierDeValidationDecision: "INCOMPLETE",
         },
-        { label: "after failed jury", jury: createJuryEntity({ result: "FAILURE" }) },
+        {
+          label: "after failed jury",
+          jury: createJuryEntity({ result: "FAILURE" }),
+        },
       ];
 
       scenarios.forEach((scenario) => {
@@ -421,10 +424,7 @@ test.describe("Next actions tiles", () => {
             candidate,
             feasibility,
             activeDossierDeValidation,
-            jury:
-              scenario.label === "after failed jury"
-                ? scenario.jury
-                : null,
+            jury: scenario.label === "after failed jury" ? scenario.jury : null,
           });
           const { handlers, dashboardWait } = dashboardHandlers({
             candidacy,

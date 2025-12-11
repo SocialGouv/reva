@@ -12,7 +12,7 @@
     "prebuild": "react-dsfr update-icons && npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
     "build": "next build && node copy-assets.js",
     "start": "node .next/standalone/server.js",
-    "lint": "eslint src",
+    "lint": "eslint src tests",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:watch": "graphql-codegen --config codegen.ts --watch",
     "test": "playwright test",
