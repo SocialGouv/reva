@@ -153,6 +153,7 @@ export const PICTOGRAMS = {
   connectionLost: generateSvg(connectionLost),
   error: generateSvg(error),
   information: generateSvg(information),
+  informationLG: generateSvg(information, { width: 120, height: 120 }),
   notification: generateSvg(notification),
   padlock: generateSvg(padlock),
   success: generateSvg(success),
