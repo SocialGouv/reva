@@ -66,6 +66,10 @@ export const SendFeasibilityForm = (): React.ReactNode => {
   const handleFeasibilityFileTemplateDownload = () =>
     updateFeasibilityFileTemplateFirstReadAt.mutateAsync({ candidacyId });
 
+  const feasibilityDecisionNotFinal =
+    feasibility?.decision !== "ADMISSIBLE" &&
+    feasibility?.decision !== "REJECTED";
+
   const {
     register,
     handleSubmit,
@@ -204,8 +208,9 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     <div className="mt-12">
       <FeasibilityBanner feasibility={feasibility} />
 
-      {hasCertificationRncpExpired && (
+      {hasCertificationRncpExpired && feasibilityDecisionNotFinal && (
         <Alert
+          data-testid="certification-expired-alert"
           className="mt-6 mb-12"
           severity="error"
           title="Le diplôme visé a expiré"

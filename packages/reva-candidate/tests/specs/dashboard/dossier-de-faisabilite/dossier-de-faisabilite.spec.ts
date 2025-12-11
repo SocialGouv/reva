@@ -19,7 +19,10 @@ import {
   navigateToDossierDeFaisabilite,
 } from "@tests/helpers/handlers/dossier-de-faisabilite/dossier-de-faisabilite.handler";
 
-import type { CandidacyStatusStep } from "@/graphql/generated/graphql";
+import type {
+  CandidacyStatusStep,
+  Certification,
+} from "@/graphql/generated/graphql";
 
 import type {
   MswFixture,
@@ -67,8 +70,9 @@ const baseFeasibilityOptions = {
 function createCandidacyFeasibilityWith(options: {
   status?: CandidacyStatusStep;
   feasibilityOptions?: Partial<FeasibilityEntity>;
+  certificationOptions?: Partial<Certification>;
 }) {
-  const certification = createCertificationEntity();
+  const certification = createCertificationEntity(options.certificationOptions);
   const candidate = createCandidateEntity();
   const feasibility = options.feasibilityOptions
     ? createFeasibilityEntity(options.feasibilityOptions)
@@ -295,5 +299,76 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
         'Voici le motif transmis par votre certificateur : "test comment"',
       ),
     ).toBeVisible();
+  });
+
+  test.describe("Certification expired alert", () => {
+    test("should not show an alert when the certification has not expired", async ({
+      page,
+      msw,
+    }) => {
+      const { candidacy } = createCandidacyFeasibilityWith({
+        status: "DOSSIER_FAISABILITE_ENVOYE",
+        certificationOptions: {
+          rncpExpiresAt: new Date("2000-01-01").getTime(),
+        },
+      });
+
+      await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+      const errorBox = page.locator(
+        '[data-testid="certification-expired-alert"]',
+      );
+      await expect(errorBox).toBeVisible();
+      await expect(errorBox.locator("h3")).toContainText(
+        "Le diplôme visé a expiré",
+      );
+    });
+
+    test("should show an alert when the certification has expired and the df decision is not final", async ({
+      page,
+      msw,
+    }) => {
+      const { candidacy } = createCandidacyFeasibilityWith({
+        status: "DOSSIER_FAISABILITE_ENVOYE",
+        certificationOptions: {
+          rncpExpiresAt: new Date("2000-01-01").getTime(),
+        },
+      });
+
+      await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+      const errorBox = page.locator(
+        '[data-testid="certification-expired-alert"]',
+      );
+      await expect(errorBox).toBeVisible();
+      await expect(errorBox.locator("h3")).toContainText(
+        "Le diplôme visé a expiré",
+      );
+    });
+
+    [
+      "DOSSIER_FAISABILITE_RECEVABLE",
+      "DOSSIER_FAISABILITE_NON_RECEVABLE",
+    ].forEach((status) => {
+      test(`should not show an alert when the certification has expired and the df decision is ${status}`, async ({
+        page,
+        msw,
+      }) => {
+        const { candidacy } = createCandidacyFeasibilityWith({
+          status: "DOSSIER_FAISABILITE_RECEVABLE",
+          certificationOptions: {
+            rncpExpiresAt: new Date("2100-01-01").getTime(),
+          },
+        });
+
+        await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+        const errorBox = page.locator(
+          '[data-testid="certification-expired-alert"]',
+        );
+
+        await expect(errorBox).not.toBeVisible();
+      });
+    });
   });
 });
