@@ -13,6 +13,7 @@ const getJuryByCandidacyIdQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       id
       isCertificationPartial
+      typeAccompagnement
       activeDossierDeValidation {
         updatedAt
         decision

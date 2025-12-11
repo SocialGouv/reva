@@ -68,6 +68,14 @@ const FULL_CERTIFICATION_OPTIONS = [
   ...COMMON_OPTIONS,
 ] as const;
 
+const ALL_OPTIONS = [
+  "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION",
+  "FULL_SUCCESS_OF_FULL_CERTIFICATION",
+  "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
+  ...COMMON_OPTIONS,
+] as const;
+
 const juryResultNotice: {
   [key in JuryResult]: "info" | "new" | "success" | "error";
 } = {
@@ -114,9 +122,20 @@ export const Resultat = () => {
 
   const candidacy = getCandidacy.data?.getCandidacyById;
 
-  const availableResultOptions = candidacy?.isCertificationPartial
-    ? PARTIAL_CERTIFICATION_OPTIONS
-    : FULL_CERTIFICATION_OPTIONS;
+  let availableResultOptions: JuryResult[] = [];
+  if (candidacy?.typeAccompagnement === "AUTONOME") {
+    availableResultOptions = [...ALL_OPTIONS];
+  } else if (
+    candidacy?.typeAccompagnement === "ACCOMPAGNE" &&
+    candidacy?.isCertificationPartial
+  ) {
+    availableResultOptions = [...PARTIAL_CERTIFICATION_OPTIONS];
+  } else if (
+    candidacy?.typeAccompagnement === "ACCOMPAGNE" &&
+    !candidacy?.isCertificationPartial
+  ) {
+    availableResultOptions = [...FULL_CERTIFICATION_OPTIONS];
+  }
   const {
     register,
     handleSubmit,
