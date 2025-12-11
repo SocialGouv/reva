@@ -250,6 +250,19 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
         },
         data: {
           feasibilityFileSentAt: null,
+          candidacy: {
+            update: {
+              candidacyCandidateInfo: {
+                update: {
+                  street: dff.feasibility.candidacy.candidate?.street,
+                  city: dff.feasibility.candidacy.candidate?.city,
+                  zip: dff.feasibility.candidacy.candidate?.zip,
+                  addressComplement:
+                    dff.feasibility.candidacy.candidate?.addressComplement,
+                },
+              },
+            },
+          },
         },
       });
 

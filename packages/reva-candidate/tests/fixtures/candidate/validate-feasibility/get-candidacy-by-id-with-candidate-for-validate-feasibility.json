@@ -2,6 +2,12 @@
   "data": {
     "getCandidacyById": {
       "id": "42288593-2a6b-4606-aedd-0d76348b39f4",
+      "candidateInfo": {
+        "street": "12 rue du Port",
+        "city": "Marseille",
+        "zip": "13002",
+        "addressComplement": null
+      },
       "candidate": {
         "id": "b6c027bf-4e24-4402-b7fa-01a4f46cb0e2",
         "firstname": "Claire",

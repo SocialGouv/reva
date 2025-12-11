@@ -30,6 +30,10 @@ export const getDematerializedFeasibilityFileWithDetailsByCandidacyId = ({
               candidate: {
                 select: {
                   email: true,
+                  street: true,
+                  city: true,
+                  zip: true,
+                  addressComplement: true,
                 },
               },
             },

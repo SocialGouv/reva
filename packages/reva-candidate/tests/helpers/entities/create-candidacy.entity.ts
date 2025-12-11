@@ -114,6 +114,15 @@ export const createCandidacyEntity = (
     candidacyDropOut,
   };
 
+  if (candidate) {
+    candidacy.candidateInfo = {
+      street: candidate.street,
+      city: candidate.city,
+      zip: candidate.zip,
+      addressComplement: candidate.addressComplement,
+    };
+  }
+
   if (organism) {
     candidacy.organism = organism;
     candidacy.typeAccompagnement = "ACCOMPAGNE";

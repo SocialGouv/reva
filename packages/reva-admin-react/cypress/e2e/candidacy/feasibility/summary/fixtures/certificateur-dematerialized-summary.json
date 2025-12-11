@@ -228,6 +228,12 @@
           }
         ],
         "certificateSkills": "Compétences transverses en management et digitalisation.",
+        "candidateInfo": {
+          "street": "10 quai du Port",
+          "city": "Marseille",
+          "zip": "13002",
+          "addressComplement": null
+        },
         "candidate": {
           "highestDegree": {
             "level": "6"

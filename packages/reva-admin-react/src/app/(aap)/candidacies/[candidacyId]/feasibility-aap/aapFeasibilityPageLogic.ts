@@ -17,6 +17,12 @@ const getCandidacyById = graphql(`
         firstname
         lastname
       }
+      candidateInfo {
+        street
+        city
+        zip
+        addressComplement
+      }
       organism {
         contactAdministrativePhone
         contactAdministrativeEmail

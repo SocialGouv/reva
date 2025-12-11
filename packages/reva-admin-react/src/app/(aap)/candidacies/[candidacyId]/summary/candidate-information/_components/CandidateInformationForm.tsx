@@ -46,7 +46,9 @@ const CandidateInformationForm = ({
 
   const candidate = candidacy?.candidate;
   const isAddressAlreadyCompleted =
-    !!candidate?.street && !!candidate?.zip && !!candidate?.city;
+    !!candidacy?.candidateInfo?.street &&
+    !!candidacy?.candidateInfo?.zip &&
+    !!candidacy?.candidateInfo?.city;
 
   const [manualAddressSelected, setManualAddress] = useState(
     isAddressAlreadyCompleted,
@@ -82,10 +84,10 @@ const CandidateInformationForm = ({
       country: candidate?.country?.id ?? franceId,
       nationality: candidate?.nationality ?? "",
       countryIsFrance: candidate?.country?.id === franceId,
-      street: candidate?.street ?? "",
-      city: candidate?.city ?? "",
-      zip: candidate?.zip ?? "",
-      addressComplement: candidate?.addressComplement ?? "",
+      street: candidacy?.candidateInfo?.street ?? "",
+      city: candidacy?.candidateInfo?.city ?? "",
+      zip: candidacy?.candidateInfo?.zip ?? "",
+      addressComplement: candidacy?.candidateInfo?.addressComplement ?? "",
     },
   });
 
@@ -95,8 +97,8 @@ const CandidateInformationForm = ({
   );
 
   const resetFormData = useCallback(
-    (candidate: Candidate) => {
-      if (!candidate) return;
+    (candidate: Candidate, candidacy: Candidacy) => {
+      if (!candidacy || !candidate) return;
       reset({
         firstname: candidate.firstname,
         lastname: candidate.lastname,
@@ -110,17 +112,17 @@ const CandidateInformationForm = ({
         countryIsFrance: candidate.country?.id === franceId,
         gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,
         nationality: candidate.nationality ?? "",
-        street: candidate.street ?? "",
-        city: candidate.city ?? "",
-        zip: candidate.zip ?? "",
-        addressComplement: candidate.addressComplement ?? "",
+        street: candidacy?.candidateInfo?.street ?? "",
+        city: candidacy?.candidateInfo?.city ?? "",
+        zip: candidacy?.candidateInfo?.zip ?? "",
+        addressComplement: candidacy?.candidateInfo?.addressComplement ?? "",
       });
     },
     [reset, franceId],
   );
   useEffect(() => {
-    resetFormData(candidate as Candidate);
-  }, [candidate, resetFormData]);
+    resetFormData(candidate as Candidate, candidacy as Candidacy);
+  }, [candidate, candidacy, resetFormData]);
 
   useEffect(() => {
     if (country !== franceId) {
@@ -204,7 +206,7 @@ const CandidateInformationForm = ({
         onSubmit={handleSubmit(onSubmit, (e) => console.log(e))}
         onReset={(e) => {
           e.preventDefault();
-          resetFormData(candidate as Candidate);
+          resetFormData(candidate as Candidate, candidacy as Candidacy);
         }}
         className="flex flex-col gap-6"
       >
