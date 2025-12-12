@@ -10,10 +10,10 @@ export default function FirstConnexionPage() {
       description="Pour y accéder, vous devez vérifier et compléter vos informations de profil."
       pictogram={PICTOGRAMS.informationLG}
       content={
-        <p className="text-sm">
-          <span className="block mb-8">
+        <div className="text-sm mb-6">
+          <p className="block text-sm mb-8">
             Cette étape ne vous prendra que quelques minutes, munissez vous de :
-          </span>
+          </p>
           <ul>
             <li>
               vos informations civiles (nom(s), prénom(s), informations de
@@ -24,7 +24,7 @@ export default function FirstConnexionPage() {
               électronique)
             </li>
           </ul>
-        </p>
+        </div>
       }
       buttons={
         <Button
