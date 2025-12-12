@@ -511,8 +511,6 @@ model Account {
   email                              String                               @unique @db.VarChar(255)
   firstname                          String?                              @db.VarChar(255)
   lastname                           String?                              @db.VarChar(255)
-  organism                           Organism?                            @relation(fields: [organismId], references: [id])
-  organismId                         String?                              @map("organism_id") @db.Uuid
   certificationAuthority             CertificationAuthority?              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId           String?                              @map("certification_authority_id") @db.Uuid
   keycloakId                         String                               @unique @map("keycloak_id") @db.Uuid
@@ -525,9 +523,10 @@ model Account {
   commanditaireVaeCollective         CommanditaireVaeCollective[]
   organismOnAccounts                 OrganismOnAccount[]
   maisonMereAAPs                     MaisonMereAAPOnAccount[]
+  organism                           Organism?                            @relation(fields: [organismId], references: [id])
+  organismId                         String?                              @db.Uuid
 
   @@index([email])
-  @@index([organismId])
   @@index([certificationAuthorityId])
   @@map("account")
 }
