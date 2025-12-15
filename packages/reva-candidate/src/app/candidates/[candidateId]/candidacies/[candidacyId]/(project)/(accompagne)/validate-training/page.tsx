@@ -1,6 +1,7 @@
 "use client";
 
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useRouter } from "next/navigation";
@@ -230,6 +231,21 @@ export default function ValidateTraining() {
 
   return (
     <PageLayout title="Votre parcours">
+      <Breadcrumb
+        currentPageLabel={
+          isTrainingConfirmed ? "Votre parcours" : "Validation du parcours"
+        }
+        className="mb-0"
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "../",
+            },
+          },
+        ]}
+      />
+
       <h1 className="mt-6 mb-4 text-5xl">
         {isTrainingConfirmed ? "Votre parcours" : "Validation du parcours"}
       </h1>

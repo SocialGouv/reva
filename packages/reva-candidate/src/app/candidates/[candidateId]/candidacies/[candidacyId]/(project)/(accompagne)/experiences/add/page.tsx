@@ -1,5 +1,6 @@
 "use client";
 
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -101,7 +102,25 @@ export default function AddExperience() {
   };
 
   return (
-    <PageLayout title="Nouvelle expérience" displayBackToHome>
+    <PageLayout title="Nouvelle expérience">
+      <Breadcrumb
+        currentPageLabel="Nouvelle expérience"
+        className="mb-0"
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "../../",
+            },
+          },
+          {
+            label: "Mes expériences",
+            linkProps: {
+              href: "../",
+            },
+          },
+        ]}
+      />
       <h2 className="mt-6 mb-2">Nouvelle expérience</h2>
       <FormOptionalFieldsDisclaimer
         className="mb-4"

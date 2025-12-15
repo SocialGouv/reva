@@ -62,7 +62,7 @@ export const CertificationPage = async ({
 }) => (
   <>
     <div className="flex flex-col gap-4">
-      <h1 className="m-0">{certification?.label}</h1>
+      <h1 className="mt-4 mb-0">{certification?.label}</h1>
       <div className="flex flex-row items-center gap-4">
         <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
 

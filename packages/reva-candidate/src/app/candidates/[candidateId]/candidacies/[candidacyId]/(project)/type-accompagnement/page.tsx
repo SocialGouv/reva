@@ -61,7 +61,7 @@ export default function ChooseTypeAccompagnementPage() {
           },
         ]}
       />
-      <h1 className="mt-4 mb-0">Modalités de parcours</h1>
+      <h1 className="mt-4 mb-2">Modalités de parcours</h1>
       <FormOptionalFieldsDisclaimer />
       <p>
         Aujourd’hui, il existe 2 manières de réaliser un parcours VAE : en

@@ -20,7 +20,7 @@ export default function CertificationBreadcrumbs({
     return (
       <Breadcrumb
         currentPageLabel={currentlyShownCertification.label}
-        className="mb-4"
+        className="mb-0"
         segments={[
           {
             label: "Ma candidature",
@@ -48,7 +48,7 @@ export default function CertificationBreadcrumbs({
   return (
     <Breadcrumb
       currentPageLabel="Diplôme visé"
-      className="mb-4"
+      className="mb-0"
       segments={[
         {
           label: "Ma candidature",

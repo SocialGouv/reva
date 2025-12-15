@@ -1,5 +1,6 @@
 "use client";
 
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { toDate } from "date-fns";
@@ -82,7 +83,19 @@ export default function DossierDeValidationPag() {
 
   return (
     <div className="flex flex-col">
-      <h1>Dossier de validation</h1>
+      <Breadcrumb
+        currentPageLabel="Dossier de validation"
+        className="mb-0"
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "../",
+            },
+          },
+        ]}
+      />
+      <h1 className="mt-6 mb-4">Dossier de validation</h1>
       <p>
         Renseignez les informations liées à votre dossier de validation puis
         déposez-le afin de le transmettre au certificateur. Si votre

@@ -83,7 +83,7 @@ export default function SetGoals() {
           },
         ]}
       />
-      <h2 className="mt-6 mb-2">Mes objectifs</h2>
+      <h2 className="mt-4 mb-2">Mes objectifs</h2>
       <FormOptionalFieldsDisclaimer
         className="mb-4"
         label="Plusieurs choix possibles"

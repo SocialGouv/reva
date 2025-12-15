@@ -1,5 +1,6 @@
 "use client";
 
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Download from "@codegouvfr/react-dsfr/Download";
@@ -104,9 +105,22 @@ export default function ValidateFeasibility() {
   };
 
   return (
-    <PageLayout title="Dossier de faisabilité" displayBackToHome>
+    <PageLayout title="Dossier de faisabilité">
+      <Breadcrumb
+        currentPageLabel="Dossier de faisabilité"
+        className="mb-0"
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "../",
+            },
+          },
+        ]}
+      />
+
       <div className="flex justify-between mb-4 mt-6">
-        <h1 className="mb-0">Dossier de faisabilité </h1>
+        <h1 className="mb-0">Dossier de faisabilité</h1>
 
         {isUseGeneratedDffFileFromFileServerActive ? (
           <>

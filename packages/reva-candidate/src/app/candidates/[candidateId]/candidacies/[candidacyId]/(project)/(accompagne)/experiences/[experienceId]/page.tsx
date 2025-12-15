@@ -1,5 +1,6 @@
 "use client";
 
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
@@ -136,8 +137,26 @@ export default function UpdateExperience() {
   };
 
   return (
-    <PageLayout title="Modifier une expérience" displayBackToHome>
-      <h2 className="mt-6 mb-0">Modifier une expérience</h2>
+    <PageLayout title="Modifier une expérience">
+      <Breadcrumb
+        currentPageLabel="Modifier une expérience"
+        className="mb-0"
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "../../",
+            },
+          },
+          {
+            label: "Mes expériences",
+            linkProps: {
+              href: "../",
+            },
+          },
+        ]}
+      />
+      <h2 className="mt-4 mb-2">Modifier une expérience</h2>
       <FormOptionalFieldsDisclaimer />
       <p className="mb-4 text-xl">
         Il peut s'agir d'une expérience professionnelle, bénévole, d'un stage ou
