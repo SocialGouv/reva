@@ -66,8 +66,8 @@ export const sessionJuryInputSchema = {
         value: {
           type: "string",
           format: "time",
-          description: "Heure de la session du jury",
-          example: "14:30",
+          description: "Heure de la session du jury exprimée en UTC",
+          example: "14:30:00Z",
         },
       },
     },
