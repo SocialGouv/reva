@@ -90,6 +90,7 @@ test.use({
 const SELECTORS = {
   submit: '[data-testid="form-buttons"] button[type="submit"]',
   reset: '[data-testid="form-buttons"] button[type="reset"]',
+  back: '[data-testid="back-button"]',
   firstname: '[data-testid="firstname-input"] input',
   lastname: '[data-testid="lastname-input"] input',
   givenName: '[data-testid="given-name-input"] input',
@@ -120,9 +121,15 @@ async function waitForProfileData(page: Page) {
   ]);
 }
 
-async function visitProfile(page: Page) {
+async function visitProfile(
+  page: Page,
+  args?: { disableNavigation?: boolean },
+) {
+  const { disableNavigation } = args ?? {};
   await login(page);
-  await page.goto(`candidates/${candidate.id}/profile`);
+  await page.goto(
+    `candidates/${candidate.id}/profile${disableNavigation ? "?navigationDisabled=true" : ""}`,
+  );
   await waitForProfileData(page);
 }
 
@@ -426,5 +433,30 @@ test.describe("Select Fields Interaction", () => {
 
     await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();
     await expect(page.locator(SELECTORS.submit)).not.toBeDisabled();
+  });
+});
+
+test.describe("Navigation Handling", () => {
+  test("The back button and the navbar should be visible when the navigationDisabled query param is not present", async ({
+    page,
+  }) => {
+    await visitProfile(page);
+
+    await expect(page.locator(SELECTORS.back)).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "Menu principal" }),
+    ).toBeVisible();
+  });
+
+  test("The back button and the navbar should not be visible when the navigationDisabled query param is true", async ({
+    page,
+  }) => {
+    await visitProfile(page, { disableNavigation: true });
+
+    await expect(page.locator(SELECTORS.submit)).toBeVisible();
+    await expect(page.locator(SELECTORS.back)).not.toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "Menu principal" }),
+    ).not.toBeVisible();
   });
 });

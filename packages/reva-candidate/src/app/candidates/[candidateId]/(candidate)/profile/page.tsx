@@ -1,10 +1,17 @@
 "use client";
+import { useSearchParams } from "next/navigation";
+
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
 import CandidateInformationForm from "./_components/CandidateInformationForm";
 import { useProfile } from "./_components/useProfile";
 
 export default function Profile() {
+  const queryParams = useSearchParams();
+
+  const navigationDisabledByQueryParam =
+    queryParams.get("navigationDisabled") === "true";
+
   const { countries, departments, candidate } = useProfile();
 
   if (!candidate || !departments || !countries) {
@@ -18,6 +25,7 @@ export default function Profile() {
         <FormOptionalFieldsDisclaimer className="mb-0" />
       </div>
       <CandidateInformationForm
+        hideBackButton={navigationDisabledByQueryParam}
         candidate={candidate}
         countries={countries}
         departments={departments}

@@ -31,10 +31,12 @@ const CandidateInformationForm = ({
   candidate,
   countries,
   departments,
+  hideBackButton,
 }: {
   candidate: CandidateUseProfile;
   countries?: Countries;
   departments?: Departments;
+  hideBackButton?: boolean;
 }) => {
   const { updateCandidateInformationMutate } = useUpdateCandidateInformation();
   const router = useRouter();
@@ -412,7 +414,7 @@ const CandidateInformationForm = ({
           />
         </div>
         <FormButtons
-          backUrl="../"
+          backUrl={hideBackButton ? undefined : "../"}
           formState={{ isDirty, isSubmitting }}
           data-testid="form-buttons"
         />
