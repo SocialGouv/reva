@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
@@ -12,16 +12,15 @@ export default function CandidatesPage() {
 
   const router = useRouter();
 
-  const { candidateId } = useParams<{
-    candidateId: string;
-  }>();
-
   useEffect(() => {
-    if (!candidateId && candidate?.id) {
-      router.push(`./${candidate.id}`);
-      return;
+    if (candidate?.id) {
+      if (candidate.profileInformationCompleted) {
+        router.push(`./${candidate.id}/candidacies`);
+      } else {
+        router.push(`./${candidate.id}/first-connexion`);
+      }
     }
-  }, [candidateId, candidate?.id, router]);
+  }, [candidate?.id, candidate?.profileInformationCompleted, router]);
 
   return <LoaderWithLayout />;
 }

@@ -14,13 +14,17 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 
 const candidate = createCandidateEntity();
 
-function createFirstConnexionHandlers() {
+function createFirstConnexionHandlers(args?: {
+  profileInformationCompleted?: boolean;
+}) {
   return [
     fvae.query(
       "candidate_getCandidateForCandidatesGuard",
       graphQLResolver({
         candidate_getCandidateWithCandidacy: {
           ...candidate,
+          profileInformationCompleted:
+            args?.profileInformationCompleted ?? true,
         },
       }),
     ),
@@ -29,6 +33,8 @@ function createFirstConnexionHandlers() {
       graphQLResolver({
         candidate_getCandidateById: {
           ...candidate,
+          profileInformationCompleted:
+            args?.profileInformationCompleted ?? true,
         },
       }),
     ),
@@ -43,10 +49,6 @@ function createFirstConnexionHandlers() {
   ];
 }
 
-test.use({
-  mswHandlers: [createFirstConnexionHandlers(), { scope: "test" }],
-});
-
 async function loginAndWaitForInitialLoad(page: Page) {
   await login(page);
   await Promise.all([
@@ -56,29 +58,61 @@ async function loginAndWaitForInitialLoad(page: Page) {
   ]);
 }
 
-test("when i access the page it show the correct title", async ({ page }) => {
-  await loginAndWaitForInitialLoad(page);
+test.describe("page tests", () => {
+  test.use({
+    mswHandlers: [createFirstConnexionHandlers(), { scope: "test" }],
+  });
 
-  await page.goto(`candidates/${candidate.id}/first-connexion`);
+  test("when i access the page it show the correct title", async ({ page }) => {
+    await loginAndWaitForInitialLoad(page);
 
-  await expect(
-    page.getByRole("heading", {
-      level: 1,
-      name: "Bienvenue dans votre espace France VAE",
-    }),
-  ).toBeVisible();
+    await page.goto(`candidates/${candidate.id}/first-connexion`);
+
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: "Bienvenue dans votre espace France VAE",
+      }),
+    ).toBeVisible();
+  });
+
+  test("when i click on the 'Mon profil' button it redirect me to the profile page", async ({
+    page,
+  }) => {
+    await loginAndWaitForInitialLoad(page);
+
+    await page.goto(`candidates/${candidate.id}/first-connexion`);
+
+    await page.getByRole("link", { name: "Mon profil" }).click();
+
+    await expect(page).toHaveURL(
+      `candidates/${candidate.id}/profile/?navigationDisabled=true`,
+    );
+  });
 });
 
-test("when i click on the 'Mon profil' button it redirect me to the profile page", async ({
-  page,
-}) => {
-  await loginAndWaitForInitialLoad(page);
+test.describe("Login and redirect tests", () => {
+  test("when i login and the profile information is  completed it redirect me to the candidacies page", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...createFirstConnexionHandlers({ profileInformationCompleted: true }),
+    );
+    await loginAndWaitForInitialLoad(page);
 
-  await page.goto(`candidates/${candidate.id}/first-connexion`);
+    await expect(page).toHaveURL(`candidates/${candidate.id}/candidacies/`);
+  });
 
-  await page.getByRole("link", { name: "Mon profil" }).click();
+  test("when i login and the profile information is not completed it redirect me to the first connexion page", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...createFirstConnexionHandlers({ profileInformationCompleted: false }),
+    );
+    await loginAndWaitForInitialLoad(page);
 
-  await expect(page).toHaveURL(
-    `candidates/${candidate.id}/profile/?navigationDisabled=true`,
-  );
+    await expect(page).toHaveURL(`candidates/${candidate.id}/first-connexion/`);
+  });
 });

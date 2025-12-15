@@ -11,6 +11,7 @@ const GET_CANDIDATE_FOR_CANDIDATES_GUARD = graphql(`
       firstname
       lastname
       email
+      profileInformationCompleted
     }
   }
 `);
