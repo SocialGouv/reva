@@ -1,7 +1,7 @@
 "use client";
 
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
@@ -77,6 +77,11 @@ export const Header = () => {
 
   const currentPathname = usePathname();
 
+  const queryParams = useSearchParams();
+
+  const navigationDisabledByQueryParam =
+    queryParams.get("navigationDisabled") === "true";
+
   const { candidateId, candidacyId } = useParams<{
     candidateId: string;
     candidacyId: string;
@@ -92,7 +97,7 @@ export const Header = () => {
   );
 
   const navigation =
-    !authenticated || isForbiddenPath
+    !authenticated || isForbiddenPath || navigationDisabledByQueryParam
       ? []
       : getNavigation({
           currentPathname,
