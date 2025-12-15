@@ -33,6 +33,7 @@ export const createCandidateEntity = (
     department: defaultDepartment,
     candidacy: candidacyOption,
     candidacies: candidacies ?? (candidacyOption ? [candidacyOption] : []),
+    profileInformationCompleted: true,
     ...candidateOverrides,
   };
 };

@@ -49,6 +49,7 @@ type Candidate {
   street: String
   city: String
   addressComplement: String
+  profileInformationCompleted: Boolean!
 }
 
 type Query {

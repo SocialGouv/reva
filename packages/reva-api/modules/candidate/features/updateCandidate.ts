@@ -143,6 +143,7 @@ export const updateCandidate = async ({
         ...candidateInput,
         birthDepartmentId:
           countrySelected.label == "France" ? birthDepartmentId : undefined,
+        profileInformationCompleted: true,
       },
     }),
     prismaClient.candidacyCandidateInfo.deleteMany({
