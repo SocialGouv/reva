@@ -13,6 +13,7 @@ export const getWhereClauseFromStatusFilterForCertificationAuthority = (
   includeDropouts = false,
 ) => {
   let whereClause: Prisma.CandidacyWhereInput = {};
+
   switch (statusFilter) {
     case "PARCOURS_CONFIRME_HORS_ABANDON":
     case "PRISE_EN_CHARGE_HORS_ABANDON":
@@ -29,9 +30,6 @@ export const getWhereClauseFromStatusFilterForCertificationAuthority = (
         whereClause = {
           ...whereClause,
           ...(!includeDropouts ? { candidacyDropOut: null } : {}),
-          endAccompagnementStatus: {
-            notIn: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
-          },
           status,
         };
       }
@@ -44,9 +42,6 @@ export const getWhereClauseFromStatusFilterForCertificationAuthority = (
         ...(!includeDropouts ? { candidacyDropOut: null } : {}),
         status: {
           notIn: ["ARCHIVE", "PROJET"],
-        },
-        endAccompagnementStatus: {
-          notIn: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
         },
       };
       break;
@@ -175,14 +170,6 @@ export const getWhereClauseFromStatusFilterForCertificationAuthority = (
             ],
           },
         ],
-      };
-      break;
-    case "END_ACCOMPAGNEMENT":
-      whereClause = {
-        ...whereClause,
-        endAccompagnementStatus: {
-          in: ["CONFIRMED_BY_CANDIDATE", "CONFIRMED_BY_ADMIN"],
-        },
       };
       break;
   }
