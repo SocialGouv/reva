@@ -1,3 +1,4 @@
+import { ajvFilePlugin } from "@fastify/multipart";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import dotenv from "dotenv";
 import Fastify from "fastify";
@@ -42,6 +43,7 @@ const fastify = Fastify({
       : undefined,
   },
   ajv: {
+    plugins: [ajvFilePlugin],
     customOptions: {
       strict: false,
     },
