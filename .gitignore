@@ -24,3 +24,4 @@ infra/ftps/data/*
 *.local*
 !infra/strapi/types/generated/
 .cursor
+**/cypress/downloads/*
