@@ -15,6 +15,7 @@ function getGenderPrefix(gender: Gender) {
 }
 
 function getGenderBornLabel(gender: Gender) {
+  console.log("gender", gender);
   switch (gender) {
     case GenderEnum.man:
       return "Né";
@@ -57,6 +58,7 @@ export default function CandidateSection({
   const bornLabel = gender ? getGenderBornLabel(gender) : "";
 
   const isFrance = country ? country?.label == "France" : false;
+  console.log("candidate", candidate);
 
   return (
     <div>
@@ -70,7 +72,11 @@ export default function CandidateSection({
       </div>
       <p className="mb-2 flex gap-2">
         {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
-        {birthdate && <span>le : {formatIso8601Date(birthdate)}</span>}
+        {birthdate && (
+          <span>
+            {bornLabel} le : {formatIso8601Date(birthdate)}
+          </span>
+        )}
         <span>
           à {birthCity}
           {country && isFrance && birthDepartment

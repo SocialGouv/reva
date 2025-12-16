@@ -14,8 +14,17 @@ const getCandidacyById = graphql(`
       additionalHourCount
       isCertificationPartial
       candidate {
+        gender
         firstname
         lastname
+        birthdate
+        birthDepartment {
+          label
+          code
+        }
+        birthCity
+        email
+        phone
       }
       candidateInfo {
         street
