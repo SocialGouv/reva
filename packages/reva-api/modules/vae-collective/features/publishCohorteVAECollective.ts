@@ -35,10 +35,7 @@ export const publishCohorteVAECollective = async ({
     );
   }
 
-  if (
-    !cohorte.certificationCohorteVaeCollectives[0]
-      .certificationCohorteVaeCollectiveOnOrganisms.length
-  ) {
+  if (!cohorte.organismId) {
     throw new Error(
       "Impossible de publier une cohorte si elle n'a pas d'aap associé",
     );

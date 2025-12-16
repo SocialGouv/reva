@@ -34,6 +34,14 @@ export const updateCohorteVAECollectiveCertification = async ({
         certificationId,
       },
     });
+    await tx.cohorteVaeCollective.update({
+      where: {
+        id: cohorteVaeCollectiveId,
+      },
+      data: {
+        organismId: null,
+      },
+    });
   });
 
   return cohorteVaeCollective;

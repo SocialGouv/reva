@@ -55,6 +55,7 @@ describe("publish a cohorte vae collective", () => {
     const organism = await createOrganismHelper();
 
     const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+      organism: { connect: { id: organism.id } },
       certificationCohorteVaeCollectives: {
         create: {
           certification: { connect: { id: certification.id } },

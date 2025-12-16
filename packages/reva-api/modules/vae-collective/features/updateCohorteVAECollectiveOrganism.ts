@@ -56,6 +56,14 @@ export const updateCohorteVAECollectiveOrganism = async ({
         organismId,
       },
     });
+    await tx.cohorteVaeCollective.update({
+      where: {
+        id: cohorteVaeCollectiveId,
+      },
+      data: {
+        organismId,
+      },
+    });
   });
 
   return cohorteVaeCollective;
