@@ -16,12 +16,6 @@ enum CohorteVaeCollectiveStatus {
 type CertificationCohorteVaeCollective {
   id: ID!
   certification: Certification!
-  certificationCohorteVaeCollectiveOnOrganisms: [CertificationCohorteVaeCollectiveOnOrganism!]!
-}
-
-type CertificationCohorteVaeCollectiveOnOrganism {
-  id: ID!
-  organism: Organism!
 }
 
 type CommanditaireVaeCollective {

@@ -6,7 +6,6 @@ import { getCertificationById } from "../referential/features/getCertificationBy
 import { createCohorteVaeCollective } from "./features/createCohorteVaeCollective";
 import { createCommanditaireVaeCollective } from "./features/createCommanditaireVaeCollective";
 import { deleteCohorteVAECollective } from "./features/deleteCohorteVAECollective";
-import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "./features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
 import { getCertificationCohortesByCohorteId } from "./features/getCertificationCohortesByCohorteId";
 import { getCohortesVaeCollectivesByCommanditaireVaeCollectiveId } from "./features/getCohortesVaeCollectivesByCommanditaireVaeCollectiveId";
 import { getCohortesVaeCollectivesForConnectedAap } from "./features/getCohortesVaeCollectivesForConnectedAap";
@@ -54,18 +53,6 @@ const unsafeResolvers = {
   CertificationCohorteVaeCollective: {
     certification: async ({ certificationId }: { certificationId: string }) =>
       getCertificationById({ certificationId }),
-    certificationCohorteVaeCollectiveOnOrganisms: async ({
-      id: certificationCohorteVaeCollectiveId,
-    }: {
-      id: string;
-    }) =>
-      getCertificationCohorteOnOrganismsByCertificationCohorteId({
-        certificationCohorteVaeCollectiveId,
-      }),
-  },
-  CertificationCohorteVaeCollectiveOnOrganism: {
-    organism: async ({ organismId }: { organismId: string }) =>
-      getOrganismById({ organismId }),
   },
   Candidacy: {
     cohorteVaeCollective: async ({
