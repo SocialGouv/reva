@@ -11,11 +11,7 @@ export const publishCohorteVAECollective = async ({
       id: cohorteVaeCollectiveId,
     },
     include: {
-      certificationCohorteVaeCollectives: {
-        include: {
-          certificationCohorteVaeCollectiveOnOrganisms: true,
-        },
-      },
+      certificationCohorteVaeCollectives: true,
     },
   });
 

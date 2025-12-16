@@ -59,9 +59,6 @@ describe("publish a cohorte vae collective", () => {
       certificationCohorteVaeCollectives: {
         create: {
           certification: { connect: { id: certification.id } },
-          certificationCohorteVaeCollectiveOnOrganisms: {
-            create: { organism: { connect: { id: organism.id } } },
-          },
         },
       },
     });
