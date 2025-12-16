@@ -65,6 +65,7 @@ test.describe("Commanditaire with multiple cohortes", () => {
                       nom: "maCohorte",
                       status: "BROUILLON",
                       createdAt: 1752593034738,
+
                       certificationCohorteVaeCollectives: [
                         {
                           id: "25004fd9-efdc-4746-9bbd-ffd22565ab2c",
@@ -73,17 +74,12 @@ test.describe("Commanditaire with multiple cohortes", () => {
                             label:
                               "Titre à finalité professionnelle Conducteur accompagnateur de personnes à mobilité réduite - CAPMR",
                           },
-                          certificationCohorteVaeCollectiveOnOrganisms: [
-                            {
-                              id: "f2acf943-76ba-483e-92b6-e9d9108cd943",
-                              organism: {
-                                id: "0837631c-797f-435c-bda9-b41e75117543",
-                                label: "Demain",
-                              },
-                            },
-                          ],
                         },
                       ],
+                      organism: {
+                        id: "0837631c-797f-435c-bda9-b41e75117543",
+                        label: "Demain",
+                      },
                     },
                     {
                       id: "dd419130-551f-40ca-9b49-730eeb95ed2d",

@@ -39,6 +39,7 @@ const getCohorteById = async (
             nom
             status
             codeInscription
+
             certificationCohorteVaeCollectives {
               id
               certification {
@@ -46,19 +47,16 @@ const getCohorteById = async (
                 label
                 codeRncp
               }
-              certificationCohorteVaeCollectiveOnOrganisms {
-                id
-                organism {
-                  id
-                  label
-                  nomPublic
-                  adresseNumeroEtNomDeRue
-                  adresseCodePostal
-                  adresseVille
-                  emailContact
-                  telephone
-                }
-              }
+            }
+            organism {
+              id
+              label
+              nomPublic
+              adresseNumeroEtNomDeRue
+              adresseCodePostal
+              adresseVille
+              emailContact
+              telephone
             }
           }
         }
@@ -96,15 +94,14 @@ export default async function CohortePage({
   const certification =
     cohorte.certificationCohorteVaeCollectives?.[0]?.certification;
 
-  const organism =
-    cohorte.certificationCohorteVaeCollectives?.[0]
-      ?.certificationCohorteVaeCollectiveOnOrganisms?.[0]?.organism;
+  const organism = cohorte.organism;
 
   const certificationSelected = !!certification;
   const organismSelected = !!organism;
 
   return (
     <div className="flex flex-col w-full">
+      NAME:{organism?.label}
       <RoleDependentBreadcrumb
         className="mt-0 mb-4"
         currentPageLabel={cohorte.nom}
@@ -130,7 +127,6 @@ export default async function CohortePage({
         Paramétrez votre cohorte, afin de générer un code unique ainsi qu’un
         lien d’accès à transmettre aux candidats devant intégrer cette cohorte.
       </p>
-
       <CertificationCard
         href={
           cohorte.status === "BROUILLON"
@@ -139,7 +135,6 @@ export default async function CohortePage({
         }
         certification={certification}
       />
-
       <OrganismCard
         className="mt-8"
         commanditaireId={commanditaireId}
@@ -155,9 +150,7 @@ export default async function CohortePage({
         readonly={cohorte.status !== "BROUILLON"}
         certificationSelected={certificationSelected}
       />
-
       <hr className="mt-8 mb-2" />
-
       {cohorte.status === "BROUILLON" && (
         <>
           <GenerateCohorteCodeInscriptionButton
@@ -177,7 +170,6 @@ export default async function CohortePage({
           />
         </>
       )}
-
       {cohorte.status === "PUBLIE" && (
         <div className="flex flex-col gap-4">
           <p className="text-lg mb-2">
@@ -201,7 +193,6 @@ export default async function CohortePage({
           />
         </div>
       )}
-
       <Button
         className="mt-12"
         priority="secondary"

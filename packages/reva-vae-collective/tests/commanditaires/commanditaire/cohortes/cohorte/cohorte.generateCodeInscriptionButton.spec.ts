@@ -153,6 +153,7 @@ test.describe("generate cohorte code inscription button", () => {
                       id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
                       nom: "macohorte",
                       status: "BROUILLON",
+
                       certificationCohorteVaeCollectives: [
                         {
                           id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
@@ -163,22 +164,17 @@ test.describe("generate cohorte code inscription button", () => {
                               codeRncp: "123456",
                             },
                           },
-                          certificationCohorteVaeCollectiveOnOrganisms: [
-                            {
-                              id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
-                              organism: {
-                                id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
-                                label: "Organism 1",
-                                adresseNumeroEtNomDeRue: "123456",
-                                adresseCodePostal: "123456",
-                                adresseVille: "123456",
-                                emailContact: "123456",
-                                telephone: "123456",
-                              },
-                            },
-                          ],
                         },
                       ],
+                      organism: {
+                        id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                        label: "Organism 1",
+                        adresseNumeroEtNomDeRue: "123456",
+                        adresseCodePostal: "123456",
+                        adresseVille: "123456",
+                        emailContact: "123456",
+                        telephone: "123456",
+                      },
                     },
                   },
                 });

@@ -52,14 +52,11 @@ const loadCommanditaireAndCohortes = async ({
                     id
                     label
                   }
-                  certificationCohorteVaeCollectiveOnOrganisms {
-                    id
-                    organism {
-                      id
-                      label
-                      nomPublic
-                    }
-                  }
+                }
+                organism {
+                  id
+                  label
+                  nomPublic
                 }
               }
             }
@@ -127,8 +124,7 @@ export default async function CohortesPage({
       <ul className="flex flex-col gap-4 list-none px-0 my-0">
         {commanditaire?.cohorteVaeCollectives?.rows?.map((cohorte) => {
           const certification = cohorte.certificationCohorteVaeCollectives[0];
-          const organism =
-            certification?.certificationCohorteVaeCollectiveOnOrganisms?.[0];
+          const organism = cohorte.organism;
           return (
             <li key={cohorte.id}>
               <Card
@@ -171,8 +167,7 @@ export default async function CohortesPage({
                       <>
                         <br />
                         <span className="text-sm" data-testid="organism">
-                          {organism.organism.nomPublic ||
-                            organism.organism.label}
+                          {organism.nomPublic || organism.label}
                         </span>
                       </>
                     )}

@@ -17,8 +17,8 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "@/modules/shared/error/functionalError";
-import { getCertificationCohorteOnOrganismsByCertificationCohorteId } from "@/modules/vae-collective/features/getCertificationCohorteOnOrganismsByCertificationCohorteId";
 import { getCertificationCohortesByCohorteId } from "@/modules/vae-collective/features/getCertificationCohortesByCohorteId";
+import { getCohorteVAECollectiveById } from "@/modules/vae-collective/features/getCohorteVAECollectiveById";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -115,6 +115,14 @@ const confirmRegistration = async ({
 
   // special case of registration for a vae collective
   if (candidateInput.cohorteVaeCollectiveId) {
+    const cohorteVaeCollective = await getCohorteVAECollectiveById({
+      cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
+    });
+
+    if (!cohorteVaeCollective) {
+      throw new Error("Cohorte de VAE Collective non trouvée");
+    }
+
     const certificationCohorteVaeCollective =
       await getCertificationCohortesByCohorteId({
         cohorteVaeCollectiveId: candidateInput.cohorteVaeCollectiveId,
@@ -129,20 +137,17 @@ const confirmRegistration = async ({
         certificationId: certificationCohorte.certificationId,
         feasibilityFormat: "DEMATERIALIZED",
       });
-
-      const certificationCohorteOnOrganisms =
-        await getCertificationCohorteOnOrganismsByCertificationCohorteId({
-          certificationCohorteVaeCollectiveId: certificationCohorte.id,
-        });
-
-      // if there is only one organism for the vae collective certification, we assign it
-      if (certificationCohorteOnOrganisms?.length === 1) {
-        await updateCandidacyOrganism({
-          candidacyId: candidacy.id,
-          organismId: certificationCohorteOnOrganisms[0].organismId,
-        });
-      }
     }
+
+    if (!cohorteVaeCollective.organismId) {
+      throw new Error("Aucun AAP n'est assigné à cette cohorte");
+    }
+
+    //we assign the cohorte organism to the candidacy
+    await updateCandidacyOrganism({
+      candidacyId: candidacy.id,
+      organismId: cohorteVaeCollective.organismId,
+    });
   }
   const url = getImpersonateUrl(candidate.keycloakId);
 
