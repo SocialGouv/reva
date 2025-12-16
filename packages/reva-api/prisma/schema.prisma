@@ -576,6 +576,7 @@ model Organism {
   modaliteAccompagnementRenseigneeEtValide     Boolean                                       @map("modalite_accompagnement_renseignee_et_valide")
   certificationCohorteVaeCollectiveOnOrganisms CertificationCohorteVaeCollectiveOnOrganism[]
   organismOnAccounts                           OrganismOnAccount[]
+  cohorteVaeCollectives                        CohorteVaeCollective[]
 
   @@index([maisonMereAAPId])
   @@map("organism")
@@ -1975,6 +1976,8 @@ model CohorteVaeCollective {
   codeInscription                    String?                             @unique @map("code_inscription") @db.VarChar(15)
   candidacy                          Candidacy[]
   status                             CohorteVaeCollectiveStatus          @default(BROUILLON) @map("status")
+  organismId                         String?                             @map("organism_id") @db.Uuid
+  organism                           Organism?                           @relation(fields: [organismId], references: [id])
 
   @@map("cohorte_vae_collective")
 }
