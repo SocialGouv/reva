@@ -67,7 +67,7 @@ export const CertificationAuthorityLocalAccount = (
   if (!certificationAuthorityLocalAccount) return null;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col">
       <div className="flex gap-2">
         <span className="fr-icon-home-4-fill" aria-hidden="true"></span>
         <strong className="text-xl">

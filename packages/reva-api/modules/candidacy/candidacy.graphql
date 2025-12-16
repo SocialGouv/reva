@@ -301,7 +301,6 @@ type Query {
   ): CandidacyConventionCollectivePaginated!
   candidacy_canAccessCandidacy(candidacyId: ID!): Boolean!
   candidacy_getCandidaciesForCertificationAuthority(
-    cohorteVaeCollectiveId: ID
     offset: Int
     limit: Int
     searchFilter: String
@@ -312,6 +311,9 @@ type Query {
     juryStatuses: [JuryStatusFilter!]
     juryResults: [JuryResultFilter!]
     includeDropouts: Boolean
+    cohorteVaeCollectiveId: ID
+    certificationAuthorityId: ID
+    certificationAuthorityLocalAccountId: ID
   ): CandidacyPage!
 }
 

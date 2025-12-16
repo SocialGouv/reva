@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 
 import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate/Impersonate.component";
 
 import { CertificationsSummaryCard } from "../../../../../../components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
@@ -44,6 +45,12 @@ const CertificationAuthorityAdminComponent = ({
     }
   });
 
+  const { isFeatureActive } = useFeatureflipping();
+
+  const candidaciesUrl = isFeatureActive("CERTIFICATEUR_CANDIDACIES_ANNUAIRE")
+    ? `/candidacies/annuaire/?page=1&certificationAuthorityId=${certificationAuthority.id}`
+    : `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityId=${certificationAuthority.id}`;
+
   return (
     <div
       className="flex flex-col flex-1"
@@ -67,7 +74,7 @@ const CertificationAuthorityAdminComponent = ({
           <Button
             priority="secondary"
             linkProps={{
-              href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityId=${certificationAuthority.id}`,
+              href: candidaciesUrl,
               target: "_blank",
             }}
           >

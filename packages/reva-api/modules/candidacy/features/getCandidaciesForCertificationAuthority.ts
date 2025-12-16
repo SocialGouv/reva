@@ -53,21 +53,24 @@ export const getCandidaciesForCertificationAuthority = async ({
   statusFilter,
   searchFilter,
   sortByFilter,
-  cohorteVaeCollectiveId,
   feasibilityStatuses,
   validationStatuses,
   juryStatuses,
   juryResults,
   includeDropouts = false,
+  cohorteVaeCollectiveId,
+  certificationAuthorityId,
+  certificationAuthorityLocalAccountId,
 }: GetCandidaciesForCertificationAuthorityInput & {
   context: GraphqlContext;
 }) => {
   const isAdmin = context.auth.hasRole("admin");
-  const { certificationAuthorityId, certificationAuthorityLocalAccountId } =
+
+  const certificationAuthorityInfo =
     await resolveCertificationAuthorityInfo(context);
 
   // Non-admin users must have a certification authority
-  if (!isAdmin && !certificationAuthorityId) {
+  if (!isAdmin && !certificationAuthorityInfo.certificationAuthorityId) {
     return {
       rows: [],
       info: processPaginationInfo({
@@ -113,19 +116,55 @@ export const getCandidaciesForCertificationAuthority = async ({
   }
 
   // certificationAuthorityId filter
-  if (certificationAuthorityId) {
+  const selectedCertificationAuthorityId = isAdmin
+    ? certificationAuthorityId
+    : certificationAuthorityInfo.certificationAuthorityId;
+
+  if (selectedCertificationAuthorityId) {
     andClauses.push({
-      feasibility: { certificationAuthorityId },
+      feasibility: {
+        certificationAuthorityId: selectedCertificationAuthorityId,
+      },
     });
   }
 
   // For local accounts, only include candidacies explicitly linked to them
-  if (certificationAuthorityLocalAccountId) {
+  let selectedCertificationAuthorityLocalAccountId: string | undefined;
+
+  if (isAdmin) {
+    selectedCertificationAuthorityLocalAccountId =
+      certificationAuthorityLocalAccountId;
+  } else if (
+    certificationAuthorityInfo.certificationAuthorityId &&
+    certificationAuthorityLocalAccountId
+  ) {
+    // Check if the local account is linked to the certification authority
+    const certificationAuthorityLocalAccount =
+      await prismaClient.certificationAuthorityLocalAccount.findUnique({
+        where: {
+          id: certificationAuthorityLocalAccountId,
+          certificationAuthorityId:
+            certificationAuthorityInfo.certificationAuthorityId,
+        },
+      });
+
+    // If the local account is linked to the certification authority, use it
+    if (certificationAuthorityLocalAccount) {
+      selectedCertificationAuthorityLocalAccountId =
+        certificationAuthorityLocalAccount.id;
+    }
+  } else {
+    selectedCertificationAuthorityLocalAccountId =
+      certificationAuthorityInfo.certificationAuthorityLocalAccountId;
+  }
+
+  if (selectedCertificationAuthorityLocalAccountId) {
     andClauses.push({
       candidacy: {
         certificationAuthorityLocalAccountOnCandidacy: {
           some: {
-            certificationAuthorityLocalAccountId,
+            certificationAuthorityLocalAccountId:
+              selectedCertificationAuthorityLocalAccountId,
           },
         },
       },

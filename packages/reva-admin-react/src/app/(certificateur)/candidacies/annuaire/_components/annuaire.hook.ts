@@ -33,29 +33,33 @@ const getCohortesForAnnuaire = graphql(`
 
 const getCandidaciesForAnnuaire = graphql(`
   query getCandidaciesForAnnuaire(
+    $offset: Int
     $searchFilter: String
     $statusFilter: CandidacyStatusFilter
     $sortByFilter: CandidacySortByFilter
-    $offset: Int
-    $cohorteVaeCollectiveId: ID
     $feasibilityStatuses: [CandidacyStatusStep!]
     $validationStatuses: [CandidacyStatusStep!]
     $juryStatuses: [JuryStatusFilter!]
     $juryResults: [JuryResultFilter!]
     $includeDropouts: Boolean
+    $cohorteVaeCollectiveId: ID
+    $certificationAuthorityId: ID
+    $certificationAuthorityLocalAccountId: ID
   ) {
     candidacy_getCandidaciesForCertificationAuthority(
+      offset: $offset
+      limit: 10
       searchFilter: $searchFilter
       statusFilter: $statusFilter
       sortByFilter: $sortByFilter
-      limit: 10
-      offset: $offset
-      cohorteVaeCollectiveId: $cohorteVaeCollectiveId
       feasibilityStatuses: $feasibilityStatuses
       validationStatuses: $validationStatuses
       juryStatuses: $juryStatuses
       juryResults: $juryResults
       includeDropouts: $includeDropouts
+      cohorteVaeCollectiveId: $cohorteVaeCollectiveId
+      certificationAuthorityId: $certificationAuthorityId
+      certificationAuthorityLocalAccountId: $certificationAuthorityLocalAccountId
     ) {
       rows {
         id
@@ -153,6 +157,11 @@ export const useAnnuaire = () => {
 
   const offset = (currentPage - 1) * 10;
 
+  const certificationAuthorityId = searchParams.get("certificationAuthorityId");
+  const certificationAuthorityLocalAccountId = searchParams.get(
+    "certificationAuthorityLocalAccountId",
+  );
+
   const { data, isLoading } = useQuery({
     queryKey: [
       "candidacy_getCandidaciesForCertificationAuthority",
@@ -166,13 +175,15 @@ export const useAnnuaire = () => {
       filters.juryResults,
       filters.cohorteIds,
       filters.includeDropouts,
+      certificationAuthorityId,
+      certificationAuthorityLocalAccountId,
     ],
     queryFn: () =>
       graphqlClient.request(getCandidaciesForAnnuaire, {
+        offset,
         searchFilter,
         statusFilter,
         sortByFilter,
-        offset,
         feasibilityStatuses:
           filters.feasibilityStatuses.length > 0
             ? filters.feasibilityStatuses
@@ -185,9 +196,11 @@ export const useAnnuaire = () => {
           filters.juryStatuses.length > 0 ? filters.juryStatuses : undefined,
         juryResults:
           filters.juryResults.length > 0 ? filters.juryResults : undefined,
+        includeDropouts: filters.includeDropouts,
         cohorteVaeCollectiveId:
           filters.cohorteIds.length === 1 ? filters.cohorteIds[0] : undefined,
-        includeDropouts: filters.includeDropouts,
+        certificationAuthorityId,
+        certificationAuthorityLocalAccountId,
       }),
   });
 
@@ -390,5 +403,7 @@ export const useAnnuaire = () => {
     clearFilters,
     hasActiveFilters,
     cohortes,
+    certificationAuthorityId,
+    certificationAuthorityLocalAccountId,
   };
 };

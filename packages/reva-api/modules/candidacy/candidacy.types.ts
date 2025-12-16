@@ -127,10 +127,12 @@ export interface GetCandidaciesForCertificationAuthorityInput {
   searchFilter?: string;
   statusFilter?: CandidacyStatusFilter;
   sortByFilter?: CandidacySortByFilter;
-  cohorteVaeCollectiveId?: string;
   feasibilityStatuses?: CandidacyStatusStep[];
   validationStatuses?: CandidacyStatusStep[];
   juryStatuses?: JuryStatusFilter[];
   juryResults?: JuryResultFilter[];
   includeDropouts?: boolean;
+  cohorteVaeCollectiveId?: string;
+  certificationAuthorityId?: string;
+  certificationAuthorityLocalAccountId?: string;
 }

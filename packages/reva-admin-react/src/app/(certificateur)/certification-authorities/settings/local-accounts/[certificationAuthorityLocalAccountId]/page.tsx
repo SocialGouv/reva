@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import LocalAccountGeneralInformationSummaryCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
@@ -70,6 +71,12 @@ export default function UpdateLocalAccountPage() {
     }
   };
 
+  const { isFeatureActive } = useFeatureflipping();
+
+  const candidaciesUrl = isFeatureActive("CERTIFICATEUR_CANDIDACIES_ANNUAIRE")
+    ? `/candidacies/annuaire/?page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccountId}`
+    : `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccountId}`;
+
   return (
     <div
       className="flex flex-col"
@@ -111,7 +118,7 @@ export default function UpdateLocalAccountPage() {
         priority="tertiary no outline"
         iconId="ri-inbox-2-fill"
         linkProps={{
-          href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccount?.id}`,
+          href: candidaciesUrl,
           target: "_blank",
           className: "after:content-none",
         }}

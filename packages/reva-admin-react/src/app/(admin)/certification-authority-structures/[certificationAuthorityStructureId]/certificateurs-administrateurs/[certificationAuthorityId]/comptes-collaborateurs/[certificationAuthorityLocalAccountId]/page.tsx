@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import LocalAccountGeneraInformationCard from "@/components/certification-authority/local-account/summary-cards/general-information-card/LocalAccountGeneralInformationSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import InterventionAreaSummaryCard from "@/components/certification-authority/summary-cards/intervention-area-summary-card/InterventionAreaSummaryCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate/Impersonate.component";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
@@ -17,6 +18,8 @@ import { useComptesCollaborateursPage } from "./comptesCollaborateurs.hooks";
 
 const CertificationAuthorityStructureComptesCollaborateursPage = () => {
   const router = useRouter();
+
+  const { isFeatureActive } = useFeatureflipping();
 
   const {
     certificationAuthorityStructureId,
@@ -80,6 +83,10 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
     }
   };
 
+  const candidaciesUrl = isFeatureActive("CERTIFICATEUR_CANDIDACIES_ANNUAIRE")
+    ? `/candidacies/annuaire/?page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccountId}`
+    : `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccountId}`;
+
   return (
     <div
       className="flex flex-col flex-1"
@@ -122,7 +129,7 @@ const CertificationAuthorityStructureComptesCollaborateursPage = () => {
               <Button
                 priority="secondary"
                 linkProps={{
-                  href: `/candidacies/feasibilities/?CATEGORY=ALL&page=1&certificationAuthorityLocalAccountId=${certificationAuthorityLocalAccount.id}`,
+                  href: candidaciesUrl,
                   target: "_blank",
                 }}
               >

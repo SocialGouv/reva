@@ -1,13 +1,18 @@
 "use client";
 
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import DsfrPagination from "@codegouvfr/react-dsfr/Pagination";
 import SearchBar from "@codegouvfr/react-dsfr/SearchBar";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { useAuth } from "@/components/auth/auth";
 import { SearchResultsHeader } from "@/components/search-results-header/SearchResultsHeader";
 
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
+
+import { CertificationAuthority } from "../(components)/CertificationAuthority";
+import { CertificationAuthorityLocalAccount } from "../(components)/CertificationAuthorityLocalAccount";
 
 import { useAnnuaire } from "./_components/annuaire.hook";
 import { AnnuaireEmptyState } from "./_components/AnnuaireEmptyState";
@@ -19,6 +24,8 @@ import { SortByBar } from "./_components/SortByBar";
 export default function AnnuairePage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+
+  const { isAdmin, isAdminCertificationAuthority } = useAuth();
 
   const {
     candidacies,
@@ -36,6 +43,8 @@ export default function AnnuairePage() {
     clearFilters,
     hasActiveFilters,
     cohortes,
+    certificationAuthorityId,
+    certificationAuthorityLocalAccountId,
   } = useAnnuaire();
 
   const [localSearchFilter, setLocalSearchFilter] = useState(searchFilter);
@@ -66,9 +75,77 @@ export default function AnnuairePage() {
     setLocalSearchFilter(searchFilter);
   }, [searchFilter]);
 
+  const getPathnameWithoutCertificationAuthorityId = (): string => {
+    const currentParams = new URLSearchParams(searchParams);
+    currentParams.delete("certificationAuthorityId");
+    return `${pathname}?${currentParams.toString()}`;
+  };
+
+  const getPathnameWithoutCertificationAuthorityLocalAccountId = (): string => {
+    const currentParams = new URLSearchParams(searchParams);
+    currentParams.delete("certificationAuthorityLocalAccountId");
+    return `${pathname}?${currentParams.toString()}`;
+  };
+
   return (
     <div className="mx-auto max-w-[1248px]">
-      <h1 className="mb-10">Candidatures</h1>
+      {isAdmin && certificationAuthorityId && (
+        <div className="mb-6">
+          <h1>Candidatures du gestionnaire</h1>
+
+          <CertificationAuthority
+            certificationAuthorityId={certificationAuthorityId}
+          />
+
+          <p className="mt-2">
+            Ici, vous pouvez rechercher une ou plusieurs candidatures gérées par
+            ce gestionnaire. Pour retrouver toutes les candidatures, cliquez sur
+            “Accéder à toutes les candidatures”.
+          </p>
+
+          <Button
+            priority="secondary"
+            linkProps={{
+              href: getPathnameWithoutCertificationAuthorityId(),
+            }}
+          >
+            Accéder à toutes les candidatures
+          </Button>
+        </div>
+      )}
+
+      {(isAdmin || isAdminCertificationAuthority) &&
+        certificationAuthorityLocalAccountId && (
+          <div className="mb-6">
+            <h1>Candidatures du compte local</h1>
+
+            <CertificationAuthorityLocalAccount
+              certificationAuthorityLocalAccountId={
+                certificationAuthorityLocalAccountId
+              }
+            />
+
+            <p className="mt-4">
+              Ici, vous pouvez rechercher une ou plusieurs candidatures gérées
+              par ce compte local. Pour retrouver toutes les candidatures,
+              cliquez sur “Accéder à toutes les candidatures”.
+            </p>
+
+            <Button
+              priority="secondary"
+              linkProps={{
+                href: getPathnameWithoutCertificationAuthorityLocalAccountId(),
+              }}
+            >
+              Accéder à toutes les candidatures
+            </Button>
+          </div>
+        )}
+
+      {!certificationAuthorityId && !certificationAuthorityLocalAccountId && (
+        <h1 className="mb-10">Candidatures</h1>
+      )}
+
       <div className="mb-10 bg-white px-6 py-8 shadow-lifted">
         <SearchBar
           label="Rechercher"
@@ -96,6 +173,7 @@ export default function AnnuairePage() {
           )}
         />
       </div>
+
       <div className="flex gap-6">
         <FiltersSection
           filters={filters}
@@ -110,6 +188,7 @@ export default function AnnuairePage() {
           onClearFilters={clearFilters}
           hasActiveFilters={hasActiveFilters}
         />
+
         <div className="flex-1">
           <div className="flex flex-col">
             <SearchResultsHeader
