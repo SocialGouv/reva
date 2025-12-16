@@ -22,6 +22,7 @@ export const searchOrganismsForCandidacy = async ({
     include: {
       candidate: { select: { departmentId: true } },
       organism: true,
+      cohorteVaeCollective: { include: { organism: true } },
     },
   });
 
@@ -29,23 +30,11 @@ export const searchOrganismsForCandidacy = async ({
     throw new Error("Candidature non trouvée");
   }
 
-  // In case of a "VAE collective", if the cohorteVaeCollective restricts the available organisms, user search results are restricted to the organisms in the cohorteVaeCollective
-  const organismsFromCohorteVaeCollectiveIds = (
-    await prismaClient.organism.findMany({
-      where: {
-        certificationCohorteVaeCollectiveOnOrganisms: {
-          some: {
-            certificationCohorteVaeCollective: {
-              certificationId: candidacy.certificationId || "",
-              cohorteVaeCollective: {
-                candidacy: { some: { id: candidacyId } },
-              },
-            },
-          },
-        },
-      },
-    })
-  ).map((o) => o.id);
+  // In case of a "VAE collective", if the cohorteVaeCollective restricts the available organisms, user search results are restricted to the organism in the cohorteVaeCollective
+  const organismsFromCohorteVaeCollectiveIds = candidacy.cohorteVaeCollective
+    ?.organismId
+    ? [candidacy.cohorteVaeCollective.organismId]
+    : [];
 
   let organismsFound: Organism[];
   let totalOrganismCount: number;

@@ -609,7 +609,7 @@ describe("searchOrganismsForCandidacy", () => {
         expect(results.totalRows).toBe(2);
       });
 
-      test("should search organisms and only return the restricted organisms there is a VAE collective organism restriction", async () => {
+      test("should search organisms and only return the restricted organisms when there is a VAE collective organism restriction", async () => {
         const certification = await createCertificationHelper({
           certificationOnConventionCollective: {
             create: ccnServicePersonne,
@@ -626,12 +626,10 @@ describe("searchOrganismsForCandidacy", () => {
         await attachOrganismToAllConventionCollectiveHelper(organism2);
 
         const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+          organism: { connect: { id: organism1.id } },
           certificationCohorteVaeCollectives: {
             create: {
               certificationId: certification.id,
-              certificationCohorteVaeCollectiveOnOrganisms: {
-                create: { organismId: organism1.id },
-              },
             },
           },
         });
@@ -720,7 +718,7 @@ describe("searchOrganismsForCandidacy", () => {
         expect(results.totalRows).toBe(2);
       });
 
-      test("should search organisms and only return the restricted organisms there is a VAE collective organism restriction", async () => {
+      test("should search organisms and only return the restricted organisms when there is a VAE collective organism restriction", async () => {
         const fetchCoordinatesMock = vi
           .spyOn(geocodingModule, "fetchCoordinatesFromZipCode")
           .mockImplementation(() =>
@@ -760,12 +758,10 @@ describe("searchOrganismsForCandidacy", () => {
         await attachOrganismToAllConventionCollectiveHelper(organism2);
 
         const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+          organism: { connect: { id: organism1.id } },
           certificationCohorteVaeCollectives: {
             create: {
               certificationId: certification.id,
-              certificationCohorteVaeCollectiveOnOrganisms: {
-                create: { organismId: organism1.id },
-              },
             },
           },
         });
