@@ -6,6 +6,7 @@ type CohorteVaeCollective {
   certificationCohorteVaeCollectives: [CertificationCohorteVaeCollective!]!
   createdAt: Timestamp!
   status: CohorteVaeCollectiveStatus!
+  organism: Organism
 }
 enum CohorteVaeCollectiveStatus {
   BROUILLON

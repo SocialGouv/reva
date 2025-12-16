@@ -48,6 +48,8 @@ const unsafeResolvers = {
       getCertificationCohortesByCohorteId({
         cohorteVaeCollectiveId,
       }),
+    organism: async ({ organismId }: { organismId: string }) =>
+      getOrganismById({ organismId }),
   },
   CertificationCohorteVaeCollective: {
     certification: async ({ certificationId }: { certificationId: string }) =>
