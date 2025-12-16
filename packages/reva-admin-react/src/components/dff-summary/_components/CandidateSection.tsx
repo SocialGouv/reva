@@ -58,7 +58,6 @@ export default function CandidateSection({
   const bornLabel = gender ? getGenderBornLabel(gender) : "";
 
   const isFrance = country ? country?.label == "France" : false;
-  console.log("candidate", candidate);
 
   return (
     <div>
