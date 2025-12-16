@@ -15,7 +15,6 @@ function getGenderPrefix(gender: Gender) {
 }
 
 function getGenderBornLabel(gender: Gender) {
-  console.log("gender", gender);
   switch (gender) {
     case GenderEnum.man:
       return "Né";
