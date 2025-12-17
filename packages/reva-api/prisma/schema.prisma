@@ -572,11 +572,10 @@ model Organism {
 
   ActiveOrganismByAvailableCertificationBasedOnFormacode ActiveOrganismByAvailableCertificationBasedOnFormacode[]
 
-  modaliteAccompagnement                       OrganismModaliteAccompagnement                @map("modalite_accompagnement")
-  modaliteAccompagnementRenseigneeEtValide     Boolean                                       @map("modalite_accompagnement_renseignee_et_valide")
-  certificationCohorteVaeCollectiveOnOrganisms CertificationCohorteVaeCollectiveOnOrganism[]
-  organismOnAccounts                           OrganismOnAccount[]
-  cohorteVaeCollectives                        CohorteVaeCollective[]
+  modaliteAccompagnement                   OrganismModaliteAccompagnement @map("modalite_accompagnement")
+  modaliteAccompagnementRenseigneeEtValide Boolean                        @map("modalite_accompagnement_renseignee_et_valide")
+  organismOnAccounts                       OrganismOnAccount[]
+  cohorteVaeCollectives                    CohorteVaeCollective[]
 
   @@index([maisonMereAAPId])
   @@map("organism")
@@ -1988,26 +1987,15 @@ enum CohorteVaeCollectiveStatus {
 }
 
 model CertificationCohorteVaeCollective {
-  id                                           String                                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  createdAt                                    DateTime                                      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                                    DateTime?                                     @map("updated_at") @db.Timestamptz(6)
-  cohorteVaeCollectiveId                       String                                        @map("cohorte_vae_collective_id") @db.Uuid
-  cohorteVaeCollective                         CohorteVaeCollective                          @relation(fields: [cohorteVaeCollectiveId], references: [id], onDelete: Cascade)
-  certificationId                              String                                        @map("certification_id") @db.Uuid
-  certification                                Certification                                 @relation(fields: [certificationId], references: [id], onDelete: Cascade)
-  certificationCohorteVaeCollectiveOnOrganisms CertificationCohorteVaeCollectiveOnOrganism[]
+  id                     String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt              DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt              DateTime?            @map("updated_at") @db.Timestamptz(6)
+  cohorteVaeCollectiveId String               @map("cohorte_vae_collective_id") @db.Uuid
+  cohorteVaeCollective   CohorteVaeCollective @relation(fields: [cohorteVaeCollectiveId], references: [id], onDelete: Cascade)
+  certificationId        String               @map("certification_id") @db.Uuid
+  certification          Certification        @relation(fields: [certificationId], references: [id], onDelete: Cascade)
 
   @@map("certification_vae_collective")
-}
-
-model CertificationCohorteVaeCollectiveOnOrganism {
-  id                                  String                            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  certificationCohorteVaeCollectiveId String                            @map("certification_cohorte_vae_collective_id") @db.Uuid
-  certificationCohorteVaeCollective   CertificationCohorteVaeCollective @relation(fields: [certificationCohorteVaeCollectiveId], references: [id], map: "ccvco_certification_cohorte", onDelete: Cascade)
-  organismId                          String                            @map("organism_id") @db.Uuid
-  organism                            Organism                          @relation(fields: [organismId], references: [id], map: "ccvco_organism")
-
-  @@map("certification_vae_collective_on_organism")
 }
 
 enum AppointmentType {

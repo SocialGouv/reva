@@ -39,32 +39,13 @@ export const updateCohorteVAECollectiveOrganism = async ({
     );
   }
 
-  const certificationCohorteVaeCollective =
-    cohorteVaeCollective.certificationCohorteVaeCollectives[0];
-
-  await prismaClient.$transaction(async (tx) => {
-    await tx.certificationCohorteVaeCollectiveOnOrganism.deleteMany({
-      where: {
-        certificationCohorteVaeCollectiveId:
-          certificationCohorteVaeCollective.id,
-      },
-    });
-    await tx.certificationCohorteVaeCollectiveOnOrganism.create({
-      data: {
-        certificationCohorteVaeCollectiveId:
-          certificationCohorteVaeCollective.id,
-        organismId,
-      },
-    });
-    await tx.cohorteVaeCollective.update({
-      where: {
-        id: cohorteVaeCollectiveId,
-      },
-      data: {
-        organismId,
-      },
-    });
+  await prismaClient.cohorteVaeCollective.update({
+    where: {
+      id: cohorteVaeCollectiveId,
+    },
+    data: {
+      organismId,
+    },
   });
-
   return cohorteVaeCollective;
 };
