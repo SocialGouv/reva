@@ -9,6 +9,7 @@ import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { graphql } from "@/graphql/generated";
 
 import { CertificationCard } from "./_components/certification-card/CertificationCard";
+import { CertificationsCard } from "./_components/certifications-card/CertificationsCard";
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
 import { GenerateCohorteCodeInscriptionButton } from "./_components/generate-cohorte-code-inscription-button/GenerateCohorteCodeInscriptionButton";
 import { OrganismCard } from "./_components/organism-card/OrganismCard";
@@ -91,12 +92,15 @@ export default async function CohortePage({
 
   const cohorte = await getCohorteById(commanditaireId, cohorteVaeCollectiveId);
 
-  const certification =
-    cohorte.certificationCohorteVaeCollectives?.[0]?.certification;
+  const certifications = (cohorte.certificationCohorteVaeCollectives || []).map(
+    (certificationCohorte) => certificationCohorte.certification,
+  );
+
+  const multipleCertificationSelected = certifications.length > 1;
 
   const organism = cohorte.organism;
 
-  const certificationSelected = !!certification;
+  const certificationSelected = certifications.length > 0;
   const organismSelected = !!organism;
 
   return (
@@ -127,14 +131,19 @@ export default async function CohortePage({
         Paramétrez votre cohorte, afin de générer un code unique ainsi qu’un
         lien d’accès à transmettre aux candidats devant intégrer cette cohorte.
       </p>
-      <CertificationCard
-        href={
-          cohorte.status === "BROUILLON"
-            ? `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`
-            : `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certification?.id}?certificationSelectionDisabled=true`
-        }
-        certification={certification}
-      />
+      {multipleCertificationSelected && (
+        <CertificationsCard numberOfCertifications={certifications.length} />
+      )}
+      {!multipleCertificationSelected && (
+        <CertificationCard
+          href={
+            cohorte.status === "BROUILLON"
+              ? `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`
+              : `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certifications[0]?.id}?certificationSelectionDisabled=true`
+          }
+          certification={certifications[0]}
+        />
+      )}
       <OrganismCard
         className="mt-8"
         commanditaireId={commanditaireId}
@@ -157,8 +166,8 @@ export default async function CohortePage({
             commanditaireId={commanditaireId}
             cohorteVaeCollectiveId={cohorteVaeCollectiveId}
             nomCohorte={cohorte.nom}
-            certificationCodeRncp={certification?.codeRncp ?? ""}
-            certificationlabel={certification?.label ?? ""}
+            certificationCodeRncp={certifications?.[0]?.codeRncp ?? ""}
+            certificationlabel={certifications?.[0]?.label ?? ""}
             aapLabel={organism?.label ?? ""}
             disabled={!organismSelected}
           />
