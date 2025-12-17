@@ -2,6 +2,7 @@ import {
   BasicSkill,
   Candidate,
   Certification,
+  CertificationAuthority,
   CertificationCompetence,
   CertificationCompetenceBloc,
   CompetenceBlocsPartCompletionEnum,
@@ -172,6 +173,7 @@ export const generateFeasibilityFileByCandidacyId = async (
         certification,
         dematerializedFeasibilityFile,
         isCertificationPartial: candidacy.isCertificationPartial,
+        certificationAuthority: feasibility.certificationAuthority,
       });
     }
 
@@ -594,12 +596,14 @@ const addCertification = (
       prerequisites: DFFPrerequisite[];
     };
     isCertificationPartial: boolean | null;
+    certificationAuthority: CertificationAuthority | null;
   },
 ) => {
   const {
     certification,
     dematerializedFeasibilityFile,
     isCertificationPartial,
+    certificationAuthority,
   } = params;
 
   doc
@@ -623,6 +627,24 @@ const addCertification = (
     .fontSize(10)
     .fillColor("#666666")
     .text(`RNCP ${certification.rncpId}`, { align: "left" });
+
+  if (certificationAuthority) {
+    doc
+      .font("assets/fonts/Marianne/Marianne-Regular.otf")
+      .fontSize(10)
+      .fillColor("#3a3a3a")
+      .text("Certificateur :", doc.x, doc.y + 10, {
+        align: "left",
+      });
+
+    doc
+      .font("assets/fonts/Marianne/Marianne-Bold.otf")
+      .fontSize(10)
+      .fillColor("#3a3a3a")
+      .text(certificationAuthority.label, {
+        align: "left",
+      });
+  }
 
   if (dematerializedFeasibilityFile.option) {
     doc
