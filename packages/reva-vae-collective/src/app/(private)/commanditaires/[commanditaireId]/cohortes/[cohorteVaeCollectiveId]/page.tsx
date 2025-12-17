@@ -105,7 +105,6 @@ export default async function CohortePage({
 
   return (
     <div className="flex flex-col w-full">
-      NAME:{organism?.label}
       <RoleDependentBreadcrumb
         className="mt-0 mb-4"
         currentPageLabel={cohorte.nom}
