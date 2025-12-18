@@ -12,12 +12,30 @@ const getCandidacyById = graphql(`
       individualHourCount
       collectiveHourCount
       additionalHourCount
+      status
+      conventionCollective {
+        label
+      }
+      candidacyDropOut {
+        createdAt
+      }
       isCertificationPartial
+      typology
       candidate {
         gender
         firstname
+        firstname2
+        firstname3
         lastname
         birthdate
+        nationality
+        niveauDeFormationLePlusEleve {
+          level
+        }
+        highestDegree {
+          level
+        }
+        highestDegreeLabel
         birthDepartment {
           label
           code
@@ -75,9 +93,14 @@ const getCandidacyById = graphql(`
         label
       }
       certification {
+        id
         label
         codeRncp
         rncpExpiresAt
+        competenceBlocs {
+          id
+          label
+        }
         certificationAuthorityStructure {
           label
         }

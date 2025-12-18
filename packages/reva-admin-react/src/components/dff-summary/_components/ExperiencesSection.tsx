@@ -29,37 +29,38 @@ export default function ExperiencesSection({
     unknown: "inconnue",
   };
   return (
-    <div className="my-8">
-      <div className="flex">
-        <span className="fr-icon-briefcase-fill fr-icon--lg mr-2" />
-        <h2 className="mb-0">Expériences professionnelles</h2>
-      </div>
+    <div className="flex flex-col gap-6 mt-6">
+      <h3 className="mb-0">Expériences professionnelles</h3>
       {experiences.length > 0 && (
-        <div className="mt-4">
+        <div className="ml-10">
           {experiences.map((experience, index) => (
             <Accordion
               key={experience.id}
               label={`Expérience ${index + 1} - ${experience.title}`}
-              defaultExpanded
+              defaultExpanded={false}
               data-testid={`experience-accordion-${index}`}
             >
-              <p>Démarrée le {format(experience?.startedAt, "dd MMMM yyyy")}</p>
-              <p>Expérience {durationLabel[experience?.duration]}</p>
-              <p>{experience?.description}</p>
+              <p className="mb-2">
+                Démarrée le {format(experience?.startedAt, "dd MMMM yyyy")}
+              </p>
+              <p className="mb-2">
+                Expérience {durationLabel[experience?.duration]}
+              </p>
+              <p className="mb-2">{experience?.description}</p>
             </Accordion>
           ))}
         </div>
       )}
 
       {blocsDeCompetences.length > 0 && (
-        <div className="mt-8">
-          <h5 className="mb-0">Blocs de compétences</h5>
+        <>
+          <h3 className="mb-0">Blocs de compétences</h3>
 
-          <div className="mt-4">
+          <div className="ml-10">
             {blocsDeCompetences.map((bc) => (
               <CertificationCompetenceAccordion
                 key={bc.certificationCompetenceBloc.id}
-                defaultExpanded
+                defaultExpanded={false}
                 competenceBloc={bc.certificationCompetenceBloc}
                 competenceBlocText={bc.text}
                 competenceDetails={certificationCompetenceDetails}
@@ -67,7 +68,7 @@ export default function ExperiencesSection({
               />
             ))}
           </div>
-        </div>
+        </>
       )}
     </div>
   );

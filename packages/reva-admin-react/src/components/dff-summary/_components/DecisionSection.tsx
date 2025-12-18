@@ -27,10 +27,9 @@ export default function DecisionSection({
   }
 
   return (
-    <div>
+    <div className="ml-10">
       <div className="flex">
-        <span className="fr-icon-thumb-up-fill fr-icon--lg mr-2" />
-        <h2 className="mb-0">Avis de faisabilité</h2>
+        <h4 className="mb-0">Avis de l'accompagnateur</h4>
       </div>
       <div className="my-4">
         <DecisionBadge />

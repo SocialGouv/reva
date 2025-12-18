@@ -4,10 +4,9 @@ export default function CandidateDecisionCommentSection({
   candidateDecisionComment: string;
 }) {
   return (
-    <div>
+    <div className="ml-10">
       <div className="flex mb-4">
-        <span className="ri-message-3-fill fr-icon--lg mr-2" />
-        <h2 className="mb-0">Commentaire du candidat</h2>
+        <h4 className="mb-0">Commentaire du candidat</h4>
       </div>
       <p>“{candidateDecisionComment}”</p>
     </div>

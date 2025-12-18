@@ -2,24 +2,30 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useMemo } from "react";
 
-import { Certification, Prerequisite } from "@/graphql/generated/graphql";
+import {
+  CertificationCompetenceBloc,
+  DffCertificationCompetenceBloc,
+  Prerequisite,
+} from "@/graphql/generated/graphql";
 
 export default function CertificationSection({
   option,
   firstForeignLanguage,
   secondForeignLanguage,
-  certification,
   prerequisites,
   isCertificationPartial,
   certificationAuthorityStructureLabel,
+  certificationCompetenceBlocs,
+  blocsDeCompetencesDFF,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
   secondForeignLanguage?: string | null;
-  certification?: Certification | null;
   prerequisites?: Prerequisite[] | null;
   isCertificationPartial?: boolean | null;
   certificationAuthorityStructureLabel?: string | null;
+  certificationCompetenceBlocs?: CertificationCompetenceBloc[];
+  blocsDeCompetencesDFF: DffCertificationCompetenceBloc[];
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -37,16 +43,20 @@ export default function CertificationSection({
 
   const noPrerequisites = !prerequisites?.length;
 
+  const competenceBlocs = useMemo(
+    () =>
+      certificationCompetenceBlocs?.map((bloc) => ({
+        competenceBlocId: bloc.id,
+        label: bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label,
+        checked: blocsDeCompetencesDFF.some(
+          (bc) => bc.certificationCompetenceBloc.id === bloc.id,
+        ),
+      })) || [],
+    [certificationCompetenceBlocs, blocsDeCompetencesDFF],
+  );
+
   return (
-    <div>
-      <div className="flex">
-        <span className="fr-icon-award-fill fr-icon--lg mr-2" />
-        <h2>Certification visée</h2>
-      </div>
-      <h4 className="mb-2">{certification?.label}</h4>
-      <p className="text-sm text-dsfr-light-text-mention-grey">
-        RNCP {certification?.codeRncp}
-      </p>
+    <div className="mt-6">
       {certificationAuthorityStructureLabel && (
         <>
           <p className="mb-0">Certificateur :</p>
@@ -75,13 +85,47 @@ export default function CertificationSection({
           )}
         </div>
       )}
-      <CallOut>
+      <CallOut
+        title="Le candidat vise"
+        classes={{
+          title: "text-xl",
+        }}
+      >
         {isCertificationPartial
           ? "Un ou plusieurs bloc(s) de compétences de la certification"
           : "La certification dans sa totalité"}
       </CallOut>
+      {competenceBlocs.length > 0 && (
+        <div className="mt-6">
+          <Accordion
+            label="Choix des blocs de compétences"
+            defaultExpanded={false}
+          >
+            <div className="flex flex-col gap-4">
+              {competenceBlocs.map((b) => {
+                return (
+                  <div key={b.competenceBlocId}>
+                    <input
+                      type="checkbox"
+                      checked={b.checked}
+                      disabled
+                      name={b.competenceBlocId}
+                    />
+                    <label
+                      className="ml-2 text-dsfrGray-labelGrey text-base"
+                      htmlFor={b.competenceBlocId}
+                    >
+                      {b.label}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+          </Accordion>
+        </div>
+      )}
 
-      <h5 className="mb-0 mt-4">Prérequis obligatoires</h5>
+      <h5 className="mb-0 mt-6">Prérequis obligatoires</h5>
       <div className="mb-8 mt-4">
         {noPrerequisites && (
           <p>
