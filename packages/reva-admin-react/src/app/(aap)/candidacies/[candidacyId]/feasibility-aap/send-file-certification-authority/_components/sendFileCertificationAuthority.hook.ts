@@ -92,15 +92,6 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             id
             label
           }
-          feasibility {
-            certificationAuthority {
-              id
-              label
-              contactFullName
-              contactEmail
-              contactPhone
-            }
-          }
           certificationAuthorityLocalAccounts {
             contactFullName
             contactEmail

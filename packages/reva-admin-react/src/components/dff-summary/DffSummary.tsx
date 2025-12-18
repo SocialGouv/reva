@@ -37,7 +37,6 @@ export function DffSummary({
   candidacy: Candidacy;
   FeasibilityBanner?: React.ReactNode;
   displayGiveYourDecisionSubtitle?: boolean;
-  certificationAuthorityLabel?: string;
 }) {
   const { isFeatureActive } = useFeatureflipping();
 
