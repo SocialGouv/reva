@@ -63,6 +63,9 @@
         "codeRncp": "9083904",
         "degree": {
           "level": 6
+        },
+        "certificationAuthorityStructure": {
+          "label": "Certificateur Metiers Services"
         }
       },
       "goals": [

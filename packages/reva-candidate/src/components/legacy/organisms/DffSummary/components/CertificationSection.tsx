@@ -11,6 +11,7 @@ export default function CertificationSection({
   certification,
   prerequisites,
   isCertificationPartial,
+  certificationAuthorityStructureLabel,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
@@ -18,6 +19,7 @@ export default function CertificationSection({
   certification?: Certification | null;
   prerequisites?: Prerequisite[] | null;
   isCertificationPartial: boolean;
+  certificationAuthorityStructureLabel?: string | null;
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -44,6 +46,22 @@ export default function CertificationSection({
       <p className="text-sm text-dsfr-light-text-mention-grey">
         RNCP {certification?.codeRncp}
       </p>
+      {!!certificationAuthorityStructureLabel && (
+        <dl className="my-4">
+          <dt
+            id="certification-authority-structure-label"
+            className="font-normal"
+          >
+            Certificateur :
+          </dt>
+          <dd
+            aria-labelledby="certification-authority-structure-label"
+            className="font-medium"
+          >
+            {certificationAuthorityStructureLabel}
+          </dd>
+        </dl>
+      )}
       {!!option && (
         <dl className="my-4">
           <dt id="certification-option-label" className="font-normal">

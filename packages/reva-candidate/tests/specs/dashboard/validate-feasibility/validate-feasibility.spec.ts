@@ -95,6 +95,9 @@ test.describe("Dematerialized feasibility résumé", () => {
       }),
     ).toBeVisible();
     await expect(certificationSection.getByText("RNCP 9083904")).toBeVisible();
+    await expect(certificationSection.getByLabel("Certificateur :")).toHaveText(
+      "Certificateur Metiers Services",
+    );
     await expect(
       certificationSection.getByText("Option pilotage d'activite"),
     ).toBeVisible();

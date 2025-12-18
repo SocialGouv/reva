@@ -64,6 +64,9 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_VALIDATE_FEASIBILITY = graphql(`
         degree {
           level
         }
+        certificationAuthorityStructure {
+          label
+        }
       }
       goals {
         id

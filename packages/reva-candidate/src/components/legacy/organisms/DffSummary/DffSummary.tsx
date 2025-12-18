@@ -92,6 +92,9 @@ export function DffSummary({
         certification={certification as Certification}
         prerequisites={prerequisites as Prerequisite[]}
         isCertificationPartial={!!candidacy?.isCertificationPartial}
+        certificationAuthorityStructureLabel={
+          certification?.certificationAuthorityStructure?.label
+        }
       />
       <CandidateSection
         candidate={{
