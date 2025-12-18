@@ -35,6 +35,9 @@ const nextConfig = {
   eslint: {
     dirs: ["pages", "app", "components", "lib", "src", "cypress"],
   },
+  experimental: {
+    testProxy: process.env.APP_ENV === "test",
+  },
 };
 
 module.exports = nextConfig;
