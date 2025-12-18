@@ -52,6 +52,7 @@ test.describe("certifications card", () => {
         { scope: "test" },
       ],
     });
+
     test("when i access the page, the filled certifications card should be displayed", async ({
       page,
     }) => {
@@ -61,6 +62,23 @@ test.describe("certifications card", () => {
         "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
       );
       await expect(page.getByTestId("certifications-card")).toBeVisible();
+    });
+
+    test("when i click on the visualiser button, i should be redirected to the certifications selectionnees page", async ({
+      page,
+    }) => {
+      await login({ page, role: "gestionnaireVaeCollective" });
+
+      await page.goto(
+        "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+      );
+      await page
+        .getByTestId("certifications-card")
+        .getByRole("link", { name: "Visualiser" })
+        .click();
+      await expect(page).toHaveURL(
+        "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications-selectionnees",
+      );
     });
   });
 });

@@ -131,7 +131,10 @@ export default async function CohortePage({
         lien d’accès à transmettre aux candidats devant intégrer cette cohorte.
       </p>
       {multipleCertificationSelected && (
-        <CertificationsCard numberOfCertifications={certifications.length} />
+        <CertificationsCard
+          numberOfCertifications={certifications.length}
+          certificationsSelectionneesHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications-selectionnees`}
+        />
       )}
       {!multipleCertificationSelected && (
         <CertificationCard
