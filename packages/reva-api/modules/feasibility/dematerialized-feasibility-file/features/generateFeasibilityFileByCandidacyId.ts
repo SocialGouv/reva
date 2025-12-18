@@ -2,7 +2,7 @@ import {
   BasicSkill,
   Candidate,
   Certification,
-  CertificationAuthority,
+  CertificationAuthorityStructure,
   CertificationCompetence,
   CertificationCompetenceBloc,
   CompetenceBlocsPartCompletionEnum,
@@ -39,7 +39,11 @@ export const generateFeasibilityFileByCandidacyId = async (
           highestDegree: true,
         },
       },
-      certification: true,
+      certification: {
+        include: {
+          certificationAuthorityStructure: true,
+        },
+      },
       Feasibility: {
         where: {
           isActive: true,
@@ -173,7 +177,8 @@ export const generateFeasibilityFileByCandidacyId = async (
         certification,
         dematerializedFeasibilityFile,
         isCertificationPartial: candidacy.isCertificationPartial,
-        certificationAuthority: feasibility.certificationAuthority,
+        certificationAuthorityStructure:
+          certification.certificationAuthorityStructure,
       });
     }
 
@@ -596,14 +601,14 @@ const addCertification = (
       prerequisites: DFFPrerequisite[];
     };
     isCertificationPartial: boolean | null;
-    certificationAuthority: CertificationAuthority | null;
+    certificationAuthorityStructure: CertificationAuthorityStructure | null;
   },
 ) => {
   const {
     certification,
     dematerializedFeasibilityFile,
     isCertificationPartial,
-    certificationAuthority,
+    certificationAuthorityStructure,
   } = params;
 
   doc
@@ -628,7 +633,7 @@ const addCertification = (
     .fillColor("#666666")
     .text(`RNCP ${certification.rncpId}`, { align: "left" });
 
-  if (certificationAuthority) {
+  if (certificationAuthorityStructure) {
     doc
       .font("assets/fonts/Marianne/Marianne-Regular.otf")
       .fontSize(10)
@@ -641,7 +646,7 @@ const addCertification = (
       .font("assets/fonts/Marianne/Marianne-Bold.otf")
       .fontSize(10)
       .fillColor("#3a3a3a")
-      .text(certificationAuthority.label, {
+      .text(certificationAuthorityStructure.label, {
         align: "left",
       });
   }

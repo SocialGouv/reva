@@ -15,7 +15,7 @@ import { PDFExtract } from "pdf.js-extract";
 import { prismaClient } from "@/prisma/client";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
-import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
+import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
 
@@ -120,10 +120,16 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     highestDegreeLabel: "Licence Informatique",
   });
 
+  const certificationAuthorityStructure =
+    await createCertificationAuthorityStructureHelper({
+      label: "Ministère de l'Éducation Nationale",
+    });
+
   const certification = await createCertificationHelper({
     label: "Manager de la performance",
     rncpLabel: "Manager de la performance",
     feasibilityFormat: FeasibilityFormat.DEMATERIALIZED,
+    certificationAuthorityStructureId: certificationAuthorityStructure.id,
   });
 
   const candidacy = await createCandidacyHelper({
@@ -136,13 +142,8 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     },
   });
 
-  const certificationAuthority = await createCertificationAuthorityHelper({
-    label: "Ministère de l'Éducation Nationale",
-  });
-
   const feasibility = await createFeasibilityDematerializedHelper({
     candidacyId: candidacy.id,
-    certificationAuthorityId: certificationAuthority.id,
     dematerializedFeasibilityFile: {
       create: {
         option: "Option Performance",
