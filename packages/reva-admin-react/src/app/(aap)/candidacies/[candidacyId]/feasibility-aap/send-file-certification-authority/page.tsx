@@ -168,9 +168,6 @@ export default function SendFileCertificationAuthorityPage() {
             decisionComment={decisionComment}
           />
         }
-        certificationAuthorityStructureLabel={
-          candidacy?.certification?.certificationAuthorityStructure?.label
-        }
       />
       <CertificationAuthoritySection
         certificationAuthorities={certificationAuthorities}

@@ -83,9 +83,6 @@ export default function SendFileCandidatePage() {
         FeasibilityBanner={
           <FeasibilityBanner sentToCandidateAt={sentToCandidateAt} />
         }
-        certificationAuthorityStructureLabel={
-          candidacy?.certification?.certificationAuthorityStructure?.label
-        }
       />
 
       <div className="flex justify-between">
