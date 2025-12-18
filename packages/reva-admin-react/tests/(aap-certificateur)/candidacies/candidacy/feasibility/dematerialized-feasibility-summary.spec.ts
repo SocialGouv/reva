@@ -532,35 +532,35 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
     }) => {
       const dffSummary = page.getByTestId("dff-summary");
       await expect(
-        dffSummary.getByRole("heading", {
-          name: "Mme Bertrand Camille, Sabine",
-        }),
-      ).toBeVisible();
-      await expect(dffSummary.getByText("Née Durand,")).toBeVisible();
-      await expect(dffSummary.getByText("le : 12/03/1987")).toBeVisible();
-      await expect(dffSummary.getByText("à Lyon, Rhône (69)")).toBeVisible();
-      await expect(
-        dffSummary.getByText(
-          "Adresse postale : 10 quai du Port 13002 Marseille",
-        ),
+        dffSummary
+          .getByTestId("candidate-section")
+          .getByText("Camille, Sabine"),
       ).toBeVisible();
       await expect(
-        dffSummary.getByText(
-          "Adresse électronique : camille.durand@example.com",
-        ),
+        dffSummary.getByTestId("candidate-section").getByText("Durand"),
       ).toBeVisible();
       await expect(
-        dffSummary.getByText("Téléphone : 0607080910"),
+        dffSummary.getByTestId("candidate-section").getByText("12/03/1987"),
       ).toBeVisible();
-      await expect(dffSummary.getByText("Nationalité Française")).toBeVisible();
+      await expect(
+        dffSummary.getByTestId("candidate-section").getByText("Lyon (69)"),
+      ).toBeVisible();
+      await expect(
+        dffSummary.getByText("10 quai du Port 13002 Marseille"),
+      ).toBeVisible();
+      await expect(
+        dffSummary.getByText("camille.durand@example.com"),
+      ).toBeVisible();
+      await expect(dffSummary.getByText("0607080910")).toBeVisible();
+      await expect(dffSummary.getByText("Française")).toBeVisible();
       await expect(
         dffSummary.locator(
-          "p:has-text('Niveau de formation le plus élevé') + p",
+          "dt:has-text('Niveau de formation le plus élevé') + dd",
         ),
       ).toHaveText("6");
       await expect(
         dffSummary.locator(
-          "p:has-text('Niveau de la certification obtenue la plus élevée') + p",
+          "dt:has-text('Niveau de la certification obtenue la plus élevée') + dd",
         ),
       ).toHaveText("6");
       await expect(
@@ -613,6 +613,7 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       const dffSummary = page.getByTestId("dff-summary");
 
       const experience1 = dffSummary.getByTestId("experience-accordion-0");
+      await experience1.click();
       await expect(
         experience1.getByText("Expérience 1 - Chef d'équipe logistique"),
       ).toBeVisible();
@@ -629,6 +630,7 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       ).toBeVisible();
 
       const experience2 = dffSummary.getByTestId("experience-accordion-1");
+      await experience2.click();
       await expect(
         experience2.getByText(
           "Expérience 2 - Responsable adjoint d'exploitation",
@@ -653,6 +655,7 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       const bloc1 = dffSummary.locator("section.fr-accordion").filter({
         hasText: "48379857 - Organiser et piloter les activités logistiques",
       });
+      await bloc1.click();
       await expect(
         bloc1.getByText("Définir les indicateurs de performance"),
       ).toBeVisible();
@@ -670,6 +673,7 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       const bloc2 = dffSummary.locator("section.fr-accordion").filter({
         hasText: "2849037 - Digitaliser les processus logistiques",
       });
+      await bloc2.click();
       await expect(
         bloc2.getByText("Mettre en place des outils de suivi en temps réel"),
       ).toBeVisible();

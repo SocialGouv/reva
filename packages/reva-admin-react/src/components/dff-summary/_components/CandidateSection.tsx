@@ -99,7 +99,10 @@ export default function CandidateSection({
   return (
     <div className="flex flex-col gap-6">
       <h3 className="mb-0">Civilité</h3>
-      <div className="flex flex-col gap-6 ml-10">
+      <div
+        className="flex flex-col gap-6 ml-10"
+        data-testid="candidate-section"
+      >
         <div className="flex flex-row gap-4 flex-wrap">
           <dl className="w-[170px]">
             <dt>Civilité</dt>

@@ -133,7 +133,7 @@ export default function CertificationSection({
           </p>
         )}
         {!!prequisitesByStatus?.acquired?.length && (
-          <Accordion label="Acquis" defaultExpanded>
+          <Accordion label="Acquis" defaultExpanded={false}>
             <ul>
               {prequisitesByStatus?.acquired?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -142,7 +142,7 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.inProgress?.length && (
-          <Accordion label="En cours" defaultExpanded>
+          <Accordion label="En cours" defaultExpanded={false}>
             <ul>
               {prequisitesByStatus?.inProgress?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
@@ -151,7 +151,7 @@ export default function CertificationSection({
           </Accordion>
         )}
         {!!prequisitesByStatus?.recommended?.length && (
-          <Accordion label="Préconisés" defaultExpanded>
+          <Accordion label="Préconisés" defaultExpanded={false}>
             <ul>
               {prequisitesByStatus?.recommended?.map((prerequisite) => (
                 <li key={prerequisite?.id}>{prerequisite?.label}</li>
