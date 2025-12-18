@@ -115,6 +115,9 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             degree {
               level
             }
+            certificationAuthorityStructure {
+              label
+            }
           }
           goals {
             id

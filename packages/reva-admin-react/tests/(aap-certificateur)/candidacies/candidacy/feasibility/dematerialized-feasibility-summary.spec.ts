@@ -194,6 +194,9 @@ const candidacy = {
     degree: {
       level: 6,
     },
+    certificationAuthorityStructure: {
+      label: "Ministère du Travail",
+    },
   },
   goals: [
     {
@@ -325,6 +328,9 @@ const aapCandidacy = {
     level: 6,
     degree: {
       level: 6,
+    },
+    certificationAuthorityStructure: {
+      label: "Ministère du Travail",
     },
   },
   goals: [
@@ -575,6 +581,13 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
         dffSummary.getByText("Titre professionnel Responsable logistique"),
       ).toBeVisible();
       await expect(dffSummary.getByText("RNCP 2983029843")).toBeVisible();
+
+      const certificationSection = dffSummary
+        .locator("div")
+        .filter({ hasText: "Certificateur :" })
+        .last();
+      await expect(certificationSection).toContainText("Ministère du Travail");
+
       await expect(
         dffSummary.getByText("Option pilotage d'activité"),
       ).toBeVisible();

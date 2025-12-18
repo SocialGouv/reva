@@ -78,6 +78,9 @@ const getCandidacyById = graphql(`
         label
         codeRncp
         rncpExpiresAt
+        certificationAuthorityStructure {
+          label
+        }
       }
       warningOnFeasibilitySubmission
       feasibility {

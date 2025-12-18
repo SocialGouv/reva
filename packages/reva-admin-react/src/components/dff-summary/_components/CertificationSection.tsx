@@ -11,6 +11,7 @@ export default function CertificationSection({
   certification,
   prerequisites,
   isCertificationPartial,
+  certificationAuthorityStructureLabel,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
@@ -18,6 +19,7 @@ export default function CertificationSection({
   certification?: Certification | null;
   prerequisites?: Prerequisite[] | null;
   isCertificationPartial?: boolean | null;
+  certificationAuthorityStructureLabel?: string | null;
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -45,6 +47,12 @@ export default function CertificationSection({
       <p className="text-sm text-dsfr-light-text-mention-grey">
         RNCP {certification?.codeRncp}
       </p>
+      {certificationAuthorityStructureLabel && (
+        <>
+          <p className="mb-0">Certificateur :</p>
+          <p className="font-medium">{certificationAuthorityStructureLabel}</p>
+        </>
+      )}
       {!!option && (
         <>
           <p className="mb-0">Option ou parcours:</p>

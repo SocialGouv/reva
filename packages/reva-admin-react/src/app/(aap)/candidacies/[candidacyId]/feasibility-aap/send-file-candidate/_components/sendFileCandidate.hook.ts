@@ -100,6 +100,9 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             degree {
               level
             }
+            certificationAuthorityStructure {
+              label
+            }
           }
           goals {
             id

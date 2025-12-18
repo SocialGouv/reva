@@ -32,11 +32,13 @@ export function DffSummary({
   candidacy,
   FeasibilityBanner,
   displayGiveYourDecisionSubtitle = false,
+  certificationAuthorityStructureLabel,
 }: {
   dematerializedFeasibilityFile?: DematerializedFeasibilityFile;
   candidacy: Candidacy;
   FeasibilityBanner?: React.ReactNode;
   displayGiveYourDecisionSubtitle?: boolean;
+  certificationAuthorityStructureLabel?: string;
 }) {
   const { isFeatureActive } = useFeatureflipping();
 
@@ -131,6 +133,9 @@ export function DffSummary({
           certification={certification}
           prerequisites={prerequisites as Prerequisite[]}
           isCertificationPartial={candidacy?.isCertificationPartial}
+          certificationAuthorityStructureLabel={
+            certificationAuthorityStructureLabel
+          }
         />
         <CandidateSection
           candidate={{

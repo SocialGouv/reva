@@ -207,6 +207,9 @@ export const DematerializedFeasibility = () => {
           />
         }
         displayGiveYourDecisionSubtitle
+        certificationAuthorityStructureLabel={
+          candidacy.certification?.certificationAuthorityStructure?.label
+        }
       />
 
       {(feasibility?.certificationAuthority || organism) && (
