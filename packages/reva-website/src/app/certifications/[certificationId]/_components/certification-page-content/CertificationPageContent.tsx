@@ -26,6 +26,7 @@ export const CertificationPageContent = async ({
     codeRncp: string;
     typeDiplome?: string | null;
     level: number;
+    rncpExpiresAt: Date;
     rncpObjectifsContexte?: string | null;
     certificationAuthorityStructure?: { label: string } | null;
     prerequisites: { id: string; label: string }[];
@@ -104,26 +105,32 @@ export const CertificationPageContent = async ({
           <div className="flex flex-col md:flex-row gap-6 mt-8">
             <Tile
               title={`Niveau ${certification.level}`}
+              desc={
+                <span className="block w-[180px] truncate">
+                  {certification.typeDiplome}
+                </span>
+              }
               classes={{ content: "p-0" }}
-              className="min-w-[282px]"
+              className="w-[282px]"
               small
               orientation="horizontal"
               imageSvg
               imageUrl="/candidate-space/certifications/pictograms/information.svg"
               imageAlt="icône information"
             />
-            {certification.typeDiplome && (
-              <Tile
-                title={certification.typeDiplome}
-                classes={{ content: "p-0" }}
-                className="min-w-[282px]"
-                small
-                orientation="horizontal"
-                imageSvg
-                imageUrl="/candidate-space/certifications/pictograms/city-hall.svg"
-                imageAlt="icône mairie"
-              />
-            )}
+            <Tile
+              title="Date d'expiration"
+              desc={new Date(certification.rncpExpiresAt).toLocaleDateString(
+                "fr-FR",
+              )}
+              classes={{ content: "p-0" }}
+              className="w-[282px]"
+              small
+              orientation="horizontal"
+              imageSvg
+              imageUrl="/candidate-space/certifications/pictograms/calendar.svg"
+              imageAlt="icône calendrier"
+            />
           </div>
         </div>
         <div className="flex gap-4 mt-12">

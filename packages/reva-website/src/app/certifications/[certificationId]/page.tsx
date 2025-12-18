@@ -66,6 +66,7 @@ const getCertificationQuery = graphql(`
       isAapAvailable
       level
       typeDiplome
+      rncpExpiresAt
       rncpObjectifsContexte
       certificationAuthorityStructure {
         label

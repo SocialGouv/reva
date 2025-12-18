@@ -49,6 +49,31 @@ test("display certification authority structure label", async ({ page }) => {
   );
 });
 
+test("display level tile with diploma type", async ({ page }) => {
+  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  const levelTile = page.getByRole("heading", {
+    name: `Niveau ${chaudronnier.level}`,
+  });
+  await expect(levelTile).toBeVisible();
+  await expect(
+    levelTile.locator("..").getByText(chaudronnier.typeDiplome),
+  ).toBeVisible();
+});
+
+test("display expiration date tile", async ({ page }) => {
+  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  const expirationTile = page.getByRole("heading", {
+    name: "Date d'expiration",
+  });
+  await expect(expirationTile).toBeVisible();
+  const expectedDate = new Date(chaudronnier.rncpExpiresAt).toLocaleDateString(
+    "fr-FR",
+  );
+  await expect(
+    expirationTile.locator("..").getByText(expectedDate),
+  ).toBeVisible();
+});
+
 test("should not display VAE collective button when feature flag is disabled", async ({
   page,
 }) => {
