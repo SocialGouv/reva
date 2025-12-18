@@ -99,9 +99,6 @@ const AapFeasibilityPage = () => {
             history={history}
           />
         }
-        certificationAuthorityStructureLabel={
-          certification?.certificationAuthorityStructure?.label
-        }
       />
     );
   }
