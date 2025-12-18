@@ -27,6 +27,7 @@ export const CertificationPageContent = async ({
     typeDiplome?: string | null;
     level: number;
     rncpObjectifsContexte?: string | null;
+    certificationAuthorityStructure?: { label: string } | null;
     prerequisites: { id: string; label: string }[];
     juryTypeMiseEnSituationProfessionnelle?: CertificationJuryTypeOfModality | null;
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
@@ -86,6 +87,11 @@ export const CertificationPageContent = async ({
           <h1 data-testid="certification-label" className="m-0">
             {certification?.label}
           </h1>
+          {certification?.certificationAuthorityStructure?.label && (
+            <p className="fr-text--lead m-0">
+              {certification.certificationAuthorityStructure.label}
+            </p>
+          )}
           <div className="flex flex-row items-center gap-4">
             <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
 

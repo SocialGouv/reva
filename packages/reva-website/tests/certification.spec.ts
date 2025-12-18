@@ -41,6 +41,14 @@ test("display certification page with correct data info", async ({ page }) => {
   );
 });
 
+test("display certification authority structure label", async ({ page }) => {
+  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  const heading = page.getByRole("heading", { name: chaudronnier.label });
+  await expect(heading.locator("+ p")).toHaveText(
+    chaudronnier.certificationAuthorityStructure.label,
+  );
+});
+
 test("should not display VAE collective button when feature flag is disabled", async ({
   page,
 }) => {

@@ -67,6 +67,9 @@ const getCertificationQuery = graphql(`
       level
       typeDiplome
       rncpObjectifsContexte
+      certificationAuthorityStructure {
+        label
+      }
       prerequisites {
         id
         label
