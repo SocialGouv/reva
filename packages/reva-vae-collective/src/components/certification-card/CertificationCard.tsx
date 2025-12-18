@@ -47,5 +47,6 @@ export const CertificationCard = ({
     linkProps={{
       href: detailsHref,
     }}
+    endDetail="Consulter"
   />
 );
