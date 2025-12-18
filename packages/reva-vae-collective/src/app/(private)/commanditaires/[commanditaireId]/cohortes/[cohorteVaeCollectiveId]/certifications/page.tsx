@@ -1,9 +1,9 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 
+import { CertificationCard } from "@/components/certification-card/CertificationCard";
 import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 
-import { CertificationCard } from "./_components/certification-card/CertificationCard";
 import { CertificationsSearchBar } from "./_components/certifications-search-bar/CertificationsSearchBar";
 import { searchCertificationsAndGetCohorteInfo } from "./actions";
 
@@ -70,9 +70,8 @@ export default async function CertificationsPage({
         {certifications?.rows.map((certification) => (
           <li key={certification.id}>
             <CertificationCard
-              commanditaireId={commanditaireId}
-              cohorteVaeCollectiveId={cohorteVaeCollectiveId}
               certification={certification}
+              detailsHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certification.id}`}
             />
           </li>
         ))}

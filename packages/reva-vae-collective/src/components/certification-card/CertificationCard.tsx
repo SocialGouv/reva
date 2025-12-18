@@ -3,11 +3,8 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 export const CertificationCard = ({
   certification,
-  commanditaireId,
-  cohorteVaeCollectiveId,
+  detailsHref,
 }: {
-  commanditaireId: string;
-  cohorteVaeCollectiveId: string;
   certification: {
     id: string;
     label: string;
@@ -19,6 +16,7 @@ export const CertificationCard = ({
       }[];
     }[];
   };
+  detailsHref: string;
 }) => (
   <Card
     data-testid="certification-card"
@@ -47,7 +45,7 @@ export const CertificationCard = ({
     }
     enlargeLink
     linkProps={{
-      href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certification.id}`,
+      href: detailsHref,
     }}
   />
 );
