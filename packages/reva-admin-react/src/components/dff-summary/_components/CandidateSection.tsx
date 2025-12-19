@@ -99,80 +99,124 @@ export default function CandidateSection({
   return (
     <div className="flex flex-col gap-6">
       <h3 className="mb-0">Civilité</h3>
-      <div
-        className="flex flex-col gap-6 ml-10"
-        data-testid="candidate-section"
-      >
+      <div className="flex flex-col gap-6 ml-10">
         <div className="flex flex-row gap-4 flex-wrap">
           <dl className="w-[170px]">
-            <dt>Civilité</dt>
-            <dd className="font-medium">{genderLabel}</dd>
+            <dt id="candidate-civilite-label">Civilité</dt>
+            <dd
+              aria-labelledby="candidate-civilite-label"
+              className="font-medium"
+            >
+              {genderLabel}
+            </dd>
           </dl>
           <dl className="w-[170px]">
-            <dt>Nom de naissance</dt>
-            <dd className="font-medium">{lastname}</dd>
+            <dt id="candidate-lastname-label">Nom de naissance</dt>
+            <dd
+              aria-labelledby="candidate-lastname-label"
+              className="font-medium"
+            >
+              {lastname}
+            </dd>
           </dl>
           <dl className="w-[170px]">
-            <dt>Prénoms</dt>
-            <dd className="font-medium">
+            <dt id="candidate-firstnames-label">Prénoms</dt>
+            <dd
+              aria-labelledby="candidate-firstnames-label"
+              className="font-medium"
+            >
               {firstname}
               {firstname2 ? `, ${firstname2}` : ""}
               {firstname3 ? `, ${firstname3}` : ""}
             </dd>
           </dl>
           <dl className="w-[170px]">
-            <dt>Date de naissance</dt>
-            <dd className="font-medium">
+            <dt id="candidate-birthdate-label">Date de naissance</dt>
+            <dd
+              aria-labelledby="candidate-birthdate-label"
+              className="font-medium"
+            >
               {birthdate ? formatIso8601Date(birthdate) : "-"}
             </dd>
           </dl>
           <dl className="w-[170px]">
-            <dt>Ville de naissance</dt>
-            <dd className="font-medium">
+            <dt id="candidate-birthcity-label">Ville de naissance</dt>
+            <dd
+              aria-labelledby="candidate-birthcity-label"
+              className="font-medium"
+            >
               {birthCity}
               {birthDepartment ? ` (${birthDepartment.code})` : ""}
             </dd>
           </dl>
           <dl className="w-[170px]">
-            <dt>Nationalité</dt>
-            <dd className="font-medium">{nationality}</dd>
+            <dt id="candidate-nationality-label">Nationalité</dt>
+            <dd
+              aria-labelledby="candidate-nationality-label"
+              className="font-medium"
+            >
+              {nationality}
+            </dd>
           </dl>
         </div>
         <div className="flex flex-col gap-4">
           <h4 className="mb-0">Niveau de formation</h4>
           <dl>
-            <dt>Niveau de formation le plus élevé</dt>
-            <dd className="font-medium">
+            <dt id="candidate-education-level-label">
+              Niveau de formation le plus élevé
+            </dt>
+            <dd
+              aria-labelledby="candidate-education-level-label"
+              className="font-medium"
+            >
               {niveauDeFormationLePlusEleve?.level}
             </dd>
           </dl>
           <dl>
-            <dt>Niveau de la certification obtenue la plus élevée</dt>
-            <dd className="font-medium">{highestDegree?.level}</dd>
+            <dt id="candidate-highest-degree-level-label">
+              Niveau de la certification obtenue la plus élevée
+            </dt>
+            <dd
+              aria-labelledby="candidate-highest-degree-level-label"
+              className="font-medium"
+            >
+              {highestDegree?.level}
+            </dd>
           </dl>
           <dl>
-            <dt>Intitulé de la certification la plus élevée obtenue</dt>
-            <dd className="font-medium">{highestDegreeLabel}</dd>
+            <dt id="candidate-highest-degree-label-label">
+              Intitulé de la certification la plus élevée obtenue
+            </dt>
+            <dd
+              aria-labelledby="candidate-highest-degree-label-label"
+              className="font-medium"
+            >
+              {highestDegreeLabel}
+            </dd>
           </dl>
         </div>
       </div>
       <h3 className="mb-0">Contact</h3>
       <div className="flex flex-col gap-4 ml-10">
         <dl>
-          <dt>Adresse postale</dt>
-          <dd className="font-medium">
+          <dt id="candidate-address-label">Adresse postale</dt>
+          <dd aria-labelledby="candidate-address-label" className="font-medium">
             {street} {addressComplement ? `, ${addressComplement}` : ""} {zip}{" "}
             {city}
           </dd>
         </dl>
         <div className="flex flex-row gap-4 flex-wrap">
           <dl>
-            <dt>Adresse électronique</dt>
-            <dd className="font-medium">{email}</dd>
+            <dt id="candidate-email-label">Adresse électronique</dt>
+            <dd aria-labelledby="candidate-email-label" className="font-medium">
+              {email}
+            </dd>
           </dl>
           <dl>
-            <dt>Téléphone</dt>
-            <dd className="font-medium">{phone}</dd>
+            <dt id="candidate-phone-label">Téléphone</dt>
+            <dd aria-labelledby="candidate-phone-label" className="font-medium">
+              {phone}
+            </dd>
           </dl>
         </div>
       </div>

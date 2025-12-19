@@ -531,46 +531,36 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       page,
     }) => {
       const dffSummary = page.getByTestId("dff-summary");
+      await expect(dffSummary.getByLabel("Civilité")).toHaveText("Mme ");
+      await expect(dffSummary.getByLabel("Nom de naissance")).toHaveText(
+        "Durand",
+      );
+      await expect(dffSummary.getByLabel("Prénoms")).toHaveText(
+        "Camille, Sabine",
+      );
+      await expect(dffSummary.getByLabel("Date de naissance")).toHaveText(
+        "12/03/1987",
+      );
+      await expect(dffSummary.getByLabel("Ville de naissance")).toHaveText(
+        "Lyon (69)",
+      );
+      await expect(dffSummary.getByLabel("Nationalité")).toHaveText("Française");
+      await expect(dffSummary.getByLabel("Adresse postale")).toHaveText(
+        "10 quai du Port 13002 Marseille",
+      );
+      await expect(dffSummary.getByLabel("Adresse électronique")).toHaveText(
+        "camille.durand@example.com",
+      );
+      await expect(dffSummary.getByLabel("Téléphone")).toHaveText("0607080910");
       await expect(
-        dffSummary
-          .getByTestId("candidate-section")
-          .getByText("Camille, Sabine"),
-      ).toBeVisible();
-      await expect(
-        dffSummary.getByTestId("candidate-section").getByText("Durand"),
-      ).toBeVisible();
-      await expect(
-        dffSummary.getByTestId("candidate-section").getByText("12/03/1987"),
-      ).toBeVisible();
-      await expect(
-        dffSummary.getByTestId("candidate-section").getByText("Lyon (69)"),
-      ).toBeVisible();
-      await expect(
-        dffSummary.getByText("10 quai du Port 13002 Marseille"),
-      ).toBeVisible();
-      await expect(
-        dffSummary.getByText("camille.durand@example.com"),
-      ).toBeVisible();
-      await expect(dffSummary.getByText("0607080910")).toBeVisible();
-      await expect(dffSummary.getByText("Française")).toBeVisible();
-      await expect(
-        dffSummary.locator(
-          "dt:has-text('Niveau de formation le plus élevé') + dd",
-        ),
+        dffSummary.getByLabel("Niveau de formation le plus élevé"),
       ).toHaveText("6");
       await expect(
-        dffSummary.locator(
-          "dt:has-text('Niveau de la certification obtenue la plus élevée') + dd",
-        ),
+        dffSummary.getByLabel("Niveau de la certification obtenue la plus élevée"),
       ).toHaveText("6");
       await expect(
-        dffSummary.getByText(
-          "Intitulé de la certification la plus élevée obtenue",
-        ),
-      ).toBeVisible();
-      await expect(
-        dffSummary.getByText("Master logistique et transport"),
-      ).toBeVisible();
+        dffSummary.getByLabel("Intitulé de la certification la plus élevée obtenue"),
+      ).toHaveText("Master logistique et transport");
     });
 
     test("renders certification information and languages", async ({
