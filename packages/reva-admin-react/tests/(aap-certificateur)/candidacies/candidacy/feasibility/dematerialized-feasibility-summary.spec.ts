@@ -524,7 +524,9 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       await expect(
         dffSummary.getByText("Accès au dossier de faisabilité intégral"),
       ).toBeVisible();
-      await expect(dffSummary.getByText("31/12/2024")).toBeVisible();
+      await expect(
+        dffSummary.getByLabel("Date de fin de validité"),
+      ).toHaveText("31/12/2024");
     });
 
     test("shows candidate identification and contact details", async ({

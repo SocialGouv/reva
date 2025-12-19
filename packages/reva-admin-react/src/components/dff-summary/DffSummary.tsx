@@ -147,12 +147,17 @@ export function DffSummary({
           <h3>Nature de la demande</h3>
           <EligibiltyBadge eligibilityRequirement={eligibilityRequirement} />
           {eligibilityValidUntil && (
-            <>
-              <p className="mb-0 mt-4">Date de fin de validité</p>
-              <p className="font-medium mb-4">
+            <dl className="mt-4 mb-4">
+              <dt id="eligibility-valid-until-label" className="mb-0">
+                Date de fin de validité
+              </dt>
+              <dd
+                aria-labelledby="eligibility-valid-until-label"
+                className="font-medium"
+              >
                 {format(eligibilityValidUntil, "dd/MM/yyyy")}
-              </p>
-            </>
+              </dd>
+            </dl>
           )}
           <h3 className="mt-6">Certification professionnelle visée</h3>
           <CertificationCard candidacy={candidacy} />
