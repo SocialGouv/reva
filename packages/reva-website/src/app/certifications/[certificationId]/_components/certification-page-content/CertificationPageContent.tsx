@@ -102,49 +102,51 @@ export const CertificationPageContent = async ({
                 : "VAE en autonomie"}
             </Tag>
           </div>
-          <div className="flex flex-col md:flex-row gap-6 mt-8">
-            <Tile
-              title={`Niveau ${certification.level}`}
-              desc={
-                <span className="block w-[180px] truncate">
-                  {certification.typeDiplome}
-                </span>
-              }
-              classes={{ content: "p-0" }}
-              className="w-[282px]"
-              small
-              orientation="horizontal"
-              imageSvg
-              imageUrl="/candidate-space/certifications/pictograms/information.svg"
-              imageAlt="icône information"
-            />
-            <Tile
-              title="Date d'expiration"
-              desc={new Date(certification.rncpExpiresAt).toLocaleDateString(
-                "fr-FR",
+          <div className="flex flex-wrap items-end justify-between gap-6 mt-8">
+            <div className="flex flex-wrap items-stretch gap-6">
+              <Tile
+                title={`Niveau ${certification.level}`}
+                desc={
+                  <span className="block w-[180px] truncate">
+                    {certification.typeDiplome}
+                  </span>
+                }
+                classes={{ content: "p-0" }}
+                className="w-[282px]"
+                small
+                orientation="horizontal"
+                imageSvg
+                imageUrl="/candidate-space/certifications/pictograms/information.svg"
+                imageAlt="icône information"
+              />
+              <Tile
+                title="Date d'expiration"
+                desc={new Date(certification.rncpExpiresAt).toLocaleDateString(
+                  "fr-FR",
+                )}
+                classes={{ content: "p-0" }}
+                className="w-[282px]"
+                small
+                orientation="horizontal"
+                imageSvg
+                imageUrl="/candidate-space/certifications/pictograms/calendar.svg"
+                imageAlt="icône calendrier"
+              />
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <SelectCertificationButton certificationId={certification.id} />
+              {showVaeCollective && (
+                <Button
+                  priority="secondary"
+                  linkProps={{
+                    href: `/inscription-candidat/vae-collective/`,
+                  }}
+                >
+                  Utiliser un code VAE collective
+                </Button>
               )}
-              classes={{ content: "p-0" }}
-              className="w-[282px]"
-              small
-              orientation="horizontal"
-              imageSvg
-              imageUrl="/candidate-space/certifications/pictograms/calendar.svg"
-              imageAlt="icône calendrier"
-            />
+            </div>
           </div>
-        </div>
-        <div className="flex gap-4 mt-12">
-          <SelectCertificationButton certificationId={certification.id} />
-          {showVaeCollective && (
-            <Button
-              priority="secondary"
-              linkProps={{
-                href: `/inscription-candidat/vae-collective/`,
-              }}
-            >
-              Utiliser un code VAE collective
-            </Button>
-          )}
         </div>
         <Tabs
           className="mt-12"
