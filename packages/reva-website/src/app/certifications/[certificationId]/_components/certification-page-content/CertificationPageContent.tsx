@@ -93,16 +93,8 @@ export const CertificationPageContent = async ({
               {certification.certificationAuthorityStructure.label}
             </p>
           )}
-          <div className="flex flex-row items-center gap-4">
-            <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
-
-            <Tag small>
-              {certification?.isAapAvailable
-                ? "VAE en autonomie ou accompagnée"
-                : "VAE en autonomie"}
-            </Tag>
-          </div>
-          <div className="flex flex-wrap items-end justify-between gap-6 mt-8">
+          <Tag className="mt-4">{`RNCP ${certification?.codeRncp}`}</Tag>
+          <div className="flex flex-wrap items-end justify-between gap-6 mt-2">
             <div className="flex flex-wrap items-stretch gap-6">
               <Tile
                 title={`Niveau ${certification.level}`}
