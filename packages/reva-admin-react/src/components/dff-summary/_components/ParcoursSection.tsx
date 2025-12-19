@@ -18,14 +18,40 @@ export default function ParcoursSection({
       <div className="flex">
         <h3>Préconisation accompagnement méthodologique </h3>
       </div>
-      <div className="ml-10">
-        <p className="mb-2">
-          Accompagnement individuel : {individualHourCount ?? 0}h
-        </p>
-        <p className="mb-2">
-          Accompagnement collectif : {collectiveHourCount ?? 0}h
-        </p>
-        <p>Formation : {additionalHourCount ?? 0}h</p>
+      <div className="ml-10 flex flex-col gap-2 mb-6">
+        <dl>
+          <dt id="parcours-individual-hours-label" className="inline">
+            Accompagnement individuel :{" "}
+          </dt>
+          <dd
+            aria-labelledby="parcours-individual-hours-label"
+            className="inline font-medium"
+          >
+            {individualHourCount ?? 0}h
+          </dd>
+        </dl>
+        <dl>
+          <dt id="parcours-collective-hours-label" className="inline">
+            Accompagnement collectif :{" "}
+          </dt>
+          <dd
+            aria-labelledby="parcours-collective-hours-label"
+            className="inline font-medium"
+          >
+            {collectiveHourCount ?? 0}h
+          </dd>
+        </dl>
+        <dl>
+          <dt id="parcours-training-hours-label" className="inline">
+            Formation :{" "}
+          </dt>
+          <dd
+            aria-labelledby="parcours-training-hours-label"
+            className="inline font-medium"
+          >
+            {additionalHourCount ?? 0}h
+          </dd>
+        </dl>
       </div>
 
       <h3>Préconisation actes formatifs </h3>

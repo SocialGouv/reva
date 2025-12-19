@@ -705,12 +705,12 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
     }) => {
       const dffSummary = page.getByTestId("dff-summary");
       await expect(
-        dffSummary.getByText("Accompagnement individuel : 42h"),
-      ).toBeVisible();
+        dffSummary.getByLabel("Accompagnement individuel :"),
+      ).toHaveText("42h");
       await expect(
-        dffSummary.getByText("Accompagnement collectif : 18h"),
-      ).toBeVisible();
-      await expect(dffSummary.getByText("Formation : 9h")).toBeVisible();
+        dffSummary.getByLabel("Accompagnement collectif :"),
+      ).toHaveText("18h");
+      await expect(dffSummary.getByLabel("Formation :")).toHaveText("9h");
 
       await expect(
         dffSummary.getByText("Prévention des risques professionnels"),
