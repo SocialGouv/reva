@@ -58,30 +58,61 @@ export default function CertificationSection({
   return (
     <div className="mt-6">
       {certificationAuthorityStructureLabel && (
-        <>
-          <p className="mb-0">Certificateur :</p>
-          <p className="font-medium">{certificationAuthorityStructureLabel}</p>
-        </>
+        <dl className="my-4">
+          <dt
+            id="certification-authority-structure-label"
+            className="font-normal mb-0"
+          >
+            Certificateur :
+          </dt>
+          <dd
+            aria-labelledby="certification-authority-structure-label"
+            className="font-medium"
+          >
+            {certificationAuthorityStructureLabel}
+          </dd>
+        </dl>
       )}
       {!!option && (
-        <>
-          <p className="mb-0">Option ou parcours:</p>
-          <p className="font-medium">{option}</p>
-        </>
+        <dl className="my-4">
+          <dt id="certification-option-label" className="font-normal mb-0">
+            Option ou parcours :
+          </dt>
+          <dd
+            aria-labelledby="certification-option-label"
+            className="font-medium"
+          >
+            {option}
+          </dd>
+        </dl>
       )}
       {(firstForeignLanguage || secondForeignLanguage) && (
         <div className="flex gap-2 mb-4">
           {firstForeignLanguage && (
-            <div className="flex flex-col flex-1">
-              <p className="mb-0">Langue vivante 1 :</p>
-              <p className="mb-0 font-medium">{firstForeignLanguage}</p>
-            </div>
+            <dl className="flex flex-col flex-1">
+              <dt id="certification-first-language-label">
+                Langue vivante 1 :
+              </dt>
+              <dd
+                aria-labelledby="certification-first-language-label"
+                className="font-medium"
+              >
+                {firstForeignLanguage}
+              </dd>
+            </dl>
           )}
           {secondForeignLanguage && (
-            <div className="flex flex-col flex-1">
-              <p className="mb-0">Langue vivante 2 :</p>
-              <p className="mb-0 font-medium">{secondForeignLanguage}</p>
-            </div>
+            <dl className="flex flex-col flex-1">
+              <dt id="certification-second-language-label">
+                Langue vivante 2 :
+              </dt>
+              <dd
+                aria-labelledby="certification-second-language-label"
+                className="font-medium"
+              >
+                {secondForeignLanguage}
+              </dd>
+            </dl>
           )}
         </div>
       )}

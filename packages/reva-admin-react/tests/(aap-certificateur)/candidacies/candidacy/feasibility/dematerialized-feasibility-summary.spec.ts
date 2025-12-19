@@ -582,27 +582,21 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       ).toBeVisible();
       await expect(dffSummary.getByText("RNCP 2983029843")).toBeVisible();
 
-      const certificationSection = dffSummary
-        .locator("div")
-        .filter({ hasText: "Certificateur :" })
-        .last();
-      await expect(certificationSection).toContainText("Ministère du Travail");
+      await expect(dffSummary.getByLabel("Certificateur :")).toHaveText(
+        "Ministère du Travail",
+      );
 
-      await expect(
-        dffSummary.getByText("Option pilotage d'activité"),
-      ).toBeVisible();
+      await expect(dffSummary.getByLabel("Option ou parcours :")).toHaveText(
+        "Option pilotage d'activité",
+      );
 
-      const langue1Container = dffSummary
-        .locator("div")
-        .filter({ hasText: "Langue vivante 1 :" })
-        .last();
-      await expect(langue1Container).toContainText("Anglais");
+      await expect(dffSummary.getByLabel("Langue vivante 1 :")).toHaveText(
+        "Anglais",
+      );
 
-      const langue2Container = dffSummary
-        .locator("div")
-        .filter({ hasText: "Langue vivante 2 :" })
-        .last();
-      await expect(langue2Container).toContainText("Espagnol");
+      await expect(dffSummary.getByLabel("Langue vivante 2 :")).toHaveText(
+        "Espagnol",
+      );
 
       await expect(
         dffSummary.getByText("La certification dans sa totalité"),
