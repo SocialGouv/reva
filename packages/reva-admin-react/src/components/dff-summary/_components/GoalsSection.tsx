@@ -4,11 +4,11 @@ export default function GoalsSection({ goals }: { goals: Goal[] }) {
   return (
     <div className="flex flex-col gap-6 mt-6">
       <h3 className="mb-0">Objectifs</h3>
-      <div className="ml-10">
+      <ul className="ml-10 my-0 text-lg">
         {goals.map((goal) => (
-          <p key={goal.id}>{goal.label}</p>
+          <li key={goal.id}>{goal.label}</li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
