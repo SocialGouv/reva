@@ -1,5 +1,4 @@
 import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
-import Tag from "@codegouvfr/react-dsfr/Tag";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
@@ -8,7 +7,6 @@ export interface AutocompleteOption {
   label: string;
   value: string;
   codeRncp?: string;
-  isAapAvailable?: boolean;
 }
 export const AutocompleteDsfr = ({
   searchFunction,
@@ -181,13 +179,6 @@ export const AutocompleteDsfr = ({
                             <span className="text-dsfrGray-mentionGrey text-xs">
                               RNCP {option.codeRncp}
                             </span>
-                          </div>
-                          <div className="ml-auto">
-                            <Tag small>
-                              {option.isAapAvailable
-                                ? "VAE en autonomie ou accompagnée"
-                                : "VAE en autonomie"}
-                            </Tag>
                           </div>
                         </div>
                       );

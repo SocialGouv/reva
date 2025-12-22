@@ -54,9 +54,7 @@ test.describe("with search results", () => {
       .locator('[data-testid="autocomplete-options"] > div')
       .first();
 
-    await expect(firstOption).toHaveText(
-      "BTS ChaudronnierRNCP 13125VAE en autonomie",
-    );
+    await expect(firstOption).toHaveText("BTS ChaudronnierRNCP 13125");
   });
 
   test("should go to the next page when a certificate is found and clicked on", async ({
