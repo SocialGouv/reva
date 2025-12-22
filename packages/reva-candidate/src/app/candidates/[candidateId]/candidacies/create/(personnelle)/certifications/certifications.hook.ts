@@ -23,6 +23,10 @@ const CERTIFICATIONS = graphql(`
         summary
         codeRncp
         status
+        certificationAuthorityStructure {
+          id
+          label
+        }
       }
       info {
         totalRows

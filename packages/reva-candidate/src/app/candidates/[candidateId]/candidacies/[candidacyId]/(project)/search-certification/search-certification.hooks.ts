@@ -29,6 +29,10 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
         summary
         codeRncp
         status
+        certificationAuthorityStructure {
+          id
+          label
+        }
       }
       info {
         totalRows

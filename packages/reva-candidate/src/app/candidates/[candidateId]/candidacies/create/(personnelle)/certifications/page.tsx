@@ -86,6 +86,7 @@ export default function CertificationsPage() {
                 size="small"
                 title={certification.label}
                 detail={`RNCP ${certification.codeRncp}`}
+                desc={certification.certificationAuthorityStructure?.label}
                 key={certification.id}
                 linkProps={{
                   href: `./${certification.id}`,
