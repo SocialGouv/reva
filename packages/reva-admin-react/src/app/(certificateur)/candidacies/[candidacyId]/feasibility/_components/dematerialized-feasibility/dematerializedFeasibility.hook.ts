@@ -112,6 +112,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           id
         }
         certification {
+          id
           certificationAuthorities {
             id
             label

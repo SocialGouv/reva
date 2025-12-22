@@ -109,6 +109,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             id
           }
           certification {
+            id
             label
             codeRncp
             level
