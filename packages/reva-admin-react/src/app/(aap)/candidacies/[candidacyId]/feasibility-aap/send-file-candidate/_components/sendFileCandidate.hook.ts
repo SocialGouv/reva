@@ -85,6 +85,10 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
           collectiveHourCount
           additionalHourCount
           isCertificationPartial
+          typology
+          conventionCollective {
+            label
+          }
           basicSkills {
             label
             id
@@ -94,11 +98,16 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             id
           }
           certification {
+            id
             label
             codeRncp
             level
             degree {
               level
+            }
+            competenceBlocs {
+              id
+              label
             }
             certificationAuthorityStructure {
               label

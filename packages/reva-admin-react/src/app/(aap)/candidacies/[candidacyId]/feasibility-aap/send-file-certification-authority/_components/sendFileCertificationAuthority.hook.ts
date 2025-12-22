@@ -88,6 +88,10 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
         candidacy {
           id
           isCertificationPartial
+          typology
+          conventionCollective {
+            label
+          }
           certificationAuthorities {
             id
             label
@@ -115,6 +119,10 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             level
             degree {
               level
+            }
+            competenceBlocs {
+              id
+              label
             }
             certificationAuthorityStructure {
               label

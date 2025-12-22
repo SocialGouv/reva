@@ -64,8 +64,6 @@ export function DffSummary({
     return null;
   }
 
-  console.log("candidacy", candidacy);
-
   const {
     option,
     firstForeignLanguage,

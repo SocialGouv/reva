@@ -83,6 +83,10 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
       candidacy {
         id
         status
+        typology
+        conventionCollective {
+          label
+        }
         organism {
           contactAdministrativePhone
           contactAdministrativeEmail
@@ -122,6 +126,10 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           level
           degree {
             level
+          }
+          competenceBlocs {
+            id
+            label
           }
           certificationAuthorityStructure {
             label

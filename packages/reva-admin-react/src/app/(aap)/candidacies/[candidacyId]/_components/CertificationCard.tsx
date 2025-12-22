@@ -29,8 +29,6 @@ export const CertificationCard = ({
   if (!certification) {
     return null;
   }
-  console.log("certification", certification);
-
   // Bloquer le changement de certification si DF incomplet et MULTI_CANDIDACY actif (sauf pour l'admin)
   const isDfIncomplete =
     candidacyActiveStatus === "DOSSIER_FAISABILITE_INCOMPLET";
