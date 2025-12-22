@@ -1,7 +1,6 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import Card from "@codegouvfr/react-dsfr/Card";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
-import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
@@ -28,7 +27,6 @@ const searchCertificationsQuery = graphql(`
         id
         label
         codeRncp
-        isAapAvailable
       }
       info {
         totalRows
@@ -141,13 +139,6 @@ const CertificationResultPage = async ({
                       href: `/certifications/${certification?.id}`,
                     }}
                     enlargeLink
-                    start={
-                      <Tag small>
-                        {certification?.isAapAvailable
-                          ? "VAE en autonomie ou accompagnée"
-                          : "VAE en autonomie"}
-                      </Tag>
-                    }
                     classes={{
                       detail: "mt-2",
                     }}
