@@ -23,7 +23,6 @@ const CERTIFICATIONS = graphql(`
         summary
         codeRncp
         status
-        isAapAvailable
       }
       info {
         totalRows

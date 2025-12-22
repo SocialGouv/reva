@@ -29,7 +29,6 @@ const SEARCH_CERTIFICATIONS_FOR_CANDIDATE = graphql(`
         summary
         codeRncp
         status
-        isAapAvailable
       }
       info {
         totalRows
@@ -66,7 +65,6 @@ const GET_CANDIDACY_BY_ID_FOR_SEARCH_CERTIFICATION_PAGE = graphql(`
         id
         label
         codeRncp
-        isAapAvailable
       }
     }
   }
