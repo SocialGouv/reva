@@ -28,12 +28,18 @@ test.use({
                     label: "certification1",
                     codeRncp: "rncp1",
                     domains: [],
+                    certificationAuthorityStructure: {
+                      label: "certificationAuthorityStructure1",
+                    },
                   },
                   {
                     id: 2,
                     label: "certification2",
                     codeRncp: "rncp2",
                     domains: [],
+                    certificationAuthorityStructure: {
+                      label: "certificationAuthorityStructure2",
+                    },
                   },
                 ],
                 info: {

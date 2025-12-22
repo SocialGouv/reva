@@ -30,6 +30,9 @@ const searchCertificationsAndGetCohorteInfoQuery = graphql(`
         id
         label
         codeRncp
+        certificationAuthorityStructure {
+          label
+        }
         domains {
           id
           label

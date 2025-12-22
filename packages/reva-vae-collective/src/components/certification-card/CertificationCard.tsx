@@ -9,6 +9,9 @@ export const CertificationCard = ({
     id: string;
     label: string;
     codeRncp: string;
+    certificationAuthorityStructure?: {
+      label: string;
+    } | null;
     domains: {
       children: {
         id: string;
@@ -43,10 +46,11 @@ export const CertificationCard = ({
         </div>
       </div>
     }
+    endDetail="Consulter"
+    desc={certification.certificationAuthorityStructure?.label}
     enlargeLink
     linkProps={{
       href: detailsHref,
     }}
-    endDetail="Consulter"
   />
 );
