@@ -27,6 +27,9 @@ const searchCertificationsQuery = graphql(`
         id
         label
         codeRncp
+        certificationAuthorityStructure {
+          label
+        }
       }
       info {
         totalRows
@@ -135,6 +138,7 @@ const CertificationResultPage = async ({
                         RNCP {certification.codeRncp}
                       </span>
                     }
+                    desc={certification.certificationAuthorityStructure?.label}
                     linkProps={{
                       href: `/certifications/${certification?.id}`,
                     }}
