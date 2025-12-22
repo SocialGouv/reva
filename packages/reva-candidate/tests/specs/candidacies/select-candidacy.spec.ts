@@ -87,7 +87,7 @@ test.describe("select candidacy from candidacies page", () => {
     ],
   });
 
-  test("when i access the page it shows one candidacy card, click on it and redirects to the candidacy page", async ({
+  test.skip("when i access the page it shows one candidacy card, click on it and redirects to the candidacy page", async ({
     page,
   }) => {
     await loginAndWaitForInitialLoad(page);

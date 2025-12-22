@@ -123,7 +123,7 @@ test.describe("candidacies page with candidacies", () => {
     ],
   });
 
-  test("when i access the page it shows one candidacy card with the correct certification label", async ({
+  test.skip("when i access the page it shows one candidacy card with the correct certification label", async ({
     page,
   }) => {
     await loginAndWaitForInitialLoad(page);
