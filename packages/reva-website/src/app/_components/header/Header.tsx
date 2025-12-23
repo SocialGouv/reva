@@ -158,9 +158,7 @@ export const Header = (props: { className?: string }) => {
                 key="start"
                 priority="secondary"
                 linkProps={{
-                  href: isFeatureActive("VAE_COLLECTIVE")
-                    ? "/commencer"
-                    : "/espace-candidat",
+                  href: "/commencer",
                 }}
               >
                 Commencer une VAE

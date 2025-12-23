@@ -7,19 +7,11 @@ import {
 
 import homePageItems from "./fixtures/strapi/homePageItems.json";
 
-const fvae = graphql.link("https://reva-api/api/graphql");
 const strapi = graphql.link("https://strapi.vae.gouv.fr/graphql");
 
 test.use({
   mswHandlers: [
     [
-      fvae.query("activeFeaturesForConnectedUser", () => {
-        return HttpResponse.json({
-          data: {
-            activeFeaturesForConnectedUser: ["VAE_COLLECTIVE"],
-          },
-        });
-      }),
       strapi.query("getHomePageItems", () => {
         return HttpResponse.json(homePageItems);
       }),

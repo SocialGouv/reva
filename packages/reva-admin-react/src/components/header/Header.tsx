@@ -115,7 +115,6 @@ const getNavigationTabs = ({
   isAdminCertificationAuthority,
   metabaseDashboardIframeUrl,
   showAAPVaeCollectivesTab,
-  showPorteursDeProjetVaeCollectiveMenu,
   showAAPAideTab,
   showCertificateurAideTab,
   isCertificateurCandidaciesAnnuaireFeatureActive,
@@ -129,7 +128,6 @@ const getNavigationTabs = ({
   isAdminCertificationAuthority: boolean;
   metabaseDashboardIframeUrl?: string | null;
   showAAPVaeCollectivesTab: boolean;
-  showPorteursDeProjetVaeCollectiveMenu: boolean;
   showAAPAideTab: boolean;
   showCertificateurAideTab: boolean;
   isCertificateurCandidaciesAnnuaireFeatureActive: boolean;
@@ -174,17 +172,13 @@ const getNavigationTabs = ({
             PATHS.CERTIFICATION_AUTHORITY_STRUCTURES,
           ),
         }),
-        ...(showPorteursDeProjetVaeCollectiveMenu
-          ? [
-              createTab({
-                text: LABELS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
-                href: PATHS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
-                isActive: currentPathname.startsWith(
-                  PATHS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
-                ),
-              }),
-            ]
-          : []),
+        createTab({
+          text: LABELS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
+          href: PATHS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
+          isActive: currentPathname.startsWith(
+            PATHS.PORTEURS_DE_PROJET_VAE_COLLECTIVE,
+          ),
+        }),
       ],
     },
     createTab({
@@ -366,7 +360,6 @@ export const Header = () => {
     getCertificationAuthorityMetabaseUrl?.account_getAccountForConnectedUser
       ?.certificationAuthority?.metabaseDashboardIframeUrl;
 
-  const isVaeCollectiveFeatureActive = isFeatureActive("VAE_COLLECTIVE");
   const isAAPAideFeatureActive = isFeatureActive("AAP_HELP");
   const isCertificateurAideFeatureActive =
     isFeatureActive("CERTIFICATEUR_HELP");
@@ -378,17 +371,14 @@ export const Header = () => {
     queryKey: ["aap", "getCohortesVaeCollectivesForConnectedAap"],
     queryFn: () =>
       graphqlClient.request(getCohortesVaeCollectivesForConnectedAapQuery),
-    enabled: isVaeCollectiveFeatureActive && isOrganism && !isAdmin,
+    enabled: isOrganism && !isAdmin,
   });
 
   const showAAPVaeCollectivesTab =
-    isVaeCollectiveFeatureActive &&
     isOrganism &&
     !isAdmin &&
     !!getCohortesVaeCollectivesForConnectedAap
       ?.cohortesVaeCollectivesForConnectedAap?.length;
-
-  const showPorteursDeProjetVaeCollectiveMenu = isVaeCollectiveFeatureActive;
 
   const showAAPAideTab = isAAPAideFeatureActive;
   const showCertificateurAideTab = isCertificateurAideFeatureActive;
@@ -403,7 +393,6 @@ export const Header = () => {
     isAdminCertificationAuthority,
     metabaseDashboardIframeUrl,
     showAAPVaeCollectivesTab,
-    showPorteursDeProjetVaeCollectiveMenu,
     showAAPAideTab,
     showCertificateurAideTab,
     isCertificateurCandidaciesAnnuaireFeatureActive,

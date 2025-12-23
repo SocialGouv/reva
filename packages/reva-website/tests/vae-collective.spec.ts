@@ -9,21 +9,6 @@ import validCohorte from "./fixtures/inscription-candidat/vae-collective/validCo
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
-test.use({
-  mswHandlers: [
-    [
-      fvae.query("activeFeaturesForConnectedUser", () => {
-        return HttpResponse.json({
-          data: {
-            activeFeaturesForConnectedUser: ["VAE_COLLECTIVE"],
-          },
-        });
-      }),
-    ],
-    { scope: "test" },
-  ],
-});
-
 test.describe("VAE Collective Code Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/inscription-candidat/vae-collective");

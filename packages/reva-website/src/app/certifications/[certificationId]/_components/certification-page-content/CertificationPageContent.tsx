@@ -4,8 +4,6 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
-import { isFeatureActive } from "@/utils/featureFlipping";
-
 import { CertificationJuryTypeOfModality } from "@/graphql/generated/graphql";
 
 import { SelectCertificationButton } from "./_components/select-certification-button/SelectCertificationButton";
@@ -67,8 +65,6 @@ export const CertificationPageContent = async ({
     }[];
   };
 }) => {
-  const showVaeCollective = await isFeatureActive("VAE_COLLECTIVE");
-
   return (
     <div className="flex-1 flex pb-8 min-h-screen">
       <div className="flex-1 bg-white w-full mx-auto flex flex-col fr-container p-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
@@ -127,16 +123,14 @@ export const CertificationPageContent = async ({
             </div>
             <div className="flex flex-wrap gap-4">
               <SelectCertificationButton certificationId={certification.id} />
-              {showVaeCollective && (
-                <Button
-                  priority="secondary"
-                  linkProps={{
-                    href: `/inscription-candidat/vae-collective/`,
-                  }}
-                >
-                  Utiliser un code VAE collective
-                </Button>
-              )}
+              <Button
+                priority="secondary"
+                linkProps={{
+                  href: `/inscription-candidat/vae-collective/`,
+                }}
+              >
+                Utiliser un code VAE collective
+              </Button>
             </div>
           </div>
         </div>

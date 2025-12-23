@@ -74,59 +74,22 @@ test("display expiration date tile", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("should not display VAE collective button when feature flag is disabled", async ({
+test("should display VAE collective button", async ({ page }) => {
+  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  const vaeCollectiveButton = page.getByRole("link", {
+    name: "Utiliser un code VAE collective",
+  });
+  await expect(vaeCollectiveButton).toBeVisible();
+});
+
+test("should navigate to VAE collective page when button is clicked", async ({
   page,
 }) => {
   await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
-  await expect(
-    page.getByRole("link", { name: "Utiliser un code VAE collective" }),
-  ).not.toBeVisible();
-});
-
-test.describe("VAE collective button - with feature flag enabled", () => {
-  test.use({
-    mswHandlers: [
-      [
-        fvae.query("activeFeaturesForConnectedUser", () => {
-          return HttpResponse.json({
-            data: {
-              activeFeaturesForConnectedUser: [
-                "WEBSITE_CERTIFICATION_PAGE_V2",
-                "VAE_COLLECTIVE",
-              ],
-            },
-          });
-        }),
-        fvae.query("getCertificationForCertificationPage", () => {
-          return HttpResponse.json(certificationBtsChaudronnierData);
-        }),
-        strapi.query("getArticlesForCertificationPageUsefulResources", () => {
-          return HttpResponse.json(articlesForCertificationPageUsefulResources);
-        }),
-      ],
-      { scope: "test" },
-    ],
+  const vaeCollectiveButton = page.getByRole("link", {
+    name: "Utiliser un code VAE collective",
   });
+  await vaeCollectiveButton.click();
 
-  test("should display VAE collective button when feature flag is enabled", async ({
-    page,
-  }) => {
-    await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
-    const vaeCollectiveButton = page.getByRole("link", {
-      name: "Utiliser un code VAE collective",
-    });
-    await expect(vaeCollectiveButton).toBeVisible();
-  });
-
-  test("should navigate to VAE collective page when button is clicked", async ({
-    page,
-  }) => {
-    await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
-    const vaeCollectiveButton = page.getByRole("link", {
-      name: "Utiliser un code VAE collective",
-    });
-    await vaeCollectiveButton.click();
-
-    await expect(page).toHaveURL("/inscription-candidat/vae-collective/");
-  });
+  await expect(page).toHaveURL("/inscription-candidat/vae-collective/");
 });
