@@ -21,7 +21,13 @@ import { useEligibility } from "./_components/eligibility.hook";
 const schema = z
   .object({
     eligibility: z.enum(
-      ["", "TOTAL", "PARTIAL", "PARTIAL_WITH_CHANGE", "PARTIAL_WITHOUT_CHANGE"],
+      [
+        "",
+        "PREMIERE_DEMANDE_RECEVABILITE",
+        "DETENTEUR_RECEVABILITE",
+        "DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL",
+        "DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL",
+      ],
       {
         invalid_type_error: "Veuillez sélectionner une situation",
       },
@@ -38,7 +44,10 @@ const schema = z
       });
     }
 
-    if (eligibility === "PARTIAL" || eligibility === "PARTIAL_WITHOUT_CHANGE") {
+    if (
+      eligibility === "DETENTEUR_RECEVABILITE" ||
+      eligibility === "DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL"
+    ) {
       if (!eligibilityValidUntil) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -70,7 +79,9 @@ const eligibilityRequirementMap = (
   timeEnough: DecisionForm["timeEnough"],
 ): "FULL_ELIGIBILITY_REQUIREMENT" | "PARTIAL_ELIGIBILITY_REQUIREMENT" => {
   if (
-    (eligibility === "PARTIAL" || eligibility === "PARTIAL_WITHOUT_CHANGE") &&
+    (eligibility === "DETENTEUR_RECEVABILITE" ||
+      eligibility ===
+        "DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL") &&
     timeEnough === "true"
   ) {
     return "PARTIAL_ELIGIBILITY_REQUIREMENT";
@@ -106,7 +117,8 @@ export default function EligibilityPage() {
   const eligibility = watch("eligibility");
 
   const areOptionalFieldsDisabled = !(
-    eligibility === "PARTIAL" || eligibility === "PARTIAL_WITHOUT_CHANGE"
+    eligibility === "DETENTEUR_RECEVABILITE" ||
+    eligibility === "DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL"
   );
 
   const handleFormSubmit = async ({
@@ -128,7 +140,9 @@ export default function EligibilityPage() {
     const input = {
       eligibilityRequirement,
       eligibilityValidUntil: eligibilityValidUntilDate,
+      eligibilityCandidateSituation: eligibility || undefined,
     };
+
     try {
       await createOrUpdateEligibilityRequirement(input);
       successToast("Recevabilité du candidat enregistré");
@@ -180,18 +194,20 @@ export default function EligibilityPage() {
           nativeSelectProps={{ ...register("eligibility"), defaultValue: "" }}
           data-testid="eligibility-select"
         >
-          <option value="" disabled>
+          <option value={undefined} disabled>
             Choisir une situation
           </option>
-          <option value="TOTAL">
+          <option value="PREMIERE_DEMANDE_RECEVABILITE">
             Première demande de recevabilité pour cette certification
           </option>
-          <option value="PARTIAL">Détenteur d'une recevabilité</option>
-          <option value="PARTIAL_WITH_CHANGE">
+          <option value="DETENTEUR_RECEVABILITE">
+            Détenteur d'une recevabilité
+          </option>
+          <option value="DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL">
             Détenteur d'une recevabilité avec changement de code RNCP et
             révision du référentiel
           </option>
-          <option value="PARTIAL_WITHOUT_CHANGE">
+          <option value="DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL">
             Détenteur d'une recevabilité avec révision sans changement de
             référentiel
           </option>

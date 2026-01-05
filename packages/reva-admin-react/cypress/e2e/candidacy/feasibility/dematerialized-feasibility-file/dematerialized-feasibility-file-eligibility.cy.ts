@@ -25,7 +25,6 @@ function visitFeasibilityEligibility() {
         "getCandidacyByIdForAapFeasibilityEligibilityPage",
         candidacy,
       );
-
       stubQuery(
         req,
         "getCandidacyMenuAndCandidateInfos",
@@ -68,7 +67,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
   });
 
   context("First-time eligibility request", () => {
-    it("should disable date and time fields when TOTAL eligibility is selected", function () {
+    it("should disable date and time fields when PREMIERE_DEMANDE_RECEVABILITE eligibility is selected", function () {
       visitFeasibilityEligibility();
 
       cy.get('[data-testid="form-buttons"]')
@@ -79,7 +78,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
 
       cy.get('[data-testid="eligibility-select"]')
         .children("select")
-        .select("TOTAL");
+        .select("PREMIERE_DEMANDE_RECEVABILITE");
 
       cy.get('[data-testid="eligibility-valid-until-input"]')
         .should("exist")
@@ -102,7 +101,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
   });
 
   context("Existing candidate eligibility", () => {
-    it("should handle PARTIAL eligibility with future date validation", function () {
+    it("should handle DETENTEUR_RECEVABILITE eligibility with future date validation", function () {
       visitFeasibilityEligibility();
 
       cy.get('[data-testid="form-buttons"]')
@@ -113,7 +112,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
 
       cy.get('[data-testid="eligibility-select"]')
         .children("select")
-        .select("PARTIAL");
+        .select("DETENTEUR_RECEVABILITE");
 
       cy.get('[data-testid="eligibility-valid-until-input"]')
         .should("exist")
@@ -140,7 +139,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
         });
     });
 
-    it("should show error message when submitting PARTIAL eligibility with past date", function () {
+    it("should show error message when submitting DETENTEUR_RECEVABILITE eligibility with past date", function () {
       visitFeasibilityEligibility();
 
       cy.get('[data-testid="form-buttons"]')
@@ -151,7 +150,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
 
       cy.get('[data-testid="eligibility-select"]')
         .children("select")
-        .select("PARTIAL");
+        .select("DETENTEUR_RECEVABILITE");
 
       cy.get('[data-testid="eligibility-valid-until-input"]')
         .should("exist")
@@ -188,7 +187,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     });
 
     context("RNCP code changes", () => {
-      it("should disable date and time fields when PARTIAL_WITH_CHANGE eligibility is selected", function () {
+      it("should disable date and time fields when DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL eligibility is selected", function () {
         visitFeasibilityEligibility();
 
         cy.get('[data-testid="form-buttons"]')
@@ -199,7 +198,9 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
 
         cy.get('[data-testid="eligibility-select"]')
           .children("select")
-          .select("PARTIAL_WITH_CHANGE");
+          .select(
+            "DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL",
+          );
 
         cy.get('[data-testid="eligibility-valid-until-input"]')
           .should("exist")
@@ -222,7 +223,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
     });
 
     context("No RNCP code changes", () => {
-      it("should handle PARTIAL_WITHOUT_CHANGE eligibility with future date validation", function () {
+      it("should handle DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL eligibility with future date validation", function () {
         visitFeasibilityEligibility();
 
         cy.get('[data-testid="form-buttons"]')
@@ -233,7 +234,7 @@ describe("Dematerialized Feasibility File Eligibility Page", () => {
 
         cy.get('[data-testid="eligibility-select"]')
           .children("select")
-          .select("PARTIAL_WITHOUT_CHANGE");
+          .select("DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL");
 
         cy.get('[data-testid="eligibility-valid-until-input"]')
           .should("exist")
