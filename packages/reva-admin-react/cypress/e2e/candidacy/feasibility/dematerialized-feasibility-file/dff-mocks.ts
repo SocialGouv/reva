@@ -1,15 +1,3 @@
-import { addMonths, format } from "date-fns";
-
-export const DF_FORMATED_DATE_6_MONTHS_FROM_NOW = format(
-  addMonths(new Date(), 6),
-  "yyyy-MM-dd",
-);
-
-export const DF_FORMATED_DATE_6_MONTHS_AGO = format(
-  addMonths(new Date(), -6),
-  "yyyy-MM-dd",
-);
-
 export const DF_CERTIFICATION = {
   label: "CAP Accompagnant éducatif petite enfance - AEPE",
   codeRncp: "38565",

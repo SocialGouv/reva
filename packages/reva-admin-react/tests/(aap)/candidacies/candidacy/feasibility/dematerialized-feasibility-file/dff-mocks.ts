@@ -118,14 +118,12 @@ export const DEFAULT_FEASIBILITY_FILE = {
   },
 };
 
-// Unused exports - kept for future use
-// These are exported but not currently used in tests
-const _DF_FORMATED_DATE_6_MONTHS_FROM_NOW = format(
+export const DF_FORMATED_DATE_6_MONTHS_FROM_NOW = format(
   addMonths(new Date(), 6),
   "yyyy-MM-dd",
 );
 
-const _DF_FORMATED_DATE_6_MONTHS_AGO = format(
+export const DF_FORMATED_DATE_6_MONTHS_AGO = format(
   addMonths(new Date(), -6),
   "yyyy-MM-dd",
 );
