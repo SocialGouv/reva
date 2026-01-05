@@ -22,9 +22,16 @@ type EligibilityRequirement =
   | "FULL_ELIGIBILITY_REQUIREMENT"
   | "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
+type DFFEligibilityCandidateSituation =
+  | "PREMIERE_DEMANDE_RECEVABILITE"
+  | "DETENTEUR_RECEVABILITE"
+  | "DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL"
+  | "DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL";
+
 export interface DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput {
   eligibilityRequirement: EligibilityRequirement;
   eligibilityValidUntil: number;
+  eligibilityCandidateSituation: DFFEligibilityCandidateSituation;
 }
 
 type CompetenceDetailState = "YES" | "NO" | "PARTIALLY";

@@ -9,7 +9,11 @@ import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 
 export const createOrUpdateEligibilityRequirement = async ({
   candidacyId,
-  input: { eligibilityRequirement, eligibilityValidUntil },
+  input: {
+    eligibilityRequirement,
+    eligibilityValidUntil,
+    eligibilityCandidateSituation,
+  },
 }: {
   input: DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput;
   candidacyId: string;
@@ -31,6 +35,8 @@ export const createOrUpdateEligibilityRequirement = async ({
     dFF.eligibilityRequirement !== eligibilityRequirement;
   const hasChangedEligibilityValidUntil =
     dFF.eligibilityValidUntil !== eligibilityValidUntilDate;
+  const hasChangedEligibilityCandidateSituation =
+    dFF.eligibilityCandidateSituation !== eligibilityCandidateSituation;
 
   if (hasChangedEligibilityRequirement) {
     await prismaClient.dematerializedFeasibilityFile.update({
@@ -39,6 +45,7 @@ export const createOrUpdateEligibilityRequirement = async ({
       },
       data: {
         eligibilityRequirement,
+        eligibilityCandidateSituation,
         eligibilityValidUntil: eligibilityValidUntilDate,
         aapDecision: null,
         aapDecisionComment: null,
@@ -57,13 +64,17 @@ export const createOrUpdateEligibilityRequirement = async ({
         competenceBlocsPartCompletion: "TO_COMPLETE",
       },
     });
-  } else if (hasChangedEligibilityValidUntil) {
+  } else if (
+    hasChangedEligibilityValidUntil ||
+    hasChangedEligibilityCandidateSituation
+  ) {
     await prismaClient.dematerializedFeasibilityFile.update({
       where: {
         id: dFF.id,
       },
       data: {
         eligibilityValidUntil: eligibilityValidUntilDate,
+        eligibilityCandidateSituation,
       },
     });
   }

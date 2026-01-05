@@ -27,6 +27,12 @@ type DematerializedFeasibilityFile {
   eligibilityValidUntil: Timestamp
   dffFile: File
 }
+enum DFFEligibilityCandidateSituation {
+  PREMIERE_DEMANDE_RECEVABILITE
+  DETENTEUR_RECEVABILITE
+  DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL
+  DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL
+}
 
 enum DFFEligibilityRequirement {
   FULL_ELIGIBILITY_REQUIREMENT
@@ -167,6 +173,7 @@ input DematerializedFeasibilityFileCreateOrUpdateSwornStatementInput {
 
 input DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput {
   eligibilityRequirement: DFFEligibilityRequirement!
+  eligibilityCandidateSituation: DFFEligibilityCandidateSituation
   eligibilityValidUntil: Timestamp
 }
 
