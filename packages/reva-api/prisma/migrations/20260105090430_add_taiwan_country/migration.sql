@@ -1,0 +1,1 @@
+INSERT INTO country (label, iso_code) VALUES ('Taïwan', 'TWN');
