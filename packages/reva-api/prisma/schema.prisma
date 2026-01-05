@@ -1654,6 +1654,13 @@ enum DFFEligibilityRequirement {
   PARTIAL_ELIGIBILITY_REQUIREMENT
 }
 
+enum DFFEligibilityCandidateSituation {
+  PREMIERE_DEMANDE_RECEVABILITE
+  DETENTEUR_RECEVABILITE
+  DETENTEUR_RECEVABILITE_AVEC_CHGT_CODE_RNCP_ET_REV_REFERENTIEL
+  DETENTEUR_RECEVABILITE_AVEC_REV_SANS_CHGT_REFERENTIEL
+}
+
 model DematerializedFeasibilityFile {
   id                                String                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   firstForeignLanguage              String?                             @map("first_foreign_language")
@@ -1678,6 +1685,7 @@ model DematerializedFeasibilityFile {
   candidateConfirmationAt           DateTime?                           @map("candidate_confirmation_at") @db.Timestamptz(6)
   eligibilityRequirement            DFFEligibilityRequirement?          @map("eligibility_requirement")
   eligibilityValidUntil             DateTime?                           @map("eligibility_valid_until") @db.Timestamptz(6)
+  eligibilityCandidateSituation     DFFEligibilityCandidateSituation?   @map("eligibility_candidate_situation")
   feasibilityFileId                 String?                             @map("dff_file_id") @db.Uuid
   feasibilityFile                   File?                               @relation("dff_file", fields: [feasibilityFileId], references: [id])
 
