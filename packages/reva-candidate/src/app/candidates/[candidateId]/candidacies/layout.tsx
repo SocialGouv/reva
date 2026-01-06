@@ -40,7 +40,7 @@ export default function CandidaciesLayout({
 
   const candidacies = useMemo(() => candidate?.candidacies || [], [candidate]);
 
-  const { isFeatureActive } = useFeatureFlipping();
+  const { isFeatureActive, status } = useFeatureFlipping();
   const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
   const inactifEnAttenteCandidacy = useMemo(() => {
@@ -69,6 +69,10 @@ export default function CandidaciesLayout({
   }, [candidacies]);
 
   useEffect(() => {
+    if (status !== "INITIALIZED") {
+      return;
+    }
+
     if (INGNORED_PATHS.some((path) => pathname.includes(path))) {
       return;
     }
@@ -110,6 +114,7 @@ export default function CandidaciesLayout({
     isMultiCandidacyFeatureActive,
     pathname,
     router,
+    status,
   ]);
 
   if (isLoading) {

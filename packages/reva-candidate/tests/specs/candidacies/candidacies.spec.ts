@@ -123,7 +123,7 @@ test.describe("candidacies page with candidacies", () => {
     ],
   });
 
-  test.skip("when i access the page it shows one candidacy card with the correct certification label", async ({
+  test("when i access the page it shows two candidacy cards with the correct certification labels", async ({
     page,
   }) => {
     await loginAndWaitForInitialLoad(page);
@@ -143,7 +143,15 @@ test.describe("candidacies page with candidacies", () => {
     ).toBeVisible();
 
     await expect(
-      page.getByText("RNCP RNCP0001 : Certification 1"),
+      page.getByText(
+        `RNCP ${certification1.codeRncp} : ${certification1.label}`,
+      ),
+    ).toBeVisible();
+
+    await expect(
+      page.getByText(
+        `RNCP ${certification2.codeRncp} : ${certification2.label}`,
+      ),
     ).toBeVisible();
   });
 });
