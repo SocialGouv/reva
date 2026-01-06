@@ -58,11 +58,17 @@ export const CertificationPage = async ({
         label: string;
       }[];
     }[];
+    certificationAuthorityStructure?: {
+      label: string;
+    } | null;
   };
 }) => (
   <>
     <div className="flex flex-col gap-4">
       <h1 className="mt-4 mb-0">{certification?.label}</h1>
+      <p className="mb-0 text-xl">
+        {certification?.certificationAuthorityStructure?.label}
+      </p>
       <div className="flex flex-row items-center gap-4">
         <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
 

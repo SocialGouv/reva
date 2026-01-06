@@ -8,7 +8,7 @@ import CertificationBreadcrumbs from "./_components/CertificationBreadcrumbs";
 import CertificationChangeButtons from "./_components/CertificationChangeButtons";
 
 const GET_CERTIFICATION = graphql(`
-  query getCertificationById($certificationId: ID!) {
+  query getCertificationByIdForCertificationPage($certificationId: ID!) {
     getCertification(certificationId: $certificationId) {
       id
       prerequisites {
@@ -54,6 +54,9 @@ const GET_CERTIFICATION = graphql(`
           id
           label
         }
+      }
+      certificationAuthorityStructure {
+        label
       }
     }
   }
