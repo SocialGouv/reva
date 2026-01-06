@@ -473,7 +473,9 @@ const LaVAEUnDispositifAccessibleATousSection = () => (
         <p className="text-xl mb-8">
           Vous pouvez dès maintenant vous inscrire pour commencer un parcours
           VAE. La seule exception ? Si vous êtes agent public, le parcours VAE
-          ne s’effectue pas via notre plateforme. Contactez les{" "}
+          ne s’effectue pas via notre plateforme.
+          <br />
+          Contactez les{" "}
           <Link
             href="/savoir-plus/articles/vae-ou-se-renseigner/"
             target="_self"
