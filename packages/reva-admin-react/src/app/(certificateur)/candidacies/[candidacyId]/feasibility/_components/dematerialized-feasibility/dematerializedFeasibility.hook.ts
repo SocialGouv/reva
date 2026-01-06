@@ -129,6 +129,7 @@ const feasibilityGetActiveFeasibilityByCandidacyId = graphql(`
           }
           competenceBlocs {
             id
+            code
             label
           }
           certificationAuthorityStructure {

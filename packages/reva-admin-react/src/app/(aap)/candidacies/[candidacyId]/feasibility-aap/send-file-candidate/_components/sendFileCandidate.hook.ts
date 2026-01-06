@@ -107,6 +107,7 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             }
             competenceBlocs {
               id
+              code
               label
             }
             certificationAuthorityStructure {

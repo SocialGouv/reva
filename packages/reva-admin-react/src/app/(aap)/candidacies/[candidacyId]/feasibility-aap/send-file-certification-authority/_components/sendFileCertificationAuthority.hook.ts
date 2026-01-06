@@ -122,6 +122,7 @@ const getActiveFeasibilitySendFileCertificationAuthorityByCandidacyId = graphql(
             }
             competenceBlocs {
               id
+              code
               label
             }
             certificationAuthorityStructure {
