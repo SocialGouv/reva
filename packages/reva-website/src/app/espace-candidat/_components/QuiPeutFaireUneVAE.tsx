@@ -1,4 +1,5 @@
 import { Card } from "@codegouvfr/react-dsfr/Card";
+import Link from "next/link";
 
 const QuiPeutFaireUneVAE = async () => (
   <section
@@ -20,8 +21,15 @@ const QuiPeutFaireUneVAE = async () => (
         <br /> <br />
         <strong>La seule exception ?</strong> Si vous êtes{" "}
         <strong>agent public</strong>, le parcours VAE ne s’effectue pas pour le
-        moment via notre plateforme. Contactez les organismes référents pour en
-        savoir plus.
+        moment via notre plateforme. Contactez les{" "}
+        <Link
+          href="/savoir-plus/articles/vae-ou-se-renseigner/"
+          target="_self"
+          className="fr-link !text-xl"
+        >
+          organismes référents
+        </Link>{" "}
+        pour en savoir plus.
       </p>
 
       <Card
