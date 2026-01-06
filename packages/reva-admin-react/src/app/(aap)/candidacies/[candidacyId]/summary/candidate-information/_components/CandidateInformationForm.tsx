@@ -46,9 +46,7 @@ const CandidateInformationForm = ({
 
   const candidate = candidacy?.candidate;
   const isAddressAlreadyCompleted =
-    !!candidacy?.candidateInfo?.street &&
-    !!candidacy?.candidateInfo?.zip &&
-    !!candidacy?.candidateInfo?.city;
+    !!candidate?.street && !!candidate?.zip && !!candidate?.city;
 
   const [manualAddressSelected, setManualAddress] = useState(
     isAddressAlreadyCompleted,
@@ -84,10 +82,10 @@ const CandidateInformationForm = ({
       country: candidate?.country?.id ?? franceId,
       nationality: candidate?.nationality ?? "",
       countryIsFrance: candidate?.country?.id === franceId,
-      street: candidacy?.candidateInfo?.street ?? "",
-      city: candidacy?.candidateInfo?.city ?? "",
-      zip: candidacy?.candidateInfo?.zip ?? "",
-      addressComplement: candidacy?.candidateInfo?.addressComplement ?? "",
+      street: candidate?.street ?? "",
+      city: candidate?.city ?? "",
+      zip: candidate?.zip ?? "",
+      addressComplement: candidate?.addressComplement ?? "",
     },
   });
 
@@ -112,10 +110,10 @@ const CandidateInformationForm = ({
         countryIsFrance: candidate.country?.id === franceId,
         gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,
         nationality: candidate.nationality ?? "",
-        street: candidacy?.candidateInfo?.street ?? "",
-        city: candidacy?.candidateInfo?.city ?? "",
-        zip: candidacy?.candidateInfo?.zip ?? "",
-        addressComplement: candidacy?.candidateInfo?.addressComplement ?? "",
+        street: candidate?.street ?? "",
+        city: candidate?.city ?? "",
+        zip: candidate?.zip ?? "",
+        addressComplement: candidate?.addressComplement ?? "",
       });
     },
     [reset, franceId],
