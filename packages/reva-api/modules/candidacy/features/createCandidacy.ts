@@ -33,6 +33,8 @@ export const createCandidacy = async ({
       status: "PROJET",
       financeModule: "hors_plateforme",
       cohorteVaeCollectiveId,
+      feasibilityFormat:
+        typeAccompagnement === "AUTONOME" ? "UPLOADED_PDF" : "DEMATERIALIZED",
       candidacyStatuses: {
         create: {
           status: CandidacyStatusStep.PROJET,
