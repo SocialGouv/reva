@@ -36,7 +36,7 @@ export default function DecisionSection({
   const isDecisionUnfavorable = decision === "UNFAVORABLE";
 
   return (
-    <div className="ml-10">
+    <div className="ml-10" data-testid="decision-section">
       <div className="flex">
         <h4 className="mb-0">Avis de l'accompagnateur</h4>
       </div>

@@ -31,211 +31,206 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays candidate information", async ({ page }) => {
-    const candidateSection = page.locator("section", {
-      has: page.getByRole("heading", {
-        name: /Durand Claire/,
-      }),
-    });
-
-    await expect(
-      candidateSection.getByRole("heading", {
-        name: "Mme Durand Claire, Marie",
-      }),
-    ).toBeVisible();
-
-    await expect(
-      candidateSection.getByText(
-        "Née Dupont, le 12/04/1988 à Lyon, Rhone (69)",
-      ),
-    ).toBeVisible();
-    await expect(candidateSection.getByText("Francaise")).toBeVisible();
-    await expect(
-      candidateSection.getByText("claire.dupont@example.com"),
-    ).toBeVisible();
-    await expect(candidateSection.getByText("0601020304")).toBeVisible();
-    await expect(
-      candidateSection.getByText("12 rue du Port 13002 Marseille"),
-    ).toBeVisible();
+    const dffSummary = page.getByTestId("dff-summary");
+    await expect(dffSummary.getByLabel("Civilité")).toHaveText("Mme");
+    await expect(dffSummary.getByLabel("Nom de naissance")).toHaveText(
+      "Dupont",
+    );
+    await expect(dffSummary.getByLabel("Prénoms")).toHaveText("Claire, Marie");
+    await expect(dffSummary.getByLabel("Date de naissance")).toHaveText(
+      "12/04/1988",
+    );
+    await expect(dffSummary.getByLabel("Ville de naissance")).toHaveText(
+      "Lyon (69)",
+    );
+    await expect(dffSummary.getByLabel("Nationalité")).toHaveText("Francaise");
+    await expect(dffSummary.getByLabel("Adresse postale")).toHaveText(
+      "12 rue du Port 13002 Marseille",
+    );
+    await expect(dffSummary.getByLabel("Téléphone")).toHaveText("0601020304");
+    await expect(dffSummary.getByLabel("Adresse électronique")).toHaveText(
+      "claire.dupont@example.com",
+    );
   });
 
   test("displays candidate education levels", async ({ page }) => {
-    const candidateSection = page.locator("section", {
-      has: page.getByRole("heading", {
-        name: /Durand Claire/,
-      }),
-    });
-
+    const dffSummary = page.getByTestId("dff-summary");
     await expect(
-      candidateSection.getByLabel("Niveau de formation le plus élevé"),
+      dffSummary.getByLabel("Niveau de formation le plus élevé"),
     ).toHaveText("5");
-
     await expect(
-      candidateSection.getByLabel(
+      dffSummary.getByLabel(
         "Niveau de la certification obtenue la plus élevée",
       ),
     ).toHaveText("4");
-
     await expect(
-      candidateSection.getByLabel(
+      dffSummary.getByLabel(
         "Intitulé de la certification la plus élevée obtenue",
       ),
     ).toHaveText("BTS logistique");
   });
 
   test("displays certification information", async ({ page }) => {
-    const certificationSection = page.locator("section", {
-      has: page.getByRole("heading", {
-        name: "Certification visée",
-      }),
-    });
-
+    const dffSummary = page.getByTestId("dff-summary");
     await expect(
-      certificationSection.getByRole("heading", {
-        name: "Titre professionnel Responsable logistique",
-      }),
+      dffSummary.getByTestId("dff-summary-certification-card"),
     ).toBeVisible();
-    await expect(certificationSection.getByText("RNCP 9083904")).toBeVisible();
-    await expect(certificationSection.getByLabel("Certificateur :")).toHaveText(
+    await expect(
+      dffSummary
+        .getByTestId("dff-summary-certification-card")
+        .getByText("RNCP 9083904"),
+    ).toBeVisible();
+    await expect(
+      dffSummary
+        .getByTestId("dff-summary-certification-card")
+        .getByText("Titre professionnel Responsable logistique"),
+    ).toBeVisible();
+    await expect(dffSummary.getByLabel("Certificateur :")).toHaveText(
       "Certificateur Metiers Services",
     );
     await expect(
-      certificationSection.getByText("Option pilotage d'activite"),
+      dffSummary
+        .getByLabel("Option ou parcours :")
+        .getByText("Option pilotage d'activite"),
     ).toBeVisible();
-
-    await expect(
-      certificationSection.getByLabel("Langue vivante 1 :"),
-    ).toHaveText("Anglais");
-    await expect(
-      certificationSection.getByLabel("Langue vivante 2 :"),
-    ).toHaveText("Espagnol");
+    await expect(dffSummary.getByLabel("Langue vivante 1 :")).toHaveText(
+      "Anglais",
+    );
+    await expect(dffSummary.getByLabel("Langue vivante 2 :")).toHaveText(
+      "Espagnol",
+    );
   });
 
   test("displays blocs de competences", async ({ page }) => {
-    const experiencesSection = page.locator("section", {
-      has: page.getByRole("heading", {
-        name: "Expériences professionnelles",
-      }),
-    });
+    const dffSummary = page.getByTestId("dff-summary");
 
-    const blocsSection = experiencesSection.locator("section", {
-      has: page.getByRole("heading", {
-        name: "Blocs de compétences",
-      }),
-    });
-
-    const blocA = blocsSection.locator("section").filter({
-      hasText: "48379857 - Organiser et piloter les activites logistiques",
-    });
+    const bloc1 = dffSummary
+      .locator("section.fr-accordion")
+      .filter({
+        hasText: "48379857 - Organiser et piloter les activites logistiques",
+      })
+      .nth(1);
+    await bloc1.click();
     await expect(
-      blocA.getByText(
+      bloc1.getByText("Definir les indicateurs de performance"),
+    ).toBeVisible();
+    await expect(bloc1.getByText("Oui")).toBeVisible();
+    await expect(
+      bloc1.getByText("Manager les equipes logistiques"),
+    ).toBeVisible();
+    await expect(bloc1.getByText("Partiellement")).toBeVisible();
+    await expect(
+      bloc1.getByText(
         "Experience significative en gestion d'equipe sur site logistique.",
       ),
     ).toBeVisible();
 
-    const competenceA1 = blocA.locator("> div > div").nth(0);
-    await expect(competenceA1).toContainText("Oui");
-    await expect(competenceA1).toContainText(
-      "Definir les indicateurs de performance",
-    );
-
-    const competenceA2 = blocA.locator("> div > div").nth(1);
-    await expect(competenceA2).toContainText("Partiellement");
-    await expect(competenceA2).toContainText("Manager les equipes logistiques");
-
-    const blocB = blocsSection
-      .locator("section")
-      .filter({ hasText: "2849037 - Digitaliser les processus logistiques" });
+    const bloc2 = dffSummary
+      .locator("section.fr-accordion")
+      .filter({
+        hasText: "2849037 - Digitaliser les processus logistiques",
+      })
+      .nth(1);
+    await bloc2.click();
     await expect(
-      blocB.getByText(
+      bloc2.getByText("Mettre en place des outils de suivi en temps reel"),
+    ).toBeVisible();
+    await expect(bloc2.getByText("Non")).toBeVisible();
+    await expect(
+      bloc2.getByText("Superviser l'integration des donnees"),
+    ).toBeVisible();
+    await expect(bloc2.getByText("Oui")).toBeVisible();
+    await expect(
+      bloc2.getByText(
         "Competences a confirmer sur la digitalisation des flux.",
       ),
     ).toBeVisible();
-
-    const competenceB1 = blocB.locator("> div > div").nth(0);
-    await expect(competenceB1).toContainText("Non");
-    await expect(competenceB1).toContainText(
-      "Mettre en place des outils de suivi en temps reel",
-    );
-
-    const competenceB2 = blocB.locator("> div > div").nth(1);
-    await expect(competenceB2).toContainText("Oui");
-    await expect(competenceB2).toContainText(
-      "Superviser l'integration des donnees",
-    );
   });
 
   test("displays prerequisites", async ({ page }) => {
-    const certificationSection = page.locator("section", {
-      has: page.getByRole("heading", {
-        name: "Certification visée",
-      }),
-    });
+    const dffSummary = page.getByTestId("dff-summary");
 
-    const prerequisitesSection = certificationSection.locator("section", {
-      has: page.getByRole("heading", {
-        name: "Prérequis obligatoires",
-      }),
-    });
+    const acquisAccordion = dffSummary
+      .locator("section.fr-accordion")
+      .filter({ hasText: "Acquis" });
+    await expect(acquisAccordion.locator("li")).toContainText(
+      "Justifier de 2 ans d'experience en logistique",
+    );
 
-    await expect(
-      prerequisitesSection.getByText(
-        "Justifier de 2 ans d'experience en logistique",
-      ),
-    ).toBeVisible();
-    await expect(
-      prerequisitesSection.getByText("Avoir suivi une formation securite"),
-    ).toBeVisible();
-    await expect(
-      prerequisitesSection.getByText("Detenir un permis cariste a jour"),
-    ).toBeVisible();
+    const enCoursAccordion = dffSummary
+      .locator("section.fr-accordion")
+      .filter({ hasText: "En cours" });
+    await expect(enCoursAccordion.locator("li")).toContainText(
+      "Avoir suivi une formation securite",
+    );
+
+    const preconisesAccordion = dffSummary
+      .locator("section.fr-accordion")
+      .filter({ hasText: "Préconisés" });
+    await expect(preconisesAccordion.locator("li")).toContainText(
+      "Detenir un permis cariste a jour",
+    );
   });
 
   test("displays professional experiences", async ({ page }) => {
-    const experiencesSection = page.locator("section", {
-      has: page.getByRole("heading", { name: "Expériences professionnelles" }),
-    });
+    const dffSummary = page.getByTestId("dff-summary");
 
+    const experience1 = dffSummary.getByTestId("experience-accordion-0");
+    await experience1.click();
     await expect(
-      experiencesSection.getByText("Cheffe d'equipe logistique"),
+      experience1.getByText("Cheffe d'equipe logistique"),
     ).toBeVisible();
     await expect(
-      experiencesSection.getByText(
+      experience1.getByText("Démarrée le 01 janvier 2021"),
+    ).toBeVisible();
+    await expect(
+      experience1.getByText("Expérience plus de 3 ans"),
+    ).toBeVisible();
+    await expect(
+      experience1.getByText(
         "Pilotage d'une equipe de 8 personnes sur une plateforme multi-sites.",
       ),
     ).toBeVisible();
+
+    const experience2 = dffSummary.getByTestId("experience-accordion-1");
+    await experience2.click();
     await expect(
-      experiencesSection.getByText("Coordinatrice supply chain"),
+      experience2.getByText("Coordinatrice supply chain"),
     ).toBeVisible();
     await expect(
-      experiencesSection.getByText(
+      experience2.getByText("Démarrée le 01 janvier 2019"),
+    ).toBeVisible();
+    await expect(
+      experience2.getByText("Expérience plus de 5 ans"),
+    ).toBeVisible();
+    await expect(
+      experience2.getByText(
         "Supervision des flux entrants et sortants avec optimisation des stocks.",
       ),
     ).toBeVisible();
   });
 
   test("displays training hours", async ({ page }) => {
-    const trainingSection = page.locator("section", {
-      has: page.getByRole("heading", { name: "Parcours proposé" }),
-    });
+    const dffSummary = page.getByTestId("dff-summary");
 
     await expect(
-      trainingSection.getByText("Accompagnement individuel : 42h"),
-    ).toBeVisible();
+      dffSummary.getByLabel("Accompagnement individuel :"),
+    ).toHaveText("42h");
     await expect(
-      trainingSection.getByText("Accompagnement collectif : 18h"),
-    ).toBeVisible();
-    await expect(trainingSection.getByText("Formation : 9h")).toBeVisible();
+      dffSummary.getByLabel("Accompagnement collectif :"),
+    ).toHaveText("18h");
+    await expect(dffSummary.getByLabel("Formation :")).toHaveText("9h");
     await expect(
-      trainingSection.getByText("Prevention des risques professionnels"),
+      dffSummary.getByText("Prevention des risques professionnels"),
     ).toBeVisible();
-    await expect(trainingSection.getByText("Analyse de donnees")).toBeVisible();
-    await expect(trainingSection.getByText("Gestion de projet")).toBeVisible();
+    await expect(dffSummary.getByText("Analyse de donnees")).toBeVisible();
+    await expect(dffSummary.getByText("Gestion de projet")).toBeVisible();
   });
 
   test("displays goals", async ({ page }) => {
-    const goalsSection = page.locator("section", {
-      has: page.getByRole("heading", { name: "Mes objectifs" }),
-    });
+    const dffSummary = page.getByTestId("dff-summary");
+
+    const goalsSection = dffSummary.getByTestId("goals-list");
 
     await expect(
       goalsSection.getByText("Trouver plus facilement un emploi"),
@@ -246,11 +241,7 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays AAP comment", async ({ page }) => {
-    const commentSection = page.locator("section", {
-      has: page.getByRole("heading", {
-        name: "L'avis de mon accompagnateur",
-      }),
-    });
+    const commentSection = page.getByTestId("decision-section");
 
     await expect(commentSection.getByText("Favorable")).toBeVisible();
     await expect(
@@ -259,17 +250,10 @@ test.describe("Dematerialized feasibility résumé", () => {
   });
 
   test("displays eligibility information", async ({ page }) => {
-    const eligibilitySection = page.locator("section", {
-      has: page.getByRole("heading", { name: "Recevabilité du candidat" }),
-    });
-
-    await expect(eligibilitySection).toContainText(
-      "Accès au dossier de faisabilité intégral",
-    );
-
+    const dffSummary = page.getByTestId("dff-summary");
     await expect(
-      eligibilitySection.getByLabel("Date de fin de validité"),
-    ).toHaveText("31/12/2024");
+      dffSummary.getByText("Accès au dossier de faisabilité intégral"),
+    ).toBeVisible();
   });
 
   test("displays validation form and enables submit button", async ({

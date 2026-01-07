@@ -22,6 +22,7 @@ export const CertificationCard = ({
   return (
     <Card
       title={certification.label}
+      data-testid="dff-summary-certification-card"
       detail={
         <div className="flex items-center gap-2 mb-3">
           <Image
