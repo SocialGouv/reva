@@ -6,10 +6,7 @@ import {
 import { graphql } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
-import {
-  CandidacyEntity,
-  createCandidacyEntity,
-} from "@tests/helpers/entities/create-candidacy.entity";
+import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
 import { graphQLResolver } from "@tests/helpers/network/msw";
@@ -23,14 +20,14 @@ const certification = createCertificationEntity({
   label: "Certification 1",
   codeRncp: "RNCP0001",
 });
-const candidacyAutonome = createCandidacyEntity({
+const candidacy = createCandidacyEntity({
   candidate,
   certification,
   status: "PROJET",
   typeAccompagnement: "AUTONOME",
 });
 
-function createCandidaciesHandlers(args?: { candidacies?: CandidacyEntity[] }) {
+function createCandidaciesHandlers() {
   return [
     fvae.query(
       "candidate_getCandidateForCandidatesGuard",
@@ -52,7 +49,7 @@ function createCandidaciesHandlers(args?: { candidacies?: CandidacyEntity[] }) {
       "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       graphQLResolver({
         candidate_getCandidateById: {
-          candidacies: args?.candidacies ?? [],
+          candidacies: [],
         },
       }),
     ),
@@ -117,21 +114,21 @@ function createCandidaciesHandlers(args?: { candidacies?: CandidacyEntity[] }) {
       "createCandidacy",
       graphQLResolver({
         candidacy_createCandidacy: {
-          id: candidacyAutonome.id,
+          id: candidacy.id,
         },
       }),
     ),
     fvae.query(
       "getCandidacyByIdForCandidacyGuard",
-      graphQLResolver({ getCandidacyById: candidacyAutonome }),
+      graphQLResolver({ getCandidacyById: candidacy }),
     ),
     fvae.query(
       "getCandidacyByIdWithCandidate",
-      graphQLResolver({ getCandidacyById: candidacyAutonome }),
+      graphQLResolver({ getCandidacyById: candidacy }),
     ),
     fvae.query(
       "getCandidacyByIdForDashboard",
-      graphQLResolver({ getCandidacyById: candidacyAutonome }),
+      graphQLResolver({ getCandidacyById: candidacy }),
     ),
     fvae.mutation(
       "candidate_loginWithToken",
@@ -222,7 +219,7 @@ test.describe("create candidacy autonome from candidacies page", () => {
     autonomeButton.click();
 
     await expect(page).toHaveURL(
-      `candidates/${candidate.id}/candidacies/${candidacyAutonome.id}/`,
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
     );
 
     const typeAccompagnementCard = page.getByText("Autonome");

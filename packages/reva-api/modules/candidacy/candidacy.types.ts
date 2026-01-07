@@ -101,7 +101,8 @@ type CandidacyArchivingReason =
   | "PROBLEME_FINANCEMENT"
   | "AUTRE"
   | "MULTI_CANDIDATURES"
-  | "PASSAGE_AUTONOME_A_ACCOMPAGNE";
+  | "PASSAGE_AUTONOME_A_ACCOMPAGNE"
+  | "ARCHIVER_PAR_LE_CANDIDAT";
 
 export interface ArchiveCandidacyParams {
   candidacyId: string;

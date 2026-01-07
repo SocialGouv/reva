@@ -265,6 +265,7 @@ enum CandidacyArchivingReason {
   AUTRE
   MULTI_CANDIDATURES
   PASSAGE_AUTONOME_A_ACCOMPAGNE
+  ARCHIVER_PAR_LE_CANDIDAT
 }
 
 type Query {

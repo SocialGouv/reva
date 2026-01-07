@@ -54,7 +54,7 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_takeOver": isCandidacyCompanion,
 
   // Mutations manager ou admin
-  "Mutation.candidacy_archiveById": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_archiveById": isOwnerOrCanManageCandidacy,
   "Mutation.candidacy_unarchiveById": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_updateAppointmentInformations":
     isAdminOrCandidacyCompanion,

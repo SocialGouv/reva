@@ -1,5 +1,9 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
@@ -96,12 +100,47 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
   }
 `);
 
+const ARCHIVE_CANDIDACY_BY_ID_MUTATION = graphql(`
+  mutation archiveCandidacyById(
+    $candidacyId: ID!
+    $archivingReason: CandidacyArchivingReason!
+    $archivingReasonAdditionalInformation: String
+  ) {
+    candidacy_archiveById(
+      candidacyId: $candidacyId
+      archivingReason: $archivingReason
+      archivingReasonAdditionalInformation: $archivingReasonAdditionalInformation
+    ) {
+      id
+    }
+  }
+`);
+
 export const useCandidacyForDashboard = () => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
+
+  const router = useRouter();
 
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
+
+  const archiveCandidacy = useMutation({
+    mutationFn: () =>
+      graphqlClient.request(ARCHIVE_CANDIDACY_BY_ID_MUTATION, {
+        candidacyId,
+        archivingReason: "ARCHIVER_PAR_LE_CANDIDAT",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.includes("candidate") ||
+          query.queryKey.includes("candidacies-guard"),
+      });
+      router.push(`../`);
+    },
+  });
 
   const { data } = useSuspenseQuery({
     queryKey: ["candidacy", "dashboard", candidacyId],
@@ -120,6 +159,7 @@ export const useCandidacyForDashboard = () => {
   return {
     candidacy,
     candidacyAlreadySubmitted,
+    archiveCandidacy,
   };
 };
 
