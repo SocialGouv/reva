@@ -524,9 +524,9 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       await expect(
         dffSummary.getByText("Accès au dossier de faisabilité intégral"),
       ).toBeVisible();
-      await expect(
-        dffSummary.getByLabel("Date de fin de validité"),
-      ).toHaveText("31/12/2024");
+      await expect(dffSummary.getByLabel("Date de fin de validité")).toHaveText(
+        "31/12/2024",
+      );
     });
 
     test("shows candidate identification and contact details", async ({
@@ -546,7 +546,9 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
       await expect(dffSummary.getByLabel("Ville de naissance")).toHaveText(
         "Lyon (69)",
       );
-      await expect(dffSummary.getByLabel("Nationalité")).toHaveText("Française");
+      await expect(dffSummary.getByLabel("Nationalité")).toHaveText(
+        "Française",
+      );
       await expect(dffSummary.getByLabel("Adresse postale")).toHaveText(
         "10 quai du Port 13002 Marseille",
       );
@@ -558,10 +560,14 @@ scenarios.forEach(({ label, role, url, handlers, waitForQueries }) => {
         dffSummary.getByLabel("Niveau de formation le plus élevé"),
       ).toHaveText("6");
       await expect(
-        dffSummary.getByLabel("Niveau de la certification obtenue la plus élevée"),
+        dffSummary.getByLabel(
+          "Niveau de la certification obtenue la plus élevée",
+        ),
       ).toHaveText("6");
       await expect(
-        dffSummary.getByLabel("Intitulé de la certification la plus élevée obtenue"),
+        dffSummary.getByLabel(
+          "Intitulé de la certification la plus élevée obtenue",
+        ),
       ).toHaveText("Master logistique et transport");
     });
 
