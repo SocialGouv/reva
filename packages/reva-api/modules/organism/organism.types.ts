@@ -55,6 +55,7 @@ export interface CreateOrganismAccountInput {
 
 export interface UpdateOrganimsAccountAndOrganismInput {
   organismId?: string;
+  maisonMereAAPId: string;
   accountId: string;
   accountFirstname: string;
   accountLastname: string;

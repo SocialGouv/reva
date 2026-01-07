@@ -24,13 +24,9 @@ const getUserAccountQuery = graphql(`
 
 const updateUserAccountMutation = graphql(`
   mutation updateUserAccountForUpdateUserAccountPage(
-    $maisonMereAAPId: ID!
     $data: UpdateOrganimsAccountAndOrganismInput!
   ) {
-    organism_updateAccountAndOrganism(
-      maisonMereAAPId: $maisonMereAAPId
-      data: $data
-    ) {
+    organism_updateAccountAndOrganism(data: $data) {
       id
     }
   }
@@ -48,11 +44,13 @@ export const useUpdateUserAccountPage = ({
 
   const updateUserAccount = useMutation({
     mutationFn: (
-      data: Omit<UpdateOrganimsAccountAndOrganismInput, "accountId">,
+      data: Omit<
+        UpdateOrganimsAccountAndOrganismInput,
+        "accountId" | "maisonMereAAPId"
+      >,
     ) =>
       graphqlClient.request(updateUserAccountMutation, {
-        maisonMereAAPId,
-        data: { ...data, accountId: userAccountId },
+        data: { ...data, accountId: userAccountId, maisonMereAAPId },
       }),
     mutationKey: [userAccountId, "agencies-settings-update-user-account-page"],
     onSuccess: () =>

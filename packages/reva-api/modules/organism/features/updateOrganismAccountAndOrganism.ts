@@ -17,6 +17,7 @@ export const updateOrganismAccountAndOrganism = async ({
   accountFirstname,
   accountLastname,
   organismId,
+  maisonMereAAPId,
   userInfo,
 }: UpdateOrganimsAccountAndOrganismInput & {
   userInfo: AAPAuditLogUserInfo;
@@ -35,6 +36,17 @@ export const updateOrganismAccountAndOrganism = async ({
   }
 
   if (isAApUserAccountV2FeatureActive) {
+    if (!maisonMereAAPId) {
+      throw new Error("L'identifiant de la maison mère est obligatoire");
+    }
+
+    const maisonMereAAP = await prismaClient.maisonMereAAP.findUnique({
+      where: { id: maisonMereAAPId },
+    });
+
+    if (!maisonMereAAP) {
+      throw new Error("La maison mère n'a pas été trouvée");
+    }
     const result = await updateAccountById({
       accountId: account.id,
       accountData: {
@@ -44,7 +56,16 @@ export const updateOrganismAccountAndOrganism = async ({
       },
     });
 
-    //TODO log audit event
+    await logAAPAuditEvent({
+      eventType: "ORGANISM_ACCOUNT_UPDATED_V2",
+      maisonMereAAPId: maisonMereAAP.id,
+      details: {
+        accountEmail,
+        maisonMereAAPId,
+        maisonMereAAPRaisonSociale: maisonMereAAP.raisonSociale,
+      },
+      userInfo,
+    });
 
     return result;
   } else {
