@@ -62,7 +62,7 @@ import { updateMaisonMereAccountSetup } from "./features/updateMaisonMereAccount
 import { updateMaisonMereIsSignalized } from "./features/updateMaisonMereIsSignalized";
 import { updateMaisonMereLegalInformation } from "./features/updateMaisonMereLegalInformation";
 import { updateMaisonMereOrganismsIsActive } from "./features/updateMaisonMereOrganismsIsActive";
-import { updateOrganismAccountAndOrganism } from "./features/updateOrganismAccountAndOrganism";
+import { updateOrganismAccount } from "./features/updateOrganismAccount";
 import { updateOrganismDegreesAndFormacodes } from "./features/updateOrganismDegreesAndFormacodes";
 import { updateOrganismDisponiblePourVaeCollective } from "./features/updateOrganismDisponiblePourVaeCollective";
 import { updatePositionnementCollaborateur } from "./features/updatePositionnementCollaborateur";
@@ -75,7 +75,7 @@ import {
   RemoteZone,
   UpdateMaisonMereAAPLegalValidationInput,
   UpdateMaisonMereLegalInformationInput,
-  UpdateOrganimsAccountAndOrganismInput,
+  UpdateOrganimsAccountInput,
 } from "./organism.types";
 
 const unsafeResolvers = {
@@ -423,16 +423,16 @@ const unsafeResolvers = {
         ...data,
         userInfo: buildAAPAuditLogUserInfoFromContext(context),
       }),
-    organism_updateAccountAndOrganism: async (
+    organism_updateOrganismAccount: async (
       _parent: unknown,
       {
         data,
       }: {
-        data: UpdateOrganimsAccountAndOrganismInput;
+        data: UpdateOrganimsAccountInput;
       },
       context: GraphqlContext,
     ) =>
-      updateOrganismAccountAndOrganism({
+      updateOrganismAccount({
         ...data,
         userInfo: buildAAPAuditLogUserInfoFromContext(context),
       }),

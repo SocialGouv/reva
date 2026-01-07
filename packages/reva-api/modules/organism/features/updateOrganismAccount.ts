@@ -6,16 +6,16 @@ import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateAccountById } from "@/modules/account/features/updateAccount";
 import { prismaClient } from "@/prisma/client";
 
-import { UpdateOrganimsAccountAndOrganismInput } from "../organism.types";
+import { UpdateOrganimsAccountInput } from "../organism.types";
 
-export const updateOrganismAccountAndOrganism = async ({
+export const updateOrganismAccount = async ({
   accountId,
   accountEmail,
   accountFirstname,
   accountLastname,
   maisonMereAAPId,
   userInfo,
-}: UpdateOrganimsAccountAndOrganismInput & {
+}: UpdateOrganimsAccountInput & {
   userInfo: AAPAuditLogUserInfo;
 }) => {
   const account = await getAccountById({

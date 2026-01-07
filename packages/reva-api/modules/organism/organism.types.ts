@@ -52,7 +52,7 @@ export interface CreateOrganismAccountInput {
   accountEmail: string;
 }
 
-export interface UpdateOrganimsAccountAndOrganismInput {
+export interface UpdateOrganimsAccountInput {
   organismId?: string;
   maisonMereAAPId: string;
   accountId: string;

@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
-import { UpdateOrganimsAccountAndOrganismInput } from "@/graphql/generated/graphql";
+import { UpdateOrganimsAccountInput } from "@/graphql/generated/graphql";
 
 const getUserAccountQuery = graphql(`
   query getUserAccountForUpdateUserAccountPage(
@@ -24,9 +24,9 @@ const getUserAccountQuery = graphql(`
 
 const updateUserAccountMutation = graphql(`
   mutation updateUserAccountForUpdateUserAccountPage(
-    $data: UpdateOrganimsAccountAndOrganismInput!
+    $data: UpdateOrganimsAccountInput!
   ) {
-    organism_updateAccountAndOrganism(data: $data) {
+    organism_updateOrganismAccount(data: $data) {
       id
     }
   }
@@ -44,10 +44,7 @@ export const useUpdateUserAccountPage = ({
 
   const updateUserAccount = useMutation({
     mutationFn: (
-      data: Omit<
-        UpdateOrganimsAccountAndOrganismInput,
-        "accountId" | "maisonMereAAPId"
-      >,
+      data: Omit<UpdateOrganimsAccountInput, "accountId" | "maisonMereAAPId">,
     ) =>
       graphqlClient.request(updateUserAccountMutation, {
         data: { ...data, accountId: userAccountId, maisonMereAAPId },

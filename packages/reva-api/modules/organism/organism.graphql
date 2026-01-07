@@ -269,10 +269,9 @@ input CreateOrganimsAccountInput {
   accountEmail: String!
 }
 
-input UpdateOrganimsAccountAndOrganismInput {
+input UpdateOrganimsAccountInput {
   maisonMereAAPId: ID!
   accountId: ID!
-  organismId: ID
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!
@@ -335,9 +334,7 @@ type Mutation {
     maisonMereAAPId: ID!
     data: CreateOrganimsAccountInput!
   ): Account!
-  organism_updateAccountAndOrganism(
-    data: UpdateOrganimsAccountAndOrganismInput!
-  ): Account!
+  organism_updateOrganismAccount(data: UpdateOrganimsAccountInput!): Account!
 
   organism_updateMaisonMereOrganismsIsActive(
     data: UpdateMaisonMereOrganismsIsActiveInput
