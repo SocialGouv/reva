@@ -2,24 +2,30 @@ import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { useMemo } from "react";
 
-import { Certification, Prerequisite } from "@/graphql/generated/graphql";
+import { Prerequisite } from "@/graphql/generated/graphql";
 
 export default function CertificationSection({
   option,
   firstForeignLanguage,
   secondForeignLanguage,
-  certification,
   prerequisites,
   isCertificationPartial,
   certificationAuthorityStructureLabel,
+  certificationCompetenceBlocs,
+  blocsDeCompetencesDFF,
 }: {
   option?: string | null;
   firstForeignLanguage?: string | null;
   secondForeignLanguage?: string | null;
-  certification?: Certification | null;
   prerequisites?: Prerequisite[] | null;
-  isCertificationPartial: boolean;
+  isCertificationPartial?: boolean | null;
   certificationAuthorityStructureLabel?: string | null;
+  certificationCompetenceBlocs?: {
+    id: string;
+    code?: string | null;
+    label: string;
+  }[];
+  blocsDeCompetencesDFF: { certificationCompetenceBloc: { id: string } }[];
 }) {
   const prequisitesByStatus = useMemo(() => {
     return {
@@ -34,23 +40,28 @@ export default function CertificationSection({
       ),
     };
   }, [prerequisites]);
+
   const noPrerequisites = !prerequisites?.length;
 
+  const competenceBlocs = useMemo(
+    () =>
+      certificationCompetenceBlocs?.map((bloc) => ({
+        competenceBlocId: bloc.id,
+        label: bloc.code ? `${bloc.code} - ${bloc.label}` : bloc.label,
+        checked: blocsDeCompetencesDFF.some(
+          (bc) => bc.certificationCompetenceBloc.id === bloc.id,
+        ),
+      })) || [],
+    [certificationCompetenceBlocs, blocsDeCompetencesDFF],
+  );
+
   return (
-    <section>
-      <div className="flex">
-        <span className="fr-icon-award-fill fr-icon--lg mr-2" />
-        <h2>Certification visée</h2>
-      </div>
-      <h4 className="mb-2">{certification?.label}</h4>
-      <p className="text-sm text-dsfr-light-text-mention-grey">
-        RNCP {certification?.codeRncp}
-      </p>
-      {!!certificationAuthorityStructureLabel && (
+    <div className="mt-6">
+      {certificationAuthorityStructureLabel && (
         <dl className="my-4">
           <dt
             id="certification-authority-structure-label"
-            className="font-normal"
+            className="font-normal mb-0"
           >
             Certificateur :
           </dt>
@@ -64,7 +75,7 @@ export default function CertificationSection({
       )}
       {!!option && (
         <dl className="my-4">
-          <dt id="certification-option-label" className="font-normal">
+          <dt id="certification-option-label" className="font-normal mb-0">
             Option ou parcours :
           </dt>
           <dd
@@ -105,50 +116,81 @@ export default function CertificationSection({
           )}
         </div>
       )}
-      <CallOut>
+      <CallOut
+        title="Le candidat vise"
+        classes={{
+          title: "text-xl",
+        }}
+      >
         {isCertificationPartial
-          ? "Un ou plusieurs bloc(s) de compétences visé(s)"
+          ? "Un ou plusieurs bloc(s) de compétences de la certification"
           : "La certification dans sa totalité"}
       </CallOut>
-
-      <section className="mt-4">
-        <h5 className="mb-0">Prérequis obligatoires</h5>
-        <div className="mt-4">
-          {noPrerequisites && (
-            <p>
-              Il n&apos;y a pas de prérequis obligatoires pour cette
-              certification
-            </p>
-          )}
-          {!!prequisitesByStatus?.acquired?.length && (
-            <Accordion label="Acquis" defaultExpanded>
-              <ul>
-                {prequisitesByStatus?.acquired?.map((prerequisite) => (
-                  <li key={prerequisite?.id}>{prerequisite?.label}</li>
-                ))}
-              </ul>
-            </Accordion>
-          )}
-          {!!prequisitesByStatus?.inProgress?.length && (
-            <Accordion label="En cours" defaultExpanded>
-              <ul>
-                {prequisitesByStatus?.inProgress?.map((prerequisite) => (
-                  <li key={prerequisite?.id}>{prerequisite?.label}</li>
-                ))}
-              </ul>
-            </Accordion>
-          )}
-          {!!prequisitesByStatus?.recommended?.length && (
-            <Accordion label="Préconisés" defaultExpanded>
-              <ul>
-                {prequisitesByStatus?.recommended?.map((prerequisite) => (
-                  <li key={prerequisite?.id}>{prerequisite?.label}</li>
-                ))}
-              </ul>
-            </Accordion>
-          )}
+      {competenceBlocs.length > 0 && (
+        <div className="mt-6">
+          <Accordion
+            label="Choix des blocs de compétences"
+            defaultExpanded={false}
+          >
+            <div className="flex flex-col gap-4">
+              {competenceBlocs.map((b) => {
+                return (
+                  <div key={b.competenceBlocId}>
+                    <input
+                      type="checkbox"
+                      checked={b.checked}
+                      disabled
+                      name={b.competenceBlocId}
+                    />
+                    <label
+                      className="ml-2 text-dsfrGray-labelGrey text-base"
+                      htmlFor={b.competenceBlocId}
+                    >
+                      {b.label}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+          </Accordion>
         </div>
-      </section>
-    </section>
+      )}
+
+      <h5 className="mb-0 mt-6">Prérequis obligatoires</h5>
+      <div className="mt-4">
+        {noPrerequisites && (
+          <p className="mb-0">
+            Il n&apos;y a pas de prérequis obligatoires pour cette certification
+          </p>
+        )}
+        {!!prequisitesByStatus?.acquired?.length && (
+          <Accordion label="Acquis" defaultExpanded={false}>
+            <ul>
+              {prequisitesByStatus?.acquired?.map((prerequisite) => (
+                <li key={prerequisite?.id}>{prerequisite?.label}</li>
+              ))}
+            </ul>
+          </Accordion>
+        )}
+        {!!prequisitesByStatus?.inProgress?.length && (
+          <Accordion label="En cours" defaultExpanded={false}>
+            <ul>
+              {prequisitesByStatus?.inProgress?.map((prerequisite) => (
+                <li key={prerequisite?.id}>{prerequisite?.label}</li>
+              ))}
+            </ul>
+          </Accordion>
+        )}
+        {!!prequisitesByStatus?.recommended?.length && (
+          <Accordion label="Préconisés" defaultExpanded={false}>
+            <ul>
+              {prequisitesByStatus?.recommended?.map((prerequisite) => (
+                <li key={prerequisite?.id}>{prerequisite?.label}</li>
+              ))}
+            </ul>
+          </Accordion>
+        )}
+      </div>
+    </div>
   );
 }

@@ -3,7 +3,6 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 
 import {
   CertificationCompetence,
-  CertificationCompetenceBloc,
   CertificationCompetenceDetails,
   DffCertificationCompetenceDetailsState,
 } from "@/graphql/generated/graphql";
@@ -67,7 +66,15 @@ export const CertificationCompetenceAccordion = ({
   defaultExpanded = false,
   hideAccordionContent = false,
 }: {
-  competenceBloc: CertificationCompetenceBloc;
+  competenceBloc: {
+    id: string;
+    label: string;
+    code?: string | null;
+    competences: {
+      id: string;
+      label: string;
+    }[];
+  };
   competenceBlocText?: string | null;
   competenceDetails: CertificationCompetenceDetails[];
   defaultExpanded?: boolean;

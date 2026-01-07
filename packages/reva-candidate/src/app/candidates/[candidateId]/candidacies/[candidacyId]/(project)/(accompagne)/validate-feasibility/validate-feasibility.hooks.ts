@@ -17,6 +17,20 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_VALIDATE_FEASIBILITY = graphql(`
         zip
         addressComplement
       }
+      typology
+      conventionCollective {
+        label
+      }
+      organism {
+        label
+        nomPublic
+        adresseVille
+        adresseCodePostal
+        adresseInformationsComplementaires
+        adresseNumeroEtNomDeRue
+        emailContact
+        telephone
+      }
       candidate {
         id
         firstname
@@ -64,6 +78,11 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_VALIDATE_FEASIBILITY = graphql(`
         degree {
           level
         }
+        competenceBlocs {
+          label
+          id
+          code
+        }
         certificationAuthorityStructure {
           label
         }
@@ -87,10 +106,29 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_VALIDATE_FEASIBILITY = graphql(`
       individualHourCount
       collectiveHourCount
       isCertificationPartial
+      certificationAuthorityLocalAccounts {
+        contactFullName
+        contactEmail
+        contactPhone
+      }
       feasibility {
+        certificationAuthority {
+          label
+          contactFullName
+          contactEmail
+          contactPhone
+        }
         feasibilityFileSentAt
         dematerializedFeasibilityFile {
           id
+          attachments {
+            type
+            file {
+              name
+              previewUrl
+              mimeType
+            }
+          }
           sentToCandidateAt
           isReadyToBeSentToCandidate
           candidateConfirmationAt
@@ -106,6 +144,7 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_VALIDATE_FEASIBILITY = graphql(`
           option
           blocsDeCompetences {
             text
+            complete
             certificationCompetenceBloc {
               id
               code

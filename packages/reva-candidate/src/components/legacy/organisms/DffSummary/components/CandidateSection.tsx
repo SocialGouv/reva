@@ -1,13 +1,76 @@
-import { formatIso8601Date } from "@/utils/formatIso8601Date";
-import { getGenderBornLabel } from "@/utils/getGenderBornLabel.util";
-import { getGenderPrefix } from "@/utils/getGenderPrefix.util";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
-import { Candidate } from "@/graphql/generated/graphql";
+import { GenderEnum } from "@/constants/genders.constant";
+import { formatIso8601Date } from "@/utils/formatIso8601Date";
+
+import {
+  Candidate,
+  CandidateTypology,
+  Gender,
+} from "@/graphql/generated/graphql";
+
+function getGenderPrefix(gender: Gender) {
+  switch (gender) {
+    case GenderEnum.man:
+      return "M. ";
+    case GenderEnum.woman:
+      return "Mme ";
+    case GenderEnum.undisclosed:
+      return "Non spécifié";
+  }
+}
+
+function getCandidateTypologyLabel(typology: CandidateTypology) {
+  switch (typology) {
+    case "NON_SPECIFIE":
+      return "Non spécifié";
+    case "SALARIE_PRIVE":
+      return "Salarié du privé";
+    case "BENEVOLE":
+      return "Bénévole";
+    case "AIDANTS_FAMILIAUX":
+      return "Aidant familial";
+    case "AIDANTS_FAMILIAUX_AGRICOLES":
+      return "Aidant familial agricole";
+    case "DEMANDEUR_EMPLOI":
+      return "Demandeur d'emploi";
+    case "TRAVAILLEUR_NON_SALARIE":
+      return "Travailleur non salarié";
+    case "RETRAITE":
+      return "Retraité";
+    case "TITULAIRE_MANDAT_ELECTIF":
+      return "Titulaire d’un mandat électif";
+    case "CONJOINT_COLLABORATEUR":
+      return "Conjoint collaborateur";
+    case "STAGIAIRE":
+      return "Stagiaire";
+    case "SALARIE_PUBLIC":
+      return "Salarié public";
+    case "SALARIE_PUBLIC_HOSPITALIER":
+      return "Salarié public hospitalier";
+    case "SALARIE_ALTERNANT":
+      return "Salarié alternant";
+    case "SALARIE_INTERIMAIRE":
+      return "Salarié interimaire";
+    case "SALARIE_INTERMITTENT":
+      return "Salarié intermittent";
+    case "SALARIE_EN_CONTRATS_AIDES":
+      return "Salarié en contrats d'aides";
+    case "AUTRE":
+      return "Autre";
+    default:
+      return typology;
+  }
+}
 
 export default function CandidateSection({
   candidate,
+  typology,
+  conventionCollective,
 }: {
   candidate: Candidate;
+  typology: CandidateTypology;
+  conventionCollective?: string | null;
 }) {
   if (!candidate) return null;
   const {
@@ -17,14 +80,13 @@ export default function CandidateSection({
     gender,
     firstname2,
     firstname3,
-    givenName,
     birthdate,
     birthCity,
     birthDepartment,
-    country,
     nationality,
     phone,
     street,
+    addressComplement,
     zip,
     city,
     niveauDeFormationLePlusEleve,
@@ -33,79 +95,146 @@ export default function CandidateSection({
   } = candidate;
 
   const genderLabel = gender ? getGenderPrefix(gender) : "";
-  const bornLabel = gender ? getGenderBornLabel(gender) : "";
-
-  const isFrance = country ? country?.label == "France" : false;
 
   return (
-    <section>
-      <div className="flex">
-        <span className="fr-icon-user-fill fr-icon--lg mr-2" />
-        <h2>
-          {genderLabel}
-          {givenName ? givenName : lastname} {firstname}
-          {firstname2 ? `, ${firstname2}` : ""}
-          {firstname3 ? `, ${firstname3}` : ""}
-        </h2>
-      </div>
-      <p className="mb-2">
-        {!!givenName && <span>{`${bornLabel} ${lastname},`}</span>}
-        {birthdate && <span> le {formatIso8601Date(birthdate)} </span>}
-        <span>
-          à {birthCity}
-          {country && isFrance && birthDepartment
-            ? `${birthCity ? ", " : ""}${birthDepartment.label} (${birthDepartment.code})`
-            : ""}
-          {country && !isFrance && `${birthCity ? ", " : ""}${country.label}`}
-        </span>
-      </p>
-      {nationality && <p>Nationalité {nationality}</p>}
-      <h3>Contact</h3>
-      <p className="mb-2">
-        Adresse postale : {street} {zip} {city}
-      </p>
-      <p className="flex gap-4">
-        <span>Adresse électronique : {email}</span>
-        <span>Téléphone : {phone}</span>
-      </p>
-      <h3>Niveau de formation</h3>
-      <dl>
-        <div>
-          <dt id="candidate-education-highest-level">
-            Niveau de formation le plus élevé
-          </dt>
-          <dd
-            aria-labelledby="candidate-education-highest-level"
-            className="mb-2 font-medium ml-0"
-          >
-            {niveauDeFormationLePlusEleve?.level}
-          </dd>
+    <div className="flex flex-col gap-6">
+      <h3 className="mb-0">Civilité</h3>
+      <div className="flex flex-col gap-6 ml-10">
+        <div className="flex flex-row gap-4 flex-wrap">
+          <dl className="w-[170px]">
+            <dt id="candidate-civilite-label">Civilité</dt>
+            <dd
+              aria-labelledby="candidate-civilite-label"
+              className="font-medium"
+            >
+              {genderLabel}
+            </dd>
+          </dl>
+          <dl className="w-[170px]">
+            <dt id="candidate-lastname-label">Nom de naissance</dt>
+            <dd
+              aria-labelledby="candidate-lastname-label"
+              className="font-medium"
+            >
+              {lastname}
+            </dd>
+          </dl>
+          <dl className="w-[170px]">
+            <dt id="candidate-firstnames-label">Prénoms</dt>
+            <dd
+              aria-labelledby="candidate-firstnames-label"
+              className="font-medium"
+            >
+              {firstname}
+              {firstname2 ? `, ${firstname2}` : ""}
+              {firstname3 ? `, ${firstname3}` : ""}
+            </dd>
+          </dl>
+          <dl className="w-[170px]">
+            <dt id="candidate-birthdate-label">Date de naissance</dt>
+            <dd
+              aria-labelledby="candidate-birthdate-label"
+              className="font-medium"
+            >
+              {birthdate ? formatIso8601Date(birthdate) : "-"}
+            </dd>
+          </dl>
+          <dl className="w-[170px]">
+            <dt id="candidate-birthcity-label">Ville de naissance</dt>
+            <dd
+              aria-labelledby="candidate-birthcity-label"
+              className="font-medium"
+            >
+              {birthCity}
+              {birthDepartment ? ` (${birthDepartment.code})` : ""}
+            </dd>
+          </dl>
+          <dl className="w-[170px]">
+            <dt id="candidate-nationality-label">Nationalité</dt>
+            <dd
+              aria-labelledby="candidate-nationality-label"
+              className="font-medium"
+            >
+              {nationality}
+            </dd>
+          </dl>
         </div>
-        <div>
-          <dt id="candidate-education-degree-level">
-            Niveau de la certification obtenue la plus élevée
-          </dt>
-          <dd
-            aria-labelledby="candidate-education-degree-level"
-            className="mb-2 font-medium ml-0"
-          >
-            {highestDegree?.level}
-          </dd>
-        </div>
-        {highestDegreeLabel && (
-          <div>
-            <dt id="candidate-education-degree-title">
+        <div className="flex flex-col gap-4">
+          <h4 className="mb-0">Niveau de formation</h4>
+          <dl>
+            <dt id="candidate-education-level-label">
+              Niveau de formation le plus élevé
+            </dt>
+            <dd
+              aria-labelledby="candidate-education-level-label"
+              className="font-medium"
+            >
+              {niveauDeFormationLePlusEleve?.level}
+            </dd>
+          </dl>
+          <dl>
+            <dt id="candidate-highest-degree-level-label">
+              Niveau de la certification obtenue la plus élevée
+            </dt>
+            <dd
+              aria-labelledby="candidate-highest-degree-level-label"
+              className="font-medium"
+            >
+              {highestDegree?.level}
+            </dd>
+          </dl>
+          <dl>
+            <dt id="candidate-highest-degree-label-label">
               Intitulé de la certification la plus élevée obtenue
             </dt>
             <dd
-              aria-labelledby="candidate-education-degree-title"
-              className="mb-2 font-medium ml-0"
+              aria-labelledby="candidate-highest-degree-label-label"
+              className="font-medium"
             >
               {highestDegreeLabel}
             </dd>
-          </div>
+          </dl>
+        </div>
+      </div>
+      <h3 className="mb-0">Contact</h3>
+      <div className="flex flex-col gap-4 ml-10">
+        <dl>
+          <dt id="candidate-address-label">Adresse postale</dt>
+          <dd aria-labelledby="candidate-address-label" className="font-medium">
+            {street} {addressComplement ? `, ${addressComplement}` : ""} {zip}{" "}
+            {city}
+          </dd>
+        </dl>
+        <div className="flex flex-row gap-4 flex-wrap">
+          <dl>
+            <dt id="candidate-email-label">Adresse électronique</dt>
+            <dd aria-labelledby="candidate-email-label" className="font-medium">
+              {email}
+            </dd>
+          </dl>
+          <dl>
+            <dt id="candidate-phone-label">Téléphone</dt>
+            <dd aria-labelledby="candidate-phone-label" className="font-medium">
+              {phone}
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <h3 className="mb-0">Statut</h3>
+      <div className="flex flex-col gap-4 ml-10">
+        <p className="font-medium mb-0">
+          {getCandidateTypologyLabel(typology)}
+        </p>
+
+        {conventionCollective && (
+          <>
+            <h4 className="mb-0">
+              Convention collective de l’employeur du candidat
+            </h4>{" "}
+            <CallOut>{conventionCollective}</CallOut>
+          </>
         )}
-      </dl>
-    </section>
+      </div>
+    </div>
   );
 }

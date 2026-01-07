@@ -1,21 +1,26 @@
+import Badge from "@codegouvfr/react-dsfr/Badge";
+import { format } from "date-fns";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { UseValidateFeasibilityCandidacy } from "@/app/candidates/[candidateId]/candidacies/[candidacyId]/(project)/(accompagne)/validate-feasibility/validate-feasibility.hooks";
+import { CertificationCard } from "@/components/certification-card/CertificationCard";
+import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 import {
   Candidate,
-  Certification,
-  CertificationCompetenceDetails,
-  DffCertificationCompetenceBloc,
+  DffAttachment,
   DffEligibilityRequirement,
   Prerequisite,
 } from "@/graphql/generated/graphql";
 
+import AttachmentsSection from "./components/AttachmentsSection";
 import { BannerSummary } from "./components/BannerSummary";
+import CandidateDecisionCommentSection from "./components/CandidateDecisionCommentSection";
 import CandidateSection from "./components/CandidateSection";
 import CertificationSection from "./components/CertificationSection";
+import { ContactInfosSection } from "./components/ContactInfosSection";
 import DecisionSection from "./components/DecisionSection";
-import EligibilitySection from "./components/EligibilitySection";
 import ExperiencesSection from "./components/ExperiencesSection";
 import GoalsSection from "./components/GoalsSection";
 import ParcoursSection from "./components/ParcoursSection";
@@ -24,6 +29,22 @@ type DffSummaryProps = {
   candidacy: UseValidateFeasibilityCandidacy;
   candidateDecisionComment: string;
   setCandidateDecisionComment: (comment: string) => void;
+};
+
+const EligibiltyBadge = ({
+  eligibilityRequirement,
+}: {
+  eligibilityRequirement?: DffEligibilityRequirement | null;
+}) => {
+  if (eligibilityRequirement === "FULL_ELIGIBILITY_REQUIREMENT") {
+    return (
+      <Badge severity="info">Accès au dossier de faisabilité intégral</Badge>
+    );
+  }
+  if (eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT") {
+    return <Badge severity="new">Accès au dossier de faisabilité adapté</Badge>;
+  }
+  return null;
 };
 
 export function DffSummary({
@@ -55,11 +76,12 @@ export function DffSummary({
     eligibilityRequirement,
     eligibilityValidUntil,
     candidateConfirmationAt,
+    attachments,
+    swornStatementFile,
   } = dematerializedFeasibilityFile;
 
   const {
     experiences,
-    certification,
     goals,
     basicSkills,
     mandatoryTrainings,
@@ -72,64 +94,138 @@ export function DffSummary({
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-12 mt-8">
       <BannerSummary
         feasibilitySentToCertificationAuthorityAt={
           feasibility.feasibilityFileSentAt
         }
       />
+      <div className="flex flex-col gap-8">
+        <div className="border border-gray-200 p-10">
+          <h2 className="mb-6">
+            <span className="w-10 h-10 inline-block align-top mr-2">
+              {PICTOGRAMS.dataVisualizationSmall}
+            </span>
+            Contexte de la demande
+          </h2>
+          <h3>Nature de la demande</h3>
+          <EligibiltyBadge eligibilityRequirement={eligibilityRequirement} />
+          {eligibilityValidUntil && (
+            <dl className="mt-4 mb-4">
+              <dt id="eligibility-valid-until-label" className="mb-0">
+                Date de fin de validité
+              </dt>
+              <dd
+                aria-labelledby="eligibility-valid-until-label"
+                className="font-medium"
+              >
+                {format(eligibilityValidUntil, "dd/MM/yyyy")}
+              </dd>
+            </dl>
+          )}
+          <h3 className="mt-6">Certification professionnelle visée</h3>
+          <CertificationCard candidacy={candidacy} />
+          <CertificationSection
+            option={option}
+            firstForeignLanguage={firstForeignLanguage}
+            secondForeignLanguage={secondForeignLanguage}
+            prerequisites={prerequisites as Prerequisite[]}
+            isCertificationPartial={candidacy.isCertificationPartial}
+            certificationCompetenceBlocs={
+              candidacy.certification?.competenceBlocs
+            }
+            blocsDeCompetencesDFF={blocsDeCompetences}
+            certificationAuthorityStructureLabel={
+              candidacy.certification?.certificationAuthorityStructure?.label
+            }
+          />
+        </div>
+        <div className="border border-gray-200 p-10">
+          <h2 className="mb-6">
+            <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
+              {PICTOGRAMS.avatarSmall}
+            </span>
+            Profil du candidat
+          </h2>
+          <CandidateSection
+            candidate={{
+              ...(candidacy?.candidate as Candidate),
+              street: candidacy?.candidateInfo?.street,
+              zip: candidacy?.candidateInfo?.zip,
+              city: candidacy?.candidateInfo?.city,
+              addressComplement: candidacy?.candidateInfo?.addressComplement,
+            }}
+            typology={candidacy?.typology}
+            conventionCollective={candidacy?.conventionCollective?.label}
+          />
+          <GoalsSection goals={goals} />
+          <ExperiencesSection
+            experiences={experiences}
+            blocsDeCompetences={blocsDeCompetences}
+            certificationCompetenceDetails={certificationCompetenceDetails}
+            isEligibilityRequirementPartial={isEligibilityRequirementPartial}
+          />
+        </div>
 
-      <EligibilitySection
-        eligibilityRequirement={
-          eligibilityRequirement as DffEligibilityRequirement | null
-        }
-        eligibilityValidUntil={eligibilityValidUntil as Date | null}
-      />
-      <CertificationSection
-        option={option}
-        firstForeignLanguage={firstForeignLanguage}
-        secondForeignLanguage={secondForeignLanguage}
-        certification={certification as Certification}
-        prerequisites={prerequisites as Prerequisite[]}
-        isCertificationPartial={!!candidacy?.isCertificationPartial}
-        certificationAuthorityStructureLabel={
-          certification?.certificationAuthorityStructure?.label
-        }
-      />
-      <CandidateSection
-        candidate={{
-          ...(candidacy.candidate as Candidate),
-          street: candidacy?.candidateInfo?.street,
-          zip: candidacy?.candidateInfo?.zip,
-          city: candidacy?.candidateInfo?.city,
-          addressComplement: candidacy?.candidateInfo?.addressComplement,
-        }}
-      />
-      <GoalsSection goals={goals} />
-      <ExperiencesSection
-        experiences={experiences}
-        blocsDeCompetences={
-          blocsDeCompetences as DffCertificationCompetenceBloc[]
-        }
-        certificationCompetenceDetails={
-          certificationCompetenceDetails as CertificationCompetenceDetails[]
-        }
-        isEligibilityRequirementPartial={isEligibilityRequirementPartial}
-      />
-      <ParcoursSection
-        basicSkills={basicSkills}
-        mandatoryTrainings={mandatoryTrainings}
-        additionalHourCount={additionalHourCount}
-        individualHourCount={individualHourCount}
-        collectiveHourCount={collectiveHourCount}
-      />
-      <DecisionSection
-        decision={aapDecision}
-        decisionComment={aapDecisionComment}
-        candidateDecisionComment={candidateDecisionComment}
-        setCandidateDecisionComment={setCandidateDecisionComment}
-        candidateDecisionCommentDisabled={!!candidateConfirmationAt}
-      />
+        <div className="border border-gray-200 p-10">
+          <h2 className="mb-6">
+            <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
+              <Image
+                src="/candidat/images/pictograms/ecosystem.svg"
+                alt="Accompagnement"
+                width={40}
+                height={40}
+              />
+            </span>
+            Accompagnement proposé au candidat
+          </h2>
+          <ParcoursSection
+            basicSkills={basicSkills}
+            mandatoryTrainings={mandatoryTrainings}
+            additionalHourCount={additionalHourCount}
+            individualHourCount={individualHourCount}
+            collectiveHourCount={collectiveHourCount}
+          />
+        </div>
+
+        <div className="border border-gray-200 p-10">
+          <h2 className="mb-6">
+            <span className="w-10 h-10 inline-block align-top mr-2 my-auto">
+              {PICTOGRAMS.contractSmall}
+            </span>
+            Avis et documents
+          </h2>
+          <DecisionSection
+            decision={aapDecision}
+            decisionComment={aapDecisionComment}
+            candidateDecisionComment={candidateDecisionComment}
+            setCandidateDecisionComment={setCandidateDecisionComment}
+            candidateDecisionCommentDisabled={!!candidateConfirmationAt}
+          />
+          {candidateDecisionComment && (
+            <CandidateDecisionCommentSection
+              candidateDecisionComment={candidateDecisionComment}
+            />
+          )}
+          <AttachmentsSection
+            attachments={attachments as DffAttachment[]}
+            swornStatementFile={swornStatementFile}
+          />
+        </div>
+      </div>
+      {candidacy.feasibility?.certificationAuthority && (
+        <div className="mb-4">
+          <ContactInfosSection
+            certificationAuthority={
+              candidacy.feasibility?.certificationAuthority
+            }
+            certificationAuthorityLocalAccounts={
+              candidacy.certificationAuthorityLocalAccounts
+            }
+            organism={candidacy.organism}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -3,7 +3,6 @@ import { format } from "date-fns";
 
 import {
   CertificationCompetenceDetails,
-  DffCertificationCompetenceBloc,
   Experience,
 } from "@/graphql/generated/graphql";
 
@@ -16,7 +15,19 @@ export default function ExperiencesSection({
   isEligibilityRequirementPartial,
 }: {
   experiences: Experience[];
-  blocsDeCompetences: DffCertificationCompetenceBloc[];
+  blocsDeCompetences: {
+    text?: string | null;
+    complete: boolean;
+    certificationCompetenceBloc: {
+      id: string;
+      label: string;
+      code?: string | null;
+      competences: {
+        id: string;
+        label: string;
+      }[];
+    };
+  }[];
   certificationCompetenceDetails: CertificationCompetenceDetails[];
   isEligibilityRequirementPartial: boolean;
 }) {
@@ -29,34 +40,38 @@ export default function ExperiencesSection({
     unknown: "inconnue",
   };
   return (
-    <section>
-      <div className="flex">
-        <span className="fr-icon-briefcase-fill fr-icon--lg mr-2" />
-        <h2 className="mb-0">Expériences professionnelles</h2>
-      </div>
-      {experiences.length > 0 &&
-        experiences.map((experience, index) => (
-          <Accordion
-            key={experience.id}
-            className="mt-4"
-            label={`Expérience ${index + 1} - ${experience.title}`}
-            defaultExpanded
-          >
-            <p>Démarrée le {format(experience?.startedAt, "dd MMMM yyyy")}</p>
-            <p>Expérience {durationLabel[experience?.duration]}</p>
-            <p>{experience?.description}</p>
-          </Accordion>
-        ))}
+    <div className="flex flex-col gap-6 mt-6">
+      <h3 className="mb-0">Expériences professionnelles</h3>
+      {experiences.length > 0 && (
+        <div className="ml-10">
+          {experiences.map((experience, index) => (
+            <Accordion
+              key={experience.id}
+              label={`Expérience ${index + 1} - ${experience.title}`}
+              defaultExpanded={false}
+              data-testid={`experience-accordion-${index}`}
+            >
+              <p className="mb-2">
+                Démarrée le {format(experience?.startedAt, "dd MMMM yyyy")}
+              </p>
+              <p className="mb-2">
+                Expérience {durationLabel[experience?.duration]}
+              </p>
+              <p className="mb-2">{experience?.description}</p>
+            </Accordion>
+          ))}
+        </div>
+      )}
 
       {blocsDeCompetences.length > 0 && (
-        <section className="mt-4">
-          <h5 className="mb-0">Blocs de compétences</h5>
+        <>
+          <h3 className="mb-0">Blocs de compétences</h3>
 
-          <div className="mt-4">
+          <div className="ml-10">
             {blocsDeCompetences.map((bc) => (
               <CertificationCompetenceAccordion
                 key={bc.certificationCompetenceBloc.id}
-                defaultExpanded
+                defaultExpanded={false}
                 competenceBloc={bc.certificationCompetenceBloc}
                 competenceBlocText={bc.text}
                 competenceDetails={certificationCompetenceDetails}
@@ -64,8 +79,8 @@ export default function ExperiencesSection({
               />
             ))}
           </div>
-        </section>
+        </>
       )}
-    </section>
+    </div>
   );
 }
