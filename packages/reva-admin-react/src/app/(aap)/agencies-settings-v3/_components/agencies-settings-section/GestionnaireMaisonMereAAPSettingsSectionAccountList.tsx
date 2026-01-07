@@ -1,6 +1,5 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Impersonate } from "@/components/impersonate/Impersonate.component";
 
 import { Account } from "@/graphql/generated/graphql";
@@ -19,9 +18,6 @@ export const GestionnaireMaisonMereAAPSettingsSectionAccountList = ({
     "id" | "email" | "firstname" | "lastname" | "disabledAt"
   >[];
 }) => {
-  const { isFeatureActive } = useFeatureflipping();
-  const isUserAccountV2Featureactive = isFeatureActive("AAP_USER_ACCOUNT_V2");
-
   return (
     <ul className="ml-6 mb-8">
       {comptesCollaborateurs
@@ -48,15 +44,9 @@ export const GestionnaireMaisonMereAAPSettingsSectionAccountList = ({
               )}
 
               <Button
-                linkProps={
-                  isUserAccountV2Featureactive
-                    ? {
-                        href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${account.id}`,
-                      }
-                    : {
-                        href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
-                      }
-                }
+                linkProps={{
+                  href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${account.id}`,
+                }}
                 priority="tertiary no outline"
                 size="small"
               >
