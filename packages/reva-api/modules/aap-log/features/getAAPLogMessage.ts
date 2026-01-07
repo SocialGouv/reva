@@ -66,10 +66,20 @@ export const getAAPLogMessage = ({
         "Compte collaborateur créé",
         `email: ${details.accountEmail}, organisme: ${details.organismLabel}`,
       );
+    case "ORGANISM_ACCOUNT_CREATED_V2":
+      return log(
+        "Compte collaborateur créé",
+        `email: ${details.accountEmail}, maison mère: ${details.maisonMereAAPRaisonSociale}`,
+      );
     case "ORGANISM_ACCOUNT_UPDATED":
       return log(
         "Compte collaborateur mis à jour",
         `email: ${details.accountEmail}, organisme: ${details.organismLabel}`,
+      );
+    case "ORGANISM_ACCOUNT_UPDATED_V2":
+      return log(
+        "Compte collaborateur mis à jour",
+        `email: ${details.accountEmail}, maison mère: ${details.maisonMereAAPRaisonSociale}`,
       );
 
     default:

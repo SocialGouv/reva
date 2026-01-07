@@ -56,7 +56,7 @@ export type AAPLogEventTypeAndDetails =
       };
     }
   | {
-      eventType: "ORGANISM_ACCOUNT_CREATED";
+      eventType: "ORGANISM_ACCOUNT_CREATED"; //deprecated
       details: {
         organismId: string;
         organismLabel: string;
@@ -64,10 +64,26 @@ export type AAPLogEventTypeAndDetails =
       };
     }
   | {
-      eventType: "ORGANISM_ACCOUNT_UPDATED";
+      eventType: "ORGANISM_ACCOUNT_CREATED_V2";
+      details: {
+        maisonMereAAPId: string;
+        maisonMereAAPRaisonSociale: string;
+        accountEmail: string;
+      };
+    }
+  | {
+      eventType: "ORGANISM_ACCOUNT_UPDATED"; //deprecated
       details: {
         organismId: string;
         organismLabel: string;
+        accountEmail: string;
+      };
+    }
+  | {
+      eventType: "ORGANISM_ACCOUNT_UPDATED_V2";
+      details: {
+        maisonMereAAPId: string;
+        maisonMereAAPRaisonSociale: string;
         accountEmail: string;
       };
     };
