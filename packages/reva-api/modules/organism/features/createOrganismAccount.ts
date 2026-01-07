@@ -24,6 +24,18 @@ export const createOrganismAccount = async ({
   });
 
   if (isAApUserAccountV2FeatureActive) {
+    if (!maisonMereAAPId) {
+      throw new Error("L'identifiant de la maison mère est obligatoire");
+    }
+
+    const maisonMereAAP = await prismaClient.maisonMereAAP.findUnique({
+      where: { id: maisonMereAAPId },
+    });
+
+    if (!maisonMereAAP) {
+      throw new Error("La maison mère n'a pas été trouvée");
+    }
+
     const account = await createAccount({
       email: accountEmail,
       username: accountEmail,
@@ -39,9 +51,18 @@ export const createOrganismAccount = async ({
       },
     });
 
-    return account;
+    await logAAPAuditEvent({
+      eventType: "ORGANISM_ACCOUNT_CREATED_V2",
+      maisonMereAAPId: maisonMereAAP.id,
+      details: {
+        accountEmail,
+        maisonMereAAPId,
+        maisonMereAAPRaisonSociale: maisonMereAAP.raisonSociale,
+      },
+      userInfo,
+    });
 
-    //TODO log audit event
+    return account;
   } else {
     if (!organismId) {
       throw new Error("L'identifiant de l'organisme est obligatoire");
