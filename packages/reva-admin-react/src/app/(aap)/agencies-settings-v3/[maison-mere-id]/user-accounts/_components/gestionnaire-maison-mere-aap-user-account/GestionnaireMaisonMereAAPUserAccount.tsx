@@ -2,9 +2,11 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
+import { useRouter } from "next/navigation";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { DisableCompteCollaborateurAAPTile } from "../disable-compte-collaborateur-aap-tile/DisableCompteCollaborateurAAPTile";
 import { SettingsBreadcrumb } from "../SettingsBreadcrumb";
@@ -20,12 +22,25 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
   userAccountId: string;
   backUrl: string;
 }) => {
-  const { userAccount } = useGestionnaireMaisonMereAAPUserAccount({
-    maisonMereAAPId,
-    userAccountId,
-  });
+  const { userAccount, disableUserAccount } =
+    useGestionnaireMaisonMereAAPUserAccount({
+      maisonMereAAPId,
+      userAccountId,
+    });
+
+  const router = useRouter();
 
   const userOrganismsCount = userAccount?.organisms?.length || 0;
+
+  const handleDisableUserAccountConfirmation = async () => {
+    try {
+      await disableUserAccount.mutateAsync();
+      router.push(backUrl);
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col">
       <SettingsBreadcrumb
@@ -68,8 +83,9 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
           </p>
         </EnhancedSectionCard>
         <DisableCompteCollaborateurAAPTile
-          accountId={userAccountId}
-          maisonMereAAPId={maisonMereAAPId}
+          onDisableUserAccountConfirmation={
+            handleDisableUserAccountConfirmation
+          }
         />
       </div>
       <Button

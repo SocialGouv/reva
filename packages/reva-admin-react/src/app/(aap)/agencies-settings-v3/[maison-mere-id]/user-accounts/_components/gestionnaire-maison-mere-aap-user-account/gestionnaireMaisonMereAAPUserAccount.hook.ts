@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
@@ -20,6 +20,18 @@ const getMaisonMerAAPUserAccountsQuery = graphql(`
   }
 `);
 
+const disableCompteCollaborateurMutation = graphql(`
+  mutation disableCompteCollaborateurForDisableCompteCollaborateurAAPTile(
+    $maisonMereAAPId: ID!
+    $accountId: ID!
+  ) {
+    organism_disableCompteCollaborateur(
+      maisonMereAAPId: $maisonMereAAPId
+      accountId: $accountId
+    )
+  }
+`);
+
 export const useGestionnaireMaisonMereAAPUserAccount = ({
   maisonMereAAPId,
   userAccountId,
@@ -28,6 +40,7 @@ export const useGestionnaireMaisonMereAAPUserAccount = ({
   userAccountId: string;
 }) => {
   const { graphqlClient } = useGraphQlClient();
+  const queryClient = useQueryClient();
 
   const { data: maisonMerAAPUserAccounts } = useQuery({
     queryKey: ["maisonMerAAPUserAccounts", maisonMereAAPId],
@@ -35,6 +48,20 @@ export const useGestionnaireMaisonMereAAPUserAccount = ({
       graphqlClient.request(getMaisonMerAAPUserAccountsQuery, {
         maisonMereAAPId,
       }),
+  });
+
+  const disableUserAccount = useMutation({
+    mutationFn: () =>
+      graphqlClient.request(disableCompteCollaborateurMutation, {
+        maisonMereAAPId,
+        accountId: userAccountId,
+      }),
+    mutationKey: [userAccountId, "agencies-settings-user-accounts-page"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [userAccountId],
+      });
+    },
   });
 
   const userAccounts =
@@ -46,5 +73,6 @@ export const useGestionnaireMaisonMereAAPUserAccount = ({
   return {
     maisonMerAAPUserAccounts,
     userAccount,
+    disableUserAccount,
   };
 };
