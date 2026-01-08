@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isTest = process.env.APP_ENV === "test";
+
 const nextConfig: NextConfig = {
   basePath: "/vae-collective",
   /* config options here */
@@ -10,8 +12,9 @@ const nextConfig: NextConfig = {
     });
     return config;
   },
+  distDir: isTest ? ".next-test" : ".next",
   experimental: {
-    testProxy: process.env.APP_ENV === "test",
+    testProxy: isTest,
   },
 };
 

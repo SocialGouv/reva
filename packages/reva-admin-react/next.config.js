@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const isTest = process.env.APP_ENV === "test";
+
 const nextConfig = {
   output: "standalone",
   basePath: "/admin2",
@@ -32,6 +34,7 @@ const nextConfig = {
       },
     ];
   },
+  distDir: isTest ? ".next-test" : ".next",
   eslint: {
     dirs: ["pages", "app", "components", "lib", "src", "cypress"],
   },
