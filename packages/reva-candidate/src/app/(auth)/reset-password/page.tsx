@@ -6,6 +6,7 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 
+import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
 
@@ -14,6 +15,7 @@ import { useResetPassword } from "./reset-password.hooks";
 export default function ForgotPassword() {
   const params = useSearchParams();
   const router = useRouter();
+  const { resetKeycloakInstance } = useKeycloakContext();
 
   const token = params.get("resetPasswordToken") || "";
 
@@ -40,8 +42,10 @@ export default function ForgotPassword() {
 
     try {
       const response = await resetPassword.mutateAsync({ token, password });
-      if (response) {
-        router.push("/reset-password-confirmation");
+      const tokens = response.candidate_resetPassword;
+      if (tokens) {
+        resetKeycloakInstance(tokens);
+        router.push("/");
       }
     } catch (error) {
       graphqlErrorToast(error);

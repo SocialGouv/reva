@@ -6,7 +6,11 @@ import { graphql } from "@/graphql/generated";
 
 const CANDIDATE_RESET_PASSWORD = graphql(`
   mutation candidate_resetPassword($token: String!, $password: String!) {
-    candidate_resetPassword(token: $token, password: $password)
+    candidate_resetPassword(token: $token, password: $password) {
+      accessToken
+      refreshToken
+      idToken
+    }
   }
 `);
 

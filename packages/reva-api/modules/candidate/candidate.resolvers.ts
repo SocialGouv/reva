@@ -152,13 +152,10 @@ const unsafeResolvers = {
         token: string;
         password: string;
       },
-    ) => {
-      await candidateResetPassword({
+    ) =>
+      candidateResetPassword({
         ...params,
-      });
-
-      return true;
-    },
+      }),
     candidate_updateCandidateInformation: (
       _: unknown,
       {

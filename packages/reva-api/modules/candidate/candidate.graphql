@@ -131,7 +131,7 @@ type Mutation {
     password: String!
   ): CandidateLogged!
   candidate_forgotPassword(email: String!): Boolean!
-  candidate_resetPassword(token: String!, password: String!): Boolean!
+  candidate_resetPassword(token: String!, password: String!): Tokens!
   candidate_updateCandidateInformation(
     candidacyId: String!
     candidateInformation: CandidateUpdateInformationInput!

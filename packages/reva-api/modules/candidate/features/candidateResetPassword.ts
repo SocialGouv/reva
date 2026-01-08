@@ -1,4 +1,5 @@
 import {
+  generateIAMTokenWithPassword,
   getAccountInIAM,
   getJWTContent,
   resetPassword,
@@ -56,6 +57,15 @@ export const candidateResetPassword = async ({
       where: { id: candidate.id },
       data: { passwordUpdatedAt: new Date() },
     });
+
+    // Generate tokens for auto-login after password reset
+    const tokens = await generateIAMTokenWithPassword(
+      candidate.keycloakId,
+      password,
+      process.env.KEYCLOAK_APP_REALM as string,
+    );
+
+    return tokens;
   } else {
     throw new FunctionalError(
       FunctionalCodeError.TECHNICAL_ERROR,
