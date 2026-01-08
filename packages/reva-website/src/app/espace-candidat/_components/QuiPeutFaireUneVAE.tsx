@@ -20,8 +20,8 @@ const QuiPeutFaireUneVAE = async () => (
         répertoire national des certifications professionnelles.
         <br /> <br />
         <strong>La seule exception ?</strong> Si vous êtes{" "}
-        <strong>agent public</strong>, le parcours VAE ne s’effectue pas pour le
-        moment via notre plateforme. Contactez les{" "}
+        <strong>agent public</strong>, le parcours VAE ne s’effectue pas, pour
+        le moment, via la plateforme France VAE. Contactez les{" "}
         <Link
           href="/savoir-plus/articles/vae-ou-se-renseigner/"
           target="_self"
