@@ -507,7 +507,52 @@ describe("Disable local account", () => {
     expect(account?.disabledAt).toBeDefined();
   });
 
-  it("should throw an error if i'm not an admin", async () => {
+  it("should disable the local account if i'm the gestionnaire of the maison mere aap of the local account", async () => {
+    vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockImplementation(
+      () =>
+        Promise.resolve({
+          users: {
+            findOne: () => Promise.resolve({}),
+            listGroups: () => Promise.resolve([]),
+            update: () => Promise.resolve({}),
+          },
+        }),
+    );
+
+    const collaborateurAccount = await createAccountHelper();
+    const maisonMereAAP = await createMaisonMereAapHelper();
+
+    attachCollaborateurAccountToMaisonMereAAP({
+      maisonMereAAPId: maisonMereAAP.id,
+      collaborateurAccountId: collaborateurAccount.id,
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "gestion_maison_mere_aap",
+          keycloakId: maisonMereAAP.gestionnaire.keycloakId,
+        }),
+      },
+    });
+
+    expect(collaborateurAccount.disabledAt).toBeNull();
+
+    await graphqlClient.request(disableCompteCollaborateurMutation, {
+      maisonMereAAPId: maisonMereAAP.id,
+      accountId: collaborateurAccount.id,
+    });
+
+    const account = await prismaClient.account.findUnique({
+      where: {
+        id: collaborateurAccount.id,
+      },
+    });
+
+    expect(account?.disabledAt).toBeDefined();
+  });
+
+  it("should throw an error if i'm not an admin and not the gestionnaire of the maison mere aap of the local account", async () => {
     const collaborateurAccount = await createAccountHelper();
     const maisonMereAAP = await createMaisonMereAapHelper();
 
