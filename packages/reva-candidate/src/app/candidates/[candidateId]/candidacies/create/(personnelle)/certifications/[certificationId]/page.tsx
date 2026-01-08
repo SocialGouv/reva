@@ -56,6 +56,9 @@ const GET_CERTIFICATION = graphql(`
           label
         }
       }
+      certificationAuthorityStructure {
+        label
+      }
     }
   }
 `);
