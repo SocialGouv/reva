@@ -52,7 +52,6 @@ type Mutation {
     accountId: ID!
     accountData: UpdateAccountInput!
   ): Account!
-  account_disableAccount(accountId: ID!): Account!
   account_loginWithCredentials(
     email: String!
     password: String!

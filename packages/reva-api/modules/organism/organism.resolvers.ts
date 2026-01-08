@@ -31,6 +31,7 @@ import { createLieuAccueilInfo } from "./features/createLieuAccueilInfo";
 import { createOrganismAccount } from "./features/createOrganismAccount";
 import { createOrUpdateOnSiteOrganismGeneralInformation } from "./features/createOrUpdateOnSiteOrganismGeneralInformation";
 import { createOrUpdateRemoteOrganismGeneralInformation } from "./features/createOrUpdateRemoteOrganismGeneralInformation";
+import { disableCompteCollaborateur } from "./features/disableCompteCollaborateur";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAccountsByOrganismId } from "./features/getAccountsByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
@@ -562,6 +563,11 @@ const unsafeResolvers = {
       updatePositionnementCollaborateur({
         ...params.positionnement,
       }),
+
+    organism_disableCompteCollaborateur: async (
+      _parent: unknown,
+      params: { maisonMereAAPId: string; accountId: string },
+    ) => disableCompteCollaborateur(params),
   },
   Query: {
     organism_getOrganism: async (

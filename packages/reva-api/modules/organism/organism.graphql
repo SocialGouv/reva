@@ -368,4 +368,9 @@ type Mutation {
     maisonMereAAPId: ID!
     positionnement: UpdatePositionnementCollaborateurInput!
   ): Account!
+
+  organism_disableCompteCollaborateur(
+    maisonMereAAPId: ID!
+    accountId: ID!
+  ): Void
 }

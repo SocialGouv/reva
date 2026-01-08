@@ -9,7 +9,6 @@ import { logger } from "@/modules/shared/logger/logger";
 
 import { ClientApp } from "./account.type";
 import { createAccount } from "./features/createAccount";
-import { disableAccountById } from "./features/disableAccount";
 import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getImpersonateUrl } from "./features/impersonate";
 import { loginWithCredentials } from "./features/loginWithCredentials";
@@ -73,32 +72,6 @@ export const resolvers = {
         }
 
         return updateAccountById(params);
-      } catch (e) {
-        logger.error(e);
-        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
-      }
-    },
-    account_disableAccount: async (
-      _parent: unknown,
-      params: {
-        accountId: string;
-      },
-      context: GraphqlContext,
-    ) => {
-      try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        const hasRole = context.auth.hasRole;
-        if (!hasRole("admin")) {
-          throw new Error("Utilisateur non autorisé");
-        }
-
-        return disableAccountById(params);
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

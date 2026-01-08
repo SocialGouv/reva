@@ -1,3 +1,4 @@
+import * as getKeycloakAdminModule from "@/modules/shared/auth/getKeycloakAdmin";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
@@ -445,6 +446,116 @@ describe("Positionnement compte collaborateur", () => {
       }),
     ).rejects.toThrowError(
       "Vous n'êtes pas autorisé à accéder à cette maison mère",
+    );
+  });
+});
+
+describe("Disable local account", () => {
+  const disableCompteCollaborateurMutation = graphql(`
+    mutation disableCompteCollaborateur(
+      $maisonMereAAPId: ID!
+      $accountId: ID!
+    ) {
+      organism_disableCompteCollaborateur(
+        maisonMereAAPId: $maisonMereAAPId
+        accountId: $accountId
+      )
+    }
+  `);
+
+  it("should disable the local account if i'm an admin", async () => {
+    vi.spyOn(getKeycloakAdminModule, "getKeycloakAdmin").mockImplementation(
+      () =>
+        Promise.resolve({
+          users: {
+            findOne: () => Promise.resolve({}),
+            listGroups: () => Promise.resolve([]),
+            update: () => Promise.resolve({}),
+          },
+        }),
+    );
+
+    const collaborateurAccount = await createAccountHelper();
+    const maisonMereAAP = await createMaisonMereAapHelper();
+
+    attachCollaborateurAccountToMaisonMereAAP({
+      maisonMereAAPId: maisonMereAAP.id,
+      collaborateurAccountId: collaborateurAccount.id,
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+        }),
+      },
+    });
+
+    expect(collaborateurAccount.disabledAt).toBeNull();
+
+    await graphqlClient.request(disableCompteCollaborateurMutation, {
+      maisonMereAAPId: maisonMereAAP.id,
+      accountId: collaborateurAccount.id,
+    });
+
+    const account = await prismaClient.account.findUnique({
+      where: {
+        id: collaborateurAccount.id,
+      },
+    });
+
+    expect(account?.disabledAt).toBeDefined();
+  });
+
+  it("should throw an error if i'm not an admin", async () => {
+    const collaborateurAccount = await createAccountHelper();
+    const maisonMereAAP = await createMaisonMereAapHelper();
+
+    attachCollaborateurAccountToMaisonMereAAP({
+      maisonMereAAPId: maisonMereAAP.id,
+      collaborateurAccountId: collaborateurAccount.id,
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_candidacy",
+        }),
+      },
+    });
+
+    await expect(
+      graphqlClient.request(disableCompteCollaborateurMutation, {
+        maisonMereAAPId: maisonMereAAP.id,
+        accountId: collaborateurAccount.id,
+      }),
+    ).rejects.toThrowError("You are not authorized!");
+  });
+
+  it("should throw an error if the maisonMereAAPId is not the one of the collaborateur account", async () => {
+    const collaborateurAccount = await createAccountHelper();
+    const maisonMereAAP = await createMaisonMereAapHelper();
+    const otherMaisonMereAAP = await createMaisonMereAapHelper();
+
+    attachCollaborateurAccountToMaisonMereAAP({
+      maisonMereAAPId: maisonMereAAP.id,
+      collaborateurAccountId: collaborateurAccount.id,
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+        }),
+      },
+    });
+    await expect(
+      graphqlClient.request(disableCompteCollaborateurMutation, {
+        maisonMereAAPId: otherMaisonMereAAP.id,
+        accountId: collaborateurAccount.id,
+      }),
+    ).rejects.toThrowError(
+      "Le compte collaborateur n'est pas lié à la maison mère",
     );
   });
 });
