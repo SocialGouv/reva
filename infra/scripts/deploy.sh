@@ -16,6 +16,11 @@ else
     exit 1
 fi
 
+if ! git ls-remote --exit-code --heads origin "$branch_name" > /dev/null 2>&1; then
+    echo "Error: remote branch '$branch_name' not found."
+    exit 1
+fi
+
 echo "Do you wish to deploy '$branch_name' to $SCALINGO_DEFAULT_APPS? (y/n)"
 read user_response
 
