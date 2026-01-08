@@ -86,7 +86,7 @@ test.describe("Settings update user account information connexion", () => {
         }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/informations-connexion/",
           );
           await waitForPageQueries(page);
 
@@ -107,7 +107,7 @@ test.describe("Settings update user account information connexion", () => {
         test("it let me go back to the user account page", async ({ page }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/informations-connexion/",
           );
           await waitForPageQueries(page);
           await page
@@ -115,7 +115,7 @@ test.describe("Settings update user account information connexion", () => {
             .click();
 
           await expect(page).toHaveURL(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/",
           );
         });
 
@@ -124,7 +124,7 @@ test.describe("Settings update user account information connexion", () => {
         }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/informations-connexion/",
           );
           await waitForPageQueries(page);
 
@@ -145,14 +145,14 @@ test.describe("Settings update user account information connexion", () => {
           );
 
           await expect(page).toHaveURL(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/informations-connexion/",
           );
         });
 
         test("it let me submit a valid form", async ({ page }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/informations-connexion/",
           );
           await waitForPageQueries(page);
 
@@ -180,7 +180,7 @@ test.describe("Settings update user account information connexion", () => {
           await mutationPromise;
 
           await expect(page).toHaveURL(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/informations-connexion/",
           );
         });
       });
@@ -188,12 +188,12 @@ test.describe("Settings update user account information connexion", () => {
         test("it let me go back to the user account page", async ({ page }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/informations-connexion/",
           );
           await waitForPageQueries(page);
           await page.getByRole("link", { name: "Doe John" }).click();
           await expect(page).toHaveURL(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/",
           );
         });
         test("it let me go back to the root page of the breadcrumb", async ({
@@ -201,7 +201,7 @@ test.describe("Settings update user account information connexion", () => {
         }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/informations-connexion/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/informations-connexion/",
           );
           await waitForPageQueries(page);
           await page

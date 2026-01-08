@@ -26,7 +26,7 @@ const InformationsConnexionPage = () => {
     maisonMereAAPId,
     userAccountId,
   });
-  const backUrl = `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`;
+  const backUrl = `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${userAccountId}`;
   const handleFormSubmit = async (data: UserAccountFormData) => {
     try {
       await updateUserAccount.mutateAsync({
@@ -53,7 +53,7 @@ const InformationsConnexionPage = () => {
           {
             label: userAccount.lastname + " " + userAccount.firstname,
             linkProps: {
-              href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`,
+              href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${userAccountId}`,
             },
           },
         ]}

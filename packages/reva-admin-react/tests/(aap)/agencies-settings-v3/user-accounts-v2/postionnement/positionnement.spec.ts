@@ -144,7 +144,7 @@ test.describe("Settings update user account positionnement", () => {
         test("it shows the correct title", async ({ page }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
           );
           await waitForPageQueries(page);
 
@@ -156,13 +156,13 @@ test.describe("Settings update user account positionnement", () => {
         test("it let me go back to the user account page", async ({ page }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
           );
           await waitForPageQueries(page);
           await page.getByRole("link", { name: "Retour" }).click();
 
           await expect(page).toHaveURL(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/",
           );
         });
       });
@@ -181,7 +181,7 @@ test.describe("Settings update user account positionnement", () => {
           test("it shows the correct organisms list", async ({ page }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
             );
             await waitForPageQueries(page);
 
@@ -213,7 +213,7 @@ test.describe("Settings update user account positionnement", () => {
           }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
             );
             await waitForPageQueries(page);
 
@@ -237,7 +237,7 @@ test.describe("Settings update user account positionnement", () => {
           }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
             );
             await waitForPageQueries(page);
 
@@ -258,7 +258,7 @@ test.describe("Settings update user account positionnement", () => {
           test("it let me search for an organism", async ({ page }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
             );
             await waitForPageQueries(page);
 
@@ -293,7 +293,7 @@ test.describe("Settings update user account positionnement", () => {
           test("it shows the empty state component", async ({ page }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
             );
             await waitForPageQueries(page);
             await expect(
@@ -318,12 +318,12 @@ test.describe("Settings update user account positionnement", () => {
         test("it let me go back to the user account page", async ({ page }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
           );
           await waitForPageQueries(page);
           await page.getByRole("link", { name: "Doe John" }).click();
           await expect(page).toHaveURL(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/",
           );
         });
         test("it let me go back to the root page of the breadcrumb", async ({
@@ -331,7 +331,7 @@ test.describe("Settings update user account positionnement", () => {
         }) => {
           await login({ role, page });
           await page.goto(
-            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-1/positionnement/",
+            "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-1/positionnement/",
           );
           await waitForPageQueries(page);
           await page

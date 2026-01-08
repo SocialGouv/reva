@@ -45,7 +45,7 @@ export const GestionnaireMaisonMereAAPSettingsSectionAccountList = ({
 
               <Button
                 linkProps={{
-                  href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${account.id}`,
+                  href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${account.id}`,
                 }}
                 priority="tertiary no outline"
                 size="small"

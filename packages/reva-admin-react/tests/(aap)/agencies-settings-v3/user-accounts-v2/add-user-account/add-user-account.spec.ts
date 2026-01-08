@@ -34,7 +34,7 @@ const addUserAccountV2Handlers = () => {
   return [createOrganismAccountForAddUserAccountPageHandler];
 };
 
-test.describe("Settings Add user account v2", () => {
+test.describe("Settings Add user account", () => {
   test.use({
     mswHandlers: [
       [...addUserAccountV2Handlers(), ...aapCommonHandlers],
@@ -46,7 +46,7 @@ test.describe("Settings Add user account v2", () => {
       test("it shows the correct title", async ({ page }) => {
         await login({ role: "aap", page });
         await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/add-user-account/",
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/add-user-account/",
         );
         await waitForPageQueries(page);
         await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -57,7 +57,7 @@ test.describe("Settings Add user account v2", () => {
       test("it let me go back to the settings page", async ({ page }) => {
         await login({ role: "aap", page });
         await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/add-user-account/",
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/add-user-account/",
         );
         await waitForPageQueries(page);
         await page
@@ -73,7 +73,7 @@ test.describe("Settings Add user account v2", () => {
       }) => {
         await login({ role: "aap", page });
         await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/add-user-account/",
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/add-user-account/",
         );
         await waitForPageQueries(page);
         await page.getByRole("button", { name: "Créer" }).click();
@@ -89,14 +89,14 @@ test.describe("Settings Add user account v2", () => {
         );
 
         await expect(page).toHaveURL(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/add-user-account/",
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/add-user-account/",
         );
       });
 
       test("it let me submit a valid form", async ({ page }) => {
         await login({ role: "aap", page });
         await page.goto(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/add-user-account/",
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/add-user-account/",
         );
         await waitForPageQueries(page);
 
@@ -118,7 +118,7 @@ test.describe("Settings Add user account v2", () => {
         await mutationPromise;
 
         await expect(page).toHaveURL(
-          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/new-account-id/",
+          "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/new-account-id/",
         );
       });
     });

@@ -38,7 +38,7 @@ const PositionnementPage = () => {
     onlyShowUserOrganisms: onlyShowAddedItems,
     organismsSearchFilter: searchFilter,
   });
-  const backUrl = `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`;
+  const backUrl = `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${userAccountId}`;
 
   const userOrganismIds = useMemo(
     () => userAccount?.organisms.map((o) => o.id) || [],
@@ -57,7 +57,7 @@ const PositionnementPage = () => {
           {
             label: userAccount.lastname + " " + userAccount.firstname,
             linkProps: {
-              href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts-v2/${userAccountId}`,
+              href: `/agencies-settings-v3/${maisonMereAAPId}/user-accounts/${userAccountId}`,
             },
           },
         ]}

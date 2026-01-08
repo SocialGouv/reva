@@ -37,21 +37,19 @@ async function waitForPageQueries(page: Page) {
 const { aapCommonHandlers } = getAAPCommonHandlers();
 
 test.describe("Collaborateur AAP settings page", () => {
-  test.describe("With user account v2 feature", () => {
-    test("it redirects me to the collaborateur settings page", async ({
-      page,
-      msw,
-    }) => {
-      msw.use(...createSettingsHandlers(), ...aapCommonHandlers);
+  test("it redirects me to the collaborateur settings page", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(...createSettingsHandlers(), ...aapCommonHandlers);
 
-      await login({ role: "aapCollaborateur", page });
+    await login({ role: "aapCollaborateur", page });
 
-      await page.goto(`/admin2/agencies-settings-v3/`);
-      await waitForPageQueries(page);
+    await page.goto(`/admin2/agencies-settings-v3/`);
+    await waitForPageQueries(page);
 
-      await expect(page).toHaveURL(
-        "/admin2/agencies-settings-v3/collaborateurs/account-1/",
-      );
-    });
+    await expect(page).toHaveURL(
+      "/admin2/agencies-settings-v3/collaborateurs/account-1/",
+    );
   });
 });

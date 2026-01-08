@@ -78,7 +78,7 @@ test.describe("Settings User accounts v2", () => {
           test("it shows the correct title", async ({ page }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-2/",
             );
             await waitForPageQueries(page);
             await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -89,7 +89,7 @@ test.describe("Settings User accounts v2", () => {
           test("it let me go back to the settings page", async ({ page }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-2/",
             );
             await waitForPageQueries(page);
             await page.getByRole("link", { name: "Retour" }).click();
@@ -101,7 +101,7 @@ test.describe("Settings User accounts v2", () => {
           }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-2/",
             );
             await waitForPageQueries(page);
             await page
@@ -109,7 +109,7 @@ test.describe("Settings User accounts v2", () => {
               .getByRole("button", { name: "Modifier" })
               .click();
             await expect(page).toHaveURL(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/informations-connexion/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-2/informations-connexion/",
             );
           });
 
@@ -118,7 +118,7 @@ test.describe("Settings User accounts v2", () => {
           }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-2/",
             );
             await waitForPageQueries(page);
             await page
@@ -126,7 +126,7 @@ test.describe("Settings User accounts v2", () => {
               .getByRole("button", { name: "Modifier" })
               .click();
             await expect(page).toHaveURL(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/positionnement/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-2/positionnement/",
             );
           });
         });
@@ -136,7 +136,7 @@ test.describe("Settings User accounts v2", () => {
           }) => {
             await login({ role, page });
             await page.goto(
-              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts-v2/account-2/",
+              "/admin2/agencies-settings-v3/a8e32301-86b8-414b-8b55-af86d289adee/user-accounts/account-2/",
             );
             await waitForPageQueries(page);
             await page
