@@ -22,7 +22,7 @@ async function waitForPageQueries(page: Page) {
   ]);
 }
 
-const createUserAccountV2Handlers = () => {
+const createUserAccountHandlers = () => {
   const getGestionnaireMaisonMereAAPSettingsInfoHandler = fvae.query(
     "getMaisonMerAAPUserAccounts",
     graphQLResolver({
@@ -47,10 +47,10 @@ const createUserAccountV2Handlers = () => {
   return [getGestionnaireMaisonMereAAPSettingsInfoHandler];
 };
 
-test.describe("Settings User accounts v2", () => {
+test.describe("Settings User accounts", () => {
   test.use({
     mswHandlers: [
-      [...createUserAccountV2Handlers(), ...aapCommonHandlers],
+      [...createUserAccountHandlers(), ...aapCommonHandlers],
       { scope: "test" },
     ],
   });
@@ -74,7 +74,7 @@ test.describe("Settings User accounts v2", () => {
   ].forEach(
     ({ role, label, backUrl, rootBreadCrumbLabel, rootBreadCrumbUrl }) => {
       test.describe(label, () => {
-        test.describe("when I access the user accounts v2 page for a user account", () => {
+        test.describe("when I access the user accounts page for a user account", () => {
           test("it shows the correct title", async ({ page }) => {
             await login({ role, page });
             await page.goto(
