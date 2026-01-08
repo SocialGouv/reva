@@ -6,6 +6,7 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
+import { DisableCompteCollaborateurAAPTile } from "../disable-compte-collaborateur-aap-tile/DisableCompteCollaborateurAAPTile";
 import { SettingsBreadcrumb } from "../SettingsBreadcrumb";
 
 import { useGestionnaireMaisonMereAAPUserAccount } from "./gestionnaireMaisonMereAAPUserAccount.hook";
@@ -66,6 +67,10 @@ export const GestionnaireMaisonMereAAPUserAccount = ({
             la structure.
           </p>
         </EnhancedSectionCard>
+        <DisableCompteCollaborateurAAPTile
+          accountId={userAccountId}
+          maisonMereAAPId={maisonMereAAPId}
+        />
       </div>
       <Button
         priority="secondary"
