@@ -10,7 +10,6 @@ import {
   Gender,
   PrerequisiteState,
 } from "@prisma/client";
-import { PDFExtract } from "pdf.js-extract";
 
 import { prismaClient } from "@/prisma/client";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
@@ -18,45 +17,13 @@ import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-
 import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
+import {
+  buildPdfTestHelper,
+  SectionDefinition,
+  StructuredSection,
+} from "@/test/helpers/pdf/pdfTestHelper";
 
 import { generateFeasibilityFileByCandidacyId } from "./generateFeasibilityFileByCandidacyId";
-
-type ExtractedContentItem = {
-  str?: string;
-};
-
-type ExtractedPage = {
-  content?: ExtractedContentItem[];
-};
-
-type ExtractedPdf = {
-  pages: ExtractedPage[];
-};
-
-type SectionDefinition = {
-  name: string;
-  title: string;
-};
-
-type StructuredSection = SectionDefinition & {
-  lines: string[];
-  startIndex: number;
-};
-
-const normalizeText = (value: string) =>
-  value
-    .split("\n")
-    .map((line) => line.replace(/\s+/g, " ").trim())
-    .filter((line) => line.length > 0)
-    .join("\n");
-
-const canonicalizeText = (value: string) =>
-  normalizeText(value).replace(/BLOC-[A-Z0-9]+/g, "BLOC-CODE");
-
-const getCanonicalLines = (value: string) =>
-  canonicalizeText(value)
-    .split("\n")
-    .filter((line) => line.length > 0);
 
 const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
   { name: "admissibility", title: "Dossier de faisabilité" },
@@ -290,49 +257,16 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
 };
 
 describe("demat feasibility pdf generation", () => {
-  let canonicalPdfLines: string[] = [];
-  let structuredSections: StructuredSection[] = [];
-  let rncpId: string;
-
-  const getSection = (sectionName: string) => {
-    const section = structuredSections.find(({ name }) => name === sectionName);
-
-    if (!section) {
-      throw new Error(
-        `Section "${sectionName}" introuvable dans la structure.`,
-      );
-    }
-
-    return section;
-  };
-
-  const expectSectionText = (sectionName: string, expected: string) => {
-    const section = getSection(sectionName);
-
-    const actualLines = getCanonicalLines(section.lines.join("\n"));
-    const expectedLines = getCanonicalLines(expected);
-
-    if (actualLines.length === 0 || expectedLines.length === 0) {
-      throw new Error(`La section "${sectionName}" ne contient aucune ligne.`);
-    }
-
-    const [actualTitle, ...actualBody] = actualLines;
-    const [expectedTitle, ...expectedBody] = expectedLines;
-
-    expect(actualTitle).toEqual(expectedTitle);
-    expect({
-      section: section.title,
-      lines: [actualTitle, ...actualBody],
-    }).toEqual({
-      section: section.title,
-      lines: [expectedTitle, ...expectedBody],
-    });
-  };
+  let rncpId = "";
+  let expectSectionText: (sectionName: string, expected: string) => void;
+  let structuredSections: StructuredSection[];
 
   beforeAll(async () => {
     const { candidacyId, certification } =
       await setupCompleteDematerializedFeasibilityFile();
+
     rncpId = certification.rncpId;
+
     const pdfBuffer = await generateFeasibilityFileByCandidacyId(candidacyId);
 
     expect(pdfBuffer).toBeInstanceOf(Buffer);
@@ -340,67 +274,12 @@ describe("demat feasibility pdf generation", () => {
     if (!pdfBuffer) {
       throw new Error("No PDF buffer generated");
     }
-
-    const pdfExtract = new PDFExtract();
-
-    const extracted = await new Promise<ExtractedPdf>((resolve, reject) => {
-      pdfExtract.extractBuffer(pdfBuffer, {}, (error, data) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve(data as ExtractedPdf);
-      });
+    const pdfHelper = await buildPdfTestHelper({
+      pdfBuffer,
+      sectionDefinitions: SECTION_DEFINITIONS,
     });
-
-    const textContent = extracted.pages
-      .flatMap((page) => (page.content ?? []).map((item) => item.str ?? ""))
-      .join("\n");
-
-    canonicalPdfLines = canonicalizeText(textContent)
-      .split("\n")
-      .filter((line) => line.length > 0);
-
-    const sectionStartIndices: number[] = [];
-    let searchIndex = 0;
-
-    SECTION_DEFINITIONS.forEach(({ title }) => {
-      let foundIndex = -1;
-
-      for (
-        let index = searchIndex;
-        index < canonicalPdfLines.length;
-        index += 1
-      ) {
-        if (canonicalPdfLines[index] === title) {
-          foundIndex = index;
-          break;
-        }
-      }
-
-      if (foundIndex === -1) {
-        throw new Error(
-          `Titre de section "${title}" introuvable dans le PDF extrait.`,
-        );
-      }
-
-      sectionStartIndices.push(foundIndex);
-      searchIndex = foundIndex + 1;
-    });
-
-    structuredSections = SECTION_DEFINITIONS.map((definition, index) => {
-      const startIndex = sectionStartIndices[index];
-      const endIndex =
-        index === SECTION_DEFINITIONS.length - 1
-          ? canonicalPdfLines.length
-          : sectionStartIndices[index + 1];
-
-      return {
-        ...definition,
-        startIndex,
-        lines: canonicalPdfLines.slice(startIndex, endIndex),
-      };
-    });
+    expectSectionText = pdfHelper.expectSectionText;
+    structuredSections = pdfHelper.structuredSections;
   });
 
   it("contains the admissibility section", () => {
