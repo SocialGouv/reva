@@ -10,11 +10,6 @@
       ],
       "mainMenu": [
         {
-          "label": "Rendez-vous pédagogique",
-          "url": "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/meetings",
-          "status": "ACTIVE_WITHOUT_HINT"
-        },
-        {
           "label": "Définition du parcours",
           "url": "/admin2/candidacies/fb451fbc-3218-416d-9ac9-65b13432469f/typology",
           "status": "ACTIVE_WITHOUT_HINT"
