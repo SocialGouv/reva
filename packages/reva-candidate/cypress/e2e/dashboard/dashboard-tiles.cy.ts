@@ -27,7 +27,7 @@ context("Dashboard Tiles", () => {
       );
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
-          activeFeaturesForConnectedUser: ["APPOINTMENTS"],
+          activeFeaturesForConnectedUser: [],
         },
       });
       stubQuery(

@@ -52,7 +52,7 @@ context("Dashboard Sidebar - Contact Tiles", () => {
       );
       stubQuery(req, "activeFeaturesForConnectedUser", {
         data: {
-          activeFeaturesForConnectedUser: ["APPOINTMENTS"],
+          activeFeaturesForConnectedUser: [],
         },
       });
       stubQuery(
