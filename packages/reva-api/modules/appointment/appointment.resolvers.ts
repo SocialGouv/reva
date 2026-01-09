@@ -70,11 +70,9 @@ const unsafeResolvers = {
     appointment_updateAppointment: async (
       _: unknown,
       { input }: { input: UpdateAppointmentInput },
-      context: GraphqlContext,
     ) =>
       updateAppointment({
         input,
-        userInfo: buildAAPAuditLogUserInfoFromContext(context),
       }),
     appointment_deleteAppointment: async (
       _: unknown,

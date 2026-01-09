@@ -5,7 +5,6 @@ import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAppointmentHelper } from "@/test/helpers/entities/create-appointment-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
-import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { getCandidateAppUrl } from "../candidate/utils/candidate.url.helpers";
@@ -18,16 +17,6 @@ const graphqlClient = getGraphQLClient({
       keycloakId: "1b0e7046-ca61-4259-b716-785f36ab79b2",
     }),
   },
-});
-
-beforeEach(async () => {
-  await createFeatureHelper({
-    args: {
-      key: "APPOINTMENTS",
-      label: "APPOINTMENTS",
-      isActive: true,
-    },
-  });
 });
 
 test("should get a candidacy appointments", async () => {

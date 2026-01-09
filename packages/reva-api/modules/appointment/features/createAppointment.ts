@@ -5,7 +5,6 @@ import {
   logCandidacyAuditEvent,
 } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getCandidateAppUrl } from "@/modules/candidate/utils/candidate.url.helpers";
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { formatUTCTime } from "@/modules/shared/date/formatUTCTime";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
@@ -20,11 +19,6 @@ export const createAppointment = async ({
   input: CreateAppointmentInput;
   userInfo: CandidacyAuditLogUserInfo;
 }) => {
-  const appointmentsFeatureActive = await isFeatureActiveForUser({
-    userKeycloakId: userInfo.userKeycloakId,
-    feature: "APPOINTMENTS",
-  });
-
   const { sendEmailToCandidate, ...data } = input;
   const existingRendezVousPédagogique =
     await prismaClient.appointment.findFirst({
@@ -65,27 +59,16 @@ export const createAppointment = async ({
     data,
   });
 
-  if (appointmentsFeatureActive) {
-    await logCandidacyAuditEvent({
-      candidacyId: data.candidacyId,
-      eventType: "APPOINTMENT_CREATED",
-      ...userInfo,
-      details: {
-        id: result.id,
-        date: data.date,
-        type: data.type,
-      },
-    });
-  } else {
-    await logCandidacyAuditEvent({
-      candidacyId: data.candidacyId,
-      eventType: "APPOINTMENT_INFO_UPDATED",
-      ...userInfo,
-      details: {
-        firstAppointmentOccuredAt: data.date,
-      },
-    });
-  }
+  await logCandidacyAuditEvent({
+    candidacyId: data.candidacyId,
+    eventType: "APPOINTMENT_CREATED",
+    ...userInfo,
+    details: {
+      id: result.id,
+      date: data.date,
+      type: data.type,
+    },
+  });
 
   if (sendEmailToCandidate) {
     const timeZone = candidate.department?.timezone || "Europe/Paris";
