@@ -24,6 +24,7 @@ import {
   addDocumentHeader,
   addInfoTable,
   getCourtesyTitleFromGender,
+  getCandidateTypologyLabel,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
 
 const ASSETS_PATH =
@@ -56,6 +57,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
           },
         },
       },
+      ccn: true,
     },
   });
 
@@ -203,6 +205,10 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
             .join(" ") + `, ${candidate.country?.label}`,
         email: candidate.email ?? "",
         phone: candidate.phone ?? "",
+        candidacyCcnLabel: candidacy.ccn?.label ?? "",
+        candidacyCandidateTypologyLabel: getCandidateTypologyLabel(
+          candidacy.typology,
+        ),
       },
       doc,
     });
@@ -537,6 +543,8 @@ const addProfilCandidatSection = ({
     address,
     email,
     phone,
+    candidacyCcnLabel,
+    candidacyCandidateTypologyLabel,
   },
 }: {
   candidate: {
@@ -552,6 +560,8 @@ const addProfilCandidatSection = ({
     address: string;
     email: string;
     phone: string;
+    candidacyCcnLabel: string;
+    candidacyCandidateTypologyLabel: string;
   };
   doc: PDFKit.PDFDocument;
 }) => {
@@ -619,6 +629,26 @@ const addProfilCandidatSection = ({
               { title: "Téléphone :", value: phone },
             ],
             doc,
+          });
+        },
+      });
+      doc.moveDown(1);
+      addSubSection({
+        title: "Statut",
+        doc,
+        content: (doc) => {
+          doc
+            .fontSize(8)
+            .font("assets/fonts/Marianne/Marianne-Regular.otf")
+            .text(candidacyCandidateTypologyLabel, doc.x, doc.y);
+          doc.moveDown(1);
+          addCallout({
+            title:
+              "Identifiant de la Convention collective de l’employeur du candidat",
+            description: candidacyCcnLabel,
+            x: doc.x,
+            doc,
+            widthInPt: pxToPt(1160),
           });
         },
       });

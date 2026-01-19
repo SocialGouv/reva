@@ -1,4 +1,5 @@
 import {
+  CandidateTypology,
   DFFEligibilityCandidateSituation,
   DFFEligibilityRequirement,
   Gender,
@@ -373,5 +374,48 @@ export const getCourtesyTitleFromGender = (gender: Gender | null) => {
       return "Madame";
     default:
       return "";
+  }
+};
+
+export const getCandidateTypologyLabel = (typology: CandidateTypology) => {
+  switch (typology) {
+    case "NON_SPECIFIE":
+      return "Non spécifié";
+    case "SALARIE_PRIVE":
+      return "Salarié du secteur privé";
+    case "BENEVOLE":
+      return "Bénévole";
+    case "AIDANTS_FAMILIAUX":
+      return "Aidant familial";
+    case "AIDANTS_FAMILIAUX_AGRICOLES":
+      return "Aidant familial agricole";
+    case "DEMANDEUR_EMPLOI":
+      return "Demandeur d'emploi";
+    case "TRAVAILLEUR_NON_SALARIE":
+      return "Travailleur non salarié";
+    case "RETRAITE":
+      return "Retraité";
+    case "TITULAIRE_MANDAT_ELECTIF":
+      return "Titulaire d’un mandat électif";
+    case "CONJOINT_COLLABORATEUR":
+      return "Conjoint collaborateur";
+    case "STAGIAIRE":
+      return "Stagiaire";
+    case "SALARIE_PUBLIC":
+      return "Salarié du secteur public";
+    case "SALARIE_PUBLIC_HOSPITALIER":
+      return "Salarié public hospitalier";
+    case "SALARIE_ALTERNANT":
+      return "Salarié alternant";
+    case "SALARIE_INTERIMAIRE":
+      return "Salarié interimaire";
+    case "SALARIE_INTERMITTENT":
+      return "Salarié intermittent";
+    case "SALARIE_EN_CONTRATS_AIDES":
+      return "Salarié en contrats d'aides";
+    case "AUTRE":
+      return "Autre";
+    default:
+      return typology;
   }
 };
