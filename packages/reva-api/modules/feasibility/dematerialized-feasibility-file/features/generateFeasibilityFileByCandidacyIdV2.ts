@@ -36,7 +36,9 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
     where: { id: candidacyId },
     include: {
       certification: { include: { competenceBlocs: true } },
-      candidate: true,
+      candidate: {
+        include: { highestDegree: true, niveauDeFormationLePlusEleve: true },
+      },
       Feasibility: {
         where: {
           isActive: true,
@@ -182,6 +184,10 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
           : "",
         birthcity: candidate.birthCity ?? "",
         nationality: candidate.nationality ?? "",
+        highestDegreeLevel: candidate.highestDegree?.level?.toString() ?? "",
+        highestDegreeLabel: candidate.highestDegreeLabel ?? "",
+        niveauDeFormationLePlusEleveLabel:
+          candidate.niveauDeFormationLePlusEleve?.label ?? "",
       },
       doc,
     });
@@ -510,6 +516,9 @@ const addProfilCandidatSection = ({
     birthdate,
     birthcity,
     nationality,
+    highestDegreeLevel,
+    highestDegreeLabel,
+    niveauDeFormationLePlusEleveLabel,
   },
 }: {
   candidate: {
@@ -519,6 +528,9 @@ const addProfilCandidatSection = ({
     birthdate: string;
     birthcity: string;
     nationality: string;
+    highestDegreeLevel: string;
+    highestDegreeLabel: string;
+    niveauDeFormationLePlusEleveLabel: string;
   };
   doc: PDFKit.PDFDocument;
 }) => {
@@ -543,6 +555,31 @@ const addProfilCandidatSection = ({
               },
               { title: "Ville de naissance :", value: birthcity },
               { title: "Nationalité :", value: nationality },
+            ],
+            doc,
+          });
+          doc.moveDown(1);
+        },
+      });
+      addSubSection({
+        title: "Niveau de formation",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1160),
+            data: [
+              {
+                title: "Niveau de formation le plus élevé ",
+                value: niveauDeFormationLePlusEleveLabel,
+              },
+              {
+                title: "Niveau de la certification obtenue la plus élevée",
+                value: highestDegreeLevel,
+              },
+              {
+                title: "Intitulé de la certification la plus élevée obtenue",
+                value: highestDegreeLabel,
+              },
             ],
             doc,
           });
