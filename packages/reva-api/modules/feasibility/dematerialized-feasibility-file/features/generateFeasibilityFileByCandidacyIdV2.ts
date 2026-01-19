@@ -21,8 +21,10 @@ import {
   addTitledBlock,
   addDisabledCheckbox,
   addDocumentHeader,
-  ASSETS_PATH,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
+
+const ASSETS_PATH =
+  "modules/feasibility/dematerialized-feasibility-file/assets/df-demat-pdf";
 
 export const generateFeasibilityFileByCandidacyIdV2 = async (
   candidacyId: string,
@@ -222,7 +224,7 @@ const addContexteDemandeSection = ({
   addSection({
     doc,
     title: "Contexte de la demande",
-    iconPath: `${ASSETS_PATH}/data-visualization.png`,
+    iconPath: `${ASSETS_PATH}/images/data-visualization.png`,
     content: (doc) => {
       addNatureDemandeSubSection({ doc, eligibilityLabelAndType });
       addCertificationSubSection({
@@ -257,12 +259,12 @@ const addNatureDemandeSubSection = ({
       ? {
           backgroundColor: "#e8edff",
           textColor: "#0063cb",
-          iconPath: `${ASSETS_PATH}/info-fill.png`,
+          iconPath: `${ASSETS_PATH}/images/info-fill.png`,
         }
       : {
           backgroundColor: "#feebd0",
           textColor: "#695240",
-          iconPath: `${ASSETS_PATH}/flashlight-fill.png`,
+          iconPath: `${ASSETS_PATH}/images/flashlight-fill.png`,
         };
   doc
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
@@ -330,7 +332,7 @@ const addCertificationSubSection = ({
         startInPt: doc.x + pxToPt(72),
       });
       doc.image(
-        `${ASSETS_PATH}/verified-badge.png`,
+        `${ASSETS_PATH}/images/verified-badge.png`,
         doc.x,
         doc.y + pxToPt(20),
         {

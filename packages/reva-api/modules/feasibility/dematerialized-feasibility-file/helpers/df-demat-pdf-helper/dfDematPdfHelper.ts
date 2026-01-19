@@ -3,8 +3,8 @@ import {
   DFFEligibilityRequirement,
 } from "@prisma/client";
 
-export const ASSETS_PATH =
-  "modules/feasibility/dematerialized-feasibility-file/assets/images/df-demat-pdf";
+const ASSETS_PATH =
+  "modules/feasibility/dematerialized-feasibility-file/helpers/df-demat-pdf-helper/assets/";
 
 export const addFrame = ({
   doc,
@@ -274,7 +274,7 @@ export const addDisabledCheckbox = ({
   const oldX = doc.x;
   if (checked) {
     doc.image(
-      "modules/feasibility/dematerialized-feasibility-file/helpers/df-demat-pdf-helper/assets/checkbox-disabled-checked.png",
+      `${ASSETS_PATH}/images/checkbox-disabled-checked.png`,
       doc.x,
       doc.y + 1.5,
       {
@@ -283,7 +283,7 @@ export const addDisabledCheckbox = ({
     );
   } else {
     doc.image(
-      "modules/feasibility/dematerialized-feasibility-file/helpers/df-demat-pdf-helper/assets/checkbox-disabled-unchecked.png",
+      `${ASSETS_PATH}/images/checkbox-disabled-unchecked.png`,
       doc.x,
       doc.y + 1.5,
       {
@@ -299,11 +299,16 @@ export const addDisabledCheckbox = ({
 };
 
 export const addDocumentHeader = (doc: PDFKit.PDFDocument) => {
-  doc.image(`${ASSETS_PATH}/republique-francaise.png`, doc.x - 10, doc.y, {
-    fit: [104.25, 90.75],
-  });
+  doc.image(
+    `${ASSETS_PATH}/images/republique-francaise.png`,
+    doc.x - 10,
+    doc.y,
+    {
+      fit: [104.25, 90.75],
+    },
+  );
 
-  doc.image(`${ASSETS_PATH}/france-vae.png`, doc.x + 395, doc.y + 6, {
+  doc.image(`${ASSETS_PATH}/images/france-vae.png`, doc.x + 395, doc.y + 6, {
     fit: [155.25, 69.9],
   });
 
