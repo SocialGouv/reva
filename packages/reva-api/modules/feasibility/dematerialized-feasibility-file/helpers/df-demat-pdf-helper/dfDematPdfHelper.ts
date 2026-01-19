@@ -326,3 +326,40 @@ export const addDocumentHeader = (doc: PDFKit.PDFDocument) => {
 
   doc.moveDown(10);
 };
+
+export const addInfoTable = ({
+  doc,
+  data,
+  widthInPt,
+}: {
+  doc: PDFKit.PDFDocument;
+  data: { title: string; value: string }[];
+  widthInPt: number;
+}) => {
+  const oldX = doc.x;
+  data.forEach((item) => {
+    const lineY = doc.y;
+    doc
+      .fontSize(8)
+      .font("assets/fonts/Marianne/Marianne-Light.otf")
+      .text(item.title, doc.x, doc.y);
+    doc.text("", doc.x, lineY);
+    doc
+      .fontSize(8)
+      .font("assets/fonts/Marianne/Marianne-Regular.otf")
+      .text(
+        item.value,
+        595 - pxToPt(140) - doc.widthOfString(item.value),
+        doc.y,
+      );
+    doc.text("", oldX, lineY + pxToPt(40));
+    doc
+      .moveTo(doc.x, doc.y)
+      .lineWidth(0.5)
+      .strokeColor("#DDDDDD")
+      .lineTo(doc.x + widthInPt, doc.y)
+      .stroke();
+    doc.moveDown(0.3);
+  });
+  doc.text("", oldX); //reset x position to start of table after table end
+};
