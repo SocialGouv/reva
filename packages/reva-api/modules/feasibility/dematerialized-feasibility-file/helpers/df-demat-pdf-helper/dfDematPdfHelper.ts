@@ -155,6 +155,7 @@ export const addSection = ({
   content: (doc: PDFKit.PDFDocument) => void;
   doc: PDFKit.PDFDocument;
 }) => {
+  const oldX = doc.x;
   doc.image(iconPath, doc.x + pxToPt(40), doc.y + pxToPt(8), {
     fit: [pxToPt(40), pxToPt(40)],
   });
@@ -167,6 +168,9 @@ export const addSection = ({
   doc.moveDown(0.5);
 
   content(doc);
+
+  doc.moveDown(5);
+  doc.text("", oldX, doc.y); //reset x position to start of section after title
 };
 
 export const pxToPt = (pixels: number) => pixels / 2.48;
