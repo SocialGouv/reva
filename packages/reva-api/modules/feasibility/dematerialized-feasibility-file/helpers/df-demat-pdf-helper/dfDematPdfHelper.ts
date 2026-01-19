@@ -3,6 +3,9 @@ import {
   DFFEligibilityRequirement,
 } from "@prisma/client";
 
+export const ASSETS_PATH =
+  "modules/feasibility/dematerialized-feasibility-file/assets/images/df-demat-pdf";
+
 export const addFrame = ({
   doc,
   content,
@@ -300,4 +303,16 @@ export const addDisabledCheckbox = ({
     .font("assets/fonts/Marianne/Marianne-Light.otf")
     .text(label, doc.x + pxToPt(30), doc.y);
   doc.text("", oldX, doc.y); //reset x position to start of checkbox after checkbox end
+};
+
+export const addDocumentHeader = (doc: PDFKit.PDFDocument) => {
+  doc.image(`${ASSETS_PATH}/republique-francaise.png`, doc.x - 10, doc.y, {
+    fit: [104.25, 90.75],
+  });
+
+  doc.image(`${ASSETS_PATH}/france-vae.png`, doc.x + 395, doc.y + 6, {
+    fit: [155.25, 69.9],
+  });
+
+  doc.moveDown(10);
 };

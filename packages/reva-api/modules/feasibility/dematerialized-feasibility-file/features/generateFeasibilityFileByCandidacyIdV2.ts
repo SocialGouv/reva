@@ -20,10 +20,9 @@ import {
   addCallout,
   addTitledBlock,
   addDisabledCheckbox,
+  addDocumentHeader,
+  ASSETS_PATH,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
-
-const ASSETS_PATH =
-  "modules/feasibility/dematerialized-feasibility-file/assets/images/df-demat-pdf";
 
 export const generateFeasibilityFileByCandidacyIdV2 = async (
   candidacyId: string,
@@ -159,18 +158,6 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
 
     doc.end();
   });
-};
-
-const addDocumentHeader = (doc: PDFKit.PDFDocument) => {
-  doc.image(`${ASSETS_PATH}/republique-francaise.png`, doc.x, doc.y, {
-    fit: [104.25, 90.75],
-  });
-
-  doc.image(`${ASSETS_PATH}/france-vae.png`, doc.x + 400, doc.y + 6, {
-    fit: [155.25, 69.9],
-  });
-
-  doc.moveDown(10);
 };
 
 type CheckIsDFFReadyArgs = {
