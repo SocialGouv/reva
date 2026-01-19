@@ -448,7 +448,10 @@ const addCertificationPrerequisitesSubSection = ({
       prerequisites
         .filter((p) => p.state === "ACQUIRED")
         .forEach((prerequisite) =>
-          doc.text("- " + prerequisite.label, doc.x, doc.y),
+          doc
+            .fontSize(8)
+            .font("assets/fonts/Marianne/Marianne-Light.otf")
+            .text("- " + prerequisite.label, doc.x, doc.y),
         );
     },
   });
@@ -462,7 +465,10 @@ const addCertificationPrerequisitesSubSection = ({
       prerequisites
         .filter((p) => p.state === "IN_PROGRESS")
         .forEach((prerequisite) =>
-          doc.text("- " + prerequisite.label, doc.x, doc.y),
+          doc
+            .fontSize(8)
+            .font("assets/fonts/Marianne/Marianne-Light.otf")
+            .text("- " + prerequisite.label, doc.x, doc.y),
         );
     },
   });
