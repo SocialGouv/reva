@@ -250,6 +250,7 @@ export const addTitledBlock = ({
   widthInPt: number;
   doc: PDFKit.PDFDocument;
 }) => {
+  const oldX = doc.x;
   doc
     .fontSize(8)
     .font("assets/fonts/Marianne/Marianne-Medium.otf")
@@ -259,7 +260,7 @@ export const addTitledBlock = ({
     .text("", startInPt + pxToPt(16), doc.y)
     .font("assets/fonts/Marianne/Marianne-Regular.otf");
   content(doc);
-  doc.text("", startInPt, doc.y); //reset x position to start of block after block end
+  doc.text("", oldX, doc.y); //reset x position to start of block after block end
 };
 
 export const addDisabledCheckbox = ({
