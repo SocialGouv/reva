@@ -89,13 +89,10 @@ const juryResultNotice: {
   CANDIDATE_ABSENT: "new",
 };
 
-const getSchema = (isCertificationPartial: boolean) =>
-  z.object({
-    result: isCertificationPartial
-      ? z.enum(PARTIAL_CERTIFICATION_OPTIONS)
-      : z.enum(FULL_CERTIFICATION_OPTIONS),
-    informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
-  });
+const schema = z.object({
+  result: z.enum(ALL_OPTIONS),
+  informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
+});
 
 type ResultatFormData = {
   result:
@@ -142,7 +139,7 @@ export const Resultat = () => {
     getValues,
     formState: { errors, isValid, isSubmitting },
   } = useForm<ResultatFormData>({
-    resolver: zodResolver(getSchema(!!candidacy?.isCertificationPartial)),
+    resolver: zodResolver(schema),
   });
 
   const {
