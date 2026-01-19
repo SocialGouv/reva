@@ -155,14 +155,14 @@ export const addSection = ({
   content: (doc: PDFKit.PDFDocument) => void;
   doc: PDFKit.PDFDocument;
 }) => {
-  doc.image(iconPath, doc.x, doc.y + pxToPt(8), {
+  doc.image(iconPath, doc.x + pxToPt(40), doc.y + pxToPt(8), {
     fit: [pxToPt(40), pxToPt(40)],
   });
 
   doc
     .fontSize(14)
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .text(title, doc.x + pxToPt(50), doc.y);
+    .text(title, doc.x + pxToPt(90), doc.y);
 
   doc.moveDown(0.5);
 
@@ -171,18 +171,25 @@ export const addSection = ({
 
 export const pxToPt = (pixels: number) => pixels / 2.48;
 
-export const addSubTitle = ({
-  subTitle,
+export const addSubSection = ({
+  title,
   doc,
+  content,
 }: {
-  subTitle: string;
+  title: string;
+  content: (doc: PDFKit.PDFDocument) => void;
   doc: PDFKit.PDFDocument;
 }) => {
+  const oldX = doc.x;
   doc
     .fontSize(12)
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .text(subTitle, pxToPt(140));
+    .text(title, pxToPt(140));
   doc.moveDown(0.5);
+  doc.text("", doc.x + pxToPt(40), doc.y); //indent content
+  content(doc);
+  doc.moveDown(0.5);
+  doc.text("", oldX, doc.y); //reset x position to start of block after sub section end
 };
 
 export const getEligibilityLabelAndType = ({

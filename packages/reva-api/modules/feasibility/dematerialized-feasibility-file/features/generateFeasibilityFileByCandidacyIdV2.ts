@@ -10,7 +10,7 @@ import { isAapAvailableForCertificationId } from "@/modules/referential/features
 import { prismaClient } from "@/prisma/client";
 
 import {
-  addSubTitle,
+  addSubSection,
   getEligibilityLabelAndType,
   pxToPt,
   addSection,
@@ -252,8 +252,6 @@ const addNatureDemandeSubSection = ({
   doc: PDFKit.PDFDocument;
   eligibilityLabelAndType: { label: string; type: "info" | "warning" };
 }) => {
-  addSubTitle({ subTitle: "Nature de la demande", doc });
-
   const { backgroundColor, textColor, iconPath } =
     eligibilityLabelAndType.type === "info"
       ? {
@@ -266,28 +264,33 @@ const addNatureDemandeSubSection = ({
           textColor: "#695240",
           iconPath: `${ASSETS_PATH}/images/flashlight-fill.png`,
         };
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(8)
-    .table({
-      position: { x: doc.x + pxToPt(40), y: doc.y },
-      columnStyles: [doc.widthOfString(eligibilityLabelAndType.label) + 25],
-      data: [
-        [
-          {
-            border: 0,
-            backgroundColor,
-            textColor,
-            text: "        " + eligibilityLabelAndType.label,
-          },
-        ],
-      ],
-    });
 
-  doc.image(iconPath, doc.x + 2, doc.y - 13, {
-    fit: [12, 12],
+  addSubSection({
+    title: "Nature de la demande",
+    doc,
+    content: (doc) => {
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(8)
+        .table({
+          columnStyles: [doc.widthOfString(eligibilityLabelAndType.label) + 25],
+          data: [
+            [
+              {
+                border: 0,
+                backgroundColor,
+                textColor,
+                text: "        " + eligibilityLabelAndType.label,
+              },
+            ],
+          ],
+        });
+
+      doc.image(iconPath, doc.x + 2, doc.y - 13, {
+        fit: [12, 12],
+      });
+    },
   });
-  doc.moveDown(1);
 };
 
 const addCertificationSubSection = ({
@@ -313,107 +316,112 @@ const addCertificationSubSection = ({
     selected: boolean;
   }[];
 }) => {
-  addSubTitle({
-    subTitle: "Informations sur la certification professionnelle visée",
+  addSubSection({
+    title: "Informations sur la certification professionnelle visée",
     doc,
-  });
-
-  addFrame({
-    doc,
-    startInPt: pxToPt(180),
-    widthInPt: pxToPt(1160),
     content: (doc) => {
-      doc.moveDown(0.75);
-      addTag({
+      addFrame({
         doc,
-        text: aapAvailableForCertification
-          ? "VAE en autonomie ou accompagnée"
-          : "VAE en autonomie",
-        startInPt: doc.x + pxToPt(72),
-      });
-      doc.image(
-        `${ASSETS_PATH}/images/verified-badge.png`,
-        doc.x,
-        doc.y + pxToPt(20),
-        {
-          fit: [pxToPt(16), pxToPt(16)],
+        startInPt: pxToPt(180),
+        widthInPt: pxToPt(1160),
+        content: (doc) => {
+          doc.moveDown(0.75);
+          addTag({
+            doc,
+            text: aapAvailableForCertification
+              ? "VAE en autonomie ou accompagnée"
+              : "VAE en autonomie",
+            startInPt: doc.x + pxToPt(72),
+          });
+          doc.image(
+            `${ASSETS_PATH}/images/verified-badge.png`,
+            doc.x,
+            doc.y + pxToPt(20),
+            {
+              fit: [pxToPt(16), pxToPt(16)],
+            },
+          );
+          doc
+            .font("assets/fonts/Marianne/Marianne-Light.otf")
+            .fontSize(6)
+            .text(
+              `       RNCP ${certification.rncpId}`,
+              doc.x,
+              doc.y + pxToPt(16),
+            );
+
+          doc
+            .font("assets/fonts/Marianne/Marianne-Bold.otf")
+            .fontSize(11)
+            .text(certification.label, doc.x, doc.y + pxToPt(16), {
+              width: pxToPt(1096),
+            });
+
+          doc.moveDown(2);
         },
-      );
-      doc
-        .font("assets/fonts/Marianne/Marianne-Light.otf")
-        .fontSize(6)
-        .text(`       RNCP ${certification.rncpId}`, doc.x, doc.y + pxToPt(16));
+      });
 
-      doc
-        .font("assets/fonts/Marianne/Marianne-Bold.otf")
-        .fontSize(11)
-        .text(certification.label, doc.x, doc.y + pxToPt(16), {
-          width: pxToPt(1096),
-        });
+      doc.moveDown(0.5);
 
-      doc.moveDown(2);
+      addInfoText({
+        title: "Option ou parcours :",
+        value: option ?? "",
+        doc,
+        maxWidthInPt: pxToPt(1160),
+      });
+
+      doc.moveDown(0.5);
+
+      const oldY = doc.y;
+
+      const oldX = doc.x;
+
+      addInfoText({
+        title: "Langue vivante 1 :",
+        value: firstForeignLanguage ?? "",
+        doc,
+      });
+
+      addInfoText({
+        title: "Langue vivante 2 :",
+        value: secondForeignLanguage ?? "",
+        x: doc.x + pxToPt(300),
+        y: oldY,
+        doc,
+      });
+
+      doc.moveDown(1);
+
+      addCallout({
+        title: "Le candidat vise",
+        description: isCertificationPartial
+          ? "Un ou plusieurs bloc(s) de compétences de la certification"
+          : "La certification dans sa totalité",
+        x: oldX,
+        doc,
+        widthInPt: pxToPt(1160),
+      });
+
+      doc.moveDown(1);
+
+      addTitledBlock({
+        doc,
+        title: "Choix des blocs de compétences",
+        content: (doc) =>
+          certificationCompetenceBlocsWithSelectionStatus.forEach((bloc) => {
+            addDisabledCheckbox({
+              label: `${bloc.code} - ${bloc.label}`,
+              checked: bloc.selected,
+              doc,
+            });
+            doc.moveDown(0.5);
+          }),
+        startInPt: oldX,
+        widthInPt: pxToPt(1160),
+      });
+      doc.moveDown(1);
     },
   });
-
-  doc.moveDown(0.5);
-
-  addInfoText({
-    title: "Option ou parcours :",
-    value: option ?? "",
-    doc,
-    maxWidthInPt: pxToPt(1160),
-  });
-
-  doc.moveDown(0.5);
-
-  const oldY = doc.y;
-
-  const oldX = doc.x;
-
-  addInfoText({
-    title: "Langue vivante 1 :",
-    value: firstForeignLanguage ?? "",
-    doc,
-  });
-
-  addInfoText({
-    title: "Langue vivante 2 :",
-    value: secondForeignLanguage ?? "",
-    x: doc.x + pxToPt(300),
-    y: oldY,
-    doc,
-  });
-
-  doc.moveDown(1);
-
-  addCallout({
-    title: "Le candidat vise",
-    description: isCertificationPartial
-      ? "Un ou plusieurs bloc(s) de compétences de la certification"
-      : "La certification dans sa totalité",
-    x: oldX,
-    doc,
-    widthInPt: pxToPt(1160),
-  });
-
-  doc.moveDown(1);
-
-  addTitledBlock({
-    doc,
-    title: "Choix des blocs de compétences",
-    content: (doc) =>
-      certificationCompetenceBlocsWithSelectionStatus.forEach((bloc) => {
-        addDisabledCheckbox({
-          label: `${bloc.code} - ${bloc.label}`,
-          checked: bloc.selected,
-          doc,
-        });
-        doc.moveDown(0.5);
-      }),
-    startInPt: oldX,
-    widthInPt: pxToPt(1160),
-  });
-  doc.moveDown(1);
 };
 
 const addCertificationPrerequisitesSubSection = ({
@@ -423,42 +431,44 @@ const addCertificationPrerequisitesSubSection = ({
   doc: PDFKit.PDFDocument;
   prerequisites: { label: string; state: PrerequisiteState }[];
 }) => {
-  addSubTitle({
-    subTitle:
+  addSubSection({
+    title:
       "Pré-requis à la délivrance de la certification professionnelle visée ",
     doc,
-  });
-  addTitledBlock({
-    doc,
-    title: "Oui",
-    startInPt: pxToPt(180),
-    widthInPt: pxToPt(1160),
     content: (doc) => {
-      prerequisites
-        .filter((p) => p.state === "ACQUIRED")
-        .forEach((prerequisite) =>
-          doc
-            .fontSize(8)
-            .font("assets/fonts/Marianne/Marianne-Light.otf")
-            .text("- " + prerequisite.label, doc.x, doc.y),
-        );
-    },
-  });
-  doc.moveDown(1);
-  addTitledBlock({
-    doc,
-    title: "Non",
-    startInPt: pxToPt(180),
-    widthInPt: pxToPt(1160),
-    content: (doc) => {
-      prerequisites
-        .filter((p) => p.state === "IN_PROGRESS")
-        .forEach((prerequisite) =>
-          doc
-            .fontSize(8)
-            .font("assets/fonts/Marianne/Marianne-Light.otf")
-            .text("- " + prerequisite.label, doc.x, doc.y),
-        );
+      addTitledBlock({
+        doc,
+        title: "Oui",
+        startInPt: pxToPt(180),
+        widthInPt: pxToPt(1160),
+        content: (doc) => {
+          prerequisites
+            .filter((p) => p.state === "ACQUIRED")
+            .forEach((prerequisite) =>
+              doc
+                .fontSize(8)
+                .font("assets/fonts/Marianne/Marianne-Light.otf")
+                .text("- " + prerequisite.label, doc.x, doc.y),
+            );
+        },
+      });
+      doc.moveDown(1);
+      addTitledBlock({
+        doc,
+        title: "Non",
+        startInPt: pxToPt(180),
+        widthInPt: pxToPt(1160),
+        content: (doc) => {
+          prerequisites
+            .filter((p) => p.state === "IN_PROGRESS")
+            .forEach((prerequisite) =>
+              doc
+                .fontSize(8)
+                .font("assets/fonts/Marianne/Marianne-Light.otf")
+                .text("- " + prerequisite.label, doc.x, doc.y),
+            );
+        },
+      });
     },
   });
 };
