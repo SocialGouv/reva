@@ -58,6 +58,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         },
       },
       ccn: true,
+      goals: { include: { goal: true } },
     },
   });
 
@@ -209,6 +210,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         candidacyCandidateTypologyLabel: getCandidateTypologyLabel(
           candidacy.typology,
         ),
+        goals: candidacy.goals.map((goal) => goal.goal.label),
       },
       doc,
     });
@@ -545,6 +547,7 @@ const addProfilCandidatSection = ({
     phone,
     candidacyCcnLabel,
     candidacyCandidateTypologyLabel,
+    goals,
   },
 }: {
   candidate: {
@@ -562,6 +565,7 @@ const addProfilCandidatSection = ({
     phone: string;
     candidacyCcnLabel: string;
     candidacyCandidateTypologyLabel: string;
+    goals: string[];
   };
   doc: PDFKit.PDFDocument;
 }) => {
@@ -649,6 +653,20 @@ const addProfilCandidatSection = ({
             x: doc.x,
             doc,
             widthInPt: pxToPt(1160),
+          });
+        },
+      });
+      doc.moveDown(1);
+      addSubSection({
+        title: "Objectifs du candidat",
+        doc,
+        content: (doc) => {
+          goals.forEach((goal) => {
+            doc
+              .fontSize(8)
+              .font("assets/fonts/Marianne/Marianne-Regular.otf")
+              .text("- " + goal, doc.x, doc.y);
+            doc.moveDown(0.5);
           });
         },
       });
