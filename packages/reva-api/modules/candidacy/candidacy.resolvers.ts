@@ -189,22 +189,9 @@ const unsafeResolvers = {
         offset?: number;
         searchFilter?: string;
       },
-      context: GraphqlContext,
     ) => {
       try {
-        if (context.auth.userInfo?.sub == undefined) {
-          throw new FunctionalError(
-            FunctionalCodeError.TECHNICAL_ERROR,
-            "Not authorized",
-          );
-        }
-
-        return getCandidacyCcns(
-          {
-            hasRole: context.auth.hasRole,
-          },
-          params,
-        );
+        return getCandidacyCcns(params);
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

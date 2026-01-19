@@ -50,6 +50,10 @@ type Candidate {
   city: String
   addressComplement: String
   profileInformationCompleted: Boolean!
+  typology: CandidateTypology!
+  typologyAdditional: String
+  ccnId: String
+  conventionCollective: CandidacyConventionCollective
 }
 
 type Query {
@@ -122,6 +126,12 @@ input CandidateUpdateContactDetailsInput {
   email: String
 }
 
+input CandidateUpdateTypologyAndCcnInput {
+  typology: CandidateTypology!
+  additionalInformation: String
+  ccnId: String
+}
+
 type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
@@ -148,5 +158,9 @@ type Mutation {
     candidacyId: String!
     candidateId: String!
     candidateContactDetails: CandidateUpdateContactDetailsInput!
+  ): Candidate!
+  candidate_updateCandidateTypologyAndCcn(
+    candidateId: String!
+    candidateTypologyAndCcn: CandidateUpdateTypologyAndCcnInput!
   ): Candidate!
 }

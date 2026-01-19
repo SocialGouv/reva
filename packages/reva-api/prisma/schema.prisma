@@ -362,43 +362,47 @@ enum Gender {
 }
 
 model Candidate {
-  id                                   String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  keycloakId                           String                  @unique @map("keycloak_id") @db.Uuid
+  id                                   String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  keycloakId                           String                         @unique @map("keycloak_id") @db.Uuid
   gender                               Gender?
-  email                                String                  @unique @db.VarChar(255)
-  firstname                            String                  @db.VarChar(255)
-  firstname2                           String?                 @db.VarChar(255)
-  firstname3                           String?                 @db.VarChar(255)
-  lastname                             String                  @db.VarChar(255)
-  givenName                            String?                 @map("given_name") @db.VarChar(255)
-  phone                                String                  @db.VarChar(255)
-  street                               String?                 @db.VarChar(255)
-  city                                 String?                 @db.VarChar(255)
-  zip                                  String?                 @db.VarChar(5)
-  addressComplement                    String?                 @db.VarChar(255)
-  departmentId                         String                  @map("department_id") @db.Uuid
-  department                           Department              @relation(fields: [departmentId], references: [id])
-  birthDepartmentId                    String?                 @map("birth_department_id") @db.Uuid
-  birthDepartment                      Department?             @relation("birthDepartmentCandidate", fields: [birthDepartmentId], references: [id])
-  birthCity                            String?                 @map("birth_city") @db.VarChar(255)
-  countryId                            String?                 @map("country_id") @db.Uuid
-  country                              Country?                @relation(fields: [countryId], references: [id])
-  nationality                          String?                 @db.VarChar(255)
-  highestDegree                        Degree?                 @relation("highest_degree", fields: [highestDegreeId], references: [id])
-  highestDegreeLabel                   String?                 @db.VarChar(255)
-  niveauDeFormationLePlusEleveDegreeId String?                 @map("niveau_de_formation_le_plus_eleve_degree_id") @db.Uuid
-  niveauDeFormationLePlusEleve         Degree?                 @relation("niveau_de_formation_le_plus_eleve", fields: [niveauDeFormationLePlusEleveDegreeId], references: [id])
-  highestDegreeId                      String?                 @map("highest_degree_id") @db.Uuid
-  vulnerabilityIndicator               VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
-  vulnerabilityIndicatorId             String?                 @map("vulnerability_indicator_id") @db.Uuid
+  email                                String                         @unique @db.VarChar(255)
+  firstname                            String                         @db.VarChar(255)
+  firstname2                           String?                        @db.VarChar(255)
+  firstname3                           String?                        @db.VarChar(255)
+  lastname                             String                         @db.VarChar(255)
+  givenName                            String?                        @map("given_name") @db.VarChar(255)
+  phone                                String                         @db.VarChar(255)
+  street                               String?                        @db.VarChar(255)
+  city                                 String?                        @db.VarChar(255)
+  zip                                  String?                        @db.VarChar(5)
+  addressComplement                    String?                        @db.VarChar(255)
+  departmentId                         String                         @map("department_id") @db.Uuid
+  department                           Department                     @relation(fields: [departmentId], references: [id])
+  birthDepartmentId                    String?                        @map("birth_department_id") @db.Uuid
+  birthDepartment                      Department?                    @relation("birthDepartmentCandidate", fields: [birthDepartmentId], references: [id])
+  birthCity                            String?                        @map("birth_city") @db.VarChar(255)
+  countryId                            String?                        @map("country_id") @db.Uuid
+  country                              Country?                       @relation(fields: [countryId], references: [id])
+  nationality                          String?                        @db.VarChar(255)
+  highestDegree                        Degree?                        @relation("highest_degree", fields: [highestDegreeId], references: [id])
+  highestDegreeLabel                   String?                        @db.VarChar(255)
+  niveauDeFormationLePlusEleveDegreeId String?                        @map("niveau_de_formation_le_plus_eleve_degree_id") @db.Uuid
+  niveauDeFormationLePlusEleve         Degree?                        @relation("niveau_de_formation_le_plus_eleve", fields: [niveauDeFormationLePlusEleveDegreeId], references: [id])
+  highestDegreeId                      String?                        @map("highest_degree_id") @db.Uuid
+  vulnerabilityIndicator               VulnerabilityIndicator?        @relation(fields: [vulnerabilityIndicatorId], references: [id])
+  vulnerabilityIndicatorId             String?                        @map("vulnerability_indicator_id") @db.Uuid
   candidacies                          Candidacy[]
-  createdAt                            DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                            DateTime?               @map("updated_at") @db.Timestamptz(6)
-  passwordUpdatedAt                    DateTime?               @map("password_updated_at") @db.Timestamptz(6)
-  lastLoginViaPasswordAt               DateTime?               @map("last_login_via_password_at") @db.Timestamptz(6)
-  lastLoginViaMagicLinkAt              DateTime?               @map("last_login_via_magic_link_at") @db.Timestamptz(6)
-  birthdate                            DateTime?               @map("birthdate") @db.Date
-  profileInformationCompleted          Boolean                 @default(false) @map("profile_information_completed")
+  createdAt                            DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                            DateTime?                      @map("updated_at") @db.Timestamptz(6)
+  passwordUpdatedAt                    DateTime?                      @map("password_updated_at") @db.Timestamptz(6)
+  lastLoginViaPasswordAt               DateTime?                      @map("last_login_via_password_at") @db.Timestamptz(6)
+  lastLoginViaMagicLinkAt              DateTime?                      @map("last_login_via_magic_link_at") @db.Timestamptz(6)
+  birthdate                            DateTime?                      @map("birthdate") @db.Date
+  profileInformationCompleted          Boolean                        @default(false) @map("profile_information_completed")
+  typology                             CandidateTypology              @default(NON_SPECIFIE)
+  typologyAdditional                   String?                        @map("typology_additional")
+  ccn                                  CandidacyConventionCollective? @relation(fields: [ccnId], references: [id], onDelete: NoAction)
+  ccnId                                String?                        @map("ccn_id") @db.Uuid
 
   @@map("candidate")
 }
@@ -1579,7 +1583,8 @@ model CandidacyConventionCollective {
   updatedAt  DateTime? @map("updated_at") @db.Timestamptz(6)
   disabledAt DateTime? @map("disabled_at") @db.Timestamptz(6)
 
-  Candidacy Candidacy[]
+  Candidacy  Candidacy[]
+  candidates Candidate[]
 
   @@map("candidacy_convention_collective")
 }

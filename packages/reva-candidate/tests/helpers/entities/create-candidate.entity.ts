@@ -34,6 +34,7 @@ export const createCandidateEntity = (
     candidacy: candidacyOption,
     candidacies: candidacies ?? (candidacyOption ? [candidacyOption] : []),
     profileInformationCompleted: true,
+    typology: "NON_SPECIFIE",
     ...candidateOverrides,
   };
 };

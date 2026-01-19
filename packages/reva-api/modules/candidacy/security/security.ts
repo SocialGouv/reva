@@ -33,6 +33,9 @@ export const resolversSecurityMap = {
   "Query.candidacy_canAccessCandidacy": isAnyone,
 
   "Query.candidacy_searchOrganismsForCandidacyAsAdmin": isAdmin,
+  "Query.candidacy_getCandidacyCcns": [
+    hasRole(["admin", "manage_candidacy", "candidate"]),
+  ],
 
   "Mutation.*": defaultSecurity, // forbidden
 

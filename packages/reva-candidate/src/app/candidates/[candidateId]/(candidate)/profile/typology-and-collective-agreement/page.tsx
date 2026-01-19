@@ -4,25 +4,25 @@ import { useSearchParams } from "next/navigation";
 
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
-import { CivilInformationForm } from "./_components/CivilInformationForm";
-import { useCivilInformation } from "./_components/useCivilInformation";
+import { TypologyAndCollectiveAgreementForm } from "./_components/TypologyAndCollectiveAgreementForm";
+import { useTypologyAndCollectiveAgreement } from "./_components/useTypologyAndCollectiveAgreement";
 
-export default function CivilInformationsPage() {
+export default function TypologyAndCollectiveAgreementPage() {
   const queryParams = useSearchParams();
 
   const navigationDisabledByQueryParam =
     queryParams.get("navigationDisabled") === "true";
 
-  const { countries, departments, candidate } = useCivilInformation();
+  const { candidate } = useTypologyAndCollectiveAgreement();
 
-  if (!candidate || !departments || !countries) {
+  if (!candidate) {
     return null;
   }
 
   return (
     <div className="flex flex-col w-full">
       <Breadcrumb
-        currentPageLabel="Mes informations civiles"
+        currentPageLabel="Ma typologie et convention collective"
         className="mb-4"
         segments={[
           {
@@ -34,14 +34,12 @@ export default function CivilInformationsPage() {
         ]}
       />
 
-      <h1 className="mb-1">Mes informations civiles</h1>
+      <h1 className="mb-1">Ma typologie et convention collective</h1>
       <FormOptionalFieldsDisclaimer className="mb-12" />
 
-      <CivilInformationForm
+      <TypologyAndCollectiveAgreementForm
         hideBackButton={navigationDisabledByQueryParam}
         candidate={candidate}
-        countries={countries}
-        departments={departments}
       />
     </div>
   );

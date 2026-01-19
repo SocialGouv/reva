@@ -1,6 +1,5 @@
 import { CandidacyConventionCollective, Prisma } from "@prisma/client";
 
-import { Role } from "@/modules/account/account.types";
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { prismaClient } from "@/prisma/client";
 
@@ -9,21 +8,11 @@ const buildContainsFilterClause =
     [field]: { contains: searchFilter, mode: "insensitive" },
   });
 
-export const getCandidacyCcns = async (
-  context: {
-    hasRole: (role: Role) => boolean;
-  },
-  params: {
-    limit?: number;
-    offset?: number;
-    searchFilter?: string;
-  },
-): Promise<PaginatedListResult<CandidacyConventionCollective>> => {
-  const { hasRole } = context;
-  if (!(hasRole("admin") || hasRole("manage_candidacy"))) {
-    throw new Error("Utilisateur non autorisé");
-  }
-
+export const getCandidacyCcns = async (params: {
+  limit?: number;
+  offset?: number;
+  searchFilter?: string;
+}): Promise<PaginatedListResult<CandidacyConventionCollective>> => {
   const { limit = 10, offset = 0, searchFilter } = params;
 
   const query: Prisma.CandidacyConventionCollectiveFindManyArgs = {

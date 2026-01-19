@@ -7,7 +7,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOpti
 import { ContactInformationForm } from "./_components/ContactInformationForm";
 import { useContactInformations } from "./_components/useContactInformations";
 
-export default function Profile() {
+export default function ContactInformationsPage() {
   const queryParams = useSearchParams();
 
   const navigationDisabledByQueryParam =

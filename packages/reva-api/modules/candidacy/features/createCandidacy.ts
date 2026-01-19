@@ -19,6 +19,13 @@ export const createCandidacy = async ({
   cohorteVaeCollectiveId?: string;
   tx?: Prisma.TransactionClient;
 }) => {
+  const candidate = await prismaClient.candidate.findUnique({
+    where: { id: candidateId },
+  });
+  if (!candidate) {
+    throw new Error(`Le candidat n'existe pas`);
+  }
+
   const prisma = tx ?? prismaClient;
   // Row-level lock per candidate to avoid duplicate candidacies under concurrency
   // If a diffrent transaction tries to aquire the lock while the first one still holds it, it will fail and rollback
@@ -40,6 +47,9 @@ export const createCandidacy = async ({
           status: CandidacyStatusStep.PROJET,
         },
       },
+      ccnId: candidate.ccnId,
+      typology: candidate.typology,
+      typologyAdditional: candidate.typologyAdditional,
     },
   });
 };

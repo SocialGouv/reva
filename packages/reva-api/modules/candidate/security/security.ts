@@ -22,4 +22,5 @@ export const resolversSecurityMap = {
     isAdminOrOwnerOfCandidate,
   "Mutation.candidate_updateCandidateContactDetails":
     isAdminOrCandidacyCompanion,
+  "Mutation.candidate_updateCandidateTypologyAndCcn": isAdminOrOwnerOfCandidate,
 };

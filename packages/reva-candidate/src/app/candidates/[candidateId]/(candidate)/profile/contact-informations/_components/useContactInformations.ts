@@ -6,8 +6,8 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { CandidateUpdateInformationBySelfInput } from "@/graphql/generated/graphql";
 
-const getCandidateByIdForProfilePage = graphql(`
-  query getCandidateByIdForProfilePage($candidateId: ID!) {
+const getCandidateByIdForContactInformationsPage = graphql(`
+  query getCandidateByIdForContactInformationsPage($candidateId: ID!) {
     candidate_getCandidateById(id: $candidateId) {
       id
       firstname
@@ -62,9 +62,15 @@ export const useContactInformations = () => {
   }>();
 
   const { data: getCandidateData } = useQuery({
-    queryKey: ["candidate", "getCandidateByIdForProfilePage", candidateId],
+    queryKey: [
+      "candidate",
+      "getCandidateByIdForContactInformationsPage",
+      candidateId,
+    ],
     queryFn: () =>
-      graphqlClient.request(getCandidateByIdForProfilePage, { candidateId }),
+      graphqlClient.request(getCandidateByIdForContactInformationsPage, {
+        candidateId,
+      }),
   });
 
   const { data: getCountriesData } = useQuery({

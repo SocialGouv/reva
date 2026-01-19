@@ -33,6 +33,10 @@ export const updateCandidacyTypologyAndCcn = async (
     throw new Error(`La candidature n'existe pas`);
   }
 
+  if (!candidacy.candidateId) {
+    throw new Error(`La candidature n'est pas rattachée à un candidat`);
+  }
+
   let ccn = null;
   if (ccnId) {
     ccn = await prismaClient.candidacyConventionCollective.findUnique({
@@ -68,14 +72,56 @@ export const updateCandidacyTypologyAndCcn = async (
     );
   }
 
-  await prismaClient.candidacy.update({
-    where: { id: candidacyId },
-    data: {
-      typology,
-      typologyAdditional: additionalInformation,
-      ccnId: ccnRequired ? ccnId : null,
+  const candidacies = await prismaClient.candidacy.findMany({
+    where: { candidateId: candidacy.candidateId },
+    select: {
+      id: true,
+      Feasibility: {
+        where: {
+          isActive: true,
+        },
+        select: {
+          feasibilityFileSentAt: true,
+          dematerializedFeasibilityFile: {
+            select: {
+              feasibilityFileId: true,
+            },
+          },
+        },
+      },
     },
   });
+
+  const candidaciesWithoutFeasibility = candidacies.filter(
+    (c) => !c.Feasibility?.[0] || !c.Feasibility?.[0]?.feasibilityFileSentAt,
+  );
+
+  await prismaClient.$transaction([
+    prismaClient.candidacy.update({
+      where: { id: candidacyId },
+      data: {
+        typology,
+        typologyAdditional: additionalInformation,
+        ccnId: ccnRequired ? ccnId : null,
+      },
+    }),
+    prismaClient.candidate.update({
+      where: { id: candidacy.candidateId },
+      data: {
+        typology,
+        typologyAdditional: additionalInformation,
+        ccnId: ccnRequired ? ccnId : null,
+      },
+    }),
+    prismaClient.candidacy.updateMany({
+      where: { id: { in: candidaciesWithoutFeasibility.map((c) => c.id) } },
+      data: {
+        typology,
+        typologyAdditional: additionalInformation,
+        ccnId: ccnRequired ? ccnId : null,
+      },
+    }),
+  ]);
 
   await logCandidacyAuditEvent({
     candidacyId: candidacyId,

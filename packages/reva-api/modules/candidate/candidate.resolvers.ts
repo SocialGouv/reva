@@ -1,8 +1,10 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { CandidateTypology } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
 
 import { getActiveCandidaciesByCandidateId } from "../candidacy/features/getActiveCandidaciesByCandidateId";
+import { getCandidacyConventionCollectiveById } from "../candidacy/features/getCandidacyConventionCollectiveById";
 import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
 import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
@@ -26,6 +28,7 @@ import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormation
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateContactDetails } from "./features/updateCandidateContactDetails";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
+import { updateCandidateTypologyAndCcn } from "./features/updateCandidateTypologyAndCcn";
 import { resolversSecurityMap } from "./security/security";
 
 const unsafeResolvers = {
@@ -72,6 +75,8 @@ const unsafeResolvers = {
       getFirstActiveCandidacyByCandidateId({ candidateId }),
     candidacies: async ({ id: candidateId }: { id: string }) =>
       getActiveCandidaciesByCandidateId({ candidateId }),
+    conventionCollective: ({ ccnId }: { ccnId: string }) =>
+      getCandidacyConventionCollectiveById({ ccnId }),
   },
   Query: {
     candidate_getCandidateWithCandidacy: async (
@@ -227,6 +232,26 @@ const unsafeResolvers = {
         candidateId,
         ...candidateContactDetails,
         userInfo: buildCandidacyAuditLogUserInfo(context),
+      }),
+    candidate_updateCandidateTypologyAndCcn: async (
+      _: unknown,
+      {
+        candidateId,
+        candidateTypologyAndCcn: { typology, additionalInformation, ccnId },
+      }: {
+        candidateId: string;
+        candidateTypologyAndCcn: {
+          typology: CandidateTypology;
+          additionalInformation: string;
+          ccnId: string;
+        };
+      },
+    ) =>
+      updateCandidateTypologyAndCcn({
+        candidateId,
+        typology,
+        additionalInformation,
+        ccnId,
       }),
   },
 };
