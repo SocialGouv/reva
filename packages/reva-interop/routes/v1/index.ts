@@ -94,7 +94,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         },
       },
       externalDocs: {
-        url: "https://www.notion.so/fabnummas/Documentation-API-interop-rabilit-France-VAE-241653b7be078088aa44eb63459c75d9",
+        url: "https://www.notion.so/Documentation-API-interop-rabilit-France-VAE-2ea100b69ece81e4adfbc0eeeaafa64d",
         description: "Guide de démarrage",
       },
       servers: [
@@ -110,7 +110,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
               name: "Authentification",
               description: "Gestion de l'authentification et des utilisateurs",
               externalDocs: {
-                url: "https://github.com/SocialGouv/reva/tree/master/packages/reva-interop/routes/v1/auth",
+                url: "https://github.com/betagouv/reva/tree/master/packages/reva-interop/routes/v1/auth",
                 description: "Comment utiliser ces routes",
               },
             }
