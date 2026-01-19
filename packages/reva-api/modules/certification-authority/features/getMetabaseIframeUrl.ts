@@ -6,12 +6,33 @@ import { CertificationAuthority } from "../certification-authority.types";
 
 import { getCertificationAuthorityStructuresByCertificationAuthorityId } from "./getCertificationAuthorityStructuresByCertificationAuthorityId";
 
+const ALLOWED_CERTIFICATION_AUTHORITY_STRUCTURES: Record<
+  string,
+  { filter: string; dashboardId: number }
+> = {
+  "Structure certificatrice inconnue": {
+    filter: "dreets",
+    dashboardId: 154,
+  },
+  "Ministère de l'Agriculture, de l'Agro-alimentaire et de la Souveraineté Alimentaire":
+    {
+      filter: "gestionnaire_de_candidatures",
+      dashboardId: 194,
+    },
+  "Ministère de l'Éducation nationale, de l'Enseignement supérieur et de la Recherche":
+    {
+      filter: "gestionnaire_de_candidatures",
+      dashboardId: 200,
+    },
+};
+
 export const getMetabaseIframeUrl = async (
   certificationAuthority: CertificationAuthority,
 ) => {
   const isFeatureActive = await isFeatureActiveForUser({
     feature: "SHOW_METABASE_DASHBOARD",
   });
+
   if (!isFeatureActive) {
     return null;
   }
@@ -22,8 +43,9 @@ export const getMetabaseIframeUrl = async (
     });
 
   if (
-    certificationAuthorityStructures[0].label !==
-    "Ministère du Travail, du Plein emploi et de l'Insertion"
+    !Object.keys(ALLOWED_CERTIFICATION_AUTHORITY_STRUCTURES).includes(
+      certificationAuthorityStructures[0].label,
+    )
   ) {
     return null;
   }
@@ -38,10 +60,19 @@ export const getMetabaseIframeUrl = async (
     return null;
   }
 
+  const certificationAuthorityStructureParams =
+    ALLOWED_CERTIFICATION_AUTHORITY_STRUCTURES[
+      certificationAuthorityStructures[0].label
+    ];
+
   const payload = {
-    resource: { dashboard: 154 },
+    resource: {
+      dashboard: certificationAuthorityStructureParams.dashboardId,
+    },
     params: {
-      dreets: [certificationAuthority.label],
+      [certificationAuthorityStructureParams.filter]: [
+        certificationAuthority.label,
+      ],
     },
     exp: Math.round(Date.now() / 1000) + 30 * 60, // 30 minute expiration
   };
