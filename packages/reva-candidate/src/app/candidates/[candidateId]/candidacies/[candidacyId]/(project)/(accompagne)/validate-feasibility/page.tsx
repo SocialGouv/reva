@@ -167,7 +167,7 @@ export default function ValidateFeasibility() {
               <div className="flex flex-col gap-4 flex-[1]">
                 <DownloadTile
                   name="Modèle d'attestation sur l'honneur (PDF)"
-                  url="/files/attestation_sur_l_honneur_modele.pdf"
+                  url="/candidat/files/attestation_sur_l_honneur_modele.pdf"
                   mimeType="application/pdf"
                   fileSizeInBytes={984064}
                 />
