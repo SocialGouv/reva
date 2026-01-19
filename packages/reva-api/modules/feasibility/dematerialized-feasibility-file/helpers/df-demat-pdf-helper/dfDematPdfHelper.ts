@@ -1,6 +1,7 @@
 import {
   DFFEligibilityCandidateSituation,
   DFFEligibilityRequirement,
+  Gender,
 } from "@prisma/client";
 
 const ASSETS_PATH =
@@ -362,4 +363,15 @@ export const addInfoTable = ({
     doc.moveDown(0.3);
   });
   doc.text("", oldX); //reset x position to start of table after table end
+};
+
+export const getCourtesyTitleFromGender = (gender: Gender | null) => {
+  switch (gender) {
+    case "man":
+      return "Monsieur";
+    case "woman":
+      return "Madame";
+    default:
+      return "";
+  }
 };

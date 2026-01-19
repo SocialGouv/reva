@@ -7,6 +7,7 @@ import {
 import PDFDocument from "pdfkit";
 
 import { isAapAvailableForCertificationId } from "@/modules/referential/features/isAapAvailableForCertificationId";
+import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -21,6 +22,8 @@ import {
   addTitledBlock,
   addDisabledCheckbox,
   addDocumentHeader,
+  addInfoTable,
+  getCourtesyTitleFromGender,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
 
 const ASSETS_PATH =
@@ -33,6 +36,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
     where: { id: candidacyId },
     include: {
       certification: { include: { competenceBlocs: true } },
+      candidate: true,
       Feasibility: {
         where: {
           isActive: true,
@@ -53,10 +57,14 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
     throw new Error("Candidature non trouvée");
   }
 
-  const { certification } = candidacy;
+  const { certification, candidate } = candidacy;
 
   if (!certification) {
     throw new Error("Certification non trouvée");
+  }
+
+  if (!candidate) {
+    throw new Error("Candidat non trouvé");
   }
 
   const feasibility = candidacy.Feasibility[0];
@@ -156,6 +164,26 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
           label: p.label,
           state: p.state,
         })) ?? [],
+    });
+
+    addProfilCandidatSection({
+      candidate: {
+        courtesyTitle: getCourtesyTitleFromGender(candidate.gender),
+        firstSecondAndThirdNames: [
+          candidate.firstname,
+          candidate.firstname2,
+          candidate.firstname3,
+        ]
+          .filter(Boolean)
+          .join(", "),
+        lastname: candidate.lastname,
+        birthdate: candidate.birthdate
+          ? formatDateWithoutTimestamp(candidate.birthdate)
+          : "",
+        birthcity: candidate.birthCity ?? "",
+        nationality: candidate.nationality ?? "",
+      },
+      doc,
     });
 
     doc.end();
@@ -467,6 +495,57 @@ const addCertificationPrerequisitesSubSection = ({
                 .font("assets/fonts/Marianne/Marianne-Light.otf")
                 .text("- " + prerequisite.label, doc.x, doc.y),
             );
+        },
+      });
+    },
+  });
+};
+
+const addProfilCandidatSection = ({
+  doc,
+  candidate: {
+    courtesyTitle,
+    firstSecondAndThirdNames,
+    lastname,
+    birthdate,
+    birthcity,
+    nationality,
+  },
+}: {
+  candidate: {
+    courtesyTitle: string;
+    firstSecondAndThirdNames: string;
+    lastname: string;
+    birthdate: string;
+    birthcity: string;
+    nationality: string;
+  };
+  doc: PDFKit.PDFDocument;
+}) => {
+  addSection({
+    doc,
+    title: "Profil du candidat",
+    iconPath: `${ASSETS_PATH}/images/avatar.png`,
+    content: (doc) => {
+      addSubSection({
+        title: "Informations sur le candidat",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1160),
+            data: [
+              { title: "Civilité :", value: courtesyTitle },
+              { title: "Nom de naissance:", value: lastname },
+              { title: "Prénoms :", value: firstSecondAndThirdNames },
+              {
+                title: "Date de naissance :",
+                value: birthdate,
+              },
+              { title: "Ville de naissance :", value: birthcity },
+              { title: "Nationalité :", value: nationality },
+            ],
+            doc,
+          });
         },
       });
     },

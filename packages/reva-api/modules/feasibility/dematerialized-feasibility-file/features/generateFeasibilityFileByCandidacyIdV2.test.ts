@@ -25,6 +25,7 @@ import { generateFeasibilityFileByCandidacyIdV2 } from "./generateFeasibilityFil
 
 const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
   { name: "contexteDemande", title: "Nature de la demande" },
+  { name: "profilCandidat", title: "Profil du candidat" },
 ];
 
 const setupCompleteDematerializedFeasibilityFile = async () => {
