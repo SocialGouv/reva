@@ -37,7 +37,11 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
     include: {
       certification: { include: { competenceBlocs: true } },
       candidate: {
-        include: { highestDegree: true, niveauDeFormationLePlusEleve: true },
+        include: {
+          highestDegree: true,
+          niveauDeFormationLePlusEleve: true,
+          country: true,
+        },
       },
       Feasibility: {
         where: {
@@ -188,6 +192,17 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         highestDegreeLabel: candidate.highestDegreeLabel ?? "",
         niveauDeFormationLePlusEleveLabel:
           candidate.niveauDeFormationLePlusEleve?.label ?? "",
+        address:
+          [
+            candidate.street,
+            candidate.addressComplement,
+            candidate.zip,
+            candidate.city,
+          ]
+            .filter(Boolean)
+            .join(" ") + `, ${candidate.country?.label}`,
+        email: candidate.email ?? "",
+        phone: candidate.phone ?? "",
       },
       doc,
     });
@@ -519,6 +534,9 @@ const addProfilCandidatSection = ({
     highestDegreeLevel,
     highestDegreeLabel,
     niveauDeFormationLePlusEleveLabel,
+    address,
+    email,
+    phone,
   },
 }: {
   candidate: {
@@ -531,6 +549,9 @@ const addProfilCandidatSection = ({
     highestDegreeLevel: string;
     highestDegreeLabel: string;
     niveauDeFormationLePlusEleveLabel: string;
+    address: string;
+    email: string;
+    phone: string;
   };
   doc: PDFKit.PDFDocument;
 }) => {
@@ -558,9 +579,9 @@ const addProfilCandidatSection = ({
             ],
             doc,
           });
-          doc.moveDown(1);
         },
       });
+      doc.moveDown(1);
       addSubSection({
         title: "Niveau de formation",
         doc,
@@ -580,6 +601,22 @@ const addProfilCandidatSection = ({
                 title: "Intitulé de la certification la plus élevée obtenue",
                 value: highestDegreeLabel,
               },
+            ],
+            doc,
+          });
+        },
+      });
+      doc.moveDown(1);
+      addSubSection({
+        title: "Informations de contact du candidat",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1160),
+            data: [
+              { title: "Adresse postale :", value: address },
+              { title: "Adresse électronique :", value: email },
+              { title: "Téléphone :", value: phone },
             ],
             doc,
           });
