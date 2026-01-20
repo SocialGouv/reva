@@ -128,7 +128,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       bufferPages: false,
       compress: true,
       margins: {
-        top: pxToPt(20),
+        top: pxToPt(40),
         bottom: "80px",
         left: pxToPt(100),
         right: "40px",
