@@ -1,5 +1,6 @@
 import {
   CompetenceBlocsPartCompletionEnum,
+  DFFCertificationCompetenceDetailsState,
   DFFDecision,
   DFFEligibilityRequirement,
   PrerequisiteState,
@@ -26,6 +27,7 @@ import {
   getCourtesyTitleFromGender,
   getCandidateTypologyLabel,
   getExperienceDurationLabel,
+  addCompetence,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
 
 const ASSETS_PATH =
@@ -52,8 +54,15 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         include: {
           dematerializedFeasibilityFile: {
             include: {
-              dffCertificationCompetenceBlocs: true,
+              dffCertificationCompetenceBlocs: {
+                include: {
+                  certificationCompetenceBloc: {
+                    include: { competences: true },
+                  },
+                },
+              },
               prerequisites: true,
+              dffCertificationCompetenceDetails: true,
             },
           },
         },
@@ -177,6 +186,34 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         })) ?? [],
     });
 
+    //dff competences blocs with competences (label and state)
+    const dffCompetenceBlocsWithCompetencesAndStates =
+      dematerializedFeasibilityFile.dffCertificationCompetenceBlocs.map(
+        (bloc) => {
+          const competences = bloc.certificationCompetenceBloc.competences
+            .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+            .map((competence) => {
+              const details =
+                dematerializedFeasibilityFile.dffCertificationCompetenceDetails.find(
+                  (detail) =>
+                    detail.certificationCompetenceId === competence.id,
+                );
+              return {
+                label: competence.label,
+                state: details?.state as
+                  | DFFCertificationCompetenceDetailsState
+                  | "TO_COMPLETE",
+              };
+            });
+          return {
+            code: bloc.certificationCompetenceBloc.code ?? "",
+            label: bloc.certificationCompetenceBloc.label,
+            text: bloc.text ?? "",
+            competences,
+          };
+        },
+      );
+
     addProfilCandidatSection({
       candidate: {
         courtesyTitle: getCourtesyTitleFromGender(candidate.gender),
@@ -219,10 +256,10 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
           durationLabel: getExperienceDurationLabel(experience.duration),
           startedAtLabel: `Démarrée le ${formatDateWithoutTimestamp(experience.startedAt)}`,
         })),
+        dffCompetenceBlocsWithCompetencesAndStates,
       },
       doc,
     });
-
     doc.end();
   });
 };
@@ -555,6 +592,7 @@ const addProfilCandidatSection = ({
     candidacyCandidateTypologyLabel,
     goals,
     experiences,
+    dffCompetenceBlocsWithCompetencesAndStates,
   },
 }: {
   candidate: {
@@ -578,6 +616,15 @@ const addProfilCandidatSection = ({
       description: string;
       durationLabel: string;
       startedAtLabel: string;
+    }[];
+    dffCompetenceBlocsWithCompetencesAndStates: {
+      code: string;
+      label: string;
+      text: string;
+      competences: {
+        label: string;
+        state: DFFCertificationCompetenceDetailsState | "TO_COMPLETE";
+      }[];
     }[];
   };
   doc: PDFKit.PDFDocument;
@@ -707,6 +754,42 @@ const addProfilCandidatSection = ({
                   .fontSize(8)
                   .font("assets/fonts/Marianne/Marianne-Light.otf")
                   .text(experience.startedAtLabel, doc.x, doc.y);
+              },
+              widthInPt: pxToPt(1160),
+            });
+            doc.moveDown(1);
+          });
+        },
+      });
+      addSubSection({
+        title:
+          "Informations sur les expériences du candidat en lien avec le référentiel d’activités et de compétences",
+        doc,
+        content: (doc) => {
+          doc.moveDown(0.5);
+          dffCompetenceBlocsWithCompetencesAndStates.forEach((bloc) => {
+            addTitledBlock({
+              doc,
+              title: `${bloc.code} - ${bloc.label}`,
+              content: (doc) => {
+                doc.moveDown(0.5);
+                bloc.competences.forEach((competence) => {
+                  addCompetence({
+                    doc,
+                    label: competence.label,
+                    state: competence.state,
+                  });
+                  doc.moveDown(1);
+                });
+                doc
+                  .font("assets/fonts/Marianne/Marianne-Bold.otf")
+                  .fontSize(8)
+                  .text("Commentaire sur le bloc");
+                doc.moveDown(0.25);
+                doc
+                  .font("assets/fonts/Marianne/Marianne-Regular.otf")
+                  .fontSize(8)
+                  .text(bloc.text);
               },
               widthInPt: pxToPt(1160),
             });
