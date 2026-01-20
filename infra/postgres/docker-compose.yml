@@ -1,6 +1,6 @@
 services:
   dbreva:
-    image: postgres
+    image: postgres:14.20
     container_name: postgresql_reva
     restart: always
     environment:

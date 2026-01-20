@@ -83,7 +83,7 @@ Output
 ```shell
 CONTAINER ID   IMAGE                              COMMAND                  CREATED          STATUS          PORTS                              NAMES
 a01d872995b6   quay.io/keycloak/keycloak:24.0.2   "/opt/keycloak/bin/k…"   47 minutes ago   Up 47 minutes   8443/tcp, 0.0.0.0:8888->8080/tcp   keycloak-keycloak-1
-d01bb1f74931   postgres:13.7                      "docker-entrypoint.s…"   50 minutes ago   Up 50 minutes   0.0.0.0:5433->5432/tcp             keycloak-postgres-1
+d01bb1f74931   postgres:14.20                     "docker-entrypoint.s…"   50 minutes ago   Up 50 minutes   0.0.0.0:5433->5432/tcp             keycloak-postgres-1
 ```
 
 Et voilà ! La stack est lancée.
