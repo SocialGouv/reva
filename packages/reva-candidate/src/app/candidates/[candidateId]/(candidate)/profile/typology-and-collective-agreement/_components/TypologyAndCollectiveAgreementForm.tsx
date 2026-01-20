@@ -176,7 +176,7 @@ export const TypologyAndCollectiveAgreementForm = ({
                   <li>
                     <a
                       className="fr-link"
-                      href="https://code.travail.gouv.fr/outils/convention-collective"
+                      href="https://vae.gouv.fr/savoir-plus/articles/retrouver-ma-convention-collective-pour-france-vae"
                       target="_blank"
                     >
                       Article dédié de France VAE
