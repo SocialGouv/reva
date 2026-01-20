@@ -24,8 +24,21 @@ import {
 import { generateFeasibilityFileByCandidacyIdV2 } from "./generateFeasibilityFileByCandidacyIdV2";
 
 const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
-  { name: "contexteDemande", title: "Nature de la demande" },
-  { name: "profilCandidat", title: "Profil du candidat" },
+  { name: "contextDemande", title: "Contexte de la demande" },
+  { name: "natureDemande", title: "Nature de la demande" },
+  {
+    name: "infosCertification",
+    title: "Informations sur la certification professionnelle visée",
+  },
+  {
+    name: "prerequisCertification",
+    title:
+      "Pré-requis à la délivrance de la certification professionnelle visée",
+  },
+  {
+    name: "profilCandidat",
+    title: "Profil du candidat",
+  },
 ];
 
 const setupCompleteDematerializedFeasibilityFile = async () => {
@@ -212,13 +225,20 @@ describe("demat feasibility pdf generation", () => {
     });
     expectSectionText = pdfHelper.expectSectionText;
   });
-
-  it("contains the admissibility section", () => {
-    expectSectionText(
-      "contexteDemande",
-      `
+  describe("contexte de la demande section", () => {
+    it("contains the 'nature de la demande' subsection", () => {
+      expectSectionText(
+        "natureDemande",
+        `
         Nature de la demande
         ACCÈS AU DOSSIER DE FAISABILITÉ INTÉGRAL
+      `,
+      );
+    });
+    it("contains the 'Informations sur la certification professionnelle visée' subsection", () => {
+      expectSectionText(
+        "infosCertification",
+        `
         Informations sur la certification professionnelle visée
         VAE en autonomie
         RNCP ${rncpId}
@@ -233,11 +253,53 @@ describe("demat feasibility pdf generation", () => {
         La certification dans sa totalité
         Choix des blocs de compétences
         BLOC-CODE - Bloc de compétences Gestion
+      `,
+      );
+    });
+    it("contains the 'Pré-requis à la délivrance de la certification professionnelle visée' certification subsection", () => {
+      expectSectionText(
+        "prerequisCertification",
+        `
         Pré-requis à la délivrance de la certification professionnelle visée
         Oui
         - Posséder un niveau B2 en anglais
         Non
       `,
-    );
+      );
+    });
+  });
+
+    it("contains the infos certification subsection", () => {
+      expectSectionText(
+        "infosCertification",
+        `
+        Informations sur la certification professionnelle visée
+        VAE en autonomie
+        RNCP ${rncpId}
+        Manager de la performance
+        Option ou parcours :
+        Option Performance
+        Langue vivante 1 :
+        Anglais
+        Langue vivante 2 :
+        Espagnol
+        Le candidat vise
+        La certification dans sa totalité
+        Choix des blocs de compétences
+        BLOC-CODE - Bloc de compétences Gestion
+      `,
+      );
+    });
+    it("contains the prerequis certification subsection", () => {
+      expectSectionText(
+        "prerequisCertification",
+        `
+        Pré-requis à la délivrance de la certification professionnelle visée
+        Oui
+        - Posséder un niveau B2 en anglais
+        Non
+      `,
+      );
+    });
   });
 });
