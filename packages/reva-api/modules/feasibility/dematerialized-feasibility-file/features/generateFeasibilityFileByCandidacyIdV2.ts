@@ -214,6 +214,11 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         },
       );
 
+    // start a new page if the text position is past the first half of the page
+    if (doc.y > 298) {
+      doc.addPage();
+    }
+
     addProfilCandidatSection({
       candidate: {
         courtesyTitle: getCourtesyTitleFromGender(candidate.gender),
