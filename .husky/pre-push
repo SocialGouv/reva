@@ -1,1 +1,44 @@
-npm run lint
+#!/usr/bin/env sh
+
+# Collect files changed between remote and local for each ref being pushed
+get_changed_files() {
+  while read local_ref local_sha remote_ref remote_sha; do
+    [ "$local_sha" = "0000000000000000000000000000000000000000" ] && continue
+    if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+      git diff --name-only 4b825dc642cb6eb9a060e54bf8d69288fbee4904 "$local_sha" 2>/dev/null
+    else
+      git diff --name-only "$remote_sha" "$local_sha" 2>/dev/null
+    fi
+  done
+}
+
+FILES=$(get_changed_files)
+
+# If we could not determine changed files, run full lint to be safe
+[ -z "$FILES" ] && exec npm run lint
+
+# Map changed files to packages; if any file is outside the 6 packages, run full lint
+PACKAGES=""
+RUN_FULL_LINT=false
+for f in $FILES; do
+  case "$f" in
+    packages/reva-api/*)            PACKAGES="$PACKAGES reva-api" ;;
+    packages/reva-admin-react/*)    PACKAGES="$PACKAGES reva-admin-react" ;;
+    packages/reva-candidate/*)      PACKAGES="$PACKAGES reva-candidate" ;;
+    packages/reva-website/*)        PACKAGES="$PACKAGES reva-website" ;;
+    packages/reva-vae-collective/*) PACKAGES="$PACKAGES reva-vae-collective" ;;
+    packages/reva-interop/*)        PACKAGES="$PACKAGES reva-interop" ;;
+    .github/*)                     ;;
+    infra/*)                       ;;
+    *)                             RUN_FULL_LINT=true ;;
+  esac
+done
+
+[ "$RUN_FULL_LINT" = true ] && exec npm run lint
+
+# Deduplicate and run lint only for affected packages
+for pkg in $(printf '%s\n' $PACKAGES | sort -u); do
+  npm run lint --prefix "packages/$pkg" || exit 1
+done
+
+exit 0
