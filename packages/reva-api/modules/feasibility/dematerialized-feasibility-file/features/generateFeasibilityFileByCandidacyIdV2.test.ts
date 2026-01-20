@@ -1,16 +1,19 @@
 import { randomUUID } from "node:crypto";
 
 import {
+  CandidateTypology,
   CompetenceBlocsPartCompletionEnum,
   DFFCertificationCompetenceDetailsState,
   DFFDecision,
   DFFEligibilityRequirement,
+  ExperienceDuration,
   FeasibilityFormat,
   Gender,
   PrerequisiteState,
 } from "@prisma/client";
 
 import { prismaClient } from "@/prisma/client";
+import { createCandidacyCCNHelper } from "@/test/helpers/entities/create-candidacy-ccn-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
@@ -38,6 +41,35 @@ const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
   {
     name: "profilCandidat",
     title: "Profil du candidat",
+  },
+  {
+    name: "informationsCandidat",
+    title: "Informations sur le candidat",
+  },
+  {
+    name: "niveauFormation",
+    title: "Niveau de formation",
+  },
+  {
+    name: "informationsContactCandidat",
+    title: "Informations de contact du candidat",
+  },
+  {
+    name: "statut",
+    title: "Statut",
+  },
+  {
+    name: "objectifsCandidat",
+    title: "Objectifs du candidat",
+  },
+  {
+    name: "experiences",
+    title: "Expériences",
+  },
+  {
+    name: "informationsReferentiel",
+    title:
+      "Informations sur les expériences du candidat en lien avec le référentiel d’activités et",
   },
 ];
 
@@ -101,6 +133,8 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     certificationAuthorityStructureId: certificationAuthorityStructure.id,
   });
 
+  const ccn = await createCandidacyCCNHelper({ label: "Ma CCN" });
+
   const candidacy = await createCandidacyHelper({
     certificationId: certification.id,
     candidacyArgs: {
@@ -108,6 +142,8 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
       additionalHourCount: 8,
       individualHourCount: 12,
       collectiveHourCount: 6,
+      typology: CandidateTypology.SALARIE_PRIVE,
+      ccnId: ccn.id,
     },
   });
 
@@ -172,6 +208,34 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     },
   });
 
+  const attachGoal = async (label: string) => {
+    const goal = await prismaClient.goal.findFirstOrThrow({ where: { label } });
+
+    await prismaClient.candicadiesOnGoals.upsert({
+      where: {
+        candidacyId_goalId: {
+          candidacyId: candidacy.id,
+          goalId: goal.id,
+        },
+      },
+      update: {},
+      create: { candidacyId: candidacy.id, goalId: goal.id },
+    });
+  };
+
+  await attachGoal("Trouver plus facilement un emploi");
+  await attachGoal("Être reconnu dans ma profession");
+
+  await prismaClient.experience.create({
+    data: {
+      candidacyId: candidacy.id,
+      title: "Chef de projet digital",
+      description: "Pilotage d'équipes pluridisciplinaires",
+      duration: ExperienceDuration.moreThanThreeYears,
+      startedAt: new Date("2018-01-01T00:00:00.000Z"),
+    },
+  });
+
   await prismaClient.dFFPrerequisite.create({
     data: {
       dematerializedFeasibilityFileId,
@@ -179,27 +243,6 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
       state: PrerequisiteState.ACQUIRED,
     },
   });
-
-  const attachBasicSkill = async (label: string) => {
-    const basicSkill = await prismaClient.basicSkill.findFirstOrThrow({
-      where: { label },
-    });
-
-    await prismaClient.basicSkillOnCandidacies.upsert({
-      where: {
-        basicSkillId_candidacyId: {
-          basicSkillId: basicSkill.id,
-          candidacyId: candidacy.id,
-        },
-      },
-      update: {},
-      create: { basicSkillId: basicSkill.id, candidacyId: candidacy.id },
-    });
-  };
-
-  await attachBasicSkill(
-    "Utilisation des règles de base de calcul et du raisonnement mathématique",
-  );
 
   return { candidacyId: candidacy.id, certification };
 };
@@ -269,35 +312,101 @@ describe("demat feasibility pdf generation", () => {
     });
   });
 
-    it("contains the infos certification subsection", () => {
+  describe("profil candidat section", () => {
+    it("contains the 'Informations sur le candidat' subsection", () => {
       expectSectionText(
-        "infosCertification",
+        "informationsCandidat",
         `
-        Informations sur la certification professionnelle visée
-        VAE en autonomie
-        RNCP ${rncpId}
-        Manager de la performance
-        Option ou parcours :
-        Option Performance
-        Langue vivante 1 :
-        Anglais
-        Langue vivante 2 :
-        Espagnol
-        Le candidat vise
-        La certification dans sa totalité
-        Choix des blocs de compétences
-        BLOC-CODE - Bloc de compétences Gestion
+        Informations sur le candidat
+        Civilité :
+        Monsieur
+        Nom de naissance:
+        Dupont
+        Prénoms :
+        Jean
+        Date de naissance :
+        20/05/1990
+        Ville de naissance :
+        Lyon
+        Nationalité :
+        Française
       `,
       );
     });
-    it("contains the prerequis certification subsection", () => {
+    it("contains the 'Niveau de formation' certification subsection", () => {
       expectSectionText(
-        "prerequisCertification",
+        "niveauFormation",
         `
-        Pré-requis à la délivrance de la certification professionnelle visée
-        Oui
-        - Posséder un niveau B2 en anglais
-        Non
+        Niveau de formation
+        Niveau de formation le plus élevé:
+        5
+        Niveau de la certification obtenue la plus élevée:
+        7
+        Intitulé de la certification la plus élevée obtenue:
+        Licence Informatique
+      `,
+      );
+    });
+    it("contains the 'Informations de contact du candidat' certification subsection", () => {
+      expectSectionText(
+        "informationsContactCandidat",
+        `
+        Informations de contact du candidat
+        Adresse postale:
+        10 rue de Paris 75001 Paris, France
+        Adresse électronique:
+        jean.dupont@example.com
+        Téléphone:
+        0601020304
+      `,
+      );
+    });
+    it("contains the 'Statut' certification subsection", () => {
+      expectSectionText(
+        "statut",
+        `
+        Statut
+        Salarié du secteur privé
+        Identifiant de la Convention collective de l’employeur du candidat
+        Ma CCN
+      `,
+      );
+    });
+    it("contains the 'Objectifs du candidat' certification subsection", () => {
+      expectSectionText(
+        "objectifsCandidat",
+        `
+        Objectifs du candidat
+        - Trouver plus facilement un emploi
+        - Être reconnu dans ma profession
+      `,
+      );
+    });
+    it("contains the 'Expériences' certification subsection", () => {
+      expectSectionText(
+        "experiences",
+        `
+        Expériences
+        Chef de projet digital
+        Pilotage d'équipes pluridisciplinaires
+        Expérience de plus de 3 ans
+        Démarrée le 01/01/2018
+
+      `,
+      );
+    });
+
+    it("contains the 'Informations sur les expériences du candidat en lien avec le référentiel d’activités et de compétences' certification subsection", () => {
+      expectSectionText(
+        "informationsReferentiel",
+        `
+        Informations sur les expériences du candidat en lien avec le référentiel d’activités et
+        de compétences
+        BLOC-CODE - Bloc de compétences Gestion
+        OUI
+        Analyser des besoins clients
+        Commentaire sur le bloc
+        Expérience significative en situation réelle
       `,
       );
     });
