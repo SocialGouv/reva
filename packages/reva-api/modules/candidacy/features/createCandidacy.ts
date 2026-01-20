@@ -1,6 +1,7 @@
 import {
   CandidacyStatusStep,
   CandidacyTypeAccompagnement,
+  CandidateTypology,
   Prisma,
 } from "@prisma/client";
 
@@ -22,9 +23,6 @@ export const createCandidacy = async ({
   const candidate = await prismaClient.candidate.findUnique({
     where: { id: candidateId },
   });
-  if (!candidate) {
-    throw new Error(`Le candidat n'existe pas`);
-  }
 
   const prisma = tx ?? prismaClient;
   // Row-level lock per candidate to avoid duplicate candidacies under concurrency
@@ -47,9 +45,9 @@ export const createCandidacy = async ({
           status: CandidacyStatusStep.PROJET,
         },
       },
-      ccnId: candidate.ccnId,
-      typology: candidate.typology,
-      typologyAdditional: candidate.typologyAdditional,
+      ccnId: candidate?.ccnId,
+      typology: candidate?.typology ?? CandidateTypology.NON_SPECIFIE,
+      typologyAdditional: candidate?.typologyAdditional,
     },
   });
 };
