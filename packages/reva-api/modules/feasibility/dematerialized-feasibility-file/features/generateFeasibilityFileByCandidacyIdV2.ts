@@ -232,8 +232,8 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         nationality: candidate.nationality ?? "",
         highestDegreeLevel: candidate.highestDegree?.level?.toString() ?? "",
         highestDegreeLabel: candidate.highestDegreeLabel ?? "",
-        niveauDeFormationLePlusEleveLabel:
-          candidate.niveauDeFormationLePlusEleve?.label ?? "",
+        niveauDeFormationLePlusEleveLevel:
+          candidate.niveauDeFormationLePlusEleve?.level?.toString() ?? "",
         address:
           [
             candidate.street,
@@ -584,7 +584,7 @@ const addProfilCandidatSection = ({
     nationality,
     highestDegreeLevel,
     highestDegreeLabel,
-    niveauDeFormationLePlusEleveLabel,
+    niveauDeFormationLePlusEleveLevel,
     address,
     email,
     phone,
@@ -604,7 +604,7 @@ const addProfilCandidatSection = ({
     nationality: string;
     highestDegreeLevel: string;
     highestDegreeLabel: string;
-    niveauDeFormationLePlusEleveLabel: string;
+    niveauDeFormationLePlusEleveLevel: string;
     address: string;
     email: string;
     phone: string;
@@ -665,7 +665,7 @@ const addProfilCandidatSection = ({
             data: [
               {
                 title: "Niveau de formation le plus élevé ",
-                value: niveauDeFormationLePlusEleveLabel,
+                value: niveauDeFormationLePlusEleveLevel,
               },
               {
                 title: "Niveau de la certification obtenue la plus élevée",
