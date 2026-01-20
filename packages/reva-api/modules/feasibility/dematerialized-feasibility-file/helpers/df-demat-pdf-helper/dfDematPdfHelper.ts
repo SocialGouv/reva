@@ -260,7 +260,7 @@ export const addTitledBlock = ({
 }: {
   title: string;
   content: (doc: PDFKit.PDFDocument) => void;
-  startInPt: number;
+  startInPt?: number;
   widthInPt: number;
   doc: PDFKit.PDFDocument;
 }) => {
@@ -271,7 +271,7 @@ export const addTitledBlock = ({
     .text(title, startInPt, doc.y);
   doc.moveDown(0.5);
   doc
-    .text("", startInPt + pxToPt(16), doc.y)
+    .text("", startInPt ?? doc.x + pxToPt(16), doc.y)
     .font("assets/fonts/Marianne/Marianne-Regular.otf");
   content(doc);
   doc.text("", oldX, doc.y); //reset x position to start of block after block end

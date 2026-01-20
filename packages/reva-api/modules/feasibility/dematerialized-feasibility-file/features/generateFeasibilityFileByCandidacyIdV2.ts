@@ -483,7 +483,6 @@ const addCertificationSubSection = ({
             });
             doc.moveDown(0.5);
           }),
-        startInPt: oldX,
         widthInPt: pxToPt(1160),
       });
     },
@@ -505,7 +504,6 @@ const addCertificationPrerequisitesSubSection = ({
       addTitledBlock({
         doc,
         title: "Oui",
-        startInPt: pxToPt(180),
         widthInPt: pxToPt(1160),
         content: (doc) => {
           prerequisites
@@ -522,7 +520,6 @@ const addCertificationPrerequisitesSubSection = ({
       addTitledBlock({
         doc,
         title: "Non",
-        startInPt: pxToPt(180),
         widthInPt: pxToPt(1160),
         content: (doc) => {
           prerequisites
@@ -711,7 +708,6 @@ const addProfilCandidatSection = ({
                   .font("assets/fonts/Marianne/Marianne-Light.otf")
                   .text(experience.startedAtLabel, doc.x, doc.y);
               },
-              startInPt: pxToPt(180),
               widthInPt: pxToPt(1160),
             });
             doc.moveDown(1);
