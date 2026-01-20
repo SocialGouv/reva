@@ -2,7 +2,7 @@ name: reva_interop
 
 services:
   db_reva_interop:
-    image: postgres:16.9
+    image: postgres:16.11
     container_name: postgresql_reva_interop
     environment:
       POSTGRES_DB: reva_interop
