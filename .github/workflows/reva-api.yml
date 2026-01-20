@@ -14,25 +14,7 @@ env:
   BASE_URL: "https://vae.gouv.fr"
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      app_changed: ${{ steps.filter.outputs.app_changed }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            app_changed:
-              - 'packages/reva-api/**'
-              - '.github/workflows/reva-api.yml'
-
   lint:
-    needs: [changes]
-    if: needs.changes.outputs.app_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -57,8 +39,6 @@ jobs:
         run: npm run lint
 
   build:
-    needs: [changes]
-    if: needs.changes.outputs.app_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -83,8 +63,6 @@ jobs:
         run: npm run build --if-present
 
   integration-tests:
-    needs: [changes]
-    if: needs.changes.outputs.app_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:

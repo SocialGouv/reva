@@ -19,26 +19,7 @@ env:
   NEXT_PUBLIC_APP_CANDIDAT_KEYCLOAK_URL: "https://auth.reva.incubateur.net"
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      app_changed: ${{ steps.filter.outputs.app_changed }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            app_changed:
-              - 'packages/reva-candidate/**'
-              - 'packages/reva-api/modules/**/*.graphql'
-              - '.github/workflows/reva-candidate.yml'
-
   lint:
-    needs: [changes]
-    if: needs.changes.outputs.app_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -63,8 +44,6 @@ jobs:
         run: npm run lint
 
   cypress:
-    needs: [changes]
-    if: needs.changes.outputs.app_changed == 'true'
     timeout-minutes: 30
     runs-on: ubuntu-latest
     defaults:
@@ -104,8 +83,6 @@ jobs:
         run: NODE_ENV=production npm run test:ci
 
   playwright:
-    needs: [changes]
-    if: needs.changes.outputs.app_changed == 'true'
     timeout-minutes: 30
     runs-on: ubuntu-latest
     defaults:

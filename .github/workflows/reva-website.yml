@@ -16,26 +16,7 @@ env:
   NEXT_PUBLIC_WEBSITE_API_GRAPHQL: "https://reva.incubateur.net/api/graphql"
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      app_changed: ${{ steps.filter.outputs.app_changed }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            app_changed:
-              - 'packages/reva-website/**'
-              - 'packages/reva-api/modules/**/*.graphql'
-              - '.github/workflows/reva-website.yml'
-
   lint:
-    needs: [changes]
-    if: needs.changes.outputs.app_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -60,8 +41,6 @@ jobs:
         run: npm run lint
 
   playwright:
-    needs: [changes]
-    if: needs.changes.outputs.app_changed == 'true'
     timeout-minutes: 60
     runs-on: ubuntu-latest
     defaults:
