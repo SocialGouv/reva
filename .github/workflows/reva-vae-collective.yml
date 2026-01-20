@@ -8,19 +8,41 @@ on:
       - ".github/workflows/reva-vae-collective.yml"
       - "!**/*.md"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 env:
   NEXT_PUBLIC_WEBSITE_API_GRAPHQL: "https://reva.incubateur.net/api/graphql"
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      app_changed: ${{ steps.filter.outputs.app_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            app_changed:
+              - 'packages/reva-vae-collective/**'
+              - 'packages/reva-api/modules/**/*.graphql'
+              - '.github/workflows/reva-vae-collective.yml'
+
   lint:
+    needs: [changes]
+    if: needs.changes.outputs.app_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./packages/reva-vae-collective
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: "npm"
@@ -37,6 +59,8 @@ jobs:
         run: npm run lint
 
   playwright:
+    needs: [changes]
+    if: needs.changes.outputs.app_changed == 'true'
     timeout-minutes: 30
     runs-on: ubuntu-latest
     defaults:

@@ -14,17 +14,21 @@ name: "CodeQL Advanced"
 on:
   push:
     branches: ["master"]
+    paths-ignore:
+      - "**/*.md"
+      - "**/*.mdx"
+      - "infra/**"
+      - "**/*.graphql"
   pull_request:
     branches: ["master"]
     paths-ignore:
-      - "**/*.test.ts"
-      - packages/reva-admin-react/cypress
-      - packages/reva-admin-react/public/vendor/tarteaucitronjs
-      - packages/reva-api/test
-      - packages/reva-candidate/cypress
-      - packages/reva-candidate/public/vendor/tarteaucitronjs
-      - packages/reva-website/cypress
-      - packages/reva-website/public/vendor/tarteaucitronjs
+      - "**/*.md"
+      - "**/*.mdx"
+      - "infra/**"
+      - "**/*.graphql"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   analyze:

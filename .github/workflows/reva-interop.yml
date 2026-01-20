@@ -8,16 +8,38 @@ on:
       - ".github/workflows/reva-interop.yml"
       - "!**/*.md"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      app_changed: ${{ steps.filter.outputs.app_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            app_changed:
+              - 'packages/reva-interop/**'
+              - 'packages/reva-api/modules/**/*.graphql'
+              - '.github/workflows/reva-interop.yml'
+
   lint:
+    needs: [changes]
+    if: needs.changes.outputs.app_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./packages/reva-interop
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: "npm"
