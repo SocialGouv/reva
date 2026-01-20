@@ -2,6 +2,7 @@ import {
   CandidateTypology,
   DFFEligibilityCandidateSituation,
   DFFEligibilityRequirement,
+  ExperienceDuration,
   Gender,
 } from "@prisma/client";
 
@@ -417,5 +418,22 @@ export const getCandidateTypologyLabel = (typology: CandidateTypology) => {
       return "Autre";
     default:
       return typology;
+  }
+};
+
+export const getExperienceDurationLabel = (duration: ExperienceDuration) => {
+  switch (duration) {
+    case "lessThanOneYear":
+      return "Expérience de moins de 1 an";
+    case "betweenOneAndThreeYears":
+      return "Expérience entre 1 et 3 ans";
+    case "moreThanThreeYears":
+      return "Expérience de plus de 3 ans";
+    case "moreThanFiveYears":
+      return "Expérience de plus de 5 ans";
+    case "moreThanTenYears":
+      return "Expérience de plus de 10 ans";
+    default:
+      return "Expérience de durée inconnue";
   }
 };

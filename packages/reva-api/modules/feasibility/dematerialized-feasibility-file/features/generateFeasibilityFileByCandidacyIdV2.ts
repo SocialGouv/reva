@@ -25,6 +25,7 @@ import {
   addInfoTable,
   getCourtesyTitleFromGender,
   getCandidateTypologyLabel,
+  getExperienceDurationLabel,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
 
 const ASSETS_PATH =
@@ -59,6 +60,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       },
       ccn: true,
       goals: { include: { goal: true } },
+      experiences: true,
     },
   });
 
@@ -211,6 +213,12 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
           candidacy.typology,
         ),
         goals: candidacy.goals.map((goal) => goal.goal.label),
+        experiences: candidacy.experiences.map((experience) => ({
+          title: experience.title,
+          description: experience.description,
+          durationLabel: getExperienceDurationLabel(experience.duration),
+          startedAtLabel: `Démarrée le ${formatDateWithoutTimestamp(experience.startedAt)}`,
+        })),
       },
       doc,
     });
@@ -549,6 +557,7 @@ const addProfilCandidatSection = ({
     candidacyCcnLabel,
     candidacyCandidateTypologyLabel,
     goals,
+    experiences,
   },
 }: {
   candidate: {
@@ -567,6 +576,12 @@ const addProfilCandidatSection = ({
     candidacyCcnLabel: string;
     candidacyCandidateTypologyLabel: string;
     goals: string[];
+    experiences: {
+      title: string;
+      description: string;
+      durationLabel: string;
+      startedAtLabel: string;
+    }[];
   };
   doc: PDFKit.PDFDocument;
 }) => {
@@ -668,6 +683,38 @@ const addProfilCandidatSection = ({
               .font("assets/fonts/Marianne/Marianne-Regular.otf")
               .text("- " + goal, doc.x, doc.y);
             doc.moveDown(0.5);
+          });
+        },
+      });
+      doc.moveDown(1);
+      addSubSection({
+        title: "Expériences",
+        doc,
+        content: (doc) => {
+          experiences.forEach((experience) => {
+            addTitledBlock({
+              doc,
+              title: experience.title,
+              content: (doc) => {
+                doc
+                  .fontSize(8)
+                  .font("assets/fonts/Marianne/Marianne-Light.otf")
+                  .text(experience.description, doc.x, doc.y);
+                doc.moveDown(0.5);
+                doc
+                  .fontSize(8)
+                  .font("assets/fonts/Marianne/Marianne-Light.otf")
+                  .text(experience.durationLabel, doc.x, doc.y);
+                doc.moveDown(0.5);
+                doc
+                  .fontSize(8)
+                  .font("assets/fonts/Marianne/Marianne-Light.otf")
+                  .text(experience.startedAtLabel, doc.x, doc.y);
+              },
+              startInPt: pxToPt(180),
+              widthInPt: pxToPt(1160),
+            });
+            doc.moveDown(1);
           });
         },
       });
