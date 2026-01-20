@@ -1,5 +1,6 @@
 import {
   CandidateTypology,
+  DFFCertificationCompetenceDetailsState,
   DFFEligibilityCandidateSituation,
   DFFEligibilityRequirement,
   ExperienceDuration,
@@ -365,6 +366,105 @@ export const addInfoTable = ({
     doc.moveDown(0.3);
   });
   doc.text("", oldX); //reset x position to start of table after table end
+};
+
+export const addCompetence = ({
+  doc,
+  label,
+  state,
+}: {
+  doc: PDFKit.PDFDocument;
+  label: string;
+  state: DFFCertificationCompetenceDetailsState | "TO_COMPLETE";
+}) => {
+  switch (state) {
+    case "YES":
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(7)
+        .table({
+          columnStyles: [22],
+          data: [
+            [
+              {
+                border: 0,
+                backgroundColor: "#b8fec9",
+                textColor: "#18753c",
+                text: "OUI",
+                align: "center",
+              },
+            ],
+          ],
+        });
+      break;
+    case "NO":
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(7)
+        .table({
+          position: { x: doc.x, y: doc.y + 20 },
+          columnStyles: [26],
+          data: [
+            [
+              {
+                border: 0,
+                backgroundColor: "#ffe9e9",
+                textColor: "#ce0500",
+                text: "NON",
+                align: "center",
+              },
+            ],
+          ],
+        });
+      break;
+    case "PARTIALLY":
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(7)
+        .table({
+          position: { x: doc.x, y: doc.y + 20 },
+          columnStyles: [67],
+          data: [
+            [
+              {
+                border: 0,
+                backgroundColor: "#feebd0",
+                textColor: "#695240",
+                text: "PARTIELLEMENT",
+                align: "center",
+              },
+            ],
+          ],
+        });
+      break;
+    case "TO_COMPLETE":
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(7)
+        .table({
+          position: { x: doc.x, y: doc.y + 20 },
+          columnStyles: [60],
+          data: [
+            [
+              {
+                border: 0,
+                backgroundColor: "#ffe9e6",
+                textColor: "#b34000",
+                text: "À COMPLÉTER",
+                align: "center",
+              },
+            ],
+          ],
+        });
+      break;
+  }
+
+  doc.moveDown(0.1);
+
+  doc
+    .font("assets/fonts/Marianne/Marianne-Regular.otf")
+    .fontSize(8)
+    .text(label.replace(/(\r\n|\n|\r)/gm, ""), doc.x, doc.y);
 };
 
 export const getCourtesyTitleFromGender = (gender: Gender | null) => {
