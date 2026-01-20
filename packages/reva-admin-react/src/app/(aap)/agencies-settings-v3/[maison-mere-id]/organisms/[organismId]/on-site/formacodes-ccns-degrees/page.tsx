@@ -38,7 +38,7 @@ const FormacodesCcnsDegreesOnSitePage = () => {
       </p>
       <a
         className="fr-link mr-auto"
-        href="https://fabnummas.notion.site/Liste-des-certifications-actives-sur-France-VAE-19d653b7be0780ee80b0d72a3e7a127f"
+        href="https://francevae.notion.site/Liste-des-certifications-actives-sur-France-VAE-19d653b7be0780ee80b0d72a3e7a127f"
         target="_blank"
       >
         Liste des certifications par sous-domaines et niveaux (dans France VAE)

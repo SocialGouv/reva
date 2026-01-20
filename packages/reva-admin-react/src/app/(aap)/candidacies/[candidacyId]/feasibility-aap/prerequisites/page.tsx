@@ -158,7 +158,7 @@ export default function PrerequisitesPage() {
         dans notre{" "}
         <a
           target="_blank"
-          href="https://fabnummas.notion.site/Ressources-documentaires-d-tails-des-certifications-trame-de-dossier-de-validation-9d8ae84eb82044b585d769c84676615d"
+          href="https://francevae.notion.site/Ressources-documentaires-d-tails-des-certifications-trame-de-dossier-de-validation-9d8ae84eb82044b585d769c84676615d"
         >
           espace documentaire
         </a>
