@@ -284,6 +284,7 @@ const addContexteDemandeSection = ({
     iconPath: `${ASSETS_PATH}/images/data-visualization.png`,
     content: (doc) => {
       addNatureDemandeSubSection({ doc, eligibilityLabelAndType });
+      doc.moveDown(1);
       addCertificationSubSection({
         doc,
         certification,
@@ -294,6 +295,7 @@ const addContexteDemandeSection = ({
         isCertificationPartial,
         certificationCompetenceBlocsWithSelectionStatus,
       });
+      doc.moveDown(1);
       addCertificationPrerequisitesSubSection({
         doc,
         prerequisites,
@@ -476,7 +478,6 @@ const addCertificationSubSection = ({
         startInPt: oldX,
         widthInPt: pxToPt(1160),
       });
-      doc.moveDown(1);
     },
   });
 };
