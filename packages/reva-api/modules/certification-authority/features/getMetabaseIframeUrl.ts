@@ -10,7 +10,7 @@ const ALLOWED_CERTIFICATION_AUTHORITY_STRUCTURES: Record<
   string,
   { filter: string; dashboardId: number }
 > = {
-  "Structure certificatrice inconnue": {
+  "Ministère du Travail, du Plein emploi et de l'Insertion": {
     filter: "dreets",
     dashboardId: 154,
   },
