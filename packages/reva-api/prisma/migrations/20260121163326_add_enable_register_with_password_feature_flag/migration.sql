@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('ENABLE_REGISTER_WITH_PASSWORD', 'Activer l''inscription d''un candidat avec un mot de passe', 'Activer l''inscription d''un candidat avec un mot de passe');
