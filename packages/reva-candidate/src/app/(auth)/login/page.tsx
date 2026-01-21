@@ -22,7 +22,6 @@ export default function Login() {
   const certificationId = searchParams.get("certificationId");
 
   const [emailForMagicLink, setEmailForMagicLink] = useState<string>("");
-
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [revealPassword, setRevealPassword] = useState<boolean>(false);
@@ -33,6 +32,12 @@ export default function Login() {
 
   const { resetKeycloakInstance } = useKeycloakContext();
   const { isFeatureActive } = useAnonymousFeatureFlipping();
+  const isMagicLinkDisabled = isFeatureActive(
+    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
+  );
+  const isRegisterWithPasswordEnabled = isFeatureActive(
+    "ENABLE_REGISTER_WITH_PASSWORD",
+  );
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,142 +72,178 @@ export default function Login() {
   };
 
   return (
-    <PageLayout title="Connexion" data-testid="login-home" className="p-6 pt-8">
-      <h1 className="mb-10">Connexion candidat</h1>
-      {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") && (
-        <div className="flex flex-col gap-4 mb-6">
-          <FranceConnectButton
-            url={getFranceConnectLoginUrl(certificationId ?? undefined)}
-          />
-          <div className="flex flex-row items-center gap-3">
-            <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-            ou
-            <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-          </div>
-        </div>
-      )}
-      <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-        {!isFeatureActive("DISABLE_CANDIDATE_MAGIC_LINK_LOGIN") && (
-          <>
-            <div className="flex flex-col gap-4">
-              <h2 className="mb-0">Se connecter avec un lien</h2>
+    <PageLayout title="Connexion" data-testid="login-home">
+      <div className="flex flex-col lg:flex-row lg:justify-between gap-8">
+        <div className="w-full lg:w-[588px] bg-white shadow-lifted p-6">
+          <h1 className="mb-6 text-center">Connexion candidat</h1>
 
-              <p className="mb-0">
-                Vous recevrez un courriel avec un lien qui vous redirigera vers
-                votre espace candidat.
-              </p>
+          {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") && (
+            <div className="flex flex-col items-center gap-4 mb-6">
+              <FranceConnectButton
+                url={getFranceConnectLoginUrl(certificationId ?? undefined)}
+              />
+              <div className="flex flex-row items-center gap-3 mt-2 w-full">
+                <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
+                <span className="text-dsfrGray-700 text-sm font-bold uppercase">
+                  ou
+                </span>
+                <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
+              </div>
+            </div>
+          )}
+
+          <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+            {!isMagicLinkDisabled && (
+              <>
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-lg font-bold mb-0">
+                    Se connecter avec un lien
+                  </h2>
+
+                  <p className="mb-0">
+                    Vous recevrez un courriel avec un lien qui vous redirigera
+                    vers votre espace candidat.
+                  </p>
+
+                  <Input
+                    disabled={
+                      (email.length > 0 && emailForMagicLink.length === 0) ||
+                      askForLogin.isPending
+                    }
+                    hintText="Format attendu : nom@domaine.fr"
+                    nativeInputProps={{
+                      id: "emailForMagicLink",
+                      name: "emailForMagicLink",
+                      required: true,
+                      type: "email",
+                      autoComplete: "email",
+                      spellCheck: "false",
+                      onChange: (e) => setEmailForMagicLink(e.target.value),
+                    }}
+                    label="Adresse électronique"
+                  />
+                </div>
+
+                <div className="flex flex-row items-center gap-3">
+                  <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
+                  <span className="text-dsfrGray-500 text-sm">ou</span>
+                  <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
+                </div>
+              </>
+            )}
+
+            <div className="flex flex-col gap-4">
+              {!isMagicLinkDisabled && (
+                <h2 className="text-lg font-bold mb-0">
+                  Se connecter avec mot de passe
+                </h2>
+              )}
 
               <Input
-                disabled={
-                  (email.length > 0 && emailForMagicLink.length === 0) ||
-                  askForLogin.isPending
-                }
+                className="mb-0"
+                disabled={emailForMagicLink.length > 0 || isPending}
                 hintText="Format attendu : nom@domaine.fr"
                 nativeInputProps={{
-                  id: "emailForMagicLink",
-                  name: "emailForMagicLink",
+                  id: "email",
+                  name: "email",
                   required: true,
                   type: "email",
-                  autoComplete: "email",
+                  autoComplete: "username",
                   spellCheck: "false",
-                  onChange: (e) => setEmailForMagicLink(e.target.value),
+                  onChange: (e) => setEmail(e.target.value),
                 }}
-                label="Adresse électronique"
+                label="Identifiant"
               />
-            </div>
 
-            <div className="flex flex-row items-center gap-3">
-              <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-              ou
-              <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-            </div>
-          </>
-        )}
-
-        <div className="flex flex-col gap-4">
-          <h2 className="mb-0">Se connecter avec mot de passe</h2>
-
-          <Input
-            className="mb-0"
-            disabled={emailForMagicLink.length > 0 || isPending}
-            hintText="Format attendu : nom@domaine.fr"
-            nativeInputProps={{
-              id: "email",
-              name: "email",
-              required: true,
-              type: "email",
-              autoComplete: "username",
-              spellCheck: "false",
-              onChange: (e) => setEmail(e.target.value),
-            }}
-            label="Identifiant"
-          />
-
-          <Input
-            className="mb-0"
-            disabled={emailForMagicLink.length > 0 || isPending}
-            nativeInputProps={{
-              id: "password",
-              name: "password",
-              required: true,
-              type: revealPassword ? "text" : "password",
-              spellCheck: "false",
-              onChange: (e) => setPassword(e.target.value),
-            }}
-            label={
-              <div className="flex flex-row justify-between items-center overflow-hidden max-h-6">
-                Mot de passe
-                <Checkbox
-                  small
-                  options={[
-                    {
-                      label: "Afficher",
-                      nativeInputProps: {
-                        className: "",
-                        checked: revealPassword,
-                        onChange: () => {
-                          setRevealPassword(!revealPassword);
+              <Input
+                className="mb-0"
+                disabled={emailForMagicLink.length > 0 || isPending}
+                nativeInputProps={{
+                  id: "password",
+                  name: "password",
+                  required: true,
+                  type: revealPassword ? "text" : "password",
+                  spellCheck: "false",
+                  onChange: (e) => setPassword(e.target.value),
+                }}
+                label={
+                  <div className="flex flex-row justify-between items-center overflow-hidden max-h-6">
+                    Mot de passe
+                    <Checkbox
+                      small
+                      options={[
+                        {
+                          label: "Afficher",
+                          nativeInputProps: {
+                            className: "",
+                            checked: revealPassword,
+                            onChange: () => {
+                              setRevealPassword(!revealPassword);
+                            },
+                          },
                         },
-                      },
-                    },
-                  ]}
-                />
-              </div>
-            }
-          />
+                      ]}
+                    />
+                  </div>
+                }
+              />
 
-          <div className="border-t border-gray-200 pt-6">
-            <Link className="text-dsfrBlue-500" href="/forgot-password/">
-              Mot de passe oublié ?
-            </Link>
-          </div>
+              <div>
+                <Link className="fr-link" href="/forgot-password/">
+                  Mot de passe oublié ?
+                </Link>
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full justify-center"
+              data-testid="login-home-submit"
+              disabled={isPending}
+            >
+              Se connecter
+            </Button>
+          </form>
         </div>
 
-        <Button
-          type="submit"
-          className="w-full justify-center"
-          data-testid="login-home-submit"
-          disabled={isPending}
-        >
-          Se connecter
-        </Button>
+        {/* Colonne droite - Options */}
+        <div className="w-full lg:w-[486px] flex flex-col justify-center gap-8 p-10">
+          <p className="text-xl font-bold leading-8 mb-0">
+            Vous n'avez pas encore de compte ?
+          </p>
 
-        <div className="w-full bg-dsfrGray-200 h-[1px]" />
+          {isRegisterWithPasswordEnabled && (
+            <div>
+              <p className="text-lg leading-7 mb-0">
+                Créez votre compte avec des identifiants :
+              </p>
+              <Button
+                priority="secondary"
+                className="w-full justify-center mt-4"
+                linkProps={{ href: "/register" }}
+              >
+                Créer mon compte
+              </Button>
+            </div>
+          )}
 
-        <h2 className="mb-0">Vous n'avez pas de compte ?</h2>
-
-        <Button
-          type="button"
-          className="w-full justify-center"
-          priority="secondary"
-          data-testid="login-home-start-vae"
-          onClick={() => {
-            window.location.href = "/espace-candidat/";
-          }}
-        >
-          Commencer une VAE
-        </Button>
-      </form>
+          <div>
+            <p className="text-lg leading-7 mb-0">
+              Consultez nos diplômes disponibles pour débuter une VAE :
+            </p>
+            <Button
+              priority="secondary"
+              className="w-full justify-center mt-4"
+              data-testid="login-home-start-vae"
+              onClick={() => {
+                window.location.href = "/espace-candidat/";
+              }}
+            >
+              Commencer une VAE
+            </Button>
+          </div>
+        </div>
+      </div>
     </PageLayout>
   );
 }

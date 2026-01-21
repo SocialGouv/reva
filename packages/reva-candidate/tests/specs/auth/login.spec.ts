@@ -40,7 +40,7 @@ test.describe("Login page", () => {
       ).not.toBeVisible();
     });
 
-    test("shows confirmation page after asking for a magic link", async ({
+    test("redirects to confirmation page after asking for a magic link", async ({
       page,
       msw,
     }) => {
@@ -66,6 +66,31 @@ test.describe("Login page", () => {
     });
   });
 
+  test.describe("when ENABLE_REGISTER_WITH_PASSWORD is active", () => {
+    const handlers = [
+      fvae.query(
+        "activeFeaturesForConnectedUser",
+        graphQLResolver({
+          activeFeaturesForConnectedUser: ["ENABLE_REGISTER_WITH_PASSWORD"],
+        }),
+      ),
+    ];
+
+    test.use({ mswHandlers: [handlers, { scope: "test" }] });
+
+    test("navigates to register page when clicking create account", async ({
+      page,
+    }) => {
+      await login(page, { authenticated: false });
+
+      await page.getByRole("link", { name: "Créer mon compte" }).click();
+
+      await expect(
+        page.getByRole("heading", { name: "Création de compte" }),
+      ).toBeVisible();
+    });
+  });
+
   test.describe("when DISABLE_CANDIDATE_MAGIC_LINK_LOGIN is active", () => {
     const handlers = [
       fvae.query(
@@ -84,7 +109,7 @@ test.describe("Login page", () => {
       await login(page, { authenticated: false });
 
       await expect(
-        page.getByRole("heading", { name: "Se connecter avec mot de passe" }),
+        page.getByRole("heading", { name: "Connexion candidat" }),
       ).toBeVisible();
 
       await expect(
@@ -95,20 +120,16 @@ test.describe("Login page", () => {
     test("shows notice banner with password instructions", async ({ page }) => {
       await login(page, { authenticated: false });
 
-      await expect(
-        page.getByRole("heading", { name: "Se connecter avec mot de passe" }),
-      ).toBeVisible();
+      const noticeBanner = page.getByTestId("magic-link-disabled-notice");
 
       await expect(
-        page.getByText(
+        noticeBanner.getByText(
           "Vous devez désormais vous connecter à votre espace candidat avec un mot de passe.",
         ),
       ).toBeVisible();
 
       await expect(
-        page
-          .getByTestId("magic-link-disabled-notice")
-          .getByRole("link", { name: "Mot de passe oublié ?" }),
+        noticeBanner.getByRole("link", { name: "Mot de passe oublié ?" }),
       ).toBeVisible();
     });
   });
