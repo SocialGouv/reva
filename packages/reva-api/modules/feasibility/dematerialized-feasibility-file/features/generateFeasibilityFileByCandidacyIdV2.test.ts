@@ -356,7 +356,7 @@ describe("demat feasibility pdf generation", () => {
       `,
       );
     });
-    it("contains the 'Pré-requis à la délivrance de la certification professionnelle visée' certification subsection", () => {
+    it("contains the 'Pré-requis à la délivrance de la certification professionnelle visée' subsection", () => {
       expectSectionText(
         "prerequisCertification",
         `
@@ -390,7 +390,7 @@ describe("demat feasibility pdf generation", () => {
       `,
       );
     });
-    it("contains the 'Niveau de formation' certification subsection", () => {
+    it("contains the 'Niveau de formation' subsection", () => {
       expectSectionText(
         "niveauFormation",
         `
@@ -404,7 +404,7 @@ describe("demat feasibility pdf generation", () => {
       `,
       );
     });
-    it("contains the 'Informations de contact du candidat' certification subsection", () => {
+    it("contains the 'Informations de contact du candidat' subsection", () => {
       expectSectionText(
         "informationsContactCandidat",
         `
@@ -418,7 +418,7 @@ describe("demat feasibility pdf generation", () => {
       `,
       );
     });
-    it("contains the 'Statut' certification subsection", () => {
+    it("contains the 'Statut' subsection", () => {
       expectSectionText(
         "statut",
         `
@@ -429,7 +429,7 @@ describe("demat feasibility pdf generation", () => {
       `,
       );
     });
-    it("contains the 'Objectifs du candidat' certification subsection", () => {
+    it("contains the 'Objectifs du candidat' subsection", () => {
       expectSectionText(
         "objectifsCandidat",
         `
@@ -439,7 +439,7 @@ describe("demat feasibility pdf generation", () => {
       `,
       );
     });
-    it("contains the 'Expériences' certification subsection", () => {
+    it("contains the 'Expériences' subsection", () => {
       expectSectionText(
         "experiences",
         `
@@ -453,7 +453,7 @@ describe("demat feasibility pdf generation", () => {
       );
     });
 
-    it("contains the 'Informations sur les expériences du candidat en lien avec le référentiel d’activités et de compétences' certification subsection", () => {
+    it("contains the 'Informations sur les expériences du candidat en lien avec le référentiel d’activités et de compétences' subsection", () => {
       expectSectionText(
         "informationsReferentiel",
         `
@@ -468,7 +468,8 @@ describe("demat feasibility pdf generation", () => {
       );
     });
 
-    it("contains the 'Préconisation accompagnement méthodologique' certification subsection", () => {
+    describe("Accompagnement proposé au candidat section", () => {
+      it("contains the 'Préconisation accompagnement méthodologique' subsection", () => {
       expectSectionText(
         "preconisationAccompagnementMethodologique",
         `
@@ -483,7 +484,23 @@ describe("demat feasibility pdf generation", () => {
       );
     });
 
-    it("contains the 'Préconisation actes formatifs' certification subsection", () => {
+      it("contains the 'Préconisation actes formatifs' subsection", () => {
+        expectSectionText(
+          "preconisationActesFormatifs",
+          `
+        Préconisation actes formatifs
+        Formations obligatoires
+        - Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)
+        - Equipier de Première Intervention
+        Savoirs de base
+        - Communication en français
+        - Usage et communication numérique
+        - Utilisation des règles de base de calcul et du raisonnement mathématique
+      `,
+        );
+      });
+    });
+
       expectSectionText(
         "preconisationActesFormatifs",
         `
