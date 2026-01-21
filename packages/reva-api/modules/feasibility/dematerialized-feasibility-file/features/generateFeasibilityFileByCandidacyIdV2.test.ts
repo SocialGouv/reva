@@ -320,7 +320,7 @@ describe("demat feasibility pdf generation", () => {
         Informations sur le candidat
         Civilité :
         Monsieur
-        Nom de naissance:
+        Nom de naissance :
         Dupont
         Prénoms :
         Jean
@@ -338,11 +338,11 @@ describe("demat feasibility pdf generation", () => {
         "niveauFormation",
         `
         Niveau de formation
-        Niveau de formation le plus élevé:
+        Niveau de formation le plus élevé :
         5
-        Niveau de la certification obtenue la plus élevée:
+        Niveau de la certification obtenue la plus élevée :
         7
-        Intitulé de la certification la plus élevée obtenue:
+        Intitulé de la certification la plus élevée obtenue :
         Licence Informatique
       `,
       );
@@ -352,11 +352,11 @@ describe("demat feasibility pdf generation", () => {
         "informationsContactCandidat",
         `
         Informations de contact du candidat
-        Adresse postale:
+        Adresse postale :
         10 rue de Paris 75001 Paris, France
-        Adresse électronique:
+        Adresse électronique :
         jean.dupont@example.com
-        Téléphone:
+        Téléphone :
         0601020304
       `,
       );

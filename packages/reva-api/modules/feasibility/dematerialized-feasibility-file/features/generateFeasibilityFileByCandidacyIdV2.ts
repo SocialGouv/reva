@@ -646,7 +646,7 @@ const addProfilCandidatSection = ({
             widthInPt: pxToPt(1160),
             data: [
               { title: "Civilité :", value: courtesyTitle },
-              { title: "Nom de naissance:", value: lastname },
+              { title: "Nom de naissance :", value: lastname },
               { title: "Prénoms :", value: firstSecondAndThirdNames },
               {
                 title: "Date de naissance :",
@@ -668,15 +668,15 @@ const addProfilCandidatSection = ({
             widthInPt: pxToPt(1160),
             data: [
               {
-                title: "Niveau de formation le plus élevé:",
+                title: "Niveau de formation le plus élevé :",
                 value: niveauDeFormationLePlusEleveLevel,
               },
               {
-                title: "Niveau de la certification obtenue la plus élevée:",
+                title: "Niveau de la certification obtenue la plus élevée :",
                 value: highestDegreeLevel,
               },
               {
-                title: "Intitulé de la certification la plus élevée obtenue:",
+                title: "Intitulé de la certification la plus élevée obtenue :",
                 value: highestDegreeLabel,
               },
             ],
@@ -692,9 +692,9 @@ const addProfilCandidatSection = ({
           addInfoTable({
             widthInPt: pxToPt(1160),
             data: [
-              { title: "Adresse postale:", value: address },
-              { title: "Adresse électronique:", value: email },
-              { title: "Téléphone:", value: phone },
+              { title: "Adresse postale :", value: address },
+              { title: "Adresse électronique :", value: email },
+              { title: "Téléphone :", value: phone },
             ],
             doc,
           });
