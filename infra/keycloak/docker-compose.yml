@@ -32,6 +32,8 @@ services:
       # KC_HOSTNAME_STRICT_BACKCHANNEL: true
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: password
       REVA_BASE_URL: http://localhost:3000
       KC_HTTP_RELATIVE_PATH: auth
       KC_HTTP_ENABLED: true
