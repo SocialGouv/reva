@@ -39,17 +39,13 @@ export const ContactInformationForm = ({
   const { updateContactInformationsMutate } = useUpdateContactInformations();
   const router = useRouter();
 
-  const isAddressAlreadyCompleted =
-    !!candidate?.street && !!candidate?.zip && !!candidate?.city;
-
-  const [manualAddressSelected, setManualAddress] = useState(
-    isAddressAlreadyCompleted,
-  );
+  const [manualAddressSelected, setManualAddress] = useState(false);
   const franceId = countries?.find((c) => c.label === "France")?.id;
 
   const {
     register,
     setValue,
+    getValues,
     reset,
     formState: { errors, isDirty, isSubmitting },
     handleSubmit,
@@ -135,9 +131,6 @@ export const ContactInformationForm = ({
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setManualAddress(e.target.checked);
-    setValue("street", "");
-    setValue("zip", "");
-    setValue("city", "");
   };
 
   return (
@@ -153,11 +146,11 @@ export const ContactInformationForm = ({
       >
         <div className="grid grid-cols-4 gap-6">
           <div className="col-span-3 flex flex-col gap-6">
-            <div className="flex flex-row gap-6">
+            <div className="grid grid-cols-3 gap-6 items-end">
               {manualAddressSelected ? (
                 <Input
-                  label="Adresse"
-                  className="w-full flex-1 mb-0"
+                  label="Adresse complète"
+                  className="col-span-2 flex-1 mb-0"
                   nativeInputProps={register("street")}
                   state={errors.street ? "error" : "default"}
                   stateRelatedMessage={errors.street?.message}
@@ -165,17 +158,33 @@ export const ContactInformationForm = ({
                 />
               ) : (
                 <AutocompleteAddress
+                  label="Adresse complète"
                   onOptionSelection={handleOnAddressSelection}
-                  className="w-full flex-1 mb-0"
-                  nativeInputProps={register("street")}
+                  className="col-span-2 flex-1 mb-0"
+                  defaultSearchText={`${getValues("street")} ${getValues("zip")} ${getValues("city")}`}
                   state={errors.street ? "error" : "default"}
                   stateRelatedMessage={errors.street?.message}
                   data-testid="autocomplete-address-input"
                 />
               )}
+              <Checkbox
+                className="col-span-1"
+                small
+                options={[
+                  {
+                    label: "Je saisis manuellement l'adresse",
+                    nativeInputProps: {
+                      checked: manualAddressSelected,
+                      onChange: handleToggleManualAddress,
+                    },
+                  },
+                ]}
+                data-testid="manual-address-checkbox"
+              />
+
               <Input
                 label="Complément d'adresse (Optionnel)"
-                className="w-full flex-1 mb-0"
+                className="col-span-2 mb-0"
                 nativeInputProps={register("addressComplement")}
                 state={errors.addressComplement ? "error" : "default"}
                 stateRelatedMessage={errors.addressComplement?.message}
@@ -183,54 +192,45 @@ export const ContactInformationForm = ({
               />
             </div>
 
-            <Checkbox
-              options={[
-                {
-                  label: "Je saisis manuellement l'adresse",
-                  nativeInputProps: {
-                    checked: manualAddressSelected,
-                    onChange: handleToggleManualAddress,
-                  },
-                },
-              ]}
-              className="w-fit"
-              data-testid="manual-address-checkbox"
-            />
+            {manualAddressSelected && (
+              <div className="grid grid-cols-3 gap-6 items-end">
+                <div className="flex flex-row gap-6 col-span-2">
+                  <Input
+                    label="Code postal"
+                    className="flex-[1] mb-0"
+                    nativeInputProps={register("zip")}
+                    state={errors.zip ? "error" : "default"}
+                    stateRelatedMessage={errors.zip?.message}
+                    data-testid="zip-input"
+                  />
+                  <Input
+                    label="Ville"
+                    className="flex-[2] mb-0"
+                    nativeInputProps={register("city")}
+                    state={errors.city ? "error" : "default"}
+                    stateRelatedMessage={errors.city?.message}
+                    data-testid="city-input"
+                  />
+                </div>
+              </div>
+            )}
 
-            <div className="flex gap-6">
+            <div className="grid grid-cols-3 gap-6 items-end">
               <Input
-                label="Code postal (France uniquement)"
-                className="w-full flex-1 mb-0"
-                nativeInputProps={register("zip")}
-                state={errors.zip ? "error" : "default"}
-                stateRelatedMessage={errors.zip?.message}
-                data-testid="zip-input"
-              />
-              <Input
-                label="Ville"
-                className="w-full flex-[2] mb-0"
-                nativeInputProps={register("city")}
-                state={errors.city ? "error" : "default"}
-                stateRelatedMessage={errors.city?.message}
-                data-testid="city-input"
-              />
-            </div>
-            <div className="flex gap-6">
-              <Input
-                label="Numéro de téléphone"
-                className="w-full mb-0"
-                nativeInputProps={register("phone")}
-                state={errors.phone ? "error" : "default"}
-                stateRelatedMessage={errors.phone?.message}
-                data-testid="phone-input"
-              />
-              <Input
-                label="Adresse électronique"
-                className="w-full mb-0"
+                label="Adresse électronique de connexion"
+                className="col-span-2 mb-0"
                 nativeInputProps={register("email")}
                 state={errors.email ? "error" : "default"}
                 stateRelatedMessage={errors.email?.message}
                 data-testid="email-input"
+              />
+              <Input
+                label="Numéro de téléphone"
+                className="col-span-1 mb-0"
+                nativeInputProps={register("phone")}
+                state={errors.phone ? "error" : "default"}
+                stateRelatedMessage={errors.phone?.message}
+                data-testid="phone-input"
               />
             </div>
           </div>
@@ -242,9 +242,7 @@ export const ContactInformationForm = ({
                 <p className="font-bold mb-2">
                   Vous ne trouvez pas votre adresse exacte ?
                 </p>
-                <p>
-                  Indiquez-la en <strong>complément d’adresse</strong>.
-                </p>
+                <p>Utiliser l’option de saisie manuelle de l’adresse. </p>
               </div>
             </div>
           </div>

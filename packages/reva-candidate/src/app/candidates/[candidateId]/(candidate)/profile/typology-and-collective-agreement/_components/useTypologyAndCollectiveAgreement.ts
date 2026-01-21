@@ -108,7 +108,12 @@ export const useUpdateCandidateTypologyAndCcn = () => {
         candidateTypologyAndCcn,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["candidate"] });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.includes("updateCandidateTypologyAndCcn") ||
+          query.queryKey.includes("candidate") ||
+          query.queryKey.includes("candidacy"),
+      });
     },
   });
 

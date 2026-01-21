@@ -7,12 +7,15 @@ import {
 } from "./useAutocompleteAddress.hook";
 
 export const AutocompleteAddress = ({
+  label,
   onOptionSelection,
   className,
   nativeInputProps,
   state,
   stateRelatedMessage,
+  defaultSearchText,
 }: {
+  label?: string;
   onOptionSelection: (selectedOption: AddressOption) => void;
   className?: string;
   nativeInputProps?:
@@ -20,8 +23,9 @@ export const AutocompleteAddress = ({
     | undefined;
   state?: "error" | "success" | "info" | "default";
   stateRelatedMessage?: string;
+  defaultSearchText?: string;
 }) => {
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(defaultSearchText ?? "");
   const { data: options = [], status } = useAutocompleteAddress({
     search: searchText,
   });
@@ -30,11 +34,7 @@ export const AutocompleteAddress = ({
     null,
   );
 
-  const [displayOptions, setDisplayOptions] = useState(true);
-
-  const updateSearchText = async (newSearchText: string) => {
-    setSearchText(newSearchText);
-  };
+  const [displayOptions, setDisplayOptions] = useState(false);
 
   const handleKeyDownOnOptions = (e: React.KeyboardEvent) => {
     switch (e.key) {
@@ -89,11 +89,12 @@ export const AutocompleteAddress = ({
   return (
     <div data-testid="autocomplete" className={`relative ${className}`}>
       <Input
+        className="mb-0"
         nativeInputProps={{
           ...nativeInputProps,
           onKeyDown: handleKeyDownOnOptions,
           onChange: (event) => {
-            updateSearchText(event.target.value);
+            setSearchText(event.target.value);
 
             setDisplayOptions(true);
           },
@@ -107,14 +108,14 @@ export const AutocompleteAddress = ({
         }}
         state={state}
         stateRelatedMessage={stateRelatedMessage}
-        label="Adresse"
+        label={label ?? "Adresse"}
         data-testid="autocomplete-input"
         iconId="fr-icon-map-pin-2-fill"
       />
       {status === "success" && displayOptions && options.length > 0 && (
         <div
           data-testid="autocomplete-options"
-          className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[75px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
+          className="absolute z-10 max-h-[500px] list-none overflow-y-auto whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
         >
           {options.map((option) => {
             const isSelected = selectedOption?.label === option.label;
@@ -137,7 +138,7 @@ export const AutocompleteAddress = ({
       {status === "error" && (
         <div
           data-testid="autocomplete-options"
-          className="absolute z-10 max-h-[500px] list-none overflow-y-auto top-[75px] whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
+          className="absolute z-10 max-h-[500px] list-none overflow-y-auto whitespace-normal w-full bg-white border-[1px] border-gray-300 px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
         >
           <div
             key="empty-label"
