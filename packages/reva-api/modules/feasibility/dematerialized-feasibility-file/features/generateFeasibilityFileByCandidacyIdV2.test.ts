@@ -71,6 +71,18 @@ const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
     title:
       "Informations sur les expériences du candidat en lien avec le référentiel d’activités et",
   },
+  {
+    name: "accompagnementCandidat",
+    title: "Accompagnement proposé au candidat",
+  },
+  {
+    name: "preconisationAccompagnementMethodologique",
+    title: "Préconisation accompagnement méthodologique",
+  },
+  {
+    name: "preconisationActesFormatifs",
+    title: "Préconisation actes formatifs",
+  },
 ];
 
 const setupCompleteDematerializedFeasibilityFile = async () => {
@@ -208,6 +220,14 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     },
   });
 
+  await prismaClient.dFFPrerequisite.create({
+    data: {
+      dematerializedFeasibilityFileId,
+      label: "Posséder un niveau B2 en anglais",
+      state: PrerequisiteState.ACQUIRED,
+    },
+  });
+
   const attachGoal = async (label: string) => {
     const goal = await prismaClient.goal.findFirstOrThrow({ where: { label } });
 
@@ -223,9 +243,6 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     });
   };
 
-  await attachGoal("Trouver plus facilement un emploi");
-  await attachGoal("Être reconnu dans ma profession");
-
   await prismaClient.experience.create({
     data: {
       candidacyId: candidacy.id,
@@ -236,13 +253,53 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     },
   });
 
-  await prismaClient.dFFPrerequisite.create({
-    data: {
-      dematerializedFeasibilityFileId,
-      label: "Posséder un niveau B2 en anglais",
-      state: PrerequisiteState.ACQUIRED,
-    },
-  });
+  await attachGoal("Trouver plus facilement un emploi");
+  await attachGoal("Être reconnu dans ma profession");
+
+  const attachTraining = async (label: string) => {
+    const training = await prismaClient.training.findFirstOrThrow({
+      where: { label },
+    });
+
+    await prismaClient.trainingOnCandidacies.upsert({
+      where: {
+        trainingId_candidacyId: {
+          trainingId: training.id,
+          candidacyId: candidacy.id,
+        },
+      },
+      update: {},
+      create: { trainingId: training.id, candidacyId: candidacy.id },
+    });
+  };
+
+  await Promise.all([
+    attachTraining(
+      "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)",
+    ),
+    attachTraining("Equipier de Première Intervention"),
+  ]);
+
+  const attachBasicSkill = async (label: string) => {
+    const basicSkill = await prismaClient.basicSkill.findFirstOrThrow({
+      where: { label },
+    });
+
+    await prismaClient.basicSkillOnCandidacies.upsert({
+      where: {
+        basicSkillId_candidacyId: {
+          basicSkillId: basicSkill.id,
+          candidacyId: candidacy.id,
+        },
+      },
+      update: {},
+      create: { basicSkillId: basicSkill.id, candidacyId: candidacy.id },
+    });
+  };
+
+  await attachBasicSkill(
+    "Utilisation des règles de base de calcul et du raisonnement mathématique",
+  );
 
   return { candidacyId: candidacy.id, certification };
 };
@@ -407,6 +464,37 @@ describe("demat feasibility pdf generation", () => {
         Analyser des besoins clients
         Commentaire sur le bloc
         Expérience significative en situation réelle
+      `,
+      );
+    });
+
+    it("contains the 'Préconisation accompagnement méthodologique' certification subsection", () => {
+      expectSectionText(
+        "preconisationAccompagnementMethodologique",
+        `
+        Préconisation accompagnement méthodologique
+        Accompagnement individuel :
+        12h
+        Accompagnement collectif :
+        6h
+        Formation :
+        8h
+      `,
+      );
+    });
+
+    it("contains the 'Préconisation actes formatifs' certification subsection", () => {
+      expectSectionText(
+        "preconisationActesFormatifs",
+        `
+        Préconisation actes formatifs
+        Formations obligatoires
+        - Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)
+        - Equipier de Première Intervention
+        Savoirs de base
+        - Communication en français
+        - Usage et communication numérique
+        - Utilisation des règles de base de calcul et du raisonnement mathématique
       `,
       );
     });

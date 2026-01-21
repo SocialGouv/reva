@@ -71,6 +71,8 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       ccn: true,
       goals: { include: { goal: true } },
       experiences: true,
+      basicSkills: { include: { basicSkill: true } },
+      trainings: { include: { training: true } },
     },
   });
 
@@ -264,10 +266,44 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       },
       doc,
     });
+
+    addNewPageIfNeeded(doc);
+
+    const {
+      basicSkills,
+      trainings,
+      additionalHourCount,
+      individualHourCount,
+      collectiveHourCount,
+    } = candidacy;
+
+    const sortedBasicSkills = [...basicSkills]
+      .map(({ basicSkill }) => basicSkill.label)
+      .sort((first, second) =>
+        first.localeCompare(second, "fr", {
+          sensitivity: "base",
+        }),
+      );
+
+    const sortedTrainings = [...trainings]
+      .map(({ training }) => training.label)
+      .sort((first, second) =>
+        first.localeCompare(second, "fr", {
+          sensitivity: "base",
+        }),
+      );
+
+    addAccompagnementCandidatSection({
+      additionalHourCount: additionalHourCount ?? 0,
+      individualHourCount: individualHourCount ?? 0,
+      collectiveHourCount: collectiveHourCount ?? 0,
+      basicSkills: sortedBasicSkills,
+      trainings: sortedTrainings,
+      doc,
+    });
     doc.end();
   });
 };
-
 type CheckIsDFFReadyArgs = {
   attachmentsPartComplete: boolean;
   certificationPartComplete: boolean;
@@ -798,6 +834,81 @@ const addProfilCandidatSection = ({
               widthInPt: pxToPt(1160),
             });
             doc.moveDown(1);
+          });
+        },
+      });
+    },
+  });
+};
+
+const addAccompagnementCandidatSection = ({
+  doc,
+  additionalHourCount,
+  individualHourCount,
+  collectiveHourCount,
+  basicSkills,
+  trainings,
+}: {
+  doc: PDFKit.PDFDocument;
+  additionalHourCount: number;
+  individualHourCount: number;
+  collectiveHourCount: number;
+  basicSkills: string[];
+  trainings: string[];
+}) => {
+  addSection({
+    doc,
+    title: "Accompagnement proposé au candidat",
+    iconPath: `${ASSETS_PATH}/images/ecosystem.png`,
+    content: (doc) => {
+      addSubSection({
+        title: "Préconisation accompagnement méthodologique ",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1160),
+            data: [
+              {
+                title: "Accompagnement individuel :",
+                value: `${individualHourCount}h`,
+              },
+              {
+                title: "Accompagnement collectif :",
+                value: collectiveHourCount + "h",
+              },
+              { title: "Formation :", value: additionalHourCount + "h" },
+            ],
+            doc,
+          });
+        },
+      });
+      doc.moveDown(0.5);
+      addSubSection({
+        title: "Préconisation actes formatifs ",
+        doc,
+        content: (doc) => {
+          addTitledBlock({
+            doc,
+            title: "Formations obligatoires",
+            content: (doc) => {
+              trainings.forEach((training) => {
+                doc.text(`- ${training}`, doc.x, doc.y);
+                doc.moveDown(0.5);
+              });
+            },
+            widthInPt: pxToPt(1160),
+          });
+          doc.moveDown(1);
+          addTitledBlock({
+            doc,
+            title: "Savoirs de base ",
+            content: (doc) => {
+              basicSkills.forEach((basicSkill) => {
+                doc.text(`- ${basicSkill}`, doc.x, doc.y);
+                doc.moveDown(0.5);
+              });
+            },
+            widthInPt: pxToPt(1160),
           });
         },
       });
