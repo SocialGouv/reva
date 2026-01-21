@@ -28,6 +28,7 @@ import {
   getCandidateTypologyLabel,
   getExperienceDurationLabel,
   addCompetence,
+  addNewPageIfNeeded,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
 
 const ASSETS_PATH =
@@ -215,9 +216,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       );
 
     // start a new page if the text position is past the first half of the page
-    if (doc.y > 298) {
-      doc.addPage();
-    }
+    addNewPageIfNeeded(doc);
 
     addProfilCandidatSection({
       candidate: {

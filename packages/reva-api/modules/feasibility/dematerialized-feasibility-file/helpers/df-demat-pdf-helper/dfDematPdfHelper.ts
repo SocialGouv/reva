@@ -467,6 +467,13 @@ export const addCompetence = ({
     .text(label.replace(/(\r\n|\n|\r)/gm, ""), doc.x, doc.y);
 };
 
+// start a new page if the text position is past the first half of the page
+export const addNewPageIfNeeded = (doc: PDFKit.PDFDocument) => {
+  if (doc.y > 421) {
+    doc.addPage();
+  }
+};
+
 export const getCourtesyTitleFromGender = (gender: Gender | null) => {
   switch (gender) {
     case "man":
