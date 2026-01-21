@@ -18,11 +18,14 @@ test.describe("Login page", () => {
 
     test.use({ mswHandlers: [handlers, { scope: "test" }] });
 
-    test("shows magic link login form", async ({ page }) => {
+    test("shows both login methods", async ({ page }) => {
       await login(page, { authenticated: false });
 
       await expect(
         page.getByRole("heading", { name: "Se connecter avec un lien" }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: "Se connecter avec mot de passe" }),
       ).toBeVisible();
     });
 
@@ -59,10 +62,12 @@ test.describe("Login page", () => {
 
       const mutationPromise = waitGraphQL(page, "candidate_askForLogin");
 
-      await page.getByTestId("login-home-submit").click();
+      await page.getByRole("button", { name: "Se connecter" }).click();
       await mutationPromise;
 
-      await expect(page.getByTestId("login-confirmation")).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: "Un courriel vous a été envoyé." }),
+      ).toBeVisible();
     });
   });
 
@@ -115,6 +120,16 @@ test.describe("Login page", () => {
       await expect(
         page.getByRole("heading", { name: "Se connecter avec un lien" }),
       ).not.toBeVisible();
+    });
+
+    test("shows only password login form without heading", async ({ page }) => {
+      await login(page, { authenticated: false });
+
+      await expect(
+        page.getByRole("heading", { name: "Se connecter avec mot de passe" }),
+      ).not.toBeVisible();
+      await expect(page.getByLabel("Identifiant")).toBeVisible();
+      await expect(page.getByLabel("Mot de passe")).toBeVisible();
     });
 
     test("shows notice banner with password instructions", async ({ page }) => {

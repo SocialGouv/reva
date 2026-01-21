@@ -58,7 +58,6 @@ export default function Register() {
               priority="secondary"
               className="w-full justify-center"
               linkProps={{ href: "/login" }}
-              data-testid="register-login"
             >
               Se connecter
             </Button>
@@ -115,7 +114,6 @@ export default function Register() {
             <Button
               type="submit"
               className="w-full justify-center"
-              data-testid="register-submit"
               disabled={askForRegistration.isPending}
             >
               S'inscrire

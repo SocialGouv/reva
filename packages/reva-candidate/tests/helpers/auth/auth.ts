@@ -37,7 +37,7 @@ async function setupAuthenticated(page: Page) {
   await page.goto("login?token=abc");
 }
 
-async function setupUnauthenticated(page: Page) {
+async function setupKeycloakAuthRedirect(page: Page) {
   await page.route(`${KEYCLOAK}/auth?*`, async (route) => {
     const url = new URL(route.request().url());
     const state = url.searchParams.get("state") || "mock-state";
@@ -52,7 +52,11 @@ async function setupUnauthenticated(page: Page) {
       },
     });
   });
-  await page.goto("login");
+}
+
+export async function setupKeycloakUnauthenticated(page: Page) {
+  await setupKeycloakMocks(page);
+  await setupKeycloakAuthRedirect(page);
 }
 
 export async function login(page: Page, { authenticated = true } = {}) {
@@ -60,6 +64,7 @@ export async function login(page: Page, { authenticated = true } = {}) {
   if (authenticated) {
     await setupAuthenticated(page);
   } else {
-    await setupUnauthenticated(page);
+    await setupKeycloakAuthRedirect(page);
+    await page.goto("login");
   }
 }

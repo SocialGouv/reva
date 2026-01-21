@@ -72,7 +72,7 @@ export default function Login() {
   };
 
   return (
-    <PageLayout title="Connexion" data-testid="login-home">
+    <PageLayout title="Connexion">
       <div className="flex flex-col lg:flex-row lg:justify-between gap-8">
         <div className="w-full lg:w-[588px] bg-white shadow-lifted p-6">
           <h1 className="mb-6 text-center">Connexion candidat</h1>
@@ -198,7 +198,6 @@ export default function Login() {
             <Button
               type="submit"
               className="w-full justify-center"
-              data-testid="login-home-submit"
               disabled={isPending}
             >
               Se connecter
@@ -234,7 +233,6 @@ export default function Login() {
             <Button
               priority="secondary"
               className="w-full justify-center mt-4"
-              data-testid="login-home-start-vae"
               onClick={() => {
                 window.location.href = "/espace-candidat/";
               }}
