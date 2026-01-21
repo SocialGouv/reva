@@ -17,6 +17,8 @@ const UNAUTHENTICATED_PATHS = [
   "/logout-confirmation",
   "/forgot-password",
   "/reset-password",
+  "/register",
+  "/register-confirmation",
 ];
 
 export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
