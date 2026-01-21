@@ -1,6 +1,7 @@
 import {
   CandidateTypology,
   DFFCertificationCompetenceDetailsState,
+  DFFDecision,
   DFFEligibilityCandidateSituation,
   DFFEligibilityRequirement,
   ExperienceDuration,
@@ -471,6 +472,55 @@ export const addCompetence = ({
 export const addNewPageIfNeeded = (doc: PDFKit.PDFDocument) => {
   if (doc.y > 421) {
     doc.addPage();
+  }
+};
+
+export const addDecision = ({
+  decision,
+  doc,
+}: {
+  decision: DFFDecision | null;
+  doc: PDFKit.PDFDocument;
+}) => {
+  switch (decision) {
+    case "FAVORABLE":
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(7)
+        .table({
+          columnStyles: [50],
+          data: [
+            [
+              {
+                border: 0,
+                backgroundColor: "#b8fec9",
+                textColor: "#18753c",
+                text: "FAVORABLE",
+                align: "center",
+              },
+            ],
+          ],
+        });
+      break;
+    case "UNFAVORABLE":
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(7)
+        .table({
+          columnStyles: [60],
+          data: [
+            [
+              {
+                border: 0,
+                backgroundColor: "#fee7fc",
+                textColor: "#6e445a",
+                text: "DÉFAVORABLE",
+                align: "center",
+              },
+            ],
+          ],
+        });
+      break;
   }
 };
 

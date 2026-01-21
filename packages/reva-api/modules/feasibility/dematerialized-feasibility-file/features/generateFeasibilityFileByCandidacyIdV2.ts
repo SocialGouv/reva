@@ -29,6 +29,7 @@ import {
   getExperienceDurationLabel,
   addCompetence,
   addNewPageIfNeeded,
+  addDecision,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
 
 const ASSETS_PATH =
@@ -64,6 +65,8 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
               },
               prerequisites: true,
               dffCertificationCompetenceDetails: true,
+              attachments: { include: { file: true } },
+              swornStatementFile: true,
             },
           },
         },
@@ -267,6 +270,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       doc,
     });
 
+    // start a new page if the text position is past the first half of the page
     addNewPageIfNeeded(doc);
 
     const {
@@ -301,6 +305,27 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       trainings: sortedTrainings,
       doc,
     });
+
+    // start a new page if the text position is past the first half of the page
+    addNewPageIfNeeded(doc);
+
+    addAvisEtDocumentsSection({
+      doc,
+      aapDecision: dematerializedFeasibilityFile.aapDecision,
+      aapDecisionComment:
+        dematerializedFeasibilityFile.aapDecisionComment ?? "",
+      candidateDecisionComment:
+        dematerializedFeasibilityFile.candidateDecisionComment ?? "",
+      attachments: [
+        ...dematerializedFeasibilityFile.attachments.map(
+          (attachment) => attachment.file.name,
+        ),
+        ...(dematerializedFeasibilityFile.swornStatementFile
+          ? [dematerializedFeasibilityFile.swornStatementFile.name]
+          : []),
+      ],
+    });
+
     doc.end();
   });
 };
@@ -909,6 +934,90 @@ const addAccompagnementCandidatSection = ({
               });
             },
             widthInPt: pxToPt(1160),
+          });
+        },
+      });
+    },
+  });
+};
+
+const addAvisEtDocumentsSection = ({
+  doc,
+  aapDecision,
+  aapDecisionComment,
+  candidateDecisionComment,
+  attachments,
+}: {
+  doc: PDFKit.PDFDocument;
+  aapDecision: DFFDecision | null;
+  aapDecisionComment: string;
+  candidateDecisionComment: string;
+  attachments: string[];
+}) => {
+  addSection({
+    doc,
+    title: "Avis et documents",
+    iconPath: `${ASSETS_PATH}/images/contract.png`,
+    content: (doc) => {
+      addSubSection({
+        title:
+          "Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de validation des acquis de l’expérience",
+        doc,
+        content: (doc) => {
+          doc
+            .font("assets/fonts/Marianne/Marianne-Bold.otf")
+            .fontSize(10)
+            .text("Avis de l’accompagnateur");
+          doc.moveDown(0.5);
+          if (aapDecision) {
+            addDecision({
+              decision: aapDecision,
+              doc,
+            });
+            doc.moveDown(0.5);
+          }
+          doc
+            .font("assets/fonts/Marianne/Marianne-Regular.otf")
+            .fontSize(8)
+            .lineWidth(pxToPt(1160))
+            .text(aapDecisionComment);
+          doc.moveDown(0.5);
+          doc
+            .font("assets/fonts/Marianne/Marianne-Bold.otf")
+            .fontSize(10)
+            .text(
+              "Commentaires du candidat sur l’avis de l’accompagnateur",
+              doc.x,
+              doc.y,
+            );
+          doc.moveDown(0.5);
+          doc
+            .font("assets/fonts/Marianne/Marianne-Regular.otf")
+            .fontSize(8)
+            .text(candidateDecisionComment);
+        },
+      });
+      doc.moveDown(1);
+      addSubSection({
+        title: "Pièces jointes",
+        doc,
+        content: (doc) => {
+          doc.table({
+            defaultStyle: {
+              border: [true, false, true, false],
+              borderColor: "#DDDDDD",
+              padding: { vertical: "8px", horizontal: "10" },
+            },
+            data: attachments.map((attachment) => [
+              {
+                text: attachment,
+                textColor: "#000091",
+                font: {
+                  src: "assets/fonts/Marianne/Marianne-Regular.otf",
+                  size: 9,
+                },
+              },
+            ]),
           });
         },
       });

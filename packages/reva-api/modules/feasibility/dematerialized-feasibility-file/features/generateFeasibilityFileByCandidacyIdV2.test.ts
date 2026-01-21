@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import {
   CandidateTypology,
   CompetenceBlocsPartCompletionEnum,
+  DFFAttachmentType,
   DFFCertificationCompetenceDetailsState,
   DFFDecision,
   DFFEligibilityRequirement,
@@ -83,6 +84,13 @@ const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
     name: "preconisationActesFormatifs",
     title: "Préconisation actes formatifs",
   },
+  { name: "avisEtDocuments", title: "Avis et documents" },
+  {
+    name: "avisAap",
+    title:
+      "Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de",
+  },
+  { name: "piecesJointes", title: "Pièces jointes" },
 ];
 
 const setupCompleteDematerializedFeasibilityFile = async () => {
@@ -176,6 +184,29 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
         eligibilityValidUntil: new Date("2025-12-31T00:00:00.000Z"),
         aapDecision: DFFDecision.FAVORABLE,
         aapDecisionComment: "Avis favorable pour la suite",
+        candidateDecisionComment:
+          "Je suis d'accord avec l'avis de l'accompagnateur",
+        attachments: {
+          create: [
+            {
+              type: DFFAttachmentType.ID_CARD,
+              file: {
+                create: {
+                  mimeType: "application/pdf",
+                  name: "carte d'identité.pdf",
+                  path: "123",
+                },
+              },
+            },
+          ],
+        },
+        swornStatementFile: {
+          create: {
+            mimeType: "application/pdf",
+            name: "déclaration sur l'honneur.pdf",
+            path: "123",
+          },
+        },
       },
     },
   });
@@ -470,9 +501,9 @@ describe("demat feasibility pdf generation", () => {
 
     describe("Accompagnement proposé au candidat section", () => {
       it("contains the 'Préconisation accompagnement méthodologique' subsection", () => {
-      expectSectionText(
-        "preconisationAccompagnementMethodologique",
-        `
+        expectSectionText(
+          "preconisationAccompagnementMethodologique",
+          `
         Préconisation accompagnement méthodologique
         Accompagnement individuel :
         12h
@@ -481,8 +512,8 @@ describe("demat feasibility pdf generation", () => {
         Formation :
         8h
       `,
-      );
-    });
+        );
+      });
 
       it("contains the 'Préconisation actes formatifs' subsection", () => {
         expectSectionText(
@@ -501,19 +532,32 @@ describe("demat feasibility pdf generation", () => {
       });
     });
 
-      expectSectionText(
-        "preconisationActesFormatifs",
-        `
-        Préconisation actes formatifs
-        Formations obligatoires
-        - Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)
-        - Equipier de Première Intervention
-        Savoirs de base
-        - Communication en français
-        - Usage et communication numérique
-        - Utilisation des règles de base de calcul et du raisonnement mathématique
+    describe("Avis et documents section", () => {
+      it("contains the 'Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de validation des acquis de l’expérience' subsection", () => {
+        expectSectionText(
+          "avisAap",
+          `
+        Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de
+        validation des acquis de l’expérience
+        Avis de l’accompagnateur
+        FAVORABLE
+        Avis favorable pour la suite
+        Commentaires du candidat sur l’avis de l’accompagnateur
+        Je suis d'accord avec l'avis de l'accompagnateur
       `,
-      );
+        );
+      });
+
+      it("contains the 'Pièces jointes' subsection", () => {
+        expectSectionText(
+          "piecesJointes",
+          `
+        Pièces jointes
+        carte d'identité.pdf
+        déclaration sur l'honneur.pdf
+      `,
+        );
+      });
     });
   });
 });
