@@ -158,7 +158,7 @@ export default function PrerequisitesPage() {
         dans notre{" "}
         <a
           target="_blank"
-          href="https://francevae.notion.site/Ressources-documentaires-d-tails-des-certifications-trame-de-dossier-de-validation-9d8ae84eb82044b585d769c84676615d"
+          href="https://francevae.notion.site/Ressources-documentaires-d-tails-des-certifications-trame-de-dossier-de-validation-b6d100b69ece8368abe18135dd89ef9e"
         >
           espace documentaire
         </a>

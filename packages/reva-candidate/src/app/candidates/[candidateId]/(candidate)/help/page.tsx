@@ -37,7 +37,7 @@ const TutorielSection = () => (
         orientation="horizontal"
         enlargeLinkOrButton
         linkProps={{
-          href: "https://francevae.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
+          href: "https://francevae.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-2ea100b69ece81cca68affd56a8885f2",
           target: "_",
         }}
         imageUrl="/candidat/images/pictograms/innovation.svg"

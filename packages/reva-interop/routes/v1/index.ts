@@ -94,7 +94,7 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
         },
       },
       externalDocs: {
-        url: "https://www.notion.so/Documentation-API-interop-rabilit-France-VAE-2ea100b69ece81e4adfbc0eeeaafa64d",
+        url: "https://francevae.notion.site/Documentation-API-interop-rabilit-France-VAE-2ea100b69ece81e4adfbc0eeeaafa64d?source=copy_link",
         description: "Guide de démarrage",
       },
       servers: [

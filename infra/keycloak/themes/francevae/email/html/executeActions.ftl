@@ -52,7 +52,7 @@
                 <li>
                     <a href="https://scribehow.com/viewer/Parametres_de_compte_de_lespace_professionnel_AAP__L1t9XG60QgORY97mqc-7tw"><strong>Paramétrage du compte</strong></a> : Renseignez les informations essentielles à votre référencement sur la plateforme et apparaissez rapidement dans les recherches des candidats. Pour vous accompagner dans votre démarche, suivez notre tutoriel qui vous explique le paramétrage pas à pas.<br /><br />
                 </li>
-                <li><a href="https://francevae.notion.site/Tutoriels-5113b725db8c4a598e6d29aa105a1968">
+                <li><a href="https://francevae.notion.site/Tutoriels-169100b69ece8378aaee01fa5361aea4">
                     <strong>Tutoriels</strong></a> : Parfois, on a juste besoin d'un petit coup de pouce pour avancer sereinement sur la plateforme. C'est chose possible grâce à nos tutoriels !<br /><br />
                 </li>
                 <li>
@@ -60,7 +60,7 @@
                     <strong>Conditions générales d'utilisation</strong></a> : Familiarisez-vous avec vos responsabilités et les attentes du rôle en consultant le cahier des charges.<br /><br />
                 </li>
                 <li>
-                    <a href="https://francevae.notion.site/Espace-documentaire-f697c4fa5fcf42d49d85428b5e0b40c5?v=9f55d3b4b2e54bd19d390ebe6febe3ea">
+                    <a href="https://francevae.notion.site/Espace-documentaire-8a8100b69ece833d8af001ef76b98a67">
                     <strong>Espace documentaire</strong></a> : Découvrez les documents clés pour accompagner efficacement vos premiers candidats. Cliquez sur l'icône 💡 en bas à droite de votre espace professionnel pour avoir accès à toutes nos ressources.
                 </li>
             </ul>
@@ -111,13 +111,13 @@
             <p>N’hésitez pas à explorer les ressources dédiées aux professionnels de la VAE. Vous y trouverez des informations essentielles pour suivre vos premiers candidats !</p>
             <ul>
                 <li>
-                    <a href="https://francevae.notion.site/f697c4fa5fcf42d49d85428b5e0b40c5?v=9f55d3b4b2e54bd19d390ebe6febe3ea" target="_blank">Espace documentaire</a>
+                    <a href="https://francevae.notion.site/Espace-documentaire-8a8100b69ece833d8af001ef76b98a67" target="_blank">Espace documentaire</a>
                 </li>
                 <li>
                     <a href="https://vae.gouv.fr/faq/" target="_blank">Notre foire aux questions</a>
                 </li>
                 <li>
-                    <a href="https://francevae.notion.site/Tutoriels-et-autres-pas-pas-5113b725db8c4a598e6d29aa105a1968" target="_blank">Tutoriels</a>
+                    <a href="https://francevae.notion.site/Tutoriels-169100b69ece8378aaee01fa5361aea4" target="_blank">Tutoriels</a>
                 </li>
             </ul>
 

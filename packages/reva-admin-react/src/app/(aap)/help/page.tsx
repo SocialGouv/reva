@@ -114,7 +114,7 @@ const EspaceDocumentaireSection = () => {
           size="small"
           enlargeLink
           linkProps={{
-            href: "https://francevae.notion.site/Espace-documentaire-f697c4fa5fcf42d49d85428b5e0b40c5",
+            href: "https://francevae.notion.site/Espace-documentaire-8a8100b69ece833d8af001ef76b98a67",
             target: "_",
           }}
           desc="Vous y trouverez l'ensemble des outils et ressources nécessaires pour prendre en main efficacement la plateforme numérique dédiée à la VAE, ainsi que les protocoles métier en lien avec vos missions spécifiques."
@@ -134,7 +134,7 @@ const EspaceDocumentaireSection = () => {
           small
           enlargeLinkOrButton
           linkProps={{
-            href: "https://francevae.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-42e539695d68436abe32fcf4b146c192",
+            href: "https://francevae.notion.site/Nouveaut-s-de-l-espace-professionnel-AAP-et-certificateurs-et-de-l-espace-candidat-France-VAE-2ea100b69ece81cca68affd56a8885f2",
             target: "_",
           }}
           title="Nouvelles fonctionnalités"

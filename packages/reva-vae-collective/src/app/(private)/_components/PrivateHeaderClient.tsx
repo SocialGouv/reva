@@ -87,7 +87,7 @@ export const PrivateHeaderClient = ({
           ? ([
               {
                 linkProps: {
-                  href: "https://francevae.notion.site/Espace-documentaire-218653b7be07800f9981d837b2df6520",
+                  href: "https://francevae.notion.site/Espace-documentaire-2ea100b69ece81bcae20e21a88ef496d",
                   title: "Espace documentaire - France VAE",
                 },
                 text: "Espace documentaire",
