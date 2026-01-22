@@ -17,9 +17,11 @@ import { prismaClient } from "@/prisma/client";
 import { createCandidacyCCNHelper } from "@/test/helpers/entities/create-candidacy-ccn-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import {
   buildPdfTestHelper,
   SectionDefinition,
@@ -91,6 +93,9 @@ const SECTION_DEFINITIONS: ReadonlyArray<SectionDefinition> = [
       "Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de",
   },
   { name: "piecesJointes", title: "Pièces jointes" },
+  { name: "contacts", title: "Contacts" },
+  { name: "aapContactInfo", title: "Architecte accompagnateur de parcours" },
+  { name: "certificationAuthorityContactInfo", title: "Certificateur" },
 ];
 
 const setupCompleteDematerializedFeasibilityFile = async () => {
@@ -146,6 +151,18 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
       label: "Ministère du test",
     });
 
+  const certificationAuthority = await createCertificationAuthorityHelper({
+    label: "Ministère du test",
+    contactFullName: "John Doe",
+    contactEmail: "john.doe@example.com",
+    contactPhone: "0601020304",
+    certificationAuthorityOnCertificationAuthorityStructure: {
+      create: {
+        certificationAuthorityStructureId: certificationAuthorityStructure.id,
+      },
+    },
+  });
+
   const certification = await createCertificationHelper({
     label: "Manager de la performance",
     rncpLabel: "Manager de la performance",
@@ -154,6 +171,16 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
   });
 
   const ccn = await createCandidacyCCNHelper({ label: "Ma CCN" });
+
+  const organism = await createOrganismHelper({
+    adresseNumeroEtNomDeRue: "10 rue de Paris",
+    adresseInformationsComplementaires: "2ième étage",
+    adresseCodePostal: "75001",
+    adresseVille: "Paris",
+    emailContact: "aap@example.com",
+    telephone: "0601020304",
+    nomPublic: "Aap du test",
+  });
 
   const candidacy = await createCandidacyHelper({
     certificationId: certification.id,
@@ -164,11 +191,13 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
       collectiveHourCount: 6,
       typology: CandidateTypology.SALARIE_PRIVE,
       ccnId: ccn.id,
+      organismId: organism.id,
     },
   });
 
   const feasibility = await createFeasibilityDematerializedHelper({
     candidacyId: candidacy.id,
+    certificationAuthorityId: certificationAuthority.id,
     dematerializedFeasibilityFile: {
       create: {
         option: "Option Performance",
@@ -555,6 +584,42 @@ describe("demat feasibility pdf generation", () => {
       Pièces jointes
       carte d'identité.pdf
       déclaration sur l'honneur.pdf
+    `,
+      );
+    });
+  });
+
+  describe("Contacts section", () => {
+    it("contains the 'Architecte accompagnateur de parcours' subsection", () => {
+      expectSectionText(
+        "aapContactInfo",
+        `
+      Architecte accompagnateur de parcours
+      Nom :
+      Aap du test
+      Adresse :
+      10 rue de Paris 2ième étage 75001 Paris
+      Adresse électronique :
+      aap@example.com
+      Téléphone :
+      0601020304
+    `,
+      );
+    });
+
+    it("contains the 'Certificateur' subsection", () => {
+      expectSectionText(
+        "certificationAuthorityContactInfo",
+        `
+      Certificateur
+      Nom de l'établissement :
+      Ministère du test
+      Nom du contact :
+      John Doe
+      Adresse électronique :
+      john.doe@example.com
+      Téléphone :
+      0601020304
     `,
       );
     });

@@ -69,6 +69,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
               swornStatementFile: true,
             },
           },
+          certificationAuthority: true,
         },
       },
       ccn: true,
@@ -76,6 +77,7 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       experiences: true,
       basicSkills: { include: { basicSkill: true } },
       trainings: { include: { training: true } },
+      organism: true,
     },
   });
 
@@ -116,10 +118,21 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
     eligibilityRequirement:
       dematerializedFeasibilityFile.eligibilityRequirement,
   });
+
   if (!isDFFReady) {
     throw new Error(
       "Dossier de faisabilité incomplet pour la génération du pdf",
     );
+  }
+
+  const { certificationAuthority } = feasibility;
+  if (!certificationAuthority) {
+    throw new Error("Autorité de certification non trouvée");
+  }
+
+  const organism = candidacy.organism;
+  if (!organism) {
+    throw new Error("Organisme d'accompagnement non trouvé");
   }
 
   const aapAvailableForCertification = await isAapAvailableForCertificationId({
@@ -324,6 +337,32 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
           ? [dematerializedFeasibilityFile.swornStatementFile.name]
           : []),
       ],
+    });
+
+    // start a new page if the text position is past the first half of the page
+    addNewPageIfNeeded(doc);
+
+    addContactsSection({
+      aapContactInfo: {
+        label: organism.nomPublic ?? organism.label,
+        address: [
+          organism.adresseNumeroEtNomDeRue,
+          organism.adresseInformationsComplementaires,
+          organism.adresseCodePostal,
+          organism.adresseVille,
+        ]
+          .filter(Boolean)
+          .join(" "),
+        email: organism.emailContact ?? "",
+        phone: organism.telephone ?? "",
+      },
+      certificationAuthorityContactInfo: {
+        label: certificationAuthority.label,
+        contactName: certificationAuthority.contactFullName ?? "",
+        contactPhone: certificationAuthority.contactPhone ?? "",
+        contactEmail: certificationAuthority.contactEmail ?? "",
+      },
+      doc,
     });
 
     doc.end();
@@ -1018,6 +1057,85 @@ const addAvisEtDocumentsSection = ({
                 },
               },
             ]),
+          });
+        },
+      });
+    },
+  });
+};
+
+const addContactsSection = ({
+  aapContactInfo,
+  certificationAuthorityContactInfo,
+  doc,
+}: {
+  aapContactInfo: {
+    label: string;
+    address: string;
+    email: string;
+    phone: string;
+  };
+  certificationAuthorityContactInfo: {
+    label: string;
+    contactName: string;
+    contactEmail: string;
+    contactPhone: string;
+  };
+  doc: PDFKit.PDFDocument;
+}) => {
+  addSection({
+    doc,
+    title: "Contacts",
+    iconPath: `${ASSETS_PATH}/images/team.png`,
+    content: (doc) => {
+      addSubSection({
+        title: "Architecte accompagnateur de parcours",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1160),
+            data: [
+              { title: "Nom :", value: aapContactInfo.label },
+              { title: "Adresse :", value: aapContactInfo.address },
+              {
+                title: "Adresse électronique :",
+                value: aapContactInfo.email,
+              },
+              {
+                title: "Téléphone :",
+                value: aapContactInfo.phone,
+              },
+            ],
+            doc,
+          });
+        },
+      });
+      doc.moveDown(1);
+      addSubSection({
+        title: "Certificateur",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1160),
+            data: [
+              {
+                title: "Nom de l'établissement :",
+                value: certificationAuthorityContactInfo.label,
+              },
+              {
+                title: "Nom du contact :",
+                value: certificationAuthorityContactInfo.contactName,
+              },
+              {
+                title: "Adresse électronique :",
+                value: certificationAuthorityContactInfo.contactEmail,
+              },
+              {
+                title: "Téléphone :",
+                value: certificationAuthorityContactInfo.contactPhone,
+              },
+            ],
+            doc,
           });
         },
       });
