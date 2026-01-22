@@ -19,7 +19,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:generate:migration": "prisma migrate dev --create-only",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --color routes utils",
+    "lint": "npm run graphql:generate && eslint --color routes utils",
     "postinstall": "npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts"
   },
   "author": "",
