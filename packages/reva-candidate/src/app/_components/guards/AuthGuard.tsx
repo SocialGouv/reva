@@ -90,7 +90,8 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
 
     // This page is loaded from link with token value
     // It must pass on useEffect only on first render
-  }, [handleTokenLogin, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (fc_code) {
