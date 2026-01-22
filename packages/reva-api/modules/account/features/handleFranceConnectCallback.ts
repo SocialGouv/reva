@@ -8,6 +8,7 @@ import {
 } from "openid-client";
 import { z } from "zod";
 
+import { getActiveCandidaciesByCandidateId } from "@/modules/candidacy/features/getActiveCandidaciesByCandidateId";
 import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandidateByKeycloakId";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
@@ -117,9 +118,24 @@ export const handleFranceConnectCallback = async (
   const certificationId = isValidCertificationId(stored.certificationId)
     ? stored.certificationId
     : undefined;
-  const redirectPath = certificationId
-    ? `/candidat/candidates/${candidate.id}/candidacies/create/certifications/${certificationId}/type-accompagnement`
-    : `/candidat/candidates/${candidate.id}/candidacies/create`;
+
+  // Si un certificationId est spécifié, on redirige toujours vers la création
+  // Sinon, on vérifie si le candidat a déjà des candidatures actives
+  let redirectPath: string;
+  if (certificationId) {
+    redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create/certifications/${certificationId}/type-accompagnement`;
+  } else {
+    const activeCandidacies = await getActiveCandidaciesByCandidateId({
+      candidateId: candidate.id,
+    });
+    if (activeCandidacies.length > 0) {
+      // Le candidat a déjà des candidatures, on le redirige vers la liste
+      redirectPath = `/candidat/candidates/${candidate.id}/candidacies`;
+    } else {
+      // Le candidat n'a pas de candidatures, on le redirige vers la création
+      redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create`;
+    }
+  }
 
   const redirectUrl = new URL(`${baseUrl}${redirectPath}`);
   redirectUrl.searchParams.set("fc_code", fc_code);
