@@ -35,6 +35,14 @@ export const createCandidacy = async ({
       certificationId,
       admissibility: { create: {} },
       examInfo: { create: {} },
+      candidacyCandidateInfo: {
+        create: {
+          street: candidate?.street,
+          city: candidate?.city,
+          zip: candidate?.zip,
+          addressComplement: candidate?.addressComplement,
+        },
+      },
       status: "PROJET",
       financeModule: "hors_plateforme",
       cohorteVaeCollectiveId,
