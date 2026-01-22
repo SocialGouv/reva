@@ -28,7 +28,6 @@ import {
   getCandidateTypologyLabel,
   getExperienceDurationLabel,
   addCompetence,
-  addNewPageIfNeeded,
   addDecision,
 } from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
 
@@ -230,9 +229,6 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         },
       );
 
-    // start a new page if the text position is past the first half of the page
-    addNewPageIfNeeded(doc);
-
     addProfilCandidatSection({
       candidate: {
         courtesyTitle: getCourtesyTitleFromGender(candidate.gender),
@@ -280,9 +276,6 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       doc,
     });
 
-    // start a new page if the text position is past the first half of the page
-    addNewPageIfNeeded(doc);
-
     const {
       basicSkills,
       trainings,
@@ -316,9 +309,6 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       doc,
     });
 
-    // start a new page if the text position is past the first half of the page
-    addNewPageIfNeeded(doc);
-
     addAvisEtDocumentsSection({
       doc,
       aapDecision: dematerializedFeasibilityFile.aapDecision,
@@ -335,9 +325,6 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
           : []),
       ],
     });
-
-    // start a new page if the text position is past the first half of the page
-    addNewPageIfNeeded(doc);
 
     addContactsSection({
       aapContactInfo: {
@@ -430,7 +417,6 @@ const addContexteDemandeSection = ({
     iconPath: `${ASSETS_PATH}/images/data-visualization.png`,
     content: (doc) => {
       addNatureDemandeSubSection({ doc, eligibilityLabelAndType });
-      doc.moveDown(1);
       addCertificationSubSection({
         doc,
         certification,
@@ -441,7 +427,6 @@ const addContexteDemandeSection = ({
         isCertificationPartial,
         certificationCompetenceBlocsWithSelectionStatus,
       });
-      doc.moveDown(1);
       addCertificationPrerequisitesSubSection({
         doc,
         prerequisites,
@@ -527,8 +512,8 @@ const addCertificationSubSection = ({
     content: (doc) => {
       addFrame({
         doc,
-        startInPt: pxToPt(180),
-        widthInPt: pxToPt(1160),
+        startInPt: pxToPt(140),
+        widthInPt: pxToPt(1200),
         content: (doc) => {
           doc.moveDown(0.75);
           addTag({
@@ -536,7 +521,7 @@ const addCertificationSubSection = ({
             text: aapAvailableForCertification
               ? "VAE en autonomie ou accompagnée"
               : "VAE en autonomie",
-            startInPt: doc.x + pxToPt(72),
+            startInPt: doc.x + pxToPt(32),
           });
           doc.image(
             `${ASSETS_PATH}/images/verified-badge.png`,
@@ -561,21 +546,19 @@ const addCertificationSubSection = ({
             .text(certification.label, doc.x, doc.y + pxToPt(16), {
               width: pxToPt(1096),
             });
-
-          doc.moveDown(2);
         },
       });
 
-      doc.moveDown(0.5);
+      doc.moveDown(1);
 
       addInfoText({
         title: "Option ou parcours :",
         value: option ?? "",
         doc,
-        maxWidthInPt: pxToPt(1160),
+        maxWidthInPt: pxToPt(1200),
       });
 
-      doc.moveDown(0.5);
+      doc.moveDown(1);
 
       const oldY = doc.y;
 
@@ -595,7 +578,7 @@ const addCertificationSubSection = ({
         doc,
       });
 
-      doc.moveDown(1);
+      doc.moveDown(1.5);
 
       addCallout({
         title: "Le candidat vise",
@@ -604,10 +587,10 @@ const addCertificationSubSection = ({
           : "La certification dans sa totalité",
         x: oldX,
         doc,
-        widthInPt: pxToPt(1160),
+        widthInPt: pxToPt(1200),
       });
 
-      doc.moveDown(1);
+      doc.moveDown(1.5);
 
       addTitledBlock({
         doc,
@@ -621,7 +604,7 @@ const addCertificationSubSection = ({
             });
             doc.moveDown(0.5);
           }),
-        widthInPt: pxToPt(1160),
+        widthInPt: pxToPt(1200),
       });
     },
   });
@@ -642,7 +625,7 @@ const addCertificationPrerequisitesSubSection = ({
       addTitledBlock({
         doc,
         title: "Oui",
-        widthInPt: pxToPt(1160),
+        widthInPt: pxToPt(1200),
         content: (doc) => {
           prerequisites
             .filter((p) => p.state === "ACQUIRED")
@@ -658,7 +641,7 @@ const addCertificationPrerequisitesSubSection = ({
       addTitledBlock({
         doc,
         title: "Non",
-        widthInPt: pxToPt(1160),
+        widthInPt: pxToPt(1200),
         content: (doc) => {
           prerequisites
             .filter((p) => p.state === "IN_PROGRESS")
@@ -740,7 +723,7 @@ const addProfilCandidatSection = ({
         doc,
         content: (doc) => {
           addInfoTable({
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
             data: [
               { title: "Civilité :", value: courtesyTitle },
               { title: "Nom de naissance :", value: lastname },
@@ -762,7 +745,7 @@ const addProfilCandidatSection = ({
         doc,
         content: (doc) => {
           addInfoTable({
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
             data: [
               {
                 title: "Niveau de formation le plus élevé :",
@@ -781,13 +764,12 @@ const addProfilCandidatSection = ({
           });
         },
       });
-      doc.moveDown(1);
       addSubSection({
         title: "Informations de contact du candidat",
         doc,
         content: (doc) => {
           addInfoTable({
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
             data: [
               { title: "Adresse postale :", value: address },
               { title: "Adresse électronique :", value: email },
@@ -797,7 +779,6 @@ const addProfilCandidatSection = ({
           });
         },
       });
-      doc.moveDown(1);
       addSubSection({
         title: "Statut",
         doc,
@@ -813,11 +794,10 @@ const addProfilCandidatSection = ({
             description: candidacyCcnLabel,
             x: doc.x,
             doc,
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
           });
         },
       });
-      doc.moveDown(1);
       addSubSection({
         title: "Objectifs du candidat",
         doc,
@@ -831,7 +811,6 @@ const addProfilCandidatSection = ({
           });
         },
       });
-      doc.moveDown(1);
       addSubSection({
         title: "Expériences",
         doc,
@@ -856,7 +835,7 @@ const addProfilCandidatSection = ({
                   .font("assets/fonts/Marianne/Marianne-Light.otf")
                   .text(experience.startedAtLabel, doc.x, doc.y);
               },
-              widthInPt: pxToPt(1160),
+              widthInPt: pxToPt(1200),
             });
             doc.moveDown(1);
           });
@@ -879,6 +858,7 @@ const addProfilCandidatSection = ({
                     doc,
                     label: competence.label,
                     state: competence.state,
+                    maxWidthInPt: pxToPt(1200),
                   });
                   doc.moveDown(1);
                 });
@@ -927,7 +907,7 @@ const addAccompagnementCandidatSection = ({
         doc,
         content: (doc) => {
           addInfoTable({
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
             data: [
               {
                 title: "Accompagnement individuel :",
@@ -943,7 +923,6 @@ const addAccompagnementCandidatSection = ({
           });
         },
       });
-      doc.moveDown(0.5);
       addSubSection({
         title: "Préconisation actes formatifs ",
         doc,
@@ -957,7 +936,7 @@ const addAccompagnementCandidatSection = ({
                 doc.moveDown(0.5);
               });
             },
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
           });
           doc.moveDown(1);
           addTitledBlock({
@@ -969,7 +948,7 @@ const addAccompagnementCandidatSection = ({
                 doc.moveDown(0.5);
               });
             },
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
           });
         },
       });
@@ -1015,8 +994,9 @@ const addAvisEtDocumentsSection = ({
           doc
             .font("assets/fonts/Marianne/Marianne-Regular.otf")
             .fontSize(8)
-            .lineWidth(pxToPt(1160))
-            .text(aapDecisionComment);
+            .text(aapDecisionComment, doc.x, doc.y, {
+              width: pxToPt(1200),
+            });
           doc.moveDown(0.5);
           doc
             .font("assets/fonts/Marianne/Marianne-Bold.otf")
@@ -1030,10 +1010,11 @@ const addAvisEtDocumentsSection = ({
           doc
             .font("assets/fonts/Marianne/Marianne-Regular.otf")
             .fontSize(8)
-            .text(candidateDecisionComment);
+            .text(candidateDecisionComment, doc.x, doc.y, {
+              width: pxToPt(1200),
+            });
         },
       });
-      doc.moveDown(1);
       addSubSection({
         title: "Pièces jointes",
         doc,
@@ -1043,6 +1024,7 @@ const addAvisEtDocumentsSection = ({
               border: [true, false, true, false],
               borderColor: "#DDDDDD",
               padding: { vertical: "8px", horizontal: "10" },
+              width: pxToPt(1200),
             },
             data: attachments.map((attachment) => [
               {
@@ -1090,7 +1072,7 @@ const addContactsSection = ({
         doc,
         content: (doc) => {
           addInfoTable({
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
             data: [
               { title: "Nom :", value: aapContactInfo.label },
               { title: "Adresse :", value: aapContactInfo.address },
@@ -1107,13 +1089,12 @@ const addContactsSection = ({
           });
         },
       });
-      doc.moveDown(1);
       addSubSection({
         title: "Certificateur",
         doc,
         content: (doc) => {
           addInfoTable({
-            widthInPt: pxToPt(1160),
+            widthInPt: pxToPt(1200),
             data: [
               {
                 title: "Nom de l'établissement :",

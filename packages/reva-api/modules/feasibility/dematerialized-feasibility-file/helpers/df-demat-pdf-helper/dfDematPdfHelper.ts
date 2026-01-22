@@ -160,21 +160,24 @@ export const addSection = ({
   content: (doc: PDFKit.PDFDocument) => void;
   doc: PDFKit.PDFDocument;
 }) => {
+  // start a new page if the text position is past the first half of the page
+  addNewPageIfNeeded(doc);
+  doc.moveDown(1);
   const oldX = doc.x;
-  doc.image(iconPath, doc.x + pxToPt(40), doc.y + pxToPt(8), {
+  doc.image(iconPath, doc.x, doc.y + pxToPt(8), {
     fit: [pxToPt(40), pxToPt(40)],
   });
 
   doc
     .fontSize(14)
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .text(title, doc.x + pxToPt(90), doc.y);
+    .text(title, doc.x + pxToPt(50), doc.y);
 
   doc.moveDown(0.5);
 
   content(doc);
 
-  doc.moveDown(5);
+  doc.moveDown(2);
   doc.text("", oldX, doc.y); //reset x position to start of section after title
 };
 
@@ -193,11 +196,11 @@ export const addSubSection = ({
   doc
     .fontSize(12)
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .text(title, pxToPt(140));
+    .text(title, pxToPt(100), doc.y, { width: pxToPt(1240) });
   doc.moveDown(0.5);
   doc.text("", doc.x + pxToPt(40), doc.y); //indent content
   content(doc);
-  doc.moveDown(0.5);
+  doc.moveDown(1.5);
   doc.text("", oldX, doc.y); //reset x position to start of block after sub section end
 };
 
@@ -329,7 +332,7 @@ export const addDocumentHeader = (doc: PDFKit.PDFDocument) => {
     fit: [155.25, 69.9],
   });
 
-  doc.moveDown(10);
+  doc.moveDown(9);
 };
 
 export const addInfoTable = ({
@@ -373,10 +376,12 @@ export const addCompetence = ({
   doc,
   label,
   state,
+  maxWidthInPt,
 }: {
   doc: PDFKit.PDFDocument;
   label: string;
   state: DFFCertificationCompetenceDetailsState | "TO_COMPLETE";
+  maxWidthInPt?: number;
 }) => {
   switch (state) {
     case "YES":
@@ -465,12 +470,14 @@ export const addCompetence = ({
   doc
     .font("assets/fonts/Marianne/Marianne-Regular.otf")
     .fontSize(8)
-    .text(label.replace(/(\r\n|\n|\r)/gm, ""), doc.x, doc.y);
+    .text(label.replace(/(\r\n|\n|\r)/gm, ""), doc.x, doc.y, {
+      width: maxWidthInPt,
+    });
 };
 
-// start a new page if the text position is past the first half of the page
-export const addNewPageIfNeeded = (doc: PDFKit.PDFDocument) => {
-  if (doc.y > 421) {
+// start a new page if the text position is past 2/3 of the page
+const addNewPageIfNeeded = (doc: PDFKit.PDFDocument) => {
+  if (doc.y > 562) {
     doc.addPage();
   }
 };
