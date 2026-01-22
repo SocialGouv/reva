@@ -125,15 +125,12 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
     );
   }
 
-  const { certificationAuthority } = feasibility;
-  if (!certificationAuthority) {
-    throw new Error("Autorité de certification non trouvée");
-  }
-
   const organism = candidacy.organism;
   if (!organism) {
     throw new Error("Organisme d'accompagnement non trouvé");
   }
+
+  const { certificationAuthority } = feasibility;
 
   const aapAvailableForCertification = await isAapAvailableForCertificationId({
     certificationId: certification.id,
@@ -357,10 +354,10 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
         phone: organism.telephone ?? "",
       },
       certificationAuthorityContactInfo: {
-        label: certificationAuthority.label,
-        contactName: certificationAuthority.contactFullName ?? "",
-        contactPhone: certificationAuthority.contactPhone ?? "",
-        contactEmail: certificationAuthority.contactEmail ?? "",
+        label: certificationAuthority?.label ?? "",
+        contactName: certificationAuthority?.contactFullName ?? "",
+        contactPhone: certificationAuthority?.contactPhone ?? "",
+        contactEmail: certificationAuthority?.contactEmail ?? "",
       },
       doc,
     });
