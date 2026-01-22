@@ -22,7 +22,6 @@ PACKAGES=""
 RUN_FULL_LINT=false
 for f in $FILES; do
   case "$f" in
-    packages/reva-api/*)            PACKAGES="$PACKAGES reva-api" ;;
     packages/reva-admin-react/*)    PACKAGES="$PACKAGES reva-admin-react" ;;
     packages/reva-candidate/*)      PACKAGES="$PACKAGES reva-candidate" ;;
     packages/reva-website/*)        PACKAGES="$PACKAGES reva-website" ;;
