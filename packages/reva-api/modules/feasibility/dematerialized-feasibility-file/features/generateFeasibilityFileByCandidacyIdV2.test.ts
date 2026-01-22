@@ -498,66 +498,65 @@ describe("demat feasibility pdf generation", () => {
       `,
       );
     });
-
-    describe("Accompagnement proposé au candidat section", () => {
-      it("contains the 'Préconisation accompagnement méthodologique' subsection", () => {
-        expectSectionText(
-          "preconisationAccompagnementMethodologique",
-          `
-        Préconisation accompagnement méthodologique
-        Accompagnement individuel :
-        12h
-        Accompagnement collectif :
-        6h
-        Formation :
-        8h
-      `,
-        );
-      });
-
-      it("contains the 'Préconisation actes formatifs' subsection", () => {
-        expectSectionText(
-          "preconisationActesFormatifs",
-          `
-        Préconisation actes formatifs
-        Formations obligatoires
-        - Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)
-        - Equipier de Première Intervention
-        Savoirs de base
-        - Communication en français
-        - Usage et communication numérique
-        - Utilisation des règles de base de calcul et du raisonnement mathématique
-      `,
-        );
-      });
+  });
+  describe("Accompagnement proposé au candidat section", () => {
+    it("contains the 'Préconisation accompagnement méthodologique' subsection", () => {
+      expectSectionText(
+        "preconisationAccompagnementMethodologique",
+        `
+      Préconisation accompagnement méthodologique
+      Accompagnement individuel :
+      12h
+      Accompagnement collectif :
+      6h
+      Formation :
+      8h
+    `,
+      );
     });
 
-    describe("Avis et documents section", () => {
-      it("contains the 'Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de validation des acquis de l’expérience' subsection", () => {
-        expectSectionText(
-          "avisAap",
-          `
-        Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de
-        validation des acquis de l’expérience
-        Avis de l’accompagnateur
-        FAVORABLE
-        Avis favorable pour la suite
-        Commentaires du candidat sur l’avis de l’accompagnateur
-        Je suis d'accord avec l'avis de l'accompagnateur
-      `,
-        );
-      });
+    it("contains the 'Préconisation actes formatifs' subsection", () => {
+      expectSectionText(
+        "preconisationActesFormatifs",
+        `
+      Préconisation actes formatifs
+      Formations obligatoires
+      - Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)
+      - Equipier de Première Intervention
+      Savoirs de base
+      - Communication en français
+      - Usage et communication numérique
+      - Utilisation des règles de base de calcul et du raisonnement mathématique
+    `,
+      );
+    });
+  });
 
-      it("contains the 'Pièces jointes' subsection", () => {
-        expectSectionText(
-          "piecesJointes",
-          `
-        Pièces jointes
-        carte d'identité.pdf
-        déclaration sur l'honneur.pdf
-      `,
-        );
-      });
+  describe("Avis et documents section", () => {
+    it("contains the 'Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de validation des acquis de l’expérience' subsection", () => {
+      expectSectionText(
+        "avisAap",
+        `
+      Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de
+      validation des acquis de l’expérience
+      Avis de l’accompagnateur
+      FAVORABLE
+      Avis favorable pour la suite
+      Commentaires du candidat sur l’avis de l’accompagnateur
+      Je suis d'accord avec l'avis de l'accompagnateur
+    `,
+      );
+    });
+
+    it("contains the 'Pièces jointes' subsection", () => {
+      expectSectionText(
+        "piecesJointes",
+        `
+      Pièces jointes
+      carte d'identité.pdf
+      déclaration sur l'honneur.pdf
+    `,
+      );
     });
   });
 });
