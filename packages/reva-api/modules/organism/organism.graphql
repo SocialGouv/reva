@@ -190,7 +190,7 @@ type Query {
   organism_searchOrganisms(
     offset: Int
     limit: Int
-    certificationId: ID
+    certificationIds: [ID!]
     searchText: String
     disponiblePourVaeCollective: Boolean
   ): OrganismPage!

@@ -30,13 +30,13 @@ const getCohorteByIdQuery = graphql(`
 
 const searchOrganismQuery = graphql(`
   query searchOrganismsForSearchAAPPage(
-    $certificationId: ID!
+    $certificationIds: [ID!]
     $searchText: String
     $offset: Int
     $limit: Int
   ) {
     organism_searchOrganisms(
-      certificationId: $certificationId
+      certificationIds: $certificationIds
       searchText: $searchText
       offset: $offset
       limit: $limit
@@ -99,11 +99,12 @@ export const searchOrganismsAndGetCohorteInfo = async ({
     throw new Error("Cohorte non trouvée");
   }
 
-  const certificationId =
-    getCohorteByIdResult.data?.vaeCollective_getCohorteVaeCollectiveById
-      ?.certificationCohorteVaeCollectives[0]?.certification?.id;
+  const certificationIds =
+    getCohorteByIdResult.data?.vaeCollective_getCohorteVaeCollectiveById?.certificationCohorteVaeCollectives.map(
+      (certificationCohorte) => certificationCohorte.certification.id,
+    );
 
-  if (!certificationId) {
+  if (!certificationIds) {
     throw new Error("Certification non trouvée");
   }
 
@@ -111,7 +112,7 @@ export const searchOrganismsAndGetCohorteInfo = async ({
     await client.query(
       searchOrganismQuery,
       {
-        certificationId,
+        certificationIds,
         searchText,
         offset,
         limit,

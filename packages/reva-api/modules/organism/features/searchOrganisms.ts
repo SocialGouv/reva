@@ -9,13 +9,13 @@ export const searchOrganisms = async ({
   limit = 10,
   offset = 0,
   searchText,
-  certificationId,
+  certificationIds,
   disponiblePourVaeCollective,
 }: {
   limit?: number;
   offset?: number;
   searchText?: string;
-  certificationId?: string;
+  certificationIds?: string[];
   disponiblePourVaeCollective?: boolean;
 }) => {
   const fromClause = Prisma.raw(`from organism o
@@ -28,8 +28,8 @@ export const searchOrganisms = async ({
     whereClause = Prisma.sql`${whereClause} and o.disponible_pour_vae_collective = true`;
   }
 
-  if (certificationId) {
-    whereClause = Prisma.sql`${whereClause} and ao.certification_id=uuid(${certificationId})`;
+  if (certificationIds) {
+    whereClause = Prisma.sql`${whereClause} and ao.certification_id = ANY(STRING_TO_ARRAY(${certificationIds.join(",")}, ',')::uuid[])`;
   }
 
   if (searchText) {
@@ -49,7 +49,7 @@ export const searchOrganisms = async ({
   }
 
   const results = await prismaClient.$queryRaw<Organism[]>`
-          select  o.id,
+          select distinct o.id,
                  o.label,
                  o.nom_public as "nomPublic",
                  o.email_contact as "emailContact",

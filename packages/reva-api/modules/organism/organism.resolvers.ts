@@ -656,7 +656,7 @@ const unsafeResolvers = {
       params: {
         offset?: number;
         limit?: number;
-        certificationId?: string;
+        certificationIds?: string[];
         searchText?: string;
         disponiblePourVaeCollective?: boolean;
       },
