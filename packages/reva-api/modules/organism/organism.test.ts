@@ -1,7 +1,10 @@
 import * as getKeycloakAdminModule from "@/modules/shared/auth/getKeycloakAdmin";
 import { prismaClient } from "@/prisma/client";
+import { attachOrganismToAllConventionCollectiveHelper } from "@/test/helpers/attach-organism-to-all-ccn-helper";
+import { attachOrganismToAllDegreesHelper } from "@/test/helpers/attach-organism-to-all-degrees-helper";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createAccountHelper } from "@/test/helpers/entities/create-account-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import {
   attachCollaborateurAccountToMaisonMereAAP,
   createMaisonMereAapHelper,
@@ -602,5 +605,139 @@ describe("Disable local account", () => {
     ).rejects.toThrowError(
       "Le compte collaborateur n'est pas lié à la maison mère",
     );
+  });
+});
+describe("Search organisms", () => {
+  const searchOrganismsQuery = graphql(`
+    query searchOrganisms(
+      $offset: Int
+      $limit: Int
+      $searchText: String
+      $certificationIds: [ID!]
+      $disponiblePourVaeCollective: Boolean
+    ) {
+      organism_searchOrganisms(
+        offset: $offset
+        limit: $limit
+        searchText: $searchText
+        certificationIds: $certificationIds
+        disponiblePourVaeCollective: $disponiblePourVaeCollective
+      ) {
+        rows {
+          id
+        }
+      }
+    }
+  `);
+
+  it("should search organisms and find one when searching for a certification available to the organism", async () => {
+    const certification = await createCertificationHelper();
+    const ccn = await prismaClient.conventionCollective.findFirst();
+    if (!certification || !ccn) {
+      throw new Error("Certification or CCN not found");
+    }
+    await prismaClient.certificationOnConventionCollective.create({
+      data: {
+        certificationId: certification.id,
+        ccnId: ccn.id,
+      },
+    });
+
+    const organism = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    await attachOrganismToAllDegreesHelper(organism);
+    await attachOrganismToAllConventionCollectiveHelper(organism);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+          keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+        }),
+      },
+    });
+    const resp = await graphqlClient.request(searchOrganismsQuery, {
+      certificationIds: [certification.id],
+    });
+    expect(resp.organism_searchOrganisms.rows.length).toBe(1);
+  });
+
+  it("should search organisms and find none when searching a certification unavailable to any organism", async () => {
+    const certification = await createCertificationHelper();
+    const ccn = await prismaClient.conventionCollective.findFirst();
+    if (!certification || !ccn) {
+      throw new Error("Certification or CCN not found");
+    }
+    await prismaClient.certificationOnConventionCollective.create({
+      data: {
+        certificationId: certification.id,
+        ccnId: ccn.id,
+      },
+    });
+
+    await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+          keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+        }),
+      },
+    });
+    const resp = await graphqlClient.request(searchOrganismsQuery, {
+      certificationIds: [certification.id],
+    });
+    expect(resp.organism_searchOrganisms.rows.length).toBe(0);
+  });
+
+  it("should search organisms and find one when searching for two certifications available to the organism", async () => {
+    const certification = await createCertificationHelper();
+    const ccn = await prismaClient.conventionCollective.findFirst();
+    if (!certification || !ccn) {
+      throw new Error("Certification or CCN not found");
+    }
+    await prismaClient.certificationOnConventionCollective.create({
+      data: {
+        certificationId: certification.id,
+        ccnId: ccn.id,
+      },
+    });
+
+    const certification2 = await createCertificationHelper();
+    const ccn2 = await prismaClient.conventionCollective.findFirst();
+    if (!certification2 || !ccn2) {
+      throw new Error("Certification or CCN not found");
+    }
+    await prismaClient.certificationOnConventionCollective.create({
+      data: {
+        certificationId: certification2.id,
+        ccnId: ccn2.id,
+      },
+    });
+
+    const organism = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    await attachOrganismToAllDegreesHelper(organism);
+    await attachOrganismToAllConventionCollectiveHelper(organism);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+          keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+        }),
+      },
+    });
+    const resp = await graphqlClient.request(searchOrganismsQuery, {
+      certificationIds: [certification.id, certification2.id],
+    });
+    expect(resp.organism_searchOrganisms.rows.length).toBe(1);
   });
 });
