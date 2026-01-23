@@ -284,3 +284,51 @@ context("Candidacy with no organism results", () => {
     },
   );
 });
+
+context("Candidacy with PARCOURS_CONFIRME status", () => {
+  it("should not have buttonProps (no clickable button) after PARCOURS_CONFIRME", function () {
+    cy.fixture("candidacy3.json").then((candidacy) => {
+      candidacy.data.getCandidacyById.status = "PARCOURS_CONFIRME";
+      candidacy.data.getCandidacyById.organism = {
+        id: "org-id",
+        label: "Test Organism",
+      };
+
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
+        stubQuery(
+          req,
+          "candidate_getCandidateForCandidatesGuard",
+          "candidate1-for-candidates-guard.json",
+        );
+        stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+        stubQuery(
+          req,
+          "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+          "candidacies-with-candidacy-3.json",
+        );
+        stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+        stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+        stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
+      });
+
+      cy.login();
+
+      cy.wait([
+        "@candidate_getCandidateForCandidatesGuard",
+        "@getCandidateByIdForCandidateGuard",
+        "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+        "@activeFeaturesForConnectedUser",
+        "@getCandidacyByIdForCandidacyGuard",
+        "@getCandidacyByIdWithCandidate",
+        "@getCandidacyByIdForDashboard",
+      ]);
+
+      cy.get('[data-testid="organism-tile"] button').should("not.exist");
+      cy.get('[data-testid="organism-tile"]').should(
+        "contain.text",
+        "Consulter",
+      );
+    });
+  });
+});

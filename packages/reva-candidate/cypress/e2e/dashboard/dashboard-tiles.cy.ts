@@ -68,6 +68,7 @@ context("Dashboard Tiles", () => {
         });
 
         candidacy.data.getCandidacyById.status = "PROJET";
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
         interceptGraphQL(candidacy);
 
@@ -156,7 +157,149 @@ context("Dashboard Tiles", () => {
           "contain.text",
           "Vérifier et envoyer",
         );
+        cy.get(
+          '[data-testid="submit-candidacy-tile"] [data-testid="to-send-badge"]',
+        ).should("be.visible");
         cy.get('[data-testid="submit-candidacy-tile"] button').should(
+          "not.be.disabled",
+        );
+      });
+    });
+  });
+
+  describe("Certification Tile", () => {
+    it("should be readOnly and display 'Consulter' for AUTONOME after feasibilityFileSentAt", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.certification = {
+          id: "cert-id",
+          label: "Test Certification",
+          codeRncp: "12345",
+        };
+        candidacy.data.getCandidacyById.status = "PROJET";
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
+        candidacy.data.getCandidacyById.feasibility = {
+          feasibilityFileSentAt: Date.now(),
+        };
+
+        interceptGraphQL(candidacy);
+
+        cy.get('[data-testid="certification-tile"]').should(
+          "contain.text",
+          "Consulter",
+        );
+        cy.get(
+          '[data-testid="certification-tile"] [data-testid="incomplete-badge"]',
+        ).should("not.exist");
+        cy.get('[data-testid="certification-tile"] a').should("not.exist");
+      });
+    });
+
+    it("should be readOnly and display 'Consulter' for ACCOMPAGNE after PARCOURS_CONFIRME", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.certification = {
+          id: "cert-id",
+          label: "Test Certification",
+          codeRncp: "12345",
+        };
+        candidacy.data.getCandidacyById.status = "PARCOURS_CONFIRME";
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
+
+        interceptGraphQL(candidacy);
+
+        cy.get('[data-testid="certification-tile"]').should(
+          "contain.text",
+          "Consulter",
+        );
+        cy.get(
+          '[data-testid="certification-tile"] [data-testid="incomplete-badge"]',
+        ).should("not.exist");
+        cy.get('[data-testid="certification-tile"] a').should("not.exist");
+      });
+    });
+  });
+
+  describe("Type Accompagnement Tile", () => {
+    it("should display 'to complete' badge when typeAccompagnement is not selected", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PROJET";
+        candidacy.data.getCandidacyById.typeAccompagnement = null;
+
+        interceptGraphQL(candidacy);
+
+        cy.get(
+          '[data-testid="type-accompagnement-tile"] [data-testid="incomplete-badge"]',
+        ).should("be.visible");
+      });
+    });
+
+    it("should not display 'to complete' badge when typeAccompagnement is selected", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PROJET";
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
+
+        interceptGraphQL(candidacy);
+
+        cy.get(
+          '[data-testid="type-accompagnement-tile"] [data-testid="incomplete-badge"]',
+        ).should("not.exist");
+      });
+    });
+
+    it("should be disabled for AUTONOME after feasibilityFileSentAt", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PROJET";
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
+        candidacy.data.getCandidacyById.feasibility = {
+          feasibilityFileSentAt: Date.now(),
+        };
+
+        interceptGraphQL(candidacy);
+
+        cy.get('[data-testid="type-accompagnement-tile"] a').should(
+          "not.exist",
+        );
+        cy.get('[data-testid="type-accompagnement-tile"]').should(
+          "contain.text",
+          "Consulter",
+        );
+        cy.get(
+          '[data-testid="type-accompagnement-tile"] [data-testid="incomplete-badge"]',
+        ).should("not.exist");
+      });
+    });
+
+    it("should be disabled for ACCOMPAGNE after PARCOURS_CONFIRME", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PARCOURS_CONFIRME";
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
+
+        interceptGraphQL(candidacy);
+
+        cy.get('[data-testid="type-accompagnement-tile"] a').should(
+          "not.exist",
+        );
+        cy.get('[data-testid="type-accompagnement-tile"]').should(
+          "contain.text",
+          "Consulter",
+        );
+        cy.get(
+          '[data-testid="type-accompagnement-tile"] [data-testid="incomplete-badge"]',
+        ).should("not.exist");
+      });
+    });
+
+    it("should display 'Modifier' when typeAccompagnement is selected and not disabled", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PROJET";
+        candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
+
+        interceptGraphQL(candidacy);
+
+        cy.get('[data-testid="type-accompagnement-tile"]').should(
+          "contain.text",
+          "Modifier",
+        );
+        cy.get('[data-testid="type-accompagnement-tile"]').should(
           "not.be.disabled",
         );
       });
