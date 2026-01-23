@@ -48,7 +48,7 @@ export const generateAndUploadFeasibilityFileByCandidacyId = async (
   }
 
   const isDFDematMiseEnConformiteFeatureActive = await isFeatureActiveForUser({
-    feature: "DF_DEMAT_MISE_EN_CONFORMITE",
+    feature: "DF_DEMAT_MISE_EN_CONFORMITE_PDF",
   });
 
   const data = await (isDFDematMiseEnConformiteFeatureActive
