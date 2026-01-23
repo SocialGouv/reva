@@ -4,6 +4,7 @@ import { login } from "@tests/helpers/auth/auth";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createFeasibilityEntity } from "@tests/helpers/entities/create-feasibility.entity";
 import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
 import {
   navigateToTypeAccompagnement,
@@ -56,6 +57,75 @@ test("should show enabled type-accompagnement tile when no certification is sele
   const tile = page.locator('[data-testid="type-accompagnement-tile"]');
   await expect(tile).toBeVisible();
   await expect(tile).not.toBeDisabled();
+  await expect(
+    tile.locator('[data-testid="incomplete-badge"]'),
+  ).not.toBeVisible();
+});
+
+test("should display 'to complete' badge when typeAccompagnement is not selected", async ({
+  page,
+  msw,
+}) => {
+  const candidacy = createCandidacyEntity({
+    candidate,
+    typeAccompagnement: "AUTONOME",
+    status: "PROJET",
+    certification: null,
+  });
+  Object.assign(candidacy, { typeAccompagnement: null });
+  const { handlers, dashboardWait } = dashboardHandlers({ candidacy });
+
+  msw.use(...handlers);
+  await login(page);
+  await dashboardWait(page);
+
+  const tile = page.locator('[data-testid="type-accompagnement-tile"]');
+  await expect(tile.locator('[data-testid="incomplete-badge"]')).toBeVisible();
+});
+
+test("should be disabled for AUTONOME after feasibilityFileSentAt", async ({
+  page,
+  msw,
+}) => {
+  const candidacy = createCandidacyEntity({
+    candidate,
+    typeAccompagnement: "AUTONOME",
+    status: "PROJET",
+    certification: createCertificationEntity(),
+    feasibility: createFeasibilityEntity({
+      feasibilityFileSentAt: Date.now(),
+    }),
+  });
+  const { handlers, dashboardWait } = dashboardHandlers({ candidacy });
+
+  msw.use(...handlers);
+  await login(page);
+  await dashboardWait(page);
+
+  const tile = page.locator('[data-testid="type-accompagnement-tile"]');
+  await expect(tile.locator("a")).not.toBeVisible();
+  await expect(tile).toContainText("Consulter");
+});
+
+test("should be disabled for ACCOMPAGNE after PARCOURS_CONFIRME", async ({
+  page,
+  msw,
+}) => {
+  const candidacy = createCandidacyEntity({
+    candidate,
+    typeAccompagnement: "ACCOMPAGNE",
+    status: "PARCOURS_CONFIRME",
+    certification: createCertificationEntity(),
+  });
+  const { handlers, dashboardWait } = dashboardHandlers({ candidacy });
+
+  msw.use(...handlers);
+  await login(page);
+  await dashboardWait(page);
+
+  const tile = page.locator('[data-testid="type-accompagnement-tile"]');
+  await expect(tile.locator("a")).not.toBeVisible();
+  await expect(tile).toContainText("Consulter");
 });
 
 test("should navigate to type-accompagnement page when clicking tile", async ({

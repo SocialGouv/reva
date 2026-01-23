@@ -72,6 +72,7 @@ test.describe("Tile is enabled", () => {
 
     await expect(tile.getByRole("button")).toBeEnabled();
     await expect(tile).toContainText("Vérifier et envoyer");
+    await expect(tile.getByTestId("to-send-badge")).toBeVisible();
   });
 
   const submittedStatuses: CandidacyStatusStep[] = [
@@ -85,7 +86,7 @@ test.describe("Tile is enabled", () => {
   ];
 
   for (const status of submittedStatuses) {
-    test(`should show 'Envoyée' badge when status is ${status}`, async ({
+    test(`should show 'Consulter' when status is ${status}`, async ({
       page,
       msw,
     }) => {
@@ -97,7 +98,7 @@ test.describe("Tile is enabled", () => {
       });
 
       await expect(tile.getByRole("button")).toBeEnabled();
-      await expect(tile.getByTestId("sent-badge")).toBeVisible();
+      await expect(tile).toContainText("Consulter");
     });
   }
 });
