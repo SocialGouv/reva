@@ -408,7 +408,6 @@ export const addCompetence = ({
         .font("assets/fonts/Marianne/Marianne-Bold.otf")
         .fontSize(7)
         .table({
-          position: { x: doc.x, y: doc.y + 20 },
           columnStyles: [26],
           data: [
             [
@@ -428,7 +427,6 @@ export const addCompetence = ({
         .font("assets/fonts/Marianne/Marianne-Bold.otf")
         .fontSize(7)
         .table({
-          position: { x: doc.x, y: doc.y + 20 },
           columnStyles: [67],
           data: [
             [
@@ -448,7 +446,6 @@ export const addCompetence = ({
         .font("assets/fonts/Marianne/Marianne-Bold.otf")
         .fontSize(7)
         .table({
-          position: { x: doc.x, y: doc.y + 20 },
           columnStyles: [60],
           data: [
             [
