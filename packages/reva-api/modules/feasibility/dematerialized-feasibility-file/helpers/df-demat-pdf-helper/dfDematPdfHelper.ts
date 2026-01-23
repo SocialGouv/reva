@@ -470,6 +470,7 @@ export const addCompetence = ({
   doc
     .font("assets/fonts/Marianne/Marianne-Regular.otf")
     .fontSize(8)
+    .fillColor("black")
     .text(label.replace(/(\r\n|\n|\r)/gm, ""), doc.x, doc.y, {
       width: maxWidthInPt,
     });
