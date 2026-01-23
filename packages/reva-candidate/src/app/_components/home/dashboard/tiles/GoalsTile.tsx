@@ -8,16 +8,23 @@ export const GoalsTile = ({
 }: {
   readOnly: boolean;
   hasCompletedGoals: boolean;
-}) => (
-  <Tile
-    data-testid="goals-tile"
-    start={!hasCompletedGoals ? <IncompleteBadge /> : undefined}
-    desc={hasCompletedGoals && !readOnly ? "Modifier" : undefined}
-    title="Objectifs"
-    small
-    linkProps={{
-      href: "./set-goals",
-    }}
-    imageUrl="/candidat/images/pictograms/conclusion.svg"
-  />
-);
+}) => {
+  const getDesc = () => {
+    if (!hasCompletedGoals) return undefined;
+    return readOnly ? "Consulter" : "Modifier";
+  };
+
+  return (
+    <Tile
+      data-testid="goals-tile"
+      start={!hasCompletedGoals ? <IncompleteBadge /> : undefined}
+      desc={getDesc()}
+      title="Objectifs"
+      small
+      linkProps={{
+        href: "./set-goals",
+      }}
+      imageUrl="/candidat/images/pictograms/conclusion.svg"
+    />
+  );
+};

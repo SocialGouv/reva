@@ -14,6 +14,7 @@ export const DashboardAutonomeTilesGroup = ({
   className?: string;
 }) => {
   const feasibility = candidacy?.feasibility;
+  const hasFeasibilitySent = !!candidacy?.feasibility?.feasibilityFileSentAt;
 
   return (
     <div
@@ -27,8 +28,12 @@ export const DashboardAutonomeTilesGroup = ({
         <div className="grid md:grid-cols-2 grid-rows-1">
           <CertificationTile
             selectedCertificationId={candidacy?.certification?.id}
+            readOnly={hasFeasibilitySent}
           />
-          <TypeAccompagnementTile />
+          <TypeAccompagnementTile
+            hasSelectedTypeAccompagnement={!!candidacy?.typeAccompagnement}
+            disabled={hasFeasibilitySent}
+          />
         </div>
       </DashboardTilesSection>
 

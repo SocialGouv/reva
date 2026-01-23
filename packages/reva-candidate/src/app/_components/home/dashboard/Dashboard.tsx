@@ -71,7 +71,9 @@ const Dashboard = () => {
     return null;
   }
 
-  const candidacyIsAutonome = candidacy.typeAccompagnement === "AUTONOME";
+  const candidacyIsAutonome =
+    candidacy.typeAccompagnement === "AUTONOME" ||
+    !candidacy.typeAccompagnement;
   const candidacyIsAccompagne = candidacy.typeAccompagnement === "ACCOMPAGNE";
   const candidacyIsVaeCollective = !!candidacy.cohorteVaeCollective;
 

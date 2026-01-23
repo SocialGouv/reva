@@ -12,13 +12,17 @@ export const ExperiencesTile = ({
   readOnly: boolean;
 }) => {
   const hasExperiences = experiences.length > 0;
-  const canModifyExperiences = hasExperiences && !readOnly;
+
+  const getDesc = () => {
+    if (!hasExperiences) return undefined;
+    return readOnly ? "Consulter" : "Modifier";
+  };
 
   return (
     <Tile
       data-testid="experiences-tile"
       start={!hasExperiences ? <IncompleteBadge /> : undefined}
-      desc={canModifyExperiences ? "Modifier" : undefined}
+      desc={getDesc()}
       title="Expériences"
       small
       linkProps={{

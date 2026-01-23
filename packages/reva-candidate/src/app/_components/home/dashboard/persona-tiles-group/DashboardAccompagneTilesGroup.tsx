@@ -32,6 +32,7 @@ export const DashboardAccompagneTilesGroup = ({
   const endAccompagnementConfirmed =
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
+  const isParcoursConfirme = candidacy.status === "PARCOURS_CONFIRME";
 
   return (
     <div
@@ -45,8 +46,12 @@ export const DashboardAccompagneTilesGroup = ({
         <div className="grid md:grid-cols-3 grid-rows-2">
           <CertificationTile
             selectedCertificationId={candidacy?.certification?.id}
+            readOnly={isParcoursConfirme}
           />
-          <TypeAccompagnementTile />
+          <TypeAccompagnementTile
+            hasSelectedTypeAccompagnement={!!candidacy?.typeAccompagnement}
+            disabled={isParcoursConfirme}
+          />
           <GoalsTile
             hasCompletedGoals={hasCompletedGoals}
             readOnly={candidacyAlreadySubmitted}

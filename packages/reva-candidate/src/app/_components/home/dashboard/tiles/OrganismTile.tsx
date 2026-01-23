@@ -19,7 +19,10 @@ export const OrganismTile = ({
 }) => {
   const router = useRouter();
 
+  const isParcoursConfirme = candidacyStatus === "PARCOURS_CONFIRME";
+
   const tileDisabled =
+    isParcoursConfirme ||
     (candidacyStatus !== "PROJET" &&
       candidacyStatus !== "VALIDATION" &&
       candidacyStatus !== "PRISE_EN_CHARGE" &&
@@ -27,7 +30,8 @@ export const OrganismTile = ({
     !hasSelectedCertification ||
     endAccompagnementConfirmed;
 
-  const canModifyOrganism = hasSelectedOrganism && !endAccompagnementConfirmed;
+  const canModifyOrganism =
+    hasSelectedOrganism && !endAccompagnementConfirmed && !isParcoursConfirme;
 
   const getStartContent = () => {
     if (endAccompagnementConfirmed) {
@@ -39,20 +43,33 @@ export const OrganismTile = ({
     return undefined;
   };
 
+  const getDesc = () => {
+    if (!hasSelectedOrganism) return undefined;
+    return canModifyOrganism ? "Modifier" : "Consulter";
+  };
+
+  const commonProps = {
+    "data-testid": "organism-tile",
+    start: getStartContent(),
+    desc: getDesc(),
+    title: "Accompagnateur",
+    small: true as const,
+    imageUrl: "/candidat/images/pictograms/avatar.svg",
+    disabled: tileDisabled,
+  };
+
+  if (isParcoursConfirme) {
+    return <Tile {...commonProps} />;
+  }
+
   return (
     <Tile
-      data-testid="organism-tile"
-      start={getStartContent()}
-      desc={canModifyOrganism ? "Modifier" : undefined}
-      title="Accompagnateur"
-      small
+      {...commonProps}
       buttonProps={{
         onClick: () => {
           router.push("./set-organism");
         },
       }}
-      imageUrl="/candidat/images/pictograms/avatar.svg"
-      disabled={tileDisabled}
     />
   );
 };
