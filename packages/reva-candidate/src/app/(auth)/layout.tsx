@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-const FULL_WIDTH_PATHS = ["/login", "/register"];
+const FULL_WIDTH_PATHS = ["/login", "/register", "/register-confirmation"];
 
 export default function AuthLayout({
   children,

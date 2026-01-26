@@ -76,10 +76,14 @@ test.describe("Register page", () => {
     await mutationPromise;
 
     await expect(
-      page.getByRole("heading", { name: "Un courriel vous a été envoyé." }),
+      page.getByRole("heading", {
+        name: "Dernière étape, activez votre compte !",
+      }),
     ).toBeVisible();
     await expect(
-      page.getByText("Vous avez demandé la création d'un compte France VAE."),
+      page.getByText(
+        "Votre demande de création de compte a bien été enregistrée.",
+      ),
     ).toBeVisible();
   });
 });
