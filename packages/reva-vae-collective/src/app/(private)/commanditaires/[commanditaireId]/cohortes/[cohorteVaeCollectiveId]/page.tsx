@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
+import { getActiveFeatures } from "@/helpers/get-actives-features";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
@@ -103,6 +104,15 @@ export default async function CohortePage({
   const certificationSelected = certifications.length > 0;
   const organismSelected = !!organism;
 
+  const { isFeatureActive } = await getActiveFeatures();
+
+  const isMultiCertificationFeatureActive = await isFeatureActive(
+    "VAE_COLLECTIVE_MULTI_CERTIFICATION",
+  );
+
+  const showMultipleCertificationCard =
+    isMultiCertificationFeatureActive || multipleCertificationSelected;
+
   return (
     <div className="flex flex-col w-full">
       <RoleDependentBreadcrumb
@@ -130,13 +140,15 @@ export default async function CohortePage({
         Paramétrez votre cohorte, afin de générer un code unique ainsi qu’un
         lien d’accès à transmettre aux candidats devant intégrer cette cohorte.
       </p>
-      {multipleCertificationSelected && (
+      {showMultipleCertificationCard && (
         <CertificationsCard
           numberOfCertifications={certifications.length}
+          cohorteStatus={cohorte.status}
           certificationsSelectionneesHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications-selectionnees`}
+          selectCertificationsHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/selection-certifications`}
         />
       )}
-      {!multipleCertificationSelected && (
+      {!showMultipleCertificationCard && (
         <CertificationCard
           href={
             cohorte.status === "BROUILLON"

@@ -81,4 +81,99 @@ test.describe("certifications card", () => {
       );
     });
   });
+
+  test.describe("when the VAE_COLLECTIVE_MULTI_CERTIFICATION feature flag is active", () => {
+    test.describe("when the cohorte status is 'BROUILLON'", () => {
+      test.describe("when there are no certifications selected", () => {
+        test.use({
+          mswHandlers: [
+            [
+              fvae.query("getCohorteByIdForCohortePage", () => {
+                return HttpResponse.json({
+                  data: {
+                    vaeCollective_getCohorteVaeCollectiveById: {
+                      id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                      nom: "macohorte",
+                      status: "BROUILLON",
+                      certificationCohorteVaeCollectives: [],
+                    },
+                  },
+                });
+              }),
+              mockQueryActiveFeatures(["VAE_COLLECTIVE_MULTI_CERTIFICATION"]),
+            ],
+            { scope: "test" },
+          ],
+        });
+
+        test("when i click on the 'Compléter' button it should lead me to the select certifications page", async ({
+          page,
+        }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+          await page
+            .getByTestId("certifications-card")
+            .getByRole("link", { name: "Compléter" })
+            .click();
+          await expect(page).toHaveURL(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/selection-certifications",
+          );
+        });
+      });
+
+      test.describe("when there is a certification already selected", () => {
+        test.use({
+          mswHandlers: [
+            [
+              fvae.query("getCohorteByIdForCohortePage", () => {
+                return HttpResponse.json({
+                  data: {
+                    vaeCollective_getCohorteVaeCollectiveById: {
+                      id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                      nom: "macohorte",
+                      status: "BROUILLON",
+                      certificationCohorteVaeCollectives: [
+                        {
+                          id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                          certification: {
+                            id: "0eda2cbf-78ae-47af-9f28-34d05f972712",
+                            certification: {
+                              label: "Certification 1",
+                              codeRncp: "123456",
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                });
+              }),
+              mockQueryActiveFeatures(["VAE_COLLECTIVE_MULTI_CERTIFICATION"]),
+            ],
+            { scope: "test" },
+          ],
+        });
+
+        test("when i click on the 'Modifier' button it should lead me to the select certifications page", async ({
+          page,
+        }) => {
+          await login({ page, role: "gestionnaireVaeCollective" });
+
+          await page.goto(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712",
+          );
+          await page
+            .getByTestId("certifications-card")
+            .getByRole("link", { name: "Modifier" })
+            .click();
+          await expect(page).toHaveURL(
+            "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/selection-certifications",
+          );
+        });
+      });
+    });
+  });
 });
