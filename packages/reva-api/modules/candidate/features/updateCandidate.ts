@@ -142,7 +142,9 @@ export const updateCandidate = async ({
       data: {
         ...candidateInput,
         birthDepartmentId:
-          countrySelected.label == "France" ? birthDepartmentId : undefined,
+          birthDepartmentId && countrySelected.label == "France"
+            ? birthDepartmentId
+            : undefined,
         profileInformationCompleted: true,
       },
     }),
