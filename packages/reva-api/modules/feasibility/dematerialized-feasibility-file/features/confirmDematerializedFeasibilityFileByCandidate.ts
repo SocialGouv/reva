@@ -4,6 +4,8 @@ import { prismaClient } from "@/prisma/client";
 import { DematerializedFeasibilityFileCreateOrUpdateCandidateDecisionInput } from "../dematerialized-feasibility-file.types";
 import { sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP } from "../emails/sendFeasibilityConfirmedByCandidateWithSwornAttestmentToAAP.email";
 
+import { generateAndUploadFeasibilityFileByCandidacyId } from "./generateAndUploadFeasibilityFileByCandidacyId";
+
 export const confirmDematerializedFeasibilityFileByCandidate = async ({
   dematerializedFeasibilityFileId,
   input,
@@ -65,6 +67,14 @@ export const confirmDematerializedFeasibilityFileByCandidate = async ({
       emailType: "REMINDER_TO_AAP_FOR_MISSING_SWORN_STATEMENT",
     },
   });
+
+  try {
+    await generateAndUploadFeasibilityFileByCandidacyId(
+      dff.feasibility.candidacy.id,
+    );
+  } catch (error) {
+    console.error(error);
+  }
 
   await logCandidacyAuditEvent({
     candidacyId: dff.feasibility.candidacy.id,
