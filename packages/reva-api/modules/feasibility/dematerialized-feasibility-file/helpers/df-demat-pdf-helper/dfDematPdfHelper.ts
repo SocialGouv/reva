@@ -535,6 +535,8 @@ export const getCourtesyTitleFromGender = (gender: Gender | null) => {
       return "Monsieur";
     case "woman":
       return "Madame";
+    case "undisclosed":
+      return "Ne se prononce pas";
     default:
       return "";
   }
