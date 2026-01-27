@@ -38,6 +38,20 @@ type BuilAppOptions = FastifyServerOptions & {
 };
 
 const validateRequiredEnvVars = () => {
+  if (process.env.NODE_ENV === "test") {
+    // Provide default test values for required environment variables
+    process.env.COOKIE_SECRET =
+      process.env.COOKIE_SECRET || "test-cookie-secret";
+    process.env.DATA_ENCRYPT_PRIVATE_KEY =
+      process.env.DATA_ENCRYPT_PRIVATE_KEY || "test-data-encrypt-private-key";
+    process.env.JWT_PRIVATE_KEY =
+      process.env.JWT_PRIVATE_KEY || "test-jwt-private-key";
+    process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET =
+      process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET ||
+      "test-keycloak-app-admin-client-secret";
+    process.env.BASE_URL = process.env.BASE_URL || "http://localhost:3003";
+    return;
+  }
   const required = [
     "COOKIE_SECRET",
     "DATA_ENCRYPT_PRIVATE_KEY",
