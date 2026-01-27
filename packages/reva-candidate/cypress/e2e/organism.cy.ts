@@ -324,9 +324,9 @@ context("Candidacy with PARCOURS_CONFIRME status", () => {
         "@getCandidacyByIdForDashboard",
       ]);
 
-      cy.get('[data-testid="organism-tile"] button').should("not.exist");
+      cy.get('[data-testid="organism-tile"] button').should("exist");
       cy.get('[data-testid="organism-tile"]').should(
-        "contain.text",
+        "not.contain.text",
         "Consulter",
       );
     });
