@@ -28,6 +28,7 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
     pathname === "/" ||
     pathname === `/candidates/` ||
     pathname === `/candidates/${candidateId}/` ||
+    pathname === `/candidates/${candidateId}/first-connexion/` ||
     pathname === `/candidates/${candidateId}/candidacies/` ||
     pathname === `/candidates/${candidateId}/candidacies/${candidacyId}/` ||
     pathname === `/candidates/${candidateId}/candidacies/create/` ||
