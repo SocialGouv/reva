@@ -75,7 +75,7 @@ type Mutation {
   vaeCollective_updateCohorteVAECollectiveCertification(
     commanditaireVaeCollectiveId: ID!
     cohorteVaeCollectiveId: ID!
-    certificationId: ID!
+    certificationIds: [ID!]!
   ): CohorteVaeCollective!
 
   vaeCollective_updateCohorteVAECollectiveOrganism(

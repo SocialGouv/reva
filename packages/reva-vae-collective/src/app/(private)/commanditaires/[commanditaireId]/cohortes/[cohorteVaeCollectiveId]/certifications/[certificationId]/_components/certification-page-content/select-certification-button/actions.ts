@@ -17,7 +17,7 @@ const updateCertificationMutation = graphql(`
     vaeCollective_updateCohorteVAECollectiveCertification(
       commanditaireVaeCollectiveId: $commanditaireVaeCollectiveId
       cohorteVaeCollectiveId: $cohorteVaeCollectiveId
-      certificationId: $certificationId
+      certificationIds: [$certificationId]
     ) {
       id
     }

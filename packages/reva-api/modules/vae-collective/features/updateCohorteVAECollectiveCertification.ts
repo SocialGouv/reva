@@ -4,10 +4,10 @@ import { getCohorteVAECollectiveById } from "./getCohorteVAECollectiveById";
 
 export const updateCohorteVAECollectiveCertification = async ({
   cohorteVaeCollectiveId,
-  certificationId,
+  certificationIds,
 }: {
   cohorteVaeCollectiveId: string;
-  certificationId: string;
+  certificationIds: string[];
 }) => {
   const cohorteVaeCollective = await getCohorteVAECollectiveById({
     cohorteVaeCollectiveId,
@@ -28,11 +28,11 @@ export const updateCohorteVAECollectiveCertification = async ({
         cohorteVaeCollectiveId,
       },
     });
-    await tx.certificationCohorteVaeCollective.create({
-      data: {
+    await tx.certificationCohorteVaeCollective.createMany({
+      data: certificationIds.map((certificationId) => ({
         cohorteVaeCollectiveId,
         certificationId,
-      },
+      })),
     });
     await tx.cohorteVaeCollective.update({
       where: {

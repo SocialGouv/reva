@@ -165,12 +165,12 @@ const unsafeResolvers = {
       _parent: unknown,
       {
         cohorteVaeCollectiveId,
-        certificationId,
-      }: { cohorteVaeCollectiveId: string; certificationId: string },
+        certificationIds,
+      }: { cohorteVaeCollectiveId: string; certificationIds: string[] },
     ) =>
       updateCohorteVAECollectiveCertification({
         cohorteVaeCollectiveId,
-        certificationId,
+        certificationIds,
       }),
     vaeCollective_updateCohorteVAECollectiveOrganism: async (
       _parent: unknown,
