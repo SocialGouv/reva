@@ -1,11 +1,9 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
-import {
-  MultiSelectItemProps,
-  MultiSelectList,
-} from "@/components/multi-select-list/MultiSelectList";
+import { MultiSelectItemProps } from "@/components/multi-select-list/MultiSelectList";
 
+import { CertificationList } from "./_components/certification-list/CertificationList";
 import {
   getCohorteById,
   searchCertificationsForSelectionCertificationsPage,
@@ -41,16 +39,16 @@ export default async function SelectionCertificationsPage({
 
   const certificationsMultiSelectItems: MultiSelectItemProps[] =
     certificationPage.rows.map((certification) => {
-      const subDomains = certification.domains.flatMap((d) =>
-        d.children.map((sd) => sd.label),
-      );
+      const subDomains = [
+        ...new Set(certification.domains.flatMap((d) => d.children)),
+      ];
       return {
         id: certification.id,
         start: (
-          <span className="flex gap-2 flex-wrap mb-3">
+          <span className="flex gap-2 flex-wrap mb-3" key={certification.id}>
             {subDomains.map((sd) => (
-              <Tag key={sd} small>
-                {sd}
+              <Tag key={sd.id} small>
+                {sd.label}
               </Tag>
             ))}
           </span>
@@ -67,8 +65,13 @@ export default async function SelectionCertificationsPage({
   return (
     <div className="flex flex-col w-full">
       <h1 className="mb-12">{cohorte?.nom}</h1>
-      <MultiSelectList
-        pageItems={certificationsMultiSelectItems}
+      <CertificationList
+        commanditaireVaeCollectiveId={commanditaireId}
+        cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+        selectedCertificationIds={cohorte.certificationCohorteVaeCollectives.map(
+          (c) => c.certification.id,
+        )}
+        certificationsPageItems={certificationsMultiSelectItems}
         paginationInfo={{
           totalPages: certificationPage.info.totalPages,
           totalItems: certificationPage.info.totalRows,
