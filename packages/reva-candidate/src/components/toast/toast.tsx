@@ -1,7 +1,7 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import toast from "react-hot-toast";
 
-interface GraphQLError {
+export interface GraphQLError {
   response?: {
     errors?: Array<{ message?: string }>;
   };

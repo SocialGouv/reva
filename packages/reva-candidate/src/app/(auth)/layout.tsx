@@ -2,7 +2,12 @@
 
 import { usePathname } from "next/navigation";
 
-const FULL_WIDTH_PATHS = ["/login", "/register", "/register-confirmation"];
+const FULL_WIDTH_PATHS = [
+  "/login",
+  "/register",
+  "/register-confirmation",
+  "/reset-password",
+];
 
 export default function AuthLayout({
   children,
@@ -10,7 +15,6 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
   const isFullWidthPath = FULL_WIDTH_PATHS.some(
     (path) => pathname === path || pathname === `${path}/`,
   );

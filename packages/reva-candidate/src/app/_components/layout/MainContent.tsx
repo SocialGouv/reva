@@ -10,7 +10,12 @@ const UNAUTHENTICATED_PATHS = [
   "/register-confirmation",
 ];
 
-const FULL_WIDTH_AUTH_PATHS = ["/login", "/register", "/register-confirmation"];
+const FULL_WIDTH_AUTH_PATHS = [
+  "/login",
+  "/register",
+  "/register-confirmation",
+  "/reset-password",
+];
 
 export const MainContent = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
