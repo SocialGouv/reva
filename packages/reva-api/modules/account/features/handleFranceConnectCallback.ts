@@ -1,11 +1,6 @@
-import crypto from "node:crypto";
-
 import { Gender } from "@prisma/client";
-import {
-  allowInsecureRequests,
-  authorizationCodeGrant,
-  discovery,
-} from "openid-client";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { authorizationCodeGrant } from "openid-client";
 import { z } from "zod";
 
 import { getActiveCandidaciesByCandidateId } from "@/modules/candidacy/features/getActiveCandidaciesByCandidateId";
@@ -21,9 +16,14 @@ import {
 } from "../utils/input-sanitization";
 
 import {
-  getAndDeleteState,
+  FranceConnectForbiddenError,
+  FranceConnectSystemError,
+  FranceConnectUserError,
+} from "./france-connect.errors";
+import {
+  getAndDeleteFcStateCookie,
+  getOAuthConfig,
   isValidCertificationId,
-  setFcCode,
 } from "./france-connect.utils";
 
 const preferredUsernameSchema = z
@@ -46,6 +46,8 @@ const FranceConnectClaimsSchema = z.object({
 type FranceConnectClaims = z.infer<typeof FranceConnectClaimsSchema>;
 
 export const handleFranceConnectCallback = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
   currentUrl: URL,
 ): Promise<string> => {
   const franceConnectEnabled = await isFeatureActiveForUser({
@@ -53,35 +55,30 @@ export const handleFranceConnectCallback = async (
   });
 
   if (!franceConnectEnabled) {
-    throw new Error("FranceConnect authentication is not enabled");
+    throw new FranceConnectForbiddenError(
+      "FranceConnect authentication is not enabled",
+    );
   }
 
   //TODO: Supprimer cette logique lorsque la FranceConnect sera disponible en production
   if (process.env.BASE_URL?.includes(".gouv.fr")) {
-    throw new Error("FranceConnect is not available in production");
+    throw new FranceConnectForbiddenError(
+      "FranceConnect is not available in production",
+    );
   }
 
   const state = currentUrl.searchParams.get("state") ?? undefined;
-  const stored = state ? getAndDeleteState(state) : null;
-  if (!stored) {
-    throw new Error("Invalid or expired state");
+  if (!state) {
+    throw new FranceConnectUserError("Missing state parameter", 400);
   }
 
-  const issuer = `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_APP_REALM}`;
-  const clientId = process.env.KEYCLOAK_APP_REVA_APP || "reva-app";
-  const clientSecret = process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET || "";
+  // Récupère et supprime le cookie fc_state (usage unique)
+  const stored = getAndDeleteFcStateCookie(request, reply, state);
+  if (!stored) {
+    throw new FranceConnectUserError("Invalid or expired state");
+  }
 
-  const discoveryOptions =
-    process.env.NODE_ENV === "development"
-      ? { execute: [allowInsecureRequests] }
-      : undefined;
-  const config = await discovery(
-    new URL(issuer),
-    clientId,
-    clientSecret,
-    undefined,
-    discoveryOptions,
-  );
+  const config = await getOAuthConfig();
 
   const tokenSet = await authorizationCodeGrant(config, currentUrl, {
     pkceCodeVerifier: stored.code_verifier,
@@ -90,25 +87,18 @@ export const handleFranceConnectCallback = async (
   });
 
   if (!tokenSet.access_token || !tokenSet.id_token) {
-    throw new Error("Invalid token response");
+    throw new FranceConnectSystemError("Invalid token response");
   }
 
   const claims = tokenSet.claims();
   const idTokenResult = FranceConnectClaimsSchema.safeParse(claims);
   if (!idTokenResult.success) {
-    throw new Error("Invalid ID token structure");
+    throw new FranceConnectUserError("Invalid ID token structure", 400);
   }
   const idTokenPayload = idTokenResult.data;
   const keycloakId = idTokenPayload.sub;
 
   const candidate = await getOrCreateCandidate(keycloakId, idTokenPayload);
-
-  const fc_code = crypto.randomBytes(32).toString("hex");
-  setFcCode(fc_code, {
-    accessToken: tokenSet.access_token,
-    refreshToken: tokenSet.refresh_token ?? "",
-    idToken: tokenSet.id_token,
-  });
 
   const baseUrl =
     process.env.NODE_ENV === "production"
@@ -119,8 +109,6 @@ export const handleFranceConnectCallback = async (
     ? stored.certificationId
     : undefined;
 
-  // Si un certificationId est spécifié, on redirige toujours vers la création
-  // Sinon, on vérifie si le candidat a déjà des candidatures actives
   let redirectPath: string;
   if (certificationId) {
     redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create/certifications/${certificationId}/type-accompagnement`;
@@ -129,16 +117,13 @@ export const handleFranceConnectCallback = async (
       candidateId: candidate.id,
     });
     if (activeCandidacies.length > 0) {
-      // Le candidat a déjà des candidatures, on le redirige vers la liste
       redirectPath = `/candidat/candidates/${candidate.id}/candidacies`;
     } else {
-      // Le candidat n'a pas de candidatures, on le redirige vers la création
       redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create`;
     }
   }
 
   const redirectUrl = new URL(`${baseUrl}${redirectPath}`);
-  redirectUrl.searchParams.set("fc_code", fc_code);
   return redirectUrl.toString();
 };
 
@@ -245,7 +230,7 @@ const getDefaultDepartment = async () => {
   });
 
   if (!department) {
-    throw new Error("Default department not found");
+    throw new FranceConnectSystemError("Default department not found");
   }
 
   return department;

@@ -1,50 +1,42 @@
+import { FastifyReply } from "fastify";
 import {
-  allowInsecureRequests,
   buildAuthorizationUrl,
   calculatePKCECodeChallenge,
-  discovery,
   randomNonce,
   randomPKCECodeVerifier,
   randomState,
 } from "openid-client";
 
+import { FranceConnectForbiddenError } from "./france-connect.errors";
 import {
   getFranceConnectRedirectUri,
+  getOAuthConfig,
   isValidCertificationId,
-  setState,
+  setFcStateCookie,
 } from "./france-connect.utils";
 
 export const getFranceConnectAuthorizeRedirectUrl = async (
+  reply: FastifyReply,
   certificationId?: string,
 ): Promise<string> => {
   //TODO: Supprimer cette logique lorsque la FranceConnect sera disponible en production
   if (process.env.BASE_URL?.includes(".gouv.fr")) {
-    throw new Error("FranceConnect is not available in production");
+    throw new FranceConnectForbiddenError(
+      "FranceConnect is not available in production",
+    );
   }
 
-  const issuer = `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_APP_REALM}`;
-  const clientId = process.env.KEYCLOAK_APP_REVA_APP || "reva-app";
-  const clientSecret = process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET || "";
+  const config = await getOAuthConfig();
   const redirectUri = getFranceConnectRedirectUri();
-
-  const discoveryOptions =
-    process.env.NODE_ENV === "development"
-      ? { execute: [allowInsecureRequests] }
-      : undefined;
-  const config = await discovery(
-    new URL(issuer),
-    clientId,
-    clientSecret,
-    undefined,
-    discoveryOptions,
-  );
 
   const state = randomState();
   const nonce = randomNonce();
   const code_verifier = randomPKCECodeVerifier();
   const code_challenge = await calculatePKCECodeChallenge(code_verifier);
 
-  setState(state, {
+  // Stocke les données de sécurité dans un cookie httpOnly chiffré
+  setFcStateCookie(reply, {
+    state,
     nonce,
     code_verifier,
     certificationId: isValidCertificationId(certificationId)

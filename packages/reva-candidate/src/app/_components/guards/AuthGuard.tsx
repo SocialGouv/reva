@@ -10,7 +10,6 @@ import { useAuth } from "@/components/auth/auth.hooks";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { usePreviousPath } from "@/components/previous-path/previousPath";
-import { REST_API_URL } from "@/config/config";
 
 const UNAUTHENTICATED_PATHS = [
   "/login-confirmation",
@@ -27,7 +26,7 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const params = useSearchParams();
   const { loginWithToken } = useAuth();
-  const { authenticated, resetKeycloakInstance } = useKeycloakContext();
+  const { authenticated } = useKeycloakContext();
   const { previousPath, setPreviousPath } = usePreviousPath();
 
   const { candidacyId } = useParams<{
@@ -35,7 +34,6 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   }>();
 
   const token = params.get("token");
-  const fc_code = params.get("fc_code");
   const isUnauthenticatedPath = UNAUTHENTICATED_PATHS.some((path) =>
     pathname.startsWith(path),
   );
@@ -57,32 +55,6 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     [loginWithToken, router],
   );
 
-  const handleFranceConnectComplete = useCallback(
-    async (code: string) => {
-      try {
-        const res = await fetch(
-          `${REST_API_URL}/account/franceconnect/tokens`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code }),
-          },
-        );
-        if (!res.ok) throw new Error("Invalid or expired code");
-        const tokens = await res.json();
-        resetKeycloakInstance(tokens);
-      } catch {
-        router.push("/login");
-      } finally {
-        const nextParams = new URLSearchParams(params.toString());
-        nextParams.delete("fc_code");
-        const q = nextParams.toString();
-        router.replace(pathname + (q ? `?${q}` : ""));
-      }
-    },
-    [params, pathname, resetKeycloakInstance, router],
-  );
-
   useEffect(() => {
     if (token) {
       handleTokenLogin(token);
@@ -94,13 +66,7 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (fc_code) {
-      handleFranceConnectComplete(fc_code);
-    }
-  }, [fc_code, handleFranceConnectComplete]);
-
-  useEffect(() => {
-    if (token || fc_code) {
+    if (token) {
       return;
     }
 
@@ -118,7 +84,6 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     router,
     setPreviousPath,
     token,
-    fc_code,
     previousPath,
     candidacyId,
   ]);

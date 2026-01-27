@@ -1,5 +1,7 @@
+import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
+import rateLimit from "@fastify/rate-limit";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import fastify, {
@@ -35,13 +37,48 @@ type BuilAppOptions = FastifyServerOptions & {
   keycloakPluginMock?: FastifyPluginAsync<FastifyPluginOptions>;
 };
 
+const validateRequiredEnvVars = () => {
+  const required = [
+    "COOKIE_SECRET",
+    "DATA_ENCRYPT_PRIVATE_KEY",
+    "JWT_PRIVATE_KEY",
+    "KEYCLOAK_APP_ADMIN_CLIENT_SECRET",
+    "BASE_URL",
+  ];
+
+  const missing = required.filter((key) => !process.env[key]);
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variables: ${missing.join(", ")}`,
+    );
+  }
+
+  if (process.env.BASE_URL) {
+    try {
+      new URL(process.env.BASE_URL);
+    } catch {
+      throw new Error("BASE_URL must be a valid URL");
+    }
+  }
+};
+
 export const buildApp = async (
   opts: BuilAppOptions = {},
 ): Promise<FastifyInstance> => {
-  //Date-fns default locale
+  validateRequiredEnvVars();
+
   setDefaultOptions({ locale: fr });
 
   const app = await fastify(opts);
+
+  app.register(cookie, {
+    secret: process.env.COOKIE_SECRET,
+  });
+
+  app.register(rateLimit, {
+    max: 100,
+    timeWindow: "1 minute",
+  });
 
   if (process.env.NODE_ENV === "production") {
     app.register(cors, {

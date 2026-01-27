@@ -38,12 +38,12 @@ export class TokenService implements TokenServiceInterface {
     const data = JSON.stringify(payload);
     const cryptedData = CryptoJS.AES.encrypt(
       data,
-      process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret",
+      process.env.DATA_ENCRYPT_PRIVATE_KEY!,
     );
 
     const token = jwt.sign(
       { data: cryptedData.toString() },
-      process.env.JWT_PRIVATE_KEY || "secret",
+      process.env.JWT_PRIVATE_KEY!,
       { expiresIn },
     );
 
@@ -54,11 +54,11 @@ export class TokenService implements TokenServiceInterface {
     try {
       const tokenData = jwt.verify(
         token,
-        process.env.JWT_PRIVATE_KEY || "secret",
+        process.env.JWT_PRIVATE_KEY!,
       ) as JwtPayload;
       const dataBytes = CryptoJS.AES.decrypt(
         tokenData.data,
-        process.env.DATA_ENCRYPT_PRIVATE_KEY || "secret",
+        process.env.DATA_ENCRYPT_PRIVATE_KEY!,
       );
 
       const data = dataBytes.toString(CryptoJS.enc.Utf8);
