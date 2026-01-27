@@ -1,11 +1,11 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 
-import { WelcomePage } from "@/app/_components/welcome-page/WelcomePage";
+import { StatusPage } from "@/app/_components/status-page/StatusPage";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 export default function FirstConnexionPage() {
   return (
-    <WelcomePage
+    <StatusPage
       title="Bienvenue dans votre espace France VAE"
       description="Pour y accéder, vous devez vérifier et compléter vos informations de profil."
       pictogram={PICTOGRAMS.informationLG}
@@ -37,3 +37,4 @@ export default function FirstConnexionPage() {
     />
   );
 }
+

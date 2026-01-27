@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import hexagonBackground from "./assets/hexagonBackground.svg";
 
-export const WelcomePage = ({
+export const StatusPage = ({
   title,
   description,
   pictogram,
@@ -15,10 +15,7 @@ export const WelcomePage = ({
   content?: React.ReactNode;
   buttons?: React.ReactNode;
 }) => (
-  <div
-    className="w-full px-6 my-10 flex justify-between "
-    data-testid="candidacy-dropout-confirmation-page"
-  >
+  <div className="w-full px-6 my-10 flex justify-between ">
     <div className="flex flex-col">
       <h1 className="text-dsfrGray-800">{title}</h1>
       <p className="text-xl">{description}</p>

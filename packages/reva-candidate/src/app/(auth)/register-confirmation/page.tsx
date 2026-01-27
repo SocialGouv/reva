@@ -3,7 +3,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
-import hexagonBackground from "@/app/_components/welcome-page/assets/hexagonBackground.svg";
+import hexagonBackground from "@/app/_components/status-page/assets/hexagonBackground.svg";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 import { PageLayout } from "@/layouts/page.layout";
 
