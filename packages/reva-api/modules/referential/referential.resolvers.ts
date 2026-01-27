@@ -160,8 +160,7 @@ const unsafeReferentialResolvers = {
         organismId?: string;
         searchText?: string;
         candidacyId?: string;
-        certificationAuthorityIdFilter?: string;
-        certificationAuthorityStructureIdFilter?: string;
+        cohorteVaeCollectiveIdFilter?: string;
       },
     ) => searchCertificationsForCandidate(payload),
     searchCertificationsForAdmin: (_: any, payload: any) =>

@@ -12,12 +12,14 @@ export const searchCertificationsForCandidate = async ({
   organismId,
   searchText,
   candidacyId,
+  cohorteVaeCollectiveIdFilter,
 }: {
   offset?: number;
   limit?: number;
   organismId?: string;
   searchText?: string;
   candidacyId?: string;
+  cohorteVaeCollectiveIdFilter?: string;
 }): Promise<PaginatedListResult<Certification>> => {
   const realLimit = limit || 10;
   const realOffset = offset || 0;
@@ -37,6 +39,22 @@ export const searchCertificationsForCandidate = async ({
       await prismaClient.certificationCohorteVaeCollective.findMany({
         where: {
           cohorteVaeCollective: { candidacy: { some: { id: candidacyId } } },
+        },
+      });
+    certificationsFromCohorteVaeCollectiveIds =
+      certificationCohorteVaeCollective.map(
+        (certificationCohorteVaeCollective) =>
+          certificationCohorteVaeCollective.certificationId,
+      );
+  }
+
+  // If a cohorte VAE collective ID filter is provided, the certifications available are restricted to those defined for that cohorte
+  // Seems like it might conflig with the candidacyId filter if the candidacy is part of a VAE collective cohort but this one is used in the vae collective app
+  if (cohorteVaeCollectiveIdFilter) {
+    const certificationCohorteVaeCollective =
+      await prismaClient.certificationCohorteVaeCollective.findMany({
+        where: {
+          cohorteVaeCollectiveId: cohorteVaeCollectiveIdFilter,
         },
       });
     certificationsFromCohorteVaeCollectiveIds =

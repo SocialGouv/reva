@@ -22,10 +22,12 @@ async function searchCertificationsForCandidate({
   searchText,
   organism,
   candidacyId,
+  cohorteVaeCollectiveIdFilter,
 }: {
   searchText?: string;
   organism?: Organism | null;
   candidacyId?: string;
+  cohorteVaeCollectiveIdFilter?: string;
 }) {
   return await injectGraphql({
     fastify: global.testApp,
@@ -42,6 +44,9 @@ async function searchCertificationsForCandidate({
         ...(searchText ? { searchText } : {}),
         ...(organism ? { organismId: organism?.id || "" } : {}),
         ...(candidacyId ? { candidacyId } : {}),
+        ...(cohorteVaeCollectiveIdFilter
+          ? { cohorteVaeCollectiveIdFilter }
+          : {}),
       },
       returnFields: "{ rows { label }, info { totalRows } }",
     },
@@ -120,7 +125,7 @@ describe("VAE collective", () => {
   /**
    * Test search certifications by a candidate restricted by a VAE collective cohort
    */
-  test("should only return the certification available for the VAE collective cohort", async () => {
+  test("should only return certifications available for the candidacy's VAE collective cohort", async () => {
     const certificationVaeCollective = await createCertificationHelper();
     const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
       certificationCohorteVaeCollectives: {
@@ -133,6 +138,24 @@ describe("VAE collective", () => {
     });
     const resp = await searchCertificationsForCandidate({
       candidacyId: candidacy.id,
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+  });
+
+  /**
+   * Test search certifications with a cohorte VAE collective ID filter
+   */
+  test("should only return certifications available for the VAE collective cohort", async () => {
+    const certificationVaeCollective = await createCertificationHelper();
+    const cohorteVaeCollective = await createCohorteVaeCollectiveHelper({
+      certificationCohorteVaeCollectives: {
+        create: { certificationId: certificationVaeCollective.id },
+      },
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      cohorteVaeCollectiveIdFilter: cohorteVaeCollective.id,
     });
     const obj = resp.json();
     expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
