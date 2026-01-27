@@ -103,8 +103,8 @@ test("should be disabled for AUTONOME after feasibilityFileSentAt", async ({
   await dashboardWait(page);
 
   const tile = page.locator('[data-testid="type-accompagnement-tile"]');
-  await expect(tile.locator("a")).not.toBeVisible();
-  await expect(tile).toContainText("Consulter");
+  await expect(tile.locator("button")).toBeVisible();
+  await expect(tile).not.toContainText("Consulter");
 });
 
 test("should be disabled for ACCOMPAGNE after PARCOURS_CONFIRME", async ({
@@ -124,8 +124,32 @@ test("should be disabled for ACCOMPAGNE after PARCOURS_CONFIRME", async ({
   await dashboardWait(page);
 
   const tile = page.locator('[data-testid="type-accompagnement-tile"]');
-  await expect(tile.locator("a")).not.toBeVisible();
-  await expect(tile).toContainText("Consulter");
+  await expect(tile.locator("button")).toBeVisible();
+  await expect(tile).not.toContainText("Consulter");
+});
+
+test("should be disabled for ACCOMPAGNE after feasibilityFileSentAt", async ({
+  page,
+  msw,
+}) => {
+  const candidacy = createCandidacyEntity({
+    candidate,
+    typeAccompagnement: "ACCOMPAGNE",
+    status: "PARCOURS_CONFIRME",
+    certification: createCertificationEntity(),
+    feasibility: createFeasibilityEntity({
+      feasibilityFileSentAt: Date.now(),
+    }),
+  });
+  const { handlers, dashboardWait } = dashboardHandlers({ candidacy });
+
+  msw.use(...handlers);
+  await login(page);
+  await dashboardWait(page);
+
+  const tile = page.locator('[data-testid="type-accompagnement-tile"]');
+  await expect(tile.locator("button")).toBeVisible();
+  await expect(tile).not.toContainText("Consulter");
 });
 
 test("should navigate to type-accompagnement page when clicking tile", async ({

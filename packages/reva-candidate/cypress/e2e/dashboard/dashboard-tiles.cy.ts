@@ -190,7 +190,7 @@ context("Dashboard Tiles", () => {
         cy.get(
           '[data-testid="certification-tile"] [data-testid="incomplete-badge"]',
         ).should("not.exist");
-        cy.get('[data-testid="certification-tile"] a').should("not.exist");
+        cy.get('[data-testid="certification-tile"] a').should("exist");
       });
     });
 
@@ -213,7 +213,7 @@ context("Dashboard Tiles", () => {
         cy.get(
           '[data-testid="certification-tile"] [data-testid="incomplete-badge"]',
         ).should("not.exist");
-        cy.get('[data-testid="certification-tile"] a').should("not.exist");
+        cy.get('[data-testid="certification-tile"] a').should("exist");
       });
     });
   });
@@ -255,11 +255,11 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-testid="type-accompagnement-tile"] a').should(
-          "not.exist",
+        cy.get('[data-testid="type-accompagnement-tile"] button').should(
+          "exist",
         );
         cy.get('[data-testid="type-accompagnement-tile"]').should(
-          "contain.text",
+          "not.contain.text",
           "Consulter",
         );
         cy.get(
@@ -275,16 +275,36 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-testid="type-accompagnement-tile"] a').should(
-          "not.exist",
+        cy.get('[data-testid="type-accompagnement-tile"] button').should(
+          "exist",
         );
         cy.get('[data-testid="type-accompagnement-tile"]').should(
-          "contain.text",
+          "not.contain.text",
           "Consulter",
         );
         cy.get(
           '[data-testid="type-accompagnement-tile"] [data-testid="incomplete-badge"]',
         ).should("not.exist");
+      });
+    });
+
+    it("should be disabled for ACCOMPAGNE after feasibilityFileSentAt", () => {
+      cy.fixture("candidacy1.json").then((candidacy) => {
+        candidacy.data.getCandidacyById.status = "PARCOURS_CONFIRME";
+        candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
+        candidacy.data.getCandidacyById.feasibility = {
+          feasibilityFileSentAt: Date.now(),
+        };
+
+        interceptGraphQL(candidacy);
+
+        cy.get('[data-testid="type-accompagnement-tile"] button').should(
+          "exist",
+        );
+        cy.get('[data-testid="type-accompagnement-tile"]').should(
+          "not.contain.text",
+          "Consulter",
+        );
       });
     });
 
