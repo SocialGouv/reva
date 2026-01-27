@@ -32,13 +32,14 @@ import keycloakPlugin from "./plugins/keycloak-plugin";
 
 const ADMIN_REACT_ROUTE_PATH = "/admin2";
 const CANDIDATE_ROUTE_PATH = "/candidat";
+const isTestEnv = process.env.NODE_ENV === "test";
 
 type BuilAppOptions = FastifyServerOptions & {
   keycloakPluginMock?: FastifyPluginAsync<FastifyPluginOptions>;
 };
 
 const validateRequiredEnvVars = () => {
-  if (process.env.NODE_ENV === "test") {
+  if (isTestEnv) {
     // Provide default test values for required environment variables
     process.env.COOKIE_SECRET =
       process.env.COOKIE_SECRET || "test-cookie-secret";
@@ -90,7 +91,7 @@ export const buildApp = async (
   });
 
   app.register(rateLimit, {
-    max: 100,
+    max: isTestEnv ? 100000 : 100,
     timeWindow: "1 minute",
   });
 
