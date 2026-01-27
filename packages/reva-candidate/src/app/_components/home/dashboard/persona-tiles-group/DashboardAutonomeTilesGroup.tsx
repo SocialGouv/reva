@@ -31,6 +31,7 @@ export const DashboardAutonomeTilesGroup = ({
             readOnly={hasFeasibilitySent}
           />
           <TypeAccompagnementTile
+            typeAccompagnement={candidacy?.typeAccompagnement}
             hasSelectedTypeAccompagnement={!!candidacy?.typeAccompagnement}
             disabled={hasFeasibilitySent}
           />

@@ -1,5 +1,7 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
+import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove.util";
+
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 import { CertificationTile } from "../tiles/CertificationTile";
 import { DossierValidationTile } from "../tiles/DossierValidationTile";
@@ -32,7 +34,10 @@ export const DashboardAccompagneTilesGroup = ({
   const endAccompagnementConfirmed =
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
-  const isParcoursConfirme = candidacy.status === "PARCOURS_CONFIRME";
+  const isParcoursConfirme = isCandidacyStatusEqualOrAbove(
+    candidacy.status,
+    "PARCOURS_CONFIRME",
+  );
 
   return (
     <div
@@ -49,6 +54,7 @@ export const DashboardAccompagneTilesGroup = ({
             readOnly={isParcoursConfirme}
           />
           <TypeAccompagnementTile
+            typeAccompagnement={candidacy?.typeAccompagnement}
             hasSelectedTypeAccompagnement={!!candidacy?.typeAccompagnement}
             disabled={isParcoursConfirme}
           />

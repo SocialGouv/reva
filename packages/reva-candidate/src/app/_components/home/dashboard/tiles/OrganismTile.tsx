@@ -44,7 +44,7 @@ export const OrganismTile = ({
   };
 
   const getDesc = () => {
-    if (!hasSelectedOrganism) return undefined;
+    if (!hasSelectedOrganism || tileDisabled) return undefined;
     return canModifyOrganism ? "Modifier" : "Consulter";
   };
 
@@ -55,11 +55,16 @@ export const OrganismTile = ({
     title: "Accompagnateur",
     small: true as const,
     imageUrl: "/candidat/images/pictograms/avatar.svg",
-    disabled: tileDisabled,
   };
 
-  if (isParcoursConfirme) {
-    return <Tile {...commonProps} />;
+  if (tileDisabled) {
+    return (
+      <Tile
+        {...commonProps}
+        disabled
+        buttonProps={{ onClick: () => router.push("./set-organism") }}
+      />
+    );
   }
 
   return (

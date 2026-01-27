@@ -1,5 +1,7 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 
+import { isCandidacyStatusEqualOrAbove } from "@/utils/isCandidacyStatusEqualOrAbove.util";
+
 import { CandidacyUseCandidateForDashboard } from "../dashboard.hooks";
 import { CertificationTile } from "../tiles/CertificationTile";
 import { DossierValidationTile } from "../tiles/DossierValidationTile";
@@ -32,6 +34,10 @@ export const DashboardVaeCollectiveTilesGroup = ({
   const endAccompagnementConfirmed =
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_CANDIDATE" ||
     candidacy.endAccompagnementStatus === "CONFIRMED_BY_ADMIN";
+  const isParcoursConfirme = isCandidacyStatusEqualOrAbove(
+    candidacy.status,
+    "PARCOURS_CONFIRME",
+  );
 
   return (
     <div className={`flex flex-col gap-y-8 ${className || ""}`}>
@@ -42,8 +48,13 @@ export const DashboardVaeCollectiveTilesGroup = ({
         <div className="grid md:grid-cols-3 grid-rows-2">
           <CertificationTile
             selectedCertificationId={candidacy?.certification?.id}
+            readOnly={isParcoursConfirme}
           />
-          <TypeAccompagnementTile disabled />
+          <TypeAccompagnementTile
+            typeAccompagnement={candidacy?.typeAccompagnement}
+            hasSelectedTypeAccompagnement={!!candidacy?.typeAccompagnement}
+            disabled
+          />
           <GoalsTile
             hasCompletedGoals={hasCompletedGoals}
             readOnly={candidacyAlreadySubmitted}

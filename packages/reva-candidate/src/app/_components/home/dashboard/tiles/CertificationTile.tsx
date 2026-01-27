@@ -28,9 +28,5 @@ export const CertificationTile = ({
     imageUrl: "/candidat/images/pictograms/search.svg",
   };
 
-  if (readOnly) {
-    return <Tile {...commonProps} disabled />;
-  }
-
   return <Tile {...commonProps} linkProps={{ href }} />;
 };
