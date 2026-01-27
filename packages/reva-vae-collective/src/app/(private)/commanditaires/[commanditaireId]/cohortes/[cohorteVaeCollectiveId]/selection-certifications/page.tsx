@@ -2,6 +2,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 import { MultiSelectItemProps } from "@/components/multi-select-list/MultiSelectList";
+import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 
 import { CertificationList } from "./_components/certification-list/CertificationList";
 import {
@@ -64,6 +65,24 @@ export default async function SelectionCertificationsPage({
 
   return (
     <div className="flex flex-col w-full">
+      <RoleDependentBreadcrumb
+        className="mt-0 mb-4"
+        currentPageLabel="Certifications"
+        segments={[
+          {
+            label: "Cohortes",
+            linkProps: {
+              href: `/commanditaires/${commanditaireId}/cohortes`,
+            },
+          },
+          {
+            label: cohorte.nom,
+            linkProps: {
+              href: `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}`,
+            },
+          },
+        ]}
+      />
       <h1 className="mb-12">{cohorte?.nom}</h1>
       <CertificationList
         commanditaireVaeCollectiveId={commanditaireId}
