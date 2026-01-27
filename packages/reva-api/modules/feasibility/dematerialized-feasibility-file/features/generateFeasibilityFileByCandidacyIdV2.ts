@@ -1039,6 +1039,10 @@ const addAvisEtDocumentsSection = ({
           });
         },
       });
+      doc
+        .font("assets/fonts/Marianne/Marianne-Regular.otf")
+        .fontSize(8)
+        .fillColor("black");
     },
   });
 };

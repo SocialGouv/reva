@@ -75,6 +75,7 @@ export const addInfoText = ({
 }) => {
   doc
     .font("assets/fonts/Marianne/Marianne-Light.otf")
+    .fillColor("black")
     .fontSize(8)
     .table({
       defaultStyle: { border: false, padding: false },
@@ -116,6 +117,7 @@ export const addCallout = ({
   doc
     .font("assets/fonts/Marianne/Marianne-Regular.otf")
     .fontSize(9)
+    .fillColor("black")
     .table({
       position: { x: x ?? doc.x, y: y ?? doc.y },
       maxWidth: widthInPt ?? undefined,
@@ -171,6 +173,7 @@ export const addSection = ({
   doc
     .fontSize(14)
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
+    .fillColor("black")
     .text(title, doc.x + pxToPt(50), doc.y);
 
   doc.moveDown(0.5);
@@ -196,6 +199,7 @@ export const addSubSection = ({
   doc
     .fontSize(12)
     .font("assets/fonts/Marianne/Marianne-Bold.otf")
+    .fillColor("black")
     .text(title, pxToPt(100), doc.y, { width: pxToPt(1240) });
   doc.moveDown(0.5);
   doc.text("", doc.x + pxToPt(40), doc.y); //indent content
@@ -273,6 +277,7 @@ export const addTitledBlock = ({
   doc
     .fontSize(8)
     .font("assets/fonts/Marianne/Marianne-Medium.otf")
+    .fillColor("black")
     .text(title, startInPt, doc.y);
   doc.moveDown(0.5);
   doc
@@ -314,6 +319,7 @@ export const addDisabledCheckbox = ({
   doc
     .fontSize(8)
     .font("assets/fonts/Marianne/Marianne-Light.otf")
+    .fillColor("black")
     .text(label, doc.x + pxToPt(30), doc.y);
   doc.text("", oldX, doc.y); //reset x position to start of checkbox after checkbox end
 };
@@ -350,6 +356,7 @@ export const addInfoTable = ({
     doc
       .fontSize(8)
       .font("assets/fonts/Marianne/Marianne-Light.otf")
+      .fillColor("black")
       .text(item.title, doc.x, doc.y);
     doc.text("", doc.x, lineY);
     doc
@@ -527,6 +534,10 @@ export const addDecision = ({
         });
       break;
   }
+  doc
+    .font("assets/fonts/Marianne/Marianne-Regular.otf")
+    .fontSize(8)
+    .fillColor("black");
 };
 
 export const getCourtesyTitleFromGender = (gender: Gender | null) => {
