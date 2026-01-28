@@ -45,6 +45,7 @@ const GET_CERTIFICATION = graphql(`
         certificationExpertContactPhone
         certificationExpertContactEmail
         usefulResources
+        commentsForAAP
       }
       competenceBlocs {
         id

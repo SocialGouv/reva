@@ -23,6 +23,7 @@ type AdditionalInfoProps = {
   certificationExpertContactPhone?: string | null;
   certificationExpertContactEmail?: string | null;
   usefulResources?: string | null;
+  commentsForAAP?: string | null;
 } | null;
 
 const DocumentationTab = ({
@@ -154,12 +155,18 @@ const DocumentationTab = ({
             </div>
           </>
         )}
-        {additionalInfo?.usefulResources && (
+        {(additionalInfo?.usefulResources ||
+          additionalInfo?.commentsForAAP) && (
           <div>
             <p className="mb-0">
               Ressources complémentaires pour aider au parcours VAE :
             </p>
-            <p className="mb-0">{additionalInfo?.usefulResources}</p>
+            {additionalInfo?.usefulResources && (
+              <p className="mb-0">{additionalInfo?.usefulResources}</p>
+            )}
+            {additionalInfo?.commentsForAAP && (
+              <p className="mb-0">{additionalInfo?.commentsForAAP}</p>
+            )}
           </div>
         )}
       </div>

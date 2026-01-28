@@ -53,6 +53,7 @@ export const CertificationPageContent = async ({
       certificationExpertContactPhone?: string | null;
       certificationExpertContactEmail?: string | null;
       usefulResources?: string | null;
+      commentsForAAP?: string | null;
     } | null;
     competenceBlocs: {
       id: string;

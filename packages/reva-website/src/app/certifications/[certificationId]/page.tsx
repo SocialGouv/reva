@@ -98,6 +98,7 @@ const getCertificationQuery = graphql(`
         certificationExpertContactPhone
         certificationExpertContactEmail
         usefulResources
+        commentsForAAP
       }
       competenceBlocs {
         id

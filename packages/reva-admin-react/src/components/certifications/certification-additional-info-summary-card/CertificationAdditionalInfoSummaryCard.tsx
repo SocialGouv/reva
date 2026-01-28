@@ -141,6 +141,11 @@ export const CertificationAdditionalInfoSummaryCard = ({
                 {certificationAdditionalInfo.usefulResources}
               </p>
             )}
+            {certificationAdditionalInfo.commentsForAAP && (
+              <p className="mb-0">
+                {certificationAdditionalInfo.commentsForAAP}
+              </p>
+            )}
           </div>
         </section>
       </div>
