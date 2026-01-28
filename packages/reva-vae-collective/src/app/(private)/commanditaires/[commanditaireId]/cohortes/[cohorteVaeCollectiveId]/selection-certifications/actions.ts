@@ -36,11 +36,13 @@ const searchCertificationsForSelectionCertificationsPageQuery = graphql(`
     $searchText: String
     $offset: Int
     $limit: Int
+    $cohorteVaeCollectiveIdFilter: ID
   ) {
     searchCertificationsForCandidate(
       searchText: $searchText
       offset: $offset
       limit: $limit
+      cohorteVaeCollectiveIdFilter: $cohorteVaeCollectiveIdFilter
     ) {
       rows {
         id
@@ -92,9 +94,11 @@ export const getCohorteById = async (
 export const searchCertificationsForSelectionCertificationsPage = async ({
   searchText,
   currentPage,
+  cohorteVaeCollectiveIdFilter,
 }: {
   searchText?: string;
   currentPage: number;
+  cohorteVaeCollectiveIdFilter?: string;
 }) => {
   const accessToken = await getAccessTokenFromCookie();
   const offset = (currentPage - 1) * RECORDS_PER_PAGE;
@@ -103,7 +107,7 @@ export const searchCertificationsForSelectionCertificationsPage = async ({
   const result = throwUrqlErrors(
     await client.query(
       searchCertificationsForSelectionCertificationsPageQuery,
-      { searchText, offset, limit },
+      { searchText, offset, limit, cohorteVaeCollectiveIdFilter },
       {
         fetchOptions: {
           headers: {

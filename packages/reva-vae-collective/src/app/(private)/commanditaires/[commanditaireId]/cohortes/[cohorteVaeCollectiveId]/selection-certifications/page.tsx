@@ -15,12 +15,17 @@ export default async function SelectionCertificationsPage({
   searchParams,
 }: {
   params: Promise<{ commanditaireId: string; cohorteVaeCollectiveId: string }>;
-  searchParams: Promise<{ searchFilter?: string; page?: number }>;
+  searchParams: Promise<{
+    searchFilter?: string;
+    page?: number;
+    onlyShowAddedItems?: string;
+  }>;
 }) {
   const { commanditaireId, cohorteVaeCollectiveId } = await params;
-  const { searchFilter, page } = await searchParams;
+  const { searchFilter, page, onlyShowAddedItems } = await searchParams;
 
   const currentPage = page ? Number(page) : 1;
+  const onlyShowAddedItemsValue = onlyShowAddedItems === "true";
 
   const cohorte = await getCohorteById(commanditaireId, cohorteVaeCollectiveId);
 
@@ -32,6 +37,9 @@ export default async function SelectionCertificationsPage({
     await searchCertificationsForSelectionCertificationsPage({
       searchText: searchFilter,
       currentPage,
+      cohorteVaeCollectiveIdFilter: onlyShowAddedItemsValue
+        ? cohorteVaeCollectiveId
+        : undefined,
     });
 
   if (!certificationPage) {
