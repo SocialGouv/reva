@@ -29,14 +29,23 @@ export const CertificationsCard = (props: CertificationsCardProps) => {
               Visualiser
             </Button>
           )}
-          {props.cohorteStatus === "BROUILLON" && (
-            <Button
-              className="ml-auto text-white"
-              linkProps={{ href: props.selectCertificationsHref }}
-            >
-              {props.numberOfCertifications > 0 ? "Modifier" : "Compléter"}
-            </Button>
-          )}
+          {props.cohorteStatus === "BROUILLON" &&
+            (props.numberOfCertifications > 0 ? (
+              <Button
+                className="ml-auto"
+                priority="tertiary"
+                linkProps={{ href: props.selectCertificationsHref }}
+              >
+                Modifier
+              </Button>
+            ) : (
+              <Button
+                className="ml-auto text-white"
+                linkProps={{ href: props.selectCertificationsHref }}
+              >
+                Compléter
+              </Button>
+            ))}
         </span>
       }
       size="small"
