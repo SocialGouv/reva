@@ -177,11 +177,17 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
       );
 
     const certificationCompetenceBlocsWithSelectionStatus =
-      certification.competenceBlocs.map((bloc) => ({
-        code: bloc.code ?? "",
-        label: bloc.label ?? "",
-        selected: dffBlocCompetenceBlocsIds.includes(bloc.id ?? false),
-      }));
+      certification.competenceBlocs
+        .map((bloc) => ({
+          code: bloc.code ?? "",
+          label: bloc.label ?? "",
+          selected: dffBlocCompetenceBlocsIds.includes(bloc.id ?? false),
+        }))
+        .sort((a, b) =>
+          a.code.localeCompare(b.code, "fr", {
+            sensitivity: "base",
+          }),
+        );
 
     addContexteDemandeSection({
       doc,
