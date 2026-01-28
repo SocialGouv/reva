@@ -19,7 +19,6 @@ export const searchOrganisms = async ({
   disponiblePourVaeCollective?: boolean;
 }) => {
   const fromClause = Prisma.raw(`from organism o
-    join active_organism_by_available_certification_based_on_formacode ao on ao.organism_id = o.id
     join maison_mere_aap as mm on mm.id = o.maison_mere_aap_id`);
 
   let whereClause = Prisma.sql`where o.modalite_accompagnement_renseignee_et_valide`;
@@ -29,7 +28,15 @@ export const searchOrganisms = async ({
   }
 
   if (certificationIds) {
-    whereClause = Prisma.sql`${whereClause} and ao.certification_id = ANY(STRING_TO_ARRAY(${certificationIds.join(",")}, ',')::uuid[])`;
+    const certificationIdsClause = certificationIds.map((certificationId) => {
+      return Prisma.sql`o.id in (select organism_id from active_organism_by_available_certification_based_on_formacode ao where ao.organism_id = o.id and ao.certification_id = ${certificationId}::uuid)`;
+    });
+
+    const certificationIdsClauseString = Prisma.join(
+      certificationIdsClause,
+      " and ",
+    );
+    whereClause = Prisma.sql`${whereClause} and (${certificationIdsClauseString})`;
   }
 
   if (searchText) {
@@ -49,7 +56,7 @@ export const searchOrganisms = async ({
   }
 
   const results = await prismaClient.$queryRaw<Organism[]>`
-          select distinct o.id,
+          select o.id,
                  o.label,
                  o.nom_public as "nomPublic",
                  o.email_contact as "emailContact",
