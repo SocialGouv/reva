@@ -49,7 +49,7 @@ export const searchCertificationsForCandidate = async ({
   }
 
   // If a cohorte VAE collective ID filter is provided, the certifications available are restricted to those defined for that cohorte
-  // Seems like it might conflig with the candidacyId filter if the candidacy is part of a VAE collective cohort but this one is used in the vae collective app
+  // Seems like it might conflict with the candidacyId filter if the candidacy is part of a VAE collective cohort but this one is used in the vae collective app
   if (cohorteVaeCollectiveIdFilter) {
     const certificationCohorteVaeCollective =
       await prismaClient.certificationCohorteVaeCollective.findMany({
@@ -62,6 +62,13 @@ export const searchCertificationsForCandidate = async ({
         (certificationCohorteVaeCollective) =>
           certificationCohorteVaeCollective.certificationId,
       );
+
+    // if the cohorte has no certifications, we add a dummy one in the filter to force an empty result
+    if (certificationsFromCohorteVaeCollectiveIds.length === 0) {
+      certificationsFromCohorteVaeCollectiveIds.push(
+        "00000000-0000-0000-0000-000000000000",
+      );
+    }
   }
 
   const organismQuery = Prisma.sql`${Prisma.raw(`from certification c, active_organism_by_available_certification_based_on_formacode available_certification
