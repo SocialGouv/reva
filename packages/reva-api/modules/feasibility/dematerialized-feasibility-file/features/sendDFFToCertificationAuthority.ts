@@ -9,6 +9,8 @@ import { sendNewFeasibilitySubmittedEmail } from "../../emails/sendNewFeasibilit
 import { getWarningOnFeasibilitySubmissionForCandidacyId } from "../../features/getWarningOnFeasibealitySubmissionForCandidacyId";
 import { throwErrorOnFeasibilitySubmissionWarning } from "../../features/throwErrorOnFeasibilitySubmissionWarning";
 
+import { generateAndUploadFeasibilityFileByCandidacyId } from "./generateAndUploadFeasibilityFileByCandidacyId";
+
 export const sendDFFToCertificationAuthority = async ({
   dematerializedFeasibilityFileId,
   certificationAuthorityId,
@@ -93,6 +95,13 @@ export const sendDFFToCertificationAuthority = async ({
 
   if (!dff) {
     throw new Error("Dossier de faisabilité dématérialisé non trouvé");
+  }
+
+  // Generate and upload the feasibility file by candidacy id
+  try {
+    await generateAndUploadFeasibilityFileByCandidacyId(candidacyId);
+  } catch (error) {
+    console.error(error);
   }
 
   // sending a mail notification to candidacy certification authority and related certification authority local accounts
