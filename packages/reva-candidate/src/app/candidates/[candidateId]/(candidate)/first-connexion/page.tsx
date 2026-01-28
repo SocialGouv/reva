@@ -5,38 +5,35 @@ import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 export default function FirstConnexionPage() {
   return (
-    <div className="bg-white lg:shadow-lifted w-full h-fit">
-      <StatusPage
-        title="Bienvenue dans votre espace France VAE"
-        chapo="Pour y accéder, vous devez vérifier et compléter vos informations de profil."
-        details={
-          <>
-            <p className="mb-0">
-              Cette étape ne vous prendra que quelques minutes, munissez vous de
-              :
-            </p>
-            <ul className="mb-0">
-              <li>
-                vos informations civiles (nom(s), prénom(s), informations de
-                naissance, nationalité)
-              </li>
-              <li>
-                vos informations de contact (adresse postale, téléphone, adresse
-                électronique)
-              </li>
-            </ul>
-          </>
-        }
-        pictogram={PICTOGRAMS.informationLG}
-        buttons={
-          <Button
-            priority="primary"
-            linkProps={{ href: "../profile?navigationDisabled=true" }}
-          >
-            Mon profil
-          </Button>
-        }
-      />
-    </div>
+    <StatusPage
+      title="Bienvenue dans votre espace France VAE"
+      chapo="Pour y accéder, vous devez vérifier et compléter vos informations de profil."
+      details={
+        <>
+          <p className="mb-0">
+            Cette étape ne vous prendra que quelques minutes, munissez vous de :
+          </p>
+          <ul className="mb-0">
+            <li>
+              vos informations civiles (nom(s), prénom(s), informations de
+              naissance, nationalité)
+            </li>
+            <li>
+              vos informations de contact (adresse postale, téléphone, adresse
+              électronique)
+            </li>
+          </ul>
+        </>
+      }
+      pictogram={PICTOGRAMS.informationLG}
+      buttons={
+        <Button
+          priority="primary"
+          linkProps={{ href: "../profile?navigationDisabled=true" }}
+        >
+          Mon profil
+        </Button>
+      }
+    />
   );
 }
