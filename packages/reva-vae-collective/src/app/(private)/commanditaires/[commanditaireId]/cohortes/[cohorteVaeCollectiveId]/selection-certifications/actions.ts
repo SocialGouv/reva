@@ -23,8 +23,6 @@ const getCohorteByIdQuery = graphql(`
         id
         certification {
           id
-          label
-          codeRncp
         }
       }
     }
