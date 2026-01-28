@@ -9,7 +9,7 @@ import { client } from "@/helpers/graphql/urql-client/urqlClient";
 import { graphql } from "@/graphql/generated";
 
 const updateCertificationsMutation = graphql(`
-  mutation updateCertificationsMutation(
+  mutation updateCertifications(
     $commanditaireVaeCollectiveId: ID!
     $cohorteVaeCollectiveId: ID!
     $certificationIds: [ID!]!
