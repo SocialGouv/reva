@@ -1,7 +1,3 @@
-"use client";
-
-import { Button } from "@codegouvfr/react-dsfr/Button";
-
 import { StatusPage } from "@/app/_components/status-page/StatusPage";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 import { PageLayout } from "@/layouts/page.layout";
@@ -35,11 +31,7 @@ export default function RegisterConfirmation() {
           </>
         }
         pictogram={PICTOGRAMS.mailSendLG}
-        buttons={
-          <Button priority="secondary" linkProps={{ href: "/" }}>
-            Retour à la page d'accueil
-          </Button>
-        }
+        actionLink={{ href: "/", label: "Retour à la page d'accueil" }}
       />
     </PageLayout>
   );

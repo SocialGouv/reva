@@ -1,5 +1,3 @@
-import { Button } from "@codegouvfr/react-dsfr/Button";
-
 import { StatusPage } from "@/app/_components/status-page/StatusPage";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
@@ -26,14 +24,11 @@ export default function FirstConnexionPage() {
         </>
       }
       pictogram={PICTOGRAMS.informationLG}
-      buttons={
-        <Button
-          priority="primary"
-          linkProps={{ href: "../profile?navigationDisabled=true" }}
-        >
-          Mon profil
-        </Button>
-      }
+      actionLink={{
+        href: "../profile?navigationDisabled=true",
+        label: "Mon profil",
+        priority: "primary",
+      }}
     />
   );
 }

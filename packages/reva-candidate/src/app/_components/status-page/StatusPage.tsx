@@ -1,3 +1,4 @@
+import { Button, ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
 import hexagonBackground from "./assets/hexagonBackground.svg";
@@ -7,16 +8,20 @@ export const StatusPage = ({
   chapo,
   details,
   pictogram,
-  buttons,
+  actionLink,
 }: {
   title: string;
   chapo: React.ReactNode;
   details?: React.ReactNode;
   pictogram: React.ReactNode;
-  buttons?: React.ReactNode;
+  actionLink?: {
+    href: string;
+    label: string;
+    priority?: ButtonProps["priority"];
+  };
 }) => (
   <div className="bg-white lg:shadow-lifted w-full h-fit">
-    <div className="px-6 py-10 flex flex-col lg:flex-row lg:items-center lg:justify-between">
+    <div className="lg:px-6 lg:py-10 flex flex-col lg:flex-row lg:items-center lg:justify-between">
       <div className="flex flex-col gap-10 flex-1">
         <div className="flex flex-col gap-6">
           <h1 className="mb-0">{title}</h1>
@@ -29,7 +34,15 @@ export const StatusPage = ({
             </div>
           )}
         </div>
-        {buttons && <div>{buttons}</div>}
+        {actionLink && (
+          <Button
+            priority={actionLink.priority ?? "secondary"}
+            linkProps={{ href: actionLink.href }}
+            className="w-full justify-center lg:w-auto"
+          >
+            {actionLink.label}
+          </Button>
+        )}
       </div>
       <div className="shrink-0 hidden lg:flex relative items-center justify-center w-[282px] h-[319px]">
         <Image src={hexagonBackground} className="absolute inset-0" alt="" />
