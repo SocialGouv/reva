@@ -31,7 +31,7 @@ export const StatusPage = ({
         </div>
         {buttons && <div>{buttons}</div>}
       </div>
-      <div className="shrink-0 hidden lg:flex relative items-center justify-center w-[208px] h-[234px]">
+      <div className="shrink-0 hidden lg:flex relative items-center justify-center w-[282px] h-[319px]">
         <Image src={hexagonBackground} className="absolute inset-0" alt="" />
         <div className="z-10">{pictogram}</div>
       </div>
