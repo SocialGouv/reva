@@ -46,6 +46,11 @@ export const CertificationList = ({
       pageItems={certificationsPageItems}
       paginationInfo={paginationInfo}
       onSelectionChange={handleCertificationSelectionChange}
+      itemTypeLabelForSearchResultsCount="certification(s)"
+      onlyShowAddedItemsSwitchLabel="Afficher les certifications ajoutées uniquement"
+      searchBarLabel="Rechercher par code RNCP, intitulé de certification etc..."
+      emptyStateTitle="Aucune certification trouvée"
+      emptyStateShowAllItemsButtonLabel="Afficher toutes les certifications"
     />
   );
 };
