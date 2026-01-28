@@ -5,23 +5,17 @@ import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 export default function FirstConnexionPage() {
   return (
-    <div className="bg-white lg:shadow-lifted w-full">
+    <div className="bg-white lg:shadow-lifted w-full h-fit">
       <StatusPage
         title="Bienvenue dans votre espace France VAE"
-        description={
-          <p className="text-xl mb-0">
-            Pour y accéder, vous devez vérifier et compléter vos informations de
-            profil.
-          </p>
-        }
-        pictogram={PICTOGRAMS.informationLG}
-        content={
-          <div className="text-sm">
-            <p className="block text-sm">
+        chapo="Pour y accéder, vous devez vérifier et compléter vos informations de profil."
+        details={
+          <>
+            <p className="mb-0">
               Cette étape ne vous prendra que quelques minutes, munissez vous de
               :
             </p>
-            <ul>
+            <ul className="mb-0">
               <li>
                 vos informations civiles (nom(s), prénom(s), informations de
                 naissance, nationalité)
@@ -31,8 +25,9 @@ export default function FirstConnexionPage() {
                 électronique)
               </li>
             </ul>
-          </div>
+          </>
         }
+        pictogram={PICTOGRAMS.informationLG}
         buttons={
           <Button
             priority="primary"
