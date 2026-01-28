@@ -91,7 +91,12 @@ export default async function SelectionCertificationsPage({
           },
         ]}
       />
-      <h1 className="mb-12">{cohorte?.nom}</h1>
+      <h1>Certifications</h1>
+      <p className="text-xl mb-12">
+        Ajoutez la (ou les) certification(s) visée(s) par vos candidats. Une
+        fiche détaillée vous apporte des informations clefs avant de valider
+        votre sélection.
+      </p>
       <CertificationList
         commanditaireVaeCollectiveId={commanditaireId}
         cohorteVaeCollectiveId={cohorteVaeCollectiveId}
