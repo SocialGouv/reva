@@ -53,6 +53,7 @@ import { getOrganismFormacodesByOrganismId } from "./features/getOrganismFormaco
 import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
 import { getPaginatedOrganismsByMaisonMereAAPId } from "./features/getPaginatedOrganismsByMaisonMereAAPId";
 import { getRemoteZonesByOrganismId } from "./features/getRemoteZonesByOrganismId";
+import { isOrganismAttachedToCertifications } from "./features/isOrganismAttachedToCertifications";
 import { isOrganismVisibleInCandidateSearchResults } from "./features/isOrganismVisibleInCandidateSearchResults";
 import { isUserGestionnaireMaisonMereAAPOfOrganism } from "./features/isUserGestionnaireMaisonMereAAPOfOrganism";
 import { isUserOwnerOfOrganism } from "./features/isUserOwnerOfOrganism";
@@ -667,6 +668,17 @@ const unsafeResolvers = {
         accountId: string;
       },
     ) => getCompteCollaborateurById({ accountId: params.accountId }),
+    organism_isOrganismAttachedToCertifications: async (
+      _parent: unknown,
+      params: {
+        organismId: string;
+        certificationIds: string[];
+      },
+    ) =>
+      isOrganismAttachedToCertifications({
+        organismId: params.organismId,
+        certificationIds: params.certificationIds,
+      }),
   },
 };
 

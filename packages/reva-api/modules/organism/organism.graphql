@@ -198,6 +198,10 @@ type Query {
     maisonMereAAPId: ID
     accountId: ID!
   ): Account!
+  organism_isOrganismAttachedToCertifications(
+    organismId: ID!
+    certificationIds: [ID!]!
+  ): Boolean!
 }
 
 input UpdateOrganismInput {
