@@ -138,13 +138,17 @@ const getOrCreateCandidate = async (
 ) => {
   const candidate = await getCandidateByKeycloakId({ keycloakId });
 
-  const country = await prismaClient.country.findUnique({
-    where: { inseeCode: userInfo.birthcountry },
-  });
-  if (!country) {
-    throw new FranceConnectUserError("Country not found", 400);
+  let countryId: string | undefined;
+
+  if (userInfo.birthcountry) {
+    const country = await prismaClient.country.findUnique({
+      where: { inseeCode: userInfo.birthcountry },
+    });
+    if (!country) {
+      throw new FranceConnectUserError("Country not found", 400);
+    }
+    countryId = country.id;
   }
-  const countryId = country.id;
 
   if (candidate) {
     return await updateCandidateWithFranceConnectInfo({
@@ -168,7 +172,7 @@ const updateCandidateWithFranceConnectInfo = async ({
 }: {
   candidateId: string;
   userInfo: FranceConnectClaims;
-  countryId: string;
+  countryId: string | undefined;
 }) => {
   const { given_name, family_name, gender, birthdate } = userInfo;
 
@@ -194,7 +198,7 @@ const createCandidateFromFranceConnect = async ({
 }: {
   keycloakId: string;
   userInfo: FranceConnectClaims;
-  countryId: string;
+  countryId: string | undefined;
 }) => {
   const department = await getDefaultDepartment();
 
