@@ -100,6 +100,7 @@ export default async function SelectionCertificationsPage({
       <CertificationList
         commanditaireVaeCollectiveId={commanditaireId}
         cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+        organismId={cohorte.organismId}
         selectedCertificationIds={cohorte.certificationCohorteVaeCollectives.map(
           (c) => c.certification.id,
         )}

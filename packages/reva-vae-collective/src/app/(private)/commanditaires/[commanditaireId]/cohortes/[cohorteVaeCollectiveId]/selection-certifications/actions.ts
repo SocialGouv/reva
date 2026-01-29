@@ -19,6 +19,7 @@ const getCohorteByIdQuery = graphql(`
     ) {
       id
       nom
+      organismId
       certificationCohorteVaeCollectives {
         id
         certification {

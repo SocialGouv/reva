@@ -55,3 +55,40 @@ export const updateCertifications = async ({
 
   revalidatePath("./");
 };
+
+const isOrganismAttachedToCertificationsQuery = graphql(`
+  query isOrganismAttachedToCertifications(
+    $organismId: ID!
+    $certificationIds: [ID!]!
+  ) {
+    organism_isOrganismAttachedToCertifications(
+      organismId: $organismId
+      certificationIds: $certificationIds
+    )
+  }
+`);
+
+export const isOrganismAttachedToCertifications = async ({
+  organismId,
+  certificationIds,
+}: {
+  organismId: string;
+  certificationIds: string[];
+}) => {
+  const accessToken = await getAccessTokenFromCookie();
+  const result = await client.query(
+    isOrganismAttachedToCertificationsQuery,
+    {
+      organismId,
+      certificationIds,
+    },
+    {
+      fetchOptions: {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    },
+  );
+  return result.data?.organism_isOrganismAttachedToCertifications;
+};
