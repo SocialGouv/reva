@@ -1,3 +1,4 @@
+import { isOrganismAttachedToCertifications } from "@/modules/organism/features/isOrganismAttachedToCertifications";
 import { prismaClient } from "@/prisma/client";
 
 import { getCohorteVAECollectiveById } from "./getCohorteVAECollectiveById";
@@ -22,6 +23,20 @@ export const updateCohorteVAECollectiveCertification = async ({
       "Impossible de modifier la certification d'une cohorte si elle n'est pas dans l'état 'BROUILLON'",
     );
   }
+
+  // reset the organism if it is not attached to all the cohorte certifications
+  let resetOrganism = false;
+  if (cohorteVaeCollective.organismId) {
+    if (
+      !(await isOrganismAttachedToCertifications({
+        organismId: cohorteVaeCollective.organismId,
+        certificationIds,
+      }))
+    ) {
+      resetOrganism = true;
+    }
+  }
+
   await prismaClient.$transaction(async (tx) => {
     await tx.certificationCohorteVaeCollective.deleteMany({
       where: {
@@ -34,14 +49,16 @@ export const updateCohorteVAECollectiveCertification = async ({
         certificationId,
       })),
     });
-    await tx.cohorteVaeCollective.update({
-      where: {
-        id: cohorteVaeCollectiveId,
-      },
-      data: {
-        organismId: null,
-      },
-    });
+    if (resetOrganism) {
+      await tx.cohorteVaeCollective.update({
+        where: {
+          id: cohorteVaeCollectiveId,
+        },
+        data: {
+          organismId: null,
+        },
+      });
+    }
   });
 
   return cohorteVaeCollective;
