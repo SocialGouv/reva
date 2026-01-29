@@ -138,17 +138,38 @@ const getOrCreateCandidate = async (
 ) => {
   const candidate = await getCandidateByKeycloakId({ keycloakId });
 
+  const country = await prismaClient.country.findUnique({
+    where: { inseeCode: userInfo.birthcountry },
+  });
+  if (!country) {
+    throw new FranceConnectUserError("Country not found", 400);
+  }
+  const countryId = country.id;
+
   if (candidate) {
-    return await updateCandidateWithFranceConnectInfo(candidate.id, userInfo);
+    return await updateCandidateWithFranceConnectInfo({
+      candidateId: candidate.id,
+      userInfo,
+      countryId,
+    });
   }
 
-  return await createCandidateFromFranceConnect(keycloakId, userInfo);
+  return await createCandidateFromFranceConnect({
+    keycloakId,
+    userInfo,
+    countryId,
+  });
 };
 
-const updateCandidateWithFranceConnectInfo = async (
-  candidateId: string,
-  userInfo: FranceConnectClaims,
-) => {
+const updateCandidateWithFranceConnectInfo = async ({
+  candidateId,
+  userInfo,
+  countryId,
+}: {
+  candidateId: string;
+  userInfo: FranceConnectClaims;
+  countryId: string;
+}) => {
   const { given_name, family_name, gender, birthdate } = userInfo;
 
   const updateData = {
@@ -157,6 +178,7 @@ const updateCandidateWithFranceConnectInfo = async (
     ...(family_name && { lastname: family_name }),
     ...(gender && { gender: mapGender(gender) }),
     ...(birthdate && { birthdate: parseFranceConnectDate(birthdate) }),
+    ...(countryId && { countryId }),
   };
 
   return prismaClient.candidate.update({
@@ -165,10 +187,15 @@ const updateCandidateWithFranceConnectInfo = async (
   });
 };
 
-const createCandidateFromFranceConnect = async (
-  keycloakId: string,
-  userInfo: FranceConnectClaims,
-) => {
+const createCandidateFromFranceConnect = async ({
+  keycloakId,
+  userInfo,
+  countryId,
+}: {
+  keycloakId: string;
+  userInfo: FranceConnectClaims;
+  countryId: string;
+}) => {
   const department = await getDefaultDepartment();
 
   const candidateData = {
@@ -181,7 +208,7 @@ const createCandidateFromFranceConnect = async (
     phone: "",
     departmentId: department.id,
     givenName: undefined,
-    birthcountry: undefined,
+    countryId,
     birthDepartmentId: undefined,
     birthCity: userInfo.birthplace,
   };
