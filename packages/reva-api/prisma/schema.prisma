@@ -504,6 +504,7 @@ model Country {
   id        String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label     String      @unique @db.VarChar(255)
   isoCode   String      @unique @map("iso_code") @db.VarChar(3)
+  inseeCode String      @unique @map("insee_code") @db.VarChar(5)
   Candidate Candidate[]
   createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime?   @map("updated_at") @db.Timestamptz(6)
