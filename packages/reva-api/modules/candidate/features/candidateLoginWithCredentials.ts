@@ -44,7 +44,7 @@ export const candidateLoginWithCredentials = async ({
     data: { lastLoginViaPasswordAt: new Date() },
   });
 
-  updateAllCandidaciesDerniereDateActiviteByCandidateId({
+  await updateAllCandidaciesDerniereDateActiviteByCandidateId({
     candidateId: candidate.id,
   });
 
