@@ -1,5 +1,3 @@
-import { ActiviteStatut, CandidacyStatusStep } from "@prisma/client";
-
 import { TokenService } from "@/modules/account/utils/token.service";
 import { updateCertification } from "@/modules/candidacy/certification/features/updateCertification";
 import { getFirstActiveCandidacyByCandidateId } from "@/modules/candidacy/features/getFirstActiveCandidacyByCandidateId";
@@ -28,6 +26,7 @@ import {
 
 import { createCandidateWithCandidacy } from "./createCandidateWithCandidacy";
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
+import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "./updateAllCandidaciesDerniereDateActiviteByCandidateId";
 
 export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(
@@ -189,18 +188,10 @@ const loginCandidate = async ({ email }: { email: string }) => {
     data: { lastLoginViaMagicLinkAt: new Date() },
   });
 
-  // Mise à jour de la date d'activité pour toutes les candidatures actives du candidat
-  await prismaClient.candidacy.updateMany({
-    where: {
-      candidateId: candidate.id,
-      status: {
-        not: CandidacyStatusStep.ARCHIVE,
-      },
-      candidacyDropOut: { is: null },
-      activite: ActiviteStatut.ACTIF,
-    },
-    data: { derniereDateActivite: new Date() },
+  await updateAllCandidaciesDerniereDateActiviteByCandidateId({
+    candidateId: candidate.id,
   });
+
   const url = getImpersonateUrl(candidate.keycloakId);
 
   return url;

@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { getActiveCandidaciesByCandidateId } from "@/modules/candidacy/features/getActiveCandidaciesByCandidateId";
 import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandidateByKeycloakId";
+import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "@/modules/candidate/features/updateAllCandidaciesDerniereDateActiviteByCandidateId";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { prismaClient } from "@/prisma/client";
@@ -122,6 +123,10 @@ export const handleFranceConnectCallback = async (
       redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create`;
     }
   }
+
+  await updateAllCandidaciesDerniereDateActiviteByCandidateId({
+    candidateId: candidate.id,
+  });
 
   const redirectUrl = new URL(`${baseUrl}${redirectPath}`);
   return redirectUrl.toString();
