@@ -196,12 +196,17 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
     reply.keycloakId = request.keycloakId;
   });
 
+  type HandlerError = Error & {
+    code?: string;
+    graphQLErrors?: Array<{ message: string }>;
+  };
+
   // Handle errors for pathes :
   // /candidatures
   // /dossiersDeFaisabilite
   // /dossiersDeValidation
   // /informationsJury
-  fastify.setErrorHandler((error, request, reply) => {
+  fastify.setErrorHandler((error: HandlerError, request, reply) => {
     const isSecurePath = securePathes.some((path) =>
       request.url.startsWith(`/interop/v1/${path}`),
     );

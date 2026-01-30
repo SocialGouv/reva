@@ -39,6 +39,9 @@ const candidacyRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             description: "Détails de la candidature",
             $ref: "http://vae.gouv.fr/components/schemas/CandidatureResponse",
           },
+          204: {
+            description: "Candidature introuvable",
+          },
         },
       },
       handler: async (request, reply) => {

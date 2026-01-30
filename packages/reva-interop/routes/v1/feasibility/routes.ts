@@ -58,6 +58,9 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             desciption: "Dossier de faisabilité",
             $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteResponse",
           },
+          204: {
+            description: "Aucun contenu",
+          },
         },
       },
       handler: async (request, reply) => {
@@ -100,6 +103,9 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           200: {
             description: "Liste des décisions sur le dossier de faisabilité",
             $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionsResponse",
+          },
+          204: {
+            description: "Aucun contenu",
           },
         },
       },
@@ -179,6 +185,9 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           201: {
             description: "Nouvelle décision créée avec succès",
             $ref: "http://vae.gouv.fr/components/schemas/DossierDeFaisabiliteDecisionResponse",
+          },
+          204: {
+            description: "Aucun contenu",
           },
         },
       },
@@ -266,6 +275,9 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             description: "Liste des dossiers de faisabilité",
             $ref: "http://vae.gouv.fr/components/schemas/DossiersDeFaisabiliteResponse",
           },
+          204: {
+            description: "Aucun contenu",
+          },
         },
       },
       handler: async (request, reply) => {
@@ -278,7 +290,7 @@ const feasibilityRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           recherche,
         );
         if (dossiersDeFaisabilite) {
-          reply.send(mapGetFeasibilities(dossiersDeFaisabilite));
+          reply.status(200).send(mapGetFeasibilities(dossiersDeFaisabilite));
         } else {
           reply.status(204).send();
         }

@@ -157,6 +157,9 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
             },
           },
         },
+        401: {
+          description: "Clé API invalide",
+        },
       },
     },
     handler: async (request, reply) => {
@@ -200,6 +203,14 @@ const authRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           },
         },
         required: ["token"],
+      },
+      response: {
+        401: {
+          description: "Clé API invalide",
+        },
+        204: {
+          description: "Jeton invalidé",
+        },
       },
     },
     handler: async (request, reply) => {

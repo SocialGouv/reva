@@ -43,7 +43,8 @@ const fastify = Fastify({
       : undefined,
   },
   ajv: {
-    plugins: [ajvFilePlugin],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    plugins: [ajvFilePlugin as unknown as any],
     customOptions: {
       strict: false,
     },

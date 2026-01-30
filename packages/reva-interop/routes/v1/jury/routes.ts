@@ -17,13 +17,13 @@ import { mapScheduleJurySessionByCandidacyId } from "../features/juries/schedule
 import { updateJuryResultByCandidacyId } from "../features/juries/updateJuryResultByCandidacyId.js";
 import { mapUpdateJuryResultByCandidacyId } from "../features/juries/updateJuryResultByCandidacyId.mapper.js";
 import {
-  sessionJuryInputSchema,
   resultatJuryInputSchema,
+  sessionJuryInputSchema,
 } from "../inputSchemas.js";
 import {
-  statutJurySchema,
   candidacyIdSchema,
   resultatJurySchema,
+  statutJurySchema,
 } from "../schemas.js";
 
 const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
@@ -75,6 +75,9 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
             description: "Liste des candidats à l'étape jury",
             $ref: "http://vae.gouv.fr/components/schemas/InformationsJuryResponse",
           },
+          204: {
+            description: "Aucun contenu",
+          },
         },
       },
       handler: async (request, reply) => {
@@ -123,6 +126,9 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
             description: "Informations du jury du candidat",
             $ref: "http://vae.gouv.fr/components/schemas/InformationJuryResponse",
           },
+          204: {
+            description: "Aucun contenu",
+          },
         },
       },
       handler: async (request, reply) => {
@@ -168,6 +174,9 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           200: {
             description: "Informations de la session du jury du candidat",
             $ref: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
+          },
+          204: {
+            description: "Aucun contenu",
           },
         },
       },
@@ -218,6 +227,9 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           200: {
             description: "Informations de session mises à jour avec succès",
             $ref: "http://vae.gouv.fr/components/schemas/SessionJuryResponse",
+          },
+          204: {
+            description: "Aucun contenu",
           },
         },
       },
@@ -276,6 +288,9 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
             description: "Résultat du jury du candidat",
             $ref: "http://vae.gouv.fr/components/schemas/ResultatSessionJuryResponse",
           },
+          204: {
+            description: "Aucun contenu",
+          },
         },
       },
       handler: async (request, reply) => {
@@ -327,6 +342,9 @@ const juryRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
           200: {
             description: "Résultat du jury mis à jour avec succès",
             $ref: "http://vae.gouv.fr/components/schemas/ResultatSessionJuryResponse",
+          },
+          204: {
+            description: "Aucun contenu",
           },
         },
       },

@@ -13,15 +13,16 @@ import { getDossiersDeValidation } from "../features/dossiersDeValidation/getDos
 import { mapGetDossiersDeValidation } from "../features/dossiersDeValidation/getDossiersDeValidation.mapper.js";
 import { dossierDeValidationDecisionInputSchema } from "../inputSchemas.js";
 import {
+  dossierDeValidationDecisionResponseSchema,
   dossiersDeValidationResponseSchema,
   pageInfoSchema,
 } from "../responseSchemas.js";
 import {
-  statutDossierDeValidationSchema,
   candidacyIdSchema,
-  dossierDeValidationSchema,
   decisionDossierDeValidationSchema,
+  dossierDeValidationSchema,
   fichierSchema,
+  statutDossierDeValidationSchema,
 } from "../schemas.js";
 
 const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
@@ -85,6 +86,9 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             description: "Liste des dossiers de validation",
             $ref: "http://vae.gouv.fr/components/schemas/DossiersDeValidationResponse",
           },
+          204: {
+            description: "Aucun contenu",
+          },
         },
       },
       handler: async (request, reply) => {
@@ -97,7 +101,9 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           recherche,
         );
         if (dossiersDeValidation) {
-          reply.send(mapGetDossiersDeValidation(dossiersDeValidation));
+          reply
+            .status(200)
+            .send(mapGetDossiersDeValidation(dossiersDeValidation));
         } else {
           reply.status(204).send();
         }
@@ -130,6 +136,9 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           200: {
             description: "Dossier de validation",
             $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationResponse",
+          },
+          204: {
+            description: "Aucun contenu",
           },
         },
       },
@@ -177,6 +186,9 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             description: "Liste des décisions sur le dossier de validation",
             $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionsResponse",
           },
+          204: {
+            description: "Aucun contenu",
+          },
         },
       },
       handler: async (request, reply) => {
@@ -203,6 +215,9 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
             typeof decisionDossierDeValidationSchema,
           ];
         };
+        SerializerSchemaOptions: {
+          references: [typeof dossierDeValidationDecisionResponseSchema];
+        };
       }>
     >()
     .route({
@@ -228,6 +243,9 @@ const dossierValidationRoutesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (
           201: {
             description: "Nouvelle décision créée avec succès",
             $ref: "http://vae.gouv.fr/components/schemas/DossierDeValidationDecisionResponse",
+          },
+          204: {
+            description: "Aucun contenu",
           },
         },
       },
