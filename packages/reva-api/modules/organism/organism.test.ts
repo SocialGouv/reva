@@ -740,4 +740,40 @@ describe("Search organisms", () => {
     });
     expect(resp.organism_searchOrganisms.rows.length).toBe(1);
   });
+
+  it("should search organisms and find none when searching for one certification available to the organism and one not available", async () => {
+    const certification = await createCertificationHelper();
+    const ccn = await prismaClient.conventionCollective.findFirst();
+    if (!certification || !ccn) {
+      throw new Error("Certification or CCN not found");
+    }
+    await prismaClient.certificationOnConventionCollective.create({
+      data: {
+        certificationId: certification.id,
+        ccnId: ccn.id,
+      },
+    });
+
+    const certification2 = await createCertificationHelper();
+
+    const organism = await createOrganismHelper({
+      modaliteAccompagnement: "LIEU_ACCUEIL",
+    });
+
+    await attachOrganismToAllDegreesHelper(organism);
+    await attachOrganismToAllConventionCollectiveHelper(organism);
+
+    const graphqlClient = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "admin",
+          keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+        }),
+      },
+    });
+    const resp = await graphqlClient.request(searchOrganismsQuery, {
+      certificationIds: [certification.id, certification2.id],
+    });
+    expect(resp.organism_searchOrganisms.rows.length).toBe(0);
+  });
 });
