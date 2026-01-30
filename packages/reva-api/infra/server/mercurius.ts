@@ -13,8 +13,9 @@ type PromiseType<T> = T extends PromiseLike<infer U> ? U : T;
 
 declare module "mercurius" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface MercuriusContext
-    extends PromiseType<ReturnType<typeof buildGqlContext>> {}
+  interface MercuriusContext extends PromiseType<
+    ReturnType<typeof buildGqlContext>
+  > {}
 }
 
 export const mercuriusGraphQL = (
