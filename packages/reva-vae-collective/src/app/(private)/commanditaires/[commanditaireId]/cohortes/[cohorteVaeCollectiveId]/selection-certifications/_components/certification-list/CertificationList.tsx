@@ -53,13 +53,21 @@ export const CertificationList = ({
       : selectedCertificationIds.filter((cid) => cid !== itemId);
 
     let needConfirmation = false;
+    console.log("organismId", organismId);
+    console.log("itemId", itemId);
+    console.log("newCertificationIds", newCertificationIds);
+    console.log("selected", selected);
+
     if (selected && organismId) {
       const organismAttachedToCertifications =
         await isOrganismAttachedToCertifications({
           organismId,
           certificationIds: [itemId],
         });
-
+      console.log(
+        "organismAttachedToCertifications",
+        organismAttachedToCertifications,
+      );
       if (!organismAttachedToCertifications) {
         needConfirmation = true;
       }
