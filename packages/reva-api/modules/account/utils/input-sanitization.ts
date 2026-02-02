@@ -3,6 +3,11 @@ import { z } from "zod";
 const REGEX_SPECIAL_CHARACTERS = /[&\\;`@{}[\]<>|~^$%#*+=/]/;
 const REGEX_SPECIAL_CHARACTERS_MESSAGE =
   "Les caractères spéciaux ne sont pas autorisés";
+const REGEX_ZIP_CODE = /^\d{5}$/;
+const REGEX_ZIP_CODE_MESSAGE = "Le code postal doit contenir 5 chiffres";
+const REGEX_PHONE = /^\+?\d{10,12}$/;
+const REGEX_PHONE_MESSAGE =
+  "Le numéro de téléphone doit commencer par + (facultatif) suivi de 10 à 12 chiffres";
 const DEFAULT_MAX_LENGTH = 10000;
 
 /**
@@ -54,4 +59,22 @@ export const sanitizedEmail = () => {
     .string()
     .trim()
     .email("Le champ doit contenir une adresse électronique valide");
+};
+
+export const sanitizedOptionalPhone = () => {
+  return z
+    .string()
+    .optional()
+    .refine((val) => !val || REGEX_PHONE.test(val), REGEX_PHONE_MESSAGE);
+};
+
+/**
+ * Zod schema for zip codes
+ * Validates against special characters and enforces numeric pattern
+ */
+export const sanitizedOptionalZipCode = () => {
+  return z
+    .string()
+    .optional()
+    .refine((val) => !val || REGEX_ZIP_CODE.test(val), REGEX_ZIP_CODE_MESSAGE);
 };

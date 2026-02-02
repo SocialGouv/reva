@@ -1,4 +1,4 @@
-import { Gender } from "@prisma/client";
+import { Country, Department, Gender } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { authorizationCodeGrant } from "openid-client";
 import { z } from "zod";
@@ -12,7 +12,9 @@ import { prismaClient } from "@/prisma/client";
 
 import {
   sanitizedEmail,
+  sanitizedOptionalPhone,
   sanitizedOptionalText,
+  sanitizedOptionalZipCode,
   sanitizedText,
 } from "../utils/input-sanitization";
 
@@ -42,6 +44,10 @@ const FranceConnectClaimsSchema = z.object({
   birthdate: sanitizedText(),
   birthplace: sanitizedOptionalText(),
   birthcountry: sanitizedOptionalText(),
+  phone_number: sanitizedOptionalPhone(),
+  locality: sanitizedOptionalText(),
+  postal_code: sanitizedOptionalZipCode(),
+  street_address: sanitizedOptionalText(),
 });
 
 type FranceConnectClaims = z.infer<typeof FranceConnectClaimsSchema>;
@@ -132,93 +138,96 @@ export const handleFranceConnectCallback = async (
   return redirectUrl.toString();
 };
 
+/** Builds the candidate fields derived from France Connect claims (shared by create and update). */
+const buildFranceConnectCandidateFields = async (
+  userInfo: FranceConnectClaims,
+) => {
+  const { firstname, firstname2, firstname3 } = splitGivenName(
+    userInfo.given_name ?? "",
+  );
+  const country = await getCountry(userInfo.birthcountry);
+  return {
+    firstname,
+    firstname2: firstname2 ?? undefined,
+    firstname3: firstname3 ?? undefined,
+    lastname: userInfo.family_name,
+    gender: mapGender(userInfo.gender),
+    birthdate: parseFranceConnectDate(userInfo.birthdate),
+    phone: userInfo.phone_number ?? "",
+    city: userInfo.locality ?? "",
+    zip: userInfo.postal_code ?? "",
+    street: userInfo.street_address ?? "",
+    countryId: country?.id,
+    givenName: userInfo.preferred_username ?? undefined,
+  };
+};
+
 const getOrCreateCandidate = async (
   keycloakId: string,
   userInfo: FranceConnectClaims,
 ) => {
   const candidate = await getCandidateByKeycloakId({ keycloakId });
 
-  let countryId: string | undefined;
-
-  if (userInfo.birthcountry) {
-    const country = await prismaClient.country.findUnique({
-      where: { inseeCode: userInfo.birthcountry },
-    });
-    if (!country) {
-      throw new FranceConnectUserError("Country not found", 400);
-    }
-    countryId = country.id;
-  }
+  const fcFields = await buildFranceConnectCandidateFields(userInfo);
 
   if (candidate) {
     return await updateCandidateWithFranceConnectInfo({
       candidateId: candidate.id,
-      userInfo,
-      countryId,
+      fcFields,
     });
   }
 
   return await createCandidateFromFranceConnect({
     keycloakId,
     userInfo,
-    countryId,
+    fcFields,
   });
 };
 
+type FranceConnectCandidateFields = Awaited<
+  ReturnType<typeof buildFranceConnectCandidateFields>
+>;
+
 const updateCandidateWithFranceConnectInfo = async ({
   candidateId,
-  userInfo,
-  countryId,
+  fcFields,
 }: {
   candidateId: string;
-  userInfo: FranceConnectClaims;
-  countryId: string | undefined;
+  fcFields: FranceConnectCandidateFields;
 }) => {
-  const { given_name, family_name, gender, birthdate } = userInfo;
-
-  const updateData = {
-    updatedAt: new Date(),
-    ...(given_name && { firstname: given_name }),
-    ...(family_name && { lastname: family_name }),
-    ...(gender && { gender: mapGender(gender) }),
-    ...(birthdate && { birthdate: parseFranceConnectDate(birthdate) }),
-    ...(countryId && { countryId }),
-  };
-
+  const { gender, birthdate, countryId, ...rest } = fcFields;
   return prismaClient.candidate.update({
     where: { id: candidateId },
-    data: updateData,
+    data: {
+      updatedAt: new Date(),
+      ...rest,
+      ...(gender != null && { gender }),
+      ...(birthdate != null && { birthdate }),
+      ...(countryId !== undefined && { countryId }),
+    },
   });
 };
 
 const createCandidateFromFranceConnect = async ({
   keycloakId,
   userInfo,
-  countryId,
+  fcFields,
 }: {
   keycloakId: string;
   userInfo: FranceConnectClaims;
-  countryId: string | undefined;
+  fcFields: FranceConnectCandidateFields;
 }) => {
-  const department = await getDefaultDepartment();
-
-  const candidateData = {
-    keycloakId,
-    email: userInfo.email,
-    firstname: userInfo.given_name,
-    lastname: userInfo.family_name,
-    gender: mapGender(userInfo.gender),
-    birthdate: parseFranceConnectDate(userInfo.birthdate),
-    phone: "",
-    departmentId: department.id,
-    givenName: undefined,
-    countryId,
-    birthDepartmentId: undefined,
-    birthCity: userInfo.birthplace,
-  };
+  const birthDepartment = await getDepartment(userInfo.birthplace);
+  const currentDepartment = await getDepartment(userInfo.locality);
 
   const candidate = await prismaClient.candidate.create({
-    data: candidateData,
+    data: {
+      ...fcFields,
+      keycloakId,
+      email: userInfo.email,
+      departmentId: currentDepartment.id,
+      birthDepartmentId: birthDepartment.id,
+    },
   });
 
   const realm = process.env.KEYCLOAK_APP_REALM;
@@ -260,6 +269,24 @@ const parseFranceConnectDate = (dateString: string): Date | null => {
   return isNaN(date.getTime()) ? null : date;
 };
 
+/** Splits France Connect given_name (e.g. "José Manuel Thomas") into firstname, firstname2, firstname3. */
+const splitGivenName = (
+  givenName: string,
+): {
+  firstname: string;
+  firstname2: string | null;
+  firstname3: string | null;
+} => {
+  const parts = givenName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) {
+    return { firstname: "", firstname2: null, firstname3: null };
+  }
+  const firstname = parts[0];
+  const firstname2 = parts.length > 1 ? parts[1] : null;
+  const firstname3 = parts.length > 2 ? parts.slice(2).join(" ") : null;
+  return { firstname, firstname2, firstname3 };
+};
+
 const getDefaultDepartment = async () => {
   const department = await prismaClient.department.findFirst({
     where: { code: "75" },
@@ -270,4 +297,36 @@ const getDefaultDepartment = async () => {
   }
 
   return department;
+};
+
+const getDepartment = async (birthplace: string): Promise<Department> => {
+  if (!birthplace) {
+    const defaultDepartment = await getDefaultDepartment();
+    return defaultDepartment;
+  }
+  const department = await prismaClient.department.findUnique({
+    where: { code: birthplace.slice(0, 2) },
+  });
+  if (department) {
+    return department;
+  }
+  const defaultDepartment = await getDefaultDepartment();
+  return defaultDepartment;
+};
+
+const getCountry = async (
+  countryCode: string,
+): Promise<Country | undefined> => {
+  let country: Country | undefined;
+
+  if (countryCode) {
+    const countryFound = await prismaClient.country.findUnique({
+      where: { inseeCode: countryCode },
+    });
+    if (!countryFound) {
+      throw new FranceConnectUserError("Country not found", 400);
+    }
+    country = countryFound;
+  }
+  return country;
 };
