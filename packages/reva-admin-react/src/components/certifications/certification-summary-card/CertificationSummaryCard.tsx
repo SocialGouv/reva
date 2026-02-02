@@ -135,7 +135,8 @@ export default function CertificationSummaryCard({
             </Info>
           )}
           <Info title="Estimation des frais de certification">
-            {certification.juryEstimatedCost
+            {certification.juryEstimatedCost !== null &&
+            certification.juryEstimatedCost !== undefined
               ? `${certification.juryEstimatedCost}€`
               : "Les frais de jury n'ont pas été renseignés par le certificateur, rapprochez vous de celui-ci pour plus d'informations."}
           </Info>
