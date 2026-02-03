@@ -37,8 +37,8 @@
     "seed": "npx tsx prisma/seed/seed.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.824.0",
-    "@aws-sdk/s3-request-presigner": "^3.824.0",
+    "@aws-sdk/client-s3": "^3.981.0",
+    "@aws-sdk/s3-request-presigner": "^3.981.0",
     "@date-fns/tz": "^1.4.1",
     "@faker-js/faker": "^9.8.0",
     "@fastify/cookie": "^11.0.2",
