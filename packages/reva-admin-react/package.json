@@ -37,7 +37,7 @@
     "date-fns": "^4.1.0",
     "graphql": "^16.11.0",
     "graphql-request": "^7.2.0",
-    "jspdf": "^4.0.0",
+    "jspdf": "^4.1.0",
     "jwt-decode": "^4.0.0",
     "keycloak-js": "^24.0.3",
     "lodash": "^4.17.21",
