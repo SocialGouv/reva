@@ -48,11 +48,20 @@ export const getAAPCommonHandlers = () => {
       fvae.query(
         "getCandidacyMenuAndCandidateInfos",
         graphQLResolver({
-          getCandidacyMenuAndCandidateInfos: {
-            candidacyMenu_getCandidacyMenu: {
-              menuHeader: [],
-              mainMenu: [],
-              menuFooter: [],
+          candidacyMenu_getCandidacyMenu: {
+            menuHeader: [],
+            mainMenu: [],
+            menuFooter: [],
+          },
+          getCandidacyById: {
+            financeModule: "unifvae",
+            organism: {
+              modaliteAccompagnement: "A_DISTANCE",
+            },
+            candidate: {
+              lastname: "Doe",
+              firstname: "John",
+              givenName: null,
             },
           },
         }),
