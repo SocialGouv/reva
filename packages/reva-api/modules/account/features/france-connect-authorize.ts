@@ -7,7 +7,6 @@ import {
   randomState,
 } from "openid-client";
 
-import { FranceConnectForbiddenError } from "./france-connect.errors";
 import {
   getFranceConnectRedirectUri,
   getOAuthConfig,
@@ -19,13 +18,6 @@ export const getFranceConnectAuthorizeRedirectUrl = async (
   reply: FastifyReply,
   certificationId?: string,
 ): Promise<string> => {
-  //TODO: Supprimer cette logique lorsque la FranceConnect sera disponible en production
-  if (process.env.BASE_URL?.includes(".gouv.fr")) {
-    throw new FranceConnectForbiddenError(
-      "FranceConnect is not available in production",
-    );
-  }
-
   const config = await getOAuthConfig();
   const redirectUri = getFranceConnectRedirectUri();
 

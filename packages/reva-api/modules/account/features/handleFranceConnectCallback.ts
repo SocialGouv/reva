@@ -8,6 +8,7 @@ import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandid
 import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "@/modules/candidate/features/updateAllCandidaciesDerniereDateActiviteByCandidateId";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
 import {
@@ -67,19 +68,11 @@ export const handleFranceConnectCallback = async (
     );
   }
 
-  //TODO: Supprimer cette logique lorsque la FranceConnect sera disponible en production
-  if (process.env.BASE_URL?.includes(".gouv.fr")) {
-    throw new FranceConnectForbiddenError(
-      "FranceConnect is not available in production",
-    );
-  }
-
   const state = currentUrl.searchParams.get("state") ?? undefined;
   if (!state) {
     throw new FranceConnectUserError("Missing state parameter", 400);
   }
 
-  // Récupère et supprime le cookie fc_state (usage unique)
   const stored = getAndDeleteFcStateCookie(request, reply, state);
   if (!stored) {
     throw new FranceConnectUserError("Invalid or expired state");
@@ -138,7 +131,6 @@ export const handleFranceConnectCallback = async (
   return redirectUrl.toString();
 };
 
-/** Builds the candidate fields derived from France Connect claims (shared by create and update). */
 const buildFranceConnectCandidateFields = async (
   userInfo: FranceConnectClaims,
 ) => {
@@ -166,13 +158,25 @@ const getOrCreateCandidate = async (
   keycloakId: string,
   userInfo: FranceConnectClaims,
 ) => {
-  const candidate = await getCandidateByKeycloakId({ keycloakId });
+  let candidate = await getCandidateByKeycloakId({ keycloakId });
 
   const fcFields = await buildFranceConnectCandidateFields(userInfo);
 
   if (candidate) {
     return await updateCandidateWithFranceConnectInfo({
       candidateId: candidate.id,
+      fcFields,
+    });
+  }
+
+  candidate = await prismaClient.candidate.findUnique({
+    where: { email: userInfo.email },
+  });
+
+  if (candidate) {
+    return await linkKeycloakIdToCandidate({
+      candidateId: candidate.id,
+      keycloakId,
       fcFields,
     });
   }
@@ -208,6 +212,37 @@ const updateCandidateWithFranceConnectInfo = async ({
   });
 };
 
+const linkKeycloakIdToCandidate = async ({
+  candidateId,
+  keycloakId,
+  fcFields,
+}: {
+  candidateId: string;
+  keycloakId: string;
+  fcFields: FranceConnectCandidateFields;
+}) => {
+  const { gender, birthdate, countryId, ...rest } = fcFields;
+
+  logger.info(
+    `[France Connect] Association du keycloakId FranceConnect ${keycloakId} au candidat existant ${candidateId}`,
+  );
+
+  const candidate = await prismaClient.candidate.update({
+    where: { id: candidateId },
+    data: {
+      keycloakId,
+      updatedAt: new Date(),
+      ...rest,
+      ...(gender != null && { gender }),
+      ...(birthdate != null && { birthdate }),
+      ...(countryId !== undefined && { countryId }),
+    },
+  });
+
+  await assignCandidateRole(keycloakId);
+  return candidate;
+};
+
 const createCandidateFromFranceConnect = async ({
   keycloakId,
   userInfo,
@@ -230,26 +265,7 @@ const createCandidateFromFranceConnect = async ({
     },
   });
 
-  const realm = process.env.KEYCLOAK_APP_REALM;
-  if (realm) {
-    try {
-      const keycloakAdmin = await getKeycloakAdmin();
-      const role = await keycloakAdmin.roles.findOneByName({
-        name: "candidate",
-        realm,
-      });
-      if (role?.id) {
-        await keycloakAdmin.users.addRealmRoleMappings({
-          id: keycloakId,
-          realm,
-          roles: [{ id: role.id, name: role.name ?? "candidate" }],
-        });
-      }
-    } catch {
-      // Le rôle ou les permissions peuvent être manquants ; ne pas échouer la création du candidat
-    }
-  }
-
+  await assignCandidateRole(keycloakId);
   return candidate;
 };
 
@@ -269,7 +285,6 @@ const parseFranceConnectDate = (dateString: string): Date | null => {
   return isNaN(date.getTime()) ? null : date;
 };
 
-/** Splits France Connect given_name (e.g. "José Manuel Thomas") into firstname, firstname2, firstname3. */
 const splitGivenName = (
   givenName: string,
 ): {
@@ -329,4 +344,27 @@ const getCountry = async (
     country = countryFound;
   }
   return country;
+};
+
+const assignCandidateRole = async (keycloakId: string): Promise<void> => {
+  const realm = process.env.KEYCLOAK_APP_REALM;
+  if (!realm) {
+    throw new FranceConnectSystemError("KEYCLOAK_APP_REALM not configured");
+  }
+
+  const keycloakAdmin = await getKeycloakAdmin();
+  const role = await keycloakAdmin.roles.findOneByName({
+    name: "candidate",
+    realm,
+  });
+
+  if (!role?.id) {
+    throw new FranceConnectSystemError("Candidate role not found in Keycloak");
+  }
+
+  await keycloakAdmin.users.addRealmRoleMappings({
+    id: keycloakId,
+    realm,
+    roles: [{ id: role.id, name: role.name ?? "candidate" }],
+  });
 };
