@@ -1,6 +1,7 @@
-import CryptoJS from "crypto-js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { allowInsecureRequests, discovery } from "openid-client";
+
+import { TokenService } from "../utils/token.service";
 
 // Durées de vie des cookies
 const STATE_TTL_SECONDS = 10 * 60; // 10 minutes
@@ -56,29 +57,6 @@ type FcStateData = {
   certificationId?: string;
 };
 
-const encryptData = (data: unknown): string => {
-  const dataStr = JSON.stringify(data);
-  const encrypted = CryptoJS.AES.encrypt(
-    dataStr,
-    process.env.DATA_ENCRYPT_PRIVATE_KEY!,
-  );
-  return encrypted.toString();
-};
-
-const decryptData = <T>(encrypted: string): T | null => {
-  try {
-    const bytes = CryptoJS.AES.decrypt(
-      encrypted,
-      process.env.DATA_ENCRYPT_PRIVATE_KEY!,
-    );
-    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-    if (!decrypted) return null;
-    return JSON.parse(decrypted) as T;
-  } catch {
-    return null;
-  }
-};
-
 const getSecureCookieOptions = (maxAge: number) => ({
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
@@ -91,10 +69,11 @@ export const setFcStateCookie = (
   reply: FastifyReply,
   data: FcStateData,
 ): void => {
-  const encrypted = encryptData(data);
+  const jwtToken = TokenService.getInstance().getToken(data, STATE_TTL_SECONDS);
+
   reply.setCookie(
     FC_STATE_COOKIE,
-    encrypted,
+    jwtToken,
     getSecureCookieOptions(STATE_TTL_SECONDS),
   );
 };
@@ -104,12 +83,12 @@ export const getAndDeleteFcStateCookie = (
   reply: FastifyReply,
   expectedState: string,
 ): Omit<FcStateData, "state"> | null => {
-  const encrypted = request.cookies[FC_STATE_COOKIE];
-  if (!encrypted) return null;
+  const jwtToken = request.cookies[FC_STATE_COOKIE];
+  if (!jwtToken) return null;
 
   reply.clearCookie(FC_STATE_COOKIE, { path: FC_COOKIE_PATH });
 
-  const data = decryptData<FcStateData>(encrypted);
+  const data = TokenService.getInstance().getPayload(jwtToken);
   if (!data) return null;
 
   if (data.state !== expectedState) return null;
