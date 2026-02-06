@@ -99,17 +99,12 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
     },
     handler: async (request, reply) => {
       try {
-        const protocol =
-          (request.headers["x-forwarded-proto"] as string)
-            ?.split(",")[0]
-            ?.trim() === "https"
-            ? "https"
-            : "http";
-        const host =
-          (request.headers["x-forwarded-host"] as string) ||
-          request.headers.host ||
-          "localhost:8080";
-        const currentUrl = new URL(request.url, `${protocol}://${host}`);
+        const baseUrl =
+          process.env.NODE_ENV !== "development"
+            ? process.env.BASE_URL
+            : "http://localhost:8080";
+
+        const currentUrl = new URL(request.url, baseUrl);
         const redirectUrl = await handleFranceConnectCallback(
           request,
           reply,
