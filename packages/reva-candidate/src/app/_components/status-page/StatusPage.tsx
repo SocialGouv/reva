@@ -38,7 +38,7 @@ export const StatusPage = ({
           <Button
             priority={actionLink.priority ?? "secondary"}
             linkProps={{ href: actionLink.href }}
-            className="w-full justify-center lg:w-auto"
+            className="w-full justify-center lg:w-auto lg:self-start"
           >
             {actionLink.label}
           </Button>

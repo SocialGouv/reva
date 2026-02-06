@@ -134,10 +134,10 @@ test.describe("create candidacy vae from candidacies page", () => {
       ),
     ).toBeVisible();
 
-    const createCandidacyButton = page.getByRole("button", {
+    const createCandidacyLink = page.getByRole("link", {
       name: "Commencer une VAE",
     });
-    createCandidacyButton.click();
+    await createCandidacyLink.click();
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/create/`,

@@ -88,7 +88,7 @@ test.describe("candidacies page with no candidacies", () => {
     ).toBeVisible();
 
     await expect(
-      page.getByRole("button", {
+      page.getByRole("link", {
         name: "Commencer une VAE",
       }),
     ).toBeVisible();
