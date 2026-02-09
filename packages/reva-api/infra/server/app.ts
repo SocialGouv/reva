@@ -1,7 +1,6 @@
 import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
-import rateLimit from "@fastify/rate-limit";
 import { setDefaultOptions } from "date-fns";
 import { fr } from "date-fns/locale";
 import fastify, {
@@ -88,11 +87,6 @@ export const buildApp = async (
 
   app.register(cookie, {
     secret: process.env.COOKIE_SECRET,
-  });
-
-  app.register(rateLimit, {
-    max: isTestEnv ? 100000 : 100,
-    timeWindow: "1 minute",
   });
 
   if (process.env.NODE_ENV === "production") {
