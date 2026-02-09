@@ -17,12 +17,7 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
         properties: { certificationId: { type: "string" } },
       },
     },
-    config: {
-      rateLimit: {
-        max: 5,
-        timeWindow: "1 minute",
-      },
-    },
+
     handler: async (request, reply) => {
       try {
         const { certificationId } = request.query;
@@ -89,12 +84,6 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
           state: { type: "string" },
         },
         required: ["code"],
-      },
-    },
-    config: {
-      rateLimit: {
-        max: 5,
-        timeWindow: "1 minute",
       },
     },
     handler: async (request, reply) => {
