@@ -1,28 +1,21 @@
 import { useParams, usePathname } from "next/navigation";
 
-const UNAUTHENTICATED_PATHS = [
-  "/login-confirmation",
-  "/login",
-  "/logout-confirmation",
-  "/forgot-password",
-  "/reset-password",
-  "/register",
-  "/register-confirmation",
-];
-
-const FULL_WIDTH_AUTH_PATHS = [
-  "/login",
-  "/register",
-  "/register-confirmation",
-  "/reset-password",
-];
-
 export const MainContent = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const { candidateId, candidacyId } = useParams<{
     candidateId?: string;
     candidacyId?: string;
   }>();
+
+  const isAuthenticatedPath = pathname.startsWith("/candidates");
+
+  if (!isAuthenticatedPath) {
+    return (
+      <main role="main" id="content" className="flex flex-col flex-1">
+        {children}
+      </main>
+    );
+  }
 
   const isTransparentPath =
     pathname === "/" ||
@@ -38,33 +31,13 @@ export const MainContent = ({ children }: { children: React.ReactNode }) => {
       `/candidates/${candidateId}/candidacies/create/vae-collective/`,
     );
 
-  const isUnAuthenticatedPath = UNAUTHENTICATED_PATHS.some((path) =>
-    pathname.startsWith(path),
-  );
-
-  const isFullWidthAuthPath = FULL_WIDTH_AUTH_PATHS.some(
-    (path) => pathname === path || pathname === `${path}/`,
-  );
-
-  if (isFullWidthAuthPath) {
-    return (
-      <main role="main" id="content" className="flex flex-col flex-1">
-        {children}
-      </main>
-    );
-  }
-
-  const wrapperClassName = isUnAuthenticatedPath
-    ? "fr-container flex flex-col flex-1 max-w-2xl"
-    : "flex flex-col flex-1";
-
   return (
     <main
       role="main"
       id="content"
       className="flex flex-col flex-1 lg:bg-candidate"
     >
-      <div className={wrapperClassName}>
+      <div className="flex flex-col flex-1">
         {isTransparentPath ? (
           <div className="fr-container flex-1 md:mt-4 pt-4 md:pt-8 md:pb-8 fr-grid-row mb-12">
             {children}

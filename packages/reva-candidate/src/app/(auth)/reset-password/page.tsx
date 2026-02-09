@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
+import { Panel } from "@/components/layout/Panel";
 import {
   errorToast,
   graphqlErrorToast,
@@ -71,71 +72,71 @@ export default function ResetPassword() {
 
   return (
     <PageLayout title={title} data-testid="reset-password-home">
-      {isInvalidLink ? (
-        <div className="center shadow-lifted">
+      <Panel narrow>
+        {isInvalidLink ? (
           <InvalidLink />
-        </div>
-      ) : (
-        <div className="max-w-2xl center shadow-lifted mx-auto p-6 pt-8">
-          <h1 className="mb-10">{title}</h1>
-          <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-            <div className="flex flex-col gap-4">
-              <Alert
-                small
-                severity="info"
-                className="mb-6"
-                description={
-                  <ul>
-                    <li>
-                      Votre mot de passe doit contenir au moins 14 caractères.
-                    </li>
-                    <li>Il doit inclure au moins une lettre majuscule.</li>
-                    <li>Il doit inclure au moins une lettre minuscule.</li>
-                    <li>Il doit inclure au moins un chiffre.</li>
-                    <li>Il doit inclure au moins un caractère spécial.</li>
-                  </ul>
-                }
-              />
+        ) : (
+          <div className="p-6 pt-8">
+            <h1 className="mb-10">{title}</h1>
+            <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+              <div className="flex flex-col gap-4">
+                <Alert
+                  small
+                  severity="info"
+                  className="mb-6"
+                  description={
+                    <ul>
+                      <li>
+                        Votre mot de passe doit contenir au moins 14 caractères.
+                      </li>
+                      <li>Il doit inclure au moins une lettre majuscule.</li>
+                      <li>Il doit inclure au moins une lettre minuscule.</li>
+                      <li>Il doit inclure au moins un chiffre.</li>
+                      <li>Il doit inclure au moins un caractère spécial.</li>
+                    </ul>
+                  }
+                />
 
-              <Input
-                className="mb-0"
+                <Input
+                  className="mb-0"
+                  disabled={resetPassword.isPending}
+                  nativeInputProps={{
+                    id: "password",
+                    name: "password",
+                    required: true,
+                    type: "password",
+                    spellCheck: "false",
+                    onChange: (e) => setPassword(e.target.value),
+                  }}
+                  label="Nouveau mot de passe"
+                />
+
+                <Input
+                  disabled={resetPassword.isPending}
+                  nativeInputProps={{
+                    id: "passwordConfirmation",
+                    name: "passwordConfirmation",
+                    required: true,
+                    type: "password",
+                    spellCheck: "false",
+                    onChange: (e) => setPasswordConfirmation(e.target.value),
+                  }}
+                  label="Confirmation du mot de passe"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full justify-center"
+                data-testid="reset-password-home-submit"
                 disabled={resetPassword.isPending}
-                nativeInputProps={{
-                  id: "password",
-                  name: "password",
-                  required: true,
-                  type: "password",
-                  spellCheck: "false",
-                  onChange: (e) => setPassword(e.target.value),
-                }}
-                label="Nouveau mot de passe"
-              />
-
-              <Input
-                disabled={resetPassword.isPending}
-                nativeInputProps={{
-                  id: "passwordConfirmation",
-                  name: "passwordConfirmation",
-                  required: true,
-                  type: "password",
-                  spellCheck: "false",
-                  onChange: (e) => setPasswordConfirmation(e.target.value),
-                }}
-                label="Confirmation du mot de passe"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full justify-center"
-              data-testid="reset-password-home-submit"
-              disabled={resetPassword.isPending}
-            >
-              Valider
-            </Button>
-          </form>
-        </div>
-      )}
+              >
+                Valider
+              </Button>
+            </form>
+          </div>
+        )}
+      </Panel>
     </PageLayout>
   );
 }
