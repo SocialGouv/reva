@@ -82,6 +82,7 @@ const CertificationPage = () => {
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { isDirty, isSubmitting, errors },
     watch,
   } = useForm<FormData>({
@@ -91,6 +92,21 @@ const CertificationPage = () => {
 
   const completion = useWatch({ name: "completion", control });
   const competenceBlocFields = watch("competenceBlocs", []);
+
+  const handleCertificationCompletionChange = useCallback(
+    (completion: "PARTIAL" | "COMPLETE") => {
+      switch (completion) {
+        case "COMPLETE": {
+          setValue(
+            "competenceBlocs",
+            competenceBlocFields.map((bloc) => ({ ...bloc, checked: true })),
+          );
+          break;
+        }
+      }
+    },
+    [competenceBlocFields, setValue],
+  );
 
   const resetForm = useCallback(
     () => reset(defaultValues),
@@ -187,7 +203,10 @@ const CertificationPage = () => {
                 label: "La certification dans sa totalité",
                 nativeInputProps: {
                   value: "COMPLETE",
-                  ...register("completion"),
+                  ...register("completion", {
+                    onChange: (e) =>
+                      handleCertificationCompletionChange(e.target.value),
+                  }),
                 },
               },
               {
@@ -195,7 +214,10 @@ const CertificationPage = () => {
                   "Un ou plusieurs bloc(s) de compétences de la certification",
                 nativeInputProps: {
                   value: "PARTIAL",
-                  ...register("completion"),
+                  ...register("completion", {
+                    onChange: (e) =>
+                      handleCertificationCompletionChange(e.target.value),
+                  }),
                 },
               },
             ]}
