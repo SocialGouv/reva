@@ -21,7 +21,6 @@ import { tarteaucitronScript } from "@/components/script/TarteaucitronScript";
 
 import { AuthGuard } from "./_components/guards/AuthGuard";
 import { AppLayout } from "./_components/layout/AppLayout";
-import { MainContent } from "./_components/layout/MainContent";
 
 const queryClient = new QueryClient();
 
@@ -54,9 +53,9 @@ export default function RootLayout({
             <QueryClientProvider client={queryClient}>
               <Toaster position="top-right" />
               <AppLayout>
-                <MainContent>
+                <main role="main" id="content" className="flex flex-col flex-1">
                   <AuthGuard>{children}</AuthGuard>
-                </MainContent>
+                </main>
               </AppLayout>
             </QueryClientProvider>
           </KeycloakProvider>
