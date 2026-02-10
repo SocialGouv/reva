@@ -2,6 +2,7 @@
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useSearchParams } from "next/navigation";
 
+import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
 import { TypologyAndCollectiveAgreementForm } from "./_components/TypologyAndCollectiveAgreementForm";
@@ -20,27 +21,29 @@ export default function TypologyAndCollectiveAgreementPage() {
   }
 
   return (
-    <div className="flex flex-col w-full">
-      <Breadcrumb
-        currentPageLabel="Ma typologie et convention collective"
-        className="mb-4"
-        segments={[
-          {
-            label: "Mon profil",
-            linkProps: {
-              href: "../",
+    <Panel>
+      <div className="flex flex-col w-full">
+        <Breadcrumb
+          currentPageLabel="Ma typologie et convention collective"
+          className="mb-4"
+          segments={[
+            {
+              label: "Mon profil",
+              linkProps: {
+                href: "../",
+              },
             },
-          },
-        ]}
-      />
+          ]}
+        />
 
-      <h1 className="mb-1">Ma typologie et convention collective</h1>
-      <FormOptionalFieldsDisclaimer className="mb-12" />
+        <h1 className="mb-1">Ma typologie et convention collective</h1>
+        <FormOptionalFieldsDisclaimer className="mb-12" />
 
-      <TypologyAndCollectiveAgreementForm
-        hideBackButton={navigationDisabledByQueryParam}
-        candidate={candidate}
-      />
-    </div>
+        <TypologyAndCollectiveAgreementForm
+          hideBackButton={navigationDisabledByQueryParam}
+          candidate={candidate}
+        />
+      </div>
+    </Panel>
   );
 }

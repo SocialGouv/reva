@@ -10,6 +10,7 @@ import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -182,61 +183,63 @@ export default function CandidacyInactifPage() {
   const modaliteAccompagnement = candidacy.organism?.modaliteAccompagnement;
 
   return (
-    <PageLayout title="Candidature inactive">
-      <h2 className="mt-6 mb-2">Candidature inactive</h2>
-      <FormOptionalFieldsDisclaimer className="mb-6" />
-      <p className="text-xl mb-12">{subtitle}</p>
-      <div className="mb-12">
-        <p className="text-md font-bold mb-4">
-          Candidature concernée par l'inactivité
-        </p>
-        <Card
-          start={getBadge({ modaliteAccompagnement })}
-          imageComponent={null}
-          title={candidateFullName}
-          endDetail={bottomCardText}
-          desc={candidateCertification}
-          detail={candidateDepartment}
-          titleAs="h6"
-        />
-      </div>
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
-        <RadioButtons
-          legend="Voulez-vous continuer cette candidature France VAE ?"
-          stateRelatedMessage={errors.continueCandidacy?.message}
-          state={errors.continueCandidacy ? "error" : "default"}
-          data-testid="candidacy-inactif-radio-buttons"
-          className="hide-radio-img"
-          options={[
-            {
-              label: continueButtonText,
-              illustration: null,
-              hintText: continueHintText,
-              nativeInputProps: {
-                ...register("continueCandidacy"),
-                value: "CONTINUE",
+    <Panel>
+      <PageLayout title="Candidature inactive">
+        <h2 className="mt-6 mb-2">Candidature inactive</h2>
+        <FormOptionalFieldsDisclaimer className="mb-6" />
+        <p className="text-xl mb-12">{subtitle}</p>
+        <div className="mb-12">
+          <p className="text-md font-bold mb-4">
+            Candidature concernée par l'inactivité
+          </p>
+          <Card
+            start={getBadge({ modaliteAccompagnement })}
+            imageComponent={null}
+            title={candidateFullName}
+            endDetail={bottomCardText}
+            desc={candidateCertification}
+            detail={candidateDepartment}
+            titleAs="h6"
+          />
+        </div>
+        <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
+          <RadioButtons
+            legend="Voulez-vous continuer cette candidature France VAE ?"
+            stateRelatedMessage={errors.continueCandidacy?.message}
+            state={errors.continueCandidacy ? "error" : "default"}
+            data-testid="candidacy-inactif-radio-buttons"
+            className="hide-radio-img"
+            options={[
+              {
+                label: continueButtonText,
+                illustration: null,
+                hintText: continueHintText,
+                nativeInputProps: {
+                  ...register("continueCandidacy"),
+                  value: "CONTINUE",
+                },
               },
-            },
-            {
-              label: stopButtonText,
-              illustration: null,
-              hintText: stopHintText,
-              nativeInputProps: {
-                ...register("continueCandidacy"),
-                value: "STOP",
+              {
+                label: stopButtonText,
+                illustration: null,
+                hintText: stopHintText,
+                nativeInputProps: {
+                  ...register("continueCandidacy"),
+                  value: "STOP",
+                },
               },
-            },
-          ]}
-        />
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="flex self-end"
-          data-testid="candidacy-inactif-confirm-button"
-        >
-          Confirmer la décision
-        </Button>
-      </form>
-    </PageLayout>
+            ]}
+          />
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="flex self-end"
+            data-testid="candidacy-inactif-confirm-button"
+          >
+            Confirmer la décision
+          </Button>
+        </form>
+      </PageLayout>
+    </Panel>
   );
 }

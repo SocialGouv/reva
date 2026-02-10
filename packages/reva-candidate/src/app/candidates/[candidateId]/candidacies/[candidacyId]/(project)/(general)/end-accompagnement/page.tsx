@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import z from "zod";
 
+import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { graphqlErrorToast } from "@/components/toast/toast";
@@ -104,82 +105,84 @@ export default function EndAccompagnementPage() {
   });
 
   return (
-    <PageLayout title="Candidature inactive">
-      <h1 className="mt-6 mb-2">Fin d'accompagnement</h1>
-      <FormOptionalFieldsDisclaimer className="mb-6" />
-      <p className="text-xl mb-12">
-        Votre accompagnateur a déclaré la fin de votre accompagnement sur ce
-        parcours de VAE
-        {candidacy.endAccompagnementDate
-          ? ` en date du ${format(new Date(candidacy.endAccompagnementDate), "dd/MM/yyyy")}`
-          : ""}
-        . Vous avez la possibilité de confirmer ou de refuser cette fin
-        d'accompagnement. Cette décision ne concerne que la candidature
-        ci-dessous. Dans tous les cas, vous aurez toujours accès à votre
-        candidature pour finaliser votre VAE.
-      </p>
-      <div className="mb-12">
-        <p className="text-md font-bold mb-4">
-          Candidature concernée par la fin d’accompagnement
+    <Panel>
+      <PageLayout title="Candidature inactive">
+        <h1 className="mt-6 mb-2">Fin d'accompagnement</h1>
+        <FormOptionalFieldsDisclaimer className="mb-6" />
+        <p className="text-xl mb-12">
+          Votre accompagnateur a déclaré la fin de votre accompagnement sur ce
+          parcours de VAE
+          {candidacy.endAccompagnementDate
+            ? ` en date du ${format(new Date(candidacy.endAccompagnementDate), "dd/MM/yyyy")}`
+            : ""}
+          . Vous avez la possibilité de confirmer ou de refuser cette fin
+          d'accompagnement. Cette décision ne concerne que la candidature
+          ci-dessous. Dans tous les cas, vous aurez toujours accès à votre
+          candidature pour finaliser votre VAE.
         </p>
-        <Card
-          start={getBadge({ modaliteAccompagnement })}
-          imageComponent={null}
-          title={candidateFullName}
-          desc={
-            <div className="flex flex-col">
-              <span>{candidateCertification}</span>
-              <span>{candidacy.organism?.label}</span>
-            </div>
-          }
-          detail={<span className="mt-2">{candidateDepartment}</span>}
-          titleAs="h6"
-          endDetail={
-            admissibleDate
-              ? `Recevable le ${format(new Date(admissibleDate), "dd/MM/yyyy")}`
-              : null
-          }
-        />
-      </div>
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
-        <RadioButtons
-          legend="Voulez-vous accepter la fin de votre accompagnement pour cette candidature France VAE ?"
-          stateRelatedMessage={errors.endAccompagnement?.message}
-          state={errors.endAccompagnement ? "error" : "default"}
-          data-testid="candidacy-end-accompagnement-radio-buttons"
-          className="hide-radio-img"
-          options={[
-            {
-              label:
-                "Oui, mon accompagnement est terminé pour cette candidature.",
-              illustration: null,
-              hintText: "Votre parcours continue !",
-              nativeInputProps: {
-                ...register("endAccompagnement"),
-                value: "CONFIRMED",
+        <div className="mb-12">
+          <p className="text-md font-bold mb-4">
+            Candidature concernée par la fin d’accompagnement
+          </p>
+          <Card
+            start={getBadge({ modaliteAccompagnement })}
+            imageComponent={null}
+            title={candidateFullName}
+            desc={
+              <div className="flex flex-col">
+                <span>{candidateCertification}</span>
+                <span>{candidacy.organism?.label}</span>
+              </div>
+            }
+            detail={<span className="mt-2">{candidateDepartment}</span>}
+            titleAs="h6"
+            endDetail={
+              admissibleDate
+                ? `Recevable le ${format(new Date(admissibleDate), "dd/MM/yyyy")}`
+                : null
+            }
+          />
+        </div>
+        <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
+          <RadioButtons
+            legend="Voulez-vous accepter la fin de votre accompagnement pour cette candidature France VAE ?"
+            stateRelatedMessage={errors.endAccompagnement?.message}
+            state={errors.endAccompagnement ? "error" : "default"}
+            data-testid="candidacy-end-accompagnement-radio-buttons"
+            className="hide-radio-img"
+            options={[
+              {
+                label:
+                  "Oui, mon accompagnement est terminé pour cette candidature.",
+                illustration: null,
+                hintText: "Votre parcours continue !",
+                nativeInputProps: {
+                  ...register("endAccompagnement"),
+                  value: "CONFIRMED",
+                },
               },
-            },
-            {
-              label:
-                "Non, je souhaite continuer mon accompagnement pour cette candidature.",
-              illustration: null,
-              hintText: "Reprenez votre accompagnement comme précédemment.",
-              nativeInputProps: {
-                ...register("endAccompagnement"),
-                value: "REFUSED",
+              {
+                label:
+                  "Non, je souhaite continuer mon accompagnement pour cette candidature.",
+                illustration: null,
+                hintText: "Reprenez votre accompagnement comme précédemment.",
+                nativeInputProps: {
+                  ...register("endAccompagnement"),
+                  value: "REFUSED",
+                },
               },
-            },
-          ]}
-        />
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="flex self-end"
-          data-testid="candidacy-end-accompagnement-confirm-button"
-        >
-          Confirmer la décision
-        </Button>
-      </form>
-    </PageLayout>
+            ]}
+          />
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="flex self-end"
+            data-testid="candidacy-end-accompagnement-confirm-button"
+          >
+            Confirmer la décision
+          </Button>
+        </form>
+      </PageLayout>
+    </Panel>
   );
 }

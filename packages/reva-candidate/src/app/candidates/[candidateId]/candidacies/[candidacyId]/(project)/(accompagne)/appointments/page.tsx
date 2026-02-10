@@ -6,6 +6,7 @@ import Card from "@codegouvfr/react-dsfr/Card";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useState } from "react";
 
+import { Panel } from "@/components/layout/Panel";
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
 import { formatIso8601Time } from "@/utils/formatIso8601Time";
 
@@ -39,49 +40,51 @@ export default function AppointmentsPage() {
   const { futureAppointments } = useAppointments({});
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <Breadcrumb
-        currentPageLabel="Mes prochains rendez-vous"
-        className="mb-0"
-        segments={[
-          {
-            label: "Ma candidature",
-            linkProps: {
-              href: "../",
+    <Panel>
+      <div className="flex flex-col gap-4 w-full">
+        <Breadcrumb
+          currentPageLabel="Mes prochains rendez-vous"
+          className="mb-0"
+          segments={[
+            {
+              label: "Ma candidature",
+              linkProps: {
+                href: "../",
+              },
             },
-          },
-        ]}
-      />
-      <div className="flex flex-col w-full gap-12">
-        <h1 className="mb-0">Mes prochains rendez-vous</h1>
-        <div className="flex flex-col gap-4">
-          {futureAppointments?.map((appointment) => (
-            <Card
-              horizontal
-              enlargeLink
-              size="small"
-              title={appointment.title}
-              desc={getFormatedDateTime(
-                appointment.date,
-                appointment.type,
-                appointment.timeOfSession,
-              )}
-              detail={<Tag small>{getTagLabel(appointment.type)}</Tag>}
-              endDetail="Voir les détails"
-              key={appointment.id}
-              linkProps={{
-                href:
-                  appointment.type === "JURY"
-                    ? "../jury-session"
-                    : `./${appointment.id}`,
-              }}
-              data-testid={`future-appointment-${appointment.id}`}
-            />
-          ))}
+          ]}
+        />
+        <div className="flex flex-col w-full gap-12">
+          <h1 className="mb-0">Mes prochains rendez-vous</h1>
+          <div className="flex flex-col gap-4">
+            {futureAppointments?.map((appointment) => (
+              <Card
+                horizontal
+                enlargeLink
+                size="small"
+                title={appointment.title}
+                desc={getFormatedDateTime(
+                  appointment.date,
+                  appointment.type,
+                  appointment.timeOfSession,
+                )}
+                detail={<Tag small>{getTagLabel(appointment.type)}</Tag>}
+                endDetail="Voir les détails"
+                key={appointment.id}
+                linkProps={{
+                  href:
+                    appointment.type === "JURY"
+                      ? "../jury-session"
+                      : `./${appointment.id}`,
+                }}
+                data-testid={`future-appointment-${appointment.id}`}
+              />
+            ))}
+          </div>
         </div>
+        <PastAppointments />
       </div>
-      <PastAppointments />
-    </div>
+    </Panel>
   );
 }
 

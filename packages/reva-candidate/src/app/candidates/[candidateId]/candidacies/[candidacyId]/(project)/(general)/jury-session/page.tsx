@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { AddToCalendar } from "@/components/add-to-calendar/AddToCalendar";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { BackButton } from "@/components/back-button/BackButton";
+import { Panel } from "@/components/layout/Panel";
 import { handleAuthenticatedDownload } from "@/utils/handleAuthenticatedDownload.util";
 
 import { JuryUseJurySession, useJurySession } from "./jury-session.hook";
@@ -73,52 +74,54 @@ export default function JurySessionPage() {
   };
 
   return (
-    <div className="flex flex-col w-full">
-      <Breadcrumb
-        currentPageLabel="Passage devant le jury"
-        className="mb-4"
-        segments={[
-          {
-            label: "Ma candidature",
-            linkProps: {
-              href: "../",
+    <Panel>
+      <div className="flex flex-col w-full">
+        <Breadcrumb
+          currentPageLabel="Passage devant le jury"
+          className="mb-4"
+          segments={[
+            {
+              label: "Ma candidature",
+              linkProps: {
+                href: "../",
+              },
             },
-          },
-        ]}
-      />
-      <h1 className="mb-6">Passage devant le jury</h1>
-      <p className="text-lg mb-12 text-dsfrGray-700">
-        Une date de jury vous a été attribuée. Retrouvez toutes les informations
-        officielles dans votre convocation.
-      </p>
-      <div className="flex">
-        <Tile
-          small
-          orientation="horizontal"
-          classes={{
-            content: "pr-20 pb-0",
-          }}
-          start={<Tag small>Passage devant le jury</Tag>}
-          title={dateOfJurySession}
+          ]}
         />
+        <h1 className="mb-6">Passage devant le jury</h1>
+        <p className="text-lg mb-12 text-dsfrGray-700">
+          Une date de jury vous a été attribuée. Retrouvez toutes les
+          informations officielles dans votre convocation.
+        </p>
+        <div className="flex">
+          <Tile
+            small
+            orientation="horizontal"
+            classes={{
+              content: "pr-20 pb-0",
+            }}
+            start={<Tag small>Passage devant le jury</Tag>}
+            title={dateOfJurySession}
+          />
+        </div>
+
+        <JuryInformation jury={jury} />
+
+        {jury.convocationFile && (
+          <Tile
+            buttonProps={{ onClick: onDownloadClick }}
+            downloadButton
+            enlargeLinkOrButton
+            orientation="horizontal"
+            title="Convocation au passage devant le jury"
+            titleAs="h3"
+            detail="PDF"
+            className="!border-b-0 mb-0"
+          />
+        )}
+
+        <BackButton navigateBack={() => router.push("../")} className="mt-12" />
       </div>
-
-      <JuryInformation jury={jury} />
-
-      {jury.convocationFile && (
-        <Tile
-          buttonProps={{ onClick: onDownloadClick }}
-          downloadButton
-          enlargeLinkOrButton
-          orientation="horizontal"
-          title="Convocation au passage devant le jury"
-          titleAs="h3"
-          detail="PDF"
-          className="!border-b-0 mb-0"
-        />
-      )}
-
-      <BackButton navigateBack={() => router.push("../")} className="mt-12" />
-    </div>
+    </Panel>
   );
 }

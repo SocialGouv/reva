@@ -2,6 +2,7 @@
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useSearchParams } from "next/navigation";
 
+import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 
 import { ContactInformationForm } from "./_components/ContactInformationForm";
@@ -20,29 +21,31 @@ export default function ContactInformationsPage() {
   }
 
   return (
-    <div className="flex flex-col w-full">
-      <Breadcrumb
-        currentPageLabel="Mes informations de contact"
-        className="mb-4"
-        segments={[
-          {
-            label: "Mon profil",
-            linkProps: {
-              href: "../",
+    <Panel>
+      <div className="flex flex-col w-full">
+        <Breadcrumb
+          currentPageLabel="Mes informations de contact"
+          className="mb-4"
+          segments={[
+            {
+              label: "Mon profil",
+              linkProps: {
+                href: "../",
+              },
             },
-          },
-        ]}
-      />
+          ]}
+        />
 
-      <h1 className="mb-1">Mes informations de contact</h1>
-      <FormOptionalFieldsDisclaimer className="mb-12" />
+        <h1 className="mb-1">Mes informations de contact</h1>
+        <FormOptionalFieldsDisclaimer className="mb-12" />
 
-      <ContactInformationForm
-        hideBackButton={navigationDisabledByQueryParam}
-        candidate={candidate}
-        countries={countries}
-        departments={departments}
-      />
-    </div>
+        <ContactInformationForm
+          hideBackButton={navigationDisabledByQueryParam}
+          candidate={candidate}
+          countries={countries}
+          departments={departments}
+        />
+      </div>
+    </Panel>
   );
 }

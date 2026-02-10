@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { ExperienceDuration } from "@/constants/experience-duration.constant";
@@ -137,153 +138,157 @@ export default function UpdateExperience() {
   };
 
   return (
-    <PageLayout title="Modifier une expérience">
-      <Breadcrumb
-        currentPageLabel="Modifier une expérience"
-        className="mb-0"
-        segments={[
-          {
-            label: "Ma candidature",
-            linkProps: {
-              href: "../../",
+    <Panel>
+      <PageLayout title="Modifier une expérience">
+        <Breadcrumb
+          currentPageLabel="Modifier une expérience"
+          className="mb-0"
+          segments={[
+            {
+              label: "Ma candidature",
+              linkProps: {
+                href: "../../",
+              },
             },
-          },
-          {
-            label: "Mes expériences",
-            linkProps: {
-              href: "../",
+            {
+              label: "Mes expériences",
+              linkProps: {
+                href: "../",
+              },
             },
-          },
-        ]}
-      />
-      <h2 className="mt-4 mb-2">Modifier une expérience</h2>
-      <FormOptionalFieldsDisclaimer />
-      <p className="mb-4 text-xl">
-        Il peut s'agir d'une expérience professionnelle, bénévole, d'un stage ou
-        d'une activité extra-professionnelle.
-      </p>
+          ]}
+        />
+        <h2 className="mt-4 mb-2">Modifier une expérience</h2>
+        <FormOptionalFieldsDisclaimer />
+        <p className="mb-4 text-xl">
+          Il peut s'agir d'une expérience professionnelle, bénévole, d'un stage
+          ou d'une activité extra-professionnelle.
+        </p>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        onReset={(e) => {
-          e.preventDefault();
-          resetForm();
-        }}
-        className="flex flex-col"
-      >
-        <fieldset>
-          <legend>
-            <h2 className="mt-2 mb-4 text-lg">{experience?.title}</h2>
-          </legend>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          onReset={(e) => {
+            e.preventDefault();
+            resetForm();
+          }}
+          className="flex flex-col"
+        >
+          <fieldset>
+            <legend>
+              <h2 className="mt-2 mb-4 text-lg">{experience?.title}</h2>
+            </legend>
 
-          <Input
-            label="Intitulé du poste ou de l'activité"
-            hintText="Exemple : Agent d'entretien ; Service à domicile ; Commercial ; etc."
-            nativeInputProps={register("title")}
-            state={errors.title ? "error" : "default"}
-            stateRelatedMessage={errors.title?.message}
-            disabled={inputShouldBeDisabled}
-          />
-          <div className="flex gap-6">
             <Input
-              label="Date de début"
-              nativeInputProps={{
-                type: "date",
-                ...register("startedAt"),
-              }}
-              state={errors.startedAt ? "error" : "default"}
-              stateRelatedMessage={errors.startedAt?.message}
+              label="Intitulé du poste ou de l'activité"
+              hintText="Exemple : Agent d'entretien ; Service à domicile ; Commercial ; etc."
+              nativeInputProps={register("title")}
+              state={errors.title ? "error" : "default"}
+              stateRelatedMessage={errors.title?.message}
               disabled={inputShouldBeDisabled}
             />
+            <div className="flex gap-6">
+              <Input
+                label="Date de début"
+                nativeInputProps={{
+                  type: "date",
+                  ...register("startedAt"),
+                }}
+                state={errors.startedAt ? "error" : "default"}
+                stateRelatedMessage={errors.startedAt?.message}
+                disabled={inputShouldBeDisabled}
+              />
 
-            <Select
-              label="Durée"
-              nativeSelectProps={register("duration")}
-              state={errors.duration ? "error" : "default"}
-              stateRelatedMessage={errors.duration?.message}
-              disabled={inputShouldBeDisabled}
-            >
-              <option value="" disabled hidden>
-                Sélectionner une option
-              </option>
-              {durationOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
+              <Select
+                label="Durée"
+                nativeSelectProps={register("duration")}
+                state={errors.duration ? "error" : "default"}
+                stateRelatedMessage={errors.duration?.message}
+                disabled={inputShouldBeDisabled}
+              >
+                <option value="" disabled hidden>
+                  Sélectionner une option
                 </option>
-              ))}
-            </Select>
-          </div>
+                {durationOptions.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </Select>
+            </div>
 
-          <Input
-            textArea
-            label="Description du poste ou de l'activité extra-professionnelle"
-            nativeTextAreaProps={{
-              rows: 5,
-              ...register("description"),
+            <Input
+              textArea
+              label="Description du poste ou de l'activité extra-professionnelle"
+              nativeTextAreaProps={{
+                rows: 5,
+                ...register("description"),
+              }}
+              state={errors.description ? "error" : "default"}
+              stateRelatedMessage={errors.description?.message}
+              disabled={inputShouldBeDisabled}
+            />
+          </fieldset>
+
+          <hr className="mt-4 pb-4" />
+
+          {canEditCandidacy && !candidacyAlreadySubmitted && (
+            <Button
+              priority="tertiary no outline"
+              size="small"
+              iconId="fr-icon-delete-line"
+              onClick={() => deleteConfirmationModal.open()}
+              disabled={deleteExperience.isPending}
+              nativeButtonProps={{
+                type: "button",
+              }}
+            >
+              Supprimer cette expérience
+            </Button>
+          )}
+
+          <FormButtons
+            backUrl={backUrl}
+            formState={{
+              isDirty,
+              isSubmitting,
+              canSubmit: canEditCandidacy,
             }}
-            state={errors.description ? "error" : "default"}
-            stateRelatedMessage={errors.description?.message}
-            disabled={inputShouldBeDisabled}
           />
-        </fieldset>
+        </form>
 
-        <hr className="mt-4 pb-4" />
-
-        {canEditCandidacy && !candidacyAlreadySubmitted && (
-          <Button
-            priority="tertiary no outline"
-            size="small"
-            iconId="fr-icon-delete-line"
-            onClick={() => deleteConfirmationModal.open()}
-            disabled={deleteExperience.isPending}
-            nativeButtonProps={{
-              type: "button",
-            }}
-          >
-            Supprimer cette expérience
-          </Button>
-        )}
-
-        <FormButtons
-          backUrl={backUrl}
-          formState={{
-            isDirty,
-            isSubmitting,
-            canSubmit: canEditCandidacy,
-          }}
-        />
-      </form>
-
-      <deleteConfirmationModal.Component
-        title={
-          <span className="ml-2">Voulez-vous supprimer cette expérience ?</span>
-        }
-        iconId="fr-icon-warning-fill"
-        buttons={[
-          {
-            priority: "secondary",
-            children: "Annuler",
-            nativeButtonProps: {
-              "aria-label": "Annuler la suppression",
+        <deleteConfirmationModal.Component
+          title={
+            <span className="ml-2">
+              Voulez-vous supprimer cette expérience ?
+            </span>
+          }
+          iconId="fr-icon-warning-fill"
+          buttons={[
+            {
+              priority: "secondary",
+              children: "Annuler",
+              nativeButtonProps: {
+                "aria-label": "Annuler la suppression",
+              },
             },
-          },
-          {
-            priority: "primary",
-            onClick: handleDelete,
-            children: "Supprimer",
-            disabled: deleteExperience.isPending,
-            doClosesModal: false,
-            nativeButtonProps: {
-              "aria-label": "Confirmer la suppression de l'expérience",
+            {
+              priority: "primary",
+              onClick: handleDelete,
+              children: "Supprimer",
+              disabled: deleteExperience.isPending,
+              doClosesModal: false,
+              nativeButtonProps: {
+                "aria-label": "Confirmer la suppression de l'expérience",
+              },
             },
-          },
-        ]}
-      >
-        <p>
-          Attention, cette action est irréversible. Une fois supprimée, vous ne
-          pourrez pas revenir en arrière.
-        </p>
-      </deleteConfirmationModal.Component>
-    </PageLayout>
+          ]}
+        >
+          <p>
+            Attention, cette action est irréversible. Une fois supprimée, vous
+            ne pourrez pas revenir en arrière.
+          </p>
+        </deleteConfirmationModal.Component>
+      </PageLayout>
+    </Panel>
   );
 }

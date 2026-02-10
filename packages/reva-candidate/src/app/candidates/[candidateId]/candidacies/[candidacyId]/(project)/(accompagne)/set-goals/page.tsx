@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { PageLayout } from "@/layouts/page.layout";
@@ -70,50 +71,52 @@ export default function SetGoals() {
   };
 
   return (
-    <PageLayout title="Vos objectifs">
-      <Breadcrumb
-        currentPageLabel="Mes objectifs"
-        className="mb-0"
-        segments={[
-          {
-            label: "Ma candidature",
-            linkProps: {
-              href: "../",
-            },
-          },
-        ]}
-      />
-      <h2 className="mt-4 mb-2">Mes objectifs</h2>
-      <FormOptionalFieldsDisclaimer
-        className="mb-4"
-        label="Plusieurs choix possibles"
-      />
-      <form onSubmit={onSubmit} className="flex flex-col">
-        <Checkbox
-          className="w-full"
-          small
-          legend="Objectif"
-          disabled={formShouldBeDisabled}
-          options={goals.map((goal) => ({
-            label: goal.label,
-            nativeInputProps: {
-              checked: selectedGoalIds.indexOf(goal.id) != -1,
-              onChange: () => {
-                setIsDirty(true);
-                toggle(goal.id);
+    <Panel>
+      <PageLayout title="Vos objectifs">
+        <Breadcrumb
+          currentPageLabel="Mes objectifs"
+          className="mb-0"
+          segments={[
+            {
+              label: "Ma candidature",
+              linkProps: {
+                href: "../",
               },
             },
-          }))}
+          ]}
         />
-        <FormButtons
-          formState={{
-            canSubmit: !formShouldBeDisabled,
-            isSubmitting,
-            isDirty,
-          }}
-          backUrl="../"
+        <h2 className="mt-4 mb-2">Mes objectifs</h2>
+        <FormOptionalFieldsDisclaimer
+          className="mb-4"
+          label="Plusieurs choix possibles"
         />
-      </form>
-    </PageLayout>
+        <form onSubmit={onSubmit} className="flex flex-col">
+          <Checkbox
+            className="w-full"
+            small
+            legend="Objectif"
+            disabled={formShouldBeDisabled}
+            options={goals.map((goal) => ({
+              label: goal.label,
+              nativeInputProps: {
+                checked: selectedGoalIds.indexOf(goal.id) != -1,
+                onChange: () => {
+                  setIsDirty(true);
+                  toggle(goal.id);
+                },
+              },
+            }))}
+          />
+          <FormButtons
+            formState={{
+              canSubmit: !formShouldBeDisabled,
+              isSubmitting,
+              isDirty,
+            }}
+            backUrl="../"
+          />
+        </form>
+      </PageLayout>
+    </Panel>
   );
 }

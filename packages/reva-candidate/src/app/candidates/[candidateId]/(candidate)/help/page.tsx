@@ -4,6 +4,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Card from "@codegouvfr/react-dsfr/Card";
 import Tile from "@codegouvfr/react-dsfr/Tile";
 
+import { Panel } from "@/components/layout/Panel";
 import { PageLayout } from "@/layouts/page.layout";
 
 import {
@@ -142,22 +143,26 @@ export default async function HelpPage() {
   const { ressourcesUtileSection, questionsFrequentesSection } =
     await getHelpPageItems();
   return (
-    <PageLayout title="Aide">
-      <h1 className="mb-6">Aide</h1>
-      <p className="text-xl mb-12">
-        Retrouvez toute la documentation nécessaire à l'autonomie sur mon
-        espace.
-      </p>
-      <TutorielSection />
-      <hr className="pb-8" />
-      <QuestionsFrequentesSection
-        questionsFrequentesSection={questionsFrequentesSection}
-      />
-      <hr className="pb-8" />
-      <RessourcesUtileSection ressourcesUtileSection={ressourcesUtileSection} />
-      <Button priority="secondary" linkProps={{ href: "../" }}>
-        Retour
-      </Button>
-    </PageLayout>
+    <Panel>
+      <PageLayout title="Aide">
+        <h1 className="mb-6">Aide</h1>
+        <p className="text-xl mb-12">
+          Retrouvez toute la documentation nécessaire à l'autonomie sur mon
+          espace.
+        </p>
+        <TutorielSection />
+        <hr className="pb-8" />
+        <QuestionsFrequentesSection
+          questionsFrequentesSection={questionsFrequentesSection}
+        />
+        <hr className="pb-8" />
+        <RessourcesUtileSection
+          ressourcesUtileSection={ressourcesUtileSection}
+        />
+        <Button priority="secondary" linkProps={{ href: "../" }}>
+          Retour
+        </Button>
+      </PageLayout>
+    </Panel>
   );
 }

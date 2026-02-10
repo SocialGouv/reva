@@ -7,7 +7,7 @@ export function Panel({
 }) {
   return (
     <div
-      className={`bg-white lg:shadow-lifted${narrow ? " max-w-2xl mx-auto" : " fr-grid-row md:mt-8 pt-4 md:pt-4 md:pb-4"}`}
+      className={`bg-white lg:shadow-lifted ${narrow ? "max-w-2xl mx-auto" : "w-full py-10 px-6"}`}
     >
       {children}
     </div>

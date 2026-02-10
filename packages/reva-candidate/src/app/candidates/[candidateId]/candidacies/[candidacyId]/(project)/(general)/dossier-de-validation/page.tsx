@@ -6,6 +6,7 @@ import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 
+import { Panel } from "@/components/layout/Panel";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import { JuryResult } from "@/graphql/generated/graphql";
@@ -82,110 +83,114 @@ export default function DossierDeValidationPag() {
     !hasFailedJuryResult;
 
   return (
-    <div className="flex flex-col">
-      <Breadcrumb
-        currentPageLabel="Dossier de validation"
-        className="mb-0"
-        segments={[
-          {
-            label: "Ma candidature",
-            linkProps: {
-              href: "../",
+    <Panel>
+      <div className="flex flex-col">
+        <Breadcrumb
+          currentPageLabel="Dossier de validation"
+          className="mb-0"
+          segments={[
+            {
+              label: "Ma candidature",
+              linkProps: {
+                href: "../",
+              },
             },
-          },
-        ]}
-      />
-      <h1 className="mt-6 mb-4">Dossier de validation</h1>
-      <p>
-        Renseignez les informations liées à votre dossier de validation puis
-        déposez-le afin de le transmettre au certificateur. Si votre
-        certification n'est pas totalement validée, vous pourrez déposer un
-        second dossier une fois votre résultat communiqué.
-      </p>
-      {queryStatus === "success" && (
-        <>
-          {readOnlyView ? (
-            <Tabs
-              tabs={[
-                {
-                  label: "Date prévisionnelle",
-                  isDefault: false,
-                  content: (
-                    <ReadOnlyReadyForJuryEstimatedDateTab
-                      readyForJuryEstimatedAt={
-                        readyForJuryEstimatedAt
-                          ? toDate(readyForJuryEstimatedAt)
-                          : undefined
-                      }
-                    />
-                  ),
-                },
-                {
-                  label: "Dépôt du dossier",
-                  isDefault: true,
-                  content: (
-                    <ReadOnlyDossierDeValidationTab
-                      dossierDeValidationSentAt={
-                        dossierDeValidation.dossierDeValidationSentAt
-                          ? toDate(
-                              dossierDeValidation.dossierDeValidationSentAt,
-                            )
-                          : undefined
-                      }
-                      dossierDeValidationFile={
-                        dossierDeValidation.dossierDeValidationFile
-                      }
-                      dossierDeValidationOtherFiles={
-                        dossierDeValidation.dossierDeValidationOtherFiles
-                      }
-                      certification={certification}
-                    />
-                  ),
-                },
-              ]}
-            />
-          ) : (
-            <Tabs
-              tabs={[
-                {
-                  label: "Date prévisionnelle",
-                  isDefault: !readyForJuryEstimatedAt,
-                  content: (
-                    <ReadyForJuryEstimatedDateTab
-                      defaultValues={{
-                        readyForJuryEstimatedAt:
-                          readyForJuryEstimatedAt || undefined,
-                      }}
-                      onSubmit={handleReadyForJuryEstimatedDateFormSubmit}
-                    />
-                  ),
-                },
-                {
-                  label: "Dépôt du dossier",
-                  isDefault: !!readyForJuryEstimatedAt,
-                  content: (
-                    <DossierDeValidationTab
-                      dossierDeValidation={dossierDeValidation}
-                      dossierDeValidationProblems={dossierDeValidationProblems}
-                      certification={certification}
-                      jury={jury}
-                      hasFailedJuryResult={!!hasFailedJuryResult}
-                      onSubmit={handleDossierDeValidationFormSubmit}
-                    />
-                  ),
-                },
-              ]}
-            />
-          )}
-        </>
-      )}
-      <Button
-        priority="secondary"
-        linkProps={{ href: "../" }}
-        className="mt-12"
-      >
-        Retour
-      </Button>
-    </div>
+          ]}
+        />
+        <h1 className="mt-6 mb-4">Dossier de validation</h1>
+        <p>
+          Renseignez les informations liées à votre dossier de validation puis
+          déposez-le afin de le transmettre au certificateur. Si votre
+          certification n'est pas totalement validée, vous pourrez déposer un
+          second dossier une fois votre résultat communiqué.
+        </p>
+        {queryStatus === "success" && (
+          <>
+            {readOnlyView ? (
+              <Tabs
+                tabs={[
+                  {
+                    label: "Date prévisionnelle",
+                    isDefault: false,
+                    content: (
+                      <ReadOnlyReadyForJuryEstimatedDateTab
+                        readyForJuryEstimatedAt={
+                          readyForJuryEstimatedAt
+                            ? toDate(readyForJuryEstimatedAt)
+                            : undefined
+                        }
+                      />
+                    ),
+                  },
+                  {
+                    label: "Dépôt du dossier",
+                    isDefault: true,
+                    content: (
+                      <ReadOnlyDossierDeValidationTab
+                        dossierDeValidationSentAt={
+                          dossierDeValidation.dossierDeValidationSentAt
+                            ? toDate(
+                                dossierDeValidation.dossierDeValidationSentAt,
+                              )
+                            : undefined
+                        }
+                        dossierDeValidationFile={
+                          dossierDeValidation.dossierDeValidationFile
+                        }
+                        dossierDeValidationOtherFiles={
+                          dossierDeValidation.dossierDeValidationOtherFiles
+                        }
+                        certification={certification}
+                      />
+                    ),
+                  },
+                ]}
+              />
+            ) : (
+              <Tabs
+                tabs={[
+                  {
+                    label: "Date prévisionnelle",
+                    isDefault: !readyForJuryEstimatedAt,
+                    content: (
+                      <ReadyForJuryEstimatedDateTab
+                        defaultValues={{
+                          readyForJuryEstimatedAt:
+                            readyForJuryEstimatedAt || undefined,
+                        }}
+                        onSubmit={handleReadyForJuryEstimatedDateFormSubmit}
+                      />
+                    ),
+                  },
+                  {
+                    label: "Dépôt du dossier",
+                    isDefault: !!readyForJuryEstimatedAt,
+                    content: (
+                      <DossierDeValidationTab
+                        dossierDeValidation={dossierDeValidation}
+                        dossierDeValidationProblems={
+                          dossierDeValidationProblems
+                        }
+                        certification={certification}
+                        jury={jury}
+                        hasFailedJuryResult={!!hasFailedJuryResult}
+                        onSubmit={handleDossierDeValidationFormSubmit}
+                      />
+                    ),
+                  },
+                ]}
+              />
+            )}
+          </>
+        )}
+        <Button
+          priority="secondary"
+          linkProps={{ href: "../" }}
+          className="mt-12"
+        >
+          Retour
+        </Button>
+      </div>
+    </Panel>
   );
 }

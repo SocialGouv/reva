@@ -2,6 +2,7 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
 import { CertificationPage } from "@/components/certification-page/CertificationPage";
 import { getSsrGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { Panel } from "@/components/layout/Panel";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { graphql } from "@/graphql/generated";
@@ -84,33 +85,35 @@ export default async function CertificationDetailsPage({
   const certificationLabel = `RNCP ${certification.codeRncp} : ${certification.label}`;
 
   return (
-    <PageLayout title={certificationLabel}>
-      <Breadcrumb
-        currentPageLabel={certificationLabel}
-        className="mb-4"
-        segments={[
-          {
-            label: "Mes candidatures",
-            linkProps: {
-              href: "../../../",
+    <Panel>
+      <PageLayout title={certificationLabel}>
+        <Breadcrumb
+          currentPageLabel={certificationLabel}
+          className="mb-4"
+          segments={[
+            {
+              label: "Mes candidatures",
+              linkProps: {
+                href: "../../../",
+              },
             },
-          },
-          {
-            label: "Créer une candidature",
-            linkProps: {
-              href: "../../",
+            {
+              label: "Créer une candidature",
+              linkProps: {
+                href: "../../",
+              },
             },
-          },
-          {
-            label: "Choix du diplôme",
-            linkProps: {
-              href: "../",
+            {
+              label: "Choix du diplôme",
+              linkProps: {
+                href: "../",
+              },
             },
-          },
-        ]}
-      />
-      <CertificationPage certification={certification} />
-      <CertificationFooterComponent />
-    </PageLayout>
+          ]}
+        />
+        <CertificationPage certification={certification} />
+        <CertificationFooterComponent />
+      </PageLayout>
+    </Panel>
   );
 }

@@ -6,6 +6,7 @@ import { redirect, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 import { EmptyState } from "@/components/empty-state/EmptyState";
+import { Panel } from "@/components/layout/Panel";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/OrganismCard";
 import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/OrganismFilters";
@@ -134,126 +135,128 @@ export default function SetOrganism() {
     redirect("../");
   }
   return (
-    <PageLayout title="Choix de l'accompagnateur" data-testid={`organisms`}>
-      <Breadcrumb
-        currentPageLabel="Choix de l'accompagnateur"
-        className="mb-0"
-        segments={[
-          {
-            label: "Ma candidature",
-            linkProps: {
-              href: "../",
+    <Panel>
+      <PageLayout title="Choix de l'accompagnateur" data-testid={`organisms`}>
+        <Breadcrumb
+          currentPageLabel="Choix de l'accompagnateur"
+          className="mb-0"
+          segments={[
+            {
+              label: "Ma candidature",
+              linkProps: {
+                href: "../",
+              },
             },
-          },
-        ]}
-      />
-      <h1 className="mt-4 mb-2" id="page-title">
-        Choix de l'accompagnateur
-      </h1>
-      <p className="text-xl my-6">
-        Choisissez votre accompagnateur parmi toute la liste. Vous pouvez
-        choisir de réaliser votre accompagnement à distance ou sur site. Si vous
-        souhaitez utiliser votre Compte Personnel de Formation (CPF) pour
-        financer votre parcours, choisissez un accompagnateur référencé sur Mon
-        Compte Formation (MCF).
-      </p>
-
-      <div className="mt-6 lg:mb-14 lg:px-10 pb-10 lg:py-8 lg:shadow-lifted border-b lg:border-b-4 lg:border-[#FFA180]">
-        <h3>Recherchez par nom</h3>
-        <SearchBar
-          label="Recherchez votre organisme d’accompagnement en saisissant son nom"
-          searchFilter={organismSearchText}
-          onSearchFilterChange={setOrganismSearchText}
-          className="mt-6"
+          ]}
         />
-      </div>
-      <div className="lg:flex gap-x-6">
-        <div className="lg:w-1/3">
-          <OrganismFilters
-            onSearch={(filters) => {
-              setOrganismSearchOnsite(filters.organismSearchOnsite);
-              setOrganismSearchRemote(filters.organismSearchRemote);
-              setOrganismSearchZip(filters.organismSearchZip);
-              setOrganismSearchPmr(filters.organismSearchPmr);
-              setOrganismSearchMcf(filters.organismSearchMcf);
-              setOrganismSearchIsAvailable(filters.organismSearchIsAvailable);
-            }}
-            filters={{
-              organismSearchText,
-              organismSearchRemote,
-              organismSearchOnsite,
-              organismSearchZip,
-              organismSearchPmr,
-              organismSearchMcf,
-              organismSearchIsAvailable,
-            }}
+        <h1 className="mt-4 mb-2" id="page-title">
+          Choix de l'accompagnateur
+        </h1>
+        <p className="text-xl my-6">
+          Choisissez votre accompagnateur parmi toute la liste. Vous pouvez
+          choisir de réaliser votre accompagnement à distance ou sur site. Si
+          vous souhaitez utiliser votre Compte Personnel de Formation (CPF) pour
+          financer votre parcours, choisissez un accompagnateur référencé sur
+          Mon Compte Formation (MCF).
+        </p>
+
+        <div className="mt-6 lg:mb-14 lg:px-10 pb-10 lg:py-8 lg:shadow-lifted border-b lg:border-b-4 lg:border-[#FFA180]">
+          <h3>Recherchez par nom</h3>
+          <SearchBar
+            label="Recherchez votre organisme d’accompagnement en saisissant son nom"
+            searchFilter={organismSearchText}
+            onSearchFilterChange={setOrganismSearchText}
+            className="mt-6"
           />
         </div>
-        <div className="lg:w-2/3">
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <>
-              {organisms && organisms.totalRows > 0 ? (
-                <p className="mt-3 mb-4 text-gray-500">
-                  {organisms.totalRows === 1
-                    ? `Résultat filtré : ${organisms.totalRows} accompagnateur`
-                    : `Résultats filtrés : ${organisms.totalRows} accompagnateurs`}
-                </p>
-              ) : (
-                <NoOrganisms
-                  organismSearchText={organismSearchText}
-                  resetFilters={resetFilters}
-                />
-              )}
-            </>
-          )}
-
-          <Organisms
-            selectedOrganismId={candidacy.organism?.id}
-            submitOrganism={({ organismId }) => {
-              submitOrganism(organismId);
-            }}
-            availableOrganisms={{
-              rows: state.rows,
-              totalRows: organisms?.totalRows || 0,
-            }}
-          />
-          <div className="mt-4 w-full flex flex-row items-center justify-center">
-            {state.hasMore ? (
-              <Button
-                data-testid="project-organisms-refresh-organisms"
-                priority="secondary"
-                nativeButtonProps={{
-                  onClick: () => {
-                    const nextOffset = stateOffset + RECORDS_PER_PAGE;
-                    loadOrganisms(nextOffset);
-                  },
-                }}
-              >
-                Afficher plus d’organismes
-              </Button>
+        <div className="lg:flex gap-x-6">
+          <div className="lg:w-1/3">
+            <OrganismFilters
+              onSearch={(filters) => {
+                setOrganismSearchOnsite(filters.organismSearchOnsite);
+                setOrganismSearchRemote(filters.organismSearchRemote);
+                setOrganismSearchZip(filters.organismSearchZip);
+                setOrganismSearchPmr(filters.organismSearchPmr);
+                setOrganismSearchMcf(filters.organismSearchMcf);
+                setOrganismSearchIsAvailable(filters.organismSearchIsAvailable);
+              }}
+              filters={{
+                organismSearchText,
+                organismSearchRemote,
+                organismSearchOnsite,
+                organismSearchZip,
+                organismSearchPmr,
+                organismSearchMcf,
+                organismSearchIsAvailable,
+              }}
+            />
+          </div>
+          <div className="lg:w-2/3">
+            {isLoading ? (
+              <Loader />
             ) : (
-              stateOffset === MAX_RECORDS && (
-                <div className="flex flex-col md:flex-row items-start">
-                  <p className="mt-0 text-lg">
-                    Vous n’avez pas trouvé d’accompagnateur ? Utilisez des
-                    filtres pour préciser votre recherche ou tapez le nom d’un
-                    accompagnateur précis dans la barre de recherche.
+              <>
+                {organisms && organisms.totalRows > 0 ? (
+                  <p className="mt-3 mb-4 text-gray-500">
+                    {organisms.totalRows === 1
+                      ? `Résultat filtré : ${organisms.totalRows} accompagnateur`
+                      : `Résultats filtrés : ${organisms.totalRows} accompagnateurs`}
                   </p>
-                  <a
-                    href="#page-title"
-                    className="text-nowrap md:ml-6 fr-link fr-icon-arrow-up-fill fr-link--icon-left"
-                  >
-                    Haut de page
-                  </a>
-                </div>
-              )
+                ) : (
+                  <NoOrganisms
+                    organismSearchText={organismSearchText}
+                    resetFilters={resetFilters}
+                  />
+                )}
+              </>
             )}
+
+            <Organisms
+              selectedOrganismId={candidacy.organism?.id}
+              submitOrganism={({ organismId }) => {
+                submitOrganism(organismId);
+              }}
+              availableOrganisms={{
+                rows: state.rows,
+                totalRows: organisms?.totalRows || 0,
+              }}
+            />
+            <div className="mt-4 w-full flex flex-row items-center justify-center">
+              {state.hasMore ? (
+                <Button
+                  data-testid="project-organisms-refresh-organisms"
+                  priority="secondary"
+                  nativeButtonProps={{
+                    onClick: () => {
+                      const nextOffset = stateOffset + RECORDS_PER_PAGE;
+                      loadOrganisms(nextOffset);
+                    },
+                  }}
+                >
+                  Afficher plus d’organismes
+                </Button>
+              ) : (
+                stateOffset === MAX_RECORDS && (
+                  <div className="flex flex-col md:flex-row items-start">
+                    <p className="mt-0 text-lg">
+                      Vous n’avez pas trouvé d’accompagnateur ? Utilisez des
+                      filtres pour préciser votre recherche ou tapez le nom d’un
+                      accompagnateur précis dans la barre de recherche.
+                    </p>
+                    <a
+                      href="#page-title"
+                      className="text-nowrap md:ml-6 fr-link fr-icon-arrow-up-fill fr-link--icon-left"
+                    >
+                      Haut de page
+                    </a>
+                  </div>
+                )
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </PageLayout>
+      </PageLayout>
+    </Panel>
   );
 }
 

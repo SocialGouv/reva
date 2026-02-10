@@ -5,6 +5,7 @@ import { Card } from "@codegouvfr/react-dsfr/Card";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { Panel } from "@/components/layout/Panel";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { PageLayout } from "@/layouts/page.layout";
 
@@ -32,83 +33,85 @@ export default function CertificationsPage() {
       .rows;
 
   return (
-    <PageLayout title="Choix du diplôme">
-      <Breadcrumb
-        currentPageLabel="Choix du diplôme"
-        className="mb-4"
-        segments={[
-          {
-            label: "Mes candidatures",
-            linkProps: {
-              href: `../../`,
+    <Panel>
+      <PageLayout title="Choix du diplôme">
+        <Breadcrumb
+          currentPageLabel="Choix du diplôme"
+          className="mb-4"
+          segments={[
+            {
+              label: "Mes candidatures",
+              linkProps: {
+                href: `../../`,
+              },
             },
-          },
-          {
-            label: "Créer une candidature",
-            linkProps: {
-              href: `../`,
+            {
+              label: "Créer une candidature",
+              linkProps: {
+                href: `../`,
+              },
             },
-          },
-        ]}
-      />
-
-      <h1 className="mt-4 mb-8">Ma candidature</h1>
-      <div className="mb-8 bg-white border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 w-full">
-        <h2 className="mb-6">Recherchez parmi les diplômes disponibles</h2>
-        <SearchBar
-          label="Rechercher"
-          searchFilter={searchFilter}
-          onSearchFilterChange={(filter) => {
-            const queryParams = new URLSearchParams(searchParams);
-            if (filter && queryParams.get("page")) {
-              queryParams.set("page", "1");
-              queryParams.set("search", filter);
-            } else if (filter) {
-              queryParams.set("search", filter);
-            } else {
-              queryParams.delete("search");
-            }
-
-            const path = `${pathname}?${queryParams.toString()}`;
-            router.push(path);
-          }}
+          ]}
         />
-      </div>
 
-      {info && rows && (
-        <>
-          <p className="mb-2" role="status">
-            Nombre de diplômes disponibles : {info?.totalRows}
-          </p>
-          <div className="flex flex-col gap-2.5">
-            {rows?.map((certification) => (
-              <Card
-                size="small"
-                title={certification.label}
-                detail={`RNCP ${certification.codeRncp}`}
-                desc={certification.certificationAuthorityStructure?.label}
-                key={certification.id}
-                linkProps={{
-                  href: `./${certification.id}`,
-                }}
-                enlargeLink
-                classes={{
-                  detail: "mt-2",
-                }}
+        <h1 className="mt-4 mb-8">Ma candidature</h1>
+        <div className="mb-8 bg-white border-b-[4px] border-b-[#FFA180] shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)] py-8 px-8 w-full">
+          <h2 className="mb-6">Recherchez parmi les diplômes disponibles</h2>
+          <SearchBar
+            label="Rechercher"
+            searchFilter={searchFilter}
+            onSearchFilterChange={(filter) => {
+              const queryParams = new URLSearchParams(searchParams);
+              if (filter && queryParams.get("page")) {
+                queryParams.set("page", "1");
+                queryParams.set("search", filter);
+              } else if (filter) {
+                queryParams.set("search", filter);
+              } else {
+                queryParams.delete("search");
+              }
+
+              const path = `${pathname}?${queryParams.toString()}`;
+              router.push(path);
+            }}
+          />
+        </div>
+
+        {info && rows && (
+          <>
+            <p className="mb-2" role="status">
+              Nombre de diplômes disponibles : {info?.totalRows}
+            </p>
+            <div className="flex flex-col gap-2.5">
+              {rows?.map((certification) => (
+                <Card
+                  size="small"
+                  title={certification.label}
+                  detail={`RNCP ${certification.codeRncp}`}
+                  desc={certification.certificationAuthorityStructure?.label}
+                  key={certification.id}
+                  linkProps={{
+                    href: `./${certification.id}`,
+                  }}
+                  enlargeLink
+                  classes={{
+                    detail: "mt-2",
+                  }}
+                />
+              ))}
+            </div>
+            <div className="flex justify-center mt-auto mb-0 pt-8">
+              <Pagination
+                defaultPage={info.currentPage}
+                count={info.totalPages}
+                getPageLinkProps={(page) => ({
+                  href: `../certifications?search=${searchFilter}&page=${page}`,
+                })}
               />
-            ))}
-          </div>
-          <div className="flex justify-center mt-auto mb-0 pt-8">
-            <Pagination
-              defaultPage={info.currentPage}
-              count={info.totalPages}
-              getPageLinkProps={(page) => ({
-                href: `../certifications?search=${searchFilter}&page=${page}`,
-              })}
-            />
-          </div>
-        </>
-      )}
-    </PageLayout>
+            </div>
+          </>
+        )}
+      </PageLayout>
+    </Panel>
   );
 }

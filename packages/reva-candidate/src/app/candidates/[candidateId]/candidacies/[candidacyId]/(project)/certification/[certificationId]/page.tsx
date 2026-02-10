@@ -1,5 +1,6 @@
 import { CertificationPage } from "@/components/certification-page/CertificationPage";
 import { getSsrGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
+import { Panel } from "@/components/layout/Panel";
 import { PageLayout } from "@/layouts/page.layout";
 
 import { graphql } from "@/graphql/generated";
@@ -81,10 +82,12 @@ export default async function CertificationDetail({
   }
 
   return (
-    <PageLayout title="Choix du diplôme" data-testid={`certificates`}>
-      <CertificationBreadcrumbs currentlyShownCertification={certification} />
-      <CertificationPage certification={certification} />
-      <CertificationChangeButtons selectedCertification={certification} />
-    </PageLayout>
+    <Panel>
+      <PageLayout title="Choix du diplôme" data-testid={`certificates`}>
+        <CertificationBreadcrumbs currentlyShownCertification={certification} />
+        <CertificationPage certification={certification} />
+        <CertificationChangeButtons selectedCertification={certification} />
+      </PageLayout>
+    </Panel>
   );
 }
