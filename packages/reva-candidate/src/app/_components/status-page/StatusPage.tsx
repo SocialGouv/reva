@@ -1,6 +1,8 @@
 import { Button, ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
+import { Panel } from "@/components/layout/Panel";
+
 import hexagonBackground from "./assets/hexagonBackground.svg";
 
 export const StatusPage = ({
@@ -20,8 +22,8 @@ export const StatusPage = ({
     priority?: ButtonProps["priority"];
   };
 }) => (
-  <div className="bg-white lg:shadow-lifted w-full h-fit">
-    <div className="px-4 lg:px-6 lg:py-10 flex flex-col lg:flex-row lg:items-center lg:justify-between">
+  <Panel>
+    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
       <div className="flex flex-col gap-10 flex-1">
         <div className="flex flex-col gap-6">
           <h1 className="mb-0">{title}</h1>
@@ -49,5 +51,5 @@ export const StatusPage = ({
         <div className="z-10">{pictogram}</div>
       </div>
     </div>
-  </div>
+  </Panel>
 );
