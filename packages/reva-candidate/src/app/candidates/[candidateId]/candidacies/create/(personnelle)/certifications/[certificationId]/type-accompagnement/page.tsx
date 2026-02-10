@@ -50,7 +50,7 @@ export default function TypeAccompagnementPage() {
   };
 
   return (
-    <>
+    <div className="px-4 lg:px-6">
       <Breadcrumb
         currentPageLabel="Choix du type d'accompagnement"
         className="mb-4"
@@ -167,6 +167,6 @@ export default function TypeAccompagnementPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

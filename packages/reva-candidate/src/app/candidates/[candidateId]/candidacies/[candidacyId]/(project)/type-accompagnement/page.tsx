@@ -47,7 +47,7 @@ export default function ChooseTypeAccompagnementPage() {
     }
   };
   return (
-    <>
+    <div className="px-4 lg:px-6">
       <Breadcrumb
         currentPageLabel="Modalité de parcours"
         className="mb-0"
@@ -77,7 +77,7 @@ export default function ChooseTypeAccompagnementPage() {
           isAapAvailable={isAapAvailable}
         />
       )}
-    </>
+    </div>
   );
 }
 
