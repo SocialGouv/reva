@@ -6,7 +6,6 @@ import { Card } from "@codegouvfr/react-dsfr/Card";
 import { useRouter, useParams } from "next/navigation";
 
 import { errorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { useCreateVaeCollectiveCandidacy } from "./createVaeCollectiveCandidacy.hook";
 import { useGetVaeCollectiveCohort } from "./getVaeCollective.hook";
@@ -40,7 +39,7 @@ export default function RejoindreVaeCollectivePage() {
   };
 
   return (
-    <PageLayout title="Rejoindre cette VAE collective">
+    <>
       <Breadcrumb
         currentPageLabel={cohorteVaeCollective?.nom}
         className="mb-4"
@@ -106,6 +105,6 @@ export default function RejoindreVaeCollectivePage() {
           </Button>
         </div>
       </div>
-    </PageLayout>
+    </>
   );
 }

@@ -12,7 +12,6 @@ import { OrganismCard } from "@/components/legacy/organisms/OrganismCard/Organis
 import { OrganismFilters } from "@/components/legacy/organisms/OrganismFilters/OrganismFilters";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { Organism } from "@/graphql/generated/graphql";
 
@@ -136,7 +135,7 @@ export default function SetOrganism() {
   }
   return (
     <Panel>
-      <PageLayout title="Choix de l'accompagnateur" data-testid={`organisms`}>
+      <div data-testid="organisms">
         <Breadcrumb
           currentPageLabel="Choix de l'accompagnateur"
           className="mb-0"
@@ -255,7 +254,7 @@ export default function SetOrganism() {
             </div>
           </div>
         </div>
-      </PageLayout>
+      </div>
     </Panel>
   );
 }

@@ -3,7 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 
 type Color = "dark" | "light";
 
-export interface BasicBackButtonProps {
+interface BasicBackButtonProps {
   color?: Color;
   className?: string;
   onClick: () => void;

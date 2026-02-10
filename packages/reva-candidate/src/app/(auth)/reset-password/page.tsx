@@ -13,7 +13,6 @@ import {
   graphqlErrorToast,
   GraphQLError,
 } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { InvalidLink } from "./_components/InvalidLink";
 import { useResetPassword } from "./reset-password.hooks";
@@ -71,7 +70,7 @@ export default function ResetPassword() {
   const title = "Définir un mot de passe";
 
   return (
-    <PageLayout title={title} data-testid="reset-password-home">
+    <div data-testid="reset-password-home" className="flex-1">
       <Panel narrow>
         {isInvalidLink ? (
           <InvalidLink />
@@ -137,6 +136,6 @@ export default function ResetPassword() {
           </div>
         )}
       </Panel>
-    </PageLayout>
+    </div>
   );
 }

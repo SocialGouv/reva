@@ -10,7 +10,6 @@ import { FormEvent, useState } from "react";
 import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { useRegister } from "./register.hooks";
 
@@ -42,7 +41,7 @@ export default function Register() {
   };
 
   return (
-    <PageLayout title="Création de compte">
+    <div className="flex-1">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
         <div className="w-full lg:w-[486px] flex flex-col gap-8 p-10 order-2 lg:order-1">
           <div className="flex flex-col gap-4">
@@ -121,6 +120,6 @@ export default function Register() {
           </form>
         </div>
       </div>
-    </PageLayout>
+    </div>
   );
 }

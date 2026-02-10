@@ -4,7 +4,6 @@ import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
-import { PageLayout } from "@/layouts/page.layout";
 
 import Dashboard from "../../../../_components/home/dashboard/Dashboard";
 
@@ -21,7 +20,7 @@ export default function Home() {
   const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
   return (
-    <PageLayout data-testid="candidate-dashboard">
+    <div data-testid="candidate-dashboard" className="flex-1">
       {isMultiCandidacyFeatureActive && (
         <Breadcrumb
           currentPageLabel={certificationLabel}
@@ -45,6 +44,6 @@ export default function Home() {
         givenName={candidate?.givenName || undefined}
       />
       <Dashboard />
-    </PageLayout>
+    </div>
   );
 }

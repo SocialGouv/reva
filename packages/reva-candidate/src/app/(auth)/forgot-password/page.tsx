@@ -7,7 +7,6 @@ import { FormEvent, useState } from "react";
 
 import { Panel } from "@/components/layout/Panel";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { useForgotPassword } from "./forgot-password.hooks";
 
@@ -33,7 +32,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <PageLayout title="Connexion" data-testid="login-home">
+    <div data-testid="login-home" className="flex-1">
       <Panel narrow>
         <div className="p-6 pt-8">
           <h1 className="mb-10">Récupération de mot de passe sur France VAE</h1>
@@ -89,6 +88,6 @@ export default function ForgotPassword() {
           </form>
         </div>
       </Panel>
-    </PageLayout>
+    </div>
   );
 }

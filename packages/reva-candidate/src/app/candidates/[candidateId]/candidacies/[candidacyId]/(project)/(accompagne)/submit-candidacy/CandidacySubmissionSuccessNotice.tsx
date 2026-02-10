@@ -1,11 +1,9 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
-import { PageLayout } from "@/layouts/page.layout";
-
 export default function CandidacySubmissionSuccessNotice() {
   return (
-    <PageLayout title="Parcours et financement">
+    <div className="flex-1">
       <div className="grid grid-cols-3 grid-rows-1 h-full w-11/12 mx-auto">
         <div className="col-span-2 my-auto">
           <h1>Candidature envoyée</h1>
@@ -36,6 +34,6 @@ export default function CandidacySubmissionSuccessNotice() {
           />
         </div>
       </div>
-    </PageLayout>
+    </div>
   );
 }

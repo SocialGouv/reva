@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { Panel } from "@/components/layout/Panel";
-import { PageLayout } from "@/layouts/page.layout";
 
 export default function CandidacyDeletedPage() {
   const router = useRouter();
@@ -18,10 +17,7 @@ export default function CandidacyDeletedPage() {
 
   return (
     <Panel>
-      <PageLayout
-        title="Candidature supprimée"
-        className="flex items-center justify-between"
-      >
+      <div className="flex items-center justify-between">
         <div>
           <h2 className="mb-6">Votre candidature a été supprimée</h2>
           <p className="text-xl mb-10">
@@ -46,7 +42,7 @@ export default function CandidacyDeletedPage() {
           width={282}
           height={319}
         />
-      </PageLayout>
+      </div>
     </Panel>
   );
 }

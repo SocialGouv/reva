@@ -4,16 +4,12 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useRouter } from "next/navigation";
 
 import { Panel } from "@/components/layout/Panel";
-import { PageLayout } from "@/layouts/page.layout";
 
 export default function LogoutConfirmation() {
   const router = useRouter();
 
   return (
-    <PageLayout
-      data-testid="logout-confirmation"
-      title="Confirmation de déconnexion"
-    >
+    <div data-testid="logout-confirmation" className="flex-1">
       <Panel narrow>
         <div className="flex flex-col items-center justify-center text-center p-6 pt-8">
           <h1 className="text-3xl font-bold text-dsfrGray-800">
@@ -31,6 +27,6 @@ export default function LogoutConfirmation() {
           </Button>
         </div>
       </Panel>
-    </PageLayout>
+    </div>
   );
 }

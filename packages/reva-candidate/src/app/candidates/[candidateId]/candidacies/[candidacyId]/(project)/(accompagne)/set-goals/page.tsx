@@ -9,7 +9,6 @@ import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { useSetGoals } from "./set-goals.hooks";
 
@@ -72,51 +71,49 @@ export default function SetGoals() {
 
   return (
     <Panel>
-      <PageLayout title="Vos objectifs">
-        <Breadcrumb
-          currentPageLabel="Mes objectifs"
-          className="mb-0"
-          segments={[
-            {
-              label: "Ma candidature",
-              linkProps: {
-                href: "../",
+      <Breadcrumb
+        currentPageLabel="Mes objectifs"
+        className="mb-0"
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "../",
+            },
+          },
+        ]}
+      />
+      <h2 className="mt-4 mb-2">Mes objectifs</h2>
+      <FormOptionalFieldsDisclaimer
+        className="mb-4"
+        label="Plusieurs choix possibles"
+      />
+      <form onSubmit={onSubmit} className="flex flex-col">
+        <Checkbox
+          className="w-full"
+          small
+          legend="Objectif"
+          disabled={formShouldBeDisabled}
+          options={goals.map((goal) => ({
+            label: goal.label,
+            nativeInputProps: {
+              checked: selectedGoalIds.indexOf(goal.id) != -1,
+              onChange: () => {
+                setIsDirty(true);
+                toggle(goal.id);
               },
             },
-          ]}
+          }))}
         />
-        <h2 className="mt-4 mb-2">Mes objectifs</h2>
-        <FormOptionalFieldsDisclaimer
-          className="mb-4"
-          label="Plusieurs choix possibles"
+        <FormButtons
+          formState={{
+            canSubmit: !formShouldBeDisabled,
+            isSubmitting,
+            isDirty,
+          }}
+          backUrl="../"
         />
-        <form onSubmit={onSubmit} className="flex flex-col">
-          <Checkbox
-            className="w-full"
-            small
-            legend="Objectif"
-            disabled={formShouldBeDisabled}
-            options={goals.map((goal) => ({
-              label: goal.label,
-              nativeInputProps: {
-                checked: selectedGoalIds.indexOf(goal.id) != -1,
-                onChange: () => {
-                  setIsDirty(true);
-                  toggle(goal.id);
-                },
-              },
-            }))}
-          />
-          <FormButtons
-            formState={{
-              canSubmit: !formShouldBeDisabled,
-              isSubmitting,
-              isDirty,
-            }}
-            backUrl="../"
-          />
-        </form>
-      </PageLayout>
+      </form>
     </Panel>
   );
 }

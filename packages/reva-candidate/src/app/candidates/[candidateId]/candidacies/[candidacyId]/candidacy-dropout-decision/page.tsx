@@ -14,7 +14,6 @@ import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 import { isDropOutConfirmed } from "@/utils/dropOutHelper";
 
 import { OrganismModaliteAccompagnement } from "@/graphql/generated/graphql";
@@ -121,10 +120,7 @@ export default function CandidacyDropOutDecisionPage() {
 
   return (
     <Panel>
-      <PageLayout
-        title="Abandon d'une candidature VAE"
-        data-testid="candidacy-dropout-decision-page"
-      >
+      <div data-testid="candidacy-dropout-decision-page">
         <h1 className="mt-6 mb-2">Abandon d’une candidature VAE</h1>
         <FormOptionalFieldsDisclaimer />
         <p className="text-xl mb-12">
@@ -208,7 +204,7 @@ export default function CandidacyDropOutDecisionPage() {
             }}
           />
         </form>
-      </PageLayout>
+      </div>
     </Panel>
   );
 }

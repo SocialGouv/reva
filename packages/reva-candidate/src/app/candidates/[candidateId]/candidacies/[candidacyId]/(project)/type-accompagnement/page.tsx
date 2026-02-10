@@ -12,7 +12,6 @@ import { useState } from "react";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { useTypeAccompagnementPage } from "./typeAccompagnement.hook";
 
@@ -48,7 +47,7 @@ export default function ChooseTypeAccompagnementPage() {
     }
   };
   return (
-    <PageLayout title="Modalités de parcours">
+    <>
       <Breadcrumb
         currentPageLabel="Modalité de parcours"
         className="mb-0"
@@ -78,7 +77,7 @@ export default function ChooseTypeAccompagnementPage() {
           isAapAvailable={isAapAvailable}
         />
       )}
-    </PageLayout>
+    </>
   );
 }
 

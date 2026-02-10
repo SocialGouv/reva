@@ -12,7 +12,6 @@ import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-conn
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { errorToast, graphqlErrorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { useLogin } from "./login.hooks";
 
@@ -72,7 +71,7 @@ export default function Login() {
   };
 
   return (
-    <PageLayout title="Connexion">
+    <div className="flex-1">
       <div className="flex flex-col lg:flex-row lg:justify-between gap-8">
         <div className="w-full lg:w-[588px] bg-white shadow-lifted p-6">
           <h1 className="mb-6 text-center">Connexion candidat</h1>
@@ -242,6 +241,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </div>
   );
 }

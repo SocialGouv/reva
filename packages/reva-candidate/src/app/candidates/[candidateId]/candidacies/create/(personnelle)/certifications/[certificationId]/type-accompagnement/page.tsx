@@ -7,7 +7,6 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { useRouter, useParams } from "next/navigation";
 
 import { errorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { TypeAccompagnement } from "@/graphql/generated/graphql";
 
@@ -51,7 +50,7 @@ export default function TypeAccompagnementPage() {
   };
 
   return (
-    <PageLayout title="Choix du type d'accompagnement">
+    <>
       <Breadcrumb
         currentPageLabel="Choix du type d'accompagnement"
         className="mb-4"
@@ -168,6 +167,6 @@ export default function TypeAccompagnementPage() {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </>
   );
 }

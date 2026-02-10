@@ -13,7 +13,6 @@ import {
 import { Panel } from "@/components/layout/Panel";
 import { SearchBar } from "@/components/legacy/molecules/SearchBar/SearchBar";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
-import { PageLayout } from "@/layouts/page.layout";
 
 import {
   useCandidacyForCertificationSearch,
@@ -55,7 +54,7 @@ export default function SetCertification() {
 
   return (
     <Panel>
-      <PageLayout title="Choix du diplôme" data-testid={`certificates`}>
+      <div data-testid="certificates">
         <Breadcrumb
           currentPageLabel="Choisir un diplôme"
           className="mb-0"
@@ -144,7 +143,7 @@ export default function SetCertification() {
             </>
           )}
         </>
-      </PageLayout>
+      </div>
     </Panel>
   );
 }

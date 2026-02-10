@@ -1,12 +1,10 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
-import { PageLayout } from "@/layouts/page.layout";
-
 import { VaeCollectiveCodeForm } from "./_components/VaeCollectiveCodeForm.component";
 
 export default function VaeCollectivePage() {
   return (
-    <PageLayout title="Rejoindre une VAE collective">
+    <>
       <Breadcrumb
         currentPageLabel="VAE collective"
         className="mb-4"
@@ -52,6 +50,6 @@ export default function VaeCollectivePage() {
           </p>
         </div>
       </div>
-    </PageLayout>
+    </>
   );
 }

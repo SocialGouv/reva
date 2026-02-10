@@ -1,14 +1,10 @@
 "use client";
 
 import { Panel } from "@/components/layout/Panel";
-import { PageLayout } from "@/layouts/page.layout";
 
 export default function ForgotPasswordConfirmation() {
   return (
-    <PageLayout
-      title="Confirmation de demande de réinitialisation de mot de passe"
-      data-testid="forgot-password-confirmation"
-    >
+    <div data-testid="forgot-password-confirmation" className="flex-1">
       <Panel narrow>
         <div className="flex flex-col items-center justify-center text-center p-6 pt-8">
           <h1 className="text-3xl font-bold text-dsfrGray-800">
@@ -29,6 +25,6 @@ export default function ForgotPasswordConfirmation() {
           </p>
         </div>
       </Panel>
-    </PageLayout>
+    </div>
   );
 }

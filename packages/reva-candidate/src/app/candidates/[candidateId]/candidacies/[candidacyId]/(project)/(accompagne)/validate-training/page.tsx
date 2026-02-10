@@ -10,7 +10,6 @@ import { ChangeEvent, useEffect, useReducer } from "react";
 import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { PageLayout } from "@/layouts/page.layout";
 
 import { useValidateTraining } from "./validate-training.hooks";
 
@@ -232,127 +231,125 @@ export default function ValidateTraining() {
 
   return (
     <Panel>
-      <PageLayout title="Votre parcours">
-        <Breadcrumb
-          currentPageLabel={
-            isTrainingConfirmed ? "Votre parcours" : "Validation du parcours"
-          }
-          className="mb-0"
-          segments={[
-            {
-              label: "Ma candidature",
-              linkProps: {
-                href: "../",
-              },
+      <Breadcrumb
+        currentPageLabel={
+          isTrainingConfirmed ? "Votre parcours" : "Validation du parcours"
+        }
+        className="mb-0"
+        segments={[
+          {
+            label: "Ma candidature",
+            linkProps: {
+              href: "../",
             },
-          ]}
-        />
+          },
+        ]}
+      />
 
-        <h1 className="mt-6 mb-4 text-5xl">
-          {isTrainingConfirmed ? "Votre parcours" : "Validation du parcours"}
-        </h1>
-        <FormOptionalFieldsDisclaimer />
+      <h1 className="mt-6 mb-4 text-5xl">
+        {isTrainingConfirmed ? "Votre parcours" : "Validation du parcours"}
+      </h1>
+      <FormOptionalFieldsDisclaimer />
 
-        <p className="mb-10">
-          Ce parcours a été pensé suite à votre rendez-vous pédagogique. Prenez
-          le temps de le consulter et validez-le pour pouvoir commencer votre
-          parcours VAE.
-        </p>
-        <ul
-          className="text-dsfrGray-700 list-disc list-inside"
-          data-testid="general-informations"
+      <p className="mb-10">
+        Ce parcours a été pensé suite à votre rendez-vous pédagogique. Prenez le
+        temps de le consulter et validez-le pour pouvoir commencer votre
+        parcours VAE.
+      </p>
+      <ul
+        className="text-dsfrGray-700 list-disc list-inside"
+        data-testid="general-informations"
+      >
+        {candidacy.isCertificationPartial ? (
+          <li>Certification visée partiellement</li>
+        ) : null}
+        <li>Accompagnement individuel: {individualHourCount || 0}h</li>
+        <li>Accompagnement collectif: {collectiveHourCount || 0}h</li>
+        <li>Formation: {additionalHourCount || 0}h</li>
+      </ul>
+      {mandatoryTrainings?.length ? (
+        <TrainingSection
+          title="Formations obligatoires"
+          data-testid="mandatory-training-section"
         >
-          {candidacy.isCertificationPartial ? (
-            <li>Certification visée partiellement</li>
-          ) : null}
-          <li>Accompagnement individuel: {individualHourCount || 0}h</li>
-          <li>Accompagnement collectif: {collectiveHourCount || 0}h</li>
-          <li>Formation: {additionalHourCount || 0}h</li>
-        </ul>
-        {mandatoryTrainings?.length ? (
-          <TrainingSection
-            title="Formations obligatoires"
-            data-testid="mandatory-training-section"
-          >
-            <ul className="list-disc list-inside">
-              {mandatoryTrainings.map((mt) => (
-                <li key={mt.id} className="text-dsfrGray-800">
-                  {mt.label}
-                </li>
-              ))}
-            </ul>
-          </TrainingSection>
-        ) : null}
-        {basicSkills?.length ? (
-          <TrainingSection
-            title="Savoirs de base"
-            data-testid="basic-skills-section"
-          >
-            <ul className="list-disc list-inside">
-              {basicSkills.map((mt) => (
-                <li key={mt.id} className="text-dsfrGray-800">
-                  {mt.label}
-                </li>
-              ))}
-            </ul>
-          </TrainingSection>
-        ) : null}
-        {certificateSkills && (
-          <TrainingSection
-            title="Bloc de compétences métiers"
-            data-testid="certificate-skills-section"
-          >
-            <p>{certificateSkills}</p>
-          </TrainingSection>
-        )}
-        {otherTraining && (
-          <TrainingSection title="Autre" data-testid="other-training-section">
-            <p>{otherTraining}</p>
-          </TrainingSection>
-        )}
-        {candidacy.financeModule === "hors_plateforme" && (
-          <TrainingSection
-            title="Modalités de financement"
-            className="flex flex-col gap-4 mb-12"
-          >
-            <p>
-              Ces éléments sont renseignés à titre indicatifs, en l'absence
-              d'information un montant approximatif a été renseigné.
-            </p>
-            <div className="grid grid-cols-[1fr_100px] gap-2">
-              {candidacy.candidacyOnCandidacyFinancingMethods.map((fm) => (
-                <>
-                  <div>
-                    {fm.candidacyFinancingMethod.label}{" "}
-                    {fm.additionalInformation
-                      ? ` (${fm.additionalInformation})`
-                      : ""}
-                  </div>
-                  <div className="font-medium ml-auto">
-                    {fm.amount.toFixed(2)} €
-                  </div>
-                  <hr className="col-span-full mt-2 pb-2" />
-                </>
-              ))}
-              <div>Montant total du devis que vous avez validé :</div>
-              <div className="font-medium ml-auto">
-                {candidacy.candidacyOnCandidacyFinancingMethods
-                  .reduce((acc, fm) => acc + fm.amount, 0)
-                  .toFixed(2)}{" "}
-                €
-              </div>
+          <ul className="list-disc list-inside">
+            {mandatoryTrainings.map((mt) => (
+              <li key={mt.id} className="text-dsfrGray-800">
+                {mt.label}
+              </li>
+            ))}
+          </ul>
+        </TrainingSection>
+      ) : null}
+      {basicSkills?.length ? (
+        <TrainingSection
+          title="Savoirs de base"
+          data-testid="basic-skills-section"
+        >
+          <ul className="list-disc list-inside">
+            {basicSkills.map((mt) => (
+              <li key={mt.id} className="text-dsfrGray-800">
+                {mt.label}
+              </li>
+            ))}
+          </ul>
+        </TrainingSection>
+      ) : null}
+      {certificateSkills && (
+        <TrainingSection
+          title="Bloc de compétences métiers"
+          data-testid="certificate-skills-section"
+        >
+          <p>{certificateSkills}</p>
+        </TrainingSection>
+      )}
+      {otherTraining && (
+        <TrainingSection title="Autre" data-testid="other-training-section">
+          <p>{otherTraining}</p>
+        </TrainingSection>
+      )}
+      {candidacy.financeModule === "hors_plateforme" && (
+        <TrainingSection
+          title="Modalités de financement"
+          className="flex flex-col gap-4 mb-12"
+        >
+          <p>
+            Ces éléments sont renseignés à titre indicatifs, en l'absence
+            d'information un montant approximatif a été renseigné.
+          </p>
+          <div className="grid grid-cols-[1fr_100px] gap-2">
+            {candidacy.candidacyOnCandidacyFinancingMethods.map((fm) => (
+              <>
+                <div>
+                  {fm.candidacyFinancingMethod.label}{" "}
+                  {fm.additionalInformation
+                    ? ` (${fm.additionalInformation})`
+                    : ""}
+                </div>
+                <div className="font-medium ml-auto">
+                  {fm.amount.toFixed(2)} €
+                </div>
+                <hr className="col-span-full mt-2 pb-2" />
+              </>
+            ))}
+            <div>Montant total du devis que vous avez validé :</div>
+            <div className="font-medium ml-auto">
+              {candidacy.candidacyOnCandidacyFinancingMethods
+                .reduce((acc, fm) => acc + fm.amount, 0)
+                .toFixed(2)}{" "}
+              €
             </div>
-          </TrainingSection>
-        )}
-        {!isTrainingConfirmed && !isCandidacyDropOut && (
-          <TrainingValidationForm />
-        )}
-        {isTrainingConfirmed && (
-          <Button priority="secondary" linkProps={{ href: "../" }}>
-            Retour
-          </Button>
-        )}
-      </PageLayout>
+          </div>
+        </TrainingSection>
+      )}
+      {!isTrainingConfirmed && !isCandidacyDropOut && (
+        <TrainingValidationForm />
+      )}
+      {isTrainingConfirmed && (
+        <Button priority="secondary" linkProps={{ href: "../" }}>
+          Retour
+        </Button>
+      )}
     </Panel>
   );
 }
