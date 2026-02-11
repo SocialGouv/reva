@@ -1,10 +1,8 @@
 import { faker } from "@faker-js/faker";
-import { FeasibilityFormat } from "@prisma/client";
 
 import * as AuthHelper from "@/modules/shared/auth/auth.helper";
 import { prismaClient } from "@/prisma/client";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
-import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
 import { graphql } from "../../graphql/generated";
@@ -23,7 +21,7 @@ const resetPasswordMutation = graphql(`
 `);
 
 describe("candidateFinalizeRegistrationWithPassword", () => {
-  test("creates candidate and candidacy then returns tokens", async () => {
+  test("creates candidate without candidacy then returns tokens", async () => {
     const graphqlClient = getGraphQLClient({});
     const email = faker.internet.email();
     const password = "StrongPassword123!";
@@ -82,53 +80,7 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
       where: { candidateId: candidate?.id },
     });
 
-    expect(candidacy).not.toBeNull();
-    expect(candidacy?.typeAccompagnement).toBe("ACCOMPAGNE");
-  });
-
-  test("updates certification when certification is available", async () => {
-    const certification = await createCertificationHelper({
-      feasibilityFormat: FeasibilityFormat.DEMATERIALIZED,
-    });
-
-    const graphqlClient = getGraphQLClient({});
-    const email = faker.internet.email();
-    const password = "StrongPassword123!";
-    const keycloakId = faker.string.uuid();
-    const token = AuthHelper.generateJwt({
-      email,
-      action: "finalize-registration",
-      certificationId: certification.id,
-    });
-
-    vi.spyOn(AuthHelper, "getJWTContent").mockReturnValue({
-      email,
-      action: "finalize-registration",
-      certificationId: certification.id,
-    });
-
-    vi.spyOn(AuthHelper, "getAccountInIAM").mockResolvedValue(null);
-
-    vi.spyOn(AuthHelper, "createAccountInIAM").mockResolvedValue(keycloakId);
-    vi.spyOn(AuthHelper, "resetPassword").mockResolvedValue(undefined);
-    vi.spyOn(AuthHelper, "generateIAMTokenWithPassword").mockResolvedValue({
-      accessToken: "access-token",
-      refreshToken: "refresh-token",
-      idToken: "id-token",
-    });
-
-    await graphqlClient.request(resetPasswordMutation, { token, password });
-
-    const candidate = await prismaClient.candidate.findUnique({
-      where: { email },
-    });
-
-    const candidacy = await prismaClient.candidacy.findFirst({
-      where: { candidateId: candidate?.id },
-    });
-
-    expect(candidacy?.certificationId).toBe(certification.id);
-    expect(candidacy?.feasibilityFormat).toBe(certification.feasibilityFormat);
+    expect(candidacy).toBeNull();
   });
 
   test("resets password when an IAM account already exists", async () => {
