@@ -46,7 +46,7 @@ export default function Register() {
         <div className="w-full lg:w-[486px] flex flex-col gap-8 p-10 order-2 lg:order-1">
           <div className="flex flex-col gap-4">
             <div>
-              <p className="text-xl font-bold leading-8 mb-0">
+              <p className="text-xl font-bold leading-8">
                 Vous avez déjà un compte ?
               </p>
               <p className="text-lg leading-7 mb-0">
