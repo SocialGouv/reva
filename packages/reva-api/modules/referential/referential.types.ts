@@ -116,7 +116,7 @@ export interface UpdateCertificationDescriptionInput {
   juryFrequency?: CertificationJuryFrequency;
   juryFrequencyOther?: string;
   juryPlace?: string;
-  juryEstimatedCost: number;
+  juryEstimatedCost?: number;
   availableAt: Date;
 }
 

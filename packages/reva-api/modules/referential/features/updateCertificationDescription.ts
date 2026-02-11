@@ -54,7 +54,7 @@ export const updateCertificationDescription = async ({
       juryFrequency,
       juryFrequencyOther,
       juryPlace,
-      juryEstimatedCost,
+      juryEstimatedCost: juryEstimatedCost ?? null,
       availableAt,
     },
   });

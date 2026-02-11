@@ -306,7 +306,7 @@ type Query {
     organismId: UUID
     searchText: String
     candidacyId: ID
-    cohorteVaeCollectiveIdFilter:ID # If provided, only certifications added to the cohorte will be returned
+    cohorteVaeCollectiveIdFilter: ID # If provided, only certifications added to the cohorte will be returned
   ): CertificationPage!
   searchCertificationsForAdmin(
     offset: Int
