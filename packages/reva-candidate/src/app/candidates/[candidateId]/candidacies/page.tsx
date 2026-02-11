@@ -32,7 +32,7 @@ export default function CandidaciesPage() {
 
   return (
     <div className="px-4 lg:px-6">
-      <h1>Mes candidatures et parcours</h1>
+      <h1 className="mt-8">Mes candidatures et parcours</h1>
 
       <p>
         Voici la liste de vos candidatures France VAE. Sélectionnez celle de
