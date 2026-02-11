@@ -41,7 +41,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 pb-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
         <div className="w-full lg:w-[486px] flex flex-col gap-8 p-10 order-2 lg:order-1">
           <div className="flex flex-col gap-4">

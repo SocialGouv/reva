@@ -39,7 +39,7 @@ export default function RejoindreVaeCollectivePage() {
   };
 
   return (
-    <div className="px-4 lg:px-6">
+    <div className="px-4 lg:px-6 pb-6">
       <Breadcrumb
         currentPageLabel={cohorteVaeCollective?.nom}
         className="mb-4"

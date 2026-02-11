@@ -4,7 +4,7 @@ import { VaeCollectiveCodeForm } from "./_components/VaeCollectiveCodeForm.compo
 
 export default function VaeCollectivePage() {
   return (
-    <div className="px-4 lg:px-6">
+    <div className="px-4 lg:px-6 pb-6">
       <Breadcrumb
         currentPageLabel="VAE collective"
         className="mb-4"

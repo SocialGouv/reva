@@ -3,7 +3,7 @@ import { Tile } from "@codegouvfr/react-dsfr/Tile";
 
 export default function CreateCandidacyPage() {
   return (
-    <div className="px-4 lg:px-6">
+    <div className="px-4 lg:px-6 pb-6">
       <Breadcrumb
         currentPageLabel="Créer une candidature"
         className="mb-4"

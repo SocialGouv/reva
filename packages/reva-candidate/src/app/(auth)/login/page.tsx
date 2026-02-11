@@ -71,7 +71,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 pb-6">
       <div className="flex flex-col lg:flex-row lg:justify-between gap-8">
         <div className="w-full lg:w-[588px] bg-white shadow-lifted p-6">
           <h1 className="mb-6 text-center">Connexion candidat</h1>

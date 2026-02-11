@@ -20,7 +20,7 @@ export default function Home() {
   const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
   return (
-    <div data-testid="candidate-dashboard" className="flex-1 px-4 lg:px-6">
+    <div data-testid="candidate-dashboard" className="flex-1 px-4 lg:px-6 pb-6">
       {isMultiCandidacyFeatureActive && (
         <Breadcrumb
           currentPageLabel={certificationLabel}
