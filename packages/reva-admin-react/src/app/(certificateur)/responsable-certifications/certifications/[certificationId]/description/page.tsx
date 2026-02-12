@@ -183,7 +183,7 @@ const PageContent = ({
 
       juryPlace: certification.juryPlace || undefined,
 
-      juryEstimatedCost: certification.juryEstimatedCost || null,
+      juryEstimatedCost: certification.juryEstimatedCost ?? null,
 
       startOfVisibility: certification.availableAt
         ? format(certification.availableAt, "yyyy-MM-dd")
