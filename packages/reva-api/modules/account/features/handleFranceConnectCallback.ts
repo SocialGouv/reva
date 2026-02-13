@@ -64,18 +64,31 @@ export const handleFranceConnectCallback = async (
 
   if (!franceConnectEnabled) {
     throw new FranceConnectForbiddenError(
-      "FranceConnect authentication is not enabled",
+      "L'authentification FranceConnect n'est pas activée",
     );
+  }
+
+  const code = currentUrl.searchParams.get("code") ?? undefined;
+  if (!code) {
+    const error = currentUrl.searchParams.get("error");
+    const errorDescription =
+      currentUrl.searchParams.get("error_description") ?? undefined;
+    const message =
+      error && errorDescription
+        ? `${error}: ${errorDescription}`
+        : (error ??
+          "Code d'autorisation manquant (connexion annulée ou refusée)");
+    throw new FranceConnectUserError(message, 400);
   }
 
   const state = currentUrl.searchParams.get("state") ?? undefined;
   if (!state) {
-    throw new FranceConnectUserError("Missing state parameter", 400);
+    throw new FranceConnectUserError("Paramètre state manquant", 400);
   }
 
   const stored = getAndDeleteFcStateCookie(request, reply, state);
   if (!stored) {
-    throw new FranceConnectUserError("Invalid or expired state");
+    throw new FranceConnectUserError("La session d'authentification a expiré");
   }
 
   const config = await getOAuthConfig();
@@ -87,18 +100,24 @@ export const handleFranceConnectCallback = async (
   });
 
   if (!tokenSet.access_token || !tokenSet.id_token) {
-    throw new FranceConnectSystemError("Invalid token response");
+    throw new FranceConnectSystemError("Erreur lors de l'authentification");
   }
 
   const claims = tokenSet.claims();
   const idTokenResult = FranceConnectClaimsSchema.safeParse(claims);
   if (!idTokenResult.success) {
-    throw new FranceConnectUserError("Invalid ID token structure", 400);
+    throw new FranceConnectUserError(
+      "Une erreur est survenue lors de l'authentification",
+      400,
+    );
   }
   const idTokenPayload = idTokenResult.data;
   const keycloakId = idTokenPayload.sub;
 
-  const candidate = await getOrCreateCandidate(keycloakId, idTokenPayload);
+  const { candidate, isNewAccount } = await getOrCreateCandidate(
+    keycloakId,
+    idTokenPayload,
+  );
 
   const baseUrl =
     process.env.NODE_ENV === "production"
@@ -110,7 +129,9 @@ export const handleFranceConnectCallback = async (
     : undefined;
 
   let redirectPath: string;
-  if (certificationId) {
+  if (isNewAccount) {
+    redirectPath = `/candidat/candidates/${candidate.id}/first-connexion`;
+  } else if (certificationId) {
     redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create/certifications/${certificationId}/type-accompagnement`;
   } else {
     const activeCandidacies = await getActiveCandidaciesByCandidateId({
@@ -131,42 +152,48 @@ export const handleFranceConnectCallback = async (
   return redirectUrl.toString();
 };
 
-const buildFranceConnectCandidateFields = async (
-  userInfo: FranceConnectClaims,
-) => {
+const upsertCandidateInfoFranceConnect = async ({
+  candidateId,
+  userInfo,
+}: {
+  candidateId: string;
+  userInfo: FranceConnectClaims;
+}) => {
   const { firstname, firstname2, firstname3 } = splitGivenName(
     userInfo.given_name ?? "",
   );
-  const country = await getCountry(userInfo.birthcountry);
-  return {
-    firstname,
-    firstname2: firstname2 ?? undefined,
-    firstname3: firstname3 ?? undefined,
-    lastname: userInfo.family_name,
-    gender: mapGender(userInfo.gender),
+  const countryId = (await getCountry(userInfo.birthcountry))?.id;
+  const data = {
+    countryId,
     birthdate: parseFranceConnectDate(userInfo.birthdate),
-    phone: userInfo.phone_number ?? "",
-    city: userInfo.locality ?? "",
-    zip: userInfo.postal_code ?? "",
-    street: userInfo.street_address ?? "",
-    countryId: country?.id,
-    givenName: userInfo.preferred_username ?? undefined,
+    gender: mapGender(userInfo.gender),
+    givenName: userInfo.given_name,
+    firstname,
+    firstname2,
+    firstname3,
+    lastname: userInfo.family_name,
+    email: userInfo.email,
   };
+
+  await prismaClient.candidateInfoFranceConnect.upsert({
+    where: { candidateId },
+    create: { candidateId, ...data },
+    update: { ...data, updatedAt: new Date() },
+  });
 };
 
 const getOrCreateCandidate = async (
   keycloakId: string,
   userInfo: FranceConnectClaims,
-) => {
+): Promise<{ candidate: { id: string }; isNewAccount: boolean }> => {
   let candidate = await getCandidateByKeycloakId({ keycloakId });
 
-  const fcFields = await buildFranceConnectCandidateFields(userInfo);
-
   if (candidate) {
-    return await updateCandidateWithFranceConnectInfo({
+    await upsertCandidateInfoFranceConnect({
       candidateId: candidate.id,
-      fcFields,
+      userInfo,
     });
+    return { candidate, isNewAccount: false };
   }
 
   candidate = await prismaClient.candidate.findUnique({
@@ -174,55 +201,43 @@ const getOrCreateCandidate = async (
   });
 
   if (candidate) {
-    return await linkKeycloakIdToCandidate({
+    if (candidate.keycloakId && candidate.keycloakId !== keycloakId) {
+      // Le candidat possède déjà un keycloakId différent (ex. compte par mot de passe).
+      // Ne pas l'écraser pour ne pas casser sa connexion existante.
+      logger.warn(
+        `[France Connect] Tentative de liaison FranceConnect pour le candidat ${candidate.id} qui possède déjà un keycloakId différent`,
+      );
+      await upsertCandidateInfoFranceConnect({
+        candidateId: candidate.id,
+        userInfo,
+      });
+      return { candidate, isNewAccount: false };
+    }
+    // keycloakId null ou identique — on lie/confirme le keycloakId FranceConnect
+    const linked = await linkKeycloakIdToCandidate({
       candidateId: candidate.id,
       keycloakId,
-      fcFields,
+      userInfo,
     });
+    return { candidate: linked, isNewAccount: false };
   }
 
-  return await createCandidateFromFranceConnect({
+  const created = await createCandidateFromFranceConnect({
     keycloakId,
     userInfo,
-    fcFields,
   });
-};
-
-type FranceConnectCandidateFields = Awaited<
-  ReturnType<typeof buildFranceConnectCandidateFields>
->;
-
-const updateCandidateWithFranceConnectInfo = async ({
-  candidateId,
-  fcFields,
-}: {
-  candidateId: string;
-  fcFields: FranceConnectCandidateFields;
-}) => {
-  const { gender, birthdate, countryId, ...rest } = fcFields;
-  return prismaClient.candidate.update({
-    where: { id: candidateId },
-    data: {
-      updatedAt: new Date(),
-      ...rest,
-      ...(gender != null && { gender }),
-      ...(birthdate != null && { birthdate }),
-      ...(countryId !== undefined && { countryId }),
-    },
-  });
+  return { candidate: created, isNewAccount: true };
 };
 
 const linkKeycloakIdToCandidate = async ({
   candidateId,
   keycloakId,
-  fcFields,
+  userInfo,
 }: {
   candidateId: string;
   keycloakId: string;
-  fcFields: FranceConnectCandidateFields;
+  userInfo: FranceConnectClaims;
 }) => {
-  const { gender, birthdate, countryId, ...rest } = fcFields;
-
   logger.info(
     `[France Connect] Association du keycloakId FranceConnect ${keycloakId} au candidat existant ${candidateId}`,
   );
@@ -232,40 +247,57 @@ const linkKeycloakIdToCandidate = async ({
     data: {
       keycloakId,
       updatedAt: new Date(),
-      ...rest,
-      ...(gender != null && { gender }),
-      ...(birthdate != null && { birthdate }),
-      ...(countryId !== undefined && { countryId }),
     },
   });
 
   await assignCandidateRole(keycloakId);
+  await upsertCandidateInfoFranceConnect({ candidateId, userInfo });
   return candidate;
 };
 
 const createCandidateFromFranceConnect = async ({
   keycloakId,
   userInfo,
-  fcFields,
 }: {
   keycloakId: string;
   userInfo: FranceConnectClaims;
-  fcFields: FranceConnectCandidateFields;
 }) => {
+  const { firstname, firstname2, firstname3 } = splitGivenName(
+    userInfo.given_name ?? "",
+  );
   const birthDepartment = await getDepartment(userInfo.birthplace);
   const currentDepartment = await getDepartment(userInfo.locality);
+  const countryId = (await getCountry(userInfo.birthcountry))?.id;
 
   const candidate = await prismaClient.candidate.create({
     data: {
-      ...fcFields,
       keycloakId,
       email: userInfo.email,
+      firstname,
+      firstname2,
+      firstname3,
+      lastname: userInfo.family_name,
+      gender: mapGender(userInfo.gender),
+      birthdate: parseFranceConnectDate(userInfo.birthdate),
+      countryId,
+      phone: userInfo.phone_number ?? "",
+      city: userInfo.locality ?? "",
+      zip: userInfo.postal_code ?? "",
+      street: userInfo.street_address ?? "",
+      givenName: userInfo.preferred_username ?? undefined,
       departmentId: currentDepartment.id,
       birthDepartmentId: birthDepartment.id,
     },
   });
 
   await assignCandidateRole(keycloakId);
+  await upsertCandidateInfoFranceConnect({
+    candidateId: candidate.id,
+    userInfo,
+  });
+  logger.info(
+    `[France Connect] Nouveau compte candidat créé avec succès : ${candidate.id}`,
+  );
   return candidate;
 };
 
@@ -289,16 +321,16 @@ const splitGivenName = (
   givenName: string,
 ): {
   firstname: string;
-  firstname2: string | null;
-  firstname3: string | null;
+  firstname2?: string;
+  firstname3?: string;
 } => {
   const parts = givenName.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) {
-    return { firstname: "", firstname2: null, firstname3: null };
+    return { firstname: "", firstname2: undefined, firstname3: undefined };
   }
   const firstname = parts[0];
-  const firstname2 = parts.length > 1 ? parts[1] : null;
-  const firstname3 = parts.length > 2 ? parts.slice(2).join(" ") : null;
+  const firstname2 = parts.length > 1 ? parts[1] : undefined;
+  const firstname3 = parts.length > 2 ? parts.slice(2).join(" ") : undefined;
   return { firstname, firstname2, firstname3 };
 };
 
@@ -308,40 +340,35 @@ const getDefaultDepartment = async () => {
   });
 
   if (!department) {
-    throw new FranceConnectSystemError("Default department not found");
+    throw new FranceConnectSystemError("Erreur de configuration du système");
   }
 
   return department;
 };
 
-const getDepartment = async (birthplace: string): Promise<Department> => {
-  if (!birthplace) {
-    const defaultDepartment = await getDefaultDepartment();
-    return defaultDepartment;
+const getDepartment = async (birthplace?: string): Promise<Department> => {
+  if (birthplace) {
+    const department = await prismaClient.department.findUnique({
+      where: { code: birthplace.slice(0, 2) },
+    });
+    if (department) return department;
   }
-  const department = await prismaClient.department.findUnique({
-    where: { code: birthplace.slice(0, 2) },
-  });
-  if (department) {
-    return department;
-  }
-  const defaultDepartment = await getDefaultDepartment();
-  return defaultDepartment;
+  return getDefaultDepartment();
 };
 
 const getCountry = async (
-  countryCode: string,
+  countryCode?: string,
 ): Promise<Country | undefined> => {
-  let country: Country | undefined;
+  if (!countryCode) return undefined;
 
-  if (countryCode) {
-    const countryFound = await prismaClient.country.findUnique({
-      where: { inseeCode: countryCode },
-    });
-    if (!countryFound) {
-      throw new FranceConnectUserError("Country not found", 400);
-    }
-    country = countryFound;
+  const country = await prismaClient.country.findUnique({
+    where: { inseeCode: countryCode },
+  });
+  if (!country) {
+    throw new FranceConnectUserError(
+      "Les informations de pays sont invalides",
+      400,
+    );
   }
   return country;
 };
@@ -349,7 +376,7 @@ const getCountry = async (
 const assignCandidateRole = async (keycloakId: string): Promise<void> => {
   const realm = process.env.KEYCLOAK_APP_REALM;
   if (!realm) {
-    throw new FranceConnectSystemError("KEYCLOAK_APP_REALM not configured");
+    throw new FranceConnectSystemError("Erreur de configuration du système");
   }
 
   const keycloakAdmin = await getKeycloakAdmin();
@@ -359,7 +386,7 @@ const assignCandidateRole = async (keycloakId: string): Promise<void> => {
   });
 
   if (!role?.id) {
-    throw new FranceConnectSystemError("Candidate role not found in Keycloak");
+    throw new FranceConnectSystemError("Erreur de configuration du système");
   }
 
   await keycloakAdmin.users.addRealmRoleMappings({
