@@ -25,3 +25,7 @@ infra/ftps/data/*
 !infra/strapi/types/generated/
 .cursor
 **/cypress/downloads/*
+.claude/*
+.claudeignore
+CLAUDE.md
+code_specs/
