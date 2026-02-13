@@ -78,46 +78,39 @@ export default function Register() {
         <div className="w-full lg:w-[588px] bg-white shadow-lifted p-6 order-1 lg:order-2">
           <h1 className="mb-6 text-center">Création de compte</h1>
 
-          {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") && (
-            <div className="flex flex-col items-center gap-4 mb-6">
+          {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") ? (
+            <div className="flex flex-col items-center gap-4">
               <FranceConnectButton
                 url={getFranceConnectLoginUrl(certificationId ?? undefined)}
               />
-              <div className="flex flex-row items-center gap-3 mt-2 w-full">
-                <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-                <span className="text-dsfrGray-700 text-sm font-bold uppercase">
-                  ou
-                </span>
-                <div className="flex-1 bg-dsfrGray-200 h-[1px]" />
-              </div>
             </div>
+          ) : (
+            <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+              <Input
+                className="mb-0"
+                disabled={askForRegistration.isPending}
+                hintText="Format attendu : nom@domaine.fr"
+                nativeInputProps={{
+                  id: "email",
+                  name: "email",
+                  required: true,
+                  type: "email",
+                  autoComplete: "email",
+                  spellCheck: "false",
+                  onChange: (e) => setEmail(e.target.value),
+                }}
+                label="Identifiant"
+              />
+
+              <Button
+                type="submit"
+                className="w-full justify-center"
+                disabled={askForRegistration.isPending}
+              >
+                S'inscrire
+              </Button>
+            </form>
           )}
-
-          <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-            <Input
-              className="mb-0"
-              disabled={askForRegistration.isPending}
-              hintText="Format attendu : nom@domaine.fr"
-              nativeInputProps={{
-                id: "email",
-                name: "email",
-                required: true,
-                type: "email",
-                autoComplete: "email",
-                spellCheck: "false",
-                onChange: (e) => setEmail(e.target.value),
-              }}
-              label="Identifiant"
-            />
-
-            <Button
-              type="submit"
-              className="w-full justify-center"
-              disabled={askForRegistration.isPending}
-            >
-              S'inscrire
-            </Button>
-          </form>
         </div>
       </div>
     </div>
