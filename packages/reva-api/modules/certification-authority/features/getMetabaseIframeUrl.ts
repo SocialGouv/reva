@@ -24,6 +24,10 @@ const ALLOWED_CERTIFICATION_AUTHORITY_STRUCTURES: Record<
       filter: "gestionnaire_de_candidatures",
       dashboardId: 200,
     },
+  "CPNEFP de la Métallurgie": {
+    filter: "gestionnaire_de_candidatures",
+    dashboardId: 209,
+  },
 };
 
 export const getMetabaseIframeUrl = async (
