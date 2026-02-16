@@ -171,6 +171,15 @@ export const DematerializedFeasibility = () => {
   const candidateName = `${candidacy.candidate?.firstname ?? ""} ${candidacy.candidate?.lastname ?? ""}`;
   const certificationName = candidacy.certification?.label ?? "";
 
+  const candidateDisplayName = `${candidacy.candidate?.lastname ?? ""} ${
+    candidacy.candidate?.firstname ?? ""
+  }`.trim();
+  const certificationDisplayName = candidacy.certification
+    ? `RNCP${candidacy.certification.codeRncp ?? ""} - ${
+        candidacy.certification.label ?? ""
+      }`
+    : "";
+
   return (
     <div
       data-testid={`feasibility-page-dematerialized-${feasibility?.decision?.toLowerCase() || "pending"}`}
@@ -223,7 +232,11 @@ export const DematerializedFeasibility = () => {
         <>
           <hr className="mt-12 mb-12 p-1" />
           {isFeasibilityWaitingToBeMarkedAsComplete && (
-            <FeasibilityCompletionForm onSubmit={handleCompletionFormSubmit} />
+            <FeasibilityCompletionForm
+              onSubmit={handleCompletionFormSubmit}
+              candidateDisplayName={candidateDisplayName}
+              certificationDisplayName={certificationDisplayName}
+            />
           )}
           {isFeasibilityWaitingToBeValidated && (
             <FeasibilityValidationForm
