@@ -1,9 +1,9 @@
 import {
   expect,
+  graphql,
   test,
   type Page,
 } from "next/experimental/testmode/playwright/msw";
-import { graphql } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "@tests/helpers/auth/auth";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
@@ -60,7 +60,10 @@ async function loginAndWaitForInitialLoad(page: Page) {
 
 test.describe("page tests", () => {
   test.use({
-    mswHandlers: [createFirstConnexionHandlers(), { scope: "test" }],
+    mswHandlers: [
+      createFirstConnexionHandlers({ profileInformationCompleted: false }),
+      { scope: "test" },
+    ],
   });
 
   test("when i access the page it show the correct title", async ({ page }) => {
