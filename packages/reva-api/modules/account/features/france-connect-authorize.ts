@@ -17,6 +17,7 @@ import {
 export const getFranceConnectAuthorizeRedirectUrl = async (
   reply: FastifyReply,
   certificationId?: string,
+  typeAccompagnement?: string,
 ): Promise<string> => {
   const config = await getOAuthConfig();
   const redirectUri = getFranceConnectRedirectUri();
@@ -34,6 +35,7 @@ export const getFranceConnectAuthorizeRedirectUrl = async (
     certificationId: isValidCertificationId(certificationId)
       ? certificationId
       : undefined,
+    typeAccompagnement,
   });
 
   const authUrl = buildAuthorizationUrl(config, {

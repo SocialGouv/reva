@@ -128,11 +128,16 @@ export const handleFranceConnectCallback = async (
     ? stored.certificationId
     : undefined;
 
+  const typeAccompagnement = stored.typeAccompagnement;
+
   let redirectPath: string;
   if (isNewAccount) {
     redirectPath = `/candidat/candidates/${candidate.id}/first-connexion`;
   } else if (certificationId) {
-    redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create/certifications/${certificationId}/type-accompagnement`;
+    const typeParam = typeAccompagnement
+      ? `?typeAccompagnement=${encodeURIComponent(typeAccompagnement)}`
+      : "";
+    redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create/certifications/${certificationId}/type-accompagnement${typeParam}`;
   } else {
     const activeCandidacies = await getActiveCandidaciesByCandidateId({
       candidateId: candidate.id,

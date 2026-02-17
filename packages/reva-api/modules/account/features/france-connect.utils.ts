@@ -55,6 +55,7 @@ type FcStateData = {
   nonce: string;
   code_verifier: string;
   certificationId?: string;
+  typeAccompagnement?: string;
 };
 
 const getSecureCookieOptions = (maxAge: number) => ({
@@ -97,5 +98,6 @@ export const getAndDeleteFcStateCookie = (
     nonce: data.nonce,
     code_verifier: data.code_verifier,
     certificationId: data.certificationId,
+    typeAccompagnement: data.typeAccompagnement,
   };
 };

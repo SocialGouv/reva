@@ -9,21 +9,25 @@ import { impersonate } from "./features/impersonate";
 
 export const accountRoute: FastifyPluginAsync = async (server) => {
   server.get<{
-    Querystring: { certificationId?: string };
+    Querystring: { certificationId?: string; typeAccompagnement?: string };
   }>("/account/franceconnect/authorize", {
     schema: {
       querystring: {
         type: "object",
-        properties: { certificationId: { type: "string" } },
+        properties: {
+          certificationId: { type: "string" },
+          typeAccompagnement: { type: "string" },
+        },
       },
     },
 
     handler: async (request, reply) => {
       try {
-        const { certificationId } = request.query;
+        const { certificationId, typeAccompagnement } = request.query;
         const redirectUrl = await getFranceConnectAuthorizeRedirectUrl(
           reply,
           certificationId,
+          typeAccompagnement,
         );
         return reply.redirect(redirectUrl);
       } catch (error) {
