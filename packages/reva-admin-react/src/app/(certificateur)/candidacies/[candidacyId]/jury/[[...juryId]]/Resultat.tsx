@@ -1,18 +1,16 @@
 "use client";
 
-import { Badge } from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, isAfter, startOfDay } from "date-fns";
+import { isAfter, startOfDay } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useAuth } from "@/components/auth/auth";
-import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
@@ -47,6 +45,77 @@ const juryResultLabels: { [key in JuryResult]: string } = {
   CANDIDATE_EXCUSED: "Candidat excusé sur justificatif",
   CANDIDATE_ABSENT: "Candidat non présent",
 };
+
+const juryResultModalContent = (result: JuryResult) => {
+  switch (result) {
+    case "FULL_SUCCESS_OF_FULL_CERTIFICATION":
+    case "FULL_SUCCESS_OF_PARTIAL_CERTIFICATION":
+      return (
+        <div>
+          <p>
+            Vous vous apprêtez à déclarer <b>une réussite totale</b> pour ce
+            candidat.
+          </p>
+          <p>
+            Conséquence : Le candidat a validé l'ensemble des blocs pour
+            lesquels il est recevable. Son parcours de VAE est terminé pour
+            cette candidature.
+          </p>
+          <p>Confirmez-vous ce résultat ?</p>
+        </div>
+      );
+    case "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION":
+    case "PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION":
+    case "PARTIAL_SUCCESS_PENDING_CONFIRMATION":
+      return (
+        <div>
+          <p>
+            Vous vous apprêtez à déclarer <b>une réussite partielle</b> pour ce
+            candidat.
+          </p>
+          <p>
+            Conséquence : Le candidat a validé une partie des blocs pour
+            lesquels il est recevable. Il pourra redéposer un dossier de
+            validation pour passer à nouveau devant le jury pour les blocs non
+            validés.
+          </p>
+          <p>Confirmez-vous ce résultat ?</p>
+        </div>
+      );
+    case "FAILURE":
+      return (
+        <div>
+          <p>
+            Vous vous apprêtez à déclarer <b>une non validation</b> pour ce
+            candidat.
+          </p>
+          <p>
+            Conséquence : Le candidat n'a validé aucun des blocs pour lesquels
+            il est recevable. Il pourra redéposer un dossier de validation pour
+            passer à nouveau devant le jury pour les blocs non validés.
+          </p>
+          <p>Confirmez-vous ce résultat ?</p>
+        </div>
+      );
+    case "CANDIDATE_EXCUSED":
+    case "CANDIDATE_ABSENT":
+      return (
+        <div>
+          <p>
+            Vous vous apprêtez à déclarer que le candidat était{" "}
+            <b>non présent</b> lors du jury.
+          </p>
+          <p>
+            Conséquence : Le candidat n'a validé aucun bloc. Il pourra redéposer
+            un dossier de validation pour passer à nouveau devant le jury pour
+            les blocs non validés.
+          </p>
+          <p>Confirmez-vous ce résultat ?</p>
+        </div>
+      );
+  }
+};
+
 // Options communes à tous les types de certification
 const COMMON_OPTIONS = [
   "FAILURE",
@@ -75,19 +144,6 @@ const ALL_OPTIONS = [
   "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION",
   ...COMMON_OPTIONS,
 ] as const;
-
-const juryResultNotice: {
-  [key in JuryResult]: "info" | "new" | "success" | "error";
-} = {
-  FULL_SUCCESS_OF_FULL_CERTIFICATION: "success",
-  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: "info",
-  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: "success",
-  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: "info",
-  PARTIAL_SUCCESS_PENDING_CONFIRMATION: "info",
-  FAILURE: "error",
-  CANDIDATE_EXCUSED: "new",
-  CANDIDATE_ABSENT: "new",
-};
 
 const schema = z.object({
   result: z.enum(ALL_OPTIONS),
@@ -310,12 +366,13 @@ export const Resultat = () => {
 
         <>
           <modal.Component
-            title="Confirmer le choix du résultat"
+            title="Confirmer le résultat du jury"
             className="modal-confirm-jury-result"
+            size="large"
             buttons={[
               {
                 priority: "secondary",
-                children: "Modifier",
+                children: "Annuler",
               },
               {
                 priority: "primary",
@@ -325,23 +382,7 @@ export const Resultat = () => {
             ]}
           >
             <div className="flex flex-col gap-4">
-              <h5 className="text-base font-bold mt-4">
-                {`${format(new Date(), "dd/MM/yyyy")} - Résultat :`}
-              </h5>
-
-              {juryResultNotice[formData.result] == "error" ? (
-                <CustomErrorBadge label={juryResultLabels[formData.result]} />
-              ) : (
-                <Badge severity={juryResultNotice[formData.result]}>
-                  {juryResultLabels[formData.result]}
-                </Badge>
-              )}
-
-              {formData?.informationOfResult && (
-                <label className="text-base">
-                  {`“${formData.informationOfResult}”`}
-                </label>
-              )}
+              {juryResultModalContent(formData.result as JuryResult)}
             </div>
           </modal.Component>
 
