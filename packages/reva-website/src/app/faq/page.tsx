@@ -37,11 +37,11 @@ const FaqPage = async () => {
   });
   return (
     <MainLayout preview={preview}>
-      <div className="flex flex-col w-full gap-8 fr-container p-32 pt-0 md:pt-16">
+      <div className="flex flex-col w-full gap-8 fr-container p-10 md:p-32 pt-0 md:pt-16">
         <h1 className="text-4xl font-bold  bg-white mt-12 mb-0 md:mb-6 self-center">
           Questions fréquentes
         </h1>
-        <div className="flex flex-wrap justify-start md:justify-center gap-6 md:gap-16">
+        <div className="flex flex-wrap justify-start md:justify-center gap-6 lg:gap-16">
           {sections.sectionFaqs?.map((s) => (
             <Tile
               key={s?.documentId}
@@ -50,7 +50,7 @@ const FaqPage = async () => {
               linkProps={{
                 href: `#section-${s?.documentId}`,
               }}
-              className="max-h-[100px]"
+              className="max-h-[100px] flex-auto"
               title={
                 <span className="flex items-center gap-8 -mt-5 mr-8">
                   {s?.pictogramme && <span>{PICTOGRAMS[s?.pictogramme]}</span>}
