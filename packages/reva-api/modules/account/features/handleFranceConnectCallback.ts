@@ -1,8 +1,14 @@
-import { Country, Department, Gender } from "@prisma/client";
+import {
+  CandidacyTypeAccompagnement,
+  Country,
+  Department,
+  Gender,
+} from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { authorizationCodeGrant } from "openid-client";
 import { z } from "zod";
 
+import { createCandidacy } from "@/modules/candidacy/features/createCandidacy";
 import { getActiveCandidaciesByCandidateId } from "@/modules/candidacy/features/getActiveCandidaciesByCandidateId";
 import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandidateByKeycloakId";
 import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "@/modules/candidate/features/updateAllCandidaciesDerniereDateActiviteByCandidateId";
@@ -128,16 +134,29 @@ export const handleFranceConnectCallback = async (
     ? stored.certificationId
     : undefined;
 
-  const typeAccompagnement = stored.typeAccompagnement;
+  const typeAccompagnement =
+    stored.typeAccompagnement as CandidacyTypeAccompagnement;
+
+  if (certificationId && typeAccompagnement) {
+    try {
+      await createCandidacy({
+        candidateId: candidate.id,
+        certificationId,
+        typeAccompagnement,
+      });
+      logger.info(
+        `[France Connect] Candidature créée automatiquement pour le candidat ${candidate.id}`,
+      );
+    } catch (error) {
+      logger.error(
+        `[France Connect] Erreur lors de la création automatique de candidature pour le candidat ${candidate.id}: ${error}`,
+      );
+    }
+  }
 
   let redirectPath: string;
   if (isNewAccount) {
     redirectPath = `/candidat/candidates/${candidate.id}/first-connexion`;
-  } else if (certificationId) {
-    const typeParam = typeAccompagnement
-      ? `?typeAccompagnement=${encodeURIComponent(typeAccompagnement)}`
-      : "";
-    redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create/certifications/${certificationId}/type-accompagnement${typeParam}`;
   } else {
     const activeCandidacies = await getActiveCandidaciesByCandidateId({
       candidateId: candidate.id,
