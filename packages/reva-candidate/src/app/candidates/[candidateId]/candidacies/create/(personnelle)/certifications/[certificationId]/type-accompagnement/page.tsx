@@ -4,7 +4,8 @@ import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Card } from "@codegouvfr/react-dsfr/Card";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
-import { useRouter, useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 import { errorToast } from "@/components/toast/toast";
 
@@ -23,31 +24,34 @@ export default function TypeAccompagnementPage() {
 
   const { certification } = useGetCertification();
 
+  const handleCreateCandidacy = useCallback(
+    async (typeAccompagnement: TypeAccompagnement) => {
+      if (!certification) return;
+
+      const data = await createCandidacy.mutateAsync({
+        candidateId: candidateId,
+        data: {
+          certificationId: certification.id,
+          typeAccompagnement,
+        },
+      });
+
+      if (data.candidacy_createCandidacy) {
+        router.push(`../../../../${data.candidacy_createCandidacy.id}`);
+      } else {
+        errorToast(
+          "Une erreur est survenue lors de la création de la candidature",
+        );
+      }
+    },
+    [certification, candidateId, createCandidacy, router],
+  );
+
   if (!certification) {
     return null;
   }
 
   const certificationLabel = `RNCP ${certification.codeRncp} : ${certification.label}`;
-
-  const handleCreateCandidacy = async (
-    typeAccompagnement: TypeAccompagnement,
-  ) => {
-    const data = await createCandidacy.mutateAsync({
-      candidateId: candidateId,
-      data: {
-        certificationId: certification.id,
-        typeAccompagnement: typeAccompagnement,
-      },
-    });
-
-    if (data.candidacy_createCandidacy) {
-      router.push(`../../../../${data.candidacy_createCandidacy.id}`);
-    } else {
-      errorToast(
-        "Une erreur est survenue lors de la création de la candidature",
-      );
-    }
-  };
 
   return (
     <div className="px-4 lg:px-6 pb-6">
