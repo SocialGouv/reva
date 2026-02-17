@@ -112,7 +112,11 @@ export const CandidateRegistrationForm = ({
             />
           )}
           {currentStep === 2 && (
-            <CandidateRegistrationStep2 onSubmit={submitStep2} />
+            <CandidateRegistrationStep2
+              onSubmit={submitStep2}
+              certificationId={certification.id}
+              typeAccompagnement={typeAccompagnement}
+            />
           )}
         </div>
       </div>

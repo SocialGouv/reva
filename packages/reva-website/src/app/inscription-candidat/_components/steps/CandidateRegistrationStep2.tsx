@@ -1,6 +1,7 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { FranceConnectButton } from "@codegouvfr/react-dsfr/FranceConnectButton";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +12,7 @@ import * as z from "zod";
 
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { GRAPHQL_API_URL } from "@/config/config";
+import { getFranceConnectLoginUrl } from "@/utils/france-connect.utils";
 import {
   sanitizedEmail,
   sanitizedPhone,
@@ -50,8 +52,12 @@ type Step2FormData = z.infer<typeof zodSchema>;
 
 export const CandidateRegistrationStep2 = ({
   onSubmit,
+  certificationId,
+  typeAccompagnement,
 }: {
   onSubmit: (data: Step2FormData) => void;
+  certificationId?: string;
+  typeAccompagnement?: string;
 }) => {
   const { isFeatureActive } = useFeatureflipping();
 
@@ -61,6 +67,10 @@ export const CandidateRegistrationStep2 = ({
 
   const candidacyCreationDisabled = isFeatureActive(
     "CANDIDACY_CREATION_DISABLED",
+  );
+
+  const franceConnectEnabled = isFeatureActive(
+    "FRANCE_CONNECT_AUTH_FOR_CANDIDATE",
   );
 
   const {
@@ -113,6 +123,22 @@ export const CandidateRegistrationStep2 = ({
           </p>
         }
       />
+    );
+  }
+
+  if (franceConnectEnabled) {
+    return (
+      <div className="flex flex-col items-center gap-6">
+        <p className="text-lg text-center mb-0">
+          Identifiez-vous avec FranceConnect pour créer votre compte.
+        </p>
+        <FranceConnectButton
+          url={getFranceConnectLoginUrl({
+            certificationId,
+            typeAccompagnement,
+          })}
+        />
+      </div>
     );
   }
 
