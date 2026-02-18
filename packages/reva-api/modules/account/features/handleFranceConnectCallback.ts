@@ -36,10 +36,15 @@ import {
   isValidCertificationId,
 } from "./france-connect.utils";
 
-const preferredUsernameSchema = z
-  .union([sanitizedEmail(), sanitizedText({ minLength: 0 })])
-  .optional()
-  .transform((val) => val ?? "");
+// France Connect mappe parfois un email dans preferred_username — on l'ignore dans ce cas.
+const preferredUsernameSchema = z.preprocess(
+  (val) => {
+    if (typeof val !== "string" || !val.trim()) return undefined;
+    if (z.string().email().safeParse(val.trim()).success) return undefined;
+    return val;
+  },
+  sanitizedText({ minLength: 0 }).optional(),
+);
 
 const FranceConnectClaimsSchema = z.object({
   sub: z.string(),
@@ -308,7 +313,7 @@ const createCandidateFromFranceConnect = async ({
       city: userInfo.locality ?? "",
       zip: userInfo.postal_code ?? "",
       street: userInfo.street_address ?? "",
-      givenName: userInfo.preferred_username ?? undefined,
+      givenName: userInfo.preferred_username,
       departmentId: currentDepartment.id,
       birthDepartmentId: birthDepartment.id,
     },
