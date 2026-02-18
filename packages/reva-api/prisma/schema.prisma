@@ -414,6 +414,7 @@ model CandidateInfoFranceConnect {
   candidate   Candidate @relation(fields: [candidateId], references: [id])
   countryId   String?   @map("country_id") @db.Uuid
   country     Country?  @relation(fields: [countryId], references: [id])
+  nationality String?   @db.VarChar(255)
   birthdate   DateTime? @db.Date
   gender      Gender?
   givenName   String?   @map("given_name") @db.VarChar(255)
@@ -526,6 +527,7 @@ model Country {
   label                      String                       @unique @db.VarChar(255)
   isoCode                    String                       @unique @map("iso_code") @db.VarChar(3)
   inseeCode                  String                       @unique @map("insee_code") @db.VarChar(5)
+  nationality                String                       @db.VarChar(255)
   Candidate                  Candidate[]
   CandidateInfoFranceConnect CandidateInfoFranceConnect[]
   createdAt                  DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
