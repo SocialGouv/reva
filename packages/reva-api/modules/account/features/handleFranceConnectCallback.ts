@@ -191,9 +191,12 @@ const upsertCandidateInfoFranceConnect = async ({
   const { firstname, firstname2, firstname3 } = splitGivenName(
     userInfo.given_name ?? "",
   );
-  const countryId = (await getCountry(userInfo.birthcountry))?.id;
+  const country = await getCountry(userInfo.birthcountry);
+  const countryId = country?.id ?? null;
+  const nationality = country?.nationality ?? null;
   const data = {
     countryId,
+    nationality,
     birthdate: parseFranceConnectDate(userInfo.birthdate),
     gender: mapGender(userInfo.gender),
     givenName: userInfo.given_name,
@@ -294,9 +297,15 @@ const createCandidateFromFranceConnect = async ({
   const { firstname, firstname2, firstname3 } = splitGivenName(
     userInfo.given_name ?? "",
   );
-  const birthDepartment = await getDepartment(userInfo.birthplace);
-  const currentDepartment = await getDepartment(userInfo.locality);
-  const countryId = (await getCountry(userInfo.birthcountry))?.id;
+  const [birthDepartment, currentDepartment, country] = await Promise.all([
+    getDepartment(userInfo.birthplace),
+    getDepartment(userInfo.locality),
+    getCountry(userInfo.birthcountry),
+  ]);
+  const countryId = country?.id ?? null;
+  const nationality = country?.nationality ?? null;
+  const gender = mapGender(userInfo.gender);
+  const birthdate = parseFranceConnectDate(userInfo.birthdate);
 
   const candidate = await prismaClient.candidate.create({
     data: {
@@ -306,9 +315,10 @@ const createCandidateFromFranceConnect = async ({
       firstname2,
       firstname3,
       lastname: userInfo.family_name,
-      gender: mapGender(userInfo.gender),
-      birthdate: parseFranceConnectDate(userInfo.birthdate),
+      gender,
+      birthdate,
       countryId,
+      nationality,
       phone: userInfo.phone_number ?? "",
       city: userInfo.locality ?? "",
       zip: userInfo.postal_code ?? "",
@@ -316,14 +326,24 @@ const createCandidateFromFranceConnect = async ({
       givenName: userInfo.preferred_username,
       departmentId: currentDepartment.id,
       birthDepartmentId: birthDepartment.id,
+      candidateInfoFranceConnect: {
+        create: {
+          countryId,
+          nationality,
+          birthdate,
+          gender,
+          givenName: userInfo.given_name,
+          firstname,
+          firstname2,
+          firstname3,
+          lastname: userInfo.family_name,
+          email: userInfo.email,
+        },
+      },
     },
   });
 
   await assignCandidateRole(keycloakId);
-  await upsertCandidateInfoFranceConnect({
-    candidateId: candidate.id,
-    userInfo,
-  });
   logger.info(
     `[France Connect] Nouveau compte candidat créé avec succès : ${candidate.id}`,
   );
