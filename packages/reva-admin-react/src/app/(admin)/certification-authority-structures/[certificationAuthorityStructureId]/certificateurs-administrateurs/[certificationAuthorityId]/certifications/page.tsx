@@ -1,5 +1,6 @@
 "use client";
 
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
@@ -120,6 +121,19 @@ const CertificationAuthorityCertificationsPage = () => {
                 (cert) => cert.id === c.id,
               ) || false,
             detailsPageUrl: `/certifications/${c.id}`,
+            start: c.visible !== undefined && (
+              <>
+                {c.visible ? (
+                  <Badge className="mb-2" noIcon severity="success">
+                    Visible
+                  </Badge>
+                ) : (
+                  <Badge className="mb-2" noIcon severity="error">
+                    Invisible
+                  </Badge>
+                )}
+              </>
+            ),
           }))}
           onSelectionChange={handleCertificationSelectionChange}
           paginationInfo={{

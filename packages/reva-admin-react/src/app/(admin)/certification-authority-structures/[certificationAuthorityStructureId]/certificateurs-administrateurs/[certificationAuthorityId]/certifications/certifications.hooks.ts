@@ -43,6 +43,7 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
         id
         codeRncp
         label
+        visible
       }
       info {
         totalRows
