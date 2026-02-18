@@ -350,14 +350,14 @@ const createCandidateFromFranceConnect = async ({
   return candidate;
 };
 
-const mapGender = (franceConnectGender: string): Gender | null => {
+const mapGender = (franceConnectGender: string): Gender => {
   switch (franceConnectGender) {
     case "male":
       return Gender.man;
     case "female":
       return Gender.woman;
     default:
-      return null;
+      return Gender.undisclosed;
   }
 };
 
