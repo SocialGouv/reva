@@ -1,83 +1,88 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityAndCertificationsQuery = graphql(`
-  query getCertificationAuthorityForCertificationsPage {
+  query getCertificationAuthorityForCertificationsPage(
+    $certificationsOffset: Int!
+    $certificationsLimit: Int!
+    $certificationsSearchFilter: String
+  ) {
     account_getAccountForConnectedUser {
       certificationAuthority {
-        id
-        label
         certificationAuthorityStructures {
           id
-          label
-          certifications {
+        }
+        id
+        label
+        paginatedCertifications(
+          limit: $certificationsLimit
+          offset: $certificationsOffset
+          searchText: $certificationsSearchFilter
+        ) {
+          rows {
+            certificationAuthorityStructure {
+              id
+            }
             id
             codeRncp
             label
+            visible
           }
-        }
-        certifications {
-          id
-          codeRncp
-          label
+          info {
+            totalRows
+            totalPages
+          }
         }
       }
     }
   }
 `);
 
-export const useCertificationsPage = () => {
+export const useCertificationsPage = ({
+  page,
+  searchFilter,
+}: {
+  page: number;
+  searchFilter?: string | null;
+}) => {
+  const RECORDS_PER_PAGE = 10;
+  const certificationsOffset = (page - 1) * RECORDS_PER_PAGE;
+
   const { graphqlClient } = useGraphQlClient();
 
   const { data: getCertificationAuthorityAndCertificationsResponse } =
     useSuspenseQuery({
-      queryKey: ["getCertificationAuthorityWithCertifications"],
-      queryFn: () =>
-        graphqlClient.request(getCertificationAuthorityAndCertificationsQuery),
+      queryKey: [
+        page,
+        searchFilter,
+        "getCertificationAuthorityForCertificationsPage",
+      ],
+      queryFn: () => {
+        return graphqlClient.request(
+          getCertificationAuthorityAndCertificationsQuery,
+          {
+            certificationsOffset,
+            certificationsLimit: RECORDS_PER_PAGE,
+            certificationsSearchFilter: searchFilter,
+          },
+        );
+      },
     });
 
   const certificationAuthority =
     getCertificationAuthorityAndCertificationsResponse
       ?.account_getAccountForConnectedUser?.certificationAuthority;
 
-  const certifications = useMemo(() => {
-    const selectedCertificationIds = new Set(
-      certificationAuthority?.certifications?.map((c) => c.id) || [],
-    );
+  const certificationPage =
+    getCertificationAuthorityAndCertificationsResponse
+      ?.account_getAccountForConnectedUser?.certificationAuthority
+      ?.paginatedCertifications;
 
-    const certificationsMap = new Map<
-      string,
-      { id: string; label: string; selected: boolean }
-    >();
-
-    // On gère le cas où il y a plusieurs structures de certification
-    // On ajoute les certifications de chaque structure à la map
-    // On vérifie si la certification est déjà dans la map, si c'est le cas, on ne l'ajoute pas pour éviter les doublons
-    certificationAuthority?.certificationAuthorityStructures
-      ?.flatMap((structure) => structure.certifications)
-      .forEach((certification) => {
-        if (certificationsMap.has(certification.id)) {
-          return;
-        }
-
-        certificationsMap.set(certification.id, {
-          id: certification.id,
-          label: `${certification.codeRncp} - ${certification.label}`,
-          selected: selectedCertificationIds.has(certification.id),
-        });
-      });
-
-    return Array.from(certificationsMap.values());
-  }, [
-    certificationAuthority?.certifications,
-    certificationAuthority?.certificationAuthorityStructures,
-  ]);
   return {
     certificationAuthority,
-    certifications,
+    certificationPage,
   };
 };

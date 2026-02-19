@@ -19,7 +19,6 @@ type MultiSelectItemProps = Pick<
 
 type MultiSelectListProps = {
   className?: string;
-  readonly?: boolean;
   pageItems: MultiSelectItemProps[];
   onSelectionChange?: (args: { itemId: string; selected: boolean }) => void;
   paginationInfo: {
@@ -42,7 +41,6 @@ type MultiSelectListProps = {
 
 export const MultiSelectList = ({
   className = "",
-  readonly = false,
   pageItems,
   onSelectionChange,
   paginationInfo: { totalItems, totalPages },
@@ -98,16 +96,14 @@ export const MultiSelectList = ({
       />
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex flex-col gap-4 mb-auto">
-          {!readonly && (
-            <ToggleSwitch
-              inputTitle={onlyShowAddedItemsSwitchLabel}
-              label={onlyShowAddedItemsSwitchLabel}
-              labelPosition="left"
-              onChange={(checked) => handleOnlyShowAddedItemsChange(checked)}
-              checked={onlyShowAddedItems}
-              className="fr-toggle--border-bottom"
-            />
-          )}
+          <ToggleSwitch
+            inputTitle={onlyShowAddedItemsSwitchLabel}
+            label={onlyShowAddedItemsSwitchLabel}
+            labelPosition="left"
+            onChange={(checked) => handleOnlyShowAddedItemsChange(checked)}
+            checked={onlyShowAddedItems}
+            className="fr-toggle--border-bottom"
+          />
           {additionalElementsInFilterSidebar}
         </div>
         <div className="flex flex-col w-full gap-4 ">
@@ -128,7 +124,7 @@ export const MultiSelectList = ({
                     size="small"
                     {...cardProps}
                     endDetail={
-                      !readonly && selected ? (
+                      selected ? (
                         <span className="flex gap-4">
                           <AlreadyAddedItemButton />
                           {detailsPageUrl && (
@@ -147,16 +143,14 @@ export const MultiSelectList = ({
                         </span>
                       ) : (
                         <span className="flex gap-4">
-                          {!readonly && (
-                            <AddItemButton
-                              onClick={() =>
-                                onSelectionChange?.({
-                                  itemId,
-                                  selected: true,
-                                })
-                              }
-                            />
-                          )}
+                          <AddItemButton
+                            onClick={() =>
+                              onSelectionChange?.({
+                                itemId,
+                                selected: true,
+                              })
+                            }
+                          />
                           {item.detailsPageUrl && (
                             <ViewDetailsButton
                               detailsPageUrl={item.detailsPageUrl}

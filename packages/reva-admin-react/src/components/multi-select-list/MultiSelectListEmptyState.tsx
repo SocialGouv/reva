@@ -22,12 +22,14 @@ export const MultiSelectListEmptyState = ({
           {description}
         </p>
       )}
-      <Button
-        className="w-full flex justify-center md:justify-start md:w-auto"
-        onClick={onShowAllItemsButtonClick}
-      >
-        {showAllItemsButtonLabel}
-      </Button>
+      {onShowAllItemsButtonClick && (
+        <Button
+          className="w-full flex justify-center md:justify-start md:w-auto"
+          onClick={onShowAllItemsButtonClick}
+        >
+          {showAllItemsButtonLabel}
+        </Button>
+      )}
     </div>
     <Image src={emptyStatePolygon} alt="icône pas de résultat" />
   </div>
