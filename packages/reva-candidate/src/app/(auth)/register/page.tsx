@@ -21,7 +21,7 @@ export default function Register() {
   const [email, setEmail] = useState<string>("");
 
   const { askForRegistration } = useRegister();
-  const { isFeatureActive } = useAnonymousFeatureFlipping();
+  const { isFeatureActive, status } = useAnonymousFeatureFlipping();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,6 +39,10 @@ export default function Register() {
       graphqlErrorToast(error);
     }
   };
+
+  if (status === "LOADING") {
+    return null;
+  }
 
   return (
     <div className="flex-1 pb-6">
