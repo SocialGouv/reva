@@ -240,8 +240,10 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
     const certificationAuthorityLabel =
       dff.feasibility.candidacy.certification?.certificationAuthorityStructure
         ?.label || "certificateur inconnu";
-    const aapEmail = dff.feasibility.candidacy.organism
-      ?.contactAdministrativeEmail as string;
+    const aapEmail =
+      dff.feasibility.candidacy.organism?.emailContact ||
+      (dff.feasibility.candidacy.organism
+        ?.contactAdministrativeEmail as string);
 
     if (decision === "INCOMPLETE") {
       await prismaClient.feasibility.update({

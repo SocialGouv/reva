@@ -24,6 +24,7 @@ export const getDematerializedFeasibilityFileWithDetailsByCandidacyId = ({
               },
               organism: {
                 select: {
+                  emailContact: true,
                   contactAdministrativeEmail: true,
                 },
               },
