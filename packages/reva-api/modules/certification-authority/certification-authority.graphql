@@ -17,7 +17,7 @@ type CertificationAuthority {
     limit: Int
     offset: Int
     searchText: String
-  ): CertificationPaginated!
+  ): CertificationPaginated
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
   certificationAuthorityStructures: [CertificationAuthorityStructure!]!
   showLocalAccountsContactInfo: Boolean!
