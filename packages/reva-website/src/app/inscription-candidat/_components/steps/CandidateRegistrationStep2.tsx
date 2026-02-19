@@ -126,6 +126,22 @@ export const CandidateRegistrationStep2 = ({
     );
   }
 
+  if (franceConnectEnabled) {
+    return (
+      <div className="flex flex-col items-center gap-6">
+        <p className="text-lg text-center mb-0">
+          Identifiez-vous avec FranceConnect pour créer votre compte.
+        </p>
+        <FranceConnectButton
+          url={getFranceConnectLoginUrl({
+            certificationId,
+            typeAccompagnement,
+          })}
+        />
+      </div>
+    );
+  }
+
   return (
     <form
       data-testid="candidate-registration-form"
@@ -136,26 +152,6 @@ export const CandidateRegistrationStep2 = ({
         reset();
       }}
     >
-      {franceConnectEnabled && (
-        <div className="flex flex-col items-center gap-6">
-          <p className="text-lg text-center mb-0">
-            Identifiez-vous avec FranceConnect pour créer votre compte.
-          </p>
-          <FranceConnectButton
-            url={getFranceConnectLoginUrl({
-              certificationId,
-              typeAccompagnement,
-            })}
-          />
-          <div className="flex flex-row items-center gap-3 w-full">
-            <div className="flex-1 bg-neutral-200 h-[1px]" />
-            <span className="text-neutral-500 text-sm font-bold uppercase">
-              ou
-            </span>
-            <div className="flex-1 bg-neutral-200 h-[1px]" />
-          </div>
-        </div>
-      )}
       <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
         <Input
           label="Nom"
