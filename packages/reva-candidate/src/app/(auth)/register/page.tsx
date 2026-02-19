@@ -9,6 +9,7 @@ import { FormEvent, useState } from "react";
 
 import { getFranceConnectLoginUrl } from "@/components/auth/keycloak-france-connect.utils";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
+import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useRegister } from "./register.hooks";
@@ -41,7 +42,7 @@ export default function Register() {
   };
 
   if (status === "LOADING") {
-    return null;
+    return <LoaderWithLayout />;
   }
 
   return (
