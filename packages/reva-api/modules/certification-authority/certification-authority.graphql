@@ -13,6 +13,11 @@ type CertificationAuthority {
   departments: [Department!]!
   regions: [Region!]!
   certifications: [Certification!]!
+  paginatedCertifications(
+    limit: Int
+    offset: Int
+    searchText: String
+  ): CertificationPaginated!
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
   certificationAuthorityStructures: [CertificationAuthorityStructure!]!
   showLocalAccountsContactInfo: Boolean!
@@ -87,6 +92,11 @@ type CertificationAuthorityOrLocalAccount {
 
 type CertificationAuhtorityOrLocalAccountPaginated {
   rows: [CertificationAuthorityOrLocalAccount!]!
+  info: PaginationInfo!
+}
+
+type CertificationPaginated {
+  rows: [Certification!]!
   info: PaginationInfo!
 }
 
