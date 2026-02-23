@@ -34,6 +34,7 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
           info {
             totalRows
             totalPages
+            currentPage
           }
         }
       }
