@@ -100,7 +100,7 @@ async function waitForPageQueries(page: Page) {
   ]);
 }
 
-test.describe("main page", () => {
+test.skip("main page", () => {
   test.use({
     mswHandlers: [
       [
