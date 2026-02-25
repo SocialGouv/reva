@@ -13,6 +13,7 @@ export const searchCertificationsForAdmin = async ({
   visible,
   certificationAuthorityIdFilter,
   certificationAuthorityStructureIdFilter,
+  certificationAuthorityLocalAccountIdFilter,
 }: {
   offset?: number;
   limit?: number;
@@ -21,6 +22,7 @@ export const searchCertificationsForAdmin = async ({
   visible?: boolean;
   certificationAuthorityIdFilter?: string; // If provided, only certifications managed by the collaborateur authority will be returned
   certificationAuthorityStructureIdFilter?: string; // If provided, only certifications managed by the certification authority structure will be returned
+  certificationAuthorityLocalAccountIdFilter?: string; // If provided, only certifications managed by the local account will be returned
 }): Promise<PaginatedListResult<Certification>> => {
   const realLimit = limit || 10;
   const realOffset = offset || 0;
@@ -68,6 +70,17 @@ export const searchCertificationsForAdmin = async ({
       certificationAuthorityOnCertification: {
         some: {
           certificationAuthorityId: certificationAuthorityIdFilter,
+        },
+      },
+    };
+  }
+  if (certificationAuthorityLocalAccountIdFilter) {
+    whereClause = {
+      ...whereClause,
+      certificationAuthorityLocalAccountOnCertification: {
+        some: {
+          certificationAuthorityLocalAccountId:
+            certificationAuthorityLocalAccountIdFilter,
         },
       },
     };

@@ -173,6 +173,8 @@ const unsafeReferentialResolvers = {
         certificationAuthorityIdFilter: payload.certificationAuthorityIdFilter,
         certificationAuthorityStructureIdFilter:
           payload.certificationAuthorityStructureIdFilter,
+        certificationAuthorityLocalAccountIdFilter:
+          payload.certificationAuthorityLocalAccountIdFilter,
       }),
     searchCertificationsV2ForRegistryManager: (
       _: any,
