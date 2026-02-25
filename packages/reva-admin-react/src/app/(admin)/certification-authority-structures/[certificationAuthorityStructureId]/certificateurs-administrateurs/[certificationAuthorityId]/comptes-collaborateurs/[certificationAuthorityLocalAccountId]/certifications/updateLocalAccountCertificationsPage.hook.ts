@@ -7,6 +7,11 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
   query getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountCertificationsPage(
     $certificationAuthorityLocalAccountId: ID!
     $certificationAuthorityStructureId: ID!
+    $certificationsOffset: Int!
+    $certificationsLimit: Int!
+    $certificationsSearchFilter: String
+    $certificationAuthorityIdFilter: ID
+    $certificationAuthorityLocalAccountIdFilter: ID
   ) {
     certification_authority_getCertificationAuthorityLocalAccount(
       id: $certificationAuthorityLocalAccountId
@@ -16,16 +21,30 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
         firstname
         lastname
       }
+      certificationAuthority {
+        id
+        label
+      }
       certifications {
         id
       }
-      certificationAuthority {
+    }
+    searchCertificationsForAdmin(
+      limit: $certificationsLimit
+      offset: $certificationsOffset
+      searchText: $certificationsSearchFilter
+      certificationAuthorityIdFilter: $certificationAuthorityIdFilter
+      certificationAuthorityLocalAccountIdFilter: $certificationAuthorityLocalAccountIdFilter
+    ) {
+      rows {
+        id
+        codeRncp
         label
-        certifications {
-          id
-          codeRncp
-          label
-        }
+        visible
+      }
+      info {
+        totalRows
+        totalPages
       }
     }
     certification_authority_getCertificationAuthorityStructure(
@@ -59,22 +78,46 @@ const updateCertificationAuthorityLocalAccountCertificationsMutation = graphql(`
 export const useUpdateLocalAccountCertificationsPage = ({
   certificationAuthorityLocalAccountId,
   certificationAuthorityStructureId,
+  certificationAuthorityId,
+  page,
+  onlyShowAddedCertifications,
+  searchFilter,
 }: {
   certificationAuthorityLocalAccountId: string;
   certificationAuthorityStructureId: string;
+  certificationAuthorityId: string;
+  page: number;
+  onlyShowAddedCertifications: boolean;
+  searchFilter?: string | null;
 }) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
 
+  const RECORDS_PER_PAGE = 10;
+  const certificationsOffset = (page - 1) * RECORDS_PER_PAGE;
+
   const { data, isLoading } = useQuery({
     queryKey: [
       certificationAuthorityLocalAccountId,
+      certificationAuthorityId,
+      certificationAuthorityStructureId,
+      page,
+      onlyShowAddedCertifications,
+      searchFilter,
       "getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountAdminCertificationsPage",
     ],
+
     queryFn: () =>
       graphqlClient.request(getCertificationAuthorityLocalAccountQuery, {
         certificationAuthorityLocalAccountId,
         certificationAuthorityStructureId,
+        certificationsOffset,
+        certificationsLimit: RECORDS_PER_PAGE,
+        certificationsSearchFilter: searchFilter,
+        certificationAuthorityIdFilter: certificationAuthorityId,
+        certificationAuthorityLocalAccountIdFilter: onlyShowAddedCertifications
+          ? certificationAuthorityLocalAccountId
+          : undefined,
       }),
   });
 
@@ -89,20 +132,13 @@ export const useUpdateLocalAccountCertificationsPage = ({
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          certificationAuthorityLocalAccountId,
-          "getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountAdminCertificationsPage",
-        ],
+        queryKey: [certificationAuthorityLocalAccountId],
       });
     },
   });
 
   const certificationAuthorityLocalAccount =
     data?.certification_authority_getCertificationAuthorityLocalAccount;
-
-  const certificationsFromCertificationAuthority =
-    data?.certification_authority_getCertificationAuthorityLocalAccount
-      ?.certificationAuthority.certifications || [];
 
   const certificationsFromLocalAccount =
     data?.certification_authority_getCertificationAuthorityLocalAccount
@@ -111,11 +147,13 @@ export const useUpdateLocalAccountCertificationsPage = ({
   const certificationAuthorityStructure =
     data?.certification_authority_getCertificationAuthorityStructure;
 
+  const certificationPage = data?.searchCertificationsForAdmin;
+
   return {
     certificationAuthorityLocalAccount,
-    certificationsFromCertificationAuthority,
     certificationsFromLocalAccount,
     certificationAuthorityStructure,
+    certificationPage,
     isLoading,
     updateCertificationAuthorityLocalAccountCertifications,
   };
