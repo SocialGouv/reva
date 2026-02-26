@@ -27,31 +27,37 @@ function createUpdateLocalAccountCertificationsHandlers() {
           },
           certificationAuthority: {
             label: "Certification Authority",
-            certifications: [
-              {
-                id: "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
-                label:
-                  "CQP Animateur d'équipe autonome de production industrielle",
-                codeRncp: "37310",
-              },
-              {
-                id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
-                label:
-                  "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
-                codeRncp: "49872",
-              },
-              {
-                id: "032036b5-528e-4d06-bbe0-a7d180602bc1",
-                label: "Titre professionnel Cariste d'entrepôt - CE ",
-                codeRncp: "13247",
-              },
-            ],
           },
           certifications: [
             {
               id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
             },
           ],
+        },
+        searchCertificationsForAdmin: {
+          rows: [
+            {
+              id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
+              label:
+                "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
+              codeRncp: "49872",
+            },
+            {
+              id: "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
+              label:
+                "CQP Animateur d'équipe autonome de production industrielle",
+              codeRncp: "37310",
+            },
+            {
+              id: "032036b5-528e-4d06-bbe0-a7d180602bc1",
+              label: "Titre professionnel Cariste d'entrepôt - CE ",
+              codeRncp: "13247",
+            },
+          ],
+          info: {
+            totalPages: 1,
+            totalRows: 3,
+          },
         },
         certification_authority_getCertificationAuthorityStructure: {
           id: "e8f214f1-3243-4dc6-8fe0-205d4cafd9d1",
@@ -100,7 +106,7 @@ async function waitForPageQueries(page: Page) {
   ]);
 }
 
-test.skip("main page", () => {
+test.describe("main page", () => {
   test.use({
     mswHandlers: [
       [
@@ -140,73 +146,96 @@ test.skip("main page", () => {
       await expect(
         page
           .getByTestId(
-            "tree-select-item-37310 - CQP Animateur d'équipe autonome de production industrielle",
+            "multi-select-list-item-0236bf82-e85d-4e88-927a-c93bb6c44efb",
           )
-          .locator("input"),
-      ).not.toBeChecked();
-
+          .getByRole("button", { name: "Retirer" }),
+      ).toBeVisible();
       await expect(
         page
           .getByTestId(
-            "tree-select-item-49872 - Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
+            "multi-select-list-item-00fa1e5b-1535-4cb6-b542-0dad27dd6341",
           )
-          .locator("input"),
-      ).toBeChecked();
+          .getByRole("button", { name: "Ajouter" }),
+      ).toBeVisible();
+      await expect(
+        page
+          .getByTestId(
+            "multi-select-list-item-032036b5-528e-4d06-bbe0-a7d180602bc1",
+          )
+          .getByRole("button", { name: "Ajouter" }),
+      ).toBeVisible();
     });
-
-    test("do not let me click on the submit button if there is no changes", async ({
+    test("it let me toggle the only show added items switch", async ({
       page,
     }) => {
       await login({ role: "admin", page });
-
       await page.goto(
         "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
       );
       await waitForPageQueries(page);
 
-      await expect(
-        page
-          .getByTestId(
-            "update-certification-authority-local-account-certifications-page",
-          )
-          .locator("button[type='submit']"),
-      ).toBeDisabled();
-    });
-
-    test("let me update the certifications and submit the form", async ({
-      page,
-    }) => {
-      await login({ role: "admin", page });
-
-      await page.goto(
-        "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
+      const queryPromise = waitGraphQL(
+        page,
+        "getCertificationAuthorityLocalAccountForAdminUpdateCertificationAuthorityLocalAccountCertificationsPage",
       );
-      await waitForPageQueries(page);
 
       await page
+        .getByRole("checkbox", {
+          name: "Afficher les certifications ajoutées uniquement",
+        })
+        .click();
+
+      await queryPromise;
+    });
+
+    test("it let me add a certification to the certification authority local account", async ({
+      page,
+    }) => {
+      await login({ role: "admin", page });
+      await page.goto(
+        "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
+      );
+      await waitForPageQueries(page);
+      await page
         .getByTestId(
-          "tree-select-item-37310 - CQP Animateur d'équipe autonome de production industrielle",
+          "multi-select-list-item-00fa1e5b-1535-4cb6-b542-0dad27dd6341",
         )
-        .locator("input")
-        .check({ force: true });
+        .getByRole("button", { name: "Ajouter" })
+        .click();
 
       const mutationPromise = waitGraphQL(
         page,
         "updateCertificationAuthorityLocalAccountCertificationsForAdminUpdateLocalAccountCertificationsPage",
       );
+      await mutationPromise;
+    });
+    test("it let me remove a certification from the certification authority local account", async ({
+      page,
+    }) => {
+      await login({ role: "admin", page });
+      await page.goto(
+        "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869/certifications",
+      );
+      await waitForPageQueries(page);
 
+      await expect(
+        page
+          .getByTestId(
+            "multi-select-list-item-0236bf82-e85d-4e88-927a-c93bb6c44efb",
+          )
+          .getByRole("button", { name: "Retirer" }),
+      ).toBeVisible();
+      const mutationPromise = waitGraphQL(
+        page,
+        "updateCertificationAuthorityLocalAccountCertificationsForAdminUpdateLocalAccountCertificationsPage",
+      );
       await page
         .getByTestId(
-          "update-certification-authority-local-account-certifications-page",
+          "multi-select-list-item-0236bf82-e85d-4e88-927a-c93bb6c44efb",
         )
-        .locator("button[type='submit']")
+        .getByRole("button", { name: "Retirer" })
         .click();
-
       await mutationPromise;
-
-      await expect(page).toHaveURL(
-        "/admin2/certification-authority-structures/e8f214f1-3243-4dc6-8fe0-205d4cafd9d1/certificateurs-administrateurs/c7399291-e79b-4e0f-b798-d3c97661e47f/comptes-collaborateurs/4871a711-232b-4aba-aa5a-bc2adc51f869/",
-      );
     });
   });
 });
