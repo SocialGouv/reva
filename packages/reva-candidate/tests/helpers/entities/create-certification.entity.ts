@@ -26,6 +26,15 @@ export const createCertificationEntity = (
     isAapAvailable: true,
     level: 1,
     prerequisites: [],
+    parcours: {
+      rows: [],
+      info: {
+        currentPage: 1,
+        pageLength: 10,
+        totalPages: 1,
+        totalRows: 0,
+      },
+    },
     ...options,
   };
 

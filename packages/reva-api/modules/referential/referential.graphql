@@ -56,6 +56,19 @@ type Certification {
   additionalInfo: CertificationAdditionalInfo
   isAapAvailable: Boolean!
   juryEstimatedCost: Decimal
+  parcours(offset: Int, limit: Int): ParcoursCertificationPage!
+}
+
+type ParcoursCertificationPage {
+  rows: [ParcoursCertification!]!
+  info: PaginationInfo!
+}
+type ParcoursCertification {
+  id: ID!
+  code: String!
+  label: String!
+  uai: String!
+  nomEtablissement: String!
 }
 
 type CertificationAdditionalInfo {

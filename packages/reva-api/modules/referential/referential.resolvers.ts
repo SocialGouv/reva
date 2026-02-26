@@ -30,6 +30,7 @@ import { getDomainsByFormacodes } from "./features/getDomainsByFormacodes";
 import { getDropOutReasons } from "./features/getDropOutReasons";
 import { getAvailableFormacodes } from "./features/getFormacodes";
 import { getGoals } from "./features/getGoals";
+import { getParcoursCertificationByCertificationId } from "./features/getParcoursCertificationByCertificationId";
 import { getRegionById } from "./features/getRegionById";
 import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
@@ -102,6 +103,15 @@ const unsafeReferentialResolvers = {
       getAdditionalInfoByCertificationId({ certificationId }),
     isAapAvailable: ({ id: certificationId }: { id: string }) =>
       isAapAvailableForCertificationId({ certificationId }),
+    parcours: (
+      { id: certificationId }: { id: string },
+      { offset, limit }: { offset?: number; limit?: number },
+    ) =>
+      getParcoursCertificationByCertificationId({
+        certificationId,
+        offset,
+        limit,
+      }),
   },
   CertificationAdditionalInfo: {
     dossierDeValidationTemplate: ({
