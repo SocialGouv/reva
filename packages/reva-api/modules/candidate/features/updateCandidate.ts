@@ -144,7 +144,7 @@ export const updateCandidate = async ({
         birthDepartmentId:
           birthDepartmentId && countrySelected.label == "France"
             ? birthDepartmentId
-            : undefined,
+            : null,
         profileInformationCompleted: true,
       },
     }),
