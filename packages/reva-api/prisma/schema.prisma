@@ -107,6 +107,7 @@ model Certification {
   certificationStatusHistory                             CertificationStatusHistory[]
   CertificationCohorteVaeCollective                      CertificationCohorteVaeCollective[]
   certificationEmails                                    CertificationEmail[]
+  parcours                                               ParcoursCertification[]
 
   @@map("certification")
 }
@@ -2064,4 +2065,18 @@ model Appointment {
   candidacy   Candidacy            @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
 
   @@map("appointment")
+}
+
+model ParcoursCertification {
+  id               String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code             String        @unique @map("code") @db.VarChar(255)
+  label            String        @map("label") @db.VarChar(255)
+  uai              String        @unique @map("uai") @db.VarChar(255)
+  nomEtablissement String?       @map("nom_etablissement") @db.VarChar(255)
+  certificationId  String        @map("certification_id") @db.Uuid
+  certification    Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime?     @map("updated_at") @db.Timestamptz(6)
+
+  @@map("parcours_certification")
 }
