@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { SearchList } from "@/components/search/search-list/SearchList";
 
 import { NoParcoursCertificationCard } from "./_components/NoParcoursCertificationCard";
+import { WithParcoursCertificationCard } from "./_components/WithParcoursCertificationCard";
 import { useCertificationsPage } from "./certifications.hooks";
 
 const CertificationAuthorityCertificationsPage = () => {
@@ -44,19 +45,33 @@ const CertificationAuthorityCertificationsPage = () => {
           searchResultsPage={certificationPage}
           searchFilter={searchFilter}
         >
-          {(certification) => (
-            <NoParcoursCertificationCard
-              key={certification.id}
-              label={certification.label}
-              codeRncp={certification.codeRncp}
-              visible={certification.visible}
-              isAttachedToAnotherStructure={
-                certification.certificationAuthorityStructure?.id !==
-                certificationAuthority.certificationAuthorityStructures[0].id
-              }
-              detailsHref={`/certifications/${certification.id}`}
-            />
-          )}
+          {(certification) => {
+            const isAttachedToAnotherStructure =
+              certification.certificationAuthorityStructure?.id !==
+              certificationAuthority.certificationAuthorityStructures[0].id;
+            const hasParcours = certification.parcours.rows.length > 0;
+
+            return hasParcours ? (
+              <WithParcoursCertificationCard
+                key={certification.id}
+                label={certification.label}
+                codeRncp={certification.codeRncp}
+                visible={certification.visible}
+                isAttachedToAnotherStructure={isAttachedToAnotherStructure}
+                detailsHref={`/certifications/${certification.id}`}
+                parcoursSettingsHref={`/certification-authorities/settings/certifications/${certification.id}/parcours`}
+              />
+            ) : (
+              <NoParcoursCertificationCard
+                key={certification.id}
+                label={certification.label}
+                codeRncp={certification.codeRncp}
+                visible={certification.visible}
+                isAttachedToAnotherStructure={isAttachedToAnotherStructure}
+                detailsHref={`/certifications/${certification.id}`}
+              />
+            );
+          }}
         </SearchList>
       </div>
     </div>
