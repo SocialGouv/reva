@@ -124,6 +124,7 @@ export default function InterventionAreaPage() {
             id: c.id,
             detail: `RNCP ${c.codeRncp}`,
             title: c.label,
+            detailsPageUrl: `/certifications/${c.id}`,
             selected: certificationsFromLocalAccount?.some(
               (cl) => cl.id === c.id,
             ),
