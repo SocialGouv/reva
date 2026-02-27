@@ -19,9 +19,8 @@ export const updateCandidate = async ({
   };
 }): Promise<Candidate> => {
   const candidateInput = { ...candidate };
-  const { id, email, birthDepartmentId, countryId } = candidateInput;
   const candidateToUpdate = await prismaClient.candidate.findUnique({
-    where: { id },
+    where: { id: candidateInput.id },
     include: { department: true },
   });
 
@@ -29,34 +28,54 @@ export const updateCandidate = async ({
     throw new Error(`Ce candidat n'existe pas`);
   }
 
-  const candidateWithEmail = await prismaClient.candidate.findUnique({
-    where: { email },
-  });
-
-  if (candidateWithEmail && candidateWithEmail.id != candidateToUpdate.id) {
-    throw new Error(
-      `Vous ne pouvez pas utiliser ${email} comme nouvelle adresse électronique`,
-    );
-  }
-
-  if (birthDepartmentId) {
-    const birthDepartmentSelected = await prismaClient.department.findUnique({
-      where: { id: birthDepartmentId },
+  if (candidateInput.email) {
+    const candidateWithEmail = await prismaClient.candidate.findUnique({
+      where: { email: candidateInput.email },
     });
 
-    if (!birthDepartmentSelected) {
-      throw new Error(`Le département de naissance n'existe pas`);
+    if (candidateWithEmail && candidateWithEmail.id != candidateToUpdate.id) {
+      throw new Error(
+        `Vous ne pouvez pas utiliser ${candidateInput.email} comme nouvelle adresse électronique`,
+      );
     }
-  } else {
+  }
+
+  // Protéger les champs pivots pour les candidats liés à FranceConnect
+  if (candidateToUpdate.franceConnectLinked) {
+    delete candidateInput.lastname;
+    delete candidateInput.firstname;
+    delete candidateInput.firstname2;
+    delete candidateInput.firstname3;
+    delete candidateInput.birthdate;
+    delete candidateInput.email;
+    delete candidateInput.countryId;
+    delete candidateInput.nationality;
     delete candidateInput.birthDepartmentId;
   }
 
-  const countrySelected = await prismaClient.country.findUnique({
-    where: { id: countryId },
-  });
+  if (candidateInput.countryId) {
+    const countrySelected =
+      (await prismaClient.country.findUnique({
+        where: { id: candidateInput.countryId },
+      })) ?? undefined;
+    if (!countrySelected) {
+      throw new Error(`Le pays n'existe pas`);
+    }
 
-  if (!countrySelected) {
-    throw new Error(`Le pays n'existe pas`);
+    if (
+      countrySelected.label === "France" &&
+      candidateInput.birthDepartmentId
+    ) {
+      const birthDepartmentSelected = await prismaClient.department.findUnique({
+        where: { id: candidateInput.birthDepartmentId },
+      });
+
+      if (!birthDepartmentSelected) {
+        throw new Error(`Le département de naissance n'existe pas`);
+      }
+    } else {
+      delete candidateInput.birthDepartmentId;
+    }
   }
 
   const isNewZip =
@@ -75,7 +94,7 @@ export const updateCandidate = async ({
   const today = new Date();
 
   if (candidateInput.birthdate) {
-    const dateSelected = new Date(Number(candidate.birthdate));
+    const dateSelected = new Date(Number(candidateInput.birthdate));
     const sixteenYearsAgo = sub(today, { years: 16 });
     const candidateBirthdayIsOlderThan16YearsAgo = isBefore(
       dateSelected,
@@ -87,7 +106,7 @@ export const updateCandidate = async ({
   }
 
   const previousEmail = candidateToUpdate.email;
-  const newEmail = email;
+  const newEmail = candidateInput.email;
 
   if (
     newEmail &&
@@ -101,7 +120,7 @@ export const updateCandidate = async ({
   }
 
   const candidacies = await prismaClient.candidacy.findMany({
-    where: { candidateId: id },
+    where: { candidateId: candidateInput.id },
     select: {
       id: true,
       Feasibility: {
@@ -138,13 +157,9 @@ export const updateCandidate = async ({
 
   const [updatedCandidate] = await prismaClient.$transaction([
     prismaClient.candidate.update({
-      where: { id },
+      where: { id: candidateInput.id },
       data: {
         ...candidateInput,
-        birthDepartmentId:
-          birthDepartmentId && countrySelected.label == "France"
-            ? birthDepartmentId
-            : null,
         profileInformationCompleted: true,
       },
     }),
