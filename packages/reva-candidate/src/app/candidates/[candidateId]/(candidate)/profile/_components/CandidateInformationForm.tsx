@@ -103,7 +103,7 @@ const CandidateInformationForm = ({
         firstname3: candidate.firstname3 ?? "",
         birthCity: candidate.birthCity ?? "",
         birthdate: candidate.birthdate ?? "",
-        birthDepartment: candidate.birthDepartment?.id,
+        birthDepartment: candidate.birthDepartment?.id ?? "",
         country: candidate.country?.id ?? franceId,
         countryIsFrance: candidate.country?.id === franceId,
         gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,

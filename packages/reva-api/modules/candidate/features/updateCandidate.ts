@@ -74,7 +74,7 @@ export const updateCandidate = async ({
         throw new Error(`Le département de naissance n'existe pas`);
       }
     } else {
-      delete candidateInput.birthDepartmentId;
+      candidateInput.birthDepartmentId = null;
     }
   }
 

@@ -86,7 +86,7 @@ export interface CandidateUpdateInput {
   givenName?: string;
   birthdate: string;
   birthCity: string;
-  birthDepartmentId: string;
+  birthDepartmentId: string | null;
   countryId: Country["id"];
   nationality: string;
   street: string;
