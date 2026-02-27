@@ -129,6 +129,10 @@ export const CandidateRegistrationStep2 = ({
   if (franceConnectEnabled) {
     return (
       <div className="flex flex-col items-center gap-6">
+        <p className="fr-text--sm fr-mb-2w">
+          FranceConnect est la solution proposée par l'État pour sécuriser et
+          simplifier la connexion à vos services en ligne.
+        </p>
         <p className="text-lg text-center mb-0">
           Identifiez-vous avec FranceConnect pour créer votre compte.
         </p>

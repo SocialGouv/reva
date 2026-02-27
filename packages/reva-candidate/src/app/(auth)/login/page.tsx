@@ -78,6 +78,10 @@ export default function Login() {
 
           {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") && (
             <div className="flex flex-col items-center gap-4 mb-6">
+              <p className="fr-text--sm fr-mb-2w">
+                FranceConnect est la solution proposée par l'État pour sécuriser
+                et simplifier la connexion à vos services en ligne.
+              </p>
               <FranceConnectButton
                 url={getFranceConnectLoginUrl(certificationId ?? undefined)}
               />
