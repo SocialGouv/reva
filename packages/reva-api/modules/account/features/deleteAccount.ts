@@ -10,8 +10,9 @@ export const deleteAccount = async ({ accountId }: { accountId: string }) => {
       "Erreur pendant la suppresion du compte. Pas d'identifiant keycloak associé.",
     );
   }
+
   (await getKeycloakAdmin()).users.del({
-    id: account?.keycloakId,
+    id: account.keycloakId,
     realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
   });
   return prismaClient.account.delete({ where: { id: accountId } });

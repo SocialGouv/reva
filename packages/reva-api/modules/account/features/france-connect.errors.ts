@@ -1,4 +1,4 @@
-export class FranceConnectError extends Error {
+class FranceConnectError extends Error {
   constructor(
     message: string,
     public statusCode: number,
@@ -28,3 +28,24 @@ export class FranceConnectForbiddenError extends FranceConnectError {
     this.name = "FranceConnectForbiddenError";
   }
 }
+
+export const mapToOAuthError = (
+  error: unknown,
+): { code: string; description: string } => {
+  if (error instanceof FranceConnectForbiddenError) {
+    return { code: "access_denied", description: error.message };
+  }
+  if (error instanceof FranceConnectUserError) {
+    return { code: "invalid_request", description: error.message };
+  }
+  if (error instanceof FranceConnectSystemError) {
+    return {
+      code: "server_error",
+      description: "Une erreur technique est survenue",
+    };
+  }
+  return {
+    code: "server_error",
+    description: "Une erreur inattendue est survenue",
+  };
+};

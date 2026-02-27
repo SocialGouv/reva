@@ -1,11 +1,32 @@
-import { FastifyPluginAsync } from "fastify";
+import { FastifyPluginAsync, FastifyReply } from "fastify";
 
+import {
+  BACKEND_BASE_URL,
+  CANDIDATE_BASE_URL,
+} from "@/modules/shared/config/config";
 import { logger } from "@/modules/shared/logger/logger";
 
 import { getFranceConnectAuthorizeRedirectUrl } from "./features/france-connect-authorize";
-import { FranceConnectError } from "./features/france-connect.errors";
+import { mapToOAuthError } from "./features/france-connect.errors";
 import { handleFranceConnectCallback } from "./features/handleFranceConnectCallback";
 import { impersonate } from "./features/impersonate";
+
+const redirectToAuthError = (
+  reply: FastifyReply,
+  error: unknown,
+  state?: string,
+) => {
+  const errorUrl = new URL(`${CANDIDATE_BASE_URL}/auth-error`);
+  if (state) {
+    errorUrl.searchParams.set("state", state);
+  }
+
+  const oauthError = mapToOAuthError(error);
+  errorUrl.searchParams.set("error", oauthError.code);
+  errorUrl.searchParams.set("error_description", oauthError.description);
+
+  return reply.redirect(errorUrl.toString());
+};
 
 export const accountRoute: FastifyPluginAsync = async (server) => {
   server.get<{
@@ -32,11 +53,7 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
         return reply.redirect(redirectUrl);
       } catch (error) {
         logger.error(`[France Connect Authorize] ${error}`);
-        const statusCode =
-          error instanceof FranceConnectError ? error.statusCode : 500;
-        return reply
-          .status(statusCode)
-          .send({ error: "France Connect authorization failed" });
+        return redirectToAuthError(reply, error);
       }
     },
   });
@@ -72,7 +89,7 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
 
   server.get<{
     Querystring: {
-      code: string;
+      code?: string;
       session_state?: string;
       iss?: string;
       state?: string;
@@ -87,17 +104,11 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
           iss: { type: "string" },
           state: { type: "string" },
         },
-        required: ["code"],
       },
     },
     handler: async (request, reply) => {
       try {
-        const baseUrl =
-          process.env.NODE_ENV !== "development"
-            ? process.env.BASE_URL
-            : "http://localhost:8080";
-
-        const currentUrl = new URL(request.url, baseUrl);
+        const currentUrl = new URL(request.url, BACKEND_BASE_URL);
         const redirectUrl = await handleFranceConnectCallback(
           request,
           reply,
@@ -106,11 +117,7 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
         return reply.redirect(redirectUrl);
       } catch (error) {
         logger.error(`[France Connect Callback] ${error}`);
-        const statusCode =
-          error instanceof FranceConnectError ? error.statusCode : 500;
-        return reply
-          .status(statusCode)
-          .send({ error: "Authentication failed" });
+        return redirectToAuthError(reply, error, request.query.state);
       }
     },
   });
