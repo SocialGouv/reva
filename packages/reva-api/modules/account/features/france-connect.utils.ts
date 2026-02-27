@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { allowInsecureRequests, discovery } from "openid-client";
 
+import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
+
 import { TokenService } from "../utils/token.service";
 
 // Durées de vie des cookies
@@ -23,12 +25,10 @@ export const isValidCertificationId = (
   CERTIFICATION_ID_UUID_REGEX.test(value);
 
 export const getFranceConnectRedirectUri = (): string => {
-  const base =
-    process.env.API_URL ||
-    (process.env.NODE_ENV === "production"
-      ? process.env.BASE_URL
-      : "http://localhost:8080");
-  return new URL("/api/account/franceconnect/callback", base).toString();
+  return new URL(
+    "/api/account/franceconnect/callback",
+    BACKEND_BASE_URL,
+  ).toString();
 };
 
 export const getOAuthConfig = async () => {
@@ -100,4 +100,33 @@ export const getAndDeleteFcStateCookie = (
     certificationId: data.certificationId,
     typeAccompagnement: data.typeAccompagnement,
   };
+};
+
+export const normalizeName = (name: string) =>
+  name
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+export const parseFranceConnectDate = (dateString: string): Date | null => {
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date;
+};
+
+export const splitGivenName = (
+  givenName: string,
+): {
+  firstname: string;
+  firstname2?: string;
+  firstname3?: string;
+} => {
+  const parts = givenName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) {
+    return { firstname: "", firstname2: undefined, firstname3: undefined };
+  }
+  const firstname = parts[0];
+  const firstname2 = parts.length > 1 ? parts[1] : undefined;
+  const firstname3 = parts.length > 2 ? parts.slice(2).join(" ") : undefined;
+  return { firstname, firstname2, firstname3 };
 };

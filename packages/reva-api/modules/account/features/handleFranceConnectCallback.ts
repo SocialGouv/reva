@@ -2,7 +2,6 @@ import {
   CandidacyTypeAccompagnement,
   Country,
   Department,
-  Gender,
 } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { authorizationCodeGrant } from "openid-client";
@@ -14,6 +13,7 @@ import { getCandidateByKeycloakId } from "@/modules/candidate/features/getCandid
 import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "@/modules/candidate/features/updateAllCandidaciesDerniereDateActiviteByCandidateId";
 import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { CANDIDATE_BASE_URL } from "@/modules/shared/config/config";
 import { logger } from "@/modules/shared/logger/logger";
 import { prismaClient } from "@/prisma/client";
 
@@ -34,25 +34,16 @@ import {
   getAndDeleteFcStateCookie,
   getOAuthConfig,
   isValidCertificationId,
+  normalizeName,
+  parseFranceConnectDate,
+  splitGivenName,
 } from "./france-connect.utils";
-
-// France Connect mappe parfois un email dans preferred_username — on l'ignore dans ce cas.
-const preferredUsernameSchema = z.preprocess(
-  (val) => {
-    if (typeof val !== "string" || !val.trim()) return undefined;
-    if (z.string().email().safeParse(val.trim()).success) return undefined;
-    return val;
-  },
-  sanitizedText({ minLength: 0 }).optional(),
-);
 
 const FranceConnectClaimsSchema = z.object({
   sub: z.string(),
   email: sanitizedEmail(),
   given_name: sanitizedText(),
   family_name: sanitizedText(),
-  preferred_username: preferredUsernameSchema,
-  gender: z.enum(["male", "female"]),
   birthdate: sanitizedText(),
   birthplace: sanitizedOptionalText(),
   birthcountry: sanitizedOptionalText(),
@@ -123,17 +114,13 @@ export const handleFranceConnectCallback = async (
     );
   }
   const idTokenPayload = idTokenResult.data;
+
   const keycloakId = idTokenPayload.sub;
 
   const { candidate, isNewAccount } = await getOrCreateCandidate(
     keycloakId,
     idTokenPayload,
   );
-
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? process.env.BASE_URL
-      : "http://localhost:3004";
 
   const certificationId = isValidCertificationId(stored.certificationId)
     ? stored.certificationId
@@ -159,17 +146,17 @@ export const handleFranceConnectCallback = async (
     }
   }
 
-  let redirectPath: string;
+  let redirectPath: string = `${CANDIDATE_BASE_URL}/candidates/${candidate.id}`;
   if (isNewAccount) {
-    redirectPath = `/candidat/candidates/${candidate.id}/first-connexion`;
+    redirectPath = `${redirectPath}/first-connexion`;
   } else {
     const activeCandidacies = await getActiveCandidaciesByCandidateId({
       candidateId: candidate.id,
     });
     if (activeCandidacies.length > 0) {
-      redirectPath = `/candidat/candidates/${candidate.id}/candidacies`;
+      redirectPath = `${redirectPath}/candidacies`;
     } else {
-      redirectPath = `/candidat/candidates/${candidate.id}/candidacies/create`;
+      redirectPath = `${redirectPath}/candidacies/create`;
     }
   }
 
@@ -177,41 +164,53 @@ export const handleFranceConnectCallback = async (
     candidateId: candidate.id,
   });
 
-  const redirectUrl = new URL(`${baseUrl}${redirectPath}`);
-  return redirectUrl.toString();
+  return redirectPath;
 };
 
-const upsertCandidateInfoFranceConnect = async ({
+const buildCandidateDataFromFCClaims = async (
+  userInfo: FranceConnectClaims,
+) => {
+  const { firstname, firstname2, firstname3 } = splitGivenName(
+    userInfo.given_name ?? "",
+  );
+  const country = await getCountry(userInfo.birthcountry);
+  let birthDepartmentId: string | null = null;
+  // Si le pays de naissance n'est pas la France, on ne peut pas déterminer le département de naissance
+  if (country?.label === "France") {
+    birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
+  }
+  const currentDepartment = await getDefaultDepartment();
+
+  return {
+    email: userInfo.email,
+    firstname,
+    firstname2,
+    firstname3,
+    lastname: userInfo.family_name,
+    birthdate: parseFranceConnectDate(userInfo.birthdate),
+    countryId: country?.id ?? null,
+    nationality: country?.nationality ?? null,
+    franceConnectLinked: true,
+    birthDepartmentId,
+    departmentId: currentDepartment.id,
+  };
+};
+
+const updateCandidateFromFCClaims = async ({
   candidateId,
   userInfo,
 }: {
   candidateId: string;
   userInfo: FranceConnectClaims;
 }) => {
-  const { firstname, firstname2, firstname3 } = splitGivenName(
-    userInfo.given_name ?? "",
-  );
-  const country = await getCountry(userInfo.birthcountry);
-  const countryId = country?.id ?? null;
-  const nationality = country?.nationality ?? null;
-  const data = {
-    countryId,
-    nationality,
-    birthdate: parseFranceConnectDate(userInfo.birthdate),
-    gender: mapGender(userInfo.gender),
-    givenName: userInfo.given_name,
-    firstname,
-    firstname2,
-    firstname3,
-    lastname: userInfo.family_name,
-    email: userInfo.email,
-  };
+  const fcData = await buildCandidateDataFromFCClaims(userInfo);
 
-  await prismaClient.candidateInfoFranceConnect.upsert({
-    where: { candidateId },
-    create: { candidateId, ...data },
-    update: { ...data, updatedAt: new Date() },
+  const candidate = await prismaClient.candidate.update({
+    where: { id: candidateId },
+    data: fcData,
   });
+
+  return candidate;
 };
 
 const getOrCreateCandidate = async (
@@ -221,7 +220,7 @@ const getOrCreateCandidate = async (
   let candidate = await getCandidateByKeycloakId({ keycloakId });
 
   if (candidate) {
-    await upsertCandidateInfoFranceConnect({
+    await updateCandidateFromFCClaims({
       candidateId: candidate.id,
       userInfo,
     });
@@ -234,21 +233,30 @@ const getOrCreateCandidate = async (
 
   if (candidate) {
     if (candidate.keycloakId && candidate.keycloakId !== keycloakId) {
-      // Le candidat possède déjà un keycloakId différent (ex. compte par mot de passe).
-      // Ne pas l'écraser pour ne pas casser sa connexion existante.
-      logger.warn(
-        `[France Connect] Tentative de liaison FranceConnect pour le candidat ${candidate.id} qui possède déjà un keycloakId différent`,
+      throw new FranceConnectForbiddenError(
+        "Un compte existe déjà avec cette adresse email. Veuillez vous connecter avec vos identifiants habituels.",
       );
-      await upsertCandidateInfoFranceConnect({
-        candidateId: candidate.id,
-        userInfo,
-      });
-      return { candidate, isNewAccount: false };
     }
-    // keycloakId null ou identique — on lie/confirme le keycloakId FranceConnect
-    const linked = await linkKeycloakIdToCandidate({
+    // Avant de lier un compte FC à un compte existant (même email),
+    // on vérifie que les données pivots (nom, prénom) correspondent pour éviter
+    // qu'un utilisateur FC récupère le compte d'une autre personne.
+    const fcFirstname = userInfo.given_name.split(/\s+/)[0] || "";
+    if (
+      normalizeName(candidate.firstname || "") !== normalizeName(fcFirstname) ||
+      normalizeName(candidate.lastname || "") !==
+        normalizeName(userInfo.family_name || "")
+    ) {
+      throw new FranceConnectUserError(
+        "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",
+        400,
+      );
+    }
+
+    logger.info(
+      `[France Connect] Association du keycloakId FranceConnect ${keycloakId} au candidat existant ${candidate.id}`,
+    );
+    const linked = await updateCandidateFromFCClaims({
       candidateId: candidate.id,
-      keycloakId,
       userInfo,
     });
     return { candidate: linked, isNewAccount: false };
@@ -261,32 +269,6 @@ const getOrCreateCandidate = async (
   return { candidate: created, isNewAccount: true };
 };
 
-const linkKeycloakIdToCandidate = async ({
-  candidateId,
-  keycloakId,
-  userInfo,
-}: {
-  candidateId: string;
-  keycloakId: string;
-  userInfo: FranceConnectClaims;
-}) => {
-  logger.info(
-    `[France Connect] Association du keycloakId FranceConnect ${keycloakId} au candidat existant ${candidateId}`,
-  );
-
-  const candidate = await prismaClient.candidate.update({
-    where: { id: candidateId },
-    data: {
-      keycloakId,
-      updatedAt: new Date(),
-    },
-  });
-
-  await assignCandidateRole(keycloakId);
-  await upsertCandidateInfoFranceConnect({ candidateId, userInfo });
-  return candidate;
-};
-
 const createCandidateFromFranceConnect = async ({
   keycloakId,
   userInfo,
@@ -294,52 +276,16 @@ const createCandidateFromFranceConnect = async ({
   keycloakId: string;
   userInfo: FranceConnectClaims;
 }) => {
-  const { firstname, firstname2, firstname3 } = splitGivenName(
-    userInfo.given_name ?? "",
-  );
-  const [birthDepartment, currentDepartment, country] = await Promise.all([
-    getDepartment(userInfo.birthplace),
-    getDepartment(userInfo.locality),
-    getCountry(userInfo.birthcountry),
-  ]);
-  const countryId = country?.id ?? null;
-  const nationality = country?.nationality ?? null;
-  const gender = mapGender(userInfo.gender);
-  const birthdate = parseFranceConnectDate(userInfo.birthdate);
+  const fcData = await buildCandidateDataFromFCClaims(userInfo);
 
   const candidate = await prismaClient.candidate.create({
     data: {
+      ...fcData,
       keycloakId,
-      email: userInfo.email,
-      firstname,
-      firstname2,
-      firstname3,
-      lastname: userInfo.family_name,
-      gender,
-      birthdate,
-      countryId,
-      nationality,
-      phone: userInfo.phone_number ?? "",
-      city: userInfo.locality ?? "",
-      zip: userInfo.postal_code ?? "",
-      street: userInfo.street_address ?? "",
-      givenName: userInfo.preferred_username,
-      departmentId: currentDepartment.id,
-      birthDepartmentId: birthDepartment.id,
-      candidateInfoFranceConnect: {
-        create: {
-          countryId,
-          nationality,
-          birthdate,
-          gender,
-          givenName: userInfo.given_name,
-          firstname,
-          firstname2,
-          firstname3,
-          lastname: userInfo.family_name,
-          email: userInfo.email,
-        },
-      },
+      phone: "",
+      city: "",
+      zip: "",
+      street: "",
     },
   });
 
@@ -348,39 +294,6 @@ const createCandidateFromFranceConnect = async ({
     `[France Connect] Nouveau compte candidat créé avec succès : ${candidate.id}`,
   );
   return candidate;
-};
-
-const mapGender = (franceConnectGender: string): Gender => {
-  switch (franceConnectGender) {
-    case "male":
-      return Gender.man;
-    case "female":
-      return Gender.woman;
-    default:
-      return Gender.undisclosed;
-  }
-};
-
-const parseFranceConnectDate = (dateString: string): Date | null => {
-  const date = new Date(dateString);
-  return isNaN(date.getTime()) ? null : date;
-};
-
-const splitGivenName = (
-  givenName: string,
-): {
-  firstname: string;
-  firstname2?: string;
-  firstname3?: string;
-} => {
-  const parts = givenName.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) {
-    return { firstname: "", firstname2: undefined, firstname3: undefined };
-  }
-  const firstname = parts[0];
-  const firstname2 = parts.length > 1 ? parts[1] : undefined;
-  const firstname3 = parts.length > 2 ? parts.slice(2).join(" ") : undefined;
-  return { firstname, firstname2, firstname3 };
 };
 
 const getDefaultDepartment = async () => {
