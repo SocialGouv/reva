@@ -43,9 +43,24 @@ export const KeycloakProvider = ({ children }: KeycloakProviderProps) => {
 
     setTokens(undefined);
 
-    await keycloakInstance?.logout({
-      redirectUri: window.location.origin + "/candidat/logout-confirmation",
-    });
+    // Déconnexion via l'endpoint OpenID Connect avec id_token_hint pour invalider aussi la session FranceConnect
+    if (keycloakInstance.idToken) {
+      const logoutUrl = new URL(
+        `${keycloakInstance.authServerUrl}/realms/${keycloakInstance.realm}/protocol/openid-connect/logout`,
+      );
+      logoutUrl.searchParams.set("id_token_hint", keycloakInstance.idToken);
+      logoutUrl.searchParams.set(
+        "post_logout_redirect_uri",
+        window.location.origin + "/candidat/logout-confirmation",
+      );
+      logoutUrl.searchParams.set("state", crypto.randomUUID());
+      window.location.href = logoutUrl.toString();
+    } else {
+      // Fallback vers la déconnexion par défaut de keycloak
+      await keycloakInstance.logout({
+        redirectUri: window.location.origin + "/candidat/logout-confirmation",
+      });
+    }
   };
 
   const resetKeycloakInstance = (tokens: Tokens) => {
