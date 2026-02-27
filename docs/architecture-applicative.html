@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Architecture Applicative - France VAE</title>
+        <style>
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    sans-serif;
+                margin: 40px auto;
+                max-width: 1280px;
+                padding: 0 20px;
+                font-size: 1.3em;
+            }
+            h1 {
+                font-size: 1.6em;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                table-layout: fixed;
+                font-size: 1em;
+            }
+            td,
+            th {
+                text-align: center;
+                padding: 16px 10px;
+                border: 1px solid #ccc;
+            }
+            .grp-t {
+                border-top: 2px solid #333;
+            }
+            .grp-b {
+                border-bottom: 2px solid #333;
+            }
+            .grp-lr {
+                border-left: 2px solid #333;
+                border-right: 2px solid #333;
+            }
+            .grp-box {
+                border: 2px solid #333;
+            }
+            .bg-link {
+                background: #f0f0f0;
+            }
+            .hdr tr {
+                font-weight: 550;
+            }
+            .hdr th,
+            .hdr td {
+                background: #ccc;
+                color: #000;
+                font-weight: 500;
+            }
+            .arrow td {
+                border: none;
+                padding: 2px;
+                font-size: 1.1em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Architecture Applicative - Vue d'ensemble</h1>
+        <table>
+            <colgroup>
+                <col style="width: 14.5%" />
+                <col style="width: 14.5%" />
+                <col style="width: 14.5%" />
+                <col style="width: 14.5%" />
+                <col style="width: 15%" />
+                <col style="width: 27%" />
+            </colgroup>
+            <tr class="hdr">
+                <th class="grp-t grp-b grp-lr bg-link">Site public</th>
+                <th class="grp-t grp-b grp-lr bg-link">Back-office</th>
+                <th class="grp-t grp-b grp-lr bg-link">Espace candidat</th>
+                <th class="grp-t grp-b grp-lr bg-link">VAE collective</th>
+                <th class="grp-t grp-b grp-lr bg-link">Interop</th>
+                <th class="grp-t grp-b grp-lr bg-link">Back-end</th>
+            </tr>
+            <tr>
+                <td class="grp-lr">Visiteurs</td>
+                <td class="grp-lr">Pros et admins</td>
+                <td class="grp-lr">Candidats</td>
+                <td class="grp-lr">Commanditaires</td>
+                <td class="grp-lr">Partenaires externes</td>
+                <td class="grp-lr">Règles métier</td>
+            </tr>
+            <tr>
+                <td class="grp-lr">Recherche certification</td>
+                <td class="grp-lr">Candidatures et certifications</td>
+                <td class="grp-lr">Candidatures</td>
+                <td class="grp-lr">Cohortes</td>
+                <td class="grp-lr">API REST</td>
+                <td class="grp-lr">API GraphQL</td>
+            </tr>
+            <tr>
+                <td class="grp-lr grp-b">Actualités et FAQ</td>
+                <td class="grp-lr grp-b">Comptes</td>
+                <td class="grp-lr grp-b">Profil</td>
+                <td class="grp-lr grp-b"></td>
+                <td class="grp-lr grp-b"></td>
+                <td class="grp-lr grp-b">Crons</td>
+            </tr>
+            <tr class="arrow">
+                <td>&#8595;</td>
+                <td>&#8595;</td>
+                <td>&#8595;</td>
+                <td>&#8595;</td>
+                <td>&#8595;</td>
+                <td>&#8595;</td>
+            </tr>
+            <tr class="hdr">
+                <td class="grp-box bg-link">reva-website</td>
+                <td class="grp-box bg-link">reva-admin-react</td>
+                <td class="grp-box bg-link">reva-candidate</td>
+                <td class="grp-box bg-link">reva-vae-collective</td>
+                <td class="grp-box bg-link">reva-interop</td>
+                <td class="grp-box bg-link">reva-api · cron</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="grp-box">
+                    Next.js · React · react-dsfr · Tailwind
+                </td>
+                <td class="grp-box">Fastify · Swagger</td>
+                <td class="grp-box">Fastify · Mercurius</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="grp-box bg-link">
+                    urql · graphql-request · react-query
+                </td>
+                <td colspan="2" class="grp-box bg-link">@urql/core</td>
+                <td class="grp-box bg-link">Prisma · PostgreSQL</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="grp-box">
+                    react-hook-form · zod · zustand
+                </td>
+                <td class="grp-box"></td>
+                <td class="grp-box"></td>
+                <td class="grp-box">client-s3 · basic-ftp · pino</td>
+            </tr>
+            <tr>
+                <td class="grp-b grp-lr"></td>
+                <td class="grp-b grp-lr bg-link">keycloak-js</td>
+                <td colspan="2" class="grp-b grp-lr bg-link">
+                    keycloak-js · cookies-next
+                </td>
+                <td class="grp-b grp-lr bg-link">jose</td>
+                <td class="grp-b grp-lr bg-link">
+                    keycloak-connect · openid-client
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="grp-box">
+                    Strapi · Matomo · Produktly · Crisp
+                </td>
+                <td class="grp-box">Strapi · Matomo</td>
+                <td class="grp-box"></td>
+                <td class="grp-box">Datadog</td>
+                <td class="grp-box">Outscale · FTPS · Brevo · Datadog</td>
+            </tr>
+            <tr>
+                <td colspan="6" class="grp-box bg-link">
+                    TypeScript 5.8 · Node.js 22
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" class="grp-b grp-lr">Ubuntu 22.04 LTS</td>
+            </tr>
+        </table>
+    </body>
+</html>
