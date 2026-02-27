@@ -1123,6 +1123,7 @@ model CertificationAuthorityStructure {
   cguVersion            Int?            @map("cgu_version")
   cguAcceptedAt         DateTime?       @map("cgu_accepted_at")
   cguAcceptanceRequired Boolean         @default(true) @map("cgu_acceptance_required")
+  hasReducedRequirements Boolean        @default(false) @map("has_reduced_requirements")
   certifications        Certification[]
 
   certificationRegistryManager                            CertificationRegistryManager?

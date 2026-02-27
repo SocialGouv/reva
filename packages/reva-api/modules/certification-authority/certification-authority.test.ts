@@ -263,6 +263,36 @@ test("should return an exisiting certification local account list of 1 item for 
   ).toMatchObject([{ id: certificationAuthorityLocalAccount.id }]);
 });
 
+test("should expose hasReducedRequirements as false by default on certification authority structure", async () => {
+  const certificationAuthorityStructure =
+    await createCertificationAuthorityStructureHelper();
+
+  const resp = await injectGraphql({
+    fastify: global.testApp,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "3c6d4571-da18-49a3-90e5-cc83ae7446bf",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "certification_authority_getCertificationAuthorityStructure",
+      arguments: {
+        id: certificationAuthorityStructure.id,
+      },
+      returnFields: "{id hasReducedRequirements}",
+    },
+  });
+
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json()).not.toHaveProperty("errors");
+  expect(
+    resp.json().data.certification_authority_getCertificationAuthorityStructure,
+  ).toEqual({
+    id: certificationAuthorityStructure.id,
+    hasReducedRequirements: false,
+  });
+});
+
 test("should create a certification authority", async () => {
   vi.spyOn(createAccount, "createAccount").mockImplementation(() =>
     Promise.resolve({} as Account),

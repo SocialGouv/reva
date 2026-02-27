@@ -49,6 +49,7 @@ type CertificationAuthorityStructure {
   certificationAuthorities: [CertificationAuthority!]!
   certificationRegistryManager: CertificationRegistryManager
   cguAcceptanceRequired: Boolean!
+  hasReducedRequirements: Boolean!
 }
 
 type CertificationRegistryManager {
