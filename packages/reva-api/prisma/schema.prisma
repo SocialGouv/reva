@@ -404,30 +404,9 @@ model Candidate {
   typologyAdditional                   String?                        @map("typology_additional")
   ccn                                  CandidacyConventionCollective? @relation(fields: [ccnId], references: [id], onDelete: NoAction)
   ccnId                                String?                        @map("ccn_id") @db.Uuid
-  candidateInfoFranceConnect           CandidateInfoFranceConnect?
+  franceConnectLinked                  Boolean                        @default(false) @map("france_connect_linked")
 
   @@map("candidate")
-}
-
-model CandidateInfoFranceConnect {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidateId String    @unique @map("candidate_id") @db.Uuid
-  candidate   Candidate @relation(fields: [candidateId], references: [id])
-  countryId   String?   @map("country_id") @db.Uuid
-  country     Country?  @relation(fields: [countryId], references: [id])
-  nationality String?   @db.VarChar(255)
-  birthdate   DateTime? @db.Date
-  gender      Gender?
-  givenName   String?   @map("given_name") @db.VarChar(255)
-  firstname   String?   @db.VarChar(255)
-  firstname2  String?   @db.VarChar(255)
-  firstname3  String?   @db.VarChar(255)
-  lastname    String?   @db.VarChar(255)
-  email       String?   @db.VarChar(255)
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
-
-  @@map("candidate_info_france_connect")
 }
 
 model Goal {
@@ -530,7 +509,6 @@ model Country {
   inseeCode                  String                       @unique @map("insee_code") @db.VarChar(5)
   nationality                String                       @db.VarChar(255)
   Candidate                  Candidate[]
-  CandidateInfoFranceConnect CandidateInfoFranceConnect[]
   createdAt                  DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                  DateTime?                    @map("updated_at") @db.Timestamptz(6)
 

@@ -50,6 +50,7 @@ type Candidate {
   city: String
   addressComplement: String
   profileInformationCompleted: Boolean!
+  franceConnectLinked: Boolean!
   typology: CandidateTypology!
   typologyAdditional: String
   ccnId: String
@@ -134,7 +135,10 @@ input CandidateUpdateTypologyAndCcnInput {
 
 type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
-  candidate_askForRegistrationWithPassword(email: String!, certificationId: String): String!
+  candidate_askForRegistrationWithPassword(
+    email: String!
+    certificationId: String
+  ): String!
   candidate_askForLogin(email: String!): String!
   candidate_loginWithToken(token: String!): String!
   candidate_loginWithCredentials(
