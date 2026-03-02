@@ -23,6 +23,7 @@ const getCandidacyById = graphql(`
       }
       candidate {
         id
+        franceConnectLinked
         firstname
         firstname2
         firstname3

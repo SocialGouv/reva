@@ -45,6 +45,7 @@ const CandidateInformationForm = ({
     useUpdateCandidateInformation(candidacyId);
 
   const candidate = candidacy?.candidate;
+  const isFCLinked = candidate?.franceConnectLinked;
   const isAddressAlreadyCompleted =
     !!candidate?.street && !!candidate?.zip && !!candidate?.city;
 
@@ -228,6 +229,7 @@ const CandidateInformationForm = ({
           <Input
             label="Nom de naissance"
             className="w-full mb-0"
+            disabled={isFCLinked}
             nativeInputProps={register("lastname")}
             state={errors.lastname ? "error" : "default"}
             stateRelatedMessage={errors.lastname?.message}
@@ -244,6 +246,7 @@ const CandidateInformationForm = ({
           <Input
             label="Prénom principal"
             className="w-full mb-0"
+            disabled={isFCLinked}
             nativeInputProps={register("firstname")}
             state={errors.firstname ? "error" : "default"}
             stateRelatedMessage={errors.firstname?.message}
@@ -251,6 +254,7 @@ const CandidateInformationForm = ({
           <Input
             label="Prénom 2 (optionnel)"
             className="w-full mb-0"
+            disabled={isFCLinked}
             nativeInputProps={register("firstname2")}
             state={errors.firstname2 ? "error" : "default"}
             stateRelatedMessage={errors.firstname2?.message}
@@ -258,6 +262,7 @@ const CandidateInformationForm = ({
           <Input
             label="Prénom 3 (optionnel)"
             className="w-full mb-0"
+            disabled={isFCLinked}
             nativeInputProps={register("firstname3")}
             state={errors.firstname3 ? "error" : "default"}
             stateRelatedMessage={errors.firstname3?.message}
@@ -267,6 +272,7 @@ const CandidateInformationForm = ({
           <Input
             label="Date de naissance"
             className="w-full md:w-1/3 md:pr-6"
+            disabled={isFCLinked}
             nativeInputProps={{
               ...register("birthdate"),
               type: "date",
@@ -279,6 +285,7 @@ const CandidateInformationForm = ({
           <Select
             className="w-full mb-0"
             label="Pays de naissance"
+            disabled={isFCLinked}
             nativeSelectProps={register("country")}
             state={errors.country ? "error" : "default"}
             stateRelatedMessage={errors.country?.message}
@@ -292,7 +299,7 @@ const CandidateInformationForm = ({
           <Select
             className="w-full mb-0"
             label="Département de naissance"
-            disabled={disabledDepartment}
+            disabled={disabledDepartment || isFCLinked}
             nativeSelectProps={register("birthDepartment")}
             state={errors.birthDepartment ? "error" : "default"}
             stateRelatedMessage={errors.birthDepartment?.message}
@@ -319,6 +326,7 @@ const CandidateInformationForm = ({
           <Input
             label="Nationalité"
             className="w-full"
+            disabled={isFCLinked}
             nativeInputProps={register("nationality")}
             state={errors.nationality ? "error" : "default"}
             stateRelatedMessage={errors.nationality?.message}
