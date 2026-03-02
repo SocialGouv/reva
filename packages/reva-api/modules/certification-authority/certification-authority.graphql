@@ -11,6 +11,7 @@ type CertificationAuthority {
   contactEmail: String
   contactPhone: String
   departments: [Department!]!
+  websiteUrl: String
   regions: [Region!]!
   certifications: [Certification!]!
   paginatedCertifications(
@@ -110,6 +111,7 @@ input UpdateCertificationAuthorityInput {
   contactEmail: String
   contactPhone: String
   isGlobalContact: Boolean
+  websiteUrl: String
 }
 
 input CreateCertificationAuthorityInput {

@@ -503,14 +503,14 @@ model Department {
 }
 
 model Country {
-  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                      String                       @unique @db.VarChar(255)
-  isoCode                    String                       @unique @map("iso_code") @db.VarChar(3)
-  inseeCode                  String                       @unique @map("insee_code") @db.VarChar(5)
-  nationality                String                       @db.VarChar(255)
-  Candidate                  Candidate[]
-  createdAt                  DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                  DateTime?                    @map("updated_at") @db.Timestamptz(6)
+  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label       String      @unique @db.VarChar(255)
+  isoCode     String      @unique @map("iso_code") @db.VarChar(3)
+  inseeCode   String      @unique @map("insee_code") @db.VarChar(5)
+  nationality String      @db.VarChar(255)
+  Candidate   Candidate[]
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?   @map("updated_at") @db.Timestamptz(6)
 
   @@map("country")
 }
@@ -1096,13 +1096,13 @@ model ExamInfo {
 }
 
 model CertificationAuthorityStructure {
-  id                    String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                 String          @unique @db.VarChar(200)
-  cguVersion            Int?            @map("cgu_version")
-  cguAcceptedAt         DateTime?       @map("cgu_accepted_at")
-  cguAcceptanceRequired Boolean         @default(true) @map("cgu_acceptance_required")
-  hasReducedRequirements Boolean        @default(false) @map("has_reduced_requirements")
-  certifications        Certification[]
+  id                     String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                  String          @unique @db.VarChar(200)
+  cguVersion             Int?            @map("cgu_version")
+  cguAcceptedAt          DateTime?       @map("cgu_accepted_at")
+  cguAcceptanceRequired  Boolean         @default(true) @map("cgu_acceptance_required")
+  hasReducedRequirements Boolean         @default(false) @map("has_reduced_requirements")
+  certifications         Certification[]
 
   certificationRegistryManager                            CertificationRegistryManager?
   certificationAuthorityOnCertificationAuthorityStructure CertificationAuthorityOnCertificationAuthorityStructure[]
@@ -1116,6 +1116,7 @@ model CertificationAuthority {
   contactFullName                                         String?                                                   @map("contact_full_name") @db.VarChar(200)
   contactEmail                                            String?                                                   @map("contact_email") @db.VarChar(200)
   contactPhone                                            String?                                                   @map("contact_phone") @db.VarChar(25)
+  websiteUrl                                              String?                                                   @map("website_url") @db.VarChar(200)
   createdAt                                               DateTime                                                  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                               DateTime?                                                 @map("updated_at") @db.Timestamptz(6)
   certificationAuthorityOnDepartment                      CertificationAuthorityOnDepartment[]

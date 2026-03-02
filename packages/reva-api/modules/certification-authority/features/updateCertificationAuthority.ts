@@ -18,6 +18,7 @@ export const updateCertificationAuthorityById = async ({
     contactEmail: string | null;
     contactPhone: string | null;
     isGlobalContact: boolean;
+    websiteUrl: string | null;
   };
   userRoles: KeyCloakUserRole[];
 }): Promise<CertificationAuthority> => {
@@ -56,6 +57,7 @@ export const updateCertificationAuthorityById = async ({
         contactFullName: certificationAuthorityData.contactFullName,
         contactEmail: certificationAuthorityData.contactEmail,
         contactPhone: certificationAuthorityData.contactPhone,
+        websiteUrl: certificationAuthorityData.websiteUrl,
       },
     });
 

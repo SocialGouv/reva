@@ -196,6 +196,7 @@ const unsafeResolvers = {
           contactEmail: string | null;
           contactPhone: string | null;
           isGlobalContact: boolean;
+          websiteUrl: string | null;
         };
       },
       context: GraphqlContext,
