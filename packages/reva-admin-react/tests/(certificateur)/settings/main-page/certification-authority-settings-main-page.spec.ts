@@ -446,6 +446,10 @@ test.describe("certifications summary card", () => {
           "getCertificationAuthorityForCertificationAuthoritySettingsPage",
           certificationAuthoritySettingsWithContact,
         ),
+        fvae.query(
+          "getCertificationAuthorityForCertificationsPage",
+          graphQLResolver({}),
+        ),
       ],
       { scope: "test" },
     ],
@@ -494,8 +498,6 @@ test.describe("certifications summary card", () => {
 
     await expect(page).toHaveURL(
       "admin2/certification-authorities/settings/certifications/",
-
-      { timeout: 10000 },
     );
   });
 });
