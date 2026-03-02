@@ -44,6 +44,18 @@ const certificationAuthoritySettingsWithContact = graphQLResolver({
           },
         },
       ],
+      certifications: [
+        {
+          id: "c051e8ad-f0f6-4132-9677-88b706489c8f",
+          label: "BP Métallier",
+          conventionsCollectives: [],
+        },
+        {
+          id: "c8474d31-787d-43ef-98a1-9480a9669622",
+          label: "Bac Professionnel Boulanger pâtissier",
+          conventionsCollectives: [],
+        },
+      ],
     },
   },
 });
@@ -76,6 +88,18 @@ const certificationAuthoritySettingsNoContact = graphQLResolver({
             lastname: "lastname2",
             email: "email2@example.com",
           },
+        },
+      ],
+      certifications: [
+        {
+          id: "c051e8ad-f0f6-4132-9677-88b706489c8f",
+          label: "BP Métallier",
+          conventionsCollectives: [],
+        },
+        {
+          id: "c8474d31-787d-43ef-98a1-9480a9669622",
+          label: "Bac Professionnel Boulanger pâtissier",
+          conventionsCollectives: [],
         },
       ],
     },
@@ -409,6 +433,69 @@ test.describe("local accounts summary card", () => {
       .click();
     await expect(page).toHaveURL(
       /\/certification-authorities\/settings\/local-accounts\/4871a711-232b-4aba-aa5a-bc2adc51f869/,
+    );
+  });
+});
+
+test.describe("certifications summary card", () => {
+  test.use({
+    mswHandlers: [
+      [
+        ...certificateurSettingsCommonHandlers,
+        fvae.query(
+          "getCertificationAuthorityForCertificationAuthoritySettingsPage",
+          certificationAuthoritySettingsWithContact,
+        ),
+      ],
+      { scope: "test" },
+    ],
+  });
+
+  test("when i access the settings page it should display the certifications summary card with the correct information", async ({
+    page,
+  }) => {
+    await login({ role: "certificateur", page });
+    await page.goto("/admin2/certification-authorities/settings");
+    await Promise.all([
+      certificateurSettingsCommonWait(page),
+      waitGraphQL(
+        page,
+        "getCertificationAuthorityForCertificationAuthoritySettingsPage",
+      ),
+    ]);
+
+    await expect(
+      page.getByTestId("certifications-summary-card").locator("h2"),
+    ).toHaveText("Certifications gérées");
+    await expect(
+      page
+        .getByTestId("certifications-summary-card")
+        .getByTestId("certifications-count-badge"),
+    ).toHaveText("2 certifications gérées");
+  });
+
+  test("when i click on the 'consulter' button it should redirect to the certifications page", async ({
+    page,
+  }) => {
+    await login({ role: "certificateur", page });
+    await page.goto("/admin2/certification-authorities/settings");
+    await Promise.all([
+      certificateurSettingsCommonWait(page),
+      waitGraphQL(
+        page,
+        "getCertificationAuthorityForCertificationAuthoritySettingsPage",
+      ),
+    ]);
+
+    await page
+      .getByTestId("certifications-summary-card")
+      .getByRole("button", { name: "Consulter" })
+      .click();
+
+    await expect(page).toHaveURL(
+      "admin2/certification-authorities/settings/certifications/",
+
+      { timeout: 10000 },
     );
   });
 });
