@@ -116,7 +116,7 @@ test.describe("certification authority settings certifications page", () => {
       );
       await waitForPageQueries(page);
       await page.getByTestId("certification-card-1").click();
-      await expect(page).toHaveURL("/admin2/certifications/1/");
+      await expect(page).toHaveURL("/admin2/certification-details/1/");
     });
   });
 
@@ -134,7 +134,7 @@ test.describe("certification authority settings certifications page", () => {
         .getByTestId("certification-card-2")
         .getByRole("link", { name: "Voir la fiche" })
         .click();
-      await expect(page).toHaveURL("/admin2/certifications/2/");
+      await expect(page).toHaveURL("/admin2/certification-details/2/");
     });
 
     test("it let me click on the 'Paramétrer' button and redirect me to the certification parcours page", async ({

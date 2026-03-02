@@ -59,7 +59,7 @@ const CertificationAuthorityCertificationsPage = () => {
                 codeRncp={certification.codeRncp}
                 visible={certification.visible}
                 isAttachedToAnotherStructure={isAttachedToAnotherStructure}
-                detailsHref={`/certifications/${certification.id}`}
+                detailsHref={`/certification-details/${certification.id}`}
                 parcoursSettingsHref={`/certification-authorities/settings/certifications/${certification.id}/parcours`}
               />
             ) : (
@@ -70,7 +70,7 @@ const CertificationAuthorityCertificationsPage = () => {
                 codeRncp={certification.codeRncp}
                 visible={certification.visible}
                 isAttachedToAnotherStructure={isAttachedToAnotherStructure}
-                detailsHref={`/certifications/${certification.id}`}
+                detailsHref={`/certification-details/${certification.id}`}
               />
             );
           }}
