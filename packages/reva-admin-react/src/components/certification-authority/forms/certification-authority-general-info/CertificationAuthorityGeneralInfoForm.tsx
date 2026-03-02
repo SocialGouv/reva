@@ -4,6 +4,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -13,22 +14,12 @@ import {
   sanitizedEmail,
   sanitizedOptionalPhone,
   sanitizedOptionalText,
+  sanitizedOptionalUrl,
   sanitizedText,
+  sanitizedUrl,
 } from "@/utils/input-sanitization";
 
 import { useCertificationAuthorityForm } from "./certificationAuthorityGeneralInfoForm.hooks";
-
-type FormData = z.infer<typeof schema>;
-
-const schema = z.object({
-  accountFirstname: sanitizedOptionalText(),
-  accountLastname: sanitizedText(),
-  accountEmail: sanitizedEmail(),
-  contactFullName: sanitizedText(),
-  contactEmail: sanitizedEmail(),
-  contactPhone: sanitizedOptionalPhone(),
-  isGlobalContact: z.boolean(),
-});
 
 const globalContactConfirmationModal = createModal({
   id: "global-contact-confirmation-modal",
@@ -45,6 +36,10 @@ export const CertificationAuthorityGeneralInfoForm = ({
     contactFullName?: string | null;
     contactEmail?: string | null;
     contactPhone?: string | null;
+    websiteUrl?: string | null;
+    certificationAuthorityStructures: {
+      hasReducedRequirements: boolean;
+    }[];
     account?: {
       id: string;
       lastname?: string | null;
@@ -59,6 +54,28 @@ export const CertificationAuthorityGeneralInfoForm = ({
 
   const { isAdmin } = useAuth();
 
+  const isWebsiteUrlRequired =
+    certificationAuthority.certificationAuthorityStructures?.some(
+      (structure) => structure.hasReducedRequirements,
+    ) || false;
+
+  const schema = useMemo(() => {
+    return z.object({
+      accountFirstname: sanitizedOptionalText(),
+      accountLastname: sanitizedText(),
+      accountEmail: sanitizedEmail(),
+      contactFullName: sanitizedText(),
+      contactEmail: sanitizedEmail(),
+      contactPhone: sanitizedOptionalPhone(),
+      isGlobalContact: z.boolean(),
+      websiteUrl: isWebsiteUrlRequired
+        ? sanitizedUrl()
+        : sanitizedOptionalUrl(),
+    });
+  }, [isWebsiteUrlRequired]);
+
+  type FormData = z.infer<typeof schema>;
+
   const {
     register,
     reset,
@@ -71,10 +88,11 @@ export const CertificationAuthorityGeneralInfoForm = ({
       accountFirstname: certificationAuthority.account?.firstname || "",
       accountLastname: certificationAuthority.account?.lastname || "",
       accountEmail: certificationAuthority.account?.email || "",
-      contactFullName: certificationAuthority.contactFullName || undefined,
-      contactEmail: certificationAuthority.contactEmail || undefined,
-      contactPhone: certificationAuthority.contactPhone || undefined,
+      contactFullName: certificationAuthority.contactFullName || "",
+      contactEmail: certificationAuthority.contactEmail || "",
+      contactPhone: certificationAuthority.contactPhone || "",
       isGlobalContact: false,
+      websiteUrl: certificationAuthority.websiteUrl || "",
     },
   });
 
@@ -157,6 +175,16 @@ export const CertificationAuthorityGeneralInfoForm = ({
               data-testid="certification-authority-account-email"
               state={errors.accountEmail ? "error" : "default"}
               stateRelatedMessage={errors.accountEmail?.message}
+            />
+            <Input
+              label={`Site web ${isWebsiteUrlRequired ? "" : "(optionnel)"}`}
+              hintText="Veuillez renseigner le lien vers votre établissement"
+              nativeInputProps={{
+                ...register("websiteUrl"),
+              }}
+              data-testid="certification-authority-website-url"
+              state={errors.websiteUrl ? "error" : "default"}
+              stateRelatedMessage={errors.websiteUrl?.message}
             />
           </div>
         </div>

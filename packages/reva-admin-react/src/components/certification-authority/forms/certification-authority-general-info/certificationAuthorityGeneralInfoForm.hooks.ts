@@ -23,6 +23,7 @@ const updateCertificationAuthorityMutation = graphql(`
       label
       contactFullName
       contactEmail
+      websiteUrl
     }
   }
 `);
@@ -42,6 +43,7 @@ export const useCertificationAuthorityForm = () => {
         contactEmail: string;
         contactPhone?: string;
         isGlobalContact: boolean;
+        websiteUrl?: string;
       };
     }) => graphqlClient.request(updateCertificationAuthorityMutation, params),
     onSuccess: ({ certification_authority_updateCertificationAuthority }) => {
