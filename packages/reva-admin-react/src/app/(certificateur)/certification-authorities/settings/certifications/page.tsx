@@ -54,6 +54,7 @@ const CertificationAuthorityCertificationsPage = () => {
             return hasParcours ? (
               <WithParcoursCertificationCard
                 key={certification.id}
+                id={certification.id}
                 label={certification.label}
                 codeRncp={certification.codeRncp}
                 visible={certification.visible}
@@ -64,6 +65,7 @@ const CertificationAuthorityCertificationsPage = () => {
             ) : (
               <NoParcoursCertificationCard
                 key={certification.id}
+                id={certification.id}
                 label={certification.label}
                 codeRncp={certification.codeRncp}
                 visible={certification.visible}

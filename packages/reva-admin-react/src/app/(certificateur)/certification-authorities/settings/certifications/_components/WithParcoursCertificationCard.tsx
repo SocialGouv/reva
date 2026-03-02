@@ -5,6 +5,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import Card from "@codegouvfr/react-dsfr/Card";
 
 export const WithParcoursCertificationCard = ({
+  id,
   label,
   codeRncp,
   visible,
@@ -12,6 +13,7 @@ export const WithParcoursCertificationCard = ({
   detailsHref,
   parcoursSettingsHref,
 }: {
+  id: string;
   label: string;
   codeRncp: string;
   visible?: boolean;
@@ -20,6 +22,7 @@ export const WithParcoursCertificationCard = ({
   parcoursSettingsHref: string;
 }) => (
   <Card
+    data-testid={`certification-card-${id}`}
     title={label}
     detail={`RNCP ${codeRncp}`}
     desc={

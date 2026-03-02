@@ -4,12 +4,14 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Card from "@codegouvfr/react-dsfr/Card";
 
 export const NoParcoursCertificationCard = ({
+  id,
   label,
   codeRncp,
   visible,
   isAttachedToAnotherStructure,
   detailsHref,
 }: {
+  id: string;
   label: string;
   codeRncp: string;
   visible?: boolean;
@@ -17,6 +19,7 @@ export const NoParcoursCertificationCard = ({
   detailsHref: string;
 }) => (
   <Card
+    data-testid={`certification-card-${id}`}
     title={label}
     detail={`RNCP ${codeRncp}`}
     desc={
