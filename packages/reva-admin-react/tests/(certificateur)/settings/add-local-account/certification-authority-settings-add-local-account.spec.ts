@@ -6,7 +6,7 @@ import { getCertificateurSettingsCommonHandlers } from "../../../shared/helpers/
 const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
   getCertificateurSettingsCommonHandlers();
 
-test.describe("add local acount page", () => {
+test.describe("main page", () => {
   test.use({
     mswHandlers: [[...certificateurSettingsCommonHandlers], { scope: "test" }],
   });
