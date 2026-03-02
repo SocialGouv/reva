@@ -10,6 +10,7 @@ const getCandidateByIdForProfilePage = graphql(`
   query getCandidateByIdForProfilePage($candidateId: ID!) {
     candidate_getCandidateById(id: $candidateId) {
       id
+      franceConnectLinked
       firstname
       lastname
       givenName
