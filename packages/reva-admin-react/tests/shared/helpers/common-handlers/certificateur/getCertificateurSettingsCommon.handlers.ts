@@ -7,6 +7,7 @@ export const certificateurSettingsCommonWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
+    waitGraphQL(page, "getCertificationAuthorityMetabaseUrl"),
   ]);
 };
 
@@ -38,6 +39,16 @@ export const getCertificateurSettingsCommonHandlers = () => {
                 acceptedAt: 1725001318488,
                 isLatestVersion: true,
               },
+            },
+          },
+        }),
+      ),
+      fvae.query(
+        "getCertificationAuthorityMetabaseUrl",
+        graphQLResolver({
+          account_getAccountForConnectedUser: {
+            certificationAuthority: {
+              metabaseDashboardIframeUrl: null,
             },
           },
         }),
