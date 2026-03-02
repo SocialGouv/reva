@@ -1173,16 +1173,30 @@ model CertificationAuthorityOnDepartment {
 }
 
 model CertificationAuthorityOnCertification {
-  id                       String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  certificationAuthority   CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: Cascade)
-  certificationAuthorityId String                 @map("certification_authority_id") @db.Uuid
-  certification            Certification          @relation(fields: [certificationId], references: [id], onDelete: NoAction)
-  certificationId          String                 @map("certification_id") @db.Uuid
-  createdAt                DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                DateTime?              @map("updated_at") @db.Timestamptz(6)
+  id                                                            String                                                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationAuthority                                        CertificationAuthority                                         @relation(fields: [certificationAuthorityId], references: [id], onDelete: Cascade)
+  certificationAuthorityId                                      String                                                         @map("certification_authority_id") @db.Uuid
+  certification                                                 Certification                                                  @relation(fields: [certificationId], references: [id], onDelete: NoAction)
+  certificationId                                               String                                                         @map("certification_id") @db.Uuid
+  createdAt                                                     DateTime                                                       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                                     DateTime?                                                      @map("updated_at") @db.Timestamptz(6)
+  certificationAuthorityOnCertificationOnParcoursCertifications CertificationAuthorityOnCertificationOnParcoursCertification[]
 
   @@unique([certificationAuthorityId, certificationId])
   @@map("certification_authority_on_certification")
+}
+
+model CertificationAuthorityOnCertificationOnParcoursCertification {
+  id                                      String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationAuthorityOnCertification   CertificationAuthorityOnCertification @relation(map: "cert_auth_on_cert_on_parcours", fields: [certificationAuthorityOnCertificationId], references: [id], onDelete: Cascade)
+  certificationAuthorityOnCertificationId String                                @map("certification_authority_on_certification_id") @db.Uuid
+  parcoursCertification                   ParcoursCertification                 @relation(fields: [parcoursCertificationId], references: [id], onDelete: NoAction)
+  parcoursCertificationId                 String                                @map("parcours_certification_id") @db.Uuid
+  createdAt                               DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                               DateTime?                             @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([certificationAuthorityOnCertificationId, parcoursCertificationId])
+  @@map("certification_authority_on_certification_on_parcours_certification")
 }
 
 model CertificationAuthorityLocalAccount {
@@ -2048,15 +2062,16 @@ model Appointment {
 }
 
 model ParcoursCertification {
-  id               String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  code             String        @unique @map("code") @db.VarChar(255)
-  label            String        @map("label") @db.VarChar(255)
-  uai              String        @unique @map("uai") @db.VarChar(255)
-  nomEtablissement String?       @map("nom_etablissement") @db.VarChar(255)
-  certificationId  String        @map("certification_id") @db.Uuid
-  certification    Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
-  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt        DateTime?     @map("updated_at") @db.Timestamptz(6)
+  id                                                            String                                                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code                                                          String                                                         @unique @map("code") @db.VarChar(255)
+  label                                                         String                                                         @map("label") @db.VarChar(255)
+  uai                                                           String                                                         @unique @map("uai") @db.VarChar(255)
+  nomEtablissement                                              String?                                                        @map("nom_etablissement") @db.VarChar(255)
+  certificationId                                               String                                                         @map("certification_id") @db.Uuid
+  certification                                                 Certification                                                  @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  createdAt                                                     DateTime                                                       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                                     DateTime?                                                      @map("updated_at") @db.Timestamptz(6)
+  certificationAuthorityOnCertificationOnParcoursCertifications CertificationAuthorityOnCertificationOnParcoursCertification[]
 
   @@map("parcours_certification")
 }
