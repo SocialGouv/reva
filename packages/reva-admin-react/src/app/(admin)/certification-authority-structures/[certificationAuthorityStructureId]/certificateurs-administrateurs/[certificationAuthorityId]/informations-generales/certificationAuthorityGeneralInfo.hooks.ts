@@ -13,6 +13,7 @@ const getCertificationAuthority = graphql(`
       contactFullName
       contactEmail
       contactPhone
+      websiteUrl
       account {
         id
         email
@@ -22,6 +23,7 @@ const getCertificationAuthority = graphql(`
       certificationAuthorityStructures {
         id
         label
+        hasReducedRequirements
       }
     }
   }
