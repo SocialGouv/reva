@@ -1,9 +1,12 @@
-import { graphql, Page } from "next/experimental/testmode/playwright/msw";
+import { graphql, type Page } from "next/experimental/testmode/playwright/msw";
 
 import { graphQLResolver } from "../network/msw";
 import { waitGraphQL } from "../network/requests";
 
+import { createCandidaciesGuardsHandlers } from "./candidacies/candidacies-guards.handler";
+
 import type { CandidacyEntity } from "../entities/create-candidacy.entity";
+
 export interface DashboardHandlersOptions {
   candidacy: CandidacyEntity;
   activeFeaturesForConnectedUser?: string[];
@@ -36,30 +39,11 @@ export const dashboardHandlers = ({
 
   return {
     handlers: [
-      fvae.query(
-        "candidate_getCandidateForCandidatesGuard",
-        graphQLResolver({
-          candidate_getCandidateWithCandidacy: {
-            ...candidacy.candidate,
-          },
-        }),
-      ),
-      fvae.query(
-        "getCandidateByIdForCandidateGuard",
-        graphQLResolver({
-          candidate_getCandidateById: {
-            ...candidacy.candidate,
-          },
-        }),
-      ),
-      fvae.query(
-        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
-        graphQLResolver({
-          candidate_getCandidateById: {
-            candidacies: [candidacy],
-          },
-        }),
-      ),
+      ...createCandidaciesGuardsHandlers({
+        candidate: candidacy.candidate,
+        candidacies: [candidacy],
+        activeFeaturesForConnectedUser,
+      }),
       fvae.query(
         "getCandidacyByIdForCandidacyGuard",
         graphQLResolver(candidacyInput),
@@ -71,16 +55,6 @@ export const dashboardHandlers = ({
       fvae.query(
         "getCandidacyByIdForDashboard",
         graphQLResolver(candidacyInput),
-      ),
-      fvae.mutation(
-        "candidate_loginWithToken",
-        graphQLResolver({ candidate_loginWithToken: null }),
-      ),
-      fvae.query(
-        "activeFeaturesForConnectedUser",
-        graphQLResolver({
-          activeFeaturesForConnectedUser,
-        }),
       ),
     ],
     dashboardWait,

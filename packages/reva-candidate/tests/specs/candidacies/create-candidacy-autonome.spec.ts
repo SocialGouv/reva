@@ -9,6 +9,7 @@ import { login } from "@tests/helpers/auth/auth";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createCandidaciesGuardsHandlers } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
 import { getArticlesForCertificationPageUsefulResourcesHandler } from "@tests/helpers/handlers/certification-page/useful-resources.handler";
 import { graphQLResolver } from "@tests/helpers/network/msw";
 import { waitGraphQL } from "@tests/helpers/network/requests";
@@ -29,30 +30,7 @@ const candidacy = createCandidacyEntity({
 
 function createCandidaciesHandlers() {
   return [
-    fvae.query(
-      "candidate_getCandidateForCandidatesGuard",
-      graphQLResolver({
-        candidate_getCandidateWithCandidacy: {
-          ...candidate,
-        },
-      }),
-    ),
-    fvae.query(
-      "getCandidateByIdForCandidateGuard",
-      graphQLResolver({
-        candidate_getCandidateById: {
-          ...candidate,
-        },
-      }),
-    ),
-    fvae.query(
-      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
-      graphQLResolver({
-        candidate_getCandidateById: {
-          candidacies: [],
-        },
-      }),
-    ),
+    ...createCandidaciesGuardsHandlers({ candidate }),
     fvae.query(
       "certifications",
       graphQLResolver({
@@ -102,14 +80,6 @@ function createCandidaciesHandlers() {
     fvae.query(
       "getCandidacyByIdForDashboard",
       graphQLResolver({ getCandidacyById: candidacy }),
-    ),
-    fvae.mutation(
-      "candidate_loginWithToken",
-      graphQLResolver({ candidate_loginWithToken: null }),
-    ),
-    fvae.query(
-      "activeFeaturesForConnectedUser",
-      graphQLResolver({ activeFeaturesForConnectedUser: ["MULTI_CANDIDACY"] }),
     ),
   ];
 }

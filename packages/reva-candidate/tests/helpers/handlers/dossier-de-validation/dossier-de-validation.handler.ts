@@ -1,8 +1,10 @@
-import { graphql, Page } from "next/experimental/testmode/playwright/msw";
+import { graphql, type Page } from "next/experimental/testmode/playwright/msw";
 
 import readyForJuryMutation from "@tests/fixtures/candidate/dossier-de-validation/ready-for-jury-mutation.json";
 import { graphQLResolver } from "@tests/helpers/network/msw";
 import { waitGraphQL } from "@tests/helpers/network/requests";
+
+import { createCandidaciesGuardsHandlers } from "../candidacies/candidacies-guards.handler";
 
 import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 
@@ -44,30 +46,11 @@ export const dossierDeValidationHandlers = ({
 
   return {
     handlers: [
-      fvae.query(
-        "candidate_getCandidateForCandidatesGuard",
-        graphQLResolver({
-          candidate_getCandidateWithCandidacy: {
-            ...candidacy.candidate,
-          },
-        }),
-      ),
-      fvae.query(
-        "getCandidateByIdForCandidateGuard",
-        graphQLResolver({
-          candidate_getCandidateById: {
-            ...candidacy.candidate,
-          },
-        }),
-      ),
-      fvae.query(
-        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
-        graphQLResolver({
-          candidate_getCandidateById: {
-            candidacies: [candidacy],
-          },
-        }),
-      ),
+      ...createCandidaciesGuardsHandlers({
+        candidate: candidacy.candidate,
+        candidacies: [candidacy],
+        activeFeaturesForConnectedUser,
+      }),
       fvae.query(
         "getCandidacyByIdForCandidacyGuard",
         graphQLResolver(candidacyInput),
@@ -83,16 +66,6 @@ export const dossierDeValidationHandlers = ({
       fvae.query(
         "getCandidacyByIdForDossierDeValidationPage",
         graphQLResolver(candidacyInput),
-      ),
-      fvae.mutation(
-        "candidate_loginWithToken",
-        graphQLResolver({ candidate_loginWithToken: null }),
-      ),
-      fvae.query(
-        "activeFeaturesForConnectedUser",
-        graphQLResolver({
-          activeFeaturesForConnectedUser,
-        }),
       ),
       fvae.mutation(
         "updateReadyForJuryEstimatedAtForDossierDeValidationPage",
