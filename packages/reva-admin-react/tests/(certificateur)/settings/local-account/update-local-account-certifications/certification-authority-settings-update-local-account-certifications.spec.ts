@@ -15,6 +15,7 @@ const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
+const STRUCTURE_ID = "structure-1";
 const localAccountForCertifications = graphQLResolver({
   certification_authority_getCertificationAuthorityLocalAccount: {
     id: "ca2905e6-7888-4fb8-b4cc-85a8b855d1fb",
@@ -25,24 +26,37 @@ const localAccountForCertifications = graphQLResolver({
     },
     certificationAuthority: {
       label: "Certification Authority",
-      certifications: [
-        {
-          id: "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
-          label: "CQP Animateur d'équipe autonome de production industrielle",
-          codeRncp: "37310",
+      certificationAuthorityStructures: [{ id: STRUCTURE_ID }],
+      paginatedCertifications: {
+        rows: [
+          {
+            id: "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
+            label: "CQP Animateur d'équipe autonome de production industrielle",
+            codeRncp: "37310",
+            visible: true,
+            certificationAuthorityStructure: { id: STRUCTURE_ID },
+          },
+          {
+            id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
+            label:
+              "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
+            codeRncp: "49872",
+            visible: true,
+            certificationAuthorityStructure: { id: STRUCTURE_ID },
+          },
+          {
+            id: "032036b5-528e-4d06-bbe0-a7d180602bc1",
+            label: "Titre professionnel Cariste d'entrepôt - CE ",
+            codeRncp: "13247",
+            visible: true,
+            certificationAuthorityStructure: { id: STRUCTURE_ID },
+          },
+        ],
+        info: {
+          totalRows: 3,
+          totalPages: 1,
         },
-        {
-          id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
-          label:
-            "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
-          codeRncp: "49872",
-        },
-        {
-          id: "032036b5-528e-4d06-bbe0-a7d180602bc1",
-          label: "Titre professionnel Cariste d'entrepôt - CE ",
-          codeRncp: "13247",
-        },
-      ],
+      },
     },
     certifications: [{ id: "0236bf82-e85d-4e88-927a-c93bb6c44efb" }],
   },
@@ -115,7 +129,7 @@ test.describe("update local account certifications page", () => {
     ).toBeVisible();
   });
 
-  test("when i access the update local account certifications page - display the correct form default values", async ({
+  test("when i access the update local account certifications page - display the correct default selection state", async ({
     page,
   }) => {
     await login({ role: "certificateur", page });
@@ -136,20 +150,20 @@ test.describe("update local account certifications page", () => {
     await expect(
       pageRoot
         .getByTestId(
-          "tree-select-item-37310 - CQP Animateur d'équipe autonome de production industrielle",
+          "multi-select-list-item-00fa1e5b-1535-4cb6-b542-0dad27dd6341",
         )
-        .locator("input"),
-    ).not.toBeChecked();
+        .getByRole("button", { name: "Ajouter" }),
+    ).toBeVisible();
     await expect(
       pageRoot
         .getByTestId(
-          "tree-select-item-49872 - Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
+          "multi-select-list-item-0236bf82-e85d-4e88-927a-c93bb6c44efb",
         )
-        .locator("input"),
-    ).toBeChecked();
+        .getByRole("button", { name: "Retirer" }),
+    ).toBeVisible();
   });
 
-  test("when i access the update local account certifications page - do not let me click on the submit button if there is no changes", async ({
+  test("when i access the update local account certifications page - display the certifications list with result count", async ({
     page,
   }) => {
     await login({ role: "certificateur", page });
@@ -169,11 +183,11 @@ test.describe("update local account certifications page", () => {
         .getByTestId(
           "update-certification-authority-local-account-certifications-page",
         )
-        .locator("button[type='submit']"),
-    ).toBeDisabled();
+        .getByText("Résultat : 3 sur 3 élément(s)"),
+    ).toBeVisible();
   });
 
-  test("when i access the update local account certifications page - let me update the certifications and submit the form", async ({
+  test("when i access the update local account certifications page - let me add a certification and see the mutation called", async ({
     page,
   }) => {
     await login({ role: "certificateur", page });
@@ -191,23 +205,21 @@ test.describe("update local account certifications page", () => {
     const pageRoot = page.getByTestId(
       "update-certification-authority-local-account-certifications-page",
     );
-    await pageRoot
-      .getByTestId(
-        "tree-select-item-37310 - CQP Animateur d'équipe autonome de production industrielle",
-      )
-      .locator("input")
-      .check({ force: true });
-
     const mutationPromise = waitGraphQL(
       page,
       "updateCertificationAuthorityLocalAccountCertificationsForUpdateLocalAccountCertificationsPage",
     );
-    await pageRoot.locator("button[type='submit']").click();
+    await pageRoot
+      .getByTestId(
+        "multi-select-list-item-00fa1e5b-1535-4cb6-b542-0dad27dd6341",
+      )
+      .getByRole("button", { name: "Ajouter" })
+      .click();
     await mutationPromise;
 
     await expect(page).toHaveURL(
       new RegExp(
-        `/certification-authorities/settings/local-accounts/${LOCAL_ACCOUNT_ID}/`,
+        `/certification-authorities/settings/local-accounts/${LOCAL_ACCOUNT_ID}/certifications`,
       ),
     );
   });

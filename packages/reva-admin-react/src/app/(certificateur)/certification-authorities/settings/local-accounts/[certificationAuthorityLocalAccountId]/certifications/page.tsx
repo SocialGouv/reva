@@ -1,14 +1,13 @@
 "use client";
 
+import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
 
-import { CertificationsForm } from "@/components/certifications-form/CertificationsForm";
-import { CertificationsFormData } from "@/components/certifications-form/CertificationsForm.hook";
 import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
+import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useUpdateLocalAccountCertificationsPage } from "./updateLocalAccountCertificationsPage.hook";
 
@@ -17,44 +16,61 @@ export default function InterventionAreaPage() {
   const { certificationAuthorityLocalAccountId } = useParams<{
     certificationAuthorityLocalAccountId: string;
   }>();
+  const searchParams = useSearchParams();
+  const searchParamsPage = searchParams.get("page");
+  const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
+  const onlyShowAddedItems = searchParams.get("onlyShowAddedItems") === "true";
+  const searchFilter = searchParams.get("searchFilter") ?? "";
   const {
     certificationAuthorityLocalAccount,
     isLoading,
-    certificationsFromCertificationAuthority,
+    certificationsPage,
     certificationsFromLocalAccount,
     updateCertificationAuthorityLocalAccountCertifications,
   } = useUpdateLocalAccountCertificationsPage({
     certificationAuthorityLocalAccountId,
+    page: currentPage,
+    certificationsSearchFilter: searchFilter,
+    onlyShowAddedCertifications: onlyShowAddedItems,
   });
 
-  const certifications = useMemo(
-    () =>
-      certificationsFromCertificationAuthority.map((certification) => ({
-        id: certification.id,
-        label: `${certification.codeRncp} - ${certification.label}`,
-        selected: certificationsFromLocalAccount.some(
-          (localCertification) => localCertification.id === certification.id,
-        ),
-      })),
-    [certificationsFromCertificationAuthority, certificationsFromLocalAccount],
-  );
-
-  if (isLoading) {
+  if (isLoading || !certificationsPage) {
     return null;
   }
 
-  const handleFormSubmit = async (data: CertificationsFormData) => {
+  const handleEmptyStateShowAllItemsButtonClick = ({
+    currentQueryParams,
+  }: {
+    currentQueryParams: URLSearchParams;
+  }) => {
+    currentQueryParams.delete("page");
+    currentQueryParams.delete("onlyShowAddedItems");
+    currentQueryParams.delete("searchFilter");
+    router.push(
+      `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/certifications?${currentQueryParams.toString()}`,
+    );
+  };
+
+  const handleCertificationSelectionChange = async ({
+    itemId,
+    selected,
+  }: {
+    itemId: string;
+    selected: boolean;
+  }) => {
     try {
       await updateCertificationAuthorityLocalAccountCertifications.mutateAsync(
-        data.certifications.filter((c) => c.selected).map((c) => c.id),
+        selected
+          ? [
+              ...(certificationsFromLocalAccount?.map((c) => c.id) || []),
+              itemId,
+            ]
+          : certificationsFromLocalAccount
+              ?.filter((c) => c.id !== itemId)
+              .map((c) => c.id) || [],
       );
-      successToast("modification enregistrées");
-      router.push(
-        `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
-      );
-    } catch (error) {
-      console.log(error);
-      graphqlErrorToast(error);
+    } catch (e) {
+      graphqlErrorToast(e);
     }
   };
 
@@ -85,12 +101,43 @@ export default function InterventionAreaPage() {
         choisir une ou plusieurs certifications. Vous pourrez ajuster cette
         sélection en tout temps.
       </p>
-      <CertificationsForm
-        fullHeight
-        fullWidth
-        certifications={certifications}
-        handleFormSubmit={handleFormSubmit}
-        backUrl={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`}
+      <MultiSelectList
+        pageItems={certificationsPage?.rows.map((c) => ({
+          id: c.id,
+          title: c.label,
+          detail: `RNCP ${c.codeRncp}`,
+          selected: certificationsFromLocalAccount.some(
+            (localCertification) => localCertification.id === c.id,
+          ),
+          detailsPageUrl: `/certification-details/${c.id}`,
+          desc: certificationAuthorityLocalAccount?.certificationAuthority.certificationAuthorityStructures.some(
+            (structure) =>
+              structure.id === c.certificationAuthorityStructure?.id,
+          )
+            ? ""
+            : "Certification rattachée à une autre structure",
+          start: c.visible !== undefined && (
+            <>
+              {c.visible ? (
+                <Badge className="mb-2" noIcon severity="success">
+                  Visible
+                </Badge>
+              ) : (
+                <Badge className="mb-2" noIcon severity="error">
+                  Invisible
+                </Badge>
+              )}
+            </>
+          ),
+        }))}
+        paginationInfo={{
+          totalItems: certificationsPage?.info.totalRows || 0,
+          totalPages: certificationsPage?.info.totalPages || 1,
+        }}
+        onSelectionChange={handleCertificationSelectionChange}
+        onEmptyStateShowAllItemsButtonClick={
+          handleEmptyStateShowAllItemsButtonClick
+        }
       />
     </div>
   );
