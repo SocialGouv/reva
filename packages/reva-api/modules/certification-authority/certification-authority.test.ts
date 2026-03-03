@@ -7,6 +7,8 @@ import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper"
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
 import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
+import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
+import { createParcoursCertificationHelper } from "@/test/helpers/entities/create-parcours-certification-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
@@ -60,6 +62,48 @@ async function graphqlUpdateCertificationAuthority({
     certificationAuthorityId,
     certificationAuthorityData: data,
   });
+}
+
+async function graphqlGetParcoursForCertificationAndCertificationAuthority({
+  certificationId,
+  certificationAuthorityId,
+  role,
+  account,
+}: {
+  certificationId: string;
+  certificationAuthorityId: string;
+  role: KeyCloakUserRole;
+  account: { keycloakId: string };
+}) {
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role,
+        keycloakId: account.keycloakId,
+      }),
+    },
+  });
+  const getParcoursForCertificationAndCertificationAuthority = graphql(`
+    query getParcoursForCertificationAndCertificationAuthority(
+      $certificationId: ID!
+      $certificationAuthorityId: ID!
+    ) {
+      certification_authority_getParcoursForCertificationAndCertificationAuthority(
+        certificationId: $certificationId
+        certificationAuthorityId: $certificationAuthorityId
+      ) {
+        id
+        label
+      }
+    }
+  `);
+  return graphqlClient.request(
+    getParcoursForCertificationAndCertificationAuthority,
+    {
+      certificationId,
+      certificationAuthorityId,
+    },
+  );
 }
 
 test("should update a certification authority's contact info and leave the account info as is as a certificaton authority manager", async () => {
@@ -329,4 +373,62 @@ test("should create a certification authority", async () => {
   expect(
     obj.data.certification_authority_createCertificationAuthority.id,
   ).not.toBeNull();
+});
+
+describe("certification authority certification parcours", () => {
+  test("should return the parcours certifications for a certification and certification authority", async () => {
+    const certification = await createCertificationHelper();
+    const parcoursCertification = await createParcoursCertificationHelper({
+      certificationId: certification.id,
+    });
+    const certificationAuthority = await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: {
+          certificationId: certification.id,
+          certificationAuthorityOnCertificationOnParcoursCertifications: {
+            create: {
+              parcoursCertificationId: parcoursCertification.id,
+            },
+          },
+        },
+      },
+    });
+    const resp =
+      await graphqlGetParcoursForCertificationAndCertificationAuthority({
+        certificationId: certification.id,
+        certificationAuthorityId: certificationAuthority.id,
+        role: "manage_certification_authority_local_account",
+        account: {
+          keycloakId: certificationAuthority.Account[0].keycloakId,
+        },
+      });
+    expect(
+      resp.certification_authority_getParcoursForCertificationAndCertificationAuthority,
+    ).toEqual([
+      { id: parcoursCertification.id, label: parcoursCertification.label },
+    ]);
+  });
+
+  test("should return an empty array of parcours certifications for a certification and certification authority", async () => {
+    const certification = await createCertificationHelper();
+    const certificationAuthority = await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: {
+          certificationId: certification.id,
+        },
+      },
+    });
+    const resp =
+      await graphqlGetParcoursForCertificationAndCertificationAuthority({
+        certificationId: certification.id,
+        certificationAuthorityId: certificationAuthority.id,
+        role: "manage_certification_authority_local_account",
+        account: {
+          keycloakId: certificationAuthority.Account[0].keycloakId,
+        },
+      });
+    expect(
+      resp.certification_authority_getParcoursForCertificationAndCertificationAuthority,
+    ).toEqual([]);
+  });
 });

@@ -50,6 +50,7 @@ import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartme
 import { getLastProfessionalCguCertificateur } from "./features/getLastProfessionalCguCertificateur";
 import { getMetabaseIframeUrl } from "./features/getMetabaseIframeUrl";
 import { getPaginatedCertifications } from "./features/getPaginatedCertifications";
+import { getParcoursForCertificationAndCertificationAuthority } from "./features/getParcoursForCertificationAndCertificationAuthority";
 import { searchCertificationAuthoritiesAndLocalAccounts } from "./features/searchCertificationAuthoritiesAndLocalAccounts";
 import { transferCandidacyToAnotherCertificationAuthority } from "./features/transferCandidacyToAnotherCertificationAuthority";
 import { transferCandidacyToCertificationAuthorityLocalAccount } from "./features/transferCandidacyToCertificationAuthorityLocalAccount";
@@ -548,6 +549,15 @@ const unsafeResolvers = {
       getCertificationAuthorityStructureById({
         certificationAuthorityStructureId: id,
       }),
+
+    certification_authority_getParcoursForCertificationAndCertificationAuthority:
+      (
+        _parent: unknown,
+        params: {
+          certificationId: string;
+          certificationAuthorityId: string;
+        },
+      ) => getParcoursForCertificationAndCertificationAuthority(params),
   },
 };
 

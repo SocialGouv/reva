@@ -207,6 +207,11 @@ type Query {
   certification_authority_getCertificationAuthorityStructure(
     id: ID!
   ): CertificationAuthorityStructure
+
+  certification_authority_getParcoursForCertificationAndCertificationAuthority(
+    certificationId: ID!
+    certificationAuthorityId: ID!
+  ): [ParcoursCertification!]!
 }
 
 type Mutation {
