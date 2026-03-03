@@ -1,9 +1,6 @@
 import { expect, test } from "next/experimental/testmode/playwright/msw";
 
-import {
-  CandidacyEntity,
-  createCandidacyEntity,
-} from "@tests/helpers/entities/create-candidacy.entity";
+import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
 import {
@@ -13,18 +10,12 @@ import {
 
 const candidate = createCandidateEntity();
 
-function createCandidaciesHandlers(args?: { candidacies?: CandidacyEntity[] }) {
-  return [
-    ...createCandidaciesGuardsHandlers({
-      candidate,
-      candidacies: args?.candidacies ?? [],
-    }),
-  ];
-}
-
 test.describe("candidacies page with no candidacies", () => {
   test.use({
-    mswHandlers: [createCandidaciesHandlers(), { scope: "test" }],
+    mswHandlers: [
+      createCandidaciesGuardsHandlers({ candidate }),
+      { scope: "test" },
+    ],
   });
 
   test("when i access the page it shows the correct title and empty state when there are no candidacies", async ({
@@ -71,7 +62,10 @@ test.describe("candidacies page with candidacies", () => {
 
   test.use({
     mswHandlers: [
-      createCandidaciesHandlers({ candidacies: [candidacy1, candidacy2] }),
+      createCandidaciesGuardsHandlers({
+        candidate,
+        candidacies: [candidacy1, candidacy2],
+      }),
       { scope: "test" },
     ],
   });
