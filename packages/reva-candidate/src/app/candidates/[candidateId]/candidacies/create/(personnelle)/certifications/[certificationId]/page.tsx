@@ -59,6 +59,7 @@ const GET_CERTIFICATION = graphql(`
       }
       certificationAuthorityStructure {
         label
+        hasReducedRequirements
       }
     }
   }

@@ -61,98 +61,106 @@ export const CertificationPage = async ({
     }[];
     certificationAuthorityStructure?: {
       label: string;
+      hasReducedRequirements: boolean;
     } | null;
   };
-}) => (
-  <>
-    <div className="flex flex-col gap-4">
-      <h1 className="mt-4 mb-0">{certification?.label}</h1>
-      <p className="mb-0 text-xl">
-        {certification?.certificationAuthorityStructure?.label}
-      </p>
-      <div className="flex flex-row items-center gap-4">
-        <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
+}) => {
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
 
-        <Tag small>
-          {certification?.isAapAvailable
-            ? "VAE en autonomie ou accompagnée"
-            : "VAE en autonomie"}
-        </Tag>
-      </div>
-      <div className="flex flex-col md:flex-row gap-6 mt-8">
-        <Tile
-          title={`Niveau ${certification.level}`}
-          classes={{ content: "p-0" }}
-          className="min-w-[282px] h-auto"
-          small
-          orientation="horizontal"
-          imageSvg
-          imageUrl="/candidat/images/pictograms/information.svg"
-          imageAlt="icône information"
+  const tabs = [
+    {
+      label: "Métier",
+      isDefault: true,
+      content: (
+        <MetierTab
+          codeRncp={certification.codeRncp}
+          rncpObjectifsContexte={certification.rncpObjectifsContexte}
         />
-        {certification.typeDiplome && (
+      ),
+    },
+    {
+      label: "Blocs de compétences",
+      content: (
+        <BlocsDeCompetenceTab competenceBlocs={certification.competenceBlocs} />
+      ),
+    },
+    ...(hasReducedRequirements
+      ? []
+      : [
+          {
+            label: "Prérequis",
+            content: (
+              <PreRequisitesTab prerequisites={certification.prerequisites} />
+            ),
+          },
+          {
+            label: "Jury",
+            content: (
+              <JuryTab
+                juryTypeMiseEnSituationProfessionnelle={
+                  certification.juryTypeMiseEnSituationProfessionnelle
+                }
+                juryTypeSoutenanceOrale={certification.juryTypeSoutenanceOrale}
+                juryEstimatedCost={certification.juryEstimatedCost}
+                juryPlace={certification.juryPlace}
+              />
+            ),
+          },
+          {
+            label: "Documentation",
+            content: (
+              <DocumentationTab additionalInfo={certification.additionalInfo} />
+            ),
+          },
+        ]),
+  ];
+
+  return (
+    <>
+      <div className="flex flex-col gap-4">
+        <h1 className="mt-4 mb-0">{certification?.label}</h1>
+        <p className="mb-0 text-xl">
+          {certification?.certificationAuthorityStructure?.label}
+        </p>
+        <div className="flex flex-row items-center gap-4">
+          <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
+
+          <Tag small>
+            {certification?.isAapAvailable
+              ? "VAE en autonomie ou accompagnée"
+              : "VAE en autonomie"}
+          </Tag>
+        </div>
+        <div className="flex flex-col md:flex-row gap-6 mt-8">
           <Tile
-            title={certification.typeDiplome}
+            title={`Niveau ${certification.level}`}
             classes={{ content: "p-0" }}
             className="min-w-[282px] h-auto"
             small
             orientation="horizontal"
             imageSvg
-            imageUrl="/candidat/images/pictograms/city-hall.svg"
-            imageAlt="icône mairie"
+            imageUrl="/candidat/images/pictograms/information.svg"
+            imageAlt="icône information"
           />
-        )}
+          {certification.typeDiplome && (
+            <Tile
+              title={certification.typeDiplome}
+              classes={{ content: "p-0" }}
+              className="min-w-[282px] h-auto"
+              small
+              orientation="horizontal"
+              imageSvg
+              imageUrl="/candidat/images/pictograms/city-hall.svg"
+              imageAlt="icône mairie"
+            />
+          )}
+        </div>
       </div>
-    </div>
-    <Tabs
-      className="mt-12"
-      tabs={[
-        {
-          label: "Métier",
-          isDefault: true,
-          content: (
-            <MetierTab
-              codeRncp={certification.codeRncp}
-              rncpObjectifsContexte={certification.rncpObjectifsContexte}
-            />
-          ),
-        },
-        {
-          label: "Blocs de compétences",
-          content: (
-            <BlocsDeCompetenceTab
-              competenceBlocs={certification.competenceBlocs}
-            />
-          ),
-        },
-        {
-          label: "Prérequis",
-          content: (
-            <PreRequisitesTab prerequisites={certification.prerequisites} />
-          ),
-        },
-        {
-          label: "Jury",
-          content: (
-            <JuryTab
-              juryTypeMiseEnSituationProfessionnelle={
-                certification.juryTypeMiseEnSituationProfessionnelle
-              }
-              juryTypeSoutenanceOrale={certification.juryTypeSoutenanceOrale}
-              juryEstimatedCost={certification.juryEstimatedCost}
-              juryPlace={certification.juryPlace}
-            />
-          ),
-        },
-        {
-          label: "Documentation",
-          content: (
-            <DocumentationTab additionalInfo={certification.additionalInfo} />
-          ),
-        },
-      ]}
-    />
-    <hr className="mt-12 mb-8 pb-1" />
-    <UsefulResources />
-  </>
-);
+      <Tabs className="mt-12" tabs={tabs} />
+      <hr className="mt-12 mb-8 pb-1" />
+      <UsefulResources />
+    </>
+  );
+};

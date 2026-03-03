@@ -1,0 +1,96 @@
+import { expect, type Page } from "next/experimental/testmode/playwright/msw";
+
+import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+
+const certificationTabLabels = [
+  "Métier",
+  "Blocs de compétences",
+  "Prérequis",
+  "Jury",
+  "Documentation",
+] as const;
+
+type CertificationTabLabel = (typeof certificationTabLabels)[number];
+type ReducedRequirementsState = true | false | null;
+type CertificationTabVisibility = Record<CertificationTabLabel, boolean>;
+
+const fullCertificationTabVisibility: CertificationTabVisibility = {
+  Métier: true,
+  "Blocs de compétences": true,
+  Prérequis: true,
+  Jury: true,
+  Documentation: true,
+};
+
+const reducedCertificationTabVisibility: CertificationTabVisibility = {
+  Métier: true,
+  "Blocs de compétences": true,
+  Prérequis: false,
+  Jury: false,
+  Documentation: false,
+};
+
+export const certificationTabsVisibilityScenarios = [
+  {
+    name: "hasReducedRequirements=true",
+    certificationLabel: "Certification du SUP",
+    structureLabel: "Structure SUP",
+    reducedRequirementsState: true,
+    expectedTabVisibility: reducedCertificationTabVisibility,
+  },
+  {
+    name: "hasReducedRequirements=false",
+    certificationLabel: "Certification standard",
+    structureLabel: "Structure classique",
+    reducedRequirementsState: false,
+    expectedTabVisibility: fullCertificationTabVisibility,
+  },
+  {
+    name: "certificationAuthorityStructure=null",
+    certificationLabel: "Certification sans structure",
+    structureLabel: null,
+    reducedRequirementsState: null,
+    expectedTabVisibility: fullCertificationTabVisibility,
+  },
+];
+
+export function createCertificationForReducedRequirementsScenario({
+  certificationLabel,
+  structureLabel,
+  reducedRequirementsState,
+  idPrefix,
+}: {
+  certificationLabel: string;
+  structureLabel: string | null;
+  reducedRequirementsState: ReducedRequirementsState;
+  idPrefix: string;
+}) {
+  return createCertificationEntity({
+    id: `${idPrefix}-${certificationLabel}`,
+    label: certificationLabel,
+    codeRncp: "RNCP9999",
+    certificationAuthorityStructure:
+      structureLabel === null
+        ? null
+        : {
+            id: "structure-1",
+            label: structureLabel,
+            hasReducedRequirements: reducedRequirementsState ?? false,
+            certificationAuthorities: [],
+            certifications: [],
+            cgu: { isLatestVersion: true },
+            cguAcceptanceRequired: false,
+          },
+  });
+}
+
+export async function assertCertificationTabVisibility(
+  page: Page,
+  expectedTabVisibility: CertificationTabVisibility,
+) {
+  for (const tabLabel of certificationTabLabels) {
+    await expect(page.getByRole("tab", { name: tabLabel })).toHaveCount(
+      expectedTabVisibility[tabLabel] ? 1 : 0,
+    );
+  }
+}
