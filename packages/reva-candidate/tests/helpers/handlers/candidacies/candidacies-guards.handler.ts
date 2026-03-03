@@ -58,6 +58,26 @@ export function createCandidaciesGuardsHandlers({
   ];
 }
 
+export function createCandidacyGuardsAndDashboardHandlers(
+  candidacy: CandidacyEntity | null,
+) {
+  const candidacyInput = {
+    getCandidacyById: candidacy,
+  };
+
+  return [
+    fvae.query(
+      "getCandidacyByIdForCandidacyGuard",
+      graphQLResolver(candidacyInput),
+    ),
+    fvae.query(
+      "getCandidacyByIdWithCandidate",
+      graphQLResolver(candidacyInput),
+    ),
+    fvae.query("getCandidacyByIdForDashboard", graphQLResolver(candidacyInput)),
+  ];
+}
+
 export async function loginAndWaitForCandidaciesInitialLoad(page: Page) {
   await login(page);
   await Promise.all([

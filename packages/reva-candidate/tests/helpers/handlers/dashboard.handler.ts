@@ -1,9 +1,11 @@
-import { graphql, type Page } from "next/experimental/testmode/playwright/msw";
+import { type Page } from "next/experimental/testmode/playwright/msw";
 
-import { graphQLResolver } from "../network/msw";
 import { waitGraphQL } from "../network/requests";
 
-import { createCandidaciesGuardsHandlers } from "./candidacies/candidacies-guards.handler";
+import {
+  createCandidaciesGuardsHandlers,
+  createCandidacyGuardsAndDashboardHandlers,
+} from "./candidacies/candidacies-guards.handler";
 
 import type { CandidacyEntity } from "../entities/create-candidacy.entity";
 
@@ -31,12 +33,6 @@ export const dashboardHandlers = ({
   candidacy,
   activeFeaturesForConnectedUser = [],
 }: DashboardHandlersOptions) => {
-  const fvae = graphql.link("https://reva-api/api/graphql");
-
-  const candidacyInput = {
-    getCandidacyById: candidacy,
-  };
-
   return {
     handlers: [
       ...createCandidaciesGuardsHandlers({
@@ -44,18 +40,7 @@ export const dashboardHandlers = ({
         candidacies: [candidacy],
         activeFeaturesForConnectedUser,
       }),
-      fvae.query(
-        "getCandidacyByIdForCandidacyGuard",
-        graphQLResolver(candidacyInput),
-      ),
-      fvae.query(
-        "getCandidacyByIdWithCandidate",
-        graphQLResolver(candidacyInput),
-      ),
-      fvae.query(
-        "getCandidacyByIdForDashboard",
-        graphQLResolver(candidacyInput),
-      ),
+      ...createCandidacyGuardsAndDashboardHandlers(candidacy),
     ],
     dashboardWait,
   };

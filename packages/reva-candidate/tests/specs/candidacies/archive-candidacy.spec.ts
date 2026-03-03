@@ -11,6 +11,7 @@ import {
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
 import {
+  createCandidacyGuardsAndDashboardHandlers,
   createCandidaciesGuardsHandlers,
   loginAndWaitForCandidaciesInitialLoad,
 } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
@@ -26,18 +27,7 @@ function createCandidaciesHandlers(args?: { candidacy: CandidacyEntity }) {
       candidate,
       candidacies: args?.candidacy ? [args.candidacy] : [],
     }),
-    fvae.query(
-      "getCandidacyByIdForCandidacyGuard",
-      graphQLResolver({ getCandidacyById: args?.candidacy ?? null }),
-    ),
-    fvae.query(
-      "getCandidacyByIdWithCandidate",
-      graphQLResolver({ getCandidacyById: args?.candidacy ?? null }),
-    ),
-    fvae.query(
-      "getCandidacyByIdForDashboard",
-      graphQLResolver({ getCandidacyById: args?.candidacy ?? null }),
-    ),
+    ...createCandidacyGuardsAndDashboardHandlers(args?.candidacy ?? null),
     fvae.mutation(
       "archiveCandidacyById",
       graphQLResolver({

@@ -8,6 +8,7 @@ import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
 import {
+  createCandidacyGuardsAndDashboardHandlers,
   createCandidaciesGuardsHandlers,
   loginAndWaitForCandidaciesInitialLoad,
 } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
@@ -70,18 +71,7 @@ function createCandidaciesHandlers() {
         },
       }),
     ),
-    fvae.query(
-      "getCandidacyByIdForCandidacyGuard",
-      graphQLResolver({ getCandidacyById: candidacy }),
-    ),
-    fvae.query(
-      "getCandidacyByIdWithCandidate",
-      graphQLResolver({ getCandidacyById: candidacy }),
-    ),
-    fvae.query(
-      "getCandidacyByIdForDashboard",
-      graphQLResolver({ getCandidacyById: candidacy }),
-    ),
+    ...createCandidacyGuardsAndDashboardHandlers(candidacy),
   ];
 }
 

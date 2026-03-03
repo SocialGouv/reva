@@ -4,7 +4,10 @@ import readyForJuryMutation from "@tests/fixtures/candidate/dossier-de-validatio
 import { graphQLResolver } from "@tests/helpers/network/msw";
 import { waitGraphQL } from "@tests/helpers/network/requests";
 
-import { createCandidaciesGuardsHandlers } from "../candidacies/candidacies-guards.handler";
+import {
+  createCandidaciesGuardsHandlers,
+  createCandidacyGuardsAndDashboardHandlers,
+} from "../candidacies/candidacies-guards.handler";
 
 import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 
@@ -51,18 +54,7 @@ export const dossierDeValidationHandlers = ({
         candidacies: [candidacy],
         activeFeaturesForConnectedUser,
       }),
-      fvae.query(
-        "getCandidacyByIdForCandidacyGuard",
-        graphQLResolver(candidacyInput),
-      ),
-      fvae.query(
-        "getCandidacyByIdWithCandidate",
-        graphQLResolver(candidacyInput),
-      ),
-      fvae.query(
-        "getCandidacyByIdForDashboard",
-        graphQLResolver(candidacyInput),
-      ),
+      ...createCandidacyGuardsAndDashboardHandlers(candidacy),
       fvae.query(
         "getCandidacyByIdForDossierDeValidationPage",
         graphQLResolver(candidacyInput),
