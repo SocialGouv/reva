@@ -93,6 +93,7 @@ const unsafeResolvers = {
         limit?: number;
         offset?: number;
         searchText?: string;
+        localAccountId?: string;
       },
     ) =>
       getPaginatedCertifications({

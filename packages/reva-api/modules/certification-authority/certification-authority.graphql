@@ -18,6 +18,7 @@ type CertificationAuthority {
     limit: Int
     offset: Int
     searchText: String
+    localAccountId: ID
   ): CertificationPaginated
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
   certificationAuthorityStructures: [CertificationAuthorityStructure!]!
