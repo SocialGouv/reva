@@ -4,7 +4,7 @@ import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -51,7 +51,7 @@ export const CivilInformationForm = ({
 
   const {
     register,
-    watch,
+    control,
     setValue,
     reset,
     formState: { errors, isDirty, isSubmitting },
@@ -75,7 +75,7 @@ export const CivilInformationForm = ({
     },
   });
 
-  const country = watch("country");
+  const country = useWatch({ control, name: "country" });
   const [disabledDepartment, setDisabledDepartment] = useState(
     country !== "France",
   );

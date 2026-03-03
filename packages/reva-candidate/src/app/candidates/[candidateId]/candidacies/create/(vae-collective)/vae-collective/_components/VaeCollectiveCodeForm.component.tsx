@@ -5,7 +5,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
@@ -40,7 +40,7 @@ export function VaeCollectiveCodeForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
     setError,
     clearErrors,
@@ -52,7 +52,7 @@ export function VaeCollectiveCodeForm() {
     reValidateMode: "onSubmit",
   });
 
-  const codeValue = watch("code");
+  const codeValue = useWatch({ control, name: "code" });
 
   const { refetch: validateCode, isLoading } = useQuery({
     queryKey: ["validateVaeCollectiveCode", codeValue],

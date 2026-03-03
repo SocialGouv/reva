@@ -1,16 +1,14 @@
-import { graphql } from "next/experimental/testmode/playwright/msw";
+import { HttpResponse } from "msw";
 
+import type { GraphQLResponseResolver } from "msw";
 import type { JsonObject } from "type-fest";
-
-type GraphQLLink = ReturnType<typeof graphql.link>;
-type GraphQLResolver = Parameters<GraphQLLink["query"]>[1];
 
 type DataArg = JsonObject | { data: JsonObject };
 
-export function graphQLResolver(payload: DataArg): GraphQLResolver {
-  const body = payload.data
-    ? (payload.data as JsonObject)
-    : (payload as JsonObject);
-
-  return (_, res, ctx) => res(ctx.data(body));
+export function graphQLResolver(payload: DataArg): GraphQLResponseResolver {
+  const body = (payload.data ? payload.data : payload) as Record<
+    string,
+    unknown
+  >;
+  return () => HttpResponse.json({ data: body });
 }

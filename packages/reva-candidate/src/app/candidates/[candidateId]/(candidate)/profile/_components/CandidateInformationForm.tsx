@@ -4,7 +4,7 @@ import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
@@ -58,7 +58,7 @@ const CandidateInformationForm = ({
 
   const {
     register,
-    watch,
+    control,
     setValue,
     reset,
     formState: { errors, isDirty, isSubmitting },
@@ -88,7 +88,7 @@ const CandidateInformationForm = ({
     },
   });
 
-  const country = watch("country");
+  const country = useWatch({ control, name: "country" });
   const [disabledDepartment, setDisabledDepartment] = useState(
     country !== "France",
   );

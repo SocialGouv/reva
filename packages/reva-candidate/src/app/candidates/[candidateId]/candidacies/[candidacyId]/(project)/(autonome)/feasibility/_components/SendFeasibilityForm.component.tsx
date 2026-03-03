@@ -2,11 +2,10 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isBefore } from "date-fns";
-import { format } from "date-fns";
+import { format, isBefore } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import z from "zod";
 
 import { DownloadTile } from "@/components/download-tile/DownloadTile";
@@ -75,7 +74,6 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     handleSubmit,
     reset,
     control,
-    watch,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<FeasibilityFormData>({
     resolver: zodResolver(schema),
@@ -104,14 +102,17 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     },
   });
 
-  const certificationAuthorityId = watch("certificationAuthorityId");
+  const certificationAuthorityId = useWatch({
+    control,
+    name: "certificationAuthorityId",
+  });
 
   const { fields: requirements } = useFieldArray({
     control,
     name: "requirements",
   });
 
-  const requirementsFields = watch("requirements");
+  const requirementsFields = useWatch({ control, name: "requirements" });
   const areRequirementsChecked = requirementsFields.every(
     (requirement) => requirement.checked,
   );

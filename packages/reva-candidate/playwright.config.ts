@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "next/experimental/testmode/playwright";
+import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Read environment variables from file.
@@ -79,9 +79,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run dev -- -p 4004",
+    command: "npm run dev -- -p 4004 --webpack",
     url: "http://localhost:4004/candidat/",
-    reuseExistingServer: false,
+    reuseExistingServer: !process.env.CI,
     env: {
       APP_ENV: "test",
       NEXT_PUBLIC_APP_CANDIDAT_GRAPHQL_API_URL: "https://reva-api/api/graphql",
