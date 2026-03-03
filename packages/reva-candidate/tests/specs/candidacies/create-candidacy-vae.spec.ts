@@ -2,16 +2,16 @@ import {
   expect,
   graphql,
   test,
-  type Page,
 } from "next/experimental/testmode/playwright/msw";
 
-import { login } from "@tests/helpers/auth/auth";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
-import { createCandidaciesGuardsHandlers } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
+import {
+  createCandidaciesGuardsHandlers,
+  loginAndWaitForCandidaciesInitialLoad,
+} from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
 import { graphQLResolver } from "@tests/helpers/network/msw";
-import { waitGraphQL } from "@tests/helpers/network/requests";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -75,26 +75,13 @@ function createCandidaciesHandlers() {
   ];
 }
 
-async function loginAndWaitForInitialLoad(page: Page) {
-  await login(page);
-  await Promise.all([
-    waitGraphQL(page, "candidate_getCandidateForCandidatesGuard"),
-    waitGraphQL(page, "getCandidateByIdForCandidateGuard"),
-    waitGraphQL(
-      page,
-      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
-    ),
-    waitGraphQL(page, "activeFeaturesForConnectedUser"),
-  ]);
-}
-
 test.describe("create candidacy vae from candidacies page", () => {
   test.use({
     mswHandlers: [createCandidaciesHandlers(), { scope: "test" }],
   });
 
   test("create candidacy", async ({ page }) => {
-    await loginAndWaitForInitialLoad(page);
+    await loginAndWaitForCandidaciesInitialLoad(page);
 
     await page.goto(`candidates/${candidate.id}/candidacies/`);
 

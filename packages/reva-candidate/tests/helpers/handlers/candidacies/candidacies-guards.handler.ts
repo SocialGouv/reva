@@ -1,6 +1,8 @@
-import { graphql } from "next/experimental/testmode/playwright/msw";
+import { graphql, type Page } from "next/experimental/testmode/playwright/msw";
 
+import { login } from "@tests/helpers/auth/auth";
 import { graphQLResolver } from "@tests/helpers/network/msw";
+import { waitGraphQL } from "@tests/helpers/network/requests";
 
 import type { CandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import type { CandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
@@ -54,4 +56,17 @@ export function createCandidaciesGuardsHandlers({
       }),
     ),
   ];
+}
+
+export async function loginAndWaitForCandidaciesInitialLoad(page: Page) {
+  await login(page);
+  await Promise.all([
+    waitGraphQL(page, "candidate_getCandidateForCandidatesGuard"),
+    waitGraphQL(page, "getCandidateByIdForCandidateGuard"),
+    waitGraphQL(
+      page,
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+    ),
+    waitGraphQL(page, "activeFeaturesForConnectedUser"),
+  ]);
 }

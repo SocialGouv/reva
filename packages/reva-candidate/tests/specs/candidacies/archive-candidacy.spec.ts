@@ -2,19 +2,19 @@ import {
   expect,
   graphql,
   test,
-  type Page,
 } from "next/experimental/testmode/playwright/msw";
 
-import { login } from "@tests/helpers/auth/auth";
 import {
   CandidacyEntity,
   createCandidacyEntity,
 } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
-import { createCandidaciesGuardsHandlers } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
+import {
+  createCandidaciesGuardsHandlers,
+  loginAndWaitForCandidaciesInitialLoad,
+} from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
 import { graphQLResolver } from "@tests/helpers/network/msw";
-import { waitGraphQL } from "@tests/helpers/network/requests";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -47,19 +47,6 @@ function createCandidaciesHandlers(args?: { candidacy: CandidacyEntity }) {
   ];
 }
 
-async function loginAndWaitForInitialLoad(page: Page) {
-  await login(page);
-  await Promise.all([
-    waitGraphQL(page, "candidate_getCandidateForCandidatesGuard"),
-    waitGraphQL(page, "getCandidateByIdForCandidateGuard"),
-    waitGraphQL(
-      page,
-      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
-    ),
-    waitGraphQL(page, "activeFeaturesForConnectedUser"),
-  ]);
-}
-
 test.describe("archive candidacy with feasibility file sent", () => {
   const certification = createCertificationEntity({
     label: "Certification 1",
@@ -81,7 +68,7 @@ test.describe("archive candidacy with feasibility file sent", () => {
   test("when i access the page it shows one candidacy card, click on it and redirects to the candidacy page without archive button", async ({
     page,
   }) => {
-    await loginAndWaitForInitialLoad(page);
+    await loginAndWaitForCandidaciesInitialLoad(page);
 
     await page.goto(`candidates/${candidate.id}/candidacies/`);
 
@@ -121,7 +108,7 @@ test.describe("archive candidacy without feasibility file sent", () => {
   test("when i access the page it shows one candidacy card, click on it and redirects to the candidacy page with archive button", async ({
     page,
   }) => {
-    await loginAndWaitForInitialLoad(page);
+    await loginAndWaitForCandidaciesInitialLoad(page);
 
     await page.goto(`candidates/${candidate.id}/candidacies/`);
 
