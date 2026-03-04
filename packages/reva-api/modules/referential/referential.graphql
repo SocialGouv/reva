@@ -23,6 +23,11 @@ enum CertificationJuryFrequency {
   YEARLY
 }
 
+type ParcoursByCertificationAuthority {
+  certificationAuthority: CertificationAuthority!
+  parcours: [ParcoursCertification!]!
+}
+
 type Certification {
   id: ID!
   label: String!
@@ -57,6 +62,7 @@ type Certification {
   isAapAvailable: Boolean!
   juryEstimatedCost: Decimal
   parcours(offset: Int, limit: Int): ParcoursCertificationPage!
+  parcoursByCertificationAuthorities: [ParcoursByCertificationAuthority!]
 }
 
 type ParcoursCertificationPage {
