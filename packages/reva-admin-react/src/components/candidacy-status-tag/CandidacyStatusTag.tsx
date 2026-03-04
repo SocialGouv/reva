@@ -30,6 +30,11 @@ export const CandidacyStatusTag = ({
     jury?.result === "PARTIAL_SUCCESS_PENDING_CONFIRMATION" ||
     jury?.result === "PARTIAL_SUCCESS_OF_FULL_CERTIFICATION";
 
+  const resultIsNotValid = jury?.result === "FAILURE";
+
+  const resultIsNotPresent =
+    jury?.result === "CANDIDATE_EXCUSED" || jury?.result === "CANDIDATE_ABSENT";
+
   switch (true) {
     case status === "DOSSIER_FAISABILITE_ENVOYE":
       return <Tag small>Nouveau dossier de faisabilité</Tag>;
@@ -58,6 +63,10 @@ export const CandidacyStatusTag = ({
       return <Tag small>Réussite partielle</Tag>;
     case resultIsSuccess:
       return <Tag small>Réussite totale</Tag>;
+    case resultIsNotValid:
+      return <Tag small>Non validation</Tag>;
+    case resultIsNotPresent:
+      return <Tag small>Non présentation au jury</Tag>;
     default:
       return null;
   }
