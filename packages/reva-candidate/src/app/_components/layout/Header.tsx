@@ -6,6 +6,8 @@ import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useKeycloakContext } from "@/components/auth/keycloak.context";
 import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 
+import { UserDropdown } from "./UserDropdown";
+
 const NAVIGATION_FORBIDDEN_PATHS = [
   "/end-accompagnement",
   "/candidacy-inactif",
@@ -73,7 +75,7 @@ const getNavigation = ({
 };
 
 export const Header = () => {
-  const { authenticated, logout } = useKeycloakContext();
+  const { authenticated } = useKeycloakContext();
 
   const currentPathname = usePathname();
 
@@ -127,18 +129,7 @@ export const Header = () => {
       }}
       classes={{ operator: "min-w-[9.0625rem] min-h-[90px]" }}
       quickAccessItems={
-        authenticated
-          ? [
-              {
-                buttonProps: {
-                  onClick: logout,
-                  className: "!text-sm !px-3 !py-1 !mb-4 !mx-1",
-                },
-                iconId: "ri-logout-box-r-line",
-                text: "Se déconnecter",
-              },
-            ]
-          : undefined
+        authenticated ? [<UserDropdown key="user-dropdown" />] : undefined
       }
       navigation={navigation}
     />
