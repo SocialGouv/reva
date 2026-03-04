@@ -325,7 +325,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       await page
         .locator('input[name="dossierDeValidationOtherFiles.0"]')
         .locator("..")
-        .getByRole("button", { name: "Supprimer" })
+        .locator("button", { hasText: "Supprimer" })
         .click();
 
       await expect(
@@ -338,7 +338,7 @@ typesAccompagnement.forEach((typeAccompagnement) => {
       await page
         .locator('input[name="dossierDeValidationOtherFiles.0"]')
         .locator("..")
-        .getByRole("button", { name: "Supprimer" })
+        .locator("button", { hasText: "Supprimer" })
         .click();
 
       await expect(
