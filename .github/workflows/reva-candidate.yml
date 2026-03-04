@@ -115,8 +115,8 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
-      - name: Build to retrieve graphql schema from API folder
-        run: npm run build
+      - name: Generate GraphQL schema from API
+        run: npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api
       - name: Run Playwright tests
         run: npm run test
       - uses: actions/upload-artifact@v4
