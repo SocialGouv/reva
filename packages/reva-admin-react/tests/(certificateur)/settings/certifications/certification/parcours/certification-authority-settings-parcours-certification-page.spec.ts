@@ -24,6 +24,19 @@ const createParcoursCertificationHandlers = () => {
           getCertification: {
             id: "1",
             label: "Certification 1",
+            parcours: {
+              rows: [
+                {
+                  id: "1",
+                  label: "Parcours 1",
+                  nomEtablissement: "Etablissement 1",
+                },
+              ],
+              info: {
+                totalRows: 1,
+                totalPages: 1,
+              },
+            },
           },
         },
       }),
