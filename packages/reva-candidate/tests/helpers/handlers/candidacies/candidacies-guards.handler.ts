@@ -30,6 +30,14 @@ export function createCandidaciesGuardsHandlers({
       }),
     ),
     fvae.query(
+      "candidate_getCandidateForUserDropdown",
+      graphQLResolver({
+        candidate_getCandidateWithCandidacy: {
+          ...candidate,
+        },
+      }),
+    ),
+    fvae.query(
       "getCandidateByIdForCandidateGuard",
       graphQLResolver({
         candidate_getCandidateById: {

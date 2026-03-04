@@ -17,6 +17,7 @@ export interface DashboardHandlersOptions {
 const dashboardWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "candidate_getCandidateForCandidatesGuard"),
+    waitGraphQL(page, "candidate_getCandidateForUserDropdown"),
     waitGraphQL(page, "getCandidateByIdForCandidateGuard"),
     waitGraphQL(
       page,

@@ -40,8 +40,15 @@ test.describe("Authenticated on dashboard", () => {
     ).toHaveText("Doe John");
   });
 
-  test("shows logout button", async ({ page }) => {
+  test("shows logout button in user dropdown", async ({ page }) => {
     await login(page);
+    await dashboardWait(page);
+
+    const userDropdownButton = page.getByRole("button", {
+      name: "Doe John",
+    });
+    await expect(userDropdownButton).toBeVisible();
+    await userDropdownButton.click();
 
     await expect(
       page.getByRole("button", { name: "Se déconnecter" }),
