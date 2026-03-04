@@ -1,6 +1,7 @@
 import {
   expect,
   graphql,
+  HttpResponse,
   test,
   type Page,
 } from "next/experimental/testmode/playwright/msw";
@@ -127,10 +128,11 @@ async function visitProfile(
 ) {
   const { disableNavigation } = args ?? {};
   await login(page);
+  const dataPromise = waitForProfileData(page);
   await page.goto(
     `candidates/${candidate.id}/profile${disableNavigation ? "?navigationDisabled=true" : ""}`,
   );
-  await waitForProfileData(page);
+  await dataPromise;
 }
 
 test.describe("Profile Page Initial Loading", () => {
@@ -296,12 +298,12 @@ test.describe("Form Submission Handling", () => {
     msw,
   }) => {
     msw.use(
-      fvae.mutation("updateCandidateInformationMutation", (_, res, ctx) =>
-        res(
-          ctx.errors([
+      fvae.mutation("updateCandidateInformationMutation", () =>
+        HttpResponse.json({
+          errors: [
             { message: "Une erreur est survenue lors de la mise à jour" },
-          ]),
-        ),
+          ],
+        }),
       ),
     );
 
