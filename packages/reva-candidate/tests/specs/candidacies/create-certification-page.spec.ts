@@ -9,7 +9,6 @@ import {
   certificationTabsVisibilityScenarios,
   createCertificationForReducedRequirementsScenario,
 } from "@tests/helpers/certification-page-tabs-visibility";
-import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import {
   createCandidaciesGuardsHandlers,
