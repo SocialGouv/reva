@@ -101,3 +101,44 @@ test.describe("project certification page tabs visibility", () => {
     },
   );
 });
+
+test.describe("Shows available parcours", () => {
+  test("when i access the tab it shows the available parcours", async ({
+    page,
+    msw,
+  }) => {
+    const certification = createCertificationForReducedRequirementsScenario({
+      certificationLabel: "Certification du SUP",
+      structureLabel: "Structure SUP",
+      reducedRequirementsState: true,
+      idPrefix: "project-certification",
+    });
+    const candidacy = createCandidacyEntity({
+      candidate,
+      certification: certification,
+      status: "PROJET",
+    });
+
+    msw.use(
+      ...createProjectCertificationPageHandlers({
+        certification: certification,
+        candidacy: candidacy,
+      }),
+    );
+
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/${candidacy.id}/certification/${certification.id}/`,
+    );
+
+    await page.getByRole("tab", { name: "Établissements" }).click();
+
+    await expect(
+      page.getByText(
+        "Établissements proposant ce diplôme sur la plateforme France VAE",
+      ),
+    ).toBeVisible();
+    await expect(page.getByText("Certification Authority")).toBeVisible();
+    await expect(page.getByText("Parcours 1")).toBeVisible();
+  });
+});

@@ -1,6 +1,7 @@
 import { expect, type Page } from "next/experimental/testmode/playwright/msw";
 
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+import { createCertificationAuthorityEntity } from "./entities/create-certification-authority.entity";
 
 const certificationTabLabels = [
   "Métier",
@@ -8,6 +9,7 @@ const certificationTabLabels = [
   "Prérequis",
   "Jury",
   "Documentation",
+  "Établissements",
 ] as const;
 
 type CertificationTabLabel = (typeof certificationTabLabels)[number];
@@ -20,6 +22,7 @@ const fullCertificationTabVisibility: CertificationTabVisibility = {
   Prérequis: true,
   Jury: true,
   Documentation: true,
+  Établissements: false,
 };
 
 const reducedCertificationTabVisibility: CertificationTabVisibility = {
@@ -28,6 +31,7 @@ const reducedCertificationTabVisibility: CertificationTabVisibility = {
   Prérequis: false,
   Jury: false,
   Documentation: false,
+  Établissements: true,
 };
 
 export const certificationTabsVisibilityScenarios = [
@@ -69,6 +73,25 @@ export function createCertificationForReducedRequirementsScenario({
     id: `${idPrefix}-${certificationLabel}`,
     label: certificationLabel,
     codeRncp: "RNCP9999",
+    parcoursByCertificationAuthorities: reducedRequirementsState
+      ? [
+          {
+            certificationAuthority: createCertificationAuthorityEntity({
+              label: "Certification Authority",
+              websiteUrl: "https://www.certification-authority.com",
+            }),
+            parcours: [
+              {
+                id: "parcours-1",
+                label: "Parcours 1",
+                code: "code-1",
+                nomEtablissement: "Etablissement 1",
+                uai: "uai-1",
+              },
+            ],
+          },
+        ]
+      : [],
     certificationAuthorityStructure:
       structureLabel === null
         ? null

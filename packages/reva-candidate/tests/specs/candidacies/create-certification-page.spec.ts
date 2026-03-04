@@ -18,6 +18,7 @@ import { getArticlesForCertificationPageUsefulResourcesHandler } from "@tests/he
 import { graphQLResolver } from "@tests/helpers/network/msw";
 
 import { Certification } from "@/graphql/generated/graphql";
+import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -76,4 +77,44 @@ test.describe("create certification page tabs visibility", () => {
       });
     },
   );
+});
+
+test.describe("Shows available parcours", () => {
+  test("when i access the tab it shows the available parcours", async ({
+    page,
+    msw,
+  }) => {
+    const certification = createCertificationForReducedRequirementsScenario({
+      certificationLabel: "Certification du SUP",
+      structureLabel: "Structure SUP",
+      reducedRequirementsState: true,
+      idPrefix: "project-certification",
+    });
+    const candidacy = createCandidacyEntity({
+      candidate,
+      certification: certification,
+      status: "PROJET",
+    });
+
+    msw.use(
+      ...createCreateCertificationPageHandlers({
+        certification: certification,
+      }),
+    );
+
+    await loginAndWaitForCandidaciesInitialLoad(page);
+    await page.goto(
+      `candidates/${candidate.id}/candidacies/create/certifications/${certification.id}/`,
+    );
+
+    await page.getByRole("tab", { name: "Établissements" }).click();
+
+    await expect(
+      page.getByText(
+        "Établissements proposant ce diplôme sur la plateforme France VAE",
+      ),
+    ).toBeVisible();
+    await expect(page.getByText("Certification Authority")).toBeVisible();
+    await expect(page.getByText("Parcours 1")).toBeVisible();
+  });
 });
