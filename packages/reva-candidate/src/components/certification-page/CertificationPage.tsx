@@ -10,6 +10,7 @@ import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 import { UsefulResources } from "./useful-resources/UserfulResources";
+import { ParcoursTab } from "./tabs/ParcoursTab";
 
 export const CertificationPage = async ({
   certification,
@@ -59,6 +60,18 @@ export const CertificationPage = async ({
         label: string;
       }[];
     }[];
+    parcoursByCertificationAuthorities?:
+      | {
+          certificationAuthority: {
+            label: string;
+            websiteUrl?: string | null;
+          };
+          parcours: {
+            id: string;
+            label: string;
+          }[];
+        }[]
+      | null;
     certificationAuthorityStructure?: {
       label: string;
       hasReducedRequirements: boolean;
@@ -87,7 +100,18 @@ export const CertificationPage = async ({
       ),
     },
     ...(hasReducedRequirements
-      ? []
+      ? [
+          {
+            label: "Établissements",
+            content: (
+              <ParcoursTab
+                parcoursByCertificationAuthorities={
+                  certification.parcoursByCertificationAuthorities
+                }
+              />
+            ),
+          },
+        ]
       : [
           {
             label: "Prérequis",

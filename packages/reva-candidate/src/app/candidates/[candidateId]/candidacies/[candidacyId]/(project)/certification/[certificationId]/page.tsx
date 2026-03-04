@@ -56,6 +56,16 @@ const GET_CERTIFICATION = graphql(`
           label
         }
       }
+      parcoursByCertificationAuthorities {
+        certificationAuthority {
+          label
+          websiteUrl
+        }
+        parcours {
+          id
+          label
+        }
+      }
       certificationAuthorityStructure {
         label
         hasReducedRequirements
