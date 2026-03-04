@@ -31,10 +31,10 @@ import {
   FranceConnectUserError,
 } from "./france-connect.errors";
 import {
+  arePivotFieldsMatching,
   getAndDeleteFcStateCookie,
   getOAuthConfig,
   isValidCertificationId,
-  normalizeName,
   parseFranceConnectDate,
   splitGivenName,
 } from "./france-connect.utils";
@@ -238,13 +238,17 @@ const getOrCreateCandidate = async (
       );
     }
     // Avant de lier un compte FC à un compte existant (même email),
-    // on vérifie que les données pivots (nom, prénom) correspondent pour éviter
-    // qu'un utilisateur FC récupère le compte d'une autre personne.
-    const fcFirstname = userInfo.given_name.split(/\s+/)[0] || "";
+    // on vérifie que les données pivots (nom, prénom, date de naissance) correspondent
+    // pour éviter qu'un utilisateur FC récupère le compte d'une autre personne.
     if (
-      normalizeName(candidate.firstname || "") !== normalizeName(fcFirstname) ||
-      normalizeName(candidate.lastname || "") !==
-        normalizeName(userInfo.family_name || "")
+      !arePivotFieldsMatching({
+        candidateFirstname: candidate.firstname,
+        candidateLastname: candidate.lastname,
+        candidateBirthdate: candidate.birthdate,
+        fcGivenName: userInfo.given_name,
+        fcFamilyName: userInfo.family_name,
+        fcBirthdate: userInfo.birthdate,
+      })
     ) {
       throw new FranceConnectUserError(
         "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",

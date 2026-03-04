@@ -102,7 +102,7 @@ export const getAndDeleteFcStateCookie = (
   };
 };
 
-export const normalizeName = (name: string) =>
+const normalizeName = (name: string) =>
   name
     .trim()
     .toLowerCase()
@@ -112,6 +112,43 @@ export const normalizeName = (name: string) =>
 export const parseFranceConnectDate = (dateString: string): Date | null => {
   const date = new Date(dateString);
   return isNaN(date.getTime()) ? null : date;
+};
+
+export const arePivotFieldsMatching = ({
+  candidateFirstname,
+  candidateLastname,
+  candidateBirthdate,
+  fcGivenName,
+  fcFamilyName,
+  fcBirthdate,
+}: {
+  candidateFirstname: string | null;
+  candidateLastname: string | null;
+  candidateBirthdate: Date | null;
+  fcGivenName: string;
+  fcFamilyName: string;
+  fcBirthdate: string;
+}): boolean => {
+  const fcFirstname = fcGivenName.split(/\s+/)[0] || "";
+
+  if (normalizeName(candidateFirstname || "") !== normalizeName(fcFirstname)) {
+    return false;
+  }
+
+  if (normalizeName(candidateLastname || "") !== normalizeName(fcFamilyName)) {
+    return false;
+  }
+
+  const parsedFcBirthdate = parseFranceConnectDate(fcBirthdate);
+  if (
+    candidateBirthdate &&
+    parsedFcBirthdate &&
+    candidateBirthdate.getTime() !== parsedFcBirthdate.getTime()
+  ) {
+    return false;
+  }
+
+  return true;
 };
 
 export const splitGivenName = (
