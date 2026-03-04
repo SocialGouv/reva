@@ -296,4 +296,10 @@ type Mutation {
   certification_authority_createCertificationAuthorityStructure(
     label: String!
   ): CertificationAuthorityStructure!
+
+  certification_authority_updateParcoursForCertificationAndCertificationAuthority(
+    certificationId: ID!
+    certificationAuthorityId: ID!
+    parcoursCertificationIds: [ID!]!
+  ): Boolean!
 }

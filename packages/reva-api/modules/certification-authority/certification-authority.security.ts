@@ -99,4 +99,7 @@ export const resolversSecurityMap = {
 
   "CertificationRegistryManager.certificationAuthorityStructure":
     isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
+
+  "Mutation.certification_authority_updateParcoursForCertificationAndCertificationAuthority":
+    isAdminOrCertificationAuthorityOwner,
 };

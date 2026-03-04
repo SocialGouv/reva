@@ -3,6 +3,7 @@ import { Account } from "@prisma/client";
 import { graphql } from "@/modules/graphql/generated";
 import { UpdateCertificationAuthorityInput } from "@/modules/graphql/generated/graphql";
 import * as getKeycloakAdminModule from "@/modules/shared/auth/getKeycloakAdmin";
+import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationAuthorityLocalAccountHelper } from "@/test/helpers/entities/create-certification-authority-local-account-helper";
@@ -106,6 +107,49 @@ async function graphqlGetParcoursForCertificationAndCertificationAuthority({
   );
 }
 
+async function graphqlUpdateParcoursForCertificationAndCertificationAuthority({
+  role,
+  account,
+  certificationId,
+  certificationAuthorityId,
+  parcoursCertificationIds,
+}: {
+  role: KeyCloakUserRole;
+  account: { keycloakId: string };
+  certificationId: string;
+  certificationAuthorityId: string;
+  parcoursCertificationIds: string[];
+}) {
+  const graphqlClient = getGraphQLClient({
+    headers: {
+      authorization: authorizationHeaderForUser({
+        role,
+        keycloakId: account.keycloakId,
+      }),
+    },
+  });
+  const updateParcoursForCertificationAndCertificationAuthority = graphql(`
+    mutation updateParcoursForCertificationAndCertificationAuthority(
+      $certificationId: ID!
+      $certificationAuthorityId: ID!
+      $parcoursCertificationIds: [ID!]!
+    ) {
+      certification_authority_updateParcoursForCertificationAndCertificationAuthority(
+        certificationId: $certificationId
+        certificationAuthorityId: $certificationAuthorityId
+        parcoursCertificationIds: $parcoursCertificationIds
+      )
+    }
+  `);
+  return graphqlClient.request(
+    updateParcoursForCertificationAndCertificationAuthority,
+    {
+      certificationId,
+      certificationAuthorityId,
+      parcoursCertificationIds,
+    },
+  );
+}
 test("should update a certification authority's contact info and leave the account info as is as a certificaton authority manager", async () => {
   const certificationAuthority = await createCertificationAuthorityHelper();
 
@@ -430,5 +474,62 @@ describe("certification authority certification parcours", () => {
     expect(
       resp.certification_authority_getParcoursForCertificationAndCertificationAuthority,
     ).toEqual([]);
+  });
+
+  test("should update the parcours certifications for a certification and certification authority", async () => {
+    const certification = await createCertificationHelper();
+    const parcoursCertification = await createParcoursCertificationHelper({
+      certificationId: certification.id,
+    });
+    const certificationAuthority = await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: {
+          certificationId: certification.id,
+          certificationAuthorityOnCertificationOnParcoursCertifications: {
+            create: {
+              parcoursCertificationId: parcoursCertification.id,
+            },
+          },
+        },
+      },
+    });
+
+    const newParcoursCertification = await createParcoursCertificationHelper({
+      certificationId: certification.id,
+    });
+    const resp =
+      await graphqlUpdateParcoursForCertificationAndCertificationAuthority({
+        role: "manage_certification_authority_local_account",
+        account: {
+          keycloakId: certificationAuthority.Account[0].keycloakId,
+        },
+        certificationId: certification.id,
+        certificationAuthorityId: certificationAuthority.id,
+        parcoursCertificationIds: [newParcoursCertification.id],
+      });
+
+    expect(
+      resp.certification_authority_updateParcoursForCertificationAndCertificationAuthority,
+    ).toEqual(true);
+
+    const certificationAuthorityOnCertification =
+      await prismaClient.certificationAuthorityOnCertification.findUnique({
+        where: {
+          certificationAuthorityId_certificationId: {
+            certificationAuthorityId: certificationAuthority.id,
+            certificationId: certification.id,
+          },
+        },
+        include: {
+          certificationAuthorityOnCertificationOnParcoursCertifications: {
+            include: { parcoursCertification: true },
+          },
+        },
+      });
+    const receivedParcoursIds =
+      certificationAuthorityOnCertification?.certificationAuthorityOnCertificationOnParcoursCertifications.map(
+        (cacopc) => cacopc.parcoursCertificationId,
+      );
+    expect(receivedParcoursIds).toEqual([newParcoursCertification.id]);
   });
 });

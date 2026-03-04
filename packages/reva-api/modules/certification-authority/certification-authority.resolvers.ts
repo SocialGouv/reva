@@ -64,6 +64,7 @@ import { updateCertificationAuthorityLocalAccountGeneralInformation } from "./fe
 import { updateCertificationAuthorityStructure } from "./features/updateCertificationAuthorityStructure";
 import { updateCertificationAuthorityStructureCertifications } from "./features/updateCertificationAuthorityStructureCertifications";
 import { updateCertificationRegistryManager } from "./features/updateCertificationRegistryManager";
+import { updateParcoursForCertificationAndCertificationAuthority } from "./features/updateParcoursForCertificationAndCertificationAuthority";
 
 const unsafeResolvers = {
   Account: {
@@ -453,6 +454,16 @@ const unsafeResolvers = {
         label: string;
       },
     ) => createCertificationAuthorityStructure(params.label),
+
+    certification_authority_updateParcoursForCertificationAndCertificationAuthority:
+      async (
+        _parent: unknown,
+        params: {
+          certificationId: string;
+          certificationAuthorityId: string;
+          parcoursCertificationIds: string[];
+        },
+      ) => updateParcoursForCertificationAndCertificationAuthority(params),
   },
   Query: {
     certification_authority_getCertificationAuthority: async (
