@@ -46,6 +46,7 @@ export const useParcoursCertificationPage = ({
     queryKey: [
       certificationId,
       "getCertificationAndParcoursForCertificationAuthorityParcoursPage",
+      page,
     ],
     queryFn: () =>
       graphqlClient.request(getCertificationAndParcoursQuery, {
