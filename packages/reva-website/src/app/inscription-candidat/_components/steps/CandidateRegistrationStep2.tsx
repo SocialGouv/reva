@@ -128,20 +128,21 @@ export const CandidateRegistrationStep2 = ({
 
   if (franceConnectEnabled) {
     return (
-      <div className="flex flex-col items-center gap-6">
-        <p className="fr-text--sm fr-mb-2w">
-          FranceConnect est la solution proposée par l'État pour sécuriser et
-          simplifier la connexion à vos services en ligne.
-        </p>
-        <p className="text-lg text-center mb-0">
-          Identifiez-vous avec FranceConnect pour créer votre compte.
-        </p>
-        <FranceConnectButton
-          url={getFranceConnectLoginUrl({
-            certificationId,
-            typeAccompagnement,
-          })}
-        />
+      <div className="w-full lg:w-[588px] bg-white shadow-lifted p-6 order-1 lg:order-2 flex flex-col items-center mx-auto gap-6">
+        <h1 className="mb-0 text-center">Création de compte</h1>
+        <div className="flex flex-col items-center">
+          <p className="text-xs mb-2 text-dsfrGray-500 max-w-96 mx-auto text-center leading-5">
+            FranceConnect est la solution proposée par l'État pour sécuriser et
+            simplifier la connexion à vos services en ligne.
+          </p>
+          <FranceConnectButton
+            url={getFranceConnectLoginUrl({
+              certificationId,
+              typeAccompagnement,
+            })}
+          />
+        </div>
+        <div className="h-6" />
       </div>
     );
   }

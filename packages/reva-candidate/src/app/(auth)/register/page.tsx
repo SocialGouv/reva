@@ -84,8 +84,8 @@ export default function Register() {
           <h1 className="mb-6 text-center">Création de compte</h1>
 
           {isFeatureActive("FRANCE_CONNECT_AUTH_FOR_CANDIDATE") ? (
-            <div className="flex flex-col items-center gap-4">
-              <p className="fr-text--sm fr-mb-2w">
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-xs mb-0 text-dsfrGray-500 max-w-96 mx-auto text-center leading-5">
                 FranceConnect est la solution proposée par l'État pour sécuriser
                 et simplifier la connexion à vos services en ligne.
               </p>
