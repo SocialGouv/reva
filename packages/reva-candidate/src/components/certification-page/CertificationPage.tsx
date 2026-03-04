@@ -8,9 +8,9 @@ import { BlocsDeCompetenceTab } from "./tabs/BlocsDeCompetenceTab";
 import DocumentationTab from "./tabs/DocumentationTab";
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
+import { ParcoursTab } from "./tabs/ParcoursTab";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 import { UsefulResources } from "./useful-resources/UserfulResources";
-import { ParcoursTab } from "./tabs/ParcoursTab";
 
 export const CertificationPage = async ({
   certification,

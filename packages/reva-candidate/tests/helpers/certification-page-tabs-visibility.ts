@@ -1,6 +1,7 @@
 import { expect, type Page } from "next/experimental/testmode/playwright/msw";
 
 import { createCertificationEntity } from "@tests/helpers/entities/create-certification.entity";
+
 import { createCertificationAuthorityEntity } from "./entities/create-certification-authority.entity";
 
 const certificationTabLabels = [

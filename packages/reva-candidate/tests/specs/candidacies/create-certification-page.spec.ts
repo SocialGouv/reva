@@ -9,6 +9,7 @@ import {
   certificationTabsVisibilityScenarios,
   createCertificationForReducedRequirementsScenario,
 } from "@tests/helpers/certification-page-tabs-visibility";
+import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import {
   createCandidaciesGuardsHandlers,
@@ -18,7 +19,6 @@ import { getArticlesForCertificationPageUsefulResourcesHandler } from "@tests/he
 import { graphQLResolver } from "@tests/helpers/network/msw";
 
 import { Certification } from "@/graphql/generated/graphql";
-import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -89,11 +89,6 @@ test.describe("Shows available parcours", () => {
       structureLabel: "Structure SUP",
       reducedRequirementsState: true,
       idPrefix: "project-certification",
-    });
-    const candidacy = createCandidacyEntity({
-      candidate,
-      certification: certification,
-      status: "PROJET",
     });
 
     msw.use(
