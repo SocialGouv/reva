@@ -33,8 +33,6 @@ const CandidateContactDetailsPage = () => {
   const { candidate, updateCandidateContactDetails } =
     useCandidateContactDetailsPageLogic({ candidacyId });
 
-  const isFCLinked = candidate?.franceConnectLinked;
-
   if (!candidate) {
     return null;
   }
@@ -58,7 +56,6 @@ const CandidateContactDetailsPage = () => {
       candidacyId={candidacyId}
       defaultValues={{ phone: candidate.phone, email: candidate.email }}
       emailInputDisabled={!isAdmin}
-      isFCLinked={isFCLinked}
       onSubmit={handleFormSubmit}
     />
   ) : null;
@@ -68,13 +65,11 @@ const CandidateContactDetailsForm = ({
   candidacyId,
   defaultValues,
   emailInputDisabled,
-  isFCLinked,
   onSubmit,
 }: {
   candidacyId: string;
   defaultValues: { phone: string; email: string };
   emailInputDisabled?: boolean;
-  isFCLinked?: boolean;
   onSubmit: (data: FormData) => void;
 }) => {
   const {
@@ -114,7 +109,7 @@ const CandidateContactDetailsForm = ({
           <Input
             className="flex-1"
             data-testid="email-input"
-            disabled={!!emailInputDisabled || !!isFCLinked}
+            disabled={!!emailInputDisabled}
             label="Adresse électronique"
             nativeInputProps={{ ...register("email") }}
             state={errors.email ? "error" : "default"}

@@ -9,7 +9,6 @@ const getCandidateContactDetailsQuery = graphql(`
     getCandidacyById(id: $candidacyId) {
       candidate {
         id
-        franceConnectLinked
         phone
         email
       }

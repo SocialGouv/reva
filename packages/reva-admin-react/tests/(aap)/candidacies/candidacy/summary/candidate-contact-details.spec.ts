@@ -156,19 +156,14 @@ test.describe("FranceConnect linked candidate", () => {
     ],
   });
 
-  test("should disable email input when FC-linked", async ({ page }) => {
-    await login({ page, role: "admin" });
-    await visitContactDetails(page);
-
-    // Email should be disabled even for admin when FC-linked
-    await expect(page.locator(SELECTORS.email)).toBeDisabled();
-  });
-
-  test("should keep phone input editable when FC-linked", async ({ page }) => {
+  test("should keep all fields editable for admin when FC-linked", async ({
+    page,
+  }) => {
     await login({ page, role: "admin" });
     await visitContactDetails(page);
 
     await expect(page.locator(SELECTORS.phone)).not.toBeDisabled();
+    await expect(page.locator(SELECTORS.email)).not.toBeDisabled();
   });
 });
 
