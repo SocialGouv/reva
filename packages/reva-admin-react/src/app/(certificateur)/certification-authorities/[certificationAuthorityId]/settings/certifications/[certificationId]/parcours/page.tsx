@@ -1,6 +1,7 @@
 "use client";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
 
@@ -16,11 +17,35 @@ export default function ParcoursPage() {
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
 
-  const { certification, getCertificationAndParcoursStatus } =
-    useParcoursCertificationPage({
+  const {
+    certification,
+    certificationAuthorityParcours,
+    getCertificationAndParcoursStatus,
+    updateParcoursForCertificationAndCertificationAuthority,
+  } = useParcoursCertificationPage({
+    certificationId,
+    certificationAuthorityId,
+    page: currentPage,
+  });
+
+  const certificationAuthorityParcoursIds = useMemo(
+    () => certificationAuthorityParcours?.map((parcours) => parcours.id),
+    [certificationAuthorityParcours],
+  );
+
+  const handleParcoursSelectionChange = async ({
+    itemId,
+    selected,
+  }: {
+    itemId: string;
+    selected: boolean;
+  }) => {
+    await updateParcoursForCertificationAndCertificationAuthority.mutateAsync({
       certificationId,
-      page: currentPage,
+      certificationAuthorityId,
+      parcoursCertificationIds: selected ? [itemId] : [],
     });
+  };
 
   if (getCertificationAndParcoursStatus === "pending" || !certification) {
     return null;
@@ -56,12 +81,16 @@ export default function ParcoursPage() {
           id: parcours.id,
           title: parcours.label,
           desc: parcours.nomEtablissement,
-          selected: false,
+          selected: !!certificationAuthorityParcoursIds?.includes(parcours.id),
         }))}
+        onSelectionChange={handleParcoursSelectionChange}
         paginationInfo={{
           totalItems: certification.parcours.info.totalRows,
           totalPages: certification.parcours.info.totalPages,
         }}
+        onlyShowAddedItemsSwitchLabel="Afficher uniquement les parcours ajoutés"
+        emptyStateTitle="Aucun parcours trouvé"
+        emptyStateShowAllItemsButtonLabel="Afficher tous les parcours"
       />
     </div>
   );
