@@ -7,25 +7,30 @@ import {
 import { logger } from "@/modules/shared/logger/logger";
 
 import { getFranceConnectAuthorizeRedirectUrl } from "./features/france-connect-authorize";
-import { mapToOAuthError } from "./features/france-connect.errors";
+import {
+  FranceConnectError,
+  mapToOAuthError,
+} from "./features/france-connect.errors";
 import { handleFranceConnectCallback } from "./features/handleFranceConnectCallback";
 import { impersonate } from "./features/impersonate";
+
+const buildAuthErrorUrl = (error: unknown, state?: string): string => {
+  const errorUrl = new URL(`${CANDIDATE_BASE_URL}/auth-error`);
+  if (state) {
+    errorUrl.searchParams.set("state", state);
+  }
+  const oauthError = mapToOAuthError(error);
+  errorUrl.searchParams.set("error", oauthError.code);
+  errorUrl.searchParams.set("error_description", oauthError.description);
+  return errorUrl.toString();
+};
 
 const redirectToAuthError = (
   reply: FastifyReply,
   error: unknown,
   state?: string,
 ) => {
-  const errorUrl = new URL(`${CANDIDATE_BASE_URL}/auth-error`);
-  if (state) {
-    errorUrl.searchParams.set("state", state);
-  }
-
-  const oauthError = mapToOAuthError(error);
-  errorUrl.searchParams.set("error", oauthError.code);
-  errorUrl.searchParams.set("error_description", oauthError.description);
-
-  return reply.redirect(errorUrl.toString());
+  return reply.redirect(buildAuthErrorUrl(error, state));
 };
 
 export const accountRoute: FastifyPluginAsync = async (server) => {
@@ -117,6 +122,20 @@ export const accountRoute: FastifyPluginAsync = async (server) => {
         return reply.redirect(redirectUrl);
       } catch (error) {
         logger.error(`[France Connect Callback] ${error}`);
+
+        if (error instanceof FranceConnectError && error.idToken) {
+          const authErrorUrl = buildAuthErrorUrl(error, request.query.state);
+          const keycloakLogoutUrl = new URL(
+            `${process.env.KEYCLOAK_ADMIN_URL}/realms/${process.env.KEYCLOAK_APP_REALM}/protocol/openid-connect/logout`,
+          );
+          keycloakLogoutUrl.searchParams.set("id_token_hint", error.idToken);
+          keycloakLogoutUrl.searchParams.set(
+            "post_logout_redirect_uri",
+            authErrorUrl,
+          );
+          return reply.redirect(keycloakLogoutUrl.toString());
+        }
+
         return redirectToAuthError(reply, error, request.query.state);
       }
     },

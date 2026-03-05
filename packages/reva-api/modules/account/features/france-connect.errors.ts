@@ -1,4 +1,5 @@
-class FranceConnectError extends Error {
+export class FranceConnectError extends Error {
+  public idToken?: string;
   constructor(
     message: string,
     public statusCode: number,

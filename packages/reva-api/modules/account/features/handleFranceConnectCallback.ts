@@ -26,6 +26,7 @@ import {
 } from "../utils/input-sanitization";
 
 import {
+  FranceConnectError,
   FranceConnectForbiddenError,
   FranceConnectSystemError,
   FranceConnectUserError,
@@ -105,66 +106,73 @@ export const handleFranceConnectCallback = async (
     throw new FranceConnectSystemError("Erreur lors de l'authentification");
   }
 
-  const claims = tokenSet.claims();
-  const idTokenResult = FranceConnectClaimsSchema.safeParse(claims);
-  if (!idTokenResult.success) {
-    throw new FranceConnectUserError(
-      "Une erreur est survenue lors de l'authentification",
-      400,
-    );
-  }
-  const idTokenPayload = idTokenResult.data;
-
-  const keycloakId = idTokenPayload.sub;
-
-  const { candidate, isNewAccount } = await getOrCreateCandidate(
-    keycloakId,
-    idTokenPayload,
-  );
-
-  const certificationId = isValidCertificationId(stored.certificationId)
-    ? stored.certificationId
-    : undefined;
-
-  const typeAccompagnement =
-    stored.typeAccompagnement as CandidacyTypeAccompagnement;
-
-  if (certificationId && typeAccompagnement) {
-    try {
-      await createCandidacy({
-        candidateId: candidate.id,
-        certificationId,
-        typeAccompagnement,
-      });
-      logger.info(
-        `[France Connect] Candidature créée automatiquement pour le candidat ${candidate.id}`,
-      );
-    } catch (error) {
-      logger.error(
-        `[France Connect] Erreur lors de la création automatique de candidature pour le candidat ${candidate.id}: ${error}`,
+  try {
+    const claims = tokenSet.claims();
+    const idTokenResult = FranceConnectClaimsSchema.safeParse(claims);
+    if (!idTokenResult.success) {
+      throw new FranceConnectUserError(
+        "Une erreur est survenue lors de l'authentification",
+        400,
       );
     }
-  }
+    const idTokenPayload = idTokenResult.data;
 
-  let redirectPath: string = `${CANDIDATE_BASE_URL}/candidates/${candidate.id}`;
-  if (isNewAccount) {
-    redirectPath = `${redirectPath}/first-connexion`;
-  } else {
-    const activeCandidacies = await getActiveCandidaciesByCandidateId({
+    const keycloakId = idTokenPayload.sub;
+
+    const { candidate, isNewAccount } = await getOrCreateCandidate(
+      keycloakId,
+      idTokenPayload,
+    );
+
+    const certificationId = isValidCertificationId(stored.certificationId)
+      ? stored.certificationId
+      : undefined;
+
+    const typeAccompagnement =
+      stored.typeAccompagnement as CandidacyTypeAccompagnement;
+
+    if (certificationId && typeAccompagnement) {
+      try {
+        await createCandidacy({
+          candidateId: candidate.id,
+          certificationId,
+          typeAccompagnement,
+        });
+        logger.info(
+          `[France Connect] Candidature créée automatiquement pour le candidat ${candidate.id}`,
+        );
+      } catch (error) {
+        logger.error(
+          `[France Connect] Erreur lors de la création automatique de candidature pour le candidat ${candidate.id}: ${error}`,
+        );
+      }
+    }
+
+    let redirectPath: string = `${CANDIDATE_BASE_URL}/candidates/${candidate.id}`;
+    if (isNewAccount) {
+      redirectPath = `${redirectPath}/first-connexion`;
+    } else {
+      const activeCandidacies = await getActiveCandidaciesByCandidateId({
+        candidateId: candidate.id,
+      });
+      if (activeCandidacies.length > 0) {
+        redirectPath = `${redirectPath}/candidacies`;
+      } else {
+        redirectPath = `${redirectPath}/candidacies/create`;
+      }
+    }
+
+    await updateAllCandidaciesDerniereDateActiviteByCandidateId({
       candidateId: candidate.id,
     });
-    if (activeCandidacies.length > 0) {
-      redirectPath = `${redirectPath}/candidacies`;
-    } else {
-      redirectPath = `${redirectPath}/candidacies/create`;
+
+    return redirectPath;
+  } catch (error) {
+    if (error instanceof FranceConnectError && tokenSet.id_token) {
+      error.idToken = tokenSet.id_token;
     }
+    throw error;
   }
-
-  await updateAllCandidaciesDerniereDateActiviteByCandidateId({
-    candidateId: candidate.id,
-  });
-
-  return redirectPath;
 };
 
 const buildCandidateDataFromFCClaims = async (
