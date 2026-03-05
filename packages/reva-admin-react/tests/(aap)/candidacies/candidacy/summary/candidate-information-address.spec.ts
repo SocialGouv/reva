@@ -24,7 +24,14 @@ const DEFAULT_CANDIDATE = {
   department: { id: "dep-75", label: "Île-de-France", code: "75" },
 };
 
-function createSummaryHandlers(candidateInfo: Record<string, unknown> | null) {
+type CandidateInfo = {
+  street: string | null;
+  city: string | null;
+  zip: string | null;
+  addressComplement: string | null;
+};
+
+function createSummaryHandlers(candidateInfo: CandidateInfo | null) {
   return [
     fvae.query(
       "getCandidacySummaryById",
