@@ -2,7 +2,6 @@
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { useParams, useSearchParams } from "next/navigation";
 
-import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
 
 import { useParcoursCertificationPage } from "./parcoursCertification.hooks";
@@ -47,7 +46,6 @@ export default function ParcoursPage() {
         currentPageLabel={certification.label}
       />
       <h1>{certification.label}</h1>
-      <FormOptionalFieldsDisclaimer />
       <p className="mb-12">
         Sélectionnez les parcours que votre établissement propose pour cette
         mention. Ces parcours apparaîtront sur la fiche certification consultée
