@@ -41,12 +41,12 @@ export default function ParcoursPage() {
         ]}
         currentPageLabel={certification.label}
       />
-      <h1>Certifications gérées</h1>
+      <h1>{certification.label}</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="mb-12">
-        Cochez les certifications proposées par ce compte local. Vous pouvez
-        choisir une ou plusieurs certifications. Vous pourrez ajuster cette
-        sélection en tout temps.
+        Sélectionnez les parcours que votre établissement propose pour cette
+        mention. Ces parcours apparaîtront sur la fiche certification consultée
+        par les candidats.
       </p>
       <MultiSelectList
         pageItems={certification.parcours.rows.map((parcours) => ({

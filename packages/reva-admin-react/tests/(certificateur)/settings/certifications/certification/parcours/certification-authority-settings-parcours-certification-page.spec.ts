@@ -95,7 +95,7 @@ test.describe("when i access the parcours certification page", () => {
     await waitForPageQueries(page);
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Certifications gérées",
+      "Certification 1",
     );
   });
 });
