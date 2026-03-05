@@ -3,6 +3,7 @@ import {
   graphql,
   HttpResponse,
   test,
+  type Page,
 } from "next/experimental/testmode/playwright/msw";
 
 import certificationBtsChaudronnierData from "./fixtures/certifications/chaudronnier.json";
@@ -12,6 +13,98 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 const strapi = graphql.link("https://strapi.vae.gouv.fr/graphql");
 
 const chaudronnier = certificationBtsChaudronnierData.data.getCertification;
+const certificationId = "610b6e86-9435-4781-abda-4cad3a746f32";
+const certificationPath = `/certifications/${certificationId}/`;
+
+const certificationTabLabels = [
+  "Métier",
+  "Blocs de compétences",
+  "Prérequis",
+  "Jury",
+  "Documentation",
+] as const;
+
+type CertificationTabLabel = (typeof certificationTabLabels)[number];
+type ReducedRequirementsState = true | false | null;
+type CertificationTabVisibility = Record<CertificationTabLabel, boolean>;
+
+const fullCertificationTabVisibility: CertificationTabVisibility = {
+  Métier: true,
+  "Blocs de compétences": true,
+  Prérequis: true,
+  Jury: true,
+  Documentation: true,
+};
+
+const reducedCertificationTabVisibility: CertificationTabVisibility = {
+  Métier: true,
+  "Blocs de compétences": true,
+  Prérequis: false,
+  Jury: false,
+  Documentation: false,
+};
+
+function createCertificationResponse({
+  certificationLabel,
+  structureLabel,
+  reducedRequirementsState,
+}: {
+  certificationLabel: string;
+  structureLabel: string | null;
+  reducedRequirementsState: ReducedRequirementsState;
+}) {
+  return {
+    data: {
+      getCertification: {
+        ...chaudronnier,
+        label: certificationLabel,
+        certificationAuthorityStructure:
+          structureLabel === null
+            ? null
+            : {
+                ...chaudronnier.certificationAuthorityStructure,
+                label: structureLabel,
+                hasReducedRequirements: reducedRequirementsState,
+              },
+      },
+    },
+  };
+}
+
+const certificationTabsVisibilityScenarios = [
+  {
+    name: "hasReducedRequirements=true",
+    certificationLabel: "Certification SUP",
+    structureLabel: "Structure SUP",
+    reducedRequirementsState: true,
+    expectedTabVisibility: reducedCertificationTabVisibility,
+  },
+  {
+    name: "hasReducedRequirements=false",
+    certificationLabel: "Certification standard",
+    structureLabel: "Structure standard",
+    reducedRequirementsState: false,
+    expectedTabVisibility: fullCertificationTabVisibility,
+  },
+  {
+    name: "certificationAuthorityStructure=null",
+    certificationLabel: "Certification sans structure",
+    structureLabel: null,
+    reducedRequirementsState: null,
+    expectedTabVisibility: fullCertificationTabVisibility,
+  },
+] as const;
+
+async function assertCertificationTabVisibility(
+  page: Page,
+  expectedTabVisibility: CertificationTabVisibility,
+) {
+  for (const tabLabel of certificationTabLabels) {
+    await expect(page.getByRole("tab", { name: tabLabel })).toHaveCount(
+      expectedTabVisibility[tabLabel] ? 1 : 0,
+    );
+  }
+}
 
 test.use({
   mswHandlers: [
@@ -35,14 +128,14 @@ test.use({
 });
 
 test("display certification page with correct data info", async ({ page }) => {
-  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  await page.goto(certificationPath);
   await expect(page.getByTestId("certification-label")).toHaveText(
     chaudronnier.label,
   );
 });
 
 test("display certification authority structure label", async ({ page }) => {
-  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  await page.goto(certificationPath);
   const heading = page.getByRole("heading", { name: chaudronnier.label });
   await expect(heading.locator("+ p")).toHaveText(
     chaudronnier.certificationAuthorityStructure.label,
@@ -50,7 +143,7 @@ test("display certification authority structure label", async ({ page }) => {
 });
 
 test("display level tile with diploma type", async ({ page }) => {
-  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  await page.goto(certificationPath);
   const levelTile = page.getByRole("heading", {
     name: `Niveau ${chaudronnier.level}`,
   });
@@ -61,7 +154,7 @@ test("display level tile with diploma type", async ({ page }) => {
 });
 
 test("display expiration date tile", async ({ page }) => {
-  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  await page.goto(certificationPath);
   const expirationTile = page.getByRole("heading", {
     name: "Date d'expiration",
   });
@@ -75,7 +168,7 @@ test("display expiration date tile", async ({ page }) => {
 });
 
 test("should display VAE collective button", async ({ page }) => {
-  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  await page.goto(certificationPath);
   const vaeCollectiveButton = page.getByRole("link", {
     name: "Utiliser un code VAE collective",
   });
@@ -85,7 +178,7 @@ test("should display VAE collective button", async ({ page }) => {
 test("should navigate to VAE collective page when button is clicked", async ({
   page,
 }) => {
-  await page.goto("/certifications/610b6e86-9435-4781-abda-4cad3a746f32/");
+  await page.goto(certificationPath);
   const vaeCollectiveButton = page.getByRole("link", {
     name: "Utiliser un code VAE collective",
   });
@@ -93,3 +186,33 @@ test("should navigate to VAE collective page when button is clicked", async ({
 
   await expect(page).toHaveURL("/inscription-candidat/vae-collective/");
 });
+
+certificationTabsVisibilityScenarios.forEach(
+  ({
+    name,
+    certificationLabel,
+    structureLabel,
+    reducedRequirementsState,
+    expectedTabVisibility,
+  }) => {
+    test(`shows expected tabs when ${name}`, async ({ page, msw }) => {
+      msw.use(
+        fvae.query("getCertificationForCertificationPage", () => {
+          return HttpResponse.json(
+            createCertificationResponse({
+              certificationLabel,
+              structureLabel,
+              reducedRequirementsState,
+            }),
+          );
+        }),
+      );
+
+      await page.goto(certificationPath);
+      await expect(
+        page.getByRole("heading", { name: certificationLabel, level: 1 }),
+      ).toBeVisible();
+      await assertCertificationTabVisibility(page, expectedTabVisibility);
+    });
+  },
+);

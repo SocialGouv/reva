@@ -70,6 +70,7 @@ const getCertificationQuery = graphql(`
       rncpObjectifsContexte
       certificationAuthorityStructure {
         label
+        hasReducedRequirements
       }
       prerequisites {
         id

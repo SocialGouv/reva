@@ -26,7 +26,10 @@ export const CertificationPageContent = async ({
     level: number;
     rncpExpiresAt: Date;
     rncpObjectifsContexte?: string | null;
-    certificationAuthorityStructure?: { label: string } | null;
+    certificationAuthorityStructure?: {
+      label: string;
+      hasReducedRequirements: boolean;
+    } | null;
     prerequisites: { id: string; label: string }[];
     juryTypeMiseEnSituationProfessionnelle?: CertificationJuryTypeOfModality | null;
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
@@ -66,6 +69,58 @@ export const CertificationPageContent = async ({
     }[];
   };
 }) => {
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+
+  const tabs = [
+    {
+      label: "Métier",
+      isDefault: true,
+      content: (
+        <MetierTab
+          codeRncp={certification.codeRncp}
+          rncpObjectifsContexte={certification.rncpObjectifsContexte}
+        />
+      ),
+    },
+    {
+      label: "Blocs de compétences",
+      content: (
+        <BlocsDeCompetenceTab competenceBlocs={certification.competenceBlocs} />
+      ),
+    },
+    ...(hasReducedRequirements
+      ? []
+      : [
+          {
+            label: "Prérequis",
+            content: (
+              <PreRequisitesTab prerequisites={certification.prerequisites} />
+            ),
+          },
+          {
+            label: "Jury",
+            content: (
+              <JuryTab
+                juryTypeMiseEnSituationProfessionnelle={
+                  certification.juryTypeMiseEnSituationProfessionnelle
+                }
+                juryTypeSoutenanceOrale={certification.juryTypeSoutenanceOrale}
+                juryEstimatedCost={certification.juryEstimatedCost}
+                juryPlace={certification.juryPlace}
+              />
+            ),
+          },
+          {
+            label: "Documentation",
+            content: (
+              <DocumentationTab additionalInfo={certification.additionalInfo} />
+            ),
+          },
+        ]),
+  ];
+
   return (
     <div className="flex-1 flex pb-8 min-h-screen">
       <div className="flex-1 bg-white w-full mx-auto flex flex-col fr-container p-6 shadow-[0px_6px_18px_0px_rgba(0,0,18,0.16)]">
@@ -135,58 +190,7 @@ export const CertificationPageContent = async ({
             </div>
           </div>
         </div>
-        <Tabs
-          className="mt-12"
-          tabs={[
-            {
-              label: "Métier",
-              isDefault: true,
-              content: (
-                <MetierTab
-                  codeRncp={certification.codeRncp}
-                  rncpObjectifsContexte={certification.rncpObjectifsContexte}
-                />
-              ),
-            },
-            {
-              label: "Blocs de compétences",
-              content: (
-                <BlocsDeCompetenceTab
-                  competenceBlocs={certification.competenceBlocs}
-                />
-              ),
-            },
-            {
-              label: "Prérequis",
-              content: (
-                <PreRequisitesTab prerequisites={certification.prerequisites} />
-              ),
-            },
-            {
-              label: "Jury",
-              content: (
-                <JuryTab
-                  juryTypeMiseEnSituationProfessionnelle={
-                    certification.juryTypeMiseEnSituationProfessionnelle
-                  }
-                  juryTypeSoutenanceOrale={
-                    certification.juryTypeSoutenanceOrale
-                  }
-                  juryEstimatedCost={certification.juryEstimatedCost}
-                  juryPlace={certification.juryPlace}
-                />
-              ),
-            },
-            {
-              label: "Documentation",
-              content: (
-                <DocumentationTab
-                  additionalInfo={certification.additionalInfo}
-                />
-              ),
-            },
-          ]}
-        />
+        <Tabs className="mt-12" tabs={tabs} />
         <hr className="mt-12 mb-8 pb-1" />
         <UsefulResources />
         <div className="flex mt-12 justify-between">
