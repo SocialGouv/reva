@@ -415,7 +415,6 @@ const CandidateInformationForm = ({
           <Input
             label="Adresse électronique"
             className="w-full"
-            disabled={isFCLinked}
             nativeInputProps={register("email")}
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message}
