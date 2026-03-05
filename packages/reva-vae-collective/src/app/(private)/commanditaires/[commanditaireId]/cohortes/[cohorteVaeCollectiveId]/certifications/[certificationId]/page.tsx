@@ -24,6 +24,9 @@ const getCertificationInfoQuery = graphql(`
       juryTypeSoutenanceOrale
       juryEstimatedCost
       juryPlace
+      certificationAuthorityStructure {
+        hasReducedRequirements
+      }
     }
   }
 `);

@@ -3,40 +3,110 @@ import {
   graphql,
   HttpResponse,
   test,
+  type Page,
 } from "next/experimental/testmode/playwright/msw";
 
 import { login } from "../../../../../../shared/utils/auth/login";
 import { mockQueryActiveFeatures } from "../../../../../../shared/utils/mockActiveFeatures";
 const fvae = graphql.link("https://reva-api/api/graphql");
+const certificationPath =
+  "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications/b122423f-6eb6-4d80-94b2-8e57fd0e4cd7";
+
+const certificationTabLabels = ["Métier", "Prérequis", "Jury"] as const;
+type CertificationTabLabel = (typeof certificationTabLabels)[number];
+type ReducedRequirementsState = true | false | null;
+type CertificationTabVisibility = Record<CertificationTabLabel, boolean>;
+
+const fullCertificationTabVisibility: CertificationTabVisibility = {
+  Métier: true,
+  Prérequis: true,
+  Jury: true,
+};
+
+const reducedCertificationTabVisibility: CertificationTabVisibility = {
+  Métier: true,
+  Prérequis: false,
+  Jury: false,
+};
+
+function createCertificationResponse({
+  certificationLabel,
+  reducedRequirementsState,
+}: {
+  certificationLabel: string;
+  reducedRequirementsState: ReducedRequirementsState;
+}) {
+  return {
+    data: {
+      getCertification: {
+        id: "b122423f-6eb6-4d80-94b2-8e57fd0e4cd7",
+        codeRncp: "40029",
+        label: certificationLabel,
+        isAapAvailable: true,
+        level: 5,
+        typeDiplome: "Brevet de technicien supérieur",
+        rncpObjectifsContexte: "contexte",
+        juryTypeMiseEnSituationProfessionnelle: "LES_DEUX",
+        juryTypeSoutenanceOrale: "LES_DEUX",
+        juryEstimatedCost: 200,
+        juryPlace: "",
+        certificationAuthorityStructure:
+          reducedRequirementsState === null
+            ? null
+            : { hasReducedRequirements: reducedRequirementsState },
+        prerequisites: [
+          { id: "1", label: "prerequis1" },
+          { id: "2", label: "prerequis2" },
+        ],
+      },
+    },
+  };
+}
+
+const certificationTabsVisibilityScenarios = [
+  {
+    name: "hasReducedRequirements=true",
+    certificationLabel: "Certification SUP VAE collective",
+    reducedRequirementsState: true,
+    expectedTabVisibility: reducedCertificationTabVisibility,
+  },
+  {
+    name: "hasReducedRequirements=false",
+    certificationLabel: "Certification standard VAE collective",
+    reducedRequirementsState: false,
+    expectedTabVisibility: fullCertificationTabVisibility,
+  },
+  {
+    name: "certificationAuthorityStructure=null",
+    certificationLabel: "Certification sans structure VAE collective",
+    reducedRequirementsState: null,
+    expectedTabVisibility: fullCertificationTabVisibility,
+  },
+] as const;
+
+async function assertCertificationTabVisibility(
+  page: Page,
+  expectedTabVisibility: CertificationTabVisibility,
+) {
+  for (const tabLabel of certificationTabLabels) {
+    await expect(page.getByRole("tab", { name: tabLabel })).toHaveCount(
+      expectedTabVisibility[tabLabel] ? 1 : 0,
+    );
+  }
+}
 
 test.use({
   mswHandlers: [
     [
-      fvae.query("getCertificationInfoForCertificationPage", () =>
-        HttpResponse.json({
-          data: {
-            getCertification: {
-              id: "b122423f-6eb6-4d80-94b2-8e57fd0e4cd7",
-              codeRncp: "40029",
-              label:
-                "Brevet de technicien supérieur - Construction et aménagement de véhicules",
-              isAapAvailable: true,
-              level: 5,
-              typeDiplome: "Brevet de technicien supérieur",
-              rncpObjectifsContexte: "contexte",
-              juryTypeMiseEnSituationProfessionnelle: "LES_DEUX",
-              juryTypeSoutenanceOrale: "LES_DEUX",
-              juryEstimatedCost: 200,
-              juryPlace: "",
-              certificationAuthorityStructure: { label: "UIMM" },
-              prerequisites: [
-                { id: "1", label: "prerequis1" },
-                { id: "2", label: "prerequis2" },
-              ],
-            },
-          },
-        }),
-      ),
+      fvae.query("getCertificationInfoForCertificationPage", () => {
+        return HttpResponse.json(
+          createCertificationResponse({
+            certificationLabel:
+              "Brevet de technicien supérieur - Construction et aménagement de véhicules",
+            reducedRequirementsState: false,
+          }),
+        );
+      }),
       fvae.mutation("updateCertificationMutation", () => {
         return HttpResponse.json({
           data: {
@@ -55,9 +125,7 @@ test.use({
 test("it should display the certification details page", async ({ page }) => {
   await login({ page, role: "gestionnaireVaeCollective" });
 
-  await page.goto(
-    "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications/b122423f-6eb6-4d80-94b2-8e57fd0e4cd7",
-  );
+  await page.goto(certificationPath);
 
   await expect(
     page.getByRole("heading", {
@@ -71,9 +139,7 @@ test("it should let me select a certification and redirect me to the cohorte det
 }) => {
   await login({ page, role: "gestionnaireVaeCollective" });
 
-  await page.goto(
-    "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications/b122423f-6eb6-4d80-94b2-8e57fd0e4cd7",
-  );
+  await page.goto(certificationPath);
 
   await page
     .getByRole("button", { name: "Choisir cette certification" })
@@ -90,9 +156,7 @@ test("it should not display the select certification button when the certificati
 }) => {
   await login({ page, role: "gestionnaireVaeCollective" });
 
-  await page.goto(
-    "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications/b122423f-6eb6-4d80-94b2-8e57fd0e4cd7?certificationSelectionDisabled=true",
-  );
+  await page.goto(`${certificationPath}?certificationSelectionDisabled=true`);
 
   await expect(
     page.getByRole("heading", {
@@ -104,3 +168,28 @@ test("it should not display the select certification button when the certificati
     page.getByRole("button", { name: "Choisir cette certification" }),
   ).not.toBeVisible();
 });
+
+certificationTabsVisibilityScenarios.forEach(
+  ({ name, certificationLabel, reducedRequirementsState, expectedTabVisibility }) => {
+    test(`it should show expected tabs when ${name}`, async ({ page, msw }) => {
+      msw.use(
+        fvae.query("getCertificationInfoForCertificationPage", () => {
+          return HttpResponse.json(
+            createCertificationResponse({
+              certificationLabel,
+              reducedRequirementsState,
+            }),
+          );
+        }),
+      );
+
+      await login({ page, role: "gestionnaireVaeCollective" });
+      await page.goto(certificationPath);
+      await expect(
+        page.getByRole("heading", { name: certificationLabel, level: 1 }),
+      ).toBeVisible();
+
+      await assertCertificationTabVisibility(page, expectedTabVisibility);
+    });
+  },
+);

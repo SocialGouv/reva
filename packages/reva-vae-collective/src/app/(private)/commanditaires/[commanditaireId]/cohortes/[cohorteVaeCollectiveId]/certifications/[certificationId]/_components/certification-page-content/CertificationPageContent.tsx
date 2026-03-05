@@ -32,69 +32,30 @@ export const CertificationPageContent = ({
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
     juryEstimatedCost?: number | null;
     juryPlace?: string | null;
+    certificationAuthorityStructure?: {
+      hasReducedRequirements: boolean;
+    } | null;
   };
   certificationSelectionDisabled?: boolean;
-}) => (
-  <div className="flex-1 flex">
-    <div className="flex flex-col">
-      <div className="flex flex-col gap-4">
-        <h1 data-testid="certification-label" className="m-0">
-          {certification?.label}
-        </h1>
-        <div className="flex flex-row items-center gap-4">
-          <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
+}) => {
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
 
-          <Tag small>
-            {certification?.isAapAvailable
-              ? "VAE en autonomie ou accompagnée"
-              : "VAE en autonomie"}
-          </Tag>
-        </div>
-        <div className="flex flex-col md:flex-row gap-6 mt-8">
-          <Tile
-            title={certification.typeDiplome}
-            classes={{ content: "p-0" }}
-            className="w-[282px]"
-            small
-            orientation="horizontal"
-            imageSvg
-            imageUrl="/vae-collective/certifications/pictograms/city-hall.svg"
-            imageAlt="icône mairie"
-          />
-          <Tile
-            title={`Niveau ${certification.level}`}
-            classes={{ content: "p-0" }}
-            className="w-[282px]"
-            small
-            orientation="horizontal"
-            imageSvg
-            imageUrl="/vae-collective/certifications/pictograms/information.svg"
-            imageAlt="icône information"
-          />
-          {!certificationSelectionDisabled && (
-            <SelectCertificationButton
-              className="ml-auto mt-auto"
-              commanditaireVaeCollectiveId={commanditaireId}
-              cohorteVaeCollectiveId={cohorteVaeCollectiveId}
-              certificationId={certification.id}
-            />
-          )}
-        </div>
-      </div>
-
-      <Tabs
-        className="mt-12"
-        tabs={[
-          {
-            label: "Métier",
-            isDefault: true,
-            content: (
-              <MetierTab
-                codeRncp={certification.codeRncp}
-                rncpObjectifsContexte={certification.rncpObjectifsContexte}
-              />
-            ),
-          },
+  const tabs = [
+    {
+      label: "Métier",
+      isDefault: true,
+      content: (
+        <MetierTab
+          codeRncp={certification.codeRncp}
+          rncpObjectifsContexte={certification.rncpObjectifsContexte}
+        />
+      ),
+    },
+    ...(hasReducedRequirements
+      ? []
+      : [
           {
             label: "Prérequis",
             content: (
@@ -114,19 +75,70 @@ export const CertificationPageContent = ({
               />
             ),
           },
-        ]}
-      />
+        ]),
+  ];
 
-      <div className="flex justify-between mt-12">
-        <BackButton />
-        {!certificationSelectionDisabled && (
-          <SelectCertificationButton
-            commanditaireVaeCollectiveId={commanditaireId}
-            cohorteVaeCollectiveId={cohorteVaeCollectiveId}
-            certificationId={certification.id}
-          />
-        )}
+  return (
+    <div className="flex-1 flex">
+      <div className="flex flex-col">
+        <div className="flex flex-col gap-4">
+          <h1 data-testid="certification-label" className="m-0">
+            {certification?.label}
+          </h1>
+          <div className="flex flex-row items-center gap-4">
+            <span className="text-xs text-dsfrGray-mentionGrey">{`RNCP ${certification?.codeRncp}`}</span>
+
+            <Tag small>
+              {certification?.isAapAvailable
+                ? "VAE en autonomie ou accompagnée"
+                : "VAE en autonomie"}
+            </Tag>
+          </div>
+          <div className="flex flex-col md:flex-row gap-6 mt-8">
+            <Tile
+              title={certification.typeDiplome}
+              classes={{ content: "p-0" }}
+              className="w-[282px]"
+              small
+              orientation="horizontal"
+              imageSvg
+              imageUrl="/vae-collective/certifications/pictograms/city-hall.svg"
+              imageAlt="icône mairie"
+            />
+            <Tile
+              title={`Niveau ${certification.level}`}
+              classes={{ content: "p-0" }}
+              className="w-[282px]"
+              small
+              orientation="horizontal"
+              imageSvg
+              imageUrl="/vae-collective/certifications/pictograms/information.svg"
+              imageAlt="icône information"
+            />
+            {!certificationSelectionDisabled && (
+              <SelectCertificationButton
+                className="ml-auto mt-auto"
+                commanditaireVaeCollectiveId={commanditaireId}
+                cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+                certificationId={certification.id}
+              />
+            )}
+          </div>
+        </div>
+
+        <Tabs className="mt-12" tabs={tabs} />
+
+        <div className="flex justify-between mt-12">
+          <BackButton />
+          {!certificationSelectionDisabled && (
+            <SelectCertificationButton
+              commanditaireVaeCollectiveId={commanditaireId}
+              cohorteVaeCollectiveId={cohorteVaeCollectiveId}
+              certificationId={certification.id}
+            />
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
