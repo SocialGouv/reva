@@ -6,12 +6,16 @@ import {
 
 import { login } from "../../../../shared/helpers/auth/login";
 import { getCertificateurSettingsCommonHandlers } from "../../../../shared/helpers/common-handlers/certificateur/getCertificateurSettingsCommon.handlers";
+
+const CERTIFICATION_AUTHORITY_ID = "c7399291-e79b-4e0f-b798-d3c97661e47f";
 import { graphQLResolver } from "../../../../shared/helpers/network/msw";
 import { waitGraphQL } from "../../../../shared/helpers/network/requests";
 
 const LOCAL_ACCOUNT_ID = "4871a711-232b-4aba-aa5a-bc2adc51f869";
 const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
-  getCertificateurSettingsCommonHandlers();
+  getCertificateurSettingsCommonHandlers({
+    certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
+  });
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -123,7 +127,7 @@ const deleteLocalAccountResponse = graphQLResolver({
 async function gotoUpdateLocalAccount(page: import("@playwright/test").Page) {
   await login({ role: "certificateur", page });
   await page.goto(
-    `/admin2/certification-authorities/settings/local-accounts/${LOCAL_ACCOUNT_ID}`,
+    `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-accounts/${LOCAL_ACCOUNT_ID}`,
   );
   await Promise.all([
     certificateurSettingsCommonWait(page),
@@ -216,7 +220,7 @@ test.describe("general information summary card", () => {
       .click();
     await expect(page).toHaveURL(
       new RegExp(
-        `/certification-authorities/settings/local-accounts/${LOCAL_ACCOUNT_ID}/general-information`,
+        `/certification-authorities/[\\w-]+/settings/local-accounts/${LOCAL_ACCOUNT_ID}/general-information`,
       ),
     );
   });
@@ -294,7 +298,7 @@ test.describe("intervention area summary card", () => {
       .click();
     await expect(page).toHaveURL(
       new RegExp(
-        `/certification-authorities/settings/local-accounts/${LOCAL_ACCOUNT_ID}/intervention-area`,
+        `/certification-authorities/[\\w-]+/settings/local-accounts/${LOCAL_ACCOUNT_ID}/intervention-area`,
       ),
     );
   });
@@ -343,7 +347,7 @@ test.describe("certifications summary card", () => {
       .click();
     await expect(page).toHaveURL(
       new RegExp(
-        `/certification-authorities/settings/local-accounts/${LOCAL_ACCOUNT_ID}/certifications`,
+        `/certification-authorities/[\\w-]+/settings/local-accounts/${LOCAL_ACCOUNT_ID}/certifications`,
       ),
     );
   });

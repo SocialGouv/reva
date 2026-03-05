@@ -9,15 +9,19 @@ import { getCertificateurSettingsCommonHandlers } from "../../shared/helpers/com
 import { graphQLResolver } from "../../shared/helpers/network/msw";
 import { waitGraphQL } from "../../shared/helpers/network/requests";
 
+const CERTIFICATION_AUTHORITY_ID = "c7399291-e79b-4e0f-b798-d3c97661e47f";
+
 const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
-  getCertificateurSettingsCommonHandlers();
+  getCertificateurSettingsCommonHandlers({
+    certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
+  });
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 const certificationAuthoritySettingsWithContact = graphQLResolver({
   account_getAccountForConnectedUser: {
     certificationAuthority: {
-      id: "c7399291-e79b-4e0f-b798-d3c97661e47f",
+      id: CERTIFICATION_AUTHORITY_ID,
       label: "certification authority label",
       contactFullName: "jane doe",
       contactEmail: "monemail@example.com",
@@ -63,7 +67,7 @@ const certificationAuthoritySettingsWithContact = graphQLResolver({
 const certificationAuthoritySettingsNoContact = graphQLResolver({
   account_getAccountForConnectedUser: {
     certificationAuthority: {
-      id: "c7399291-e79b-4e0f-b798-d3c97661e47f",
+      id: CERTIFICATION_AUTHORITY_ID,
       label: "certification authority label",
       contactFullName: null,
       contactEmail: null,
@@ -124,7 +128,9 @@ test.describe("main page", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -157,7 +163,9 @@ test.describe("general information summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -203,7 +211,9 @@ test.describe("general information summary card", () => {
 
   test("shows a button to update the general information", async ({ page }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -219,7 +229,7 @@ test.describe("general information summary card", () => {
     await expect(actionButton).toBeEnabled();
     await actionButton.click();
     await expect(page).toHaveURL(
-      /\/certification-authorities\/settings\/informations-generales/,
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/informations-generales/`,
     );
   });
 });
@@ -242,7 +252,9 @@ test.describe("general information summary card - no contact info", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -262,7 +274,9 @@ test.describe("general information summary card - no contact info", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -276,7 +290,9 @@ test.describe("general information summary card - no contact info", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -311,7 +327,9 @@ test.describe("local accounts summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -331,7 +349,9 @@ test.describe("local accounts summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -350,7 +370,9 @@ test.describe("local accounts summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -372,7 +394,9 @@ test.describe("local accounts summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -394,7 +418,9 @@ test.describe("local accounts summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -408,7 +434,7 @@ test.describe("local accounts summary card", () => {
       .getByTestId("action-button")
       .click();
     await expect(page).toHaveURL(
-      /\/certification-authorities\/settings\/local-accounts\/add-local-account/,
+      /\/certification-authorities\/[\w-]+\/settings\/local-accounts\/add-local-account/,
     );
   });
 
@@ -416,7 +442,9 @@ test.describe("local accounts summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -432,7 +460,7 @@ test.describe("local accounts summary card", () => {
       .getByTestId("update-local-account-button")
       .click();
     await expect(page).toHaveURL(
-      /\/certification-authorities\/settings\/local-accounts\/4871a711-232b-4aba-aa5a-bc2adc51f869/,
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-accounts/4871a711-232b-4aba-aa5a-bc2adc51f869/`,
     );
   });
 });
@@ -459,7 +487,9 @@ test.describe("certifications summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -482,7 +512,9 @@ test.describe("certifications summary card", () => {
     page,
   }) => {
     await login({ role: "certificateur", page });
-    await page.goto("/admin2/certification-authorities/settings");
+    await page.goto(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings`,
+    );
     await Promise.all([
       certificateurSettingsCommonWait(page),
       waitGraphQL(
@@ -497,7 +529,7 @@ test.describe("certifications summary card", () => {
       .click();
 
     await expect(page).toHaveURL(
-      "admin2/certification-authorities/settings/certifications/",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications/`,
     );
   });
 });

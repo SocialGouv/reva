@@ -16,9 +16,11 @@ import { useUpdateLocalAccountGeneralInformationPage } from "./updateLocalAccoun
 export default function AddLocalAccountPage() {
   const router = useRouter();
 
-  const { certificationAuthorityLocalAccountId } = useParams<{
-    certificationAuthorityLocalAccountId: string;
-  }>();
+  const { certificationAuthorityId, certificationAuthorityLocalAccountId } =
+    useParams<{
+      certificationAuthorityId: string;
+      certificationAuthorityLocalAccountId: string;
+    }>();
   const {
     certificationAuthorityLocalAccount,
     updateCertificationAuthorityLocalAccount,
@@ -40,7 +42,7 @@ export default function AddLocalAccountPage() {
       successToast("modifications enregistrées");
 
       router.push(
-        `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+        `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
       );
     } catch (error) {
       graphqlErrorToast(error);
@@ -60,12 +62,14 @@ export default function AddLocalAccountPage() {
         segments={[
           {
             label: "Paramètres",
-            linkProps: { href: "/certification-authorities/settings/" },
+            linkProps: {
+              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+            },
           },
           {
             label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
             linkProps: {
-              href: `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+              href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
             },
           },
         ]}
@@ -90,7 +94,7 @@ export default function AddLocalAccountPage() {
         />
       </div>
       <CertificationAuthorityLocalAccountGeneralInformationForm
-        backUrl={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`}
+        backUrl={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`}
         onSubmit={handleFormSubmit}
         defaultValues={{
           accountFirstname:

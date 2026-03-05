@@ -8,7 +8,10 @@ import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList"
 import { useParcoursCertificationPage } from "./parcoursCertification.hooks";
 
 export default function ParcoursPage() {
-  const { certificationId } = useParams<{ certificationId: string }>();
+  const { certificationAuthorityId, certificationId } = useParams<{
+    certificationAuthorityId: string;
+    certificationId: string;
+  }>();
 
   const searchParams = useSearchParams();
   const searchParamsPage = searchParams.get("page");
@@ -30,12 +33,14 @@ export default function ParcoursPage() {
         segments={[
           {
             label: "Paramètres",
-            linkProps: { href: "/certification-authorities/settings/" },
+            linkProps: {
+              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+            },
           },
           {
             label: "Certifications gérées",
             linkProps: {
-              href: "/certification-authorities/settings/certifications",
+              href: `/certification-authorities/${certificationAuthorityId}/settings/certifications`,
             },
           },
         ]}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useParams } from "next/navigation";
+
 import { CertificationAuthorityLocalAccountsSummaryCard } from "@/components/certification-authority/summary-cards/certification-authority-local-accounts-summary-card/CertificationAuthorityLocalAccountsSummaryCard";
 import { CertificationsSummaryCard } from "@/components/certification-authority/summary-cards/certifications-summary-card/CertificationsSummaryCard";
 import GeneralInformationCard from "@/components/certification-authority/summary-cards/general-information-card/GeneralInformationCard";
@@ -8,6 +10,10 @@ import InterventionAreaSummaryCard from "@/components/certification-authority/su
 import { useCertificationAuthoritySettings } from "./certificationAuthoritySettingsPage.hook";
 
 export default function CertificationAuthoritySettingsPage() {
+  const { certificationAuthorityId } = useParams<{
+    certificationAuthorityId: string;
+  }>();
+
   const { certificationAuthority, getCertificationAuthorityStatus } =
     useCertificationAuthoritySettings();
 
@@ -31,19 +37,15 @@ export default function CertificationAuthoritySettingsPage() {
       </p>
       <div className="flex flex-col gap-y-6">
         <GeneralInformationCard
-          hrefPrefix={"/certification-authorities/settings"}
+          hrefPrefix={`/certification-authorities/${certificationAuthorityId}/settings`}
           certificationAuthority={certificationAuthority}
         />
         <CertificationAuthorityLocalAccountsSummaryCard
           accounts={
             certificationAuthority?.certificationAuthorityLocalAccounts || []
           }
-          updateLocalAccountPageUrl={
-            "/certification-authorities/settings/local-accounts"
-          }
-          addLocalAccountPageUrl={
-            "/certification-authorities/settings/local-accounts/add-local-account"
-          }
+          updateLocalAccountPageUrl={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts`}
+          addLocalAccountPageUrl={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts/add-local-account`}
         />
         <InterventionAreaSummaryCard
           regions={certificationAuthority?.regions || []}
@@ -51,9 +53,7 @@ export default function CertificationAuthoritySettingsPage() {
         <CertificationsSummaryCard
           readonly
           certifications={certificationAuthority?.certifications || []}
-          updateButtonHref={
-            "/certification-authorities/settings/certifications"
-          }
+          updateButtonHref={`/certification-authorities/${certificationAuthorityId}/settings/certifications`}
         />
       </div>
     </div>

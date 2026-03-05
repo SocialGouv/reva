@@ -3,12 +3,16 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Tag from "@codegouvfr/react-dsfr/Tag";
+import { useParams } from "next/navigation";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 
 import { useLocalAccountSettingsPage } from "./localAccountSettingsPage.hook";
 
 export default function LocalAccountSettingsPage() {
+  const { certificationAuthorityId } = useParams<{
+    certificationAuthorityId: string;
+  }>();
   const { certificationAuthorityLocalAccount } = useLocalAccountSettingsPage();
 
   const certificationsCount =
@@ -49,7 +53,7 @@ export default function LocalAccountSettingsPage() {
           title="Informations générales"
           titleIconClass="fr-icon-information-fill"
           isEditable
-          buttonOnClickHref="/certification-authorities/settings/local-account/general-information"
+          buttonOnClickHref={`/certification-authorities/${certificationAuthorityId}/settings/local-account/general-information`}
         >
           <div className="pl-10">
             {certificationAuthorityLocalAccount?.contactFullName ? (
@@ -104,7 +108,7 @@ export default function LocalAccountSettingsPage() {
           title="Certifications gérées"
           titleIconClass="fr-icon-award-fill"
           isEditable
-          buttonOnClickHref="/certification-authorities/settings/local-account/certifications"
+          buttonOnClickHref={`/certification-authorities/${certificationAuthorityId}/settings/local-account/certifications`}
           customButtonTitle="Consulter"
         >
           {certificationsCount ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import { SearchList } from "@/components/search/search-list/SearchList";
 
@@ -10,6 +10,9 @@ import { WithParcoursCertificationCard } from "./_components/WithParcoursCertifi
 import { useCertificationsPage } from "./certifications.hooks";
 
 const CertificationAuthorityCertificationsPage = () => {
+  const { certificationAuthorityId } = useParams<{
+    certificationAuthorityId: string;
+  }>();
   const searchParams = useSearchParams();
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
@@ -30,7 +33,9 @@ const CertificationAuthorityCertificationsPage = () => {
           segments={[
             {
               label: "Paramètres",
-              linkProps: { href: "/certification-authorities/settings/" },
+              linkProps: {
+                href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+              },
             },
           ]}
           currentPageLabel="Certifications gérées"
@@ -60,7 +65,7 @@ const CertificationAuthorityCertificationsPage = () => {
                 visible={certification.visible}
                 isAttachedToAnotherStructure={isAttachedToAnotherStructure}
                 detailsHref={`/certification-details/${certification.id}`}
-                parcoursSettingsHref={`/certification-authorities/settings/certifications/${certification.id}/parcours`}
+                parcoursSettingsHref={`/certification-authorities/${certificationAuthorityId}/settings/certifications/${certification.id}/parcours`}
               />
             ) : (
               <NoParcoursCertificationCard

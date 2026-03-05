@@ -3,8 +3,12 @@ import { expect, test } from "next/experimental/testmode/playwright/msw";
 import { login } from "../../../shared/helpers/auth/login";
 import { getCertificateurSettingsCommonHandlers } from "../../../shared/helpers/common-handlers/certificateur/getCertificateurSettingsCommon.handlers";
 
+const CERTIFICATION_AUTHORITY_ID = "c7399291-e79b-4e0f-b798-d3c97661e47f";
+
 const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
-  getCertificateurSettingsCommonHandlers();
+  getCertificateurSettingsCommonHandlers({
+    certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
+  });
 
 test.describe("main page", () => {
   test.use({
@@ -16,7 +20,7 @@ test.describe("main page", () => {
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/local-accounts/add-local-account",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-accounts/add-local-account`,
     );
     await certificateurSettingsCommonWait(page);
 
@@ -38,7 +42,7 @@ test.describe("general information summary card", () => {
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/local-accounts/add-local-account",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-accounts/add-local-account`,
     );
     await certificateurSettingsCommonWait(page);
 
@@ -48,7 +52,7 @@ test.describe("general information summary card", () => {
       .click();
 
     await expect(page).toHaveURL(
-      /\/certification-authorities\/settings\/local-accounts\/add-local-account\/general-information/,
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-accounts/add-local-account/general-information/`,
     );
   });
 });

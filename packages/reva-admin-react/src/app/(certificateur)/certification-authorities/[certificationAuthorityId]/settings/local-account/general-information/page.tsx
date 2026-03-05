@@ -1,7 +1,7 @@
 "use client";
 
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import {
   CertificationAuthorityLocalAccountGeneralInformationForm,
@@ -13,6 +13,9 @@ import { useGeneralInformationLocalAccountPage } from "./generalInformationLocal
 
 export default function CertificationAuthorityLocalAccountGeneralInformationPage() {
   const router = useRouter();
+  const { certificationAuthorityId } = useParams<{
+    certificationAuthorityId: string;
+  }>();
   const {
     certificationAuthorityLocalAccount,
     updateCertificationAuthorityLocalAccount,
@@ -28,7 +31,9 @@ export default function CertificationAuthorityLocalAccountGeneralInformationPage
           certificationAuthorityLocalAccount?.id || "",
       });
       successToast("modifications enregistrées");
-      router.push("/certification-authorities/settings/local-account");
+      router.push(
+        `/certification-authorities/${certificationAuthorityId}/settings/local-account`,
+      );
     } catch (error) {
       graphqlErrorToast(error);
     }
@@ -41,7 +46,7 @@ export default function CertificationAuthorityLocalAccountGeneralInformationPage
           {
             label: "Paramètres",
             linkProps: {
-              href: "/certification-authorities/settings/local-account",
+              href: `/certification-authorities/${certificationAuthorityId}/settings/local-account`,
             },
           },
         ]}
@@ -49,7 +54,7 @@ export default function CertificationAuthorityLocalAccountGeneralInformationPage
       />
       {certificationAuthorityLocalAccount && (
         <CertificationAuthorityLocalAccountGeneralInformationForm
-          backUrl="/certification-authorities/settings/local-account"
+          backUrl={`/certification-authorities/${certificationAuthorityId}/settings/local-account`}
           onSubmit={handleFormSubmit}
           disableAccountFields
           defaultValues={{

@@ -18,9 +18,11 @@ import { useUpdateLocalAccountPage } from "./updateLocalAccountPage.hook";
 export default function UpdateLocalAccountPage() {
   const router = useRouter();
 
-  const { certificationAuthorityLocalAccountId } = useParams<{
-    certificationAuthorityLocalAccountId: string;
-  }>();
+  const { certificationAuthorityId, certificationAuthorityLocalAccountId } =
+    useParams<{
+      certificationAuthorityId: string;
+      certificationAuthorityLocalAccountId: string;
+    }>();
 
   const {
     certificationAuthorityLocalAccount,
@@ -64,7 +66,9 @@ export default function UpdateLocalAccountPage() {
         certificationAuthorityLocalAccountId,
       );
       successToast("Compte local supprimé");
-      router.push("/certification-authorities/settings/");
+      router.push(
+        `/certification-authorities/${certificationAuthorityId}/settings/`,
+      );
     } catch (error) {
       console.error(error);
       graphqlErrorToast(error);
@@ -104,7 +108,9 @@ export default function UpdateLocalAccountPage() {
         segments={[
           {
             label: "Paramètres",
-            linkProps: { href: "/certification-authorities/settings/" },
+            linkProps: {
+              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+            },
           },
         ]}
         currentPageLabel={localAccountLabel}
@@ -129,17 +135,17 @@ export default function UpdateLocalAccountPage() {
         <LocalAccountGeneralInformationSummaryCard
           contactFullName={certificationAuthorityLocalAccount?.contactFullName}
           contactEmail={certificationAuthorityLocalAccount?.contactEmail}
-          updateGeneralInformationPageUrl={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/general-information`}
+          updateGeneralInformationPageUrl={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}/general-information`}
         />
         <InterventionAreaSummaryCard
           regions={regionsAndDepartments}
-          updateButtonHref={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/intervention-area`}
+          updateButtonHref={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}/intervention-area`}
         />
         <CertificationsSummaryCard
           certifications={
             certificationAuthorityLocalAccount?.certifications || []
           }
-          updateButtonHref={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/certifications`}
+          updateButtonHref={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}/certifications`}
         />
         <Tile
           data-testid="delete-certification-authority-local-account-button"
@@ -166,7 +172,7 @@ export default function UpdateLocalAccountPage() {
         className="mt-12"
         priority="secondary"
         linkProps={{
-          href: "/certification-authorities/settings/",
+          href: `/certification-authorities/${certificationAuthorityId}/settings/`,
         }}
       >
         Retour

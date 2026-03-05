@@ -1,5 +1,6 @@
 "use client";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { useParams } from "next/navigation";
 
 import { BackButton } from "@/components/back-button/BackButton";
 import { TreeSelect } from "@/components/tree-select/TreeSelect.component";
@@ -7,6 +8,9 @@ import { TreeSelect } from "@/components/tree-select/TreeSelect.component";
 import { useCertificationsLocalAccountPage } from "./certificationsLocalAccountPage.hook";
 
 export default function CertificationsPage() {
+  const { certificationAuthorityId } = useParams<{
+    certificationAuthorityId: string;
+  }>();
   const { certificationAuthorityLocalAccount } =
     useCertificationsLocalAccountPage();
 
@@ -21,7 +25,7 @@ export default function CertificationsPage() {
           {
             label: "Paramètres",
             linkProps: {
-              href: "/certification-authorities/settings/local-account",
+              href: `/certification-authorities/${certificationAuthorityId}/settings/local-account`,
             },
           },
         ]}
@@ -51,7 +55,9 @@ export default function CertificationsPage() {
           readonly
         />
       </div>
-      <BackButton href="/certification-authorities/settings/local-account">
+      <BackButton
+        href={`/certification-authorities/${certificationAuthorityId}/settings/local-account`}
+      >
         Retour
       </BackButton>
     </div>

@@ -13,9 +13,11 @@ import { useUpdateLocalAccountCertificationsPage } from "./updateLocalAccountCer
 
 export default function InterventionAreaPage() {
   const router = useRouter();
-  const { certificationAuthorityLocalAccountId } = useParams<{
-    certificationAuthorityLocalAccountId: string;
-  }>();
+  const { certificationAuthorityId, certificationAuthorityLocalAccountId } =
+    useParams<{
+      certificationAuthorityId: string;
+      certificationAuthorityLocalAccountId: string;
+    }>();
   const searchParams = useSearchParams();
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
@@ -47,7 +49,7 @@ export default function InterventionAreaPage() {
     currentQueryParams.delete("onlyShowAddedItems");
     currentQueryParams.delete("searchFilter");
     router.push(
-      `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}/certifications?${currentQueryParams.toString()}`,
+      `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}/certifications?${currentQueryParams.toString()}`,
     );
   };
 
@@ -83,12 +85,14 @@ export default function InterventionAreaPage() {
         segments={[
           {
             label: "Paramètres",
-            linkProps: { href: "/certification-authorities/settings/" },
+            linkProps: {
+              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+            },
           },
           {
             label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
             linkProps: {
-              href: `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+              href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
             },
           },
         ]}

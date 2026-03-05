@@ -6,18 +6,22 @@ import {
 
 import { login } from "../../../shared/helpers/auth/login";
 import { getCertificateurSettingsCommonHandlers } from "../../../shared/helpers/common-handlers/certificateur/getCertificateurSettingsCommon.handlers";
+
+const CERTIFICATION_AUTHORITY_ID = "c7399291-e79b-4e0f-b798-d3c97661e47f";
 import { graphQLResolver } from "../../../shared/helpers/network/msw";
 import { waitGraphQL } from "../../../shared/helpers/network/requests";
 
 const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
-  getCertificateurSettingsCommonHandlers();
+  getCertificateurSettingsCommonHandlers({
+    certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
+  });
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 const certificationAuthorityGeneralInfo = graphQLResolver({
   account_getAccountForConnectedUser: {
     certificationAuthority: {
-      id: "c7399291-e79b-4e0f-b798-d3c97661e47f",
+      id: CERTIFICATION_AUTHORITY_ID,
       label: "certification authority label",
       contactFullName: "jane doe",
       contactEmail: "monemail@example.com",
@@ -35,7 +39,7 @@ const certificationAuthorityGeneralInfoWithRequiredWebsiteUrl = graphQLResolver(
   {
     account_getAccountForConnectedUser: {
       certificationAuthority: {
-        id: "c7399291-e79b-4e0f-b798-d3c97661e47f",
+        id: CERTIFICATION_AUTHORITY_ID,
         label: "certification authority label",
         contactFullName: "jane doe",
         contactEmail: "monemail@example.com",
@@ -76,7 +80,7 @@ test.describe("update general information page", () => {
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/informations-generales",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/informations-generales`,
     );
     await Promise.all([
       certificateurSettingsCommonWait(page),
@@ -93,7 +97,7 @@ test.describe("update general information page", () => {
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/informations-generales",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/informations-generales`,
     );
     await Promise.all([
       certificateurSettingsCommonWait(page),
@@ -140,7 +144,7 @@ test.describe("update general information page", () => {
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/informations-generales",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/informations-generales`,
     );
     await Promise.all([
       certificateurSettingsCommonWait(page),
@@ -172,7 +176,7 @@ test.describe("update general information page with required website url", () =>
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/informations-generales",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/informations-generales`,
     );
     await Promise.all([
       certificateurSettingsCommonWait(page),
@@ -192,7 +196,7 @@ test.describe("update general information page with required website url", () =>
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/informations-generales",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/informations-generales`,
     );
     await Promise.all([
       certificateurSettingsCommonWait(page),

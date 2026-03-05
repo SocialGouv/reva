@@ -1,9 +1,15 @@
 "use client";
+import { useParams } from "next/navigation";
+
 import { CertificationAuthorityGeneralInfoForm } from "@/components/certification-authority/forms/certification-authority-general-info/CertificationAuthorityGeneralInfoForm";
 
 import { useCertificationAuthority } from "./certificationAuthorityGeneralInfo.hooks";
 
 const CertificationAuthorityGeneralInfoAdminPage = () => {
+  const { certificationAuthorityId } = useParams<{
+    certificationAuthorityId: string;
+  }>();
+
   const { certificationAuthority, getCertificationAuthorityStatus } =
     useCertificationAuthority();
 
@@ -29,7 +35,7 @@ const CertificationAuthorityGeneralInfoAdminPage = () => {
       </p>
       <CertificationAuthorityGeneralInfoForm
         certificationAuthority={certificationAuthority}
-        backUrl="/certification-authorities/settings"
+        backUrl={`/certification-authorities/${certificationAuthorityId}/settings`}
       />
     </div>
   );

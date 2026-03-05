@@ -1,10 +1,15 @@
 "use client";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { useParams } from "next/navigation";
 
 import { AddCertificationAuthorityLocalAccountPageContent } from "@/components/certification-authority/local-account/add-local-account-page-content/AddCertificationAuthorityLocalAccountPageContent";
 
 export default function AddLocalAccountPage() {
+  const { certificationAuthorityId } = useParams<{
+    certificationAuthorityId: string;
+  }>();
+
   return (
     <div
       className="flex flex-col"
@@ -14,7 +19,9 @@ export default function AddLocalAccountPage() {
         segments={[
           {
             label: "Paramètres",
-            linkProps: { href: "/certification-authorities/settings/" },
+            linkProps: {
+              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+            },
           },
         ]}
         currentPageLabel="Nouveau compte local"
@@ -23,12 +30,14 @@ export default function AddLocalAccountPage() {
       <p className="mb-12">
         Retrouvez l’ensemble des informations liées à ce compte local.
       </p>
-      <AddCertificationAuthorityLocalAccountPageContent generalInformationPageUrl="/certification-authorities/settings/local-accounts/add-local-account/general-information" />
+      <AddCertificationAuthorityLocalAccountPageContent
+        generalInformationPageUrl={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts/add-local-account/general-information`}
+      />
       <Button
         className="mt-12"
         priority="secondary"
         linkProps={{
-          href: "/certification-authorities/settings/",
+          href: `/certification-authorities/${certificationAuthorityId}/settings/`,
         }}
       >
         Annuler

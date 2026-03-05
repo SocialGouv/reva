@@ -7,11 +7,15 @@ import {
 
 import { login } from "../../../../../shared/helpers/auth/login";
 import { getCertificateurSettingsCommonHandlers } from "../../../../../shared/helpers/common-handlers/certificateur/getCertificateurSettingsCommon.handlers";
+
+const CERTIFICATION_AUTHORITY_ID = "c7399291-e79b-4e0f-b798-d3c97661e47f";
 import { graphQLResolver } from "../../../../../shared/helpers/network/msw";
 import { waitGraphQL } from "../../../../../shared/helpers/network/requests";
 
 const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
-  getCertificateurSettingsCommonHandlers();
+  getCertificateurSettingsCommonHandlers({
+    certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
+  });
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -89,7 +93,7 @@ test.describe("when i access the parcours certification page", () => {
     await login({ page, role: "certificateur" });
 
     await page.goto(
-      "/admin2/certification-authorities/settings/certifications/1/parcours",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications/1/parcours`,
     );
 
     await waitForPageQueries(page);
@@ -107,7 +111,7 @@ test.describe("breadcrumb", async () => {
     await login({ page, role: "certificateur" });
 
     await page.goto(
-      "/admin2/certification-authorities/settings/certifications/1/parcours",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications/1/parcours`,
     );
 
     await waitForPageQueries(page);
@@ -118,7 +122,7 @@ test.describe("breadcrumb", async () => {
       .click();
 
     await expect(page).toHaveURL(
-      "/admin2/certification-authorities/settings/certifications/",
+      /\/certification-authorities\/[\w-]+\/settings\/certifications\//,
     );
   });
 
@@ -128,7 +132,7 @@ test.describe("breadcrumb", async () => {
     await login({ page, role: "certificateur" });
 
     await page.goto(
-      "/admin2/certification-authorities/settings/certifications/1/parcours",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications/1/parcours`,
     );
 
     await waitForPageQueries(page);
@@ -138,6 +142,8 @@ test.describe("breadcrumb", async () => {
       .getByRole("link", { name: "Paramètres" })
       .click();
 
-    await expect(page).toHaveURL("/admin2/certification-authorities/settings/");
+    await expect(page).toHaveURL(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/`,
+    );
   });
 });

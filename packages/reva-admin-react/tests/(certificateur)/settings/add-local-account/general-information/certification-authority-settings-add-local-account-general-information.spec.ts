@@ -9,15 +9,19 @@ import { getCertificateurSettingsCommonHandlers } from "../../../../shared/helpe
 import { graphQLResolver } from "../../../../shared/helpers/network/msw";
 import { waitGraphQL } from "../../../../shared/helpers/network/requests";
 
+const CERTIFICATION_AUTHORITY_ID = "c7399291-e79b-4e0f-b798-d3c97661e47f";
+
 const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
-  getCertificateurSettingsCommonHandlers();
+  getCertificateurSettingsCommonHandlers({
+    certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
+  });
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 const certificationAuthorityForAdd = graphQLResolver({
   account_getAccountForConnectedUser: {
     certificationAuthority: {
-      id: "c7399291-e79b-4e0f-b798-d3c97661e47f",
+      id: CERTIFICATION_AUTHORITY_ID,
       label: "certification authority label",
     },
   },
@@ -52,7 +56,7 @@ test.describe("add local account general information page", () => {
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/local-accounts/add-local-account/general-information",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-accounts/add-local-account/general-information`,
     );
     await Promise.all([
       certificateurSettingsCommonWait(page),
@@ -76,7 +80,7 @@ test.describe("add local account general information page", () => {
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/local-accounts/add-local-account/general-information",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-accounts/add-local-account/general-information`,
     );
     await Promise.all([
       certificateurSettingsCommonWait(page),
@@ -122,7 +126,7 @@ test.describe("add local account general information page", () => {
     await mutationPromise;
 
     await expect(page).toHaveURL(
-      /\/certification-authorities\/settings\/local-accounts\/f7b5b065-f1c5-47d3-aa0c-c826deee8fa6\//,
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-accounts/f7b5b065-f1c5-47d3-aa0c-c826deee8fa6/`,
     );
   });
 });

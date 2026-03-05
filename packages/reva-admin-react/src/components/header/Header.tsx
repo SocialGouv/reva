@@ -11,11 +11,17 @@ import { graphql } from "@/graphql/generated";
 
 import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 
-const getCertificationAuthorityMetabaseUrlQuery = graphql(`
-  query getCertificationAuthorityMetabaseUrl {
+const getCertificationAuthorityForHeaderQuery = graphql(`
+  query getCertificationAuthorityForHeader {
     account_getAccountForConnectedUser {
       certificationAuthority {
+        id
         metabaseDashboardIframeUrl
+      }
+      certificationAuthorityLocalAccount {
+        certificationAuthority {
+          id
+        }
       }
     }
   }
@@ -34,9 +40,10 @@ const PATHS = {
   AGENCIES_SETTINGS: "/agencies-settings-v3",
   CANDIDACIES: "/candidacies",
   CERTIFICATEUR_HELP: "/certification-authorities/help",
-  CERTIFICATION_AUTHORITIES_SETTINGS: "/certification-authorities/settings",
-  CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL:
-    "/certification-authorities/settings/local-account",
+  CERTIFICATION_AUTHORITIES_SETTINGS: (id: string) =>
+    `/certification-authorities/${id}/settings`,
+  CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL: (id: string) =>
+    `/certification-authorities/${id}/settings/local-account`,
   CERTIFICATION_AUTHORITY_STRUCTURES: "/certification-authority-structures",
   CERTIFICATIONS: "/certifications",
   FEASIBILITIES: "/candidacies/feasibilities",
@@ -118,6 +125,7 @@ const getNavigationTabs = ({
   showAAPAideTab,
   showCertificateurAideTab,
   isCertificateurCandidaciesAnnuaireFeatureActive,
+  certificationAuthorityId,
 }: {
   currentPathname: string;
   isAdmin: boolean;
@@ -131,6 +139,7 @@ const getNavigationTabs = ({
   showAAPAideTab: boolean;
   showCertificateurAideTab: boolean;
   isCertificateurCandidaciesAnnuaireFeatureActive: boolean;
+  certificationAuthorityId?: string;
 }) => {
   const certificateurCandidaciesPath =
     isCertificateurCandidaciesAnnuaireFeatureActive
@@ -267,10 +276,10 @@ const getNavigationTabs = ({
     }),
     createTab({
       text: LABELS.PARAMETRES,
-      href: PATHS.CERTIFICATION_AUTHORITIES_SETTINGS,
-      isActive: currentPathname.startsWith(
-        PATHS.CERTIFICATION_AUTHORITIES_SETTINGS,
+      href: PATHS.CERTIFICATION_AUTHORITIES_SETTINGS(
+        certificationAuthorityId ?? "",
       ),
+      isActive: currentPathname.includes("/settings"),
     }),
     ...(showCertificateurAideTab
       ? [
@@ -300,10 +309,10 @@ const getNavigationTabs = ({
     }),
     createTab({
       text: LABELS.PARAMETRES,
-      href: PATHS.CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL,
-      isActive: currentPathname.startsWith(
-        PATHS.CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL,
+      href: PATHS.CERTIFICATION_AUTHORITIES_SETTINGS_LOCAL(
+        certificationAuthorityId ?? "",
       ),
+      isActive: currentPathname.includes("/settings"),
     }),
     ...(showCertificateurAideTab
       ? [
@@ -349,16 +358,22 @@ export const Header = () => {
 
   const { isFeatureActive } = useFeatureflipping();
 
-  const { data: getCertificationAuthorityMetabaseUrl } = useQuery({
-    queryKey: ["certificateur", "getCertificationAuthorityMetabaseUrl"],
+  const { data: getCertificationAuthorityForHeader } = useQuery({
+    queryKey: ["certificateur", "getCertificationAuthorityForHeader"],
     queryFn: () =>
-      graphqlClient.request(getCertificationAuthorityMetabaseUrlQuery),
+      graphqlClient.request(getCertificationAuthorityForHeaderQuery),
     enabled: !isOrganism && !isGestionnaireMaisonMereAAP && !isAdmin,
   });
 
   const metabaseDashboardIframeUrl =
-    getCertificationAuthorityMetabaseUrl?.account_getAccountForConnectedUser
+    getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
       ?.certificationAuthority?.metabaseDashboardIframeUrl;
+
+  const certificationAuthorityId =
+    getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
+      ?.certificationAuthority?.id ??
+    getCertificationAuthorityForHeader?.account_getAccountForConnectedUser
+      ?.certificationAuthorityLocalAccount?.certificationAuthority?.id;
 
   const isAAPAideFeatureActive = isFeatureActive("AAP_HELP");
   const isCertificateurAideFeatureActive =
@@ -396,6 +411,7 @@ export const Header = () => {
     showAAPAideTab,
     showCertificateurAideTab,
     isCertificateurCandidaciesAnnuaireFeatureActive,
+    certificationAuthorityId,
   });
 
   return (

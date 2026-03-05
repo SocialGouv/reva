@@ -10,8 +10,12 @@ import { getCertificateurSettingsCommonHandlers } from "../../../shared/helpers/
 import { graphQLResolver } from "../../../shared/helpers/network/msw";
 import { waitGraphQL } from "../../../shared/helpers/network/requests";
 
+const CERTIFICATION_AUTHORITY_ID = "c7399291-e79b-4e0f-b798-d3c97661e47f";
+
 const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
-  getCertificateurSettingsCommonHandlers();
+  getCertificateurSettingsCommonHandlers({
+    certificationAuthorityId: CERTIFICATION_AUTHORITY_ID,
+  });
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
@@ -27,7 +31,7 @@ const createCertificationsHandlers = () => {
                 id: "d529c770-70a5-43cb-90b2-9050c1d6a093",
               },
             ],
-            id: "2b334ce7-7523-4426-a4de-0b57f0426e66",
+            id: CERTIFICATION_AUTHORITY_ID,
             label: "Certificateur",
             paginatedCertifications: {
               rows: [
@@ -99,7 +103,7 @@ test.describe("certification authority settings certifications page", () => {
   }) => {
     await login({ role: "certificateur", page });
     await page.goto(
-      "/admin2/certification-authorities/settings/certifications",
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications`,
     );
     await waitForPageQueries(page);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -112,7 +116,7 @@ test.describe("certification authority settings certifications page", () => {
     }) => {
       await login({ role: "certificateur", page });
       await page.goto(
-        "/admin2/certification-authorities/settings/certifications",
+        `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications`,
       );
       await waitForPageQueries(page);
       await page.getByTestId("certification-card-1").click();
@@ -126,7 +130,7 @@ test.describe("certification authority settings certifications page", () => {
     }) => {
       await login({ role: "certificateur", page });
       await page.goto(
-        "/admin2/certification-authorities/settings/certifications",
+        `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications`,
       );
       await waitForPageQueries(page);
       await page
@@ -142,7 +146,7 @@ test.describe("certification authority settings certifications page", () => {
     }) => {
       await login({ role: "certificateur", page });
       await page.goto(
-        "/admin2/certification-authorities/settings/certifications/",
+        `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications/`,
       );
       await waitForPageQueries(page);
       await page
@@ -151,7 +155,7 @@ test.describe("certification authority settings certifications page", () => {
         .getByRole("link", { name: "Paramétrer" })
         .click();
       await expect(page).toHaveURL(
-        "/admin2/certification-authorities/settings/certifications/2/parcours/",
+        `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications/2/parcours/`,
       );
     });
   });

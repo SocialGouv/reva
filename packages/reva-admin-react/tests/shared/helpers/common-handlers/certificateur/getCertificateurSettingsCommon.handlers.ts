@@ -7,11 +7,15 @@ export const certificateurSettingsCommonWait = async (page: Page) => {
   await Promise.all([
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getMaisonMereCGUQuery"),
-    waitGraphQL(page, "getCertificationAuthorityMetabaseUrl"),
+    waitGraphQL(page, "getCertificationAuthorityForHeader"),
   ]);
 };
 
-export const getCertificateurSettingsCommonHandlers = () => {
+export const getCertificateurSettingsCommonHandlers = ({
+  certificationAuthorityId,
+}: {
+  certificationAuthorityId: string;
+}) => {
   const fvae = graphql.link("https://reva-api/api/graphql");
 
   return {
@@ -44,12 +48,14 @@ export const getCertificateurSettingsCommonHandlers = () => {
         }),
       ),
       fvae.query(
-        "getCertificationAuthorityMetabaseUrl",
+        "getCertificationAuthorityForHeader",
         graphQLResolver({
           account_getAccountForConnectedUser: {
             certificationAuthority: {
+              id: certificationAuthorityId,
               metabaseDashboardIframeUrl: null,
             },
+            certificationAuthorityLocalAccount: null,
           },
         }),
       ),

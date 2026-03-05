@@ -13,9 +13,11 @@ import { useUpdateLocalAccountInterventionAreaPage } from "./updateLocalAccountI
 export default function InterventionAreaPage() {
   const router = useRouter();
 
-  const { certificationAuthorityLocalAccountId } = useParams<{
-    certificationAuthorityLocalAccountId: string;
-  }>();
+  const { certificationAuthorityId, certificationAuthorityLocalAccountId } =
+    useParams<{
+      certificationAuthorityId: string;
+      certificationAuthorityLocalAccountId: string;
+    }>();
   const {
     certificationAuthorityLocalAccount,
     regions,
@@ -36,7 +38,7 @@ export default function InterventionAreaPage() {
 
       successToast("modification enregistrées");
       router.push(
-        `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+        `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
       );
     } catch (error) {
       console.log(error);
@@ -57,12 +59,14 @@ export default function InterventionAreaPage() {
         segments={[
           {
             label: "Paramètres",
-            linkProps: { href: "/certification-authorities/settings/" },
+            linkProps: {
+              href: `/certification-authorities/${certificationAuthorityId}/settings/`,
+            },
           },
           {
             label: `${certificationAuthorityLocalAccount?.account.firstname} ${certificationAuthorityLocalAccount?.account.lastname}`,
             linkProps: {
-              href: `/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
+              href: `/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`,
             },
           },
         ]}
@@ -72,7 +76,7 @@ export default function InterventionAreaPage() {
       <FormOptionalFieldsDisclaimer />
       <p className="mb-12">Cocher les régions ou départements gérés.</p>
       <InterventionAreaForm
-        backUrl={`/certification-authorities/settings/local-accounts/${certificationAuthorityLocalAccountId}`}
+        backUrl={`/certification-authorities/${certificationAuthorityId}/settings/local-accounts/${certificationAuthorityLocalAccountId}`}
         entityDepartments={
           certificationAuthorityLocalAccount?.departments || []
         }
