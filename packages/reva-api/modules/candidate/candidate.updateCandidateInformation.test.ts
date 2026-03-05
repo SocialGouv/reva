@@ -19,7 +19,7 @@ const getDefaultUpdatedCandidateFields = async () => {
     where: { label: "France" },
   })) as Country;
 
-  const updatedCandidateFields = {
+  return {
     gender: "undisclosed",
     lastname: "newLastName",
     givenName: "newGivenName",
@@ -38,7 +38,6 @@ const getDefaultUpdatedCandidateFields = async () => {
     addressComplement: "newAddressComplement",
     email: "newEmail",
   };
-  return updatedCandidateFields;
 };
 
 describe("candidate information update", () => {
@@ -122,7 +121,7 @@ describe("candidate information update", () => {
         },
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
-        returnFields: "{  email}",
+        returnFields: "{ email }",
       },
     });
     expect(resp.statusCode).toEqual(200);
@@ -223,6 +222,100 @@ describe("candidate information update", () => {
     expect(obj.data.candidate_updateCandidateInformation).toMatchObject({
       department: { label: "Loire-Atlantique" },
     });
+  });
+
+  test("should allow email update when candidate is FranceConnect-linked", async () => {
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    // Marquer le candidat comme lié France Connect
+    await prismaClient.candidate.update({
+      where: { id: candidacy.candidate.id },
+      data: { franceConnectLinked: true },
+    });
+
+    const newEmail = "fc-linked-new-email@example.com";
+    const updatedCandidateFields = {
+      ...(await getDefaultUpdatedCandidateFields()),
+      email: newEmail,
+    };
+
+    const resp = await injectGraphql({
+      fastify: global.testApp,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: mockAdminKeycloakUuid,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: {
+            id: candidacy.candidateId,
+            ...updatedCandidateFields,
+          },
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ email }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).not.toHaveProperty("errors");
+    const obj = resp.json();
+    expect(obj.data.candidate_updateCandidateInformation.email).toBe(newEmail);
+  });
+
+  test("should block pivot fields update when candidate is FranceConnect-linked", async () => {
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    const originalCandidate = candidacy.candidate;
+
+    // Marquer le candidat comme lié France Connect
+    await prismaClient.candidate.update({
+      where: { id: candidacy.candidate.id },
+      data: { franceConnectLinked: true },
+    });
+
+    const updatedCandidateFields = await getDefaultUpdatedCandidateFields();
+
+    const resp = await injectGraphql({
+      fastify: global.testApp,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: mockAdminKeycloakUuid,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: {
+            id: candidacy.candidateId,
+            ...updatedCandidateFields,
+          },
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ firstname lastname birthdate }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).not.toHaveProperty("errors");
+    const obj = resp.json();
+    // Les champs pivot ne doivent pas avoir changé
+    expect(obj.data.candidate_updateCandidateInformation.firstname).toBe(
+      originalCandidate.firstname,
+    );
+    expect(obj.data.candidate_updateCandidateInformation.lastname).toBe(
+      originalCandidate.lastname,
+    );
   });
 
   test("should be able to update a candidate zipcode with an overseas terrtory zip code", async () => {

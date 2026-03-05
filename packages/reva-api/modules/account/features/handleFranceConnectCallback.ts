@@ -190,7 +190,6 @@ const buildCandidateDataFromFCClaims = async (
   const currentDepartment = await getDefaultDepartment();
 
   return {
-    email: userInfo.email,
     firstname,
     firstname2,
     firstname3,
@@ -293,6 +292,7 @@ const createCandidateFromFranceConnect = async ({
   const candidate = await prismaClient.candidate.create({
     data: {
       ...fcData,
+      email: userInfo.email,
       keycloakId,
       phone: "",
       city: "",
