@@ -2063,7 +2063,6 @@ model Appointment {
 
 model ParcoursCertification {
   id                                                            String                                                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  code                                                          String                                                         @unique @map("code") @db.VarChar(255)
   label                                                         String                                                         @map("label") @db.VarChar(255)
   uai                                                           String                                                         @unique @map("uai") @db.VarChar(255)
   nomEtablissement                                              String?                                                        @map("nom_etablissement") @db.VarChar(255)

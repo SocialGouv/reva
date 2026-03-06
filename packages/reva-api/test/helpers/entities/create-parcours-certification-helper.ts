@@ -16,7 +16,6 @@ export const createParcoursCertificationHelper = async (
   }
   return prismaClient.parcoursCertification.create({
     data: {
-      code: faker.string.uuid(),
       label: faker.lorem.sentence(),
       uai: faker.string.uuid(),
       nomEtablissement: faker.lorem.sentence(),

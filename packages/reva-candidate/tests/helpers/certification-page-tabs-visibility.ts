@@ -85,7 +85,6 @@ export function createCertificationForReducedRequirementsScenario({
               {
                 id: "parcours-1",
                 label: "Parcours 1",
-                code: "code-1",
                 nomEtablissement: "Etablissement 1",
                 uai: "uai-1",
               },

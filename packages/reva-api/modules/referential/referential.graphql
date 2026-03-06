@@ -76,7 +76,6 @@ type ParcoursCertificationPage {
 }
 type ParcoursCertification {
   id: ID!
-  code: String!
   label: String!
   uai: String!
   nomEtablissement: String!
