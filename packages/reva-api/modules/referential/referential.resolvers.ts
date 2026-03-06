@@ -105,10 +105,15 @@ const unsafeReferentialResolvers = {
       isAapAvailableForCertificationId({ certificationId }),
     parcours: (
       { id: certificationId }: { id: string },
-      { offset, limit }: { offset?: number; limit?: number },
+      {
+        offset,
+        limit,
+        searchFilter,
+      }: { offset?: number; limit?: number; searchFilter?: string },
     ) =>
       getParcoursCertificationByCertificationId({
         certificationId,
+        searchFilter,
         offset,
         limit,
       }),

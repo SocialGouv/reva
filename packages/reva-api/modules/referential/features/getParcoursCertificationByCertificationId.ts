@@ -5,10 +5,12 @@ export const getParcoursCertificationByCertificationId = async ({
   certificationId,
   offset,
   limit,
+  searchFilter,
 }: {
   certificationId: string;
   offset?: number;
   limit?: number;
+  searchFilter?: string;
 }) => {
   const certification = await prismaClient.certification.findUnique({
     where: { id: certificationId },
@@ -16,6 +18,14 @@ export const getParcoursCertificationByCertificationId = async ({
       parcours: {
         skip: offset,
         take: limit,
+        where: {
+          OR: [
+            { label: { contains: searchFilter, mode: "insensitive" } },
+            {
+              nomEtablissement: { contains: searchFilter, mode: "insensitive" },
+            },
+          ],
+        },
       },
     },
   });

@@ -61,7 +61,11 @@ type Certification {
   additionalInfo: CertificationAdditionalInfo
   isAapAvailable: Boolean!
   juryEstimatedCost: Decimal
-  parcours(offset: Int, limit: Int): ParcoursCertificationPage!
+  parcours(
+    offset: Int
+    limit: Int
+    searchFilter: String
+  ): ParcoursCertificationPage!
   parcoursByCertificationAuthorities: [ParcoursByCertificationAuthority!]
 }
 
