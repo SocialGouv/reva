@@ -65,6 +65,7 @@ type Certification {
     offset: Int
     limit: Int
     searchFilter: String
+    certificationAuthorityIdFilter: ID # If provided, only parcours managed by the collaborateur authority will be returned
   ): ParcoursCertificationPage!
   parcoursByCertificationAuthorities: [ParcoursByCertificationAuthority!]
 }

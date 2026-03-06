@@ -109,11 +109,18 @@ const unsafeReferentialResolvers = {
         offset,
         limit,
         searchFilter,
-      }: { offset?: number; limit?: number; searchFilter?: string },
+        certificationAuthorityIdFilter,
+      }: {
+        offset?: number;
+        limit?: number;
+        searchFilter?: string;
+        certificationAuthorityIdFilter?: string;
+      },
     ) =>
       getParcoursCertificationByCertificationId({
         certificationId,
         searchFilter,
+        certificationAuthorityIdFilter,
         offset,
         limit,
       }),
