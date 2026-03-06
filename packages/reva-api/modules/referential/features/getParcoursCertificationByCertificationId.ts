@@ -16,7 +16,9 @@ export const getParcoursCertificationByCertificationId = async ({
   searchFilter?: string;
   certificationAuthorityIdFilter?: string;
 }) => {
-  const whereClause: Prisma.ParcoursCertificationWhereInput = {};
+  const whereClause: Prisma.ParcoursCertificationWhereInput = {
+    certificationId,
+  };
 
   if (searchFilter) {
     whereClause.OR = [
@@ -35,23 +37,20 @@ export const getParcoursCertificationByCertificationId = async ({
         },
       };
   }
-  const certification = await prismaClient.certification.findUnique({
-    where: { id: certificationId },
-    include: {
-      parcours: {
-        skip: offset,
-        take: limit,
-        where: whereClause,
-      },
-    },
+  const parcours = await prismaClient.parcoursCertification.findMany({
+    where: whereClause,
+    skip: offset,
+    take: limit,
   });
 
-  const parcours = certification?.parcours || [];
+  const count = await prismaClient.parcoursCertification.count({
+    where: whereClause,
+  });
 
   return {
     rows: parcours,
     info: processPaginationInfo({
-      totalRows: parcours.length,
+      totalRows: count,
       limit: limit ?? 10,
       offset: offset ?? 0,
     }),
