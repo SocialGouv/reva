@@ -51,7 +51,7 @@ export default function ParcoursPage() {
     });
   };
 
-  if (getCertificationAndParcoursStatus === "pending" || !certification) {
+  if (getCertificationAndParcoursStatus !== "success" || !certification) {
     return null;
   }
 

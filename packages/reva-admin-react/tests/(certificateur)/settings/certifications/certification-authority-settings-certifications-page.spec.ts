@@ -77,7 +77,29 @@ const createCertificationsHandlers = () => {
       },
     }),
   );
-  return [getCertificationAuthorityForCertificationsPageHandler];
+
+  const getCertificationAndParcoursForCertificationAuthorityParcoursPageHandler =
+    fvae.query(
+      "getCertificationAndParcoursForCertificationAuthorityParcoursPageQuery",
+      graphQLResolver({
+        data: {
+          getCertificationAndParcoursForCertificationAuthorityParcoursPage: {
+            certification: {
+              id: "1",
+              label:
+                "Bac Pro Accompagnement, soins et services à la personne - à domicile",
+              parcours: {
+                rows: [],
+              },
+            },
+          },
+        },
+      }),
+    );
+  return [
+    getCertificationAuthorityForCertificationsPageHandler,
+    getCertificationAndParcoursForCertificationAuthorityParcoursPageHandler,
+  ];
 };
 
 async function waitForPageQueries(page: Page) {

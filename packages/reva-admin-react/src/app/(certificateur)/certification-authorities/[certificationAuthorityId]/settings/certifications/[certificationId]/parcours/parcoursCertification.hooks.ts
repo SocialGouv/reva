@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useSuspenseQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 
@@ -106,7 +110,7 @@ export const useParcoursCertificationPage = ({
   const {
     data: getCertificationAndParcoursResponse,
     status: getCertificationAndParcoursStatus,
-  } = useQuery({
+  } = useSuspenseQuery({
     queryKey: [
       certificationAuthorityId,
       certificationId,
