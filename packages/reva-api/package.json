@@ -69,7 +69,7 @@
     "keycloak-connect": "^24.0.2",
     "lodash": "^4.17.21",
     "magic-bytes.js": "^1.12.1",
-    "mercurius": "^16.1.0",
+    "mercurius": "^16.8.0",
     "openid-client": "^6.8.1",
     "pdfkit": "^0.17.2",
     "pino": "^9.7.0",
