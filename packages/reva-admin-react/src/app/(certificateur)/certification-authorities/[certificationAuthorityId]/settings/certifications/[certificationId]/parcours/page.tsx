@@ -16,6 +16,7 @@ export default function ParcoursPage() {
   const searchParams = useSearchParams();
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
+  const searchFilter = searchParams.get("searchFilter");
 
   const {
     certification,
@@ -26,6 +27,7 @@ export default function ParcoursPage() {
     certificationId,
     certificationAuthorityId,
     page: currentPage,
+    searchFilter,
   });
 
   const certificationAuthorityParcoursIds = useMemo(

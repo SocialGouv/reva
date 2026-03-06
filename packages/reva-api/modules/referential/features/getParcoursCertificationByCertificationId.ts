@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { prismaClient } from "@/prisma/client";
 
@@ -12,20 +14,20 @@ export const getParcoursCertificationByCertificationId = async ({
   limit?: number;
   searchFilter?: string;
 }) => {
+  const whereClause: Prisma.ParcoursCertificationWhereInput = {};
+  if (searchFilter) {
+    whereClause.OR = [
+      { label: { contains: searchFilter, mode: "insensitive" } },
+      { nomEtablissement: { contains: searchFilter, mode: "insensitive" } },
+    ];
+  }
   const certification = await prismaClient.certification.findUnique({
     where: { id: certificationId },
     include: {
       parcours: {
         skip: offset,
         take: limit,
-        where: {
-          OR: [
-            { label: { contains: searchFilter, mode: "insensitive" } },
-            {
-              nomEtablissement: { contains: searchFilter, mode: "insensitive" },
-            },
-          ],
-        },
+        where: whereClause,
       },
     },
   });

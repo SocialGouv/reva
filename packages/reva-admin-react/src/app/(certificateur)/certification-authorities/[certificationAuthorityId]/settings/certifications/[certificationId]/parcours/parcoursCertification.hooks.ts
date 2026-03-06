@@ -10,11 +10,16 @@ const getCertificationAndParcoursQuery = graphql(`
     $certificationAuthorityId: ID!
     $parcoursOffset: Int!
     $parcoursLimit: Int!
+    $parcoursSearchFilter: String
   ) {
     getCertification(certificationId: $certificationId) {
       id
       label
-      parcours(offset: $parcoursOffset, limit: $parcoursLimit) {
+      parcours(
+        offset: $parcoursOffset
+        limit: $parcoursLimit
+        searchFilter: $parcoursSearchFilter
+      ) {
         rows {
           id
           label
@@ -56,10 +61,12 @@ export const useParcoursCertificationPage = ({
   certificationId,
   certificationAuthorityId,
   page,
+  searchFilter,
 }: {
   certificationId: string;
   certificationAuthorityId: string;
   page: number;
+  searchFilter?: string | null;
 }) => {
   const RECORDS_PER_PAGE = 10;
   const parcoursOffset = (page - 1) * RECORDS_PER_PAGE;
@@ -100,6 +107,7 @@ export const useParcoursCertificationPage = ({
       certificationAuthorityId,
       certificationId,
       page,
+      searchFilter,
       "getCertificationAndParcoursForCertificationAuthorityParcoursPage",
     ],
     queryFn: () =>
@@ -108,6 +116,7 @@ export const useParcoursCertificationPage = ({
         certificationAuthorityId,
         parcoursOffset,
         parcoursLimit: RECORDS_PER_PAGE,
+        parcoursSearchFilter: searchFilter,
       }),
   });
 
