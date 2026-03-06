@@ -11,6 +11,7 @@ const getCertificationAndParcoursQuery = graphql(`
     $parcoursOffset: Int!
     $parcoursLimit: Int!
     $parcoursSearchFilter: String
+    $parcoursCertificationAuthorityIdFilter: ID
   ) {
     getCertification(certificationId: $certificationId) {
       id
@@ -19,6 +20,7 @@ const getCertificationAndParcoursQuery = graphql(`
         offset: $parcoursOffset
         limit: $parcoursLimit
         searchFilter: $parcoursSearchFilter
+        certificationAuthorityIdFilter: $parcoursCertificationAuthorityIdFilter
       ) {
         rows {
           id
@@ -62,11 +64,13 @@ export const useParcoursCertificationPage = ({
   certificationAuthorityId,
   page,
   searchFilter,
+  onlyShowAddedParcours,
 }: {
   certificationId: string;
   certificationAuthorityId: string;
   page: number;
   searchFilter?: string | null;
+  onlyShowAddedParcours?: boolean | null;
 }) => {
   const RECORDS_PER_PAGE = 10;
   const parcoursOffset = (page - 1) * RECORDS_PER_PAGE;
@@ -108,6 +112,7 @@ export const useParcoursCertificationPage = ({
       certificationId,
       page,
       searchFilter,
+      onlyShowAddedParcours,
       "getCertificationAndParcoursForCertificationAuthorityParcoursPage",
     ],
     queryFn: () =>
@@ -117,6 +122,9 @@ export const useParcoursCertificationPage = ({
         parcoursOffset,
         parcoursLimit: RECORDS_PER_PAGE,
         parcoursSearchFilter: searchFilter,
+        parcoursCertificationAuthorityIdFilter: onlyShowAddedParcours
+          ? certificationAuthorityId
+          : undefined,
       }),
   });
 

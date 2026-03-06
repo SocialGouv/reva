@@ -17,6 +17,7 @@ export default function ParcoursPage() {
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
   const searchFilter = searchParams.get("searchFilter");
+  const onlyShowAddedItems = searchParams.get("onlyShowAddedItems") === "true";
 
   const {
     certification,
@@ -28,6 +29,7 @@ export default function ParcoursPage() {
     certificationAuthorityId,
     page: currentPage,
     searchFilter,
+    onlyShowAddedParcours: onlyShowAddedItems,
   });
 
   const certificationAuthorityParcoursIds = useMemo(
