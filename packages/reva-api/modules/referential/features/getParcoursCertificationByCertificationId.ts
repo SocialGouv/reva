@@ -41,6 +41,7 @@ export const getParcoursCertificationByCertificationId = async ({
     where: whereClause,
     skip: offset,
     take: limit,
+    orderBy: { label: "asc" },
   });
 
   const count = await prismaClient.parcoursCertification.count({
