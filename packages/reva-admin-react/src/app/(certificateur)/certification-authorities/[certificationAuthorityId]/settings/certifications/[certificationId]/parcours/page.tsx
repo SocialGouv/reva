@@ -1,5 +1,6 @@
 "use client";
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useParams, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
@@ -96,6 +97,15 @@ export default function ParcoursPage() {
         emptyStateTitle="Aucun parcours trouvé"
         emptyStateShowAllItemsButtonLabel="Afficher tous les parcours"
       />
+      <Button
+        priority="tertiary"
+        className="mt-10"
+        linkProps={{
+          href: `/certification-authorities/${certificationAuthorityId}/settings/certifications/`,
+        }}
+      >
+        Retour
+      </Button>
     </div>
   );
 }

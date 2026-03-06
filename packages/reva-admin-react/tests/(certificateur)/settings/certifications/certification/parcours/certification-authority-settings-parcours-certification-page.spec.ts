@@ -133,6 +133,19 @@ test.describe("when i access the parcours certification page", () => {
       "Certification 1",
     );
   });
+  test("when i click on the back button it should lead to the certifications page", async ({
+    page,
+  }) => {
+    await login({ page, role: "certificateur" });
+    await page.goto(PAGE_URL);
+    await waitForPageQueries(page);
+
+    await page.getByRole("link", { name: "Retour" }).click();
+
+    await expect(page).toHaveURL(
+      `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications/`,
+    );
+  });
 });
 
 test.describe("breadcrumb", () => {
