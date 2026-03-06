@@ -76,7 +76,6 @@ const getCandidaciesQuery = graphql(`
         }
         cohorteVaeCollective {
           nom
-          nom
           commanditaireVaeCollective {
             raisonSociale
           }
@@ -92,8 +91,14 @@ const getCandidaciesQuery = graphql(`
 `);
 
 const getCandidacyCountByStatusQuery = graphql(`
-  query getCandidacyCountByStatusForVaeCollectivesPage($cohorteId: ID!) {
-    candidacy_candidacyCountByStatus(cohorteVaeCollectiveId: $cohorteId) {
+  query getCandidacyCountByStatusForVaeCollectivesPage(
+    $cohorteId: ID!
+    $searchFilter: String
+  ) {
+    candidacy_candidacyCountByStatus(
+      cohorteVaeCollectiveId: $cohorteId
+      searchFilter: $searchFilter
+    ) {
       ACTIVE_HORS_ABANDON
       DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON
       DOSSIER_DE_VALIDATION_ENVOYE_HORS_ABANDON
@@ -162,10 +167,15 @@ export const useVAECollectivesPage = ({
   });
 
   const { data: getCandidacyCountByStatusResponse } = useQuery({
-    queryKey: [cohorteId, "getCandidacyCountByStatusForVaeCollectivesPage"],
+    queryKey: [
+      cohorteId,
+      searchFilter,
+      "getCandidacyCountByStatusForVaeCollectivesPage",
+    ],
     queryFn: () =>
       graphqlClient.request(getCandidacyCountByStatusQuery, {
         cohorteId: cohorteId ?? "",
+        searchFilter,
       }),
     enabled: !!cohorteId,
   });

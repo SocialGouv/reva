@@ -174,6 +174,7 @@ const unsafeResolvers = {
       _params: {
         searchFilter?: string;
         maisonMereAAPId?: string;
+        cohorteVaeCollectiveId?: string;
       },
       context: GraphqlContext,
     ) =>

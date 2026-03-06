@@ -20,10 +20,10 @@ export default function VAECollectivePage() {
 
   const { cohortes, candidacies, candidacyCountByStatus } =
     useVAECollectivesPage({
-      cohorteId: cohorteId,
-      status: status,
+      cohorteId,
+      status,
       page: parseInt(page),
-      searchFilter: searchFilter,
+      searchFilter,
     });
 
   return (
