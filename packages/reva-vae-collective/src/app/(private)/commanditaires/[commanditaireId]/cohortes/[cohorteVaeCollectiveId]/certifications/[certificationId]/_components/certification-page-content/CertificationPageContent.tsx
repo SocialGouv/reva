@@ -9,6 +9,7 @@ import { BackButton } from "../back-button/BackButton";
 import { SelectCertificationButton } from "./select-certification-button/SelectCertificationButton";
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
+import { ParcoursTab } from "./tabs/ParcoursTab";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 
 export const CertificationPageContent = ({
@@ -32,6 +33,18 @@ export const CertificationPageContent = ({
     juryTypeSoutenanceOrale?: CertificationJuryTypeOfModality | null;
     juryEstimatedCost?: number | null;
     juryPlace?: string | null;
+    parcoursByCertificationAuthorities?:
+      | {
+          certificationAuthority: {
+            label: string;
+            websiteUrl?: string | null;
+          };
+          parcours: {
+            id: string;
+            label: string;
+          }[];
+        }[]
+      | null;
     certificationAuthorityStructure?: {
       hasReducedRequirements: boolean;
     } | null;
@@ -54,7 +67,18 @@ export const CertificationPageContent = ({
       ),
     },
     ...(hasReducedRequirements
-      ? []
+      ? [
+          {
+            label: "Établissements",
+            content: (
+              <ParcoursTab
+                parcoursByCertificationAuthorities={
+                  certification.parcoursByCertificationAuthorities
+                }
+              />
+            ),
+          },
+        ]
       : [
           {
             label: "Prérequis",

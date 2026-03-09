@@ -27,6 +27,16 @@ const getCertificationInfoQuery = graphql(`
       certificationAuthorityStructure {
         hasReducedRequirements
       }
+      parcoursByCertificationAuthorities {
+        certificationAuthority {
+          label
+          websiteUrl
+        }
+        parcours {
+          id
+          label
+        }
+      }
     }
   }
 `);
