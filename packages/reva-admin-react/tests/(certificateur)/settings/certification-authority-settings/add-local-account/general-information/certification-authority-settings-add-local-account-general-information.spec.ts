@@ -4,10 +4,10 @@ import {
   test,
 } from "next/experimental/testmode/playwright/msw";
 
-import { login } from "../../../../shared/helpers/auth/login";
-import { getCertificateurSettingsCommonHandlers } from "../../../../shared/helpers/common-handlers/certificateur/getCertificateurSettingsCommon.handlers";
-import { graphQLResolver } from "../../../../shared/helpers/network/msw";
-import { waitGraphQL } from "../../../../shared/helpers/network/requests";
+import { login } from "../../../../../shared/helpers/auth/login";
+import { getCertificateurSettingsCommonHandlers } from "../../../../../shared/helpers/common-handlers/certificateur/getCertificateurSettingsCommon.handlers";
+import { graphQLResolver } from "../../../../../shared/helpers/network/msw";
+import { waitGraphQL } from "../../../../../shared/helpers/network/requests";
 
 const CERTIFICATION_AUTHORITY_ID = "c7399291-e79b-4e0f-b798-d3c97661e47f";
 
