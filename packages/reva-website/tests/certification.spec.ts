@@ -22,6 +22,7 @@ const certificationTabLabels = [
   "Prérequis",
   "Jury",
   "Documentation",
+  "Établissements",
 ] as const;
 
 type CertificationTabLabel = (typeof certificationTabLabels)[number];
@@ -34,6 +35,7 @@ const fullCertificationTabVisibility: CertificationTabVisibility = {
   Prérequis: true,
   Jury: true,
   Documentation: true,
+  Établissements: false,
 };
 
 const reducedCertificationTabVisibility: CertificationTabVisibility = {
@@ -42,6 +44,7 @@ const reducedCertificationTabVisibility: CertificationTabVisibility = {
   Prérequis: false,
   Jury: false,
   Documentation: false,
+  Établissements: true,
 };
 
 function createCertificationResponse({
@@ -57,6 +60,24 @@ function createCertificationResponse({
     data: {
       getCertification: {
         ...chaudronnier,
+        parcoursByCertificationAuthorities: reducedRequirementsState
+          ? [
+              {
+                certificationAuthority: {
+                  label: "Certification Authority",
+                  websiteUrl: "https://www.certification-authority.com",
+                },
+                parcours: [
+                  {
+                    id: "parcours-1",
+                    label: "Parcours 1",
+                    nomEtablissement: "Etablissement 1",
+                    uai: "uai-1",
+                  },
+                ],
+              },
+            ]
+          : [],
         label: certificationLabel,
         certificationAuthorityStructure:
           structureLabel === null
@@ -216,3 +237,27 @@ certificationTabsVisibilityScenarios.forEach(
     });
   },
 );
+
+test("shows available parcours", async ({ page, msw }) => {
+  msw.use(
+    fvae.query("getCertificationForCertificationPage", () => {
+      return HttpResponse.json(
+        createCertificationResponse({
+          certificationLabel: "Certification SUP",
+          structureLabel: "Structure SUP",
+          reducedRequirementsState: true,
+        }),
+      );
+    }),
+  );
+
+  await page.goto(certificationPath);
+  await page.getByRole("tab", { name: "Établissements" }).click();
+  await expect(
+    page.getByText(
+      "Établissements proposant ce diplôme sur la plateforme France VAE",
+    ),
+  ).toBeVisible();
+  await expect(page.getByText("Certification Authority")).toBeVisible();
+  await expect(page.getByText("Parcours 1")).toBeVisible();
+});
