@@ -7,8 +7,12 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { createOrganismOnConventionCollectiveHelper } from "@/test/helpers/entities/create-organism-on-convention-collective-helper";
+import { createParcoursCertificationHelper } from "@/test/helpers/entities/create-parcours-certification-helper";
 import { createCohorteVaeCollectiveHelper } from "@/test/helpers/entities/create-vae-collective-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+import { graphql } from "../graphql/generated";
 
 const createCertifications = async () => {
   for (const cert of particulierEmployeurCertifications) {
@@ -52,6 +56,35 @@ async function searchCertificationsForCandidate({
     },
   });
 }
+
+const getCertificationAndParcoursQuery = graphql(`
+  query getCertificationAndParcours(
+    $certificationId: ID!
+    $searchFilter: String
+  ) {
+    getCertification(certificationId: $certificationId) {
+      parcours(searchFilter: $searchFilter) {
+        rows {
+          id
+        }
+      }
+    }
+  }
+`);
+
+const getCertificationAndParcours = async ({
+  certificationId,
+  searchFilter,
+}: {
+  certificationId: string;
+  searchFilter?: string;
+}) => {
+  const graphqlClient = getGraphQLClient({});
+  return graphqlClient.request(getCertificationAndParcoursQuery, {
+    certificationId,
+    searchFilter,
+  });
+};
 
 const particulierEmployeurCertifications = [
   "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
@@ -159,5 +192,48 @@ describe("VAE collective", () => {
     });
     const obj = resp.json();
     expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
+  });
+});
+
+describe("Parcours certification", () => {
+  test("should return all parcours certifications for a certification and only those parcours", async () => {
+    const certification = await createCertificationHelper();
+    const parcoursCertification = await createParcoursCertificationHelper({
+      certificationId: certification.id,
+    });
+    await createParcoursCertificationHelper(); //parcours not attached to the certification
+
+    const resp = await getCertificationAndParcours({
+      certificationId: certification.id,
+    });
+    expect(resp.getCertification.parcours.rows).toEqual([
+      { id: parcoursCertification.id },
+    ]);
+  });
+
+  test("should return all parcours certifications for a certification matching the search filter", async () => {
+    const certification = await createCertificationHelper();
+    const parcoursCertification = await createParcoursCertificationHelper({
+      certificationId: certification.id,
+      label: "Parcours 1",
+    });
+    const parcoursCertification2 = await createParcoursCertificationHelper({
+      certificationId: certification.id,
+      label: "Parcours 2",
+    });
+
+    await createParcoursCertificationHelper({
+      certificationId: certification.id,
+      label: "Should not return this one",
+    });
+
+    const resp = await getCertificationAndParcours({
+      certificationId: certification.id,
+      searchFilter: "Parcours",
+    });
+    expect(resp.getCertification.parcours.rows).toEqual([
+      { id: parcoursCertification.id },
+      { id: parcoursCertification2.id },
+    ]);
   });
 });
