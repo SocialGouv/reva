@@ -243,5 +243,8 @@ test("shows available parcours", async ({ page, msw }) => {
     ),
   ).toBeVisible();
   await expect(page.getByText("Certification Authority")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Certification Authority" }),
+  ).toHaveAttribute("href", "https://www.certification-authority.com");
   await expect(page.getByText("Parcours 1")).toBeVisible();
 });
