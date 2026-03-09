@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
 import { MultiSelectList } from "@/components/multi-select-list/MultiSelectList";
+import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useParcoursCertificationPage } from "./parcoursCertification.hooks";
 
@@ -34,7 +35,7 @@ export default function ParcoursPage() {
   });
 
   const certificationAuthorityParcoursIds = useMemo(
-    () => certificationAuthorityParcours?.map((parcours) => parcours.id),
+    () => certificationAuthorityParcours?.map((parcours) => parcours.id) || [],
     [certificationAuthorityParcours],
   );
 
@@ -45,11 +46,19 @@ export default function ParcoursPage() {
     itemId: string;
     selected: boolean;
   }) => {
-    await updateParcoursForCertificationAndCertificationAuthority.mutateAsync({
-      certificationId,
-      certificationAuthorityId,
-      parcoursCertificationIds: selected ? [itemId] : [],
-    });
+    try {
+      await updateParcoursForCertificationAndCertificationAuthority.mutateAsync(
+        {
+          certificationId,
+          certificationAuthorityId,
+          parcoursCertificationIds: selected
+            ? [...certificationAuthorityParcoursIds, itemId]
+            : certificationAuthorityParcoursIds.filter((id) => id !== itemId),
+        },
+      );
+    } catch (error) {
+      graphqlErrorToast(error);
+    }
   };
 
   if (getCertificationAndParcoursStatus !== "success" || !certification) {
