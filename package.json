@@ -14,6 +14,7 @@
     "lint": "npm-run-all --print-label --parallel \"lint --prefix packages/reva-api\" \"lint --prefix packages/reva-candidate\" \"lint --prefix packages/reva-admin-react\" \"lint --prefix packages/reva-website\" \"lint --prefix packages/reva-vae-collective\" \"lint --prefix packages/reva-interop\"",
     "test-api": "npm run test --prefix packages/reva-api",
     "deploy": "./infra/scripts/deploy.sh",
+    "deploy-preprod": "./infra/scripts/deploy-preprod.sh",
     "graphql:generate": "npm run graphql:generate --prefix packages/reva-api && npm run graphql:generate --prefix packages/reva-admin-react && npm run graphql:generate --prefix packages/reva-candidate && npm run graphql:generate --prefix packages/reva-website && npm run graphql:generate --prefix packages/reva-vae-collective && npm run graphql:generate --prefix packages/reva-interop",
     "prisma:generate": "npm run prisma:generate --prefix packages/reva-api",
     "prisma:migrate:deploy": "npm run prisma:migrate:deploy --prefix packages/reva-api",
