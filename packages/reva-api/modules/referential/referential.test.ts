@@ -4,6 +4,7 @@ import { prismaClient } from "@/prisma/client";
 import { attachOrganismToAllDegreesHelper } from "@/test/helpers/attach-organism-to-all-degrees-helper";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createCertificationAuthorityHelper } from "@/test/helpers/entities/create-certification-authority-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { createOrganismOnConventionCollectiveHelper } from "@/test/helpers/entities/create-organism-on-convention-collective-helper";
@@ -235,5 +236,48 @@ describe("Parcours certification", () => {
       { id: parcoursCertification.id },
       { id: parcoursCertification2.id },
     ]);
+  });
+
+  test("should not return a certification if it has parcours but no certification authority is linked", async () => {
+    const certification = await createCertificationHelper({
+      label: "Certif without authority",
+    });
+    await createParcoursCertificationHelper({
+      certificationId: certification.id,
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "Certif without authority",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(0);
+  });
+
+  test("should return a certification if it has parcours and a certification authority is linked to at least one parcours", async () => {
+    const certificationWithAuthority = await createCertificationHelper({
+      label: "Certif with authority and parcours",
+    });
+    const parcoursCertificationWithAuthority =
+      await createParcoursCertificationHelper({
+        certificationId: certificationWithAuthority.id,
+      });
+    await createCertificationAuthorityHelper({
+      certificationAuthorityOnCertification: {
+        create: {
+          certificationId: certificationWithAuthority.id,
+          certificationAuthorityOnCertificationOnParcoursCertifications: {
+            create: {
+              parcoursCertificationId: parcoursCertificationWithAuthority.id,
+            },
+          },
+        },
+      },
+    });
+
+    const resp = await searchCertificationsForCandidate({
+      searchText: "Certif with authority and parcours",
+    });
+    const obj = resp.json();
+    expect(obj.data.searchCertificationsForCandidate.info.totalRows).toBe(1);
   });
 });
