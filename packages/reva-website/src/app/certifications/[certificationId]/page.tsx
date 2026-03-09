@@ -110,6 +110,16 @@ const getCertificationQuery = graphql(`
           label
         }
       }
+      parcoursByCertificationAuthorities {
+        certificationAuthority {
+          label
+          websiteUrl
+        }
+        parcours {
+          id
+          label
+        }
+      }
     }
   }
 `);

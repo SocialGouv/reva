@@ -11,6 +11,7 @@ import { BlocsDeCompetenceTab } from "./tabs/BlocsDeCompetenceTab";
 import DocumentationTab from "./tabs/DocumentationTab";
 import { JuryTab } from "./tabs/JuryTab";
 import { MetierTab } from "./tabs/MetierTab";
+import { ParcoursTab } from "./tabs/ParcoursTab";
 import { PreRequisitesTab } from "./tabs/PrerequisitesTab";
 import { UsefulResources } from "./useful-resources/UserfulResources";
 
@@ -67,11 +68,28 @@ export const CertificationPageContent = async ({
         label: string;
       }[];
     }[];
+    parcoursByCertificationAuthorities?:
+      | {
+          certificationAuthority: {
+            label: string;
+            websiteUrl?: string | null;
+          };
+          parcours: {
+            id: string;
+            label: string;
+          }[];
+        }[]
+      | null;
   };
 }) => {
   const hasReducedRequirements =
     certification.certificationAuthorityStructure?.hasReducedRequirements ??
     false;
+
+  console.log(
+    "certification.parcoursByCertificationAuthorities",
+    certification.parcoursByCertificationAuthorities,
+  );
 
   const tabs = [
     {
@@ -91,7 +109,18 @@ export const CertificationPageContent = async ({
       ),
     },
     ...(hasReducedRequirements
-      ? []
+      ? [
+          {
+            label: "Établissements",
+            content: (
+              <ParcoursTab
+                parcoursByCertificationAuthorities={
+                  certification.parcoursByCertificationAuthorities
+                }
+              />
+            ),
+          },
+        ]
       : [
           {
             label: "Prérequis",
