@@ -12,7 +12,12 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 const certificationPath =
   "/vae-collective/commanditaires/115c2693-b625-491b-8b91-c7b3875d86a0/cohortes/0eda2cbf-78ae-47af-9f28-34d05f972712/certifications/b122423f-6eb6-4d80-94b2-8e57fd0e4cd7";
 
-const certificationTabLabels = ["Métier", "Prérequis", "Jury"] as const;
+const certificationTabLabels = [
+  "Métier",
+  "Prérequis",
+  "Jury",
+  "Établissements",
+] as const;
 type CertificationTabLabel = (typeof certificationTabLabels)[number];
 type ReducedRequirementsState = true | false | null;
 type CertificationTabVisibility = Record<CertificationTabLabel, boolean>;
@@ -21,12 +26,14 @@ const fullCertificationTabVisibility: CertificationTabVisibility = {
   Métier: true,
   Prérequis: true,
   Jury: true,
+  Établissements: false,
 };
 
 const reducedCertificationTabVisibility: CertificationTabVisibility = {
   Métier: true,
   Prérequis: false,
   Jury: false,
+  Établissements: true,
 };
 
 function createCertificationResponse({
@@ -50,6 +57,22 @@ function createCertificationResponse({
         juryTypeSoutenanceOrale: "LES_DEUX",
         juryEstimatedCost: 200,
         juryPlace: "",
+        parcoursByCertificationAuthorities: reducedRequirementsState
+          ? [
+              {
+                certificationAuthority: {
+                  label: "Certification Authority",
+                  websiteUrl: "https://www.certification-authority.com",
+                },
+                parcours: [
+                  {
+                    id: "parcours-1",
+                    label: "Parcours 1",
+                  },
+                ],
+              },
+            ]
+          : [],
         certificationAuthorityStructure:
           reducedRequirementsState === null
             ? null
@@ -170,7 +193,12 @@ test("it should not display the select certification button when the certificati
 });
 
 certificationTabsVisibilityScenarios.forEach(
-  ({ name, certificationLabel, reducedRequirementsState, expectedTabVisibility }) => {
+  ({
+    name,
+    certificationLabel,
+    reducedRequirementsState,
+    expectedTabVisibility,
+  }) => {
     test(`it should show expected tabs when ${name}`, async ({ page, msw }) => {
       msw.use(
         fvae.query("getCertificationInfoForCertificationPage", () => {
@@ -193,3 +221,27 @@ certificationTabsVisibilityScenarios.forEach(
     });
   },
 );
+
+test("shows available parcours", async ({ page, msw }) => {
+  msw.use(
+    fvae.query("getCertificationInfoForCertificationPage", () => {
+      return HttpResponse.json(
+        createCertificationResponse({
+          certificationLabel: "Certification SUP",
+          reducedRequirementsState: true,
+        }),
+      );
+    }),
+  );
+
+  await login({ page, role: "gestionnaireVaeCollective" });
+  await page.goto(certificationPath);
+  await page.getByRole("tab", { name: "Établissements" }).click();
+  await expect(
+    page.getByText(
+      "Établissements proposant ce diplôme sur la plateforme France VAE",
+    ),
+  ).toBeVisible();
+  await expect(page.getByText("Certification Authority")).toBeVisible();
+  await expect(page.getByText("Parcours 1")).toBeVisible();
+});
