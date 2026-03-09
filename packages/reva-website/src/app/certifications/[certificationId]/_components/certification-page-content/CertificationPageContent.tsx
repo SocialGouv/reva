@@ -86,11 +86,6 @@ export const CertificationPageContent = async ({
     certification.certificationAuthorityStructure?.hasReducedRequirements ??
     false;
 
-  console.log(
-    "certification.parcoursByCertificationAuthorities",
-    certification.parcoursByCertificationAuthorities,
-  );
-
   const tabs = [
     {
       label: "Métier",
