@@ -153,6 +153,69 @@ http:
 
     # --- END PRODUCTION VAE.GOUV.FR ---
 
+    # --- BEGIN PREPROD ---
+
+    auth-preprod-vae-gouv-fr:
+      rule: "Host(`auth.preprod.vae.gouv.fr`)"
+      service: auth-preprod
+      middlewares:
+        - removeHeader
+
+    metabase-preprod-vae-gouv-fr:
+      rule: "Host(`metabase.preprod.vae.gouv.fr`)"
+      service: metabase-preprod
+      middlewares:
+        - removeHeader
+        - add-anti-clickjacking-headers-preprod
+
+    site-web-preprod:
+      rule: "Host(`preprod.vae.gouv.fr`) && PathPrefix(`/`)"
+      service: site-web-preprod
+      middlewares:
+        - removeHeader
+        - add-security-headers-preprod
+
+    espace-pro-react-preprod:
+      rule: "Host(`preprod.vae.gouv.fr`) && PathPrefix(`/admin2`)"
+      service: espace-pro-react-preprod
+      middlewares:
+        - removeHeader
+        - add-security-headers-preprod
+
+    app-candidat-preprod:
+      rule: "Host(`preprod.vae.gouv.fr`) && PathPrefix(`/app`)"
+      service: noop@internal
+      middlewares:
+        - redirect-reva-candidate
+
+    app-candidate-preprod:
+      rule: "Host(`preprod.vae.gouv.fr`) && (Path(`/candidat`) || PathPrefix(`/candidat/`))"
+      service: app-candidate-preprod
+      middlewares:
+        - removeHeader
+        - add-security-headers-preprod
+
+    api-preprod:
+      rule: "Host(`preprod.vae.gouv.fr`) && PathPrefix(`/api`)"
+      service: api-preprod
+      middlewares:
+        - removeHeader
+
+    interop-preprod:
+      rule: "Host(`preprod.vae.gouv.fr`) && PathPrefix(`/interop/v1`)"
+      service: interop-preprod
+      middlewares:
+        - removeHeader
+
+    vae-collective-preprod:
+      rule: "Host(`preprod.vae.gouv.fr`) && PathPrefix(`/vae-collective`)"
+      service: vae-collective-preprod
+      middlewares:
+        - removeHeader
+        - add-security-headers-preprod
+
+    # --- END PREPROD ---
+
     # --- BEGIN SANDBOX ---
 
     auth-sandbox-vae-gouv-fr:
@@ -207,6 +270,18 @@ http:
       headers:
         customResponseHeaders:
           Content-Security-Policy: "default-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'; object-src 'none'; img-src https://client.crisp.chat 'self' data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr https://client.crisp.chat 'unsafe-inline'; style-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr https://client.crisp.chat 'unsafe-inline'; connect-src 'self' https://client.crisp.chat https://api.produktly.com https://sessions.bugsnag.com https://strapi.vae.gouv.fr https://matomo.fabrique.social.gouv.fr https://auth.vae.gouv.fr https://api-adresse.data.gouv.fr wss://client.relay.crisp.chat; font-src https://client.crisp.chat 'self' data:; frame-src 'self' blob: https://auth.vae.gouv.fr https://plugins.crisp.chat https://metabase.vae.gouv.fr; media-src 'self' https://healing-nature-bb0384846f.media.strapiapp.com https://youtube.com https://dailymotion.com"
+          X-Frame-Options: SAMEORIGIN
+          X-Content-Type-Options: nosniff
+
+    add-anti-clickjacking-headers-preprod:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: "frame-ancestors 'self' https://preprod.vae.gouv.fr;"
+
+    add-security-headers-preprod:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: "default-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'; object-src 'none'; img-src https://client.crisp.chat 'self' data: https: ; script-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr https://client.crisp.chat 'unsafe-inline'; style-src 'self' https://static.userguiding.com https://public.produktly.com https://matomo.fabrique.social.gouv.fr https://client.crisp.chat 'unsafe-inline'; connect-src 'self' https://client.crisp.chat https://api.produktly.com https://sessions.bugsnag.com https://strapi.vae.gouv.fr https://matomo.fabrique.social.gouv.fr https://auth.preprod.vae.gouv.fr https://api-adresse.data.gouv.fr wss://client.relay.crisp.chat; font-src https://client.crisp.chat 'self' data:; frame-src 'self' blob: https://auth.preprod.vae.gouv.fr https://plugins.crisp.chat https://metabase.preprod.vae.gouv.fr; media-src 'self' https://healing-nature-bb0384846f.media.strapiapp.com https://youtube.com https://dailymotion.com"
           X-Frame-Options: SAMEORIGIN
           X-Content-Type-Options: nosniff
 
@@ -375,6 +450,58 @@ http:
 
 
     # --- END PRODUCTION  ---
+
+    # --- BEGIN PREPROD ---
+
+    auth-preprod:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://auth-reva-preprod.osc-secnum-fr1.scalingo.io/"
+
+    metabase-preprod:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://metabase-reva-preprod.osc-secnum-fr1.scalingo.io/"
+
+    site-web-preprod:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-preprod-website.osc-secnum-fr1.scalingo.io/"
+
+    espace-pro-react-preprod:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-preprod-admin-react.osc-secnum-fr1.scalingo.io/admin2/"
+
+    app-candidate-preprod:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-preprod-candidate.osc-secnum-fr1.scalingo.io/candidat/"
+
+    api-preprod:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-preprod.osc-secnum-fr1.scalingo.io/api"
+
+    interop-preprod:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-preprod-interop.osc-secnum-fr1.scalingo.io/interop/v1"
+
+    vae-collective-preprod:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-preprod-vae-collective.osc-secnum-fr1.scalingo.io/"
+
+    # --- END PREPROD ---
 
     # --- BEGIN SANDBOX ---
 
