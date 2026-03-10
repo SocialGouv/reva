@@ -18,22 +18,38 @@ const { certificateurSettingsCommonHandlers, certificateurSettingsCommonWait } =
 
 const fvae = graphql.link("https://reva-api/api/graphql");
 
+const STRUCTURE_ID = "d529c770-70a5-43cb-90b2-9050c1d6a093";
+
 const localAccountCertifications = graphQLResolver({
   account_getAccountForConnectedUser: {
     certificationAuthorityLocalAccount: {
-      certifications: [
-        {
-          id: "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
-          codeRncp: "12296A",
-          label: "CQP Animateur d'équipe autonome de production industrielle",
+      certificationAuthority: {
+        certificationAuthorityStructures: [{ id: STRUCTURE_ID }],
+      },
+      paginatedCertifications: {
+        rows: [
+          {
+            id: "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
+            codeRncp: "12296A",
+            label: "CQP Animateur d'équipe autonome de production industrielle",
+            visible: true,
+            certificationAuthorityStructure: { id: STRUCTURE_ID },
+          },
+          {
+            id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
+            codeRncp: "5022",
+            label:
+              "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
+            visible: true,
+            certificationAuthorityStructure: { id: STRUCTURE_ID },
+          },
+        ],
+        info: {
+          totalRows: 2,
+          totalPages: 1,
+          currentPage: 1,
         },
-        {
-          id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
-          codeRncp: "5022",
-          label:
-            "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
-        },
-      ],
+      },
     },
   },
 });
@@ -81,32 +97,29 @@ test.describe("local account settings certifications page", () => {
     page,
   }) => {
     await gotoCertificationsPage(page);
+    const pageContainer = page.getByTestId("certifications-local-account-page");
     await expect(
-      page
-        .getByTestId("certifications-local-account-page")
-        .getByText(
-          "12296A - CQP Animateur d'équipe autonome de production industrielle",
-        ),
-    ).toBeVisible();
-    await expect(
-      page
-        .getByTestId("certifications-local-account-page")
-        .getByText(
-          "5022 - Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
-        ),
-    ).toBeVisible();
-  });
-
-  test("when i click on the back button - redirect to the local account settings page", async ({
-    page,
-  }) => {
-    await gotoCertificationsPage(page);
-    await page.getByRole("link", { name: "Retour" }).click();
-    await expect(page).toHaveURL(
-      new RegExp(
-        `/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/local-account`,
+      pageContainer.getByTestId(
+        "certification-card-00fa1e5b-1535-4cb6-b542-0dad27dd6341",
       ),
-    );
+    ).toBeVisible();
+    await expect(
+      pageContainer.getByTestId(
+        "certification-card-0236bf82-e85d-4e88-927a-c93bb6c44efb",
+      ),
+    ).toBeVisible();
+    await expect(
+      pageContainer.getByText(
+        "CQP Animateur d'équipe autonome de production industrielle",
+      ),
+    ).toBeVisible();
+    await expect(
+      pageContainer.getByText(
+        "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
+      ),
+    ).toBeVisible();
+    await expect(pageContainer.getByText("RNCP 12296A")).toBeVisible();
+    await expect(pageContainer.getByText("RNCP 5022")).toBeVisible();
   });
 
   test.describe("when i use the breadcrumb", () => {
