@@ -1,4 +1,6 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
+import Button from "@codegouvfr/react-dsfr/Button";
+import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import { Tile } from "@codegouvfr/react-dsfr/Tile";
 import { Metadata, Viewport } from "next";
 import { draftMode } from "next/headers";
@@ -37,8 +39,8 @@ const FaqPage = async () => {
   });
   return (
     <MainLayout preview={preview}>
-      <div className="flex flex-col w-full gap-8 fr-container p-10 md:p-32 pt-0 md:pt-16">
-        <h1 className="text-4xl font-bold  bg-white mt-12 mb-0 md:mb-6 self-center">
+      <div className="flex flex-col w-full gap-10 fr-container p-10 md:p-32 pt-0 md:pt-12">
+        <h1 className="text-4xl font-bold  bg-white mt-10 md:mt-0 mb-0 self-center">
           Questions fréquentes
         </h1>
         <div className="flex flex-wrap justify-start md:justify-center gap-6 lg:gap-16">
@@ -60,20 +62,20 @@ const FaqPage = async () => {
             />
           ))}
         </div>
-        <div className="flex flex-col gap-10 py-4 mt-0 md:mt-12">
+        <div className="flex flex-col gap-10 mt-0">
           {sections.sectionFaqs?.map((s) => (
             <div
               key={s?.documentId}
               id={`section-${s?.documentId}`}
               className="flex flex-col gap-8 font-bold text-[2rem] text-black"
             >
-              {s?.titre}
+              <h2 className="m-0">{s?.titre}</h2>
               <ul className="list-none p-0 m-0 flex flex-col gap-8">
                 {s?.sous_section_faqs?.map((ss) => (
                   <li className="text-[1.75rem]" key={ss?.documentId}>
-                    <div className="leading-none">
+                    <h3 className="leading-none">
                       {(s?.sous_section_faqs?.length || 0) > 1 && ss?.titre}
-                    </div>
+                    </h3>
                     <div className="mt-6">
                       {ss?.article_faqs?.map((a) => (
                         <span
@@ -101,6 +103,21 @@ const FaqPage = async () => {
                   </li>
                 ))}
               </ul>
+              <CallOut
+                title="Vous n’avez pas trouvé de réponse à votre question ? Vous rencontrez un blocage technique ?"
+                className="m-0 mt-2"
+                classes={{
+                  title: "mb-0",
+                }}
+              >
+                <Button
+                  linkProps={{
+                    href: "/nous-contacter",
+                  }}
+                >
+                  Contactez-nous
+                </Button>
+              </CallOut>
             </div>
           ))}
         </div>
