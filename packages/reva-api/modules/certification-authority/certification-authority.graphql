@@ -75,9 +75,14 @@ type CertificationAuthorityLocalAccountPaginated {
   info: PaginationInfo!
 }
 
+type ParcoursByCertificationAuthority {
+  certificationAuthority: CertificationAuthority!
+  parcours: [ParcoursCertification!]!
+}
 type Certification {
   certificationAuthorities: [CertificationAuthority!]!
   certificationAuthorityStructure: CertificationAuthorityStructure
+  parcoursByCertificationAuthorities: [ParcoursByCertificationAuthority!]
 }
 
 enum CertificationAuthorityOrLocalAccountType {

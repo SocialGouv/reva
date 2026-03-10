@@ -23,11 +23,6 @@ enum CertificationJuryFrequency {
   YEARLY
 }
 
-type ParcoursByCertificationAuthority {
-  certificationAuthority: CertificationAuthority!
-  parcours: [ParcoursCertification!]!
-}
-
 type Certification {
   id: ID!
   label: String!
@@ -67,7 +62,6 @@ type Certification {
     searchFilter: String
     certificationAuthorityIdFilter: ID # If provided, only parcours managed by the collaborateur authority will be returned
   ): ParcoursCertificationPage!
-  parcoursByCertificationAuthorities: [ParcoursByCertificationAuthority!]
 }
 
 type ParcoursCertificationPage {
