@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 
 import {
@@ -25,6 +26,12 @@ export default function TransferCandidacyPage() {
     certificationAuthorityLocalAccountSelected,
     setCertificationAuthorityLocalAccountSelected,
   ] = useState<CertificationAuthorityLocalAccount | null>(null);
+
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isCertificateurCandidaciesAnnuaireFeatureActive = isFeatureActive(
+    "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
+  );
 
   const {
     certificationAuthorities,
@@ -52,7 +59,11 @@ export default function TransferCandidacyPage() {
         title: "La candidature a été transférée avec succès",
         closable: true,
       });
-      router.push("/candidacies/feasibilities");
+      router.push(
+        isCertificateurCandidaciesAnnuaireFeatureActive
+          ? "/candidacies/annuaire"
+          : "/candidacies/feasibilities",
+      );
     } catch (error) {
       graphqlErrorToast(error);
     }
