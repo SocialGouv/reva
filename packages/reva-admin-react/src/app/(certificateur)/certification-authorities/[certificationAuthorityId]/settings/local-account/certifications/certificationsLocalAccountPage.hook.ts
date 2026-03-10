@@ -5,35 +5,79 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 
 const getCertificationAuthorityLocalAccount = graphql(`
-  query getCertificationAuthorityLocalAccountForCertificationsLocalAccountPage {
+  query getCertificationAuthorityLocalAccountForCertificationsLocalAccountPage(
+    $certificationsOffset: Int!
+    $certificationsLimit: Int!
+    $certificationsSearchFilter: String
+  ) {
     account_getAccountForConnectedUser {
       certificationAuthorityLocalAccount {
-        certifications {
-          id
-          label
-          codeRncp
+        certificationAuthority {
+          certificationAuthorityStructures {
+            id
+          }
+        }
+        paginatedCertifications(
+          limit: $certificationsLimit
+          offset: $certificationsOffset
+          searchText: $certificationsSearchFilter
+        ) {
+          rows {
+            certificationAuthorityStructure {
+              id
+            }
+            id
+            codeRncp
+            label
+            visible
+            parcours(limit: 1) {
+              rows {
+                id
+              }
+            }
+          }
+          info {
+            totalRows
+            totalPages
+            currentPage
+          }
         }
       }
     }
   }
 `);
 
-export const useCertificationsLocalAccountPage = () => {
+export const useCertificationsLocalAccountPage = ({
+  page,
+  searchFilter,
+}: {
+  page: number;
+  searchFilter: string;
+}) => {
   const { graphqlClient } = useGraphQlClient();
+  const RECORDS_PER_PAGE = 10;
+  const certificationsOffset = (page - 1) * RECORDS_PER_PAGE;
 
   const { data } = useQuery({
-    queryKey: [
-      "account_getAccountForConnectedUser",
-      "certificationAuthorityLocalAccount",
-      "CertificationsLocalAccountPage",
-    ],
-    queryFn: () => graphqlClient.request(getCertificationAuthorityLocalAccount),
+    queryKey: [page, searchFilter, "CertificationsLocalAccountPage"],
+    queryFn: () =>
+      graphqlClient.request(getCertificationAuthorityLocalAccount, {
+        certificationsOffset,
+        certificationsLimit: RECORDS_PER_PAGE,
+        certificationsSearchFilter: searchFilter,
+      }),
   });
 
   const certificationAuthorityLocalAccount =
     data?.account_getAccountForConnectedUser
       ?.certificationAuthorityLocalAccount;
+
+  const certificationsPage =
+    data?.account_getAccountForConnectedUser?.certificationAuthorityLocalAccount
+      ?.paginatedCertifications;
+
   return {
     certificationAuthorityLocalAccount,
+    certificationsPage,
   };
 };
