@@ -4,7 +4,7 @@ import { prismaClient } from "@/prisma/client";
 
 import { UpdateCertificationDescriptionInput } from "../referential.types";
 
-import { getCertificationById } from "./getCertificationById";
+import { getCertificationWithReducedRequirementsById } from "./getCertificationWithReducedRequirementsById";
 
 export const updateCertificationDescription = async ({
   certificationId,
@@ -16,7 +16,9 @@ export const updateCertificationDescription = async ({
   juryEstimatedCost,
   availableAt,
 }: UpdateCertificationDescriptionInput) => {
-  const certification = await getCertificationById({ certificationId });
+  const certification = await getCertificationWithReducedRequirementsById({
+    certificationId,
+  });
   if (!certification) {
     throw new Error("La certification n'a pas été trouvée");
   }
@@ -34,7 +36,15 @@ export const updateCertificationDescription = async ({
     );
   }
 
-  if (!juryTypeMiseEnSituationProfessionnelle && !juryTypeSoutenanceOrale) {
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+
+  if (
+    !hasReducedRequirements &&
+    !juryTypeMiseEnSituationProfessionnelle &&
+    !juryTypeSoutenanceOrale
+  ) {
     throw new Error("Renseigner au moins une modalité de jury");
   }
 
@@ -42,7 +52,7 @@ export const updateCertificationDescription = async ({
     throw new Error("Renseigner une seule fréquence de jury");
   }
 
-  if (!juryFrequency && !juryFrequencyOther) {
+  if (!hasReducedRequirements && !juryFrequency && !juryFrequencyOther) {
     throw new Error("Renseigner au moins une fréquence de jury");
   }
 

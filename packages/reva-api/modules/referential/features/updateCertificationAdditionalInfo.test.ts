@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { CertificationStatus } from "@prisma/client";
 import { addDays, subDays } from "date-fns";
 
+import { createCertificationAuthorityStructureHelper } from "@/test/helpers/entities/create-certification-authority-structure-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
 
 import { updateCertificationAdditionalInfo } from "./updateCertificationAdditionalInfo";
@@ -22,6 +23,23 @@ const createPendingCertification = async ({
     availableAt: subDays(new Date(), 1),
     rncpExpiresAt: addDays(new Date(), 1),
   });
+
+const createPendingReducedRequirementsCertification = async ({
+  status = CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
+}: {
+  status?: CertificationStatus;
+}) => {
+  const structure = await createCertificationAuthorityStructureHelper({
+    hasReducedRequirements: true,
+  });
+
+  return createCertificationHelper({
+    certificationAuthorityStructureId: structure.id,
+    status,
+    availableAt: subDays(new Date(), 1),
+    rncpExpiresAt: addDays(new Date(), 1),
+  });
+};
 
 const createDummyUpload = (): GraphqlUploadedFile =>
   Promise.resolve().then(() => {
@@ -54,6 +72,42 @@ describe("updateCertificationAdditionalInfo", () => {
 
   it("keeps dossier mutual exclusion", async () => {
     const certification = await createPendingCertification({});
+
+    await expect(
+      updateCertificationAdditionalInfo({
+        certificationId: certification.id,
+        additionalInfo: {
+          linkToReferential: "",
+          additionalDocuments: [],
+          dossierDeValidationLink: "https://example.test/dossier",
+          dossierDeValidationTemplate: createDummyUpload(),
+        },
+      }),
+    ).rejects.toThrow(MISSING_DOSSIER_ERROR);
+  });
+
+  it("allows missing dossier fields when reduced requirements are enabled", async () => {
+    const certification = await createPendingReducedRequirementsCertification(
+      {},
+    );
+
+    const additionalInfo = await updateCertificationAdditionalInfo({
+      certificationId: certification.id,
+      additionalInfo: {
+        linkToReferential: "",
+        additionalDocuments: [],
+      },
+    });
+
+    expect(additionalInfo.certificationId).toBe(certification.id);
+    expect(additionalInfo.dossierDeValidationTemplateFileId).toBeNull();
+    expect(additionalInfo.dossierDeValidationLink).toBeNull();
+  });
+
+  it("keeps dossier mutual exclusion when reduced requirements are enabled", async () => {
+    const certification = await createPendingReducedRequirementsCertification(
+      {},
+    );
 
     await expect(
       updateCertificationAdditionalInfo({

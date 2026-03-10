@@ -5,12 +5,14 @@ import { prismaClient } from "@/prisma/client";
 
 import { ValidateCertificationInput } from "../referential.types";
 
-import { getCertificationById } from "./getCertificationById";
+import { getCertificationWithReducedRequirementsById } from "./getCertificationWithReducedRequirementsById";
 
 export const validateCertification = async ({
   certificationId,
 }: ValidateCertificationInput) => {
-  const certification = await getCertificationById({ certificationId });
+  const certification = await getCertificationWithReducedRequirementsById({
+    certificationId,
+  });
   if (!certification) {
     throw new Error("La certification n'a pas été trouvée");
   }
@@ -23,13 +25,22 @@ export const validateCertification = async ({
     );
   }
 
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+  const hasJuryType =
+    certification.juryTypeMiseEnSituationProfessionnelle ||
+    certification.juryTypeSoutenanceOrale;
+  const hasJuryFrequency =
+    (certification.juryFrequency && certification.juryFrequency?.length > 0) ||
+    certification.juryFrequencyOther;
+  const hasRequiredJuryInfo =
+    hasReducedRequirements || (hasJuryType && hasJuryFrequency);
+
   const isDescriptionComplete =
-    (certification.juryTypeMiseEnSituationProfessionnelle ||
-      certification.juryTypeSoutenanceOrale) &&
-    ((certification.juryFrequency && certification.juryFrequency?.length > 0) ||
-      certification.juryFrequencyOther) &&
-    certification.availableAt &&
-    certification.rncpExpiresAt;
+    hasRequiredJuryInfo &&
+    !!certification.availableAt &&
+    !!certification.rncpExpiresAt;
 
   if (!isDescriptionComplete) {
     throw new Error("La description de la certification n'est pas complète");

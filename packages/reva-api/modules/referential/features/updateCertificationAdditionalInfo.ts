@@ -13,14 +13,19 @@ import { prismaClient } from "@/prisma/client";
 
 import { UpdateCertificationAdditionalInfoInput } from "../referential.types";
 
+import { getCertificationWithReducedRequirementsById } from "./getCertificationWithReducedRequirementsById";
+
 const MAX_UPLOAD_SIZE = 15728640; // 15Mo
 
 export const updateCertificationAdditionalInfo = async ({
   certificationId,
   additionalInfo,
 }: UpdateCertificationAdditionalInfoInput) => {
-  const existingInfo =
-    await prismaClient.certificationAdditionalInfo.findUnique({
+  const [certification, existingInfo] = await Promise.all([
+    getCertificationWithReducedRequirementsById({
+      certificationId,
+    }),
+    prismaClient.certificationAdditionalInfo.findUnique({
       where: {
         certificationId,
       },
@@ -28,14 +33,32 @@ export const updateCertificationAdditionalInfo = async ({
         dossierDeValidationTemplate: true,
         additionalDocuments: { include: { file: true } },
       },
-    });
+    }),
+  ]);
+
+  if (!certification) {
+    throw new Error("La certification n'a pas été trouvée");
+  }
 
   const { dossierDeValidationTemplate, additionalDocuments, ...otherInfo } =
     additionalInfo;
 
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+  const hasDossierDeValidationLink = Boolean(otherInfo.dossierDeValidationLink);
+  const hasDossierDeValidationTemplate = Boolean(dossierDeValidationTemplate);
+
+  if (hasDossierDeValidationLink && hasDossierDeValidationTemplate) {
+    throw new Error(
+      "La trame du dossier de validation est requise et doit être transmise soit par PDF, soit sous forme de lien.",
+    );
+  }
+
   if (
-    (!otherInfo.dossierDeValidationLink && !dossierDeValidationTemplate) ||
-    (otherInfo.dossierDeValidationLink && dossierDeValidationTemplate)
+    !hasReducedRequirements &&
+    !hasDossierDeValidationLink &&
+    !hasDossierDeValidationTemplate
   ) {
     throw new Error(
       "La trame du dossier de validation est requise et doit être transmise soit par PDF, soit sous forme de lien.",
