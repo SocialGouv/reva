@@ -103,29 +103,12 @@ export const Header = (props: { className?: string }) => {
       },
       text: "La VAE dans votre région",
     },
-
     {
-      isActive:
-        !!pathname.match(/\/nous-contacter/)?.length ||
-        !!pathname.match(/\/faq/)?.length,
-      text: "Besoin d'aide ?",
-      menuLinks: [
-        {
-          linkProps: {
-            href: "/faq",
-          },
-          isActive: !!pathname.match(/\/faq/)?.length,
-          text: "Questions fréquentes",
-        },
-
-        {
-          linkProps: {
-            href: "/nous-contacter",
-          },
-          isActive: !!pathname.match(/\/nous-contacter/)?.length,
-          text: "Nous contacter",
-        },
-      ],
+      linkProps: {
+        href: "/faq",
+      },
+      isActive: !!pathname.match(/\/faq/)?.length,
+      text: "Questions fréquentes",
     },
   ];
 
