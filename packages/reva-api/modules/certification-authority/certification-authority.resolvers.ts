@@ -128,6 +128,18 @@ const unsafeResolvers = {
       getAccountById({
         id: parent.accountId,
       }),
+    paginatedCertifications: (
+      parent: CertificationAuthorityLocalAccount,
+      params: {
+        limit?: number;
+        offset?: number;
+        searchText?: string;
+      },
+    ) =>
+      getPaginatedCertifications({
+        localAccountId: parent.id,
+        ...params,
+      }),
   },
   Certification: {
     certificationAuthorities: ({
