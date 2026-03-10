@@ -60,28 +60,28 @@ const FaqPage = async () => {
             />
           ))}
         </div>
-        <div className="flex flex-col py-4 mt-0 md:mt-12">
+        <div className="flex flex-col gap-10 py-4 mt-0 md:mt-12">
           {sections.sectionFaqs?.map((s) => (
             <div
               key={s?.documentId}
               id={`section-${s?.documentId}`}
-              className="font-bold text-3xl text-black mb-12"
+              className="flex flex-col gap-8 font-bold text-[2rem] text-black"
             >
               {s?.titre}
-              <ul className="list-none p-0">
+              <ul className="list-none p-0 m-0 flex flex-col gap-8">
                 {s?.sous_section_faqs?.map((ss) => (
-                  <li className="text-2xl mt-4" key={ss?.documentId}>
-                    {(s?.sous_section_faqs?.length || 0) > 1 && ss?.titre}
-                    <div className="mt-4">
+                  <li className="text-[1.75rem]" key={ss?.documentId}>
+                    <div className="leading-none">
+                      {(s?.sous_section_faqs?.length || 0) > 1 && ss?.titre}
+                    </div>
+                    <div className="mt-6">
                       {ss?.article_faqs?.map((a) => (
                         <span
                           key={a?.documentId}
                           id={`article-${a?.documentId}`}
                         >
                           <Accordion
-                            label={
-                              <p className="text-blue-900">{a?.question}</p>
-                            }
+                            label={<p>{a?.question}</p>}
                             className="text-gray-700 font-normal"
                           >
                             <div
