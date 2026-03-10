@@ -30,11 +30,6 @@ const getCertificationAuthorityLocalAccount = graphql(`
             codeRncp
             label
             visible
-            parcours(limit: 1) {
-              rows {
-                id
-              }
-            }
           }
           info {
             totalRows
