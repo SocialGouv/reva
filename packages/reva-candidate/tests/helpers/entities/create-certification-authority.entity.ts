@@ -17,6 +17,7 @@ export const createCertificationAuthorityEntity = (
     showLocalAccountsContactInfo: false,
     metabaseDashboardIframeUrl: null,
     account: null,
+    certificationsAndParcours: [],
     ...options,
   };
 };

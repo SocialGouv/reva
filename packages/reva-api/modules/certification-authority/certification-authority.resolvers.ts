@@ -44,6 +44,7 @@ import { getCertificationAuthorityStructures } from "./features/getCertification
 import { getCertificationAuthorityStructuresByCertificationAuthorityId } from "./features/getCertificationAuthorityStructuresByCertificationAuthorityId";
 import { getCertificationRegistryManagerByAccountId } from "./features/getCertificationRegistryManagerByAccountId";
 import { getCertificationRegistryManagerByStructureId } from "./features/getCertificationRegistryManagerByStructureId";
+import { getCertificationsAndParcoursByCertificationAuthorityId } from "./features/getCertificationsAndParcoursByCertificationAuthorityId";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
 import { getCertificationsByCertificationStructureId } from "./features/getCertificationsByCertificationStructureId";
 import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
@@ -117,6 +118,10 @@ const unsafeResolvers = {
       }),
     metabaseDashboardIframeUrl: async (parent: CertificationAuthority) =>
       getMetabaseIframeUrl(parent),
+    certificationsAndParcours: (parent: CertificationAuthority) =>
+      getCertificationsAndParcoursByCertificationAuthorityId({
+        certificationAuthorityId: parent.id,
+      }),
   },
 
   CertificationAuthorityLocalAccount: {

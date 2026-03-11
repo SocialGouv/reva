@@ -14,6 +14,7 @@ type CertificationAuthority {
   websiteUrl: String
   regions: [Region!]!
   certifications: [Certification!]!
+  certificationsAndParcours: [CertificationAndParcours!]! # certifications with parcours selected by the certification authority
   paginatedCertifications(
     limit: Int
     offset: Int
@@ -24,6 +25,11 @@ type CertificationAuthority {
   certificationAuthorityStructures: [CertificationAuthorityStructure!]!
   showLocalAccountsContactInfo: Boolean!
   metabaseDashboardIframeUrl: String
+}
+
+type CertificationAndParcours {
+  certification: Certification!
+  parcours: [ParcoursCertification!]!
 }
 
 type CertificationAuthorityLocalAccount {
