@@ -7,6 +7,7 @@ import { ReactNode } from "react";
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
+import { CertificationParcoursCard } from "@/components/certifications/certification-parcours-card/CertificationParcoursCard";
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -185,6 +186,15 @@ const PageContent = ({
             </>
           )}
         </EnhancedSectionCard>
+
+        {hasReducedRequirements &&
+          certification.parcoursByCertificationAuthorities && (
+            <CertificationParcoursCard
+              parcoursByCertificationAuthorities={
+                certification.parcoursByCertificationAuthorities
+              }
+            />
+          )}
       </div>
       <hr className="mt-8" />
       {isEditable && (

@@ -6,6 +6,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useAuth } from "@/components/auth/auth";
 import { CertificationAdditionalInfoSummaryCard } from "@/components/certifications/certification-additional-info-summary-card/CertificationAdditionalInfoSummaryCard";
 import { CertificationCompetenceBlocsSummaryCard } from "@/components/certifications/certification-competence-blocs-summary-card/CertificationCompetenceBlocsSummaryCard";
+import { CertificationParcoursCard } from "@/components/certifications/certification-parcours-card/CertificationParcoursCard";
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
@@ -55,7 +56,7 @@ export default function CertificationDetailsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-12 w-full">
       <h1 className="m-0">
         RNCP {certification.codeRncp} - {certification.label}
       </h1>
@@ -85,7 +86,7 @@ const PageContent = ({
 
   return (
     <div data-testid="certification-details-page" className="w-full">
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 w-full">
         <CertificationSummaryCard certification={certification} />
         <CertificationCompetenceBlocsSummaryCard
           isEditable={false}
@@ -103,6 +104,14 @@ const PageContent = ({
             certificationAdditionalInfo={certification.additionalInfo}
           />
         )}
+        {hasReducedRequirements &&
+          certification.parcoursByCertificationAuthorities && (
+            <CertificationParcoursCard
+              parcoursByCertificationAuthorities={
+                certification.parcoursByCertificationAuthorities
+              }
+            />
+          )}
       </div>
       <hr className="mt-8" />
     </div>

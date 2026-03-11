@@ -26,6 +26,17 @@ const getCertificationQuery = graphql(`
       certificationAuthorityStructure {
         hasReducedRequirements
       }
+      parcoursByCertificationAuthorities {
+        certificationAuthority {
+          id
+          label
+          websiteUrl
+        }
+        parcours {
+          id
+          label
+        }
+      }
       additionalInfo {
         linkToReferential
         linkToCorrespondenceTable
