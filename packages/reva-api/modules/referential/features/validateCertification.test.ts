@@ -6,29 +6,21 @@ import { createCertificationHelper } from "@/test/helpers/entities/create-certif
 
 import { validateCertification } from "./validateCertification";
 
-const createPendingCertification = async ({
-  status = CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
-}: {
-  status?: CertificationStatus;
-}) =>
+const createPendingCertification = async () =>
   createCertificationHelper({
-    status,
+    status: CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
     availableAt: subDays(new Date(), 1),
     rncpExpiresAt: addDays(new Date(), 1),
   });
 
-const createPendingReducedRequirementsCertification = async ({
-  status = CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
-}: {
-  status?: CertificationStatus;
-}) => {
+const createPendingReducedRequirementsCertification = async () => {
   const structure = await createCertificationAuthorityStructureHelper({
     hasReducedRequirements: true,
   });
 
   return createCertificationHelper({
     certificationAuthorityStructureId: structure.id,
-    status,
+    status: CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
     availableAt: subDays(new Date(), 1),
     rncpExpiresAt: addDays(new Date(), 1),
   });
@@ -36,7 +28,7 @@ const createPendingReducedRequirementsCertification = async ({
 
 describe("validateCertification", () => {
   it("requires a complete description before validation", async () => {
-    const certification = await createPendingCertification({});
+    const certification = await createPendingCertification();
 
     await expect(
       validateCertification({
@@ -46,9 +38,7 @@ describe("validateCertification", () => {
   });
 
   it("validates reduced requirements certifications without jury information", async () => {
-    const certification = await createPendingReducedRequirementsCertification(
-      {},
-    );
+    const certification = await createPendingReducedRequirementsCertification();
 
     const validatedCertification = await validateCertification({
       certificationId: certification.id,

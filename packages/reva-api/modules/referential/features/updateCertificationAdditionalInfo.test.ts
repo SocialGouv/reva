@@ -13,29 +13,21 @@ import { updateCertificationAdditionalInfo } from "./updateCertificationAddition
 const MISSING_DOSSIER_ERROR =
   "La trame du dossier de validation est requise et doit être transmise soit par PDF, soit sous forme de lien.";
 
-const createPendingCertification = async ({
-  status = CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
-}: {
-  status?: CertificationStatus;
-}) =>
+const createPendingCertification = async () =>
   createCertificationHelper({
-    status,
+    status: CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
     availableAt: subDays(new Date(), 1),
     rncpExpiresAt: addDays(new Date(), 1),
   });
 
-const createPendingReducedRequirementsCertification = async ({
-  status = CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
-}: {
-  status?: CertificationStatus;
-}) => {
+const createPendingReducedRequirementsCertification = async () => {
   const structure = await createCertificationAuthorityStructureHelper({
     hasReducedRequirements: true,
   });
 
   return createCertificationHelper({
     certificationAuthorityStructureId: structure.id,
-    status,
+    status: CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
     availableAt: subDays(new Date(), 1),
     rncpExpiresAt: addDays(new Date(), 1),
   });
@@ -57,7 +49,7 @@ const createDummyUpload = (): GraphqlUploadedFile =>
 
 describe("updateCertificationAdditionalInfo", () => {
   it("requires a dossier link or template", async () => {
-    const certification = await createPendingCertification({});
+    const certification = await createPendingCertification();
 
     await expect(
       updateCertificationAdditionalInfo({
@@ -71,7 +63,7 @@ describe("updateCertificationAdditionalInfo", () => {
   });
 
   it("keeps dossier mutual exclusion", async () => {
-    const certification = await createPendingCertification({});
+    const certification = await createPendingCertification();
 
     await expect(
       updateCertificationAdditionalInfo({
@@ -87,9 +79,7 @@ describe("updateCertificationAdditionalInfo", () => {
   });
 
   it("allows missing dossier fields when reduced requirements are enabled", async () => {
-    const certification = await createPendingReducedRequirementsCertification(
-      {},
-    );
+    const certification = await createPendingReducedRequirementsCertification();
 
     const additionalInfo = await updateCertificationAdditionalInfo({
       certificationId: certification.id,
@@ -105,9 +95,7 @@ describe("updateCertificationAdditionalInfo", () => {
   });
 
   it("keeps dossier mutual exclusion when reduced requirements are enabled", async () => {
-    const certification = await createPendingReducedRequirementsCertification(
-      {},
-    );
+    const certification = await createPendingReducedRequirementsCertification();
 
     await expect(
       updateCertificationAdditionalInfo({

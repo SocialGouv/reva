@@ -10,29 +10,21 @@ import { createCertificationHelper } from "@/test/helpers/entities/create-certif
 
 import { updateCertificationDescription } from "./updateCertificationDescription";
 
-const createPendingCertification = async ({
-  status = CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
-}: {
-  status?: CertificationStatus;
-}) =>
+const createPendingCertification = async () =>
   createCertificationHelper({
-    status,
+    status: CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
     availableAt: subDays(new Date(), 1),
     rncpExpiresAt: addDays(new Date(), 1),
   });
 
-const createPendingReducedRequirementsCertification = async ({
-  status = CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
-}: {
-  status?: CertificationStatus;
-}) => {
+const createPendingReducedRequirementsCertification = async () => {
   const structure = await createCertificationAuthorityStructureHelper({
     hasReducedRequirements: true,
   });
 
   return createCertificationHelper({
     certificationAuthorityStructureId: structure.id,
-    status,
+    status: CertificationStatus.A_VALIDER_PAR_CERTIFICATEUR,
     availableAt: subDays(new Date(), 1),
     rncpExpiresAt: addDays(new Date(), 1),
   });
@@ -40,7 +32,7 @@ const createPendingReducedRequirementsCertification = async ({
 
 describe("updateCertificationDescription", () => {
   it("requires at least one jury modality", async () => {
-    const certification = await createPendingCertification({});
+    const certification = await createPendingCertification();
 
     await expect(
       updateCertificationDescription({
@@ -51,7 +43,7 @@ describe("updateCertificationDescription", () => {
   });
 
   it("requires a single jury frequency source", async () => {
-    const certification = await createPendingCertification({});
+    const certification = await createPendingCertification();
 
     await expect(
       updateCertificationDescription({
@@ -66,9 +58,7 @@ describe("updateCertificationDescription", () => {
   });
 
   it("allows missing jury fields when reduced requirements are enabled", async () => {
-    const certification = await createPendingReducedRequirementsCertification(
-      {},
-    );
+    const certification = await createPendingReducedRequirementsCertification();
 
     const updatedCertification = await updateCertificationDescription({
       certificationId: certification.id,
@@ -85,9 +75,7 @@ describe("updateCertificationDescription", () => {
   });
 
   it("keeps jury frequency coherence when reduced requirements are enabled", async () => {
-    const certification = await createPendingReducedRequirementsCertification(
-      {},
-    );
+    const certification = await createPendingReducedRequirementsCertification();
 
     await expect(
       updateCertificationDescription({
