@@ -97,7 +97,7 @@ export const resolversSecurityMap = {
   "CertificationAuthorityStructure.certifications":
     isAdminOrCertificationRegistryManagerOfCertificationOrIsCertificationAuthorityStructureMember,
   "CertificationAuthority.certificationsAndParcours":
-    isAdminOrCertificationRegistryManagerOfCertificationOrIsCertificationAuthorityStructureMember,
+    isAdminOrCertificationAuthorityOwner,
 
   "CertificationRegistryManager.certificationAuthorityStructure":
     isAdminOrIsCertificationAuthorityStructureRegistryManagerMember,
