@@ -64,6 +64,24 @@ function createCertificationDetailsHandlers({
           competenceBlocs: [],
           prerequisites: [{ id: "prereq-1", label: "A prerequisite" }],
           certificationAuthorities: [],
+          parcoursByCertificationAuthorities:
+            reducedRequirementsState === true
+              ? [
+                  {
+                    certificationAuthority: {
+                      id: "certification-authority-id",
+                      label: "Certification Authority",
+                      websiteUrl: "https://www.certification-authority.com",
+                    },
+                    parcours: [
+                      {
+                        id: "parcours-id",
+                        label: "Parcours 1",
+                      },
+                    ],
+                  },
+                ]
+              : [],
         },
       }),
     ),
@@ -78,6 +96,7 @@ const reducedRequirementsScenarios = [
     shouldShowJurySection: false,
     shouldShowPrerequisitesCard: false,
     shouldShowDocumentationCard: false,
+    shouldShowParcoursCard: true,
   },
   {
     name: "reduced requirements disabled",
@@ -86,6 +105,7 @@ const reducedRequirementsScenarios = [
     shouldShowJurySection: true,
     shouldShowPrerequisitesCard: true,
     shouldShowDocumentationCard: true,
+    shouldShowParcoursCard: false,
   },
   {
     name: "certificationAuthorityStructure=null",
@@ -94,6 +114,7 @@ const reducedRequirementsScenarios = [
     shouldShowJurySection: true,
     shouldShowPrerequisitesCard: true,
     shouldShowDocumentationCard: true,
+    shouldShowParcoursCard: false,
   },
 ] as const;
 
@@ -106,6 +127,7 @@ test.describe("admin certification details page", () => {
       shouldShowJurySection,
       shouldShowPrerequisitesCard,
       shouldShowDocumentationCard,
+      shouldShowParcoursCard,
     }) => {
       test(`shows the expected sections when ${name}`, async ({
         page,
@@ -137,7 +159,33 @@ test.describe("admin certification details page", () => {
         await expect(
           page.getByRole("heading", { name: "Documentation" }),
         ).toHaveCount(shouldShowDocumentationCard ? 1 : 0);
+        await expect(page.getByTestId("parcours-card")).toHaveCount(
+          shouldShowParcoursCard ? 1 : 0,
+        );
       });
     },
   );
+  test("show correct parcours card and info when reduced requirements are enabled", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...createCertificationDetailsHandlers({
+        certificationLabel: "Certification SUP",
+        reducedRequirementsState: true,
+      }),
+      ...aapCommonHandlers,
+    );
+    await login({ role: "admin", page });
+    await page.goto(CERTIFICATION_PATH);
+    const parcoursCard = page.getByTestId("parcours-card");
+    await expect(parcoursCard).toBeVisible();
+    await expect(
+      parcoursCard.getByText("Certification Authority"),
+    ).toBeVisible();
+    await expect(
+      parcoursCard.getByRole("link", { name: "Certification Authority" }),
+    ).toHaveAttribute("href", "https://www.certification-authority.com");
+    await expect(parcoursCard.getByText("Parcours 1")).toBeVisible();
+  });
 });
