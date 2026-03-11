@@ -10,7 +10,7 @@
     "predev": "react-dsfr update-icons && graphql-codegen --config codegen.ts",
     "dev": "next dev -p 3003",
     "prebuild": "react-dsfr update-icons && npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
-    "build": "next build && node copy-assets.js && rm -rf ../reva-api/node_modules",
+    "build": "next build && node copy-assets.js",
     "start": "node .next/standalone/packages/reva-admin-react/server.js",
     "lint": "eslint --color src cypress",
     "graphql:generate": "graphql-codegen --config codegen.ts",
