@@ -79,6 +79,10 @@ const PageContent = ({
 }: {
   certification: CertificationForPage;
 }) => {
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+
   return (
     <div data-testid="certification-details-page" className="w-full">
       <div className="flex flex-col gap-8">
@@ -87,14 +91,18 @@ const PageContent = ({
           isEditable={false}
           competenceBlocs={certification.competenceBlocs}
         />
-        <CertificationPrerequisitesCard
-          prerequisites={certification.prerequisites}
-          isEditable={false}
-        />
-        <CertificationAdditionalInfoSummaryCard
-          isAdmin
-          certificationAdditionalInfo={certification.additionalInfo}
-        />
+        {!hasReducedRequirements && (
+          <CertificationPrerequisitesCard
+            prerequisites={certification.prerequisites}
+            isEditable={false}
+          />
+        )}
+        {!hasReducedRequirements && (
+          <CertificationAdditionalInfoSummaryCard
+            isAdmin
+            certificationAdditionalInfo={certification.additionalInfo}
+          />
+        )}
       </div>
       <hr className="mt-8" />
     </div>

@@ -44,6 +44,9 @@ export default function CertificationSummaryCard({
     juryFrequency?: CertificationJuryFrequency | null;
     juryFrequencyOther?: string | null;
     juryEstimatedCost?: number | null;
+    certificationAuthorityStructure?: {
+      hasReducedRequirements?: boolean;
+    } | null;
     domains: {
       id: string;
       label: string;
@@ -59,6 +62,10 @@ export default function CertificationSummaryCard({
     }[];
   };
 }) {
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+
   return (
     <EnhancedSectionCard
       data-testid="certification-description-card"
@@ -95,52 +102,56 @@ export default function CertificationSummaryCard({
           </Info>
         </div>
 
-        <h3 className="mb-0">Jury</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {certification.juryTypeSoutenanceOrale && (
-            <Info title="Entretien : ">
-              {(certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
-                certification.juryTypeSoutenanceOrale == "PRESENTIEL") && (
-                <Tag>Présentiel</Tag>
+        {!hasReducedRequirements && (
+          <>
+            <h3 className="mb-0">Jury</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {certification.juryTypeSoutenanceOrale && (
+                <Info title="Entretien : ">
+                  {(certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
+                    certification.juryTypeSoutenanceOrale == "PRESENTIEL") && (
+                    <Tag>Présentiel</Tag>
+                  )}
+                  {(certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
+                    certification.juryTypeSoutenanceOrale == "A_DISTANCE") && (
+                    <Tag>À distance</Tag>
+                  )}
+                </Info>
               )}
-              {(certification.juryTypeSoutenanceOrale == "LES_DEUX" ||
-                certification.juryTypeSoutenanceOrale == "A_DISTANCE") && (
-                <Tag>À distance</Tag>
+              {certification.juryTypeMiseEnSituationProfessionnelle && (
+                <Info title="Mise en situation professionnelle : ">
+                  {(certification.juryTypeMiseEnSituationProfessionnelle ==
+                    "LES_DEUX" ||
+                    certification.juryTypeMiseEnSituationProfessionnelle ==
+                      "PRESENTIEL") && <Tag>Présentiel</Tag>}
+                  {(certification.juryTypeMiseEnSituationProfessionnelle ==
+                    "LES_DEUX" ||
+                    certification.juryTypeMiseEnSituationProfessionnelle ==
+                      "A_DISTANCE") && <Tag>À distance</Tag>}
+                </Info>
               )}
-            </Info>
-          )}
-          {certification.juryTypeMiseEnSituationProfessionnelle && (
-            <Info title="Mise en situation professionnelle : ">
-              {(certification.juryTypeMiseEnSituationProfessionnelle ==
-                "LES_DEUX" ||
-                certification.juryTypeMiseEnSituationProfessionnelle ==
-                  "PRESENTIEL") && <Tag>Présentiel</Tag>}
-              {(certification.juryTypeMiseEnSituationProfessionnelle ==
-                "LES_DEUX" ||
-                certification.juryTypeMiseEnSituationProfessionnelle ==
-                  "A_DISTANCE") && <Tag>À distance</Tag>}
-            </Info>
-          )}
 
-          <Info title="Fréquence des jurys">
-            {certification.juryFrequencyOther ||
-              JuryFrequencies.find(
-                ({ id }) => id == certification.juryFrequency,
-              )?.label ||
-              "À compléter"}
-          </Info>
-          {certification.juryPlace && (
-            <Info title="Lieu où se déroulera le passage : ">
-              {certification.juryPlace}
-            </Info>
-          )}
-          <Info title="Estimation des frais de certification">
-            {certification.juryEstimatedCost !== null &&
-            certification.juryEstimatedCost !== undefined
-              ? `${certification.juryEstimatedCost}€`
-              : "Les frais de jury n'ont pas été renseignés par le certificateur, rapprochez vous de celui-ci pour plus d'informations."}
-          </Info>
-        </div>
+              <Info title="Fréquence des jurys">
+                {certification.juryFrequencyOther ||
+                  JuryFrequencies.find(
+                    ({ id }) => id == certification.juryFrequency,
+                  )?.label ||
+                  "À compléter"}
+              </Info>
+              {certification.juryPlace && (
+                <Info title="Lieu où se déroulera le passage : ">
+                  {certification.juryPlace}
+                </Info>
+              )}
+              <Info title="Estimation des frais de certification">
+                {certification.juryEstimatedCost !== null &&
+                certification.juryEstimatedCost !== undefined
+                  ? `${certification.juryEstimatedCost}€`
+                  : "Les frais de jury n'ont pas été renseignés par le certificateur, rapprochez vous de celui-ci pour plus d'informations."}
+              </Info>
+            </div>
+          </>
+        )}
 
         <h3 className="mb-0">Domaines et sous-domaines du Formacode </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

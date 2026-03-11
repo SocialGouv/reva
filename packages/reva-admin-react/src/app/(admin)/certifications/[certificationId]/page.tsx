@@ -70,6 +70,9 @@ const PageContent = ({
   };
 
   const isEditable = certification.status == "BROUILLON";
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
 
   return (
     <div data-testid="update-certification-page">
@@ -116,18 +119,22 @@ const PageContent = ({
           }
         />
 
-        <CertificationPrerequisitesCard
-          prerequisites={certification.prerequisites}
-          isEditable={isEditable}
-          customButtonTitle="Modifier"
-          buttonOnClickHref={`/certifications/${certification.id}/prerequisites`}
-        />
+        {!hasReducedRequirements && (
+          <CertificationPrerequisitesCard
+            prerequisites={certification.prerequisites}
+            isEditable={isEditable}
+            customButtonTitle="Modifier"
+            buttonOnClickHref={`/certifications/${certification.id}/prerequisites`}
+          />
+        )}
 
-        <CertificationAdditionalInfoSummaryCard
-          isAdmin
-          updateButtonHref={`/responsable-certifications/certifications/${certification.id}/additional-info`}
-          certificationAdditionalInfo={certification.additionalInfo}
-        />
+        {!hasReducedRequirements && (
+          <CertificationAdditionalInfoSummaryCard
+            isAdmin
+            updateButtonHref={`/responsable-certifications/certifications/${certification.id}/additional-info`}
+            certificationAdditionalInfo={certification.additionalInfo}
+          />
+        )}
 
         <EnhancedSectionCard
           data-testid="certification-structure-summary-card"

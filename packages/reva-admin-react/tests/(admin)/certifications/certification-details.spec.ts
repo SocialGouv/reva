@@ -72,6 +72,14 @@ function createCertificationDetailsHandlers({
 
 const reducedRequirementsScenarios = [
   {
+    name: "reduced requirements enabled",
+    certificationLabel: "Certification SUP",
+    reducedRequirementsState: true,
+    shouldShowJurySection: false,
+    shouldShowPrerequisitesCard: false,
+    shouldShowDocumentationCard: false,
+  },
+  {
     name: "reduced requirements disabled",
     certificationLabel: "Certification standard",
     reducedRequirementsState: false,

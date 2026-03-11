@@ -72,6 +72,7 @@ const getCertificationQuery = graphql(`
       certificationAuthorityStructure {
         id
         label
+        hasReducedRequirements
         certificationRegistryManager {
           id
         }
