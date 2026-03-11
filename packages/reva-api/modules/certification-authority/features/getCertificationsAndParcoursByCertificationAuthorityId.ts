@@ -23,9 +23,21 @@ export const getCertificationsAndParcoursByCertificationAuthorityId = async ({
     {};
   if (searchText) {
     certificationAuthorityOnCertificationWhereClause.certification = {
-      label: { contains: searchText, mode: "insensitive" },
+      OR: [
+        { label: { contains: searchText, mode: "insensitive" } },
+        { rncpId: { contains: searchText, mode: "insensitive" } },
+        {
+          certificationAuthorityStructure: {
+            label: { contains: searchText, mode: "insensitive" },
+          },
+        },
+        {
+          rncpTypeDiplome: { contains: searchText, mode: "insensitive" },
+        },
+      ],
     };
   }
+
   const certificationsAndParcours = await prismaClient.certificationAuthority
     .findUnique({
       where: {
