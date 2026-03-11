@@ -206,6 +206,9 @@ http:
       service: interop-preprod
       middlewares:
         - removeHeader
+        - preprodInteropIpWhitelist
+        - preprodInteropRateLimit
+        - add-interop-proxy-secret-header
 
     vae-collective-preprod:
       rule: "Host(`preprod.vae.gouv.fr`) && PathPrefix(`/vae-collective`)"
@@ -333,8 +336,37 @@ http:
         ipStrategy:
           excludedIPs:
             - "10.0.0.1/24"
+    preprodInteropIpWhitelist:
+      ipWhiteList:
+        sourceRange:
+        {{- $whitelist := splitList "," (env "PREPROD_INTEROP_IP_WHITELIST") }}
+        {{- range $ip := $whitelist }}
+          - {{ $ip | quote }}
+        {{- end }}
+        ipStrategy:
+          excludedIPs:
+            - "10.0.0.1/24"
+    productionInteropIpWhitelist:
+      ipWhiteList:
+        sourceRange:
+        {{- $whitelist := splitList "," (env "PRODUCTION_INTEROP_IP_WHITELIST") }}
+        {{- range $ip := $whitelist }}
+          - {{ $ip | quote }}
+        {{- end }}
+        ipStrategy:
+          excludedIPs:
+            - "10.0.0.1/24"
 
     sandboxInteropRateLimit:
+      rateLimit:
+        average: 20
+        burst: 50
+    
+    preprodInteropRateLimit:
+      rateLimit:
+        average: 20
+        burst: 50
+    productionInteropRateLimit:
       rateLimit:
         average: 20
         burst: 50
