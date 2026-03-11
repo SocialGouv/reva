@@ -14,7 +14,11 @@ type CertificationAuthority {
   websiteUrl: String
   regions: [Region!]!
   certifications: [Certification!]!
-  certificationsAndParcours: [CertificationAndParcours!]! # certifications with parcours selected by the certification authority
+  certificationsAndParcours(
+    offset: Int
+    limit: Int
+    searchText: String
+  ): CertificationAndParcoursPaginated! # certifications with parcours selected by the certification authority
   paginatedCertifications(
     limit: Int
     offset: Int
@@ -32,6 +36,10 @@ type CertificationAndParcours {
   parcours: [ParcoursCertification!]!
 }
 
+type CertificationAndParcoursPaginated {
+  rows: [CertificationAndParcours!]!
+  info: PaginationInfo!
+}
 type CertificationAuthorityLocalAccount {
   id: ID!
   account: Account!

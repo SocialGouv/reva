@@ -132,13 +132,15 @@ async function graphqlGetCertificationsAndParcoursByCertificationAuthorityId({
         id: $certificationAuthorityId
       ) {
         certificationsAndParcours {
-          certification {
-            id
-            label
-          }
-          parcours {
-            id
-            label
+          rows {
+            certification {
+              id
+              label
+            }
+            parcours {
+              id
+              label
+            }
           }
         }
       }
@@ -551,7 +553,7 @@ describe("certification authority certification parcours", () => {
         });
       expect(
         resp.certification_authority_getCertificationAuthority
-          ?.certificationsAndParcours,
+          ?.certificationsAndParcours.rows,
       ).toEqual([
         {
           certification: { id: certification.id, label: certification.label },
@@ -587,7 +589,7 @@ describe("certification authority certification parcours", () => {
         });
       expect(
         resp.certification_authority_getCertificationAuthority
-          ?.certificationsAndParcours,
+          ?.certificationsAndParcours.rows,
       ).toEqual([
         {
           certification: { id: certification.id, label: certification.label },
@@ -608,7 +610,7 @@ describe("certification authority certification parcours", () => {
         });
       expect(
         resp.certification_authority_getCertificationAuthority
-          ?.certificationsAndParcours,
+          ?.certificationsAndParcours.rows,
       ).toEqual([]);
     });
   });

@@ -118,9 +118,17 @@ const unsafeResolvers = {
       }),
     metabaseDashboardIframeUrl: async (parent: CertificationAuthority) =>
       getMetabaseIframeUrl(parent),
-    certificationsAndParcours: (parent: CertificationAuthority) =>
+    certificationsAndParcours: (
+      parent: CertificationAuthority,
+      params: {
+        offset?: number;
+        limit?: number;
+        searchText?: string;
+      },
+    ) =>
       getCertificationsAndParcoursByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
+        ...params,
       }),
   },
 

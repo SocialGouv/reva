@@ -1,25 +1,50 @@
-import { Certification, ParcoursCertification } from "@prisma/client";
+import { Certification, ParcoursCertification, Prisma } from "@prisma/client";
 
+import { processPaginationInfo } from "@/modules/shared/list/pagination";
 import { prismaClient } from "@/prisma/client";
 
-export const getCertificationsAndParcoursByCertificationAuthorityId = ({
+export const getCertificationsAndParcoursByCertificationAuthorityId = async ({
   certificationAuthorityId,
+  offset,
+  limit,
+  searchText,
 }: {
   certificationAuthorityId: string;
+  offset?: number;
+  limit?: number;
+  searchText?: string;
 }): Promise<
-  { certification: Certification; parcours: ParcoursCertification[] }[]
-> =>
-  prismaClient.certificationAuthority
+  PaginatedListResult<{
+    certification: Certification;
+    parcours: ParcoursCertification[];
+  }>
+> => {
+  const certificationAuthorityOnCertificationWhereClause: Prisma.CertificationAuthorityOnCertificationWhereInput =
+    {};
+  if (searchText) {
+    certificationAuthorityOnCertificationWhereClause.certification = {
+      label: { contains: searchText, mode: "insensitive" },
+    };
+  }
+  const certificationsAndParcours = await prismaClient.certificationAuthority
     .findUnique({
       where: {
         id: certificationAuthorityId,
       },
       include: {
         certificationAuthorityOnCertification: {
+          where: certificationAuthorityOnCertificationWhereClause,
           include: {
             certification: true,
             certificationAuthorityOnCertificationOnParcoursCertifications: {
               include: { parcoursCertification: true },
+            },
+          },
+          skip: offset ?? 0,
+          take: limit ?? 10,
+          orderBy: {
+            certification: {
+              label: "asc",
             },
           },
         },
@@ -36,3 +61,20 @@ export const getCertificationsAndParcoursByCertificationAuthorityId = ({
           ),
       }));
     });
+
+  const count = await prismaClient.certificationAuthorityOnCertification.count({
+    where: {
+      certificationAuthority: { id: certificationAuthorityId },
+      ...certificationAuthorityOnCertificationWhereClause,
+    },
+  });
+
+  return {
+    rows: certificationsAndParcours,
+    info: processPaginationInfo({
+      totalRows: count,
+      limit: limit ?? 10,
+      offset: offset ?? 0,
+    }),
+  };
+};
