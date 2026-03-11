@@ -17,12 +17,13 @@ const CertificationAuthorityCertificationsPage = () => {
   const searchParamsPage = searchParams.get("page");
   const currentPage = searchParamsPage ? Number(searchParamsPage) : 1;
   const searchFilter = searchParams.get("search") ?? "";
-  const { certificationPage, certificationAuthority } = useCertificationsPage({
-    page: currentPage,
-    searchFilter: searchFilter ?? undefined,
-  });
+  const { certificationAndParcoursPage, certificationAuthority } =
+    useCertificationsPage({
+      page: currentPage,
+      searchFilter: searchFilter ?? undefined,
+    });
 
-  if (!certificationAuthority || !certificationPage) {
+  if (!certificationAuthority || !certificationAndParcoursPage) {
     return null;
   }
 
@@ -47,16 +48,18 @@ const CertificationAuthorityCertificationsPage = () => {
           vous de l’administration de France VAE.
         </p>
         <SearchList
-          searchResultsPage={certificationPage}
+          searchResultsPage={certificationAndParcoursPage}
           searchFilter={searchFilter}
         >
-          {(certification) => {
+          {(certificationAndParcours) => {
+            const certification = certificationAndParcours.certification;
             const isAttachedToAnotherStructure =
               certification.certificationAuthorityStructure?.id !==
               certificationAuthority.certificationAuthorityStructures[0].id;
-            const hasParcours = certification.parcours.rows.length > 0;
+            const certificationHasParcours =
+              certification.parcours.rows.length > 0;
 
-            return hasParcours ? (
+            return certificationHasParcours ? (
               <WithParcoursCertificationCard
                 key={certification.id}
                 id={certification.id}

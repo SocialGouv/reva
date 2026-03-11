@@ -17,22 +17,24 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
         }
         id
         label
-        paginatedCertifications(
+        certificationsAndParcours(
           limit: $certificationsLimit
           offset: $certificationsOffset
           searchText: $certificationsSearchFilter
         ) {
           rows {
-            certificationAuthorityStructure {
-              id
-            }
-            id
-            codeRncp
-            label
-            visible
-            parcours(limit: 1) {
-              rows {
+            certification {
+              certificationAuthorityStructure {
                 id
+              }
+              id
+              codeRncp
+              label
+              visible
+              parcours(limit: 1) {
+                rows {
+                  id
+                }
               }
             }
           }
@@ -82,13 +84,13 @@ export const useCertificationsPage = ({
     getCertificationAuthorityAndCertificationsResponse
       ?.account_getAccountForConnectedUser?.certificationAuthority;
 
-  const certificationPage =
+  const certificationAndParcoursPage =
     getCertificationAuthorityAndCertificationsResponse
       ?.account_getAccountForConnectedUser?.certificationAuthority
-      ?.paginatedCertifications;
+      ?.certificationsAndParcours;
 
   return {
     certificationAuthority,
-    certificationPage,
+    certificationAndParcoursPage,
   };
 };

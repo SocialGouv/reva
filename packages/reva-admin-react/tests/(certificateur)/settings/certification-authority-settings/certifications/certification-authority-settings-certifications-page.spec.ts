@@ -33,36 +33,40 @@ const createCertificationsHandlers = () => {
             ],
             id: CERTIFICATION_AUTHORITY_ID,
             label: "Certificateur",
-            paginatedCertifications: {
+            certificationsAndParcours: {
               rows: [
                 {
-                  certificationAuthorityStructure: {
-                    id: "d529c770-70a5-43cb-90b2-9050c1d6a093",
-                  },
-                  id: "1",
-                  codeRncp: "12296A",
-                  label:
-                    "Bac Pro Accompagnement, soins et services à la personne - à domicile",
-                  visible: true,
-                  parcours: {
-                    rows: [],
+                  certification: {
+                    certificationAuthorityStructure: {
+                      id: "d529c770-70a5-43cb-90b2-9050c1d6a093",
+                    },
+                    id: "1",
+                    codeRncp: "12296A",
+                    label:
+                      "Bac Pro Accompagnement, soins et services à la personne - à domicile",
+                    visible: true,
+                    parcours: {
+                      rows: [],
+                    },
                   },
                 },
                 {
-                  certificationAuthorityStructure: {
-                    id: "d529c770-70a5-43cb-90b2-9050c1d6a093",
-                  },
-                  id: "2",
-                  codeRncp: "5022",
-                  label:
-                    "Autre certification professionnelle de droit - Un des meilleurs ouvriers de France (diplôme d'Etat)  Groupe III Métiers du bâtiment,des travaux publics et du patrimoine architectural      Spécialité : métiers du verre appliqués à l'architecture",
-                  visible: true,
-                  parcours: {
-                    rows: [
-                      {
-                        id: "6a1b78c3-561e-46f3-ade8-3324251b03a1",
-                      },
-                    ],
+                  certification: {
+                    certificationAuthorityStructure: {
+                      id: "d529c770-70a5-43cb-90b2-9050c1d6a093",
+                    },
+                    id: "2",
+                    codeRncp: "5022",
+                    label:
+                      "Autre certification professionnelle de droit - Un des meilleurs ouvriers de France (diplôme d'Etat)  Groupe III Métiers du bâtiment,des travaux publics et du patrimoine architectural      Spécialité : métiers du verre appliqués à l'architecture",
+                    visible: true,
+                    parcours: {
+                      rows: [
+                        {
+                          id: "6a1b78c3-561e-46f3-ade8-3324251b03a1",
+                        },
+                      ],
+                    },
                   },
                 },
               ],
