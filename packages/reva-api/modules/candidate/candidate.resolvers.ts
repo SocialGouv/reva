@@ -24,8 +24,11 @@ import { candidateResetPassword } from "./features/candidateResetPassword";
 import { getCandidateById } from "./features/getCandidateById";
 import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
 import { getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists } from "./features/getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists";
+import { getCivilInformationCompletedByCandidateId } from "./features/getCivilInformationCompletedByCandidateId";
+import { getContactInformationCompletedByCandidateId } from "./features/getContactInformationCompletedByCandidateId";
 import { getHighestDegreeById } from "./features/getHighestDegreeById";
 import { getNiveauDeFormationLePlusEleve } from "./features/getNiveauDeFormationLePlusEleve";
+import { getTypologyAndCollectiveAgreementCompletedByCandidateId } from "./features/getTypologyAndCollectiveAgreementCompletedByCandidateId";
 import { updateCandidate } from "./features/updateCandidate";
 import { updateCandidateContactDetails } from "./features/updateCandidateContactDetails";
 import { updateCandidateProfile } from "./features/updateCandidateProfile";
@@ -78,6 +81,16 @@ const unsafeResolvers = {
       getActiveCandidaciesByCandidateId({ candidateId }),
     conventionCollective: ({ ccnId }: { ccnId: string }) =>
       getCandidacyConventionCollectiveById({ ccnId }),
+    contactInformationCompleted: async ({ id: candidateId }: { id: string }) =>
+      getContactInformationCompletedByCandidateId({ candidateId }),
+    civilInformationCompleted: async ({ id: candidateId }: { id: string }) =>
+      getCivilInformationCompletedByCandidateId({ candidateId }),
+    typologyAndCollectiveAgreementCompleted: async ({
+      id: candidateId,
+    }: {
+      id: string;
+    }) =>
+      getTypologyAndCollectiveAgreementCompletedByCandidateId({ candidateId }),
   },
   Query: {
     candidate_getCandidateWithCandidacy: async (

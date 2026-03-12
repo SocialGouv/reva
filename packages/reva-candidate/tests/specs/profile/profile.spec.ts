@@ -122,15 +122,11 @@ async function waitForProfileData(page: Page) {
   ]);
 }
 
-async function visitProfile(
-  page: Page,
-  args?: { disableNavigation?: boolean },
-) {
-  const { disableNavigation } = args ?? {};
+async function visitProfile(page: Page, navigationDisabled = false) {
   await login(page);
   const dataPromise = waitForProfileData(page);
   await page.goto(
-    `candidates/${candidate.id}/profile${disableNavigation ? "?navigationDisabled=true" : ""}`,
+    `candidates/${candidate.id}/profile${navigationDisabled ? "?navigationDisabled=true" : ""}`,
   );
   await dataPromise;
 }
@@ -453,7 +449,7 @@ test.describe("Navigation Handling", () => {
   test("The back button and the navbar should not be visible when the navigationDisabled query param is true", async ({
     page,
   }) => {
-    await visitProfile(page, { disableNavigation: true });
+    await visitProfile(page, true);
 
     await expect(page.locator(SELECTORS.submit)).toBeVisible();
     await expect(page.locator(SELECTORS.back)).not.toBeVisible();

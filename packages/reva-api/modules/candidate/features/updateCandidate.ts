@@ -158,7 +158,6 @@ export const updateCandidate = async ({
       where: { id: candidateInput.id },
       data: {
         ...candidateInput,
-        profileInformationCompleted: true,
       },
     }),
     prismaClient.candidacyCandidateInfo.deleteMany({

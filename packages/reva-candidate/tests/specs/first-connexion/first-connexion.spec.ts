@@ -15,7 +15,9 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 const candidate = createCandidateEntity();
 
 function createFirstConnexionHandlers(args?: {
-  profileInformationCompleted?: boolean;
+  civilInformationCompleted?: boolean;
+  contactInformationCompleted?: boolean;
+  typologyAndCollectiveAgreementCompleted?: boolean;
 }) {
   return [
     fvae.query(
@@ -23,8 +25,11 @@ function createFirstConnexionHandlers(args?: {
       graphQLResolver({
         candidate_getCandidateWithCandidacy: {
           ...candidate,
-          profileInformationCompleted:
-            args?.profileInformationCompleted ?? true,
+          civilInformationCompleted: args?.civilInformationCompleted ?? true,
+          contactInformationCompleted:
+            args?.contactInformationCompleted ?? true,
+          typologyAndCollectiveAgreementCompleted:
+            args?.typologyAndCollectiveAgreementCompleted ?? true,
         },
       }),
     ),
@@ -33,8 +38,11 @@ function createFirstConnexionHandlers(args?: {
       graphQLResolver({
         candidate_getCandidateById: {
           ...candidate,
-          profileInformationCompleted:
-            args?.profileInformationCompleted ?? true,
+          civilInformationCompleted: args?.civilInformationCompleted ?? true,
+          contactInformationCompleted:
+            args?.contactInformationCompleted ?? true,
+          typologyAndCollectiveAgreementCompleted:
+            args?.typologyAndCollectiveAgreementCompleted ?? true,
         },
       }),
     ),
@@ -61,7 +69,11 @@ async function loginAndWaitForInitialLoad(page: Page) {
 test.describe("page tests", () => {
   test.use({
     mswHandlers: [
-      createFirstConnexionHandlers({ profileInformationCompleted: false }),
+      createFirstConnexionHandlers({
+        civilInformationCompleted: false,
+        contactInformationCompleted: false,
+        typologyAndCollectiveAgreementCompleted: false,
+      }),
       { scope: "test" },
     ],
   });
@@ -89,7 +101,7 @@ test.describe("page tests", () => {
     await page.getByRole("link", { name: "Mon profil" }).click();
 
     await expect(page).toHaveURL(
-      `candidates/${candidate.id}/profile/?navigationDisabled=true`,
+      `candidates/${candidate.id}/first-connexion/civil-informations/`,
     );
   });
 });
@@ -100,7 +112,11 @@ test.describe("Login and redirect tests", () => {
     msw,
   }) => {
     msw.use(
-      ...createFirstConnexionHandlers({ profileInformationCompleted: true }),
+      ...createFirstConnexionHandlers({
+        civilInformationCompleted: true,
+        contactInformationCompleted: true,
+        typologyAndCollectiveAgreementCompleted: true,
+      }),
     );
     await loginAndWaitForInitialLoad(page);
 
@@ -112,7 +128,11 @@ test.describe("Login and redirect tests", () => {
     msw,
   }) => {
     msw.use(
-      ...createFirstConnexionHandlers({ profileInformationCompleted: false }),
+      ...createFirstConnexionHandlers({
+        civilInformationCompleted: false,
+        contactInformationCompleted: false,
+        typologyAndCollectiveAgreementCompleted: false,
+      }),
     );
     await loginAndWaitForInitialLoad(page);
 

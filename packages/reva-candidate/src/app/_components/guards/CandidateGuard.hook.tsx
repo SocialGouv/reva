@@ -9,7 +9,9 @@ const GET_CANDIDATE_BY_ID_FOR_CANDIDATE_GUARD = graphql(`
   query getCandidateByIdForCandidateGuard($candidateId: ID!) {
     candidate_getCandidateById(id: $candidateId) {
       id
-      profileInformationCompleted
+      civilInformationCompleted
+      contactInformationCompleted
+      typologyAndCollectiveAgreementCompleted
     }
   }
 `);

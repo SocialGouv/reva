@@ -23,7 +23,9 @@
       "phone": "0601020304",
       "email": "email@example.com",
       "addressComplement": "Appartement 42",
-      "profileInformationCompleted": true
+      "civilInformationCompleted": true,
+      "contactInformationCompleted": true,
+      "typologyAndCollectiveAgreementCompleted": true
     }
   }
 }

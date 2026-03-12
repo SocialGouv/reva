@@ -399,7 +399,6 @@ model Candidate {
   lastLoginViaPasswordAt               DateTime?                      @map("last_login_via_password_at") @db.Timestamptz(6)
   lastLoginViaMagicLinkAt              DateTime?                      @map("last_login_via_magic_link_at") @db.Timestamptz(6)
   birthdate                            DateTime?                      @map("birthdate") @db.Date
-  profileInformationCompleted          Boolean                        @default(false) @map("profile_information_completed")
   typology                             CandidateTypology              @default(NON_SPECIFIE)
   typologyAdditional                   String?                        @map("typology_additional")
   ccn                                  CandidacyConventionCollective? @relation(fields: [ccnId], references: [id], onDelete: NoAction)

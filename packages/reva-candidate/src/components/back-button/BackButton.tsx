@@ -3,9 +3,11 @@ import Button from "@codegouvfr/react-dsfr/Button";
 export const BackButton = ({
   navigateBack,
   className,
+  title,
 }: {
   navigateBack: () => void;
   className?: string;
+  title?: string;
 }) => (
   <Button
     priority="secondary"
@@ -15,6 +17,6 @@ export const BackButton = ({
     data-testid="back-button"
     className={className}
   >
-    Retour
+    {title || "Retour"}
   </Button>
 );

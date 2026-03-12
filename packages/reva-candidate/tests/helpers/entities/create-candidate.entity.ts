@@ -33,9 +33,11 @@ export const createCandidateEntity = (
     department: defaultDepartment,
     candidacy: candidacyOption,
     candidacies: candidacies ?? (candidacyOption ? [candidacyOption] : []),
-    profileInformationCompleted: true,
     franceConnectLinked: false,
     typology: "NON_SPECIFIE",
+    civilInformationCompleted: true,
+    contactInformationCompleted: true,
+    typologyAndCollectiveAgreementCompleted: true,
     ...candidateOverrides,
   };
 };
