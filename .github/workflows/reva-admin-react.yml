@@ -87,6 +87,11 @@ jobs:
   playwright:
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2]
+        shardTotal: [2]
     defaults:
       run:
         working-directory: ./packages/reva-admin-react
@@ -120,10 +125,10 @@ jobs:
       - name: Build to retrieve graphql schema from API folder
         run: npm run build
       - name: Run Playwright tests
-        run: npm run test
+        run: npx playwright test --project=chromium --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-admin
+          name: playwright-report-admin-${{ matrix.shardIndex }}
           path: packages/reva-admin-react/playwright-report/
           retention-days: 30
