@@ -130,12 +130,12 @@ test.describe("FranceConnect linked candidate", () => {
     await expect(page.locator(SELECTORS.birthdate)).toBeDisabled();
     await expect(page.locator(SELECTORS.country)).toBeDisabled();
     await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();
-    await expect(page.locator(SELECTORS.nationality)).toBeDisabled();
   });
 
   test("should keep non-locked fields editable", async ({ page }) => {
     await visitProfile(page);
 
+    await expect(page.locator(SELECTORS.nationality)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.gender)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.givenName)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.birthCity)).not.toBeDisabled();

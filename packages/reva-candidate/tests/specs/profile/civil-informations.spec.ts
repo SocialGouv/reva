@@ -126,7 +126,6 @@ test.describe("FranceConnect linked candidate", () => {
       "birthdate",
       "country",
       "birthDepartment",
-      "nationality",
     ]) {
       await expect(
         page.locator(SELECTORS[field as keyof typeof SELECTORS]),
