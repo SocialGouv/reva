@@ -228,9 +228,7 @@ test.describe("certificateur certification summary page", () => {
 
     await Promise.all([
       page.waitForURL(
-        new RegExp(
-          `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/bloc-competence/${FIRST_COMPETENCE_BLOC_ID}/?$`,
-        ),
+        `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/bloc-competence/${FIRST_COMPETENCE_BLOC_ID}/`,
       ),
       page
         .getByTestId("competence-bloc")
@@ -305,9 +303,7 @@ test.describe("certificateur certification summary page", () => {
 
     await Promise.all([
       page.waitForURL(
-        new RegExp(
-          `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/prerequisites/?$`,
-        ),
+        `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/prerequisites/`,
       ),
       page
         .getByTestId("prerequisites-summary-card")
@@ -390,9 +386,7 @@ test.describe("certificateur certification summary page", () => {
 
     await Promise.all([
       page.waitForURL(
-        new RegExp(
-          `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/additional-info/?$`,
-        ),
+        `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/additional-info/`,
       ),
       page
         .getByTestId("additional-info-summary-card")
@@ -462,6 +456,26 @@ test.describe("certificateur certification summary page", () => {
     await expect(page.getByTestId("form-buttons")).not.toBeVisible();
   });
 
+  test("keeps validation blocked when additional info is missing", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...createCertificationSummaryHandlers({
+        withAdditionalInfo: false,
+        withDescription: true,
+        withPrerequisites: false,
+        status: "A_VALIDER_PAR_CERTIFICATEUR",
+      }),
+      ...certificateurSettingsCommonHandlers,
+    );
+
+    await openSummaryPage({ page, role: "admin" });
+    await expect(
+      page.getByRole("button", { name: "Valider cette certification" }),
+    ).toBeDisabled();
+  });
+
   test("shows the replace certification button and navigates to the replace page when status is VALIDE_PAR_CERTIFICATEUR", async ({
     page,
     msw,
@@ -480,9 +494,7 @@ test.describe("certificateur certification summary page", () => {
 
     await Promise.all([
       page.waitForURL(
-        new RegExp(
-          `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/replace/?$`,
-        ),
+        `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/replace/`,
       ),
       page.getByTestId("replace-certification-button").click(),
     ]);
@@ -506,9 +518,7 @@ test.describe("certificateur certification summary page", () => {
 
     await Promise.all([
       page.waitForURL(
-        new RegExp(
-          `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/replace/?$`,
-        ),
+        `/admin2/responsable-certifications/certifications/${CERTIFICATION_ID}/replace/`,
       ),
       page.getByTestId("replace-certification-button").click(),
     ]);
