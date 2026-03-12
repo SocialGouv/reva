@@ -11,6 +11,13 @@ export const certificateurSettingsCommonWait = async (page: Page) => {
   ]);
 };
 
+export const certificateurSettingsAdminCommonWait = async (page: Page) => {
+  await Promise.all([
+    waitGraphQL(page, "activeFeaturesForConnectedUser"),
+    waitGraphQL(page, "getMaisonMereCGUQuery"),
+  ]);
+};
+
 export const getCertificateurSettingsCommonHandlers = ({
   certificationAuthorityId,
 }: {
@@ -60,6 +67,7 @@ export const getCertificateurSettingsCommonHandlers = ({
         }),
       ),
     ],
+    certificateurSettingsAdminCommonWait,
     certificateurSettingsCommonWait,
   };
 };
