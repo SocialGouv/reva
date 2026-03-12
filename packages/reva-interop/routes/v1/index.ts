@@ -106,7 +106,8 @@ const routesApiV1: FastifyPluginAsyncJsonSchemaToTs = async (fastify) => {
       ],
       tags: [
         process.env.ENVIRONMENT !== "sandbox" &&
-        process.env.ENVIRONMENT !== "production"
+        process.env.ENVIRONMENT !== "production" &&
+        process.env.ENVIRONMENT !== "preprod"
           ? {
               name: "Authentification",
               description: "Gestion de l'authentification et des utilisateurs",
