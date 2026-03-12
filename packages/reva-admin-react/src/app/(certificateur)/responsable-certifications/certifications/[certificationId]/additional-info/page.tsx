@@ -60,58 +60,71 @@ export default function CertificationAdditionalInfoPage() {
   );
 }
 
-const schema = z
-  .object({
-    dossierDeValidationTemplate: z
-      .object({
-        0: z
-          .instanceof(File, { message: "Merci de remplir ce champ" })
-          .optional(),
-      })
-      .optional(),
-    additionalDocuments: z
-      .object({
-        0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
-      })
-      .array(),
-    dossierDeValidationLink: sanitizedOptionalUrl(),
-    linkToReferential: sanitizedUrl(),
-    linkToCorrespondenceTable: sanitizedOptionalUrl(),
-    linkToJuryGuide: sanitizedOptionalUrl(),
-    certificationExpertContactDetails: sanitizedOptionalText(),
-    certificationExpertContactPhone: sanitizedOptionalPhone(),
-    certificationExpertContactEmail: sanitizedOptionalEmail(),
-    usefulResources: sanitizedOptionalTextAllowSpecialCharacters(),
-    commentsForAAP: sanitizedOptionalTextAllowSpecialCharacters(),
-  })
-  .superRefine(
-    (
-      { dossierDeValidationTemplate, dossierDeValidationLink },
-      { addIssue },
-    ) => {
-      if (!dossierDeValidationTemplate?.[0] && !dossierDeValidationLink) {
-        addIssue({
-          path: ["dossierDeValidationTemplate[0]"],
-          message: "Vous devez renseigner au moins un de ces deux champs",
-          code: z.ZodIssueCode.custom,
-        });
+const getSchema = ({
+  hasReducedRequirements,
+}: {
+  hasReducedRequirements: boolean;
+}) =>
+  z
+    .object({
+      dossierDeValidationTemplate: z
+        .object({
+          0: z
+            .instanceof(File, { message: "Merci de remplir ce champ" })
+            .optional(),
+        })
+        .optional(),
+      additionalDocuments: z
+        .object({
+          0: z.instanceof(File, { message: "Merci de remplir ce champ" }),
+        })
+        .array(),
+      dossierDeValidationLink: sanitizedOptionalUrl(),
+      linkToReferential: hasReducedRequirements
+        ? sanitizedOptionalUrl()
+        : sanitizedUrl(),
+      linkToCorrespondenceTable: sanitizedOptionalUrl(),
+      linkToJuryGuide: sanitizedOptionalUrl(),
+      certificationExpertContactDetails: sanitizedOptionalText(),
+      certificationExpertContactPhone: sanitizedOptionalPhone(),
+      certificationExpertContactEmail: sanitizedOptionalEmail(),
+      usefulResources: sanitizedOptionalTextAllowSpecialCharacters(),
+      commentsForAAP: sanitizedOptionalTextAllowSpecialCharacters(),
+    })
+    .superRefine(
+      (
+        { dossierDeValidationTemplate, dossierDeValidationLink },
+        { addIssue },
+      ) => {
+        if (
+          !hasReducedRequirements &&
+          !dossierDeValidationTemplate?.[0] &&
+          !dossierDeValidationLink
+        ) {
+          addIssue({
+            path: ["dossierDeValidationTemplate[0]"],
+            message: "Vous devez renseigner au moins un de ces deux champs",
+            code: z.ZodIssueCode.custom,
+          });
+          addIssue({
+            path: ["dossierDeValidationLink"],
+            message: "Vous devez renseigner au moins un de ces deux champs",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      },
+    );
 
-        addIssue({
-          path: ["dossierDeValidationLink"],
-          message: "Vous devez renseigner au moins un de ces deux champs",
-          code: z.ZodIssueCode.custom,
-        });
-      }
-    },
-  );
-
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<ReturnType<typeof getSchema>>;
 
 const AdditionalInfoForm = ({
   certification,
 }: {
   certification: {
     id: string;
+    certificationAuthorityStructure?: {
+      hasReducedRequirements: boolean;
+    } | null;
     additionalInfo?: {
       linkToReferential: string;
       linkToCorrespondenceTable?: string | null;
@@ -138,6 +151,16 @@ const AdditionalInfoForm = ({
   };
 }) => {
   const router = useRouter();
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+  const schema = useMemo(
+    () => getSchema({ hasReducedRequirements }),
+    [hasReducedRequirements],
+  );
+  const optionalReferentialLabelSuffix = hasReducedRequirements
+    ? " (optionnel)"
+    : "";
   const {
     register,
     handleSubmit,
@@ -215,6 +238,7 @@ const AdditionalInfoForm = ({
         certificationId: certification.id,
         additionalInfo: {
           ...data,
+          linkToReferential: data.linkToReferential || "",
           dossierDeValidationTemplate,
           additionalDocuments,
         },
@@ -276,7 +300,7 @@ const AdditionalInfoForm = ({
         </div>
         <Input
           data-testid="referential-link-input"
-          label="Lien vers les référentiels d’activités et de compétences :"
+          label={`Lien vers les référentiels d’activités et de compétences${optionalReferentialLabelSuffix} :`}
           state={errors.linkToReferential ? "error" : "default"}
           stateRelatedMessage={errors.linkToReferential?.message}
           nativeInputProps={{

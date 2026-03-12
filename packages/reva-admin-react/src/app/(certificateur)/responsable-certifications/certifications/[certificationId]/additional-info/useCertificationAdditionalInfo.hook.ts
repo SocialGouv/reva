@@ -14,6 +14,9 @@ const getCertificationQuery = graphql(`
       id
       label
       codeRncp
+      certificationAuthorityStructure {
+        hasReducedRequirements
+      }
       additionalInfo {
         linkToReferential
         linkToCorrespondenceTable
