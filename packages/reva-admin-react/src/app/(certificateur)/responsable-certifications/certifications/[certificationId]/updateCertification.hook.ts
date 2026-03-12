@@ -26,6 +26,9 @@ const getCertificationQuery = graphql(`
       juryFrequencyOther
       juryPlace
       juryEstimatedCost
+      certificationAuthorityStructure {
+        hasReducedRequirements
+      }
       additionalInfo {
         linkToReferential
         linkToCorrespondenceTable

@@ -89,13 +89,15 @@ const {
   });
 
 function createCertificationSummaryHandlers({
+  hasReducedRequirements,
   withAdditionalInfo,
-  withDescription,
+  withJuryData,
   withPrerequisites,
   status,
 }: {
+  hasReducedRequirements: boolean;
   withAdditionalInfo: boolean;
-  withDescription: boolean;
+  withJuryData: boolean;
   withPrerequisites: boolean;
   status: CertificationStatus;
 }) {
@@ -108,18 +110,21 @@ function createCertificationSummaryHandlers({
           label: "BP Boucher",
           codeRncp: "37310",
           status,
-          rncpExpiresAt: withDescription ? 1688162500000 : 1788127200000,
+          rncpExpiresAt: 1788127200000,
           rncpPublishedAt: null,
           rncpEffectiveAt: null,
           rncpDeliveryDeadline: null,
           availableAt: 1688162400000,
           typeDiplome: null,
           juryTypeMiseEnSituationProfessionnelle: null,
-          juryTypeSoutenanceOrale: withDescription ? "PRESENTIEL" : null,
-          juryFrequency: withDescription ? "MONTHLY" : null,
+          juryTypeSoutenanceOrale: withJuryData ? "PRESENTIEL" : null,
+          juryFrequency: withJuryData ? "MONTHLY" : null,
           juryFrequencyOther: null,
           juryPlace: null,
-          juryEstimatedCost: withDescription ? 10 : null,
+          juryEstimatedCost: withJuryData ? 10 : null,
+          certificationAuthorityStructure: {
+            hasReducedRequirements,
+          },
           additionalInfo: withAdditionalInfo
             ? {
                 linkToReferential: "https://www.google.fr",
@@ -167,8 +172,9 @@ test.describe("certificateur certification summary page", () => {
   test("displays the page title", async ({ page, msw }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -190,8 +196,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -216,8 +223,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -244,8 +252,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -267,8 +276,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: true,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -291,8 +301,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: true,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -318,8 +329,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -346,8 +358,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: true,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -374,8 +387,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -401,8 +415,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: true,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -422,8 +437,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: true,
-        withDescription: true,
+        withJuryData: true,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -443,8 +459,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: true,
-        withDescription: true,
+        withJuryData: true,
         withPrerequisites: false,
         status: "VALIDE_PAR_CERTIFICATEUR",
       }),
@@ -456,34 +473,15 @@ test.describe("certificateur certification summary page", () => {
     await expect(page.getByTestId("form-buttons")).not.toBeVisible();
   });
 
-  test("keeps validation blocked when additional info is missing", async ({
-    page,
-    msw,
-  }) => {
-    msw.use(
-      ...createCertificationSummaryHandlers({
-        withAdditionalInfo: false,
-        withDescription: true,
-        withPrerequisites: false,
-        status: "A_VALIDER_PAR_CERTIFICATEUR",
-      }),
-      ...certificateurSettingsCommonHandlers,
-    );
-
-    await openSummaryPage({ page, role: "admin" });
-    await expect(
-      page.getByRole("button", { name: "Valider cette certification" }),
-    ).toBeDisabled();
-  });
-
   test("shows the replace certification button and navigates to the replace page when status is VALIDE_PAR_CERTIFICATEUR", async ({
     page,
     msw,
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "VALIDE_PAR_CERTIFICATEUR",
       }),
@@ -506,8 +504,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "INACTIVE",
       }),
@@ -530,8 +529,9 @@ test.describe("certificateur certification summary page", () => {
   }) => {
     msw.use(
       ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
         withAdditionalInfo: false,
-        withDescription: false,
+        withJuryData: false,
         withPrerequisites: false,
         status: "A_VALIDER_PAR_CERTIFICATEUR",
       }),
@@ -543,5 +543,57 @@ test.describe("certificateur certification summary page", () => {
     await expect(
       page.getByTestId("replace-certification-button"),
     ).not.toBeVisible();
+  });
+
+  test("keeps validation blocked when additional info is missing", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...createCertificationSummaryHandlers({
+        hasReducedRequirements: false,
+        withAdditionalInfo: false,
+        withJuryData: true,
+        withPrerequisites: false,
+        status: "A_VALIDER_PAR_CERTIFICATEUR",
+      }),
+      ...certificateurSettingsCommonHandlers,
+    );
+
+    await openSummaryPage({ page, role: "admin" });
+
+    await expect(
+      page.getByRole("button", { name: "Valider cette certification" }),
+    ).toBeDisabled();
+  });
+
+  test("allows validation without jury and without additional info when reduced requirements are enabled", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...createCertificationSummaryHandlers({
+        hasReducedRequirements: true,
+        withAdditionalInfo: false,
+        withJuryData: false,
+        withPrerequisites: false,
+        status: "A_VALIDER_PAR_CERTIFICATEUR",
+      }),
+      ...certificateurSettingsCommonHandlers,
+    );
+
+    await openSummaryPage({ page, role: "admin" });
+
+    const additionalInfoCard = page.getByTestId("additional-info-summary-card");
+    await expect(
+      additionalInfoCard.getByRole("heading", { name: "Documentation" }),
+    ).toBeVisible();
+    await expect(
+      additionalInfoCard.getByTestId("to-complete-badge"),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("button", { name: "Valider cette certification" }),
+    ).toBeEnabled();
   });
 });

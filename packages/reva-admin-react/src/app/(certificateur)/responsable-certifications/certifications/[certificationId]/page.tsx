@@ -100,16 +100,28 @@ const PageContent = ({
     : certification.status == "A_VALIDER_PAR_CERTIFICATEUR" ||
       certification.status == "VALIDE_PAR_CERTIFICATEUR";
 
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+
+  const hasJuryType = Boolean(
+    certification.juryTypeMiseEnSituationProfessionnelle ||
+    certification.juryTypeSoutenanceOrale,
+  );
+  const hasJuryFrequency = Boolean(
+    certification.juryFrequency || certification.juryFrequencyOther,
+  );
+  const hasVisibilityPeriod = Boolean(
+    certification.availableAt && certification.rncpExpiresAt,
+  );
+
   const isDescriptionComplete =
-    (certification.juryTypeMiseEnSituationProfessionnelle ||
-      certification.juryTypeSoutenanceOrale) &&
-    ((certification.juryFrequency && certification.juryFrequency?.length > 0) ||
-      certification.juryFrequencyOther) &&
-    certification.availableAt &&
-    certification.rncpExpiresAt;
+    hasVisibilityPeriod &&
+    (hasReducedRequirements || (hasJuryType && hasJuryFrequency));
 
   const canValidateCertification =
-    isDescriptionComplete && certification.additionalInfo;
+    isDescriptionComplete &&
+    (hasReducedRequirements || Boolean(certification.additionalInfo));
 
   return (
     <div data-testid="certification-registry-manager-update-certification-page">
