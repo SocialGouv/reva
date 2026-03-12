@@ -12,8 +12,19 @@ export function waitGraphQL(page: Page, operationName: string) {
     }
 
     try {
-      const body = response.request().postDataJSON();
-      if (body.operationName !== operationName) {
+      const request = response.request();
+
+      const matchesOperationName = (() => {
+        try {
+          const body = request.postDataJSON();
+          return body.operationName === operationName;
+        } catch {
+          const rawPostData = request.postData();
+          return rawPostData?.includes(operationName) ?? false;
+        }
+      })();
+
+      if (!matchesOperationName) {
         return false;
       }
 
