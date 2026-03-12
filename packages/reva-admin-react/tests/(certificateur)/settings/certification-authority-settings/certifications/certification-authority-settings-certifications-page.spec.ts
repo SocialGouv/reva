@@ -46,9 +46,12 @@ const createCertificationsHandlers = () => {
                       "Bac Pro Accompagnement, soins et services à la personne - à domicile",
                     visible: true,
                     parcours: {
-                      rows: [],
+                      info: {
+                        totalRows: 0,
+                      },
                     },
                   },
+                  parcours: [],
                 },
                 {
                   certification: {
@@ -61,17 +64,37 @@ const createCertificationsHandlers = () => {
                       "Autre certification professionnelle de droit - Un des meilleurs ouvriers de France (diplôme d'Etat)  Groupe III Métiers du bâtiment,des travaux publics et du patrimoine architectural      Spécialité : métiers du verre appliqués à l'architecture",
                     visible: true,
                     parcours: {
-                      rows: [
-                        {
-                          id: "6a1b78c3-561e-46f3-ade8-3324251b03a1",
-                        },
-                      ],
+                      info: {
+                        totalRows: 1,
+                      },
                     },
                   },
+                  parcours: [
+                    {
+                      id: "6a1b78c3-561e-46f3-ade8-3324251b03a1",
+                    },
+                  ],
+                },
+                {
+                  certification: {
+                    certificationAuthorityStructure: {
+                      id: "d529c770-70a5-43cb-90b2-9050c1d6a093",
+                    },
+                    id: "3",
+                    codeRncp: "9999",
+                    label: "Certification avec parcours non sélectionnés",
+                    visible: true,
+                    parcours: {
+                      info: {
+                        totalRows: 2,
+                      },
+                    },
+                  },
+                  parcours: [],
                 },
               ],
               info: {
-                totalRows: 2,
+                totalRows: 3,
                 totalPages: 1,
                 currentPage: 1,
               },
@@ -151,6 +174,32 @@ test.describe("certification authority settings certifications page", () => {
   });
 
   test.describe("When a certification has a parcours", () => {
+    test("it displays the parcours count badge when the CA has parcours linked to the certification", async ({
+      page,
+    }) => {
+      await login({ role: "certificateur", page });
+      await page.goto(
+        `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications`,
+      );
+      await waitForPageQueries(page);
+      await expect(
+        page.getByTestId("certification-card-2").getByText("1 PARCOURS"),
+      ).toBeVisible();
+    });
+
+    test("it does not display the parcours count badge when the CA has no parcours linked to the certification", async ({
+      page,
+    }) => {
+      await login({ role: "certificateur", page });
+      await page.goto(
+        `/admin2/certification-authorities/${CERTIFICATION_AUTHORITY_ID}/settings/certifications`,
+      );
+      await waitForPageQueries(page);
+      await expect(
+        page.getByTestId("certification-card-3").getByText(/PARCOURS/),
+      ).not.toBeVisible();
+    });
+
     test("it let me click on the 'Voir la fiche' button and redirect me to the certification details page", async ({
       page,
     }) => {

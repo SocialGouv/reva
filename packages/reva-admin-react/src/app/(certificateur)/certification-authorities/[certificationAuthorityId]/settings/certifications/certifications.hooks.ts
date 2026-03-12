@@ -32,10 +32,13 @@ const getCertificationAuthorityAndCertificationsQuery = graphql(`
               label
               visible
               parcours(limit: 1) {
-                rows {
-                  id
+                info {
+                  totalRows
                 }
               }
+            }
+            parcours {
+              id
             }
           }
           info {

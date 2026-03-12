@@ -3,6 +3,7 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import Card from "@codegouvfr/react-dsfr/Card";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 
 export const WithParcoursCertificationCard = ({
   id,
@@ -10,6 +11,7 @@ export const WithParcoursCertificationCard = ({
   codeRncp,
   visible,
   isAttachedToAnotherStructure,
+  parcoursSelectedForCertificationCount,
   detailsHref,
   parcoursSettingsHref,
 }: {
@@ -18,6 +20,7 @@ export const WithParcoursCertificationCard = ({
   codeRncp: string;
   visible?: boolean;
   isAttachedToAnotherStructure?: boolean;
+  parcoursSelectedForCertificationCount: number;
   detailsHref: string;
   parcoursSettingsHref: string;
 }) => (
@@ -31,19 +34,26 @@ export const WithParcoursCertificationCard = ({
         : ""
     }
     start={
-      visible !== undefined && (
-        <>
-          {visible ? (
-            <Badge className="mb-2" noIcon severity="success">
-              Visible
-            </Badge>
-          ) : (
-            <Badge className="mb-2" noIcon severity="error">
-              Invisible
-            </Badge>
-          )}
-        </>
-      )
+      <span className="flex gap-2">
+        {visible !== undefined && (
+          <>
+            {visible ? (
+              <Badge className="mb-2" noIcon severity="success">
+                Visible
+              </Badge>
+            ) : (
+              <Badge className="mb-2" noIcon severity="error">
+                Invisible
+              </Badge>
+            )}
+          </>
+        )}
+        {parcoursSelectedForCertificationCount > 0 && (
+          <Tag className="mb-2 rounded-[4px] text-[#6E445A] bg-[#FEE7FC] font-bold">
+            {parcoursSelectedForCertificationCount} PARCOURS
+          </Tag>
+        )}
+      </span>
     }
     endDetail={
       <span className="flex gap-4">

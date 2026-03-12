@@ -57,7 +57,10 @@ const CertificationAuthorityCertificationsPage = () => {
               certification.certificationAuthorityStructure?.id !==
               certificationAuthority.certificationAuthorityStructures[0].id;
             const certificationHasParcours =
-              certification.parcours.rows.length > 0;
+              certification.parcours.info.totalRows > 0;
+
+            const parcoursSelectedForCertificationCount =
+              certificationAndParcours.parcours.length;
 
             return certificationHasParcours ? (
               <WithParcoursCertificationCard
@@ -67,6 +70,9 @@ const CertificationAuthorityCertificationsPage = () => {
                 codeRncp={certification.codeRncp}
                 visible={certification.visible}
                 isAttachedToAnotherStructure={isAttachedToAnotherStructure}
+                parcoursSelectedForCertificationCount={
+                  parcoursSelectedForCertificationCount
+                }
                 detailsHref={`/certification-details/${certification.id}`}
                 parcoursSettingsHref={`/certification-authorities/${certificationAuthorityId}/settings/certifications/${certification.id}/parcours`}
               />
