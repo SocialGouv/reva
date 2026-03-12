@@ -326,7 +326,6 @@ const CandidateInformationForm = ({
           <Input
             label="Nationalité"
             className="w-full"
-            disabled={isFCLinked}
             nativeInputProps={register("nationality")}
             state={errors.nationality ? "error" : "default"}
             stateRelatedMessage={errors.nationality?.message}

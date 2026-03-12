@@ -175,9 +175,13 @@ export const handleFranceConnectCallback = async (
   }
 };
 
-const buildCandidateDataFromFCClaims = async (
-  userInfo: FranceConnectClaims,
-) => {
+const buildCandidateDataFromFCClaims = async ({
+  userInfo,
+  existingNationality,
+}: {
+  userInfo: FranceConnectClaims;
+  existingNationality?: string | null;
+}) => {
   const { firstname, firstname2, firstname3 } = splitGivenName(
     userInfo.given_name ?? "",
   );
@@ -188,6 +192,7 @@ const buildCandidateDataFromFCClaims = async (
     birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
   }
   const currentDepartment = await getDefaultDepartment();
+  const nationality = existingNationality ?? country?.nationality ?? null;
 
   return {
     firstname,
@@ -196,7 +201,7 @@ const buildCandidateDataFromFCClaims = async (
     lastname: userInfo.family_name,
     birthdate: parseFranceConnectDate(userInfo.birthdate),
     countryId: country?.id ?? null,
-    nationality: country?.nationality ?? null,
+    nationality,
     franceConnectLinked: true,
     birthDepartmentId,
     departmentId: currentDepartment.id,
@@ -210,7 +215,16 @@ const updateCandidateFromFCClaims = async ({
   candidateId: string;
   userInfo: FranceConnectClaims;
 }) => {
-  const fcData = await buildCandidateDataFromFCClaims(userInfo);
+  const existingCandidate = await prismaClient.candidate.findUnique({
+    where: { id: candidateId },
+    select: { nationality: true },
+  });
+  const existingNationality = existingCandidate?.nationality;
+
+  const fcData = await buildCandidateDataFromFCClaims({
+    userInfo,
+    existingNationality,
+  });
 
   const candidate = await prismaClient.candidate.update({
     where: { id: candidateId },
@@ -227,11 +241,11 @@ const getOrCreateCandidate = async (
   let candidate = await getCandidateByKeycloakId({ keycloakId });
 
   if (candidate) {
-    await updateCandidateFromFCClaims({
+    const updated = await updateCandidateFromFCClaims({
       candidateId: candidate.id,
       userInfo,
     });
-    return { candidate, isNewAccount: false };
+    return { candidate: updated, isNewAccount: false };
   }
 
   candidate = await prismaClient.candidate.findUnique({
@@ -287,7 +301,9 @@ const createCandidateFromFranceConnect = async ({
   keycloakId: string;
   userInfo: FranceConnectClaims;
 }) => {
-  const fcData = await buildCandidateDataFromFCClaims(userInfo);
+  const fcData = await buildCandidateDataFromFCClaims({
+    userInfo,
+  });
 
   const candidate = await prismaClient.candidate.create({
     data: {

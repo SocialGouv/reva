@@ -48,7 +48,6 @@ export const updateCandidate = async ({
     delete candidateInput.firstname3;
     delete candidateInput.birthdate;
     delete candidateInput.countryId;
-    delete candidateInput.nationality;
     delete candidateInput.birthDepartmentId;
   }
 
