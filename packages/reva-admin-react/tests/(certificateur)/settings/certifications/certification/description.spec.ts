@@ -62,6 +62,17 @@ function createCertificationDescriptionHandlers({
   ];
 }
 
+function createUpdateDescriptionMutationHandler() {
+  return fvae.mutation(
+    "updateCertificationDescriptionForCertificationRegistryManagerUpdateCertificationDescriptionPage",
+    graphQLResolver({
+      referential_updateCertificationDescription: {
+        id: CERTIFICATION_ID,
+      },
+    }),
+  );
+}
+
 async function waitForDescriptionPageQueries(page: Page) {
   await Promise.all([
     certificateurSettingsCommonWait(page),
@@ -73,6 +84,50 @@ async function waitForDescriptionPageQueries(page: Page) {
 }
 
 test.describe("certificateur certification description page", () => {
+  test("allows submitting without jury fields when reduced requirements are enabled", async ({
+    page,
+    msw,
+  }) => {
+    msw.use(
+      ...createCertificationDescriptionHandlers({
+        hasReducedRequirements: true,
+      }),
+      createUpdateDescriptionMutationHandler(),
+      ...certificateurSettingsCommonHandlers,
+    );
+
+    await login({ role: "certificateur", page });
+    await page.goto(DESCRIPTION_PAGE_PATH);
+    await waitForDescriptionPageQueries(page);
+
+    await expect(
+      page.getByText(
+        "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires.",
+      ),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Types d’épreuves (optionnel)" }),
+    ).toBeVisible();
+    await expect(
+      page.getByLabel("Fréquence des jurys (optionnel) :"),
+    ).toBeVisible();
+
+    await page.locator('input[name="startOfVisibility"]').fill("2025-01-02");
+
+    const updateMutation = waitGraphQL(
+      page,
+      "updateCertificationDescriptionForCertificationRegistryManagerUpdateCertificationDescriptionPage",
+    );
+    await page.getByRole("button", { name: "Enregistrer" }).click();
+    await updateMutation;
+
+    await expect(
+      page.getByText(
+        "Veuillez renseigner au moins un type d’épreuve pour le jury de cette certification",
+      ),
+    ).toHaveCount(0);
+  });
+
   test("keeps jury fields required when reduced requirements are disabled", async ({
     page,
     msw,

@@ -15,6 +15,7 @@ import * as z from "zod";
 
 import { EnhancedSectionCard } from "@/components/card/enhanced-section-card/EnhancedSectionCard";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
+import { FormOptionalFieldsDisclaimer } from "@/components/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { FranceCompetencesLogo } from "@/components/logo/france-competences-logo/FranceCompetencesLogo";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import {
@@ -41,74 +42,87 @@ const JuryFrequencies: { id: CertificationJuryFrequency; label: string }[] = [
   },
 ];
 
-const zodSchema = z
-  .object({
-    juryTypeOfTest: z
-      .object({
-        id: z.string(),
-        label: z.string(),
-        checked: z.boolean(),
-        presentiel: z.boolean(),
-        distanciel: z.boolean(),
-      })
-      .array(),
+const getZodSchema = ({
+  hasReducedRequirements,
+}: {
+  hasReducedRequirements: boolean;
+}) =>
+  z
+    .object({
+      juryTypeOfTest: z
+        .object({
+          id: z.string(),
+          label: z.string(),
+          checked: z.boolean(),
+          presentiel: z.boolean(),
+          distanciel: z.boolean(),
+        })
+        .array(),
 
-    juryFrequency: z.enum([
-      "",
-      ...JuryFrequencies.map(({ id }) => id),
-      "Autre",
-    ]),
-    juryFrequencyOther: sanitizedOptionalText(),
-    juryPlace: sanitizedOptionalText(),
-    juryEstimatedCost: z.number().optional().nullable(),
-    startOfVisibility: sanitizedText(),
-  })
-  .superRefine(
-    (
-      { juryTypeOfTest, juryFrequency, juryFrequencyOther, startOfVisibility },
-      { addIssue },
-    ) => {
-      if (
-        juryTypeOfTest.findIndex(
-          (v) => v.checked && (v.presentiel || v.distanciel),
-        ) == -1
-      ) {
-        addIssue({
-          path: ["juryTypeOfTest"],
-          message:
-            "Veuillez renseigner au moins un type d’épreuve pour le jury de cette certification",
-          code: z.ZodIssueCode.custom,
-        });
-      }
+      juryFrequency: z.enum([
+        "",
+        ...JuryFrequencies.map(({ id }) => id),
+        "Autre",
+      ]),
+      juryFrequencyOther: sanitizedOptionalText(),
+      juryPlace: sanitizedOptionalText(),
+      juryEstimatedCost: z.number().optional().nullable(),
+      startOfVisibility: sanitizedText(),
+    })
+    .superRefine(
+      (
+        {
+          juryTypeOfTest,
+          juryFrequency,
+          juryFrequencyOther,
+          startOfVisibility,
+        },
+        { addIssue },
+      ) => {
+        if (
+          !hasReducedRequirements &&
+          juryTypeOfTest.findIndex(
+            (v) => v.checked && (v.presentiel || v.distanciel),
+          ) == -1
+        ) {
+          addIssue({
+            path: ["juryTypeOfTest"],
+            message:
+              "Veuillez renseigner au moins un type d’épreuve pour le jury de cette certification",
+            code: z.ZodIssueCode.custom,
+          });
+        }
 
-      if (!juryFrequency) {
-        addIssue({
-          path: ["juryFrequency"],
-          message: "Veuillez renseigner ce champ",
-          code: z.ZodIssueCode.custom,
-        });
-        return;
-      } else if (juryFrequency == "Autre" && !juryFrequencyOther) {
-        addIssue({
-          path: ["juryFrequencyOther"],
-          message: "Veuillez renseigner ce champ",
-          code: z.ZodIssueCode.custom,
-        });
+        if (!hasReducedRequirements && !juryFrequency) {
+          addIssue({
+            path: ["juryFrequency"],
+            message: "Veuillez renseigner ce champ",
+            code: z.ZodIssueCode.custom,
+          });
+          return;
+        } else if (juryFrequency == "Autre" && !juryFrequencyOther) {
+          addIssue({
+            path: ["juryFrequencyOther"],
+            message: "Veuillez renseigner ce champ",
+            code: z.ZodIssueCode.custom,
+          });
 
-        return;
-      }
+          return;
+        }
 
-      if (isNaN(Date.parse(startOfVisibility))) {
-        addIssue({
-          path: ["startOfVisibility"],
-          message: "Veuillez renseigner ce champ",
-          code: z.ZodIssueCode.custom,
-        });
-      }
-    },
-  );
+        if (isNaN(Date.parse(startOfVisibility))) {
+          addIssue({
+            path: ["startOfVisibility"],
+            message: "Veuillez renseigner ce champ",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      },
+    );
 
-type CompanySiretStepFormSchema = z.infer<typeof zodSchema>;
+type CertificationDescriptionFormSchema = z.infer<
+  ReturnType<typeof getZodSchema>
+>;
 
 type CertificationForPage = Exclude<
   ReturnType<typeof useUpdateCertificationDescriptionPage>["certification"],
@@ -144,6 +158,14 @@ const PageContent = ({
   >["updateCertificationDescription"];
 }) => {
   const router = useRouter();
+  const hasReducedRequirements =
+    certification.certificationAuthorityStructure?.hasReducedRequirements ??
+    false;
+  const zodSchema = useMemo(
+    () => getZodSchema({ hasReducedRequirements }),
+    [hasReducedRequirements],
+  );
+  const optionalJuryLabelSuffix = hasReducedRequirements ? " (optionnel)" : "";
 
   const defaultValues = useMemo(
     () => ({
@@ -199,7 +221,7 @@ const PageContent = ({
     watch,
     setValue,
     reset,
-  } = useForm<CompanySiretStepFormSchema>({
+  } = useForm<CertificationDescriptionFormSchema>({
     resolver: zodResolver(zodSchema),
     defaultValues,
   });
@@ -363,8 +385,9 @@ const PageContent = ({
             <h2 className="m-0">Informations complémentaires</h2>
             <div className="flex flex-col gap-6">
               <h3 className="m-0">Jury</h3>
+              {hasReducedRequirements && <FormOptionalFieldsDisclaimer />}
               <div className="flex flex-col gap-4">
-                <h4 className="mb-0">Types d’épreuves</h4>
+                <h4 className="mb-0">{`Types d’épreuves${optionalJuryLabelSuffix}`}</h4>
                 <div className="max-w-[620px]">
                   <Checkbox
                     className="[&_.fr-label::before]:mt-2 [&_.fr-checkbox-group]:m-0 first:[&_.fr-checkbox-group]:border-t [&_.fr-checkbox-group]:border-b [&_.fr-messages-group>p]:pt-4 [&_.fr-messages-group]:pb-0 mb-0"
@@ -432,7 +455,7 @@ const PageContent = ({
                 <div className="flex flex-row gap-4">
                   <Select
                     className="m-0"
-                    label="Fréquence des jurys :"
+                    label={`Fréquence des jurys${optionalJuryLabelSuffix} :`}
                     nativeSelectProps={{
                       defaultValue: "",
                       ...register("juryFrequency"),
