@@ -60,7 +60,10 @@
         "highestDegree": {
           "level": 4
         },
-        "highestDegreeLabel": "BTS logistique"
+        "highestDegreeLabel": "BTS logistique",
+        "civilInformationCompleted": true,
+        "contactInformationCompleted": true,
+        "typologyAndCollectiveAgreementCompleted": true
       },
       "experiences": [
         {

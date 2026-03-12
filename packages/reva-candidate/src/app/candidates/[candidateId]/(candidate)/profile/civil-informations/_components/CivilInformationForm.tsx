@@ -31,11 +31,21 @@ export const CivilInformationForm = ({
   countries,
   departments,
   hideBackButton,
+  backButtonLabel,
+  hideResetButton,
+  submitButtonLabel,
+  submitPath,
+  forceIsDirty,
 }: {
   candidate: CandidateUseProfile;
   countries?: Countries;
   departments?: Departments;
   hideBackButton?: boolean;
+  backButtonLabel?: string;
+  hideResetButton?: boolean;
+  submitButtonLabel?: string;
+  submitPath?: string;
+  forceIsDirty?: boolean;
 }) => {
   const { updateCivilInformationMutate } = useUpdateCivilInformation();
   const isFCLinked = candidate?.franceConnectLinked;
@@ -65,7 +75,7 @@ export const CivilInformationForm = ({
       givenName: candidate?.givenName ?? "",
       firstname2: candidate?.firstname2 ?? "",
       firstname3: candidate?.firstname3 ?? "",
-      gender: (candidate?.gender as GenderEnum) ?? GenderEnum.undisclosed,
+      gender: (candidate?.gender as GenderEnum) ?? undefined,
       birthCity: candidate?.birthCity ?? "",
       birthdate: candidate?.birthdate ?? "",
       birthDepartment: candidate?.birthDepartment?.id ?? "",
@@ -94,7 +104,7 @@ export const CivilInformationForm = ({
         birthDepartment: candidate.birthDepartment?.id ?? "",
         country: candidate.country?.id ?? franceId,
         countryIsFrance: candidate.country?.id === franceId,
-        gender: (candidate.gender as GenderEnum) ?? GenderEnum.undisclosed,
+        gender: (candidate.gender as GenderEnum) ?? undefined,
         nationality: candidate.nationality ?? "",
       });
     },
@@ -148,7 +158,7 @@ export const CivilInformationForm = ({
         candidateInformation,
       });
       successToast("Les informations ont bien été mises à jour");
-      router.push("../");
+      router.push(submitPath || "../");
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -319,7 +329,10 @@ export const CivilInformationForm = ({
 
         <FormButtons
           backUrl={hideBackButton ? undefined : "../"}
-          formState={{ isDirty, isSubmitting }}
+          backLabel={backButtonLabel}
+          hideResetButton={hideResetButton}
+          submitButtonLabel={submitButtonLabel}
+          formState={{ isDirty: forceIsDirty ?? isDirty, isSubmitting }}
           data-testid="form-buttons"
         />
       </form>

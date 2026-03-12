@@ -30,11 +30,23 @@ export const ContactInformationForm = ({
   candidate,
   countries,
   hideBackButton,
+  backButtonLabel,
+  backButtonUrl,
+  hideResetButton,
+  submitButtonLabel,
+  submitPath,
+  forceIsDirty,
 }: {
   candidate: CandidateUseProfile;
   countries?: Countries;
   departments?: Departments;
   hideBackButton?: boolean;
+  backButtonLabel?: string;
+  backButtonUrl?: string;
+  hideResetButton?: boolean;
+  submitButtonLabel?: string;
+  submitPath?: string;
+  forceIsDirty?: boolean;
 }) => {
   const { updateContactInformationsMutate } = useUpdateContactInformations();
   const router = useRouter();
@@ -106,7 +118,7 @@ export const ContactInformationForm = ({
         candidateInformation,
       });
       successToast("Les informations ont bien été mises à jour");
-      router.push("../");
+      router.push(submitPath || "../");
     } catch (e) {
       graphqlErrorToast(e);
     }
@@ -249,8 +261,11 @@ export const ContactInformationForm = ({
         </div>
 
         <FormButtons
-          backUrl={hideBackButton ? undefined : "../"}
-          formState={{ isDirty, isSubmitting }}
+          backUrl={hideBackButton ? undefined : backButtonUrl || "../"}
+          backLabel={backButtonLabel}
+          hideResetButton={hideResetButton}
+          submitButtonLabel={submitButtonLabel}
+          formState={{ isDirty: forceIsDirty ?? isDirty, isSubmitting }}
           data-testid="form-buttons"
         />
       </form>

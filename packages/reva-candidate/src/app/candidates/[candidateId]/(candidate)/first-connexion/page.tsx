@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { StatusPage } from "@/app/_components/status-page/StatusPage";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
@@ -20,12 +22,25 @@ export default function FirstConnexionPage() {
               vos informations de contact (adresse postale, téléphone, adresse
               électronique)
             </li>
+            <li>
+              la convention collective (IDCC) à laquelle vous êtes rattaché(e),
+              vous pouvez la trouver sur vos bulletins de paie, votre contrat de
+              travail ou sur le{" "}
+              <Link
+                className="fr-link"
+                href="https://code.travail.gouv.fr/outils/convention-collective"
+                target="_"
+              >
+                site du code du travail
+              </Link>
+              .
+            </li>
           </ul>
         </>
       }
       pictogram={PICTOGRAMS.informationLG}
       actionLink={{
-        href: "../profile?navigationDisabled=true",
+        href: "./civil-informations",
         label: "Mon profil",
         priority: "primary",
       }}

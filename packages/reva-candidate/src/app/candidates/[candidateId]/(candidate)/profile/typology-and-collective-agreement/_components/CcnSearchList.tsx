@@ -75,8 +75,10 @@ export const CcnSearchList = ({
   );
 
   useEffect(() => {
-    setSearchFilter(inputValue);
-  }, [inputValue, setSearchFilter]);
+    if (inputValue !== searchFilter) {
+      setSearchFilter(inputValue);
+    }
+  }, [inputValue, searchFilter, setSearchFilter]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 

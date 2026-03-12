@@ -47,6 +47,8 @@ const BackConfirmationModal = ({ onConfirm }: { onConfirm(): void }) => {
 
 interface FormButtonsProps {
   backUrl?: string;
+  backLabel?: string;
+  hideResetButton?: boolean;
   formState: {
     isDirty: boolean;
     isSubmitting: boolean;
@@ -58,6 +60,8 @@ interface FormButtonsProps {
 
 export const FormButtons = ({
   backUrl,
+  backLabel,
+  hideResetButton = false,
   submitButtonLabel = "Enregistrer",
   formState: { isDirty, isSubmitting, canSubmit = true },
   className,
@@ -82,16 +86,20 @@ export const FormButtons = ({
         role="group"
         aria-label="Actions du formulaire"
       >
-        {backUrl && <BackButton navigateBack={navigateBack} />}
+        {backUrl && (
+          <BackButton navigateBack={navigateBack} title={backLabel} />
+        )}
         <div className="flex gap-x-2 ml-auto">
-          <Button
-            type="reset"
-            priority="tertiary no outline"
-            disabled={!isDirty}
-            aria-label="Réinitialiser le formulaire"
-          >
-            Réinitialiser
-          </Button>
+          {!hideResetButton && (
+            <Button
+              type="reset"
+              priority="tertiary no outline"
+              disabled={!isDirty}
+              aria-label="Réinitialiser le formulaire"
+            >
+              Réinitialiser
+            </Button>
+          )}
           <Button
             type="submit"
             disabled={isSubmitting || !isDirty || !canSubmit}

@@ -7,6 +7,7 @@ import { useCandidateGuard } from "./CandidateGuard.hook";
 
 export const CandidateGuard = ({ children }: { children: React.ReactNode }) => {
   const { isLoading, isError, candidate } = useCandidateGuard();
+
   const pathname = usePathname();
   const router = useRouter();
   const { candidateId } = useParams<{ candidateId: string }>();
@@ -20,10 +21,13 @@ export const CandidateGuard = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (
-    candidate?.profileInformationCompleted &&
-    pathname.includes("/first-connexion")
+    candidate &&
+    (!candidate.civilInformationCompleted ||
+      !candidate.contactInformationCompleted ||
+      !candidate.typologyAndCollectiveAgreementCompleted) &&
+    !pathname.includes("/first-connexion")
   ) {
-    router.push(`/candidates/${candidateId}/candidacies`);
+    router.push(`/candidates/${candidateId}/first-connexion`);
     return <LoaderWithLayout />;
   }
 

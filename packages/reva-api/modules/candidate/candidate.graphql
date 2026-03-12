@@ -49,7 +49,9 @@ type Candidate {
   street: String
   city: String
   addressComplement: String
-  profileInformationCompleted: Boolean!
+  contactInformationCompleted: Boolean!
+  civilInformationCompleted: Boolean!
+  typologyAndCollectiveAgreementCompleted: Boolean!
   franceConnectLinked: Boolean!
   typology: CandidateTypology!
   typologyAdditional: String
