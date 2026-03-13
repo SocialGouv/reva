@@ -14,6 +14,8 @@ export const getCivilInformationCompletedByCandidateId = async ({
   }
 
   return (
+    candidate.firstname !== null &&
+    candidate.lastname !== null &&
     candidate.gender !== null &&
     candidate.birthCity !== null &&
     candidate.birthDepartmentId !== null &&
