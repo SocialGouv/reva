@@ -1,2 +1,24 @@
-/.cache/Cypress
-/node_modules
+# Own node_modules (standalone bundles deps)
+node_modules
+
+# reva-api artifacts (only needed at build time for graphql codegen)
+../reva-api/node_modules
+../reva-api/dist
+
+# Source code (compiled into .next/standalone)
+src
+
+# Build cache
+.next/cache
+
+# Test tooling
+.cache
+cypress
+playwright.config.ts
+
+# Dev config
+codegen.ts
+tsconfig.json
+postcss.config.js
+tailwind.config.js
+copy-assets.js

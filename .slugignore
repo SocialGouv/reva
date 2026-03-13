@@ -1,0 +1,11 @@
+# Test tooling
+.cache
+**/cypress
+**/.cache/Cypress
+**/playwright.config.ts
+
+# Dev/CI files not needed at runtime
+.github
+infra
+code_specs
+.graphqlrc.ts
