@@ -120,7 +120,7 @@ export const Footer = () => (
           <li className="fr-footer__bottom-item">
             <Link
               className="fr-footer__bottom-link"
-              href="https://metabase.vae.gouv.fr/public/dashboard/951df0e6-757d-4491-928e-2cd2d6beafec"
+              href={`${process.env.NEXT_PUBLIC_METABASE_BASE_URL}/public/dashboard/951df0e6-757d-4491-928e-2cd2d6beafec`}
             >
               Statistiques
             </Link>

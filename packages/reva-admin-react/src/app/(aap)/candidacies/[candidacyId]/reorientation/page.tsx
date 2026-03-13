@@ -349,7 +349,7 @@ const NoResult = () => {
           <br />
           <br />
           <a
-            href="https://metabase.vae.gouv.fr/public/dashboard/31ce8d3e-1347-4aad-8a82-79a06de6b8a0"
+            href={`${process.env.NEXT_PUBLIC_METABASE_BASE_URL}/public/dashboard/31ce8d3e-1347-4aad-8a82-79a06de6b8a0`}
             target="_blank"
             className="fr-link text-2l font-semibold break-words text-black"
           >

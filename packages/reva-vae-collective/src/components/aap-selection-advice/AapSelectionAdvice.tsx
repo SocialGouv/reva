@@ -9,7 +9,7 @@ export const AapSelectionAdvice = ({
     <a
       className="fr-link"
       style={{ fontSize: "inherit" }}
-      href="https://metabase.vae.gouv.fr/public/dashboard/1ac9acb3-2b30-4932-9fb2-8a0111123fdd"
+      href={`${process.env.NEXT_PUBLIC_METABASE_BASE_URL}/public/dashboard/1ac9acb3-2b30-4932-9fb2-8a0111123fdd`}
       target="_blank"
     >
       la liste des AAP référencés sur France VAE
