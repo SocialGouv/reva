@@ -26,19 +26,21 @@ const getCertificationAuthorityLocalAccountQuery = graphql(`
         certificationAuthorityStructures {
           id
         }
-        paginatedCertifications(
+        certificationsAndParcours(
           limit: $certificationsLimit
           offset: $certificationsOffset
           searchText: $certificationsSearchFilter
-          localAccountId: $certificationAuthorityLocalAccountIdFilter
+          certificationAuthorityLocalAccountIdFilter: $certificationAuthorityLocalAccountIdFilter
         ) {
           rows {
-            id
-            label
-            codeRncp
-            visible
-            certificationAuthorityStructure {
+            certification {
               id
+              label
+              codeRncp
+              visible
+              certificationAuthorityStructure {
+                id
+              }
             }
           }
           info {
@@ -128,13 +130,9 @@ export const useUpdateLocalAccountCertificationsPage = ({
   const certificationAuthorityLocalAccount =
     data?.certification_authority_getCertificationAuthorityLocalAccount;
 
-  // const certificationsFromCertificationAuthority =
-  //   data?.certification_authority_getCertificationAuthorityLocalAccount
-  //     ?.certificationAuthority.certifications || [];
-
-  const certificationsPage =
+  const certificationsAndParcoursPage =
     data?.certification_authority_getCertificationAuthorityLocalAccount
-      ?.certificationAuthority.paginatedCertifications;
+      ?.certificationAuthority.certificationsAndParcours;
 
   const certificationsFromLocalAccount =
     data?.certification_authority_getCertificationAuthorityLocalAccount
@@ -142,7 +140,7 @@ export const useUpdateLocalAccountCertificationsPage = ({
 
   return {
     certificationAuthorityLocalAccount,
-    certificationsPage,
+    certificationsAndParcoursPage,
     certificationsFromLocalAccount,
     isLoading,
     updateCertificationAuthorityLocalAccountCertifications,

@@ -26,7 +26,7 @@ export default function InterventionAreaPage() {
   const {
     certificationAuthorityLocalAccount,
     isLoading,
-    certificationsPage,
+    certificationsAndParcoursPage,
     certificationsFromLocalAccount,
     updateCertificationAuthorityLocalAccountCertifications,
   } = useUpdateLocalAccountCertificationsPage({
@@ -36,7 +36,7 @@ export default function InterventionAreaPage() {
     onlyShowAddedCertifications: onlyShowAddedItems,
   });
 
-  if (isLoading || !certificationsPage) {
+  if (isLoading || !certificationsAndParcoursPage) {
     return null;
   }
 
@@ -106,37 +106,39 @@ export default function InterventionAreaPage() {
         sélection en tout temps.
       </p>
       <MultiSelectList
-        pageItems={certificationsPage?.rows.map((c) => ({
-          id: c.id,
-          title: c.label,
-          detail: `RNCP ${c.codeRncp}`,
-          selected: certificationsFromLocalAccount.some(
-            (localCertification) => localCertification.id === c.id,
-          ),
-          detailsPageUrl: `/certification-details/${c.id}`,
-          desc: certificationAuthorityLocalAccount?.certificationAuthority.certificationAuthorityStructures.some(
-            (structure) =>
-              structure.id === c.certificationAuthorityStructure?.id,
-          )
-            ? ""
-            : "Certification rattachée à une autre structure",
-          start: c.visible !== undefined && (
-            <>
-              {c.visible ? (
-                <Badge className="mb-2" noIcon severity="success">
-                  Visible
-                </Badge>
-              ) : (
-                <Badge className="mb-2" noIcon severity="error">
-                  Invisible
-                </Badge>
-              )}
-            </>
-          ),
-        }))}
+        pageItems={certificationsAndParcoursPage?.rows
+          .map((cap) => cap.certification)
+          .map((c) => ({
+            id: c.id,
+            title: c.label,
+            detail: `RNCP ${c.codeRncp}`,
+            selected: certificationsFromLocalAccount.some(
+              (localCertification) => localCertification.id === c.id,
+            ),
+            detailsPageUrl: `/certification-details/${c.id}`,
+            desc: certificationAuthorityLocalAccount?.certificationAuthority.certificationAuthorityStructures.some(
+              (structure) =>
+                structure.id === c.certificationAuthorityStructure?.id,
+            )
+              ? ""
+              : "Certification rattachée à une autre structure",
+            start: c.visible !== undefined && (
+              <>
+                {c.visible ? (
+                  <Badge className="mb-2" noIcon severity="success">
+                    Visible
+                  </Badge>
+                ) : (
+                  <Badge className="mb-2" noIcon severity="error">
+                    Invisible
+                  </Badge>
+                )}
+              </>
+            ),
+          }))}
         paginationInfo={{
-          totalItems: certificationsPage?.info.totalRows || 0,
-          totalPages: certificationsPage?.info.totalPages || 1,
+          totalItems: certificationsAndParcoursPage?.info.totalRows || 0,
+          totalPages: certificationsAndParcoursPage?.info.totalPages || 1,
         }}
         onSelectionChange={handleCertificationSelectionChange}
         onEmptyStateShowAllItemsButtonClick={

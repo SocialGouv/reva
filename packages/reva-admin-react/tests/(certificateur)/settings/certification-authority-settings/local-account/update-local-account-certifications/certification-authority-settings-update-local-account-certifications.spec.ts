@@ -31,26 +31,36 @@ const localAccountForCertifications = graphQLResolver({
     certificationAuthority: {
       label: "Certification Authority",
       certificationAuthorityStructures: [{ id: STRUCTURE_ID }],
-      paginatedCertifications: {
+      certificationsAndParcours: {
         rows: [
           {
-            id: "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
-            label: "CQP Animateur d'équipe autonome de production industrielle",
-            codeRncp: "37310",
-            visible: true,
-            certificationAuthorityStructure: { id: STRUCTURE_ID },
+            certification: {
+              id: "00fa1e5b-1535-4cb6-b542-0dad27dd6341",
+              label:
+                "CQP Animateur d'équipe autonome de production industrielle",
+              codeRncp: "37310",
+              visible: true,
+              certificationAuthorityStructure: { id: STRUCTURE_ID },
+            },
           },
           {
-            id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
-            label:
-              "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
-            codeRncp: "49872",
-            visible: true,
-            certificationAuthorityStructure: { id: STRUCTURE_ID },
+            certification: {
+              id: "0236bf82-e85d-4e88-927a-c93bb6c44efb",
+              label:
+                "Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF",
+              codeRncp: "49872",
+              visible: true,
+              certificationAuthorityStructure: { id: STRUCTURE_ID },
+            },
           },
           {
-            id: "032036b5-528e-4d06-bbe0-a7d180602bc1",
-            label: "Titre professionnel Cariste d'entrepôt - CE ",
+            certification: {
+              id: "032036b5-528e-4d06-bbe0-a7d180602bc1",
+              label: "Titre professionnel Cariste d'entrepôt - CE ",
+              codeRncp: "13247",
+              visible: true,
+              certificationAuthorityStructure: { id: STRUCTURE_ID },
+            },
             codeRncp: "13247",
             visible: true,
             certificationAuthorityStructure: { id: STRUCTURE_ID },
