@@ -20,12 +20,6 @@ type CertificationAuthority {
     searchText: String
     certificationAuthorityLocalAccountIdFilter: ID # If provided, only certifications managed by the collaborateur authority local accountwill be returned
   ): CertificationAndParcoursPaginated! # certifications with parcours selected by the certification authority
-  paginatedCertifications(
-    limit: Int
-    offset: Int
-    searchText: String
-    localAccountId: ID
-  ): CertificationPaginated
   certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
   certificationAuthorityStructures: [CertificationAuthorityStructure!]!
   showLocalAccountsContactInfo: Boolean!

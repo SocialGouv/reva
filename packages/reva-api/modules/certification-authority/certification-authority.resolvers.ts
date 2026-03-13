@@ -89,19 +89,6 @@ const unsafeResolvers = {
       getCertificationsByCertificationAuthorityId({
         certificationAuthorityId: parent.id,
       }),
-    paginatedCertifications: (
-      parent: CertificationAuthority,
-      params: {
-        limit?: number;
-        offset?: number;
-        searchText?: string;
-        localAccountId?: string;
-      },
-    ) =>
-      getPaginatedCertifications({
-        certificationAuthorityId: parent.id,
-        ...params,
-      }),
     certificationAuthorityStructures: ({
       id: certificationAuthorityId,
     }: CertificationAuthority) =>
