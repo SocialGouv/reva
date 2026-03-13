@@ -109,10 +109,12 @@ async function graphqlGetParcoursForCertificationAndCertificationAuthority({
 
 async function graphqlGetCertificationsAndParcoursByCertificationAuthorityId({
   certificationAuthorityId,
+  certificationAuthorityLocalAccountIdFilter,
   role,
   account,
 }: {
   certificationAuthorityId: string;
+  certificationAuthorityLocalAccountIdFilter?: string;
   role: KeyCloakUserRole;
   account: { keycloakId: string };
 }) {
@@ -127,11 +129,14 @@ async function graphqlGetCertificationsAndParcoursByCertificationAuthorityId({
   const getParcoursForCertificationAndCertificationAuthority = graphql(`
     query certification_authority_getCertificationAuthority(
       $certificationAuthorityId: ID!
+      $certificationAuthorityLocalAccountIdFilter: ID
     ) {
       certification_authority_getCertificationAuthority(
         id: $certificationAuthorityId
       ) {
-        certificationsAndParcours {
+        certificationsAndParcours(
+          certificationAuthorityLocalAccountIdFilter: $certificationAuthorityLocalAccountIdFilter
+        ) {
           rows {
             certification {
               id
@@ -150,6 +155,7 @@ async function graphqlGetCertificationsAndParcoursByCertificationAuthorityId({
     getParcoursForCertificationAndCertificationAuthority,
     {
       certificationAuthorityId,
+      certificationAuthorityLocalAccountIdFilter,
     },
   );
 }
@@ -612,6 +618,65 @@ describe("certification authority certification parcours", () => {
         resp.certification_authority_getCertificationAuthority
           ?.certificationsAndParcours.rows,
       ).toEqual([]);
+    });
+
+    test("should return the certification for a certification authority with a certification selected and also associated to a certification authority local account", async () => {
+      const certificationAssociatedToCertificationAuthorityLocalAccount =
+        await createCertificationHelper();
+      const certificationNotAssociatedToCertificationAuthorityLocalAccount =
+        await createCertificationHelper();
+
+      const certificationAuthority = await createCertificationAuthorityHelper({
+        certificationAuthorityOnCertification: {
+          createMany: {
+            data: [
+              {
+                certificationId:
+                  certificationAssociatedToCertificationAuthorityLocalAccount.id,
+              },
+              {
+                certificationId:
+                  certificationNotAssociatedToCertificationAuthorityLocalAccount.id,
+              },
+            ],
+          },
+        },
+      });
+
+      const certificationAuthorityLocalAccount =
+        await createCertificationAuthorityLocalAccountHelper({
+          certificationAuthorityId: certificationAuthority.id,
+          certificationAuthorityLocalAccountOnCertification: {
+            create: {
+              certificationId:
+                certificationAssociatedToCertificationAuthorityLocalAccount.id,
+            },
+          },
+        });
+
+      const resp =
+        await graphqlGetCertificationsAndParcoursByCertificationAuthorityId({
+          certificationAuthorityId: certificationAuthority.id,
+          role: "admin",
+          account: {
+            keycloakId: certificationAuthority.Account[0].keycloakId,
+          },
+          certificationAuthorityLocalAccountIdFilter:
+            certificationAuthorityLocalAccount.id,
+        });
+      expect(
+        resp.certification_authority_getCertificationAuthority
+          ?.certificationsAndParcours.rows,
+      ).toEqual([
+        {
+          certification: {
+            id: certificationAssociatedToCertificationAuthorityLocalAccount.id,
+            label:
+              certificationAssociatedToCertificationAuthorityLocalAccount.label,
+          },
+          parcours: [],
+        },
+      ]);
     });
   });
 

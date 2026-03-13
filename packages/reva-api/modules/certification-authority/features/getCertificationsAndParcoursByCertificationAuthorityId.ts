@@ -8,11 +8,13 @@ export const getCertificationsAndParcoursByCertificationAuthorityId = async ({
   offset,
   limit,
   searchText,
+  certificationAuthorityLocalAccountIdFilter,
 }: {
   certificationAuthorityId: string;
   offset?: number;
   limit?: number;
   searchText?: string;
+  certificationAuthorityLocalAccountIdFilter?: string;
 }): Promise<
   PaginatedListResult<{
     certification: Certification;
@@ -21,6 +23,7 @@ export const getCertificationsAndParcoursByCertificationAuthorityId = async ({
 > => {
   const certificationAuthorityOnCertificationWhereClause: Prisma.CertificationAuthorityOnCertificationWhereInput =
     {};
+  certificationAuthorityOnCertificationWhereClause.certification = {};
   if (searchText) {
     certificationAuthorityOnCertificationWhereClause.certification = {
       OR: [
@@ -36,6 +39,16 @@ export const getCertificationsAndParcoursByCertificationAuthorityId = async ({
         },
       ],
     };
+  }
+
+  if (certificationAuthorityLocalAccountIdFilter) {
+    certificationAuthorityOnCertificationWhereClause.certification.certificationAuthorityLocalAccountOnCertification =
+      {
+        some: {
+          certificationAuthorityLocalAccountId:
+            certificationAuthorityLocalAccountIdFilter,
+        },
+      };
   }
 
   const certificationsAndParcours = await prismaClient.certificationAuthority
