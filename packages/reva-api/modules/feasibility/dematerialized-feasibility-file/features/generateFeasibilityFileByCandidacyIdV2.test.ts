@@ -470,7 +470,7 @@ describe("demat feasibility pdf generation", () => {
         `
         Informations de contact du candidat
         Adresse postale :
-        10 rue de Paris 75001 Paris, France
+        10 rue de Paris 75001 Paris
         Adresse électronique :
         jean.dupont@example.com
         Téléphone :
