@@ -82,9 +82,63 @@ jobs:
       - name: Running Test
         run: NODE_ENV=production npm run test:ci
 
-  playwright:
-    timeout-minutes: 30
+  playwright-setup:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - name: Candidate node_modules cache
+        id: candidate-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-candidate/node_modules
+          key: candidate-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing candidate dependencies
+        if: steps.candidate-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefix packages/reva-candidate
+      - name: API node_modules cache
+        id: api-node_modules-cache
+        uses: actions/cache@v4
+        with:
+          path: ./packages/reva-api/node_modules
+          key: api-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Installing API dependencies
+        if: steps.api-node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --include=dev --prefix packages/reva-api
+      - name: Generate GraphQL schema from API
+        run: npm run graphql:generate --prefix packages/reva-api
+      - name: Upload generated API schema
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-generated-schema
+          path: packages/reva-api/modules/generated-graphql-schema.graphql
+          retention-days: 1
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=`npm list --prefix packages/reva-candidate | grep '@playwright/test'|sed 's/.*playwright\/test@//'`" >> $GITHUB_ENV
+      - name: Cache Playwright Binaries
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+        working-directory: ./packages/reva-candidate
+
+  playwright:
+    timeout-minutes: 15
+    needs: [playwright-setup]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
     defaults:
       run:
         working-directory: ./packages/reva-candidate
@@ -115,13 +169,19 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
-      - name: Generate GraphQL schema from API
-        run: npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api
+      - name: Install Chromium OS deps
+        if: steps.cache-playwright.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Download generated API schema
+        uses: actions/download-artifact@v4
+        with:
+          name: api-generated-schema
+          path: packages/reva-api/modules/
       - name: Run Playwright tests
-        run: npm run test
+        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-candidate
+          name: playwright-report-candidate-${{ matrix.shardIndex }}
           path: packages/reva-candidate/playwright-report/
-          retention-days: 30
+          retention-days: 14
