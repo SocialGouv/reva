@@ -141,7 +141,7 @@ export const Header = (props: { className?: string }) => {
                 key="start"
                 priority="secondary"
                 linkProps={{
-                  href: "/commencer",
+                  href: `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`,
                 }}
               >
                 Commencer une VAE
