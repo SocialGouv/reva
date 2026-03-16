@@ -23,7 +23,7 @@ describe("arePivotFieldsMatching", () => {
         ...baseFc,
         candidateFirstname: "René",
         candidateLastname: "Müller",
-        candidateBirthdate: null,
+        candidateBirthdate: new Date("1990-05-15"),
         fcGivenName: "Rene",
         fcFamilyName: "Muller",
       }),
@@ -71,7 +71,7 @@ describe("arePivotFieldsMatching", () => {
     ).toBe(false);
   });
 
-  test("skips birthdate comparison when candidate birthdate is null", () => {
+  test("returns false when candidate birthdate is null", () => {
     expect(
       arePivotFieldsMatching({
         ...baseFc,
@@ -79,16 +79,16 @@ describe("arePivotFieldsMatching", () => {
         candidateLastname: "Dupont",
         candidateBirthdate: null,
       }),
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  test("skips birthdate comparison when FC birthdate is invalid", () => {
+  test("returns false when FC birthdate is invalid", () => {
     expect(
       arePivotFieldsMatching({
         ...baseCandidate,
         ...baseFc,
         fcBirthdate: "invalid-date",
       }),
-    ).toBe(true);
+    ).toBe(false);
   });
 });

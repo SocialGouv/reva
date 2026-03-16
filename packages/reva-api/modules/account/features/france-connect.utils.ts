@@ -141,8 +141,8 @@ export const arePivotFieldsMatching = ({
 
   const parsedFcBirthdate = parseFranceConnectDate(fcBirthdate);
   if (
-    candidateBirthdate &&
-    parsedFcBirthdate &&
+    !candidateBirthdate ||
+    !parsedFcBirthdate ||
     candidateBirthdate.getTime() !== parsedFcBirthdate.getTime()
   ) {
     return false;
