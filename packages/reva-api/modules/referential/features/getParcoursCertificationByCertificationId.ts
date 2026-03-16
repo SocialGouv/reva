@@ -16,19 +16,18 @@ export const getParcoursCertificationByCertificationId = async ({
   searchFilter?: string;
   certificationAuthorityIdFilter?: string;
 }) => {
-  const whereClause: Prisma.ParcoursCertificationWhereInput = {
-    certificationId,
-  };
+  const parcoursCertificationWhereClause: Prisma.ParcoursCertificationWhereInput =
+    {};
 
   if (searchFilter) {
-    whereClause.OR = [
+    parcoursCertificationWhereClause.OR = [
       { label: { contains: searchFilter, mode: "insensitive" } },
       { nomEtablissement: { contains: searchFilter, mode: "insensitive" } },
     ];
   }
 
   if (certificationAuthorityIdFilter) {
-    whereClause.certificationAuthorityOnCertificationOnParcoursCertifications =
+    parcoursCertificationWhereClause.certificationAuthorityOnCertificationOnParcoursCertifications =
       {
         some: {
           certificationAuthorityOnCertification: {
@@ -37,15 +36,19 @@ export const getParcoursCertificationByCertificationId = async ({
         },
       };
   }
-  const parcours = await prismaClient.parcoursCertification.findMany({
-    where: whereClause,
-    skip: offset,
-    take: limit,
-    orderBy: { label: "asc" },
-  });
+  const parcours = await prismaClient.certification
+    .findUnique({
+      where: { id: certificationId },
+    })
+    .parcours({
+      where: parcoursCertificationWhereClause,
+      skip: offset,
+      take: limit,
+      orderBy: { label: "asc" },
+    });
 
   const count = await prismaClient.parcoursCertification.count({
-    where: whereClause,
+    where: { certificationId, ...parcoursCertificationWhereClause },
   });
 
   return {
