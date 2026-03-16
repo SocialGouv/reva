@@ -445,6 +445,8 @@ describe("demat feasibility pdf generation", () => {
         20/05/1990
         Ville de naissance :
         Lyon
+        Pays de naissance :
+        France
         Nationalité :
         Française
       `,
