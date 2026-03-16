@@ -493,7 +493,7 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://https://reva-interop.osc-secnum-fr1.scalingo.io/interop/v1"
+          - url: "https://reva-interop.osc-secnum-fr1.scalingo.io/interop/v1"
 
 
     # --- END PRODUCTION  ---
