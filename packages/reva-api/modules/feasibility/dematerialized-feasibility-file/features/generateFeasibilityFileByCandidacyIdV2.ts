@@ -628,6 +628,18 @@ const addCertificationPrerequisitesSubSection = ({
       "Pré-requis à la délivrance de la certification professionnelle visée ",
     doc,
     content: (doc) => {
+      if (prerequisites.length === 0) {
+        doc
+          .fontSize(8)
+          .font("assets/fonts/Marianne/Marianne-Regular.otf")
+          .fillColor("black")
+          .text(
+            "Il n'y a pas de prérequis obligatoires pour cette certification",
+            doc.x,
+            doc.y,
+          );
+        return;
+      }
       addTitledBlock({
         doc,
         title: "Oui",
