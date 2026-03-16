@@ -250,20 +250,20 @@ export const generateFeasibilityFileByCandidacyIdV2 = async (
           ? formatDateWithoutTimestamp(candidate.birthdate)
           : "",
         birthcity: candidate.birthCity ?? "",
+        birthcountry: candidate.country?.label ?? "",
         nationality: candidate.nationality ?? "",
         highestDegreeLevel: candidate.highestDegree?.level?.toString() ?? "",
         highestDegreeLabel: candidate.highestDegreeLabel ?? "",
         niveauDeFormationLePlusEleveLevel:
           candidate.niveauDeFormationLePlusEleve?.level?.toString() ?? "",
-        address:
-          [
-            candidate.street,
-            candidate.addressComplement,
-            candidate.zip,
-            candidate.city,
-          ]
-            .filter(Boolean)
-            .join(" ") + `, ${candidate.country?.label}`,
+        address: [
+          candidate.street,
+          candidate.addressComplement,
+          candidate.zip,
+          candidate.city,
+        ]
+          .filter(Boolean)
+          .join(" "),
         email: candidate.email ?? "",
         phone: candidate.phone ?? "",
         candidacyCcnLabel: candidacy.ccn?.label ?? "",
@@ -683,6 +683,7 @@ const addProfilCandidatSection = ({
     lastname,
     birthdate,
     birthcity,
+    birthcountry,
     nationality,
     highestDegreeLevel,
     highestDegreeLabel,
@@ -703,6 +704,7 @@ const addProfilCandidatSection = ({
     lastname: string;
     birthdate: string;
     birthcity: string;
+    birthcountry: string;
     nationality: string;
     highestDegreeLevel: string;
     highestDegreeLabel: string;
@@ -751,6 +753,7 @@ const addProfilCandidatSection = ({
                 value: birthdate,
               },
               { title: "Ville de naissance :", value: birthcity },
+              { title: "Pays de naissance :", value: birthcountry },
               { title: "Nationalité :", value: nationality },
             ],
             doc,
