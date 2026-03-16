@@ -13,6 +13,9 @@ export const Header = (props: { className?: string }) => {
   const [isClient, setIsClient] = useState(false);
   const { isFeatureActive } = useFeatureflipping();
   const showNewProMenu = isFeatureActive("WEBSITE_PRO_MENU_DROPDOWN");
+  const isDisableMagicLinkActive = isFeatureActive(
+    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
+  );
 
   useEffect(() => {
     setIsClient(true);
@@ -141,7 +144,9 @@ export const Header = (props: { className?: string }) => {
                 key="start"
                 priority="secondary"
                 linkProps={{
-                  href: `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`,
+                  href: isDisableMagicLinkActive
+                    ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
+                    : "/commencer",
                 }}
               >
                 Commencer une VAE
