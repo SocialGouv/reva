@@ -150,6 +150,15 @@ http:
         - removeHeader
         - add-security-headers-production
 
+    interop-production-vae-gouv-fr:
+      rule: "Host(`vae.gouv.fr`) && PathPrefix(`/interop/v1`)"
+      service: interop-production
+      middlewares:
+        - removeHeader
+        - productionInteropIpWhitelist
+        - productionInteropRateLimit
+        - add-interop-proxy-secret-header
+
 
     # --- END PRODUCTION VAE.GOUV.FR ---
 
@@ -479,6 +488,12 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-prod-vae-collective.osc-secnum-fr1.scalingo.io/"
+
+    interop-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://https://reva-interop.osc-secnum-fr1.scalingo.io/interop/v1"
 
 
     # --- END PRODUCTION  ---
