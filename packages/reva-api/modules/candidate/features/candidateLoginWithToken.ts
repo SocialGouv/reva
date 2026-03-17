@@ -11,6 +11,7 @@ import {
   getJWTContent,
 } from "@/modules/shared/auth/auth.helper";
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -148,7 +149,10 @@ const confirmRegistration = async ({
       organismId: cohorteVaeCollective.organismId,
     });
   }
-  const url = getImpersonateUrl(candidate.keycloakId);
+  const url = getImpersonateUrl({
+    keycloakId: candidate.keycloakId,
+    candidateId: candidate.id,
+  });
 
   await logCandidacyAuditEvent({
     candidacyId: candidacy.id,
@@ -192,23 +196,35 @@ const loginCandidate = async ({ email }: { email: string }) => {
     candidateId: candidate.id,
   });
 
-  const url = getImpersonateUrl(candidate.keycloakId);
+  const url = getImpersonateUrl({
+    keycloakId: candidate.keycloakId,
+    candidateId: candidate.id,
+  });
 
   return url;
 };
 
-const getImpersonateUrl = async (
-  keycloakId: string,
-): Promise<string | undefined> => {
-  const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
-
-  const token = await getImpersonateTokenForCandidate(keycloakId);
-  return `${baseUrl}/api/account/impersonate?token=${token}`;
+const getImpersonateUrl = async ({
+  keycloakId,
+  candidateId,
+}: {
+  keycloakId: string;
+  candidateId: string;
+}): Promise<string | undefined> => {
+  const token = await getImpersonateTokenForCandidate({
+    keycloakId,
+    candidateId,
+  });
+  return `${BACKEND_BASE_URL}/account/impersonate?token=${token}`;
 };
 
-const getImpersonateTokenForCandidate = async (
-  keycloakId: string,
-): Promise<string> => {
+const getImpersonateTokenForCandidate = async ({
+  keycloakId,
+  candidateId,
+}: {
+  keycloakId: string;
+  candidateId: string;
+}) => {
   const keycloakAdmin = await getKeycloakAdmin();
 
   // Check if candidate with candidateToUpdate.keycloakId exsits
@@ -224,7 +240,8 @@ const getImpersonateTokenForCandidate = async (
   }
 
   const token = TokenService.getInstance().getToken({
-    candidateId: keycloakId,
+    keycloakId,
+    candidateId,
   });
 
   return token;

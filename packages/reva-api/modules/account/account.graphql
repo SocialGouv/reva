@@ -33,6 +33,7 @@ input UpdateAccountInput {
 input GetImpersonateUrlInput {
   accountId: String
   candidateId: String
+  candidacyId: String
 }
 
 type AccountLogged {

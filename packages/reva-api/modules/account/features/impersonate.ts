@@ -1,9 +1,10 @@
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
 import { prismaClient } from "@/prisma/client";
 
 import {
   impersonateAccount,
-  impersonateCandiate,
+  impersonateCandidate,
 } from "../utils/keycloak.utils";
 import { TokenService } from "../utils/token.service";
 
@@ -15,20 +16,20 @@ export const getImpersonateUrl = async (
   params: {
     accountId?: string;
     candidateId?: string;
+    candidacyId?: string;
   },
 ): Promise<string | undefined> => {
-  const { accountId, candidateId } = params;
-
-  const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+  const { accountId, candidateId, candidacyId } = params;
 
   if (accountId) {
     const token = await getImpersonateTokenForAccount(context, { accountId });
-    return `${baseUrl}/api/account/impersonate?token=${token}`;
+    return `${BACKEND_BASE_URL}/account/impersonate?token=${token}`;
   } else if (candidateId) {
     const token = await getImpersonateTokenForCandidate(context, {
       candidateId,
+      candidacyId,
     });
-    return `${baseUrl}/api/account/impersonate?token=${token}`;
+    return `${BACKEND_BASE_URL}/account/impersonate?token=${token}`;
   }
 
   return undefined;
@@ -105,6 +106,7 @@ const getImpersonateTokenForCandidate = async (
   },
   params: {
     candidateId: string;
+    candidacyId?: string;
   },
 ): Promise<string> => {
   const { hasRole } = context;
@@ -112,7 +114,7 @@ const getImpersonateTokenForCandidate = async (
     throw new Error("Utilisateur non autorisé");
   }
 
-  const { candidateId } = params;
+  const { candidateId, candidacyId } = params;
 
   // Check if candidateToUpdate with candidateId exsits
   const candidateToUpdate = await prismaClient.candidate.findUnique({
@@ -138,7 +140,9 @@ const getImpersonateTokenForCandidate = async (
   }
 
   const token = TokenService.getInstance().getToken({
-    candidateId: candidateToUpdate.keycloakId,
+    keycloakId: candidateToUpdate.keycloakId,
+    candidateId,
+    ...(candidacyId && { candidacyId }),
   });
 
   return token;
@@ -158,11 +162,15 @@ export const impersonate = async (
     throw new Error("Unauthorized");
   }
 
-  const { accountId, candidateId } = payload;
+  const { accountId, keycloakId, candidateId, candidacyId } = payload;
 
   if (accountId) {
-    return impersonateAccount(payload.accountId);
-  } else if (candidateId) {
-    return impersonateCandiate(payload.candidateId);
+    return impersonateAccount(accountId);
+  } else if (keycloakId) {
+    return impersonateCandidate({
+      keycloakId,
+      candidateId,
+      candidacyId,
+    });
   }
 };

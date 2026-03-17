@@ -104,7 +104,11 @@ export const resolvers = {
     account_getImpersonateUrl: async (
       _parent: unknown,
       params: {
-        input: { accountId?: string; candidateId?: string };
+        input: {
+          accountId?: string;
+          candidateId?: string;
+          candidacyId?: string;
+        };
       },
       context: GraphqlContext,
     ) => {

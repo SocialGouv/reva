@@ -1,6 +1,7 @@
 import Keycloak from "keycloak-connect";
 
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { CANDIDATE_BASE_URL } from "@/modules/shared/config/config";
 import { logger } from "@/modules/shared/logger/logger";
 
 import { ClientApp } from "../account.type";
@@ -32,9 +33,15 @@ export const impersonateAccount = async (
   return undefined;
 };
 
-export const impersonateCandiate = async (
-  keycloakId: string,
-): Promise<
+export const impersonateCandidate = async ({
+  keycloakId,
+  candidateId,
+  candidacyId,
+}: {
+  keycloakId: string;
+  candidateId: string;
+  candidacyId?: string;
+}): Promise<
   | {
       headers: [string, string][];
       redirect: string;
@@ -49,11 +56,15 @@ export const impersonateCandiate = async (
   const data = await impersonate(keycloakId, KEYCLOAK_APP_REALM);
 
   if (data) {
-    const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+    let redirect = `${CANDIDATE_BASE_URL}/candidates/${candidateId}`;
+
+    if (candidacyId) {
+      redirect += `/candidacies/${candidacyId}`;
+    }
 
     return {
       headers: data.headers,
-      redirect: `${baseUrl}/candidat`,
+      redirect,
     };
   }
 
