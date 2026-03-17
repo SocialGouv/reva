@@ -128,7 +128,7 @@ export const DF_FORMATED_DATE_6_MONTHS_AGO = format(
   "yyyy-MM-dd",
 );
 
-const _DF_CERTIFICATION = {
+export const DF_CERTIFICATION = {
   label: "CAP Accompagnant éducatif petite enfance - AEPE",
   codeRncp: "38565",
   competenceBlocs: [
