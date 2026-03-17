@@ -25,10 +25,7 @@ export const isValidCertificationId = (
   CERTIFICATION_ID_UUID_REGEX.test(value);
 
 export const getFranceConnectRedirectUri = (): string => {
-  return new URL(
-    "/account/franceconnect/callback",
-    BACKEND_BASE_URL,
-  ).toString();
+  return `${BACKEND_BASE_URL}/account/franceconnect/callback`;
 };
 
 export const getOAuthConfig = async () => {
