@@ -1,5 +1,6 @@
 import { ajvFilePlugin } from "@fastify/multipart";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
+import { CrispStatusReporter } from "crisp-status-reporter";
 import dotenv from "dotenv";
 import Fastify from "fastify";
 
@@ -72,6 +73,19 @@ try {
     port: (process.env.PORT || 8080) as number,
     host: "0.0.0.0",
   });
+  if (
+    process.env.CRISP_TOKEN &&
+    process.env.CRISP_SERVICE_ID &&
+    process.env.CRISP_NODE_ID
+  ) {
+    new CrispStatusReporter({
+      token: process.env.CRISP_TOKEN,
+      service_id: process.env.CRISP_SERVICE_ID,
+      node_id: process.env.CRISP_NODE_ID,
+      replica_id: "1",
+      interval: 30,
+    });
+  }
 } catch (err) {
   fastify.log.error(err);
   process.exit(1);
