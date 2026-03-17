@@ -96,7 +96,7 @@ test.describe("create candidacy vae from candidacies page", () => {
 
     const vaeCard = page.getByText("Je dispose d'un code VAE collective");
     await expect(vaeCard).toBeVisible();
-    vaeCard.click();
+    await vaeCard.click();
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/create/vae-collective/`,
@@ -147,7 +147,7 @@ test.describe("create candidacy vae from candidacies page", () => {
       name: "Rejoindre cette cohorte",
     });
     await expect(rejoindreCohorteButton).toBeVisible();
-    rejoindreCohorteButton.click();
+    await rejoindreCohorteButton.click();
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/${candidacy.id}/`,

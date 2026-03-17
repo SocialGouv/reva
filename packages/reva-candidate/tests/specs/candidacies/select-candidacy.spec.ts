@@ -51,7 +51,7 @@ test.describe("select candidacy from candidacies page", () => {
       `RNCP ${certification.codeRncp} : ${certification.label}`,
     );
     await expect(candidacyCard).toBeVisible();
-    candidacyCard.click();
+    await candidacyCard.click();
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/${candidacy.id}/`,

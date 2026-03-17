@@ -108,7 +108,7 @@ test.describe("create candidacy accompagnée from candidacies page", () => {
       "Ma démarche est personnelle",
     );
     await expect(maDemarcheEstPersonnelleCard).toBeVisible();
-    maDemarcheEstPersonnelleCard.click();
+    await maDemarcheEstPersonnelleCard.click();
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/create/certifications/`,
@@ -118,7 +118,7 @@ test.describe("create candidacy accompagnée from candidacies page", () => {
 
     const certificationCard = page.getByText(certification.label);
     await expect(certificationCard).toBeVisible();
-    certificationCard.click();
+    await certificationCard.click();
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/create/certifications/${certification.id}/`,
@@ -127,7 +127,7 @@ test.describe("create candidacy accompagnée from candidacies page", () => {
     const selectCertificationButton = page.getByRole("button", {
       name: "Choisir ce diplôme",
     });
-    selectCertificationButton.click();
+    await selectCertificationButton.click();
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/create/certifications/${certification.id}/type-accompagnement/`,
@@ -137,7 +137,7 @@ test.describe("create candidacy accompagnée from candidacies page", () => {
       name: "Avec un accompagnateur",
     });
     await expect(accompagnementButton).toBeVisible();
-    accompagnementButton.click();
+    await accompagnementButton.click();
 
     await expect(page).toHaveURL(
       `candidates/${candidate.id}/candidacies/${candidacy.id}/`,
