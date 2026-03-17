@@ -30,9 +30,9 @@ export default function CivilInformationsPage() {
         <Stepper
           className="mb-12"
           currentStep={1}
-          nextTitle="Informations civiles"
+          nextTitle="Informations de contact"
           stepCount={3}
-          title="Informations de contact"
+          title="Informations civiles"
         />
 
         <CivilInformationForm

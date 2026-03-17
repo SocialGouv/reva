@@ -16,11 +16,11 @@ export const civilInformationSchema = () =>
       firstname: sanitizedText(),
       firstname2: sanitizedOptionalText(),
       firstname3: sanitizedOptionalText(),
-      birthdate: sanitizedOptionalText(),
+      birthdate: sanitizedText(),
       country: sanitizedText().default("France"),
-      birthDepartment: sanitizedOptionalText(),
-      birthCity: sanitizedOptionalText(),
-      nationality: sanitizedOptionalText(),
+      birthDepartment: sanitizedText(),
+      birthCity: sanitizedText(),
+      nationality: sanitizedText(),
       countryIsFrance: z.boolean(),
     })
     .superRefine((data, ctx) => {

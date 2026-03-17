@@ -5,14 +5,15 @@ import {
   sanitizedEmail,
   sanitizedOptionalText,
   sanitizedPhone,
+  sanitizedText,
   sanitizedZipCode,
 } from "@/utils/input-sanitization";
 
 export const contactInformationSchema = () =>
   z
     .object({
-      street: sanitizedOptionalText(),
-      city: sanitizedOptionalText(),
+      street: sanitizedText(),
+      city: sanitizedText(),
       zip: z.union([sanitizedZipCode(), z.literal("")]),
       phone: sanitizedPhone(),
       email: sanitizedEmail(),

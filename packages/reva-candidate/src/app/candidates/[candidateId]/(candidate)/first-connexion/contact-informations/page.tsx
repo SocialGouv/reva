@@ -32,7 +32,7 @@ export default function ContactInformationsPage() {
           currentStep={2}
           nextTitle="Typologie et convention collective"
           stepCount={3}
-          title="Informations civiles"
+          title="Informations de contact"
         />
 
         <ContactInformationForm

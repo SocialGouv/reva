@@ -52,7 +52,9 @@ function createFirstConnexionHandlers(args?: {
     ),
     fvae.query(
       "activeFeaturesForConnectedUser",
-      graphQLResolver({ activeFeaturesForConnectedUser: [] }),
+      graphQLResolver({
+        activeFeaturesForConnectedUser: ["CANDIDATE_PROFILE_V2"],
+      }),
     ),
   ];
 }
