@@ -1,9 +1,17 @@
+"use client";
 import Link from "next/link";
 
 import { StatusPage } from "@/app/_components/status-page/StatusPage";
+import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 export default function FirstConnexionPage() {
+  const { isFeatureActive } = useAnonymousFeatureFlipping();
+
+  const isCandidateProfileV2FeatureActive = isFeatureActive(
+    "CANDIDATE_PROFILE_V2",
+  );
+
   return (
     <StatusPage
       title="Bienvenue dans votre espace France VAE"
@@ -40,7 +48,9 @@ export default function FirstConnexionPage() {
       }
       pictogram={PICTOGRAMS.informationLG}
       actionLink={{
-        href: "./civil-informations",
+        href: isCandidateProfileV2FeatureActive
+          ? "./civil-informations"
+          : "../profile?navigationDisabled=true",
         label: "Mon profil",
         priority: "primary",
       }}
