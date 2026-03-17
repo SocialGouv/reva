@@ -1595,7 +1595,7 @@ model MaisonMereAAPOnConventionCollective {
 }
 
 model CandidacyConventionCollective {
-  id         String    @id @db.Uuid
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   idcc       String    @unique @map("idcc") @db.VarChar(10)
   label      String    @db.Text
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
