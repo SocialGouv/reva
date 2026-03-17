@@ -67,13 +67,15 @@ const FaqPage = async () => {
             <div
               key={s?.documentId}
               id={`section-${s?.documentId}`}
-              className="flex flex-col gap-8 font-bold text-[2rem] text-black"
+              className="flex flex-col gap-8"
             >
-              <h2 className="m-0">{s?.titre}</h2>
+              <h2 className="m-0 font-bold text-[2rem] text-black">
+                {s?.titre}
+              </h2>
               <ul className="list-none p-0 m-0 flex flex-col gap-8">
                 {s?.sous_section_faqs?.map((ss) => (
-                  <li className="text-[1.75rem]" key={ss?.documentId}>
-                    <h3 className="leading-none">
+                  <li key={ss?.documentId}>
+                    <h3 className="leading-none text-[1.75rem]">
                       {(s?.sous_section_faqs?.length || 0) > 1 && ss?.titre}
                     </h3>
                     <div className="mt-6">
