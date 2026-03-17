@@ -26,7 +26,7 @@ export const isValidCertificationId = (
 
 export const getFranceConnectRedirectUri = (): string => {
   return new URL(
-    "/api/account/franceconnect/callback",
+    "/account/franceconnect/callback",
     BACKEND_BASE_URL,
   ).toString();
 };
