@@ -14,11 +14,12 @@ export const useHooks = () => {
   const getImpersonateUrl = async (params: {
     candidateId?: string;
     accountId?: string;
+    candidacyId?: string;
   }): Promise<string | undefined | null> => {
-    const { candidateId, accountId } = params;
+    const { candidateId, accountId, candidacyId } = params;
 
     const response = await graphqlClient.request(account_getImpersonateUrl, {
-      input: { candidateId, accountId },
+      input: { candidateId, accountId, candidacyId },
     });
 
     return response.account_getImpersonateUrl;

@@ -109,7 +109,10 @@ const CandidacySummaryPage = () => {
             </Button>
           )}
 
-          <Impersonate candidateId={candidacy.candidate?.id} />
+          <Impersonate
+            candidateId={candidacy.candidate?.id}
+            candidacyId={candidacyId}
+          />
         </div>
 
         <p>

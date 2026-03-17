@@ -9,11 +9,12 @@ import { useHooks } from "./Impersonate.hooks";
 interface Props {
   candidateId?: string;
   accountId?: string;
+  candidacyId?: string;
   size?: "small" | "medium" | "large";
 }
 
 export const Impersonate = (props: Props) => {
-  const { candidateId, accountId, size } = props;
+  const { candidateId, accountId, candidacyId, size } = props;
 
   const { isFeatureActive } = useFeatureflipping();
   const { isAdmin } = useAuth();
@@ -23,7 +24,11 @@ export const Impersonate = (props: Props) => {
   return isFeatureActive("IMPERSONATE") && isAdmin ? (
     <CopyClipBoard
       onClick={async (callback) => {
-        const url = await getImpersonateUrl({ candidateId, accountId });
+        const url = await getImpersonateUrl({
+          candidateId,
+          accountId,
+          candidacyId,
+        });
         if (url) {
           callback(url);
         }
