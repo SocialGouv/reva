@@ -94,7 +94,9 @@ test.describe("create candidacy vae from candidacies page", () => {
       page.getByRole("heading", { name: "Commencer une VAE" }),
     ).toBeVisible();
 
-    const vaeCard = page.getByText("Je dispose d'un code VAE collective");
+    const vaeCard = page.getByRole("link", {
+      name: "Je dispose d'un code VAE collective",
+    });
     await expect(vaeCard).toBeVisible();
     await vaeCard.click();
 

@@ -104,9 +104,9 @@ test.describe("create candidacy accompagnée from candidacies page", () => {
       page.getByRole("heading", { name: "Commencer une VAE" }),
     ).toBeVisible();
 
-    const maDemarcheEstPersonnelleCard = page.getByText(
-      "Ma démarche est personnelle",
-    );
+    const maDemarcheEstPersonnelleCard = page.getByRole("link", {
+      name: "Ma démarche est personnelle",
+    });
     await expect(maDemarcheEstPersonnelleCard).toBeVisible();
     await maDemarcheEstPersonnelleCard.click();
 
@@ -116,7 +116,9 @@ test.describe("create candidacy accompagnée from candidacies page", () => {
 
     await waitGraphQL(page, "certifications");
 
-    const certificationCard = page.getByText(certification.label);
+    const certificationCard = page.getByRole("link", {
+      name: certification.label,
+    });
     await expect(certificationCard).toBeVisible();
     await certificationCard.click();
 
