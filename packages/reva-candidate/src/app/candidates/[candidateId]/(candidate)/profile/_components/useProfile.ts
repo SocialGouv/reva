@@ -125,7 +125,12 @@ export const useUpdateCandidateInformation = () => {
         candidateInformation,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["candidacy"] });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.includes("updateCandidateInformation") ||
+          query.queryKey.includes("candidate") ||
+          query.queryKey.includes("candidacy"),
+      });
     },
   });
 
