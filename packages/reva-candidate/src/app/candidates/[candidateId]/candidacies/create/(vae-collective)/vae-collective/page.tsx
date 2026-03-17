@@ -47,6 +47,10 @@ export default function VaeCollectivePage() {
               Contactez votre référent afin d’obtenir ce code. Il le trouvera
               sur son espace dédié à la gestion de ses cohortes.
             </span>
+            <span className="block text-lg">
+              Vous pourrez ensuite bénéficier de l’appui de votre accompagnateur
+              pour créer votre candidature.
+            </span>
           </p>
         </div>
       </div>

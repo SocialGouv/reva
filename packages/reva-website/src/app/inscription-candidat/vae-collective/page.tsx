@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { CandidateBackground } from "@/components/layout/full-height-blue-layout/CandidateBackground";
 
@@ -41,14 +39,11 @@ export default async function VaeCollectiveCodePage({
                   Contactez votre référent afin d’obtenir ce code. Il le
                   trouvera sur son espace dédié à la gestion de ses cohortes.
                 </span>
+                <span className="block text-lg">
+                  Vous pourrez ensuite bénéficier de l’appui de votre
+                  accompagnateur pour créer votre candidature.
+                </span>
               </p>
-              <p className="text-lg">
-                En attendant, vous pouvez rechercher et consulter le diplôme que
-                vous visez.
-              </p>
-              <Link className="fr-link mx-auto" href="/espace-candidat/">
-                Voir les diplômes accessibles sur France VAE
-              </Link>
             </div>
           </div>
         </div>
