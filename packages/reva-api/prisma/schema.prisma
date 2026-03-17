@@ -1195,7 +1195,7 @@ model CertificationAuthorityOnCertificationOnParcoursCertification {
   updatedAt                               DateTime?                             @map("updated_at") @db.Timestamptz(6)
 
   @@unique([certificationAuthorityOnCertificationId, parcoursCertificationId])
-  @@map("certification_authority_on_certification_on_parcours_certification")
+  @@map("certification_authority_on_certification_on_parcours_certificat")
 }
 
 model CertificationAuthorityLocalAccount {
