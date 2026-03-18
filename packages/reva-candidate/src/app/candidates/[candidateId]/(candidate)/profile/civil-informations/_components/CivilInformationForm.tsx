@@ -321,7 +321,10 @@ export const CivilInformationForm = ({
 
               <div>
                 <p className="font-bold mb-2">Né(e) à l’étranger ? </p>
-                <p>Indiquez le pays et la ville de votre lieu de naissance.</p>
+                <p>
+                  Indiquez le pays et la ville de votre{" "}
+                  <strong>lieu de naissance</strong>.
+                </p>
               </div>
             </div>
           </div>
