@@ -1,11 +1,63 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { format } from "date-fns";
 
+import { FeasibilityDecision } from "@/graphql/generated/graphql";
+
+const getDecisionBanner = (
+  decision: FeasibilityDecision,
+  decisionSentAt: number,
+  decisionComment?: string | null,
+) => {
+  if (decision === "ADMISSIBLE") {
+    return (
+      <Alert
+        description={decisionComment ? `”${decisionComment}”` : ""}
+        severity="success"
+        title={`Dossier recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`}
+        data-testid="dff-summary-decision-banner-admissible"
+      />
+    );
+  } else if (decision === "REJECTED") {
+    return (
+      <Alert
+        description={decisionComment ? `”${decisionComment}”` : ""}
+        severity="error"
+        title={`Dossier non recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`}
+        data-testid="dff-summary-decision-banner-rejected"
+      />
+    );
+  } else if (decision === "INCOMPLETE") {
+    return (
+      <Alert
+        description={decisionComment ? `”${decisionComment}”` : ""}
+        severity="warning"
+        title={`Dossier retourné incomplet le ${format(decisionSentAt, "dd/MM/yyyy")}`}
+        data-testid="dff-summary-decision-banner-incomplete"
+      />
+    );
+  }
+};
+
 export function BannerSummary({
   feasibilitySentToCertificationAuthorityAt,
+  decision,
+  decisionSentAt,
+  decisionComment,
 }: {
   feasibilitySentToCertificationAuthorityAt?: number | null;
+  decision?: FeasibilityDecision | null;
+  decisionSentAt?: number | null;
+  decisionComment?: string | null;
 }) {
+  if (
+    decision &&
+    decision !== "DRAFT" &&
+    decision !== "PENDING" &&
+    decision !== "COMPLETE" &&
+    decisionSentAt
+  ) {
+    return getDecisionBanner(decision, decisionSentAt, decisionComment);
+  }
   if (feasibilitySentToCertificationAuthorityAt) {
     return (
       <Alert

@@ -119,6 +119,9 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_VALIDATE_FEASIBILITY = graphql(`
           contactPhone
         }
         feasibilityFileSentAt
+        decision
+        decisionSentAt
+        decisionComment
         dematerializedFeasibilityFile {
           id
           eligibilityCandidateSituation

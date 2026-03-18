@@ -122,6 +122,9 @@ export function DffSummary({
         feasibilitySentToCertificationAuthorityAt={
           feasibility.feasibilityFileSentAt
         }
+        decision={feasibility.decision}
+        decisionSentAt={feasibility.decisionSentAt}
+        decisionComment={feasibility.decisionComment}
       />
       <div className="flex flex-col gap-8">
         <div className="border border-gray-200 p-10">
