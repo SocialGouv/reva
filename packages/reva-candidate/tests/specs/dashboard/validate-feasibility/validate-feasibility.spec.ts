@@ -275,3 +275,172 @@ test.describe("Dematerialized feasibility résumé", () => {
     await expect(submitButton).toBeEnabled();
   });
 });
+
+test.describe("Dematerialized feasibility résumé decision banner", () => {
+  const decisionSentAt = 1705276800000; // 15/01/2024
+  const decisionComment = "Décision test.";
+
+  test.describe("when decision is ADMISSIBLE", () => {
+    const { handlers, validateFeasibilityWait, candidateId, candidacyId } =
+      validateFeasibilityHandlers({
+        feasibilityOverrides: {
+          decision: "ADMISSIBLE",
+          decisionSentAt,
+          decisionComment,
+        },
+      });
+
+    test.use({
+      mswHandlers: [handlers, { scope: "test" }],
+    });
+
+    test.beforeEach(async ({ page }) => {
+      await page.route("https://files.example.com/**", async (route) => {
+        await route.fulfill({
+          status: 200,
+          headers: {
+            "content-type": "application/pdf",
+          },
+          body: "fake-pdf-content",
+        });
+      });
+
+      await login(page);
+      await navigateToValidateFeasibility(page, candidateId, candidacyId);
+      await validateFeasibilityWait(page);
+    });
+
+    test("displays admissible banner", async ({ page }) => {
+      const banner = page.getByTestId("dff-summary-decision-banner-admissible");
+      await expect(banner).toBeVisible();
+      await expect(banner).toContainText("Dossier recevable le 15/01/2024");
+      await expect(banner).toContainText(`”${decisionComment}”`);
+    });
+  });
+
+  test.describe("when decision is REJECTED", () => {
+    const { handlers, validateFeasibilityWait, candidateId, candidacyId } =
+      validateFeasibilityHandlers({
+        feasibilityOverrides: {
+          decision: "REJECTED",
+          decisionSentAt,
+          decisionComment,
+        },
+      });
+
+    test.use({
+      mswHandlers: [handlers, { scope: "test" }],
+    });
+
+    test.beforeEach(async ({ page }) => {
+      await page.route("https://files.example.com/**", async (route) => {
+        await route.fulfill({
+          status: 200,
+          headers: {
+            "content-type": "application/pdf",
+          },
+          body: "fake-pdf-content",
+        });
+      });
+
+      await login(page);
+      await navigateToValidateFeasibility(page, candidateId, candidacyId);
+      await validateFeasibilityWait(page);
+    });
+
+    test("displays rejected banner", async ({ page }) => {
+      const banner = page.getByTestId("dff-summary-decision-banner-rejected");
+      await expect(banner).toBeVisible();
+      await expect(banner).toContainText("Dossier non recevable le 15/01/2024");
+      await expect(banner).toContainText(`”${decisionComment}”`);
+    });
+  });
+
+  test.describe("when decision is INCOMPLETE", () => {
+    const { handlers, validateFeasibilityWait, candidateId, candidacyId } =
+      validateFeasibilityHandlers({
+        feasibilityOverrides: {
+          decision: "INCOMPLETE",
+          decisionSentAt,
+          decisionComment,
+        },
+      });
+
+    test.use({
+      mswHandlers: [handlers, { scope: "test" }],
+    });
+
+    test.beforeEach(async ({ page }) => {
+      await page.route("https://files.example.com/**", async (route) => {
+        await route.fulfill({
+          status: 200,
+          headers: {
+            "content-type": "application/pdf",
+          },
+          body: "fake-pdf-content",
+        });
+      });
+
+      await login(page);
+      await navigateToValidateFeasibility(page, candidateId, candidacyId);
+      await validateFeasibilityWait(page);
+    });
+
+    test("displays incomplete banner", async ({ page }) => {
+      const banner = page.getByTestId("dff-summary-decision-banner-incomplete");
+      await expect(banner).toBeVisible();
+      await expect(banner).toContainText(
+        "Dossier retourné incomplet le 15/01/2024",
+      );
+      await expect(banner).toContainText(`”${decisionComment}”`);
+    });
+  });
+
+  test.describe("when decision is PENDING", () => {
+    const { handlers, validateFeasibilityWait, candidateId, candidacyId } =
+      validateFeasibilityHandlers({
+        feasibilityOverrides: {
+          decision: "PENDING",
+          decisionSentAt,
+          decisionComment,
+          feasibilityFileSentAt: null,
+        },
+      });
+
+    test.use({
+      mswHandlers: [handlers, { scope: "test" }],
+    });
+
+    test.beforeEach(async ({ page }) => {
+      await page.route("https://files.example.com/**", async (route) => {
+        await route.fulfill({
+          status: 200,
+          headers: {
+            "content-type": "application/pdf",
+          },
+          body: "fake-pdf-content",
+        });
+      });
+
+      await login(page);
+      await navigateToValidateFeasibility(page, candidateId, candidacyId);
+      await validateFeasibilityWait(page);
+    });
+
+    test("does not display decision banner", async ({ page }) => {
+      await expect(
+        page.getByTestId("dff-summary-decision-banner-admissible"),
+      ).toHaveCount(0);
+      await expect(
+        page.getByTestId("dff-summary-decision-banner-rejected"),
+      ).toHaveCount(0);
+      await expect(
+        page.getByTestId("dff-summary-decision-banner-incomplete"),
+      ).toHaveCount(0);
+
+      await expect(
+        page.getByText("Vous avez en partie rempli ce dossier"),
+      ).toBeVisible();
+    });
+  });
+});

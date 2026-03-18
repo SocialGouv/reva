@@ -25,7 +25,9 @@ export const navigateToValidateFeasibility = async (
   );
 };
 
-export const validateFeasibilityHandlers = () => {
+export const validateFeasibilityHandlers = (options?: {
+  feasibilityOverrides?: Record<string, unknown>;
+}) => {
   const fvae = graphql.link("https://reva-api/api/graphql");
 
   const candidacyWithCandidate =
@@ -34,6 +36,22 @@ export const validateFeasibilityHandlers = () => {
 
   const candidacyId = candidacyWithCandidate.id;
   const candidateId = candidate.id;
+
+  const getCandidacyByIdWithCandidateForValidateFeasibilityWithOverrides =
+    options?.feasibilityOverrides
+      ? (() => {
+          const clonedFixture = JSON.parse(
+            JSON.stringify(getCandidacyByIdWithCandidateForValidateFeasibility),
+          );
+
+          clonedFixture.data.getCandidacyById.feasibility = {
+            ...(clonedFixture.data.getCandidacyById.feasibility ?? {}),
+            ...options.feasibilityOverrides,
+          };
+
+          return clonedFixture;
+        })()
+      : getCandidacyByIdWithCandidateForValidateFeasibility;
 
   return {
     handlers: [
@@ -67,7 +85,9 @@ export const validateFeasibilityHandlers = () => {
       ),
       fvae.query(
         "getCandidacyByIdWithCandidateForValidateFeasibility",
-        graphQLResolver(getCandidacyByIdWithCandidateForValidateFeasibility),
+        graphQLResolver(
+          getCandidacyByIdWithCandidateForValidateFeasibilityWithOverrides,
+        ),
       ),
       fvae.mutation(
         "candidate_loginWithToken",
