@@ -18,7 +18,7 @@ export const civilInformationSchema = () =>
       firstname3: sanitizedOptionalText(),
       birthdate: sanitizedText(),
       country: sanitizedText().default("France"),
-      birthDepartment: sanitizedText(),
+      birthDepartment: sanitizedOptionalText(),
       birthCity: sanitizedText(),
       nationality: sanitizedText(),
       countryIsFrance: z.boolean(),
