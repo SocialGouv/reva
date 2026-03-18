@@ -264,6 +264,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
         {certificationAuthorities.length > 1 && canUpload && (
           <>
             <Select
+              data-testid="certification-authority-select"
               className="w-3/5 mb-0"
               label={
                 <label className="block mt-[6px] mb-[10px]">
