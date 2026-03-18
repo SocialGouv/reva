@@ -13,14 +13,24 @@ export const getCivilInformationCompletedByCandidateId = async ({
     throw new Error(`Le candidat n'existe pas`);
   }
 
+  const country = candidate.countryId
+    ? await prismaClient.country.findUnique({
+        where: {
+          id: candidate.countryId,
+        },
+      })
+    : null;
+
   return (
     candidate.firstname !== null &&
     candidate.lastname !== null &&
     candidate.gender !== null &&
     candidate.birthCity !== null &&
-    candidate.birthDepartmentId !== null &&
     candidate.birthdate !== null &&
-    candidate.countryId !== null &&
-    candidate.nationality !== null
+    candidate.nationality !== null &&
+    ((country?.isoCode === "FRA" && candidate.birthDepartmentId !== null) ||
+      (country !== null &&
+        country.isoCode !== "FRA" &&
+        candidate.birthDepartmentId === null))
   );
 };
