@@ -31,11 +31,12 @@ export const updateCandidateTypologyAndCcn = async (params: {
     typology === CandidateTypology.SALARIE_PRIVE ||
     typology === CandidateTypology.DEMANDEUR_EMPLOI ||
     typology === CandidateTypology.TRAVAILLEUR_NON_SALARIE ||
-    typology === CandidateTypology.TITULAIRE_MANDAT_ELECTIF;
+    typology === CandidateTypology.TITULAIRE_MANDAT_ELECTIF ||
+    typology === CandidateTypology.AIDANTS_FAMILIAUX_AGRICOLES;
 
   if (ccnRequired && !ccnId) {
     throw new Error(
-      'Les typologies "SALARIE_PRIVE" et "DEMANDEUR_EMPLOI" doivent être associées à une convention collective.',
+      'Les typologies "SALARIE_PRIVE", "DEMANDEUR_EMPLOI", "TRAVAILLEUR_NON_SALARIE", "TITULAIRE_MANDAT_ELECTIF" et "AIDANTS_FAMILIAUX_AGRICOLES" doivent être associées à une convention collective.',
     );
   }
 

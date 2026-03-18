@@ -15,8 +15,17 @@ export const getTypologyAndCollectiveAgreementCompletedByCandidateId = async ({
     throw new Error(`Le candidat n'existe pas`);
   }
 
-  return (
-    candidate.typology !== CandidateTypology.NON_SPECIFIE &&
-    candidate.ccnId !== null
-  );
+  const { typology, ccnId } = candidate;
+
+  if (
+    typology === CandidateTypology.SALARIE_PRIVE ||
+    typology === CandidateTypology.DEMANDEUR_EMPLOI ||
+    typology === CandidateTypology.TRAVAILLEUR_NON_SALARIE ||
+    typology === CandidateTypology.TITULAIRE_MANDAT_ELECTIF ||
+    typology === CandidateTypology.AIDANTS_FAMILIAUX_AGRICOLES
+  ) {
+    return ccnId !== null;
+  }
+
+  return typology !== CandidateTypology.NON_SPECIFIE;
 };
