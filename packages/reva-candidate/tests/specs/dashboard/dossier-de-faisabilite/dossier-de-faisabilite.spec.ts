@@ -309,7 +309,7 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
       const { candidacy } = createCandidacyFeasibilityWith({
         status: "DOSSIER_FAISABILITE_ENVOYE",
         certificationOptions: {
-          rncpExpiresAt: new Date("2000-01-01").getTime(),
+          rncpExpiresAt: new Date("2100-01-01").getTime(),
         },
       });
 
@@ -318,10 +318,7 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
       const errorBox = page.locator(
         '[data-testid="certification-expired-alert"]',
       );
-      await expect(errorBox).toBeVisible();
-      await expect(errorBox.locator("h3")).toContainText(
-        "Le diplôme visé a expiré",
-      );
+      await expect(errorBox).not.toBeVisible();
     });
 
     test("should show an alert when the certification has expired and the df decision is not final", async ({
@@ -337,6 +334,10 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
 
       await setupAndNavigateToFaisabilite(page, msw, candidacy);
 
+      await expect(
+        page.locator('[data-testid="feasibility-upload-form"]'),
+      ).toBeVisible();
+
       const errorBox = page.locator(
         '[data-testid="certification-expired-alert"]',
       );
@@ -347,9 +348,17 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
     });
 
     [
-      "DOSSIER_FAISABILITE_RECEVABLE",
-      "DOSSIER_FAISABILITE_NON_RECEVABLE",
-    ].forEach((status) => {
+      {
+        status: "DOSSIER_FAISABILITE_RECEVABLE",
+        decision: "ADMISSIBLE" as const,
+        decisionAlertTestId: "feasibility-decision-admissible",
+      },
+      {
+        status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
+        decision: "REJECTED" as const,
+        decisionAlertTestId: "feasibility-decision-rejected",
+      },
+    ].forEach(({ status, decision, decisionAlertTestId }) => {
       test(`should not show an alert when the certification has expired and the df decision is ${status}`, async ({
         page,
         msw,
@@ -357,11 +366,18 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
         const { candidacy } = createCandidacyFeasibilityWith({
           status: "DOSSIER_FAISABILITE_RECEVABLE",
           certificationOptions: {
-            rncpExpiresAt: new Date("2100-01-01").getTime(),
+            rncpExpiresAt: new Date("2000-01-01").getTime(),
+          },
+          feasibilityOptions: {
+            decision,
           },
         });
 
         await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+        await expect(
+          page.locator(`[data-testid="${decisionAlertTestId}"]`),
+        ).toBeVisible();
 
         const errorBox = page.locator(
           '[data-testid="certification-expired-alert"]',
