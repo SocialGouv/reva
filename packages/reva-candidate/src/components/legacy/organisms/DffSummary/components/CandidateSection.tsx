@@ -1,5 +1,6 @@
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { GenderEnum } from "@/constants/genders.constant";
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
 
@@ -72,14 +73,15 @@ export default function CandidateSection({
   typology: CandidateTypology;
   conventionCollective?: string | null;
 }) {
+  const { isFeatureActive } = useFeatureFlipping();
+  const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
+
   if (!candidate) return null;
   const {
     firstname,
     lastname,
     email,
     gender,
-    firstname2,
-    firstname3,
     birthdate,
     birthCity,
     birthDepartment,
@@ -95,6 +97,12 @@ export default function CandidateSection({
   } = candidate;
 
   const genderLabel = gender ? getGenderPrefix(gender) : "";
+
+  const middleNames = isMiddleNamesEnabled
+    ? candidate.middleNames
+    : `${candidate.firstname2 ? `${candidate.firstname2}` : ""}${candidate.firstname3 ? ` ${candidate.firstname3}` : ""}`;
+
+  const candidateFullName = `${firstname}${middleNames ? ` ${middleNames}` : ""}`;
 
   return (
     <div className="flex flex-col gap-6">
@@ -125,9 +133,7 @@ export default function CandidateSection({
               aria-labelledby="candidate-firstnames-label"
               className="font-medium"
             >
-              {firstname}
-              {firstname2 ? `, ${firstname2}` : ""}
-              {firstname3 ? `, ${firstname3}` : ""}
+              {candidateFullName}
             </dd>
           </dl>
           <dl className="w-[170px]">

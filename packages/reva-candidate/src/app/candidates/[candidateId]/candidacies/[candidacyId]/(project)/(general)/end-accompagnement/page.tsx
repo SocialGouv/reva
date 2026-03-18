@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import z from "zod";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
@@ -50,6 +51,9 @@ const schema = z.object({
 });
 
 export default function EndAccompagnementPage() {
+  const { isFeatureActive } = useFeatureFlipping();
+  const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
+
   const {
     handleSubmit,
     register,
@@ -78,7 +82,11 @@ export default function EndAccompagnementPage() {
 
   const candidate = candidacy.candidate;
 
-  const candidateFullName = `${candidate?.lastname} ${candidate?.givenName ? candidate?.givenName : ""} ${candidate?.firstname} ${candidate?.firstname2 || ""} ${candidate?.firstname3 || ""}`;
+  const middleNames = isMiddleNamesEnabled
+    ? candidate.middleNames
+    : `${candidate?.firstname2 ? `${candidate?.firstname2}` : ""}${candidate?.firstname3 ? ` ${candidate?.firstname3}` : ""}`;
+
+  const candidateFullName = `${candidate?.lastname} ${candidate?.givenName ? candidate?.givenName : ""} ${candidate?.firstname}${middleNames ? ` ${middleNames}` : ""}`;
   const candidateDepartment = `${candidate?.department?.label} (${candidate?.department?.code})`;
   const candidateCertification =
     candidacy.certification &&

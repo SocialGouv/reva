@@ -18,6 +18,7 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_DROP_OUT_DECISION = graphql(`
         firstname
         firstname2
         firstname3
+        middleNames
         lastname
         givenName
         department {

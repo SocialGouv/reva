@@ -15,6 +15,7 @@ const getCandidateByIdForContactInformationsPage = graphql(`
       givenName
       firstname2
       firstname3
+      middleNames
       gender
       birthCity
       birthdate

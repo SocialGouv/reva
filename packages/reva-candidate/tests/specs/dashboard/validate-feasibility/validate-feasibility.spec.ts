@@ -36,7 +36,7 @@ test.describe("Dematerialized feasibility résumé", () => {
     await expect(dffSummary.getByLabel("Nom de naissance")).toHaveText(
       "Dupont",
     );
-    await expect(dffSummary.getByLabel("Prénoms")).toHaveText("Claire, Marie");
+    await expect(dffSummary.getByLabel("Prénoms")).toHaveText("Claire Marie");
     await expect(dffSummary.getByLabel("Date de naissance")).toHaveText(
       "12/04/1988",
     );

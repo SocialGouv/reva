@@ -82,6 +82,7 @@ export interface CandidateUpdateInput {
   firstname: string;
   firstname2?: string;
   firstname3?: string;
+  middleNames?: string;
   lastname: string;
   givenName?: string;
   birthdate: string;
