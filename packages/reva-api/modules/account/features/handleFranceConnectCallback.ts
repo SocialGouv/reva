@@ -25,6 +25,7 @@ import {
   sanitizedText,
 } from "../utils/input-sanitization";
 
+import { resolveBirthplaceFromInseeCode } from "./france-connect-birthplace";
 import {
   FranceConnectError,
   FranceConnectForbiddenError,
@@ -187,10 +188,33 @@ const buildCandidateDataFromFCClaims = async ({
   );
   const country = await getCountry(userInfo.birthcountry);
   let birthDepartmentId: string | null = null;
-  // Si le pays de naissance n'est pas la France, on ne peut pas déterminer le département de naissance
-  if (country?.label === "France") {
-    birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
+  let birthCity: string | null = null;
+
+  if (country?.label === "France" && userInfo.birthplace) {
+    const resolution = await resolveBirthplaceFromInseeCode(
+      userInfo.birthplace,
+    );
+    if (resolution) {
+      birthCity = resolution.cityName;
+      const department = await prismaClient.department.findUnique({
+        where: { code: resolution.departmentCode },
+      });
+      if (department) {
+        birthDepartmentId = department.id;
+      } else {
+        logger.warn(
+          `[France Connect] Code département "${resolution.departmentCode}" retourné par l'API Geo introuvable en base pour le code INSEE "${userInfo.birthplace}"`,
+        );
+        birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
+      }
+    } else {
+      // Fallback : API indisponible, on conserve le comportement actuel
+      birthDepartmentId = (await getDepartment(userInfo.birthplace)).id;
+    }
+  } else if (country?.label === "France") {
+    birthDepartmentId = (await getDefaultDepartment()).id;
   }
+
   const currentDepartment = await getDefaultDepartment();
   const nationality = existingNationality ?? country?.nationality ?? null;
 
@@ -204,6 +228,7 @@ const buildCandidateDataFromFCClaims = async ({
     nationality,
     franceConnectLinked: true,
     birthDepartmentId,
+    birthCity,
     departmentId: currentDepartment.id,
   };
 };
