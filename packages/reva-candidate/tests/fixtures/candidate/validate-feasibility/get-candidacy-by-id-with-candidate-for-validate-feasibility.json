@@ -35,6 +35,7 @@
         "firstname": "Claire",
         "firstname2": "Marie",
         "firstname3": null,
+        "middleNames": "Marie",
         "lastname": "Dupont",
         "email": "claire.dupont@example.com",
         "givenName": "Durand",

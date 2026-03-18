@@ -18,7 +18,7 @@ interface CandidaciesGuardsHandlersOptions {
 export function createCandidaciesGuardsHandlers({
   candidate,
   candidacies = [],
-  activeFeaturesForConnectedUser = ["MULTI_CANDIDACY"],
+  activeFeaturesForConnectedUser = ["MULTI_CANDIDACY", "MIDDLE_NAMES"],
 }: CandidaciesGuardsHandlersOptions) {
   return [
     fvae.query(

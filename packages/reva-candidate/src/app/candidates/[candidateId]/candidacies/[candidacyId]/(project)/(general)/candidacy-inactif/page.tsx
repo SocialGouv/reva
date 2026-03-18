@@ -10,6 +10,7 @@ import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { Panel } from "@/components/layout/Panel";
 import { FormOptionalFieldsDisclaimer } from "@/components/legacy/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { LoaderWithLayout } from "@/components/loaders/LoaderWithLayout";
@@ -102,6 +103,9 @@ const getBadge = ({
 };
 
 export default function CandidacyInactifPage() {
+  const { isFeatureActive } = useFeatureFlipping();
+  const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
+
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -174,7 +178,11 @@ export default function CandidacyInactifPage() {
 
   const candidate = candidacy.candidate;
 
-  const candidateFullName = `${candidate?.lastname} ${candidate?.givenName ? candidate?.givenName : ""} ${candidate?.firstname} ${candidate?.firstname2 || ""} ${candidate?.firstname3 || ""}`;
+  const middleNames = isMiddleNamesEnabled
+    ? candidate.middleNames
+    : `${candidate?.firstname2 ? `${candidate?.firstname2}` : ""}${candidate?.firstname3 ? ` ${candidate?.firstname3}` : ""}`;
+
+  const candidateFullName = `${candidate?.lastname} ${candidate?.givenName ? candidate?.givenName : ""} ${candidate?.firstname}${middleNames ? ` ${middleNames}` : ""}`;
   const candidateDepartment = `${candidate?.department?.label} (${candidate?.department?.code})`;
   const candidateCertification =
     candidacy.certification &&

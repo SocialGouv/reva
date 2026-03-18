@@ -26,6 +26,7 @@ const getDefaultUpdatedCandidateFields = async () => {
     firstname: "newFirstName",
     firstname2: "newFirstName2",
     firstname3: "newFirstName3",
+    middleNames: "newFirstName2 newFirstName3",
     birthdate: "1990-01-01",
     birthCity: "newBirthCity",
     birthDepartmentId: pasDeCalais.id,
@@ -74,7 +75,7 @@ describe("candidate information update", () => {
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
         returnFields:
-          "{ gender, lastname, givenName, firstname, firstname2, firstname3, birthdate, birthCity, birthDepartment {id}, country{id}, nationality, street, zip, city, email, phone, addressComplement}",
+          "{ gender, lastname, givenName, firstname, firstname2, firstname3, middleNames, birthdate, birthCity, birthDepartment {id}, country{id}, nationality, street, zip, city, email, phone, addressComplement}",
       },
     });
     expect(resp.statusCode).toEqual(200);

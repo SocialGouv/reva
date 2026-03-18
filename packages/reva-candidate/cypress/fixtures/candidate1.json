@@ -7,6 +7,7 @@
       "givenName": "Johnny",
       "firstname2": "Robert",
       "firstname3": "William",
+      "middleNames": "Robert William",
       "gender": "man",
       "birthCity": "Paris",
       "birthdate": "1990-01-01",

@@ -30,6 +30,7 @@ type Candidate {
   firstname: String!
   firstname2: String
   firstname3: String
+  middleNames: String
   lastname: String!
   givenName: String
   email: String!
@@ -83,6 +84,7 @@ input CandidateUpdateInformationInput {
   firstname: String!
   firstname2: String
   firstname3: String
+  middleNames: String
   birthdate: Date!
   birthCity: String!
   birthDepartmentId: String
@@ -106,6 +108,7 @@ input CandidateUpdateInformationBySelfInput {
   givenName: String
   firstname2: String
   firstname3: String
+  middleNames: String
   birthdate: Date
   birthCity: String
   birthDepartmentId: String

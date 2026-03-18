@@ -200,6 +200,10 @@ const createFeasibilities = async (certificationRncpId: string) => {
     // Random feasibility status
     const feasibilityStatus = faker.helpers.arrayElement(FEASIBILITY_STATUSES);
 
+    const firstname2 = faker.helpers.maybe(() => faker.person.middleName());
+    const firstname3 = faker.helpers.maybe(() => faker.person.middleName());
+    const middleNames = [firstname2, firstname3].filter(Boolean).join(" ");
+
     // Create candidate
     const candidate = await prismaClient.candidate.create({
       data: {
@@ -212,8 +216,9 @@ const createFeasibilities = async (certificationRncpId: string) => {
           Gender.undisclosed,
         ]),
         keycloakId: faker.string.uuid(),
-        firstname2: faker.helpers.maybe(() => faker.person.middleName()),
-        firstname3: faker.helpers.maybe(() => faker.person.middleName()),
+        firstname2,
+        firstname3,
+        middleNames,
         phone: faker.helpers.fromRegExp(/0[1-9]{9}/),
         birthdate: faker.date.birthdate({ min: 18, max: 65, mode: "age" }),
         birthCity: faker.location.city(),

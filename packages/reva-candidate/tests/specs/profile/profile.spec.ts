@@ -33,6 +33,7 @@ const candidate = createCandidateEntity({
   givenName: "Johnny",
   firstname2: "Paul",
   firstname3: "Max",
+  middleNames: "Paul Max",
   gender: "man",
   birthCity: "Paris",
   birthdate: "1990-01-01",
@@ -50,7 +51,10 @@ const candidacy = createCandidacyEntity({
   candidate,
 });
 
-const { handlers: guardHandlers } = dashboardHandlers({ candidacy });
+const { handlers: guardHandlers } = dashboardHandlers({
+  candidacy,
+  activeFeaturesForConnectedUser: ["MIDDLE_NAMES"],
+});
 
 function profileHandlers() {
   return [
@@ -95,8 +99,7 @@ const SELECTORS = {
   firstname: '[data-testid="firstname-input"] input',
   lastname: '[data-testid="lastname-input"] input',
   givenName: '[data-testid="given-name-input"] input',
-  firstname2: '[data-testid="firstname2-input"] input',
-  firstname3: '[data-testid="firstname3-input"] input',
+  middleNames: '[data-testid="middle-names-input"] input',
   gender: '[data-testid="gender-select"] select',
   birthCity: '[data-testid="birth-city-input"] input',
   birthdate: '[data-testid="birthdate-input"] input',
@@ -146,11 +149,8 @@ test.describe("Profile Page Initial Loading", () => {
     await expect(page.locator(SELECTORS.givenName)).toHaveValue(
       candidate.givenName ?? "Should not be empty",
     );
-    await expect(page.locator(SELECTORS.firstname2)).toHaveValue(
-      candidate.firstname2 ?? "Should not be empty",
-    );
-    await expect(page.locator(SELECTORS.firstname3)).toHaveValue(
-      candidate.firstname3 ?? "Should not be empty",
+    await expect(page.locator(SELECTORS.middleNames)).toHaveValue(
+      candidate.middleNames ?? "Should not be empty",
     );
     await expect(page.locator(SELECTORS.gender)).toHaveValue(
       candidate.gender ?? "Should not be empty",
@@ -351,8 +351,7 @@ test.describe("Optional Fields Handling", () => {
     await visitProfile(page);
 
     await page.locator(SELECTORS.givenName).fill("");
-    await page.locator(SELECTORS.firstname2).fill("");
-    await page.locator(SELECTORS.firstname3).fill("");
+    await page.locator(SELECTORS.middleNames).fill("");
     await page.locator(SELECTORS.addressComplement).fill("");
 
     const mutationPromise = waitGraphQL(

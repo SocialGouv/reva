@@ -32,6 +32,7 @@ const candidateFields = {
   givenName: "Mary",
   firstname2: "Anne",
   firstname3: "Claire",
+  middleNames: "Anne Claire",
   gender: "woman",
   birthCity: "Lyon",
   birthdate: "1985-06-15",
@@ -58,7 +59,10 @@ const nonFcCandidate = createCandidateEntity({
 
 function profileHandlers(candidate: ReturnType<typeof createCandidateEntity>) {
   const candidacy = createCandidacyEntity({ candidate });
-  const { handlers: guardHandlers } = dashboardHandlers({ candidacy });
+  const { handlers: guardHandlers } = dashboardHandlers({
+    candidacy,
+    activeFeaturesForConnectedUser: ["MIDDLE_NAMES"],
+  });
 
   return [
     ...guardHandlers,
@@ -87,8 +91,7 @@ const SELECTORS = {
   firstname: '[data-testid="firstname-input"] input',
   lastname: '[data-testid="lastname-input"] input',
   givenName: '[data-testid="given-name-input"] input',
-  firstname2: '[data-testid="firstname2-input"] input',
-  firstname3: '[data-testid="firstname3-input"] input',
+  middleNames: '[data-testid="middle-names-input"] input',
   gender: '[data-testid="gender-select"] select',
   birthCity: '[data-testid="birth-city-input"] input',
   birthdate: '[data-testid="birthdate-input"] input',
@@ -125,8 +128,7 @@ test.describe("FranceConnect linked candidate", () => {
 
     await expect(page.locator(SELECTORS.lastname)).toBeDisabled();
     await expect(page.locator(SELECTORS.firstname)).toBeDisabled();
-    await expect(page.locator(SELECTORS.firstname2)).toBeDisabled();
-    await expect(page.locator(SELECTORS.firstname3)).toBeDisabled();
+    await expect(page.locator(SELECTORS.middleNames)).toBeDisabled();
     await expect(page.locator(SELECTORS.birthdate)).toBeDisabled();
     await expect(page.locator(SELECTORS.country)).toBeDisabled();
     await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();
@@ -158,8 +160,7 @@ test.describe("Non-FranceConnect candidate", () => {
 
     await expect(page.locator(SELECTORS.lastname)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.firstname)).not.toBeDisabled();
-    await expect(page.locator(SELECTORS.firstname2)).not.toBeDisabled();
-    await expect(page.locator(SELECTORS.firstname3)).not.toBeDisabled();
+    await expect(page.locator(SELECTORS.middleNames)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.birthdate)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.country)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.birthDepartment)).not.toBeDisabled();

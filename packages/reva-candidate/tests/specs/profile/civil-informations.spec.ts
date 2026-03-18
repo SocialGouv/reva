@@ -32,6 +32,7 @@ const candidateFields = {
   givenName: "Mary",
   firstname2: "Anne",
   firstname3: "Claire",
+  middleNames: "Anne Claire",
   gender: "woman",
   birthCity: "Lyon",
   birthdate: "1985-06-15",
@@ -60,7 +61,10 @@ function civilInformationHandlers(
   candidate: ReturnType<typeof createCandidateEntity>,
 ) {
   const candidacy = createCandidacyEntity({ candidate });
-  const { handlers: guardHandlers } = dashboardHandlers({ candidacy });
+  const { handlers: guardHandlers } = dashboardHandlers({
+    candidacy,
+    activeFeaturesForConnectedUser: ["MIDDLE_NAMES"],
+  });
 
   return [
     ...guardHandlers,
@@ -89,8 +93,7 @@ const SELECTORS = {
   firstname: '[data-testid="firstname-input"] input',
   lastname: '[data-testid="lastname-input"] input',
   givenName: '[data-testid="given-name-input"] input',
-  firstname2: '[data-testid="firstname2-input"] input',
-  firstname3: '[data-testid="firstname3-input"] input',
+  middleNames: '[data-testid="middle-names-input"] input',
   birthCity: '[data-testid="birth-city-input"] input',
   birthdate: '[data-testid="birthdate-input"] input',
   birthDepartment: '[data-testid="birth-department-select"] select',
@@ -121,8 +124,7 @@ test.describe("FranceConnect linked candidate", () => {
     for (const field of [
       "lastname",
       "firstname",
-      "firstname2",
-      "firstname3",
+      "middleNames",
       "birthdate",
       "country",
       "birthDepartment",

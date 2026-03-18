@@ -126,6 +126,7 @@ const setupCompleteDematerializedFeasibilityFile = async () => {
     firstname: "Jean",
     firstname2: null,
     firstname3: null,
+    middleNames: null,
     lastname: "Dupont",
     gender: Gender.man,
     givenName: null,

@@ -97,6 +97,7 @@ export const ContactInformationForm = ({
       firstname: candidate?.firstname ?? "",
       firstname2: candidate?.firstname2 ?? "",
       firstname3: candidate?.firstname3 ?? "",
+      middleNames: candidate?.middleNames ?? "",
       lastname: candidate?.lastname ?? "",
       givenName: candidate?.givenName ?? "",
       birthCity: candidate?.birthCity ?? "",

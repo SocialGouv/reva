@@ -10,6 +10,10 @@ export const createCandidateHelper = async (
     where: { code: "75" },
   });
 
+  const firstname2 = faker.person.middleName();
+  const firstname3 = faker.person.middleName();
+  const middleNames = [firstname2, firstname3].filter(Boolean).join(" ");
+
   return prismaClient.candidate.create({
     data: {
       firstname: faker.person.firstName(),
@@ -17,8 +21,9 @@ export const createCandidateHelper = async (
       email: faker.internet.email(),
       gender: Gender.man,
       keycloakId: faker.string.uuid(),
-      firstname2: faker.person.middleName(),
-      firstname3: faker.person.middleName(),
+      firstname2,
+      firstname3,
+      middleNames,
       phone: faker.phone.number(),
       birthdate: faker.date.past(),
       birthCity: faker.location.city(),

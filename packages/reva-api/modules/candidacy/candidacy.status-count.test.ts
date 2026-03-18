@@ -537,6 +537,7 @@ describe.each(["ADMIN", "AAP"] as const)(
       "firstname",
       "firstname2",
       "firstname3",
+      "middleNames",
       "email",
       "phone",
     ] as const)(

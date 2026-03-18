@@ -9,6 +9,7 @@ export const candidateSearchWord = (word: string) => {
       containsFilter("firstname"),
       containsFilter("firstname2"),
       containsFilter("firstname3"),
+      containsFilter("middleNames"),
       containsFilter("email"),
       containsFilter("phone"),
     ],

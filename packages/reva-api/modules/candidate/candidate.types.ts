@@ -13,6 +13,7 @@ export interface Candidate {
   firstname: string;
   firstname2?: string | null;
   firstname3?: string | null;
+  middleNames?: string | null;
   lastname: string;
   givenName?: string | null;
   phone: string;
@@ -82,6 +83,7 @@ export interface CandidateUpdateInput {
   firstname: string;
   firstname2?: string;
   firstname3?: string;
+  middleNames?: string;
   lastname: string;
   givenName?: string;
   birthdate: string;

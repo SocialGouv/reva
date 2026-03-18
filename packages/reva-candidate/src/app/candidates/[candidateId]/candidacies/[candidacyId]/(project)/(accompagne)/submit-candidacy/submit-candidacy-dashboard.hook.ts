@@ -21,6 +21,7 @@ const GET_CANDIDACY_BY_ID_WITH_CANDIDATE_FOR_CANDIDACY_SUBMIT_DASHBOARD =
           gender
           firstname2
           firstname3
+          middleNames
           givenName
           birthdate
           birthCity

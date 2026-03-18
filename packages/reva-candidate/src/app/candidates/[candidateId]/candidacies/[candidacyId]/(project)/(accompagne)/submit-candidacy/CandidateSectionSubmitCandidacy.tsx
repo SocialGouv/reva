@@ -1,3 +1,4 @@
+import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { formatIso8601Date } from "@/utils/formatIso8601Date";
 import { getGenderPrefix } from "@/utils/getGenderPrefix.util";
 
@@ -8,6 +9,9 @@ export default function CandidateSectionSubmitCandidacy({
 }: {
   candidate: CandidateUseSubmitCandidacyForDashboard;
 }) {
+  const { isFeatureActive } = useFeatureFlipping();
+  const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
+
   if (!candidate) return null;
   const {
     firstname,
@@ -34,7 +38,11 @@ export default function CandidateSectionSubmitCandidacy({
       ? `${birthCity} ${birthDepartment?.code ? `(${birthDepartment.code})` : ""}`
       : "-";
 
-  const fullNameLabel = `${genderLabel} ${givenName ? givenName : lastname}${firstname ? `, ${firstname}` : ""}${firstname2 ? `, ${firstname2}` : ""}${firstname3 ? `, ${firstname3}` : ""}`;
+  const middleNames = isMiddleNamesEnabled
+    ? candidate.middleNames
+    : `${firstname2 ? `${firstname2}` : ""}${firstname3 ? ` ${firstname3}` : ""}`;
+
+  const fullNameLabel = `${genderLabel} ${givenName ? givenName : lastname}${firstname ? `, ${firstname}` : ""}${middleNames ? `, ${middleNames}` : ""}`;
 
   return (
     <div>

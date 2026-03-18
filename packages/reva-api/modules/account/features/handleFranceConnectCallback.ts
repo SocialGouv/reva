@@ -226,10 +226,13 @@ const buildCandidateDataFromFCClaims = async ({
   const currentDepartment = await getDefaultDepartment();
   const nationality = existingNationality ?? country?.nationality ?? null;
 
+  const middleNames = [firstname2, firstname3].filter(Boolean).join(" ");
+
   return {
     firstname,
     firstname2,
     firstname3,
+    middleNames,
     lastname: userInfo.family_name,
     birthdate: parseFranceConnectDate(userInfo.birthdate),
     countryId: country?.id ?? null,

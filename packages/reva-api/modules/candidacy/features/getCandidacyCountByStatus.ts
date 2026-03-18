@@ -127,6 +127,7 @@ export const getCandidacyCountByStatus = async ({
           "firstname",
           "firstname2",
           "firstname3",
+          "middle_names",
           "email",
           "phone",
         ],
