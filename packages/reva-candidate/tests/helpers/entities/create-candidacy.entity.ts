@@ -54,6 +54,7 @@ export type CreateCandidacyEntityOptions = {
   collectiveHourCount?: Candidacy["collectiveHourCount"];
   additionalHourCount?: Candidacy["additionalHourCount"];
   candidacyStatuses?: Candidacy["candidacyStatuses"];
+  warningOnFeasibilitySubmission?: Candidacy["warningOnFeasibilitySubmission"];
 };
 
 export function createCandidacyStatuses(statuses: CandidacyStatusStep[]) {
@@ -94,6 +95,7 @@ export const createCandidacyEntity = (
     collectiveHourCount,
     additionalHourCount,
     candidacyStatuses,
+    warningOnFeasibilitySubmission,
   } = options;
 
   const candidacy: CandidacyEntity = {
@@ -136,6 +138,7 @@ export const createCandidacyEntity = (
     endAccompagnementStatus,
     endAccompagnementDate,
     candidacyDropOut,
+    warningOnFeasibilitySubmission,
   };
 
   if (candidate) {
