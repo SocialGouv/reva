@@ -113,6 +113,7 @@ const AapFeasibilityPage = () => {
 
       {hasCertificationRncpExpired && (
         <Alert
+          data-testid="certification-expired-alert"
           className="mt-6 mb-12"
           severity="error"
           title="La certification visée a expiré"

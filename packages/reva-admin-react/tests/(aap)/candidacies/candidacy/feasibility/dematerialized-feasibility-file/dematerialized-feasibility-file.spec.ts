@@ -51,8 +51,21 @@ const FEASIBILITY_ADMISSIBLE_DECISION = {
 
 function createFeasibilityHandlers(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  feasibility: any = DEFAULT_FEASIBILITY_FILE,
+  args?: { feasibility?: any; certificationExpired?: boolean },
 ) {
+  const {
+    feasibility = DEFAULT_FEASIBILITY_FILE,
+    certificationExpired = false,
+  } = args ?? {};
+
+  const certification = {
+    label:
+      "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
+    codeRncp: "37780",
+    rncpExpiresAt: certificationExpired
+      ? DATE_NOW - 1000000
+      : DATE_NOW + 1000000,
+  };
   return [
     fvae.query(
       "getCandidacyByIdForAAPFeasibilityPage",
@@ -91,11 +104,7 @@ function createFeasibilityHandlers(
               label: "Usage et communication numérique",
             },
           ],
-          certification: {
-            label:
-              "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
-            codeRncp: "37780",
-          },
+          certification,
           certificationAuthorityLocalAccounts: [
             {
               contactFullName: "Jane Doe public contact",
@@ -220,7 +229,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(feasibilityEligibilityCompleted),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityEligibilityCompleted,
+          }),
         ],
         { scope: "test" },
       ],
@@ -293,9 +304,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(
-            feasibilityEligibilityAndCertificationCompleted,
-          ),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityEligibilityAndCertificationCompleted,
+          }),
         ],
         { scope: "test" },
       ],
@@ -371,7 +382,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(feasibilityEligibilityPartial),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityEligibilityPartial,
+          }),
         ],
         { scope: "test" },
       ],
@@ -454,9 +467,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(
-            feasibilityEligibilityAndCertificationCompleted,
-          ),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityEligibilityAndCertificationCompleted,
+          }),
         ],
         { scope: "test" },
       ],
@@ -523,6 +536,60 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
         ),
       ).toBeVisible();
     });
+
+    test("the certification expired alert should not be visible", async ({
+      page,
+    }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+      await waitForFeasibilityQueries(page);
+
+      await expect(
+        page.getByTestId("send-file-candidate-tile-ready"),
+      ).toBeVisible();
+
+      await expect(
+        page.getByTestId("certification-expired-alert"),
+      ).not.toBeVisible();
+    });
+
+    test.describe("when certification is expired", () => {
+      test.use({
+        mswHandlers: [
+          [
+            ...aapCommonHandlers,
+            ...createFeasibilityHandlers({
+              feasibility: feasibilityEligibilityAndCertificationCompleted,
+              certificationExpired: true,
+            }),
+          ],
+          { scope: "test" },
+        ],
+      });
+      test("the certification expired alert should be visible", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+        await waitForFeasibilityQueries(page);
+
+        await expect(
+          page.getByTestId("certification-expired-alert"),
+        ).toBeVisible();
+      });
+
+      test("the send to candidate tile should be disabled", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+        await waitForFeasibilityQueries(page);
+
+        await expect(
+          page.getByTestId("send-file-candidate-tile-uncompleted"),
+        ).toBeVisible();
+      });
+    });
   });
 
   test.describe("When the file has been sent to the candidate", () => {
@@ -546,7 +613,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(feasibilityWithSentToCandidate),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityWithSentToCandidate,
+          }),
         ],
         { scope: "test" },
       ],
@@ -635,7 +704,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(feasibilityUnfavorableDecision),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityUnfavorableDecision,
+          }),
         ],
         { scope: "test" },
       ],
@@ -717,7 +788,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
         mswHandlers: [
           [
             ...aapCommonHandlers,
-            ...createFeasibilityHandlers(feasibilityWithUnfavorableDecision),
+            ...createFeasibilityHandlers({
+              feasibility: feasibilityWithUnfavorableDecision,
+            }),
           ],
           { scope: "test" },
         ],
@@ -762,7 +835,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(feasibilityAllCompleted),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityAllCompleted,
+          }),
         ],
         { scope: "test" },
       ],
@@ -851,9 +926,9 @@ test.describe("Candidacy Dematerialized Feasibility File Page", () => {
         mswHandlers: [
           [
             ...aapCommonHandlers,
-            ...createFeasibilityHandlers(
-              feasibilityAllCompletedWithSwornAttestation,
-            ),
+            ...createFeasibilityHandlers({
+              feasibility: feasibilityAllCompletedWithSwornAttestation,
+            }),
           ],
           { scope: "test" },
         ],
@@ -947,7 +1022,12 @@ test.describe("When the feasibility file has been sent to the certification auth
 
   test.use({
     mswHandlers: [
-      [...aapCommonHandlers, ...createFeasibilityHandlers(feasibilityFileSent)],
+      [
+        ...aapCommonHandlers,
+        ...createFeasibilityHandlers({
+          feasibility: feasibilityFileSent,
+        }),
+      ],
       { scope: "test" },
     ],
   });
@@ -1026,7 +1106,9 @@ test.describe("When the decision is ADMISSIBLE or REJECTED", () => {
     mswHandlers: [
       [
         ...aapCommonHandlers,
-        ...createFeasibilityHandlers(FEASIBILITY_ADMISSIBLE_DECISION),
+        ...createFeasibilityHandlers({
+          feasibility: FEASIBILITY_ADMISSIBLE_DECISION,
+        }),
       ],
       { scope: "test" },
     ],
@@ -1093,7 +1175,9 @@ test.describe("When the decision is ADMISSIBLE or REJECTED", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(feasibilityRejectedDecision),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityRejectedDecision,
+          }),
         ],
         { scope: "test" },
       ],
@@ -1137,7 +1221,9 @@ test.describe("When the decision is INCOMPLETE", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(feasibilityIncompleteDecision),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityIncompleteDecision,
+          }),
         ],
         { scope: "test" },
       ],
@@ -1234,7 +1320,9 @@ test.describe("When the decision is INCOMPLETE", () => {
       mswHandlers: [
         [
           ...aapCommonHandlers,
-          ...createFeasibilityHandlers(feasibilityIncompleteDecision),
+          ...createFeasibilityHandlers({
+            feasibility: feasibilityIncompleteDecision,
+          }),
         ],
         { scope: "test" },
       ],
