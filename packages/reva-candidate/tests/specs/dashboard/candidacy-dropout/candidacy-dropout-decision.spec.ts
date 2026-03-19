@@ -1,7 +1,10 @@
 import { expect, Page, test } from "next/experimental/testmode/playwright/msw";
 import { graphql } from "next/experimental/testmode/playwright/msw";
 
-import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
+import {
+  type CandidacyEntity,
+  createCandidacyEntity,
+} from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { loginAndWaitForCandidaciesInitialLoad } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
 import { candidacyDropOutHandlers } from "@tests/helpers/handlers/candidacy-dropout.handler";
@@ -29,6 +32,35 @@ const candidacy = createCandidacyEntity({
 const decisionPageUrl = `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/candidacy-dropout-decision`;
 
 const fvae = graphql.link("https://reva-api/api/graphql");
+
+function postMutationHandlers(postMutationCandidacy: CandidacyEntity) {
+  return [
+    fvae.query(
+      "getCandidacyByIdWithCandidateForDropOutDecision",
+      graphQLResolver({ getCandidacyById: postMutationCandidacy }),
+    ),
+    fvae.query(
+      "getCandidacyByIdForCandidacyGuard",
+      graphQLResolver({ getCandidacyById: postMutationCandidacy }),
+    ),
+    fvae.query(
+      "getCandidacyByIdWithCandidate",
+      graphQLResolver({ getCandidacyById: postMutationCandidacy }),
+    ),
+    fvae.query(
+      "getCandidacyByIdForDashboard",
+      graphQLResolver({ getCandidacyById: postMutationCandidacy }),
+    ),
+    fvae.query(
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+      graphQLResolver({
+        candidate_getCandidateById: {
+          candidacies: [postMutationCandidacy],
+        },
+      }),
+    ),
+  ];
+}
 
 async function setupAndNavigateToDropoutDecision(page: Page, msw: MswFixture) {
   msw.use(...candidacyDropOutHandlers({ candidacy }));
@@ -70,6 +102,15 @@ test.describe("Candidacy dropout decision page", () => {
       })
       .check({ force: true });
 
+    const dropOutConfirmedCandidacy = {
+      ...candidacy,
+      candidacyDropOut: {
+        ...candidacy.candidacyDropOut,
+        dropOutConfirmedByCandidate: true,
+      },
+    };
+    msw.use(...postMutationHandlers(dropOutConfirmedCandidacy));
+
     const mutationPromise = waitGraphQL(
       page,
       "updateCandidateCandidacyDropoutDecision",
@@ -94,24 +135,7 @@ test.describe("Candidacy dropout decision page", () => {
       .check({ force: true });
 
     const cancelledCandidacy = { ...candidacy, candidacyDropOut: null };
-    msw.use(
-      fvae.query(
-        "getCandidacyByIdWithCandidateForDropOutDecision",
-        graphQLResolver({ getCandidacyById: cancelledCandidacy }),
-      ),
-      fvae.query(
-        "getCandidacyByIdForCandidacyGuard",
-        graphQLResolver({ getCandidacyById: cancelledCandidacy }),
-      ),
-      fvae.query(
-        "getCandidacyByIdWithCandidate",
-        graphQLResolver({ getCandidacyById: cancelledCandidacy }),
-      ),
-      fvae.query(
-        "getCandidacyByIdForDashboard",
-        graphQLResolver({ getCandidacyById: cancelledCandidacy }),
-      ),
-    );
+    msw.use(...postMutationHandlers(cancelledCandidacy));
 
     const mutationPromise = waitGraphQL(
       page,
