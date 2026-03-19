@@ -38,9 +38,10 @@ const InformationsConnexionPage = () => {
       <h1>Informations de connexion</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl mb-12">
-        Voici les informations liées à votre compte collaborateur. Si vous
-        souhaitez les modifier, adressez-vous directement à l’administrateur de
-        la structure.
+        Ces informations sont gérées par l'administrateur de votre structure.
+        Vous ne pouvez pas les modifier depuis votre compte collaborateur. Pour
+        toute mise à jour, rapprochez-vous de l'administrateur de votre
+        structure d’accompagnement.
       </p>
 
       <UserAccountForm
