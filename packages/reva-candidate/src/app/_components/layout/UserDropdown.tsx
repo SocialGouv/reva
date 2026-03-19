@@ -29,7 +29,10 @@ export const UserDropdown = () => {
         >
           <ul className="fr-menu__list">
             <li>
-              <button className="fr-nav__link" onClick={logout}>
+              <button
+                className="fr-nav__link whitespace-nowrap"
+                onClick={logout}
+              >
                 Se déconnecter
               </button>
             </li>
