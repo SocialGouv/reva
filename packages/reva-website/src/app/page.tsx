@@ -99,7 +99,7 @@ function getBackgroundImage(srcSet = "") {
   return `image-set(${imageSet})`;
 }
 
-const BienvenueSection = () => {
+const BienvenueSection = async () => {
   const {
     props: { srcSet },
   } = getImageProps({
@@ -110,6 +110,11 @@ const BienvenueSection = () => {
   });
 
   const backgroundImage = getBackgroundImage(srcSet);
+
+  const isDisableMagicLinkActive = await isFeatureActive(
+    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
+  );
+
   return (
     <section className="w-full md:px-6 md:py-8 md:pt-12 md:pb-20 relative">
       <div
@@ -136,7 +141,9 @@ const BienvenueSection = () => {
             iconPosition="right"
             className="mt-auto"
             linkProps={{
-              href: "/commencer",
+              href: isDisableMagicLinkActive
+                ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
+                : "/commencer",
               target: "_self",
             }}
           >
@@ -148,121 +155,129 @@ const BienvenueSection = () => {
   );
 };
 
-const QuiEtesVousSection = () => (
-  <section className="w-full px-6 py-8 md:pt-12 md:pb-20 bg-[#cedff4]">
-    <div className="fr-container !p-0">
-      <h2 className="text-[22px] md:text-[32px] mb-8 text-dsfrBlue-franceSun md:text-black">
-        Qui êtes-vous ?
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <QuiEtesVousCard
-          title="Candidat"
-          titleIcon={
-            <Image
-              src="/home-page/young_man_dc.png"
-              alt="visage jeune homme souriant"
-              width={40}
-              height={47}
-            />
-          }
-          subtitle="Transformez votre expérience professionnelle en diplôme reconnu !"
-          description="Constituez votre dossier VAE pas à pas avec un accompagnement pour vous aider à valoriser vos compétences et  obtenir votre diplôme."
-        >
-          <Button
-            priority="secondary"
-            iconId="fr-icon-arrow-right-line"
-            iconPosition="right"
-            className="mt-auto"
-            linkProps={{
-              href: "/commencer",
-              target: "_self",
-            }}
+const QuiEtesVousSection = async () => {
+  const isDisableMagicLinkActive = await isFeatureActive(
+    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
+  );
+
+  return (
+    <section className="w-full px-6 py-8 md:pt-12 md:pb-20 bg-[#cedff4]">
+      <div className="fr-container !p-0">
+        <h2 className="text-[22px] md:text-[32px] mb-8 text-dsfrBlue-franceSun md:text-black">
+          Qui êtes-vous ?
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <QuiEtesVousCard
+            title="Candidat"
+            titleIcon={
+              <Image
+                src="/home-page/young_man_dc.png"
+                alt="visage jeune homme souriant"
+                width={40}
+                height={47}
+              />
+            }
+            subtitle="Transformez votre expérience professionnelle en diplôme reconnu !"
+            description="Constituez votre dossier VAE pas à pas avec un accompagnement pour vous aider à valoriser vos compétences et  obtenir votre diplôme."
           >
-            Commencez votre parcours VAE
-          </Button>
-        </QuiEtesVousCard>
-        <QuiEtesVousCard
-          title="Accompagnateur"
-          titleIcon={
-            <Image
-              src="/home-page/young_woman_dc.png"
-              alt="visage jeune homme souriant"
-              width={40}
-              height={47}
-            />
-          }
-          subtitle="Guidez les candidats vers la réussite de leur VAE."
-          description="Assurez un suivi complet des parcours VAE : échangez avec les certificateurs et gérez chaque étape, du premier entretien jusqu'au jury sur une plateforme unique et centralisée."
-        >
-          <Button
-            priority="secondary"
-            iconId="fr-icon-arrow-right-line"
-            iconPosition="right"
-            className="mt-auto"
-            linkProps={{
-              href: "/espace-professionnel/",
-              target: "_self",
-            }}
+            <Button
+              priority="secondary"
+              iconId="fr-icon-arrow-right-line"
+              iconPosition="right"
+              className="mt-auto"
+              linkProps={{
+                href: isDisableMagicLinkActive
+                  ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
+                  : "/commencer",
+                target: "_self",
+              }}
+            >
+              Commencez votre parcours VAE
+            </Button>
+          </QuiEtesVousCard>
+          <QuiEtesVousCard
+            title="Accompagnateur"
+            titleIcon={
+              <Image
+                src="/home-page/young_woman_dc.png"
+                alt="visage jeune homme souriant"
+                width={40}
+                height={47}
+              />
+            }
+            subtitle="Guidez les candidats vers la réussite de leur VAE."
+            description="Assurez un suivi complet des parcours VAE : échangez avec les certificateurs et gérez chaque étape, du premier entretien jusqu'au jury sur une plateforme unique et centralisée."
           >
-            Accompagnez les candidats
-          </Button>
-        </QuiEtesVousCard>
-        <QuiEtesVousCard
-          title="Certificateur"
-          titleIcon={
-            <Image
-              src="/home-page/young_man_dc_2.png"
-              alt="visage jeune homme souriant"
-              width={40}
-              height={47}
-            />
-          }
-          subtitle="Simplifiez la gestion des certifications et des candidatures."
-          description="Gérez vos certifications, collaborez avec les accompagnateurs et suivez les parcours VAE de la recevabilité au jury en toute autonomie."
-        >
-          <Button
-            priority="secondary"
-            iconId="fr-icon-arrow-right-line"
-            iconPosition="right"
-            className="mt-auto"
-            linkProps={{
-              href: "/savoir-plus/articles/espace-certificateurs/",
-              target: "_self",
-            }}
+            <Button
+              priority="secondary"
+              iconId="fr-icon-arrow-right-line"
+              iconPosition="right"
+              className="mt-auto"
+              linkProps={{
+                href: "/espace-professionnel/",
+                target: "_self",
+              }}
+            >
+              Accompagnez les candidats
+            </Button>
+          </QuiEtesVousCard>
+          <QuiEtesVousCard
+            title="Certificateur"
+            titleIcon={
+              <Image
+                src="/home-page/young_man_dc_2.png"
+                alt="visage jeune homme souriant"
+                width={40}
+                height={47}
+              />
+            }
+            subtitle="Simplifiez la gestion des certifications et des candidatures."
+            description="Gérez vos certifications, collaborez avec les accompagnateurs et suivez les parcours VAE de la recevabilité au jury en toute autonomie."
           >
-            Créez votre espace certificateur
-          </Button>
-        </QuiEtesVousCard>
-        <QuiEtesVousCard
-          title="VAE collective"
-          titleIcon={
-            <Image
-              src="/home-page/young_man_dc_3.png"
-              alt="porteur de projet VAE collective"
-              width={40}
-              height={47}
-            />
-          }
-          subtitle="Lancez un projet de VAE collective à l'échelle de votre organisation."
-          description="Ciblez les bons métiers, mobilisez des accompagnateurs et suivez vos collaborateurs vers la certification en valorisant leur expérience."
-        >
-          <Button
-            priority="secondary"
-            iconId="fr-icon-arrow-right-line"
-            iconPosition="right"
-            className="mt-auto"
-            linkProps={{
-              href: "https://vae.gouv.fr/savoir-plus/articles/lancez-votre-projet-de-vae-collective/",
-              target: "_self",
-            }}
+            <Button
+              priority="secondary"
+              iconId="fr-icon-arrow-right-line"
+              iconPosition="right"
+              className="mt-auto"
+              linkProps={{
+                href: "/savoir-plus/articles/espace-certificateurs/",
+                target: "_self",
+              }}
+            >
+              Créez votre espace certificateur
+            </Button>
+          </QuiEtesVousCard>
+          <QuiEtesVousCard
+            title="VAE collective"
+            titleIcon={
+              <Image
+                src="/home-page/young_man_dc_3.png"
+                alt="porteur de projet VAE collective"
+                width={40}
+                height={47}
+              />
+            }
+            subtitle="Lancez un projet de VAE collective à l'échelle de votre organisation."
+            description="Ciblez les bons métiers, mobilisez des accompagnateurs et suivez vos collaborateurs vers la certification en valorisant leur expérience."
           >
-            Démarrez un projet de VAE collective
-          </Button>
-        </QuiEtesVousCard>
+            <Button
+              priority="secondary"
+              iconId="fr-icon-arrow-right-line"
+              iconPosition="right"
+              className="mt-auto"
+              linkProps={{
+                href: "https://vae.gouv.fr/savoir-plus/articles/lancez-votre-projet-de-vae-collective/",
+                target: "_self",
+              }}
+            >
+              Démarrez un projet de VAE collective
+            </Button>
+          </QuiEtesVousCard>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const QuiEtesVousCard = ({
   title,
@@ -415,88 +430,104 @@ const AvantageCard = ({
   </div>
 );
 
-const OldLaVAEUnDispositifAccessibleATousSection = () => (
-  <section className="w-full bg-white px-6 py-8 md:pt-12 md:pb-20">
-    <div className="fr-container flex flex-col items-center md:flex-row !p-0 gap-12 md:gap-20">
-      <Image
-        src="/home-page/avatar_1_section_3.png"
-        alt="3 visages souriants"
-        width={312}
-        height={393}
-        className="basis-1/3"
-      />
-      <div className="flex flex-col basis-2/3">
-        <h2 className="text-[22px] md:text-[32px] mb-8">
-          La VAE, un dispositif accessible à tous !
-        </h2>
-        <p className="text-xl mb-8">
-          Vous pouvez dès maintenant vous inscrire pour commencer un parcours
-          VAE. La seule exception ? Si vous êtes agent public ou contractuel de
-          l’État, le parcours VAE ne s’effectue pas via notre plateforme.
-          Contactez les{" "}
-          <Link
-            href="/savoir-plus/articles/vae-ou-se-renseigner/"
-            target="_self"
-            className="fr-link !text-xl"
-          >
-            organismes référents
-          </Link>{" "}
-          pour en savoir plus.
-        </p>
-        <Button
-          linkProps={{
-            href: "/inscription-candidat/",
-            target: "_self",
-          }}
-        >
-          Commencez votre parcours VAE
-        </Button>
-      </div>
-    </div>
-  </section>
-);
+const OldLaVAEUnDispositifAccessibleATousSection = async () => {
+  const isDisableMagicLinkActive = await isFeatureActive(
+    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
+  );
 
-const LaVAEUnDispositifAccessibleATousSection = () => (
-  <section className="w-full bg-white px-6 py-8 md:pt-12 md:pb-20">
-    <div className="fr-container flex flex-col items-center md:flex-row !p-0 gap-12 md:gap-20">
-      <Image
-        src="/home-page/avatar_1_section_3.png"
-        alt="3 visages souriants"
-        width={312}
-        height={393}
-        className="basis-1/3"
-      />
-      <div className="flex flex-col basis-2/3">
-        <h2 className="text-[22px] md:text-[32px] mb-8">
-          La VAE, un dispositif accessible à tous !
-        </h2>
-        <p className="text-xl mb-8">
-          Vous pouvez dès maintenant vous inscrire pour commencer un parcours
-          VAE. La seule exception ? Si vous êtes agent public, le parcours VAE
-          ne s’effectue pas via notre plateforme.
-          <br />
-          Contactez les{" "}
-          <Link
-            href="/savoir-plus/articles/vae-ou-se-renseigner/"
-            target="_self"
-            className="fr-link !text-xl"
+  return (
+    <section className="w-full bg-white px-6 py-8 md:pt-12 md:pb-20">
+      <div className="fr-container flex flex-col items-center md:flex-row !p-0 gap-12 md:gap-20">
+        <Image
+          src="/home-page/avatar_1_section_3.png"
+          alt="3 visages souriants"
+          width={312}
+          height={393}
+          className="basis-1/3"
+        />
+        <div className="flex flex-col basis-2/3">
+          <h2 className="text-[22px] md:text-[32px] mb-8">
+            La VAE, un dispositif accessible à tous !
+          </h2>
+          <p className="text-xl mb-8">
+            Vous pouvez dès maintenant vous inscrire pour commencer un parcours
+            VAE. La seule exception ? Si vous êtes agent public ou contractuel
+            de l’État, le parcours VAE ne s’effectue pas via notre plateforme.
+            Contactez les{" "}
+            <Link
+              href="/savoir-plus/articles/vae-ou-se-renseigner/"
+              target="_self"
+              className="fr-link !text-xl"
+            >
+              organismes référents
+            </Link>{" "}
+            pour en savoir plus.
+          </p>
+          <Button
+            linkProps={{
+              href: isDisableMagicLinkActive
+                ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
+                : "/commencer",
+              target: "_self",
+            }}
           >
-            organismes référents
-          </Link>{" "}
-          pour en savoir plus.
-        </p>
-        <Button
-          linkProps={{
-            href: "/inscription-candidat/",
-            target: "_self",
-          }}
-        >
-          Commencez votre parcours VAE
-        </Button>
+            Commencez votre parcours VAE
+          </Button>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
+
+const LaVAEUnDispositifAccessibleATousSection = async () => {
+  const isDisableMagicLinkActive = await isFeatureActive(
+    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
+  );
+
+  return (
+    <section className="w-full bg-white px-6 py-8 md:pt-12 md:pb-20">
+      <div className="fr-container flex flex-col items-center md:flex-row !p-0 gap-12 md:gap-20">
+        <Image
+          src="/home-page/avatar_1_section_3.png"
+          alt="3 visages souriants"
+          width={312}
+          height={393}
+          className="basis-1/3"
+        />
+        <div className="flex flex-col basis-2/3">
+          <h2 className="text-[22px] md:text-[32px] mb-8">
+            La VAE, un dispositif accessible à tous !
+          </h2>
+          <p className="text-xl mb-8">
+            Vous pouvez dès maintenant vous inscrire pour commencer un parcours
+            VAE. La seule exception ? Si vous êtes agent public, le parcours VAE
+            ne s’effectue pas via notre plateforme.
+            <br />
+            Contactez les{" "}
+            <Link
+              href="/savoir-plus/articles/vae-ou-se-renseigner/"
+              target="_self"
+              className="fr-link !text-xl"
+            >
+              organismes référents
+            </Link>{" "}
+            pour en savoir plus.
+          </p>
+          <Button
+            linkProps={{
+              href: isDisableMagicLinkActive
+                ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
+                : "/commencer",
+              target: "_self",
+            }}
+          >
+            Commencez votre parcours VAE
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 const LAVAEEnChiffresSection = () => (
   <section className="w-full bg-white md:py-8 md:pt-12 md:pb-20">

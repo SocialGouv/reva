@@ -3,6 +3,7 @@ import Head from "next/head";
 
 import { MainLayout } from "@/app/_components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
+import { isFeatureActive } from "@/utils/featureFlipping";
 
 const RedirectionBlock = ({
   title,
@@ -26,7 +27,11 @@ const RedirectionBlock = ({
     </div>
   );
 };
-const Custom404 = () => {
+const Custom404 = async () => {
+  const isDisableMagicLinkActive = await isFeatureActive(
+    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
+  );
+
   return (
     <MainLayout>
       <Head>
@@ -47,7 +52,11 @@ const Custom404 = () => {
         <RedirectionBlock
           title="Vous êtes candidat ?"
           buttonLabel="Démarrer ma VAE"
-          buttonLink="/inscription-candidat/"
+          buttonLink={
+            isDisableMagicLinkActive
+              ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
+              : "/commencer"
+          }
         />
         <RedirectionBlock
           title="Vous êtes Architecte Accompagnateur de Parcours ?"
