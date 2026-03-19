@@ -2,7 +2,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
@@ -105,6 +105,16 @@ export const TypologyAndCollectiveAgreementForm = ({
 
   const { typology } = useWatch({ control });
 
+  const isCcnRequired = useMemo(() => {
+    return (
+      typology === "SALARIE_PRIVE" ||
+      typology === "DEMANDEUR_EMPLOI" ||
+      typology === "TRAVAILLEUR_NON_SALARIE" ||
+      typology === "TITULAIRE_MANDAT_ELECTIF" ||
+      typology === "AIDANTS_FAMILIAUX_AGRICOLES"
+    );
+  }, [typology]);
+
   return (
     <>
       <form
@@ -134,11 +144,33 @@ export const TypologyAndCollectiveAgreementForm = ({
               ))}
             </Select>
 
-            {typology === "SALARIE_PRIVE" ||
-            typology === "DEMANDEUR_EMPLOI" ||
-            typology === "TRAVAILLEUR_NON_SALARIE" ||
-            typology === "TITULAIRE_MANDAT_ELECTIF" ||
-            typology === "AIDANTS_FAMILIAUX_AGRICOLES" ? (
+            {(typology as string) === "NON_SPECIFIE" && (
+              <Alert
+                small
+                severity="warning"
+                description={
+                  <p>
+                    France VAE n'est pas encore disponible pour les{" "}
+                    <strong>
+                      fonctionnaires et agents contractuels (de droit public ou
+                      privé)
+                    </strong>
+                    . Vous pouvez retrouver des informations auprès de vos
+                    interlocuteurs RH habituels.
+                  </p>
+                }
+              />
+            )}
+
+            {(typology as string) !== "NON_SPECIFIE" && !isCcnRequired && (
+              <Alert
+                small
+                severity="info"
+                description="Cette typologie ne nécessite pas de renseigner une convention collective."
+              />
+            )}
+
+            {isCcnRequired && (
               <>
                 <CcnSearchList
                   conventionCollective={candidate?.conventionCollective}
@@ -147,12 +179,6 @@ export const TypologyAndCollectiveAgreementForm = ({
                   }}
                 />
               </>
-            ) : (
-              <Alert
-                small
-                severity="info"
-                description="Cette typologie ne possède pas de convention collective. Passez à l’étape suivante."
-              />
             )}
           </div>
 

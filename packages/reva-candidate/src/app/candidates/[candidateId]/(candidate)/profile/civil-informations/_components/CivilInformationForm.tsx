@@ -181,6 +181,7 @@ export const CivilInformationForm = ({
               className="mb-0"
               legend="Civilité"
               orientation="horizontal"
+              small
               options={genders.map((gender) => ({
                 label: gender.label,
                 nativeInputProps: {
