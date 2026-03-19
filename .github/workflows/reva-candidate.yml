@@ -85,6 +85,11 @@ jobs:
   playwright:
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2]
+        shardTotal: [2]
     defaults:
       run:
         working-directory: ./packages/reva-candidate
@@ -118,10 +123,10 @@ jobs:
       - name: Generate GraphQL schema from API
         run: npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api
       - name: Run Playwright tests
-        run: npm run test
+        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-candidate
+          name: playwright-report-candidate-${{ matrix.shardIndex }}
           path: packages/reva-candidate/playwright-report/
           retention-days: 30
