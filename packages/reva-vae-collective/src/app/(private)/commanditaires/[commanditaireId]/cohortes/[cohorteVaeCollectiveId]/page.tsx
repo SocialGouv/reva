@@ -214,6 +214,13 @@ export default async function CohortePage({
           <RegistrationUrlDisplay
             registrationUrl={`${websiteBaseUrl}/inscription-candidat/vae-collective?codeInscription=${cohorte.codeInscription}`}
           />
+          <p className="text-lg sm:mb-0 mt-6">
+            Vous pouvez aussi transmettre ces informations à l'accompagnateur en
+            charge de la cohorte. Il pourra les utiliser afin de guider les
+            candidats de cette cohorte dans leur création de candidature en VAE
+            collective.Des modèles de mails sont mis à votre disposition pour
+            informer votre accompagnateur et les candidats concernés.
+          </p>
         </div>
       )}
       <Button
