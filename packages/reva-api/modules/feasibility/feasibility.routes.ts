@@ -268,6 +268,12 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
               rncpExpiresAt: true,
             },
           },
+          Feasibility: {
+            select: {
+              decision: true,
+              isActive: true,
+            },
+          },
         },
       });
 
@@ -281,7 +287,12 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         !!certification?.rncpExpiresAt &&
         isBefore(certification.rncpExpiresAt, new Date());
 
-      if (hasCertificationRncpExpired) {
+      const currentFeasibilityDecision = candidacy?.Feasibility[0]?.decision;
+
+      if (
+        hasCertificationRncpExpired &&
+        currentFeasibilityDecision !== "INCOMPLETE"
+      ) {
         return reply.status(400).send("Le diplôme visé a expiré.");
       }
 
