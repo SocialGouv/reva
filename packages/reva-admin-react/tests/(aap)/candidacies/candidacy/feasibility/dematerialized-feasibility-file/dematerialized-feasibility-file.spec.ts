@@ -1388,4 +1388,59 @@ test.describe("When the decision is INCOMPLETE", () => {
       ).toBeVisible();
     });
   });
+  test.describe("when the df is ready to be sent to the candidate", () => {
+    const feasibilityIncompleteDecision = {
+      ...DEFAULT_FEASIBILITY_FILE,
+      decision: DFF_CERTIFICATION_AUTHORITY_DECISION_INCOMPLETE,
+      dematerializedFeasibilityFile: {
+        ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+        eligibilityRequirement: DFF_FULL_ELIGIBILITY,
+        certificationPartComplete: true,
+        blocsDeCompetences: DEFAULT_BLOCS_COMPETENCES_COMPLETED,
+        attachmentsPartComplete: true,
+        prerequisitesPartComplete: true,
+        aapDecision: DFF_AAP_DECISION_FAVORABLE,
+        competenceBlocsPartCompletion: DFF_BLOCS_COMPETENCES_COMPLETED,
+        isReadyToBeSentToCandidate: true,
+        swornStatementFileId: "some-file-id",
+        isReadyToBeSentToCertificationAuthority: true,
+        feasibilityFileSentAt: null,
+      },
+    };
+    test.describe("when the certification has expired", () => {
+      test.use({
+        mswHandlers: [
+          [
+            ...aapCommonHandlers,
+            ...createFeasibilityHandlers({
+              feasibility: feasibilityIncompleteDecision,
+              certificationExpired: true,
+            }),
+          ],
+          { scope: "test" },
+        ],
+      });
+      test("it should not show the certification expired alert", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+        await waitForFeasibilityQueries(page);
+        await expect(page.getByTestId("eligibility-section")).toBeVisible();
+        await expect(
+          page.getByTestId("certification-expired-alert"),
+        ).not.toBeVisible();
+      });
+      test("the send to candidate tile should be visible and enabled", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+        await waitForFeasibilityQueries(page);
+        await expect(
+          page.getByTestId("send-file-candidate-tile-ready"),
+        ).toBeVisible();
+      });
+    });
+  });
 });

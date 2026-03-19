@@ -69,16 +69,24 @@ const AapFeasibilityPage = () => {
     !!certification?.rncpExpiresAt &&
     isBefore(certification?.rncpExpiresAt, new Date());
   const isFeasibilityEditable =
-    (!feasibilityFileSentAt || feasibilityDecisionIsIncomplete) &&
-    !hasCertificationRncpExpired;
+    (!feasibilityFileSentAt && !hasCertificationRncpExpired) ||
+    feasibilityDecisionIsIncomplete;
   const isFeasibilityReceivedOrRejected =
     decision === "ADMISSIBLE" || decision === "REJECTED";
+  const isFeasibilityIncomplete = decision == "INCOMPLETE";
   const displayDecisionIncompleteAlert =
     feasibilityDecisionIsIncomplete && decisionSentAt;
 
   const isEligibilityRequirementPartial =
     dematerializedFeasibilityFile?.eligibilityRequirement ===
     "PARTIAL_ELIGIBILITY_REQUIREMENT";
+
+  const showCertificationExpiredAlert =
+    hasCertificationRncpExpired && !isFeasibilityIncomplete; //do not show the certification expired alert if the df decision is incomplete
+
+  const canSendFeasibilityFileToCandidate =
+    !!dematerializedFeasibilityFile?.isReadyToBeSentToCandidate &&
+    (!hasCertificationRncpExpired || isFeasibilityIncomplete);
 
   if (!candidacy || !feasibility) {
     return null;
@@ -111,7 +119,7 @@ const AapFeasibilityPage = () => {
         certificateur.
       </p>
 
-      {hasCertificationRncpExpired && (
+      {showCertificationExpiredAlert && (
         <Alert
           data-testid="certification-expired-alert"
           className="mt-6 mb-12"
@@ -240,10 +248,7 @@ const AapFeasibilityPage = () => {
             sentToCandidateAt={
               dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
             }
-            isReadyToBeSentToCandidate={
-              !!dematerializedFeasibilityFile?.isReadyToBeSentToCandidate &&
-              !hasCertificationRncpExpired
-            }
+            isReadyToBeSentToCandidate={canSendFeasibilityFileToCandidate}
           />
           {dematerializedFeasibilityFile?.candidateDecisionComment && (
             <CandidateDecisionCommentSection
