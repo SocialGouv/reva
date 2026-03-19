@@ -1,10 +1,10 @@
 import { Page } from "@playwright/test";
 import { expect, test } from "next/experimental/testmode/playwright/msw";
 
-import { login } from "@tests/helpers/auth/auth";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
-import { dashboardHandlers } from "@tests/helpers/handlers/dashboard.handler";
+import { loginAndWaitForCandidaciesInitialLoad } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
+import { candidacyDropOutHandlers } from "@tests/helpers/handlers/candidacy-dropout.handler";
 
 import type { MswFixture } from "next/experimental/testmode/playwright/msw";
 
@@ -28,10 +28,8 @@ const setupAndNavigateToDropoutConfirmation = async (
   page: Page,
   msw: MswFixture,
 ) => {
-  const { handlers, dashboardWait } = dashboardHandlers({ candidacy });
-  msw.use(...handlers);
-  await login(page);
-  await dashboardWait(page);
+  msw.use(...candidacyDropOutHandlers({ candidacy }));
+  await loginAndWaitForCandidaciesInitialLoad(page);
   await page.goto(
     `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/candidacy-dropout-decision/dropout-confirmation`,
   );
