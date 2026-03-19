@@ -120,8 +120,8 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
-      - name: Generate GraphQL schema from API
-        run: npm ci --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api
+      - name: Generate GraphQL types from API schema
+        run: npm run prebuild
       - name: Run Playwright tests
         run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - uses: actions/upload-artifact@v4
