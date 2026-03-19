@@ -344,98 +344,35 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
         await expect(uploadForm).toBeEnabled();
       });
     });
-  });
 
-  test.describe("when the certification has expired", () => {
-    const { candidacy } = createCandidacyFeasibilityWith({
-      status: "PARCOURS_CONFIRME",
-      certificationOptions: {
-        rncpExpiresAt: new Date("2000-01-01").getTime(),
-      },
-    });
-    test.describe("when the df decision is not final", () => {
-      test("it should show the certification expired alert ", async ({
-        page,
-        msw,
-      }) => {
-        await setupAndNavigateToFaisabilite(page, msw, candidacy);
-
-        await expect(
-          page.locator('[data-testid="feasibility-upload-form"]'),
-        ).toBeVisible();
-
-        const errorBox = page.locator(
-          '[data-testid="certification-expired-alert"]',
-        );
-        await expect(errorBox).toBeVisible();
-        await expect(errorBox.locator("h3")).toContainText(
-          "Le diplôme visé a expiré",
-        );
-      });
-
-      test("the certification authority select should be disabled", async ({
-        page,
-        msw,
-      }) => {
-        await setupAndNavigateToFaisabilite(page, msw, candidacy);
-
-        const certificationAuthoritySelect = page.locator(
-          '[data-testid="certification-authority-select"] select',
-        );
-        await expect(certificationAuthoritySelect).toBeDisabled();
-      });
-
-      test("the upload form should be disabled", async ({ page, msw }) => {
-        await setupAndNavigateToFaisabilite(page, msw, candidacy);
-
-        const uploadForm = page.locator(
-          '[data-testid="feasibility-upload-form"] input[name="feasibilityFile"]',
-        );
-        await expect(uploadForm).toBeDisabled();
-      });
-    });
-
-    test.describe("when the df decision is final", () => {
-      [
-        {
-          status: "DOSSIER_FAISABILITE_RECEVABLE",
-          decision: "ADMISSIBLE" as const,
-          decisionAlertTestId: "feasibility-decision-admissible",
-        },
-        {
-          status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
-          decision: "REJECTED" as const,
-          decisionAlertTestId: "feasibility-decision-rejected",
-        },
-      ].forEach(({ status, decision, decisionAlertTestId }) => {
-        test(`it should not show the certification expired alert when the df decision is ${status}`, async ({
+    test.describe("when the certification has expired", () => {
+      test.describe("when the df has not been sent", () => {
+        const { candidacy } = createCandidacyFeasibilityWith({
+          status: "PARCOURS_CONFIRME",
+          certificationOptions: {
+            rncpExpiresAt: new Date("2000-01-01").getTime(),
+          },
+        });
+        test("it should show the certification expired alert ", async ({
           page,
           msw,
         }) => {
-          const { candidacy } = createCandidacyFeasibilityWith({
-            status: "DOSSIER_FAISABILITE_RECEVABLE",
-            certificationOptions: {
-              rncpExpiresAt: new Date("2000-01-01").getTime(),
-            },
-            feasibilityOptions: {
-              decision,
-            },
-          });
-
           await setupAndNavigateToFaisabilite(page, msw, candidacy);
 
           await expect(
-            page.locator(`[data-testid="${decisionAlertTestId}"]`),
+            page.locator('[data-testid="feasibility-upload-form"]'),
           ).toBeVisible();
 
           const errorBox = page.locator(
             '[data-testid="certification-expired-alert"]',
           );
-
-          await expect(errorBox).not.toBeVisible();
+          await expect(errorBox).toBeVisible();
+          await expect(errorBox.locator("h3")).toContainText(
+            "Le diplôme visé a expiré",
+          );
         });
 
-        test(`it should disable the certification authority select when the df decision is ${status}`, async ({
+        test("the certification authority select should be disabled", async ({
           page,
           msw,
         }) => {
@@ -447,16 +384,149 @@ test.describe("AUTONOME - Dossier de faisabilité", () => {
           await expect(certificationAuthoritySelect).toBeDisabled();
         });
 
-        test(`it should disable the upload form when the df decision is ${status}`, async ({
-          page,
-          msw,
-        }) => {
+        test("the upload form should be disabled", async ({ page, msw }) => {
           await setupAndNavigateToFaisabilite(page, msw, candidacy);
 
           const uploadForm = page.locator(
             '[data-testid="feasibility-upload-form"] input[name="feasibilityFile"]',
           );
           await expect(uploadForm).toBeDisabled();
+        });
+      });
+
+      test.describe("when the df decision is incomplete", () => {
+        const { candidacy } = createCandidacyFeasibilityWith({
+          status: "DOSSIER_FAISABILITE_INCOMPLET",
+          certificationOptions: {
+            rncpExpiresAt: new Date("2000-01-01").getTime(),
+          },
+          feasibilityOptions: {
+            decision: "INCOMPLETE",
+          },
+        });
+
+        test("it should not show the certification expired alert", async ({
+          page,
+          msw,
+        }) => {
+          await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+          await expect(
+            page.locator(`[data-testid="feasibility-decision-incomplete"]`),
+          ).toBeVisible();
+
+          await expect(
+            page.locator('[data-testid="certification-expired-alert"]'),
+          ).not.toBeVisible();
+        });
+
+        test("the certification authority select should be enabled", async ({
+          page,
+          msw,
+        }) => {
+          await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+          await expect(
+            page.locator(`[data-testid="feasibility-decision-incomplete"]`),
+          ).toBeVisible();
+
+          await expect(
+            page.locator(
+              '[data-testid="certification-authority-select"] select',
+            ),
+          ).toBeEnabled();
+        });
+
+        test("the upload form should be enabled", async ({ page, msw }) => {
+          await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+          await expect(
+            page.locator(`[data-testid="feasibility-decision-incomplete"]`),
+          ).toBeVisible();
+
+          await expect(
+            page.locator(
+              '[data-testid="feasibility-upload-form"] input[name="feasibilityFile"]',
+            ),
+          ).toBeEnabled();
+        });
+      });
+
+      [
+        {
+          status: "DOSSIER_FAISABILITE_RECEVABLE" as const,
+          decision: "ADMISSIBLE" as const,
+          decisionAlertTestId: "feasibility-decision-admissible",
+        },
+        {
+          status: "DOSSIER_FAISABILITE_NON_RECEVABLE" as const,
+          decision: "REJECTED" as const,
+          decisionAlertTestId: "feasibility-decision-rejected",
+        },
+      ].forEach(({ status, decision, decisionAlertTestId }) => {
+        test.describe(`when the df decision is ${status}`, () => {
+          const { candidacy } = createCandidacyFeasibilityWith({
+            status,
+            certificationOptions: {
+              rncpExpiresAt: new Date("2000-01-01").getTime(),
+            },
+            feasibilityOptions: {
+              decision,
+              feasibilityUploadedPdf: {
+                feasibilityFile: {
+                  previewUrl: "https://example.com",
+                  mimeType: "application/pdf",
+                  name: "dossier_de_faisabilite.pdf",
+                  url: "https://example.com",
+                },
+              },
+            },
+          });
+
+          test(`it should not show the certification expired alert`, async ({
+            page,
+            msw,
+          }) => {
+            await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+            await expect(
+              page.locator(`[data-testid="${decisionAlertTestId}"]`),
+            ).toBeVisible();
+
+            const errorBox = page.locator(
+              '[data-testid="certification-expired-alert"]',
+            );
+
+            await expect(errorBox).not.toBeVisible();
+          });
+
+          test(`it should not show the certification authority select`, async ({
+            page,
+            msw,
+          }) => {
+            await setupAndNavigateToFaisabilite(page, msw, candidacy);
+            await expect(
+              page.locator(`[data-testid="${decisionAlertTestId}"]`),
+            ).toBeVisible();
+
+            const certificationAuthoritySelect = page.locator(
+              '[data-testid="certification-authority-select"] select',
+            );
+            await expect(certificationAuthoritySelect).not.toBeVisible();
+          });
+
+          test(`it should not show the upload form`, async ({ page, msw }) => {
+            await setupAndNavigateToFaisabilite(page, msw, candidacy);
+
+            await expect(
+              page.locator(`[data-testid="${decisionAlertTestId}"]`),
+            ).toBeVisible();
+
+            const uploadForm = page.locator(
+              '[data-testid="feasibility-upload-form"] input[name="feasibilityFile"]',
+            );
+            await expect(uploadForm).not.toBeVisible();
+          });
         });
       });
     });

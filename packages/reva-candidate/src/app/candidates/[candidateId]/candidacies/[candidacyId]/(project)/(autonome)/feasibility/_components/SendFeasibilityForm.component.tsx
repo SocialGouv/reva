@@ -65,9 +65,13 @@ export const SendFeasibilityForm = (): React.ReactNode => {
   const handleFeasibilityFileTemplateDownload = () =>
     updateFeasibilityFileTemplateFirstReadAt.mutateAsync({ candidacyId });
 
-  const feasibilityDecisionNotFinal =
+  const feasibilityDecisionNotFinalOrIncomplete =
     feasibility?.decision !== "ADMISSIBLE" &&
-    feasibility?.decision !== "REJECTED";
+    feasibility?.decision !== "REJECTED" &&
+    feasibility?.decision !== "INCOMPLETE";
+
+  const certificationValidOrDFIncomplete =
+    !hasCertificationRncpExpired || feasibility?.decision === "INCOMPLETE";
 
   const {
     register,
@@ -209,29 +213,31 @@ export const SendFeasibilityForm = (): React.ReactNode => {
     <div className="mt-12">
       <FeasibilityBanner feasibility={feasibility} />
 
-      {hasCertificationRncpExpired && feasibilityDecisionNotFinal && (
-        <Alert
-          data-testid="certification-expired-alert"
-          className="mt-6 mb-12"
-          severity="error"
-          title="Le diplôme visé a expiré"
-          description={
-            <>
-              <p className="mb-4">
-                Le diplôme <em>{candidacy?.certification?.label}</em> a expiré
-                le{" "}
-                {format(candidacy.certification!.rncpExpiresAt, "dd/MM/yyyy")}.
-              </p>
-              <p>
-                Il est impossible d’envoyer votre dossier de faisabilité au
-                certificateur. Vous devez attendre le renouvellement du diplôme,
-                changer de diplôme ou vous pouvez contacter le certificateur en
-                charge de votre candidature.
-              </p>
-            </>
-          }
-        />
-      )}
+      {hasCertificationRncpExpired &&
+        feasibilityDecisionNotFinalOrIncomplete && (
+          <Alert
+            data-testid="certification-expired-alert"
+            className="mt-6 mb-12"
+            severity="error"
+            title="Le diplôme visé a expiré"
+            description={
+              <>
+                <p className="mb-4">
+                  Le diplôme <em>{candidacy?.certification?.label}</em> a expiré
+                  le{" "}
+                  {format(candidacy.certification!.rncpExpiresAt, "dd/MM/yyyy")}
+                  .
+                </p>
+                <p>
+                  Il est impossible d’envoyer votre dossier de faisabilité au
+                  certificateur. Vous devez attendre le renouvellement du
+                  diplôme, changer de diplôme ou vous pouvez contacter le
+                  certificateur en charge de votre candidature.
+                </p>
+              </>
+            }
+          />
+        )}
 
       {candidacy.warningOnFeasibilitySubmission ===
         "MAX_SUBMISSIONS_UNIQUE_CERTIFICATION_REACHED" && (
@@ -277,7 +283,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
               }}
               disabled={
                 candidacy?.warningOnFeasibilitySubmission !== "NONE" ||
-                hasCertificationRncpExpired
+                !certificationValidOrDFIncomplete
               }
             >
               <>
@@ -319,7 +325,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
               requirements={requirements}
               disabled={
                 candidacy?.warningOnFeasibilitySubmission !== "NONE" ||
-                hasCertificationRncpExpired
+                !certificationValidOrDFIncomplete
               }
             />
             <FormButtons
@@ -330,7 +336,7 @@ export const SendFeasibilityForm = (): React.ReactNode => {
                   certificationAuthorities.length > 0 &&
                   areRequirementsChecked &&
                   candidacy?.warningOnFeasibilitySubmission === "NONE" &&
-                  !hasCertificationRncpExpired,
+                  certificationValidOrDFIncomplete,
               }}
               backUrl="/"
               submitButtonLabel="Envoyer"
