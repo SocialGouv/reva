@@ -135,6 +135,13 @@ export const generateFeasibilityFileByCandidacyId = async (
     certificationId: certification.id,
   });
 
+  const middleNamesFeature = await prismaClient.feature.findFirst({
+    where: {
+      key: "MIDDLE_NAMES",
+    },
+  });
+  const isMiddleNamesFeatureEnabled = middleNamesFeature?.isActive ?? false;
+
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
       size: "A4",
@@ -235,16 +242,24 @@ export const generateFeasibilityFileByCandidacyId = async (
         },
       );
 
+    let firstAndMiddleNames = [
+      candidate.firstname,
+      candidate.firstname2,
+      candidate.firstname3,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    if (isMiddleNamesFeatureEnabled) {
+      firstAndMiddleNames = [candidate.firstname, candidate.middleNames]
+        .filter(Boolean)
+        .join(", ");
+    }
+
     addProfilCandidatSection({
       candidate: {
         courtesyTitle: getCourtesyTitleFromGender(candidate.gender),
-        firstSecondAndThirdNames: [
-          candidate.firstname,
-          candidate.firstname2,
-          candidate.firstname3,
-        ]
-          .filter(Boolean)
-          .join(", "),
+        firstAndMiddleNames,
         lastname: candidate.lastname,
         birthdate: candidate.birthdate
           ? formatDateWithoutTimestamp(candidate.birthdate)
@@ -679,7 +694,7 @@ const addProfilCandidatSection = ({
   doc,
   candidate: {
     courtesyTitle,
-    firstSecondAndThirdNames,
+    firstAndMiddleNames,
     lastname,
     birthdate,
     birthcity,
@@ -700,7 +715,7 @@ const addProfilCandidatSection = ({
 }: {
   candidate: {
     courtesyTitle: string;
-    firstSecondAndThirdNames: string;
+    firstAndMiddleNames: string;
     lastname: string;
     birthdate: string;
     birthcity: string;
@@ -747,7 +762,7 @@ const addProfilCandidatSection = ({
             data: [
               { title: "Civilité :", value: courtesyTitle },
               { title: "Nom de naissance :", value: lastname },
-              { title: "Prénoms :", value: firstSecondAndThirdNames },
+              { title: "Prénoms :", value: firstAndMiddleNames },
               {
                 title: "Date de naissance :",
                 value: birthdate,
