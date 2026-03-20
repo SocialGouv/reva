@@ -143,7 +143,18 @@ export const AccountInfoStepForm = () => {
                   />
                   <Notice
                     className="mb-4"
-                    title="Cette adresse électronique vous permettra de vous connecter à la plateforme. C'est sur celle-ci que vous recevrez la confirmation de la validation de votre compte administrateur."
+                    title={
+                      <>
+                        L’adresse électronique vous permettra de vous connecter
+                        à la plateforme. C’est sur celle-ci que vous recevrez la
+                        confirmation de la validation de votre compte
+                        administrateur.
+                        <br /> <br />
+                        <span className="text-lg">⚠</span> Attention : Vous ne
+                        pouvez pas renseigner une adresse électronique déjà
+                        utilisée sur France VAE.
+                      </>
+                    }
                   />
                 </div>
                 <Input
