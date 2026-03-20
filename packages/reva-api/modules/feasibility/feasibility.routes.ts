@@ -6,12 +6,10 @@ import { logger } from "@/modules/shared/logger/logger";
 import { isCandidateOwnerOfCandidacyFeature } from "@/modules/shared/security/middlewares/isCandidateOwnerOfCandidacy.security";
 import { prismaClient } from "@/prisma/client";
 
-import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 import { UploadedFile } from "../shared/file/file.interface";
 import { getDownloadLink } from "../shared/file/file.service";
 
 import { generateFeasibilityFileByCandidacyId } from "./dematerialized-feasibility-file/features/generateFeasibilityFileByCandidacyId";
-import { generateFeasibilityFileByCandidacyIdV2 } from "./dematerialized-feasibility-file/features/generateFeasibilityFileByCandidacyIdV2";
 import {
   canDownloadFeasibilityFiles,
   canUserManageCandidacy,
@@ -180,14 +178,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           feasibilityDemat &&
           feasibilityDemat.id == dematerializedFeasibilityFileId
         ) {
-          const isDFDematMiseEnConformiteFeatureActive =
-            await isFeatureActiveForUser({
-              feature: "DF_DEMAT_MISE_EN_CONFORMITE_PDF",
-            });
-
-          const data = await (isDFDematMiseEnConformiteFeatureActive
-            ? generateFeasibilityFileByCandidacyIdV2(candidacyId)
-            : generateFeasibilityFileByCandidacyId(candidacyId));
+          const data = await generateFeasibilityFileByCandidacyId(candidacyId);
 
           if (data) {
             reply.header("Content-Type", "application/pdf");

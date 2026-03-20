@@ -1,29 +1,38 @@
 import {
-  BasicSkill,
-  Candidate,
-  Certification,
-  CertificationAuthorityStructure,
-  CertificationCompetence,
-  CertificationCompetenceBloc,
   CompetenceBlocsPartCompletionEnum,
-  Country,
-  Degree,
-  DematerializedFeasibilityFile,
-  Department,
-  DFFCertificationCompetenceBloc,
-  DFFCertificationCompetenceDetails,
+  DFFCertificationCompetenceDetailsState,
   DFFDecision,
   DFFEligibilityRequirement,
-  DFFPrerequisite,
-  Experience,
-  Gender,
-  Goal,
-  Training,
+  PrerequisiteState,
 } from "@prisma/client";
 import PDFDocument from "pdfkit";
 
+import { isAapAvailableForCertificationId } from "@/modules/referential/features/isAapAvailableForCertificationId";
 import { formatDateWithoutTimestamp } from "@/modules/shared/date/formatDateWithoutTimestamp";
 import { prismaClient } from "@/prisma/client";
+
+import {
+  addSubSection,
+  getEligibilityLabelAndType,
+  pxToPt,
+  addSection,
+  addFrame,
+  addTag,
+  addInfoText,
+  addCallout,
+  addTitledBlock,
+  addDisabledCheckbox,
+  addDocumentHeader,
+  addInfoTable,
+  getCourtesyTitleFromGender,
+  getCandidateTypologyLabel,
+  getExperienceDurationLabel,
+  addCompetence,
+  addDecision,
+} from "../helpers/df-demat-pdf-helper/dfDematPdfHelper";
+
+const ASSETS_PATH =
+  "modules/feasibility/dematerialized-feasibility-file/assets/df-demat-pdf";
 
 export const generateFeasibilityFileByCandidacyId = async (
   candidacyId: string,
@@ -31,17 +40,12 @@ export const generateFeasibilityFileByCandidacyId = async (
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     include: {
+      certification: { include: { competenceBlocs: true } },
       candidate: {
         include: {
-          birthDepartment: true,
-          country: true,
-          niveauDeFormationLePlusEleve: true,
           highestDegree: true,
-        },
-      },
-      certification: {
-        include: {
-          certificationAuthorityStructure: true,
+          niveauDeFormationLePlusEleve: true,
+          country: true,
         },
       },
       Feasibility: {
@@ -49,64 +53,45 @@ export const generateFeasibilityFileByCandidacyId = async (
           isActive: true,
         },
         include: {
-          certificationAuthority: true,
-          feasibilityUploadedPdf: true,
           dematerializedFeasibilityFile: {
             include: {
               dffCertificationCompetenceBlocs: {
-                orderBy: {
-                  certificationCompetenceBloc: {
-                    code: "asc",
-                  },
-                },
                 include: {
                   certificationCompetenceBloc: {
-                    include: {
-                      competences: {
-                        orderBy: {
-                          index: "asc",
-                        },
-                      },
-                    },
+                    include: { competences: true },
                   },
                 },
               },
-              dffCertificationCompetenceDetails: true,
               prerequisites: true,
+              dffCertificationCompetenceDetails: true,
+              attachments: { include: { file: true } },
+              swornStatementFile: true,
             },
           },
+          certificationAuthority: true,
         },
       },
-      experiences: {
-        orderBy: {
-          startedAt: "desc",
-        },
-      },
-      basicSkills: {
-        include: {
-          basicSkill: true,
-        },
-      },
-      trainings: {
-        include: {
-          training: true,
-        },
-      },
-      goals: {
-        include: {
-          goal: true,
-        },
-        orderBy: {
-          goal: {
-            order: "asc",
-          },
-        },
-      },
+      ccn: true,
+      goals: { include: { goal: true } },
+      experiences: true,
+      basicSkills: { include: { basicSkill: true } },
+      trainings: { include: { training: true } },
+      organism: true,
     },
   });
 
   if (!candidacy) {
     throw new Error("Candidature non trouvée");
+  }
+
+  const { certification, candidate } = candidacy;
+
+  if (!certification) {
+    throw new Error("Certification non trouvée");
+  }
+
+  if (!candidate) {
+    throw new Error("Candidat non trouvé");
   }
 
   const feasibility = candidacy.Feasibility[0];
@@ -132,11 +117,23 @@ export const generateFeasibilityFileByCandidacyId = async (
     eligibilityRequirement:
       dematerializedFeasibilityFile.eligibilityRequirement,
   });
+
   if (!isDFFReady) {
     throw new Error(
       "Dossier de faisabilité incomplet pour la génération du pdf",
     );
   }
+
+  const organism = candidacy.organism;
+  if (!organism) {
+    throw new Error("Organisme d'accompagnement non trouvé");
+  }
+
+  const { certificationAuthority } = feasibility;
+
+  const aapAvailableForCertification = await isAapAvailableForCertificationId({
+    certificationId: certification.id,
+  });
 
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
@@ -145,7 +142,12 @@ export const generateFeasibilityFileByCandidacyId = async (
       autoFirstPage: true,
       bufferPages: false,
       compress: true,
-      margins: { top: 40, bottom: 40, left: 40, right: 40 },
+      margins: {
+        top: pxToPt(40),
+        bottom: "80px",
+        left: pxToPt(100),
+        right: "40px",
+      },
     });
 
     const buffers: Buffer[] = [];
@@ -162,45 +164,123 @@ export const generateFeasibilityFileByCandidacyId = async (
 
     addDocumentHeader(doc);
 
-    if (dematerializedFeasibilityFile.eligibilityRequirement) {
-      addCandidacyAdmissibility(
-        doc,
+    const eligibilityLabelAndType = getEligibilityLabelAndType({
+      eligibilityRequirement:
         dematerializedFeasibilityFile.eligibilityRequirement,
-        dematerializedFeasibilityFile.eligibilityValidUntil,
+      eligibilitySituation:
+        dematerializedFeasibilityFile.eligibilityCandidateSituation,
+    });
+
+    const dffBlocCompetenceBlocsIds =
+      dematerializedFeasibilityFile.dffCertificationCompetenceBlocs.map(
+        (bloc) => bloc.certificationCompetenceBlocId,
       );
-    }
 
-    const { certification } = candidacy;
+    const certificationCompetenceBlocsWithSelectionStatus =
+      certification.competenceBlocs
+        .map((bloc) => ({
+          code: bloc.code ?? "",
+          label: bloc.label ?? "",
+          selected: dffBlocCompetenceBlocsIds.includes(bloc.id ?? false),
+        }))
+        .sort((a, b) =>
+          a.code.localeCompare(b.code, "fr", {
+            sensitivity: "base",
+          }),
+        );
 
-    if (certification) {
-      addCertification(doc, {
-        certification,
-        dematerializedFeasibilityFile,
-        isCertificationPartial: candidacy.isCertificationPartial,
-        certificationAuthorityStructure:
-          certification.certificationAuthorityStructure,
-      });
-    }
+    addContexteDemandeSection({
+      doc,
+      eligibilityLabelAndType,
+      certification,
+      aapAvailableForCertification,
+      option: dematerializedFeasibilityFile.option,
+      firstForeignLanguage: dematerializedFeasibilityFile.firstForeignLanguage,
+      secondForeignLanguage:
+        dematerializedFeasibilityFile.secondForeignLanguage,
+      isCertificationPartial: !!candidacy.isCertificationPartial,
+      certificationCompetenceBlocsWithSelectionStatus,
+      prerequisites:
+        dematerializedFeasibilityFile.prerequisites.map((p) => ({
+          label: p.label,
+          state: p.state,
+        })) ?? [],
+    });
 
-    const { candidate } = candidacy;
+    //dff competences blocs with competences (label and state)
+    const dffCompetenceBlocsWithCompetencesAndStates =
+      dematerializedFeasibilityFile.dffCertificationCompetenceBlocs.map(
+        (bloc) => {
+          const competences = bloc.certificationCompetenceBloc.competences
+            .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+            .map((competence) => {
+              const details =
+                dematerializedFeasibilityFile.dffCertificationCompetenceDetails.find(
+                  (detail) =>
+                    detail.certificationCompetenceId === competence.id,
+                );
+              return {
+                label: competence.label,
+                state: details?.state as
+                  | DFFCertificationCompetenceDetailsState
+                  | "TO_COMPLETE",
+              };
+            });
+          return {
+            code: bloc.certificationCompetenceBloc.code ?? "",
+            label: bloc.certificationCompetenceBloc.label,
+            text: bloc.text ?? "",
+            competences,
+          };
+        },
+      );
 
-    if (candidate) {
-      addCandidate(doc, { candidate });
-    }
-
-    const { goals } = candidacy;
-
-    if (goals.length > 0) {
-      addGoals(doc, { goals: goals.map(({ goal }) => goal) });
-    }
-
-    const { experiences } = candidacy;
-
-    if (experiences.length > 0) {
-      addExperiences(doc, { experiences });
-    }
-
-    addCompetenciesBlocs(doc, { dematerializedFeasibilityFile });
+    addProfilCandidatSection({
+      candidate: {
+        courtesyTitle: getCourtesyTitleFromGender(candidate.gender),
+        firstSecondAndThirdNames: [
+          candidate.firstname,
+          candidate.firstname2,
+          candidate.firstname3,
+        ]
+          .filter(Boolean)
+          .join(", "),
+        lastname: candidate.lastname,
+        birthdate: candidate.birthdate
+          ? formatDateWithoutTimestamp(candidate.birthdate)
+          : "",
+        birthcity: candidate.birthCity ?? "",
+        birthcountry: candidate.country?.label ?? "",
+        nationality: candidate.nationality ?? "",
+        highestDegreeLevel: candidate.highestDegree?.level?.toString() ?? "",
+        highestDegreeLabel: candidate.highestDegreeLabel ?? "",
+        niveauDeFormationLePlusEleveLevel:
+          candidate.niveauDeFormationLePlusEleve?.level?.toString() ?? "",
+        address: [
+          candidate.street,
+          candidate.addressComplement,
+          candidate.zip,
+          candidate.city,
+        ]
+          .filter(Boolean)
+          .join(" "),
+        email: candidate.email ?? "",
+        phone: candidate.phone ?? "",
+        candidacyCcnLabel: candidacy.ccn?.label ?? "",
+        candidacyCandidateTypologyLabel: getCandidateTypologyLabel(
+          candidacy.typology,
+        ),
+        goals: candidacy.goals.map((goal) => goal.goal.label),
+        experiences: candidacy.experiences.map((experience) => ({
+          title: experience.title,
+          description: experience.description,
+          durationLabel: getExperienceDurationLabel(experience.duration),
+          startedAtLabel: `Démarrée le ${formatDateWithoutTimestamp(experience.startedAt)}`,
+        })),
+        dffCompetenceBlocsWithCompetencesAndStates,
+      },
+      doc,
+    });
 
     const {
       basicSkills,
@@ -211,1072 +291,73 @@ export const generateFeasibilityFileByCandidacyId = async (
     } = candidacy;
 
     const sortedBasicSkills = [...basicSkills]
-      .map(({ basicSkill }) => basicSkill)
+      .map(({ basicSkill }) => basicSkill.label)
       .sort((first, second) =>
-        first.label.localeCompare(second.label, "fr", {
+        first.localeCompare(second, "fr", {
           sensitivity: "base",
         }),
       );
 
     const sortedTrainings = [...trainings]
-      .map(({ training }) => training)
+      .map(({ training }) => training.label)
       .sort((first, second) =>
-        first.label.localeCompare(second.label, "fr", {
+        first.localeCompare(second, "fr", {
           sensitivity: "base",
         }),
       );
 
-    addTraining(doc, {
+    addAccompagnementCandidatSection({
+      additionalHourCount: additionalHourCount ?? 0,
+      individualHourCount: individualHourCount ?? 0,
+      collectiveHourCount: collectiveHourCount ?? 0,
       basicSkills: sortedBasicSkills,
       trainings: sortedTrainings,
-      additionalHourCount,
-      individualHourCount,
-      collectiveHourCount,
+      doc,
     });
 
-    if (dematerializedFeasibilityFile.aapDecision) {
-      addDecision(doc, {
-        aapDecision: dematerializedFeasibilityFile.aapDecision,
-        aapDecisionComment: dematerializedFeasibilityFile.aapDecisionComment,
-      });
-    }
-
-    // Finalize PDF file
-    doc.end();
-  });
-};
-
-const addDocumentHeader = (doc: PDFKit.PDFDocument) => {
-  doc.image("assets/images/republique-francaise.png", doc.x, doc.y, {
-    fit: [117, 106],
-  });
-
-  doc.image("assets/images/france-vae.png", doc.x + 339, doc.y + 6, {
-    fit: [178, 94],
-  });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(30)
-    .fillColor("#161616")
-    .text("Dossier de faisabilité", doc.x, doc.y + 20 + 106, { align: "left" });
-};
-
-const addCandidacyAdmissibility = (
-  doc: PDFKit.PDFDocument,
-  eligibilityRequirement: DFFEligibilityRequirement,
-  eligibilityValidUntil: Date | null,
-) => {
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(14)
-    .fillColor("#161616")
-    .text("Recevabilité du candidat", doc.x + 24, doc.y + 20, {
-      align: "left",
-    });
-
-  doc.image("assets/images/folder-check-fill.png", doc.x - 24, doc.y - 20, {
-    fit: [20, 20],
-  });
-
-  if (
-    eligibilityRequirement ==
-    DFFEligibilityRequirement.FULL_ELIGIBILITY_REQUIREMENT
-  ) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .table({
-        position: { x: doc.x - 24, y: doc.y + 10 },
-        columnStyles: [255],
-        data: [
-          [
-            {
-              border: 0,
-              backgroundColor: "#e8edff",
-              textColor: "#0063cb",
-              text: "      ACCÈS AU DOSSIER DE FAISABILITÉ INTÉGRAL",
-              // align: "center",
-            },
-          ],
-        ],
-      });
-
-    doc.image("assets/images/info-fill.png", doc.x + 4, doc.y - 15, {
-      fit: [12, 12],
-    });
-  } else if (
-    eligibilityRequirement ==
-    DFFEligibilityRequirement.PARTIAL_ELIGIBILITY_REQUIREMENT
-  ) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .table({
-        position: { x: doc.x - 24, y: doc.y + 10 },
-        columnStyles: [243],
-        data: [
-          [
-            {
-              border: 0,
-              backgroundColor: "#feebd0",
-              textColor: "#695240",
-              text: "      ACCÈS AU DOSSIER DE FAISABILITÉ ADAPTÉ",
-              // align: "center",
-            },
-          ],
-        ],
-      });
-
-    doc.image("assets/images/flashlight-fill.png", doc.x + 4, doc.y - 15, {
-      fit: [12, 12],
-    });
-  }
-
-  if (eligibilityValidUntil) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`Date de fin de validité`, doc.x, doc.y + 10, {
-        align: "left",
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(formatDateWithoutTimestamp(eligibilityValidUntil), {
-        align: "left",
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(12)
-      .table({
-        position: { x: doc.x, y: doc.y + 10 },
-        data: [
-          [
-            {
-              border: [false, false, false, true],
-              borderColor: "#6a6af4",
-              backgroundColor: "#eeeeee",
-              padding: { vertical: "16px", horizontal: "24px" },
-              text: "Le candidat s'engage à respecter le délai de fin de validité de la recevabilité",
-            },
-          ],
-        ],
-      });
-  }
-};
-
-function getGenderPrefix(gender: Gender) {
-  switch (gender) {
-    case Gender.man:
-      return "M.";
-    case Gender.woman:
-      return "Mme";
-    case Gender.undisclosed:
-      return "";
-  }
-}
-
-function getGenderBornLabel(gender: Gender) {
-  switch (gender) {
-    case Gender.man:
-      return "Né";
-    case Gender.woman:
-      return "Née";
-    case Gender.undisclosed:
-      return "Né";
-  }
-}
-
-const addCandidate = (
-  doc: PDFKit.PDFDocument,
-  params: {
-    candidate: Candidate & {
-      birthDepartment: Department | null;
-      country: Country | null;
-      niveauDeFormationLePlusEleve: Degree | null;
-      highestDegree: Degree | null;
-    };
-  },
-) => {
-  const { candidate } = params;
-
-  const {
-    firstname,
-    lastname,
-    email,
-    gender,
-    firstname2,
-    firstname3,
-    givenName,
-    birthdate,
-    birthCity,
-    birthDepartment,
-    country,
-    nationality,
-    phone,
-    street,
-    zip,
-    city,
-    niveauDeFormationLePlusEleve,
-    highestDegree,
-    highestDegreeLabel,
-  } = candidate;
-
-  const genderLabel = gender ? getGenderPrefix(gender) : "";
-
-  let nameLabel = "";
-
-  if (genderLabel) {
-    nameLabel = `${genderLabel} `;
-  }
-
-  nameLabel = `${nameLabel}${givenName ? givenName : lastname} ${firstname}`;
-
-  if (firstname2) {
-    nameLabel = `${nameLabel}, ${firstname2}`;
-  }
-
-  if (firstname3) {
-    nameLabel = `${nameLabel}, ${firstname3}`;
-  }
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(14)
-    .fillColor("#161616")
-    .text(nameLabel, doc.x + 24, doc.y + 20, { align: "left" });
-
-  doc.image("assets/images/user-fill.png", doc.x - 24, doc.y - 20, {
-    fit: [20, 20],
-  });
-
-  const bornLabel = gender ? getGenderBornLabel(gender) : "";
-  const isFrance = country ? country?.label == "France" : false;
-
-  let birthLabel = "";
-
-  if (givenName) {
-    birthLabel = `${bornLabel} ${lastname}, `;
-  }
-
-  if (birthdate) {
-    const formattedBirthdate = formatDateWithoutTimestamp(birthdate);
-
-    birthLabel = `${birthLabel}le : ${formattedBirthdate} `;
-  }
-
-  birthLabel = `${birthLabel}à ${birthCity}`;
-
-  if (country && isFrance && birthDepartment) {
-    birthLabel = `${birthLabel}${birthCity ? ", " : ""}${birthDepartment.label} (${birthDepartment.code}) `;
-  }
-
-  if (country && !isFrance) {
-    birthLabel = `${birthLabel}${birthCity ? ", " : ""}${country.label}`;
-  }
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(birthLabel, doc.x - 24, doc.y, {
-      align: "left",
-    });
-
-  if (nationality) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`Nationalité ${nationality}`, {
-        align: "left",
-      });
-  }
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(14)
-    .fillColor("#161616")
-    .text("Contact", doc.x, doc.y + 20, { align: "left" });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`Adresse postale : ${street} ${zip} ${city}`, {
-      align: "left",
-    });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`Adresse électronique : ${email}`, {
-      align: "left",
-    });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`Téléphone : ${phone}`, {
-      align: "left",
-    });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(14)
-    .fillColor("#161616")
-    .text("Niveau de formation", doc.x, doc.y + 20, { align: "left" });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`Niveau de formation le plus élevé`, {
-      align: "left",
-    });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`${niveauDeFormationLePlusEleve?.level || "Inconnu"}`, {
-      align: "left",
-    });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`Niveau de la certification obtenue la plus élevée`, {
-      align: "left",
-    });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`${highestDegree?.level || "Inconnu"}`, {
-      align: "left",
-    });
-
-  if (highestDegreeLabel) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`Intitulé de la certification la plus élevée obtenue`, {
-        align: "left",
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`${highestDegreeLabel}`, {
-        align: "left",
-      });
-  }
-};
-
-type CompetenceBloc = DFFCertificationCompetenceBloc & {
-  certificationCompetenceBloc: CertificationCompetenceBloc & {
-    competences: CertificationCompetence[];
-  };
-};
-
-const addCertification = (
-  doc: PDFKit.PDFDocument,
-  params: {
-    certification: Certification;
-    dematerializedFeasibilityFile: DematerializedFeasibilityFile & {
-      dffCertificationCompetenceBlocs: CompetenceBloc[];
-      dffCertificationCompetenceDetails: DFFCertificationCompetenceDetails[];
-      prerequisites: DFFPrerequisite[];
-    };
-    isCertificationPartial: boolean | null;
-    certificationAuthorityStructure: CertificationAuthorityStructure | null;
-  },
-) => {
-  const {
-    certification,
-    dematerializedFeasibilityFile,
-    isCertificationPartial,
-    certificationAuthorityStructure,
-  } = params;
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(22)
-    .fillColor("#161616")
-    .text("Certification visée", doc.x + 24, doc.y + 20, { align: "left" });
-
-  doc.image("assets/images/award-fill.png", doc.x - 24, doc.y - 23, {
-    fit: [20, 20],
-  });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(14)
-    .fillColor("#161616")
-    .text(`${certification.label}`, doc.x - 24, doc.y + 20, { align: "left" });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Light.otf")
-    .fontSize(10)
-    .fillColor("#666666")
-    .text(`RNCP ${certification.rncpId}`, { align: "left" });
-
-  if (certificationAuthorityStructure) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text("Certificateur :", doc.x, doc.y + 10, {
-        align: "left",
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(certificationAuthorityStructure.label, {
-        align: "left",
-      });
-  }
-
-  if (dematerializedFeasibilityFile.option) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`Option ou parcours :`, doc.x, doc.y + 10, {
-        align: "left",
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`${dematerializedFeasibilityFile.option}`, {
-        align: "left",
-      });
-  }
-
-  if (dematerializedFeasibilityFile.firstForeignLanguage) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`Langue vivante 1 :`, doc.x, doc.y + 10, {
-        align: "left",
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`${dematerializedFeasibilityFile.firstForeignLanguage}`, {
-        align: "left",
-      });
-  }
-
-  if (dematerializedFeasibilityFile.secondForeignLanguage) {
-    const docX = dematerializedFeasibilityFile.firstForeignLanguage
-      ? doc.x + 240
-      : doc.x;
-    const docY = dematerializedFeasibilityFile.firstForeignLanguage
-      ? doc.y - 38
-      : doc.y + 10;
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`Langue vivante 2 :`, docX, docY + 10, {
-        align: "left",
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`${dematerializedFeasibilityFile.secondForeignLanguage}`, {
-        align: "left",
-      });
-  }
-
-  const isCertificationPartialLabel = isCertificationPartial
-    ? "Un ou plusieurs bloc(s) de compétences de la certification"
-    : "La certification dans sa totalité";
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(12)
-    .table({
-      position: {
-        x:
-          dematerializedFeasibilityFile.firstForeignLanguage &&
-          dematerializedFeasibilityFile.secondForeignLanguage
-            ? 40
-            : doc.x,
-        y: doc.y + 10,
-      },
-      data: [
-        [
-          {
-            border: [false, false, false, true],
-            borderColor: "#6a6af4",
-            backgroundColor: "#eeeeee",
-            padding: { vertical: "16px", horizontal: "24px" },
-            text: isCertificationPartialLabel,
-          },
-        ],
+    addAvisEtDocumentsSection({
+      doc,
+      aapDecision: dematerializedFeasibilityFile.aapDecision,
+      aapDecisionComment:
+        dematerializedFeasibilityFile.aapDecisionComment ?? "",
+      candidateDecisionComment:
+        dematerializedFeasibilityFile.candidateDecisionComment ?? "",
+      attachments: [
+        ...dematerializedFeasibilityFile.attachments.map(
+          (attachment) => attachment.file.name,
+        ),
+        ...(dematerializedFeasibilityFile.swornStatementFile
+          ? [dematerializedFeasibilityFile.swornStatementFile.name]
+          : []),
       ],
     });
 
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(14)
-    .fillColor("#161616")
-    .text("Prérequis obligatoires", doc.x, doc.y + 20, { align: "left" });
-
-  if (dematerializedFeasibilityFile.prerequisites.length == 0) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`Il n'y a pas de prérequis obligatoires pour cette certification`, {
-        align: "left",
-      });
-  } else {
-    const acquired = dematerializedFeasibilityFile.prerequisites.filter(
-      (p) => p.state == "ACQUIRED",
-    );
-    const inProgress = dematerializedFeasibilityFile.prerequisites.filter(
-      (p) => p.state == "IN_PROGRESS",
-    );
-
-    if (acquired.length > 0) {
-      doc
-        .font("assets/fonts/Marianne/Marianne-Medium.otf")
-        .fontSize(10)
-        .table({
-          position: { x: doc.x, y: doc.y + 20 },
-          data: [
-            [
-              {
-                border: 0,
-                backgroundColor: "#e3e3fd",
-                textColor: "#000091",
-                padding: { vertical: "16px", horizontal: "24px" },
-                text: "Acquis",
-              },
-            ],
-          ],
-        });
-
-      for (let index = 0; index < acquired.length; index++) {
-        const prerequisite = acquired[index];
-
-        doc
-          .font("assets/fonts/Marianne/Marianne-Regular.otf")
-          .fontSize(10)
-          .fillColor("#3a3a3a")
-          .text(
-            `${prerequisite.label.replace(/(\r\n|\n|\r)/gm, "")}`,
-            doc.x,
-            doc.y + 10,
-            {
-              align: "left",
-            },
-          );
-      }
-    }
-
-    if (inProgress.length > 0) {
-      doc
-        .font("assets/fonts/Marianne/Marianne-Medium.otf")
-        .fontSize(10)
-        .table({
-          position: { x: doc.x, y: doc.y + 20 },
-          data: [
-            [
-              {
-                border: 0,
-                backgroundColor: "#e3e3fd",
-                textColor: "#000091",
-                padding: { vertical: "16px", horizontal: "24px" },
-                text: "En cours",
-              },
-            ],
-          ],
-        });
-
-      for (let index = 0; index < inProgress.length; index++) {
-        const prerequisite = inProgress[index];
-
-        doc
-          .font("assets/fonts/Marianne/Marianne-Regular.otf")
-          .fontSize(10)
-          .fillColor("#3a3a3a")
-          .text(
-            `${prerequisite.label.replace(/(\r\n|\n|\r)/gm, "")}`,
-            doc.x,
-            doc.y + 10,
-            {
-              align: "left",
-            },
-          );
-      }
-    }
-  }
-};
-
-const durationLabel = {
-  betweenOneAndThreeYears: "entre 1 et 3 ans",
-  lessThanOneYear: "moins de 1 an",
-  moreThanFiveYears: "plus de 5 ans",
-  moreThanTenYears: "plus de 10 ans",
-  moreThanThreeYears: "plus de 3 ans",
-  unknown: "inconnue",
-};
-
-const addExperiences = (
-  doc: PDFKit.PDFDocument,
-  params: { experiences: Experience[] },
-) => {
-  const { experiences } = params;
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(22)
-    .fillColor("#161616")
-    .text("Expériences professionnelles", doc.x + 28, doc.y + 20, {
-      align: "left",
-    });
-
-  doc.image("assets/images/briefcase-fill.png", doc.x - 28, doc.y - 23, {
-    fit: [20, 20],
-  });
-
-  for (let index = 0; index < experiences.length; index++) {
-    const experience = experiences[index];
-
-    const docX = index == 0 ? -28 : 0;
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Medium.otf")
-      .fontSize(10)
-      .table({
-        position: { x: doc.x + docX, y: doc.y + 20 },
-        data: [
-          [
-            {
-              border: 0,
-              backgroundColor: "#e3e3fd",
-              textColor: "#000091",
-              padding: { vertical: "16px", horizontal: "24px" },
-              text: `Expérience ${index + 1} - ${experience.title}`,
-            },
-          ],
-        ],
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(
-        `Démarrée le ${formatDateWithoutTimestamp(experience.startedAt, "dd MMMM yyyy")}`,
-        doc.x,
-        doc.y + 10,
-        {
-          align: "left",
-        },
-      );
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`Expérience ${durationLabel[experience?.duration]}`, {
-        align: "left",
-      });
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`${experience?.description}`, {
-        align: "left",
-      });
-  }
-};
-
-const addCompetenciesBlocs = (
-  doc: PDFKit.PDFDocument,
-  params: {
-    dematerializedFeasibilityFile: DematerializedFeasibilityFile & {
-      dffCertificationCompetenceBlocs: CompetenceBloc[];
-      dffCertificationCompetenceDetails: DFFCertificationCompetenceDetails[];
-    };
-  },
-) => {
-  const { dematerializedFeasibilityFile } = params;
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(14)
-    .fillColor("#161616")
-    .text("Blocs de compétences", doc.x, doc.y + 20, { align: "left" });
-
-  const competenceBlocs =
-    dematerializedFeasibilityFile.dffCertificationCompetenceBlocs;
-
-  for (let indexBloc = 0; indexBloc < competenceBlocs.length; indexBloc++) {
-    const competenceBloc = competenceBlocs[indexBloc];
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Medium.otf")
-      .fontSize(10)
-      .table({
-        position: { x: doc.x, y: doc.y + 20 },
-        data: [
-          [
-            {
-              border: 0,
-              backgroundColor: "#e3e3fd",
-              textColor: "#000091",
-              padding: { vertical: "16px", horizontal: "24px" },
-              text: `${competenceBloc.certificationCompetenceBloc.code} - ${competenceBloc.certificationCompetenceBloc.label}`,
-            },
-          ],
-        ],
-      });
-
-    const competences = competenceBloc.certificationCompetenceBloc.competences;
-
-    for (
-      let indexCompetence = 0;
-      indexCompetence < competences.length;
-      indexCompetence++
-    ) {
-      const competence = competences[indexCompetence];
-
-      const state =
-        dematerializedFeasibilityFile.dffCertificationCompetenceDetails.find(
-          (detail) => detail.certificationCompetenceId == competence.id,
-        )?.state || "TO_COMPLETE";
-
-      if (state == "YES") {
-        doc
-          .font("assets/fonts/Marianne/Marianne-Bold.otf")
-          .fontSize(10)
-          .table({
-            position: { x: doc.x, y: doc.y + 20 },
-            columnStyles: [30],
-            data: [
-              [
-                {
-                  border: 0,
-                  backgroundColor: "#b8fec9",
-                  textColor: "#18753c",
-                  text: "OUI",
-                  align: "center",
-                },
-              ],
-            ],
-          });
-      } else if (state == "NO") {
-        doc
-          .font("assets/fonts/Marianne/Marianne-Bold.otf")
-          .fontSize(10)
-          .table({
-            position: { x: doc.x, y: doc.y + 20 },
-            columnStyles: [36],
-            data: [
-              [
-                {
-                  border: 0,
-                  backgroundColor: "#ffe9e9",
-                  textColor: "#ce0500",
-                  text: "NON",
-                  align: "center",
-                },
-              ],
-            ],
-          });
-      } else if (state == "PARTIALLY") {
-        doc
-          .font("assets/fonts/Marianne/Marianne-Bold.otf")
-          .fontSize(10)
-          .table({
-            position: { x: doc.x, y: doc.y + 20 },
-            columnStyles: [92],
-            data: [
-              [
-                {
-                  border: 0,
-                  backgroundColor: "#feebd0",
-                  textColor: "#695240",
-                  text: "PARTIELLEMENT",
-                  align: "center",
-                },
-              ],
-            ],
-          });
-      } else if (state == "TO_COMPLETE") {
-        doc
-          .font("assets/fonts/Marianne/Marianne-Bold.otf")
-          .fontSize(10)
-          .table({
-            position: { x: doc.x, y: doc.y + 20 },
-            columnStyles: [30],
-            data: [
-              [
-                {
-                  border: 0,
-                  backgroundColor: "#ffe9e6",
-                  textColor: "#b34000",
-                  text: "À COMPLÉTER",
-                  align: "center",
-                },
-              ],
-            ],
-          });
-      }
-
-      doc
-        .font("assets/fonts/Marianne/Marianne-Bold.otf")
-        .fontSize(10)
-        .fillColor("#161616")
-        .text(`${competence.label.replace(/(\r\n|\n|\r)/gm, "")}`, {
-          align: "left",
-        });
-    }
-
-    if (competenceBloc.text) {
-      doc
-        .font("assets/fonts/Marianne/Marianne-Regular.otf")
-        .fontSize(10)
-        .fillColor("#3a3a3a")
-        .text(`${competenceBloc.text}`, doc.x, doc.y + 20, {
-          align: "left",
-        });
-    }
-  }
-};
-
-const addTraining = (
-  doc: PDFKit.PDFDocument,
-  params: {
-    basicSkills: BasicSkill[];
-    trainings: Training[];
-    additionalHourCount: number | null;
-    individualHourCount: number | null;
-    collectiveHourCount: number | null;
-  },
-) => {
-  const {
-    basicSkills,
-    trainings,
-    additionalHourCount,
-    individualHourCount,
-    collectiveHourCount,
-  } = params;
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(22)
-    .fillColor("#161616")
-    .text("Parcours envisagé", doc.x + 28, doc.y + 20, { align: "left" });
-
-  doc.image("assets/images/time-fill.png", doc.x - 28, doc.y - 23, {
-    fit: [20, 20],
-  });
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(
-      `Accompagnement individuel : ${individualHourCount || 0}h`,
-      doc.x - 28,
-      doc.y,
-      {
-        align: "left",
+    addContactsSection({
+      aapContactInfo: {
+        label: organism.nomPublic ?? organism.label,
+        address: [
+          organism.adresseNumeroEtNomDeRue,
+          organism.adresseInformationsComplementaires,
+          organism.adresseCodePostal,
+          organism.adresseVille,
+        ]
+          .filter(Boolean)
+          .join(" "),
+        email: organism.emailContact ?? "",
+        phone: organism.telephone ?? "",
       },
-    );
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`Accompagnement collectif : ${collectiveHourCount || 0}h`, {
-      align: "left",
+      certificationAuthorityContactInfo: {
+        label: certificationAuthority?.label ?? "",
+        contactName: certificationAuthority?.contactFullName ?? "",
+        contactPhone: certificationAuthority?.contactPhone ?? "",
+        contactEmail: certificationAuthority?.contactEmail ?? "",
+      },
+      doc,
     });
 
-  doc
-    .font("assets/fonts/Marianne/Marianne-Regular.otf")
-    .fontSize(10)
-    .fillColor("#3a3a3a")
-    .text(`Formation : ${additionalHourCount || 0}h`, {
-      align: "left",
-    });
-
-  if (trainings.length > 0) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(14)
-      .fillColor("#161616")
-      .text("Formations obligatoires", doc.x, doc.y + 20, { align: "left" });
-
-    for (let index = 0; index < trainings.length; index++) {
-      const training = trainings[index];
-
-      doc
-        .font("assets/fonts/Marianne/Marianne-Regular.otf")
-        .fontSize(10)
-        .fillColor("#3a3a3a")
-        .text(`${training.label}`, {
-          align: "left",
-        });
-    }
-  }
-
-  if (basicSkills.length > 0) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(14)
-      .fillColor("#161616")
-      .text("Savoir de base", doc.x, doc.y + 20, { align: "left" });
-
-    for (let index = 0; index < basicSkills.length; index++) {
-      const basicSkill = basicSkills[index];
-
-      doc
-        .font("assets/fonts/Marianne/Marianne-Regular.otf")
-        .fontSize(10)
-        .fillColor("#3a3a3a")
-        .text(`${basicSkill.label}`, {
-          align: "left",
-        });
-    }
-  }
-};
-
-const addGoals = (
-  doc: PDFKit.PDFDocument,
-  params: {
-    goals: Goal[];
-  },
-) => {
-  const { goals } = params;
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(22)
-    .fillColor("#161616")
-    .text("Objectifs poursuivis par le candidat", doc.x + 28, doc.y + 20, {
-      align: "left",
-    });
-
-  doc.image("assets/images/focus-2-fill.png", doc.x - 28, doc.y - 23, {
-    fit: [20, 20],
+    doc.end();
   });
-
-  for (let index = 0; index < goals.length; index++) {
-    const goal = goals[index];
-
-    const docX = index == 0 ? -28 : 0;
-
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`${goal.label}`, doc.x + docX, doc.y, {
-        align: "left",
-      });
-  }
 };
-
-const addDecision = (
-  doc: PDFKit.PDFDocument,
-  params: {
-    aapDecision: DFFDecision;
-    aapDecisionComment: string | null;
-  },
-) => {
-  const { aapDecision, aapDecisionComment } = params;
-
-  doc
-    .font("assets/fonts/Marianne/Marianne-Bold.otf")
-    .fontSize(22)
-    .fillColor("#161616")
-    .text("Avis de faisabilité", doc.x + 28, doc.y + 20, { align: "left" });
-
-  doc.image("assets/images/thumb-up-fill.png", doc.x - 28, doc.y - 23, {
-    fit: [20, 20],
-  });
-
-  if (aapDecision == "FAVORABLE") {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .table({
-        position: { x: doc.x - 28, y: doc.y + 10 },
-        columnStyles: [70],
-        data: [
-          [
-            {
-              border: 0,
-              backgroundColor: "#b8fec9",
-              textColor: "#18753c",
-              text: "FAVORABLE",
-              align: "center",
-            },
-          ],
-        ],
-      });
-  } else if (aapDecision == "UNFAVORABLE") {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Bold.otf")
-      .fontSize(10)
-      .table({
-        position: { x: doc.x - 28, y: doc.y + 10 },
-        columnStyles: [98],
-        data: [
-          [
-            {
-              border: 0,
-              backgroundColor: "#fee7fc",
-              textColor: "#6e445a",
-              text: "NON FAVORABLE",
-              align: "center",
-            },
-          ],
-        ],
-      });
-  }
-
-  if (aapDecisionComment) {
-    doc
-      .font("assets/fonts/Marianne/Marianne-Regular.otf")
-      .fontSize(10)
-      .fillColor("#3a3a3a")
-      .text(`${aapDecisionComment}`, doc.x, doc.y + 10, {
-        align: "left",
-      });
-  }
-};
-
 type CheckIsDFFReadyArgs = {
   attachmentsPartComplete: boolean;
   certificationPartComplete: boolean;
@@ -1307,4 +388,760 @@ const checkIsDFFReady = ({
   }
 
   return isDFFReady;
+};
+
+const addContexteDemandeSection = ({
+  doc,
+  eligibilityLabelAndType,
+  certification,
+  aapAvailableForCertification,
+  option,
+  firstForeignLanguage,
+  secondForeignLanguage,
+  isCertificationPartial,
+  certificationCompetenceBlocsWithSelectionStatus,
+  prerequisites,
+}: {
+  doc: PDFKit.PDFDocument;
+  eligibilityLabelAndType: { label: string; type: "info" | "warning" };
+  certification: { label: string; rncpId: string };
+  aapAvailableForCertification: boolean;
+  option: string | null;
+  firstForeignLanguage: string | null;
+  secondForeignLanguage: string | null;
+  isCertificationPartial: boolean;
+  certificationCompetenceBlocsWithSelectionStatus: {
+    code: string;
+    label: string;
+    selected: boolean;
+  }[];
+  prerequisites: { label: string; state: PrerequisiteState }[];
+}) => {
+  addSection({
+    doc,
+    title: "Contexte de la demande",
+    iconPath: `${ASSETS_PATH}/images/data-visualization.png`,
+    content: (doc) => {
+      addNatureDemandeSubSection({ doc, eligibilityLabelAndType });
+      addCertificationSubSection({
+        doc,
+        certification,
+        aapAvailableForCertification,
+        option,
+        firstForeignLanguage,
+        secondForeignLanguage,
+        isCertificationPartial,
+        certificationCompetenceBlocsWithSelectionStatus,
+      });
+      addCertificationPrerequisitesSubSection({
+        doc,
+        prerequisites,
+      });
+    },
+  });
+};
+
+const addNatureDemandeSubSection = ({
+  doc,
+  eligibilityLabelAndType,
+}: {
+  doc: PDFKit.PDFDocument;
+  eligibilityLabelAndType: { label: string; type: "info" | "warning" };
+}) => {
+  const { backgroundColor, textColor, iconPath } =
+    eligibilityLabelAndType.type === "info"
+      ? {
+          backgroundColor: "#e8edff",
+          textColor: "#0063cb",
+          iconPath: `${ASSETS_PATH}/images/info-fill.png`,
+        }
+      : {
+          backgroundColor: "#feebd0",
+          textColor: "#695240",
+          iconPath: `${ASSETS_PATH}/images/flashlight-fill.png`,
+        };
+
+  addSubSection({
+    title: "Nature de la demande",
+    doc,
+    content: (doc) => {
+      doc
+        .font("assets/fonts/Marianne/Marianne-Bold.otf")
+        .fontSize(8)
+        .table({
+          columnStyles: [doc.widthOfString(eligibilityLabelAndType.label) + 25],
+          data: [
+            [
+              {
+                border: 0,
+                backgroundColor,
+                textColor,
+                text: "        " + eligibilityLabelAndType.label,
+              },
+            ],
+          ],
+        });
+
+      doc.image(iconPath, doc.x + 2, doc.y - 13, {
+        fit: [12, 12],
+      });
+    },
+  });
+};
+
+const addCertificationSubSection = ({
+  doc,
+  certification,
+  aapAvailableForCertification,
+  option,
+  firstForeignLanguage,
+  secondForeignLanguage,
+  isCertificationPartial,
+  certificationCompetenceBlocsWithSelectionStatus,
+}: {
+  doc: PDFKit.PDFDocument;
+  certification: { label: string; rncpId: string };
+  aapAvailableForCertification: boolean;
+  option: string | null;
+  firstForeignLanguage: string | null;
+  secondForeignLanguage: string | null;
+  isCertificationPartial: boolean;
+  certificationCompetenceBlocsWithSelectionStatus: {
+    code: string;
+    label: string;
+    selected: boolean;
+  }[];
+}) => {
+  addSubSection({
+    title: "Informations sur la certification professionnelle visée",
+    doc,
+    content: (doc) => {
+      addFrame({
+        doc,
+        startInPt: pxToPt(140),
+        widthInPt: pxToPt(1200),
+        content: (doc) => {
+          doc.moveDown(0.75);
+          addTag({
+            doc,
+            text: aapAvailableForCertification
+              ? "VAE en autonomie ou accompagnée"
+              : "VAE en autonomie",
+            startInPt: doc.x + pxToPt(32),
+          });
+          doc.image(
+            `${ASSETS_PATH}/images/verified-badge.png`,
+            doc.x,
+            doc.y + pxToPt(20),
+            {
+              fit: [pxToPt(16), pxToPt(16)],
+            },
+          );
+          doc
+            .font("assets/fonts/Marianne/Marianne-Light.otf")
+            .fontSize(6)
+            .text(
+              `       RNCP ${certification.rncpId}`,
+              doc.x,
+              doc.y + pxToPt(16),
+            );
+
+          doc
+            .font("assets/fonts/Marianne/Marianne-Bold.otf")
+            .fontSize(11)
+            .text(certification.label, doc.x, doc.y + pxToPt(16), {
+              width: pxToPt(1096),
+            });
+        },
+      });
+
+      doc.moveDown(1);
+
+      addInfoText({
+        title: "Option ou parcours :",
+        value: option ?? "",
+        doc,
+        maxWidthInPt: pxToPt(1200),
+      });
+
+      doc.moveDown(1);
+
+      const oldY = doc.y;
+
+      const oldX = doc.x;
+
+      addInfoText({
+        title: "Langue vivante 1 :",
+        value: firstForeignLanguage ?? "",
+        doc,
+      });
+
+      addInfoText({
+        title: "Langue vivante 2 :",
+        value: secondForeignLanguage ?? "",
+        x: doc.x + pxToPt(300),
+        y: oldY,
+        doc,
+      });
+
+      doc.moveDown(1.5);
+
+      addCallout({
+        title: "Le candidat vise",
+        description: isCertificationPartial
+          ? "Un ou plusieurs bloc(s) de compétences de la certification"
+          : "La certification dans sa totalité",
+        x: oldX,
+        doc,
+        widthInPt: pxToPt(1200),
+      });
+
+      doc.moveDown(1.5);
+
+      addTitledBlock({
+        doc,
+        title: "Choix des blocs de compétences",
+        content: (doc) =>
+          certificationCompetenceBlocsWithSelectionStatus.forEach((bloc) => {
+            addDisabledCheckbox({
+              label: `${bloc.code} - ${bloc.label}`,
+              checked: bloc.selected,
+              doc,
+            });
+            doc.moveDown(0.5);
+          }),
+        widthInPt: pxToPt(1200),
+      });
+    },
+  });
+};
+
+const addCertificationPrerequisitesSubSection = ({
+  doc,
+  prerequisites,
+}: {
+  doc: PDFKit.PDFDocument;
+  prerequisites: { label: string; state: PrerequisiteState }[];
+}) => {
+  addSubSection({
+    title:
+      "Pré-requis à la délivrance de la certification professionnelle visée ",
+    doc,
+    content: (doc) => {
+      if (prerequisites.length === 0) {
+        doc
+          .fontSize(8)
+          .font("assets/fonts/Marianne/Marianne-Regular.otf")
+          .fillColor("black")
+          .text(
+            "Il n'y a pas de prérequis obligatoires pour cette certification",
+            doc.x,
+            doc.y,
+          );
+        return;
+      }
+      addTitledBlock({
+        doc,
+        title: "Oui",
+        widthInPt: pxToPt(1200),
+        content: (doc) => {
+          prerequisites
+            .filter((p) => p.state === "ACQUIRED")
+            .forEach((prerequisite) =>
+              doc
+                .fontSize(8)
+                .font("assets/fonts/Marianne/Marianne-Light.otf")
+                .text("- " + prerequisite.label, doc.x, doc.y),
+            );
+        },
+      });
+      doc.moveDown(1);
+      addTitledBlock({
+        doc,
+        title: "Non",
+        widthInPt: pxToPt(1200),
+        content: (doc) => {
+          prerequisites
+            .filter((p) => p.state === "IN_PROGRESS")
+            .forEach((prerequisite) =>
+              doc
+                .fontSize(8)
+                .font("assets/fonts/Marianne/Marianne-Light.otf")
+                .text("- " + prerequisite.label, doc.x, doc.y),
+            );
+        },
+      });
+    },
+  });
+};
+
+const addProfilCandidatSection = ({
+  doc,
+  candidate: {
+    courtesyTitle,
+    firstSecondAndThirdNames,
+    lastname,
+    birthdate,
+    birthcity,
+    birthcountry,
+    nationality,
+    highestDegreeLevel,
+    highestDegreeLabel,
+    niveauDeFormationLePlusEleveLevel,
+    address,
+    email,
+    phone,
+    candidacyCcnLabel,
+    candidacyCandidateTypologyLabel,
+    goals,
+    experiences,
+    dffCompetenceBlocsWithCompetencesAndStates,
+  },
+}: {
+  candidate: {
+    courtesyTitle: string;
+    firstSecondAndThirdNames: string;
+    lastname: string;
+    birthdate: string;
+    birthcity: string;
+    birthcountry: string;
+    nationality: string;
+    highestDegreeLevel: string;
+    highestDegreeLabel: string;
+    niveauDeFormationLePlusEleveLevel: string;
+    address: string;
+    email: string;
+    phone: string;
+    candidacyCcnLabel: string;
+    candidacyCandidateTypologyLabel: string;
+    goals: string[];
+    experiences: {
+      title: string;
+      description: string;
+      durationLabel: string;
+      startedAtLabel: string;
+    }[];
+    dffCompetenceBlocsWithCompetencesAndStates: {
+      code: string;
+      label: string;
+      text: string;
+      competences: {
+        label: string;
+        state: DFFCertificationCompetenceDetailsState | "TO_COMPLETE";
+      }[];
+    }[];
+  };
+  doc: PDFKit.PDFDocument;
+}) => {
+  addSection({
+    doc,
+    title: "Profil du candidat",
+    iconPath: `${ASSETS_PATH}/images/avatar.png`,
+    content: (doc) => {
+      addSubSection({
+        title: "Informations sur le candidat",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1200),
+            data: [
+              { title: "Civilité :", value: courtesyTitle },
+              { title: "Nom de naissance :", value: lastname },
+              { title: "Prénoms :", value: firstSecondAndThirdNames },
+              {
+                title: "Date de naissance :",
+                value: birthdate,
+              },
+              { title: "Ville de naissance :", value: birthcity },
+              { title: "Pays de naissance :", value: birthcountry },
+              { title: "Nationalité :", value: nationality },
+            ],
+            doc,
+          });
+        },
+      });
+      doc.moveDown(1);
+      addSubSection({
+        title: "Niveau de formation",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1200),
+            data: [
+              {
+                title: "Niveau de formation le plus élevé :",
+                value: niveauDeFormationLePlusEleveLevel,
+              },
+              {
+                title: "Niveau de la certification obtenue la plus élevée :",
+                value: highestDegreeLevel,
+              },
+              {
+                title: "Intitulé de la certification la plus élevée obtenue :",
+                value: highestDegreeLabel,
+              },
+            ],
+            doc,
+          });
+        },
+      });
+      addSubSection({
+        title: "Informations de contact du candidat",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1200),
+            data: [
+              { title: "Adresse postale :", value: address },
+              { title: "Adresse électronique :", value: email },
+              { title: "Téléphone :", value: phone },
+            ],
+            doc,
+          });
+        },
+      });
+      addSubSection({
+        title: "Statut",
+        doc,
+        content: (doc) => {
+          doc
+            .fontSize(8)
+            .font("assets/fonts/Marianne/Marianne-Regular.otf")
+            .text(candidacyCandidateTypologyLabel, doc.x, doc.y);
+          doc.moveDown(1);
+          addCallout({
+            title:
+              "Identifiant de la Convention collective de l’employeur du candidat",
+            description: candidacyCcnLabel,
+            x: doc.x,
+            doc,
+            widthInPt: pxToPt(1200),
+          });
+        },
+      });
+      addSubSection({
+        title: "Objectifs du candidat",
+        doc,
+        content: (doc) => {
+          goals.forEach((goal) => {
+            doc
+              .fontSize(8)
+              .font("assets/fonts/Marianne/Marianne-Regular.otf")
+              .text("- " + goal, doc.x, doc.y);
+            doc.moveDown(0.5);
+          });
+        },
+      });
+      addSubSection({
+        title: "Expériences",
+        doc,
+        content: (doc) => {
+          experiences.forEach((experience) => {
+            addTitledBlock({
+              doc,
+              title: experience.title,
+              content: (doc) => {
+                doc
+                  .fontSize(8)
+                  .font("assets/fonts/Marianne/Marianne-Light.otf")
+                  .text(experience.description, doc.x, doc.y);
+                doc.moveDown(0.5);
+                doc
+                  .fontSize(8)
+                  .font("assets/fonts/Marianne/Marianne-Light.otf")
+                  .text(experience.durationLabel, doc.x, doc.y);
+                doc.moveDown(0.5);
+                doc
+                  .fontSize(8)
+                  .font("assets/fonts/Marianne/Marianne-Light.otf")
+                  .text(experience.startedAtLabel, doc.x, doc.y);
+              },
+              widthInPt: pxToPt(1200),
+            });
+            doc.moveDown(1);
+          });
+        },
+      });
+      addSubSection({
+        title:
+          "Informations sur les expériences du candidat en lien avec le référentiel d’activités et de compétences",
+        doc,
+        content: (doc) => {
+          doc.moveDown(0.5);
+          dffCompetenceBlocsWithCompetencesAndStates.forEach((bloc) => {
+            addTitledBlock({
+              doc,
+              title: `${bloc.code} - ${bloc.label}`,
+              content: (doc) => {
+                doc.moveDown(0.5);
+                bloc.competences.forEach((competence) => {
+                  addCompetence({
+                    doc,
+                    label: competence.label,
+                    state: competence.state,
+                    maxWidthInPt: pxToPt(1200),
+                  });
+                  doc.moveDown(1);
+                });
+                doc
+                  .font("assets/fonts/Marianne/Marianne-Bold.otf")
+                  .fontSize(8)
+                  .text("Commentaire sur le bloc");
+                doc.moveDown(0.25);
+                doc
+                  .font("assets/fonts/Marianne/Marianne-Regular.otf")
+                  .fontSize(8)
+                  .text(bloc.text);
+              },
+              widthInPt: pxToPt(1160),
+            });
+            doc.moveDown(1);
+          });
+        },
+      });
+    },
+  });
+};
+
+const addAccompagnementCandidatSection = ({
+  doc,
+  additionalHourCount,
+  individualHourCount,
+  collectiveHourCount,
+  basicSkills,
+  trainings,
+}: {
+  doc: PDFKit.PDFDocument;
+  additionalHourCount: number;
+  individualHourCount: number;
+  collectiveHourCount: number;
+  basicSkills: string[];
+  trainings: string[];
+}) => {
+  addSection({
+    doc,
+    title: "Accompagnement proposé au candidat",
+    iconPath: `${ASSETS_PATH}/images/ecosystem.png`,
+    content: (doc) => {
+      addSubSection({
+        title: "Préconisation accompagnement méthodologique ",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1200),
+            data: [
+              {
+                title: "Accompagnement individuel :",
+                value: `${individualHourCount}h`,
+              },
+              {
+                title: "Accompagnement collectif :",
+                value: collectiveHourCount + "h",
+              },
+              { title: "Formation :", value: additionalHourCount + "h" },
+            ],
+            doc,
+          });
+        },
+      });
+      addSubSection({
+        title: "Préconisation actes formatifs ",
+        doc,
+        content: (doc) => {
+          addTitledBlock({
+            doc,
+            title: "Formations obligatoires",
+            content: (doc) => {
+              trainings.forEach((training) => {
+                doc.text(`- ${training}`, doc.x, doc.y);
+                doc.moveDown(0.5);
+              });
+            },
+            widthInPt: pxToPt(1200),
+          });
+          doc.moveDown(1);
+          addTitledBlock({
+            doc,
+            title: "Savoirs de base ",
+            content: (doc) => {
+              basicSkills.forEach((basicSkill) => {
+                doc.text(`- ${basicSkill}`, doc.x, doc.y);
+                doc.moveDown(0.5);
+              });
+            },
+            widthInPt: pxToPt(1200),
+          });
+        },
+      });
+    },
+  });
+};
+
+const addAvisEtDocumentsSection = ({
+  doc,
+  aapDecision,
+  aapDecisionComment,
+  candidateDecisionComment,
+  attachments,
+}: {
+  doc: PDFKit.PDFDocument;
+  aapDecision: DFFDecision | null;
+  aapDecisionComment: string;
+  candidateDecisionComment: string;
+  attachments: string[];
+}) => {
+  addSection({
+    doc,
+    title: "Avis et documents",
+    iconPath: `${ASSETS_PATH}/images/contract.png`,
+    content: (doc) => {
+      addSubSection({
+        title:
+          "Avis de la personne chargée de l’accompagnement sur la faisabilité de la demande de validation des acquis de l’expérience",
+        doc,
+        content: (doc) => {
+          doc
+            .font("assets/fonts/Marianne/Marianne-Bold.otf")
+            .fontSize(10)
+            .text("Avis de l’accompagnateur");
+          doc.moveDown(0.5);
+          if (aapDecision) {
+            addDecision({
+              decision: aapDecision,
+              doc,
+            });
+            doc.moveDown(0.5);
+          }
+          doc
+            .font("assets/fonts/Marianne/Marianne-Regular.otf")
+            .fontSize(8)
+            .text(aapDecisionComment, doc.x, doc.y, {
+              width: pxToPt(1200),
+            });
+          doc.moveDown(0.5);
+          doc
+            .font("assets/fonts/Marianne/Marianne-Bold.otf")
+            .fontSize(10)
+            .text(
+              "Commentaires du candidat sur l’avis de l’accompagnateur",
+              doc.x,
+              doc.y,
+            );
+          doc.moveDown(0.5);
+          doc
+            .font("assets/fonts/Marianne/Marianne-Regular.otf")
+            .fontSize(8)
+            .text(candidateDecisionComment, doc.x, doc.y, {
+              width: pxToPt(1200),
+            });
+        },
+      });
+      addSubSection({
+        title: "Pièces jointes",
+        doc,
+        content: (doc) => {
+          doc.table({
+            defaultStyle: {
+              border: [true, false, true, false],
+              borderColor: "#DDDDDD",
+              padding: { vertical: "8px", horizontal: "10" },
+              width: pxToPt(1200),
+            },
+            data: attachments.map((attachment) => [
+              {
+                text: attachment,
+                textColor: "#000091",
+                font: {
+                  src: "assets/fonts/Marianne/Marianne-Regular.otf",
+                  size: 9,
+                },
+              },
+            ]),
+          });
+        },
+      });
+      doc
+        .font("assets/fonts/Marianne/Marianne-Regular.otf")
+        .fontSize(8)
+        .fillColor("black");
+    },
+  });
+};
+
+const addContactsSection = ({
+  aapContactInfo,
+  certificationAuthorityContactInfo,
+  doc,
+}: {
+  aapContactInfo: {
+    label: string;
+    address: string;
+    email: string;
+    phone: string;
+  };
+  certificationAuthorityContactInfo: {
+    label: string;
+    contactName: string;
+    contactEmail: string;
+    contactPhone: string;
+  };
+  doc: PDFKit.PDFDocument;
+}) => {
+  addSection({
+    doc,
+    title: "Contacts",
+    iconPath: `${ASSETS_PATH}/images/team.png`,
+    content: (doc) => {
+      addSubSection({
+        title: "Architecte accompagnateur de parcours",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1200),
+            data: [
+              { title: "Nom :", value: aapContactInfo.label },
+              { title: "Adresse :", value: aapContactInfo.address },
+              {
+                title: "Adresse électronique :",
+                value: aapContactInfo.email,
+              },
+              {
+                title: "Téléphone :",
+                value: aapContactInfo.phone,
+              },
+            ],
+            doc,
+          });
+        },
+      });
+      addSubSection({
+        title: "Certificateur",
+        doc,
+        content: (doc) => {
+          addInfoTable({
+            widthInPt: pxToPt(1200),
+            data: [
+              {
+                title: "Nom de l'établissement :",
+                value: certificationAuthorityContactInfo.label,
+              },
+              {
+                title: "Nom du contact :",
+                value: certificationAuthorityContactInfo.contactName,
+              },
+              {
+                title: "Adresse électronique :",
+                value: certificationAuthorityContactInfo.contactEmail,
+              },
+              {
+                title: "Téléphone :",
+                value: certificationAuthorityContactInfo.contactPhone,
+              },
+            ],
+            doc,
+          });
+        },
+      });
+    },
+  });
 };

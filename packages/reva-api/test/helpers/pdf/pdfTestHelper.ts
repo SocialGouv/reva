@@ -17,7 +17,7 @@ export type SectionDefinition = {
   title: string;
 };
 
-export type StructuredSection = SectionDefinition & {
+type StructuredSection = SectionDefinition & {
   lines: string[];
   startIndex: number;
 };
