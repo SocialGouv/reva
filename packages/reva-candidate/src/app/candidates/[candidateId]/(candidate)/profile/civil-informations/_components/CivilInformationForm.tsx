@@ -289,6 +289,7 @@ export const CivilInformationForm = ({
               <Input
                 label="Ville de naissance"
                 className="w-full mb-0"
+                disabled={isFCLinked}
                 nativeInputProps={register("birthCity")}
                 state={errors.birthCity ? "error" : "default"}
                 stateRelatedMessage={errors.birthCity?.message}
