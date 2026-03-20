@@ -19,6 +19,7 @@ services:
     image: quay.io/keycloak/keycloak:24.0.2
     volumes:
       - ./themes/francevae:/opt/keycloak/themes/francevae
+      - ./themes/francevae-candidate:/opt/keycloak/themes/francevae-candidate
     environment:
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
@@ -39,6 +40,7 @@ services:
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT_HTTPS: false
       REVA_URL_CREATE_AAP_ACCOUNT: http://localhost:3002/espace-professionnel/inscription/
+      CANDIDATE_BASE_URL: http://localhost:3004/candidat
       # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
       # JDBC_PARAMS: "ssl=true"
     command:
