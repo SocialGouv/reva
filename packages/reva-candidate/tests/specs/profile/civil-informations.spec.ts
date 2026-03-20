@@ -126,6 +126,7 @@ test.describe("FranceConnect linked candidate", () => {
       "birthdate",
       "country",
       "birthDepartment",
+      "birthCity",
     ]) {
       await expect(
         page.locator(SELECTORS[field as keyof typeof SELECTORS]),
@@ -137,7 +138,6 @@ test.describe("FranceConnect linked candidate", () => {
     await visitCivilInformations(page);
 
     await expect(page.locator(SELECTORS.givenName)).not.toBeDisabled();
-    await expect(page.locator(SELECTORS.birthCity)).not.toBeDisabled();
     await expect(
       page.locator('input[name="gender"]').first(),
     ).not.toBeDisabled();
