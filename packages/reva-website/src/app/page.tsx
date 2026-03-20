@@ -35,9 +35,6 @@ const HomeContainer = ({ children }: { children: ReactNode }) => (
 );
 
 const HomePage = async () => {
-  const isPublicEligibleFeatureActive = await isFeatureActive(
-    "WEBSITE_PUBLIC_ELIGIBLE",
-  );
   const homePageItemsResult = await getHomePageItemsFromStrapi();
   const articlesDaide = homePageItemsResult.articlesDAide;
   const articlesFAQ = homePageItemsResult.articlesFAQ;
@@ -54,7 +51,6 @@ const HomePage = async () => {
           articleDAides={articlesDaide as ArticleDAide[]}
           articlesFAQ={articlesFAQ as ArticleFaq[]}
           articlesActualite={articlesActualite as ArticleActualite[]}
-          isPublicEligibleFeatureActive={isPublicEligibleFeatureActive}
         />
       </HomeContainer>
     </MainLayout>
@@ -65,12 +61,10 @@ const HomePageContent = ({
   articleDAides,
   articlesFAQ,
   articlesActualite,
-  isPublicEligibleFeatureActive,
 }: {
   articleDAides: ArticleDAide[];
   articlesFAQ: ArticleFaq[];
   articlesActualite: ArticleActualite[];
-  isPublicEligibleFeatureActive: boolean;
 }) => (
   <>
     <BienvenueSection />
@@ -78,11 +72,7 @@ const HomePageContent = ({
     <LesActualitesFranceVAESection articlesActualite={articlesActualite} />
     <ToutSavoirSurLaVAESection articlesDaide={articleDAides} />
     <LesAvantagesSection />
-    {isPublicEligibleFeatureActive ? (
-      <LaVAEUnDispositifAccessibleATousSection />
-    ) : (
-      <OldLaVAEUnDispositifAccessibleATousSection />
-    )}
+    <LaVAEUnDispositifAccessibleATousSection />
     <LAVAEEnChiffresSection />
     <QuestionsFrequentesSection articlesFAQ={articlesFAQ} />
   </>
@@ -429,55 +419,6 @@ const AvantageCard = ({
     <p className="mb-0">{description}</p>
   </div>
 );
-
-const OldLaVAEUnDispositifAccessibleATousSection = async () => {
-  const isDisableMagicLinkActive = await isFeatureActive(
-    "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
-  );
-
-  return (
-    <section className="w-full bg-white px-6 py-8 md:pt-12 md:pb-20">
-      <div className="fr-container flex flex-col items-center md:flex-row !p-0 gap-12 md:gap-20">
-        <Image
-          src="/home-page/avatar_1_section_3.png"
-          alt="3 visages souriants"
-          width={312}
-          height={393}
-          className="basis-1/3"
-        />
-        <div className="flex flex-col basis-2/3">
-          <h2 className="text-[22px] md:text-[32px] mb-8">
-            La VAE, un dispositif accessible à tous !
-          </h2>
-          <p className="text-xl mb-8">
-            Vous pouvez dès maintenant vous inscrire pour commencer un parcours
-            VAE. La seule exception ? Si vous êtes agent public ou contractuel
-            de l’État, le parcours VAE ne s’effectue pas via notre plateforme.
-            Contactez les{" "}
-            <Link
-              href="/savoir-plus/articles/vae-ou-se-renseigner/"
-              target="_self"
-              className="fr-link !text-xl"
-            >
-              organismes référents
-            </Link>{" "}
-            pour en savoir plus.
-          </p>
-          <Button
-            linkProps={{
-              href: isDisableMagicLinkActive
-                ? `${process.env.NEXT_PUBLIC_CANDIDATE_BASE_URL || "/candidat"}/register/`
-                : "/commencer",
-              target: "_self",
-            }}
-          >
-            Commencez votre parcours VAE
-          </Button>
-        </div>
-      </div>
-    </section>
-  );
-};
 
 const LaVAEUnDispositifAccessibleATousSection = async () => {
   const isDisableMagicLinkActive = await isFeatureActive(
