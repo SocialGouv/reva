@@ -10,7 +10,7 @@ import { mockQueryActiveFeatures } from "../../../../shared/utils/mockActiveFeat
 const fvae = graphql.link("https://reva-api/api/graphql");
 
 test.describe("certifications card", () => {
-  test.describe("when there are multiple certifications selected", () => {
+  test.describe("when there are one or more certifications selected", () => {
     test.use({
       mswHandlers: [
         [

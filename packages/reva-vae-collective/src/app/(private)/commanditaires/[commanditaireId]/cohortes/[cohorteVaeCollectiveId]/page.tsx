@@ -3,13 +3,11 @@ import Link from "next/link";
 
 import { RoleDependentBreadcrumb } from "@/components/role-dependent-breadcrumb/RoleDependentBreadcrumb";
 import { getAccessTokenFromCookie } from "@/helpers/auth/get-access-token-from-cookie/getAccessTokenFromCookie";
-import { getActiveFeatures } from "@/helpers/get-actives-features";
 import { throwUrqlErrors } from "@/helpers/graphql/throw-urql-errors/throwUrqlErrors";
 import { client } from "@/helpers/graphql/urql-client/urqlClient";
 
 import { graphql } from "@/graphql/generated";
 
-import { CertificationCard } from "./_components/certification-card/CertificationCard";
 import { CertificationsCard } from "./_components/certifications-card/CertificationsCard";
 import { DeleteCohorteButton } from "./_components/delete-cohorte-button/DeleteCohorteButton";
 import { GenerateCohorteCodeInscriptionButton } from "./_components/generate-cohorte-code-inscription-button/GenerateCohorteCodeInscriptionButton";
@@ -97,21 +95,10 @@ export default async function CohortePage({
     (certificationCohorte) => certificationCohorte.certification,
   );
 
-  const multipleCertificationSelected = certifications.length > 1;
-
   const organism = cohorte.organism;
 
   const certificationSelected = certifications.length > 0;
   const organismSelected = !!organism;
-
-  const { isFeatureActive } = await getActiveFeatures();
-
-  const isMultiCertificationFeatureActive = await isFeatureActive(
-    "VAE_COLLECTIVE_MULTI_CERTIFICATION",
-  );
-
-  const showMultipleCertificationCard =
-    isMultiCertificationFeatureActive || multipleCertificationSelected;
 
   return (
     <div className="flex flex-col w-full">
@@ -140,24 +127,12 @@ export default async function CohortePage({
         Paramétrez votre cohorte, afin de générer un code unique ainsi qu’un
         lien d’accès à transmettre aux candidats devant intégrer cette cohorte.
       </p>
-      {showMultipleCertificationCard && (
-        <CertificationsCard
-          numberOfCertifications={certifications.length}
-          cohorteStatus={cohorte.status}
-          certificationsSelectionneesHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications-selectionnees`}
-          selectCertificationsHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/selection-certifications`}
-        />
-      )}
-      {!showMultipleCertificationCard && (
-        <CertificationCard
-          href={
-            cohorte.status === "BROUILLON"
-              ? `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications`
-              : `/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications/${certifications[0]?.id}?certificationSelectionDisabled=true`
-          }
-          certification={certifications[0]}
-        />
-      )}
+      <CertificationsCard
+        numberOfCertifications={certifications.length}
+        cohorteStatus={cohorte.status}
+        certificationsSelectionneesHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/certifications-selectionnees`}
+        selectCertificationsHref={`/commanditaires/${commanditaireId}/cohortes/${cohorteVaeCollectiveId}/selection-certifications`}
+      />
       <OrganismCard
         className="mt-8"
         commanditaireId={commanditaireId}

@@ -1,4 +1,3 @@
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { prismaClient } from "@/prisma/client";
 
 export const updateCohorteVAECollectiveOrganism = async ({
@@ -8,11 +7,6 @@ export const updateCohorteVAECollectiveOrganism = async ({
   cohorteVaeCollectiveId: string;
   organismId: string;
 }) => {
-  const isVaeCollectiveMultipleCertificationsFeatureActive =
-    await isFeatureActiveForUser({
-      feature: "VAE_COLLECTIVE_MULTI_CERTIFICATION",
-    });
-
   const cohorteVaeCollective =
     await prismaClient.cohorteVaeCollective.findUnique({
       where: {
@@ -36,15 +30,6 @@ export const updateCohorteVAECollectiveOrganism = async ({
   if (!cohorteVaeCollective.certificationCohorteVaeCollectives.length) {
     throw new Error(
       "Impossible de modifier l'aap d'une cohorte si la certification n'est pas définie",
-    );
-  }
-
-  if (
-    !isVaeCollectiveMultipleCertificationsFeatureActive &&
-    cohorteVaeCollective.certificationCohorteVaeCollectives.length > 1
-  ) {
-    throw new Error(
-      "La mise à jour de l'aap d'une cohorte avec plusieurs certifications n'est pas possible",
     );
   }
 
