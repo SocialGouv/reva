@@ -77,12 +77,20 @@ export const handleFranceConnectCallback = async (
     const error = currentUrl.searchParams.get("error");
     const errorDescription =
       currentUrl.searchParams.get("error_description") ?? undefined;
-    const message =
-      error && errorDescription
-        ? `${error}: ${errorDescription}`
-        : (error ??
-          "Code d'autorisation manquant (connexion annulée ou refusée)");
-    throw new FranceConnectUserError(message, 400);
+
+    const message = errorDescription ?? "Connexion annulée ou refusée";
+
+    // Préserver le code d'erreur FC d'origine en utilisant la classe d'erreur correspondante
+    switch (error) {
+      case "access_denied":
+        throw new FranceConnectForbiddenError(message);
+      case "server_error":
+      case "temporarily_unavailable":
+        throw new FranceConnectSystemError(message);
+      default:
+        // Couvre : null (pas de paramètre error), invalid_request, invalid_scope, login_required, etc.
+        throw new FranceConnectUserError(message, 400);
+    }
   }
 
   const state = currentUrl.searchParams.get("state") ?? undefined;
