@@ -1,5 +1,7 @@
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { getOrganismById } from "@/modules/organism/features/getOrganism";
+import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
+import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -26,6 +28,12 @@ export const selectOrganismForCandidacyAsAdmin = async ({
     where: { id: candidacyId },
     select: {
       financeModule: true,
+      candidate: {
+        select: {
+          firstname: true,
+          lastname: true,
+        },
+      },
     },
   });
 
@@ -51,6 +59,20 @@ export const selectOrganismForCandidacyAsAdmin = async ({
     const updatedCandidacy = await updateCandidacyOrganism({
       candidacyId,
       organismId,
+    });
+
+    const newAapEmail =
+      organism.emailContact || organism.contactAdministrativeEmail;
+
+    await sendEmailUsingTemplate({
+      to: { email: newAapEmail },
+      templateId: 691,
+      params: {
+        candidateFullName: `${candidacy.candidate?.lastname} ${candidacy.candidate?.firstname}`,
+        candidacyUrl: getBackofficeUrl({
+          path: `/candidacies/${candidacyId}/summary`,
+        }),
+      },
     });
 
     await logCandidacyAuditEvent({
