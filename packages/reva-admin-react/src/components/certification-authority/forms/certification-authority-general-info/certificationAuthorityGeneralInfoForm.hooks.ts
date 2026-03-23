@@ -36,6 +36,7 @@ export const useCertificationAuthorityForm = () => {
     mutationFn: (params: {
       certificationAuthorityId: string;
       certificationAuthorityData: {
+        label: string;
         accountFirstname: string;
         accountLastname: string;
         accountEmail: string;

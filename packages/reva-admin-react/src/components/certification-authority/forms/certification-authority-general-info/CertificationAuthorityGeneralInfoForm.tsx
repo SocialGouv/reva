@@ -61,6 +61,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
 
   const schema = useMemo(() => {
     return z.object({
+      label: sanitizedText(),
       accountFirstname: sanitizedOptionalText(),
       accountLastname: sanitizedText(),
       accountEmail: sanitizedEmail(),
@@ -85,6 +86,7 @@ export const CertificationAuthorityGeneralInfoForm = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      label: certificationAuthority.label,
       accountFirstname: certificationAuthority.account?.firstname || "",
       accountLastname: certificationAuthority.account?.lastname || "",
       accountEmail: certificationAuthority.account?.email || "",
@@ -137,9 +139,13 @@ export const CertificationAuthorityGeneralInfoForm = ({
           <div className="flex flex-col">
             <Input
               label="Nom de la structure"
-              nativeInputProps={{ value: certificationAuthority.label }}
-              disabled
+              nativeInputProps={{
+                ...register("label"),
+              }}
+              disabled={!isAdmin}
               data-testid="certification-authority-label"
+              state={errors.label ? "error" : "default"}
+              stateRelatedMessage={errors.label?.message}
             />
             <div className="flex gap-4">
               <Input

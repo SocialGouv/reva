@@ -211,6 +211,7 @@ test("should update a certification authority's contact info and leave the accou
     account: certificationAuthority.Account[0],
     certificationAuthorityId: certificationAuthority.id,
     data: {
+      label: certificationAuthority.label,
       accountEmail: "new email",
       accountFirstname: "new firstname",
       accountLastname: "new lastname",
@@ -252,6 +253,7 @@ test("should update a certification authority's contact and account info as an a
     },
     certificationAuthorityId: certificationAuthority.id,
     data: {
+      label: "new label",
       accountEmail: "new account email",
       accountFirstname: "new account firstname",
       accountLastname: "new account lastname",
@@ -262,7 +264,7 @@ test("should update a certification authority's contact and account info as an a
 
   expect(resp.certification_authority_updateCertificationAuthority).toEqual({
     id: certificationAuthority.id,
-    label: certificationAuthority.label,
+    label: "new label",
     contactFullName: "new name",
     contactEmail: "new email",
     account: {
@@ -284,6 +286,7 @@ test("should refuse to to update a certification authority's contact info as a c
       },
       certificationAuthorityId: certificationAuthority.id,
       data: {
+        label: certificationAuthority.label,
         accountEmail: "new email",
         accountFirstname: "new firstname",
         accountLastname: "new lastname",
@@ -305,6 +308,7 @@ test("should refuse to to update a certification authority's contact info as a c
       },
       certificationAuthorityId: certificationAuthority.id,
       data: {
+        label: "new label",
         accountEmail: "new account email",
         accountFirstname: "new account firstname",
         accountLastname: "new account lastname",
@@ -343,6 +347,7 @@ test("should update all of a certification authority's local accounts contact in
     },
     certificationAuthorityId: certificationAuthority.id,
     data: {
+      label: "new label",
       accountEmail: "new account email",
       accountFirstname: "new account firstname",
       accountLastname: "new account lastname",
@@ -354,7 +359,7 @@ test("should update all of a certification authority's local accounts contact in
 
   expect(resp.certification_authority_updateCertificationAuthority).toEqual({
     id: certificationAuthority.id,
-    label: certificationAuthority.label,
+    label: "new label",
     contactFullName: "new name",
     contactEmail: "new email",
     account: {
