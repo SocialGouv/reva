@@ -18,8 +18,10 @@ const defaultMessage = errorMessages.server_error;
 export default function AuthError() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || "server_error";
+  const errorDescription = searchParams.get("error_description");
 
-  const displayMessage = errorMessages[error] || defaultMessage;
+  const displayMessage =
+    errorDescription || errorMessages[error] || defaultMessage;
 
   return (
     <div className="flex-1 pb-6">
