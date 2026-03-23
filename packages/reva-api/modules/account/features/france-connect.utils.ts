@@ -1,9 +1,13 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { allowInsecureRequests, discovery } from "openid-client";
 
+import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
 import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
+import { logger } from "@/modules/shared/logger/logger";
 
 import { TokenService } from "../utils/token.service";
+
+import { FranceConnectSystemError } from "./france-connect.errors";
 
 // Durées de vie des cookies
 const STATE_TTL_SECONDS = 10 * 60; // 10 minutes
@@ -146,6 +150,39 @@ export const arePivotFieldsMatching = ({
   }
 
   return true;
+};
+
+export const unlinkFranceConnectIdentity = async (
+  keycloakId: string,
+): Promise<void> => {
+  const realm = process.env.KEYCLOAK_APP_REALM;
+  if (!realm) {
+    throw new FranceConnectSystemError("Erreur de configuration du système");
+  }
+
+  const keycloakAdmin = await getKeycloakAdmin();
+
+  const federatedIdentities = await keycloakAdmin.users.listFederatedIdentities(
+    {
+      id: keycloakId,
+      realm,
+    },
+  );
+
+  const fcIdentity = federatedIdentities.find((fi) =>
+    fi.identityProvider?.toLowerCase().includes("franceconnect"),
+  );
+
+  if (fcIdentity?.identityProvider) {
+    await keycloakAdmin.users.delFromFederatedIdentity({
+      id: keycloakId,
+      federatedIdentityId: fcIdentity.identityProvider,
+      realm,
+    });
+    logger.info(
+      `[France Connect] Lien FC supprimé pour le compte Keycloak ${keycloakId} (identité non-correspondante)`,
+    );
+  }
 };
 
 export const splitGivenName = (

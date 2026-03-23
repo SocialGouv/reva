@@ -39,6 +39,7 @@ import {
   isValidCertificationId,
   parseFranceConnectDate,
   splitGivenName,
+  unlinkFranceConnectIdentity,
 } from "./france-connect.utils";
 
 const FranceConnectClaimsSchema = z.object({
@@ -277,6 +278,26 @@ const getOrCreateCandidate = async (
   let candidate = await getCandidateByKeycloakId({ keycloakId });
 
   if (candidate) {
+    // Keycloak auto-link le compte FC par email sans vérifier l'identité.
+    // On vérifie que les données pivots (nom, prénom, date de naissance)
+    // correspondent pour éviter qu'un utilisateur FC récupère le compte
+    // d'une autre personne ayant la même adresse email.
+    if (
+      !arePivotFieldsMatching({
+        candidateFirstname: candidate.firstname,
+        candidateLastname: candidate.lastname,
+        candidateBirthdate: candidate.birthdate,
+        fcGivenName: userInfo.given_name,
+        fcFamilyName: userInfo.family_name,
+        fcBirthdate: userInfo.birthdate,
+      })
+    ) {
+      await unlinkFranceConnectIdentity(keycloakId);
+      throw new FranceConnectUserError(
+        "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",
+        400,
+      );
+    }
     const updated = await updateCandidateFromFCClaims({
       candidateId: candidate.id,
       userInfo,
@@ -292,24 +313,6 @@ const getOrCreateCandidate = async (
     if (candidate.keycloakId && candidate.keycloakId !== keycloakId) {
       throw new FranceConnectForbiddenError(
         "Un compte existe déjà avec cette adresse email. Veuillez vous connecter avec vos identifiants habituels.",
-      );
-    }
-    // Avant de lier un compte FC à un compte existant (même email),
-    // on vérifie que les données pivots (nom, prénom, date de naissance) correspondent
-    // pour éviter qu'un utilisateur FC récupère le compte d'une autre personne.
-    if (
-      !arePivotFieldsMatching({
-        candidateFirstname: candidate.firstname,
-        candidateLastname: candidate.lastname,
-        candidateBirthdate: candidate.birthdate,
-        fcGivenName: userInfo.given_name,
-        fcFamilyName: userInfo.family_name,
-        fcBirthdate: userInfo.birthdate,
-      })
-    ) {
-      throw new FranceConnectUserError(
-        "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",
-        400,
       );
     }
 
