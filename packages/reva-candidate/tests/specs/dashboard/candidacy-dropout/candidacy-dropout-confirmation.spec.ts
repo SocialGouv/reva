@@ -1,6 +1,7 @@
 import { Page } from "@playwright/test";
 import { expect, test } from "next/experimental/testmode/playwright/msw";
 
+import { createCandidacyDropOutEntity } from "@tests/helpers/entities/create-candidacy-dropout.entity";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { loginAndWaitForCandidaciesInitialLoad } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
@@ -11,17 +12,9 @@ import type { MswFixture } from "next/experimental/testmode/playwright/msw";
 const candidate = createCandidateEntity();
 const candidacy = createCandidacyEntity({
   candidate,
-  candidacyDropOut: {
+  candidacyDropOut: createCandidacyDropOutEntity({
     createdAt: 1580428800000,
-    dropOutConfirmedByCandidate: false,
-    proofReceivedByAdmin: false,
-    dropOutReason: {
-      id: "reason-1",
-      label: "Motif d'abandon",
-      isActive: true,
-    },
-    status: "PROJET",
-  },
+  }),
 });
 
 const setupAndNavigateToDropoutConfirmation = async (

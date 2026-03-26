@@ -1,6 +1,7 @@
 import { expect, Page, test } from "next/experimental/testmode/playwright/msw";
 import { graphql } from "next/experimental/testmode/playwright/msw";
 
+import { createCandidacyDropOutEntity } from "@tests/helpers/entities/create-candidacy-dropout.entity";
 import {
   type CandidacyEntity,
   createCandidacyEntity,
@@ -16,17 +17,9 @@ import type { MswFixture } from "next/experimental/testmode/playwright/msw";
 const candidate = createCandidateEntity();
 const candidacy = createCandidacyEntity({
   candidate,
-  candidacyDropOut: {
+  candidacyDropOut: createCandidacyDropOutEntity({
     createdAt: Date.now() - 1000 * 60 * 60 * 24 * 30,
-    dropOutConfirmedByCandidate: false,
-    proofReceivedByAdmin: false,
-    dropOutReason: {
-      id: "reason-1",
-      label: "Motif d'abandon",
-      isActive: true,
-    },
-    status: "PROJET",
-  },
+  }),
 });
 
 const decisionPageUrl = `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/candidacy-dropout-decision`;
@@ -101,6 +94,10 @@ test.describe("Candidacy dropout decision page", () => {
         name: /Non, je souhaite arrêter ce parcours VAE/,
       })
       .check({ force: true });
+
+    if (!candidacy.candidacyDropOut) {
+      throw new Error("Expected a dropout");
+    }
 
     const dropOutConfirmedCandidacy = {
       ...candidacy,

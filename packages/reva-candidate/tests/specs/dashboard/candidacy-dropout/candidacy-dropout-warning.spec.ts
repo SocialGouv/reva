@@ -1,40 +1,23 @@
 import { subMonths } from "date-fns";
 import { expect, test } from "next/experimental/testmode/playwright/msw";
 
+import { createCandidacyDropOutEntity } from "@tests/helpers/entities/create-candidacy-dropout.entity";
 import { createCandidacyEntity } from "@tests/helpers/entities/create-candidacy.entity";
 import { createCandidateEntity } from "@tests/helpers/entities/create-candidate.entity";
 import { loginAndWaitForCandidaciesInitialLoad } from "@tests/helpers/handlers/candidacies/candidacies-guards.handler";
 import { candidacyDropOutHandlers } from "@tests/helpers/handlers/candidacy-dropout.handler";
+
+import type { CandidacyDropOut } from "@/graphql/generated/graphql";
 
 import type { Page } from "@playwright/test";
 import type { MswFixture } from "next/experimental/testmode/playwright/msw";
 
 const candidate = createCandidateEntity();
 
-const createDropOut = ({
-  createdAt = Date.now(),
-  proofReceivedByAdmin = false,
-  dropOutConfirmedByCandidate = false,
-}: {
-  createdAt?: number;
-  proofReceivedByAdmin?: boolean;
-  dropOutConfirmedByCandidate?: boolean;
-} = {}) => ({
-  createdAt,
-  proofReceivedByAdmin,
-  dropOutConfirmedByCandidate,
-  dropOutReason: {
-    id: "reason-1",
-    label: "Motif d'abandon",
-    isActive: true,
-  },
-  status: "PROJET",
-});
-
 const createCandidacy = ({
-  candidacyDropOut = createDropOut(),
+  candidacyDropOut = createCandidacyDropOutEntity(),
 }: {
-  candidacyDropOut?: ReturnType<typeof createDropOut> | null;
+  candidacyDropOut?: CandidacyDropOut | null;
 } = {}) =>
   createCandidacyEntity({
     candidate,
@@ -74,7 +57,9 @@ test.describe("Candidacy dropout warning", () => {
   }) => {
     await setupDropOutWarningPage(page, msw, {
       candidacy: createCandidacy({
-        candidacyDropOut: createDropOut({ proofReceivedByAdmin: true }),
+        candidacyDropOut: createCandidacyDropOutEntity({
+          proofReceivedByAdmin: true,
+        }),
       }),
     });
 
@@ -90,7 +75,7 @@ test.describe("Candidacy dropout warning", () => {
   }) => {
     await setupDropOutWarningPage(page, msw, {
       candidacy: createCandidacy({
-        candidacyDropOut: createDropOut({
+        candidacyDropOut: createCandidacyDropOutEntity({
           dropOutConfirmedByCandidate: true,
         }),
       }),
@@ -108,7 +93,7 @@ test.describe("Candidacy dropout warning", () => {
   }) => {
     await setupDropOutWarningPage(page, msw, {
       candidacy: createCandidacy({
-        candidacyDropOut: createDropOut({
+        candidacyDropOut: createCandidacyDropOutEntity({
           createdAt: subMonths(new Date(), 6).getTime(),
         }),
       }),
