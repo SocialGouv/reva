@@ -187,9 +187,9 @@ const CompetenciesBlockPage = () => {
       <h1>Blocs de compétences</h1>
       <FormOptionalFieldsDisclaimer />
       <p className="text-xl">
-        Faites le lien entre les activités déclarées par le candidat et chaque
-        bloc de compétences. Apportez un maximum de contexte sur l’activité via
-        la section “Commentaire”.
+        Pour chaque bloc, décrivez les activités réalisées et le contexte dans
+        lequel elles ont été exercées. Si la certification comporte un parcours
+        spécifique, précisez les activités liées à celui-ci.
       </p>
       {block && (
         <>
