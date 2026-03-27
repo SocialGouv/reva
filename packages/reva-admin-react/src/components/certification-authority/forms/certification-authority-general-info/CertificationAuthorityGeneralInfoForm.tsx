@@ -154,7 +154,6 @@ export const CertificationAuthorityGeneralInfoForm = ({
                 nativeInputProps={{
                   ...register("accountLastname"),
                 }}
-                disabled={!isAdmin}
                 data-testid="certification-authority-account-lastname"
                 state={errors.accountLastname ? "error" : "default"}
                 stateRelatedMessage={errors.accountLastname?.message}
@@ -165,7 +164,6 @@ export const CertificationAuthorityGeneralInfoForm = ({
                 nativeInputProps={{
                   ...register("accountFirstname"),
                 }}
-                disabled={!isAdmin}
                 data-testid="certification-authority-account-firstname"
                 state={errors.accountFirstname ? "error" : "default"}
                 stateRelatedMessage={errors.accountFirstname?.message}
