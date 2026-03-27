@@ -49,6 +49,7 @@ export const ContactInformationForm = ({
   forceIsDirty?: boolean;
 }) => {
   const { updateContactInformationsMutate } = useUpdateContactInformations();
+  const isFCLinked = candidate?.franceConnectLinked;
   const router = useRouter();
 
   const [manualAddressSelected, setManualAddress] = useState(false);
@@ -255,8 +256,29 @@ export const ContactInformationForm = ({
                 <p className="font-bold mb-2">
                   Vous ne trouvez pas votre adresse exacte ?
                 </p>
-                <p>Utiliser l’option de saisie manuelle de l’adresse. </p>
+                <p>Utiliser l’option de saisie manuelle de l’adresse.</p>
               </div>
+
+              {isFCLinked && (
+                <div>
+                  <p className="font-bold mb-2">
+                    Comment modifier mon adresse électronique de connexion ?
+                  </p>
+                  <p>
+                    Les informations de connexion récupérées via FranceConnect
+                    ne peuvent pas être modifiées directement. Pour toute
+                    correction ou mise à jour, consultez la{" "}
+                    <a
+                      className="fr-link"
+                      href="https://aide.franceconnect.gouv.fr/faq/erreur-etat-civil/articles/etat-civil-erreur-compte/"
+                      target="_blank"
+                    >
+                      page d’aide FranceConnect
+                    </a>
+                    .
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

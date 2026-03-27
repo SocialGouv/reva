@@ -32,6 +32,7 @@ const getCandidateByIdForContactInformationsPage = graphql(`
       phone
       email
       addressComplement
+      franceConnectLinked
     }
   }
 `);

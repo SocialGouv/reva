@@ -355,15 +355,37 @@ export const CivilInformationForm = ({
           <div className="col-span-1">
             <div className="flex flex-col px-4 pt-6 bg-dsfr-light-decisions-background-background-alt-blue-france">
               <h6>Ressources :</h6>
-              <div>
-                <p className="font-bold mb-2">
-                  Comment renseigner mon état civil ?
-                </p>
-                <p>
-                  Toutes les informations doivent être renseignées comme elles
-                  apparaissent sur votre carte d’identité ou passeport.
-                </p>
-              </div>
+
+              {isFCLinked ? (
+                <div>
+                  <p className="font-bold mb-2">
+                    Comment modifier mon état civil ?
+                  </p>
+                  <p>
+                    Les informations d’état civil récupérées via FranceConnect
+                    ne peuvent pas être modifiées directement. Pour toute
+                    correction ou mise à jour, consultez la{" "}
+                    <a
+                      className="fr-link"
+                      href="https://aide.franceconnect.gouv.fr/faq/erreur-etat-civil/articles/etat-civil-erreur-compte/"
+                      target="_blank"
+                    >
+                      page d’aide FranceConnect
+                    </a>
+                    .
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="font-bold mb-2">
+                    Comment renseigner mon état civil ?
+                  </p>
+                  <p>
+                    Toutes les informations doivent être renseignées comme elles
+                    apparaissent sur votre carte d’identité ou passeport.
+                  </p>
+                </div>
+              )}
 
               <div>
                 <p className="font-bold mb-2">Né(e) à l’étranger ? </p>
