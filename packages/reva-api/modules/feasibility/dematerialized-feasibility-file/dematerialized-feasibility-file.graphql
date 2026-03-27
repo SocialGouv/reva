@@ -27,6 +27,7 @@ type DematerializedFeasibilityFile {
   eligibilityCandidateSituation: DFFEligibilityCandidateSituation
   eligibilityValidUntil: Timestamp
   dffFile: File
+  complementExperienceParcoursVise: String
 }
 enum DFFEligibilityCandidateSituation {
   PREMIERE_DEMANDE_RECEVABILITE
