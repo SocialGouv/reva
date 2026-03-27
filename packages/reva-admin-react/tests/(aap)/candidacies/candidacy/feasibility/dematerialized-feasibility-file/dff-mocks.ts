@@ -101,6 +101,7 @@ export const DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE: Partial<DematerializedFeas
     attachments: [],
     eligibilityRequirement: null,
     eligibilityValidUntil: null,
+    complementExperienceParcoursVise: null,
   };
 
 export const DEFAULT_FEASIBILITY_FILE = {

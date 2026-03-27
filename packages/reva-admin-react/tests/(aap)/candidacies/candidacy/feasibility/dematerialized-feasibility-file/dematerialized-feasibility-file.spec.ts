@@ -49,13 +49,15 @@ const FEASIBILITY_ADMISSIBLE_DECISION = {
   },
 };
 
-function createFeasibilityHandlers(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  args?: { feasibility?: any; certificationExpired?: boolean },
-) {
+function createFeasibilityHandlers(args?: {
+  feasibility?: any;
+  certificationExpired?: boolean;
+  certificationAuthorityStructureHasReducedRequirements?: boolean;
+}) {
   const {
     feasibility = DEFAULT_FEASIBILITY_FILE,
     certificationExpired = false,
+    certificationAuthorityStructureHasReducedRequirements,
   } = args ?? {};
 
   const certification = {
@@ -65,6 +67,12 @@ function createFeasibilityHandlers(
     rncpExpiresAt: certificationExpired
       ? DATE_NOW - 1000000
       : DATE_NOW + 1000000,
+    ...(certificationAuthorityStructureHasReducedRequirements !== undefined && {
+      certificationAuthorityStructure: {
+        hasReducedRequirements:
+          certificationAuthorityStructureHasReducedRequirements,
+      },
+    }),
   };
   return [
     fvae.query(
@@ -1440,6 +1448,179 @@ test.describe("When the decision is INCOMPLETE", () => {
         await expect(
           page.getByTestId("send-file-candidate-tile-ready"),
         ).toBeVisible();
+      });
+    });
+  });
+});
+
+test.describe("ComplementExperienceParcoursViseAccordion", () => {
+  test.describe("when certificationAuthorityStructure is absent", () => {
+    test.use({
+      mswHandlers: [
+        [...aapCommonHandlers, ...createFeasibilityHandlers()],
+        { scope: "test" },
+      ],
+    });
+
+    test("should not show the accordion", async ({ page }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+      await waitForFeasibilityQueries(page);
+      await expect(
+        page.getByTestId("complement-experience-parcours-vise-accordion"),
+      ).not.toBeVisible();
+    });
+  });
+
+  test.describe("when certificationAuthorityStructureHasReducedRequirements is false", () => {
+    test.use({
+      mswHandlers: [
+        [
+          ...aapCommonHandlers,
+          ...createFeasibilityHandlers({
+            certificationAuthorityStructureHasReducedRequirements: false,
+          }),
+        ],
+        { scope: "test" },
+      ],
+    });
+
+    test("should not show the accordion", async ({ page }) => {
+      await login({ role: "aap", page });
+      await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+      await waitForFeasibilityQueries(page);
+      await expect(
+        page.getByTestId("complement-experience-parcours-vise-accordion"),
+      ).not.toBeVisible();
+    });
+  });
+
+  test.describe("when certificationAuthorityStructureHasReducedRequirements is true", () => {
+    test.describe("when complementExperienceParcoursVise is null", () => {
+      const feasibilityEditable = {
+        ...DEFAULT_FEASIBILITY_FILE,
+        dematerializedFeasibilityFile: {
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          certificationPartComplete: true,
+        },
+      };
+
+      test.use({
+        mswHandlers: [
+          [
+            ...aapCommonHandlers,
+            ...createFeasibilityHandlers({
+              feasibility: feasibilityEditable,
+              certificationAuthorityStructureHasReducedRequirements: true,
+            }),
+          ],
+          { scope: "test" },
+        ],
+      });
+
+      test("it should show the accordion with a 'Compléter' button", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+        await waitForFeasibilityQueries(page);
+        await expect(
+          page.getByTestId("complement-experience-parcours-vise-accordion"),
+        ).toBeVisible();
+        const button = page.getByTestId(
+          "complement-experience-parcours-vise-button",
+        );
+        await expect(button).toBeVisible();
+        await expect(button).toContainText("Compléter");
+      });
+
+      test("it should lead me to the complement experience parcours vise page when i click on the button", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+        await waitForFeasibilityQueries(page);
+        await page
+          .getByTestId("complement-experience-parcours-vise-button")
+          .click();
+        await expect(page).toHaveURL(
+          `/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap/complement-experience-parcours-vise/`,
+        );
+      });
+    });
+
+    test.describe("when complementExperienceParcoursVise has content", () => {
+      const feasibilityWithContent = {
+        ...DEFAULT_FEASIBILITY_FILE,
+        dematerializedFeasibilityFile: {
+          ...DEFAULT_DEMATERIALIZED_FEASIBILITY_FILE,
+          certificationPartComplete: true,
+          complementExperienceParcoursVise:
+            "Contenu du complément d'expérience",
+        },
+      };
+
+      test.use({
+        mswHandlers: [
+          [
+            ...aapCommonHandlers,
+            ...createFeasibilityHandlers({
+              feasibility: feasibilityWithContent,
+              certificationAuthorityStructureHasReducedRequirements: true,
+            }),
+          ],
+          { scope: "test" },
+        ],
+      });
+
+      test("itshould show the accordion with a 'Modifier' button", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+        await waitForFeasibilityQueries(page);
+        await expect(
+          page.getByTestId("complement-experience-parcours-vise-accordion"),
+        ).toBeVisible();
+        const button = page.getByTestId(
+          "complement-experience-parcours-vise-button",
+        );
+        await expect(button).toBeVisible();
+        await expect(button).toContainText("Modifier");
+      });
+    });
+
+    test.describe("when the file is not editable (sent to certification authority)", () => {
+      const feasibilitySent = {
+        ...DEFAULT_FEASIBILITY_FILE,
+        feasibilityFileSentAt: DATE_NOW,
+      };
+
+      test.use({
+        mswHandlers: [
+          [
+            ...aapCommonHandlers,
+            ...createFeasibilityHandlers({
+              feasibility: feasibilitySent,
+              certificationAuthorityStructureHasReducedRequirements: true,
+            }),
+          ],
+          { scope: "test" },
+        ],
+      });
+
+      test("it should show the accordion without a button", async ({
+        page,
+      }) => {
+        await login({ role: "aap", page });
+        await page.goto(`/admin2/candidacies/${CANDIDACY_ID}/feasibility-aap`);
+        await waitForFeasibilityQueries(page);
+        await expect(
+          page.getByTestId("complement-experience-parcours-vise-accordion"),
+        ).toBeVisible();
+        await expect(
+          page.getByTestId("complement-experience-parcours-vise-button"),
+        ).not.toBeVisible();
       });
     });
   });

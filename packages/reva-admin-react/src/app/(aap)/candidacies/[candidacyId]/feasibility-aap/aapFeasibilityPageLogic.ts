@@ -103,6 +103,7 @@ const getCandidacyById = graphql(`
         }
         certificationAuthorityStructure {
           label
+          hasReducedRequirements
         }
       }
       warningOnFeasibilitySubmission
@@ -178,6 +179,7 @@ const getCandidacyById = graphql(`
             previewUrl
             mimeType
           }
+          complementExperienceParcoursVise
         }
       }
     }

@@ -88,6 +88,9 @@ const AapFeasibilityPage = () => {
     !!dematerializedFeasibilityFile?.isReadyToBeSentToCandidate &&
     (!hasCertificationRncpExpired || isFeasibilityIncomplete);
 
+  const certificationAuthorityStructureHasReducedRequirements =
+    !!certification?.certificationAuthorityStructure?.hasReducedRequirements;
+
   if (!candidacy || !feasibility) {
     return null;
   }
@@ -221,6 +224,12 @@ const AapFeasibilityPage = () => {
             }
             isEditable={isFeasibilityEditable}
             isEligibilityRequirementPartial={isEligibilityRequirementPartial}
+            showComplementExperienceParcoursVise={
+              certificationAuthorityStructureHasReducedRequirements
+            }
+            complementExperienceParcoursVise={
+              dematerializedFeasibilityFile?.complementExperienceParcoursVise as string
+            }
           />
           <DecisionSection
             aapDecision={

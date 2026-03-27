@@ -6,6 +6,7 @@ import { BadgeCompleted } from "@/components/badge/badge-completed/BadgeComplete
 import { BadgeToComplete } from "@/components/badge/badge-to-complete/BadgeToComplete";
 import { SectionCard } from "@/components/card/section-card/SectionCard";
 import { CertificationCompetenceAccordion } from "@/components/dff-summary/_components/CertificationCompetenceAccordion";
+import { ComplementExperienceParcoursViseAccordion } from "@/components/dff-summary/_components/ComplementExperienceParcoursViseAccordion";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 
 import {
@@ -37,6 +38,8 @@ export const CompetenciesBlocksSection = ({
   disabled,
   disabledNoticeText,
   isEligibilityRequirementPartial,
+  showComplementExperienceParcoursVise,
+  complementExperienceParcoursVise,
 }: {
   isEditable: boolean;
   competenceBlocsPartCompletion?: CompetenceBlocsPartCompletion;
@@ -45,8 +48,10 @@ export const CompetenciesBlocksSection = ({
   disabled: boolean;
   disabledNoticeText: string;
   isEligibilityRequirementPartial: boolean;
+  showComplementExperienceParcoursVise: boolean;
+  complementExperienceParcoursVise: string;
 }) => {
-  const { candidacyId } = useParams();
+  const { candidacyId } = useParams<{ candidacyId: string }>();
 
   return (
     <SectionCard
@@ -62,38 +67,48 @@ export const CompetenciesBlocksSection = ({
       disabled={disabled}
       data-testid="competencies-blocks-section"
     >
-      {!!blocsDeCompetences?.length && (
-        <ul className="list-none flex flex-col gap-2">
-          {blocsDeCompetences?.map((bloc) => (
-            <li
+      <ul className="list-none flex flex-col gap-2">
+        {blocsDeCompetences?.map((bloc) => (
+          <li
+            key={bloc.certificationCompetenceBloc.id}
+            className="flex flex-row justify-between items-start pb-0 gap-6"
+          >
+            <CertificationCompetenceAccordion
               key={bloc.certificationCompetenceBloc.id}
-              className="flex flex-row justify-between items-start pb-0 gap-6"
-            >
-              <CertificationCompetenceAccordion
-                key={bloc.certificationCompetenceBloc.id}
-                competenceBloc={bloc.certificationCompetenceBloc}
-                competenceBlocText={bloc.text}
-                competenceDetails={certificationCompetenceDetails}
-                hideAccordionContent={isEligibilityRequirementPartial}
-              />
-              {!disabled && isEditable && (
-                <Button
-                  className="w-[120px] flex-none mt-1 border-t-[1px]"
-                  priority={bloc.complete ? "secondary" : "primary"}
-                  linkProps={{
-                    href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
-                  }}
-                  data-testid="competencies-blocks-section-button"
-                >
-                  <span className="mx-auto">
-                    {bloc.complete ? "Modifier" : "Compléter"}
-                  </span>
-                </Button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+              competenceBloc={bloc.certificationCompetenceBloc}
+              competenceBlocText={bloc.text}
+              competenceDetails={certificationCompetenceDetails}
+              hideAccordionContent={isEligibilityRequirementPartial}
+            />
+            {!disabled && isEditable && (
+              <Button
+                className="w-[120px] flex-none mt-1 border-t-[1px]"
+                priority={bloc.complete ? "secondary" : "primary"}
+                linkProps={{
+                  href: `/candidacies/${candidacyId}/feasibility-aap/competencies-blocks/${bloc.certificationCompetenceBloc.id}`,
+                }}
+                data-testid="competencies-blocks-section-button"
+              >
+                <span className="mx-auto">
+                  {bloc.complete ? "Modifier" : "Compléter"}
+                </span>
+              </Button>
+            )}
+          </li>
+        ))}
+        {showComplementExperienceParcoursVise && (
+          <li className="pb-0">
+            <ComplementExperienceParcoursViseAccordion
+              complementExperienceParcoursVise={
+                complementExperienceParcoursVise
+              }
+              disabled={disabled}
+              isEditable={isEditable}
+              candidacyId={candidacyId}
+            />
+          </li>
+        )}
+      </ul>
       {disabled && (
         <SmallNotice className="mt-4">{disabledNoticeText}</SmallNotice>
       )}
