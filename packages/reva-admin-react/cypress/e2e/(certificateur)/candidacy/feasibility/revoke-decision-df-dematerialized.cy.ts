@@ -11,6 +11,13 @@ import feasibilityDematerializedIncomplete from "./fixtures/feasibility-demateri
 import feasibilityDematerializedRejected from "./fixtures/feasibility-dematerialized-rejected.json";
 import revokeDecisionResponse from "./fixtures/revoke-decision-response.json";
 
+const fixtureMap: Record<string, object> = {
+  ADMISSIBLE: feasibilityDematerializedAdmissible,
+  REJECTED: feasibilityDematerializedRejected,
+  COMPLETE: feasibilityDematerializedComplete,
+  INCOMPLETE: feasibilityDematerializedIncomplete,
+};
+
 describe("Revoke Dematerialized Feasibility Decision", () => {
   const candidacyUrl =
     "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/feasibility";
@@ -64,9 +71,7 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
           stubQuery(
             req,
             "feasibilityGetActiveFeasibilityByCandidacyId",
-            decision === "ADMISSIBLE"
-              ? feasibilityDematerializedAdmissible
-              : feasibilityDematerializedRejected,
+            fixtureMap[decision],
           );
         });
 
@@ -104,15 +109,13 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
       });
     });
 
-    ["ADMISSIBLE", "REJECTED"].forEach((decision) => {
+    ["ADMISSIBLE", "REJECTED", "COMPLETE", "INCOMPLETE"].forEach((decision) => {
       it(`should display the revoke decision button for admin when decision is ${decision}`, () => {
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
             req,
             "feasibilityGetActiveFeasibilityByCandidacyId",
-            decision === "ADMISSIBLE"
-              ? feasibilityDematerializedAdmissible
-              : feasibilityDematerializedRejected,
+            fixtureMap[decision],
           );
         });
 
@@ -183,40 +186,6 @@ describe("Revoke Dematerialized Feasibility Decision", () => {
       cy.get(`[data-testid="feasibility-page-dematerialized-complete"]`).should(
         "exist",
       );
-    });
-
-    ["COMPLETE", "INCOMPLETE"].forEach((decision) => {
-      it(`should NOT display revoke button for ${decision} decisions`, () => {
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "feasibilityGetActiveFeasibilityByCandidacyId",
-            decision === "COMPLETE"
-              ? feasibilityDematerializedComplete
-              : feasibilityDematerializedIncomplete,
-          );
-        });
-
-        cy.admin(candidacyUrl);
-
-        cy.wait([
-          "@activeFeaturesForConnectedUser",
-          "@getMaisonMereCGUQuery",
-          "@getCandidacyWithCandidateInfoForLayout",
-          "@getFeasibilityCountByCategory",
-          "@getDossierDeValidationCountByCategory",
-          "@getJuryCountByCategory",
-          "@getCandidacyWithFeasibilityQuery",
-          "@candidacy_canAccessCandidacy",
-          "@feasibilityGetActiveFeasibilityByCandidacyId",
-        ]);
-
-        cy.get(
-          `[data-testid="feasibility-page-dematerialized-${decision.toLowerCase()}"]`,
-        ).should("exist");
-
-        cy.get("button").contains("Annuler la décision").should("not.exist");
-      });
     });
 
     ["DOSSIER_DE_VALIDATION_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"].forEach(

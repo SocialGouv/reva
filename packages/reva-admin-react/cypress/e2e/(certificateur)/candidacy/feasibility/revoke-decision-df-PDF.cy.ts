@@ -11,6 +11,13 @@ import candidacyPdfIncomplete from "./fixtures/feasibility-pdf-incomplete.json";
 import candidacyPdfRejected from "./fixtures/feasibility-pdf-rejected.json";
 import revokeDecisionResponse from "./fixtures/revoke-decision-response.json";
 
+const fixtureMap: Record<string, object> = {
+  ADMISSIBLE: candidacyPdfAdmissible,
+  REJECTED: candidacyPdfRejected,
+  COMPLETE: candidacyPdfComplete,
+  INCOMPLETE: candidacyPdfIncomplete,
+};
+
 describe("Revoke PDF Feasibility Decision", () => {
   const candidacyUrl =
     "/candidacies/46206f6b-0a59-4478-9338-45e3a8d968e4/feasibility";
@@ -64,9 +71,7 @@ describe("Revoke PDF Feasibility Decision", () => {
           stubQuery(
             req,
             "getCandidacyWithFeasibilityUploadedPdfQuery",
-            decision === "ADMISSIBLE"
-              ? candidacyPdfAdmissible
-              : candidacyPdfRejected,
+            fixtureMap[decision],
           );
         });
 
@@ -104,15 +109,13 @@ describe("Revoke PDF Feasibility Decision", () => {
       });
     });
 
-    ["ADMISSIBLE", "REJECTED"].forEach((decision) => {
+    ["ADMISSIBLE", "REJECTED", "COMPLETE", "INCOMPLETE"].forEach((decision) => {
       it(`should display the revoke decision button for admin when decision is ${decision}`, () => {
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
             req,
             "getCandidacyWithFeasibilityUploadedPdfQuery",
-            decision === "ADMISSIBLE"
-              ? candidacyPdfAdmissible
-              : candidacyPdfRejected,
+            fixtureMap[decision],
           );
         });
 
@@ -179,40 +182,6 @@ describe("Revoke PDF Feasibility Decision", () => {
       cy.wait("@getCandidacyWithFeasibilityUploadedPdfQuery");
 
       cy.get(`[data-testid="feasibility-page-pdf-complete"]`).should("exist");
-    });
-
-    ["COMPLETE", "INCOMPLETE"].forEach((decision) => {
-      it(`should NOT display revoke button for ${decision} decisions`, () => {
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(
-            req,
-            "getCandidacyWithFeasibilityUploadedPdfQuery",
-            decision === "COMPLETE"
-              ? candidacyPdfComplete
-              : candidacyPdfIncomplete,
-          );
-        });
-
-        cy.admin(candidacyUrl);
-
-        cy.wait([
-          "@activeFeaturesForConnectedUser",
-          "@getMaisonMereCGUQuery",
-          "@getCandidacyWithCandidateInfoForLayout",
-          "@getFeasibilityCountByCategory",
-          "@getDossierDeValidationCountByCategory",
-          "@getJuryCountByCategory",
-          "@getCandidacyWithFeasibilityQuery",
-          "@candidacy_canAccessCandidacy",
-          "@getCandidacyWithFeasibilityUploadedPdfQuery",
-        ]);
-
-        cy.get(
-          `[data-testid="feasibility-page-pdf-${decision.toLowerCase()}"]`,
-        ).should("exist");
-
-        cy.get("button").contains("Annuler la décision").should("not.exist");
-      });
     });
 
     ["DOSSIER_DE_VALIDATION_ENVOYE", "DOSSIER_DE_VALIDATION_SIGNALE"].forEach(
