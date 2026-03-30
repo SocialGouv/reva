@@ -24,6 +24,7 @@ import { createOrUpdateAttachments } from "./features/createOrUpdateAttachments"
 import { createOrUpdateCertificationAuthorityDecision } from "./features/createOrUpdateCertificationAuthorityDecision";
 import { createOrUpdateCertificationCompetenceDetails } from "./features/createOrUpdateCertificationCompetenceDetails";
 import { createOrUpdateCertificationInfo } from "./features/createOrUpdateCertificationInfo";
+import { createOrUpdateComplementExperienceParcoursVise } from "./features/createOrUpdateComplementExperienceParcoursVise";
 import { createOrUpdateEligibilityRequirement } from "./features/createOrUpdateEligibilityRequirement";
 import { createOrUpdatePrerequisites } from "./features/createOrUpdatePrerequisites";
 import { createOrUpdateSwornStatement } from "./features/createOrUpdateSwornStatement";
@@ -184,6 +185,21 @@ const unsafeResolvers = {
       ) =>
         createOrUpdateCertificationCompetenceDetails({
           ...params.input,
+        }),
+    dematerialized_feasibility_file_createOrUpdateComplementExperienceParcoursVise:
+      (
+        _parent: unknown,
+        params: {
+          candidacyId: string;
+          input: {
+            complementExperienceParcoursVise: string;
+          };
+        },
+      ) =>
+        createOrUpdateComplementExperienceParcoursVise({
+          candidacyId: params.candidacyId,
+          complementExperienceParcoursVise:
+            params.input.complementExperienceParcoursVise,
         }),
     dematerialized_feasibility_file_createOrUpdatePrerequisites: (
       _parent: unknown,

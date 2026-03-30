@@ -19,6 +19,9 @@ export const resolversSecurityMap = {
   "Mutation.dematerialized_feasibility_file_createOrUpdateCertificationCompetenceDetails":
     isAdminOrCandidacyCompanion,
 
+  "Mutation.dematerialized_feasibility_file_createOrUpdateComplementExperienceParcoursVise":
+    isAdminOrCandidacyCompanion,
+
   "Mutation.dematerialized_feasibility_file_createOrUpdatePrerequisites":
     isAdminOrCandidacyCompanion,
 

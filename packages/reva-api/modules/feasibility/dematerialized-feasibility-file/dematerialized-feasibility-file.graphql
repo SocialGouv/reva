@@ -179,6 +179,10 @@ input DematerializedFeasibilityFileCreateOrUpdateEligibilityRequirementInput {
   eligibilityValidUntil: Timestamp
 }
 
+input DematerializedFeasibilityFileCreateOrUpdateComplementExperienceParcoursViseInput {
+  complementExperienceParcoursVise: String!
+}
+
 type Mutation {
   dematerialized_feasibility_file_createOrUpdateCertificationInfo(
     candidacyId: ID!
@@ -188,6 +192,11 @@ type Mutation {
   dematerialized_feasibility_file_createOrUpdateCertificationCompetenceDetails(
     candidacyId: ID!
     input: DematerializedFeasibilityFileCreateOrUpdateCertificationCompetenceDetailsInput!
+  ): DematerializedFeasibilityFile!
+
+  dematerialized_feasibility_file_createOrUpdateComplementExperienceParcoursVise(
+    candidacyId: ID!
+    input: DematerializedFeasibilityFileCreateOrUpdateComplementExperienceParcoursViseInput!
   ): DematerializedFeasibilityFile!
 
   dematerialized_feasibility_file_createOrUpdatePrerequisites(
