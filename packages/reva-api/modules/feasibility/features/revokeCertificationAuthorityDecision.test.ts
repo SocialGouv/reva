@@ -49,7 +49,7 @@ const getCandidacyByIdQuery = graphql(`
   }
 `);
 
-describe("revokeCertificationAuthorityDecision", () => {
+describe("Révocation de la décision du dossier de faisabilité", () => {
   const getAdminClient = () =>
     getGraphQLClient({
       headers: {
@@ -116,41 +116,76 @@ describe("revokeCertificationAuthorityDecision", () => {
       });
     }
 
-    return {
-      candidacy,
-      feasibility,
-    };
+    return { candidacy, feasibility };
   };
 
-  describe("successful revocation scenarios", () => {
+  describe("Révocation réussie", () => {
     test.each<{
       decision: FeasibilityStatus;
       format: FeasibilityFormat;
+      expectedDecision: string;
+      expectedStatus: string;
     }>([
       {
         decision: "ADMISSIBLE",
         format: "DEMATERIALIZED",
+        expectedDecision: "COMPLETE",
+        expectedStatus: "DOSSIER_FAISABILITE_COMPLET",
       },
       {
         decision: "REJECTED",
         format: "DEMATERIALIZED",
+        expectedDecision: "COMPLETE",
+        expectedStatus: "DOSSIER_FAISABILITE_COMPLET",
       },
       {
         decision: "ADMISSIBLE",
         format: "UPLOADED_PDF",
+        expectedDecision: "COMPLETE",
+        expectedStatus: "DOSSIER_FAISABILITE_COMPLET",
       },
       {
         decision: "REJECTED",
         format: "UPLOADED_PDF",
+        expectedDecision: "COMPLETE",
+        expectedStatus: "DOSSIER_FAISABILITE_COMPLET",
+      },
+      {
+        decision: "COMPLETE",
+        format: "DEMATERIALIZED",
+        expectedDecision: "PENDING",
+        expectedStatus: "DOSSIER_FAISABILITE_ENVOYE",
+      },
+      {
+        decision: "INCOMPLETE",
+        format: "DEMATERIALIZED",
+        expectedDecision: "PENDING",
+        expectedStatus: "DOSSIER_FAISABILITE_ENVOYE",
+      },
+      {
+        decision: "COMPLETE",
+        format: "UPLOADED_PDF",
+        expectedDecision: "PENDING",
+        expectedStatus: "DOSSIER_FAISABILITE_ENVOYE",
+      },
+      {
+        decision: "INCOMPLETE",
+        format: "UPLOADED_PDF",
+        expectedDecision: "PENDING",
+        expectedStatus: "DOSSIER_FAISABILITE_ENVOYE",
       },
     ])(
-      "should revoke $decision decision for $format feasibility",
+      "devrait révoquer la décision $decision ($format) → $expectedDecision",
       async ({
         decision,
         format,
+        expectedDecision,
+        expectedStatus,
       }: {
         decision: FeasibilityStatus;
         format: FeasibilityFormat;
+        expectedDecision: string;
+        expectedStatus: string;
       }) => {
         const { candidacy, feasibility } = await createFeasibilityWithDecision(
           decision,
@@ -169,7 +204,7 @@ describe("revokeCertificationAuthorityDecision", () => {
         expect(
           result.feasibility_revokeCertificationAuthorityDecision,
         ).toMatchObject({
-          decision: "COMPLETE",
+          decision: expectedDecision,
           decisionSentAt: null,
           decisionComment: null,
         });
@@ -177,33 +212,25 @@ describe("revokeCertificationAuthorityDecision", () => {
         const history =
           result.feasibility_revokeCertificationAuthorityDecision.history;
 
-        // For PDF, history only shows INCOMPLETE decisions
-        // For dematerialized, it shows all decisions from feasibilityDecision table
         if (format === "UPLOADED_PDF") {
           expect(history.length).toBe(0);
         } else {
           expect(history.length).toBe(2);
-          expect(history[0]).toMatchObject({
-            decision: "COMPLETE",
-          });
+          expect(history[0]).toMatchObject({ decision: expectedDecision });
         }
 
         const candidacyResult = await adminClient.request(
           getCandidacyByIdQuery,
-          {
-            candidacyId: candidacy.id,
-          },
+          { candidacyId: candidacy.id },
         );
 
-        expect(candidacyResult.getCandidacyById?.status).toBe(
-          "DOSSIER_FAISABILITE_COMPLET",
-        );
+        expect(candidacyResult.getCandidacyById?.status).toBe(expectedStatus);
       },
     );
   });
 
-  describe("candidacy log creation", () => {
-    test("should create candidacy log with reason when provided", async () => {
+  describe("Journal de candidature", () => {
+    test("devrait créer un log avec le motif quand il est fourni", async () => {
       const { candidacy, feasibility } =
         await createFeasibilityWithDecision("ADMISSIBLE");
       const adminClient = getAdminClient();
@@ -227,32 +254,26 @@ describe("revokeCertificationAuthorityDecision", () => {
     });
   });
 
-  describe("access scenarios", () => {
-    test("should fail for certificateur role", async () => {
+  describe("Contrôle d'accès", () => {
+    test("devrait échouer pour un certificateur", async () => {
       const { feasibility } = await createFeasibilityWithDecision("ADMISSIBLE");
       const certificateurClient = getCertificateurClient();
 
       await expect(
         certificateurClient.request(
           revokeCertificationAuthorityDecisionMutation,
-          {
-            feasibilityId: feasibility.id,
-          },
+          { feasibilityId: feasibility.id },
         ),
       ).rejects.toThrowError("You are not authorized!");
     });
   });
 
-  describe("error scenarios", () => {
-    test.each<{
-      decision: FeasibilityStatus;
-    }>([
-      { decision: "COMPLETE" },
-      { decision: "INCOMPLETE" },
+  describe("Cas d'erreur", () => {
+    test.each<{ decision: FeasibilityStatus }>([
       { decision: "PENDING" },
       { decision: "DRAFT" },
     ])(
-      "should fail to revoke $decision decision",
+      "devrait échouer pour une décision $decision",
       async ({ decision }: { decision: FeasibilityStatus }) => {
         const { feasibility } = await createFeasibilityWithDecision(decision);
         const adminClient = getAdminClient();
@@ -262,18 +283,17 @@ describe("revokeCertificationAuthorityDecision", () => {
             feasibilityId: feasibility.id,
           }),
         ).rejects.toThrowError(
-          "La décision ne peut être annulée que pour les dossiers recevables ou non recevables",
+          "La décision ne peut être annulée que pour les dossiers recevables, non recevables, complets ou incomplets",
         );
       },
     );
 
-    test("should fail when feasibility does not exist", async () => {
-      const nonExistentFeasibilityId = "00000000-0000-0000-0000-000000000000";
+    test("devrait échouer quand le dossier de faisabilité n'existe pas", async () => {
       const adminClient = getAdminClient();
 
       await expect(
         adminClient.request(revokeCertificationAuthorityDecisionMutation, {
-          feasibilityId: nonExistentFeasibilityId,
+          feasibilityId: "00000000-0000-0000-0000-000000000000",
         }),
       ).rejects.toThrowError("Aucun dossier de faisabilité trouvé");
     });
@@ -282,7 +302,7 @@ describe("revokeCertificationAuthorityDecision", () => {
       "DOSSIER_DE_VALIDATION_ENVOYE",
       "DOSSIER_DE_VALIDATION_SIGNALE",
     ])(
-      "should fail when candidacy status is %s",
+      "devrait échouer quand le statut de la candidature est %s",
       async (status: CandidacyStatusStep) => {
         const candidacy = await createCandidacyHelper({
           candidacyArgs: { status },
@@ -301,7 +321,7 @@ describe("revokeCertificationAuthorityDecision", () => {
             feasibilityId: feasibility.id,
           }),
         ).rejects.toThrowError(
-          "La décision ne peut être annulée que lorsque la candidature est à l'étape DOSSIER_FAISABILITE_RECEVABLE ou DOSSIER_FAISABILITE_NON_RECEVABLE",
+          "La décision ne peut être annulée que lorsque la candidature est à l'étape DOSSIER_FAISABILITE_RECEVABLE, DOSSIER_FAISABILITE_NON_RECEVABLE, DOSSIER_FAISABILITE_COMPLET ou DOSSIER_FAISABILITE_INCOMPLET",
         );
       },
     );
