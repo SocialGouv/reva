@@ -40,6 +40,16 @@ const getJuryByCandidacyIdQuery = graphql(`
           previewUrl
         }
       }
+      feasibility {
+        dematerializedFeasibilityFile {
+          blocsDeCompetences {
+            certificationCompetenceBloc {
+              label
+              code
+            }
+          }
+        }
+      }
       historyJury {
         id
         dateOfSession
