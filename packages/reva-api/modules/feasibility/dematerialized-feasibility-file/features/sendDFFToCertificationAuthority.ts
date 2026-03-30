@@ -2,6 +2,7 @@ import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "@/modules/certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
+import { getAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getAccountByCertificationAuthorityId";
 import { getBackofficeUrl } from "@/modules/shared/email/backoffice.url.helpers";
 import { prismaClient } from "@/prisma/client";
 
@@ -119,6 +120,13 @@ export const sendDFFToCertificationAuthority = async ({
   const emails = [];
   if (certificationAuthority?.contactEmail) {
     emails.push(certificationAuthority?.contactEmail);
+  } else {
+    const account = await getAccountByCertificationAuthorityId({
+      certificationAuthorityId,
+    });
+    if (account) {
+      emails.push(account.email);
+    }
   }
 
   for (const cala of certificationAuthorityLocalAccounts) {

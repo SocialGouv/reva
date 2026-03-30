@@ -4,6 +4,7 @@ import { v4 as uuidV4 } from "uuid";
 import { getAccountById } from "@/modules/account/features/getAccount";
 import { updateCandidacyStatus } from "@/modules/candidacy/features/updateCandidacyStatus";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
+import { getAccountByCertificationAuthorityId } from "@/modules/certification-authority/features/getAccountByCertificationAuthorityId";
 import { allowFileTypeByDocumentType } from "@/modules/shared/file/allowFileTypes";
 import { UploadedFile } from "@/modules/shared/file/file.interface";
 import { uploadFileToS3 } from "@/modules/shared/file/file.service";
@@ -224,6 +225,13 @@ export const sendDossierDeValidation = async ({
   const emails = [];
   if (certificationAuthority?.contactEmail) {
     emails.push(certificationAuthority?.contactEmail);
+  } else {
+    const account = await getAccountByCertificationAuthorityId({
+      certificationAuthorityId: certificationAuthority?.id || "",
+    });
+    if (account) {
+      emails.push(account.email);
+    }
   }
 
   for (const cala of certificationAuthorityLocalAccounts) {

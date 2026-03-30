@@ -22,6 +22,7 @@ import { updateCandidacyStatus } from "../candidacy/features/updateCandidacyStat
 import { candidacySearchWord } from "../candidacy/utils/candidacy.helper";
 import { logCandidacyAuditEvent } from "../candidacy-log/features/logCandidacyAuditEvent";
 import { assignCandidacyToCertificationAuthorityLocalAccounts } from "../certification-authority/features/assignCandidacyToCertificationAuthorityLocalAccounts";
+import { getAccountByCertificationAuthorityId } from "../certification-authority/features/getAccountByCertificationAuthorityId";
 import { getCertificationAuthorityLocalAccountByAccountId } from "../certification-authority/features/getCertificationAuthorityLocalAccountByAccountId";
 import { UploadedFile } from "../shared/file/file.interface";
 import {
@@ -355,6 +356,13 @@ export const createFeasibility = async ({
   const emails = [];
   if (certificationAuthority?.contactEmail) {
     emails.push(certificationAuthority?.contactEmail);
+  } else {
+    const account = await getAccountByCertificationAuthorityId({
+      certificationAuthorityId,
+    });
+    if (account) {
+      emails.push(account.email);
+    }
   }
 
   for (const cala of certificationAuthorityLocalAccounts) {
