@@ -31,43 +31,6 @@ import {
   useDematerializedFeasibility,
 } from "./dematerializedFeasibility.hook";
 
-const FeasibilityBanner = ({
-  isWaitingForDecision,
-  feasibilityDecisionSentAt,
-  feasibilityDecision,
-  feasibilityDecisionComment,
-  feasibilityHistory,
-  onRevokeDecision,
-  isAdmin,
-  candidacyStatus,
-}: {
-  isWaitingForDecision: boolean;
-  feasibilityDecisionSentAt: Date | null;
-  feasibilityDecision: FeasibilityDecision;
-  feasibilityDecisionComment?: string | null;
-  feasibilityHistory: FeasibilityHistory[];
-  candidacyId: string;
-  onRevokeDecision?: () => void;
-  isAdmin?: boolean;
-  candidacyStatus: string;
-}) => {
-  if (!isWaitingForDecision) {
-    return (
-      <DecisionSentComponent
-        decisionSentAt={feasibilityDecisionSentAt}
-        decision={feasibilityDecision}
-        decisionComment={feasibilityDecisionComment}
-        history={feasibilityHistory}
-        onRevokeDecision={onRevokeDecision}
-        isAdmin={isAdmin}
-        candidacyStatus={candidacyStatus}
-      />
-    );
-  }
-
-  return null;
-};
-
 export const DematerializedFeasibility = () => {
   const { candidacyId } = useParams<{ candidacyId: string }>();
   const {
@@ -203,13 +166,11 @@ export const DematerializedFeasibility = () => {
         }
         candidacy={candidacy as Candidacy}
         FeasibilityBanner={
-          <FeasibilityBanner
-            isWaitingForDecision={waitingForDecision}
-            feasibilityDecisionSentAt={feasibilityDecisionSentAt}
-            feasibilityDecision={feasibility?.decision as FeasibilityDecision}
-            feasibilityDecisionComment={feasibility?.decisionComment}
-            feasibilityHistory={feasibility?.history as FeasibilityHistory[]}
-            candidacyId={candidacyId}
+          <DecisionSentComponent
+            decisionSentAt={feasibilityDecisionSentAt}
+            decision={feasibility?.decision as FeasibilityDecision}
+            decisionComment={feasibility?.decisionComment}
+            history={feasibility?.history as FeasibilityHistory[]}
             onRevokeDecision={() => revokeDecisionModal.open()}
             isAdmin={isAdmin}
             candidacyStatus={candidacy.status}

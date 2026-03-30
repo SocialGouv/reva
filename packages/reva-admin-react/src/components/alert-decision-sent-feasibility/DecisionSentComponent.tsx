@@ -15,6 +15,7 @@ type FeasibilityHistory = {
 
 const severityMap = {
   ADMISSIBLE: "success",
+  COMPLETE: "info",
   INCOMPLETE: "info",
   REJECTED: "error",
 };
@@ -36,25 +37,35 @@ export const DecisionSentComponent = ({
   isAdmin?: boolean;
   candidacyStatus?: string;
 }) => {
-  if (!decisionSentAt || decision === "COMPLETE") {
+  if (decision === "PENDING" || decision === "DRAFT") {
     return null;
   }
 
   const titleMap = {
-    ADMISSIBLE: `Dossier recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`,
-    INCOMPLETE: `Dossier retourné incomplet le ${format(decisionSentAt, "dd/MM/yyyy")}`,
-    REJECTED: `Dossier non recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`,
+    ADMISSIBLE: decisionSentAt
+      ? `Dossier recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`
+      : "Dossier recevable",
+    COMPLETE: "Dossier déclaré complet",
+    INCOMPLETE: decisionSentAt
+      ? `Dossier retourné incomplet le ${format(decisionSentAt, "dd/MM/yyyy")}`
+      : "Dossier retourné incomplet",
+    REJECTED: decisionSentAt
+      ? `Dossier non recevable le ${format(decisionSentAt, "dd/MM/yyyy")}`
+      : "Dossier non recevable",
+  };
+
+  const decisionToStatusMap: Record<string, string[]> = {
+    ADMISSIBLE: ["DOSSIER_FAISABILITE_RECEVABLE"],
+    REJECTED: ["DOSSIER_FAISABILITE_NON_RECEVABLE"],
+    COMPLETE: ["DOSSIER_FAISABILITE_COMPLET"],
+    INCOMPLETE: ["DOSSIER_FAISABILITE_INCOMPLET"],
   };
 
   const canDisplayHistory = !!history?.length && history.length > 1;
   const canRevoke =
-    ["ADMISSIBLE", "REJECTED"].includes(decision) &&
     isAdmin &&
     candidacyStatus &&
-    [
-      "DOSSIER_FAISABILITE_RECEVABLE",
-      "DOSSIER_FAISABILITE_NON_RECEVABLE",
-    ].includes(candidacyStatus);
+    decisionToStatusMap[decision]?.includes(candidacyStatus);
 
   return (
     <>

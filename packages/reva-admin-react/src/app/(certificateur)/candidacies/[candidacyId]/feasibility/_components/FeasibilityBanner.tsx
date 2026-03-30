@@ -1,4 +1,4 @@
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import Alert, { AlertProps } from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
 
@@ -20,6 +20,20 @@ interface Props {
   candidacyStatus: string;
 }
 
+const decisionToStatusMap: Record<string, string[]> = {
+  ADMISSIBLE: ["DOSSIER_FAISABILITE_RECEVABLE"],
+  REJECTED: ["DOSSIER_FAISABILITE_NON_RECEVABLE"],
+  COMPLETE: ["DOSSIER_FAISABILITE_COMPLET"],
+  INCOMPLETE: ["DOSSIER_FAISABILITE_INCOMPLET"],
+};
+
+const severityMap: Record<string, AlertProps.Severity> = {
+  ADMISSIBLE: "success",
+  COMPLETE: "success",
+  INCOMPLETE: "warning",
+  REJECTED: "error",
+};
+
 export function FeasibilityBanner({
   decision,
   decisionComment,
@@ -29,101 +43,86 @@ export function FeasibilityBanner({
   isAdmin = false,
   candidacyStatus,
 }: Props) {
-  const canRevokeDecision =
-    isAdmin &&
-    [
-      "DOSSIER_FAISABILITE_RECEVABLE",
-      "DOSSIER_FAISABILITE_NON_RECEVABLE",
-    ].includes(candidacyStatus);
-  switch (true) {
-    case decision === "REJECTED":
-      return (
-        <>
-          <div>
-            <Alert
-              className="mb-4"
-              severity="error"
-              data-testid="feasibility-decision-rejected"
-              title={`Dossier déclaré comme "non recevable" le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
-              description={
-                <p>
-                  Si vous avez précisé les motifs de cette décision, ils seront
-                  transmis au candidat : {'"'}
-                  {decisionComment}
-                  {'"'}
-                </p>
-              }
-            />
-            {canRevokeDecision && (
-              <div className="flex justify-end mb-4">
-                <Button priority="secondary" onClick={onRevokeDecision}>
-                  Annuler la décision
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {feasibilityHistory.length > 0 && (
-            <FeasibilityDecisionHistory history={feasibilityHistory} />
-          )}
-        </>
-      );
-
-    case decision === "INCOMPLETE":
-      return (
-        <>
-          <Alert
-            className="mb-12"
-            severity="warning"
-            data-testid="feasibility-decision-incomplete"
-            title={`Dossier renvoyé car "incomplet" le ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
-            description={
-              <p>
-                Le dossier a été renvoyé au candidat car "incomplet". Si vous
-                avez précisé les motifs de cette décision, ils seront transmis
-                au candidat : {'"'}
-                {decisionComment}
-                {'"'}
-              </p>
-            }
-          />
-          {feasibilityHistory.length > 0 && (
-            <FeasibilityDecisionHistory history={feasibilityHistory} />
-          )}
-        </>
-      );
-
-    case decision === "PENDING":
-      return feasibilityHistory.length > 0 ? (
-        <FeasibilityDecisionHistory history={feasibilityHistory} />
-      ) : null;
-
-    case decision === "ADMISSIBLE":
-      return (
-        <>
-          <div>
-            <Alert
-              className="mb-4"
-              severity="success"
-              data-testid="feasibility-decision-admissible"
-              small
-              description={`Recevabilité acceptée le  ${toDate(decisionSentAt!).toLocaleDateString("fr-FR")}`}
-            />
-            {canRevokeDecision && (
-              <div className="flex justify-end mb-4">
-                <Button priority="secondary" onClick={onRevokeDecision}>
-                  Annuler la décision
-                </Button>
-              </div>
-            )}
-          </div>
-          {feasibilityHistory.length > 0 && (
-            <FeasibilityDecisionHistory history={feasibilityHistory} />
-          )}
-        </>
-      );
-
-    default:
-      return null;
+  if (decision === "PENDING") {
+    return feasibilityHistory.length > 0 ? (
+      <FeasibilityDecisionHistory history={feasibilityHistory} />
+    ) : null;
   }
+
+  const formattedDate = decisionSentAt
+    ? toDate(decisionSentAt).toLocaleDateString("fr-FR")
+    : null;
+
+  const titleMap: Record<string, string> = {
+    ADMISSIBLE: formattedDate
+      ? `Recevabilité acceptée le ${formattedDate}`
+      : "Recevabilité acceptée",
+    REJECTED: formattedDate
+      ? `Dossier déclaré comme "non recevable" le ${formattedDate}`
+      : `Dossier déclaré comme "non recevable"`,
+    COMPLETE: "Dossier complet",
+    INCOMPLETE: formattedDate
+      ? `Dossier renvoyé car "incomplet" le ${formattedDate}`
+      : `Dossier renvoyé car "incomplet"`,
+  };
+
+  const descriptionMap: Record<
+    string,
+    NonNullable<React.ReactNode> | undefined
+  > = {
+    ADMISSIBLE: undefined,
+    COMPLETE: decisionComment ? <p>"{decisionComment}"</p> : undefined,
+    REJECTED: (
+      <p>
+        Si vous avez précisé les motifs de cette décision, ils seront transmis
+        au candidat : {'"'}
+        {decisionComment}
+        {'"'}
+      </p>
+    ),
+    INCOMPLETE: (
+      <p>
+        Le dossier a été renvoyé au candidat car "incomplet". Si vous avez
+        précisé les motifs de cette décision, ils seront transmis au candidat :{" "}
+        {'"'}
+        {decisionComment}
+        {'"'}
+      </p>
+    ),
+  };
+
+  const canRevoke =
+    isAdmin && decisionToStatusMap[decision]?.includes(candidacyStatus);
+
+  const alertProps = {
+    className: "mb-4",
+    severity: severityMap[decision] ?? ("info" as AlertProps.Severity),
+    "data-testid": `feasibility-decision-${decision.toLowerCase()}`,
+  };
+
+  return (
+    <>
+      <div>
+        {decision === "ADMISSIBLE" ? (
+          <Alert {...alertProps} small description={titleMap[decision] ?? ""} />
+        ) : (
+          <Alert
+            {...alertProps}
+            title={titleMap[decision] ?? ""}
+            description={descriptionMap[decision]}
+          />
+        )}
+        {canRevoke && (
+          <div className="flex justify-end mb-4">
+            <Button priority="secondary" onClick={onRevokeDecision}>
+              Annuler la décision
+            </Button>
+          </div>
+        )}
+      </div>
+      {feasibilityHistory.length > 0 && (
+        <FeasibilityDecisionHistory history={feasibilityHistory} />
+      )}
+    </>
+  );
 }
