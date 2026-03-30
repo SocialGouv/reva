@@ -2,6 +2,8 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useFormContext } from "react-hook-form";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+
 import { Candidacy } from "@/graphql/generated/graphql";
 
 const genders = [
@@ -22,6 +24,10 @@ export const InformationCandidatBlock = ({
     formState: { errors },
   } = useFormContext();
 
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
+
   return (
     <div className="w-full flex flex-col mt-6">
       <legend>
@@ -38,20 +44,40 @@ export const InformationCandidatBlock = ({
           nativeInputProps={{ value: candidacy?.candidate?.firstname ?? "" }}
           disabled
         />
-        <Input
-          label="2ème prénom (optionnel)"
-          nativeInputProps={register("candidateSecondname")}
-          stateRelatedMessage={errors.candidateSecondname?.message as string}
-          state={errors.candidateSecondname ? "error" : "default"}
-          disabled={isReadOnly}
-        />
-        <Input
-          label="3ème prénom (optionnel)"
-          nativeInputProps={register("candidateThirdname")}
-          stateRelatedMessage={errors.candidateThirdname?.message as string}
-          state={errors.candidateThirdname ? "error" : "default"}
-          disabled={isReadOnly}
-        />
+
+        {isMiddleNamesEnabled ? (
+          <>
+            <Input
+              label="Autres prénoms (optionnel)"
+              nativeInputProps={register("candidateMiddleNames")}
+              stateRelatedMessage={
+                errors.candidateMiddleNames?.message as string
+              }
+              state={errors.candidateMiddleNames ? "error" : "default"}
+              disabled={isReadOnly}
+            />
+          </>
+        ) : (
+          <>
+            <Input
+              label="2ème prénom (optionnel)"
+              nativeInputProps={register("candidateSecondname")}
+              stateRelatedMessage={
+                errors.candidateSecondname?.message as string
+              }
+              state={errors.candidateSecondname ? "error" : "default"}
+              disabled={isReadOnly}
+            />
+            <Input
+              label="3ème prénom (optionnel)"
+              nativeInputProps={register("candidateThirdname")}
+              stateRelatedMessage={errors.candidateThirdname?.message as string}
+              state={errors.candidateThirdname ? "error" : "default"}
+              disabled={isReadOnly}
+            />
+          </>
+        )}
+
         <Select
           className="w-full"
           label="Civilité"

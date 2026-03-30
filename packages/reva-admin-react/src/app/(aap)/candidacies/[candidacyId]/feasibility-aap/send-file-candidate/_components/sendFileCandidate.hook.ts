@@ -153,6 +153,7 @@ const feasibilityWithDematerializedFeasibilityFileSendFileCandidateByCandidacyId
             firstname
             firstname2
             firstname3
+            middleNames
             lastname
             email
             givenName

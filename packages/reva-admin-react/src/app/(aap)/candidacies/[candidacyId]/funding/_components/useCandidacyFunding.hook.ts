@@ -71,6 +71,7 @@ const getCandidacyByIdFunding = graphql(`
         firstname
         firstname2
         firstname3
+        middleNames
         gender
         email
         phone

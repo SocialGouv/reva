@@ -108,6 +108,7 @@ const FundingPage = () => {
     () => ({
       candidateSecondname: candidacy?.candidate?.firstname2 ?? "",
       candidateThirdname: candidacy?.candidate?.firstname3 ?? "",
+      candidateMiddleNames: candidacy?.candidate?.middleNames ?? "",
       candidateGender:
         (candidacy?.candidate?.gender as GenderEnum) ?? GenderEnum.undisclosed,
       individualHourCount: candidacyFundingRequest?.individualHourCount ?? 0,

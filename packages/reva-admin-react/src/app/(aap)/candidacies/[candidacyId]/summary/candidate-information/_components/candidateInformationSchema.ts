@@ -16,6 +16,7 @@ export const candidateInformationSchema = z
     firstname: sanitizedText(),
     firstname2: sanitizedOptionalText(),
     firstname3: sanitizedOptionalText(),
+    middleNames: sanitizedOptionalText(),
     birthdate: sanitizedText(),
     country: sanitizedText().default("France"),
     birthDepartment: sanitizedOptionalText(),

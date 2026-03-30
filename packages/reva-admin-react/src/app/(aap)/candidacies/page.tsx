@@ -130,6 +130,9 @@ export default function CandidaciesPage() {
               candidateFirstname={candidacy.candidate?.firstname || ""}
               candidateFirstname2={candidacy.candidate?.firstname2 || undefined}
               candidateFirstname3={candidacy.candidate?.firstname3 || undefined}
+              candidateMiddleNames={
+                candidacy.candidate?.middleNames || undefined
+              }
               candidateLastname={candidacy.candidate?.lastname || ""}
               candidateGivenName={candidacy.candidate?.givenName || undefined}
               certificationLabel={

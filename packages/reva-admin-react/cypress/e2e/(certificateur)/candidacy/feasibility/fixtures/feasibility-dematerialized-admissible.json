@@ -65,6 +65,7 @@
           "firstname": "John",
           "firstname2": "",
           "firstname3": "",
+          "middleNames": "",
           "lastname": "Doe",
           "email": "john.doe@example.com",
           "givenName": "",

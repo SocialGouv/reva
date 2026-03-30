@@ -26,6 +26,7 @@ const getCandidacyById = graphql(`
         firstname
         firstname2
         firstname3
+        middleNames
         lastname
         birthdate
         nationality

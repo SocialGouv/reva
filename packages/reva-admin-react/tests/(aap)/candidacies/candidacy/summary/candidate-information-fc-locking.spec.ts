@@ -34,6 +34,7 @@ function createCandidate(franceConnectLinked: boolean) {
     givenName: "Johnny",
     firstname2: "Paul",
     firstname3: "Max",
+    middleNames: "Paul Max",
     gender: "man",
     birthCity: "Paris",
     birthdate: "1990-01-01",
@@ -88,14 +89,15 @@ function candidateInformationHandlers({
   ];
 }
 
-const { aapCommonHandlers, aapCommonWait } = getAAPCommonHandlers();
+const { aapCommonHandlers, aapCommonWait } = getAAPCommonHandlers({
+  activeFeaturesForConnectedUser: ["MIDDLE_NAMES"],
+});
 
 const SELECTORS = {
   firstname: 'input[name="firstname"]',
   lastname: 'input[name="lastname"]',
   givenName: 'input[name="givenName"]',
-  firstname2: 'input[name="firstname2"]',
-  firstname3: 'input[name="firstname3"]',
+  middleNames: 'input[name="middleNames"]',
   gender: 'select[name="gender"]',
   birthCity: 'input[name="birthCity"]',
   birthdate: 'input[name="birthdate"]',
@@ -136,8 +138,7 @@ test.describe("FranceConnect linked candidate", () => {
     await visitCandidateInformation(page);
     await expect(page.locator(SELECTORS.lastname)).toBeDisabled();
     await expect(page.locator(SELECTORS.firstname)).toBeDisabled();
-    await expect(page.locator(SELECTORS.firstname2)).toBeDisabled();
-    await expect(page.locator(SELECTORS.firstname3)).toBeDisabled();
+    await expect(page.locator(SELECTORS.middleNames)).toBeDisabled();
     await expect(page.locator(SELECTORS.birthdate)).toBeDisabled();
     await expect(page.locator(SELECTORS.country)).toBeDisabled();
     await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();

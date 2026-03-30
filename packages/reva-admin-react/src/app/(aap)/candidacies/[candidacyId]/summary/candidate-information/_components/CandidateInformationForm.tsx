@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
 import { GenderEnum } from "@/constants/genders.constant";
@@ -40,6 +41,9 @@ const CandidateInformationForm = ({
 }) => {
   const backUrl = `/candidacies/${candidacyId}/summary`;
   const router = useRouter();
+
+  const { isFeatureActive } = useFeatureflipping();
+  const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
 
   const { updateCandidateInformationMutate } =
     useUpdateCandidateInformation(candidacyId);
@@ -76,6 +80,7 @@ const CandidateInformationForm = ({
       givenName: candidate?.givenName ?? "",
       firstname2: candidate?.firstname2 ?? "",
       firstname3: candidate?.firstname3 ?? "",
+      middleNames: candidate?.middleNames ?? "",
       gender: (candidate?.gender as GenderEnum) ?? GenderEnum.undisclosed,
       birthCity: candidate?.birthCity ?? "",
       birthdate: candidate?.birthdate ?? "",
@@ -104,6 +109,7 @@ const CandidateInformationForm = ({
         givenName: candidate.givenName ?? "",
         firstname2: candidate.firstname2 ?? "",
         firstname3: candidate.firstname3 ?? "",
+        middleNames: candidate.middleNames ?? "",
         birthCity: candidate.birthCity ?? "",
         birthdate: candidate.birthdate ?? "",
         birthDepartment: candidate.birthDepartment?.id ?? "",
@@ -141,11 +147,23 @@ const CandidateInformationForm = ({
   }, [franceId, countries, candidacy, setValue]);
 
   const onSubmit = async (data: FormCandidateInformationData) => {
+    let firstname2 = data.firstname2;
+    let firstname3 = data.firstname3;
+    let middleNames = data.middleNames;
+
+    if (isMiddleNamesEnabled) {
+      firstname2 = middleNames?.split(" ")[0];
+      firstname3 = middleNames?.split(" ")[1];
+    } else {
+      middleNames = `${firstname2 || ""}${firstname2 ? " " : ""}${firstname3 || ""}`;
+    }
+
     const candidateInformation: CandidateUpdateInformationInput = {
       id: candidacy?.candidate?.id,
       firstname: data.firstname,
-      firstname2: data.firstname2,
-      firstname3: data.firstname3,
+      firstname2: firstname2,
+      firstname3: firstname3,
+      middleNames: middleNames,
       lastname: data.lastname,
       givenName: data.givenName,
       birthCity: data.birthCity,
@@ -251,22 +269,35 @@ const CandidateInformationForm = ({
             state={errors.firstname ? "error" : "default"}
             stateRelatedMessage={errors.firstname?.message}
           />
-          <Input
-            label="Prénom 2 (optionnel)"
-            className="w-full mb-0"
-            disabled={isFCLinked}
-            nativeInputProps={register("firstname2")}
-            state={errors.firstname2 ? "error" : "default"}
-            stateRelatedMessage={errors.firstname2?.message}
-          />
-          <Input
-            label="Prénom 3 (optionnel)"
-            className="w-full mb-0"
-            disabled={isFCLinked}
-            nativeInputProps={register("firstname3")}
-            state={errors.firstname3 ? "error" : "default"}
-            stateRelatedMessage={errors.firstname3?.message}
-          />
+          {isMiddleNamesEnabled ? (
+            <Input
+              label="Autres prénoms (optionnel)"
+              className="w-full mb-0"
+              disabled={isFCLinked}
+              nativeInputProps={register("middleNames")}
+              state={errors.middleNames ? "error" : "default"}
+              stateRelatedMessage={errors.middleNames?.message}
+            />
+          ) : (
+            <>
+              <Input
+                label="Prénom 2 (optionnel)"
+                className="w-full mb-0"
+                disabled={isFCLinked}
+                nativeInputProps={register("firstname2")}
+                state={errors.firstname2 ? "error" : "default"}
+                stateRelatedMessage={errors.firstname2?.message}
+              />
+              <Input
+                label="Prénom 3 (optionnel)"
+                className="w-full mb-0"
+                disabled={isFCLinked}
+                nativeInputProps={register("firstname3")}
+                state={errors.firstname3 ? "error" : "default"}
+                stateRelatedMessage={errors.firstname3?.message}
+              />
+            </>
+          )}
         </div>
         <div className="flex">
           <Input

@@ -13,7 +13,9 @@ const aapCommonWait = async (page: Page) => {
   ]);
 };
 
-export const getAAPCommonHandlers = () => {
+export const getAAPCommonHandlers = (config?: {
+  activeFeaturesForConnectedUser: string[];
+}) => {
   const fvae = graphql.link("https://reva-api/api/graphql");
 
   return {
@@ -21,7 +23,8 @@ export const getAAPCommonHandlers = () => {
       fvae.query(
         "activeFeaturesForConnectedUser",
         graphQLResolver({
-          activeFeaturesForConnectedUser: [],
+          activeFeaturesForConnectedUser:
+            config?.activeFeaturesForConnectedUser ?? [],
         }),
       ),
       fvae.query(

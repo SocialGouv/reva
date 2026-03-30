@@ -2,6 +2,7 @@ import { format, isAfter, toDate } from "date-fns";
 import { useRouter } from "next/navigation";
 
 import { WhiteCard } from "@/components/card/white-card/WhiteCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import {
   CandidacyStatus,
@@ -40,6 +41,7 @@ export const CandidacyCard = ({
   candidateFirstname,
   candidateFirstname2,
   candidateFirstname3,
+  candidateMiddleNames,
   candidateLastname,
   candidateGivenName,
   certificationLabel,
@@ -64,6 +66,7 @@ export const CandidacyCard = ({
   candidateFirstname: string;
   candidateFirstname2?: string;
   candidateFirstname3?: string;
+  candidateMiddleNames?: string;
   candidateLastname: string;
   candidateGivenName?: string;
   certificationLabel?: string;
@@ -97,6 +100,10 @@ export const CandidacyCard = ({
   const candidacySentAt = validationStatus
     ? toDate(validationStatus.createdAt)
     : undefined;
+
+  const { isFeatureActive } = useFeatureflipping();
+
+  const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
 
   return (
     <WhiteCard
@@ -133,8 +140,14 @@ export const CandidacyCard = ({
             ? `${candidateGivenName} (${candidateLastname})`
             : candidateLastname}{" "}
           {candidateFirstname}
-          {candidateFirstname2 && <span>, {candidateFirstname2}</span>}
-          {candidateFirstname3 && <span>, {candidateFirstname3}</span>}
+          {isMiddleNamesEnabled ? (
+            <>{candidateMiddleNames && <span>, {candidateMiddleNames}</span>}</>
+          ) : (
+            <>
+              {candidateFirstname2 && <span>, {candidateFirstname2}</span>}
+              {candidateFirstname3 && <span>, {candidateFirstname3}</span>}
+            </>
+          )}
         </div>
 
         <p className="m-0 text-sm">
