@@ -14,7 +14,11 @@ import {
 export const candidateInformationSchema = () =>
   z
     .object({
-      gender: z.nativeEnum(GenderEnum).default(GenderEnum.undisclosed),
+      gender: z
+        .nativeEnum(GenderEnum, {
+          invalid_type_error: "Une de ces options doit être sélectionnée.",
+        })
+        .default(GenderEnum.undisclosed),
       lastname: sanitizedText(),
       givenName: sanitizedOptionalText(),
       firstname: sanitizedText(),
