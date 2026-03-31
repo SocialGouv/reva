@@ -12,7 +12,6 @@ export const Header = (props: { className?: string }) => {
   const pathname = usePathname() || "";
   const [isClient, setIsClient] = useState(false);
   const { isFeatureActive } = useFeatureflipping();
-  const showNewProMenu = isFeatureActive("WEBSITE_PRO_MENU_DROPDOWN");
   const isDisableMagicLinkActive = isFeatureActive(
     "DISABLE_CANDIDATE_MAGIC_LINK_LOGIN",
   );
@@ -39,45 +38,37 @@ export const Header = (props: { className?: string }) => {
       },
       text: "Candidats",
     },
-    showNewProMenu
-      ? {
-          isActive: !!pathname.match(/\/espace-professionnel/)?.length,
-          menuLinks: [
-            {
-              linkProps: {
-                href: "/savoir-plus/articles/lancez-votre-projet-de-vae-collective/",
-              },
-              isActive: !!pathname.match(
-                /\/savoir-plus\/articles\/lancez-votre-projet-de-vae-collective/,
-              )?.length,
-              text: "Porteurs de projets de VAE collective",
-            },
-            {
-              linkProps: {
-                href: "/espace-professionnel",
-              },
-              isActive: !!pathname.match(/\/espace-professionnel/)?.length,
-              text: "Architectes Accompagnateurs de Parcours",
-            },
-            {
-              linkProps: {
-                href: "/savoir-plus/articles/espace-certificateurs/",
-              },
-              isActive: !!pathname.match(
-                /\/savoir-plus\/articles\/espace-certificateurs/,
-              )?.length,
-              text: "Certificateurs",
-            },
-          ],
-          text: "Professionnels",
-        }
-      : {
-          isActive: !!pathname.match(/\/espace-professionnel/)?.length,
+    {
+      isActive: !!pathname.match(/\/espace-professionnel/)?.length,
+      menuLinks: [
+        {
+          linkProps: {
+            href: "/savoir-plus/articles/lancez-votre-projet-de-vae-collective/",
+          },
+          isActive: !!pathname.match(
+            /\/savoir-plus\/articles\/lancez-votre-projet-de-vae-collective/,
+          )?.length,
+          text: "Porteurs de projets de VAE collective",
+        },
+        {
           linkProps: {
             href: "/espace-professionnel",
           },
-          text: "Professionnels",
+          isActive: !!pathname.match(/\/espace-professionnel/)?.length,
+          text: "Architectes Accompagnateurs de Parcours",
         },
+        {
+          linkProps: {
+            href: "/savoir-plus/articles/espace-certificateurs/",
+          },
+          isActive: !!pathname.match(
+            /\/savoir-plus\/articles\/espace-certificateurs/,
+          )?.length,
+          text: "Certificateurs",
+        },
+      ],
+      text: "Professionnels",
+    },
     {
       isActive: !!pathname.match(/\/savoir-plus/)?.length,
       text: "Espace d'informations",
