@@ -2,6 +2,8 @@ import Alert, { AlertProps } from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { format } from "date-fns";
 
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+
 import { FeasibilityDecision } from "@/graphql/generated/graphql";
 
 import { FeasibilityDecisionHistory } from "../feasibility-decision-history/FeasibilityDecisionHistory";
@@ -37,6 +39,7 @@ export const DecisionSentComponent = ({
   isAdmin?: boolean;
   candidacyStatus?: string;
 }) => {
+  const { isFeatureActive } = useFeatureflipping();
   if (decision === "PENDING" || decision === "DRAFT") {
     return null;
   }
@@ -62,10 +65,13 @@ export const DecisionSentComponent = ({
   };
 
   const canDisplayHistory = !!history?.length && history.length > 1;
+  const canRevokeDfIncomplete = isFeatureActive("ADMIN_REVOKE_DF_INCOMPLETE");
+
   const canRevoke =
     isAdmin &&
     candidacyStatus &&
-    decisionToStatusMap[decision]?.includes(candidacyStatus);
+    decisionToStatusMap[decision]?.includes(candidacyStatus) &&
+    (decision !== "INCOMPLETE" || canRevokeDfIncomplete);
 
   return (
     <>

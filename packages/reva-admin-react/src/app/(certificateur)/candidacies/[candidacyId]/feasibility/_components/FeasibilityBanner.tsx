@@ -3,6 +3,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { toDate } from "date-fns";
 
 import { FeasibilityDecisionHistory } from "@/components/feasibility-decison-history/FeasibilityDecisionHistory.component";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import {
   FeasibilityDecision,
@@ -43,6 +44,7 @@ export function FeasibilityBanner({
   isAdmin = false,
   candidacyStatus,
 }: Props) {
+  const { isFeatureActive } = useFeatureflipping();
   if (decision === "PENDING") {
     return feasibilityHistory.length > 0 ? (
       <FeasibilityDecisionHistory history={feasibilityHistory} />
@@ -91,8 +93,11 @@ export function FeasibilityBanner({
     ),
   };
 
+  const canRevokeDfIncomplete = isFeatureActive("ADMIN_REVOKE_DF_INCOMPLETE");
   const canRevoke =
-    isAdmin && decisionToStatusMap[decision]?.includes(candidacyStatus);
+    isAdmin &&
+    decisionToStatusMap[decision]?.includes(candidacyStatus) &&
+    (decision !== "INCOMPLETE" || canRevokeDfIncomplete);
 
   const alertProps = {
     className: "mb-4",
