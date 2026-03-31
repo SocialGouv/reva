@@ -7,7 +7,6 @@ import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
-import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 const submitTraining = async ({
@@ -178,15 +177,7 @@ test("should reset the training and status when selecting a new certification", 
   expect(financingMethodCount).toEqual(0);
 });
 
-test("should block candidate from updating certification when status is DOSSIER_FAISABILITE_INCOMPLET and MULTI_CANDIDACY is active", async () => {
-  await createFeatureHelper({
-    args: {
-      key: "MULTI_CANDIDACY",
-      label: "Multi candidacy",
-      isActive: true,
-    },
-  });
-
+test("should block candidate from updating certification when status is DOSSIER_FAISABILITE_INCOMPLET", async () => {
   const candidacy = await createCandidacyHelper({
     candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
     candidacyArgs: {
@@ -207,15 +198,7 @@ test("should block candidate from updating certification when status is DOSSIER_
   );
 });
 
-test("should allow admin to update certification when status is DOSSIER_FAISABILITE_INCOMPLET and MULTI_CANDIDACY is active", async () => {
-  await createFeatureHelper({
-    args: {
-      key: "MULTI_CANDIDACY",
-      label: "Multi candidacy",
-      isActive: true,
-    },
-  });
-
+test("should allow admin to update certification when status is DOSSIER_FAISABILITE_INCOMPLET", async () => {
   const candidacy = await createCandidacyHelper({
     candidacyActiveStatus: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
     candidacyArgs: {

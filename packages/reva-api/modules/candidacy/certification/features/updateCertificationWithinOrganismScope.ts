@@ -2,7 +2,6 @@ import { CandidacyStatusStep } from "@prisma/client";
 
 import { Role } from "@/modules/account/account.types";
 import { logCandidacyAuditEvent } from "@/modules/candidacy-log/features/logCandidacyAuditEvent";
-import { isFeatureActiveForUser } from "@/modules/feature-flipping/feature-flipping.features";
 import { getCertificationById } from "@/modules/referential/features/getCertificationById";
 import {
   FunctionalCodeError,
@@ -101,20 +100,8 @@ export const updateCertificationWithinOrganismScope = async ({
     );
   }
 
-  const isMultiCandidacyActive =
-    userKeycloakId !== undefined &&
-    userKeycloakId !== null &&
-    (await isFeatureActiveForUser({
-      userKeycloakId,
-      feature: "MULTI_CANDIDACY",
-    }));
-
-  // Bloquer le changement de certification si DF incomplet et MULTI_CANDIDACY actif (sauf pour l'admin)
-  if (
-    isMultiCandidacyActive &&
-    lastStatus === "DOSSIER_FAISABILITE_INCOMPLET" &&
-    !hasRole("admin")
-  ) {
+  // Bloquer le changement de certification si DF incomplet (sauf pour l'admin)
+  if (lastStatus === "DOSSIER_FAISABILITE_INCOMPLET" && !hasRole("admin")) {
     throw new Error(
       "Impossible de modifier la certification lorsque le dossier de faisabilité est incomplet",
     );

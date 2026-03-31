@@ -10,7 +10,6 @@ import { TRAINING_INPUT } from "@/test/fixtures/trainings.fixture";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
 import { createCertificationHelper } from "@/test/helpers/entities/create-certification-helper";
-import { createFeatureHelper } from "@/test/helpers/entities/create-feature-helper";
 import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
@@ -224,15 +223,7 @@ allowedStatuses.forEach((statut) => {
   });
 });
 
-test("should allow admin to update certification when status is DOSSIER_FAISABILITE_INCOMPLET and MULTI_CANDIDACY is active", async () => {
-  await createFeatureHelper({
-    args: {
-      key: "MULTI_CANDIDACY",
-      label: "Multi candidacy",
-      isActive: true,
-    },
-  });
-
+test("should allow admin to update certification when status is DOSSIER_FAISABILITE_INCOMPLET", async () => {
   const { candidacy, organism } =
     await createCandidacyWithSocialCertificationAndOrganism({
       statut: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,
@@ -279,15 +270,7 @@ test("should allow admin to update certification when status is DOSSIER_FAISABIL
   expect(candidacyUpdated?.certificationId).toEqual(newCertification.id);
 });
 
-test("should block non-admin from updating certification when status is DOSSIER_FAISABILITE_INCOMPLET and MULTI_CANDIDACY is active", async () => {
-  await createFeatureHelper({
-    args: {
-      key: "MULTI_CANDIDACY",
-      label: "Multi candidacy",
-      isActive: true,
-    },
-  });
-
+test("should block non-admin from updating certification when status is DOSSIER_FAISABILITE_INCOMPLET", async () => {
   const { candidacy, organism } =
     await createCandidacyWithSocialCertificationAndOrganism({
       statut: CandidacyStatusStep.DOSSIER_FAISABILITE_INCOMPLET,

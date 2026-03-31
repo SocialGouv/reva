@@ -40,8 +40,7 @@ export default function CandidaciesLayout({
 
   const candidacies = useMemo(() => candidate?.candidacies || [], [candidate]);
 
-  const { isFeatureActive, status } = useFeatureFlipping();
-  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
+  const { status } = useFeatureFlipping();
 
   const inactifEnAttenteCandidacy = useMemo(() => {
     return candidacies.find(
@@ -96,14 +95,6 @@ export default function CandidaciesLayout({
 
       return;
     }
-
-    if (!isMultiCandidacyFeatureActive) {
-      if (!candidacyId && candidacies.length > 0) {
-        router.push(
-          `/candidates/${candidateId}/candidacies/${candidacies[0].id}`,
-        );
-      }
-    }
   }, [
     candidateId,
     candidacyId,
@@ -111,7 +102,6 @@ export default function CandidaciesLayout({
     endAccompagnementPendingCandidacy,
     dropOutPendingCandidacy,
     inactifEnAttenteCandidacy,
-    isMultiCandidacyFeatureActive,
     pathname,
     router,
     status,
@@ -121,21 +111,13 @@ export default function CandidaciesLayout({
     return <LoaderWithLayout />;
   }
 
-  if (isMultiCandidacyFeatureActive) {
-    if (
-      !candidacyId &&
-      (inactifEnAttenteCandidacy ||
-        endAccompagnementPendingCandidacy ||
-        dropOutPendingCandidacy)
-    ) {
-      return <LoaderWithLayout />;
-    }
-  }
-
-  if (!isMultiCandidacyFeatureActive) {
-    if (!candidacyId && candidacies.length > 0) {
-      return <LoaderWithLayout />;
-    }
+  if (
+    !candidacyId &&
+    (inactifEnAttenteCandidacy ||
+      endAccompagnementPendingCandidacy ||
+      dropOutPendingCandidacy)
+  ) {
+    return <LoaderWithLayout />;
   }
 
   return children;

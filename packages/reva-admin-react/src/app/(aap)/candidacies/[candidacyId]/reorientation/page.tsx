@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 
 import { useAuth } from "@/components/auth/auth";
 import { CandidacyBackButton } from "@/components/candidacy-back-button/CandidacyBackButton";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { SearchList } from "@/components/search/search-list/SearchList";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -97,8 +96,6 @@ const ReorientationPage = () => {
   }>();
   const router = useRouter();
   const { isAdmin } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
-  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
@@ -118,10 +115,9 @@ const ReorientationPage = () => {
   const candidacy = getCandidacyResponse?.getCandidacyById;
   const organismId = candidacy?.organismId;
 
-  // Bloquer le changement de certification si DF incomplet et MULTI_CANDIDACY actif (sauf pour l'admin)
+  // Bloquer le changement de certification si DF incomplet (sauf pour l'admin)
   const isDfIncomplete = candidacy?.status === "DOSSIER_FAISABILITE_INCOMPLET";
-  const shouldBlockForNonAdmin =
-    isMultiCandidacyFeatureActive && isDfIncomplete && !isAdmin;
+  const shouldBlockForNonAdmin = isDfIncomplete && !isAdmin;
 
   useEffect(() => {
     if (shouldBlockForNonAdmin && candidacy) {

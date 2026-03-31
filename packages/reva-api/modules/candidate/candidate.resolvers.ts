@@ -7,7 +7,6 @@ import { getActiveCandidaciesByCandidateId } from "../candidacy/features/getActi
 import { getCandidacyConventionCollectiveById } from "../candidacy/features/getCandidacyConventionCollectiveById";
 import { getFirstActiveCandidacyByCandidateId } from "../candidacy/features/getFirstActiveCandidacyByCandidateId";
 import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCandidacyAuditEvent";
-import { isFeatureActiveForUser } from "../feature-flipping/feature-flipping.features";
 
 import {
   CandidateProfileUpdateInput,
@@ -23,7 +22,6 @@ import { candidateLoginWithToken } from "./features/candidateLoginWithToken";
 import { candidateResetPassword } from "./features/candidateResetPassword";
 import { getCandidateById } from "./features/getCandidateById";
 import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
-import { getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists } from "./features/getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists";
 import { getCivilInformationCompletedByCandidateId } from "./features/getCivilInformationCompletedByCandidateId";
 import { getContactInformationCompletedByCandidateId } from "./features/getContactInformationCompletedByCandidateId";
 import { getHighestDegreeById } from "./features/getHighestDegreeById";
@@ -103,18 +101,9 @@ const unsafeResolvers = {
         throw new Error("Utilisateur non authentifié");
       }
 
-      const isMultiCandidacyFeatureActive = await isFeatureActiveForUser({
-        userKeycloakId: keycloakId,
-        feature: "MULTI_CANDIDACY",
+      return getCandidateByKeycloakId({
+        keycloakId,
       });
-
-      return isMultiCandidacyFeatureActive
-        ? getCandidateByKeycloakId({
-            keycloakId,
-          })
-        : getCandidateByKeycloakIdAndCreateCandidacyIfNoActiveOneExists({
-            context,
-          });
     },
     candidate_getCandidateById: async (_: any, params: { id: string }) =>
       getCandidateById({ candidateId: params.id }),
