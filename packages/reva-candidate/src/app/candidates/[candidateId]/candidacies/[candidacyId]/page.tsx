@@ -2,7 +2,6 @@
 
 import { Breadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { NameBadge } from "@/components/legacy/molecules/NameBadge/NameBadge";
 
 import Dashboard from "../../../../_components/home/dashboard/Dashboard";
@@ -16,25 +15,20 @@ export default function Home() {
     ? `RNCP ${certification?.codeRncp} : ${certification?.label}`
     : "Certification non renseignée";
 
-  const { isFeatureActive } = useFeatureFlipping();
-  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
-
   return (
     <div data-testid="candidate-dashboard" className="flex-1 px-4 lg:px-6 pb-6">
-      {isMultiCandidacyFeatureActive && (
-        <Breadcrumb
-          currentPageLabel={certificationLabel}
-          className="mb-4"
-          segments={[
-            {
-              label: "Mes candidatures",
-              linkProps: {
-                href: `../`,
-              },
+      <Breadcrumb
+        currentPageLabel={certificationLabel}
+        className="mb-4"
+        segments={[
+          {
+            label: "Mes candidatures",
+            linkProps: {
+              href: `../`,
             },
-          ]}
-        />
-      )}
+          },
+        ]}
+      />
 
       <NameBadge
         as="h2"

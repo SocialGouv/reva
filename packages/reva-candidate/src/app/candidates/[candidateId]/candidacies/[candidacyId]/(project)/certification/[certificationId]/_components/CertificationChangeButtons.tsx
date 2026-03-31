@@ -3,7 +3,6 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { useParams, useRouter } from "next/navigation";
 
-import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast } from "@/components/toast/toast";
 
 import { useCandidacyForCertification } from "./certification.hooks";
@@ -33,13 +32,9 @@ export default function CertificationChangeButtons({
     isRefetching,
   } = useCandidacyForCertification();
 
-  const { isFeatureActive } = useFeatureFlipping();
-  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
-
   const isDfIncomplete = candidacy?.status === "DOSSIER_FAISABILITE_INCOMPLET";
-  // Bloquer le changement de certification si DF incomplet et MULTI_CANDIDACY actif
-  const shouldBlockCertificationChange =
-    isMultiCandidacyFeatureActive && isDfIncomplete;
+  // Bloquer le changement de certification si DF incomplet
+  const shouldBlockCertificationChange = isDfIncomplete;
   const canChangeCertification =
     canEditCandidacy && !shouldBlockCertificationChange;
 

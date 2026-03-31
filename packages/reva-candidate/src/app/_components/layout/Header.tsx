@@ -22,30 +22,22 @@ const getNavigation = ({
   candidateHelpIsActive,
   candidateId,
   candidacyId,
-  isMultiCandidacyFeatureActive,
 }: {
   currentPathname: string;
   candidateHelpIsActive: boolean;
   candidateId: string;
   candidacyId: string;
-  isMultiCandidacyFeatureActive: boolean;
 }) => {
   return [
     {
-      text: isMultiCandidacyFeatureActive
-        ? "Mes candidatures"
-        : "Ma candidature",
+      text: "Mes candidatures",
       linkProps: {
-        href: isMultiCandidacyFeatureActive
-          ? `/candidates/${candidateId}/candidacies/`
-          : `/candidates/${candidateId}/`,
+        href: `/candidates/${candidateId}/candidacies/`,
         target: "_self",
       },
       isActive:
         currentPathname ===
-        (isMultiCandidacyFeatureActive
-          ? `/candidates/${candidateId}/candidacies/`
-          : `/candidates/${candidateId}/candidacies/${candidacyId}/`),
+        `/candidates/${candidateId}/candidacies/${candidacyId}/`,
     },
     {
       text: "Mon profil",
@@ -92,7 +84,6 @@ export const Header = () => {
   const { isFeatureActive } = useAnonymousFeatureFlipping();
 
   const candidateHelpIsActive = isFeatureActive("candidate-help");
-  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
   const isForbiddenPath = NAVIGATION_FORBIDDEN_PATHS.some((path) =>
     currentPathname.includes(path),
@@ -106,7 +97,6 @@ export const Header = () => {
           candidateHelpIsActive,
           candidateId,
           candidacyId,
-          isMultiCandidacyFeatureActive,
         });
 
   return (

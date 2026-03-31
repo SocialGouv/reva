@@ -1,11 +1,13 @@
 import { addDays, format, subDays } from "date-fns";
 
+import candidacy1Data from "../../fixtures/candidacy1.json";
 import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
 
 interface CandidacyFixture {
   data: {
     getCandidacyById: {
+      id: string;
       firstAppointmentOccuredAt: string | null;
       jury: {
         dateOfSession: number;
@@ -58,8 +60,11 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
 
     cy.login();
 
+    cy.visit(
+      `/candidates/${candidate1Data.data.candidate_getCandidateById.id}/candidacies/${(candidacy || candidacy1Data).data.getCandidacyById.id}`,
+    );
+
     cy.wait([
-      "@candidate_getCandidateForCandidatesGuard",
       "@getCandidateByIdForCandidateGuard",
       "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",

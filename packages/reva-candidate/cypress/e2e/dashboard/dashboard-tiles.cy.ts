@@ -1,10 +1,12 @@
 import { addDays, format, subDays } from "date-fns";
 
+import candidacy1Data from "../../fixtures/candidacy1.json";
 import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
 
 context("Dashboard Tiles", () => {
-  const interceptGraphQL = (candidacy?: unknown) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const interceptGraphQL = (candidacy?: any) => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
@@ -42,8 +44,11 @@ context("Dashboard Tiles", () => {
 
     cy.login();
 
+    cy.visit(
+      `/candidates/${candidate1Data.data.candidate_getCandidateById.id}/candidacies/${(candidacy || candidacy1Data).data.getCandidacyById.id}`,
+    );
+
     cy.wait([
-      "@candidate_getCandidateForCandidatesGuard",
       "@getCandidateByIdForCandidateGuard",
       "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",

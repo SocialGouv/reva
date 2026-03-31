@@ -31,7 +31,6 @@ async function loginAndWaitForInitialLoad(page: Page) {
       page,
       "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     ),
-    waitGraphQL(page, "getCandidacyByIdForCandidacyGuard"),
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
   ]);
 }

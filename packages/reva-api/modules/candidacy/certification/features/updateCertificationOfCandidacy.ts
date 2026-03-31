@@ -48,7 +48,6 @@ export const updateCertificationOfCandidacy = async ({
   if (
     !(await canCandidateUpdateCandidacy({
       candidacy,
-      userKeycloakId,
       userRoles,
     }))
   ) {

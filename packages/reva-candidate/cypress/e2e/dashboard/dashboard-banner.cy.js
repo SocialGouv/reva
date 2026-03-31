@@ -3,44 +3,48 @@ import { addDays, subMonths, format } from "date-fns";
 import candidate1Data from "../../fixtures/candidate1.json";
 import { stubQuery } from "../../utils/graphql";
 
-context("Dashboard Banner", () => {
-  beforeEach(() => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(
-        req,
-        "candidate_getCandidateForCandidatesGuard",
-        "candidate1-for-candidates-guard.json",
-      );
-      stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
-      stubQuery(
-        req,
-        "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
-        "candidacies-with-candidacy-1.json",
-      );
+function interceptGraphQL(candidacy) {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(
+      req,
+      "candidate_getCandidateForCandidatesGuard",
+      "candidate1-for-candidates-guard.json",
+    );
+    stubQuery(req, "getCandidateByIdForCandidateGuard", candidate1Data);
+    stubQuery(
+      req,
+      "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+      "candidacies-with-candidacy-1.json",
+    );
 
-      stubQuery(req, "getCandidacyByIdForCandidacyGuard", "candidacy1.json");
-      stubQuery(req, "activeFeaturesForConnectedUser", {
-        data: {
-          activeFeaturesForConnectedUser: [],
-        },
-      });
-      stubQuery(req, "getCandidacyByIdWithCandidate", "candidacy1.json");
-      stubQuery(req, "getCandidacyByIdForDashboard", "candidacy1.json");
+    stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
+    stubQuery(req, "activeFeaturesForConnectedUser", {
+      data: {
+        activeFeaturesForConnectedUser: [],
+      },
     });
-
-    cy.login();
-
-    cy.wait([
-      "@candidate_getCandidateForCandidatesGuard",
-      "@getCandidateByIdForCandidateGuard",
-      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
-      "@activeFeaturesForConnectedUser",
-      "@getCandidacyByIdForCandidacyGuard",
-      "@getCandidacyByIdWithCandidate",
-      "@getCandidacyByIdForDashboard",
-    ]);
-    cy.visit("/");
+    stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
+    stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
   });
+
+  cy.login();
+
+  cy.visit(
+    `/candidates/${candidate1Data.data.candidate_getCandidateById.id}/candidacies/${candidacy.data.getCandidacyById.id}`,
+  );
+
+  cy.wait([
+    "@getCandidateByIdForCandidateGuard",
+    "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
+    "@activeFeaturesForConnectedUser",
+    "@getCandidacyByIdForCandidacyGuard",
+    "@getCandidacyByIdWithCandidate",
+    "@getCandidacyByIdForDashboard",
+  ]);
+}
+
+context("Dashboard Banner", () => {
+  // beforeEach(() => {});
 
   describe("Completion Banner", () => {
     const requiredFields = [
@@ -57,11 +61,7 @@ context("Dashboard Banner", () => {
         });
         candidacy.data.getCandidacyById.status = "PROJET";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="need-to-complete-info-banner"]').should(
           "be.visible",
@@ -90,11 +90,7 @@ context("Dashboard Banner", () => {
           candidacy.data.getCandidacyById[fieldInfo.field] = fieldInfo.value;
           candidacy.data.getCandidacyById.status = "PROJET";
 
-          cy.intercept("POST", "/api/graphql", (req) => {
-            stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-            stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-            stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-          });
+          interceptGraphQL(candidacy);
 
           cy.get('[data-testid="need-to-complete-info-banner"]').should(
             "be.visible",
@@ -121,11 +117,7 @@ context("Dashboard Banner", () => {
         };
         candidacy.data.getCandidacyById.status = "PROJET";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="need-to-complete-info-banner"]').should(
           "not.exist",
@@ -147,11 +139,7 @@ context("Dashboard Banner", () => {
           dropOutConfirmedByCandidate: true,
         };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="drop-out-warning"]').should("be.visible");
         cy.get('[data-testid="drop-out-warning-decision-button"]').should(
@@ -168,11 +156,7 @@ context("Dashboard Banner", () => {
           decision: "PENDING",
         };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="pending-dv-banner"]').should("be.visible");
       });
@@ -184,11 +168,7 @@ context("Dashboard Banner", () => {
           decision: "INCOMPLETE",
         };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="incomplete-dv-banner"]').should("be.visible");
       });
@@ -204,11 +184,7 @@ context("Dashboard Banner", () => {
         candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
         candidacy.data.getCandidacyById.readyForJuryEstimatedAt = null;
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="admissible-feasibility-banner"]').should(
           "be.visible",
@@ -223,11 +199,7 @@ context("Dashboard Banner", () => {
         };
         candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="admissible-feasibility-banner"]').should(
           "be.visible",
@@ -245,11 +217,7 @@ context("Dashboard Banner", () => {
         };
         candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="draft-feasibility-banner"]').should("be.visible");
       });
@@ -262,11 +230,7 @@ context("Dashboard Banner", () => {
         };
         candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="pending-feasibility-banner"]').should(
           "be.visible",
@@ -281,11 +245,7 @@ context("Dashboard Banner", () => {
         };
         candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="autonome-pending-feasibility-banner"]').should(
           "be.visible",
@@ -300,11 +260,7 @@ context("Dashboard Banner", () => {
         };
         candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="incomplete-feasibility-banner"]').should(
           "be.visible",
@@ -319,11 +275,7 @@ context("Dashboard Banner", () => {
         };
         candidacy.data.getCandidacyById.typeAccompagnement = "AUTONOME";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="autonome-incomplete-feasibility-banner"]').should(
           "be.visible",
@@ -337,11 +289,7 @@ context("Dashboard Banner", () => {
           decision: "REJECTED",
         };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="rejected-feasibility-banner"]').should(
           "be.visible",
@@ -357,11 +305,7 @@ context("Dashboard Banner", () => {
         candidacy.data.getCandidacyById.firstAppointmentOccuredAt = null;
         candidacy.data.getCandidacyById.typeAccompagnement = "ACCOMPAGNE";
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="waiting-for-appointment-banner"]').should(
           "be.visible",
@@ -381,11 +325,7 @@ context("Dashboard Banner", () => {
           nomPublic: "Public Name",
         };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="first-appointment-scheduled-banner"]').should(
           "be.visible",
@@ -406,11 +346,7 @@ context("Dashboard Banner", () => {
           },
         };
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="creating-feasibility-banner"]').should(
           "be.visible",
@@ -425,11 +361,7 @@ context("Dashboard Banner", () => {
         candidacy.data.getCandidacyById.firstAppointmentOccuredAt =
           pastAppointment;
 
-        cy.intercept("POST", "/api/graphql", (req) => {
-          stubQuery(req, "getCandidacyByIdForCandidacyGuard", candidacy);
-          stubQuery(req, "getCandidacyByIdWithCandidate", candidacy);
-          stubQuery(req, "getCandidacyByIdForDashboard", candidacy);
-        });
+        interceptGraphQL(candidacy);
 
         cy.get('[data-testid="waiting-for-training-banner"]').should(
           "be.visible",

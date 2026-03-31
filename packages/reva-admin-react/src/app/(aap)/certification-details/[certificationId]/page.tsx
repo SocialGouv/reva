@@ -9,7 +9,6 @@ import { CertificationCompetenceBlocsSummaryCard } from "@/components/certificat
 import { CertificationParcoursCard } from "@/components/certifications/certification-parcours-card/CertificationParcoursCard";
 import CertificationPrerequisitesCard from "@/components/certifications/certification-prerequisites-card/CertificationPrerequisitesCard";
 import CertificationSummaryCard from "@/components/certifications/certification-summary-card/CertificationSummaryCard";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 
 import { useCertificationDetailsPage } from "./getCertificationDetails.hook";
 
@@ -29,13 +28,10 @@ export default function CertificationDetailsPage() {
     useCertificationDetailsPage({ certificationId, candidacyId });
 
   const { isAdmin, isGestionnaireMaisonMereAAP, isOrganism } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
-  const isMultiCandidacyFeatureActive = isFeatureActive("MULTI_CANDIDACY");
 
-  // Bloquer le changement de certification si DF incomplet et MULTI_CANDIDACY actif (sauf pour l'admin)
+  // Bloquer le changement de certification si DF incomplet (sauf pour l'admin)
   const isDfIncomplete = candidacy?.status === "DOSSIER_FAISABILITE_INCOMPLET";
-  const shouldBlockForNonAdmin =
-    isMultiCandidacyFeatureActive && isDfIncomplete && !isAdmin;
+  const shouldBlockForNonAdmin = isDfIncomplete && !isAdmin;
 
   const canUpdateCertification =
     (isAdmin || isGestionnaireMaisonMereAAP || isOrganism) &&
