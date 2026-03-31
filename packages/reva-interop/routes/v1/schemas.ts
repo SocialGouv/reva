@@ -126,6 +126,12 @@ export const candidatSchema = {
       example: "Claire",
       nullable: true,
     },
+    middleNames: {
+      type: "string",
+      maxLength: 255,
+      example: "Marie Claire",
+      nullable: true,
+    },
     nom: {
       type: "string",
       maxLength: 255,

@@ -27,6 +27,7 @@ const getCandidacyWithFeasibilityQuery = graphql(`
         firstname
         firstname2
         firstname3
+        middleNames
         givenName
         birthCity
         birthDepartment {

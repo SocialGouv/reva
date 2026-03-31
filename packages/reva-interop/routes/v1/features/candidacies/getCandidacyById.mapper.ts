@@ -68,6 +68,9 @@ export const mapGetCandidacyById = (
     id: candidacy.id,
     candidat: {
       prenom: candidacy.candidate.firstname,
+      prenom2: candidacy.candidate.firstname2 || null,
+      prenom3: candidacy.candidate.firstname3 || null,
+      middleNames: candidacy.candidate.middleNames || null,
       nom: candidacy.candidate.lastname,
       nomUsage: candidacy.candidate.givenName || null,
       genre: mapCandidateGender(candidacy.candidate.gender),
