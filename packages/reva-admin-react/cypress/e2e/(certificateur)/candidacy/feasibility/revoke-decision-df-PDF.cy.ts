@@ -109,7 +109,7 @@ describe("Revoke PDF Feasibility Decision", () => {
       });
     });
 
-    ["ADMISSIBLE", "REJECTED", "COMPLETE", "INCOMPLETE"].forEach((decision) => {
+    ["ADMISSIBLE", "REJECTED", "COMPLETE"].forEach((decision) => {
       it(`should display the revoke decision button for admin when decision is ${decision}`, () => {
         cy.intercept("POST", "/api/graphql", (req) => {
           stubQuery(
@@ -139,6 +139,67 @@ describe("Revoke PDF Feasibility Decision", () => {
 
         cy.get("button").contains("Annuler la décision").should("be.visible");
       });
+    });
+
+    it("should display the revoke decision button for admin when decision is INCOMPLETE and feature flag is active", () => {
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "activeFeaturesForConnectedUser", {
+          data: {
+            activeFeaturesForConnectedUser: ["ADMIN_REVOKE_DF_INCOMPLETE"],
+          },
+        });
+        stubQuery(
+          req,
+          "getCandidacyWithFeasibilityUploadedPdfQuery",
+          fixtureMap["INCOMPLETE"],
+        );
+      });
+
+      cy.admin(candidacyUrl);
+
+      cy.wait([
+        "@activeFeaturesForConnectedUser",
+        "@getMaisonMereCGUQuery",
+        "@getCandidacyWithCandidateInfoForLayout",
+        "@getFeasibilityCountByCategory",
+        "@getDossierDeValidationCountByCategory",
+        "@getJuryCountByCategory",
+        "@getCandidacyWithFeasibilityQuery",
+        "@candidacy_canAccessCandidacy",
+        "@getCandidacyWithFeasibilityUploadedPdfQuery",
+      ]);
+
+      cy.get(`[data-testid="feasibility-page-pdf-incomplete"]`).should("exist");
+
+      cy.get("button").contains("Annuler la décision").should("be.visible");
+    });
+
+    it("should NOT display the revoke decision button for admin when decision is INCOMPLETE and feature flag is inactive", () => {
+      cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(
+          req,
+          "getCandidacyWithFeasibilityUploadedPdfQuery",
+          fixtureMap["INCOMPLETE"],
+        );
+      });
+
+      cy.admin(candidacyUrl);
+
+      cy.wait([
+        "@activeFeaturesForConnectedUser",
+        "@getMaisonMereCGUQuery",
+        "@getCandidacyWithCandidateInfoForLayout",
+        "@getFeasibilityCountByCategory",
+        "@getDossierDeValidationCountByCategory",
+        "@getJuryCountByCategory",
+        "@getCandidacyWithFeasibilityQuery",
+        "@candidacy_canAccessCandidacy",
+        "@getCandidacyWithFeasibilityUploadedPdfQuery",
+      ]);
+
+      cy.get(`[data-testid="feasibility-page-pdf-incomplete"]`).should("exist");
+
+      cy.get("button").contains("Annuler la décision").should("not.exist");
     });
 
     it("should allow admin to revoke a decision with comment", () => {
