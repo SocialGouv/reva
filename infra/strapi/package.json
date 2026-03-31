@@ -31,9 +31,14 @@
     "node": "22"
   },
   "overrides": {
-    "handlebars": "4.7.9",
-    "tar": "7.5.13",
-    "undici": "6.24.0"
+    "esbuild": "^0.25.12",
+    "handlebars": "^4.7.9",
+    "strapi-plugin-preview-button": {
+      "lodash": "^4.17.23"
+    },
+    "tar": "^7.5.13",
+    "undici": "^6.24.0",
+    "tmp": "^0.2.4"
   },
   "strapi": {
     "uuid": "55e85fe6-ae49-4d25-9991-2494c22b6d81"
