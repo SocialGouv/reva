@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('ADMIN_REVOKE_DF_INCOMPLETE', 'Admin : Annuler la décision DF incomplet', 'Active le bouton permettant à un admin d''annuler la décision d''un certificateur lorsque le dossier de faisabilité est au statut INCOMPLET. Les autres statuts (COMPLETE, ADMISSIBLE, REJECTED) ne sont pas concernés par ce feature flag.');
