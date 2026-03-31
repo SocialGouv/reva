@@ -34,9 +34,6 @@ const SavoirPlusPage = async () => {
               <Button size="small" linkProps={{ href: "/faq" }}>
                 Questions fréquentes
               </Button>
-              <Button priority="secondary" size="small">
-                <a href="https://vae.gouv.fr/nous-contacter/">Nous contacter</a>
-              </Button>
             </div>
           </div>
           <div className="flex flex-col p-4 lg:p-32 lg:pt-8 ">
