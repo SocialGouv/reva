@@ -55,13 +55,17 @@ test.describe("Candidacy dropout warning", () => {
     page,
     msw,
   }) => {
-    await setupDropOutWarningPage(page, msw, {
+    const candidacy = await setupDropOutWarningPage(page, msw, {
       candidacy: createCandidacy({
         candidacyDropOut: createCandidacyDropOutEntity({
           proofReceivedByAdmin: true,
         }),
       }),
     });
+
+    await page.goto(
+      `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/`,
+    );
 
     await expect(page.getByTestId("drop-out-warning")).toBeVisible();
     await expect(
@@ -73,13 +77,17 @@ test.describe("Candidacy dropout warning", () => {
     page,
     msw,
   }) => {
-    await setupDropOutWarningPage(page, msw, {
+    const candidacy = await setupDropOutWarningPage(page, msw, {
       candidacy: createCandidacy({
         candidacyDropOut: createCandidacyDropOutEntity({
           dropOutConfirmedByCandidate: true,
         }),
       }),
     });
+
+    await page.goto(
+      `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/`,
+    );
 
     await expect(page.getByTestId("drop-out-warning")).toBeVisible();
     await expect(
@@ -91,13 +99,17 @@ test.describe("Candidacy dropout warning", () => {
     page,
     msw,
   }) => {
-    await setupDropOutWarningPage(page, msw, {
+    const candidacy = await setupDropOutWarningPage(page, msw, {
       candidacy: createCandidacy({
         candidacyDropOut: createCandidacyDropOutEntity({
           createdAt: subMonths(new Date(), 6).getTime(),
         }),
       }),
     });
+
+    await page.goto(
+      `/candidat/candidates/${candidate.id}/candidacies/${candidacy.id}/`,
+    );
 
     await expect(page.getByTestId("drop-out-warning")).toBeVisible();
     await expect(

@@ -51,7 +51,6 @@ describe("Certification change button visibility", () => {
     "PRISE_EN_CHARGE",
     "PARCOURS_ENVOYE",
     "PARCOURS_CONFIRME",
-    "DOSSIER_FAISABILITE_INCOMPLET",
   ];
 
   const notAllowedStatuses: CandidacyStatusStep[] = [
@@ -65,7 +64,12 @@ describe("Certification change button visibility", () => {
 
   (["admin", "aap"] as const).forEach((userProfile) => {
     context(`${userProfile} user`, () => {
-      allowedStatuses.forEach((status) => {
+      let statuses = [...allowedStatuses];
+      if (userProfile === "admin") {
+        statuses = [...statuses, "DOSSIER_FAISABILITE_INCOMPLET"];
+      }
+
+      statuses.forEach((status) => {
         it(`should show the change certification button when status is ${status}`, () => {
           visitCertificationDetails({
             candidacyStatus: status,

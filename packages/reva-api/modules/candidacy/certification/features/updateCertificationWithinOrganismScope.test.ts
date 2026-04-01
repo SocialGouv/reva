@@ -189,7 +189,6 @@ const allowedStatuses: CandidacyStatusStep[] = [
   "PRISE_EN_CHARGE",
   "PARCOURS_ENVOYE",
   "PARCOURS_CONFIRME",
-  "DOSSIER_FAISABILITE_INCOMPLET",
 ];
 
 const notAllowedStatuses: CandidacyStatusStep[] = [

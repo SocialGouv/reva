@@ -1,3 +1,5 @@
+import candidacy1Data from "../fixtures/candidacy1.json";
+import candidacy3Data from "../fixtures/candidacy3.json";
 import candidate1Data from "../fixtures/candidate1.json";
 import { stubMutation, stubQuery } from "../utils/graphql";
 
@@ -22,8 +24,11 @@ context("Empty candidacy", () => {
     });
     cy.login();
 
+    cy.visit(
+      `/candidates/${candidate1Data.data.candidate_getCandidateById.id}/candidacies/${candidacy1Data.data.getCandidacyById.id}`,
+    );
+
     cy.wait([
-      "@candidate_getCandidateForCandidatesGuard",
       "@getCandidateByIdForCandidateGuard",
       "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
@@ -65,8 +70,14 @@ context("Candidacy with certification selected", () => {
     cy.wait([
       "@candidate_getCandidateForCandidatesGuard",
       "@getCandidateByIdForCandidateGuard",
-      "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
+    ]);
+
+    cy.visit(
+      `/candidates/${candidate1Data.data.candidate_getCandidateById.id}/candidacies/${candidacy3Data.data.getCandidacyById.id}`,
+    );
+
+    cy.wait([
       "@getCandidacyByIdForCandidacyGuard",
       "@getCandidacyByIdWithCandidate",
       "@getCandidacyByIdForDashboard",
@@ -191,8 +202,11 @@ context("Candidacy with no organism results", () => {
 
     cy.login();
 
+    cy.visit(
+      `/candidates/${candidate1Data.data.candidate_getCandidateById.id}/candidacies/${candidacy3Data.data.getCandidacyById.id}`,
+    );
+
     cy.wait([
-      "@candidate_getCandidateForCandidatesGuard",
       "@getCandidateByIdForCandidateGuard",
       "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
       "@activeFeaturesForConnectedUser",
@@ -314,8 +328,11 @@ context("Candidacy with PARCOURS_CONFIRME status", () => {
 
       cy.login();
 
+      cy.visit(
+        `/candidates/${candidate1Data.data.candidate_getCandidateById.id}/candidacies/${candidacy3Data.data.getCandidacyById.id}`,
+      );
+
       cy.wait([
-        "@candidate_getCandidateForCandidatesGuard",
         "@getCandidateByIdForCandidateGuard",
         "@candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
         "@activeFeaturesForConnectedUser",

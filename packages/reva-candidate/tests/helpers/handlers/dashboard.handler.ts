@@ -14,7 +14,7 @@ export interface DashboardHandlersOptions {
   activeFeaturesForConnectedUser?: string[];
 }
 
-const dashboardWait = async (page: Page) => {
+const dashboardWait = async (page: Page, candidacy: CandidacyEntity) => {
   await Promise.all([
     waitGraphQL(page, "candidate_getCandidateForCandidatesGuard"),
     waitGraphQL(page, "candidate_getCandidateForUserDropdown"),
@@ -23,6 +23,13 @@ const dashboardWait = async (page: Page) => {
       page,
       "candidate_getCandidateByIdWithCandidaciesForCandidaciesGuard",
     ),
+  ]);
+
+  await page.goto(
+    `/candidat/candidates/${candidacy?.candidate?.id}/candidacies/${candidacy.id}/`,
+  );
+
+  await Promise.all([
     waitGraphQL(page, "getCandidacyByIdForCandidacyGuard"),
     waitGraphQL(page, "activeFeaturesForConnectedUser"),
     waitGraphQL(page, "getCandidacyByIdWithCandidate"),
@@ -43,6 +50,6 @@ export const dashboardHandlers = ({
       }),
       ...createCandidacyGuardsAndDashboardHandlers(candidacy),
     ],
-    dashboardWait,
+    dashboardWait: (page: Page) => dashboardWait(page, candidacy),
   };
 };
