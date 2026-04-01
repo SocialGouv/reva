@@ -48,5 +48,10 @@
     "sass": "^1.89.2",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss-url": {
+      "minimatch": "3.1.5"
+    }
   }
 }
