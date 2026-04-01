@@ -69,5 +69,10 @@
     "tailwindcss": "^3.4.17",
     "type-fest": "^4.41.0",
     "typescript": "5.8.3"
+  },
+  "overrides": {
+    "postcss-url": {
+      "minimatch": "3.1.5"
+    }
   }
 }
