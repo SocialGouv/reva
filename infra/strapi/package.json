@@ -16,9 +16,9 @@
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "1.0.2",
     "@strapi/pack-up": "^5.1.1",
-    "@strapi/plugin-graphql": "5.40.0",
-    "@strapi/plugin-users-permissions": "5.40.0",
-    "@strapi/strapi": "5.40.0",
+    "@strapi/plugin-graphql": "5.41.1",
+    "@strapi/plugin-users-permissions": "5.41.1",
+    "@strapi/strapi": "5.41.1",
     "better-sqlite3": "12.6.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -36,7 +36,6 @@
     "strapi-plugin-preview-button": {
       "lodash": "^4.17.23"
     },
-    "tar": "^7.5.13",
     "undici": "^6.24.0",
     "tmp": "^0.2.4"
   },
