@@ -71,7 +71,7 @@ describe("MaisonMereAAP resolvers", () => {
       const collaborateurAccount = await createAccountHelper();
       const maisonMereAAP = await createMaisonMereAapHelper();
 
-      attachCollaborateurAccountToMaisonMereAAP({
+      await attachCollaborateurAccountToMaisonMereAAP({
         maisonMereAAPId: maisonMereAAP.id,
         collaborateurAccountId: collaborateurAccount.id,
       });
@@ -82,7 +82,7 @@ describe("MaisonMereAAP resolvers", () => {
       const collaborateurAccountOfOtherMaisonMere = await createAccountHelper();
       const otherMaisonMereAAP = await createMaisonMereAapHelper();
 
-      attachCollaborateurAccountToMaisonMereAAP({
+      await attachCollaborateurAccountToMaisonMereAAP({
         maisonMereAAPId: otherMaisonMereAAP.id,
         collaborateurAccountId: collaborateurAccountOfOtherMaisonMere.id,
       });
@@ -114,7 +114,7 @@ describe("MaisonMereAAP resolvers", () => {
       const collaborateurAccount = await createAccountHelper();
       const maisonMereAAP = await createMaisonMereAapHelper();
 
-      attachCollaborateurAccountToMaisonMereAAP({
+      await attachCollaborateurAccountToMaisonMereAAP({
         maisonMereAAPId: maisonMereAAP.id,
         collaborateurAccountId: collaborateurAccount.id,
       });
@@ -125,7 +125,7 @@ describe("MaisonMereAAP resolvers", () => {
       const collaborateurAccountOfOtherMaisonMere = await createAccountHelper();
       const otherMaisonMereAAP = await createMaisonMereAapHelper();
 
-      attachCollaborateurAccountToMaisonMereAAP({
+      await attachCollaborateurAccountToMaisonMereAAP({
         maisonMereAAPId: otherMaisonMereAAP.id,
         collaborateurAccountId: collaborateurAccountOfOtherMaisonMere.id,
       });
@@ -152,7 +152,7 @@ describe("MaisonMereAAP resolvers", () => {
       const collaborateurAccount = await createAccountHelper();
       const maisonMereAAP = await createMaisonMereAapHelper();
 
-      attachCollaborateurAccountToMaisonMereAAP({
+      await attachCollaborateurAccountToMaisonMereAAP({
         maisonMereAAPId: maisonMereAAP.id,
         collaborateurAccountId: collaborateurAccount.id,
       });
@@ -186,7 +186,7 @@ describe("MaisonMereAAP resolvers", () => {
       const collaborateurAccount = await createAccountHelper();
       const maisonMereAAP = await createMaisonMereAapHelper();
 
-      attachCollaborateurAccountToMaisonMereAAP({
+      await attachCollaborateurAccountToMaisonMereAAP({
         maisonMereAAPId: maisonMereAAP.id,
         collaborateurAccountId: collaborateurAccount.id,
       });
@@ -197,7 +197,7 @@ describe("MaisonMereAAP resolvers", () => {
       const collaborateurAccountOfOtherMaisonMere = await createAccountHelper();
       const otherMaisonMereAAP = await createMaisonMereAapHelper();
 
-      attachCollaborateurAccountToMaisonMereAAP({
+      await attachCollaborateurAccountToMaisonMereAAP({
         maisonMereAAPId: otherMaisonMereAAP.id,
         collaborateurAccountId: collaborateurAccountOfOtherMaisonMere.id,
       });
@@ -279,7 +279,7 @@ describe("MaisonMereAAP resolvers", () => {
 
       const collaborateurAccount = await createAccountHelper();
 
-      attachCollaborateurAccountToOrganism({
+      await attachCollaborateurAccountToOrganism({
         organismId: organism1.id,
         collaborateurAccountId: collaborateurAccount.id,
       });
@@ -356,7 +356,7 @@ describe("Positionnement compte collaborateur", () => {
       maisonMereAAPId: maisonMereAAP.id,
     });
 
-    attachCollaborateurAccountToMaisonMereAAP({
+    await attachCollaborateurAccountToMaisonMereAAP({
       maisonMereAAPId: maisonMereAAP.id,
       collaborateurAccountId: collaborateurAccount.id,
     });
@@ -411,7 +411,7 @@ describe("Positionnement compte collaborateur", () => {
       maisonMereAAPId: maisonMereAAP.id,
     });
 
-    attachCollaborateurAccountToMaisonMereAAP({
+    await attachCollaborateurAccountToMaisonMereAAP({
       maisonMereAAPId: maisonMereAAP.id,
       collaborateurAccountId: collaborateurAccount.id,
     });
@@ -481,7 +481,7 @@ describe("Disable local account", () => {
     const collaborateurAccount = await createAccountHelper();
     const maisonMereAAP = await createMaisonMereAapHelper();
 
-    attachCollaborateurAccountToMaisonMereAAP({
+    await attachCollaborateurAccountToMaisonMereAAP({
       maisonMereAAPId: maisonMereAAP.id,
       collaborateurAccountId: collaborateurAccount.id,
     });
@@ -525,7 +525,7 @@ describe("Disable local account", () => {
     const collaborateurAccount = await createAccountHelper();
     const maisonMereAAP = await createMaisonMereAapHelper();
 
-    attachCollaborateurAccountToMaisonMereAAP({
+    await attachCollaborateurAccountToMaisonMereAAP({
       maisonMereAAPId: maisonMereAAP.id,
       collaborateurAccountId: collaborateurAccount.id,
     });
@@ -559,7 +559,7 @@ describe("Disable local account", () => {
     const collaborateurAccount = await createAccountHelper();
     const maisonMereAAP = await createMaisonMereAapHelper();
 
-    attachCollaborateurAccountToMaisonMereAAP({
+    await attachCollaborateurAccountToMaisonMereAAP({
       maisonMereAAPId: maisonMereAAP.id,
       collaborateurAccountId: collaborateurAccount.id,
     });
@@ -585,7 +585,7 @@ describe("Disable local account", () => {
     const maisonMereAAP = await createMaisonMereAapHelper();
     const otherMaisonMereAAP = await createMaisonMereAapHelper();
 
-    attachCollaborateurAccountToMaisonMereAAP({
+    await attachCollaborateurAccountToMaisonMereAAP({
       maisonMereAAPId: maisonMereAAP.id,
       collaborateurAccountId: collaborateurAccount.id,
     });
