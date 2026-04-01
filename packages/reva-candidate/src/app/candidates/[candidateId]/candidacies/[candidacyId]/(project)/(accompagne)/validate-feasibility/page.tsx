@@ -10,24 +10,16 @@ import { redirect, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { DownloadTile } from "@/components/download-tile/DownloadTile";
-import { useAnonymousFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { Panel } from "@/components/layout/Panel";
 import { FancyUpload } from "@/components/legacy/atoms/FancyUpload/FancyUpload";
 import { PdfLink } from "@/components/legacy/organisms/DffSummary/components/PdfLink";
 import { DffSummary } from "@/components/legacy/organisms/DffSummary/DffSummary";
 import { graphqlErrorToast } from "@/components/toast/toast";
-import { REST_API_URL } from "@/config/config";
 
 import { useValidateFeasibility } from "./validate-feasibility.hooks";
 
 export default function ValidateFeasibility() {
   const router = useRouter();
-
-  const { isFeatureActive } = useAnonymousFeatureFlipping();
-
-  const isUseGeneratedDffFileFromFileServerActive = isFeatureActive(
-    "USE_GENERATED_DFF_FILE_FROM_FILE_SERVER",
-  );
 
   const {
     createOrUpdateSwornStatement,
@@ -77,10 +69,6 @@ export default function ValidateFeasibility() {
     redirect("../");
   }
 
-  const getPdfUrl = () => {
-    return `${REST_API_URL}/candidacy/${candidacy.id}/feasibility/file-demat/${dematerializedFeasibilityFile.id}`;
-  };
-
   const onSubmit = async () => {
     try {
       if (swornStatementFile) {
@@ -123,22 +111,12 @@ export default function ValidateFeasibility() {
       <div className="flex justify-between mb-4 mt-6">
         <h1 className="mb-0">Dossier de faisabilité</h1>
 
-        {isUseGeneratedDffFileFromFileServerActive ? (
-          <>
-            {dematerializedFeasibilityFile.dffFile ? (
-              <PdfLink
-                url={dematerializedFeasibilityFile.dffFile.url}
-                fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
-              />
-            ) : null}
-          </>
-        ) : (
+        {dematerializedFeasibilityFile.dffFile ? (
           <PdfLink
-            url={getPdfUrl()}
-            isBlobUrl
+            url={dematerializedFeasibilityFile.dffFile.url}
             fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
           />
-        )}
+        ) : null}
       </div>
 
       <DffSummary

@@ -97,9 +97,7 @@ export const validateFeasibilityHandlers = (options?: {
         "activeFeaturesForConnectedUser",
         graphQLResolver({
           data: {
-            activeFeaturesForConnectedUser: [
-              "USE_GENERATED_DFF_FILE_FROM_FILE_SERVER",
-            ],
+            activeFeaturesForConnectedUser: [],
           },
         }),
       ),

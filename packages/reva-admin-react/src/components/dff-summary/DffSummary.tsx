@@ -6,7 +6,6 @@ import { deburr } from "lodash";
 import Image from "next/image";
 
 import { CertificationCard } from "@/app/(aap)/candidacies/[candidacyId]/_components/CertificationCard";
-import { REST_API_URL } from "@/config/config";
 
 import {
   Candidacy,
@@ -19,7 +18,6 @@ import {
 } from "@/graphql/generated/graphql";
 
 import { ContactInfosSection } from "../../app/contact-infos-section/ContactInfosSection";
-import { useFeatureflipping } from "../feature-flipping/featureFlipping";
 import { PICTOGRAMS } from "../pictograms/Pictograms";
 
 import AttachmentsSection from "./_components/AttachmentsSection";
@@ -80,8 +78,6 @@ export function DffSummary({
   FeasibilityBanner?: React.ReactNode;
   displayGiveYourDecisionSubtitle?: boolean;
 }) {
-  const { isFeatureActive } = useFeatureflipping();
-
   if (!dematerializedFeasibilityFile || !candidacy) {
     return null;
   }
@@ -114,41 +110,23 @@ export function DffSummary({
   const isEligibilityRequirementPartial =
     eligibilityRequirement === "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
-  const isUseGeneratedDffFileFromFileServerActive = isFeatureActive(
-    "USE_GENERATED_DFF_FILE_FROM_FILE_SERVER",
-  );
-
   const { candidate } = candidacy;
 
   const candidateName = deburr(
     `${candidate?.givenName ? candidate?.givenName : candidate?.lastname}_${candidate?.firstname}`,
   ).toLowerCase();
 
-  const getPdfUrl = () => {
-    return `${REST_API_URL}/candidacy/${candidacy.id}/feasibility/file-demat/${dematerializedFeasibilityFile.id}`;
-  };
-
   return (
     <div className="flex flex-col mb-8" data-testid="dff-summary">
       <div className="flex justify-between mb-4">
         <h1 className="mb-0">Dossier de faisabilité</h1>
 
-        {isUseGeneratedDffFileFromFileServerActive ? (
-          <>
-            {dematerializedFeasibilityFile.dffFile ? (
-              <PdfLink
-                url={dematerializedFeasibilityFile.dffFile.url}
-                fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
-              />
-            ) : null}
-          </>
-        ) : (
+        {dematerializedFeasibilityFile.dffFile ? (
           <PdfLink
-            url={getPdfUrl()}
-            isBlobUrl
+            url={dematerializedFeasibilityFile.dffFile.url}
             fileName={`dossier_de_faisabilite_${candidateName}.pdf`}
           />
-        )}
+        ) : null}
       </div>
       {displayGiveYourDecisionSubtitle && (
         <p>
