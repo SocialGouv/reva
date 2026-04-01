@@ -52,9 +52,11 @@ export const Header = (props: { className?: string }) => {
         },
         {
           linkProps: {
-            href: "/espace-professionnel",
+            href: "/savoir-plus/articles/espace-architecte-accompagnateur-de-parcours/",
           },
-          isActive: !!pathname.match(/\/espace-professionnel/)?.length,
+          isActive: !!pathname.match(
+            /\/savoir-plus\/articles\/espace-architecte-accompagnateur-de-parcours/,
+          )?.length,
           text: "Architectes Accompagnateurs de Parcours",
         },
         {
@@ -89,7 +91,6 @@ export const Header = (props: { className?: string }) => {
         },
       ],
     },
-
     {
       isActive: !!pathname.match(/\/regions/)?.length,
       linkProps: {

@@ -14,7 +14,22 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    return [{ source: "/websiteapi/:path*", destination: "/api/:path*" }];
+    return [
+      {
+        source: "/websiteapi/:path*",
+        destination: "/api/:path*",
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: "/espace-professionnel",
+        destination:
+          "/savoir-plus/articles/espace-architecte-accompagnateur-de-parcours",
+        permanent: false,
+      },
+    ];
   },
   webpack: (config) => {
     config.module.rules.push({

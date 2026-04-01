@@ -204,7 +204,7 @@ const QuiEtesVousSection = async () => {
               iconPosition="right"
               className="mt-auto"
               linkProps={{
-                href: "/espace-professionnel/",
+                href: "/savoir-plus/articles/espace-architecte-accompagnateur-de-parcours",
                 target: "_self",
               }}
             >
