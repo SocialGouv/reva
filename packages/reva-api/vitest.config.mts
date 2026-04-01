@@ -13,11 +13,6 @@ export default defineConfig({
       DATABASE_URL: "postgresql://reva:password@localhost:5444/reva-test",
     },
     setupFiles: ["./vitest.setup.ts"],
-    server: {
-      deps: {
-        inline: ["@keycloak/keycloak-admin-client"],
-      },
-    },
     globalSetup: ["./vitest.global-setup.ts"],
     include: ["./modules/**/*.test.ts"],
     exclude: [
@@ -29,11 +24,7 @@ export default defineConfig({
     testTimeout: 30000,
     hookTimeout: 10000,
     pool: "threads",
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
+    maxWorkers: 1,
     isolate: false,
     maxConcurrency: 1,
     fileParallelism: false,
@@ -62,7 +53,7 @@ export default defineConfig({
         lines: 80,
       },
     },
-    reporters: ["basic"],
+    reporters: ["default"],
     clearMocks: true,
     restoreMocks: true,
     mockReset: true,
