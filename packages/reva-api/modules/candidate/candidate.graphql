@@ -77,7 +77,6 @@ input CandidateInput {
 }
 
 input CandidateUpdateInformationInput {
-  id: UUID!
   gender: Gender!
   lastname: String!
   givenName: String

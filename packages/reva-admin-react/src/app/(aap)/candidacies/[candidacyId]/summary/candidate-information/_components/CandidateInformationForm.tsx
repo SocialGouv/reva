@@ -159,7 +159,6 @@ const CandidateInformationForm = ({
     }
 
     const candidateInformation: CandidateUpdateInformationInput = {
-      id: candidacy?.candidate?.id,
       firstname: data.firstname,
       firstname2: firstname2,
       firstname3: firstname3,
