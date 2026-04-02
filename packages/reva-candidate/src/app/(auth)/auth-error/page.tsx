@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { StatusPage } from "@/app/_components/status-page/StatusPage";
@@ -28,7 +29,7 @@ export default function AuthError() {
   if (isReconciliationError) {
     return (
       <StatusPage
-        title="Erreur d'authentification"
+        title="Problème lors de la connexion"
         chapo={
           <>
             <p className="text-xl leading-8 mb-6">
@@ -50,13 +51,19 @@ export default function AuthError() {
           <p className="text-sm leading-6 mb-0">
             Le problème persiste alors que vos informations sont identiques
             entre vos comptes FranceConnect et France VAE ?{" "}
-            <a href="mailto:support@vae.gouv.fr">Contacter le support</a> afin
-            de comprendre d&apos;où peut venir le problème.
+            <Link
+              className="fr-link"
+              href="https://vae.gouv.fr/nous-contacter/"
+              target="_blank"
+            >
+              Contactez le support
+            </Link>{" "}
+            afin de comprendre d&apos;où peut venir le problème.
           </p>
         }
         actionLink={{
           href: "/login",
-          label: "Revenir à la page d'accueil",
+          label: "Se connecter",
           priority: "primary",
         }}
         pictogram={PICTOGRAMS.errorLG}
@@ -69,11 +76,11 @@ export default function AuthError() {
 
   return (
     <StatusPage
-      title="Erreur d'authentification"
+      title="Problème lors de la connexion"
       chapo={displayMessage}
       actionLink={{
         href: "/login",
-        label: "Revenir à la page d'accueil",
+        label: "Se connecter",
         priority: "primary",
       }}
       pictogram={PICTOGRAMS.errorLG}
