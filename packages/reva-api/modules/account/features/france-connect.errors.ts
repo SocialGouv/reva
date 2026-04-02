@@ -16,6 +16,16 @@ export class FranceConnectUserError extends FranceConnectError {
   }
 }
 
+export class FranceConnectReconciliationError extends FranceConnectUserError {
+  constructor() {
+    super(
+      "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",
+      401,
+    );
+    this.name = "FranceConnectReconciliationError";
+  }
+}
+
 export class FranceConnectSystemError extends FranceConnectError {
   constructor(message: string) {
     super(message, 500);

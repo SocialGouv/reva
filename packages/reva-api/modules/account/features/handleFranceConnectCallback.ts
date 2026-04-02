@@ -29,6 +29,7 @@ import { resolveBirthplaceFromInseeCode } from "./france-connect-birthplace";
 import {
   FranceConnectError,
   FranceConnectForbiddenError,
+  FranceConnectReconciliationError,
   FranceConnectSystemError,
   FranceConnectUserError,
 } from "./france-connect.errors";
@@ -293,10 +294,7 @@ const getOrCreateCandidate = async (
       })
     ) {
       await unlinkFranceConnectIdentity(keycloakId);
-      throw new FranceConnectUserError(
-        "Les informations d'identité ne correspondent pas au compte existant. Connectez-vous avec vos identifiants habituels pour vérifier vos informations, ou contactez le support.",
-        400,
-      );
+      throw new FranceConnectReconciliationError();
     }
     const updated = await updateCandidateFromFCClaims({
       candidateId: candidate.id,
