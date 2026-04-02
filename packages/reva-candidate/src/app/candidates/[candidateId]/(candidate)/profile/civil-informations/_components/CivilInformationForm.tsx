@@ -51,7 +51,9 @@ export const CivilInformationForm = ({
   const { isFeatureActive } = useFeatureFlipping();
   const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
 
-  const { updateCivilInformationMutate } = useUpdateCivilInformation();
+  const { updateCivilInformationMutate } = useUpdateCivilInformation({
+    candidateId: candidate?.id,
+  });
   const isFCLinked = candidate?.franceConnectLinked;
   const router = useRouter();
 
@@ -150,7 +152,6 @@ export const CivilInformationForm = ({
     }
 
     const candidateInformation: CandidateUpdateInformationBySelfInput = {
-      id: candidate?.id,
       firstname: data.firstname,
       firstname2: firstname2,
       firstname3: firstname3,

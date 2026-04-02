@@ -98,6 +98,28 @@ export interface CandidateUpdateInput {
   addressComplement?: string;
 }
 
+export interface CandidateUpdateBySelfInput {
+  gender: Gender;
+  email: string;
+  phone: string;
+  firstname: string;
+  firstname2?: string;
+  firstname3?: string;
+  middleNames?: string;
+  lastname: string;
+  givenName?: string;
+  birthdate: string;
+  birthCity: string;
+  birthDepartmentId: string | null;
+  countryId: Country["id"];
+  nationality: string;
+  street: string;
+  zip: string;
+  city: string;
+  departmentId?: string;
+  addressComplement?: string;
+}
+
 export interface CandidateProfileUpdateInput {
   candidateId: string;
   highestDegreeId: string;

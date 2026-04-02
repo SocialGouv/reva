@@ -107,7 +107,11 @@ const updateCandidateInformationMutation = graphql(`
   }
 `);
 
-export const useUpdateCandidateInformation = () => {
+export const useUpdateCandidateInformation = ({
+  candidateId,
+}: {
+  candidateId: string;
+}) => {
   const { graphqlClient } = useGraphQlClient();
   const queryClient = useQueryClient();
 
@@ -122,7 +126,7 @@ export const useUpdateCandidateInformation = () => {
       candidateInformation: CandidateUpdateInformationBySelfInput;
     }) =>
       graphqlClient.request(updateCandidateInformationMutation, {
-        candidateId: candidateInformation.id,
+        candidateId,
         candidateInformation,
       }),
     onSuccess: () => {
