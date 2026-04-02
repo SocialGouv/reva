@@ -21,6 +21,7 @@ import { candidateForgotPassword } from "./features/candidateForgotPassword";
 import { candidateLoginWithCredentials } from "./features/candidateLoginWithCredentials";
 import { candidateLoginWithToken } from "./features/candidateLoginWithToken";
 import { candidateResetPassword } from "./features/candidateResetPassword";
+import { getCandidateByCandidacyId } from "./features/getCandidateByCandidacyId";
 import { getCandidateById } from "./features/getCandidateById";
 import { getCandidateByKeycloakId } from "./features/getCandidateByKeycloakId";
 import { getCivilInformationCompletedByCandidateId } from "./features/getCivilInformationCompletedByCandidateId";
@@ -169,23 +170,30 @@ const unsafeResolvers = {
       candidateResetPassword({
         ...params,
       }),
-    candidate_updateCandidateInformation: (
+    candidate_updateCandidateInformation: async (
       _: unknown,
       {
+        candidacyId,
         candidateInformation,
       }: {
+        candidacyId: string;
         candidateInformation: CandidateUpdateInput;
       },
       context: GraphqlContext,
-    ) =>
-      updateCandidate({
+    ) => {
+      const candidate = await getCandidateByCandidacyId({ candidacyId });
+      if (!candidate) {
+        throw new Error("Candidate not found");
+      }
+      return updateCandidate({
         params: {
-          candidate: candidateInformation,
+          candidate: { ...candidateInformation, id: candidate.id },
           userKeycloakId: context.auth.userInfo?.sub,
           userEmail: context.auth.userInfo?.email,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
         },
-      }),
+      });
+    },
 
     candidate_updateCandidateProfile: (
       _: unknown,

@@ -3,6 +3,7 @@ import { Country, Department } from "@prisma/client";
 import { prismaClient } from "@/prisma/client";
 import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
 import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createOrganismHelper } from "@/test/helpers/entities/create-organism-helper";
 import { injectGraphql } from "@/test/helpers/graphql-helper";
 
 import * as SendNewEmailCandidateEmailModule from "../candidacy/emails/sendNewEmailCandidateEmail";
@@ -67,10 +68,7 @@ describe("candidate information update", () => {
         requestType: "mutation",
         arguments: {
           candidacyId: candidacy.id,
-          candidateInformation: {
-            id: candidacy.candidateId,
-            ...updatedCandidateFields,
-          },
+          candidateInformation: updatedCandidateFields,
         },
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
@@ -115,10 +113,7 @@ describe("candidate information update", () => {
         requestType: "mutation",
         arguments: {
           candidacyId: candidacy.id,
-          candidateInformation: {
-            id: candidacy.candidateId,
-            ...updatedCandidateFields,
-          },
+          candidateInformation: updatedCandidateFields,
         },
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
@@ -168,10 +163,7 @@ describe("candidate information update", () => {
         requestType: "mutation",
         arguments: {
           candidacyId: candidacy.id,
-          candidateInformation: {
-            id: candidacy.candidateId,
-            ...updatedCandidateFields,
-          },
+          candidateInformation: updatedCandidateFields,
         },
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
@@ -207,10 +199,7 @@ describe("candidate information update", () => {
         requestType: "mutation",
         arguments: {
           candidacyId: candidacy.id,
-          candidateInformation: {
-            id: candidacy.candidateId,
-            ...updatedCandidateFields,
-          },
+          candidateInformation: updatedCandidateFields,
         },
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
@@ -254,10 +243,7 @@ describe("candidate information update", () => {
         requestType: "mutation",
         arguments: {
           candidacyId: candidacy.id,
-          candidateInformation: {
-            id: candidacy.candidateId,
-            ...updatedCandidateFields,
-          },
+          candidateInformation: updatedCandidateFields,
         },
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
@@ -297,10 +283,7 @@ describe("candidate information update", () => {
         requestType: "mutation",
         arguments: {
           candidacyId: candidacy.id,
-          candidateInformation: {
-            id: candidacy.candidateId,
-            ...updatedCandidateFields,
-          },
+          candidateInformation: updatedCandidateFields,
         },
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
@@ -341,10 +324,7 @@ describe("candidate information update", () => {
         requestType: "mutation",
         arguments: {
           candidacyId: candidacy.id,
-          candidateInformation: {
-            id: candidacy.candidateId,
-            ...updatedCandidateFields,
-          },
+          candidateInformation: updatedCandidateFields,
         },
         enumFields: ["gender"],
         endpoint: "candidate_updateCandidateInformation",
@@ -357,5 +337,40 @@ describe("candidate information update", () => {
     expect(obj.data.candidate_updateCandidateInformation).toMatchObject({
       department: { label: "Guadeloupe" },
     });
+  });
+
+  test("should not allow an aap to update candidate information if it is not the owner of the candidacy", async () => {
+    const nonOwnerOrganism = await createOrganismHelper();
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    const updatedCandidateFields = await getDefaultUpdatedCandidateFields();
+
+    const resp = await injectGraphql({
+      fastify: global.testApp,
+      authorization: authorizationHeaderForUser({
+        role: "manage_candidacy",
+        keycloakId: nonOwnerOrganism.organismOnAccounts[0].account.keycloakId,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: updatedCandidateFields,
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ email }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    const obj = resp.json();
+    expect(obj).toHaveProperty("errors");
+    expect(obj.errors[0].message).toBe(
+      "Vous n'êtes pas autorisé à gérer cette candidature.",
+    );
   });
 });

@@ -12,7 +12,7 @@ import { updateCandidateEmailAndSendNotifications } from "./updateCandidateEmail
 export const updateCandidate = async ({
   params: { candidate, userRoles, userKeycloakId, userEmail },
 }: {
-  params: { candidate: Partial<CandidateUpdateInput> } & {
+  params: { candidate: Partial<CandidateUpdateInput> & { id: string } } & {
     userKeycloakId?: string;
     userEmail?: string;
     userRoles: KeyCloakUserRole[];

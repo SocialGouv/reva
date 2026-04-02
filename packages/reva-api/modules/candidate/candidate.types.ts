@@ -76,7 +76,6 @@ export enum CandidateBusinessEvent {
 }
 
 export interface CandidateUpdateInput {
-  id: string;
   gender: Gender;
   email: string;
   phone: string;
