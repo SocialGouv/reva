@@ -1,8 +1,9 @@
 "use client";
 
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useSearchParams } from "next/navigation";
+
+import { StatusPage } from "@/app/_components/status-page/StatusPage";
+import { PICTOGRAMS } from "@/components/pictograms/Pictograms";
 
 const errorMessages: Record<string, string> = {
   access_denied:
@@ -20,23 +21,62 @@ export default function AuthError() {
   const error = searchParams.get("error") || "server_error";
   const errorDescription = searchParams.get("error_description");
 
+  const isReconciliationError = errorDescription?.includes(
+    "Les informations d'identit\u00e9 ne correspondent pas",
+  );
+
+  if (isReconciliationError) {
+    return (
+      <StatusPage
+        title="Erreur d'authentification"
+        chapo={
+          <>
+            <p className="text-xl leading-8 mb-6">
+              Une ou plusieurs des informations suivantes ne correspond(ent) pas
+              au compte existant avec la même adresse électronique :
+            </p>
+            <ul className="text-xl leading-8 list-disc mb-6 pl-8">
+              <li>Nom de naissance</li>
+              <li>Prénom principal</li>
+              <li>Date de naissance</li>
+            </ul>
+            <p className="text-xl leading-8 mb-0">
+              Connectez-vous avec vos identifiants habituels pour vérifier ces
+              informations.
+            </p>
+          </>
+        }
+        details={
+          <p className="text-sm leading-6 mb-0">
+            Le problème persiste alors que vos informations sont identiques
+            entre vos comptes FranceConnect et France VAE ?{" "}
+            <a href="mailto:support@vae.gouv.fr">Contacter le support</a> afin
+            de comprendre d&apos;où peut venir le problème.
+          </p>
+        }
+        actionLink={{
+          href: "/login",
+          label: "Revenir à la page d'accueil",
+          priority: "primary",
+        }}
+        pictogram={PICTOGRAMS.errorLG}
+      />
+    );
+  }
+
   const displayMessage =
     errorDescription || errorMessages[error] || defaultMessage;
 
   return (
-    <div className="flex-1 pb-6">
-      <div className="flex flex-col items-center gap-6 max-w-xl mx-auto">
-        <h1>Erreur d&apos;authentification</h1>
-
-        <Alert
-          severity="error"
-          title="Authentification échouée"
-          description={displayMessage}
-          className="w-full"
-        />
-
-        <Button linkProps={{ href: "/login" }}>Revenir sur France VAE</Button>
-      </div>
-    </div>
+    <StatusPage
+      title="Erreur d'authentification"
+      chapo={displayMessage}
+      actionLink={{
+        href: "/login",
+        label: "Revenir à la page d'accueil",
+        priority: "primary",
+      }}
+      pictogram={PICTOGRAMS.errorLG}
+    />
   );
 }

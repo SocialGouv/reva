@@ -159,6 +159,7 @@ export const PICTOGRAMS = {
   map: generateSvg(map),
   connectionLost: generateSvg(connectionLost),
   error: generateSvg(error),
+  errorLG: generateSvg(error, { width: 142, height: 142 }),
   information: generateSvg(information),
   informationLG: generateSvg(information, { width: 120, height: 120 }),
   notification: generateSvg(notification),
