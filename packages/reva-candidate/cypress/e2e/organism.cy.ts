@@ -215,7 +215,7 @@ context("Candidacy with no organism results", () => {
       "@getCandidacyByIdForDashboard",
     ]);
 
-    cy.get('[data-testid="organism-tile"] button').click();
+    cy.get('[data-testid="organism-tile"] button').click({ force: true });
     cy.wait("@getRandomOrganismsForCandidacy");
     cy.wait("@getCandidacyByIdForSetOrganism");
   });
