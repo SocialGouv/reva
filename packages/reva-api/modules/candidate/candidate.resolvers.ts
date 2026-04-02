@@ -10,6 +10,7 @@ import { buildCandidacyAuditLogUserInfo } from "../candidacy-log/features/logCan
 
 import {
   CandidateProfileUpdateInput,
+  CandidateUpdateBySelfInput,
   CandidateUpdateInput,
   TypeAccompagnement,
 } from "./candidate.types";
@@ -206,13 +207,17 @@ const unsafeResolvers = {
     candidate_updateCandidateInformationBySelf: async (
       _: unknown,
       {
+        candidateId,
         candidateInformation,
-      }: { candidateInformation: Partial<CandidateUpdateInput> },
+      }: {
+        candidateId: string;
+        candidateInformation: Partial<CandidateUpdateBySelfInput>;
+      },
       context: GraphqlContext,
     ) =>
       updateCandidate({
         params: {
-          candidate: candidateInformation,
+          candidate: { ...candidateInformation, id: candidateId },
           userKeycloakId: context.auth.userInfo?.sub,
           userEmail: context.auth.userInfo?.email,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],

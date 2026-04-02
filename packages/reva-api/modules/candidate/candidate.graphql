@@ -99,7 +99,6 @@ input CandidateUpdateInformationInput {
 }
 
 input CandidateUpdateInformationBySelfInput {
-  id: UUID!
   email: String!
   lastname: String!
   firstname: String!

@@ -48,7 +48,9 @@ export const ContactInformationForm = ({
   submitPath?: string;
   forceIsDirty?: boolean;
 }) => {
-  const { updateContactInformationsMutate } = useUpdateContactInformations();
+  const { updateContactInformationsMutate } = useUpdateContactInformations({
+    candidateId: candidate?.id,
+  });
   const isFCLinked = candidate?.franceConnectLinked;
   const router = useRouter();
 
@@ -94,7 +96,6 @@ export const ContactInformationForm = ({
 
   const onSubmit = async (data: FormContactInformationData) => {
     const candidateInformation: CandidateUpdateInformationBySelfInput = {
-      id: candidate?.id,
       firstname: candidate?.firstname ?? "",
       firstname2: candidate?.firstname2 ?? "",
       firstname3: candidate?.firstname3 ?? "",
