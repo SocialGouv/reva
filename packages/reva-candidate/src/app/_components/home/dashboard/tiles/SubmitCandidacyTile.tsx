@@ -44,6 +44,7 @@ export const SubmitCandidacyTile = ({
       disabled={!candidacyAlreadySubmitted && !canSubmitCandidacy}
       title="Envoi de la candidature"
       small
+      imageSvg
       buttonProps={{
         onClick: () => {
           router.push("./submit-candidacy");

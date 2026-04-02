@@ -25,6 +25,7 @@ export const ExperiencesTile = ({
       desc={getDesc()}
       title="Expériences"
       small
+      imageSvg
       linkProps={{
         href: "./experiences",
       }}

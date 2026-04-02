@@ -36,6 +36,7 @@ export const TypeAccompagnementTile = ({
     title: "Modalité de parcours",
     small: true as const,
     imageUrl: "/candidat/images/pictograms/human-cooperation.svg",
+    imageSvg: true,
   };
 
   if (disabled) {
