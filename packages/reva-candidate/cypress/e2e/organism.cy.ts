@@ -83,7 +83,7 @@ context("Candidacy with certification selected", () => {
       "@getCandidacyByIdForDashboard",
     ]);
 
-    cy.get('[data-testid="organism-tile"] button').click();
+    cy.get('[data-testid="organism-tile"] button').click({ force: true });
     cy.wait("@getRandomOrganismsForCandidacy");
     cy.wait("@getCandidacyByIdForSetOrganism");
   });
