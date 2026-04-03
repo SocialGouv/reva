@@ -19,11 +19,23 @@ export const updateCandidateContactDetails = async ({
   email?: string;
   userInfo: CandidacyAuditLogUserInfo;
 }) => {
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+  });
+  if (!candidacy) {
+    throw new Error(`La candidature n'existe pas`);
+  }
+
   const candidate = await prismaClient.candidate.findUnique({
     where: { id: candidateId },
   });
+
   if (!candidate) {
     throw new Error(`Ce candidat n'existe pas`);
+  }
+
+  if (candidacy.candidateId !== candidate.id) {
+    throw new Error(`Le candidat n'est pas rattaché à la candidature`);
   }
 
   if (
