@@ -86,7 +86,6 @@ export const useCandidateProfilePageLogic = () => {
 
   const updateCandidateProfile = useMutation({
     mutationFn: (candidateProfile: {
-      candidateId: string;
       highestDegreeId: string;
       niveauDeFormationLePlusEleveDegreeId: string;
       highestDegreeLabel?: string;
@@ -170,10 +169,7 @@ export const useCandidateProfilePageLogic = () => {
           message: "Merci de remplir ce champ",
         });
       } else {
-        await updateCandidateProfile.mutateAsync({
-          candidateId: candidate?.id,
-          ...data,
-        });
+        await updateCandidateProfile.mutateAsync(data);
         successToast("Les modifications ont bien été enregistrées");
         router.push(`/candidacies/${candidacyId}/summary`);
       }

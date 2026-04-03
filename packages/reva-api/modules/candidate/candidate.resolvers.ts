@@ -209,8 +209,10 @@ const unsafeResolvers = {
     candidate_updateCandidateProfile: (
       _: unknown,
       {
+        candidacyId,
         candidateProfile,
       }: {
+        candidacyId: string;
         candidateProfile: CandidateProfileUpdateInput;
       },
       context: GraphqlContext,
@@ -218,6 +220,7 @@ const unsafeResolvers = {
       updateCandidateProfile({
         params: {
           ...candidateProfile,
+          candidacyId,
           userKeycloakId: context.auth.userInfo?.sub,
           userEmail: context.auth.userInfo?.email,
           userRoles: context.auth.userInfo?.realm_access?.roles || [],
