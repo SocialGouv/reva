@@ -3,9 +3,11 @@ import { prismaClient } from "@/prisma/client";
 
 import { CandidateProfileUpdateInput } from "../candidate.types";
 
+import { getCandidateByCandidacyId } from "./getCandidateByCandidacyId";
+
 export const updateCandidateProfile = async ({
   params: {
-    candidateId,
+    candidacyId,
     highestDegreeId,
     highestDegreeLabel,
     niveauDeFormationLePlusEleveDegreeId,
@@ -14,14 +16,18 @@ export const updateCandidateProfile = async ({
     userRoles,
   },
 }: {
-  params: CandidateProfileUpdateInput & {
+  params: CandidateProfileUpdateInput & { candidacyId: string } & {
     userKeycloakId?: string;
     userEmail?: string;
     userRoles: KeyCloakUserRole[];
   };
 }) => {
+  const candidate = await getCandidateByCandidacyId({ candidacyId });
+  if (!candidate) {
+    throw new Error("Candidate not found");
+  }
   const result = await prismaClient.candidate.update({
-    where: { id: candidateId },
+    where: { id: candidate.id },
     data: {
       highestDegreeId,
       highestDegreeLabel,
@@ -30,7 +36,7 @@ export const updateCandidateProfile = async ({
   });
 
   const candidacies = await prismaClient.candidacy.findMany({
-    where: { candidateId },
+    where: { candidateId: candidate.id },
   });
 
   await Promise.all(

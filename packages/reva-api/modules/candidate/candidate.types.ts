@@ -120,7 +120,6 @@ export interface CandidateUpdateBySelfInput {
 }
 
 export interface CandidateProfileUpdateInput {
-  candidateId: string;
   highestDegreeId: string;
   highestDegreeLabel: string;
   niveauDeFormationLePlusEleveDegreeId: string;

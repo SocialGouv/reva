@@ -119,7 +119,6 @@ input CandidateUpdateInformationBySelfInput {
 }
 
 input CandidateProfileUpdateInput {
-  candidateId: UUID!
   highestDegreeId: UUID!
   highestDegreeLabel: String
   niveauDeFormationLePlusEleveDegreeId: String
