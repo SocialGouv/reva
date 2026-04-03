@@ -2,9 +2,9 @@ import {
   createAccountInIAM,
   generateIAMTokenWithPassword,
   getAccountInIAM,
-  getJWTContent,
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
+import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
 import { prismaClient } from "@/prisma/client";
 
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";

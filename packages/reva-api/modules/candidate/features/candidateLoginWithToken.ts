@@ -8,9 +8,9 @@ import { isCertificationAvailable } from "@/modules/referential/features/isCerti
 import {
   createAccountInIAM,
   getAccountInIAM,
-  getJWTContent,
 } from "@/modules/shared/auth/auth.helper";
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
 import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
 import {
   FunctionalCodeError,

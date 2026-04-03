@@ -1,4 +1,4 @@
-import { generateJwt } from "@/modules/shared/auth/auth.helper";
+import { generateJwt } from "@/modules/shared/auth/jwt.helper";
 
 import { TypeAccompagnement } from "../candidate.types";
 

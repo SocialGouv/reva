@@ -1,4 +1,5 @@
 import * as AuthHelper from "@/modules/shared/auth/auth.helper";
+import * as JwtHelper from "@/modules/shared/auth/jwt.helper";
 import { prismaClient } from "@/prisma/client";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -29,7 +30,7 @@ describe("candidateResetPassword", () => {
       refreshToken: "refresh-token",
       idToken: "id-token",
     };
-    const token = AuthHelper.generateJwt({
+    const token = JwtHelper.generateJwt({
       email: "candidate@example.com",
       action: "finalize-registration",
     });
@@ -57,7 +58,7 @@ describe("candidateResetPassword", () => {
     const candidate = await createCandidateHelper({
       keycloakId,
     });
-    const token = AuthHelper.generateJwt({
+    const token = JwtHelper.generateJwt({
       email: candidate.email,
       action: "reset-password",
     });

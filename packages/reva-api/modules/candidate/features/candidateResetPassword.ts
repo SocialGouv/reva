@@ -1,9 +1,9 @@
 import {
   generateIAMTokenWithPassword,
   getAccountInIAM,
-  getJWTContent,
   resetPassword,
 } from "@/modules/shared/auth/auth.helper";
+import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
 import {
   FunctionalCodeError,
   FunctionalError,

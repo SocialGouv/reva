@@ -1,7 +1,7 @@
 import { formatDuration, intervalToDuration } from "date-fns";
 
 import { createAccount } from "@/modules/account/features/createAccount";
-import { generateJwt } from "@/modules/shared/auth/auth.helper";
+import { generateJwt } from "@/modules/shared/auth/jwt.helper";
 import { sendEmailUsingTemplate } from "@/modules/shared/email/sendEmailUsingTemplate";
 import { prismaClient } from "@/prisma/client";
 

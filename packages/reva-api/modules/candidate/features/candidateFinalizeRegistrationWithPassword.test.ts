@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 
 import * as AuthHelper from "@/modules/shared/auth/auth.helper";
+import * as JwtHelper from "@/modules/shared/auth/jwt.helper";
 import { prismaClient } from "@/prisma/client";
 import { createCandidateHelper } from "@/test/helpers/entities/create-candidate-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
@@ -26,12 +27,12 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
     const email = faker.internet.email();
     const password = "StrongPassword123!";
     const keycloakId = faker.string.uuid();
-    const token = AuthHelper.generateJwt({
+    const token = JwtHelper.generateJwt({
       email,
       action: "finalize-registration",
     });
 
-    vi.spyOn(AuthHelper, "getJWTContent").mockReturnValue({
+    vi.spyOn(JwtHelper, "getJWTContent").mockReturnValue({
       email,
       action: "finalize-registration",
     });
@@ -90,7 +91,7 @@ describe("candidateFinalizeRegistrationWithPassword", () => {
     const existingCandidate = await createCandidateHelper({
       keycloakId,
     });
-    const token = AuthHelper.generateJwt({
+    const token = JwtHelper.generateJwt({
       email: existingCandidate.email,
       action: "finalize-registration",
     });
