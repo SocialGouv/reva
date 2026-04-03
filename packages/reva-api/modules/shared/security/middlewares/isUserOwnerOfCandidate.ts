@@ -8,12 +8,19 @@ const isUserOwnerOfCandidateFeature = async ({
 }: {
   candidateId: string;
   keycloakId?: string;
-}) =>
-  !!keycloakId &&
-  !!(await prismaClient.candidate.findUnique({
-    where: { id: candidateId, keycloakId },
-    select: { id: true },
-  }));
+}) => {
+  try {
+    return (
+      !!keycloakId &&
+      !!(await prismaClient.candidate.findUnique({
+        where: { id: candidateId, keycloakId },
+        select: { id: true },
+      }))
+    );
+  } catch (_error) {
+    return null;
+  }
+};
 
 export const isUserOwnerOfCandidate =
   (next: IFieldResolver<unknown>) =>
@@ -24,7 +31,15 @@ export const isUserOwnerOfCandidate =
     info: any,
   ) => {
     const candidateId =
-      args.candidateId || args.data?.candidateId || root.candidateId || root.id;
+      args.id ||
+      args.candidateId ||
+      args.data?.candidateId ||
+      root.candidateId ||
+      root.id;
+
+    if (!candidateId) {
+      throw new Error("Vous n'êtes pas autorisé à accéder à cette candidature");
+    }
 
     if (
       !(await isUserOwnerOfCandidateFeature({
