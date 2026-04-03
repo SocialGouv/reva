@@ -23,7 +23,7 @@ export const updateCohorteVAECollectiveOrganism = async ({
 
   if (cohorteVaeCollective.status !== "BROUILLON") {
     throw new Error(
-      "Impossible de modifier la certification d'une cohorte si elle n'est pas dans l'état 'BROUILLON'",
+      "Impossible de modifier l'aap d'une cohorte si elle n'est pas dans l'état 'BROUILLON'",
     );
   }
 
@@ -33,7 +33,7 @@ export const updateCohorteVAECollectiveOrganism = async ({
     );
   }
 
-  await prismaClient.cohorteVaeCollective.update({
+  return prismaClient.cohorteVaeCollective.update({
     where: {
       id: cohorteVaeCollectiveId,
     },
@@ -41,5 +41,4 @@ export const updateCohorteVAECollectiveOrganism = async ({
       organismId,
     },
   });
-  return cohorteVaeCollective;
 };

@@ -3,6 +3,7 @@ import {
   isAdmin,
   isAdminOrGestionnaireOfCommanditaireVaeCollective,
   isAnyone,
+  isAdminOrGestionnaireOfCohorteVaeCollective,
 } from "@/modules/shared/security/presets";
 
 export const vaeCollectiveResolversSecurityMap = {
@@ -15,7 +16,7 @@ export const vaeCollectiveResolversSecurityMap = {
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
 
   "Query.vaeCollective_getCohorteVaeCollectiveById":
-    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    isAdminOrGestionnaireOfCohorteVaeCollective,
 
   "Query.vaeCollective_commanditaireVaeCollectives": isAdmin,
 
@@ -23,19 +24,19 @@ export const vaeCollectiveResolversSecurityMap = {
     isAdminOrGestionnaireOfCommanditaireVaeCollective,
 
   "Mutation.vaeCollective_updateNomCohorteVaeCollective":
-    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    isAdminOrGestionnaireOfCohorteVaeCollective,
 
   "Mutation.vaeCollective_updateCohorteVAECollectiveOrganism":
-    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    isAdminOrGestionnaireOfCohorteVaeCollective,
 
   "Mutation.vaeCollective_deleteCohorteVaeCollective":
-    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    isAdminOrGestionnaireOfCohorteVaeCollective,
 
   "Mutation.vaeCollective_updateCohorteVAECollectiveCertification":
-    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    isAdminOrGestionnaireOfCohorteVaeCollective,
 
   "Mutation.vaeCollective_publishCohorteVAECollective":
-    isAdminOrGestionnaireOfCommanditaireVaeCollective,
+    isAdminOrGestionnaireOfCohorteVaeCollective,
 
   "Mutation.vaeCollective_createCommanditaireVaeCollective": isAdmin,
 
