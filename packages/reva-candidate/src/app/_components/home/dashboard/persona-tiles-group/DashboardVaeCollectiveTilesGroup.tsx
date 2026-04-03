@@ -45,7 +45,7 @@ export const DashboardVaeCollectiveTilesGroup = ({
         title="Compléter ma candidature"
         icon="fr-icon-ball-pen-line"
       >
-        <div className="grid md:grid-cols-3 grid-rows-2 h-[200px]">
+        <div className="grid md:grid-cols-3 grid-rows-2">
           <CertificationTile
             selectedCertificationId={candidacy?.certification?.id}
             readOnly={isParcoursConfirme}
@@ -85,7 +85,7 @@ export const DashboardVaeCollectiveTilesGroup = ({
           ) : undefined
         }
       >
-        <div className="grid grid-flow-row md:grid-flow-col grid-rows-1 h-[200px]">
+        <div className="grid grid-flow-row md:grid-flow-col grid-rows-1">
           <TrainingTile
             candidacyStatus={candidacy.status}
             firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}

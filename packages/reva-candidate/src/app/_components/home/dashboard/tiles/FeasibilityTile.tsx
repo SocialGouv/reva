@@ -143,7 +143,6 @@ export const FeasibilityTile = ({
         />
       }
       small
-      imageSvg
       buttonProps={{
         onClick: () => {
           router.push(feasibilityUrl);

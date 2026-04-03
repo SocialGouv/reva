@@ -55,7 +55,6 @@ export const OrganismTile = ({
     title: "Accompagnateur",
     small: true as const,
     imageUrl: "/candidat/images/pictograms/avatar.svg",
-    imageSvg: true,
   };
 
   if (tileDisabled) {

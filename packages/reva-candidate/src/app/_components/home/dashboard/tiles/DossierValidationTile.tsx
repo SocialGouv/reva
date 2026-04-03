@@ -104,7 +104,6 @@ export const DossierValidationTile = ({
       }
       title="Dossier de validation"
       small
-      imageSvg
       buttonProps={{
         onClick: () => {
           router.push("./dossier-de-validation");

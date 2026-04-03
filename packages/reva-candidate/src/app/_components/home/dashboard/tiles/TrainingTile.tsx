@@ -68,7 +68,6 @@ export const TrainingTile = ({
         />
       }
       small
-      imageSvg
       buttonProps={{
         onClick: () => {
           router.push(
