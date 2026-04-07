@@ -1,3 +1,4 @@
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -6,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
+import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
 import { useFeatureFlipping } from "@/components/feature-flipping/featureFlipping";
 import { FormButtons } from "@/components/form/form-footer/FormButtons";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
@@ -50,6 +52,7 @@ export const CivilInformationForm = ({
 }) => {
   const { isFeatureActive } = useFeatureFlipping();
   const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
+  const isBirthPlaceEnabled = isFeatureActive("BIRTH_PLACE");
 
   const { updateCivilInformationMutate } = useUpdateCivilInformation({
     candidateId: candidate?.id,
@@ -57,7 +60,7 @@ export const CivilInformationForm = ({
   const isFCLinked = candidate?.franceConnectLinked;
   const router = useRouter();
 
-  const franceId = countries?.find((c) => c.label === "France")?.id;
+  const franceId = countries?.find((c) => c.isoCode === "FRA")?.id;
 
   const genders = [
     { label: "Madame", value: "woman" },
@@ -69,6 +72,7 @@ export const CivilInformationForm = ({
     register,
     control,
     setValue,
+    getValues,
     reset,
     formState: { errors, isDirty, isSubmitting },
     clearErrors,
@@ -183,6 +187,43 @@ export const CivilInformationForm = ({
     }
   };
 
+  const findDepartmentById = (id: string) => {
+    return departments?.find((d) => d.id === id);
+  };
+
+  const handleOnAddressSelection = (
+    {
+      city,
+    }: {
+      city: string;
+    },
+    department?: { id: string; code: string; label: string },
+  ) => {
+    setValue("birthCity", city, { shouldDirty: true });
+    setValue("birthDepartment", department?.id ?? "", { shouldDirty: true });
+  };
+
+  const [birthPlaceIsForeign, setBirthPlaceIsForeign] = useState(false);
+  const handleToggleBirthPlaceIsForeign = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const isForeign = e.target.checked;
+    setBirthPlaceIsForeign(isForeign);
+    if (isForeign) {
+      setValue("country", "", { shouldDirty: true });
+      setValue("birthCity", "", { shouldDirty: true });
+      setValue("birthDepartment", "", { shouldDirty: true });
+    } else {
+      setValue("country", franceId, {
+        shouldDirty: true,
+      });
+      setValue("birthCity", candidate?.birthCity ?? "", { shouldDirty: true });
+      setValue("birthDepartment", candidate?.birthDepartment?.id ?? "", {
+        shouldDirty: true,
+      });
+    }
+  };
+
   return (
     <>
       <form
@@ -197,7 +238,7 @@ export const CivilInformationForm = ({
         <div className="grid grid-cols-4 gap-6">
           <div className="col-span-3 flex flex-col gap-6">
             <RadioButtons
-              className="mb-0"
+              className="mb-0 w-full"
               legend="Civilité"
               orientation="horizontal"
               small
@@ -212,7 +253,7 @@ export const CivilInformationForm = ({
               stateRelatedMessage={errors.gender?.message}
             />
 
-            <div className="flex gap-8">
+            <div className="grid grid-cols-3 gap-8">
               <Input
                 label="Nom de naissance"
                 className="w-full mb-0"
@@ -254,7 +295,7 @@ export const CivilInformationForm = ({
                 />
               </div>
             ) : (
-              <div className="flex gap-8">
+              <div className="grid grid-cols-3 gap-8">
                 <Input
                   label="Prénom principal"
                   className="w-full mb-0"
@@ -280,7 +321,7 @@ export const CivilInformationForm = ({
                 />
               </div>
             )}
-            <div className="flex gap-8">
+            <div className="grid grid-cols-3 gap-8">
               <Input
                 label="Date de naissance"
                 className="mb-0"
@@ -293,58 +334,109 @@ export const CivilInformationForm = ({
                 stateRelatedMessage={errors.birthdate?.message}
                 data-testid="birthdate-input"
               />
+
+              {isBirthPlaceEnabled && (
+                <>
+                  {birthPlaceIsForeign ? (
+                    <Select
+                      className="w-full mb-0"
+                      label="Pays de naissance"
+                      disabled={isFCLinked}
+                      nativeSelectProps={register("country")}
+                      state={errors.country ? "error" : "default"}
+                      stateRelatedMessage={errors.country?.message}
+                      data-testid="country-select"
+                    >
+                      {(countries || [])
+                        .filter((c) => c.isoCode !== "FRA")
+                        .map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.label}
+                          </option>
+                        ))}
+                    </Select>
+                  ) : (
+                    <AutocompleteAddress
+                      label="Lieu de naissance"
+                      onOptionSelection={handleOnAddressSelection}
+                      className="w-full mb-0"
+                      displayMode="municipality"
+                      defaultSearchText={`${getValues("birthCity")} (${findDepartmentById(getValues("birthDepartment"))?.code})`}
+                      disabled={isFCLinked}
+                    />
+                  )}
+
+                  <Checkbox
+                    className="mb-0 w-full mt-12"
+                    small
+                    options={[
+                      {
+                        label: "Je suis né(e) à l’étranger",
+                        nativeInputProps: {
+                          checked: birthPlaceIsForeign,
+                          onChange: handleToggleBirthPlaceIsForeign,
+                          disabled: isFCLinked,
+                        },
+                      },
+                    ]}
+                  />
+                </>
+              )}
             </div>
 
-            <div className="flex gap-8">
-              <Select
-                className="w-full mb-0"
-                label="Pays de naissance"
-                disabled={isFCLinked}
-                nativeSelectProps={register("country")}
-                state={errors.country ? "error" : "default"}
-                stateRelatedMessage={errors.country?.message}
-                data-testid="country-select"
-              >
-                {countries?.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
-              </Select>
+            {!isBirthPlaceEnabled && (
+              <div className="grid grid-cols-3 gap-8">
+                <Select
+                  className="w-full mb-0"
+                  label="Pays de naissance"
+                  disabled={isFCLinked}
+                  nativeSelectProps={register("country")}
+                  state={errors.country ? "error" : "default"}
+                  stateRelatedMessage={errors.country?.message}
+                  data-testid="country-select"
+                >
+                  {countries?.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  ))}
+                </Select>
 
-              <Select
-                className="w-full mb-0"
-                label="Département de naissance"
-                disabled={disabledDepartment || isFCLinked}
-                nativeSelectProps={register("birthDepartment")}
-                state={errors.birthDepartment ? "error" : "default"}
-                stateRelatedMessage={errors.birthDepartment?.message}
-                data-testid="birth-department-select"
-              >
-                <option value="" disabled hidden>
-                  Votre département
-                </option>
-                {departments?.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.label} ({d.code})
+                <Select
+                  className="w-full mb-0"
+                  label="Département de naissance"
+                  disabled={disabledDepartment || isFCLinked}
+                  nativeSelectProps={register("birthDepartment")}
+                  state={errors.birthDepartment ? "error" : "default"}
+                  stateRelatedMessage={errors.birthDepartment?.message}
+                  data-testid="birth-department-select"
+                >
+                  <option value="" disabled hidden>
+                    Votre département
                   </option>
-                ))}
-              </Select>
+                  {departments?.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.label} ({d.code})
+                    </option>
+                  ))}
+                </Select>
 
-              <Input
-                label="Ville de naissance"
-                className="w-full mb-0"
-                disabled={isFCLinked}
-                nativeInputProps={register("birthCity")}
-                state={errors.birthCity ? "error" : "default"}
-                stateRelatedMessage={errors.birthCity?.message}
-                data-testid="birth-city-input"
-              />
-            </div>
-            <div className="flex gap-8">
+                <Input
+                  label="Ville de naissance"
+                  className="w-full mb-0"
+                  disabled={isFCLinked}
+                  nativeInputProps={register("birthCity")}
+                  state={errors.birthCity ? "error" : "default"}
+                  stateRelatedMessage={errors.birthCity?.message}
+                  data-testid="birth-city-input"
+                />
+              </div>
+            )}
+
+            <div className="grid grid-cols-3 gap-8">
               <Input
                 label="Nationalité"
-                className="w-full md:w-1/4 md:pr-6"
+                className="w-full mb-0"
                 nativeInputProps={register("nationality")}
                 state={errors.nationality ? "error" : "default"}
                 stateRelatedMessage={errors.nationality?.message}
@@ -388,13 +480,15 @@ export const CivilInformationForm = ({
                 </div>
               )}
 
-              <div>
-                <p className="font-bold mb-2">Né(e) à l’étranger ? </p>
-                <p>
-                  Indiquez le pays et la ville de votre{" "}
-                  <strong>lieu de naissance</strong>.
-                </p>
-              </div>
+              {!isBirthPlaceEnabled && (
+                <div>
+                  <p className="font-bold mb-2">Né(e) à l’étranger ? </p>
+                  <p>
+                    Indiquez le pays et la ville de votre{" "}
+                    <strong>lieu de naissance</strong>.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

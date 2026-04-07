@@ -42,6 +42,7 @@ const getCountries = graphql(`
     getCountries {
       id
       label
+      isoCode
     }
   }
 `);

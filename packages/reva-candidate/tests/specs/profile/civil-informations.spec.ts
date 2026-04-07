@@ -63,7 +63,7 @@ function civilInformationHandlers(
   const candidacy = createCandidacyEntity({ candidate });
   const { handlers: guardHandlers } = dashboardHandlers({
     candidacy,
-    activeFeaturesForConnectedUser: ["MIDDLE_NAMES"],
+    activeFeaturesForConnectedUser: ["MIDDLE_NAMES", "BIRTH_PLACE"],
   });
 
   return [
@@ -94,10 +94,7 @@ const SELECTORS = {
   lastname: '[data-testid="lastname-input"] input',
   givenName: '[data-testid="given-name-input"] input',
   middleNames: '[data-testid="middle-names-input"] input',
-  birthCity: '[data-testid="birth-city-input"] input',
   birthdate: '[data-testid="birthdate-input"] input',
-  birthDepartment: '[data-testid="birth-department-select"] select',
-  country: '[data-testid="country-select"] select',
   nationality: '[data-testid="nationality-input"] input',
 };
 
@@ -121,19 +118,30 @@ test.describe("FranceConnect linked candidate", () => {
   test("should disable FC-locked fields", async ({ page }) => {
     await visitCivilInformations(page);
 
+    const DEFAULT_SELECTORS = {
+      ...SELECTORS,
+      birthPlace: '[data-testid="autocomplete"] input',
+    };
+
     for (const field of [
       "lastname",
       "firstname",
       "middleNames",
       "birthdate",
-      "country",
-      "birthDepartment",
-      "birthCity",
+      "birthPlace",
     ]) {
       await expect(
-        page.locator(SELECTORS[field as keyof typeof SELECTORS]),
+        page.locator(
+          DEFAULT_SELECTORS[field as keyof typeof DEFAULT_SELECTORS],
+        ),
       ).toBeDisabled();
     }
+
+    await expect(
+      page.getByRole("checkbox", {
+        name: "Je suis né(e) à l’étranger",
+      }),
+    ).toBeDisabled();
   });
 
   test("should keep non-locked fields editable", async ({ page }) => {
@@ -151,12 +159,55 @@ test.describe("Non-FranceConnect candidate", () => {
     mswHandlers: [civilInformationHandlers(nonFcCandidate), { scope: "test" }],
   });
 
-  test("should have all fields editable", async ({ page }) => {
+  test("should have all default fields editable", async ({ page }) => {
     await visitCivilInformations(page);
 
-    for (const selector of Object.values(SELECTORS)) {
+    const DEFAULT_SELECTORS = {
+      ...SELECTORS,
+      birthPlace: '[data-testid="autocomplete"] input',
+    };
+
+    for (const selector of Object.values(DEFAULT_SELECTORS)) {
       await expect(page.locator(selector)).not.toBeDisabled();
     }
+
+    await expect(
+      page.locator('input[name="gender"]').first(),
+    ).not.toBeDisabled();
+
+    await expect(
+      page.getByRole("checkbox", {
+        name: "Je suis né(e) à l’étranger",
+      }),
+    ).not.toBeDisabled();
+  });
+
+  test("should have all default fields editable when birth place is foreign", async ({
+    page,
+  }) => {
+    await visitCivilInformations(page);
+
+    await expect(
+      page.getByRole("checkbox", {
+        name: "Je suis né(e) à l’étranger",
+      }),
+    ).not.toBeDisabled();
+
+    await page
+      .getByRole("checkbox", {
+        name: "Je suis né(e) à l’étranger",
+      })
+      .check({ force: true });
+
+    const DEFAULT_SELECTORS = {
+      ...SELECTORS,
+      country: '[data-testid="country-select"] select',
+    };
+
+    for (const selector of Object.values(DEFAULT_SELECTORS)) {
+      await expect(page.locator(selector)).not.toBeDisabled();
+    }
+
     await expect(
       page.locator('input[name="gender"]').first(),
     ).not.toBeDisabled();
