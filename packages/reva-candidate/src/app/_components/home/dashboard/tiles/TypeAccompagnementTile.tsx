@@ -37,6 +37,7 @@ export const TypeAccompagnementTile = ({
     small: true as const,
     imageUrl: "/candidat/images/pictograms/human-cooperation.svg",
     imageSvg: true,
+    className: "h-[200px]",
   };
 
   if (disabled) {
@@ -55,7 +56,6 @@ export const TypeAccompagnementTile = ({
       linkProps={{
         href: "./type-accompagnement",
       }}
-      className="h-[200px]"
     />
   );
 };
