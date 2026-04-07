@@ -28,5 +28,5 @@ export const CertificationTile = ({
     imageUrl: "/candidat/images/pictograms/search.svg",
   };
 
-  return <Tile {...commonProps} linkProps={{ href }} />;
+  return <Tile {...commonProps} imageSvg linkProps={{ href }} />;
 };

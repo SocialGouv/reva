@@ -25,7 +25,7 @@ export const DashboardAutonomeTilesGroup = ({
         title="Compléter ma candidature"
         icon="fr-icon-ball-pen-line"
       >
-        <div className="grid md:grid-cols-2 grid-rows-1">
+        <div className="grid md:grid-cols-2 grid-rows-1 h-[200px]">
           <CertificationTile
             selectedCertificationId={candidacy?.certification?.id}
             readOnly={hasFeasibilitySent}
@@ -42,7 +42,7 @@ export const DashboardAutonomeTilesGroup = ({
         title="Suivre mon parcours"
         icon="fr-icon-award-line"
       >
-        <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-2 grid-rows-1">
+        <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-2 grid-rows-1 h-[200px]">
           <FeasibilityTile
             feasibility={feasibility}
             candidacyIsAutonome={true}

@@ -48,7 +48,7 @@ export const DashboardAccompagneTilesGroup = ({
         title="Compléter ma candidature"
         icon="fr-icon-ball-pen-line"
       >
-        <div className="grid md:grid-cols-3 grid-rows-2">
+        <div className="grid md:grid-cols-3 grid-rows-2 h-[200px]">
           <CertificationTile
             selectedCertificationId={candidacy?.certification?.id}
             readOnly={isParcoursConfirme}
@@ -88,7 +88,7 @@ export const DashboardAccompagneTilesGroup = ({
           ) : undefined
         }
       >
-        <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-3 grid-rows-1">
+        <div className="grid grid-flow-row md:grid-flow-col md:grid-cols-3 grid-rows-1 h-[200px]">
           <TrainingTile
             candidacyStatus={candidacy.status}
             firstAppointmentOccuredAt={candidacy.firstAppointmentOccuredAt}

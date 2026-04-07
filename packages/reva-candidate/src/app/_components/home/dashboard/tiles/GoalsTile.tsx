@@ -21,6 +21,7 @@ export const GoalsTile = ({
       desc={getDesc()}
       title="Objectifs"
       small
+      imageSvg
       linkProps={{
         href: "./set-goals",
       }}
