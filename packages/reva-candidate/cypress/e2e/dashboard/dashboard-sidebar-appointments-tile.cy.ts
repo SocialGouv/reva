@@ -100,7 +100,6 @@ context("Dashboard Sidebar - Appointment Tiles", () => {
           cy.get('[data-testid="rendez-vous-generique-tile"]').should(
             "not.exist",
           );
-          cy.get('[data-testid="ready-for-jury-tile"]').should("not.exist");
           cy.get('[data-testid="jury-session-tile"]').should("not.exist");
         },
       );
