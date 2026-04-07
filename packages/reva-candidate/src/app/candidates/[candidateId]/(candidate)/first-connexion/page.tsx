@@ -31,9 +31,9 @@ export default function FirstConnexionPage() {
               électronique)
             </li>
             <li>
-              la convention collective (IDCC) à laquelle vous êtes rattaché(e),
-              vous pouvez la trouver sur vos bulletins de paie, votre contrat de
-              travail ou sur le{" "}
+              du numéro de la convention collective (IDCC) à laquelle vous êtes
+              rattaché(e), vous pouvez le trouver sur vos bulletins de paie,
+              votre contrat de travail ou sur le{" "}
               <Link
                 className="fr-link"
                 href="https://code.travail.gouv.fr/outils/convention-collective"
