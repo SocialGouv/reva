@@ -5,7 +5,8 @@ export const getCertificationCompetencesByBlocId = ({
 }: {
   certificationCompetenceBlocId: string;
 }) =>
-  prismaClient.certificationCompetence.findMany({
-    where: { blocId: certificationCompetenceBlocId },
-    orderBy: { index: "asc" },
-  });
+  prismaClient.certificationCompetenceBloc
+    .findUnique({
+      where: { id: certificationCompetenceBlocId },
+    })
+    .competences({ orderBy: { index: "asc" } });
