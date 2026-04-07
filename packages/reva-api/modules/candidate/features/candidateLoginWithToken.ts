@@ -1,4 +1,3 @@
-import { TokenService } from "@/modules/account/utils/token.service";
 import { updateCertification } from "@/modules/candidacy/certification/features/updateCertification";
 import { getFirstActiveCandidacyByCandidateId } from "@/modules/candidacy/features/getFirstActiveCandidacyByCandidateId";
 import { updateCandidacyOrganism } from "@/modules/candidacy/features/updateCandidacyOrganism";
@@ -10,7 +9,7 @@ import {
   getAccountInIAM,
 } from "@/modules/shared/auth/auth.helper";
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
-import { getJWTContent } from "@/modules/shared/auth/jwt.helper";
+import { getJWTContent, generateJwt } from "@/modules/shared/auth/jwt.helper";
 import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
 import {
   FunctionalCodeError,
@@ -28,6 +27,8 @@ import {
 import { createCandidateWithCandidacy } from "./createCandidateWithCandidacy";
 import { getCandidateByKeycloakId } from "./getCandidateByKeycloakId";
 import { updateAllCandidaciesDerniereDateActiviteByCandidateId } from "./updateAllCandidaciesDerniereDateActiviteByCandidateId";
+
+const CANDIDATE_IMPERSONATE_TOKEN_TTL_SECONDS = 60;
 
 export const candidateLoginWithToken = async ({ token }: { token: string }) => {
   const candidateAuthenticationInput = (await getJWTContent(
@@ -239,10 +240,13 @@ const getImpersonateTokenForCandidate = async ({
     );
   }
 
-  const token = TokenService.getInstance().getToken({
-    keycloakId,
-    candidateId,
-  });
+  const token = generateJwt(
+    {
+      keycloakId,
+      candidateId,
+    },
+    CANDIDATE_IMPERSONATE_TOKEN_TTL_SECONDS,
+  );
 
   return token;
 };

@@ -2,10 +2,9 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { allowInsecureRequests, discovery } from "openid-client";
 
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { generateJwt, getJWTContent } from "@/modules/shared/auth/jwt.helper";
 import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
 import { logger } from "@/modules/shared/logger/logger";
-
-import { TokenService } from "../utils/token.service";
 
 import { FranceConnectSystemError } from "./france-connect.errors";
 
@@ -71,7 +70,7 @@ export const setFcStateCookie = (
   reply: FastifyReply,
   data: FcStateData,
 ): void => {
-  const jwtToken = TokenService.getInstance().getToken(data, STATE_TTL_SECONDS);
+  const jwtToken = generateJwt(data, STATE_TTL_SECONDS);
 
   reply.setCookie(
     FC_STATE_COOKIE,
@@ -90,7 +89,7 @@ export const getAndDeleteFcStateCookie = (
 
   reply.clearCookie(FC_STATE_COOKIE, { path: FC_COOKIE_PATH });
 
-  const data = TokenService.getInstance().getPayload(jwtToken);
+  const data = getJWTContent(jwtToken);
   if (!data) return null;
 
   if (data.state !== expectedState) return null;

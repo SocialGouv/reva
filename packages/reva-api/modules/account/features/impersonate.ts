@@ -1,4 +1,5 @@
 import { getKeycloakAdmin } from "@/modules/shared/auth/getKeycloakAdmin";
+import { generateJwt, getJWTContent } from "@/modules/shared/auth/jwt.helper";
 import { BACKEND_BASE_URL } from "@/modules/shared/config/config";
 import { prismaClient } from "@/prisma/client";
 
@@ -6,7 +7,8 @@ import {
   impersonateAccount,
   impersonateCandidate,
 } from "../utils/keycloak.utils";
-import { TokenService } from "../utils/token.service";
+
+const IMPERSONATE_TOKEN_TTL_SECONDS = 60;
 
 export const getImpersonateUrl = async (
   context: {
@@ -93,9 +95,12 @@ const getImpersonateTokenForAccount = async (
     }
   }
 
-  const token = TokenService.getInstance().getToken({
-    accountId: accountToUpdate.keycloakId,
-  });
+  const token = generateJwt(
+    {
+      accountId: accountToUpdate.keycloakId,
+    },
+    IMPERSONATE_TOKEN_TTL_SECONDS,
+  );
   return token;
 };
 
@@ -139,11 +144,14 @@ const getImpersonateTokenForCandidate = async (
     );
   }
 
-  const token = TokenService.getInstance().getToken({
-    keycloakId: candidateToUpdate.keycloakId,
-    candidateId,
-    ...(candidacyId && { candidacyId }),
-  });
+  const token = generateJwt(
+    {
+      keycloakId: candidateToUpdate.keycloakId,
+      candidateId,
+      ...(candidacyId && { candidacyId }),
+    },
+    IMPERSONATE_TOKEN_TTL_SECONDS,
+  );
 
   return token;
 };
@@ -157,7 +165,7 @@ export const impersonate = async (
     }
   | undefined
 > => {
-  const payload = TokenService.getInstance().getPayload(token);
+  const payload = getJWTContent(token);
   if (!payload) {
     throw new Error("Unauthorized");
   }
