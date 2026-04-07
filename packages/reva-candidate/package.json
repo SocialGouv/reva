@@ -46,8 +46,8 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.1",
-    "@graphql-codegen/cli": "^5.0.7",
-    "@graphql-codegen/client-preset": "4.8.2",
+    "@graphql-codegen/cli": "^6.2.1",
+    "@graphql-codegen/client-preset": "^5.2.4",
     "@parcel/watcher": "^2.5.1",
     "@playwright/test": "^1.58.2",
     "@types/lodash": "^4.17.17",

@@ -25,7 +25,7 @@
   "author": "",
   "devDependencies": {
     "@eslint/js": "^9.29.0",
-    "@graphql-codegen/cli": "^5.0.7",
+    "@graphql-codegen/cli": "^6.2.1",
     "@parcel/watcher": "^2.5.1",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
