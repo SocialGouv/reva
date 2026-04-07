@@ -69,6 +69,7 @@ const GET_CANDIDACY_BY_ID_FOR_DASHBOARD = graphql(`
       feasibility {
         feasibilityFileSentAt
         decision
+        decisionSentAt
         feasibilityFormat
         dematerializedFeasibilityFile {
           swornStatementFileId

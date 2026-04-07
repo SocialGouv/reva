@@ -3,6 +3,11 @@ import Tile from "@codegouvfr/react-dsfr/Tile";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
+import {
+  hasFreshCandidateConfirmation,
+  isSentToCandidateOutdatedAfterIncomplete,
+} from "@/utils/feasibilityIncompleteOutdated.util";
+
 import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 const FeasibilityBadge = ({
   feasibility,
@@ -15,14 +20,19 @@ const FeasibilityBadge = ({
   const isDfDemat = feasibility?.feasibilityFormat === "DEMATERIALIZED";
   const isSentToCandidate =
     !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;
-  const isCandidateConfirmed =
-    !!feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt;
+  const isCandidateConfirmed = hasFreshCandidateConfirmation({
+    decision,
+    decisionSentAt: feasibility?.decisionSentAt,
+    candidateConfirmationAt:
+      feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt,
+  });
   const decisionIsDraftOrIncomplete =
     decision === "DRAFT" || decision === "INCOMPLETE";
   const needsAttestation =
     isDfDemat &&
     !candidacyIsAutonome &&
-    !feasibility?.dematerializedFeasibilityFile?.swornStatementFileId;
+    (!feasibility?.dematerializedFeasibilityFile?.swornStatementFileId ||
+      !isCandidateConfirmed);
 
   switch (true) {
     case decisionIsDraftOrIncomplete &&
@@ -99,21 +109,22 @@ export const FeasibilityTile = ({
   const feasibilityHasBeenSentToCandidate =
     !!feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt;
 
+  const isIncompleteNotResentToCandidate =
+    !candidacyIsAutonome &&
+    isSentToCandidateOutdatedAfterIncomplete({
+      decision: feasibility?.decision,
+      decisionSentAt: feasibility?.decisionSentAt,
+      sentToCandidateAt:
+        feasibility?.dematerializedFeasibilityFile?.sentToCandidateAt,
+    });
+
   const feasibilityTileDisabled = useMemo(() => {
     switch (true) {
       case candidacyIsAutonome:
         return false;
       case !feasibility:
         return true;
-      case feasibility?.decision === "INCOMPLETE" &&
-        feasibilityIsPdf &&
-        !feasibility.feasibilityFileSentAt &&
-        !candidacyIsAutonome:
-        return true;
-      case feasibility?.decision === "INCOMPLETE" &&
-        !feasibility?.dematerializedFeasibilityFile?.candidateConfirmationAt &&
-        !feasibilityHasBeenSentToCandidate &&
-        !candidacyIsAutonome:
+      case isIncompleteNotResentToCandidate:
         return true;
       case feasibilityHasBeenSentToCandidate || feasibilityIsPdf:
         return false;
@@ -125,6 +136,7 @@ export const FeasibilityTile = ({
     feasibilityHasBeenSentToCandidate,
     feasibilityIsPdf,
     candidacyIsAutonome,
+    isIncompleteNotResentToCandidate,
   ]);
 
   const feasibilityUrl = isFeasibilityDemat

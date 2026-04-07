@@ -513,11 +513,11 @@ context("Dashboard Tiles", () => {
       });
     });
 
-    it("should be disabled when PDF DF is incomplete and has not been yet resent to certification authority by AAP", () => {
+    it("should be enabled when PDF DF is incomplete (candidate can view the decision)", () => {
       cy.fixture("candidacy1.json").then((candidacy) => {
         candidacy.data.getCandidacyById.feasibility = {
           decision: "INCOMPLETE",
-          feasibilityFileSentAt: null,
+          feasibilityFileSentAt: "2024-01-01T00:00:00.000Z",
           feasibilityFormat: "UPLOADED_PDF",
         };
 
@@ -525,7 +525,9 @@ context("Dashboard Tiles", () => {
 
         interceptGraphQL(candidacy);
 
-        cy.get('[data-testid="feasibility-tile"] button').should("be.disabled");
+        cy.get('[data-testid="feasibility-tile"] button').should(
+          "not.be.disabled",
+        );
       });
     });
 
@@ -533,10 +535,11 @@ context("Dashboard Tiles", () => {
       cy.fixture("candidacy1.json").then((candidacy) => {
         candidacy.data.getCandidacyById.feasibility = {
           decision: "INCOMPLETE",
+          decisionSentAt: "2024-01-02T00:00:00.000Z",
           feasibilityFormat: "DEMATERIALIZED",
           dematerializedFeasibilityFile: {
-            sentToCandidateAt: null,
-            candidateConfirmationAt: null,
+            sentToCandidateAt: "2024-01-01T00:00:00.000Z",
+            candidateConfirmationAt: "2024-01-01T00:00:00.000Z",
           },
         };
 

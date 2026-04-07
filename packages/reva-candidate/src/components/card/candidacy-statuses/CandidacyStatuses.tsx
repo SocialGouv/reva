@@ -88,6 +88,8 @@ const StatusTag = ({
       return <Tag small>Parcours reçu</Tag>;
     case status === "PARCOURS_CONFIRME":
       return <Tag small>Parcours validé</Tag>;
+    case feasibility?.decision === "INCOMPLETE":
+      return <Tag small>Dossier de faisabilité incomplet</Tag>;
     case isSentToCandidate &&
       !hasCandidateConfirmed &&
       feasibility.decision === "DRAFT":

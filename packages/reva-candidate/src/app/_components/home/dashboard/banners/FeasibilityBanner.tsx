@@ -1,3 +1,8 @@
+import {
+  hasFreshCandidateConfirmation as computeHasFreshConfirmation,
+  isSentToCandidateOutdatedAfterIncomplete,
+} from "@/utils/feasibilityIncompleteOutdated.util";
+
 import { FeasibilityUseCandidateForDashboard } from "../dashboard.hooks";
 
 import { BaseBanner } from "./BaseBanner";
@@ -42,6 +47,40 @@ export const FeasibilityBanner = ({
     );
   }
 
+  const hasFreshCandidateConfirmation = computeHasFreshConfirmation({
+    decision,
+    decisionSentAt: feasibility.decisionSentAt,
+    candidateConfirmationAt:
+      feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt,
+  });
+
+  // Dossier INCOMPLETE accompagné — AAP n'a pas encore re-envoyé au candidat après la décision
+  if (
+    decision === "INCOMPLETE" &&
+    typeAccompagnement === "ACCOMPAGNE" &&
+    !hasFreshCandidateConfirmation &&
+    isSentToCandidateOutdatedAfterIncomplete({
+      decision,
+      decisionSentAt: feasibility.decisionSentAt,
+      sentToCandidateAt:
+        feasibility.dematerializedFeasibilityFile?.sentToCandidateAt,
+    })
+  ) {
+    return (
+      <BaseBanner
+        content={
+          <div data-testid="incomplete-feasibility-banner">
+            Votre dossier de faisabilité est incomplet. Votre accompagnateur est
+            en train de le mettre à jour et vous le renverra bientôt pour
+            validation.
+          </div>
+        }
+        imageSrc={WARNING_IMAGE}
+        imageAlt={WARNING_IMAGE_ALT}
+      />
+    );
+  }
+
   // Dossier pas encore envoyé au candidat
   if (
     decision === "DRAFT" &&
@@ -65,7 +104,7 @@ export const FeasibilityBanner = ({
   if (
     (decision === "DRAFT" || decision === "INCOMPLETE") &&
     typeAccompagnement === "ACCOMPAGNE" &&
-    !feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+    !hasFreshCandidateConfirmation &&
     feasibility.dematerializedFeasibilityFile?.sentToCandidateAt
   ) {
     return (
@@ -85,7 +124,7 @@ export const FeasibilityBanner = ({
   if (
     (decision === "DRAFT" || decision === "INCOMPLETE") &&
     typeAccompagnement === "ACCOMPAGNE" &&
-    feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+    hasFreshCandidateConfirmation &&
     !feasibility.dematerializedFeasibilityFile?.swornStatementFileId
   ) {
     return (
@@ -105,7 +144,7 @@ export const FeasibilityBanner = ({
   if (
     (decision === "DRAFT" || decision === "INCOMPLETE") &&
     typeAccompagnement === "ACCOMPAGNE" &&
-    feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
+    hasFreshCandidateConfirmation &&
     feasibility.dematerializedFeasibilityFile?.swornStatementFileId
   ) {
     return (
@@ -141,11 +180,8 @@ export const FeasibilityBanner = ({
     );
   }
 
-  if (
-    decision === "INCOMPLETE" &&
-    !feasibility.dematerializedFeasibilityFile?.candidateConfirmationAt &&
-    typeAccompagnement === "ACCOMPAGNE"
-  ) {
+  // INCOMPLETE accompagné après correction AAP (sentToCandidateAt effacé par resetDFFSentToCandidateState)
+  if (decision === "INCOMPLETE" && typeAccompagnement === "ACCOMPAGNE") {
     return (
       <BaseBanner
         content={
