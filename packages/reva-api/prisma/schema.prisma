@@ -147,6 +147,7 @@ model CertificationCompetence {
   bloc                              CertificationCompetenceBloc         @relation(fields: [blocId], references: [id], onUpdate: NoAction, onDelete: Cascade)
   dffCertificationCompetenceDetails DFFCertificationCompetenceDetails[]
 
+  @@index([blocId, index])
   @@map("certification_competence")
 }
 
