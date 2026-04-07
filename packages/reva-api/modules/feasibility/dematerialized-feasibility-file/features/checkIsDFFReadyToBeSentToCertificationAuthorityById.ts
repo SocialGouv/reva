@@ -2,6 +2,7 @@ import {
   CompetenceBlocsPartCompletionEnum,
   DFFDecision,
   DFFEligibilityRequirement,
+  FeasibilityStatus,
 } from "@prisma/client";
 
 type CheckIsDFFReadyToBeSentToCertificationAuthorityByIdArgs = {
@@ -13,6 +14,8 @@ type CheckIsDFFReadyToBeSentToCertificationAuthorityByIdArgs = {
   eligibilityRequirement: DFFEligibilityRequirement | null;
   swornStatementFileId: string | null;
   candidateConfirmationAt: Date | null;
+  feasibilityDecision?: FeasibilityStatus | null;
+  feasibilityDecisionSentAt?: Date | null;
 };
 
 export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
@@ -24,7 +27,20 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
   eligibilityRequirement,
   swornStatementFileId,
   candidateConfirmationAt,
+  feasibilityDecision,
+  feasibilityDecisionSentAt,
 }: CheckIsDFFReadyToBeSentToCertificationAuthorityByIdArgs) => {
+  // Apres une decision INCOMPLETE, bloquer tant que le candidat n'a pas re-confirme (comparaison temporelle)
+  if (feasibilityDecision === "INCOMPLETE") {
+    if (
+      !candidateConfirmationAt ||
+      !feasibilityDecisionSentAt ||
+      candidateConfirmationAt <= feasibilityDecisionSentAt
+    ) {
+      return false;
+    }
+  }
+
   let isDFFReadyToBeSentToCertificationAuthority =
     attachmentsPartComplete &&
     certificationPartComplete &&

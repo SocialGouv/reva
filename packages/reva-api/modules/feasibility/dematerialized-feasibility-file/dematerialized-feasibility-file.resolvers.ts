@@ -3,6 +3,7 @@ import { DematerializedFeasibilityFile } from "@prisma/client";
 
 import { getCertificationCompetenceById } from "@/modules/referential/features/getCertificationCompetenceById";
 import { getCompetenceBlocById } from "@/modules/referential/features/getCompetenceBlocById";
+import { prismaClient } from "@/prisma/client";
 
 import { resolversSecurityMap } from "./dematerialized-feasibility-file.security";
 import {
@@ -110,26 +111,27 @@ const unsafeResolvers = {
         aapDecision,
         eligibilityRequirement,
       }),
-    isReadyToBeSentToCertificationAuthority: ({
-      attachmentsPartComplete,
-      certificationPartComplete,
-      competenceBlocsPartCompletion,
-      prerequisitesPartComplete,
-      aapDecision,
-      eligibilityRequirement,
-      swornStatementFileId,
-      candidateConfirmationAt,
-    }: DematerializedFeasibilityFile) =>
-      checkIsDFFReadyToBeSentToCertificationAuthorityById({
-        attachmentsPartComplete,
-        certificationPartComplete,
-        competenceBlocsPartCompletion,
-        prerequisitesPartComplete,
-        aapDecision,
-        eligibilityRequirement,
-        swornStatementFileId,
-        candidateConfirmationAt,
-      }),
+    isReadyToBeSentToCertificationAuthority: async (
+      dff: DematerializedFeasibilityFile,
+    ) => {
+      const feasibility = await prismaClient.feasibility.findUnique({
+        where: { id: dff.feasibilityId },
+        select: { decision: true, decisionSentAt: true },
+      });
+
+      return checkIsDFFReadyToBeSentToCertificationAuthorityById({
+        attachmentsPartComplete: dff.attachmentsPartComplete,
+        certificationPartComplete: dff.certificationPartComplete,
+        competenceBlocsPartCompletion: dff.competenceBlocsPartCompletion,
+        prerequisitesPartComplete: dff.prerequisitesPartComplete,
+        aapDecision: dff.aapDecision,
+        eligibilityRequirement: dff.eligibilityRequirement,
+        swornStatementFileId: dff.swornStatementFileId,
+        candidateConfirmationAt: dff.candidateConfirmationAt,
+        feasibilityDecision: feasibility?.decision,
+        feasibilityDecisionSentAt: feasibility?.decisionSentAt,
+      });
+    },
     swornStatementFile: ({
       swornStatementFileId,
     }: {

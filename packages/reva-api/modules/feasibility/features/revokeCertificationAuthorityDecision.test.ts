@@ -3,6 +3,7 @@ import {
   FeasibilityFormat,
   FeasibilityStatus,
 } from "@prisma/client";
+import { v4 as uuidV4 } from "uuid";
 
 import { graphql } from "@/modules/graphql/generated";
 import { prismaClient } from "@/prisma/client";
@@ -325,5 +326,58 @@ describe("Révocation de la décision du dossier de faisabilité", () => {
         );
       },
     );
+  });
+
+  describe("Préservation des données DFF après révocation d'une décision INCOMPLETE", () => {
+    test("devrait préserver sentToCandidateAt, candidateConfirmationAt, swornStatementFileId et feasibilityFileSentAt", async () => {
+      const { feasibility } = await createFeasibilityWithDecision("INCOMPLETE");
+
+      const swornStatementFile = await prismaClient.file.create({
+        data: {
+          id: uuidV4(),
+          name: "sworn-statement.pdf",
+          mimeType: "application/pdf",
+          path: `candidacies/${feasibility.candidacyId}/dff_files/sworn-statement.pdf`,
+        },
+      });
+
+      const dffId = (
+        feasibility as { dematerializedFeasibilityFile: { id: string } }
+      ).dematerializedFeasibilityFile.id;
+
+      await prismaClient.dematerializedFeasibilityFile.update({
+        where: { id: dffId },
+        data: {
+          sentToCandidateAt: new Date("2025-01-01"),
+          candidateConfirmationAt: new Date("2025-01-02"),
+          swornStatementFileId: swornStatementFile.id,
+        },
+      });
+
+      await prismaClient.feasibility.update({
+        where: { id: feasibility.id },
+        data: { feasibilityFileSentAt: new Date("2025-01-01") },
+      });
+
+      const adminClient = getAdminClient();
+
+      await adminClient.request(revokeCertificationAuthorityDecisionMutation, {
+        feasibilityId: feasibility.id,
+        reason: "erreur de saisie",
+      });
+
+      const updatedFeasibility = await prismaClient.feasibility.findUnique({
+        where: { id: feasibility.id },
+        include: { dematerializedFeasibilityFile: true },
+      });
+
+      expect(updatedFeasibility?.decision).toBe("PENDING");
+      expect(updatedFeasibility?.feasibilityFileSentAt).not.toBeNull();
+
+      const dff = updatedFeasibility?.dematerializedFeasibilityFile;
+      expect(dff?.sentToCandidateAt).not.toBeNull();
+      expect(dff?.candidateConfirmationAt).not.toBeNull();
+      expect(dff?.swornStatementFileId).not.toBeNull();
+    });
   });
 });

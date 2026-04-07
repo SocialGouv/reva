@@ -25,7 +25,6 @@ import { DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisi
 
 import { getDematerializedFeasibilityFileByCandidacyId } from "./getDematerializedFeasibilityFileByCandidacyId";
 import { getDematerializedFeasibilityFileWithDetailsByCandidacyId } from "./getDematerializedFeasibilityFileWithDetailsByCandidacyId";
-import { resetDFFSentToCandidateState } from "./resetDFFSentToCandidateState";
 
 const decisionMapper = {
   ADMISSIBLE: {
@@ -210,7 +209,7 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
           decision,
           decisionComment,
           decisionSentAt: now,
-          decisionFile: decisionFileForDb ? decisionFileForDb : undefined,
+          decisionFile: decisionFileForDb || undefined,
         },
       });
 
@@ -244,32 +243,6 @@ export const createOrUpdateCertificationAuthorityDecision = async ({
       dff.feasibility.candidacy.organism?.emailContact ||
       (dff.feasibility.candidacy.organism
         ?.contactAdministrativeEmail as string);
-
-    if (decision === "INCOMPLETE") {
-      await prismaClient.feasibility.update({
-        where: {
-          id: feasibility.id,
-        },
-        data: {
-          feasibilityFileSentAt: null,
-          candidacy: {
-            update: {
-              candidacyCandidateInfo: {
-                update: {
-                  street: dff.feasibility.candidacy.candidate?.street,
-                  city: dff.feasibility.candidacy.candidate?.city,
-                  zip: dff.feasibility.candidacy.candidate?.zip,
-                  addressComplement:
-                    dff.feasibility.candidacy.candidate?.addressComplement,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      await resetDFFSentToCandidateState(dff);
-    }
 
     if (decision === "ADMISSIBLE" || decision === "REJECTED") {
       await deleteFeasibilityIDFile(feasibility.id);

@@ -1,0 +1,245 @@
+import { v4 as uuidV4 } from "uuid";
+
+import { graphql } from "@/modules/graphql/generated";
+import { prismaClient } from "@/prisma/client";
+import { authorizationHeaderForUser } from "@/test/helpers/authorization-helper";
+import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-helper";
+import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
+import { getGraphQLClient } from "@/test/test-graphql-client";
+
+const createOrUpdateCertificationAuthorityDecisionMutation = graphql(`
+  mutation dff_createOrUpdateCertificationAuthorityDecision(
+    $candidacyId: ID!
+    $input: DematerializedFeasibilityFileCreateOrUpdateCertificationAuthorityDecisionInput!
+  ) {
+    dematerialized_feasibility_file_createOrUpdateCertificationAuthorityDecision(
+      candidacyId: $candidacyId
+      input: $input
+    ) {
+      id
+    }
+  }
+`);
+
+const sendDFFToCertificationAuthorityMutation = graphql(`
+  mutation dff_sendToCertificationAuthority(
+    $candidacyId: ID!
+    $dematerializedFeasibilityFileId: ID!
+    $certificationAuthorityId: ID!
+  ) {
+    dematerialized_feasibility_file_sendToCertificationAuthority(
+      candidacyId: $candidacyId
+      dematerializedFeasibilityFileId: $dematerializedFeasibilityFileId
+      certificationAuthorityId: $certificationAuthorityId
+    )
+  }
+`);
+
+type CandidacyHelper = Awaited<ReturnType<typeof createCandidacyHelper>>;
+
+const getCertificationAuthorityKeycloakId = (candidacy: CandidacyHelper) =>
+  candidacy.certification?.certificationAuthorityStructure
+    ?.certificationAuthorityOnCertificationAuthorityStructure?.[0]
+    ?.certificationAuthority?.Account?.[0]?.keycloakId;
+
+const getCertificationAuthorityId = (candidacy: CandidacyHelper) =>
+  candidacy.certification?.certificationAuthorityStructure
+    ?.certificationAuthorityOnCertificationAuthorityStructure?.[0]
+    ?.certificationAuthority?.id;
+
+const getAapKeycloakId = (candidacy: CandidacyHelper) =>
+  candidacy.organism?.organismOnAccounts?.[0]?.account?.keycloakId;
+
+describe("Décision INCOMPLETE sur le dossier de faisabilité dématérialisé", () => {
+  const createDFFWithPreExistingData = async () => {
+    const candidacy = await createCandidacyHelper({
+      candidacyActiveStatus: "DOSSIER_FAISABILITE_ENVOYE",
+      candidacyArgs: { status: "DOSSIER_FAISABILITE_ENVOYE" },
+    });
+
+    const feasibility = await createFeasibilityDematerializedHelper({
+      candidacyId: candidacy.id,
+      decision: "PENDING",
+      feasibilityFileSentAt: new Date(),
+      certificationAuthorityId: getCertificationAuthorityId(candidacy)!,
+    });
+
+    const swornStatementFile = await prismaClient.file.create({
+      data: {
+        id: uuidV4(),
+        name: "sworn-statement.pdf",
+        mimeType: "application/pdf",
+        path: `candidacies/${candidacy.id}/dff_files/sworn-statement.pdf`,
+      },
+    });
+
+    await prismaClient.dematerializedFeasibilityFile.update({
+      where: { id: feasibility.dematerializedFeasibilityFile!.id },
+      data: {
+        sentToCandidateAt: new Date("2025-01-01"),
+        candidateConfirmationAt: new Date("2025-01-02"),
+        swornStatementFileId: swornStatementFile.id,
+      },
+    });
+
+    return { candidacy, feasibility, swornStatementFile };
+  };
+
+  test("la décision INCOMPLETE ne doit pas effacer les données du DFF", async () => {
+    const { candidacy, feasibility } = await createDFFWithPreExistingData();
+
+    const certKeycloakId = getCertificationAuthorityKeycloakId(candidacy);
+    const client = getGraphQLClient({
+      headers: {
+        authorization: authorizationHeaderForUser({
+          role: "manage_feasibility",
+          keycloakId: certKeycloakId!,
+        }),
+      },
+    });
+
+    await client.request(createOrUpdateCertificationAuthorityDecisionMutation, {
+      candidacyId: candidacy.id,
+      input: {
+        decision: "INCOMPLETE",
+        decisionComment: "Il manque des pièces justificatives",
+      },
+    });
+
+    const updatedFeasibility = await prismaClient.feasibility.findFirst({
+      where: { id: feasibility.id },
+      include: { dematerializedFeasibilityFile: true },
+    });
+
+    expect(updatedFeasibility?.decision).toBe("INCOMPLETE");
+    expect(updatedFeasibility?.decisionComment).toBe(
+      "Il manque des pièces justificatives",
+    );
+    expect(updatedFeasibility?.decisionSentAt).not.toBeNull();
+
+    expect(updatedFeasibility?.feasibilityFileSentAt).not.toBeNull();
+
+    const dff = updatedFeasibility?.dematerializedFeasibilityFile;
+    expect(dff?.sentToCandidateAt).not.toBeNull();
+    expect(dff?.candidateConfirmationAt).not.toBeNull();
+    expect(dff?.swornStatementFileId).not.toBeNull();
+
+    const updatedCandidacy = await prismaClient.candidacy.findUnique({
+      where: { id: candidacy.id },
+    });
+    expect(updatedCandidacy?.status).toBe("DOSSIER_FAISABILITE_INCOMPLET");
+  });
+
+  describe("Garde temporelle pour sendDFFToCertificationAuthority", () => {
+    test("devrait échouer quand le dossier INCOMPLETE n'a pas été re-confirmé par le candidat", async () => {
+      const { candidacy, feasibility } = await createDFFWithPreExistingData();
+
+      const certKeycloakId = getCertificationAuthorityKeycloakId(candidacy);
+      const certClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "manage_feasibility",
+            keycloakId: certKeycloakId!,
+          }),
+        },
+      });
+
+      await certClient.request(
+        createOrUpdateCertificationAuthorityDecisionMutation,
+        {
+          candidacyId: candidacy.id,
+          input: {
+            decision: "INCOMPLETE",
+            decisionComment: "Pièces manquantes",
+          },
+        },
+      );
+
+      const aapKeycloakId = getAapKeycloakId(candidacy);
+      const aapClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "manage_candidacy",
+            keycloakId: aapKeycloakId!,
+          }),
+        },
+      });
+
+      await expect(
+        aapClient.request(sendDFFToCertificationAuthorityMutation, {
+          candidacyId: candidacy.id,
+          dematerializedFeasibilityFileId:
+            feasibility.dematerializedFeasibilityFile!.id,
+          certificationAuthorityId: getCertificationAuthorityId(candidacy)!,
+        }),
+      ).rejects.toThrowError(
+        "Impossible d'envoyer le dossier au certificateur : le dossier doit être corrigé et re-validé par le candidat",
+      );
+    });
+
+    test("devrait réussir quand le candidat a re-confirmé après la décision INCOMPLETE", async () => {
+      const { candidacy, feasibility } = await createDFFWithPreExistingData();
+
+      const certKeycloakId = getCertificationAuthorityKeycloakId(candidacy);
+      const certClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "manage_feasibility",
+            keycloakId: certKeycloakId!,
+          }),
+        },
+      });
+
+      await certClient.request(
+        createOrUpdateCertificationAuthorityDecisionMutation,
+        {
+          candidacyId: candidacy.id,
+          input: {
+            decision: "INCOMPLETE",
+            decisionComment: "Pièces manquantes",
+          },
+        },
+      );
+
+      // Direct DB update to simulate candidate re-confirmation after INCOMPLETE.
+      // We bypass the confirmDematerializedFeasibilityFileByCandidate mutation
+      // to test the temporal guard in isolation, without requiring candidate auth setup.
+      await prismaClient.dematerializedFeasibilityFile.update({
+        where: { id: feasibility.dematerializedFeasibilityFile!.id },
+        data: {
+          candidateConfirmationAt: new Date(), // now > decisionSentAt
+        },
+      });
+
+      // Reset candidacy status to allow re-sending
+      await prismaClient.candidacy.update({
+        where: { id: candidacy.id },
+        data: { status: "DOSSIER_FAISABILITE_INCOMPLET" },
+      });
+
+      const aapKeycloakId = getAapKeycloakId(candidacy);
+      const aapClient = getGraphQLClient({
+        headers: {
+          authorization: authorizationHeaderForUser({
+            role: "manage_candidacy",
+            keycloakId: aapKeycloakId!,
+          }),
+        },
+      });
+
+      const result = await aapClient.request(
+        sendDFFToCertificationAuthorityMutation,
+        {
+          candidacyId: candidacy.id,
+          dematerializedFeasibilityFileId:
+            feasibility.dematerializedFeasibilityFile!.id,
+          certificationAuthorityId: getCertificationAuthorityId(candidacy)!,
+        },
+      );
+
+      expect(
+        result.dematerialized_feasibility_file_sendToCertificationAuthority,
+      ).toBe("Ok");
+    });
+  });
+});

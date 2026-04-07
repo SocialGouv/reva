@@ -36,29 +36,43 @@ export const sendDFFToCertificationAuthority = async ({
     where: { candidacyId, isActive: true },
   });
 
-  try {
-    const candidacy = await prismaClient.$transaction(async (tx) => {
-      await tx.feasibility.updateMany({
-        where: { candidacyId, isActive: true },
-        data: {
-          certificationAuthorityId,
-          feasibilityFileSentAt: now,
-          decision: "PENDING",
-        },
-      });
-      return updateCandidacyStatus({
-        candidacyId,
-        status: "DOSSIER_FAISABILITE_ENVOYE",
-        tx,
-      });
+  if (existingFeasibility?.decision === "INCOMPLETE") {
+    const dff = await prismaClient.dematerializedFeasibilityFile.findFirst({
+      where: {
+        feasibility: { candidacyId, isActive: true },
+      },
+      select: { candidateConfirmationAt: true },
     });
 
-    if (!candidacy) {
-      throw new Error("Could not update candidacy");
+    if (
+      !dff?.candidateConfirmationAt ||
+      !existingFeasibility.decisionSentAt ||
+      dff.candidateConfirmationAt <= existingFeasibility.decisionSentAt
+    ) {
+      throw new Error(
+        "Impossible d'envoyer le dossier au certificateur : le dossier doit être corrigé et re-validé par le candidat",
+      );
     }
-  } catch (error) {
-    console.error(error);
-    throw error;
+  }
+
+  const candidacy = await prismaClient.$transaction(async (tx) => {
+    await tx.feasibility.updateMany({
+      where: { candidacyId, isActive: true },
+      data: {
+        certificationAuthorityId,
+        feasibilityFileSentAt: now,
+        decision: "PENDING",
+      },
+    });
+    return updateCandidacyStatus({
+      candidacyId,
+      status: "DOSSIER_FAISABILITE_ENVOYE",
+      tx,
+    });
+  });
+
+  if (!candidacy) {
+    throw new Error("Could not update candidacy");
   }
 
   // Update certification authority local accounts only if certificationAuthorityId has been changed
