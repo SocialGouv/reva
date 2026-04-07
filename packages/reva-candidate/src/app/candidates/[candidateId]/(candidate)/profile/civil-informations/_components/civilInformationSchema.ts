@@ -22,7 +22,9 @@ export const civilInformationSchema = () =>
       firstname3: sanitizedOptionalText(),
       middleNames: sanitizedOptionalText(),
       birthdate: sanitizedText(),
-      country: sanitizedText().default("France"),
+      country: sanitizedText({
+        invalid_type_error: "Ce champ est obligatoire",
+      }).default("France"),
       birthDepartment: sanitizedOptionalText(),
       birthCity: sanitizedText(),
       nationality: sanitizedText(),

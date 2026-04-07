@@ -17,13 +17,19 @@ const DEFAULT_MAX_LENGTH = 10000;
 export const sanitizedText = ({
   minLength = 1,
   maxLength = DEFAULT_MAX_LENGTH,
-}: { minLength?: number; maxLength?: number } = {}) => {
+  invalid_type_error,
+}: {
+  minLength?: number;
+  maxLength?: number;
+  invalid_type_error?: string;
+} = {}) => {
   return z
     .string()
     .trim()
     .min(
       minLength,
-      `Ce champ doit contenir au moins ${minLength === 1 ? "1 caractère" : `${minLength} caractères`}`,
+      invalid_type_error ||
+        `Ce champ doit contenir au moins ${minLength === 1 ? "1 caractère" : `${minLength} caractères`}`,
     )
     .max(
       maxLength,

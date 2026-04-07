@@ -1,9 +1,15 @@
 import Input from "@codegouvfr/react-dsfr/Input";
-import { DetailedHTMLProps, InputHTMLAttributes, useState } from "react";
+import {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  useMemo,
+  useState,
+} from "react";
 
 import {
   AddressOption,
   useAutocompleteAddress,
+  useDepartments,
 } from "./useAutocompleteAddress.hook";
 
 export const AutocompleteAddress = ({
@@ -14,9 +20,15 @@ export const AutocompleteAddress = ({
   state,
   stateRelatedMessage,
   defaultSearchText,
+  displayMode = "street",
+  disabled = false,
 }: {
   label?: string;
-  onOptionSelection: (selectedOption: AddressOption) => void;
+  displayMode?: "street" | "municipality";
+  onOptionSelection: (
+    selectedOption: AddressOption,
+    department?: { id: string; code: string; label: string },
+  ) => void;
   className?: string;
   nativeInputProps?:
     | DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
@@ -24,11 +36,59 @@ export const AutocompleteAddress = ({
   state?: "error" | "success" | "info" | "default";
   stateRelatedMessage?: string;
   defaultSearchText?: string;
+  disabled?: boolean;
 }) => {
   const [searchText, setSearchText] = useState(defaultSearchText ?? "");
-  const { data: options = [], status } = useAutocompleteAddress({
+
+  const { data: defaultOptions = [], status } = useAutocompleteAddress({
     search: searchText,
   });
+  const options = useMemo(() => {
+    if (displayMode === "municipality") {
+      return defaultOptions.filter((option) => option.type === "municipality");
+    }
+
+    return defaultOptions;
+  }, [defaultOptions, displayMode]);
+
+  const { departments } = useDepartments();
+
+  const findDepartmentByZip = (zip: string) => {
+    const zipWith5Digits = zip.slice(0, 5);
+    const zipWith4Digits = zip.slice(0, 4);
+    const zipWith3Digits = zip.slice(0, 3);
+    const zipWith2Digits = zip.slice(0, 2);
+
+    const departmentWith5Digits = departments?.find(
+      (department) => department.code === zipWith5Digits,
+    );
+    if (departmentWith5Digits) {
+      return departmentWith5Digits;
+    }
+
+    const departmentWith4Digits = departments?.find(
+      (department) => department.code === zipWith4Digits,
+    );
+    if (departmentWith4Digits) {
+      return departmentWith4Digits;
+    }
+
+    const departmentWith3Digits = departments?.find(
+      (department) => department.code === zipWith3Digits,
+    );
+    if (departmentWith3Digits) {
+      return departmentWith3Digits;
+    }
+
+    const departmentWith2Digits = departments?.find(
+      (department) => department.code === zipWith2Digits,
+    );
+    if (departmentWith2Digits) {
+      return departmentWith2Digits;
+    }
+
+    return undefined;
+  };
 
   const [selectedOption, setSelectedOption] = useState<AddressOption | null>(
     null,
@@ -72,9 +132,16 @@ export const AutocompleteAddress = ({
   };
 
   const handleOptionSelection = (newSelectedOption: AddressOption) => {
+    const department = findDepartmentByZip(newSelectedOption.zip);
+
     setSelectedOption(newSelectedOption);
-    onOptionSelection?.(newSelectedOption);
-    setSearchText(newSelectedOption.label);
+    onOptionSelection?.(newSelectedOption, department);
+
+    if (displayMode === "municipality") {
+      setSearchText(`${newSelectedOption.city} (${department?.code})`);
+    } else {
+      setSearchText(newSelectedOption.label);
+    }
   };
 
   const handleSubmit = () => {
@@ -106,6 +173,7 @@ export const AutocompleteAddress = ({
           onClick: () => setDisplayOptions(true),
           autoComplete: "new-password",
         }}
+        disabled={disabled}
         state={state}
         stateRelatedMessage={stateRelatedMessage}
         label={label ?? "Adresse"}

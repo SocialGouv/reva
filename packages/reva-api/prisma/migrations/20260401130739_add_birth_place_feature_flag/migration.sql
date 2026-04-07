@@ -1,0 +1,1 @@
+insert into features (key, label, description) values ('BIRTH_PLACE', 'Regroupement des champs ville de naissance et département de naissance en lieu de naissance', 'Regroupement des champs ville de naissance et département de naissance en lieu de naissance');
