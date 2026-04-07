@@ -44,9 +44,6 @@ export const certificationAuthorityLoaders = {
         await prismaClient.certificationAuthorityOnCertification.findMany({
           where: {
             certificationId: { in: certificationIds },
-            certificationAuthorityOnCertificationOnParcoursCertifications: {
-              some: { id: { not: undefined } },
-            },
           },
           include: {
             certificationAuthority: true,
