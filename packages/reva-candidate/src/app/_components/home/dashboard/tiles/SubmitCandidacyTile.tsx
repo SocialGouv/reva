@@ -52,6 +52,7 @@ export const SubmitCandidacyTile = ({
       }}
       imageUrl="/candidat/images/pictograms/mail-send.svg"
       desc={getDesc()}
+      className="h-[200px]"
     />
   );
 };

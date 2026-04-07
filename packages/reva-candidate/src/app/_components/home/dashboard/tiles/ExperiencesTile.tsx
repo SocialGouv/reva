@@ -30,6 +30,7 @@ export const ExperiencesTile = ({
         href: "./experiences",
       }}
       imageUrl="/candidat/images/pictograms/culture.svg"
+      className="h-[200px]"
     />
   );
 };

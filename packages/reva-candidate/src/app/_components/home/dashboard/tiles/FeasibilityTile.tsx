@@ -150,6 +150,7 @@ export const FeasibilityTile = ({
         },
       }}
       imageUrl="/candidat/images/pictograms/contract.svg"
+      className="h-[200px]"
     />
   );
 };

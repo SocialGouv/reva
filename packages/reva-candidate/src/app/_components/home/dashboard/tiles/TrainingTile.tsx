@@ -81,6 +81,7 @@ export const TrainingTile = ({
         },
       }}
       imageUrl="/candidat/images/pictograms/in-progress.svg"
+      className="h-[200px]"
     />
   );
 };

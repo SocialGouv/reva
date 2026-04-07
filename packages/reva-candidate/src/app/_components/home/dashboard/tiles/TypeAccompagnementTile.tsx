@@ -55,6 +55,7 @@ export const TypeAccompagnementTile = ({
       linkProps={{
         href: "./type-accompagnement",
       }}
+      className="h-[200px]"
     />
   );
 };

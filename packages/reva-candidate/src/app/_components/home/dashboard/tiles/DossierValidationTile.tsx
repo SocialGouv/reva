@@ -111,6 +111,7 @@ export const DossierValidationTile = ({
         },
       }}
       imageUrl="/candidat/images/pictograms/binders.svg"
+      className="h-[200px]"
     />
   );
 };

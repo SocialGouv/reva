@@ -26,6 +26,7 @@ export const GoalsTile = ({
         href: "./set-goals",
       }}
       imageUrl="/candidat/images/pictograms/conclusion.svg"
+      className="h-[200px]"
     />
   );
 };
