@@ -8,6 +8,7 @@ import { useState } from "react";
 
 import { DffSummary } from "@/components/dff-summary/DffSummary";
 import { graphqlErrorToast, successToast } from "@/components/toast/toast";
+import { isSentToCandidateOutdatedAfterIncomplete } from "@/utils/feasibilityIncompleteOutdated.util";
 
 import {
   Candidacy,
@@ -48,6 +49,8 @@ export default function SendFileCandidatePage() {
     dematerializedFeasibilityFileId,
     dematerializedFeasibilityFile,
     candidacy,
+    feasibilityIsIncomplete,
+    decisionSentAt,
   } = useSendFileCandidate();
   const router = useRouter();
   const feasibilitySummaryUrl = `/candidacies/${candidacyId}/feasibility-aap`;
@@ -69,9 +72,19 @@ export default function SendFileCandidatePage() {
     }
   };
 
-  const sentToCandidateAt = dematerializedFeasibilityFile?.sentToCandidateAt
-    ? toDate(dematerializedFeasibilityFile?.sentToCandidateAt)
-    : null;
+  const isSentToCandidateOutdated = isSentToCandidateOutdatedAfterIncomplete({
+    isIncomplete: feasibilityIsIncomplete,
+    decisionSentAt: decisionSentAt ? new Date(decisionSentAt) : null,
+    sentToCandidateAt: dematerializedFeasibilityFile?.sentToCandidateAt
+      ? new Date(dematerializedFeasibilityFile.sentToCandidateAt)
+      : null,
+  });
+
+  const sentToCandidateAt =
+    dematerializedFeasibilityFile?.sentToCandidateAt &&
+    !isSentToCandidateOutdated
+      ? toDate(dematerializedFeasibilityFile.sentToCandidateAt)
+      : null;
 
   return (
     <>
@@ -94,9 +107,7 @@ export default function SendFileCandidatePage() {
         </Button>
         <Button
           onClick={handleSendFile}
-          disabled={
-            !!dematerializedFeasibilityFile?.sentToCandidateAt || isSubmitting
-          }
+          disabled={!!sentToCandidateAt || isSubmitting}
         >
           Envoyer au candidat
         </Button>

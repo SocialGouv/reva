@@ -65,6 +65,7 @@ const AapFeasibilityPage = () => {
   const decisionComment = feasibility?.decisionComment;
   const history = feasibility?.history;
   const feasibilityDecisionIsIncomplete = decision === "INCOMPLETE";
+  const decisionSentAtDate = decisionSentAt ? toDate(decisionSentAt) : null;
   const hasCertificationRncpExpired =
     !!certification?.rncpExpiresAt &&
     isBefore(certification?.rncpExpiresAt, new Date());
@@ -73,7 +74,6 @@ const AapFeasibilityPage = () => {
     feasibilityDecisionIsIncomplete;
   const isFeasibilityReceivedOrRejected =
     decision === "ADMISSIBLE" || decision === "REJECTED";
-  const isFeasibilityIncomplete = decision == "INCOMPLETE";
   const displayDecisionIncompleteAlert =
     feasibilityDecisionIsIncomplete && decisionSentAt;
 
@@ -81,12 +81,13 @@ const AapFeasibilityPage = () => {
     dematerializedFeasibilityFile?.eligibilityRequirement ===
     "PARTIAL_ELIGIBILITY_REQUIREMENT";
 
+  // ne pas afficher l'alerte d'expiration de la certification si la décision du dossier de faisabilité est incomplète
   const showCertificationExpiredAlert =
-    hasCertificationRncpExpired && !isFeasibilityIncomplete; //do not show the certification expired alert if the df decision is incomplete
+    hasCertificationRncpExpired && !feasibilityDecisionIsIncomplete;
 
   const canSendFeasibilityFileToCandidate =
     !!dematerializedFeasibilityFile?.isReadyToBeSentToCandidate &&
-    (!hasCertificationRncpExpired || isFeasibilityIncomplete);
+    (!hasCertificationRncpExpired || feasibilityDecisionIsIncomplete);
 
   const certificationAuthorityStructureHasReducedRequirements =
     !!certification?.certificationAuthorityStructure?.hasReducedRequirements;
@@ -255,9 +256,13 @@ const AapFeasibilityPage = () => {
 
           <SendFileCandidateSection
             sentToCandidateAt={
-              dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
+              dematerializedFeasibilityFile?.sentToCandidateAt
+                ? toDate(dematerializedFeasibilityFile.sentToCandidateAt)
+                : null
             }
             isReadyToBeSentToCandidate={canSendFeasibilityFileToCandidate}
+            isIncomplete={feasibilityDecisionIsIncomplete}
+            decisionSentAt={decisionSentAtDate}
           />
           {dematerializedFeasibilityFile?.candidateDecisionComment && (
             <CandidateDecisionCommentSection
@@ -268,7 +273,9 @@ const AapFeasibilityPage = () => {
           )}
           <SwornStatementSection
             sentToCandidateAt={
-              dematerializedFeasibilityFile?.sentToCandidateAt as Date | null
+              dematerializedFeasibilityFile?.sentToCandidateAt
+                ? toDate(dematerializedFeasibilityFile.sentToCandidateAt)
+                : null
             }
             isCompleted={!!dematerializedFeasibilityFile?.swornStatementFile}
             isEditable={isFeasibilityEditable}
@@ -284,6 +291,7 @@ const AapFeasibilityPage = () => {
               !!dematerializedFeasibilityFile?.isReadyToBeSentToCertificationAuthority
             }
             disabled={candidacy.warningOnFeasibilitySubmission !== "NONE"}
+            isIncomplete={feasibilityDecisionIsIncomplete}
           />
         </ul>
       )}

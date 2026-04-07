@@ -14,11 +14,13 @@ export const SwornStatementSection = ({
 }) => {
   const { candidacyId } = useParams();
 
+  const status = isCompleted ? "COMPLETED" : "TO_COMPLETE";
+
   return (
     <EnhancedSectionCard
       title="Attestation sur l'honneur"
       titleIconClass="fr-icon-success-fill"
-      status={isCompleted ? "COMPLETED" : "TO_COMPLETE"}
+      status={status}
       isEditable={isEditable}
       disabled={!sentToCandidateAt}
       buttonOnClickHref={`/candidacies/${candidacyId}/feasibility-aap/sworn-statement`}

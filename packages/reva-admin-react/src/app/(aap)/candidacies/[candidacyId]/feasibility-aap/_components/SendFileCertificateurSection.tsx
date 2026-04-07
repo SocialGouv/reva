@@ -25,17 +25,22 @@ export const SendFileCertificationAuthoritySection = ({
   sentToCertificationAuthorityAt,
   isReadyToBeSentToCertificationAuthority,
   disabled,
+  isIncomplete,
 }: {
   sentToCertificationAuthorityAt?: Date | null;
   isReadyToBeSentToCertificationAuthority: boolean;
   disabled?: boolean;
+  isIncomplete?: boolean;
 }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
   }>();
 
   const navigationUrl = `/candidacies/${candidacyId}/feasibility-aap/send-file-certification-authority`;
-  const feasibilityHasBeenSent = !!sentToCertificationAuthorityAt;
+  // Apres INCOMPLETE, l'envoi precedent n'est plus valide (pas de comparaison temporelle necessaire
+  // car sendDFFToCertificationAuthority remet decision a PENDING, donc INCOMPLETE implique toujours stale)
+  const feasibilityHasBeenSent =
+    !!sentToCertificationAuthorityAt && !isIncomplete;
 
   if (feasibilityHasBeenSent) {
     return (

@@ -176,7 +176,9 @@ export default function SendFileCertificationAuthorityPage() {
         setCertificationAuthoritySelectedId={
           setCertificationAuthoritySelectedId
         }
-        feasibilityHasBeenSentToCertificationAuthority={!!feasibilityFileSentAt}
+        feasibilityHasBeenSentToCertificationAuthority={
+          !!feasibilityFileSentAt && !feasibilityIsIncomplete
+        }
       />
 
       <div className="flex justify-between">

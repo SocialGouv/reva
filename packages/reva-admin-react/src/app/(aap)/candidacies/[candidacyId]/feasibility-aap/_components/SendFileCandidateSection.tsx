@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 
 import { CustomErrorBadge } from "@/components/badge/custom-error-badge/CustomErrorBadge";
+import { isSentToCandidateOutdatedAfterIncomplete } from "@/utils/feasibilityIncompleteOutdated.util";
 
 const TILE_COMMON_PROPS = {
   orientation: "horizontal" as const,
@@ -24,9 +25,13 @@ const TILE_COMMON_PROPS = {
 export const SendFileCandidateSection = ({
   sentToCandidateAt,
   isReadyToBeSentToCandidate,
+  isIncomplete,
+  decisionSentAt,
 }: {
   sentToCandidateAt?: Date | null;
   isReadyToBeSentToCandidate: boolean;
+  isIncomplete?: boolean;
+  decisionSentAt?: Date | null;
 }) => {
   const { candidacyId } = useParams<{
     candidacyId: string;
@@ -34,7 +39,14 @@ export const SendFileCandidateSection = ({
 
   const navigationUrl = `/candidacies/${candidacyId}/feasibility-aap/send-file-candidate`;
 
-  if (sentToCandidateAt) {
+  const isIncompleteNotResentToCandidate =
+    isSentToCandidateOutdatedAfterIncomplete({
+      isIncomplete,
+      decisionSentAt,
+      sentToCandidateAt,
+    });
+
+  if (sentToCandidateAt && !isIncompleteNotResentToCandidate) {
     return (
       <Tile
         {...TILE_COMMON_PROPS}
@@ -52,7 +64,7 @@ export const SendFileCandidateSection = ({
     );
   }
 
-  if (isReadyToBeSentToCandidate) {
+  if (isReadyToBeSentToCandidate || isIncompleteNotResentToCandidate) {
     return (
       <Tile
         {...TILE_COMMON_PROPS}
