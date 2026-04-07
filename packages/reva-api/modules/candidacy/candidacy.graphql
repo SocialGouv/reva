@@ -51,12 +51,6 @@ enum EndAccompagnementStatus {
   CONFIRMED_BY_ADMIN
 }
 
-type CandidacyCertificationAuthorityLocalAccount {
-  contactFullName: String!
-  contactEmail: String!
-  contactPhone: String
-}
-
 # QUERY
 
 type Candidacy {
@@ -80,7 +74,6 @@ type Candidacy {
   status: CandidacyStatusStep!
   typeAccompagnement: TypeAccompagnement!
   hasMoreThanOneCertificationAvailable: Boolean!
-  certificationAuthorityLocalAccounts: [CandidacyCertificationAuthorityLocalAccount]
   archivingReason: CandidacyArchivingReason
   activite: ActiviteStatut!
   derniereDateActivite: Timestamp

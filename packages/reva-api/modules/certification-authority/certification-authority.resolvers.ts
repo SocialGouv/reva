@@ -1,6 +1,7 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import {
   Account,
+  Candidacy,
   CertificationAuthorityLocalAccount,
   CertificationRegistryManager,
 } from "@prisma/client";
@@ -29,6 +30,7 @@ import { createCertificationAuthorityStructure } from "./features/createCertific
 import { createCertificationRegistryManager } from "./features/createCertificationRegistryManager";
 import { deleteCertificationAuthorityLocalAccount } from "./features/deleteCertificationAuthorityLocalAccount";
 import { getAccountByCertificationAuthorityId } from "./features/getAccountByCertificationAuthorityId";
+import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
 import { getCertificationAuthorities } from "./features/getCertificationAuthorities";
 import { getCertificationAuthoritiesByCertificationId } from "./features/getCertificationAuthoritiesByCertificationId";
 import { getCertificationAuthoritiesByStructureId } from "./features/getCertificationAuthoritiesByStructureId";
@@ -77,6 +79,10 @@ const unsafeResolvers = {
       getCertificationAuthorityLocalAccountByAccountId({
         accountId: parent.id,
       }),
+  },
+  Candidacy: {
+    certificationAuthorityLocalAccounts: ({ id: candidacyId }: Candidacy) =>
+      getCandidacyCertificationAuthorityLocalAccounts({ candidacyId }),
   },
   CertificationAuthority: {
     departments: (parent: CertificationAuthority) =>

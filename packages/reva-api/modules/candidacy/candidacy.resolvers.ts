@@ -44,7 +44,6 @@ import { getCandidaciesForCertificationAuthority } from "./features/getCandidaci
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCandidateInfoByCandidacyId } from "./features/getCandidacyCandidateInfoByCandidacyId";
 import { getCandidacyCcns } from "./features/getCandidacyCcns";
-import { getCandidacyCertificationAuthorityLocalAccounts } from "./features/getCandidacyCertificationAuthorityLocalAccounts";
 import { getCandidacyConventionCollectiveById } from "./features/getCandidacyConventionCollectiveById";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { getCandidacyDropOutByCandidacyId } from "./features/getCandidacyDropOutByCandidacyId";
@@ -100,8 +99,6 @@ const unsafeResolvers = {
       getCandidacyDropOutByCandidacyId({ candidacyId }),
     candidacyOnCandidacyFinancingMethods: ({ id: candidacyId }: Candidacy) =>
       getCandidacyOnCandidacyFinancingMethodsByCandidacyId({ candidacyId }),
-    certificationAuthorityLocalAccounts: ({ id: candidacyId }: Candidacy) =>
-      getCandidacyCertificationAuthorityLocalAccounts({ candidacyId }),
     candidateInfo: ({ id: candidacyId }: Candidacy) =>
       getCandidacyCandidateInfoByCandidacyId({ candidacyId }),
   },

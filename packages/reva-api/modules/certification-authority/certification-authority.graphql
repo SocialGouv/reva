@@ -185,6 +185,16 @@ input UpdateCertificationAuthorityDepartmentsAndCertificationsInput {
   certificationIds: [String!]!
 }
 
+type CandidacyCertificationAuthorityLocalAccount {
+  contactFullName: String!
+  contactEmail: String!
+  contactPhone: String
+}
+
+type Candidacy {
+  certificationAuthorityLocalAccounts: [CandidacyCertificationAuthorityLocalAccount]
+}
+
 type Query {
   certification_authority_getCertificationAuthority(
     id: ID!
