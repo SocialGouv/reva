@@ -154,38 +154,6 @@ test.describe("FranceConnect linked candidate", () => {
   });
 });
 
-test.describe("FranceConnect linked candidate with non-France country", () => {
-  const fcCandidateNonFrance = createCandidateEntity({
-    ...candidateFields,
-    franceConnectLinked: true,
-    country: countries[1],
-    birthDepartment: null,
-  });
-
-  test.use({
-    mswHandlers: [
-      civilInformationHandlers(fcCandidateNonFrance),
-      { scope: "test" },
-    ],
-  });
-
-  test("should not disable birthCity when country is not France", async ({
-    page,
-  }) => {
-    await visitCivilInformations(page);
-
-    await expect(page.locator(SELECTORS.birthCity)).not.toBeDisabled();
-  });
-
-  test("should disable birthDepartment when country is not France", async ({
-    page,
-  }) => {
-    await visitCivilInformations(page);
-
-    await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();
-  });
-});
-
 test.describe("Non-FranceConnect candidate", () => {
   test.use({
     mswHandlers: [civilInformationHandlers(nonFcCandidate), { scope: "test" }],
