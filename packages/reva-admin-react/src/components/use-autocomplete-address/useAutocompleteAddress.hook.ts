@@ -1,11 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
+import { graphql } from "@/graphql/generated";
+
+import { useGraphQlClient } from "../graphql/graphql-client/GraphqlClient";
+
 export interface AddressOption {
   label: string;
   street: string;
   zip: string;
   city: string;
+  type: "street" | "municipality";
 }
 
 type AutocompleteAddressResponse = {
@@ -71,10 +76,36 @@ export function useAutocompleteAddress({ search }: { search?: string }) {
           street: feature.properties.name,
           zip: feature.properties.postcode,
           city: feature.properties.city,
+          type: feature.properties.type as "street" | "municipality",
         };
       });
       return result;
     },
     enabled: !!debouncedSearch,
   });
+}
+
+const getDepartments = graphql(`
+  query getDepartments {
+    getDepartments {
+      id
+      label
+      code
+    }
+  }
+`);
+
+export function useDepartments() {
+  const { graphqlClient } = useGraphQlClient();
+
+  const { data } = useQuery({
+    queryKey: ["getDepartments"],
+    queryFn: () => graphqlClient.request(getDepartments),
+  });
+
+  const departments = data?.getDepartments;
+
+  return {
+    departments,
+  };
 }

@@ -4,14 +4,17 @@ import {
   InputHTMLAttributes,
   useEffect,
   useState,
+  useMemo,
 } from "react";
 
 import {
   AddressOption,
   useAutocompleteAddress,
+  useDepartments,
 } from "../use-autocomplete-address/useAutocompleteAddress.hook";
 
 export const AutocompleteAddress = ({
+  label,
   onOptionSelection,
   className,
   nativeInputProps,
@@ -19,8 +22,15 @@ export const AutocompleteAddress = ({
   stateRelatedMessage,
   value,
   onInputChange,
+  displayMode = "street",
+  disabled = false,
 }: {
-  onOptionSelection: (selectedOption: AddressOption) => void;
+  label?: string;
+  displayMode?: "street" | "municipality";
+  onOptionSelection: (
+    selectedOption: AddressOption,
+    department?: { id: string; code: string; label: string },
+  ) => void;
   className?: string;
   nativeInputProps?:
     | DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
@@ -28,12 +38,59 @@ export const AutocompleteAddress = ({
   state?: "error" | "success" | "info" | "default";
   stateRelatedMessage?: string;
   value?: string;
+  disabled?: boolean;
   onInputChange?: (value: string) => void;
 }) => {
   const [searchText, setSearchText] = useState(value ?? "");
-  const { data: options = [], status } = useAutocompleteAddress({
+  const { data: defaultOptions = [], status } = useAutocompleteAddress({
     search: searchText,
   });
+  const options = useMemo(() => {
+    if (displayMode === "municipality") {
+      return defaultOptions.filter((option) => option.type === "municipality");
+    }
+
+    return defaultOptions;
+  }, [defaultOptions, displayMode]);
+
+  const { departments } = useDepartments();
+
+  const findDepartmentByZip = (zip: string) => {
+    const zipWith5Digits = zip.slice(0, 5);
+    const zipWith4Digits = zip.slice(0, 4);
+    const zipWith3Digits = zip.slice(0, 3);
+    const zipWith2Digits = zip.slice(0, 2);
+
+    const departmentWith5Digits = departments?.find(
+      (department) => department.code === zipWith5Digits,
+    );
+    if (departmentWith5Digits) {
+      return departmentWith5Digits;
+    }
+
+    const departmentWith4Digits = departments?.find(
+      (department) => department.code === zipWith4Digits,
+    );
+    if (departmentWith4Digits) {
+      return departmentWith4Digits;
+    }
+
+    const departmentWith3Digits = departments?.find(
+      (department) => department.code === zipWith3Digits,
+    );
+    if (departmentWith3Digits) {
+      return departmentWith3Digits;
+    }
+
+    const departmentWith2Digits = departments?.find(
+      (department) => department.code === zipWith2Digits,
+    );
+    if (departmentWith2Digits) {
+      return departmentWith2Digits;
+    }
+
+    return undefined;
+  };
 
   const [selectedOption, setSelectedOption] = useState<AddressOption | null>(
     null,
@@ -87,12 +144,16 @@ export const AutocompleteAddress = ({
   };
 
   const handleOptionSelection = (newSelectedOption: AddressOption) => {
+    const department = findDepartmentByZip(newSelectedOption.zip);
+
     setSelectedOption(newSelectedOption);
-    onOptionSelection?.(newSelectedOption);
-    if (value === undefined) {
+    onOptionSelection?.(newSelectedOption, department);
+
+    if (displayMode === "municipality") {
+      setSearchText(`${newSelectedOption.city} (${department?.code})`);
+    } else {
       setSearchText(newSelectedOption.label);
     }
-    setDisplayOptions(false);
   };
 
   const handleSubmit = () => {
@@ -107,6 +168,7 @@ export const AutocompleteAddress = ({
   return (
     <div data-testid="autocomplete" className={`relative ${className}`}>
       <Input
+        className="mb-0"
         nativeInputProps={{
           ...nativeInputProps,
           onKeyDown: handleKeyDownOnOptions,
@@ -125,9 +187,10 @@ export const AutocompleteAddress = ({
           onClick: () => setDisplayOptions(true),
           autoComplete: "new-password",
         }}
+        disabled={disabled}
         state={state}
         stateRelatedMessage={stateRelatedMessage}
-        label="Adresse"
+        label={label ?? "Adresse"}
         data-testid="autocomplete-input"
         iconId="fr-icon-map-pin-2-fill"
       />

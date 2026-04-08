@@ -187,7 +187,7 @@ export const ContactInformationForm = ({
                 small
                 options={[
                   {
-                    label: "Je saisis manuellement l'adresse",
+                    label: "Saisir manuellement l'adresse",
                     nativeInputProps: {
                       checked: manualAddressSelected,
                       onChange: handleToggleManualAddress,

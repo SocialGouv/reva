@@ -48,22 +48,9 @@ const CandidacySummaryPage = () => {
 
   const { candidate, goals } = candidacy;
 
-  const isCandidateInformationCompleted = checkCandidateFields(candidate, [
-    "firstname",
-    "lastname",
-    "phone",
-    "email",
-    "department",
-    "birthdate",
-    "country",
-    "birthCity",
-    "nationality",
-    "street",
-    "zip",
-    "city",
-    "phone",
-    "email",
-  ]);
+  const isCandidateInformationCompleted =
+    candidate.civilInformationCompleted &&
+    candidate.contactInformationCompleted;
 
   const isCandidateProfileCompleted = checkCandidateFields(candidate, [
     "highestDegree",

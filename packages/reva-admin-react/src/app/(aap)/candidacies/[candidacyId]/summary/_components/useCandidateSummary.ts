@@ -86,6 +86,8 @@ const getCandidacyById = graphql(`
           id
           level
         }
+        civilInformationCompleted
+        contactInformationCompleted
       }
       experiences {
         id

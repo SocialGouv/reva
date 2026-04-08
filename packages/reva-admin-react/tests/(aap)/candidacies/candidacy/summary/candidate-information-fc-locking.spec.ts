@@ -16,8 +16,8 @@ const CANDIDACY_ID = "fb451fbc-3218-416d-9ac9-65b13432469f";
 const FRANCE_COUNTRY_ID = "208ef9d1-4d18-475b-9f5f-575da5f7218c";
 
 const countries = [
-  { id: FRANCE_COUNTRY_ID, label: "France" },
-  { id: "country-2", label: "Canada" },
+  { id: FRANCE_COUNTRY_ID, label: "France", isoCode: "FRA" },
+  { id: "country-2", label: "Canada", isoCode: "CAN" },
 ];
 
 const departments = [
@@ -90,7 +90,7 @@ function candidateInformationHandlers({
 }
 
 const { aapCommonHandlers, aapCommonWait } = getAAPCommonHandlers({
-  activeFeaturesForConnectedUser: ["MIDDLE_NAMES"],
+  activeFeaturesForConnectedUser: ["MIDDLE_NAMES", "BIRTH_PLACE"],
 });
 
 const SELECTORS = {
@@ -98,11 +98,7 @@ const SELECTORS = {
   lastname: 'input[name="lastname"]',
   givenName: 'input[name="givenName"]',
   middleNames: 'input[name="middleNames"]',
-  gender: 'select[name="gender"]',
-  birthCity: 'input[name="birthCity"]',
   birthdate: 'input[name="birthdate"]',
-  birthDepartment: 'select[name="birthDepartment"]',
-  country: 'select[name="country"]',
   nationality: 'input[name="nationality"]',
   street: 'input[name="street"]',
   city: 'input[name="city"]',
@@ -136,19 +132,41 @@ test.describe("FranceConnect linked candidate", () => {
 
   test("should disable FC-locked fields", async ({ page }) => {
     await visitCandidateInformation(page);
+
+    await page
+      .getByRole("checkbox", {
+        name: "Saisir manuellement l'adresse",
+      })
+      .check({ force: true });
+
     await expect(page.locator(SELECTORS.lastname)).toBeDisabled();
     await expect(page.locator(SELECTORS.firstname)).toBeDisabled();
     await expect(page.locator(SELECTORS.middleNames)).toBeDisabled();
     await expect(page.locator(SELECTORS.birthdate)).toBeDisabled();
-    await expect(page.locator(SELECTORS.country)).toBeDisabled();
-    await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();
-    await expect(page.locator(SELECTORS.birthCity)).toBeDisabled();
+    await expect(
+      page.locator('[data-testid="autocomplete"] input'),
+    ).toBeDisabled();
+
+    await expect(
+      page.getByRole("checkbox", {
+        name: "Né(e) à l’étranger",
+      }),
+    ).toBeDisabled();
   });
 
   test("should keep non-locked fields editable", async ({ page }) => {
     await visitCandidateInformation(page);
+
+    await page
+      .getByRole("checkbox", {
+        name: "Saisir manuellement l'adresse",
+      })
+      .check({ force: true });
+
     await expect(page.locator(SELECTORS.nationality)).not.toBeDisabled();
-    await expect(page.locator(SELECTORS.gender)).not.toBeDisabled();
+    await expect(
+      page.locator('input[name="gender"]').first(),
+    ).not.toBeDisabled();
     await expect(page.locator(SELECTORS.givenName)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.street)).not.toBeDisabled();
     await expect(page.locator(SELECTORS.city)).not.toBeDisabled();
@@ -209,20 +227,6 @@ test.describe("FranceConnect linked candidate with non-France country", () => {
       { scope: "test" },
     ],
   });
-
-  test("should not disable birthCity when country is not France", async ({
-    page,
-  }) => {
-    await visitCandidateInformation(page);
-    await expect(page.locator(SELECTORS.birthCity)).not.toBeDisabled();
-  });
-
-  test("should disable birthDepartment when country is not France", async ({
-    page,
-  }) => {
-    await visitCandidateInformation(page);
-    await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();
-  });
 });
 
 test.describe("Non-FranceConnect candidate", () => {
@@ -238,8 +242,56 @@ test.describe("Non-FranceConnect candidate", () => {
 
   test("should have all fields editable", async ({ page }) => {
     await visitCandidateInformation(page);
+
+    await page
+      .getByRole("checkbox", {
+        name: "Saisir manuellement l'adresse",
+      })
+      .check({ force: true });
+
     for (const selector of Object.values(SELECTORS)) {
       await expect(page.locator(selector)).not.toBeDisabled();
     }
+
+    await expect(
+      page.locator('input[name="gender"]').first(),
+    ).not.toBeDisabled();
+  });
+
+  test("should have all default fields editable when birth place is foreign", async ({
+    page,
+  }) => {
+    await visitCandidateInformation(page);
+
+    await page
+      .getByRole("checkbox", {
+        name: "Saisir manuellement l'adresse",
+      })
+      .check({ force: true });
+
+    await expect(
+      page.getByRole("checkbox", {
+        name: "Né(e) à l’étranger",
+      }),
+    ).not.toBeDisabled();
+
+    await page
+      .getByRole("checkbox", {
+        name: "Né(e) à l’étranger",
+      })
+      .check({ force: true });
+
+    const DEFAULT_SELECTORS = {
+      ...SELECTORS,
+      country: '[data-testid="country-select"] select',
+    };
+
+    for (const selector of Object.values(DEFAULT_SELECTORS)) {
+      await expect(page.locator(selector)).not.toBeDisabled();
+    }
+
+    await expect(
+      page.locator('input[name="gender"]').first(),
+    ).not.toBeDisabled();
   });
 });

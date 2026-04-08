@@ -7,7 +7,9 @@ import {
   sanitizedText,
 } from "@/utils/input-sanitization";
 
-export const civilInformationSchema = () =>
+export const civilInformationSchema = ({
+  isBirthPlaceEnabled = false,
+}: { isBirthPlaceEnabled?: boolean } = {}) =>
   z
     .object({
       gender: z
@@ -26,7 +28,9 @@ export const civilInformationSchema = () =>
         invalid_type_error: "Ce champ est obligatoire",
       }).default("France"),
       birthDepartment: sanitizedOptionalText(),
-      birthCity: sanitizedText(),
+      birthCity: isBirthPlaceEnabled
+        ? sanitizedOptionalText()
+        : sanitizedText(),
       nationality: sanitizedText(),
       countryIsFrance: z.boolean(),
     })
@@ -58,11 +62,27 @@ export const civilInformationSchema = () =>
         }
       }
 
-      if (data.countryIsFrance && !data.birthDepartment?.length) {
+      if (
+        !isBirthPlaceEnabled &&
+        data.countryIsFrance &&
+        !data.birthDepartment?.length
+      ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Merci de remplir ce champ",
           path: ["birthDepartment"],
+        });
+      }
+
+      if (
+        isBirthPlaceEnabled &&
+        data.countryIsFrance &&
+        (!data.birthCity?.length || !data.birthDepartment?.length)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Merci de remplir ce champ",
+          path: ["birthCity"],
         });
       }
 

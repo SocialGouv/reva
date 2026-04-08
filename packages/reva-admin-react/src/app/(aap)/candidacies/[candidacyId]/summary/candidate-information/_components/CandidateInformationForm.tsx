@@ -1,9 +1,10 @@
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
@@ -44,19 +45,16 @@ const CandidateInformationForm = ({
 
   const { isFeatureActive } = useFeatureflipping();
   const isMiddleNamesEnabled = isFeatureActive("MIDDLE_NAMES");
+  const isBirthPlaceEnabled = isFeatureActive("BIRTH_PLACE");
 
   const { updateCandidateInformationMutate } =
     useUpdateCandidateInformation(candidacyId);
 
   const candidate = candidacy?.candidate;
   const isFCLinked = candidate?.franceConnectLinked;
-  const isAddressAlreadyCompleted =
-    !!candidate?.street && !!candidate?.zip && !!candidate?.city;
 
-  const [manualAddressSelected, setManualAddress] = useState(
-    isAddressAlreadyCompleted,
-  );
-  const franceId = countries?.find((c) => c.label === "France")?.id;
+  const [manualAddressSelected, setManualAddress] = useState(false);
+  const franceId = countries?.find((c) => c.isoCode === "FRA")?.id;
 
   const genders = [
     { label: "Madame", value: "woman" },
@@ -68,12 +66,13 @@ const CandidateInformationForm = ({
     register,
     watch,
     setValue,
+    getValues,
     reset,
     formState: { errors, isDirty, isSubmitting },
     clearErrors,
     handleSubmit,
   } = useForm<FormCandidateInformationData>({
-    resolver: zodResolver(candidateInformationSchema),
+    resolver: zodResolver(candidateInformationSchema({ isBirthPlaceEnabled })),
     defaultValues: {
       firstname: candidate?.firstname,
       lastname: candidate?.lastname,
@@ -211,10 +210,69 @@ const CandidateInformationForm = ({
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setManualAddress(e.target.checked);
-    setValue("street", "");
-    setValue("zip", "");
-    setValue("city", "");
   };
+
+  const findDepartmentById = useCallback(
+    (id: string) => {
+      return departments?.find((d) => d.id === id);
+    },
+    [departments],
+  );
+
+  const handleOnBirthPlaceSelection = (
+    {
+      city,
+    }: {
+      city: string;
+    },
+    department?: { id: string; code: string; label: string },
+  ) => {
+    setValue("birthCity", city, { shouldDirty: true });
+    setValue("birthDepartment", department?.id ?? "", { shouldDirty: true });
+  };
+
+  const [birthPlaceIsForeign, setBirthPlaceIsForeign] = useState(false);
+
+  useEffect(() => {
+    setBirthPlaceIsForeign(candidate?.country?.id !== franceId);
+  }, [candidate?.country?.id, franceId]);
+
+  const handleToggleBirthPlaceIsForeign = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const isForeign = e.target.checked;
+    setBirthPlaceIsForeign(isForeign);
+    if (isForeign) {
+      setValue("country", "", { shouldDirty: true });
+      setValue("birthCity", "", { shouldDirty: true });
+      setValue("birthDepartment", "", { shouldDirty: true });
+    } else {
+      setValue("country", franceId, {
+        shouldDirty: true,
+      });
+      setValue("birthCity", candidate?.birthCity ?? "", { shouldDirty: true });
+      setValue("birthDepartment", candidate?.birthDepartment?.id ?? "", {
+        shouldDirty: true,
+      });
+    }
+  };
+
+  const defaultBirthPlaceDisplayText = useMemo(() => {
+    let text = "";
+
+    if (getValues("birthCity")) {
+      text = getValues("birthCity");
+    }
+
+    const birthDepartmentCode = findDepartmentById(
+      getValues("birthDepartment"),
+    )?.code;
+
+    if (birthDepartmentCode) {
+      text = `${text ? `${text} ` : ""}(${birthDepartmentCode})`;
+    }
+    return text;
+  }, [getValues, findDepartmentById]);
 
   return (
     <>
@@ -227,22 +285,23 @@ const CandidateInformationForm = ({
         className="flex flex-col gap-6"
       >
         <h6 className="mb-0 text-xl font-bold">Informations civiles</h6>
-        <div className="flex gap-8">
-          <Select
-            label="Civilité"
-            className="w-full mb-0"
-            nativeSelectProps={register("gender")}
-            state={errors.gender ? "error" : "default"}
-            stateRelatedMessage={errors.gender?.message}
-          >
-            {genders.map(
-              ({ value, label }: { value: string; label: string }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ),
-            )}
-          </Select>
+        <RadioButtons
+          className="mb-0 w-full"
+          legend="Civilité"
+          orientation="horizontal"
+          small
+          options={genders.map((gender) => ({
+            label: gender.label,
+            nativeInputProps: {
+              ...register("gender"),
+              value: gender.value,
+            },
+          }))}
+          state={errors.gender ? "error" : "default"}
+          stateRelatedMessage={errors.gender?.message}
+        />
+
+        <div className="grid grid-cols-3 gap-6">
           <Input
             label="Nom de naissance"
             className="w-full mb-0"
@@ -250,58 +309,70 @@ const CandidateInformationForm = ({
             nativeInputProps={register("lastname")}
             state={errors.lastname ? "error" : "default"}
             stateRelatedMessage={errors.lastname?.message}
+            data-testid="lastname-input"
           />
           <Input
             label="Nom d'usage (optionnel)"
             className="w-full mb-0"
             nativeInputProps={register("givenName")}
-            state={errors.givenName ? "error" : "default"}
-            stateRelatedMessage={errors.givenName?.message}
+            data-testid="given-name-input"
           />
-        </div>
-        <div className="flex gap-8">
-          <Input
-            label="Prénom principal"
-            className="w-full mb-0"
-            disabled={isFCLinked}
-            nativeInputProps={register("firstname")}
-            state={errors.firstname ? "error" : "default"}
-            stateRelatedMessage={errors.firstname?.message}
-          />
-          {isMiddleNamesEnabled ? (
+          {isMiddleNamesEnabled && (
             <Input
-              label="Autres prénoms (optionnel)"
+              label="Prénom principal"
+              className="w-full mb-0"
+              disabled={isFCLinked}
+              nativeInputProps={register("firstname")}
+              state={errors.firstname ? "error" : "default"}
+              stateRelatedMessage={errors.firstname?.message}
+              data-testid="firstname-input"
+            />
+          )}
+        </div>
+        {isMiddleNamesEnabled ? (
+          <div className="flex gap-6">
+            <Input
+              label="Autre(s) prénom(s)"
+              hintText="Tous les prénoms remplis sur votre état civil doivent être renseignés en les séparant par des espaces."
               className="w-full mb-0"
               disabled={isFCLinked}
               nativeInputProps={register("middleNames")}
               state={errors.middleNames ? "error" : "default"}
               stateRelatedMessage={errors.middleNames?.message}
+              data-testid="middle-names-input"
             />
-          ) : (
-            <>
-              <Input
-                label="Prénom 2 (optionnel)"
-                className="w-full mb-0"
-                disabled={isFCLinked}
-                nativeInputProps={register("firstname2")}
-                state={errors.firstname2 ? "error" : "default"}
-                stateRelatedMessage={errors.firstname2?.message}
-              />
-              <Input
-                label="Prénom 3 (optionnel)"
-                className="w-full mb-0"
-                disabled={isFCLinked}
-                nativeInputProps={register("firstname3")}
-                state={errors.firstname3 ? "error" : "default"}
-                stateRelatedMessage={errors.firstname3?.message}
-              />
-            </>
-          )}
-        </div>
-        <div className="flex">
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-6">
+            <Input
+              label="Prénom principal"
+              className="w-full mb-0"
+              disabled={isFCLinked}
+              nativeInputProps={register("firstname")}
+              state={errors.firstname ? "error" : "default"}
+              stateRelatedMessage={errors.firstname?.message}
+              data-testid="firstname-input"
+            />
+            <Input
+              label="Prénom 2 (optionnel)"
+              className="w-full mb-0"
+              disabled={isFCLinked}
+              nativeInputProps={register("firstname2")}
+              data-testid="firstname2-input"
+            />
+            <Input
+              label="Prénom 3 (optionnel)"
+              className="w-full mb-0"
+              disabled={isFCLinked}
+              nativeInputProps={register("firstname3")}
+              data-testid="firstname3-input"
+            />
+          </div>
+        )}
+        <div className="grid grid-cols-3 gap-6">
           <Input
             label="Date de naissance"
-            className="w-full md:w-1/3 md:pr-6"
+            className="mb-0"
             disabled={isFCLinked}
             nativeInputProps={{
               ...register("birthdate"),
@@ -309,120 +380,190 @@ const CandidateInformationForm = ({
             }}
             state={errors.birthdate ? "error" : "default"}
             stateRelatedMessage={errors.birthdate?.message}
+            data-testid="birthdate-input"
           />
-        </div>
-        <div className="flex gap-8">
-          <Select
-            className="w-full mb-0"
-            label="Pays de naissance"
-            disabled={isFCLinked}
-            nativeSelectProps={register("country")}
-            state={errors.country ? "error" : "default"}
-            stateRelatedMessage={errors.country?.message}
-          >
-            {countries?.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.label}
-              </option>
-            ))}
-          </Select>
-          <Select
-            className="w-full mb-0"
-            label="Département de naissance"
-            disabled={disabledDepartment || isFCLinked}
-            nativeSelectProps={register("birthDepartment")}
-            state={errors.birthDepartment ? "error" : "default"}
-            stateRelatedMessage={errors.birthDepartment?.message}
-          >
-            <option value="" disabled hidden>
-              Votre département
-            </option>
-            {departments?.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.label} ({d.code})
-              </option>
-            ))}
-          </Select>
 
-          <Input
-            label="Ville de naissance"
-            className="w-full mb-0"
-            disabled={isFCLinked && country === franceId}
-            nativeInputProps={register("birthCity")}
-            state={errors.birthCity ? "error" : "default"}
-            stateRelatedMessage={errors.birthCity?.message}
-          />
+          {isBirthPlaceEnabled && (
+            <>
+              {birthPlaceIsForeign ? (
+                <Select
+                  className="w-full mb-0"
+                  label="Pays de naissance"
+                  disabled={isFCLinked}
+                  nativeSelectProps={register("country")}
+                  state={errors.country ? "error" : "default"}
+                  stateRelatedMessage={errors.country?.message}
+                  data-testid="country-select"
+                >
+                  {(countries || [])
+                    .filter((c) => c.isoCode !== "FRA")
+                    .map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.label}
+                      </option>
+                    ))}
+                </Select>
+              ) : (
+                <AutocompleteAddress
+                  label="Lieu de naissance"
+                  onOptionSelection={handleOnBirthPlaceSelection}
+                  className="w-full mb-0"
+                  displayMode="municipality"
+                  value={defaultBirthPlaceDisplayText}
+                  disabled={isFCLinked}
+                  state={errors.birthCity ? "error" : "default"}
+                  stateRelatedMessage={errors.birthCity?.message}
+                />
+              )}
+
+              <Checkbox
+                className="mb-0 w-full mt-12"
+                small
+                options={[
+                  {
+                    label: "Né(e) à l’étranger",
+                    nativeInputProps: {
+                      checked: birthPlaceIsForeign,
+                      onChange: handleToggleBirthPlaceIsForeign,
+                      disabled: isFCLinked,
+                    },
+                  },
+                ]}
+              />
+            </>
+          )}
         </div>
-        <div className="flex gap-8">
+
+        {!isBirthPlaceEnabled && (
+          <div className="grid grid-cols-3 gap-6">
+            <Select
+              className="w-full mb-0"
+              label="Pays de naissance"
+              disabled={isFCLinked}
+              nativeSelectProps={register("country")}
+              state={errors.country ? "error" : "default"}
+              stateRelatedMessage={errors.country?.message}
+              data-testid="country-select"
+            >
+              {countries?.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+            </Select>
+
+            <Select
+              className="w-full mb-0"
+              label="Département de naissance"
+              disabled={disabledDepartment || isFCLinked}
+              nativeSelectProps={register("birthDepartment")}
+              state={errors.birthDepartment ? "error" : "default"}
+              stateRelatedMessage={errors.birthDepartment?.message}
+              data-testid="birth-department-select"
+            >
+              <option value="" disabled hidden>
+                Votre département
+              </option>
+              {departments?.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.label} ({d.code})
+                </option>
+              ))}
+            </Select>
+
+            <Input
+              label="Ville de naissance"
+              className="w-full mb-0"
+              disabled={isFCLinked && country === franceId}
+              nativeInputProps={register("birthCity")}
+              state={errors.birthCity ? "error" : "default"}
+              stateRelatedMessage={errors.birthCity?.message}
+              data-testid="birth-city-input"
+            />
+          </div>
+        )}
+
+        <div className="grid grid-cols-3 gap-6">
           <Input
             label="Nationalité"
-            className="w-full"
+            className="w-full mb-0"
             nativeInputProps={register("nationality")}
             state={errors.nationality ? "error" : "default"}
             stateRelatedMessage={errors.nationality?.message}
+            data-testid="nationality-input"
           />
         </div>
         <h6 className="mb-0 md:mt-4 text-xl font-bold">
           Informations de contact
         </h6>
-        <div className="flex gap-8">
+        <div className="grid grid-cols-3 gap-6 items-end">
           {manualAddressSelected ? (
             <Input
-              label="Adresse"
-              className="w-full flex-1 mb-0"
+              label="Adresse complète"
+              className="col-span-2 flex-1 mb-0"
               nativeInputProps={register("street")}
               state={errors.street ? "error" : "default"}
               stateRelatedMessage={errors.street?.message}
+              data-testid="street-input"
             />
           ) : (
             <AutocompleteAddress
+              label="Adresse complète"
               onOptionSelection={handleOnAddressSelection}
-              className="w-full flex-1"
-              nativeInputProps={register("street")}
+              className="col-span-2 flex-1 mb-0"
+              value={`${getValues("street")} ${getValues("zip")} ${getValues("city")}`}
               state={errors.street ? "error" : "default"}
               stateRelatedMessage={errors.street?.message}
+              data-testid="autocomplete-address-input"
             />
           )}
+          <Checkbox
+            className="col-span-1"
+            small
+            options={[
+              {
+                label: "Saisir manuellement l'adresse",
+                nativeInputProps: {
+                  checked: manualAddressSelected,
+                  onChange: handleToggleManualAddress,
+                },
+              },
+            ]}
+            data-testid="manual-address-checkbox"
+          />
+
           <Input
             label="Complément d'adresse (Optionnel)"
-            className="w-full flex-1"
+            className="col-span-2 mb-0"
             nativeInputProps={register("addressComplement")}
             state={errors.addressComplement ? "error" : "default"}
             stateRelatedMessage={errors.addressComplement?.message}
+            data-testid="address-complement-input"
           />
         </div>
 
-        <Checkbox
-          options={[
-            {
-              label: "Je saisis manuellement l'adresse",
-              nativeInputProps: {
-                checked: manualAddressSelected,
-                onChange: handleToggleManualAddress,
-              },
-            },
-          ]}
-          className="mb-0 w-fit"
-          state={errors.street ? "error" : "default"}
-          stateRelatedMessage={errors.street?.message}
-        />
-
-        <div className="flex gap-8">
-          <Input
-            label="Code postal (France uniquement)"
-            className="w-full flex-1"
-            nativeInputProps={register("zip")}
-            state={errors.zip ? "error" : "default"}
-            stateRelatedMessage={errors.zip?.message}
-          />
-          <Input
-            label="Ville"
-            className="w-full flex-[2]"
-            nativeInputProps={register("city")}
-            state={errors.city ? "error" : "default"}
-            stateRelatedMessage={errors.city?.message}
-          />
-        </div>
+        {manualAddressSelected && (
+          <div className="grid grid-cols-3 gap-6 items-end">
+            <div className="flex flex-row gap-6 col-span-2">
+              <Input
+                label="Code postal"
+                className="flex-[1] mb-0"
+                nativeInputProps={register("zip")}
+                state={errors.zip ? "error" : "default"}
+                stateRelatedMessage={errors.zip?.message}
+                data-testid="zip-input"
+              />
+              <Input
+                label="Ville"
+                className="flex-[2] mb-0"
+                nativeInputProps={register("city")}
+                state={errors.city ? "error" : "default"}
+                stateRelatedMessage={errors.city?.message}
+                data-testid="city-input"
+              />
+            </div>
+          </div>
+        )}
         <FormButtons backUrl={backUrl} formState={{ isDirty, isSubmitting }} />
       </form>
     </>

@@ -17,8 +17,8 @@ const fvae = graphql.link("https://reva-api/api/graphql");
 const FRANCE_COUNTRY_ID = "208ef9d1-4d18-475b-9f5f-575da5f7218c";
 
 const countries = [
-  { id: FRANCE_COUNTRY_ID, label: "France", isoCode: "FR" },
-  { id: "country-2", label: "Canada", isoCode: "CA" },
+  { id: FRANCE_COUNTRY_ID, label: "France", isoCode: "FRA" },
+  { id: "country-2", label: "Canada", isoCode: "CAN" },
 ];
 
 const departments = [

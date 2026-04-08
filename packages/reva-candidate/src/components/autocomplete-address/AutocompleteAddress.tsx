@@ -2,6 +2,7 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import {
   DetailedHTMLProps,
   InputHTMLAttributes,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -152,6 +153,12 @@ export const AutocompleteAddress = ({
     handleOptionSelection(selectedOption);
     setDisplayOptions(false);
   };
+
+  useEffect(() => {
+    if (defaultSearchText !== undefined) {
+      setSearchText(defaultSearchText);
+    }
+  }, [defaultSearchText]);
 
   return (
     <div data-testid="autocomplete" className={`relative ${className}`}>

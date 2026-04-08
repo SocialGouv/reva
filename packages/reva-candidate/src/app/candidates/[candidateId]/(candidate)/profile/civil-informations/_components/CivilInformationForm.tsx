@@ -4,7 +4,7 @@ import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { AutocompleteAddress } from "@/components/autocomplete-address/AutocompleteAddress";
@@ -78,7 +78,7 @@ export const CivilInformationForm = ({
     clearErrors,
     handleSubmit,
   } = useForm<FormCivilInformationData>({
-    resolver: zodResolver(civilInformationSchema()),
+    resolver: zodResolver(civilInformationSchema({ isBirthPlaceEnabled })),
     defaultValues: {
       firstname: candidate?.firstname,
       lastname: candidate?.lastname,
@@ -183,9 +183,12 @@ export const CivilInformationForm = ({
     }
   };
 
-  const findDepartmentById = (id: string) => {
-    return departments?.find((d) => d.id === id);
-  };
+  const findDepartmentById = useCallback(
+    (id: string) => {
+      return departments?.find((d) => d.id === id);
+    },
+    [departments],
+  );
 
   const handleOnAddressSelection = (
     {
@@ -200,16 +203,23 @@ export const CivilInformationForm = ({
   };
 
   const [birthPlaceIsForeign, setBirthPlaceIsForeign] = useState(false);
+
+  useEffect(() => {
+    setBirthPlaceIsForeign(candidate?.country?.id !== franceId);
+  }, [candidate?.country?.id, franceId]);
+
   const handleToggleBirthPlaceIsForeign = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const isForeign = e.target.checked;
     setBirthPlaceIsForeign(isForeign);
     if (isForeign) {
+      setValue("countryIsFrance", false, { shouldDirty: true });
       setValue("country", "", { shouldDirty: true });
       setValue("birthCity", "", { shouldDirty: true });
       setValue("birthDepartment", "", { shouldDirty: true });
     } else {
+      setValue("countryIsFrance", true, { shouldDirty: true });
       setValue("country", franceId, {
         shouldDirty: true,
       });
@@ -220,10 +230,27 @@ export const CivilInformationForm = ({
     }
   };
 
+  const defaultBirthPlaceDisplayText = useMemo(() => {
+    let text = "";
+
+    if (getValues("birthCity")) {
+      text = getValues("birthCity");
+    }
+
+    const birthDepartmentCode = findDepartmentById(
+      getValues("birthDepartment"),
+    )?.code;
+
+    if (birthDepartmentCode) {
+      text = `${text ? `${text} ` : ""}(${birthDepartmentCode})`;
+    }
+    return text;
+  }, [getValues, findDepartmentById]);
+
   return (
     <>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, (e) => console.log(e))}
         onReset={(e) => {
           e.preventDefault();
           resetFormData(candidate as Candidate);
@@ -249,7 +276,7 @@ export const CivilInformationForm = ({
               stateRelatedMessage={errors.gender?.message}
             />
 
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-3 gap-6">
               <Input
                 label="Nom de naissance"
                 className="w-full mb-0"
@@ -278,7 +305,7 @@ export const CivilInformationForm = ({
               )}
             </div>
             {isMiddleNamesEnabled ? (
-              <div className="flex gap-8">
+              <div className="flex gap-6">
                 <Input
                   label="Autre(s) prénom(s)"
                   hintText="Tous les prénoms remplis sur votre état civil doivent être renseignés en les séparant par des espaces."
@@ -291,7 +318,7 @@ export const CivilInformationForm = ({
                 />
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-8">
+              <div className="grid grid-cols-3 gap-6">
                 <Input
                   label="Prénom principal"
                   className="w-full mb-0"
@@ -317,7 +344,7 @@ export const CivilInformationForm = ({
                 />
               </div>
             )}
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-3 gap-6">
               <Input
                 label="Date de naissance"
                 className="mb-0"
@@ -357,8 +384,10 @@ export const CivilInformationForm = ({
                       onOptionSelection={handleOnAddressSelection}
                       className="w-full mb-0"
                       displayMode="municipality"
-                      defaultSearchText={`${getValues("birthCity")} (${findDepartmentById(getValues("birthDepartment"))?.code})`}
+                      defaultSearchText={defaultBirthPlaceDisplayText}
                       disabled={isFCLinked}
+                      state={errors.birthCity ? "error" : "default"}
+                      stateRelatedMessage={errors.birthCity?.message}
                     />
                   )}
 
@@ -381,7 +410,7 @@ export const CivilInformationForm = ({
             </div>
 
             {!isBirthPlaceEnabled && (
-              <div className="grid grid-cols-3 gap-8">
+              <div className="grid grid-cols-3 gap-6">
                 <Select
                   className="w-full mb-0"
                   label="Pays de naissance"
@@ -429,7 +458,7 @@ export const CivilInformationForm = ({
               </div>
             )}
 
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-3 gap-6">
               <Input
                 label="Nationalité"
                 className="w-full mb-0"
