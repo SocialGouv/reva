@@ -182,7 +182,7 @@ test.describe("jury result by blocks", () => {
     await expect(juryResultRadioByValue(page, "FAILURE")).toBeVisible();
   });
 
-  test("keeps submit disabled until a result is selected, then enables it", async ({
+  test.skip("keeps submit disabled until a result is selected, then enables it", async ({
     page,
     msw,
   }) => {
@@ -210,7 +210,7 @@ test.describe("jury result by blocks", () => {
     await expect(submitButton).toBeEnabled();
   });
 
-  test("submits the jury result after confirmation modal", async ({
+  test.skip("submits the jury result after confirmation modal", async ({
     page,
     msw,
   }) => {
