@@ -31,14 +31,13 @@ export const checkIsDFFReadyToBeSentToCertificationAuthorityById = async ({
   feasibilityDecisionSentAt,
 }: CheckIsDFFReadyToBeSentToCertificationAuthorityByIdArgs) => {
   // Apres une decision INCOMPLETE, bloquer tant que le candidat n'a pas re-confirme (comparaison temporelle)
-  if (feasibilityDecision === "INCOMPLETE") {
-    if (
-      !candidateConfirmationAt ||
+  if (
+    feasibilityDecision === "INCOMPLETE" &&
+    (!candidateConfirmationAt ||
       !feasibilityDecisionSentAt ||
-      candidateConfirmationAt <= feasibilityDecisionSentAt
-    ) {
-      return false;
-    }
+      candidateConfirmationAt <= feasibilityDecisionSentAt)
+  ) {
+    return false;
   }
 
   let isDFFReadyToBeSentToCertificationAuthority =

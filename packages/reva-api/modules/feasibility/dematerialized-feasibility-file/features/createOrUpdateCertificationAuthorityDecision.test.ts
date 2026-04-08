@@ -7,6 +7,8 @@ import { createCandidacyHelper } from "@/test/helpers/entities/create-candidacy-
 import { createFeasibilityDematerializedHelper } from "@/test/helpers/entities/create-feasibility-dematerialized-helper";
 import { getGraphQLClient } from "@/test/test-graphql-client";
 
+const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+
 const createOrUpdateCertificationAuthorityDecisionMutation = graphql(`
   mutation dff_createOrUpdateCertificationAuthorityDecision(
     $candidacyId: ID!
@@ -201,17 +203,13 @@ describe("Décision INCOMPLETE sur le dossier de faisabilité dématérialisé",
         },
       );
 
-      // Direct DB update to simulate candidate re-confirmation after INCOMPLETE.
-      // We bypass the confirmDematerializedFeasibilityFileByCandidate mutation
-      // to test the temporal guard in isolation, without requiring candidate auth setup.
       await prismaClient.dematerializedFeasibilityFile.update({
         where: { id: feasibility.dematerializedFeasibilityFile!.id },
         data: {
-          candidateConfirmationAt: new Date(), // now > decisionSentAt
+          candidateConfirmationAt: new Date(Date.now() + ONE_DAY_IN_MS), // après la décision INCOMPLETE
         },
       });
 
-      // Reset candidacy status to allow re-sending
       await prismaClient.candidacy.update({
         where: { id: candidacy.id },
         data: { status: "DOSSIER_FAISABILITE_INCOMPLET" },
