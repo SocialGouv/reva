@@ -42,6 +42,13 @@ export const updateCandidate = async ({
 
   // Protéger les champs pivots pour les candidats liés à FranceConnect
   if (candidateToUpdate.franceConnectLinked) {
+    const candidateCountry = candidateToUpdate.countryId
+      ? await prismaClient.country.findUnique({
+          where: { id: candidateToUpdate.countryId },
+        })
+      : null;
+    const countryIsFrance = candidateCountry?.label === "France";
+
     delete candidateInput.lastname;
     delete candidateInput.firstname;
     delete candidateInput.firstname2;
@@ -49,8 +56,13 @@ export const updateCandidate = async ({
     delete candidateInput.middleNames;
     delete candidateInput.birthdate;
     delete candidateInput.countryId;
-    delete candidateInput.birthDepartmentId;
-    delete candidateInput.birthCity;
+
+    if (countryIsFrance) {
+      delete candidateInput.birthDepartmentId;
+      delete candidateInput.birthCity;
+    } else {
+      candidateInput.birthDepartmentId = null;
+    }
   }
 
   if (candidateInput.countryId) {

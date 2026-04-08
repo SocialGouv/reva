@@ -157,6 +157,74 @@ test.describe("FranceConnect linked candidate", () => {
   });
 });
 
+test.describe("FranceConnect linked candidate with non-France country", () => {
+  function createCandidateNonFrance() {
+    return {
+      ...createCandidate(true),
+      country: countries[1],
+      birthDepartment: null,
+    };
+  }
+
+  function candidateInformationHandlersNonFrance() {
+    const candidate = createCandidateNonFrance();
+    return [
+      fvae.query(
+        "getCandidacyById",
+        graphQLResolver({
+          getCandidacyById: {
+            id: CANDIDACY_ID,
+            candidacyDropOut: null,
+            reorientationReason: null,
+            organismId: "org-1",
+            status: "PRISE_EN_CHARGE",
+            certification: {
+              codeRncp: "RNCP1234",
+              label: "Certification Label",
+            },
+            candidate,
+            experiences: [],
+            goals: [],
+          },
+        }),
+      ),
+      fvae.query(
+        "getCountries",
+        graphQLResolver({
+          getCountries: countries,
+        }),
+      ),
+      fvae.query(
+        "getDepartments",
+        graphQLResolver({
+          getDepartments: departments,
+        }),
+      ),
+    ];
+  }
+
+  test.use({
+    mswHandlers: [
+      [...candidateInformationHandlersNonFrance(), ...aapCommonHandlers],
+      { scope: "test" },
+    ],
+  });
+
+  test("should not disable birthCity when country is not France", async ({
+    page,
+  }) => {
+    await visitCandidateInformation(page);
+    await expect(page.locator(SELECTORS.birthCity)).not.toBeDisabled();
+  });
+
+  test("should disable birthDepartment when country is not France", async ({
+    page,
+  }) => {
+    await visitCandidateInformation(page);
+    await expect(page.locator(SELECTORS.birthDepartment)).toBeDisabled();
+  });
+});
+
 test.describe("Non-FranceConnect candidate", () => {
   test.use({
     mswHandlers: [

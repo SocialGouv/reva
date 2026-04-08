@@ -97,9 +97,7 @@ export const CivilInformationForm = ({
   });
 
   const country = useWatch({ control, name: "country" });
-  const [disabledDepartment, setDisabledDepartment] = useState(
-    country !== "France",
-  );
+  const countryIsFrance = country === franceId;
 
   const resetFormData = useCallback(
     (candidate: Candidate) => {
@@ -127,17 +125,15 @@ export const CivilInformationForm = ({
   }, [candidate, resetFormData]);
 
   useEffect(() => {
-    if (country !== franceId) {
+    if (!countryIsFrance) {
       setValue("birthDepartment", "");
-      setDisabledDepartment(true);
       setValue("countryIsFrance", false);
       clearErrors("birthDepartment");
     } else {
-      setDisabledDepartment(false);
       setValue("countryIsFrance", true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country, franceId, setValue, setDisabledDepartment]);
+  }, [countryIsFrance, setValue]);
 
   useEffect(() => {
     setValue("country", candidate?.country?.id ?? franceId);
@@ -405,7 +401,7 @@ export const CivilInformationForm = ({
                 <Select
                   className="w-full mb-0"
                   label="Département de naissance"
-                  disabled={disabledDepartment || isFCLinked}
+                  disabled={isFCLinked || !countryIsFrance}
                   nativeSelectProps={register("birthDepartment")}
                   state={errors.birthDepartment ? "error" : "default"}
                   stateRelatedMessage={errors.birthDepartment?.message}
@@ -424,7 +420,7 @@ export const CivilInformationForm = ({
                 <Input
                   label="Ville de naissance"
                   className="w-full mb-0"
-                  disabled={isFCLinked}
+                  disabled={isFCLinked && countryIsFrance}
                   nativeInputProps={register("birthCity")}
                   state={errors.birthCity ? "error" : "default"}
                   stateRelatedMessage={errors.birthCity?.message}

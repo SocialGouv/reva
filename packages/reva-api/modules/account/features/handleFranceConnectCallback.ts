@@ -230,6 +230,8 @@ const buildCandidateDataFromFCClaims = async ({
 
   const middleNames = [firstname2, firstname3].filter(Boolean).join(" ");
 
+  const countryIsFrance = country?.label === "France";
+
   return {
     firstname,
     firstname2,
@@ -241,7 +243,7 @@ const buildCandidateDataFromFCClaims = async ({
     nationality,
     franceConnectLinked: true,
     birthDepartmentId,
-    birthCity,
+    ...(countryIsFrance ? { birthCity } : {}),
     departmentId: currentDepartment.id,
   };
 };
