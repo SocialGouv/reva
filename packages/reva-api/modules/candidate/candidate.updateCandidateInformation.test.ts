@@ -302,6 +302,56 @@ describe("candidate information update", () => {
     );
   });
 
+  test("should allow birthCity update when candidate is FranceConnect-linked with non-France country", async () => {
+    const candidacy = await createCandidacyHelper();
+
+    if (!candidacy || !candidacy.candidate) {
+      throw Error("Error while creating test candidacy");
+    }
+
+    const canada = (await prismaClient.country.findFirst({
+      where: { label: { not: "France" } },
+    })) as Country;
+
+    // Marquer le candidat comme lié France Connect avec un pays non-France
+    await prismaClient.candidate.update({
+      where: { id: candidacy.candidate.id },
+      data: { franceConnectLinked: true, countryId: canada.id },
+    });
+
+    const { birthDepartmentId, ...baseFields } =
+      await getDefaultUpdatedCandidateFields();
+    const updatedCandidateFields = {
+      ...baseFields,
+      birthCity: "Montreal",
+      countryId: canada.id,
+    };
+
+    const resp = await injectGraphql({
+      fastify: global.testApp,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: mockAdminKeycloakUuid,
+      }),
+      payload: {
+        requestType: "mutation",
+        arguments: {
+          candidacyId: candidacy.id,
+          candidateInformation: updatedCandidateFields,
+        },
+        enumFields: ["gender"],
+        endpoint: "candidate_updateCandidateInformation",
+        returnFields: "{ birthCity }",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).not.toHaveProperty("errors");
+    const obj = resp.json();
+    expect(obj.data.candidate_updateCandidateInformation.birthCity).toBe(
+      "Montreal",
+    );
+  });
+
   test("should be able to update a candidate zipcode with an overseas terrtory zip code", async () => {
     const candidacy = await createCandidacyHelper();
 

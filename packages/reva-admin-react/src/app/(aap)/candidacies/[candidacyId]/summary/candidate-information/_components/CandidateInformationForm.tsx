@@ -347,7 +347,7 @@ const CandidateInformationForm = ({
           <Input
             label="Ville de naissance"
             className="w-full mb-0"
-            disabled={isFCLinked}
+            disabled={isFCLinked && country === franceId}
             nativeInputProps={register("birthCity")}
             state={errors.birthCity ? "error" : "default"}
             stateRelatedMessage={errors.birthCity?.message}
