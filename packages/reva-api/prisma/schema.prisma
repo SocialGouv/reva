@@ -1781,6 +1781,7 @@ model DFFCertificationCompetenceDetails {
   createdAt                       DateTime                               @default(now()) @map("created_at") @db.Timestamptz(6)
   state                           DFFCertificationCompetenceDetailsState @default(YES)
 
+  @@index([dematerializedFeasibilityFileId])
   @@map("dff_certification_competence_details")
 }
 
