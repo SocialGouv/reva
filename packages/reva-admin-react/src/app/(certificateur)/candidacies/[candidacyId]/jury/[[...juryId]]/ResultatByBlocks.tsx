@@ -11,6 +11,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useAuth } from "@/components/auth/auth";
+import { CertificationCard } from "@/components/card/certification-card/CertificationCard";
+import { GrayCard } from "@/components/card/gray-card/GrayCard";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
@@ -168,10 +171,14 @@ const revokeSchema = z.object({
 
 type RevokeFormData = z.infer<typeof revokeSchema>;
 
-export const Resultat = () => {
+export const ResultatByBlocks = () => {
   const { getCandidacy, updateJuryResult, revokeJuryDecision } =
     useJuryPageLogic();
   const { isAdmin } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
+  const isJuryResultsByBlockFeatureActive = isFeatureActive(
+    "JURY_RESULTS_BY_BLOCK",
+  );
 
   const candidacy = getCandidacy.data?.getCandidacyById;
 
@@ -260,17 +267,36 @@ export const Resultat = () => {
 
   return (
     <>
-      <h3>Résultat suite au passage devant le jury</h3>
+      <h3>Résultat de jury</h3>
 
       <div className="flex flex-col gap-10">
         {!result && (
           <p className="m-0 text-gray-600">
-            Sélectionnez le résultat à communiquer par courriel au candidat et à
-            l'AAP. Vous devrez également envoyer un document officiel au
-            candidat.
+            Ce résultat sera communiqué par e-mail au candidat et à son
+            accompagnateur le cas échéant.
           </p>
         )}
+        {isJuryResultsByBlockFeatureActive && (
+          <CertificationCard certification={candidacy?.certification} />
+        )}
 
+        {isJuryResultsByBlockFeatureActive &&
+          candidacy?.feasibility?.dematerializedFeasibilityFile
+            ?.blocsDeCompetences && (
+            <GrayCard as="div" className="-mt-4">
+              <h4 className="mb-6">Recevabilité obtenue sur les blocs : </h4>
+              <ul className="my-0">
+                {candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+                  (bloc) => (
+                    <li key={bloc.certificationCompetenceBloc.code}>
+                      {bloc.certificationCompetenceBloc.code} -{" "}
+                      {bloc.certificationCompetenceBloc.label}
+                    </li>
+                  ),
+                )}
+              </ul>
+            </GrayCard>
+          )}
         {historyJury && (
           <HistoryResultatView
             historyJury={historyJury.map((jury) => ({

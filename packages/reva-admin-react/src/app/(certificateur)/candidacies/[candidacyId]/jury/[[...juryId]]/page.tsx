@@ -8,12 +8,16 @@ import { useFeatureflipping } from "@/components/feature-flipping/featureFlippin
 import { DateDeJury } from "./DateDeJury";
 import { useJuryPageLogic } from "./juryPageLogic";
 import { Resultat } from "./Resultat";
+import { ResultatByBlocks } from "./ResultatByBlocks";
 
 const JuryPage = () => {
   const { getCandidacy } = useJuryPageLogic();
   const { isFeatureActive } = useFeatureflipping();
   const isCertificateurCandidaciesAnnuaireEnabled = isFeatureActive(
     "CERTIFICATEUR_CANDIDACIES_ANNUAIRE",
+  );
+  const isJuryResultsByBlockFeatureActive = isFeatureActive(
+    "JURY_RESULTS_BY_BLOCK",
   );
 
   const candidaciesUrl = isCertificateurCandidaciesAnnuaireEnabled
@@ -40,7 +44,11 @@ const JuryPage = () => {
               },
               {
                 label: "Résultat",
-                content: <Resultat />,
+                content: isJuryResultsByBlockFeatureActive ? (
+                  <ResultatByBlocks />
+                ) : (
+                  <Resultat />
+                ),
               },
             ]}
           />
