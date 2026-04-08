@@ -101,61 +101,41 @@ export const getCandidacyCountByStatus = async ({
   }
 
   //search filters
+  // Each word must match at least one searched field across organism, candidate, department, or certification.
+  // We use per-word IN subqueries with UNION so each branch can leverage trigram (GIN) indexes,
+  // avoiding a post-join sequential scan over ~70k rows.
   if (searchFilter) {
-    const words = searchFilter.split(/\s+/);
+    const words = searchFilter.split(/\s+/).filter(Boolean);
 
-    const searchClauses = [];
-
-    //search on organism
-    searchClauses.push(
-      getSearchFilterClause({
-        table: "candidacyOrganism",
-        fields: ["label"],
-        words,
-      }),
-    );
-
-    //search on candidate
-    fromClause = Prisma.sql`${fromClause} join candidate on candidacy.candidate_id = candidate.id`;
-
-    searchClauses.push(
-      getSearchFilterClause({
-        table: "candidate",
-        fields: [
-          "lastname",
-          "given_name",
-          "firstname",
-          "firstname2",
-          "firstname3",
-          "middle_names",
-          "email",
-          "phone",
-        ],
-        words,
-      }),
-    );
-
-    //search on department
-    fromClause = Prisma.sql`${fromClause} left join department on candidate.department_id = department.id`;
-    searchClauses.push(
-      getSearchFilterClause({
-        table: "department",
-        fields: ["label"],
-        words,
-      }),
-    );
-
-    //search on certification
-    fromClause = Prisma.sql`${fromClause} left join certification on candidacy.certification_id = certification.id`;
-    searchClauses.push(
-      getSearchFilterClause({
-        table: "certification",
-        fields: ["label", "rncp_type_diplome"],
-        words,
-      }),
-    );
-
-    whereClause = Prisma.sql` ${whereClause} and (${Prisma.join(searchClauses, " or ")})`;
+    for (const word of words) {
+      const w = `%${word}%`;
+      whereClause = Prisma.sql`${whereClause} AND candidacy.id IN (
+        SELECT c.id FROM candidacy c
+        JOIN candidate cand ON c.candidate_id = cand.id
+        WHERE cand.lastname     ILIKE ${w}
+           OR cand.given_name   ILIKE ${w}
+           OR cand.firstname    ILIKE ${w}
+           OR cand.firstname2   ILIKE ${w}
+           OR cand.firstname3   ILIKE ${w}
+           OR cand.middle_names ILIKE ${w}
+           OR cand.email        ILIKE ${w}
+           OR cand.phone        ILIKE ${w}
+        UNION
+        SELECT c.id FROM candidacy c
+        LEFT JOIN organism o ON c.organism_id = o.id
+        WHERE o.label ILIKE ${w}
+        UNION
+        SELECT c.id FROM candidacy c
+        JOIN candidate cand ON c.candidate_id = cand.id
+        JOIN department d ON cand.department_id = d.id
+        WHERE d.label ILIKE ${w}
+        UNION
+        SELECT c.id FROM candidacy c
+        LEFT JOIN certification cert ON c.certification_id = cert.id
+        WHERE cert.label             ILIKE ${w}
+           OR cert.rncp_type_diplome ILIKE ${w}
+      )`;
+    }
   }
 
   const query = Prisma.sql`${selectClause} ${fromClause} ${whereClause}`;
@@ -246,40 +226,3 @@ const getSQLSelectSumClauseFromStatusFilter = (
       );
   }
 };
-
-//build a search clause for a table, a collection of fields and a collection of words
-const getSearchFilterClause = ({
-  table,
-  fields,
-  words,
-}: {
-  table: string;
-  fields: string[];
-  words: string[];
-}) =>
-  Prisma.join(
-    words.map(
-      (word) =>
-        Prisma.sql`( ${getSearchFilterClauseForGivenWord({ table, fields, word })} )`,
-    ),
-    " and ",
-  );
-
-//build a search clause for a table, a collection of fields and a word
-const getSearchFilterClauseForGivenWord = ({
-  table,
-  fields,
-  word,
-}: {
-  table: string;
-  fields: string[];
-  word: string;
-}) =>
-  Prisma.join(
-    fields.map((field) => {
-      const tableAndField = Prisma.raw(`${table}.${field}`);
-      const wordWithWildcards = `%${word}%`;
-      return Prisma.sql`(${tableAndField} ilike ${wordWithWildcards})`;
-    }),
-    " or ",
-  );
