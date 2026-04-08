@@ -44,6 +44,7 @@ const getJuryByCandidacyIdQuery = graphql(`
         dematerializedFeasibilityFile {
           blocsDeCompetences {
             certificationCompetenceBloc {
+              id
               label
               code
             }

@@ -44,11 +44,13 @@ const JuryPage = () => {
               },
               {
                 label: "Résultat",
-                content: isJuryResultsByBlockFeatureActive ? (
-                  <ResultatByBlocks />
-                ) : (
-                  <Resultat />
-                ),
+                content:
+                  isJuryResultsByBlockFeatureActive &&
+                  candidacy?.typeAccompagnement === "ACCOMPAGNE" ? (
+                    <ResultatByBlocks />
+                  ) : (
+                    <Resultat />
+                  ),
               },
             ]}
           />

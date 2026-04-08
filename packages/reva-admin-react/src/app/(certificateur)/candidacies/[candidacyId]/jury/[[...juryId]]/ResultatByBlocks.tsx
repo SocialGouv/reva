@@ -2,6 +2,7 @@
 
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
@@ -13,7 +14,6 @@ import { z } from "zod";
 import { useAuth } from "@/components/auth/auth";
 import { CertificationCard } from "@/components/card/certification-card/CertificationCard";
 import { GrayCard } from "@/components/card/gray-card/GrayCard";
-import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { graphqlErrorToast } from "@/components/toast/toast";
 import { sanitizedOptionalTextAllowSpecialCharacters } from "@/utils/input-sanitization";
 
@@ -33,20 +33,46 @@ const revokeModal = createModal({
   isOpenedByDefault: false,
 });
 
-const juryResultLabels: { [key in JuryResult]: string } = {
-  FULL_SUCCESS_OF_FULL_CERTIFICATION:
-    "Réussite totale à une certification visée en totalité",
-  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION:
-    "Réussite partielle à une certification visée en totalité",
-  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION:
-    "Réussite totale aux blocs de compétences visés",
-  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION:
-    "Réussite partielle aux blocs de compétences visés",
-  PARTIAL_SUCCESS_PENDING_CONFIRMATION:
-    "Réussite partielle (sous reserve de confirmation par un certificateur)",
-  FAILURE: "Non validation",
-  CANDIDATE_EXCUSED: "Candidat excusé sur justificatif",
-  CANDIDATE_ABSENT: "Candidat non présent",
+const juryResultOptions: {
+  [key in JuryResult]: { label: string; hintText?: string };
+} = {
+  FULL_SUCCESS_OF_FULL_CERTIFICATION: {
+    label: "Tous les blocs visés ont été validés",
+    hintText:
+      "Le candidat a validé l'ensemble des blocs pour lesquels il est recevable. Son parcours de VAE est terminé pour cette candidature.",
+  },
+  PARTIAL_SUCCESS_OF_FULL_CERTIFICATION: {
+    label: "Certains blocs visés ont été validés",
+    hintText:
+      "Le candidat a validé une partie des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.",
+  },
+  FULL_SUCCESS_OF_PARTIAL_CERTIFICATION: {
+    label: "Tous les blocs visés ont été validés",
+    hintText:
+      "Le candidat a validé l'ensemble des blocs pour lesquels il est recevable. Son parcours de VAE est terminé pour cette candidature.",
+  },
+  PARTIAL_SUCCESS_OF_PARTIAL_CERTIFICATION: {
+    label: "Certains blocs visés ont été validés",
+    hintText:
+      "Le candidat a validé une partie des blocs pour lesquels il est recevable. Il pourra redéposer un dossier de validation pour les blocs restants.",
+  },
+  PARTIAL_SUCCESS_PENDING_CONFIRMATION: {
+    label:
+      "Réussite partielle (sous reserve de confirmation par un certificateur)",
+    hintText:
+      "Réussite partielle (sous reserve de confirmation par un certificateur)",
+  },
+  FAILURE: {
+    label: "Aucun bloc visé n’a été validé",
+    hintText:
+      "Le candidat n'a validé aucun des blocs  pour lesquels il est recevable. ",
+  },
+  CANDIDATE_EXCUSED: {
+    label: "Candidat excusé sur justificatif",
+  },
+  CANDIDATE_ABSENT: {
+    label: "Candidat non présent",
+  },
 };
 
 const juryResultModalContent = (result: JuryResult) => {
@@ -151,6 +177,7 @@ const ALL_OPTIONS = [
 const schema = z.object({
   result: z.enum(ALL_OPTIONS),
   informationOfResult: sanitizedOptionalTextAllowSpecialCharacters(),
+  validatedBlocks: z.array(z.string()),
 });
 
 type ResultatFormData = {
@@ -163,6 +190,7 @@ type ResultatFormData = {
     | "CANDIDATE_EXCUSED"
     | "CANDIDATE_ABSENT";
   informationOfResult: string;
+  validatedBlocks: string[];
 };
 
 const revokeSchema = z.object({
@@ -175,11 +203,6 @@ export const ResultatByBlocks = () => {
   const { getCandidacy, updateJuryResult, revokeJuryDecision } =
     useJuryPageLogic();
   const { isAdmin } = useAuth();
-  const { isFeatureActive } = useFeatureflipping();
-  const isJuryResultsByBlockFeatureActive = isFeatureActive(
-    "JURY_RESULTS_BY_BLOCK",
-  );
-
   const candidacy = getCandidacy.data?.getCandidacyById;
 
   let availableResultOptions: JuryResult[] = [];
@@ -203,6 +226,9 @@ export const ResultatByBlocks = () => {
     formState: { errors, isValid, isSubmitting },
   } = useForm<ResultatFormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      validatedBlocks: [],
+    },
   });
 
   const {
@@ -218,9 +244,9 @@ export const ResultatByBlocks = () => {
 
   const formData = getValues();
 
+  console.log("formData redner", formData);
   const submitData = async () => {
     modal.close();
-
     if (candidacy?.jury?.id) {
       try {
         await updateJuryResult.mutateAsync({
@@ -276,27 +302,25 @@ export const ResultatByBlocks = () => {
             accompagnateur le cas échéant.
           </p>
         )}
-        {isJuryResultsByBlockFeatureActive && (
-          <CertificationCard certification={candidacy?.certification} />
-        )}
 
-        {isJuryResultsByBlockFeatureActive &&
-          candidacy?.feasibility?.dematerializedFeasibilityFile
-            ?.blocsDeCompetences && (
-            <GrayCard as="div" className="-mt-4">
-              <h4 className="mb-6">Recevabilité obtenue sur les blocs : </h4>
-              <ul className="my-0">
-                {candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
-                  (bloc) => (
-                    <li key={bloc.certificationCompetenceBloc.code}>
-                      {bloc.certificationCompetenceBloc.code} -{" "}
-                      {bloc.certificationCompetenceBloc.label}
-                    </li>
-                  ),
-                )}
-              </ul>
-            </GrayCard>
-          )}
+        <CertificationCard certification={candidacy?.certification} />
+
+        {candidacy?.feasibility?.dematerializedFeasibilityFile
+          ?.blocsDeCompetences && (
+          <GrayCard as="div" className="-mt-4">
+            <h4 className="mb-6">Recevabilité obtenue sur les blocs : </h4>
+            <ul className="my-0">
+              {candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+                (bloc) => (
+                  <li key={bloc.certificationCompetenceBloc.code}>
+                    {bloc.certificationCompetenceBloc.code} -{" "}
+                    {bloc.certificationCompetenceBloc.label}
+                  </li>
+                ),
+              )}
+            </ul>
+          </GrayCard>
+        )}
         {historyJury && (
           <HistoryResultatView
             historyJury={historyJury.map((jury) => ({
@@ -351,11 +375,16 @@ export const ResultatByBlocks = () => {
                   : ""
               }
               className="m-0 p-0 mb-4"
+              classes={{
+                inputGroup: "border w-full max-w-full mb-4 px-4",
+              }}
               options={availableResultOptions.map((key) => {
-                const label = juryResultLabels[key as JuryResult];
+                const label = juryResultOptions[key as JuryResult].label;
+                const hintText = juryResultOptions[key as JuryResult].hintText;
 
                 return {
                   label,
+                  hintText,
                   nativeInputProps: {
                     value: key,
                     ...register("result"),
@@ -369,11 +398,46 @@ export const ResultatByBlocks = () => {
               }
             />
 
+            <Checkbox
+              legend="Quels blocs ont été validés ?"
+              small
+              className="m-0 p-0 mb-4"
+              classes={{
+                inputGroup: "-my-2",
+              }}
+              options={
+                candidacy?.feasibility?.dematerializedFeasibilityFile?.blocsDeCompetences.map(
+                  (bloc) => ({
+                    label: bloc.certificationCompetenceBloc.label,
+                    hintText: "Recevabilité obtenue sur ce bloc",
+                    nativeInputProps: {
+                      value: bloc.certificationCompetenceBloc.id,
+                      ...register(`validatedBlocks`),
+                    },
+                    disabled: !editable,
+                  }),
+                ) || []
+              }
+            />
+
             <Input
               label="Commentaires (optionnel) :"
               nativeTextAreaProps={register("informationOfResult")}
               textArea
-              hintText="Indiquer ici toutes les réserves, consignes ou attendus éventuels."
+              hintText={
+                <>
+                  <p className="m-0 text-xs">
+                    Indiquer ici toutes les réserves, consignes ou attendus
+                    éventuels.
+                  </p>
+                  <p className="m-0 text-xs">
+                    <b>
+                      Si des blocs ont été validés alors que le candidat n'était
+                      pas recevable dessus, vous pouvez l’indiquer ici.
+                    </b>
+                  </p>
+                </>
+              }
               disabled={!editable}
               state={errors.informationOfResult ? "error" : "default"}
               stateRelatedMessage={errors.informationOfResult?.message}
