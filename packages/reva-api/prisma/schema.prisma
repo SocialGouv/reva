@@ -109,6 +109,8 @@ model Certification {
   certificationEmails                                    CertificationEmail[]
   parcours                                               ParcoursCertification[]
 
+  @@index([label(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_certification_label_trgm")
+  @@index([rncpTypeDiplome(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_certification_rncp_type_diplome_trgm")
   @@map("certification")
 }
 
@@ -407,6 +409,14 @@ model Candidate {
   ccnId                                String?                        @map("ccn_id") @db.Uuid
   franceConnectLinked                  Boolean                        @default(false) @map("france_connect_linked")
 
+  @@index([lastname(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_candidate_lastname_trgm")
+  @@index([firstname(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_candidate_firstname_trgm")
+  @@index([givenName(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_candidate_given_name_trgm")
+  @@index([email(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_candidate_email_trgm")
+  @@index([phone(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_candidate_phone_trgm")
+  @@index([firstname2(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_candidate_firstname2_trgm")
+  @@index([firstname3(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_candidate_firstname3_trgm")
+  @@index([middleNames(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_candidate_middle_names_trgm")
   @@map("candidate")
 }
 
@@ -500,6 +510,7 @@ model Department {
   timezone                                       String                                           @map("timezone")
 
   @@index([regionId])
+  @@index([label(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_department_label_trgm")
   @@map("department")
 }
 
@@ -587,6 +598,7 @@ model Organism {
   cohorteVaeCollectives                    CohorteVaeCollective[]
 
   @@index([maisonMereAAPId])
+  @@index([label(ops: raw("gin_trgm_ops"))], type: Gin, map: "idx_organism_label_trgm")
   @@map("organism")
 }
 
